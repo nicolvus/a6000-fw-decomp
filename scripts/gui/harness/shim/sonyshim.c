@@ -202,6 +202,10 @@ static unsigned hex(const char *p, char **end) {
     for (;; p++) { int c = *p; if (c >= '0' && c <= '9') v = v * 16 + c - '0'; else if (c >= 'a' && c <= 'f') v = v * 16 + c - 'a' + 10; else break; }
     *end = (char *)p; return v;
 }
+static void efp(const char *f, ...) {  /* escritura sin cerrojo de stderr: usable desde el manejador de señal */
+    char b[300]; va_list v; va_start(v, f); int n = vsnprintf(b, sizeof b, f, v); va_end(v);
+    if (n > 0) { if (n > (int)sizeof b - 1) n = sizeof b - 1; write(2, b, n); }
+}
 static struct { unsigned lo, hi, off; char name[96]; } maps[512];
 static int nmaps;
 static void load_maps(void) {
@@ -218,24 +222,24 @@ static void load_maps(void) {
 }
 static void sym(unsigned v) {
     for (int i = 0; i < nmaps; i++)
-        if (v >= maps[i].lo && v < maps[i].hi) { fprintf(stderr, "[shim]   %08x %s+%#x\n", v, maps[i].name, v - maps[i].lo + maps[i].off); return; }
+        if (v >= maps[i].lo && v < maps[i].hi) { efp("[shim]   %08x %s+%#x\n", v, maps[i].name, v - maps[i].lo + maps[i].off); return; }
 }
 static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, LR y direcciones de código halladas en la pila */
     ucontext_t *uc = ctx; unsigned *sp = (unsigned *)uc->uc_mcontext.arm_sp;
-    load_maps();
-    char nm[24] = {0}; syscall(SYS_prctl, 16, nm); fprintf(stderr, "[shim] --- pila (sig %d tid %ld %s) pc/lr:\n", sig, (long)syscall(SYS_gettid), nm); sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
+    if (!nmaps) load_maps();
+    char nm[24] = {0}; syscall(SYS_prctl, 16, nm); efp("[shim] --- pila (sig %d tid %ld %s) pc/lr:\n", sig, (long)syscall(SYS_gettid), nm); sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
     sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
-    for (int i = 0; i < 300; i++) sym(sp[i]);
+    for (int i = 0; i < 300; i++) { if (((unsigned long)(sp + i) & 0xfff) == 0 || i == 0) { if (msync((void *)((unsigned long)(sp + i) & ~0xfffUL), 1, MS_ASYNC)) break; } sym(sp[i]); }  /* no cruzar el final de la pila */
     (void)sig; (void)si;
 }
 #include <dirent.h>
 /* DUMPAT=n: a los n s manda SIGUSR1 a cada hilo (uno por segundo) para ver dónde está parado cada uno */
 static int num(const char *t) { int v = 0; while (*t >= '0' && *t <= '9') v = v * 10 + *t++ - '0'; return v; }  /* sin atoi: el sysroot nuevo enlaza __isoc23_strtol, que la glibc 2.11 no tiene */
 static void *dumper(void *a) {
-    sleep(num(getenv("DUMPAT"))); (void)a;
+    sleep(num(getenv("DUMPAT"))); (void)a; load_maps();
     DIR *d = opendir("/proc/self/task"); struct dirent *e; int tids[512], n = 0;
     while (d && (e = readdir(d)) && n < 512) if (e->d_name[0] != '.') tids[n++] = num(e->d_name);
-    if (d) closedir(d); fprintf(stderr, "[shim] dumper hilos=%d\n", n);
+    if (d) closedir(d); efp("[shim] dumper hilos=%d\n", n);
     for (int i = 0; i < n; i++) { syscall(SYS_tgkill, getpid(), tids[i], SIGUSR1); sleep(1); }
     return 0;
 }
