@@ -40,6 +40,7 @@ Features wanted on the A6000, inherited from other Sony models and other brands,
 - ⬜ D Range Priority — _Origin: Fujifilm X-T3_
 - ⬜ Color Chrome Effect — _Origin: Fujifilm X-T3_
 - ⬜ LUT import — _Origin: Sony ZV-E1_
+- ⬜ Direct film simulation — _Origin: Fujifilm X-T5_
 
 ### Video
 
@@ -81,9 +82,3 @@ Features wanted on the A6000, inherited from other Sony models and other brands,
 
 - ⬜ USB charging while powered on — _Origin: ≈Sony α7 II_
 - ⬜ FTP Background Transfer — _Origin: Sony α9_
-
-## Other
-
-Not inherited from another model; can be added at any time.
-
-- ⬜ Direct film simulation — _Origin: Fujifilm X-T5_

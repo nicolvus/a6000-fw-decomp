@@ -40,6 +40,7 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 - ⬜ D Range Priority — _Origen: Fujifilm X-T3_
 - ⬜ Color Chrome Effect — _Origen: Fujifilm X-T3_
 - ⬜ Importación de LUTs — _Origen: Sony ZV-E1_
+- ⬜ Film simulation directo — _Origen: Fujifilm X-T5_
 
 ### Video
 
@@ -81,9 +82,3 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 
 - ⬜ Carga USB con la cámara encendida — _Origen: ≈Sony α7 II_
 - ⬜ FTP Background Transfer — _Origen: Sony α9_
-
-## Otros
-
-No vienen de otro modelo y se pueden añadir en cualquier momento.
-
-- ⬜ Film simulation directo — _Origen: Fujifilm X-T5_

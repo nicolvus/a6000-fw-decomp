@@ -32,6 +32,7 @@ HLG 1-3 — ≈Sony α7R III
 D Range Priority — Fujifilm X-T3
 Color Chrome Effect — Fujifilm X-T3
 Importación de LUTs — Sony ZV-E1
+Film simulation directo — Fujifilm X-T5
 
 Video:
 Full HD / HD 120 fps — ≈Sony α6300
@@ -69,6 +70,3 @@ Intelligent Subject Detection AF — Olympus E-M1X
 Sistema y conectividad:
 Carga USB con la cámara encendida — ≈Sony α7 II
 FTP Background Transfer — Sony α9
-
-Otros (no heredadas; se pueden añadir en cualquier momento):
-Film simulation directo — Fujifilm X-T5

@@ -69,6 +69,7 @@ Details in [Goals](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-16-Goals)
 | D Range Priority | Image and color | Fujifilm X-T3 | ⬜ |
 | Color Chrome Effect | Image and color | Fujifilm X-T3 | ⬜ |
 | LUT import | Image and color | Sony ZV-E1 | ⬜ |
+| Direct film simulation | Image and color | Fujifilm X-T5 | ⬜ |
 | Full HD / HD 120 fps | Video | ≈Sony α6300 | ⬜ |
 | Variable Frame Rate | Video | Panasonic GH5 | ⬜ |
 | Internal 4K | Video | ≈Sony α7R II | ⬜ |
@@ -98,7 +99,6 @@ Details in [Goals](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-16-Goals)
 | Intelligent Subject Detection AF | Focus | Olympus E-M1X | ⬜ |
 | USB charging while powered on | System and connectivity | ≈Sony α7 II | ⬜ |
 | FTP Background Transfer | System and connectivity | Sony α9 | ⬜ |
-| Direct film simulation | Extra (not inherited) | Fujifilm X-T5 | ⬜ |
 
 ## Copyright and use
 
