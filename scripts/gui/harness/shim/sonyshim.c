@@ -21,7 +21,7 @@ enum { D_NONE = 0, D_UIPC, D_GENERIC };
 static unsigned char kind[MAXFD];
 static char devname[MAXFD][32];
 
-#define LOG(...) do { fprintf(stderr, "[shim] " __VA_ARGS__); fputc('\n', stderr); } while (0)
+#define LOG(...) do { fprintf(stderr, getenv("TIDLOG") ? "[shim %ld] " : "[shim] ", (long)syscall(224)); fprintf(stderr, __VA_ARGS__); fputc('\n', stderr); } while (0)
 
 #define E_TMOUT (-1022)
 static pthread_mutex_t semlock = PTHREAD_MUTEX_INITIALIZER;
@@ -134,6 +134,30 @@ static void backup_service(unsigned *m) {
 /* Servicios de kernel por snd_sync_direct (mm 0x910042, ...). shortcut: sin modelar, responde 0 */
 static int direct_service(unsigned qid, unsigned *m) { (void)qid; (void)m; return 0; }
 
+/* Buzones de colas dinámicas de kernel (dynamic_id tipo 0x2a): el servicio 0xd9016e (registro de puerto de vídeo/OSD) se responde copiando la petición. */
+static struct { unsigned q; void *msg; } mbx[16];
+static pthread_mutex_t mbx_m = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t mbx_c = PTHREAD_COND_INITIALIZER;
+static void mbx_post(unsigned q, const unsigned *req) {
+    unsigned char *b = calloc(1, 0x300); unsigned *body = (unsigned *)(b + 0x20); int k;
+    memcpy(body, req, 28); body[-1] = 0x61003c; ((unsigned short *)body)[1] = 0;  /* cabecera esperada por 0x6a25e0 y estado 0 */
+    pthread_mutex_lock(&mbx_m);
+    for (k = 0; k < 16 && mbx[k].msg; k++);
+    if (k < 16) { mbx[k].q = q; mbx[k].msg = body; }
+    pthread_cond_broadcast(&mbx_c); pthread_mutex_unlock(&mbx_m);
+}
+static int mbx_take(unsigned q, int tmo, void **out) {  /* 0 = recibido, 1 = esta cola no tiene buzón */
+    int k, r = 1; if ((q >> 16) != 0xaf) return 1;
+    pthread_mutex_lock(&mbx_m);
+    for (;;) {
+        for (k = 0; k < 16; k++) if (mbx[k].msg && mbx[k].q == q) { *out = mbx[k].msg; mbx[k].msg = 0; r = 0; goto fin; }
+        if (tmo == 0) { r = -1; break; }
+        pthread_cond_wait(&mbx_c, &mbx_m);
+    }
+fin:
+    pthread_mutex_unlock(&mbx_m); return r;
+}
+
 int ioctl(int fd, unsigned long req, ...) {
     static int (*r)(int, unsigned long, ...);
     va_list a; va_start(a, req); void *arg = va_arg(a, void *); va_end(a);
@@ -157,6 +181,7 @@ int ioctl(int fd, unsigned long req, ...) {
         case 2: sem_sig(w[0]); LOG("uipc sig_sem %#x", w[0]); return 0;
         case 7: { unsigned *t = (unsigned *)w[1]; LOG("uipc rcv_msg qid=%#x tmo=%d", w[0], (int)t[1]);
             if ((int)t[1] < 0 && getenv("RCVSTACK")) { static unsigned vq[64]; static int nq; int k, ya = 0; for (k = 0; k < nq; k++) if (vq[k] == w[0]) ya = 1; if (!ya && nq < 64) { vq[nq++] = w[0]; raise(SIGUSR1); } }
+            { void *mm; int rr = mbx_take(w[0], (int)t[1], &mm); if (rr == 0) { *(void **)t[0] = mm; LOG("rcv_msg qid=%#x <- respuesta", w[0]); return 0; } if (rr < 0) return -1; }
             return kernel_sleep((int)t[1]); }
         case 13: LOG("uipc wait_cb (proxy bloqueado)"); return kernel_sleep(-1);
         case 5: {  /* snd_sync_msg {qid, msg}: 0x8f013a es el registro de trazas (u16 + texto "%4X %s %s") */
@@ -173,7 +198,8 @@ int ioctl(int fd, unsigned long req, ...) {
         case 12: {  /* dynamic_id {0, &{tipo, grupo, &id}}: tipo 0x32 = semáforo nuevo */
             static unsigned next = 0x4000;
             unsigned *t = (unsigned *)w[1];
-            if (t[0] == 0x32 && t[2]) { unsigned id = (t[1] << 16) | next++; *(unsigned *)t[2] = id; LOG("uipc dynamic_id sem -> %#x", id); }
+            if (t[0] == 0x2a && t[2]) { unsigned id = (t[1] << 16) | next++; *(unsigned *)t[2] = id; LOG("uipc dynamic_id cola -> %#x", id); }
+            else if (t[0] == 0x32 && t[2]) { unsigned id = (t[1] << 16) | next++; *(unsigned *)t[2] = id; LOG("uipc dynamic_id sem -> %#x", id); }
             else LOG("uipc dynamic_id tipo=%#x grupo=%#x (sin salida)", t[0], t[1]);
             return 0; }
         case 11: if (getenv("VERB")) LOG("uipc free qid=%#x msg=%#x", w[0], w[1]); return 0;
@@ -183,7 +209,9 @@ int ioctl(int fd, unsigned long req, ...) {
                 { char c[420]; int o = 0, pd = 1; for (k = 0; t[k]; k++) { if (t[k] == '.') { if (!pd) c[o++] = ' '; pd = 1; } else { c[o++] = t[k]; pd = 0; } } c[o] = 0; if (o > 6) LOG("TRAZA %s", c); }
                 if (strstr(t, "MMapBase")) { char h[500]; int o = 0; for (k = 0; k < 200; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]); LOG("TRAZAHEX %s", h); }
                 return 0; }
+            if (w[0] == 0xd9016e) { mbx_post(((unsigned *)m)[2], (unsigned *)m); LOG("snd_msg 0xd9016e -> respuesta a %#x", ((unsigned *)m)[2]); return 0; }
             if (w[0] == 0x9a015a || w[0] == 0x9c015b) { static int n; if (n++ < 4) raise(SIGUSR1); if (n > 5) { usleep(20000); return 0; } }  /* bucle HDMI: pila y silencio */
+            if (getenv("VERB")) { char h[200]; int k, o = 0; for (k = -32; k < 32; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]); LOG("MSGHEX %#x %s", w[0], h); }
             LOG("uipc snd_msg a la cola de kernel %#x (descartado) cab=%02x%02x%02x%02x datos=%08x %08x", w[0], m[-12], m[-11], m[-10], m[-9],
                 ((unsigned *)m)[0], ((unsigned *)m)[1]); return 0; }
         case 6: { unsigned char *m = (unsigned char *)w[1]; char h[200]; int k, o = 0;
