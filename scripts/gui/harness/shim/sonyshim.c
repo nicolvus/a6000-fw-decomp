@@ -141,7 +141,7 @@ int ioctl(int fd, unsigned long req, ...) {
         switch (idx) {
         case 10: {  /* valloc_msg_wait {qid, &{out, size, tmo}}: mensaje para una cola de kernel (se descarta al enviarlo) */
             unsigned *t = (unsigned *)w[1];
-            unsigned char *b = calloc(1, t[1] + 0x40);
+            unsigned char *b = calloc(1, t[1] + 0x240);
             *(void **)t[0] = b + 0x20;
             LOG("uipc valloc qid=%#x size=%u -> %p", w[0], t[1], b + 0x20);
             return 0; }
@@ -154,6 +154,11 @@ int ioctl(int fd, unsigned long req, ...) {
             unsigned char *m = *(unsigned char **)w[1];  /* w[1] -> {msg, ...} */
             if (w[0] == 0x8f013a) { if (m[2]) LOG("LOG %s", (char *)m + 2); else { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
             else if (w[0] == 0x3e014d) backup_service((unsigned *)m);
+            else if (w[0] == 0x14c0424 && ((unsigned *)m)[0] == 7) {  /* área de memoria por nombre (dmm): {7, nombre[16], estado, phys, tamaño, ?} */
+                static unsigned next = 0x80000000;
+                unsigned *r = (unsigned *)m + 5;
+                r[0] = 0; r[1] = next; r[2] = 0x4000000; r[3] = 0; next += 0x4000000;  /* shortcut: 64 MiB por área en orden; tamaños reales en DmmConfig.bin */
+                LOG("dmm área '%s' -> phys %#x size %#x", (char *)m + 4, r[1], r[2]); return 0; }
             else LOG("uipc snd_sync_msg qid=%#x datos=%08x %08x %08x %08x", w[0], ((unsigned *)m)[0], ((unsigned *)m)[1], ((unsigned *)m)[2], ((unsigned *)m)[3]);
             return 0; }
         case 12: {  /* dynamic_id {0, &{tipo, grupo, &id}}: tipo 0x32 = semáforo nuevo */
@@ -208,7 +213,7 @@ static void sym(unsigned v) {
 static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, LR y direcciones de código halladas en la pila */
     ucontext_t *uc = ctx; unsigned *sp = (unsigned *)uc->uc_mcontext.arm_sp;
     load_maps();
-    fprintf(stderr, "[shim] --- pila (SIGUSR1) ---\n");
+    fprintf(stderr, "[shim] --- pila (sig %d addr %p) pc/lr:\n", sig, si->si_addr); sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
     sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
     for (int i = 0; i < 300; i++) sym(sp[i]);
     (void)sig; (void)si;
