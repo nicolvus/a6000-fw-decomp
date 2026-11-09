@@ -24,7 +24,7 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 - ⬜ Live Bulb / Live Time — _Origen: Olympus E-M1 II_
 - ⬜ Bulb Timer — _Origen: Canon EOS 7D Mark II_
 - ⬜ Focus Shift Shooting / Focus Stacking — _Origen: Nikon D850; Panasonic GH5, G9; Olympus E-M1 II, E-M1X_
-- ⬜ Smile Shutter — _Origen: Sony (modelo por determinar)_
+- ⬜ Smile Shutter — _Origen: Sony α5100_
 - ⬜ Intervalómetro interno — _Origen: ≈Sony α9_
 - ⬜ Interval AE Tracking Sensitivity / Exposure Smoothing — _Origen: ≈Sony α7R III; Nikon D850_
 - ⬜ Anti-Flicker Shooting / Flicker Reduction / Flicker Scan — _Origen: Canon EOS 7D Mark II; Nikon D500, D850; Fujifilm X-T3; Olympus E-M1 II, E-M1X_
@@ -39,6 +39,7 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 - ⬜ HLG 1-3 — _Origen: ≈Sony α7R III_
 - ⬜ D Range Priority — _Origen: Fujifilm X-T3_
 - ⬜ Color Chrome Effect — _Origen: Fujifilm X-T3_
+- ⬜ Importación de LUTs — _Origen: Sony ZV-E1_
 
 ### Video
 
@@ -49,7 +50,7 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 - ⬜ Salida HDMI 4K — _Origen: Sony α7S_
 - ⬜ Timecode / User Bit — _Origen: ≈Sony α7S II_
 - ⬜ Loop Recording — _Origen: Panasonic GH5_
-- ⬜ Movie Silent Control / Silent Multi Controller — _Origen: Fujifilm X-T3; Sony (modelo por determinar)_
+- ⬜ Movie Silent Control / Silent Multi Controller — _Origen: Fujifilm X-T3; Sony α99 II_
 - ⬜ Anamorphic Desqueeze — _Origen: Panasonic GH5_
 - ⬜ Synchro Scan — _Origen: Panasonic GH5_
 - ⬜ Auto Object Framing — _Origen: ≈Sony ZV-E1_

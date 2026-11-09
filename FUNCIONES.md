@@ -17,7 +17,7 @@ Live Composite — Olympus E-M1 II
 Live Bulb / Live Time — Olympus E-M1 II
 Bulb Timer — Canon EOS 7D Mark II
 Focus Shift Shooting / Focus Stacking — Nikon D850; Panasonic GH5, G9; Olympus E-M1 II, E-M1X
-Smile Shutter — Sony (modelo por determinar)
+Smile Shutter — Sony α5100
 Intervalómetro interno — ≈Sony α9
 Interval AE Tracking Sensitivity / Exposure Smoothing — ≈Sony α7R III; Nikon D850
 Anti-Flicker Shooting / Flicker Reduction / Flicker Scan — Canon EOS 7D Mark II; Nikon D500, D850; Fujifilm X-T3; Olympus E-M1 II, E-M1X
@@ -31,6 +31,7 @@ S-Log3 — ≈Sony α7S II
 HLG 1-3 — ≈Sony α7R III
 D Range Priority — Fujifilm X-T3
 Color Chrome Effect — Fujifilm X-T3
+Importación de LUTs — Sony ZV-E1
 
 Video:
 Full HD / HD 120 fps — ≈Sony α6300
@@ -40,7 +41,7 @@ Dual Video Recording — ≈Sony α7R III
 Salida HDMI 4K — Sony α7S
 Timecode / User Bit — ≈Sony α7S II
 Loop Recording — Panasonic GH5
-Movie Silent Control / Silent Multi Controller — Fujifilm X-T3; Sony (modelo por determinar)
+Movie Silent Control / Silent Multi Controller — Fujifilm X-T3; Sony α99 II
 Anamorphic Desqueeze — Panasonic GH5
 Synchro Scan — Panasonic GH5
 Auto Object Framing — ≈Sony ZV-E1
