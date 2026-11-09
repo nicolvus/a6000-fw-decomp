@@ -39,6 +39,18 @@ textos nuevos (Gamma, Still, ITU709, Cine1–4) copiados de la A6300 a 7 ranuras
 Verificado: 5 tests (`test_g23_gamma_menu.py`, `test_g23_gamma_descriptor.py`) y carga conjunta de los tres `.so` + `libObj` en `qemu-arm`: los tres ejecutan su init (incluida la construcción de la raíz con 7 hijos) sin fallo.
 Memoria real con `gdb` (`qemu-arm -g`, tras el SIGSEGV por falta de `/dev/uipc`): raíz AfIlluminator con `hijos`=array nuevo, `cuenta`=7 y los 7 punteros a los nodos previstos; `D[0x3c]` → descriptor con 7 opciones, modelo `@M00B`/0x40/0x49, claves 0x214/0x216 y tabla (4,5,3,6,7,8,9). La lectura detectó que la plantilla inerte trae «nº de modelos» = 0 (el EFCS trae 1): corregido (`desc[7] = 1`) y cubierto por test.
 
+## Más páginas: carpeta → páginas → ajustes, solo datos (09-11-2026)
+
+Un nodo de menú es un objeto de 10 palabras `{vtable, hijos**, cuenta, props*, 0×6}` y `props` = `{lista, nº tripletas}` (VERIFICADO con `gdb` sobre nodos existentes, p. ej. `CustomLensComp`);
+la vtable es `_ZTV18CmnViewSettingNode`+8 (símbolo definido en `CautionConfig.so`) y el constructor genérico solo rellena esos campos. Por tanto **se pueden fabricar nodos nuevos como datos**
+en el `PT_LOAD` añadido, con relocaciones `R_ARM_RELATIVE`, sin código ni `init_array`. La A6000 ya tiene la estructura de carpeta: raíz `0xb=0,0xc=3` sin pid
+(`CustomLensComp`, `DispButton`, `FnFunction`) → nodo de página `0xb=0` → ajustes. `CustomFunction` y sus `Page1/2` **no** sirven de plantilla: tienen clases propias (vtables `_ZTV…CustomFunctionPage1`).
+
+`build_pp_gamma_menu.py` ahora crea la carpeta «Picture Profile» con `PAGINAS_PP` páginas (hoy 1, con Gamma); **para añadir otra página basta añadir una lista de raíces a `PAGINAS_PP`**
+(`[["AfIlluminator"], ["OtraRaíz"]]`). La entrada de las 5 páginas del menú apunta a la carpeta (delta calculado: carpeta − `RootAelWShutter`). Verificado en memoria con `gdb`:
+carpeta → 1 página → raíz de Gamma (`0x41b82234`), con sus tripletas intactas; test `test_carpeta_pagina_ajuste_es_una_cadena_de_nodos_de_datos`. Límite: cada ajuste hijo sigue necesitando
+raíz, descriptor/pid y nodos de opción (hoy solo Gamma los tiene); el máximo de entradas por página que admite la UI y el aspecto de la carpeta en pantalla son NO_VERIFICADO.
+
 ## Límites y supuestos NO verificados
 
 - Valor interno de opción (`0xf/0x10`): se pone el índice de la opción (0–6); no se ha comprobado cómo lo usa la vista frente a la tabla opción→valor del descriptor.

@@ -26,7 +26,7 @@ def _symbols(path):
 
 @needs
 def test_array_de_hijos_nuevo_apunta_a_los_siete_nodos(tmp_path):
-    new = B.patch_caution(LIB.read_bytes(), IDS)
+    new, _ = B.patch_caution(LIB.read_bytes(), IDS)
     p = tmp_path / "c.so"
     p.write_bytes(new)
     s = _symbols(p)
@@ -48,7 +48,7 @@ def test_array_de_hijos_nuevo_apunta_a_los_siete_nodos(tmp_path):
 
 @needs
 def test_listas_editadas_en_sitio_conservan_tamano(tmp_path):
-    new = B.patch_caution(LIB.read_bytes(), IDS)
+    new, _ = B.patch_caution(LIB.read_bytes(), IDS)
     p = tmp_path / "c.so"
     p.write_bytes(new)
     s, segs = _symbols(p), A._segments(new)
@@ -57,3 +57,19 @@ def test_listas_editadas_en_sitio_conservan_tamano(tmp_path):
     gamma = A._off(segs, s["cmnViewSettingPropertyListAfTrackingSpeed1"][0])
     assert struct.unpack_from("<18I", new, gamma)[12:] == (0xF, 1, 6, 0x10, 1, 6)        # Cine4 = opción 6
     assert len(set(B.pp_gamma_descriptor.GAMMAS)) == len(B.OPCIONES) == 7
+
+
+@needs
+def test_carpeta_pagina_ajuste_es_una_cadena_de_nodos_de_datos(tmp_path):
+    new, delta = B.patch_caution(LIB.read_bytes(), IDS)
+    p = tmp_path / "c.so"
+    p.write_bytes(new)
+    s, segs = _symbols(p), A._segments(new)
+    rd = lambda va, n=1: struct.unpack_from(f"<{n}I", new, A._off(segs, va))
+    carpeta = s["cmnViewSettingNodeRootAelWShutter"][0] + delta
+    vt, kids, n, props = rd(carpeta, 4)
+    assert vt == s["_ZTV18CmnViewSettingNode"][0] + 8 and n == len(B.PAGINAS_PP) == 1
+    assert rd(props, 2)[1] == 4 and rd(rd(props)[0] + 12 * 2, 3) == (0xB, 1, 0)             # etiqueta, ayuda, 0xb=0, 0xc=3 (como CustomLensComp)
+    pagina = rd(kids)[0]
+    assert rd(pagina + 8)[0] == 1 and rd(rd(pagina + 4)[0])[0] == s["cmnViewSettingNodeRootAfIlluminator"][0]
+    assert rd(rd(rd(carpeta + 12)[0])[0] + 12 * 3, 3) == (0xC, 1, 3)

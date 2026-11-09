@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """G23 — paquete de prueba «Gamma de Picture Profile» para la A6000 fw3.21 (solo ficheros; no toca la cámara).
 
-Reutiliza el ajuste oculto `AfIlluminator` (raíz `cmnViewSettingNodeRootAfIlluminator`) como menú «Gamma» con 7 opciones y lo cablea al descriptor
+Crea una carpeta «Picture Profile» → páginas → ajustes (nodos de datos puros, sin código; `PAGINAS_PP` define cuántas páginas y qué ajuste lleva cada una) y reutiliza el ajuste oculto `AfIlluminator` (raíz `cmnViewSettingNodeRootAfIlluminator`) como menú «Gamma» con 7 opciones y lo cablea al descriptor
 de `pp_gamma_descriptor.py` (ProcessId 0x3c: `@M00B` 0x40/clave 0x214, lectura 0x49/0x216). Sin código nuevo:
   lib/cmn_view_processDataMgr.so  descriptor de Gamma (pp_gamma_descriptor.py)
   lib/CautionConfig.so            listas de propiedades de 8 nodos (editadas en sitio, mismo tamaño), `NumOf…AfIlluminatorDefault` = 7 y array de hijos
@@ -24,15 +24,16 @@ import uxc_strings
 
 PID, RES = pp_gamma_descriptor.PID, 0x0204_0000
 ROOT_NAME = "AfIlluminator"
-DELTA_RAIZ = 0x15B8                    # RootAfIlluminator − RootAelWShutter (CautionConfig.so fw3.21, nm -D)
 # (nodo hijo ocioso, texto): orden del menú = orden de pp_gamma_descriptor.GAMMAS (Movie 4, Still 5, ITU709 3, Cine1–4 6–9)
 OPCIONES = (
     ("AfIlluminatorAuto", "movie"), ("AfIlluminatorOFF", "still"), ("CtrlDialWheelSetupFnoWheelShutter", "itu709"),
     ("CtrlDialWheelSetupShutterWheelFno", "cine1"), ("WheelLockLock", "cine2"), ("WheelLockUnLock", "cine3"), ("AfTrackingSpeed1", "cine4"),
 )
 # textos nuevos: clave → (id en la A6300 o None si es literal, literal)
-TEXTOS = {"gamma": (None, "Gamma"), "still": (0xF6E7, ""), "itu709": (0xF718, ""), "cine1": (0xF6BB, ""), "cine2": (0xF6B9, ""),
+TEXTOS = {"gamma": (None, "Gamma"), "pp": (None, "Picture Profile"), "still": (0xF6E7, ""), "itu709": (0xF718, ""), "cine1": (0xF6BB, ""), "cine2": (0xF6B9, ""),
           "cine3": (0xF6BA, ""), "cine4": (0xF6BE, "")}
+# páginas de la carpeta «Picture Profile» (cada una es un nodo de página): lista de raíces (`cmnViewSettingNodeRoot<nombre>`). Añadir páginas = añadir listas
+PAGINAS_PP = [[ROOT_NAME]]
 MOVIE_ID = 0xE1B4                       # «Movie» ya existe en el A6000
 
 
@@ -63,6 +64,20 @@ def free_ids(a: Path, n: int, excluir=()):
     return [i for i in range(0xF745, 0xE000, -1) if i not in ocupadas and i not in refs and i not in excluir and i - 0xE000 < (ini - 0x10) // 2][:n]
 
 
+class Segmento:
+    """PT_LOAD RW añadido: bloques de palabras con relocaciones (`rel`: índice→'R' = RELATIVE, o índice de símbolo ABS32)."""
+
+    def __init__(self, base_va):
+        self.va, self.words, self.rels = base_va, [], []    # base_va = inicio de los bloques (tras .rel.dyn)
+
+    def alloc(self, words, rel=None):
+        va = self.va + 4 * len(self.words)
+        self.words += list(words)
+        for i, r in (rel or {}).items():
+            self.rels.append((va + 4 * i, r))
+        return va
+
+
 def patch_caution(data: bytes, ids: dict) -> bytes:
     out = bytearray(data)
     segs = A._segments(data)
@@ -78,8 +93,7 @@ def patch_caution(data: bytes, ids: dict) -> bytes:
     _, _, (n_va, n_size, _) = sym(data, segs, dyn, f"cmnViewSettingNodesNumOf{ROOT_NAME}Default")
     assert n_size == 4 and struct.unpack_from("<I", data, A._off(segs, n_va))[0] == 2
     struct.pack_into("<I", out, A._off(segs, n_va), len(OPCIONES))
-    # array de hijos nuevo en un PT_LOAD RW (copia de .rel.dyn + 7 R_ARM_ABS32 contra los nodos)
-    ai, _, (a_va, a_size, _) = sym(data, segs, dyn, f"cmnViewSettingNodes{ROOT_NAME}Default")
+    ai, a_ent, (a_va, a_size, _) = sym(data, segs, dyn, f"cmnViewSettingNodes{ROOT_NAME}Default")
     assert a_size == 8
     tags = {t: v for t, v in dyn if t}
     rel_va, rel_sz = tags[0x11], tags[0x12]
@@ -87,30 +101,44 @@ def patch_caution(data: bytes, ids: dict) -> bytes:
     top = max(v + ms for t, _, v, _, _, ms, _, _ in segs if t == 1)
     new_va = (top + A.ALIGN - 1) // A.ALIGN * A.ALIGN
     new_off = (len(data) + A.ALIGN - 1) // A.ALIGN * A.ALIGN
-    n = len(OPCIONES)
-    rel_new_size = rel_sz + 8 * n
-    arr_va = new_va + (rel_new_size + 15) // 16 * 16
-    extra = b"".join(struct.pack("<II", arr_va + 4 * i, (sym(data, segs, dyn, f"cmnViewSettingNode{nodo}")[0] << 8) | A.R_ARM_ABS32)
-                     for i, (nodo, _) in enumerate(OPCIONES))
-    rel_new = bytes(rel) + extra
-    seg = bytearray(rel_new.ljust(arr_va - new_va, b"\0")) + bytearray(4 * n)
-    _, a_ent, _ = sym(data, segs, dyn, f"cmnViewSettingNodes{ROOT_NAME}Default")
-    struct.pack_into("<II", out, a_ent + 4, arr_va, 4 * n)       # st_value, st_size
-    phdr_off = new_off + len(seg)
-    new_ph = [list(s) for s in segs] + [[1, new_off, new_va, new_va, 0, 0, 6, A.ALIGN]]
-    new_ph[-1][4] = new_ph[-1][5] = len(seg) + 32 * len(new_ph)
-    seg += b"".join(struct.pack("<8I", *s) for s in new_ph)
-    out = bytes(out).ljust(new_off, b"\0") + seg
-    out = bytearray(out)
-    struct.pack_into("<I", out, 28, phdr_off)
-    struct.pack_into("<H", out, 44, len(new_ph))
+    # el tamaño de .rel.dyn nuevo depende del nº de relocaciones: se reserva con holgura y se fija al final
+    max_rel = 8 * (len(OPCIONES) + 8 * (2 + len(PAGINAS_PP)) + len(PAGINAS_PP) + sum(map(len, PAGINAS_PP)) + 16)
+    seg = Segmento(new_va + (rel_sz + max_rel + 15) // 16 * 16)
+    arr = seg.alloc([0] * len(OPCIONES), {i: sym(data, segs, dyn, f"cmnViewSettingNode{n}")[0] for i, (n, _) in enumerate(OPCIONES)})
+    struct.pack_into("<II", out, a_ent + 4, arr, 4 * len(OPCIONES))       # st_value, st_size del array de hijos de Gamma
+    raiz = lambda n: sym(data, segs, dyn, f"cmnViewSettingNodeRoot{n}")[2][0]
+    vt = sym(data, segs, dyn, "_ZTV18CmnViewSettingNode")[2][0] + 8
+    # nodos nuevos de datos puros: {vtable, hijos, cuenta, props, 0×6}; props = {lista, cuenta} (verificado en memoria con gdb)
+    def nodo(tripletas, hijos):
+        lst = seg.alloc([x for t in tripletas for x in t])
+        kids = seg.alloc(hijos, {i: "R" for i in range(len(hijos))})
+        props = seg.alloc([lst, len(tripletas)], {0: "R"})
+        return seg.alloc([vt, kids, len(hijos), props] + [0] * 6, {0: "R", 1: "R", 3: "R"})
+    paginas = [nodo([(0xB, 1, 0)], [raiz(n) for n in h]) for h in PAGINAS_PP]
+    carpeta = nodo([(0, 0, lt("pp")), (6, 0, lt("pp")), (0xB, 1, 0), (0xC, 1, 3)], paginas)
+    rel_new = bytearray(rel)
+    for va, r in seg.rels:
+        rel_new += struct.pack("<II", va, 0x17 if r == "R" else (r << 8) | A.R_ARM_ABS32)
+    assert len(rel_new) <= rel_sz + max_rel
+    blob = bytearray()
+    for w in seg.words:
+        blob += struct.pack("<I", w)
+    head = bytes(rel_new).ljust(seg.va - new_va - 0, b"\0")
+    body = head + blob
+    phdr_off = new_off + len(body)
+    new_ph = [list(x) for x in segs] + [[1, new_off, new_va, new_va, 0, 0, 6, A.ALIGN]]
+    new_ph[-1][4] = new_ph[-1][5] = len(body) + 32 * len(new_ph)
+    body += b"".join(struct.pack("<8I", *x) for x in new_ph)
+    res = bytearray(bytes(out).ljust(new_off, b"\0") + body)
+    struct.pack_into("<I", res, 28, phdr_off)
+    struct.pack_into("<H", res, 44, len(new_ph))
     doff, _ = A._dynamic(data, segs)
     for i, (t, _) in enumerate(dyn):
         if t == 0x11:
-            struct.pack_into("<I", out, doff + 8 * i + 4, new_va)
+            struct.pack_into("<I", res, doff + 8 * i + 4, new_va)
         if t == 0x12:
-            struct.pack_into("<I", out, doff + 8 * i + 4, len(rel_new))
-    return bytes(out)
+            struct.pack_into("<I", res, doff + 8 * i + 4, len(rel_new))
+    return bytes(res), carpeta - raiz("AelWShutter")       # carpeta − RootAelWShutter = delta de add_menu_entry
 
 
 def main(dev_a, dev_b, dest):
@@ -129,8 +157,9 @@ def main(dev_a, dev_b, dest):
     assert len(libres) == len(TEXTOS), libres
     ids = dict(zip(TEXTOS, libres))
     emit("lib/cmn_view_processDataMgr.so", pp_gamma_descriptor.patch((a / "lib/cmn_view_processDataMgr.so").read_bytes()))
-    emit("lib/CautionConfig.so", patch_caution((a / "lib/CautionConfig.so").read_bytes(), ids))
-    emit("lib/viewUnified2.so", A.patch((a / "lib/viewUnified2.so").read_bytes(), DELTA_RAIZ))
+    caution, delta = patch_caution((a / "lib/CautionConfig.so").read_bytes(), ids)
+    emit("lib/CautionConfig.so", caution)
+    emit("lib/viewUnified2.so", A.patch((a / "lib/viewUnified2.so").read_bytes(), delta))
     english = uxc_strings.parse((b / "share/app/string_english.uxc").read_bytes())[2]
     for f in sorted((a / "share/app").glob("string_*.uxc")):
         if f.name.endswith("_guide.uxc"):
