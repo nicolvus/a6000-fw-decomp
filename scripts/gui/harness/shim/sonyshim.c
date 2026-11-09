@@ -249,16 +249,18 @@ __attribute__((constructor)) static void shim_init(void) { if (getenv("DUMPAT"))
 /* Experimento (SKIPFN=717830,...): sustituye esas funciones Thumb de libObj por «movs r0,#0; bx lr» (devuelven éxito sin hacer nada). */
 static unsigned long hexv(const char *s, const char **end) { unsigned long v = 0; for (;; s++) { int c = *s; if (c >= '0' && c <= '9') c -= '0'; else if (c >= 'a' && c <= 'f') c -= 'a' - 10; else break; v = v * 16 + c; } if (end) *end = s; return v; }
 /* Experimento (TRACEFN=716800,6cd1e0,...): traza de una sola vez (UDF + restauración) de la entrada de esas funciones de libObj: r0-r3 y lr. */
-static struct { unsigned long pc; unsigned short orig; } trc[32]; static int ntrc;
+static struct { unsigned long pc; unsigned short orig; } trc[32]; static int ntrc; static unsigned long trc_base;
 static void on_trace(int sig, siginfo_t *si, void *u) {
     mcontext_t *c = &((ucontext_t *)u)->uc_mcontext; unsigned long pc = c->arm_pc & ~1UL; int i;
     for (i = 0; i < ntrc; i++) if (trc[i].pc == pc) {
         LOG("TRACE %lx r0=%lx r1=%lx r2=%lx r3=%lx lr=%lx", pc, c->arm_r0, c->arm_r1, c->arm_r2, c->arm_r3, c->arm_lr);
+        for (const char *e = getenv("TRACEPEEK"); e && *e; ) { unsigned long a = hexv(e, &e); LOG("  PEEK %lx = %08x", a, *(unsigned *)(trc_base + a)); while (*e == ',') e++; }
         *(unsigned short *)pc = trc[i].orig; __builtin___clear_cache((char *)pc, (char *)pc + 2); return;
     }
     signal(SIGILL, SIG_DFL);
 }
 static void trace_fns(unsigned long base) {
+    trc_base = base;
     struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_trace; sa.sa_flags = SA_SIGINFO | SA_NODEFER; sigaction(SIGILL, &sa, 0);
     for (const char *e = getenv("TRACEFN"); e && *e && ntrc < 32; ) {
         unsigned long a = hexv(e, &e), pc = base + a; unsigned short *p = (unsigned short *)pc;
@@ -267,18 +269,23 @@ static void trace_fns(unsigned long base) {
         while (*e == ',') e++;
     }
 }
+/* Experimento (WATCH=dir): hilo que sondea cada ms la palabra libObj+dir y registra sus cambios. */
+static unsigned long watch_addr;
+static void *watcher(void *a) { volatile unsigned *p = (unsigned *)watch_addr; unsigned old = *p; LOG("WATCH inicio %p = %08x", (void *)p, old); for (;;) { unsigned v = *p; if (v != old) { LOG("WATCH %p %08x -> %08x", (void *)p, old, v); old = v; } usleep(1000); } return 0; }
 static void skip_fns(void) {
     char ln[256]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");
     while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, "libObj.so")) { base = hexv(ln, 0); break; }
     if (m) fclose(m);
     if (!base) { LOG("SKIPFN: libObj no hallada"); return; }
     if (getenv("TRACEFN")) trace_fns(base);
+    if (getenv("WATCH") && !watch_addr) { pthread_t th; watch_addr = base + hexv(getenv("WATCH"), 0); pthread_create(&th, 0, watcher, 0); }
     for (const char *e = getenv("SKIPFN"); e && *e; ) {
         unsigned long a = hexv(e, &e); unsigned char *p = (unsigned char *)(base + a);
         unsigned long pg = (unsigned long)p & ~4095UL;
         mprotect((void *)pg, 8192, PROT_READ | PROT_WRITE | PROT_EXEC);
-        p[0] = 0x00; p[1] = 0x20; p[2] = 0x70; p[3] = 0x47; __builtin___clear_cache((char *)p, (char *)p + 4);
-        LOG("SKIPFN %#lx parcheada (base %#lx)", a, base);
+        unsigned v = 0; if (*e == '=') v = hexv(e + 1, &e) & 0xff;  /* dir=v: devuelve v (0..255) */
+        p[0] = v; p[1] = 0x20; p[2] = 0x70; p[3] = 0x47; __builtin___clear_cache((char *)p, (char *)p + 4);
+        LOG("SKIPFN %#lx parcheada (base %#lx, ret %u)", a, base, v);
         while (*e == ',') e++;
     }
 }
@@ -287,7 +294,7 @@ void *dlopen(const char *f, int fl) {
     if (!d) d = dlsym(RTLD_NEXT, "dlopen");
     LOG("dlopen(%s) ...", f ? f : "(null)");
     void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
-    if (h && f && strstr(f, "libObj.so") && (getenv("SKIPFN") || getenv("TRACEFN"))) skip_fns();
+    if (h && f && strstr(f, "libObj.so") && (getenv("SKIPFN") || getenv("TRACEFN") || getenv("WATCH"))) skip_fns();
     return h;
 }
 int system(const char *c) {
@@ -312,6 +319,10 @@ void *mmap64(void *a, size_t l, int pr, int fl, int fd, off64_t o) { return mmap
 FILE *fopen(const char *p, const char *m) {
     static FILE *(*f)(const char *, const char *);
     if (!f) f = dlsym(RTLD_NEXT, "fopen");
+    if (!strcmp(p, "/proc/modules")) {  /* libObj (MemoryAllocator.cpp:45) exige «grm_ma » en /proc/modules: módulos de kernel de Sony simulados */
+        FILE *w = f("/tmp/modules", "w");
+        if (w) { fputs("grm_ma 1 0 - Live 0x0\ngrm_gles 1 0 - Live 0x0\n", w); fclose(w); p = "/tmp/modules"; }
+    }
     FILE *r = f(p, m);
     if (strncmp(p, "/proc/self", 10)) LOG("fopen(%s, %s) -> %p", p, m, (void *)r);
     return r;
