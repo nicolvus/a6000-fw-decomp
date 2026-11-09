@@ -53,6 +53,21 @@ def replace_files(image: Path, package: Path, files: list[str]) -> None:
         assert all(got[k] == attrs[k] for k in ("mode", "uid", "gid")), (dest, got, attrs)
 
 
+def add_files(image: Path, package: Path, new: dict[str, str]) -> None:
+    """Ficheros que Sony no tiene (G18): MANIFEST «nuevos» = {ruta: modo octal}; dueño root:root, directorio ya existente."""
+    for rel, mode in sorted(new.items()):
+        dest = "/" + rel
+        script = Path(tempfile.mkstemp(suffix=".dbg")[1])
+        script.write_text("\n".join([f"write {package / rel} {dest}", f"set_inode_field {dest} mode 0{int(mode, 8) | 0o100000:o}",
+                                     f"set_inode_field {dest} uid 0", f"set_inode_field {dest} gid 0"]) + "\n")
+        subprocess.run(["debugfs", "-w", "-f", str(script), str(image)], capture_output=True, text=True, check=True)
+        script.unlink()
+        got = stat_fields(image, dest)
+        assert (got["mode"] & 0o7777, got["uid"], got["gid"]) == (int(mode, 8), 0, 0), (dest, got)
+        dumped = subprocess.run(["debugfs", "-R", f"cat {dest}", str(image)], capture_output=True, check=True).stdout
+        assert dumped == (package / rel).read_bytes(), f"{dest}: contenido distinto tras escribirlo"
+
+
 def main(original: Path, package: Path, out: Path) -> dict:
     manifest = json.loads((package / "MANIFEST.json").read_text())
     files = sorted(manifest["parcheados"])
@@ -63,6 +78,9 @@ def main(original: Path, package: Path, out: Path) -> dict:
     img = work / "usr.ext2"
     img.write_bytes(ext2)
     replace_files(img, package, files)
+    new = manifest.get("nuevos", {})
+    add_files(img, package, new)
+    files += sorted(new)
     fsck = subprocess.run(["e2fsck", "-fn", str(img)], capture_output=True, text=True, check=False)
     assert fsck.returncode == 0, fsck.stdout[-400:]
     patched = bytearray(img.read_bytes())

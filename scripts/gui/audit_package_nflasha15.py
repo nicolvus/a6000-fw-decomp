@@ -105,7 +105,14 @@ def mounted_diff(ext_new: bytes, ext_old: bytes) -> list[str]:
         finally:
             for x in "ab":
                 subprocess.run(["sudo", "-S", "umount", str(t / x)], input=SUDO, text=True, capture_output=True, check=False)
-    return sorted(ln.split(f"{t}/b/")[1].split(" differ")[0] if " differ" in ln else ln for ln in out.splitlines())
+    def rel(ln: str) -> str:
+        if " differ" in ln:
+            return ln.split(f"{t}/b/")[1].split(" differ")[0]
+        if ln.startswith(f"Only in {t}/b/"):  # fichero nuevo (G18): «Only in …/b/bin: x» → bin/x
+            d, name = ln[len(f"Only in {t}/b/"):].split(": ", 1)
+            return f"{d}/{name}"
+        return ln
+    return sorted(rel(ln) for ln in out.splitlines())
 
 
 def run(dat: Path, pkg: Path, base_dat: Path, darwin_v3: bool, sin_wbi: bool = False) -> dict:
@@ -124,7 +131,8 @@ def run(dat: Path, pkg: Path, base_dat: Path, darwin_v3: bool, sin_wbi: bool = F
     indep_bad = [i for i in recomp if fw_decode(p_new, i) != tpzl.decode_block(p_new.block(i), 65536)]
     ext_new, ext_old = p_new.decompressed(), p_old.decompressed()
     files = mounted_diff(ext_new, ext_old)
-    want = sorted(r for r, h in man["parcheados"].items() if h != man["originales"].get(r))  # control 3.48: reescritos con los bytes de Sony
+    new_files = man.get("nuevos", {})  # G18: ficheros que Sony no tiene (contenido = el del paquete, root:root, modo del MANIFEST)
+    want = sorted([r for r, h in man["parcheados"].items() if h != man["originales"].get(r)] + list(new_files))  # control 3.48: reescritos con los bytes de Sony
     files_ok = files == want
     with tempfile.NamedTemporaryFile(suffix=".img") as f:
         f.write(ext_new)
@@ -141,6 +149,12 @@ def run(dat: Path, pkg: Path, base_dat: Path, darwin_v3: bool, sin_wbi: bool = F
             hashes_ok &= sha((Path(t) / "f").read_bytes()) == h
             got, want_attrs = (build_nflasha15.stat_fields(x, "/" + rel) for x in (img, old))
             if any(got[k] != want_attrs[k] for k in ("mode", "uid", "gid")):  # 3.39–3.42 quedaron en 0644 (G11 §3)
+                attrs_bad.append(rel)
+        for rel, mode in new_files.items():
+            subprocess.run(["debugfs", "-R", f"dump /{rel} {t}/f", str(img)], capture_output=True, check=True)
+            hashes_ok &= (Path(t) / "f").read_bytes() == (pkg / rel).read_bytes()
+            got = build_nflasha15.stat_fields(img, "/" + rel)
+            if (got["mode"] & 0o7777, got["uid"], got["gid"]) != (int(mode, 8), 0, 0):
                 attrs_bad.append(rel)
     darwin = {}
     if darwin_v3:
