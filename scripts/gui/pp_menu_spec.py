@@ -52,6 +52,8 @@ SETTINGS = {s.id: s for s in (
     *(S(f"wb_{k}", t, K(3 + i), num(-9, 9), "clave A7S `WbShift` + validador (caso 3–6: -9..+9)") for i, (k, t) in enumerate((("lb", "LB"), ("cc", "CC"), ("r", "R"), ("b", "B")))),
     S("det_hilight", "Hi-Light Detail", K(22), num(0, 4), "clave+rango"),
 )}
+# Gamma con el orden y las opciones de la A6300/A7S (sin S-Log3, que la A7S tampoco tiene); 10/11 = app de ITU709(800%)/S-Log2 en la `libObj` parcheada (G25)
+GAMMA_COMPLETA = ((("Movie", 4), ("Still", 5)) + tuple((f"Cine{k}", 5 + k) for k in range(1, 5)) + (("ITU709", 3), ("ITU709(800%)", 10), ("S-Log2", 11)))
 # árbol como la A6300 (carpeta → páginas → ajustes u otras carpetas)
 F = lambda label, *pages: ("folder", label, pages)
 TREE = F("Picture Profile",

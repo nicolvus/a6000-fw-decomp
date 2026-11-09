@@ -7,7 +7,7 @@ carpeta → páginas → ajustes/carpetas. Se construye:
   lib/CautionConfig.so            nodos de datos puros (raíz+opciones de cada ajuste, carpetas y páginas) en un PT_LOAD RW con relocaciones RELATIVE
   lib/viewUnified2.so             entrada nueva = carpeta «Picture Profile» en las 5 páginas del menú (add_menu_entry.py)
   share/app/string_<idioma>.uxc   textos en ranuras libres (traducción de la A6300 si el inglés coincide; si no, el literal)
-Uso: build_pp_menu.py DIR_DEV_A6000 DIR_DEV_A6300 SALIDA [--saturacion-a6300]
+Uso: build_pp_menu.py DIR_DEV_A6000 DIR_DEV_A6300 SALIDA [--saturacion-a6300] [--gamma-slog]
 """
 import hashlib
 import json
@@ -111,7 +111,7 @@ def patch_caution(data: bytes, ids: dict):
     return bytes(res), carpeta - ref
 
 
-def main(dev_a, dev_b, dest, saturacion_a6300=False):
+def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False):
     a, b, dest = Path(dev_a) / "nflasha15_unpacked_unpacked", Path(dev_b) / "nflasha15_unpacked_unpacked", Path(dest)
     (dest / "lib").mkdir(parents=True, exist_ok=True)
     (dest / "share/app").mkdir(parents=True, exist_ok=True)
@@ -128,8 +128,10 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False):
     ids = dict(zip(txt, libres))
     ajustes = [pp_descriptors.Ajuste(M.PIDS[i], s.clave, tuple(v for _, v in s.opciones), s.evento) for i, s in enumerate(M.SETTINGS.values())]
     emit("lib/cmn_view_processDataMgr.so", pp_descriptors.patch((a / "lib/cmn_view_processDataMgr.so").read_bytes(), ajustes))
-    if saturacion_a6300:                  # opt-in: ver patch_libobj_pp.py
-        emit("lib/libObj.so", patch_libobj_pp.patch((a / "lib/libObj.so").read_bytes()))
+    if saturacion_a6300 or gamma_slog:     # opt-in: ver patch_libobj_pp.py
+        lo = (a / "lib/libObj.so").read_bytes()
+        lo = patch_libobj_pp.patch(lo) if saturacion_a6300 else lo
+        emit("lib/libObj.so", patch_libobj_pp.patch_gamma(lo) if gamma_slog else lo)
     caution, delta = patch_caution((a / "lib/CautionConfig.so").read_bytes(), ids)
     emit("lib/CautionConfig.so", caution)
     emit("lib/viewUnified2.so", A.patch((a / "lib/viewUnified2.so").read_bytes(), delta))
@@ -162,7 +164,9 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False):
 
 if __name__ == "__main__":
     args = [x for x in sys.argv[1:] if not x.startswith("--")]
-    sat = "--saturacion-a6300" in sys.argv
+    sat, gam = "--saturacion-a6300" in sys.argv, "--gamma-slog" in sys.argv
+    if gam:                               # ITU709(800%) y S-Log2: requieren libObj parcheado y las curvas de pp_curves_patch.py (núcleo)
+        M.SETTINGS["gamma"] = M.S("gamma", "Gamma", 0x214, M.GAMMA_COMPLETA, "clave+A7S convertValueIdToBackupValue+parche libObj (opt-in)")
     if sat:                               # el menú ofrece −32…+32 solo si se parchea libObj
         M.SETTINGS["saturation"] = M.S("saturation", "Saturation", 0x26C, M.num(-32, 32), "clave+parche libObj (opt-in)")
-    main(*args[:3], saturacion_a6300=sat)
+    main(*args[:3], saturacion_a6300=sat, gamma_slog=gam)

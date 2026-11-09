@@ -23,8 +23,12 @@ SLOT0, STRIDE = 0x43FAF300, 0x1020
 TAB = {"a6000": 0x44001404, "a7s": 0x43FFA290}
 SEL = {"a6000": 0x43CB56E6, "a7s": 0x43CAB54D}
 GAMMAS = [0x16, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D]
-CON_CODIGO = {0x16, 0x18, 0x19, 0x1A, 0x1B}  # el switch/rodilla de la A6000 llega a 0x1b
-SEL_IDX = range(3, 10)  # 3 → 0x16, 4/5 → Movie/Still forzadas, 6–9 → 0x18–0x1b
+# Fase 4 solo-datos (G25): el código de la A6000 llega a 0x1b, así que las dos curvas de la A7S con código propio (0x1c = S-Log2, 0x1d = ITU709(800%);
+# selectores 10 y 11 = VALUEID 0x480 y 0x481) se instalan con los números 0x14 y 0x15, que el código ya trata como el resto de gammas de cine
+# (mismos casos del switch y de la rodilla que 0x16 y 0x18–0x1b) y cuya curva de vídeo está vacía en la A6000.
+REMAP = {0x1C: 0x14, 0x1D: 0x15}
+CON_CODIGO = {0x16, 0x18, 0x19, 0x1A, 0x1B, 0x14, 0x15}
+SEL_IDX = range(3, 12)  # 3 → 0x16, 4/5 → Movie/Still forzadas, 6–9 → 0x18–0x1b, 10/11 → 0x14/0x15
 
 
 def u32(d: bytes, a: int) -> int:
@@ -37,12 +41,14 @@ def patches(base: bytes, a7s: bytes) -> list[tuple[int, bytes, str]]:
         src = bytearray(a7s[u32(a7s, TAB["a7s"] + 8 * g + 4) - BASE:][:CURVE])
         assert src[0x1012] == 7 and src[0x1014] == g, (hex(g), src[0x1012], src[0x1014])  # +0x1014 = número de gamma
         src[0x1012] = 4  # valor de todas las curvas de vídeo de la A6000 (G17 §1)
+        ng = REMAP.get(g, g)
+        src[0x1014] = ng  # el número de gamma de la propia curva coincide con el que usa el núcleo
         dst = SLOT0 + n * STRIDE
-        out.append((dst, bytes(src), f"curva 0x{g:02x}"))
-        if g in CON_CODIGO:
-            out.append((TAB["a6000"] + 8 * g + 4, struct.pack("<I", dst), f"puntero vídeo 0x{g:02x}"))
+        out.append((dst, bytes(src), f"curva 0x{ng:02x}"))
+        out.append((TAB["a6000"] + 8 * ng + 4, struct.pack("<I", dst), f"puntero vídeo 0x{ng:02x}"))
     for i in SEL_IDX:
-        out.append((SEL["a6000"] + 2 * i, a7s[SEL["a7s"] + 2 * i - BASE:][:2], f"selector {i}"))
+        e = a7s[SEL["a7s"] + 2 * i - BASE:][:2]
+        out.append((SEL["a6000"] + 2 * i, bytes(REMAP.get(x, x) for x in e), f"selector {i}"))
     return out
 
 
@@ -109,10 +115,11 @@ def main(base_path: Path, out: Path, prueba: int | None = None) -> dict:
     for g in CON_CODIGO:
         p = u32(new, TAB["a6000"] + 8 * g + 4)
         c = new[p - BASE:p - BASE + CURVE]
-        ref = a7s[u32(a7s, TAB["a7s"] + 8 * g + 4) - BASE:][:CURVE]
-        assert c[:0x1012] == ref[:0x1012] and c[0x1013:] == ref[0x1013:] and c[0x1012] == 4
+        og = next((k for k, v in REMAP.items() if v == g), g)  # gamma de la A7S de la que viene la curva
+        ref = a7s[u32(a7s, TAB["a7s"] + 8 * og + 4) - BASE:][:CURVE]
+        assert c[:0x1012] == ref[:0x1012] and c[0x1013] == ref[0x1013] and c[0x1015:] == ref[0x1015:] and c[0x1012] == 4 and c[0x1014] == g
     assert [list(new[SEL["a6000"] + 2 * i - BASE:][:2]) for i in range(12)] == \
-        [[0, 10]] * 3 + [[0x16, 0x16], [10, 10], [0, 0], [0x18, 0x18], [0x19, 0x19], [0x1A, 0x1A], [0x1B, 0x1B]] + [[0, 10]] * 2
+        [[0, 10]] * 3 + [[0x16, 0x16], [10, 10], [0, 0], [0x18, 0x18], [0x19, 0x19], [0x1A, 0x1A], [0x1B, 0x1B], [0x14, 0x14], [0x15, 0x15]]
     diff = sum(a != b for a, b in zip(base, new))
     out.mkdir(parents=True, exist_ok=True)
     (out / "av-cam.pp.bin").write_bytes(new)

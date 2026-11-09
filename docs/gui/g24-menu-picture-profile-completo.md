@@ -61,7 +61,8 @@ inferido (Range, Knee Mode, Sens., Detail Mode, B/W) podrían estar permutados. 
 | **WB Shift** | HECHO (oculto también en la A6300): carpeta con Filter Type (clave `0x200`, 0/1) y LB, CC, R, B (claves `0x204`–`0x210`, −9…+9 = lo que valida la A6000, casos 3–6). Filter Type = LB/CC (0) o R/B (1): los `VALUEID` `WB_SHIFT_LB_CC`/`WB_SHIFT_RGAIN_BGAIN` del caso 2. |
 | **Saturation −32…+32** | OPT-IN: `build_pp_menu.py … --saturacion-a6300` parchea `libObj.so` (`patch_libobj_pp.py`: `add.w r3,r5,#8; cmp r3,#0xf` → `#0x20; #0x40` en `0x4b4880`, seis bytes, verificado en memoria) y ofrece 65 opciones. NO verificado que el núcleo admita |valor| > 8. Por defecto: −8…+7. |
 | **Reset** | PENDIENTE: no se localizó el evento ni el descriptor (A7S) del elemento `Normal` de Reset; `pvt_ActionExePictureProfileReset` existe en la `libObj`. |
-| **ITU709(800%), S-Log2, S-Log3, S-Gamut, S-Gamut3(.Cine), B&W** | PENDIENTE (G17 fase 4): la `libObj` de la A6000 no tiene los `VALUEID` y `av-cam` no tiene las curvas/matrices; ofrecerlos en el menú haría fallar el validador. |
+| **ITU709(800%), S-Log2** | HECHO opt-in en [G25](g25-gamma-slog2-itu709-800.md): parche de `libObj` + curvas del núcleo (solo datos) + `--gamma-slog`. |
+| **S-Log3, S-Gamut, S-Gamut3(.Cine), B&W** | PENDIENTES: sin curvas/matrices en la A7S ni `PP_COLOR_*` en la `libObj` de la A6000. |
 | **Gamma Disp. Assist, Color Mode Level** | PENDIENTES: vista propia (`view/SLOGDISPASSIST`) / sin uso sin S-Gamut. |
 
 ProcessIds: los 6 ajustes añadidos usan `0x55–0x5a`, de la familia contigua `0x55–0x5d` (posibles teclas personalizables): riesgo de colisión con otro consumidor, NO verificado.
