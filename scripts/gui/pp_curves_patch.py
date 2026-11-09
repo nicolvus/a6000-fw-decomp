@@ -17,25 +17,29 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
 A7S = ROOT / "analysis/rea-independent/input/av-cam-a7s.bin"
+A6300 = ROOT / "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin"
 BASE, PHYS, CURVE = 0x43541000, 0x40000000, 0x101A
 GAP = (0x43FAF28C, 0x43FB8EE0)
 SLOT0, STRIDE = 0x43FAF300, 0x1020
 TAB = {"a6000": 0x44001404, "a7s": 0x43FFA290}
 SEL = {"a6000": 0x43CB56E6, "a7s": 0x43CAB54D}
+# G26: la A6300 trae S-Log3 como gamma 0x1f (curva en el bloque de punteros 0x441bc70c, selector 12 = (0x1f,0x1f), tabla de selectores de la A6300 en 0x43db1e31 (= índice 3)).
+# Se instala con el número 0x17: el código de la A6000 lo trata por la rama por defecto (como Movie/Still), sin caso propio (NO verificado en cámara).
+TAB_A6300, SLOG3_A6300, SLOG3_AQUI = 0x441BC70C, 0x1F, 0x17
 GAMMAS = [0x16, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D]
 # Fase 4 solo-datos (G25): el código de la A6000 llega a 0x1b, así que las dos curvas de la A7S con código propio (0x1c = S-Log2, 0x1d = ITU709(800%);
 # selectores 10 y 11 = VALUEID 0x480 y 0x481) se instalan con los números 0x14 y 0x15, que el código ya trata como el resto de gammas de cine
 # (mismos casos del switch y de la rodilla que 0x16 y 0x18–0x1b) y cuya curva de vídeo está vacía en la A6000.
 REMAP = {0x1C: 0x14, 0x1D: 0x15}
 CON_CODIGO = {0x16, 0x18, 0x19, 0x1A, 0x1B, 0x14, 0x15}
-SEL_IDX = range(3, 12)  # 3 → 0x16, 4/5 → Movie/Still forzadas, 6–9 → 0x18–0x1b, 10/11 → 0x14/0x15
+SEL_IDX = range(3, 13)  # 3 → 0x16, 4/5 → Movie/Still forzadas, 6–9 → 0x18–0x1b, 10/11 → 0x14/0x15, 12 → 0x17 (S-Log3, G26)
 
 
 def u32(d: bytes, a: int) -> int:
     return struct.unpack_from("<I", d, a - BASE)[0]
 
 
-def patches(base: bytes, a7s: bytes) -> list[tuple[int, bytes, str]]:
+def patches(base: bytes, a7s: bytes, a6300: bytes | None = None) -> list[tuple[int, bytes, str]]:
     out = []
     for n, g in enumerate(GAMMAS):
         src = bytearray(a7s[u32(a7s, TAB["a7s"] + 8 * g + 4) - BASE:][:CURVE])
@@ -46,7 +50,18 @@ def patches(base: bytes, a7s: bytes) -> list[tuple[int, bytes, str]]:
         dst = SLOT0 + n * STRIDE
         out.append((dst, bytes(src), f"curva 0x{ng:02x}"))
         out.append((TAB["a6000"] + 8 * ng + 4, struct.pack("<I", dst), f"puntero vídeo 0x{ng:02x}"))
+    if a6300 is not None:  # S-Log3 (G26): curva 0x1f de la A6300 → gamma 0x17, selector 12
+        src = bytearray(a6300[u32(a6300, TAB_A6300 + 8 * SLOG3_A6300 + 4) - BASE:][:CURVE])
+        assert src[0x1012] == 7 and src[0x1014] == SLOG3_A6300, (src[0x1012], src[0x1014])
+        src[0x1012], src[0x1014] = 4, SLOG3_AQUI
+        dst = SLOT0 + len(GAMMAS) * STRIDE
+        out.append((dst, bytes(src), f"curva 0x{SLOG3_AQUI:02x}"))
+        out.append((TAB["a6000"] + 8 * SLOG3_AQUI + 4, struct.pack("<I", dst), f"puntero vídeo 0x{SLOG3_AQUI:02x}"))
     for i in SEL_IDX:
+        if i == 12:
+            if a6300 is not None:
+                out.append((SEL["a6000"] + 2 * i, bytes([SLOG3_AQUI, SLOG3_AQUI]), f"selector {i}"))
+            continue
         e = a7s[SEL["a7s"] + 2 * i - BASE:][:2]
         out.append((SEL["a6000"] + 2 * i, bytes(REMAP.get(x, x) for x in e), f"selector {i}"))
     return out
@@ -54,7 +69,7 @@ def patches(base: bytes, a7s: bytes) -> list[tuple[int, bytes, str]]:
 
 def check_base(base: bytes, ps: list[tuple[int, bytes, str]]) -> None:
     assert not any(base[GAP[0] - BASE:GAP[1] - BASE]), "el hueco ya no está a cero"
-    assert SLOT0 + len(GAMMAS) * STRIDE <= GAP[1]
+    assert SLOT0 + (len(GAMMAS) + 1) * STRIDE <= GAP[1]
     for a, data, what in ps:
         cur = base[a - BASE:a - BASE + len(data)]
         if what.startswith("puntero"):
@@ -108,18 +123,21 @@ def camera_files(base: bytes, ps: list[tuple[int, bytes, str]], prueba: int | No
 
 def main(base_path: Path, out: Path, prueba: int | None = None) -> dict:
     base, a7s = base_path.read_bytes(), A7S.read_bytes()
-    ps = patches(base, a7s)
+    ps = patches(base, a7s, A6300.read_bytes() if A6300.is_file() else None)
     check_base(base, ps)
     new = apply(base, ps)
     # autocomprobación: releer como lo haría el núcleo
-    for g in CON_CODIGO:
+    for g in CON_CODIGO | ({SLOG3_AQUI} if A6300.is_file() else set()):
         p = u32(new, TAB["a6000"] + 8 * g + 4)
         c = new[p - BASE:p - BASE + CURVE]
         og = next((k for k, v in REMAP.items() if v == g), g)  # gamma de la A7S de la que viene la curva
-        ref = a7s[u32(a7s, TAB["a7s"] + 8 * og + 4) - BASE:][:CURVE]
+        a_ref, t_ref = (a7s, TAB["a7s"]) if g != SLOG3_AQUI else (A6300.read_bytes(), TAB_A6300)
+        og = SLOG3_A6300 if g == SLOG3_AQUI else og
+        ref = a_ref[u32(a_ref, t_ref + 8 * og + 4) - BASE:][:CURVE]
         assert c[:0x1012] == ref[:0x1012] and c[0x1013] == ref[0x1013] and c[0x1015:] == ref[0x1015:] and c[0x1012] == 4 and c[0x1014] == g
-    assert [list(new[SEL["a6000"] + 2 * i - BASE:][:2]) for i in range(12)] == \
-        [[0, 10]] * 3 + [[0x16, 0x16], [10, 10], [0, 0], [0x18, 0x18], [0x19, 0x19], [0x1A, 0x1A], [0x1B, 0x1B], [0x14, 0x14], [0x15, 0x15]]
+    assert [list(new[SEL["a6000"] + 2 * i - BASE:][:2]) for i in range(13)] == \
+        [[0, 10]] * 3 + [[0x16, 0x16], [10, 10], [0, 0], [0x18, 0x18], [0x19, 0x19], [0x1A, 0x1A], [0x1B, 0x1B], [0x14, 0x14], [0x15, 0x15],
+                         [0x17, 0x17] if A6300.is_file() else [0, 10]]
     diff = sum(a != b for a, b in zip(base, new))
     out.mkdir(parents=True, exist_ok=True)
     (out / "av-cam.pp.bin").write_bytes(new)

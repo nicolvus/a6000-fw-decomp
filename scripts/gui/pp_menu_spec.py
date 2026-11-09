@@ -6,7 +6,7 @@ Detail Mode/Level 16/17, V/H 18, B/W 19, Limit 20, Crispening 21, Hi-Light 22, C
 Rangos y valores = lo que acepta el validador de la A6000 (`pvt_ChangePictureProfileParamApp2Obj`, libObj `0x4b46b8`): numéricos con signo y paso 1 (valor = número);
 enumerados = índice de la tabla VALUEID del caso (Gamma y ColorMode con la identificación de curvas/modos de G20 y G23).
 Evidencia por ajuste: «clave» (A7S) · «rango» (validador A6000) · «mapa» (INFERENCIA: orden de VALUEID o índice igual al de la A6300).
-Fuera de alcance: Reset (evento sin determinar), Gamma Disp. Assist (vista propia), ColorModeLevel, ITU709(800%)/S-Log2/S-Log3/S-Gamut/B&W (sin núcleo).
+Fuera de alcance: Reset (acción sin modelo de datos, ver G26), Gamma Disp. Assist (vista propia), ColorModeLevel; B&W/S-Gamut/S-Gamut3(.Cine): menú + libObj (opt-in, G26) pero sin matrices del núcleo.
 """
 from dataclasses import dataclass
 
@@ -52,8 +52,10 @@ SETTINGS = {s.id: s for s in (
     *(S(f"wb_{k}", t, K(3 + i), num(-9, 9), "clave A7S `WbShift` + validador (caso 3–6: -9..+9)") for i, (k, t) in enumerate((("lb", "LB"), ("cc", "CC"), ("r", "R"), ("b", "B")))),
     S("det_hilight", "Hi-Light Detail", K(22), num(0, 4), "clave+rango"),
 )}
-# Gamma con el orden y las opciones de la A6300/A7S (sin S-Log3, que la A7S tampoco tiene); 10/11 = app de ITU709(800%)/S-Log2 en la `libObj` parcheada (G25)
-GAMMA_COMPLETA = ((("Movie", 4), ("Still", 5)) + tuple((f"Cine{k}", 5 + k) for k in range(1, 5)) + (("ITU709", 3), ("ITU709(800%)", 10), ("S-Log2", 11)))
+# Gamma con el orden y las opciones de la A6300; 10/11/12 = app de ITU709(800%)/S-Log2/S-Log3 en la `libObj` parcheada (G25/G26)
+GAMMA_COMPLETA = ((("Movie", 4), ("Still", 5)) + tuple((f"Cine{k}", 5 + k) for k in range(1, 5)) + (("ITU709", 3), ("ITU709(800%)", 10), ("S-Log2", 11), ("S-Log3", 12)))
+# Color Mode con el orden y las opciones de la A6300 (G26): app 8 = S-Gamut (0x505), 9 = B&W (0x504), 10 = S-Gamut3 (0x583), 11 = S-Gamut3.Cine (0x584) en la `libObj` parcheada
+COLOR_MODE_COMPLETO = (("Movie", 5), ("Still", 6), ("Cinema", 7), ("Pro", 3), ("ITU709 Matrix", 4), ("Black & White", 9), ("S-Gamut", 8), ("S-Gamut3.Cine", 11), ("S-Gamut3", 10))
 # árbol como la A6300 (carpeta → páginas → ajustes u otras carpetas)
 F = lambda label, *pages: ("folder", label, pages)
 TREE = F("Picture Profile",

@@ -1,4 +1,4 @@
-"""G25: parche de Gamma de `libObj.so` (ITU709(800%) y S-Log2): emulación Unicorn de App2Obj/Obj2App antes y después (offline)."""
+"""G25/G26: parche de Gamma de `libObj.so` (ITU709(800%), S-Log2 y S-Log3): emulación Unicorn de App2Obj/Obj2App antes y después (offline)."""
 from __future__ import annotations
 
 import struct
@@ -51,13 +51,14 @@ def call(img: bytes, fn: int, case: int, val: int):
 
 
 @needs
-def test_app2obj_acepta_12_valores_y_rechaza_el_13():
+def test_app2obj_acepta_13_valores_y_rechaza_el_14():
     old, new = LIB.read_bytes(), P.patch_gamma(LIB.read_bytes())
     for v in range(10):
         assert call(old, APP2OBJ_FN, 7, v) == (1, P.VALUEID[v]) == call(new, APP2OBJ_FN, 7, v)   # comportamiento anterior intacto
     assert call(old, APP2OBJ_FN, 7, 10)[0] == 0 and call(old, APP2OBJ_FN, 7, 11)[0] == 0
     assert call(new, APP2OBJ_FN, 7, 10) == (1, 0x481) and call(new, APP2OBJ_FN, 7, 11) == (1, 0x480)
-    assert call(new, APP2OBJ_FN, 7, 12)[0] == 0
+    assert call(new, APP2OBJ_FN, 7, 12) == (1, 0x585)   # S-Log3 (G26)
+    assert call(new, APP2OBJ_FN, 7, 13)[0] == 0
 
 
 @needs
@@ -76,3 +77,26 @@ def test_otros_casos_no_cambian():
     for case, vals in ((8, range(4)), (10, (-15, 0, 15, 16)), (9, (-7, 7, 8)), (30, (-7, 8))):
         for v in vals:
             assert call(old, APP2OBJ_FN, case, v & 0xFFFFFFFF) == call(new, APP2OBJ_FN, case, v & 0xFFFFFFFF)
+
+
+@needs
+def test_camconv_gamma_valueid_a_selector():
+    """G26: `CamMsgConv` (0x9b36de) escribe el índice de la tabla en buf[0x1a]; un VALUEID desconocido va al error 0x9b3770."""
+    from unicorn import UC_HOOK_CODE, Uc, UC_ARCH_ARM, UC_MODE_THUMB
+    from unicorn.arm_const import UC_ARM_REG_PC, UC_ARM_REG_R0, UC_ARM_REG_R4
+
+    def run(img, vid):
+        mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
+        mu.mem_map(0, 0x1100000)
+        mu.mem_write(0, img[:0x1100000])
+        mu.mem_map(0x20000000, 0x1000)
+        mu.reg_write(UC_ARM_REG_R0, vid)
+        mu.reg_write(UC_ARM_REG_R4, 0x20000000)
+        mu.hook_add(UC_HOOK_CODE, lambda u, a, s, _: u.emu_stop() if a == 0x9B3746 else None)
+        mu.emu_start(0x9B36DE | 1, 0x9B3770, count=500)
+        return mu.reg_read(UC_ARM_REG_PC) & ~1, bytes(mu.mem_read(0x2000001A, 1))[0]
+
+    new = P.patch_gamma(LIB.read_bytes())
+    for sel, vid in enumerate(P.VALUEID):
+        assert run(new, vid)[1] == sel
+    assert run(new, 0x482)[0] == 0x9B3770 and run(new, 0)[0] == 0x9B3770
