@@ -1,0 +1,71 @@
+"""G23: menú completo de Picture Profile — árbol de nodos de datos y descriptores (offline, sobre los .so de Sony)."""
+from __future__ import annotations
+
+import struct
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT / "scripts/gui"))
+import add_menu_entry as A
+import build_pp_menu as B
+import pp_descriptors as D
+import pp_menu_spec as M
+
+LIB = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib"
+needs = pytest.mark.skipif(not (LIB / "CautionConfig.so").is_file(), reason="biblioteca de Sony ausente")
+
+
+def test_spec_coherente():
+    assert len(M.SETTINGS) == len(M.PIDS) == len(set(M.PIDS))
+    assert M.SETTINGS["gamma"].clave == 0x214 and M.SETTINGS["sel"].clave == 0x274 and M.SETTINGS["saturation"].clave == 0x26C
+    assert [M.SETTINGS[f"cd_{c}"].clave for c in "rgbcmy"] == [0x254, 0x258, 0x25C, 0x260, 0x264, 0x268]
+    assert len({s.clave for s in M.SETTINGS.values()}) == len(M.SETTINGS)           # ninguna clave repetida
+    assert all(0x55 > p or p > 0x5D for p in M.PIDS)                                # fuera de la familia 0x55–0x5d
+
+
+@needs
+def test_arbol_y_descriptores(tmp_path):
+    txt = B.textos()
+    ids = {t: 0xE000 + i for i, t in enumerate(txt)}
+    new, delta = B.patch_caution((LIB / "CautionConfig.so").read_bytes(), ids)
+    p = tmp_path / "c.so"
+    p.write_bytes(new)
+    syms = {f[3]: int(f[0], 16) for f in (l.split() for l in subprocess.run(["nm", "-D", str(p)], capture_output=True, text=True).stdout.splitlines()) if len(f) == 3 for f in [[f[0], "", "", f[2]]]}
+    segs = A._segments(new)
+    rd = lambda va, n=1: struct.unpack_from(f"<{n}I", new, A._off(segs, va))
+    roots, cnt = [], {"carpeta": 0, "pagina": 0, "opcion": 0}
+
+    def walk(n):
+        kids, c = rd(n + 4, 2)
+        lst, pc = rd(rd(n + 12)[0], 2)
+        pr = {t[0]: t[2] for t in (rd(lst + 12 * i, 3) for i in range(pc))}
+        if 0xE in pr:
+            roots.append((pr[0xE], c))
+        elif pr.get(0xC) == 3:
+            cnt["carpeta"] += 1
+        elif pr.get(0xC) == 1:
+            cnt["opcion"] += 1
+            return
+        else:
+            cnt["pagina"] += 1
+        for k in rd(kids, c):
+            walk(k)
+
+    walk(syms["cmnViewSettingNodeRootAelWShutter"] + delta)
+    assert len(roots) == 26 and cnt == {"carpeta": 8, "pagina": 9, "opcion": sum(len(s.opciones) for s in M.SETTINGS.values())}
+    assert dict(roots) == {M.PIDS[i]: len(s.opciones) for i, s in enumerate(M.SETTINGS.values())}
+
+    ajustes = [D.Ajuste(M.PIDS[i], s.clave, tuple(v for _, v in s.opciones)) for i, s in enumerate(M.SETTINGS.values())]
+    pm = D.patch((LIB / "cmn_view_processDataMgr.so").read_bytes(), ajustes)
+    ps = A._segments(pm)
+    prd = lambda va, n=1: struct.unpack_from(f"<{n}I", pm, A._off(ps, va))
+    for a in ajustes:
+        desc = prd(prd(D.TABLA_D + 4 * a.pid)[0], D.DESC_PALABRAS)
+        m = prd(desc[6], D.MODEL_PALABRAS)
+        assert desc[7] == 1 and desc[5] >> 8 & 0xFF == len(a.valores) and m[2:4] == (0x40, 0x49)
+        assert prd(m[4])[0] == a.clave and prd(m[5])[0] == a.clave + 2
+        assert tuple(struct.unpack("<i", struct.pack("<I", x))[0] for x in prd(m[7], len(a.valores))) == a.valores
