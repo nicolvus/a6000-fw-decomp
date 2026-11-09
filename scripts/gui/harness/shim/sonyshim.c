@@ -68,7 +68,7 @@ static int fake_open(const char *p, int fl, mode_t m, int is64) {
     int fd;
     if (!strcmp(p, "/dev/uipc")) {
         fd = real_open_call("/tmp/uipc.shm", O_RDWR | O_CREAT, 0666, is64);
-        if (fd >= 0) { ftruncate(fd, 0x80000); kind[fd] = D_UIPC; }
+        if (fd >= 0) { ftruncate(fd, 0x80000); unsigned v = 8; pwrite(fd, &v, 4, 0x10); kind[fd] = D_UIPC; }  /* [base+0x10] = nº de hilos proxy que arranca u_osal_reg_msg_queue_cb */
     } else {
         fd = real_open_call("/dev/null", O_RDWR, 0, is64);  /* dispositivo no modelado: fd inerte, queda registrado */
         if (fd >= 0) kind[fd] = D_GENERIC;
