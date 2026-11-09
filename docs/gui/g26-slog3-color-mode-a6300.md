@@ -28,8 +28,14 @@ Nuevos scripts: `scripts/gui/libobj_dis.py` (Thumb-2 con capstone; la `libObj` s
 Tests en `tests/test_g26_color_libobj.py` (Unicorn: 0–7 igual que antes, 8–11 nuevos, 12 rechazado, inversa exacta, `CamMsgConv` registra el índice, Gamma intacta).
 **Límite principal**: el tipo llega al núcleo como palabra en `cfg+0x138` (mensaje `0x4066` byte 8) pero las matrices de color de S-Gamut/B&W no están en el núcleo de la A6000; el consumidor (programación de registros YC desde un bloque de parámetros, p. ej. `0x438acc50` → `0x438ac3be`) no se ha portado. Sin eso, elegir esas opciones **no cambia la imagen** (o puede dar valores indefinidos): por eso es opt-in.
 
-## 4. Reset y resto (investigado, sin cerrar)
+## 4. Copy y Reset (hecho en `libObj`, ids por analogía)
 
-- Reset es un nodo de tipo acción (`0xb=2`, `0xc=4`) con pid `0x12a` (A6300) / `0x11e` (A7S) y una opción de valor `0x16` / `0x14`; su descriptor en la A7S no tiene modelo de datos (palabra 6 = 0, igual que Copy), así que **no se resuelve por el mecanismo `@M00B`**. En la `libObj` de la A6000 la acción es `pvt_ActionExePictureProfileReset` (`0x4c0a78`, llamada desde `0x4c0f08` y `0x4d000a`; recorre los 31 parámetros con el validador y emite un mensaje `0x75ae`); falta saber qué evento de UI la dispara.
-- **Color Mode Level** (`PARAMID_PP_COLOR_MODE_LEVEL`, byte 9) y **Gamma Disp. Assist** (vista propia): sin trabajar.
+- En la A7S, `Copy::setValue` hace `requestModelExecute("@M00B", 0x41, {0x274: PP})`; las demás claves PP usan el id `0x40` (= `pvt_ActionSetPictureProfile`). En la A6000 el despachador de comandos (`libObj 0x4cfb9c`) solo llega a `0x40` en esa zona: `0x41–0x44` caen en el error `0x4d02b8`, **pero** la `libObj` ya trae `ActionExePictureprofileCopy` (`0x4b424c`) y `…Reset` (`0x4c0f4c` → `0x4c0e14`, que copia los 31 valores por defecto del PP indicado, `≤ 9`). Son las acciones 0x38/0x39 de la tabla de acciones (`tbh` en `0x4d02f0`, idéntica en la A7S).
+- `patch_libobj_pp.patch_actions` (requiere `patch_gamma`) redirige la comparación `0x4cfcda` a un tramo de 40 B en el hueco que deja `CamMsgConv` (`0x9b370e`): `0x40` como antes, **`0x41` → Copy, `0x42` → Reset**. `0x42` es una INFERENCIA (la A6300/A7S no tienen clase propia para Reset: su descriptor no trae modelo, pid `0x12a`/`0x11e`). Test Unicorn (`tests/test_g26_actions_libobj.py`): 0x40 sigue a `SetPictureProfile`, 0x41/0x42 llegan a Copy/Reset con r0 = mensaje y r1 = parámetro, 0x43/0x44 siguen dando error.
+- Menú: nuevo ajuste `reset` (pid `0x5b`, evento `0x42`, clave `0x274`, opciones PP1–PP9 = PP a restablecer); `build_pp_menu.py … --copy-reset` aplica `patch_gamma + patch_actions`. NO verificado: que la capa de modelo (`createRequestModelExecuteEvent`) entregue `0x41/0x42` tal cual al despachador, ni el comportamiento real del reset.
+
+## 5. Color Mode Level, Gamma Disp. Assist y lo que queda
+
+- **Color Mode Level**: no es un ajuste de usuario (ninguna raíz de la A6300 lo expone; «Color Level» de la A6300 es la saturación, ya cubierta con `--saturacion-a6300`). Es el byte 9 del `0x4066` que escribe `ColorModeType::setValue` junto con el tipo; sin menú.
+- **Gamma Disp. Assist** (`SLogDispAssistRoot`, pid `0x151`, opciones Off/Auto/S-Log2/S-Log3 con ids `0x3f0–0x3f3`): no hay ningún `PARAMID/MSGID` de ese nombre en ninguna `libObj` (A6000 ni A6300); es una conversión de pantalla (S-Log→ITU709(800%)) del lado de la visualización, no resoluble solo con datos.
 - La A6300 extraída no trae `cmn_view_processDataMgr.so` (sus descriptores están fuera de lo extraído).
