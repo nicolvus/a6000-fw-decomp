@@ -25,7 +25,7 @@ with tempfile.TemporaryDirectory() as t:
     initrd = t / "initrd.gz"
     gz = subprocess.run(["gzip", "-1"], input=cpio, capture_output=True, check=True).stdout
     initrd.write_bytes((work / "base.cpio.gz").read_bytes() + gz)
-    cmd = ["qemu-system-arm", "-M", "virt", "-cpu", "cortex-a15", "-m", "1536", "-kernel", str(work / "vmlinuz"), "-initrd", str(initrd),
+    cmd = ["qemu-system-arm", "-M", "virt", "-cpu", "cortex-a15", "-smp", "8", "-accel", "tcg,thread=multi", "-m", "1536", "-kernel", str(work / "vmlinuz"), "-initrd", str(initrd),
            "-append", "console=ttyAMA0 quiet loglevel=3", "-nographic", "-no-reboot", *extra]
     log = work / "last.log"
     with open(log, "wb") as out:

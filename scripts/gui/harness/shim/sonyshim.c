@@ -290,3 +290,22 @@ void abort_regs(unsigned *r) {
     sym(r[13]);
 }
 void abort_real(void) { static void (*a)(void); if (!a) a = dlsym(RTLD_NEXT, "abort"); a(); for (;;); }
+
+/* Experimento (CVWAIT=s): el solicitante de libObj+0x719ed8 (patrón «trabajador», fw 3.21) espera el fin del trabajo sin sostener su
+ * cerrojo y puede perder la señal; solo ese punto de llamada espera con tope de s segundos (despertar espurio).
+ * El resto de esperas (p. ej. el bucle del trabajador, que no tolera despertares espurios) queda intacto. */
+#define _GNU_SOURCE
+int pthread_cond_wait(pthread_cond_t *c, pthread_mutex_t *m) {
+    static int tmo = -1; static int (*real)(pthread_cond_t *, pthread_mutex_t *);
+    if (!real) real = dlsym(RTLD_NEXT, "pthread_cond_wait");
+    if (tmo < 0) { const char *e = getenv("CVWAIT"); tmo = 0; while (e && *e >= '0' && *e <= '9') tmo = tmo * 10 + *e++ - '0'; }
+    if (tmo) {
+        Dl_info di; void *ra = __builtin_return_address(0);
+        if (dladdr(ra, &di) && di.dli_fname && strstr(di.dli_fname, "libObj.so") && (unsigned long)ra - (unsigned long)di.dli_fbase == 0x719ee1) {
+            LOG("cond_wait de grm_init: tope %d s", tmo);
+            struct timespec ts; clock_gettime(CLOCK_REALTIME, &ts); ts.tv_sec += tmo;
+            pthread_cond_timedwait(c, m, &ts); return 0;
+        }
+    }
+    return real(c, m);
+}
