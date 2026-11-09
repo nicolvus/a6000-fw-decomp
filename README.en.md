@@ -39,62 +39,65 @@ Details in [Current state and limits](https://github.com/nicolvus/a6000-fw-decom
 
 ## Target features
 
-Details in [Goals](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-16-Goals) (✅ = verified on the camera).
+Details in [Goals](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-16-Goals) (✅ = verified on the camera). ≈ = Sony model from memory, unverified (web search only confirmed Silent Shooting → α7S, FTP → α9 and AF Track Sens → α99 II); may not be the first.
 
-| Feature | Category | Status |
-|---|---|---|
-| Silent Shooting | In progress | ⬜ |
-| Picture Profiles PP1–PP10 | In progress | ⬜ |
-| Maximum shutter speed 1/8000 | Photo | ⬜ |
-| Expanded ISO up to 409600 | Photo | ⬜ |
-| Pixel Shift Multi Shooting | Photo | ⬜ |
-| Multiple Exposure | Photo | ⬜ |
-| Live Composite | Photo | ⬜ |
-| Live Bulb / Live Time | Photo | ⬜ |
-| Bulb Timer | Photo | ⬜ |
-| Focus Shift Shooting / Focus Stacking | Photo | ⬜ |
-| Pre Capture photo | Photo | ⬜ |
-| Smile Shutter | Photo | ⬜ |
-| Internal intervalometer | Photo | ⬜ |
-| Interval AE Tracking Sensitivity / Exposure Smoothing | Photo | ⬜ |
-| Anti-Flicker Shooting / Flicker Reduction / Flicker Scan | Photo | ⬜ |
-| Keystone Compensation | Photo | ⬜ |
-| Live ND via software | Photo | ⬜ |
-| In-camera photo rating | Photo | ⬜ |
-| S-Log2 | Image and color | ⬜ |
-| S-Log3 | Image and color | ⬜ |
-| HLG 1-3 | Image and color | ⬜ |
-| D Range Priority | Image and color | ⬜ |
-| Color Chrome Effect | Image and color | ⬜ |
-| Full HD / HD 120 fps | Video | ⬜ |
-| Variable Frame Rate | Video | ⬜ |
-| Internal 4K | Video | ⬜ |
-| Dual Video Recording | Video | ⬜ |
-| 4K HDMI output | Video | ⬜ |
-| Timecode / User Bit | Video | ⬜ |
-| Loop Recording | Video | ⬜ |
-| Movie Silent Control / Silent Multi Controller | Video | ⬜ |
-| Anamorphic Desqueeze | Video | ⬜ |
-| Synchro Scan | Video | ⬜ |
-| Auto Object Framing | Video | ⬜ |
-| Voice Memo | Video | ⬜ |
-| Zebra 0–109 % | Monitoring | ⬜ |
-| Waveform Monitor | Monitoring | ⬜ |
-| Vectorscope | Monitoring | ⬜ |
-| Gamma Display Assist | Monitoring | ⬜ |
-| Sports Finder Mode | Monitoring | ⬜ |
-| Real-time Eye AF | Focus | ⬜ |
-| Real-time AF tracking (3D Tracking / EOS iTR AF) | Focus | ⬜ |
-| AF tracking sensitivity settings (AF-C Custom Settings / AF-C Cases) | Focus | ⬜ |
-| AF Acceleration/Deceleration Tracking | Focus | ⬜ |
-| AF Range Control | Focus | ⬜ |
-| AF Micro Adjustment | Focus | ⬜ |
-| Pre-AF | Focus | ⬜ |
-| AF Point Auto Switching / Zone Area Switching | Focus | ⬜ |
-| Starry Sky AF | Focus | ⬜ |
-| USB charging while powered on | System and connectivity | ⬜ |
-| FTP Background Transfer | System and connectivity | ⬜ |
-| Direct film simulation | Extra (not inherited) | ⬜ |
+| Feature | Category | Origin | Status |
+|---|---|---|---|
+| Silent Shooting | In progress | Sony α7S | ⬜ |
+| Picture Profiles PP1–PP10 | In progress | ≈Sony α7R III | ⬜ |
+| Maximum shutter speed 1/8000 | Photo | ≈Sony α7 | ⬜ |
+| Expanded ISO up to 409600 | Photo | Sony α7S | ⬜ |
+| Pixel Shift Multi Shooting / High Res Shot / Handheld High Res Shot | Photo | ≈Sony α7R III; Olympus E-M1 II, E-M1X; Panasonic G9 | ⬜ |
+| 4K/6K Photo (incl. 4K Photo Burst S/S) | Photo | Panasonic GH5, G9 | ⬜ |
+| Pre Capture photo / Pro Capture / Pre-Burst 4K/6K | Photo | Olympus E-M1 II; Panasonic GH5, G9 | ⬜ |
+| Post Focus | Photo | Panasonic GH5, G9 | ⬜ |
+| Multiple Exposure | Photo | Canon EOS 7D Mark II; Nikon D850; Olympus E-M1 II | ⬜ |
+| Live Composite | Photo | Olympus E-M1 II | ⬜ |
+| Live Bulb / Live Time | Photo | Olympus E-M1 II | ⬜ |
+| Bulb Timer | Photo | Canon EOS 7D Mark II | ⬜ |
+| Focus Shift Shooting / Focus Stacking | Photo | Nikon D850; Panasonic GH5, G9; Olympus E-M1 II, E-M1X | ⬜ |
+| Smile Shutter | Photo | Sony (modelo por determinar) | ⬜ |
+| Internal intervalometer | Photo | ≈Sony α9 | ⬜ |
+| Interval AE Tracking Sensitivity / Exposure Smoothing | Photo | ≈Sony α7R III; Nikon D850 | ⬜ |
+| Anti-Flicker Shooting / Flicker Reduction / Flicker Scan | Photo | Canon EOS 7D Mark II; Nikon D500, D850; Fujifilm X-T3; Olympus E-M1 II, E-M1X | ⬜ |
+| Keystone Compensation | Photo | Olympus E-M1 II, E-M1X | ⬜ |
+| Live ND | Photo | Olympus E-M1X | ⬜ |
+| In-camera photo rating | Photo | ≈Sony α9 | ⬜ |
+| S-Log2 | Image and color | ≈Sony α7S | ⬜ |
+| S-Log3 | Image and color | ≈Sony α7S II | ⬜ |
+| HLG 1-3 | Image and color | ≈Sony α7R III | ⬜ |
+| D Range Priority | Image and color | Fujifilm X-T3 | ⬜ |
+| Color Chrome Effect | Image and color | Fujifilm X-T3 | ⬜ |
+| Full HD / HD 120 fps | Video | ≈Sony α6300 | ⬜ |
+| Variable Frame Rate | Video | Panasonic GH5 | ⬜ |
+| Internal 4K | Video | ≈Sony α7R II | ⬜ |
+| Dual Video Recording | Video | ≈Sony α7R III | ⬜ |
+| 4K HDMI output | Video | Sony α7S | ⬜ |
+| Timecode / User Bit | Video | ≈Sony α7S II | ⬜ |
+| Loop Recording | Video | Panasonic GH5 | ⬜ |
+| Movie Silent Control / Silent Multi Controller | Video | Fujifilm X-T3; Sony (modelo por determinar) | ⬜ |
+| Anamorphic Desqueeze | Video | Panasonic GH5 | ⬜ |
+| Synchro Scan | Video | Panasonic GH5 | ⬜ |
+| Auto Object Framing | Video | ≈Sony ZV-E1 | ⬜ |
+| Voice Memo | Video | ≈Sony α9 | ⬜ |
+| Zebra 0–109 % | Monitoring | ≈Sony α6400 | ⬜ |
+| Waveform Monitor | Monitoring | Panasonic GH5 | ⬜ |
+| Vectorscope | Monitoring | Panasonic GH5 | ⬜ |
+| Gamma Display Assist | Monitoring | ≈Sony α7R III | ⬜ |
+| Sports Finder Mode | Monitoring | Fujifilm X-T3 | ⬜ |
+| Real-time Eye AF | Focus | ≈Sony α9 | ⬜ |
+| Real-time AF tracking (3D Tracking / EOS iTR AF) | Focus | ≈Sony α6400; Nikon D500, D850; Canon EOS 7D Mark II | ⬜ |
+| AF tracking sensitivity settings (AF-C Custom Settings / AF-C Cases) | Focus | Sony α99 II; Fujifilm X-T3; Panasonic GH5; Olympus E-M1 II; Canon EOS 7D Mark II | ⬜ |
+| AF Acceleration/Deceleration Tracking | Focus | Canon EOS 7D Mark II | ⬜ |
+| AF Range Control | Focus | ≈Sony α99 II | ⬜ |
+| AF Micro Adjustment | Focus | ≈Sony α99 | ⬜ |
+| Pre-AF | Focus | Fujifilm X-T3 | ⬜ |
+| AF Point Auto Switching / Zone Area Switching | Focus | Canon EOS 7D Mark II; Fujifilm X-T3 | ⬜ |
+| Starry Sky AF | Focus | Olympus E-M1 II | ⬜ |
+| Intelligent Subject Detection AF | Focus | Olympus E-M1X | ⬜ |
+| USB charging while powered on | System and connectivity | ≈Sony α7 II | ⬜ |
+| FTP Background Transfer | System and connectivity | Sony α9 | ⬜ |
+| Direct film simulation | Extra (not inherited) | — | ⬜ |
 
 ## Copyright and use
 
