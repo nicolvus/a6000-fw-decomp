@@ -20,14 +20,31 @@ En modo MR guarda el valor en NVRAM por perfil (`CmnViewPictureProfileCommon::ge
 | | para los 31 parámetros: valor del perfil desde NVRAM (`[this+0x5dc + perfil·0x7c + 4·i]`), y si la lista trae la clave `[this+0x2f4 + 4·i]`, la usa | una lista con una sola clave basta: el resto sale de NVRAM |
 | | convierte con `pvt_ChangePictureProfileParamApp2Obj` (`0x4b46b8`, 31 casos) y envía `ObjMsg 0x75ae` (`MSGID_SET_PICTURE_PROFILE_CMD`) | → `SequenceSetPictureProfile` → LIRO 0x4066 (G17 §1) |
 | `App2Obj` caso 7 = **gamma** | valores 0–9 → `0x1b7`… (los VALUEID que el conversor pasa al selector 0–11) | mismo índice 7 que la clave `0x214` de la A6300 |
-| Claves de la A6000 | el constructor `0x4a9a56` pone en `+0x2f4…+0x36c` valores `0x107xxxx` (gamma, `+0x310` = `0x10701e4`) | **INFERENCIA**: si es la misma clase, las claves de la A6000 no son las de la A6300 (`0x214`) y el código de la A6300 no serviría tal cual |
+| Claves de la A6000 | el constructor `0x4a9a56` pone en `+0x2f4…+0x36c` valores `0x107xxxx` | **descartado en §2b**: es otro objeto; la A6000 usa `0x214` como la A6300 |
 
 Ningún `.so` de la A6000 contiene esas claves como literal: hoy ninguna vista envía Picture Profile.
 
+## 2b. Segunda pasada con REA (VERIFICADO)
+
+- **API de la A6300, completa para la gamma**: escritura `requestModelExecute("@M00B", 0x40, {0x214: v})`. Lectura
+  `getModelInfo("model/CAMERA", 0x49)` → clave **`0x216`** (`0x3a61e8`); en modo MR, `readBackup`. La lectura usa otra clave que la escritura.
+- **El elemento genérico `Normal` de la A6000 funciona solo con datos** (REA, `cmn_view_processDataMgr.so`, símbolos;
+  `setModelParam` `0x75ea0`, `getModelParam` `0x75b18`, `getValueFromModel` `0x75c2a`, `getDataModel*`). El modelo del descriptor
+  ocupa 0x24 B: `+0` nombre, `+8` id de evento de escritura, `+0xc` id de lectura (`getModelInfo`), `+0x10` claves de escritura, `+0x14` claves de lectura,
+  `+0x18` tipos (0 = bool, 1 = número), `+0x1c` tabla opción→valor, `+0x20` nº de claves, `+0x21` nº de valores. Al escribir construye
+  `ParamList{clave: valor}` y llama a `requestModelExecute(nombre, evento, lista)`. Al leer llama a `getModelInfo(nombre, id)` y busca qué opción
+  coincide con el valor. Por tanto, **cada ajuste PP de la A6300 cabe en un descriptor `Normal`** (`@M00B`/0x40/`0x214` para escribir y
+  `model/CAMERA`/0x49/`0x216` para leer, en la gamma) **sin portar las 25 clases**.
+- **Lectura en la A6000: NO_VERIFICADO.** Ninguna función de la `libObj` de la A6000 añade la clave `0x216` con un inmediato. El
+  `getModelInfo` `0x5fc3fc` devuelve `0x214` con el id `0xe` (otro uso). La notificación PP del núcleo (`0x4b4498`, mensaje `0x8577`) lee
+  las claves `[this+0x468+4·i]` y guarda el estado; falta ver quién lo devuelve a la vista. Si la A6000 no responde al 0x49, el menú
+  escribiría bien pero no marcaría la opción actual; la salida sería un descriptor con respaldo NVRAM en lugar de lectura del modelo.
+- La clave `0x214` de la A6000 queda **a favor de la A6300** (la `libObj` de la A6000 usa `0x214`…`0x274` en sus `ParamList`); la lectura
+  `0x107xxxx` del §2 era otro objeto (cerrado como INFERENCIA descartada).
+
 ## 3. Lo que falta para un menú que funcione
 
-1. Confirmar la clave de gamma de la A6000 (`0x214` o `0x10701e4`) y qué mensaje de lectura devuelve el valor actual (para que el menú
-   muestre la opción marcada). Si el modelo pide `0x10701e4`, la clave se pone en el descriptor; no cambia el resto.
+1. Lectura del valor actual en la A6000 (§2b): `model/CAMERA` 0x49 o, si no existe, respaldo NVRAM por perfil.
 2. **ProcessId**: la tabla está llena (`0xe8`). Opción barata: reutilizar el ProcessId **`0x12`** (`AfTrackingSpeed`, oculto y `Normal`
    sin modelo ni NVRAM, [G13](g13-barrido-ajustes-a6000-a6300.md) §6) y apuntar su descriptor a uno nuevo (`@M00B`, set `0x40`, la clave
    de gamma). No se pierde ninguna función visible.
