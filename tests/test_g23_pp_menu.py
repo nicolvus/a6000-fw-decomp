@@ -84,3 +84,11 @@ def test_parche_libobj_saturacion_solo_cambia_seis_bytes():
 def test_copy_usa_evento_41_y_clave_del_selector():
     s = M.SETTINGS["copy"]
     assert (s.evento, s.clave, [v for _, v in s.opciones]) == (0x41, 0x274, list(range(9)))
+
+
+def test_sin_copy_reset_el_menu_no_usa_los_eventos_41_42():
+    """G27: la `libObj` sin `patch_actions` rechaza 0x41/0x42; el menú por defecto no debe ofrecerlos (subproceso: muta la spec)."""
+    code = ("import sys; sys.path.insert(0, 'scripts/gui'); import build_pp_menu as B, pp_menu_spec as M; B.sin_acciones(); "
+            "assert {s.evento for s in M.SETTINGS.values()} == {0x40} and 'Copy' not in B.textos() and 'Reset' not in B.textos(); "
+            "assert M.TREE[2][0][:2] == ['sel', 'gamma']")
+    assert subprocess.run([sys.executable, "-c", code], cwd=ROOT, check=False).returncode == 0

@@ -7,7 +7,8 @@ carpeta → páginas → ajustes/carpetas. Se construye:
   lib/CautionConfig.so            nodos de datos puros (raíz+opciones de cada ajuste, carpetas y páginas) en un PT_LOAD RW con relocaciones RELATIVE
   lib/viewUnified2.so             entrada nueva = carpeta «Picture Profile» en las 5 páginas del menú (add_menu_entry.py)
   share/app/string_<idioma>.uxc   textos en ranuras libres (traducción de la A6300 si el inglés coincide; si no, el literal)
-Uso: build_pp_menu.py DIR_DEV_A6000 DIR_DEV_A6300 SALIDA [--saturacion-a6300] [--gamma-slog]
+Uso: build_pp_menu.py DIR_DEV_A6000 DIR_DEV_A6300 SALIDA [--saturacion-a6300] [--gamma-slog] [--color-gamut] [--copy-reset]
+Las cuatro opciones parchean `libObj.so` (patch_libobj_pp.py). Sin `--copy-reset` el menú no lleva Copy ni Reset: la `libObj` original rechaza sus eventos 0x41/0x42.
 """
 import hashlib
 import json
@@ -133,7 +134,7 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
         lo = patch_libobj_pp.patch(lo) if saturacion_a6300 else lo
         lo = patch_libobj_pp.patch_gamma(lo) if gamma_slog or acciones else lo
         lo = patch_libobj_pp.patch_actions(lo) if acciones else lo
-        emit("lib/libObj.so", patch_libobj_pp.patch_color(lo) if color_gamut else lo)
+        emit("lib/libObj.so", patch_libobj_pp.patch_bw(patch_libobj_pp.patch_color(lo)) if color_gamut else lo)
     caution, delta = patch_caution((a / "lib/CautionConfig.so").read_bytes(), ids)
     emit("lib/CautionConfig.so", caution)
     emit("lib/viewUnified2.so", A.patch((a / "lib/viewUnified2.so").read_bytes(), delta))
@@ -164,14 +165,23 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
     (dest / "SHA256SUMS").write_text("".join(f"{h}  {r}\n" for r, h in manifest["parcheados"].items()))
 
 
+def sin_acciones():
+    """Quita Copy y Reset del menú: sin `patch_actions` el despachador de `libObj` (0x4cfb9c) manda sus eventos 0x41/0x42 al error 0x4d02b8."""
+    for k in ("copy", "reset"):
+        M.SETTINGS.pop(k)
+    M.TREE[2][0][:] = [x for x in M.TREE[2][0] if x not in ("copy", "reset")]
+
+
 if __name__ == "__main__":
     args = [x for x in sys.argv[1:] if not x.startswith("--")]
     sat, gam, col = "--saturacion-a6300" in sys.argv, "--gamma-slog" in sys.argv, "--color-gamut" in sys.argv
     acc = "--copy-reset" in sys.argv
+    if not acc:
+        sin_acciones()
     if gam:                               # ITU709(800%), S-Log2 y S-Log3: requieren libObj parcheado y las curvas de pp_curves_patch.py (núcleo)
         M.SETTINGS["gamma"] = M.S("gamma", "Gamma", 0x214, M.GAMMA_COMPLETA, "clave+A7S convertValueIdToBackupValue+parche libObj (opt-in)")
-    if sat:                               # el menú ofrece −32…+32 solo si se parchea libObj
+    if sat:                               # el menú ofrece −32…+32 solo si se parchea libObj; ojo: el núcleo toma toda saturación < −7 como blanco y negro (G27)
         M.SETTINGS["saturation"] = M.S("saturation", "Saturation", 0x26C, M.num(-32, 32), "clave+parche libObj (opt-in)")
-    if col:                               # B&W, S-Gamut, S-Gamut3(.Cine): libObj (G26) + matrices del núcleo (NO resueltas: sin ellas el modo no cambia la imagen)
+    if col:                               # B&W (con efecto: Movie + saturación −8, G27) y S-Gamut, S-Gamut3(.Cine) (el núcleo los trata como Movie: sin efecto propio)
         M.SETTINGS["color_mode"] = M.S("color_mode", "Color Mode", M.K(0), M.COLOR_MODE_COMPLETO, "clave+VALUEID+parche libObj (opt-in)")
     main(*args[:3], saturacion_a6300=sat, gamma_slog=gam, color_gamut=col, acciones=acc)

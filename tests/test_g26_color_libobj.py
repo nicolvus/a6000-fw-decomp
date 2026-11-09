@@ -69,3 +69,31 @@ def test_menu_color_mode_sigue_a_la_a6300():
     assert [t for t, _ in M.COLOR_MODE_COMPLETO] == ["Movie", "Still", "Cinema", "Pro", "ITU709 Matrix", "Black & White", "S-Gamut", "S-Gamut3.Cine", "S-Gamut3"]
     assert (P.COLOR[d["Black & White"]], P.COLOR[d["S-Gamut"]], P.COLOR[d["S-Gamut3"]], P.COLOR[d["S-Gamut3.Cine"]]) == (0x504, 0x505, 0x583, 0x584)
     assert [d[k] for k in ("Movie", "Still", "Cinema", "Pro", "ITU709 Matrix")] == [dict(M.SETTINGS["color_mode"].opciones)[k] for k in ("Movie", "Still", "Cinema", "Pro", "ITU709 Matrix")]
+
+
+@needs
+def test_bw_envia_movie_y_saturacion_menos_8():
+    """G27: el núcleo de la A6000 no conoce el tipo 8; su B&W es saturación < −7 (indicador monocromo, `av-cam 0x437a273c`)."""
+    from unicorn import UC_ARCH_ARM, UC_HOOK_CODE, UC_MODE_THUMB, Uc
+    from unicorn.arm_const import UC_ARM_REG_R0, UC_ARM_REG_R4
+
+    def run(img, tipo, sat):
+        mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
+        mu.mem_map(0, 0x1100000)
+        mu.mem_write(0, img[:0x1100000])
+        mu.mem_map(0x20000000, 0x1000)
+        mu.mem_write(0x20000008, bytes([tipo]))
+        mu.reg_write(UC_ARM_REG_R0, sat & 0xFFFFFFFF)
+        mu.reg_write(UC_ARM_REG_R4, 0x20000000)
+        mu.hook_add(UC_HOOK_CODE, lambda u, a, s, _: u.emu_stop() if a == P.SAT_SIGUE else None)
+        mu.emu_start(P.SAT_SITE | 1, P.SAT_SIGUE + 2, count=50)
+        m = bytes(mu.mem_read(0x20000000, 0x20))
+        return m[8], m[0x15]
+
+    old, new = nuevo(), P.patch_bw(nuevo())
+    assert run(new, 8, 3) == (5, 0xF8)                                   # B&W → Movie + saturación −8
+    for tipo in (0, 5, 7, 9, 11):
+        for sat in (-8, 0, 7):
+            assert run(new, tipo, sat) == run(old, tipo, sat) == (tipo, sat & 0xFF)
+    with pytest.raises(AssertionError):
+        P.patch_bw(P.patch_gamma(LIB.read_bytes()))                      # exige patch_color (usa su hueco)

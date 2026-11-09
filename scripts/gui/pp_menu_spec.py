@@ -6,7 +6,7 @@ Detail Mode/Level 16/17, V/H 18, B/W 19, Limit 20, Crispening 21, Hi-Light 22, C
 Rangos y valores = lo que acepta el validador de la A6000 (`pvt_ChangePictureProfileParamApp2Obj`, libObj `0x4b46b8`): numéricos con signo y paso 1 (valor = número);
 enumerados = índice de la tabla VALUEID del caso (Gamma y ColorMode con la identificación de curvas/modos de G20 y G23).
 Evidencia por ajuste: «clave» (A7S) · «rango» (validador A6000) · «mapa» (INFERENCIA: orden de VALUEID o índice igual al de la A6300).
-Fuera de alcance: Reset (acción sin modelo de datos, ver G26), Gamma Disp. Assist (vista propia), ColorModeLevel; B&W/S-Gamut/S-Gamut3(.Cine): menú + libObj (opt-in, G26) pero sin matrices del núcleo.
+Fuera de alcance: Reset (acción sin modelo de datos, ver G26), Gamma Disp. Assist (vista propia), ColorModeLevel; B&W: menú + libObj con efecto (Movie + saturación −8, G27); S-Gamut/S-Gamut3(.Cine): menú + libObj, el núcleo los trata como Movie (G27).
 """
 from dataclasses import dataclass
 
@@ -39,7 +39,7 @@ SETTINGS = {s.id: s for s in (
     S("knee_slope", "Slope", K(15), num(-5, 5), "clave+rango"),
     S("color_mode", "Color Mode", K(0), (("Movie", 5), ("Still", 6), ("Cinema", 7), ("Pro", 3), ("ITU709 Matrix", 4)), "clave+VALUEID"),
     S("copy", "Copy", 0x274, tuple((f"PP{k + 1}", k) for k in range(9)), "INFERENCIA: evento 0x41 y clave 0x274 de `Copy::setValue` (A7S); el valor = PP destino", 0x41),
-    S("saturation", "Saturation", K(29), num(-8, 7), "clave+rango(A6000: -8..+7, la A6300 -32..+32)"),
+    S("saturation", "Saturation", K(29), num(-8, 7), "clave+rango(A6000: -8..+7, la A6300 -32..+32); -8 = blanco y negro en el núcleo (G27)"),
     S("phase", "Color Phase", K(30), num(-7, 7), "clave+rango"),
     *(S(f"cd_{c.lower()}", c, K(23 + i), num(-7, 7), "clave+rango") for i, c in enumerate("RGBCMY")),
     S("det_mode", "Mode", K(16), (("Auto", 0), ("Manual", 1)), "clave+mapa"),

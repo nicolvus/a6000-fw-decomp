@@ -24,9 +24,9 @@ Nuevos scripts: `scripts/gui/libobj_dis.py` (Thumb-2 con capstone; la `libObj` s
 
 ## 3. Hecho — Color Mode ampliado en `libObj` + menú (opt-in `--color-gamut`)
 
-`patch_libobj_pp.patch_color`: App2Obj caso 0, Obj2App caso 0 y `CamMsgConv` byte 8 pasan a una tabla de 12 VALUEID (`COLOR`) con los ids de la A6300. Menú con 9 opciones en el orden de la A6300 (`pp_menu_spec.COLOR_MODE_COMPLETO`; app 9 = B&W, 8 = S-Gamut, 10 = S-Gamut3, 11 = S-Gamut3.Cine).
+`patch_libobj_pp.patch_color`: App2Obj caso 0, Obj2App caso 0 y `CamMsgConv` byte 8 pasan a una tabla de 12 VALUEID (`COLOR`) con los ids de la A6300. Menú con 9 opciones en el orden de la A6300 (`pp_menu_spec.COLOR_MODE_COMPLETO`; app 8 = B&W, 9 = S-Gamut como la A7S (§6.2), 10 = S-Gamut3, 11 = S-Gamut3.Cine).
 Tests en `tests/test_g26_color_libobj.py` (Unicorn: 0–7 igual que antes, 8–11 nuevos, 12 rechazado, inversa exacta, `CamMsgConv` registra el índice, Gamma intacta).
-**Límite principal**: el tipo llega al núcleo como palabra en `cfg+0x138` (mensaje `0x4066` byte 8) pero las matrices de color de S-Gamut/B&W no están en el núcleo de la A6000; el consumidor (programación de registros YC desde un bloque de parámetros, p. ej. `0x438acc50` → `0x438ac3be`) no se ha portado. Sin eso, elegir esas opciones **no cambia la imagen** (o puede dar valores indefinidos): por eso es opt-in.
+**Corregido en [G27](g27-pp-auditoria-color-mode-y-plan.md) §2–§3**: el núcleo trata los tipos 8–11 como Movie (nada indefinido) y B&W ya tiene efecto (`patch_bw`). Texto original: **Límite principal**: el tipo llega al núcleo como palabra en `cfg+0x138` (mensaje `0x4066` byte 8) pero las matrices de color de S-Gamut/B&W no están en el núcleo de la A6000; el consumidor (programación de registros YC desde un bloque de parámetros, p. ej. `0x438acc50` → `0x438ac3be`) no se ha portado. Sin eso, elegir esas opciones **no cambia la imagen** (o puede dar valores indefinidos): por eso es opt-in.
 
 ## 4. Copy y Reset (hecho en `libObj`, ids por analogía)
 
@@ -41,6 +41,8 @@ Tests en `tests/test_g26_color_libobj.py` (Unicorn: 0–7 igual que antes, 8–1
 - La A6300 extraída no trae `cmn_view_processDataMgr.so` (sus descriptores están fuera de lo extraído).
 
 ## 6. Matrices de color del núcleo (investigado con REA, sin resolver)
+
+**Superado por [G27](g27-pp-auditoria-color-mode-y-plan.md) §2**: la ruta «bytes `0x133…0x144` → bloque `+0x740`» de este apartado y de §6.2 es de otra estructura; el consumidor real del tipo es `FUN_437aa65c` → `FUN_437a4cd4`.
 
 Sesiones REA abiertas y reutilizables: `analysis/rea-independent/run/a6k.sock` (A6000) y `run/a6300b.sock` (A6300). Hallazgos:
 - El desempaquetador del `0x4066` (A6000 `0x43802a28`) guarda el byte 8 (tipo de Color Mode) como **palabra** en `cfg+0x138` (el byte 9, nivel, en `+0x13c`). La A6300 usa otro diseño del `cfg` (el selector de gamma está en `+0x171`, no `+0x153`) y su desempaquetador no coincide con el patrón de la A6000.

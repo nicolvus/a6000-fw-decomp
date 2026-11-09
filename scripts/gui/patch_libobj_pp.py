@@ -157,6 +157,30 @@ def patch_color(d: bytes) -> bytes:
     return bytes(out)
 
 
+# --- B&W con efecto en imagen (G27) -------------------------------------------------------------------------------------------------------
+# El núcleo de la A6000 solo traduce los tipos 1–7 a id de modo de color (`av-cam 0x437aa816`: `cmp #6`, tabla de 7 B en 0x43ca66f2; la A7S: `cmp #8`, 8 → 0x17 B&W, 9 → 0x16);
+# un tipo 8–11 acaba como id 0, que el `switch` de 0x437a4cd4 trata igual que Movie (0x13). En la A7S el id 0x17 también es Movie más el indicador monocromo (`+0x88`,
+# A7S 0x438c3b9c). La A6000 pone ese mismo indicador con saturación < −7 (0x437a273c: el «−8 = blanco y negro» de los PP antiguos). Por eso `CamMsgConv`, al escribir la
+# saturación (byte 0x15 del 0x4066), envía tipo 5 (Movie) y saturación −8 cuando el tipo es B&W; el ajuste Saturation guardado no se toca.
+SAT_SITE, SAT_SIGUE = 0x9B35A2, 0x9B35C4
+BW_CAVE = 0x9B328C                                              # nops que deja patch_color tras su tabla (hasta 0x9B32C0)
+
+
+def patch_bw(d: bytes) -> bytes:
+    segs = A._segments(d)
+    os_, oc = A._off(segs, SAT_SITE), A._off(segs, BW_CAVE)
+    bw, movie = COLOR.index(0x504), COLOR.index(0x399)
+    # ldrb r3,[r4,#8]; cmp r3,#bw; bne fin; movs r3,#movie; strb r3,[r4,#8]; mvn r0,#7; fin: strb r0,[r4,#0x15]; b.w SAT_SIGUE
+    c = _hw(0x7A23, 0x2B00 | bw) + bcc(BW_CAVE + 4, BW_CAVE + 14, 1) + _hw(0x2300 | movie, 0x7223, 0xF06F, 0x0007, 0x7560)
+    c += b_w(BW_CAVE + len(c), SAT_SIGUE)
+    assert d[os_:os_ + 4] == _hw(0x7560) + b_n(SAT_SITE + 2, SAT_SIGUE), "libObj.so no es el fw3.21 esperado (saturación de CamMsgConv)"
+    assert d[oc:oc + len(c)] == _hw(0xBF00) * (len(c) // 2), "falta patch_color (hueco ocupado)"
+    out = bytearray(d)
+    out[oc:oc + len(c)] = c
+    out[os_:os_ + 4] = b_w(SAT_SITE, BW_CAVE)
+    return bytes(out)
+
+
 # --- Acciones Copy y Reset de Picture Profile (G26) ---------------------------------------------------------------------------------------
 # En la A7S/A6300 `Copy::setValue` envía `requestModelExecute("@M00B", 0x41, {0x274: PP})`. El despachador de comandos de la A6000 (`0x4cfb9c`) solo conoce hasta 0x40 en
 # esa zona (0x41–0x44 caen en el error `0x4d02b8`), aunque la `libObj` ya trae las acciones `ActionExePictureprofileCopy` (`0x4b424c`) y `…Reset` (`0x4c0f4c`; el reset real es
