@@ -86,4 +86,4 @@ Features wanted on the A6000, inherited from other Sony models and other brands,
 
 Not inherited from another model; can be added at any time.
 
-- ⬜ Direct film simulation
+- ⬜ Direct film simulation — _Origin: Fujifilm X-T5_

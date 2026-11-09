@@ -98,7 +98,7 @@ Detalle en [Objetivos](https://github.com/nicolvus/a6000-fw-decomp/wiki/16-Objet
 | Intelligent Subject Detection AF | Enfoque | Olympus E-M1X | ⬜ |
 | Carga USB con la cámara encendida | Sistema y conectividad | ≈Sony α7 II | ⬜ |
 | FTP Background Transfer | Sistema y conectividad | Sony α9 | ⬜ |
-| Film simulation directo | Extra (no heredada) | — | ⬜ |
+| Film simulation directo | Extra (no heredada) | Fujifilm X-T5 | ⬜ |
 
 ## Copyright y uso
 

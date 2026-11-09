@@ -86,4 +86,4 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 
 No vienen de otro modelo y se pueden añadir en cualquier momento.
 
-- ⬜ Film simulation directo
+- ⬜ Film simulation directo — _Origen: Fujifilm X-T5_

@@ -98,7 +98,7 @@ Details in [Goals](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-16-Goals)
 | Intelligent Subject Detection AF | Focus | Olympus E-M1X | ⬜ |
 | USB charging while powered on | System and connectivity | ≈Sony α7 II | ⬜ |
 | FTP Background Transfer | System and connectivity | Sony α9 | ⬜ |
-| Direct film simulation | Extra (not inherited) | — | ⬜ |
+| Direct film simulation | Extra (not inherited) | Fujifilm X-T5 | ⬜ |
 
 ## Copyright and use
 

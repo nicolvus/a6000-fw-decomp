@@ -71,4 +71,4 @@ Carga USB con la cámara encendida — ≈Sony α7 II
 FTP Background Transfer — Sony α9
 
 Otros (no heredadas; se pueden añadir en cualquier momento):
-Film simulation directo
+Film simulation directo — Fujifilm X-T5
