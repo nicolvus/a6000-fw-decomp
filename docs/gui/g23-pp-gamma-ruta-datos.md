@@ -43,13 +43,13 @@ Memoria real con `gdb` (`qemu-arm -g`, tras el SIGSEGV por falta de `/dev/uipc`)
 
 - Valor interno de opción (`0xf/0x10`): se pone el índice de la opción (0–6); no se ha comprobado cómo lo usa la vista frente a la tabla opción→valor del descriptor.
 - Los nodos hijos siguen referenciados por los arrays originales de sus ajustes ocultos (nunca mostrados); si el nodo guarda puntero al padre, el último en construirse manda. 
-- La clase del nodo raíz (`CmnViewSettingNodeAfIlluminator`) podría tener comportamiento propio; no se ha leído.
+- La raíz AfIlluminator se construye con el `CmnViewSettingNode` genérico (VERIFICADO, `CautionConfig.so:0x138fd4`). `AfTrackingSpeed1` (7.º hijo) es hoja de un ajuste cuya raíz usa la clase propia `CmnViewSettingNodeAfTrackingDuration`; que la hoja sea genérica no está comprobado.
 - `viewUnified2` y `CautionConfig` de este paquete **no se combinan** todavía con los de Silent (G22/3.54): ambos parchean las mismas páginas y `CautionConfig`.
 - Idiomas no latinos sin textos nuevos (como G09/G10-C). Sin curvas en RAM (G18) solo Movie/ITU709 son distintos; nada probado en cámara.
 
 ## Lo que falta
 
-1. Leer la clase de la raíz (`CmnViewSettingNodeAfIlluminator`); las palabras `desc[12..18]` (en EFCS `1,0xd02,0x83cd,…`, en la plantilla inerte `0xa45`) no se han descifrado.
+1. Comprobar la clase de las hojas ociosas (en especial `AfTrackingSpeed1`); las palabras `desc[12..18]` (en EFCS `1,0xd02,0x83cd,…`, en la plantilla inerte `0xa45`) no se han descifrado.
 2. Combinar con Silent/3.56 en un único paquete (pages de `viewUnified2`, `CautionConfig`) y auditarlo.
 3. Con autorización: instalar y comprobar en cámara que Gamma Cine1 = modo de prueba del 3.56.
 4. Después: resto de parámetros PP (30), selector PP1–PP10 y Copy/Reset (G20 §2 b–d) con la misma técnica.
