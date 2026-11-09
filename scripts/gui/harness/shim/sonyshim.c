@@ -277,6 +277,9 @@ static void skip_fns(void) {
     while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, "libObj.so")) { base = hexv(ln, 0); break; }
     if (m) fclose(m);
     if (!base) { LOG("SKIPFN: libObj no hallada"); return; }
+    if (getenv("POKE")) {  /* POKE=dir=malloc: escribe la dirección de malloc en libObj+dir (asignador del GPU de DMP, experimento) */
+        const char *e = getenv("POKE"); unsigned long a = hexv(e, &e); *(void **)(base + a) = (void *)malloc; LOG("POKE libObj+%#lx = malloc (%p)", a, (void *)malloc);
+    }
     if (getenv("TRACEFN")) trace_fns(base);
     if (getenv("WATCH") && !watch_addr) { pthread_t th; watch_addr = base + hexv(getenv("WATCH"), 0); pthread_create(&th, 0, watcher, 0); }
     for (const char *e = getenv("SKIPFN"); e && *e; ) {
@@ -294,7 +297,7 @@ void *dlopen(const char *f, int fl) {
     if (!d) d = dlsym(RTLD_NEXT, "dlopen");
     LOG("dlopen(%s) ...", f ? f : "(null)");
     void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
-    if (h && f && strstr(f, "libObj.so") && (getenv("SKIPFN") || getenv("TRACEFN") || getenv("WATCH"))) skip_fns();
+    if (h && f && strstr(f, "libObj.so") && (getenv("SKIPFN") || getenv("TRACEFN") || getenv("WATCH") || getenv("POKE"))) skip_fns();
     return h;
 }
 int system(const char *c) {
