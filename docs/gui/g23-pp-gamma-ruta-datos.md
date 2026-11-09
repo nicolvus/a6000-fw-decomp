@@ -16,11 +16,23 @@ Revisa el orden de entrega de [G20](g20-menu-pp-construccion.md) §2. Nada proba
 El **ProcessId `0x12`** ya está reservado por G22 (`silent_descriptor.py`, Silent Shooting). Gamma debe usar otro pid oculto
 (candidato: `LocalAreaLimitation`, 3 hijos, o `AfIlluminator`; comprobar su `D[pid]` con `process_bindings.py`).
 
+## Layout del descriptor (VERIFICADO, desensamblado de `CmnViewProcessDataElementNormal::getDataModel*`, 09-11-2026)
+
+`desc` (19 palabras): `+0x04` cautions por opción (no se usan, solo se indexan) · `+0x15` **nº de opciones** · `+0x18` modelo · `+0x1c` nº de modelos.
+Modelo (9 palabras): `+0` nombre · `+4` update · `+8` evento de escritura · `+0xc` id de lectura · `+0x10` array de claves de escritura · `+0x14` de lectura ·
+`+0x18` tipos por clave (0 bool, 1 número) · `+0x1c` tabla opción→valor, índice `opción·nclaves + clave` · `+0x20` nclaves · `+0x21` nº de entradas.
+Corrige la lectura previa de «S0/S1/S2/S3»: son arrays planos, no estructuras de 12 palabras.
+
+## Hecho: `scripts/gui/pp_gamma_descriptor.py` (pid `0x3c`)
+
+Descriptor nuevo en un `PT_LOAD` añadido (como `silent_descriptor.py`): `@M00B`, escritura `0x40`/clave `0x214`, lectura `0x49`/clave `0x216`,
+7 opciones con valores (4, 5, 3, 6, 7, 8, 9) = Movie, Still, ITU709, Cine1–4. Tests `tests/test_g23_gamma_descriptor.py` (3, verdes, con los de G22).
+La `.so` parcheada carga y ejecuta su init en `qemu-arm` con el sysroot de la cámara (`LD_PRELOAD` con `libObj.so`; no se leyó la memoria con gdb).
+
 ## Lo que falta (en orden)
 
-1. Decodificar las estructuras S2/S3 de un descriptor `@M00B` multi-opción (p. ej. pid `0x37`) para escribir la tabla opción→valor
-   de Gamma (Movie 4, Still 5, ITU709 3, Cine1–4 6–9; G20 §1). La palabra de modelo [8] (`0x201`…) parece codificar nº de claves/valores.
-2. Construir `pp_gamma_descriptor.py` (hermano de `silent_descriptor.py`) con el pid elegido.
+1. ~~Tabla opción→valor y `pp_gamma_descriptor.py`~~ hecho.
+2. Textos Movie/Still/ITU709/Cine1–4 en `string_*.uxc` (25 idiomas) si el A6000 no los trae.
 3. Editar listas de propiedades y arrays de hijos (`add_menu_entry.py`) y textos `.uxc`; probar carga en qemu-user como G09 §5e.
 4. Solo si 1–3 fallan: `libpp.so` de G20 §2.
 
