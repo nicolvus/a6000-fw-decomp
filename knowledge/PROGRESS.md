@@ -601,3 +601,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 10-11-2026: G22-B avance 33 — comparación con el log real de la cámara. [G22 §5.16](../docs/gui/g22-arnes-ui-qemu.md).
 - 10-11-2026: G22-B avance 34 — la UI no recibe eventos de modelo (falta av-cam); F3/F4/F5 abiertas. [G22 §5.17](../docs/gui/g22-arnes-ui-qemu.md).
 - 10-11-2026: G22-B avance 35 — paridad con el registro real hasta `getNumber : 1`; nuevas herramientas del shim (`PATCHFN` halfwords, `TRACEDEREF`, `GMILOG`, `KEYONACTIVE`); F3/F4/F5 abiertas. [G22 §5.18](../docs/gui/g22-arnes-ui-qemu.md).
+- 10-11-2026: G22-B avance 35i — `libStm.so` desensamblado: ScalarSTM es servidor petición/respuesta (ops 1..0xb), no espera notificaciones de av-cam; hipótesis descartada. [G22 §5.18i](../docs/gui/g22-arnes-ui-qemu.md).
