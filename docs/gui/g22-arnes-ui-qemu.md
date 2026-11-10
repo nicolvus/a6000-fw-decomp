@@ -334,6 +334,12 @@ Método: contrastar línea a línea el registro real (`mem-20261020-log`, 129.72
 - Shim: **`UPMON=1|2`** emula la respuesta (`APP_ON` a `0x920168`; con `2` lo deja en un buzón si no hay callback). Resultado con la receta de §5.18m + `UPMON=2`: `UPMON: ON_CMP -> APP_ON a 0x920168: buzón` (sin lector: nadie consume).
 - **Siguiente paso**: averiguar quién crea los objetos de `libObj` (tabla `Obj*_Create`, p. ej. `ObjHandover_Create`) y por qué el arnés no lo hace (`Os 0xx_Obj*` ausente): buscar el arranque de objetos que en el registro real precede/sigue a `Ms 001_libObj.so`. No verificado: el efecto de `APP_ON` en la UI.
 
+#### 5.18o Qué hace la app tras `APP_ON` y en qué diverge el arnés (10-11-2026)
+
+- Registro real (`mem-20261020-log`, líneas 3682–4372; el anillo perdió el arranque en frío): el hilo `83` (Appframework) recorre los módulos de `libObj` con `Mi`/`Ma` (init/attach por id: `05C`, `0DC`, …), `Tc 100`, `Ts` y, por cada módulo, `Md`/`Ms` (`0DC`, `05C`, `0ED`, `020`, `10B`, …, `038`, `0E7`, `001`); el hilo `87` arranca los objetos (`Os 001_ObjMic … 038_ObjRemote`, formato `%s %03X_%s` en `libObj+0x4424be`). Tras `ON_CMP -> APP_ON` vienen `Root Draw`, `Ts`/`Tr`, `Ms`/`Mr 001_libObj.so` y la reanudación de objetos (`Or 001_ObjMic … 00F_ObjCntMgr`, `EV onResuming`).
+- En el arnés el hilo `83` solo registra `AC`, `wait`, `Vn 070_viewUnified8.so` (`ViewScalarboot`), `Vo`, `Lc Layer/Layout`: **no hay `Mi/Ma/Tc/Ts/Md/Ms`, ni `Os/Or`**. Es decir, el arranque de módulos/objetos de `libObj` (que registra, entre otros, `ObjHandover_Create` → `0x920168`) no se ejecuta; la función de log de objetos (`libObj+0x4424be`) no tiene llamadores directos (barrido `llvm-objdump` sobre todo el texto): se llama por tabla/puntero.
+- **Siguiente paso**: localizar en `libObj` el emisor de `Tc`/`Ts` (cadenas `Tc %d`/`Ts` del hilo del módulo) y el evento que lo dispara en el hilo Appframework (probablemente un `Event` del bucle `Mainloop` que `appFw`/`Application_System_Init` publica tras `act_all`); comprobar con `DLSYMLOG` si el arnés llega a pedir `Mi`/`Ma` de algún módulo. No verificado: si ese arranque ocurre antes o después de `APP_ON` en el arranque en frío.
+
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
 Verificado: `build.sh` reproduce byte a byte el `sonyshim.so` que se estaba usando (md5 `5307f8ae…` antes de las correcciones);

@@ -607,3 +607,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 10-11-2026: G22-B avance 35l — `CMD_ON` inyectado a `0x94016a` no se consume: `main` de `im.elf` espera un `join` (`[0x154c4]`, INFRA1; objetivo sin identificar) antes de su bucle de recepción; shim `CBLOG`/`SYNCMBX`. [G22 §5.18l](../docs/gui/g22-arnes-ui-qemu.md).
 - 10-11-2026: G22-B avance 35m — `act_all`/`CameraBackground_act` reproducidos en el arnés (`NOJOIN`, `SYNCMBX`, `THRLOG`); falta la respuesta de `upm.ko` (`ON_CMP`). [G22 §5.18m](../docs/gui/g22-arnes-ui-qemu.md).
 - 10-11-2026: G22-B avance 35n — `ON_CMP`→`APP_ON` a `0x920168` (registrada por `ObjHandover_Create`, no llamado en el arnés); shim `UPMON`. [G22 §5.18n](../docs/gui/g22-arnes-ui-qemu.md).
+- 10-11-2026: G22-B avance 35o — el arnés no ejecuta el arranque de módulos/objetos de `libObj` (`Mi/Ma/Tc/Ts/Md/Ms`, `Os/Or`) que en la cámara precede/sigue a `APP_ON`. [G22 §5.18o](../docs/gui/g22-arnes-ui-qemu.md).
