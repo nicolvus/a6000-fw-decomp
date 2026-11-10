@@ -531,7 +531,7 @@ static void *openviewer(void *a) {
                 ector(ev, id, 2, 0);
                 if (*e == ':') { int mid = (int)hexv(e + 1, &e); void *pr = calloc(1, 0x10); ((void (*)(void *, int))(base + 0xf0fb0 + 1))(pr, mid);  /* STARTEV=id:modelo → parámetro 0x18 = Param<int>(modelo), como 0x7f2618 */
                     void (*addp)(void *, unsigned long, void *) = dlsym(RTLD_DEFAULT, "_ZN5Event12addParameterEmP9ParamBase"); if (addp) addp(ev, 0x18, pr); }
-                int rr = push(mm, ev); efp("[shim] STARTEV %#lx -> %d\n", id, rr); sleep(2); while (*e && *e != ',') e++; while (*e == ',') e++; }  /* avanza siempre: hexv no acepta mayúsculas */
+                int rr = push(mm, ev); efp("[shim] STARTEV %#lx -> %d\n", id, rr); sleep(getenv("STARTGAP") ? (unsigned)hexv(getenv("STARTGAP"), 0) : 2); while (*e && *e != ',') e++; while (*e == ',') e++; }  /* avanza siempre: hexv no acepta mayúsculas */
         } else efp("[shim] STARTEV: faltan pViewManager/Event::Event/ModelManager::pushEvent\n");
     }
     { void **pv = dlsym(lobj_h, "pViewManager"); for (int k = 0; pv && !*pv && k < 600; k++) usleep(100000); }  /* openView con ViewManager aún NULL = SIGSEGV (arranque lento) */
