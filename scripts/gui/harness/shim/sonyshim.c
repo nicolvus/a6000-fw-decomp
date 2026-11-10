@@ -291,7 +291,8 @@ int ioctl(int fd, unsigned long req, ...) {
             int k = cb_find(w[0]); if (k < 0 && ncbs < 128) k = ncbs++;
             if (k >= 0) { cbs[k].q = w[0]; cbs[k].cb = (void *)t[1]; cbs[k].arg = (void *)(t[3] == 1 ? t[2] : t[0]); }  /* t[3]==1: registro síncrono, el argumento va en t[2] (EventWrapper de libMWF) */
             pthread_mutex_unlock(&cb_m);
-            LOG("uipc reg_%smsg_queue_cb qid=%#x arg=%#x cb=%#x t2=%#x%s", t[3] == 1 ? "sync_" : "", w[0], t[0], t[1], t[2], k < 0 ? " (tabla llena)" : ""); return 0; }
+            { Dl_info di; const char *fn = "?"; unsigned long off = 0; if (dladdr((void *)(t[1] & ~1u), &di) && di.dli_fname) { fn = strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname; off = (t[1] & ~1u) - (unsigned long)di.dli_fbase; }
+              LOG("uipc reg_%smsg_queue_cb qid=%#x arg=%#x cb=%#x (%s+%#lx) t2=%#x%s", t[3] == 1 ? "sync_" : "", w[0], t[0], t[1], fn, off, t[2], k < 0 ? " (tabla llena)" : ""); } return 0; }
         case 9: { pthread_mutex_lock(&cb_m); int k = cb_find(w[0]); if (k >= 0) cbs[k].q = 0; pthread_mutex_unlock(&cb_m); LOG("uipc unreg_msg_queue_cb qid=%#x", w[0]); return 0; }
         case 3: LOG("uipc stat_msgq %#x (sin modelar: 0)", w[0]); return 0;
         case 5: {  /* snd_sync_msg {qid, &{msg, cb, arg}}: 0x8f013a es el registro de trazas (u16 + texto "%4X %s %s") */
@@ -458,22 +459,27 @@ unsigned IMDB_get_entries(unsigned a, unsigned b, unsigned c, unsigned d) { retu
 /* INJECT="seg:qid:w0,w1,..;seg:qid:.." (todo en hex; sin strtoul: la glibc 2.11 no tiene __isoc23_*): a los seg s entrega un mensaje a la cola síncrona con callback, como haría av-cam */
 static void *injector(void *a) {
     char *spec = strdup(getenv("INJECT")), *sp1 = 0; (void)a; unsigned long t0 = 0;
-    for (char *it = strtok_r(spec, ";", &sp1); it; it = strtok_r(0, ";", &sp1)) {
+    for (char *it = strtok_r(spec, ";/", &sp1); it; it = strtok_r(0, ";", &sp1)) {
         const char *e; unsigned long at = hexv(it, &e); unsigned q = hexv(e + 1, &e);
         unsigned *m = calloc(64, 4); int n = 0;
         while (*e == ':' || *e == ',') { m[n++] = hexv(e + 1, &e); if (n >= 60) break; }
         if (at > t0) { sleep(at - t0); t0 = at; }
-        int ok = cb_deliver(q, m); efp("[shim] INJECT q=%#x w0=%#x -> %s\n", q, m[0], ok ? "entregado" : "SIN CALLBACK");
+        int ok = cb_deliver(q, m); const char *how = "callback";
+        if (!ok && is_dynq(q)) { mbx_post(q, m, 0); ok = 1; how = "buzón"; }  /* cola que un hilo lee con rcv_msg (p. ej. KEYQ=7a0020, el driver de entrada) */
+        efp("[shim] INJECT q=%#x w0=%#x -> %s\n", q, m[0], ok ? how : "SIN CALLBACK NI BUZÓN");
     }
     return 0;
 }
 /* SEMSIG: semáforos que en la cámara señala otro procesador (av-cam) y aquí nadie; se dejan señalados al arrancar.
    0x83037a: el main de im.elf (antes de crear el hilo de aplicación appFw.so → UI) y luego el hilo Appframework esperan en él; se señala 4 veces. Lista hex separada por comas; vacío = ninguno. */
+static void keyq_init(void) {  /* KEYQ=qid_hex[,…]: colas del kernel que un hilo de usuario lee con rcv_msg: se les da buzón (para INJECT) */
+    const char *p = getenv("KEYQ"); while (p && *p) { const char *q; unsigned id = hexv(p, &q); if (q == p) break; dynq_add(id); p = *q == ',' ? q + 1 : q; }
+}
 static void presignal(void) {
     const char *e = getenv("SEMSIG"), *p = e ? e : "83037a,83037a,83037a,83037a";
     while (*p) { const char *q; unsigned id = hexv(p, &q); if (q == p) break; sem_sig(id); p = *q == ',' ? q + 1 : q; }
 }
-__attribute__((constructor)) static void shim_init(void) { presignal(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
+__attribute__((constructor)) static void shim_init(void) { presignal(); keyq_init(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
     sa.sa_flags = SA_SIGINFO | SA_RESETHAND; sigaction(SIGSEGV, &sa, 0); sigaction(SIGBUS, &sa, 0); sigaction(SIGILL, &sa, 0); sigaction(SIGABRT, &sa, 0); }  /* un fallo imprime la pila y se reintenta por defecto (core) */
 
 /* Experimento (SKIPFN=717830,...): sustituye esas funciones Thumb de libObj por «movs r0,#0; bx lr» (devuelven éxito sin hacer nada). */
