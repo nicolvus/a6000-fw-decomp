@@ -323,6 +323,7 @@ int ioctl(int fd, unsigned long req, ...) {
         case 3: LOG("uipc stat_msgq %#x (sin modelar: 0)", w[0]); return 0;
         case 5: {  /* snd_sync_msg {qid, &{msg, cb, arg}}: 0x8f013a es el registro de trazas (u16 + texto "%4X %s %s") */
             unsigned *t5 = (unsigned *)w[1];
+            if (getenv("VERB5") && w[0] != 0x8f013a && w[0] != 0x720018) LOG("sync5 qid=%#x t5[1]=%#x", w[0], ((unsigned *)w[1])[1]);
             unsigned char *m = (unsigned char *)t5[0];
             if (t5[1]) return 0;  /* segunda llamada del emisor: fin del callback síncrono */
             { static int ns5; const char *e = getenv("STACKQ"); if (e && hexv(e, 0) == w[0] && ++ns5 == 3) raise(SIGUSR1); }  /* STACKQ=qid: pila del emisor en el 3.er envío */
