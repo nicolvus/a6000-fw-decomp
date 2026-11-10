@@ -10,3 +10,8 @@ echo "alive=$P threads=$(ls /proc/$P/task 2>/dev/null | wc -l) lineas=$(grep -ac
 grep -a "EXIT=\|ABORT\|Segmentation\|Aborted\|dlopen(.*) -> 0x0\|respuesta a" /tmp/im_s.log | tail -8 | cut -c1-160
 echo "--- ultimas lineas (filtradas)"
 grep -av "snd_msg a la cola\|valloc\|uipc free\|wait_cb\|094_\|wai_sem\|sig_sem\|LOG $\|dynamic_id sem\|NOFILTER_x\|LOGRAW" /tmp/im_s.log | tail -${TAILN:-40} | cut -c1-190
+if [ -n "$FULLLOG" ]; then  # registro completo del guest por la consola; run.py lo decodifica en DIR_TRABAJO/guest.log
+  tr -d '\r' < /tmp/im_s.log > /cam/tmp/im_s.log  # el busybox del instalador no trae gzip: usar el de la cámara (chroot)
+  if chroot /cam /bin/busybox gzip -c /dev/null > /dev/null 2>&1; then GZ="chroot /cam /bin/busybox gzip -9 -c /tmp/im_s.log"; else GZ="cat /cam/tmp/im_s.log"; fi
+  echo "=====GUESTLOG-BEGIN $GZ"; $GZ | base64; echo "=====GUESTLOG-END"
+fi

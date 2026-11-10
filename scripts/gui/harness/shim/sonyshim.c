@@ -142,9 +142,10 @@ static pthread_mutex_t mbx_m = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t mbx_c = PTHREAD_COND_INITIALIZER;
 static void dynq_add(unsigned q) { pthread_mutex_lock(&mbx_m); if (ndynq < 64) dynq[ndynq++] = q; else LOG("dynq lleno: %#x sin buzón", q); pthread_mutex_unlock(&mbx_m); }
 static int is_dynq(unsigned q) { for (int k = 0; k < ndynq; k++) if (dynq[k] == q) return 1; return 0; }
-static void mbx_post(unsigned q, const unsigned *req) {
+static void mbx_post(unsigned q, const unsigned *req, int req_id0) {  /* req_id0: dmpNative::InternalCmd (0x61003c) espera req_id 0 en +6 (medido con TRACEFN en 0x6a2612: r2=0xe copiado, r3=0 esperado) */
     unsigned char *b = calloc(1, 0x300); unsigned *body = (unsigned *)(b + 0x20); int k;
     memcpy(body, req, 28); body[-1] = 0x61003c; ((unsigned short *)body)[1] = 0;  /* cabecera esperada por 0x6a25e0 y estado 0 */
+    if (req_id0) ((unsigned short *)body)[3] = 0;
     pthread_mutex_lock(&mbx_m);
     for (k = 0; k < 16 && mbx[k].msg; k++);
     if (k < 16) { mbx[k].q = q; mbx[k].msg = body; } else { LOG("mbx lleno: respuesta a %#x perdida", q); free(b); }
@@ -165,11 +166,30 @@ fin:
     pthread_mutex_unlock(&mbx_m); return r;
 }
 
+/* Colas de kernel con callback de usuario (reg_msg_queue_cb, idx 8). En libosal_uipc.so: los hilos proxy bloqueados en wait_cb (idx 13)
+ * reciben {cb, arg, msg, 0} y llaman cb(msg, arg); un envío síncrono (idx 5) a una cola con callback devuelve {cb, arg} al emisor en su
+ * propio struct, el emisor llama cb(msg, arg) y repite el ioctl(5) para terminar. */
+static struct { unsigned q; void *cb, *arg; } cbs[128]; static int ncbs;
+static struct { void *cb, *arg, *msg; } dlv[256]; static unsigned dlv_r, dlv_w;
+static pthread_mutex_t cb_m = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t cb_c = PTHREAD_COND_INITIALIZER;
+static unsigned long hexv(const char *s, const char **end);
+static int cb_find(unsigned q) { for (int k = 0; k < ncbs; k++) if (cbs[k].q == q) return k; return -1; }
+static int cb_deliver(unsigned q, void *msg) {  /* 1 = encolado para un hilo proxy */
+    pthread_mutex_lock(&cb_m); int k = cb_find(q);
+    if (k >= 0) {
+        if (dlv_w - dlv_r < 256) { dlv[dlv_w % 256].cb = cbs[k].cb; dlv[dlv_w % 256].arg = cbs[k].arg; dlv[dlv_w % 256].msg = msg; dlv_w++; pthread_cond_signal(&cb_c); }
+        else LOG("dlv lleno: mensaje a %#x perdido", q);
+    }
+    pthread_mutex_unlock(&cb_m); return k >= 0;
+}
+
 int ioctl(int fd, unsigned long req, ...) {
     static int (*r)(int, unsigned long, ...);
     va_list a; va_start(a, req); void *arg = va_arg(a, void *); va_end(a);
     if (fd >= 0 && fd < MAXFD && kind[fd] == D_UIPC) {
-        unsigned idx = req & 0x7fffffff;
+        unsigned idx = req & 0x7fffffff;  /* índices según u_osal_* de libosal_uipc.so: 0 stat_sem 1 wai_sem 2 sig_sem 3 stat_msgq 4 snd_msg
+            5 snd_sync_msg 6 snd_sync_direct 7 rcv_msg 8 reg_msg_queue_cb 9 unreg 0xa valloc 0xb free 0xc dynamic_id 0xd wait_cb 0xe/0xf modos de cola 0x10 connect */
         if (idx == 0x10) {  /* connect: {tamaño memoria compartida, montón, reservado, ?} (valores de __k_4u_connect) */
             unsigned *o = *(unsigned **)((char *)arg + 4);
             o[0] = 0x80000; o[1] = 0x20000; o[2] = 0x8000; o[3] = 0;
@@ -190,9 +210,29 @@ int ioctl(int fd, unsigned long req, ...) {
             if ((int)t[1] < 0 && getenv("RCVSTACK")) { static unsigned vq[64]; static int nq; int k, ya = 0; for (k = 0; k < nq; k++) if (vq[k] == w[0]) ya = 1; if (!ya && nq < 64) { vq[nq++] = w[0]; raise(SIGUSR1); } }
             { void *mm; int rr = mbx_take(w[0], (int)t[1], &mm); if (rr == 0) { *(void **)t[0] = mm; LOG("rcv_msg qid=%#x <- respuesta", w[0]); return 0; } if (rr != 1) return rr; }
             return kernel_sleep((int)t[1]); }
-        case 13: LOG("uipc wait_cb (proxy bloqueado)"); return kernel_sleep(-1);
-        case 5: {  /* snd_sync_msg {qid, msg}: 0x8f013a es el registro de trazas (u16 + texto "%4X %s %s") */
-            unsigned char *m = *(unsigned char **)w[1];  /* w[1] -> {msg, ...} */
+        case 13: {  /* wait_cb {0, &out[4]}: el proxy espera una entrega y llama out[0](out[2], out[1]) */
+            unsigned *out = (unsigned *)w[1];
+            pthread_mutex_lock(&cb_m);
+            while (dlv_r == dlv_w) pthread_cond_wait(&cb_c, &cb_m);
+            out[0] = (unsigned)dlv[dlv_r % 256].cb; out[1] = (unsigned)dlv[dlv_r % 256].arg; out[2] = (unsigned)dlv[dlv_r % 256].msg; out[3] = 0; dlv_r++;
+            pthread_mutex_unlock(&cb_m);
+            if (getenv("VERB")) LOG("wait_cb -> cb %#x msg %#x", out[0], out[2]);
+            return 0; }
+        case 8: {  /* reg_msg_queue_cb(qid, arg, cb, prio) → {qid, &{arg, cb, prio, 0}}: t[0] es un puntero a objeto (par), t[1] código Thumb (impar) */
+            unsigned *t = (unsigned *)w[1];
+            pthread_mutex_lock(&cb_m);
+            int k = cb_find(w[0]); if (k < 0 && ncbs < 128) k = ncbs++;
+            if (k >= 0) { cbs[k].q = w[0]; cbs[k].cb = (void *)t[1]; cbs[k].arg = (void *)(t[3] == 1 ? t[2] : t[0]); }  /* t[3]==1: registro síncrono, el argumento va en t[2] (EventWrapper de libMWF) */
+            pthread_mutex_unlock(&cb_m);
+            LOG("uipc reg_%smsg_queue_cb qid=%#x arg=%#x cb=%#x t2=%#x%s", t[3] == 1 ? "sync_" : "", w[0], t[0], t[1], t[2], k < 0 ? " (tabla llena)" : ""); return 0; }
+        case 9: { pthread_mutex_lock(&cb_m); int k = cb_find(w[0]); if (k >= 0) cbs[k].q = 0; pthread_mutex_unlock(&cb_m); LOG("uipc unreg_msg_queue_cb qid=%#x", w[0]); return 0; }
+        case 3: LOG("uipc stat_msgq %#x (sin modelar: 0)", w[0]); return 0;
+        case 5: {  /* snd_sync_msg {qid, &{msg, cb, arg}}: 0x8f013a es el registro de trazas (u16 + texto "%4X %s %s") */
+            unsigned *t5 = (unsigned *)w[1];
+            unsigned char *m = (unsigned char *)t5[0];
+            if (t5[1]) return 0;  /* segunda llamada del emisor: fin del callback síncrono */
+            { pthread_mutex_lock(&cb_m); int k = cb_find(w[0]); if (k >= 0) { t5[1] = (unsigned)cbs[k].cb; t5[2] = (unsigned)cbs[k].arg; } pthread_mutex_unlock(&cb_m);
+              if (k >= 0) { if (getenv("VERB")) LOG("snd_sync_msg %#x -> callback directo", w[0]); return 0; } }
             if (w[0] == 0x8f013a) { if (m[2]) LOG("LOG %s", (char *)m + 2); else if (getenv("VERB")) { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
             else if (w[0] == 0x3e014d) backup_service((unsigned *)m);
             else if (w[0] == 0x14c0424 && ((unsigned *)m)[0] == 7) {  /* área de memoria por nombre (dmm): {7, nombre[16], estado, phys, tamaño, ?} */
@@ -216,7 +256,13 @@ int ioctl(int fd, unsigned long req, ...) {
                 { char c[420]; int o = 0, pd = 1; for (k = 0; t[k]; k++) { if (t[k] == '.') { if (!pd) c[o++] = ' '; pd = 1; } else { c[o++] = t[k]; pd = 0; } } c[o] = 0; if (o > 6) LOG("TRAZA %s", c); }
                 if (strstr(t, "MMapBase")) { char h[500]; int o = 0; for (k = 0; k < 200; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]); LOG("TRAZAHEX %s", h); }
                 return 0; }
-            if (w[0] == 0xd9016e) { mbx_post(((unsigned *)m)[2], (unsigned *)m); LOG("snd_msg 0xd9016e -> respuesta a %#x", ((unsigned *)m)[2]); return 0; }
+            if (cb_deliver(w[0], m)) { if (getenv("VERB")) LOG("snd_msg %#x -> callback", w[0]); return 0; }
+            /* Servicios de kernel con acuse genérico (ACKQ=d9016e,7a0029,…; 0xd9016e registro de puerto de vídeo, 0x7a0029 input.ko): se
+             * responde a la cola dinámica que viaja en el cuerpo copiando la petición con estado 0 (lo que comprueba el emisor síncrono
+             * 0x6a2550 de libObj). shortcut: a 0x61003c la misma respuesta hace saltar la aserción de 0x6a25d2; modelarla cuando se conozca su formato. */
+            { const char *e = getenv("ACKQ"); if (!e) e = "d9016e,7a0029"; int ack = 0;
+              while (*e) { if (hexv(e, &e) == w[0]) ack = 1; while (*e == ',') e++; }
+              if (ack) for (int k = 0; k < 6; k++) if (is_dynq(((unsigned *)m)[k])) { mbx_post(((unsigned *)m)[k], (unsigned *)m, w[0] == 0x61003c); LOG("snd_msg %#x -> acuse genérico a %#x (palabra %d)", w[0], ((unsigned *)m)[k], k); return 0; } }
             if (w[0] == 0x9a015a || w[0] == 0x9c015b) { static int n; if (n++ < 4) raise(SIGUSR1); if (n > 5) { usleep(20000); return 0; } }  /* bucle HDMI: pila y silencio */
             if (getenv("VERB")) { char h[200]; int k, o = 0; for (k = -32; k < 32; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]); LOG("MSGHEX %#x %s", w[0], h); }
             LOG("uipc snd_msg a la cola de kernel %#x (descartado) cab=%02x%02x%02x%02x datos=%08x %08x", w[0], m[-12], m[-11], m[-10], m[-9],

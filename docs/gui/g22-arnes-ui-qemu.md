@@ -34,14 +34,17 @@ emulada. Es el único camino para verificar menús sin arriesgar la unidad (cada
 |---|---|---|
 | 0x10 | connect | `{0x80000, 0x20000, 0x8000, 0}` (valores de `__k_4u_connect`) |
 | 0 / 1 / 2 | stat / wai / sig sem | Semáforos propios (cuenta inicial 1; `0x83037a` = señal de salida de `im.elf`, inicial 0); aviso `BLOQUEO sem` tras 8 s sin señal |
-| 4 | snd_msg | `0x8f0139/a` trazas (texto) · `0xd9016e` responde al solicitante (cabecera `0x61003c`, estado 0) · `0x9a015a/0x9c015b` (HDMI/WLAN) silenciadas · resto: descartado y registrado |
-| 5 | snd_sync_msg | `0x8f013a` trazas · `0x3e014d` **backup** (op 0 tamaño, 3 lectura, 4 lectura de 4 B, 8 escritura descartada; datos de `bk.tbl`) · `0x14c0424` **dmm** (código 7: área por nombre → phys desde `0x80000000`, 64 MiB por área) |
+| 3 | stat_msgq | devuelve 0 y lo registra |
+| 4 | snd_msg | `0x8f0139/a` trazas (texto) · colas con callback registrado → se entrega a un hilo proxy (idx 13) · `ACKQ` (por defecto `d9016e,7a0029`): acuse genérico a la cola dinámica que viaja en el cuerpo (cabecera `0x61003c`, estado 0) · resto: descartado y registrado |
+| 5 | snd_sync_msg | colas con callback registrado → devuelve `{cb,arg}` y el emisor llama `cb(msg,arg)` en su hilo (`__osal_finish_sync_cb` lo cierra con la 2.ª llamada) · `0x8f013a` trazas · `0x3e014d` **backup** (op 0 tamaño, 3 lectura, 4 lectura de 4 B, 8 escritura descartada; datos de `bk.tbl`) · `0x14c0424` **dmm** (código 7: área por nombre → phys desde `0x80000000`, 64 MiB por área) |
 | 6 | snd_sync_direct | responde 0 (`0x910042`… sin modelar) |
 | 7 | rcv_msg | colas dinámicas (`dynamic_id` tipo `0x2a`) leen su buzón con el *timeout* pedido; las demás «duermen» y devuelven `E_TMOUT` |
 | 10 / 11 | valloc / free | reserva `tamaño+0x240` con cabecera de 0x20; `free` no libera (fuga aceptada) |
 | 12 | dynamic_id | tipo `0x32` semáforo y `0x2a` cola: id `(grupo<<16)|n` |
-| 13 | wait_cb | bloquea para siempre (proxy) |
-| **3, 8** | — | **sin modelar** (vistos en el arranque: `idx=8` tras crear la cola `0x3c4049`, `idx=3 args 0x7a0029`) |
+| 8 / 9 | reg / unreg_msg_queue_cb | tabla `cbs[]`: `(qid, arg=t[0], cb=t[1])`; el registro **síncrono** (`t[3]==1`) lleva el argumento en `t[2]` (`MWF::EventWrapper`) |
+| 13 | wait_cb | el proxy espera una entrega y vuelve con `{cb, arg, msg}` (`libosal_uipc` llama `cb(msg, arg)`) |
+
+Índices medidos en `libosal_uipc.so` (Thumb): 0 stat_sem · 1 wai_sem · 2 sig_sem · 3 stat_msgq · 4 snd_msg · 5 snd_sync_msg · 6 snd_sync_direct · 7 rcv_msg · 8 reg_msg_queue_cb · 9 unreg · 0xa valloc · 0xb free · 0xc dynamic_id · 0xd wait_cb · 0xe/0xf modos de cola · 0x10 connect. Sin servicio (descartados): colas `0x7a0020` (input.ko), `0x5700f9`, `0x5a0048`, `0x16f4010`, `0x61003c`; backup `op 1`/`op 5`.
 
 Otros ganchos: cualquier otro `/dev/*` → fd inerte sobre `/dev/null` con `mmap` anónimo (`/dev/mem`, `/dev/stream*`, `/dev/nflasha4`…);
 `/proc/modules` simulado con `grm_ma`/`grm_gles`; `dlopen`/`system`/`fopen`/`munmap` registrados; `abort()` vuelca `r4–r8/lr`;
@@ -52,6 +55,8 @@ Otros ganchos: cualquier otro `/dev/*` → fd inerte sobre `/dev/null` con `mmap
 | Variable | Efecto |
 |---|---|
 | `WAIT` / `TAILN` | `im.sh`: segundos de espera (50) y líneas finales mostradas (40) |
+| `FULLLOG=1` | `im.sh`: trae el registro completo del guest al anfitrión (`DIR_TRABAJO/guest.log`, gzip+base64 por la consola) |
+| `ACKQ=hex,hex,…` | colas de kernel que reciben acuse genérico (por defecto `d9016e,7a0029`) |
 | `VERB=1` | muestra valloc/free/direct, `MSGHEX` de envíos a colas de kernel y `LOGRAW` |
 | `TIDLOG=1` | antepone el tid a cada línea |
 | `BKV=1` | registra cada petición al backup (por defecto solo los ids ausentes) |
@@ -78,7 +83,7 @@ Requisitos del anfitrión: `qemu-system-arm` (probado 11.1.3), `clang`+`lld`, `b
 `references/pmca`. Un `setup.sh` con las descargas ya hechas tarda ≈ 5 s; el arranque completo ≈ 15 s y la ejecución la fija `WAIT`.
 
 Resultado de referencia (09-11-2026, tras la auditoría §6): `alive=<pid> threads=49 lineas=1542 modulos=47`,
-`snd_msg 0xd9016e -> respuesta a 0xaf403b`, última espera `rcv_msg qid=0xaf404a tmo=-1`, sin `ABORT`/`EXIT`.
+`snd_msg 0xd9016e -> respuesta`, sin `ABORT`/`EXIT`. Tras el avance 18 (callbacks): `threads=49 modulos=46`, `guest.log` ≈ 3 000 líneas sin `VERB` (`FULLLOG=1` lo trae al anfitrión).
 
 ## 4. Camino recorrido (avances 1–17, condensado)
 
@@ -102,6 +107,13 @@ sabe qué servicio la atiende ni qué respuesta espera. Hay no determinismo entr
 Sin `POKE`, el asignador nulo hace fallar `0x71e890`. INFERENCIA: el asignador real lo instala `dmp_allocator_lib_init` (`0x6c70f0`)
 con pools `mpool_0x10` (`libObj+0x65f420`), y los *callbacks* del controlador GL (`0x1016f38+0x34/+0/+4/+0x38`) los provee el módulo
 `grm_gles.ko` (dispositivo `/dev/dmpgles2`), que no existe en QEMU.
+
+### 5.1 Avance 18 (09-11-2026): callbacks de cola y protocolo de `0x61003c`
+
+- `idx 8/13/5` modelados: antes las colas con callback (MWF, HDMI `0x9c015b`, etc.) no recibían nada; ahora hay ≈ 300 entregas asíncronas por arranque y `libMWF` (`EventWrapper::CallBackPoint`) responde. Corregido en el camino el orden de argumentos del registro (`t[0]`=arg, `t[1]`=cb) y el argumento del registro síncrono (`t[2]`).
+- Referencia nueva: `threads=49 modulos=46` (+`libMWF`, `libmpr*`, `MediaMount/Detect`), sin `ABORT` ni `ioctl ignorada`.
+- El trabajador B (`THREAD_INFRA0`) espera en `rcv_msg` de una cola dinámica tras enviar a **`0x61003c`** (`m[0]=1, m[1]=0x000e1700, m[3]=-1, m[4]`=cola de respuesta; cabecera `m[-4]`=cola): orden de `dmpNative::InternalCmd` (`int_cmd.cpp`). Con `ACKQ=d9016e,7a0029,61003c` la respuesta pasa la aserción `int_cmd.cpp:171` (`req_id` en `+6` debe ser **0**; medido con `TRACEFN=6a2612`: `r2=0xe` copiado frente a `r3=0` esperado) y el sistema avanza hasta `DataflowInfraPin::RequestDisconnect` (`libObj+0x6a7f60`), que aborta con «invalid phys 0x01704021»: recibe nuestro acuse (cola de respuesta en `m[4]`) donde espera una dirección física. Por eso `61003c` **no** está en el `ACKQ` por defecto.
+- Siguiente (F2): modelar el protocolo de pines de `stream.ko` (`DataflowInfraPin::Request*`, `_MSG_PIN_REQUEST_*`): desensamblar `0x6a7968`/`0x6a7f60` y fabricar respuestas con direcciones físicas de las áreas `dmm`.
 
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
@@ -129,7 +141,7 @@ despreciable), `direct_service` responde 0 a todo.
 | Fase | Trabajo | Criterio de cierre |
 |---|---|---|
 | F0 (hecha 09-11-2026) | Reproducibilidad, correcciones del shim, pruebas, documentación | `setup.sh` + `run.py` llegan al punto de referencia de §3 |
-| F1 Cobertura de uipc | Modelar `ioctl idx 3` y `8` (ver §2.1), backup `op 1`/`op 5` (ids que son punteros), `snd_sync_direct 0x910042` según su estructura real; contar «ignorada / sin modelar» por arranque | Arranque sin ninguna línea «ignorada»/«sin modelar» |
+| F1 Cobertura de uipc (**ioctl hechos 09-11-2026; faltan servicios**) | `idx 3/8/9/13` y callbacks modelados (§2.1); quedan servicios de kernel sin respuesta (`0x7a0020`, `0x5700f9`, `0x5a0048`, `0x16f4010`, `0x61003c`), backup `op 1`/`op 5` (ids que son punteros) y `snd_sync_direct 0x910042` | Arranque sin ninguna línea «descartado»/«sin modelar» |
 | F2 Desbloquear `grm_init` | (a) con `TIDLOG` seguir al trabajador B tras la respuesta `0xd9016e` hasta su siguiente espera; (b) identificar el servicio de la segunda petición (`0xaf404a`) y responderla como `0xd9016e`; (c) si el bloqueo es el asignador, imitar `65f420` (pools) en lugar de `malloc`; (d) si son los *callbacks* GL, sustituir la ruta GL entera (`0x717830` con `SKIPFN`) y satisfacer `grm_ma` con un asignador falso que no aborte en la limpieza | `grm_init` retorna, `THREAD_INFRA0/1` avanzan y **`appFw.so` se carga** (etapa 4) |
 | F3 Pantalla | No hay `/dev/fb0`: enganchar la presentación de [G03](g03-compositor.md) (`GRM_fbrmUpdateYUV` / `0x12e6d0`) para volcar la superficie YUV a `/tmp` y convertirla a PNG en el anfitrión | Imagen reconocible del menú o de la pantalla de disparo |
 | F4 Entrada | Modelar `input`/`sircs` (teclas, rueda) por `uipc` o `/dev/input` para navegar | Cambio de pantalla al inyectar una tecla |

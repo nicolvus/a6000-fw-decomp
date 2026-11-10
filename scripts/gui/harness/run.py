@@ -5,6 +5,8 @@ Uso: [SHIMENV="WAIT=60 CVWAIT=0 ..."] run.py DIR_TRABAJO SCRIPT.sh [segundos] [e
   Debe existir DIR_TRABAJO/{vmlinuz,base.cpio.gz} (lo crea setup.sh). El overlay se concatena (el kernel admite cpio.gz concatenados).
   SHIMENV se escribe en /cam/harness.env dentro del guest; im.sh lo exporta antes de arrancar im.elf.
 """
+import base64
+import gzip
 import os
 import shutil
 import subprocess
@@ -39,4 +41,11 @@ with tempfile.TemporaryDirectory() as t:
         except subprocess.TimeoutExpired:
             p.kill()
             p.wait()
-    print(log.read_text(errors="replace")[-20000:])
+    text = log.read_text(errors="replace")
+    if "=====GUESTLOG-BEGIN" in text and "=====GUESTLOG-END" in text:  # FULLLOG=1 en im.sh
+        head, blob = text.split("=====GUESTLOG-BEGIN", 1)[1].split("=====GUESTLOG-END", 1)[0].split("\n", 1)
+        raw = base64.b64decode("".join(blob.split()))
+        data = gzip.decompress(raw) if "gzip" in head else raw
+        (work / "guest.log").write_bytes(data)
+        text = text.split("=====GUESTLOG-BEGIN", 1)[0] + f"[guest.log: {data.count(b'\n')} líneas]"
+    print(text[-20000:])

@@ -580,3 +580,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 08-11-2026: G11 §12 — 3.52 arranca en frío (`BootMode: 1`): causa confirmada. 3.53 (menú completo sin `nflasha5`) construido, 25/25.
 - 08-11-2026: G11 §13 — 3.53 en cámara: arranca y aparece «Silent Shooting», sin selector. 3.54: listas del nodo con `0xb`/`0xc` del EFCS en segmento nuevo (qemu OK), 25/25.
 - 09-11-2026: G22-B — auditoría del arnés de la UI: `setup.sh` reproducible, `im.sh`+`SHIMENV`, shim corregido (buzones con *timeout*, colas dinámicas, señal segura), `tests/test_gui_harness.py`, informe [G22](../docs/gui/g22-arnes-ui-qemu.md) con el plan F1–F5; verificado en QEMU el mismo punto que el avance 17.
+- 09-11-2026: G22-B avance 18 — callbacks de cola de `libosal_uipc` (idx 3/8/9/13) modelados; `FULLLOG`/`ACKQ`; bloqueo ahora en el protocolo de pines (`DataflowInfraPin`, tras acusar `0x61003c`). Ver [G22 §5.1](../docs/gui/g22-arnes-ui-qemu.md).
