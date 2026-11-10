@@ -239,6 +239,13 @@ Causa del bloqueo de `Appframework` (§5.6) y arreglos en el shim (todos por def
 - Con `PATCHFN=viewUnified2.so:17094c=0|1|3` (el comprobador devuelve ese estado) desaparece `TIME get error`, pero el registro sigue mostrando `getCurrentLayout_POWER_ON … USBAndClockReady Non-Display` y la tabla de la GPU sigue con **4 trabajos**. Conclusión: `Non-Display` es probablemente el **nombre del diseño de espera** del arranque (no un fallo) y §5.11/§5.12 sobrestimaban su papel como causa. Lo que falta es la transición siguiente de `ViewRootPowerSw` (`ST_INIT → … «POWER Key Final to On»`), que depende del evento de tecla de encendido: `InputService` recibe el mensaje inyectado pero lo marca `INH` (`callback_convert_not_user_operation … event_code=0x15010010 status=0`) y las repeticiones dan «same event».
 - Siguiente paso: averiguar por qué el evento `0x15010010` se inhibe (estado de `InputService`/`ModelRoot`: `getInputEventStatus` devuelve `pKeyStatus->getNumber=5`) y qué secuencia (pulsar/soltar, `w1…w5`) lleva `ViewRootPowerSw` a «Final to On».
 
+### 5.14 Avance 31 (10-11-2026): la tecla de encendido llega con `status`; `ViewRootPowerSw` la procesa hasta `isBootEECapNone`
+
+- **Formato del mensaje de entrada** (cola `0x7a0020`, `INJECT=seg:7a0020:w0,w1,…`, tiempos y valores en hex): **`w1` = estado** del evento (`2,1,0,0,0,0` → `callback_convert_not_user_operation … event_code=0x15010010 status=1 prev_status=0`; `2,0,0,0,0,0` → `status=0`). El «INH» del registro es solo la etiqueta del callback; los eventos `0x15010010` son del interruptor de encendido (0 = apagado, 1 = encendido) y mi inyección anterior lo mandaba siempre a 0. Repetir el mismo valor da «same event».
+- Con `status=1`, `ViewRootPowerSw` ejecuta `isBootEECapNone` → «Boot EECap is 84ffe994» (parece un puntero del montón, no un valor) → `ret : 0`, y no avanza a «POWER Key Final to On». Los valores de arranque de `ModelRoot` (`BootKey/BootType/BootBis/EeCap`) siguen `Unknown Value 0x0` (tabla de conversión de 23 entradas en `libObj+0x63c470`: el valor crudo 0 no figura); su origen (servicio de arranque/`upm_get_boot_factor`) no está modelado.
+- `libObj+0x63cf6c` también usa `0x90013d` orden 2 y copia 10 B desde `+0x14` (fecha: 4×u16 + tipo en `+0x1c`, inferido); el shim ya rellena una fecha fija (sin comprobar).
+- Siguiente paso: modelar los datos de arranque crudos (EECap/BootKey…) y repetir `INJECT` con `status=1`; ver si aparece «POWER Key Final to On» y entonces trabajos nuevos en la tabla de la GPU.
+
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
 Verificado: `build.sh` reproduce byte a byte el `sonyshim.so` que se estaba usando (md5 `5307f8ae…` antes de las correcciones);

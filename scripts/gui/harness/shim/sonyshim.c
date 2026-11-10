@@ -148,6 +148,7 @@ static int direct_service(unsigned qid, unsigned *m) {
     if (m[0] == 0x28 && ((unsigned short *)m)[8] == 2 && !getenv("NODATE")) {
         unsigned short *h = (unsigned short *)m; const char *e = getenv("DATETYPE");
         h[9] = 0; h[14] = e ? (unsigned short)hexv(e, 0) : 1;
+        h[10] = 2026; h[11] = 11; h[12] = 10; h[13] = 13;  /* shortcut: fecha fija; formato (+0x14: 4×u16 + tipo en +0x1c) inferido de libObj+0x63cf6c (memcpy de 10 B), sin comprobar */
         static int n; if (n++ < 3) LOG("direct %#x get_date -> tipo %u", qid, h[14]);
     }
     return 0;
