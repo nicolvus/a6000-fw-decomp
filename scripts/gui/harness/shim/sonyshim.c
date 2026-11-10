@@ -489,6 +489,11 @@ static void *openviewer(void *a) {
         void (*ctor)(void *) = dlsym(RTLD_DEFAULT, "_ZN9ParamListC1Ev"); static char lb[512];
         if (rq && ctor) { ctor(lb); int rr = rq(getenv("PREACQ"), 0, lb); efp("[shim] PREACQ %s -> %d\n", getenv("PREACQ"), rr); sleep(3); }
     }
+    if (getenv("PREACQST") && lobj_h) {  /* PREACQST=i,j,…: llama a ModelManager::acquireStatus(i) (índice de estado) antes de abrir vistas */
+        void **pvm = dlsym(lobj_h, "pViewManager"); unsigned char *base = (unsigned char *)ov - 0x1251fd;
+        if (pvm && *pvm) { void *mm = *(void **)((char *)*pvm + 0x18); int (*aq)(void *, int) = (int (*)(void *, int))(base + 0x7eb0a2 + 1);
+            for (const char *e = getenv("PREACQST"); e && *e; ) { int i = (int)hexv(e, &e); int rr = aq(mm, i); efp("[shim] PREACQST acquireStatus(%d) -> %d\n", i, rr); sleep(2); while (*e == ',') e++; } }
+    }
     if (getenv("PRECREATE") && lobj_h) {  /* PRECREATE=modelo: publica el evento «solicitar modelo» (libObj+0x7eb9e8: mm, {?,?,id}) para que Appframework cree el modelo ANTES de abrir la vista */
         unsigned char *base = (unsigned char *)ov - 0x1251fd; void **pvm = dlsym(lobj_h, "pViewManager");
         unsigned (*idget)(const char *) = dlsym(lobj_h, "_ZN11IdGenerator3GetEPKc");
@@ -500,7 +505,7 @@ static void *openviewer(void *a) {
     }
     { void **pv = dlsym(lobj_h, "pViewManager"); for (int k = 0; pv && !*pv && k < 600; k++) usleep(100000); }  /* openView con ViewManager aún NULL = SIGSEGV (arranque lento) */
     char *spec = strdup(getenv("OPENVIEW")), *sv = 0;
-    for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) { efp("[shim] OPENVIEW %s ...\n", it); int r = ov(it, 0); efp("[shim] OPENVIEW %s -> %d\n", it, r); sleep(2); }
+    for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) { efp("[shim] OPENVIEW %s ...\n", it); int r = ov(it, 0); efp("[shim] OPENVIEW %s -> %d\n", it, r); sleep(getenv("OPENVIEWGAP") ? (unsigned)hexv(getenv("OPENVIEWGAP"), 0) : 2); }
     return 0;
 }
 static void *injector(void *a) {
@@ -623,6 +628,24 @@ void *dlopen(const char *f, int fl) {
         }
     }
     return h;
+}
+/* ModelManager::pushEvent(Event*): PUSHLOG=1 registra quién publica eventos de modelo (lr y primeras palabras del Event) */
+int _ZN12ModelManager9pushEventEP5Event(void *mm, unsigned *ev) {
+    static int (*real)(void *, void *);
+    if (!real) real = dlsym(RTLD_NEXT, "_ZN12ModelManager9pushEventEP5Event");
+    if (getenv("PUSHLOG")) { static int n; if (n++ < 600) { unsigned long lr = (unsigned long)__builtin_return_address(0); Dl_info di; const char *lib = dladdr((void *)lr, &di) ? di.dli_fname : "?"; LOG("pushEvent lr=%lx (%s+%lx) ev=%08x %08x %08x %08x %08x", lr, lib, dladdr((void *)lr, &di) ? lr - (unsigned long)di.dli_fbase : 0, ev[0], ev[1], ev[2], ev[3], ev[4]); } }
+    return real ? real(mm, ev) : 0;
+}
+/* ModelManager::acquireStatus/releaseStatus(int): PUSHLOG=1 registra quién fija el «estado» del sistema (0x4/0x5/0x7 0000…) */
+int _ZN12ModelManager13acquireStatusEi(void *mm, int st) {
+    static int (*real)(void *, int); if (!real) real = dlsym(RTLD_NEXT, "_ZN12ModelManager13acquireStatusEi");
+    if (getenv("PUSHLOG")) { unsigned long lr = (unsigned long)__builtin_return_address(0); Dl_info di; int ok = dladdr((void *)lr, &di); LOG("acquireStatus(%#x) lr=%lx (+%lx)", st, lr, ok ? lr - (unsigned long)di.dli_fbase : 0); }
+    return real ? real(mm, st) : 0;
+}
+int _ZN12ModelManager13releaseStatusEi(void *mm, int st) {
+    static int (*real)(void *, int); if (!real) real = dlsym(RTLD_NEXT, "_ZN12ModelManager13releaseStatusEi");
+    if (getenv("PUSHLOG")) { unsigned long lr = (unsigned long)__builtin_return_address(0); Dl_info di; int ok = dladdr((void *)lr, &di); LOG("releaseStatus(%#x) lr=%lx (+%lx)", st, lr, ok ? lr - (unsigned long)di.dli_fbase : 0); }
+    return real ? real(mm, st) : 0;
 }
 /* ViewBase::getModelInfo(nombre, info, lista, filtro): las vistas piden datos de modelo por aquí (PLT → este símbolo antes que libObj). GMILOG=1 registra cada petición y su resultado. */
 int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name, int info, void *list, const void *flt) {
