@@ -24,4 +24,5 @@ if [ -n "$FULLLOG" ]; then  # registro completo del guest por la consola; run.py
   tr -d '\r' < /tmp/im_s.log > /cam/tmp/im_s.log  # el busybox del instalador no trae gzip: usar el de la cámara (chroot)
   if chroot /cam /bin/busybox gzip -c /dev/null > /dev/null 2>&1; then GZ="chroot /cam /bin/busybox gzip -9 -c /tmp/im_s.log"; else GZ="cat /cam/tmp/im_s.log"; fi
   echo "=====GUESTLOG-BEGIN $GZ"; $GZ | base64; echo "=====GUESTLOG-END"
+  if [ -s /cam/tmp/fb.bin ]; then echo "=====GUESTFILE-BEGIN fb.bin"; chroot /cam /bin/busybox gzip -1 -c /tmp/fb.bin | base64; echo "=====GUESTFILE-END"; fi
 fi

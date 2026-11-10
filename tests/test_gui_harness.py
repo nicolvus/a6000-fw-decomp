@@ -58,7 +58,7 @@ def test_shim_compila_y_exporta_los_ganchos(tmp_path: Path) -> None:
 @pytest.mark.skipif(not (os.environ.get("A6000_HARNESS_RUN") and (WORK / "base.cpio.gz").exists() and shutil.which("qemu-system-arm")),
                     reason="prueba lenta (≈ 2 min): A6000_HARNESS_RUN=1 y setup.sh hecho")
 def test_arranque_en_qemu_llega_a_la_pila_de_ventanas() -> None:
-    """Referencia del avance 19+: im.elf vivo, > 55 módulos cargados, sin aborto; libgrm cargada y WindowServer iniciado."""
+    """Referencia del avance 23: im.elf vivo, > 55 módulos, sin aborto; libgrm, WindowServer, appFw.so y viewUnified2.so cargados."""
     env = {**os.environ, "SHIMENV": "WAIT=70 CVWAIT=0 POKE=fef348 FULLLOG=1"}
     out = subprocess.run([sys.executable, str(HARNESS / "run.py"), str(WORK), str(HARNESS / "im.sh"), "220"],
                          capture_output=True, text=True, check=True, env=env).stdout
@@ -68,3 +68,4 @@ def test_arranque_en_qemu_llega_a_la_pila_de_ventanas() -> None:
     assert "EXIT=" not in out
     log = (WORK / "guest.log").read_text(errors="replace")
     assert "B  Ii 080_libgrm.so" in log and "Initialize Window System" in log
+    assert "E  Ii 083_appFw.so" in log and "dlopen(viewUnified2.so) ->" in log  # hilo de aplicación (SEMSIG) y vistas cargadas

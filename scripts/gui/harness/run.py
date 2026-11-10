@@ -48,4 +48,9 @@ with tempfile.TemporaryDirectory() as t:
         data = gzip.decompress(raw) if "gzip" in head else raw
         (work / "guest.log").write_bytes(data)
         text = text.split("=====GUESTLOG-BEGIN", 1)[0] + f"[guest.log: {data.count(b'\n')} líneas]"
+    while "=====GUESTFILE-BEGIN" in text and "=====GUESTFILE-END" in text:  # ficheros extra (fb.bin…): gzip+base64 → DIR_TRABAJO/<nombre>
+        pre, rest = text.split("=====GUESTFILE-BEGIN", 1)
+        head, blob = rest.split("=====GUESTFILE-END", 1)[0].split("\n", 1)
+        (work / head.strip()).write_bytes(gzip.decompress(base64.b64decode("".join(blob.split()))))
+        text = pre + f"[{head.strip()} extraído]" + rest.split("=====GUESTFILE-END", 1)[1]
     print(text[-20000:])

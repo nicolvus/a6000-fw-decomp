@@ -383,16 +383,38 @@ static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, L
 }
 #include <dirent.h>
 /* DUMPAT=n: a los n s manda SIGUSR1 a cada hilo (uno por segundo) para ver dónde está parado cada uno */
+static struct { void *p; size_t len; long off; char dev[32]; } amaps[64]; static int nam;
 static void memscan(void);
 static void *dumper(void *a) {
     sleep(num(getenv("DUMPAT"))); (void)a; load_maps();
     if (getenv("MEMSCAN")) memscan();
+    if (getenv("PIXDUMP")) {  /* PIXDUMP=1|off_hex: vuelca el inicio del área /dev/stream con ese offset (por defecto b4000000: búfer de pantalla de FbPool) a /tmp/fb.bin */
+        for (int k = 0; k < nam; k++) if (strstr(amaps[k].dev, "stream") && amaps[k].off == (long)hexv(getenv("PIXDUMP")[0] == '1' ? "b4000000" : getenv("PIXDUMP"), 0)) {
+            size_t n = amaps[k].len < 0x600000 ? amaps[k].len : 0x600000; int fd = open("/tmp/fb.bin", O_WRONLY | O_CREAT | O_TRUNC, 0644);
+            if (fd >= 0) { write(fd, amaps[k].p, n); close(fd); efp("[shim] PIXDUMP %zu B de %s off=%#lx\n", n, amaps[k].dev, amaps[k].off); }
+            break;
+        }
+    }
     DIR *d = opendir("/proc/self/task"); struct dirent *e; int tids[512], n = 0;
     while (d && (e = readdir(d)) && n < 512) if (e->d_name[0] != '.') tids[n++] = num(e->d_name);
     if (d) closedir(d); efp("[shim] dumper hilos=%d\n", n);
     for (int i = 0; i < n; i++) { syscall(SYS_tgkill, getpid(), tids[i], SIGUSR1); sleep(1); }
     return 0;
 }
+
+/* IMDB_TRACE=1: registra las consultas de im.elf a libIMDB (tabla de etapas) para ver qué entradas/destino elige */
+typedef unsigned (*imdb_fn)(unsigned, unsigned, unsigned, unsigned);
+static unsigned imdb_call(const char *nm, unsigned a, unsigned b, unsigned c, unsigned d) {
+    imdb_fn f = (imdb_fn)dlsym(RTLD_NEXT, nm); unsigned r = f ? f(a, b, c, d) : 0;
+    if (getenv("IMDB_TRACE")) {
+        char sa[48] = ""; if (a > 0x10000 && a < 0xbf000000u) snprintf(sa, sizeof sa, " \"%.40s\"", (const char *)a);
+        efp("[shim] %s(%#x%s, %#x) -> %#x\n", nm, a, sa, b, r);
+    }
+    return r;
+}
+unsigned IMDB_find_target_bit(unsigned a, unsigned b, unsigned c, unsigned d) { return imdb_call("IMDB_find_target_bit", a, b, c, d); }
+unsigned IMDB_find_entry(unsigned a, unsigned b, unsigned c, unsigned d) { return imdb_call("IMDB_find_entry", a, b, c, d); }
+unsigned IMDB_get_entries(unsigned a, unsigned b, unsigned c, unsigned d) { return imdb_call("IMDB_get_entries", a, b, c, d); }
 /* INJECT="seg:qid:w0,w1,..;seg:qid:.." (todo en hex; sin strtoul: la glibc 2.11 no tiene __isoc23_*): a los seg s entrega un mensaje a la cola síncrona con callback, como haría av-cam */
 static void *injector(void *a) {
     char *spec = strdup(getenv("INJECT")), *sp1 = 0; (void)a; unsigned long t0 = 0;
@@ -405,7 +427,13 @@ static void *injector(void *a) {
     }
     return 0;
 }
-__attribute__((constructor)) static void shim_init(void) { if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
+/* SEMSIG: semáforos que en la cámara señala otro procesador (av-cam) y aquí nadie; se dejan señalados al arrancar.
+   0x83037a: el main de im.elf espera en él antes de crear el hilo de aplicación (appFw.so → UI). Lista hex separada por comas; vacío = ninguno. */
+static void presignal(void) {
+    const char *e = getenv("SEMSIG"), *p = e ? e : "83037a";
+    while (*p) { const char *q; unsigned id = hexv(p, &q); if (q == p) break; sem_sig(id); p = *q == ',' ? q + 1 : q; }
+}
+__attribute__((constructor)) static void shim_init(void) { presignal(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
     sa.sa_flags = SA_SIGINFO | SA_RESETHAND; sigaction(SIGSEGV, &sa, 0); sigaction(SIGBUS, &sa, 0); sigaction(SIGILL, &sa, 0); sigaction(SIGABRT, &sa, 0); }  /* un fallo imprime la pila y se reintenta por defecto (core) */
 
 /* Experimento (SKIPFN=717830,...): sustituye esas funciones Thumb de libObj por «movs r0,#0; bx lr» (devuelven éxito sin hacer nada). */
@@ -469,7 +497,6 @@ int system(const char *c) {
 }
 
 /* Mapeos anónimos de dispositivos no modelados (para MEMSCAN: qué áreas ha escrito la UI) */
-static struct { void *p; size_t len; long off; char dev[32]; } amaps[64]; static int nam;
 static void memscan(void) {
     for (int k = 0; k < nam; k++) {
         unsigned char *b = amaps[k].p; size_t nz = 0, first = (size_t)-1, last = 0;
