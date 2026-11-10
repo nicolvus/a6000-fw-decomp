@@ -338,6 +338,8 @@ int ioctl(int fd, unsigned long req, ...) {
             if (w[0] == 0x8f0139 || w[0] == 0x8f013a) {  /* registro de trazas asíncrono: texto ASCII dentro del mensaje */
                 char t[420]; int k; for (k = 0; k < 410; k++) t[k] = (m[k] >= 32 && m[k] < 127) ? m[k] : '.'; t[410] = 0;
                 { char c[420]; int o = 0, pd = 1; for (k = 0; t[k]; k++) { if (t[k] == '.') { if (!pd) c[o++] = ' '; pd = 1; } else { c[o++] = t[k]; pd = 0; } } c[o] = 0; if (o > 6) LOG("TRAZA %s", c); }
+                { const char *ka = getenv("KEYONACTIVE"), *kp = strstr(t, "toActive:3515 insert key_code=0x");  /* KEYONACTIVE=estado_hex: el driver de entrada de la cámara informa el estado inicial de cada tecla cuando InputService la activa (aquí, la tecla de encendido) */
+                  if (ka && kp && is_dynq(0x7a0020)) { unsigned kc = hexv(kp + 32, 0), kmsg[6] = { kc, 0, hexv(ka, 0), 0, 0, 0 }; mbx_post(0x7a0020, kmsg, 0); LOG("KEYONACTIVE key=%#x status=%#x", kc, kmsg[2]); } }
                 if (strstr(t, "MMapBase")) { char h[500]; int o = 0; for (k = 0; k < 200; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]); LOG("TRAZAHEX %s", h); }
                 return 0; }
             if (w[0] == 0x80003b && !getenv("NOVDF")) {  /* display vdf del kernel */
@@ -527,6 +529,9 @@ static void on_trace(int sig, siginfo_t *si, void *u) {
     for (i = 0; i < ntrc; i++) if (trc[i].pc == pc) {  /* efp, no LOG: fprintf en un manejador de señal puede bloquearse con el cerrojo de stderr de otro hilo */
         efp("[shim] TRACE %lx r0=%lx r1=%lx r2=%lx r3=%lx lr=%lx\n", pc, c->arm_r0, c->arm_r1, c->arm_r2, c->arm_r3, c->arm_lr);
         for (const char *e = getenv("TRACEPEEK"); e && *e; ) { unsigned long a = hexv(e, &e); efp("[shim]   PEEK %lx = %08x\n", a, *(unsigned *)(trc_base + a)); while (*e == ',') e++; }
+        { const char *e = getenv("TRACEDEREF");  /* «reg:off:palabras» (hex): vuelca palabras en *(reg+off), p. ej. 4:24:90 = tabla de teclas de InfraInput; con «d» delante («d0:a0:20») vuelca desde reg+off sin desreferenciar */
+          if (e && *e) { int dr = *e == 'd'; e += dr; unsigned long rg = hexv(e, &e), off = hexv(e + 1, &e), n = hexv(e + 1, 0), *rv = &c->arm_r0; unsigned *q = dr ? (unsigned *)(rv[rg] + off) : (unsigned *)*(unsigned long *)(rv[rg] + off);
+            for (unsigned long k = 0; k < n && q; k += 9) efp("[shim]   DEREF %p+%lx: %08x %08x %08x %08x %08x %08x %08x %08x %08x\n", q, k * 4, q[k], q[k+1], q[k+2], q[k+3], q[k+4], q[k+5], q[k+6], q[k+7], q[k+8]); } }
         *(unsigned short *)pc = trc[i].orig; __builtin___clear_cache((char *)pc, (char *)pc + 2); return;
     }
     signal(SIGILL, SIG_DFL);
@@ -593,11 +598,24 @@ void *dlopen(const char *f, int fl) {
             const char *q; unsigned long off = hexv(c + 1, &q), val = *q == '=' ? hexv(q + 1, 0) : 0;
             unsigned short *p = (unsigned short *)((base + off) & ~1UL);
             mprotect((void *)((unsigned long)p & ~4095UL), 8192, PROT_READ | PROT_WRITE | PROT_EXEC);
+            if (*q == '=' && q[1] == '#') {  /* «=#2302.600b.2001.4770»: halfwords Thumb literales (p. ej. «model/ROOT: tiempo asentado = 2») */
+                int n = 0; const char *r = q + 2;
+                for (;;) { p[n++] = (unsigned short)hexv(r, &r); if (*r != '.') break; r++; }
+                __builtin___clear_cache((char *)p, (char *)(p + n)); LOG("PATCHFN %s+%#lx -> %d halfwords", it, off, n); continue;
+            }
             p[0] = 0x2000 | (val & 0xff); p[1] = 0x4770; __builtin___clear_cache((char *)p, (char *)(p + 2));
             LOG("PATCHFN %s+%#lx -> movs r0,#%lu; bx lr", it, off, val);
         }
     }
     return h;
+}
+/* ViewBase::getModelInfo(nombre, info, lista, filtro): las vistas piden datos de modelo por aquí (PLT → este símbolo antes que libObj). GMILOG=1 registra cada petición y su resultado. */
+int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name, int info, void *list, const void *flt) {
+    static int (*real)(void *, const char *, int, void *, const void *);
+    if (!real) real = dlsym(RTLD_NEXT, "_ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_");
+    int r = real ? real(self, name, info, list, flt) : 0;
+    if (getenv("GMILOG")) { static int n; if (n++ < 400) LOG("getModelInfo(%s, %d) -> %d", name, info, r); }
+    return r;
 }
 void *dlsym(void *h, const char *n) {  /* DLSYMLOG=1: símbolos que pide la UI (p. ej. «<Vista>ToInstance», initializeViewConfig) */
     static void *(*d)(void *, const char *); static int lg = -1;
