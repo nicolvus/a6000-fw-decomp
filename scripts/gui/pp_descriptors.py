@@ -58,8 +58,10 @@ def patch(d: bytes, ajustes, tabla_d: int = TABLA_D) -> bytes:
         assert desc[6] == 0 and desc[5] & 0xFF00 and by_off.get(tabla_d + 4 * a.pid) is not None, f"el pid {a.pid:#x} no es inerte"
         n = len(a.valores)
         assert 0 < n < 256
-        n_rel += 7
-        plan.append((a, desc, n))
+        n_rel += 7 + DESC_PALABRAS
+        # G28: los punteros del descriptor original llevan relocación; hay que conservarla en la copia (sin ella apuntan a la dirección de enlace, no a la de carga)
+        punteros = {i: by_off[desc_va + 4 * i] for i in range(DESC_PALABRAS) if desc_va + 4 * i in by_off}
+        plan.append((a, desc, n, punteros))
         cur_words += 4 * (1 + 1 + 1 + n + n) + 4 * (MODEL_PALABRAS + DESC_PALABRAS) + 5 * 16
     top = max(v + ms for t, _, v, _, _, ms, _, _ in segs if t == 1)
     new_va = (top + A.ALIGN - 1) // A.ALIGN * A.ALIGN
@@ -76,7 +78,7 @@ def patch(d: bytes, ajustes, tabla_d: int = TABLA_D) -> bytes:
             extra.extend(struct.pack("<II", va + 4 * i, r))
         return va
 
-    for a, desc, n in plan:
+    for a, desc, n, punteros in plan:
         s, g, t = alloc([a.clave]), alloc([a.clave + 2]), alloc([1])
         v = alloc([x & 0xFFFFFFFF for x in a.valores])
         c = alloc([NADA] * n)
@@ -84,7 +86,11 @@ def patch(d: bytes, ajustes, tabla_d: int = TABLA_D) -> bytes:
         desc[5] = (desc[5] & ~0xFF00) | (n << 8)
         desc[7] = 1
         desc[1], desc[6] = c, m
-        dv = alloc(desc, {1: 0x17, 6: 0x17})
+        # el pid prestado es una función real: su respaldo NVRAM (palabras 8-9) y su vista de destino (10) no son de PP; escribirían en ajustes ajenos
+        for i in (8, 9, 10):
+            desc[i] = 0
+            punteros.pop(i, None)
+        dv = alloc(desc, {**punteros, 1: 0x17, 6: 0x17})
         struct.pack_into("<I", out, A._off(segs, tabla_d + 4 * a.pid), dv)       # D[pid] ya tenía su relocación
     rel_new = bytes(rel) + bytes(extra)
     assert len(rel_new) <= rel_new_size

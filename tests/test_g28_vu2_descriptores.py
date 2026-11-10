@@ -65,3 +65,20 @@ def test_clase_normal_para_todos_los_pids_del_menu():
     nuevo = struct.unpack_from("<233I", P.clase_normal(vu2, [S.PID_NUEVO, *M.PIDS]), P.ELEM_VU2)
     assert {nuevo[p] for p in [S.PID_NUEVO, *M.PIDS]} == {sin[S.PID_EFCS]}
     assert [p for p in range(233) if nuevo[p] != sin[p]] == sorted(p for p in M.PIDS if sin[p] != sin[S.PID_EFCS])
+
+
+@needs
+def test_descriptores_conservan_relocaciones_y_sin_respaldo_ajeno():
+    """3.62: los punteros copiados sin relocación apuntaban a la dirección de enlace (SEGV al abrir Picture Profile); el pid prestado conserva el respaldo NVRAM de otra función."""
+    vu2 = (LIB / "viewUnified2.so").read_bytes()
+    nv = P.patch(vu2, AJ, P.TABLA_D_VU2)
+    rel_old, rel_new = _reloc(vu2), _reloc(nv)
+    for a in AJ:
+        dold = _rd(vu2, P.TABLA_D_VU2 + 4 * a.pid)[0]
+        dnew = _rd(nv, P.TABLA_D_VU2 + 4 * a.pid)[0]
+        new = _rd(nv, dnew, P.DESC_PALABRAS)
+        assert new[8] == new[9] == new[10] == 0 and new[2] == new[3] == new[4] == 0, hex(a.pid)
+        for i in range(P.DESC_PALABRAS):
+            if i not in (1, 6, 8, 9, 10) and dold + 4 * i in rel_old:
+                assert dnew + 4 * i in rel_new and rel_new[dnew + 4 * i] == rel_old[dold + 4 * i], (hex(a.pid), i)
+        assert rel_new[dnew + 4] & 0xFF == 0x17 and rel_new[dnew + 24] & 0xFF == 0x17
