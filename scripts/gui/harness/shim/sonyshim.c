@@ -484,6 +484,11 @@ static void *openviewer(void *a) {
     (void)a; sleep(num(getenv("OPENVIEWAT") ? getenv("OPENVIEWAT") : "40"));
     int (*ov)(const char *, int) = lobj_h ? dlsym(lobj_h, "_ZN13viewManagerIf8openViewEPKci") : 0;
     if (!ov) { efp("[shim] OPENVIEW: sin viewManagerIf::openView\n"); return 0; }
+    if (getenv("PREACQ") && lobj_h) {  /* PREACQ=modelo: pide un «execute» al modelo antes de abrir vistas (¿fuerza su creación?) */
+        int (*rq)(const char *, unsigned long, void *) = dlsym(lobj_h, "_ZN13viewManagerIf19requestModelExecuteEPKcmP9ParamList");
+        void (*ctor)(void *) = dlsym(RTLD_DEFAULT, "_ZN9ParamListC1Ev"); static char lb[512];
+        if (rq && ctor) { ctor(lb); int rr = rq(getenv("PREACQ"), 0, lb); efp("[shim] PREACQ %s -> %d\n", getenv("PREACQ"), rr); sleep(3); }
+    }
     char *spec = strdup(getenv("OPENVIEW")), *sv = 0;
     for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) { efp("[shim] OPENVIEW %s ...\n", it); int r = ov(it, 0); efp("[shim] OPENVIEW %s -> %d\n", it, r); sleep(2); }
     return 0;
@@ -614,6 +619,9 @@ int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name
     static int (*real)(void *, const char *, int, void *, const void *);
     if (!real) real = dlsym(RTLD_NEXT, "_ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_");
     int r = real ? real(self, name, info, list, flt) : 0;
+    if (real && r && getenv("GMIPROBE2") && !strcmp(name, "model/ROOT") && info == 6) {  /* misma lista que la vista: info 1 y 7, y se restaura la 6 */
+        static int n2; if (n2++ < 3) { int a = real(self, name, 1, list, flt), b = real(self, name, 7, list, flt), c = real(self, name, 6, list, flt); LOG("GMIPROBE2 misma lista: info1=%d info7=%d info6=%d", a, b, c); }
+    }
     if (real && getenv("GMIPROBE") && !strcmp(name, "model/ROOT") && info == 6) {  /* una vez: prueba info 0..10 de model/ROOT con una lista propia */
         static int done; if (!done++) { void (*ctor)(void *) = dlsym(RTLD_DEFAULT, "_ZN9ParamListC1Ev"), (*dtor)(void *) = dlsym(RTLD_DEFAULT, "_ZN9ParamListD1Ev");
             if (ctor && dtor) for (int i = 0; i <= 10; i++) { char buf[256] = {0}; ctor(buf); int rr = real(self, name, i, buf, 0); LOG("GMIPROBE model/ROOT info %d -> %d", i, rr); dtor(buf); } }
