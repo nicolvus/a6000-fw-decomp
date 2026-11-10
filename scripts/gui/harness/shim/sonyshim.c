@@ -383,8 +383,10 @@ static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, L
 }
 #include <dirent.h>
 /* DUMPAT=n: a los n s manda SIGUSR1 a cada hilo (uno por segundo) para ver dónde está parado cada uno */
+static void memscan(void);
 static void *dumper(void *a) {
     sleep(num(getenv("DUMPAT"))); (void)a; load_maps();
+    if (getenv("MEMSCAN")) memscan();
     DIR *d = opendir("/proc/self/task"); struct dirent *e; int tids[512], n = 0;
     while (d && (e = readdir(d)) && n < 512) if (e->d_name[0] != '.') tids[n++] = num(e->d_name);
     if (d) closedir(d); efp("[shim] dumper hilos=%d\n", n);
@@ -454,6 +456,19 @@ int system(const char *c) {
     int r = sy(c); LOG("system(%s) -> %d", c ? c : "(null)", r); return r;
 }
 
+/* Mapeos anónimos de dispositivos no modelados (para MEMSCAN: qué áreas ha escrito la UI) */
+static struct { void *p; size_t len; long off; char dev[32]; } amaps[64]; static int nam;
+static void memscan(void) {
+    for (int k = 0; k < nam; k++) {
+        unsigned char *b = amaps[k].p; size_t nz = 0, first = (size_t)-1, last = 0;
+        for (size_t o = 0; o < amaps[k].len; o += 4096) {
+            size_t n = amaps[k].len - o < 4096 ? amaps[k].len - o : 4096, j = 0;
+            while (j < n && !b[o + j]) j++;
+            if (j < n) { nz++; if (first == (size_t)-1) first = o; last = o; }
+        }
+        efp("[shim] MEMSCAN %s off=%#lx len=%#zx base=%p págs no nulas=%zu [%#zx..%#zx]\n", amaps[k].dev, amaps[k].off, amaps[k].len, amaps[k].p, nz, first == (size_t)-1 ? 0 : first, last);
+    }
+}
 /* mmap de dispositivos no modelados (/dev/mem, fb, ...): memoria anónima a cero */
 void *mmap(void *a, size_t l, int pr, int fl, int fd, off_t o) {
     static void *(*m)(void *, size_t, int, int, int, off_t);
@@ -461,6 +476,7 @@ void *mmap(void *a, size_t l, int pr, int fl, int fd, off_t o) {
     if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC) {
         if (!l) l = 0x1000;  /* shortcut: len 0 no es válido; el monitor de MWF lo pide sin argumentos */
         void *r = m(a, l, pr, (fl & ~MAP_SHARED) | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+        if (r != MAP_FAILED && nam < 64) { amaps[nam].p = r; amaps[nam].len = l; amaps[nam].off = o; strncpy(amaps[nam].dev, devname[fd], 31); nam++; }
         LOG("mmap(%s, len=%#zx off=%#lx) -> %p (anónima)", devname[fd], l, (long)o, r); return r;
     }
     return m(a, l, pr, fl, fd, o);

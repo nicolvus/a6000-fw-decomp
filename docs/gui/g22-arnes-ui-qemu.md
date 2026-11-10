@@ -67,6 +67,9 @@ Otros ganchos: cualquier otro `/dev/*` → fd inerte sobre `/dev/null` con `mmap
 | `TRACEFN=dir,…` / `TRACEPEEK=dir,…` | traza única de entrada (`r0–r3`, `lr`) mediante UDF + `SIGILL`; `TRACEPEEK` lee palabras de `libObj` en cada traza |
 | `WATCH=dir` | hilo que sondea cada ms `libObj+dir` y registra cambios |
 | `DUMPAT=n` | a los n s manda `SIGUSR1` a cada hilo: pila con nombre |
+| `MEMSCAN=1` | con `DUMPAT=n`: por área de dispositivo, páginas no nulas (¿ha escrito algo la UI?) |
+| `STACKQ=qid` | pila del emisor en el 3.er envío síncrono a esa cola |
+| `GPUIRQ_MS=n` | periodo de la IRQ simulada de la GPU (20 por defecto; 0 = GPU ociosa) |
 | `RCVSTACK=1` | pila de cada `rcv_msg` nuevo con espera infinita |
 
 ## 3. Reproducir desde cero
@@ -156,6 +159,12 @@ El shim (`ma_service`) lleva una tabla de mspaces (64 MiB anónimos por área, a
 **Estado de referencia (3 de 3 ejecuciones)**: `alive=<pid> threads=73 modulos=60–61`, sin aborto, sin SIGSEGV. `libgrm.so` termina su carga (`grm_init` retorna), `hal_create` pasa, arranca el Window System (`[WindowServer] init … w = 640 h = 480 buffer num = 2`, hilo `UX_WINDOW_SYSTEM`) y se cargan `libuxengine`, `libInfraTp/Indctr/Hotshoe/Sircs/Dial/Lanc`, `libInputServant`, `libScalarDaemon`, `libHapiLib`, `libInfraSelector`. El hilo `HotshoeResource` sondea `0x720018` (≈ 5 envíos/s: comportamiento normal). Nota: **`appFw.so` no existe como biblioteca** en este firmware; las suposiciones de los avances 7–8 sobre «etapa 4» eran erróneas.
 
 Siguiente: F3 (pantalla) y F4 (entrada). Pistas: el Window System usa 2 búferes de 640×480 y un hilo propio; `GRM_fbrm*YUV` son stubs de 8 bytes en `libObj` (`0x614924…0x61496c`, tablas de salto); la presentación real sale por servicios del «kernel» aún sin respuesta (`0x80003b`, `0x5700f9`, `0x5a0048`, `0x16f4010`, `0x7a0020`).
+
+### 5.4 Avance 21 (09-11-2026): carga completa y reposo del sistema; por qué aún no hay imagen
+
+- **El cargador de etapas termina**: 66 inicios de módulo (el último, `063_libInfraSelector.so`; `libmprctrl` figura sin «E» solo por un solape de registros). Con 170 s de espera no se carga nada más: `im.elf` queda **en reposo** (hilos de etapa terminados, `HotshoeResource` sondeando `0x720018`). La interfaz de usuario no se lanza desde `im.elf` solo; en la cámara la ponen en marcha mensajes de `av-cam` (BIONZ) que aquí nadie envía (INFERENCIA: modo de encendido, objetivo, teclas).
+- **Sin píxeles todavía**: `MEMSCAN=1` (con `DUMPAT=n`; vuelca por área de dispositivo cuántas páginas no son cero) muestra que ninguna área ha sido escrita: `gl_common` 2 páginas, `ws_image_space` 1 y los **4 búferes de `InternalCmd` (`0xe1700` B = 640×480×3 + 0x700)** a cero salvo su página 0. Esos 4 búferes son los destinos de render del Window System (`buffer num = 2` + 2 de apoyo): los rellena la GPU de DMP por listas de comandos, así que **capturar la pantalla exige emular esa GPU** (no hay ruta de dibujo por software que pase por `/dev/fb0`) o, como mínimo, la ruta 2D (`DMP2D_*`/`GRM_gpermRectblit`), que sería el primer candidato por ser un blitter simple.
+- Plan F3 revisado: (1) conseguir que arranque la UI (mensajes de `av-cam`: ver `docs/capture` de los paquetes `pkt` BIONZ↔Linux y las colas `0x5700f9`, `0x5a0048`, `0x16f4010`, `0x80003b`); (2) decodificar los comandos que `libObj` escribe en la ventana de registros (`0x20000`, offsets `+0x1800…`, `rm_reg_*`) para ver si el 2D es emulable; (3) volcar los 4 búferes con `MEMSCAN`/`DUMPAT` a PNG en el anfitrión.
 
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
