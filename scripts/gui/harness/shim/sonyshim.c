@@ -614,6 +614,11 @@ int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name
     static int (*real)(void *, const char *, int, void *, const void *);
     if (!real) real = dlsym(RTLD_NEXT, "_ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_");
     int r = real ? real(self, name, info, list, flt) : 0;
+    if (real && getenv("GMIPROBE") && !strcmp(name, "model/ROOT") && info == 6) {  /* una vez: prueba info 0..10 de model/ROOT con una lista propia */
+        static int done; if (!done++) { void (*ctor)(void *) = dlsym(RTLD_DEFAULT, "_ZN9ParamListC1Ev"), (*dtor)(void *) = dlsym(RTLD_DEFAULT, "_ZN9ParamListD1Ev");
+            if (ctor && dtor) for (int i = 0; i <= 10; i++) { char buf[256] = {0}; ctor(buf); int rr = real(self, name, i, buf, 0); LOG("GMIPROBE model/ROOT info %d -> %d", i, rr); dtor(buf); } }
+    }
+    if (!r && real && getenv("GMIRETRY")) for (int k = 0; k < 20 && !r; k++) { usleep(50000); r = real(self, name, info, list, flt); if (r) LOG("getModelInfo(%s, %d) acierta en el reintento %d", name, info, k + 1); }  /* ¿carrera con la inicialización del modelo? */
     if (getenv("GMILOG")) { static int n; if (n++ < 400) LOG("getModelInfo(%s, %d) -> %d", name, info, r); }
     return r;
 }
