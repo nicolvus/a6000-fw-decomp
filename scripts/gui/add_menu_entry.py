@@ -49,7 +49,9 @@ def _symbol_index(d, segs, dyn, name):
     raise KeyError(name)
 
 
-def patch(d: bytes, delta: int) -> bytes:
+def patch(d: bytes, delta: int | list[int]) -> bytes:
+    """`delta` = distancia del nodo nuevo a `RootAelWShutter`; una lista inserta varias entradas, en ese orden, antes de la ancla de cada página."""
+    deltas = [delta] if isinstance(delta, int) else list(delta)
     segs = _segments(d)
     dyn_off, dyn = _dynamic(d, segs)
     tags = {t: v for t, v in dyn if t}
@@ -62,15 +64,16 @@ def patch(d: bytes, delta: int) -> bytes:
     new_va = (top + ALIGN - 1) // ALIGN * ALIGN
     new_off = (len(d) + ALIGN - 1) // ALIGN * ALIGN
     extra_rel, blob, out = bytearray(), bytearray(), bytearray(d)
-    rel_new_size = rel_sz + 8 * sum(c + 1 for _, c, *_ in PAGES)
+    rel_new_size = rel_sz + 8 * sum(c + len(deltas) for _, c, *_ in PAGES)
     arrays_va = new_va + (rel_new_size + 15) // 16 * 16
 
     for arr, cnt, movs, lit, add, anchor in PAGES:
         base = _off(segs, arr)
         slots = [struct.unpack_from("<I", d, base + 4 * i)[0] for i in range(cnt)]
         info = [by_off.get(arr + 4 * i) for i in range(cnt)]
-        slots.insert(anchor, delta & 0xFFFFFFFF)
-        info.insert(anchor, (ref_sym << 8) | R_ARM_ABS32)
+        for dl in reversed(deltas):
+            slots.insert(anchor, dl & 0xFFFFFFFF)
+            info.insert(anchor, (ref_sym << 8) | R_ARM_ABS32)
         va = arrays_va + len(blob)
         for i, (w, r) in enumerate(zip(slots, info)):
             blob += struct.pack("<I", w)
@@ -80,7 +83,7 @@ def patch(d: bytes, delta: int) -> bytes:
         # literal PC-relativo y cuenta (movs r2,#N es 16 bits: 0x2200|N)
         struct.pack_into("<I", out, lit, (va - (add + 4)) & 0xFFFFFFFF)
         assert struct.unpack_from("<H", d, movs)[0] == 0x2200 | cnt, "inmediato de cuenta inesperado"
-        struct.pack_into("<H", out, movs, 0x2200 | (cnt + 1))
+        struct.pack_into("<H", out, movs, 0x2200 | (cnt + len(deltas)))
     rel_new = bytes(rel) + bytes(extra_rel)
     assert len(rel_new) <= rel_new_size
     seg = bytearray(rel_new.ljust(rel_new_size, b"\0")).ljust(arrays_va - new_va, b"\0") + blob

@@ -92,3 +92,17 @@ def test_sin_copy_reset_el_menu_no_usa_los_eventos_41_42():
             "assert {s.evento for s in M.SETTINGS.values()} == {0x40} and 'Copy' not in B.textos() and 'Reset' not in B.textos(); "
             "assert M.TREE[2][0][:2] == ['sel', 'gamma']")
     assert subprocess.run([sys.executable, "-c", code], cwd=ROOT, check=False).returncode == 0
+
+
+def test_color_mode_level_clave_1_rango_del_validador():
+    """G27: Color Mode Level = clave K(1), opciones 1…8 (lo que acepta el caso 1 de `pvt_ChangePictureProfileParamApp2Obj`), en la página de Color Mode."""
+    s = M.SETTINGS["color_level"]
+    assert (s.clave, s.evento, [v for _, v in s.opciones]) == (0x1FC, 0x40, list(range(1, 9)))
+    assert M.PIDS[list(M.SETTINGS).index("color_level")] == 0x26 and len(set(M.PIDS)) == len(M.PIDS)
+    assert M.TREE[2][1][:3] == ["color_mode", "color_level", "saturation"]
+    if not (LIB / "libObj.so").is_file():
+        return
+    sys.path.insert(0, str(ROOT / "tests"))
+    from test_g25_gamma_libobj import APP2OBJ_FN, call
+    d = (LIB / "libObj.so").read_bytes()
+    assert [v for v in range(-20, 21) if call(d, APP2OBJ_FN, 1, v)[0] == 1] == list(range(1, 9))

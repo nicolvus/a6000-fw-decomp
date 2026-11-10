@@ -11,7 +11,7 @@ Contenido de SALIDA/:
                                   de esquema latino). Los ids de la A6300 caen fuera del índice del A6000 (5 958 ranuras, hasta 0xf745):
                                   así se instaló el 3.39 y la UI no arrancó (assert de ResourceManager.cpp:954)
   SHA256SUMS, MANIFEST.json  (hashes de los originales y de los parcheados)
-Uso: build_silent_menu_test.py DIR_DEV_A6000 DIR_DEV_A6300 SALIDA
+Uso: build_silent_menu_test.py DIR_DEV_A6000 DIR_DEV_A6300 SALIDA [PID_SILENT, p. ej. 0x12 para el 3.57+]
 """
 import hashlib
 import json
@@ -74,7 +74,9 @@ def patch_caution(data: bytes, lib: Path) -> bytes:
     return bytes(out)
 
 
-def main(dev_a, dev_b, dest):
+def main(dev_a, dev_b, dest, pid_silent=PID_EFCS):
+    """pid_silent: ProcessId del nodo (0x46 = el del EFCS, 3.54; 0x12 = propio de Silent, 3.57+ con silent_descriptor.py)."""
+    LISTS["SilentShutterRoot"][-1] = (0xE, 1, pid_silent)
     a, b, dest = (Path(dev_a) / "nflasha15_unpacked_unpacked"), (Path(dev_b) / "nflasha15_unpacked_unpacked"), Path(dest)
     (dest / "lib").mkdir(parents=True, exist_ok=True)
     (dest / "share/app").mkdir(parents=True, exist_ok=True)
@@ -112,4 +114,4 @@ def main(dev_a, dev_b, dest):
 
 
 if __name__ == "__main__":
-    main(*sys.argv[1:4])
+    main(*sys.argv[1:4], pid_silent=int(sys.argv[4], 0) if len(sys.argv) > 4 else PID_EFCS)

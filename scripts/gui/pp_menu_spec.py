@@ -6,7 +6,7 @@ Detail Mode/Level 16/17, V/H 18, B/W 19, Limit 20, Crispening 21, Hi-Light 22, C
 Rangos y valores = lo que acepta el validador de la A6000 (`pvt_ChangePictureProfileParamApp2Obj`, libObj `0x4b46b8`): numéricos con signo y paso 1 (valor = número);
 enumerados = índice de la tabla VALUEID del caso (Gamma y ColorMode con la identificación de curvas/modos de G20 y G23).
 Evidencia por ajuste: «clave» (A7S) · «rango» (validador A6000) · «mapa» (INFERENCIA: orden de VALUEID o índice igual al de la A6300).
-Fuera de alcance: Reset (acción sin modelo de datos, ver G26), Gamma Disp. Assist (vista propia), ColorModeLevel; B&W: menú + libObj con efecto (Movie + saturación −8, G27); S-Gamut = Movie (G27 §5); S-Gamut3(.Cine): menú + libObj + parche de núcleo `pp_curves_patch.py --color` (G27 §6).
+Fuera de alcance: Gamma Disp. Assist (vista propia). Color Mode Level (clave K(1)) entra en G27; B&W: menú + libObj con efecto (Movie + saturación −8, G27); S-Gamut = Movie (G27 §5); S-Gamut3(.Cine): menú + libObj + parche de núcleo `pp_curves_patch.py --color` (G27 §6).
 """
 from dataclasses import dataclass
 
@@ -52,6 +52,7 @@ SETTINGS = {s.id: s for s in (
     *(S(f"wb_{k}", t, K(3 + i), num(-9, 9), "clave A7S `WbShift` + validador (caso 3–6: -9..+9)") for i, (k, t) in enumerate((("lb", "LB"), ("cc", "CC"), ("r", "R"), ("b", "B")))),
     S("det_hilight", "Hi-Light Detail", K(22), num(0, 4), "clave+rango"),
     S("reset", "Reset", 0x274, tuple((f"PP{k + 1}", k) for k in range(9)), "INFERENCIA (G26): evento 0x42 → `ActionExePictureprofileReset` (necesita patch_actions); el valor = PP a restablecer (el reset real acepta 0–9)", 0x42),
+    S("color_level", "Color Mode Level", K(1), num(1, 8), "clave K(1)=0x1fc (A7S ColorModeLevel) + rango 1..8 del caso 1 del validador de la A6000 (byte 9 del 0x4066)"),
 )}
 # Gamma con el orden y las opciones de la A6300; 10/11/12 = app de ITU709(800%)/S-Log2/S-Log3 en la `libObj` parcheada (G25/G26)
 GAMMA_COMPLETA = ((("Movie", 4), ("Still", 5)) + tuple((f"Cine{k}", 5 + k) for k in range(1, 5)) + (("ITU709", 3), ("ITU709(800%)", 10), ("S-Log2", 11), ("S-Log3", 12)))
@@ -62,8 +63,9 @@ F = lambda label, *pages: ("folder", label, pages)
 TREE = F("Picture Profile",
          ["sel", "copy", "reset", "gamma", "black_level", F("Black Gamma", ["bg_range", "bg_level"]),
           F("Knee", ["knee_mode", F("Auto Set", ["knee_max", "knee_sens"]), F("Manual Set", ["knee_point", "knee_slope"])])],
-         ["color_mode", "saturation", "phase", F("Color Depth", [f"cd_{c}" for c in "rgbcmy"]), F("WB Shift", ["wb_filter", "wb_lb", "wb_cc", "wb_r", "wb_b"]),
+         ["color_mode", "color_level", "saturation", "phase", F("Color Depth", [f"cd_{c}" for c in "rgbcmy"]), F("WB Shift", ["wb_filter", "wb_lb", "wb_cc", "wb_r", "wb_b"]),
           F("Detail", ["det_level", "det_mode", F("Manual Set", ["det_vh", "det_bw", "det_limit", "det_crisp", "det_hilight"])])])
 # ProcessIds inertes sin referencia en ningún menú
 PIDS = [0x35, 0x9D, 0xB3, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xDC, 0xDD, 0xDE, 0xDF, 0x52, 0x53, 0x54, 0x5E, 0x5F, 0x60, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68,
-        0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x5B]                 # los 6 últimos son de la familia contigua 0x55–0x5d: riesgo de uso por otro consumidor (G24 §3)
+        0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x5B,
+        0x26]                                                     # Color Mode Level (G27): pid de SilentShutterRoot, raíz que el menú del A6000 no usa (el Silent del 3.57+ usa 0x12 por el mismo motivo)                 # los 6 últimos son de la familia contigua 0x55–0x5d: riesgo de uso por otro consumidor (G24 §3)

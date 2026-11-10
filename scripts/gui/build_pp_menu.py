@@ -112,7 +112,7 @@ def patch_caution(data: bytes, ids: dict):
     return bytes(res), carpeta - ref
 
 
-def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gamut=False, acciones=False):
+def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gamut=False, acciones=False, entradas_previas=()):
     a, b, dest = Path(dev_a) / "nflasha15_unpacked_unpacked", Path(dev_b) / "nflasha15_unpacked_unpacked", Path(dest)
     (dest / "lib").mkdir(parents=True, exist_ok=True)
     (dest / "share/app").mkdir(parents=True, exist_ok=True)
@@ -137,7 +137,7 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
         emit("lib/libObj.so", patch_libobj_pp.patch_bw(patch_libobj_pp.patch_color(lo)) if color_gamut else lo)
     caution, delta = patch_caution((a / "lib/CautionConfig.so").read_bytes(), ids)
     emit("lib/CautionConfig.so", caution)
-    emit("lib/viewUnified2.so", A.patch((a / "lib/viewUnified2.so").read_bytes(), delta))
+    emit("lib/viewUnified2.so", A.patch((a / "lib/viewUnified2.so").read_bytes(), [*entradas_previas, delta]))   # entradas_previas: p. ej. Silent (0xEB0) en el CFW completo
     en_b = uxc_strings.parse((b / "share/app/string_english.uxc").read_bytes())[2]
     inv = {}
     for rid, t in sorted(en_b.items()):
@@ -172,16 +172,19 @@ def sin_acciones():
     M.TREE[2][0][:] = [x for x in M.TREE[2][0] if x not in ("copy", "reset")]
 
 
-if __name__ == "__main__":
-    args = [x for x in sys.argv[1:] if not x.startswith("--")]
-    sat, gam, col = "--saturacion-a6300" in sys.argv, "--gamma-slog" in sys.argv, "--color-gamut" in sys.argv
-    acc = "--copy-reset" in sys.argv
+def configurar(sat=False, gam=False, col=False, acc=False):
+    """Ajusta la spec según las opciones (como la línea de órdenes) y devuelve los argumentos con nombre de `main`."""
     if not acc:
         sin_acciones()
-    if gam:                               # ITU709(800%), S-Log2 y S-Log3: requieren libObj parcheado y las curvas de pp_curves_patch.py (núcleo)
+    if gam:        # ITU709(800%), S-Log2 y S-Log3: requieren libObj parcheado y las curvas de pp_curves_patch.py (núcleo)
         M.SETTINGS["gamma"] = M.S("gamma", "Gamma", 0x214, M.GAMMA_COMPLETA, "clave+A7S convertValueIdToBackupValue+parche libObj (opt-in)")
-    if sat:                               # el menú ofrece −32…+32 solo si se parchea libObj; ojo: el núcleo toma toda saturación < −7 como blanco y negro (G27)
+    if sat:        # −32…+32 solo si se parchea libObj; ojo: el núcleo toma toda saturación < −7 como blanco y negro (G27)
         M.SETTINGS["saturation"] = M.S("saturation", "Saturation", 0x26C, M.num(-32, 32), "clave+parche libObj (opt-in)")
-    if col:                               # B&W (con efecto: Movie + saturación −8, G27) S-Gamut (= Movie también en la A7S) y S-Gamut3(.Cine) (con efecto solo si se aplica `pp_curves_patch.py --color`, G27 §6)
+    if col:        # B&W con efecto (Movie + saturación −8), S-Gamut (= Movie, G27 §5) y S-Gamut3(.Cine) (efecto con `pp_curves_patch.py --color`, G27 §6)
         M.SETTINGS["color_mode"] = M.S("color_mode", "Color Mode", M.K(0), M.COLOR_MODE_COMPLETO, "clave+VALUEID+parche libObj (opt-in)")
-    main(*args[:3], saturacion_a6300=sat, gamma_slog=gam, color_gamut=col, acciones=acc)
+    return {"saturacion_a6300": sat, "gamma_slog": gam, "color_gamut": col, "acciones": acc}
+
+
+if __name__ == "__main__":
+    args = [x for x in sys.argv[1:] if not x.startswith("--")]
+    main(*args[:3], **configurar("--saturacion-a6300" in sys.argv, "--gamma-slog" in sys.argv, "--color-gamut" in sys.argv, "--copy-reset" in sys.argv))
