@@ -594,3 +594,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 10-11-2026: G22-B avance 26 — la UI abre ViewScalarboot; GRM 2D sin uso; F3 sigue bloqueada por la GPU de DMP. [G22 §5.9](../docs/gui/g22-arnes-ui-qemu.md).
 - 10-11-2026: G22-B avance 27 — ViewRoot abierta con OPENVIEW=view/ROOT; teclas llegan a InputService; bitmap a cero. [G22 §5.10](../docs/gui/g22-arnes-ui-qemu.md).
 - 10-11-2026: G22-B avance 28 — corrección: la UI no envía dibujo a la GPU (4 trabajos); ViewRootPowerSw Non-Display por la fecha de model/ROOT. [G22 §5.11](../docs/gui/g22-arnes-ui-qemu.md).
+- 10-11-2026: G22-B avance 29 — servicio de fecha modelado sin efecto; ViewRootPowerSw sigue Non-Display. [G22 §5.12](../docs/gui/g22-arnes-ui-qemu.md).

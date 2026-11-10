@@ -113,8 +113,13 @@ static void bk_load(void) {
     for (long o = 0; o < sz;) { long r = syscall(SYS_read, fd, bk + o, sz - o); if (r <= 0) break; o += r; }
     bklen = sz; syscall(SYS_close, fd); LOG("bk.tbl %ld B", bklen);
 }
+static unsigned long hexv(const char *s, const char **end);
 static unsigned *bk_find(unsigned id, unsigned *len) {
     bk_load();
+    { const char *e = getenv("BKSET");  /* BKSET=id_hex=valor_hex[,…]: fuerza un registro de 1–4 bytes (p. ej. 1070140=1: reloj «asentado» para ModelRoot) */
+      static unsigned ov[8][2]; static int nov = -1;
+      if (nov < 0) { nov = 0; while (e && *e && nov < 8) { const char *q; ov[nov][0] = hexv(e, &q); if (*q != '=') break; ov[nov][1] = hexv(q + 1, &q); nov++; e = *q == ',' ? q + 1 : q; } }
+      for (int k = 0; k < nov; k++) if (ov[k][0] == id) { *len = 1; return &ov[k][1]; } }
     for (long o = 0; o + 8 <= bklen; o += 8 + ((((unsigned *)(bk + o))[1] + 3) & ~3u))
         if (((unsigned *)(bk + o))[0] == id) { *len = ((unsigned *)(bk + o))[1]; return (unsigned *)(bk + o + 8); }
     return 0;
@@ -137,7 +142,16 @@ static void backup_service(unsigned *m) {
 }
 
 /* Servicios de kernel por snd_sync_direct (mm 0x910042, ...). shortcut: sin modelar, responde 0 */
-static int direct_service(unsigned qid, unsigned *m) { (void)qid; (void)m; return 0; }
+/* 0x90013d cmd 2 = osal_get_date (ModelRoot::getDateInfo, libObj+0x63c2bc): +0x12 estado, +0x1c tipo (0 sin hora, 1/3 asentada; DATETYPE, 1 por defecto). */
+static unsigned long hexv(const char *s, const char **end);
+static int direct_service(unsigned qid, unsigned *m) {
+    if (m[0] == 0x28 && ((unsigned short *)m)[8] == 2 && !getenv("NODATE")) {
+        unsigned short *h = (unsigned short *)m; const char *e = getenv("DATETYPE");
+        h[9] = 0; h[14] = e ? (unsigned short)hexv(e, 0) : 1;
+        static int n; if (n++ < 3) LOG("direct %#x get_date -> tipo %u", qid, h[14]);
+    }
+    return 0;
+}
 
 /* Buzones de colas dinámicas de kernel (dynamic_id tipo 0x2a): el servicio 0xd9016e (registro de puerto de vídeo/OSD) se responde copiando la petición. */
 static struct { unsigned q; void *msg; } mbx[16];
