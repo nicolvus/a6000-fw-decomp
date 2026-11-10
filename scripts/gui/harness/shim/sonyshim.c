@@ -520,6 +520,17 @@ static void *openviewer(void *a) {
             efp("[shim] PRECREATE mm=%p id=%#x\n", mm, fake[2]); int rr = rq(mm, fake); efp("[shim] PRECREATE -> %d\n", rr); sleep(3);
         } else efp("[shim] PRECREATE: sin pViewManager/IdGenerator\n");
     }
+    if (getenv("STARTEV") && lobj_h) {  /* STARTEV=id,id,…: construye Event(id,2,0) como en libObj+0x7f25f0 y lo publica con ModelManager::pushEvent (p. ej. 11004002=Tc, 11004012=Ts, 11004013=→estado 7) */
+        void **pvm = dlsym(lobj_h, "pViewManager");
+        void (*ector)(void *, unsigned long, unsigned char, unsigned char) = dlsym(RTLD_DEFAULT, "_ZN5EventC1Emhh");
+        int (*push)(void *, void *) = dlsym(RTLD_DEFAULT, "_ZN12ModelManager9pushEventEP5Event");
+        for (int k = 0; pvm && !*pvm && k < 600; k++) usleep(100000);
+        if (pvm && *pvm && ector && push) {
+            void *mm = *(void **)((char *)*pvm + 0x18);
+            for (const char *e = getenv("STARTEV"); e && *e; ) { unsigned long id = hexv(e, &e); void *ev = calloc(1, 0x10);  /* Event ocupa 0x10 (operator new(0x10) en el original); lo posee el ModelManager */
+                ector(ev, id, 2, 0); int rr = push(mm, ev); efp("[shim] STARTEV %#lx -> %d\n", id, rr); sleep(2); while (*e == ',') e++; }
+        } else efp("[shim] STARTEV: faltan pViewManager/Event::Event/ModelManager::pushEvent\n");
+    }
     { void **pv = dlsym(lobj_h, "pViewManager"); for (int k = 0; pv && !*pv && k < 600; k++) usleep(100000); }  /* openView con ViewManager aún NULL = SIGSEGV (arranque lento) */
     char *spec = strdup(getenv("OPENVIEW")), *sv = 0;
     for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) { efp("[shim] OPENVIEW %s ...\n", it); int r = ov(it, 0); efp("[shim] OPENVIEW %s -> %d\n", it, r); sleep(getenv("OPENVIEWGAP") ? (unsigned)hexv(getenv("OPENVIEWGAP"), 0) : 2); }
