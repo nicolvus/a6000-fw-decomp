@@ -582,6 +582,17 @@ void *dlopen(const char *f, int fl) {
     void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
     if (h && f && strstr(f, "libObj.so")) { gpu_patch(); lobj_h = h; }
     if (h && f && strstr(f, "libObj.so") && (getenv("SKIPFN") || getenv("TRACEFN") || getenv("WATCH") || getenv("POKE"))) skip_fns();
+    if (h && f && getenv("PATCHFN")) {  /* PATCHFN="lib.so:off_hex=val_hex[,…]": sustituye la función Thumb en lib+off por «movs r0,#val; bx lr» (p. ej. viewUnified2.so:17094c=3) */
+        char *spec = strdup(getenv("PATCHFN")), *sv = 0; unsigned long base = *(unsigned long *)h;  /* link_map.l_addr */
+        for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) {
+            char *c = strchr(it, ':'); if (!c) continue; *c = 0; if (!strstr(f, it)) continue;
+            const char *q; unsigned long off = hexv(c + 1, &q), val = *q == '=' ? hexv(q + 1, 0) : 0;
+            unsigned short *p = (unsigned short *)((base + off) & ~1UL);
+            mprotect((void *)((unsigned long)p & ~4095UL), 8192, PROT_READ | PROT_WRITE | PROT_EXEC);
+            p[0] = 0x2000 | (val & 0xff); p[1] = 0x4770; __builtin___clear_cache((char *)p, (char *)(p + 2));
+            LOG("PATCHFN %s+%#lx -> movs r0,#%lu; bx lr", it, off, val);
+        }
+    }
     return h;
 }
 void *dlsym(void *h, const char *n) {  /* DLSYMLOG=1: símbolos que pide la UI (p. ej. «<Vista>ToInstance», initializeViewConfig) */

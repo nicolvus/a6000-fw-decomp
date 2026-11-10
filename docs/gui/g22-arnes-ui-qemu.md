@@ -232,6 +232,13 @@ Causa del bloqueo de `Appframework` (§5.6) y arreglos en el shim (todos por def
 - Trampas del shim (glibc 2.44 de compilación vs. 2.11.2 de la cámara): `strtoul`/`atoi` de las cabeceras nuevas enlazan con `__isoc23_strtol[ul]`, inexistentes en la cámara y solo fallan al ejecutarse esa rama; usar `hexv`. Comprobar siempre que `build.sh` compiló (`grep error:` y la hora de `sonyshim.so`): hubo tres pruebas que usaron un binario antiguo.
 - Siguiente paso concreto: instrumentar `viewManagerIf::getModelInfo` (`libObj+0x12503c`) y `ModelRoot::onGetInfo` para ver qué devuelven con `INFO 1`; o decodificar la estructura de fecha.
 
+### 5.13 Avance 30 (10-11-2026): «Non-Display» no era el error; `PATCHFN`
+
+- `PATCHFN="lib.so:off_hex=val_hex[,…]"` (nuevo): al `dlopen` de la biblioteca sustituye la función Thumb en `lib+off` por `movs r0,#val; bx lr` (`l_addr` del `link_map`).
+- `ModelManager::getModelInfo` (`libObj+0x7ebe4c`) **sí encuentra** el modelo (traza: `0x7eb8fa` devuelve objeto y entra en el despacho `0x7f1260`); la consulta `INFO 1` de `ViewRootPowerSw::execCheck` devuelve el error dentro de `ModelRoot::onGetInfo` (no identificado, sin trazas `[M_ROOT] onGetInfo`).
+- Con `PATCHFN=viewUnified2.so:17094c=0|1|3` (el comprobador devuelve ese estado) desaparece `TIME get error`, pero el registro sigue mostrando `getCurrentLayout_POWER_ON … USBAndClockReady Non-Display` y la tabla de la GPU sigue con **4 trabajos**. Conclusión: `Non-Display` es probablemente el **nombre del diseño de espera** del arranque (no un fallo) y §5.11/§5.12 sobrestimaban su papel como causa. Lo que falta es la transición siguiente de `ViewRootPowerSw` (`ST_INIT → … «POWER Key Final to On»`), que depende del evento de tecla de encendido: `InputService` recibe el mensaje inyectado pero lo marca `INH` (`callback_convert_not_user_operation … event_code=0x15010010 status=0`) y las repeticiones dan «same event».
+- Siguiente paso: averiguar por qué el evento `0x15010010` se inhibe (estado de `InputService`/`ModelRoot`: `getInputEventStatus` devuelve `pKeyStatus->getNumber=5`) y qué secuencia (pulsar/soltar, `w1…w5`) lleva `ViewRootPowerSw` a «Final to On».
+
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
 Verificado: `build.sh` reproduce byte a byte el `sonyshim.so` que se estaba usando (md5 `5307f8ae…` antes de las correcciones);
