@@ -588,3 +588,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 09-11-2026: G22-B avance 23 — la UI arranca (`appFw.so`+`viewUnified2.so`): faltaba señalar el semáforo `0x83037a` (`SEMSIG`). Bitmap de pantalla a cero → F3 depende de la GPU de DMP. [G22 §5.6](../docs/gui/g22-arnes-ui-qemu.md).
 - 10-11-2026: G22-B avance 23b — SEMSIG×4, la UI carga recursos y abre /dev/ldec; pantalla aún a cero (GPU). [G22 §5.6](../docs/gui/g22-arnes-ui-qemu.md).
 - 10-11-2026: G22-B avance 23c — AREADUMP/DUMPTHR; lista de comandos de la GPU solo con sincronización; Appframework bloqueado en mutex GL. [G22 §5.6](../docs/gui/g22-arnes-ui-qemu.md).
+- 10-11-2026: G22-B avance 24 — GPU mínima (GPUEMU) y protocolo vdf; la UI no se bloquea; pantalla aún a cero (falta renderizar listas DMP). [G22 §5.7](../docs/gui/g22-arnes-ui-qemu.md).

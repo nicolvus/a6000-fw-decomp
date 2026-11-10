@@ -175,6 +175,8 @@ fin:
     pthread_mutex_unlock(&mbx_m); return r;
 }
 
+static volatile int gpu_live;  /* GPUEMU: la UI ya envía actualizaciones de pantalla (dlopen de viewUnified*.so): a partir de ahí los trabajos terminan con aviso */
+static volatile int gpu_ack;  /* GPUEMU: el controlador reconoció el aviso de fin de trabajo */
 static int num(const char *t) { int v = 0; while (*t >= '0' && *t <= '9') v = v * 10 + *t++ - '0'; return v; }  /* sin atoi: el sysroot nuevo enlaza __isoc23_strtol, que la glibc 2.11 no tiene */
 /* Colas de kernel con callback de usuario (reg_msg_queue_cb, idx 8). En libosal_uipc.so: los hilos proxy bloqueados en wait_cb (idx 13)
  * reciben {cb, arg, msg, 0} y llaman cb(msg, arg); un envío síncrono (idx 5) a una cola con callback devuelve {cb, arg} al emisor en su
@@ -192,6 +194,18 @@ static int cb_deliver(unsigned q, void *msg) {  /* 1 = encolado para un hilo pro
         else LOG("dlv lleno: mensaje a %#x perdido", q);
     }
     pthread_mutex_unlock(&cb_m); return k >= 0;
+}
+static void cb_call(void *cb, void *arg, void *msg) {  /* entrega cb(msg, arg) a un hilo proxy (sin cola): para avisos que en la cámara hace un módulo de kernel */
+    pthread_mutex_lock(&cb_m);
+    if (dlv_w - dlv_r < 256) { dlv[dlv_w % 256].cb = cb; dlv[dlv_w % 256].arg = arg; dlv[dlv_w % 256].msg = msg; dlv_w++; pthread_cond_signal(&cb_c); }
+    pthread_mutex_unlock(&cb_m);
+}
+static void *vdfcb[16];  /* vdf (cola de kernel 0x80003b): comandos pares 2,4,6,8,9 = registro de callbacks de usuario (m[1]); 5 = actualización de pantalla */
+static void *vdf_ack(void *a) {  /* petición c (1 exec, 3 break, 5 update, 7 mute) → callback registrado con el comando c+1 (2 exec_cb, 4 break_cb, 6 update_cb, 8 mute_cb); VDFUPD=99: diagnóstico */
+    unsigned c = (unsigned)(unsigned long)a; usleep(3000);
+    if (getenv("VDFUPD") && num(getenv("VDFUPD")) == 99) { static int once; if (once++) return 0; for (int k = 0; k < 16; k++) if (vdfcb[k]) { cb_call(vdfcb[k], 0, calloc(1, 256)); LOG("vdf: prueba callback del cmd %d (%p)", k, vdfcb[k]); usleep(500000); } return 0; }
+    if (c + 1 < 16 && vdfcb[c + 1]) { cb_call(vdfcb[c + 1], 0, calloc(1, 256)); LOG("vdf: petición %u terminada → callback del cmd %u (%p)", c, c + 1, vdfcb[c + 1]); }
+    return 0;
 }
 
 /* Servicio de memoria grm_ma.ko (cola 0x14c0424, mensaje de 44 B). Código = u16 de m[0]; tabla de grm_ma.ko:ma_user_sync_cb (medida):
@@ -307,6 +321,11 @@ int ioctl(int fd, unsigned long req, ...) {
                 { char c[420]; int o = 0, pd = 1; for (k = 0; t[k]; k++) { if (t[k] == '.') { if (!pd) c[o++] = ' '; pd = 1; } else { c[o++] = t[k]; pd = 0; } } c[o] = 0; if (o > 6) LOG("TRAZA %s", c); }
                 if (strstr(t, "MMapBase")) { char h[500]; int o = 0; for (k = 0; k < 200; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]); LOG("TRAZAHEX %s", h); }
                 return 0; }
+            if (w[0] == 0x80003b && !getenv("NOVDF")) {  /* display vdf del kernel */
+                unsigned cmd = ((unsigned *)m)[0], p1 = ((unsigned *)m)[1];
+                if (cmd < 16 && p1 > 0x10000 && ((cmd & 1) == 0 || cmd == 9)) { vdfcb[cmd] = (void *)p1; return 0; }
+                if ((cmd & 1) && cmd < 8) { pthread_t t; pthread_create(&t, 0, vdf_ack, (void *)(unsigned long)cmd); pthread_detach(t); return 0; }
+            }
             if (cb_deliver(w[0], m)) { if (getenv("VERB")) LOG("snd_msg %#x -> callback", w[0]); return 0; }
             /* Servicios de kernel con acuse genérico (ACKQ=d9016e,7a0029,…; 0xd9016e registro de puerto de vídeo, 0x7a0029 input.ko): se
              * responde a la cola dinámica que viaja en el cuerpo copiando la petición con estado 0 (lo que comprueba el emisor síncrono
@@ -327,7 +346,8 @@ int ioctl(int fd, unsigned long req, ...) {
     if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC) {  /* dispositivo no modelado: éxito, registrado las 5 primeras veces por (dispositivo, orden) y luego cada 4096 */
         static struct { char d[32]; unsigned long r; unsigned n; } seen[64]; static int ns; int k;
         if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0x80048206 && arg) *(unsigned *)arg = 0x20000;  /* tamaño de la ventana de registros de la GPU (rm_reg_init lo pasa a mmap de /dev/mem; con 0 se mapeaba 1 página y el código escribe en +0x1804) */
-        if (getenv("GPUTRACE") && !strcmp(devname[fd], "/dev/dmpgles2")) { static int gn; if (gn++ < 600) LOG("GPU ioctl %#lx arg=%p val=%#x", req, arg, (unsigned long)arg > 0x10000 ? *(unsigned *)arg : 0u); }  /* GPUTRACE=1: cada ioctl de la GPU (primeros 600), sin deduplicar */
+        if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0xc0048212 && arg && *(unsigned *)arg == 1) gpu_ack = 1;  /* el controlador reconoce el aviso de fin (GPUEMU) */
+        if (getenv("GPUTRACE") && gpu_live && !strcmp(devname[fd], "/dev/dmpgles2")) { static int gn; if (gn++ < 600) LOG("GPU ioctl %#lx arg=%p val=%#x", req, arg, (unsigned long)arg > 0x10000 ? *(unsigned *)arg : 0u); }  /* GPUTRACE=1: cada ioctl de la GPU tras cargar las vistas (primeros 600), sin deduplicar */
         if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0xc004820d) {  /* espera de interrupción de la GPU (libObj+0x6c5320 repite hasta salida != 0) */
             const char *e = getenv("GPUIRQ_MS"); unsigned ms = e ? (unsigned)num(e) : 20;  /* GPUIRQ_MS=n: IRQ simulada cada n ms (20 por defecto, necesaria para que termine la init GL); 0 = GPU ociosa, duerme */
             if (ms && arg) { usleep(ms * 1000u); *(unsigned *)arg = 1; return 0; }
@@ -458,10 +478,17 @@ __attribute__((constructor)) static void shim_init(void) { presignal(); if (gete
 
 /* Experimento (SKIPFN=717830,...): sustituye esas funciones Thumb de libObj por «movs r0,#0; bx lr» (devuelven éxito sin hacer nada). */
 static unsigned long hexv(const char *s, const char **end) { unsigned long v = 0; for (;; s++) { int c = *s; if (c >= '0' && c <= '9') c -= '0'; else if (c >= 'a' && c <= 'f') c -= 'a' - 10; else break; v = v * 16 + c; } if (end) *end = s; return v; }
+static unsigned long gpu_pc;  /* libObj+0x6c4c46: «str r1,[r3,r0]» de rm_reg_write (off=r0, valor=r1, base=r3); se sustituye por UDF para ver cada escritura */
+static volatile unsigned gpu_kicks;
 /* Experimento (TRACEFN=716800,6cd1e0,...): traza de una sola vez (UDF + restauración) de la entrada de esas funciones de libObj: r0-r3 y lr. */
 static struct { unsigned long pc; unsigned short orig; } trc[32]; static int ntrc; static unsigned long trc_base;
 static void on_trace(int sig, siginfo_t *si, void *u) {
     mcontext_t *c = &((ucontext_t *)u)->uc_mcontext; unsigned long pc = c->arm_pc & ~1UL; int i;
+    if (gpu_pc && pc == gpu_pc) {  /* rm_reg_write: se hace el almacenamiento y se salta la instrucción; 0x1804 = timbre de la GPU (GPUEMU) */
+        *(volatile unsigned *)(c->arm_r3 + c->arm_r0) = c->arm_r1; if (c->arm_r0 == 0x1804) gpu_kicks++;
+        { static int nw; if (getenv("GPUTRACE") && nw++ < 200) efp("[shim] REGW off=%#lx val=%#lx kicks=%u\n", c->arm_r0, c->arm_r1, gpu_kicks); }
+        c->arm_pc += 2; return;
+    }
     for (i = 0; i < ntrc; i++) if (trc[i].pc == pc) {  /* efp, no LOG: fprintf en un manejador de señal puede bloquearse con el cerrojo de stderr de otro hilo */
         efp("[shim] TRACE %lx r0=%lx r1=%lx r2=%lx r3=%lx lr=%lx\n", pc, c->arm_r0, c->arm_r1, c->arm_r2, c->arm_r3, c->arm_lr);
         for (const char *e = getenv("TRACEPEEK"); e && *e; ) { unsigned long a = hexv(e, &e); efp("[shim]   PEEK %lx = %08x\n", a, *(unsigned *)(trc_base + a)); while (*e == ',') e++; }
@@ -502,11 +529,27 @@ static void skip_fns(void) {
         while (*e == ',') e++;
     }
 }
+static void on_trace(int sig, siginfo_t *si, void *u);
+static void gpu_patch(void) {  /* GPUEMU: ver arriba (gpu_thread); libObj 3.21: rm_reg_write en 0x6c4c20, instrucción en 0x6c4c46 */
+    static int done; const char *g = getenv("GPUEMU"); if (done || (g && g[0] == '0')) return;
+    unsigned long base = 0; char ln[256]; FILE *m = fopen("/proc/self/maps", "r");
+    while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, "libObj.so")) { base = hexv(ln, 0); break; }
+    if (m) fclose(m);
+    if (!base) return;
+    unsigned short *p = (unsigned short *)(base + 0x6c4c46);
+    if (*p != 0x5019) { LOG("GPUEMU: libObj+0x6c4c46 no es «str r1,[r3,r0]» (%#x): sin timbre", *p); done = 1; return; }
+    mprotect((void *)((unsigned long)p & ~4095UL), 8192, PROT_READ | PROT_WRITE | PROT_EXEC);
+    gpu_pc = (unsigned long)p; *p = 0xde00; __builtin___clear_cache((char *)p, (char *)p + 2); done = 1;
+    struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_trace; sa.sa_flags = SA_SIGINFO | SA_NODEFER; sigaction(SIGILL, &sa, 0);
+    LOG("GPUEMU: timbre de la GPU en libObj+0x6c4c46 (%p)", (void *)p);
+}
 void *dlopen(const char *f, int fl) {
     static void *(*d)(const char *, int);
     if (!d) d = dlsym(RTLD_NEXT, "dlopen");
+    if (f && strstr(f, "viewUnified")) gpu_live = 1;
     LOG("dlopen(%s) ...", f ? f : "(null)");
     void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
+    if (h && f && strstr(f, "libObj.so")) gpu_patch();
     if (h && f && strstr(f, "libObj.so") && (getenv("SKIPFN") || getenv("TRACEFN") || getenv("WATCH") || getenv("POKE"))) skip_fns();
     return h;
 }
@@ -531,6 +574,7 @@ static void memscan(void) {
 /* REGTRAP=1: las ventanas de registros de la GPU (/dev/dmpgles2 y /dev/mem off=1, 0x20000 B) se mantienen en PROT_NONE; cada acceso falla, se registra
  * (tid, PC, dirección, lectura/escritura) y se abre la ventana 1,5 ms; el hilo de trampa registra además los cambios de contenido (escrituras con su valor).
  * Sirve para saber qué registros consulta el controlador de libObj (p. ej. para decidir que un trabajo terminó). */
+static volatile unsigned *gw0, *gw1;
 static unsigned libobj_off(void *ra);
 static struct { unsigned char *p; size_t len; unsigned snap[0x8000]; } rtw[2]; static int nrtw; static struct sigaction rt_old;
 static void rt_segv(int sig, siginfo_t *si, void *ctx) {
@@ -540,6 +584,7 @@ static void rt_segv(int sig, siginfo_t *si, void *ctx) {
         for (int q = 0; q < nseen; q++) if (seenk[q] == key) dup = 1;
         if (!dup && nseen < 512) { seenk[nseen++] = key; n = 0; } else n = 2000;
         if (n++ < 1500) efp("[shim] REGTRAP tid %ld %s w%d+%#lx pc=libObj+%#x lr=libObj+%#x\n", (long)syscall(224), (uc->uc_mcontext.error_code & (1 << 11)) ? "ESC" : "LEC", k, (unsigned long)(a - rtw[k].p), libobj_off((void *)uc->uc_mcontext.arm_pc), libobj_off((void *)uc->uc_mcontext.arm_lr));
+        if (k == 0 && a >= rtw[0].p + 0x1000 && a < rtw[0].p + 0x2000) gpu_kicks++;  /* timbre de la GPU (GPUEMU) visto desde REGTRAP */
         mprotect(rtw[k].p, rtw[k].len, PROT_READ | PROT_WRITE); return;
     }
     sigaction(SIGSEGV, &rt_old, 0);  /* no es nuestra: el manejador previo (pila) al reintentar */
@@ -554,6 +599,56 @@ static void *rt_thread(void *a) {
         }
     }
     return 0;
+}
+/* GPUEMU (activo por defecto; GPUEMU=0 lo desactiva): GPU de DMP mínima. Ventanas: gw0 = motor (/dev/mem off=1; el controlador empuja la dirección de la lista de
+ * órdenes en +0x1804), gw1 = registros de /dev/dmpgles2 (+4 índice del trabajo terminado, 0xffffffff = ninguno; +0x10 resultados pendientes; +0x14 estado, 2 = inactiva).
+ * Al cambiar +0x1804: estado «ocupada» (1) unos GPUEMU_MS ms, luego se avisa del fin (+4 = GPUEMU_JOB, +0x10 = 1) y la GPU vuelve a 2; el aviso se retira cuando el
+ * controlador lo reconoce con ioctl 0xc0048212 (arg 1). shortcut: no se ejecuta ninguna orden (no hay dibujo); solo desbloquea los hilos que esperan a la GPU. */
+static unsigned char *phys2p(unsigned phys) {  /* fase → dirección en nuestras áreas anónimas de /dev/stream y /dev/mem */
+    for (int k = 0; k < nam; k++) { unsigned long o = (unsigned long)amaps[k].off; if ((!strstr(amaps[k].dev, "stream") && !strstr(amaps[k].dev, "mem")) || o < 0x80000000ul) continue; if (phys >= o && phys < o + amaps[k].len) return (unsigned char *)amaps[k].p + (phys - o); }
+    return 0;
+}
+/* GPUDUMP=fichero: cada lista de órdenes (pares {reg<<16|0xf000, valor} hasta la marca 0x12345678) se anexa en texto: «JOB n lista=… » + «reg valor» */
+static void gpu_dumplist(unsigned list, int n) {
+    const char *fn = getenv("GPUDUMP"); if (!fn || !list) return;
+    unsigned *w = (unsigned *)phys2p(list); if (!w) { efp("[shim] GPUDUMP lista %#x sin área\n", list); return; }
+    FILE *f = fopen(fn, "a"); if (!f) return; fprintf(f, "JOB %d lista=%#x\n", n, list);
+    if (gw1) { fprintf(f, "TABLA"); for (int i = 0xe8 / 4; i < (0xe8 + 0x100) / 4; i++) fprintf(f, " %x:%08x", i * 4, gw1[i]); fprintf(f, "\n"); }
+    for (int i = 0; i < 20000; i += 2) { unsigned h = w[i], v = w[i + 1]; fprintf(f, "%04x %08x %08x\n", h >> 16, h & 0xffff, v); if ((h >> 16) == 0x10 && v == 0x12345678) break; if (!h && !v) { fprintf(f, "FIN-NULO\n"); break; } }
+    fclose(f);
+}
+static void *gpu_thread(void *a) {
+    (void)a; unsigned done = 0; const char *e = getenv("GPUEMU_MS"), *j = getenv("GPUEMU_JOB"); unsigned ms = e ? (unsigned)num(e) : 3, job = j ? (unsigned)num(j) : 0; int n = 0;
+    for (;;) {
+        usleep(100);
+        if (getenv("RINGWATCH") && gw1) {  /* RINGWATCH=1: cada ~2 s, entradas de la tabla de trabajos (ventana +0xe8, 0x8c B) con algún dato; byte 0 = en curso */
+            static unsigned tick; if (++tick % 20000 == 0) {
+                char b[800]; int o = 0, c = 0; for (unsigned q = 0; q < 0x320 && c < 6 && 0xe8 + (q + 1) * 0x8c <= 0x20000; q++) { volatile unsigned *e = gw1 + (0xe8 + q * 0x8c) / 4; int nz = 0; for (int i = 0; i < 35; i++) if (e[i]) nz = 1; if (nz) { c++; o += snprintf(b + o, sizeof b - o, " [%u: b0=%u w1=%#x w2=%#x w3=%#x w4=%#x w5=%#x w6=%#x]", q, (unsigned)(e[0] & 0xff), e[1], e[2], e[3], e[4], e[5], e[6]); } }
+                efp("[shim] RING kicks=%u +4=%#x +c=%#x +10=%#x +14=%#x:%s\n", gpu_kicks, gw1[1], gw1[3], gw1[4], gw1[5], b);
+            }
+        }
+        if (gpu_kicks == done) continue;
+        done = gpu_kicks; unsigned v = gw0 ? gw0[0x1804 / 4] : 0;
+        gw1[5] = 1; usleep(ms * 1000u); gw1[5] = 2;  /* ocupada → inactiva: grm_init lo necesita en cada trabajo */
+        if (!gpu_live) continue;  /* durante el arranque los trabajos no generan aviso de fin: el controlador no lo espera */
+        usleep(ms * 1000u);
+        unsigned idx = 0xffffffffu;  /* el controlador anota el trabajo en la tabla de la ventana (+0xe8, entradas de 0x8c B, [+0x14] = id) antes de empujar la lista */
+        for (unsigned q = 0; q < 0x320 && 0xe8 + (q + 1) * 0x8c <= 0x20000; q++) if (gw1[(0xe8 + q * 0x8c + 0x14) / 4]) { idx = q; break; }
+        if (idx == 0xffffffffu && j) idx = job;
+        if (idx != 0xffffffffu) { gpu_ack = 0; gw1[4] = 1; gw1[1] = idx; }
+        if (n++ < 40) efp("[shim] GPUEMU trabajo %d: lista %#x terminada (+4=%#x)\n", n, v, idx);
+        gpu_dumplist(v, n);
+        if (idx != 0xffffffffu) { for (int k = 0; k < 2000 && !gpu_ack; k++) usleep(500); gw1[1] = 0xffffffffu; gw1[4] = 0; }
+    }
+    return 0;
+}
+static void gpuemu_add(const char *dev, off_t off, void *p, size_t len) {
+    const char *g = getenv("GPUEMU"); if (g && g[0] == '0') return;
+    if (len != 0x20000) return;
+    if (!strcmp(dev, "/dev/mem") && off == 1) gw0 = p; else if (!strcmp(dev, "/dev/dmpgles2")) gw1 = p; else return;
+    static int th; if (gw0 && gw1 && !th++) {
+        pthread_t t; pthread_create(&t, 0, gpu_thread, 0);
+    }
 }
 static void regtrap_add(void *p, size_t len) {
     if (nrtw >= 2 || len > 0x20000) return;
@@ -570,6 +665,7 @@ void *mmap(void *a, size_t l, int pr, int fl, int fd, off_t o) {
         void *r = m(a, l, pr, (fl & ~MAP_SHARED) | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
         if (r != MAP_FAILED && nam < 64) { amaps[nam].p = r; amaps[nam].len = l; amaps[nam].off = o; strncpy(amaps[nam].dev, devname[fd], 31); nam++; }
         if (r != MAP_FAILED && !strcmp(devname[fd], "/dev/dmpgles2") && l == 0x20000) { ((unsigned *)r)[1] = 0xffffffffu; ((unsigned *)r)[5] = 2; }  /* reg +4 = índice del trabajo terminado (libObj+0x6c61b0); 0xffffffff = ninguno; reg +0x14 = estado de la GPU (el bucle del hilo GL, libObj+0x6c35a0/0x6c66c4, gira hasta que vale 2 = inactiva). A 0 el controlador cree que el trabajo 0 acaba de terminar y gira reteniendo su cerrojo */
+        if (r != MAP_FAILED) gpuemu_add(devname[fd], o, r, l);
         if (getenv("REGTRAP") && r != MAP_FAILED && ((!strcmp(devname[fd], "/dev/dmpgles2") && l == 0x20000) || (!strcmp(devname[fd], "/dev/mem") && l == 0x20000 && o == 1))) regtrap_add(r, l);
         LOG("mmap(%s, len=%#zx off=%#lx) -> %p (anónima)", devname[fd], l, (long)o, r); return r;
     }
