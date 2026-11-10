@@ -262,6 +262,12 @@ Fuente: [log.txt](../../analysis/camera-dumps/mem-20261020-log/log.txt) (ciclo s
 - NVRAM (`20261105-volcado-total-nvram`): el registro `0x1070140` (reloj «forzado») vale 0; el registro real de `ModelRoot` (`BootKey/EeCap`) no está en el registro de la cámara.
 - Siguiente paso: averiguar qué evento (¿de `ModelBoot`/`POWER_CTRL` al terminar el arranque?) activa `isRequiredScalarViewOpen` y reproducirlo; y fijar el orden `toActive`→`INJECT` (p. ej. inyectar tras detectar `toActive`) para eliminar la carrera.
 
+### 5.17 Avance 34 (10-11-2026): por qué la UI no se anima — falta el flujo de eventos de av-cam
+
+- `ViewRoot::isRequiredScalarViewOpen` (`viewUnified2+0x16de00`) es una guarda del autómata de `ViewRoot` (`DefRootView::ActionEventMapBase/ActionCheckerListBase`): exige `[this+0x138]==1`, los factores de inhibición `CmnViewInhUtil::isFactorOn(0x16, 8/9)` y `ScalarView::ExistsScalarPackage`. Solo se ejecuta cuando el autómata recibe un evento (`DispatchEvent`); en la cámara lo recibe a los 122,25 s y 126,19 s del registro, y en nuestra ejecución nunca.
+- Dato ya medido (§5.8): `Appframework` despacha **un** único evento en 75 s. En el registro real, en cambio, los eventos de modelo llegan continuamente (`[DAEMON]SystemModelInfo::update`, `CameraEvent…Cb`, `M_POWER`, `[CmnViewMgrSetSave] MAAJID` cada ≈30 ms, `ACT_Icon*`): proceden del procesador de cámara (`av-cam`/`ScalarDaemon` reciben notificaciones de `LIRO`/`CAMUSER`/`AGENT`), que aquí no existe.
+- **Conclusión**: sin un generador de eventos de modelo que imite a `av-cam` (estado de disparo, enfoque, batería, USB, zoom…), las vistas se crean pero no se activan ni se redibujan; aun con un rasterizador de la GPU de DMP no habría nada que dibujar. F3 requiere, en este orden: (1) generar los eventos de `ModelManager::pushEvent` que la cámara real emite tras `POWER_ON` (se pueden inferir del registro real: `mem-20261020-log`); (2) comprobar que la tabla de trabajos de la GPU crece; (3) rasterizador. Es trabajo de largo recorrido sin criterio de cierre acotado.
+
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
 Verificado: `build.sh` reproduce byte a byte el `sonyshim.so` que se estaba usando (md5 `5307f8ae…` antes de las correcciones);

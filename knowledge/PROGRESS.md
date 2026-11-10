@@ -599,3 +599,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 10-11-2026: G22-B avance 31 — w1 de INJECT = status del interruptor de encendido; ViewRootPowerSw llega a isBootEECapNone. [G22 §5.14](../docs/gui/g22-arnes-ui-qemu.md).
 - 10-11-2026: G22-B avance 32 — status del encendido = w2; BOOTINFO; sin avance en dibujo. [G22 §5.15](../docs/gui/g22-arnes-ui-qemu.md).
 - 10-11-2026: G22-B avance 33 — comparación con el log real de la cámara. [G22 §5.16](../docs/gui/g22-arnes-ui-qemu.md).
+- 10-11-2026: G22-B avance 34 — la UI no recibe eventos de modelo (falta av-cam); F3/F4/F5 abiertas. [G22 §5.17](../docs/gui/g22-arnes-ui-qemu.md).
