@@ -327,6 +327,7 @@ int ioctl(int fd, unsigned long req, ...) {
     if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC) {  /* dispositivo no modelado: éxito, registrado las 5 primeras veces por (dispositivo, orden) y luego cada 4096 */
         static struct { char d[32]; unsigned long r; unsigned n; } seen[64]; static int ns; int k;
         if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0x80048206 && arg) *(unsigned *)arg = 0x20000;  /* tamaño de la ventana de registros de la GPU (rm_reg_init lo pasa a mmap de /dev/mem; con 0 se mapeaba 1 página y el código escribe en +0x1804) */
+        if (getenv("GPUTRACE") && !strcmp(devname[fd], "/dev/dmpgles2")) { static int gn; if (gn++ < 600) LOG("GPU ioctl %#lx arg=%p val=%#x", req, arg, (unsigned long)arg > 0x10000 ? *(unsigned *)arg : 0u); }  /* GPUTRACE=1: cada ioctl de la GPU (primeros 600), sin deduplicar */
         if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0xc004820d) {  /* espera de interrupción de la GPU (libObj+0x6c5320 repite hasta salida != 0) */
             const char *e = getenv("GPUIRQ_MS"); unsigned ms = e ? (unsigned)num(e) : 20;  /* GPUIRQ_MS=n: IRQ simulada cada n ms (20 por defecto, necesaria para que termine la init GL); 0 = GPU ociosa, duerme */
             if (ms && arg) { usleep(ms * 1000u); *(unsigned *)arg = 1; return 0; }
@@ -388,6 +389,16 @@ static void memscan(void);
 static void *dumper(void *a) {
     sleep(num(getenv("DUMPAT"))); (void)a; load_maps();
     if (getenv("MEMSCAN")) memscan();
+    if (getenv("GLOBDUMP")) {  /* GLOBDUMP="off_hex,…": valor de variables globales de libObj (+off) y su posición respecto a las ventanas de la GPU */
+        unsigned long base = 0; { FILE *m = fopen("/proc/self/maps", "r"); char ln[300]; while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, "libObj.so")) { base = hexv(ln, 0); break; } if (m) fclose(m); }
+        /* la base del mapa con offset 0 */
+        char *spec = strdup(getenv("GLOBDUMP")), *sv = 0;
+        for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) {
+            unsigned long off = hexv(it, 0); unsigned v = *(unsigned *)(base + off); char r[120] = "";
+            for (int k = 0; k < nam; k++) if ((unsigned long)v >= (unsigned long)amaps[k].p && (unsigned long)v < (unsigned long)amaps[k].p + amaps[k].len) snprintf(r, sizeof r, " = ventana %s off=%#lx +%#lx", amaps[k].dev, amaps[k].off, (unsigned long)v - (unsigned long)amaps[k].p);
+            efp("[shim] GLOBDUMP libObj+%#lx = %#x%s\n", off, v, r);
+        }
+    }
     if (getenv("AREADUMP")) {  /* AREADUMP="dev@off_hex[,dev@off_hex…]" (p. ej. stream@b4000000,dmpgles2@0,mem@80000000): vuelca cada área (máx. 8 MiB) a /tmp/area_<dev>_<off>.bin */
         char *spec = strdup(getenv("AREADUMP")), *sv = 0;
         for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) {
@@ -517,6 +528,39 @@ static void memscan(void) {
         efp("[shim] MEMSCAN %s off=%#lx len=%#zx base=%p págs no nulas=%zu [%#zx..%#zx]\n", amaps[k].dev, amaps[k].off, amaps[k].len, amaps[k].p, nz, first == (size_t)-1 ? 0 : first, last);
     }
 }
+/* REGTRAP=1: las ventanas de registros de la GPU (/dev/dmpgles2 y /dev/mem off=1, 0x20000 B) se mantienen en PROT_NONE; cada acceso falla, se registra
+ * (tid, PC, dirección, lectura/escritura) y se abre la ventana 1,5 ms; el hilo de trampa registra además los cambios de contenido (escrituras con su valor).
+ * Sirve para saber qué registros consulta el controlador de libObj (p. ej. para decidir que un trabajo terminó). */
+static unsigned libobj_off(void *ra);
+static struct { unsigned char *p; size_t len; unsigned snap[0x8000]; } rtw[2]; static int nrtw; static struct sigaction rt_old;
+static void rt_segv(int sig, siginfo_t *si, void *ctx) {
+    ucontext_t *uc = ctx; unsigned char *a = si->si_addr; static int n;
+    for (int k = 0; k < nrtw; k++) if (a >= rtw[k].p && a < rtw[k].p + rtw[k].len) {
+        static unsigned long seenk[512]; static int nseen; unsigned long key = ((unsigned long)k << 28) ^ ((unsigned long)(a - rtw[k].p) << 12) ^ (uc->uc_mcontext.arm_pc & 0xfff) ^ (((uc->uc_mcontext.error_code >> 11) & 1) << 27); int dup = 0;
+        for (int q = 0; q < nseen; q++) if (seenk[q] == key) dup = 1;
+        if (!dup && nseen < 512) { seenk[nseen++] = key; n = 0; } else n = 2000;
+        if (n++ < 1500) efp("[shim] REGTRAP tid %ld %s w%d+%#lx pc=libObj+%#x lr=libObj+%#x\n", (long)syscall(224), (uc->uc_mcontext.error_code & (1 << 11)) ? "ESC" : "LEC", k, (unsigned long)(a - rtw[k].p), libobj_off((void *)uc->uc_mcontext.arm_pc), libobj_off((void *)uc->uc_mcontext.arm_lr));
+        mprotect(rtw[k].p, rtw[k].len, PROT_READ | PROT_WRITE); return;
+    }
+    sigaction(SIGSEGV, &rt_old, 0);  /* no es nuestra: el manejador previo (pila) al reintentar */
+}
+static void *rt_thread(void *a) {
+    (void)a; for (;;) {
+        usleep(60);
+        for (int k = 0; k < nrtw; k++) {
+            unsigned *w = (unsigned *)rtw[k].p; size_t nw = rtw[k].len / 4;
+            for (size_t i = 0; i < nw; i++) if (w[i] != rtw[k].snap[i]) { static int m; if (m++ < 800) efp("[shim] REGTRAP w%d+%#zx: %#x -> %#x\n", k, i * 4, rtw[k].snap[i], w[i]); rtw[k].snap[i] = w[i]; }
+            mprotect(rtw[k].p, rtw[k].len, PROT_NONE);
+        }
+    }
+    return 0;
+}
+static void regtrap_add(void *p, size_t len) {
+    if (nrtw >= 2 || len > 0x20000) return;
+    rtw[nrtw].p = p; rtw[nrtw].len = len; efp("[shim] REGTRAP ventana w%d = %p\n", nrtw, p); nrtw++;
+    if (nrtw == 1) { struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = rt_segv; sa.sa_flags = SA_SIGINFO | SA_NODEFER; sigaction(SIGSEGV, &sa, &rt_old); }
+    if (nrtw == 2 || 1) { static int th; if (!th++) { pthread_t t; pthread_create(&t, 0, rt_thread, 0); } }
+}
 /* mmap de dispositivos no modelados (/dev/mem, fb, ...): memoria anónima a cero */
 void *mmap(void *a, size_t l, int pr, int fl, int fd, off_t o) {
     static void *(*m)(void *, size_t, int, int, int, off_t);
@@ -525,6 +569,8 @@ void *mmap(void *a, size_t l, int pr, int fl, int fd, off_t o) {
         if (!l) l = 0x1000;  /* shortcut: len 0 no es válido; el monitor de MWF lo pide sin argumentos */
         void *r = m(a, l, pr, (fl & ~MAP_SHARED) | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
         if (r != MAP_FAILED && nam < 64) { amaps[nam].p = r; amaps[nam].len = l; amaps[nam].off = o; strncpy(amaps[nam].dev, devname[fd], 31); nam++; }
+        if (r != MAP_FAILED && !strcmp(devname[fd], "/dev/dmpgles2") && l == 0x20000) { ((unsigned *)r)[1] = 0xffffffffu; ((unsigned *)r)[5] = 2; }  /* reg +4 = índice del trabajo terminado (libObj+0x6c61b0); 0xffffffff = ninguno; reg +0x14 = estado de la GPU (el bucle del hilo GL, libObj+0x6c35a0/0x6c66c4, gira hasta que vale 2 = inactiva). A 0 el controlador cree que el trabajo 0 acaba de terminar y gira reteniendo su cerrojo */
+        if (getenv("REGTRAP") && r != MAP_FAILED && ((!strcmp(devname[fd], "/dev/dmpgles2") && l == 0x20000) || (!strcmp(devname[fd], "/dev/mem") && l == 0x20000 && o == 1))) regtrap_add(r, l);
         LOG("mmap(%s, len=%#zx off=%#lx) -> %p (anónima)", devname[fd], l, (long)o, r); return r;
     }
     return m(a, l, pr, fl, fd, o);
@@ -554,6 +600,7 @@ void abort_regs(unsigned *r) {
 }
 void abort_real(void) { static void (*a)(void); if (!a) a = dlsym(RTLD_NEXT, "abort"); a(); for (;;); }
 
+static int mw_secs(void); static const char *tname(int, char *, size_t); static unsigned libobj_off(void *);
 /* Experimento (CVWAIT=s): el solicitante de libObj+0x719ed8 (patrón «trabajador», fw 3.21) espera el fin del trabajo sin sostener su
  * cerrojo y puede perder la señal; solo ese punto de llamada espera con tope de s segundos (despertar espurio).
  * El resto de esperas (p. ej. el bucle del trabajador, que no tolera despertares espurios) queda intacto. */
@@ -569,7 +616,51 @@ int pthread_cond_wait(pthread_cond_t *c, pthread_mutex_t *m) {
             pthread_cond_timedwait(c, m, &ts); return 0;
         }
     }
+    if (mw_secs()) {  /* espera con tope para poder registrar quién se queda esperando una condición */
+        static void *seen[64]; static int ns; void *ra = __builtin_return_address(0); struct timespec ts; int k, ya = 0;
+        clock_gettime(CLOCK_REALTIME, &ts); ts.tv_sec += mw_secs();
+        int r = pthread_cond_timedwait(c, m, &ts);
+        if (r == 110) {
+            for (k = 0; k < ns; k++) if (seen[k] == ra) ya = 1;
+            if (!ya && ns < 64) { char a[32]; seen[ns++] = ra; efp("[shim] MUTEXWATCH %s (tid %ld) espera condición %p (cerrojo %p) > %d s; llamador libObj+%#x\n", tname((int)syscall(224), a, sizeof a), (long)syscall(224), (void *)c, (void *)m, mw_secs(), libobj_off(ra)); }
+            return real(c, m);
+        }
+        return r;
+    }
     return real(c, m);
+}
+/* MUTEXWATCH=s: un pthread_mutex_lock que espera más de s segundos registra quién lo retiene (glibc 2.11 ARM: __owner en +8) y manda
+ * SIGUSR1 al dueño y al solicitante (pila). pthread_cond_wait con MUTEXWATCH registra una vez por llamador las esperas > s con dirección
+ * de la condición y del cerrojo. Solo se activa con la variable (coste cero sin ella). */
+static int mw_secs(void) { static int v = -1; if (v < 0) { const char *e = getenv("MUTEXWATCH"); v = 0; while (e && *e >= '0' && *e <= '9') v = v * 10 + *e++ - '0'; } return v; }
+static const char *tname(int tid, char *b, size_t n) { char fn[64]; snprintf(fn, sizeof fn, "/proc/self/task/%d/comm", tid); FILE *f = fopen(fn, "r"); b[0] = 0; if (f) { if (!fgets(b, n, f)) b[0] = 0; fclose(f); } for (char *c = b; *c; c++) if (*c == '\n') *c = 0; return b; }
+static unsigned libobj_off(void *ra) { Dl_info di; return (dladdr(ra, &di) && di.dli_fname && strstr(di.dli_fname, "libObj.so")) ? (unsigned)((unsigned long)ra - (unsigned long)di.dli_fbase) : 0; }
+static int mt_suffix(void) { static int v = -2; if (v == -2) { const char *e = getenv("MUTEXTRACE"); v = e ? (int)hexv(e, 0) : -1; } return v; }
+static void mt_log(const char *what, pthread_mutex_t *m, void *ra) { static int n; if (mt_suffix() >= 0 && (((unsigned long)m & 0xfff) == (unsigned long)mt_suffix()) && n < 6000) { n++; char a[32]; efp("[shim] MUTEXTRACE %s %p tid %ld %s libObj+%#x\n", what, (void *)m, (long)syscall(224), tname((int)syscall(224), a, sizeof a), libobj_off(ra)); if (getenv("MUTEXSTACK") && what[0] == 'l' && strstr(a, getenv("MUTEXSTACK"))) raise(SIGUSR1); } }
+int pthread_mutex_lock(pthread_mutex_t *m) {
+    static int (*real)(pthread_mutex_t *), (*tl)(pthread_mutex_t *, const struct timespec *);
+    if (!real) { real = dlsym(RTLD_NEXT, "pthread_mutex_lock"); tl = dlsym(RTLD_NEXT, "pthread_mutex_timedlock"); }
+    mt_log("lock", m, __builtin_return_address(0));
+    int w = mw_secs(); if (!w || !tl) return real(m);
+    struct timespec ts; clock_gettime(CLOCK_REALTIME, &ts); ts.tv_sec += w;
+    int r = tl(m, &ts);
+    if (r != 110 /* ETIMEDOUT */) return r;
+    int owner = ((int *)m)[2]; char a[32], b[32]; unsigned off = libobj_off(__builtin_return_address(0));
+    efp("[shim] MUTEXWATCH %s (tid %ld) espera cerrojo %p > %d s; dueño tid %d (%s); llamador libObj+%#x\n", tname((int)syscall(224), a, sizeof a), (long)syscall(224), (void *)m, w, owner, tname(owner, b, sizeof b), off);
+    if (owner > 0 && !getenv("LOCKSTEAL")) syscall(SYS_tgkill, getpid(), owner, SIGUSR1);
+    if (getenv("LOCKSTEAL")) { efp("[shim] LOCKSTEAL: se libera a la fuerza el cerrojo %p (dueño %d)\n", (void *)m, owner); ((int *)m)[2] = 0; ((int *)m)[0] = 0; __sync_synchronize(); }  /* LOCKSTEAL=1: experimento, carrera de datos asumida */
+    return real(m);
+}
+/* FAIRMUTEX=us: tras soltar un cerrojo con esperadores (glibc 2.11: __lock == 2) el hilo duerme us µs para que un esperador lo tome; los mutex de glibc no son
+ * justos y el hilo trabajador de la GPU (que lo vuelve a tomar enseguida) deja sin cerrojo al hilo de la aplicación. */
+int pthread_mutex_unlock(pthread_mutex_t *m) {
+    static int (*real)(pthread_mutex_t *); static int us = -1;
+    if (!real) real = dlsym(RTLD_NEXT, "pthread_mutex_unlock");
+    if (us < 0) { const char *e = getenv("FAIRMUTEX"); us = 0; while (e && *e >= '0' && *e <= '9') us = us * 10 + *e++ - '0'; }
+    mt_log("unlock", m, __builtin_return_address(0));
+    int w = us ? ((int *)m)[0] : 0, r = real(m);
+    if (w == 2) usleep(us);
+    return r;
 }
 /* Registro de munmap grandes (MMapBase de libObj aborta si desmapea algo no mapeado). */
 int munmap(void *a, size_t l) {

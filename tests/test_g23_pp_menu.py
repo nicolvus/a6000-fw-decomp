@@ -58,7 +58,7 @@ def test_arbol_y_descriptores(tmp_path):
     assert len(roots) == len(M.SETTINGS) and cnt == {"carpeta": 9, "pagina": 10, "opcion": sum(len(s.opciones) for s in M.SETTINGS.values())}
     assert dict(roots) == {M.PIDS[i]: len(s.opciones) for i, s in enumerate(M.SETTINGS.values())}
 
-    ajustes = [D.Ajuste(M.PIDS[i], s.clave, tuple(v for _, v in s.opciones)) for i, s in enumerate(M.SETTINGS.values())]
+    ajustes = [D.Ajuste(M.PIDS_PRESTADOS[i], s.clave, tuple(v for _, v in s.opciones)) for i, s in enumerate(M.SETTINGS.values())]
     pm = D.patch((LIB / "cmn_view_processDataMgr.so").read_bytes(), ajustes)
     ps = A._segments(pm)
     prd = lambda va, n=1: struct.unpack_from(f"<{n}I", pm, A._off(ps, va))
@@ -98,7 +98,7 @@ def test_color_mode_level_clave_1_rango_del_validador():
     """G27: Color Mode Level = clave K(1), opciones 1…8 (lo que acepta el caso 1 de `pvt_ChangePictureProfileParamApp2Obj`), en la página de Color Mode."""
     s = M.SETTINGS["color_level"]
     assert (s.clave, s.evento, [v for _, v in s.opciones]) == (0x1FC, 0x40, list(range(1, 9)))
-    assert M.PIDS[list(M.SETTINGS).index("color_level")] == 0x26 and len(set(M.PIDS)) == len(M.PIDS)
+    assert M.PIDS[list(M.SETTINGS).index("color_level")] == 0xE9 + 33 and len(set(M.PIDS)) == len(M.PIDS) and min(M.PIDS) >= 0xE9
     assert M.TREE[2][1][:3] == ["color_mode", "color_level", "saturation"]
     if not (LIB / "libObj.so").is_file():
         return

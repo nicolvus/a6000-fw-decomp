@@ -133,9 +133,9 @@ def encode_lz(data: bytes) -> bytes:
         for j in reversed(heads.get(key, [])) if len(key) == 3 else ():
             if i - j > 0xFFF:
                 break
-            k = 0
-            while k < 64 and i + k < n and data[j + k] == data[i + k]:
-                k += 1
+            m = min(64, n - i)                                # prefijo común sin bucle por byte: XOR de enteros big-endian
+            x = int.from_bytes(data[j:j + m]) ^ int.from_bytes(data[i:i + m])
+            k = m if not x else m - (x.bit_length() + 7) // 8
             if k > best[0]:
                 best = (k, i - j)
                 if k == 64:
@@ -246,17 +246,27 @@ class TpzlImage:
         """Tamaño descomprimido del bloque (el último puede ser menor)."""
         return self.block_size
 
-    def decompressed(self) -> bytes:
-        out = bytearray()
-        for index in range(len(self.entries)):
-            out += decode_block(self.block(index), self.target_size(index))
-        return bytes(out)
+    def decompressed(self, workers: int | None = None) -> bytes:
+        """Todos los bloques descomprimidos; con muchos bloques se reparten entre procesos (todos los núcleos por defecto)."""
+        return b"".join(_decodificar([(self.block(i), self.target_size(i)) for i in range(len(self.entries))], workers))
 
     def block_index(self, offset: int) -> int:
         index, _rem = divmod(offset, self.block_size)
         if index >= len(self.entries):
             raise TpzlError(f"offset {offset:#x} fuera de la partición")
         return index
+
+
+def _decode_job(args: tuple[bytes, int]) -> bytes:
+    return decode_block(*args)
+
+
+def _decodificar(jobs: list[tuple[bytes, int]], workers: int | None = None) -> list[bytes]:
+    workers = workers or os.cpu_count() or 1
+    if workers > 1 and len(jobs) > 32:
+        with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as pool:
+            return list(pool.map(_decode_job, jobs, chunksize=max(1, len(jobs) // (workers * 4))))
+    return [_decode_job(j) for j in jobs]
 
 
 def _align(value: int, align: int = ALIGN) -> int:
@@ -303,13 +313,9 @@ def _splice(block: bytes, raw: bytes) -> bytes:
     return bytes(out)
 
 
-def _comprimir_bloque(args: tuple[int, bytes, bytes, int]) -> tuple[int, bytes]:
-    """Un bloque nuevo (independiente de los demás): `_splice` + comprobación de ida y vuelta. Corre en un proceso del grupo."""
-    index, original, raw, target = args
-    compressed = _splice(original, raw)
-    if decode_block(compressed, target) != raw:
-        raise TpzlError(f"bloque {index}: la recompresión no reproduce el contenido")
-    return index, compressed
+def _comprimir_pagina(new: bytes) -> bytes:
+    """Una página de 4096 B cambiada (lo caro: LZ77 en Python): corre en un proceso del grupo."""
+    return min(encode_lz(new), encode_raw(new), key=len)
 
 
 def rebuild(image: TpzlImage, replacements: dict[int, bytes], workers: int | None = None) -> tuple[bytes, list[dict]]:
@@ -318,20 +324,38 @@ def rebuild(image: TpzlImage, replacements: dict[int, bytes], workers: int | Non
     `replacements` asocia índice de bloque con sus 65536 B descomprimidos.  El
     resto de bloques se copia byte a byte, sin recomprimir.  En los bloques nuevos solo
     las páginas cambiadas pasan a registros almacenados (`_splice`) y todo se alinea a
-    512 B con relleno 0x00.  Los bloques nuevos se comprimen en paralelo (`workers` procesos; por defecto todos los núcleos).
+    512 B con relleno 0x00.  Las páginas cambiadas de todos los bloques nuevos se comprimen
+    en paralelo, página a página (`workers` procesos; por defecto todos los núcleos).
     """
-    jobs = []
+    planes: dict[int, list] = {}
+    paginas: list[bytes] = []
     for index in sorted(replacements):
         target = image.target_size(index)
         if len(replacements[index]) != target:
             raise TpzlError(f"bloque {index}: {len(replacements[index])} B, esperado {target} B")
-        jobs.append((index, image.block(index), replacements[index], target))
+        original = image.block(index)
+        plan, pos = [], 0
+        for page in range(0, target, RECORD):
+            start = pos
+            chunk, pos = _inflate_segment(original, pos)
+            new = replacements[index][page:page + RECORD]
+            if chunk == new:
+                plan.append(original[start:pos])
+            else:
+                plan.append(len(paginas))
+                paginas.append(new)
+        planes[index] = plan
     workers = workers or os.cpu_count() or 1
-    if workers > 1 and len(jobs) > 1:
+    if workers > 1 and len(paginas) > 8:
         with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as pool:
-            done = dict(pool.map(_comprimir_bloque, jobs, chunksize=max(1, len(jobs) // (workers * 4))))
+            comp = list(pool.map(_comprimir_pagina, paginas, chunksize=2))
     else:
-        done = dict(map(_comprimir_bloque, jobs))
+        comp = [_comprimir_pagina(p) for p in paginas]
+    done: dict[int, bytes] = {}
+    for index, plan in planes.items():
+        done[index] = b"".join(comp[x] if isinstance(x, int) else x for x in plan)
+        if decode_block(done[index], image.target_size(index)) != replacements[index]:
+            raise TpzlError(f"bloque {index}: la recompresión no reproduce el contenido")
     blocks: list[bytes] = []
     info: list[dict] = []
     for index, (old_offset, old_size) in enumerate(image.entries):
@@ -385,13 +409,9 @@ def rebuild(image: TpzlImage, replacements: dict[int, bytes], workers: int | Non
 
 
 def _apply(image: TpzlImage, replacements: dict[int, bytes]) -> bytes:
-    out = bytearray()
-    for index in range(len(image.entries)):
-        if index in replacements:
-            out += replacements[index]
-        else:
-            out += decode_block(image.block(index), image.target_size(index))
-    return bytes(out)
+    resto = [i for i in range(len(image.entries)) if i not in replacements]
+    hechos = dict(zip(resto, _decodificar([(image.block(i), image.target_size(i)) for i in resto])))
+    return b"".join(replacements[i] if i in replacements else hechos[i] for i in range(len(image.entries)))
 
 
 def patch_decompressed(image: TpzlImage, patched: bytes) -> tuple[bytes, list[dict]]:

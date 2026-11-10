@@ -65,7 +65,8 @@ TREE = F("Picture Profile",
           F("Knee", ["knee_mode", F("Auto Set", ["knee_max", "knee_sens"]), F("Manual Set", ["knee_point", "knee_slope"])])],
          ["color_mode", "color_level", "saturation", "phase", F("Color Depth", [f"cd_{c}" for c in "rgbcmy"]), F("WB Shift", ["wb_filter", "wb_lb", "wb_cc", "wb_r", "wb_b"]),
           F("Detail", ["det_level", "det_mode", F("Manual Set", ["det_vh", "det_bw", "det_limit", "det_crisp", "det_hilight"])])])
-# ProcessIds inertes sin referencia en ningún menú
-PIDS = [0x35, 0x9D, 0xB3, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xDC, 0xDD, 0xDE, 0xDF, 0x52, 0x53, 0x54, 0x5E, 0x5F, 0x60, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68,
-        0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x5B,
-        0x26]                                                     # Color Mode Level (G27): pid de SilentShutterRoot, raíz que el menú del A6000 no usa (el Silent del 3.57+ usa 0x12 por el mismo motivo)                 # los 6 últimos son de la familia contigua 0x55–0x5d: riesgo de uso por otro consumidor (G24 §3)
+# G28: pids NUEVOS (fuera de los 233 originales, que casi todos usa algún nodo): el espacio se amplía en pid_space.py. PIDS_PRESTADOS es la lista del 3.57–3.62
+# (G23: se creían «inertes», pero eran Custom Key / Function Menu Set.) y solo se conserva para las pruebas de los descriptores de la .so.
+PIDS_PRESTADOS = [0x35, 0x9D, 0xB3, 0xC3, 0xC4, 0xC5, 0xC6, 0xC7, 0xC8, 0xDC, 0xDD, 0xDE, 0xDF, 0x52, 0x53, 0x54, 0x5E, 0x5F, 0x60, 0x62, 0x63, 0x64, 0x65, 0x66, 0x67, 0x68,
+                  0x55, 0x56, 0x57, 0x58, 0x59, 0x5A, 0x5B, 0x26]
+PIDS = list(range(0xE9, 0xE9 + len(PIDS_PRESTADOS)))

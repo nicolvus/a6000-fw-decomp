@@ -3,7 +3,7 @@
 
 Todo son datos, sin código nuevo (G23 «Más páginas»): `pp_menu_spec.py` define los 26 ajustes (claves de la A7S, rangos del validador de la A6000) y el árbol
 carpeta → páginas → ajustes/carpetas. Se construye:
-  lib/viewUnified2.so             descriptores (pp_descriptors.py) en ProcessIds inertes (`PIDS`, clase forzada a Normal) dentro de la copia del gestor de procesos (G28)
+  lib/viewUnified2.so             espacio de pids ampliado + descriptores de PP en pids nuevos dentro de la copia del gestor de procesos (pid_space.py, G28)
   lib/CautionConfig.so            nodos de datos puros (raíz+opciones de cada ajuste, carpetas y páginas) en un PT_LOAD RW con relocaciones RELATIVE
   lib/viewUnified2.so             entrada nueva = carpeta «Picture Profile» en las 5 páginas del menú (add_menu_entry.py)
   share/app/string_<idioma>.uxc   textos en ranuras libres (traducción de la A6300 si el inglés coincide; si no, el literal)
@@ -20,6 +20,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 import add_menu_entry as A
 import build_pp_gamma_menu as G
 import patch_libobj_pp
+import pid_space
 import pp_descriptors
 import pp_menu_spec as M
 import silent_descriptor
@@ -137,12 +138,12 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
         emit("lib/libObj.so", patch_libobj_pp.patch_bw(patch_libobj_pp.patch_color(lo)) if color_gamut else lo)
     caution, delta = patch_caution((a / "lib/CautionConfig.so").read_bytes(), ids)
     emit("lib/CautionConfig.so", caution)
-    # G28: la UI usa la copia del gestor de procesos que lleva viewUnified2.so (cmn_view_processDataMgr.so no se carga): descriptores y clase Normal van ahí
+    # G28: la UI usa la copia del gestor de procesos que lleva viewUnified2.so (cmn_view_processDataMgr.so no se carga) y los pids originales los usa casi todos algún nodo:
+    # los ajustes de PP van en pids nuevos (espacio ampliado en pid_space.py); Silent conserva el 0x12 (descriptor propio sobre la tabla original, antes de copiarla).
     vu2 = A.patch((a / "lib/viewUnified2.so").read_bytes(), [*entradas_previas, delta])   # entradas_previas: p. ej. Silent (0xEB0) en el CFW completo
     if silent:
         vu2 = silent_descriptor.patch(vu2, silent_descriptor.TABLA_D_VU2, silent_descriptor.DESC_EFCS_VU2)
-    vu2 = pp_descriptors.patch(vu2, ajustes, pp_descriptors.TABLA_D_VU2)
-    emit("lib/viewUnified2.so", pp_descriptors.clase_normal(vu2, [silent_descriptor.PID_NUEVO, *M.PIDS]))
+    emit("lib/viewUnified2.so", pid_space.patch(vu2, ajustes))
     en_b = uxc_strings.parse((b / "share/app/string_english.uxc").read_bytes())[2]
     inv = {}
     for rid, t in sorted(en_b.items()):
