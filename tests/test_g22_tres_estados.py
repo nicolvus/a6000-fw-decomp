@@ -61,7 +61,7 @@ def test_solo_cambia_lo_previsto_y_revierte(pair):
 @needs
 @pytest.mark.parametrize("efcs,silent", [(0, 0), (0, 1), (1, 0), (1, 1)])
 def test_copiador_igual_que_sony_salvo_el_byte_nuevo(pair, efcs, silent):
-    """0x43845f2e..0x43845fa4: misma memoria de `cap` y mismo `sb`; solo se añade cap+0x41d = efcs & silent."""
+    """0x43845f2e..0x43845fa4: misma memoria de `cap` y mismo `sb`; solo se añade cap+0x41d = silent (Silent manda sobre EFCS)."""
     orig, out = pair
     rng = random.Random(7)
     blk_bytes = bytes(rng.randrange(256) for _ in range(0x600))
@@ -83,8 +83,8 @@ def test_copiador_igual_que_sony_salvo_el_byte_nuevo(pair, efcs, silent):
     mem_n, sb_n = run(out)
     assert sb_o == sb_n
     diff = [i for i in range(0x1000) if mem_o[i] != mem_n[i]]
-    assert diff == ([0x41D] if efcs & silent else [])
-    assert mem_n[0x41C] == efcs and mem_n[0x41D] == efcs & silent
+    assert diff == ([0x41D] if silent else [])
+    assert mem_n[0x41C] == efcs and mem_n[0x41D] == silent
 
 
 @needs
@@ -103,7 +103,7 @@ def test_envio_pkt0e_es_electronico(pair, r6, efcs, silent):
     uc.reg_write(UC_ARM_REG_R6, r6)
     uc.reg_write(UC_ARM_REG_SP, 0x5001F000)
     _run(uc, 0x438D01A2, 0x438D01FE)
-    assert uc.mem_read(carga + 0x4E, 1)[0] == efcs & silent
+    assert uc.mem_read(carga + 0x4E, 1)[0] == silent
     # r6 == 0 deja obj+0x768 = 1 (como Sony: no ejecuta 0x438d01c2); r6 != 0 lo pone a 0
     assert uc.mem_read(obj + 0x768, 1)[0] == (1 if r6 == 0 else 0)
 
@@ -118,14 +118,14 @@ def test_ctor_pkt0e_lee_el_byte_nuevo_y_pkt0d_igual(pair, efcs, silent):
             uc = _uc(code)
             pkt, cap = 0x50000000, 0x50001000
             uc.mem_write(cap + 0x41C, efcs.to_bytes(4, "little"))
-            uc.mem_write(cap + 0x41D, bytes([efcs & silent]))
+            uc.mem_write(cap + 0x41D, bytes([silent]))
             for r, v in ((UC_ARM_REG_R0, r0), (unicorn.arm_const.UC_ARM_REG_R1, r1), (unicorn.arm_const.UC_ARM_REG_R2, r2),
                          (UC_ARM_REG_R4, pkt), (UC_ARM_REG_R9, cap), (UC_ARM_REG_SP, 0x50001F00)):
                 uc.reg_write(r, v)
             _run(uc, 0x43841472, 0x4384148C)
             res.append(bytes(uc.mem_read(pkt, 0x10)))
         so, nw = res
-        assert nw[0x0D] == so[0x0D] and nw[0x0E] == efcs & silent
+        assert nw[0x0D] == so[0x0D] and nw[0x0E] == silent
 
 
 @needs
