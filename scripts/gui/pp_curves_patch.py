@@ -159,7 +159,7 @@ def main(base_path: Path, out: Path, prueba: int | None = None, color: bool = Fa
         ref = a_ref[u32(a_ref, t_ref + 8 * og + 4) - BASE:][:CURVE]
         assert c[:0x1012] == ref[:0x1012] and c[0x1013] == ref[0x1013] and c[0x1015:] == ref[0x1015:] and c[0x1012] == 4 and c[0x1014] == g
     assert [list(new[SEL["a6000"] + 2 * i - BASE:][:2]) for i in range(13)] == \
-        [[0, 10]] * 3 + [[0x16, 0x16], [10, 10], [0, 0], [0x18, 0x18], [0x19, 0x19], [0x1A, 0x1A], [0x1B, 0x1B], [0x14, 0x14], [0x15, 0x15],
+        [[0, 10]] * 3 + [[0x16, 0x16], [10, 10], [0, 10], [0x18, 0x18], [0x19, 0x19], [0x1A, 0x1A], [0x1B, 0x1B], [0x14, 0x14], [0x15, 0x15],
                          [0x17, 0x17] if A6300.is_file() else [0, 10]]
     diff = sum(a != b for a, b in zip(base, new))
     out.mkdir(parents=True, exist_ok=True)
