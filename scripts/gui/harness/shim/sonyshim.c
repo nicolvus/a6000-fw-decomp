@@ -125,6 +125,10 @@ static void backup_service(unsigned *m) {
     switch (op) {
     case 0: m[1] = d ? len : 0; break;                                          /* get_datasize */
     case 3: if (d && n >= 2 && id[1]) memcpy((void *)id[1], d, len); m[1] = d ? len : 0; break;     /* read(id, buf) */
+    case 30: {  /* nread(id, buf, tamaño): copia min(len, tamaño) a buf y devuelve los bytes copiados (SystemImpl::initialize_setting exige == sizeof(setting)) */
+        unsigned c = d ? (len < id[2] ? len : id[2]) : 0;
+        if (c && n >= 3 && id[1]) memcpy((void *)id[1], d, c);
+        m[1] = c; break; }
     case 4: m[1] = d ? *d : 0; break;                                           /* read_4Byte */
     case 8: break;                                                              /* write: se descarta */
     default: LOG("backup op=%u n=%u id0=%#x (sin modelar)", op, n, id[0]);
@@ -145,7 +149,12 @@ static int is_dynq(unsigned q) { for (int k = 0; k < ndynq; k++) if (dynq[k] == 
 static void mbx_post(unsigned q, const unsigned *req, int req_id0) {  /* req_id0: dmpNative::InternalCmd (0x61003c) espera req_id 0 en +6 (medido con TRACEFN en 0x6a2612: r2=0xe copiado, r3=0 esperado) */
     unsigned char *b = calloc(1, 0x300); unsigned *body = (unsigned *)(b + 0x20); int k;
     memcpy(body, req, 28); body[-1] = 0x61003c; ((unsigned short *)body)[1] = 0;  /* cabecera esperada por 0x6a25e0 y estado 0 */
-    if (req_id0) ((unsigned short *)body)[3] = 0;
+    if (req_id0) {  /* dmpNative::InternalCmd alloc (0x61003c): petición {1, tamaño, 0, -1, cola, ?:req_id}; respuesta: req_id en +6, phys en +0x10 y
+         * tamaño en +0x14 (leídos por 0x6a2626 → MMapBase::Map, que exige phys alineado). shortcut: 'tamaño' = req[1] (0xe1700 en las dos peticiones vistas) */
+        static unsigned next_phys = 0xa0000000u; unsigned sz = (req[1] + 0xfffu) & ~0xfffu;
+        if (getenv("VERB")) LOG("InternalCmd req [-4..8] %08x | %08x %08x %08x %08x %08x %08x %08x %08x", req[-1], req[0], req[1], req[2], req[3], req[4], req[5], req[6], req[7]);
+        ((unsigned short *)body)[3] = (unsigned short)req[5]; body[4] = next_phys; body[5] = req[1]; LOG("InternalCmd alloc size %#x id %u -> phys %#x", req[1], req[5] & 0xffff, next_phys); next_phys += sz;
+    }
     pthread_mutex_lock(&mbx_m);
     for (k = 0; k < 16 && mbx[k].msg; k++);
     if (k < 16) { mbx[k].q = q; mbx[k].msg = body; } else { LOG("mbx lleno: respuesta a %#x perdida", q); free(b); }
@@ -240,7 +249,14 @@ int ioctl(int fd, unsigned long req, ...) {
                 unsigned *r = (unsigned *)m + 5;
                 r[0] = 0; r[1] = next; r[2] = 0x4000000; r[3] = 0; next += 0x4000000;  /* shortcut: 64 MiB por área en orden; tamaños reales en DmmConfig.bin */
                 LOG("dmm área '%s' -> phys %#x size %#x", (char *)m + 4, r[1], r[2]); return 0; }
-            else LOG("uipc snd_sync_msg qid=%#x datos=%08x %08x %08x %08x", w[0], ((unsigned *)m)[0], ((unsigned *)m)[1], ((unsigned *)m)[2], ((unsigned *)m)[3]);
+            else if (w[0] == 0x14c0424 && (((unsigned *)m)[0] == 1 || ((unsigned *)m)[0] == 9)) {  /* dmm código 1 = crear área {1, tamaño?, "\0nombre"…}; 9 = reservar {9, 0, tamaño, alineación}: respuesta en +0x14 como el código 7 */
+                static unsigned pool = 0xb0000000u; unsigned *q = (unsigned *)m, *r = q + 5, sz, al;
+                if (q[0] == 1) { sz = 0x4000000; al = 0x1000; } else { sz = q[2]; al = q[3] > 0x1000 ? q[3] : 0x1000; }
+                pool = (pool + al - 1) & ~(al - 1);
+                r[0] = 0; r[1] = pool; r[2] = sz; r[3] = 0; if (q[0] == 1) { q[7] = 0; q[8] = pool; q[9] = sz; }  /* código 1: el resultado va en +0x1c (MAMessage::send leía 0x4000000 = tamaño como error) */
+                LOG("dmm código %u (%s) -> phys %#x size %#x", q[0], q[0] == 1 ? (char *)m + 9 : "reserva", pool, sz); pool += (sz + 0xfff) & ~0xfffu; return 0; }
+            else { char h[200]; int k, o = 0; for (k = 0; k < 16; k++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[k]);
+                LOG("uipc snd_sync_msg qid=%#x datos=%s", w[0], h); }
             return 0; }
         case 12: {  /* dynamic_id {0, &{tipo, grupo, &id}}: tipo 0x32 = semáforo nuevo */
             static unsigned next = 0x4000;
@@ -260,7 +276,7 @@ int ioctl(int fd, unsigned long req, ...) {
             /* Servicios de kernel con acuse genérico (ACKQ=d9016e,7a0029,…; 0xd9016e registro de puerto de vídeo, 0x7a0029 input.ko): se
              * responde a la cola dinámica que viaja en el cuerpo copiando la petición con estado 0 (lo que comprueba el emisor síncrono
              * 0x6a2550 de libObj). shortcut: a 0x61003c la misma respuesta hace saltar la aserción de 0x6a25d2; modelarla cuando se conozca su formato. */
-            { const char *e = getenv("ACKQ"); if (!e) e = "d9016e,7a0029"; int ack = 0;
+            { const char *e = getenv("ACKQ"); if (!e) e = "d9016e,7a0029,61003c"; int ack = 0;
               while (*e) { if (hexv(e, &e) == w[0]) ack = 1; while (*e == ',') e++; }
               if (ack) for (int k = 0; k < 6; k++) if (is_dynq(((unsigned *)m)[k])) { mbx_post(((unsigned *)m)[k], (unsigned *)m, w[0] == 0x61003c); LOG("snd_msg %#x -> acuse genérico a %#x (palabra %d)", w[0], ((unsigned *)m)[k], k); return 0; } }
             if (w[0] == 0x9a015a || w[0] == 0x9c015b) { static int n; if (n++ < 4) raise(SIGUSR1); if (n > 5) { usleep(20000); return 0; } }  /* bucle HDMI: pila y silencio */
@@ -273,7 +289,19 @@ int ioctl(int fd, unsigned long req, ...) {
         default: LOG("uipc ioctl idx=%u args %#x %#x (ignorada)", idx, w[0], w[1]); return 0;
         }
     }
-    if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC) { LOG("ioctl(%s, %#lx, %p)", devname[fd], req, arg); return 0; }
+    if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC) {  /* dispositivo no modelado: éxito, registrado las 5 primeras veces por (dispositivo, orden) y luego cada 4096 */
+        static struct { char d[32]; unsigned long r; unsigned n; } seen[64]; static int ns; int k;
+        if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0xc0048211 && arg) *(unsigned *)arg = 0;  /* espera de la GPU de DMP (libObj+0x6c53e0): repite mientras la salida != 0 → «ya ha terminado» */
+        pthread_mutex_lock(&semlock);
+        for (k = 0; k < ns && (seen[k].r != req || strcmp(seen[k].d, devname[fd])); k++);
+        if (k == ns && ns < 64) { strncpy(seen[ns].d, devname[fd], 31); seen[ns].r = req; seen[ns++].n = 0; }
+        unsigned n = k < 64 ? seen[k].n++ : 0;
+        pthread_mutex_unlock(&semlock);
+        if (n == 3 && getenv("DEVSTACK")) raise(SIGUSR1);  /* pila del llamador de la 4.ª repetición */
+        if (n < 5 || !(n & 4095)) { Dl_info di; void *ra = __builtin_return_address(0); int ok = dladdr(ra, &di) && di.dli_fname;
+            LOG("ioctl(%s, %#lx, %p) arg0=%#x [n=%u] desde %s+%#lx", devname[fd], req, arg, arg ? *(unsigned *)arg : 0, n, ok ? di.dli_fname : "?", ok ? (unsigned long)ra - (unsigned long)di.dli_fbase : 0UL); }
+        return 0;
+    }
     if (!r) r = dlsym(RTLD_NEXT, "ioctl");
     return r(fd, req, arg);
 }
@@ -308,9 +336,9 @@ static void sym(unsigned v) {
 static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, LR y direcciones de código halladas en la pila */
     ucontext_t *uc = ctx; unsigned *sp = (unsigned *)uc->uc_mcontext.arm_sp;
     if (!nmaps) load_maps();
-    char nm[24] = {0}; syscall(SYS_prctl, 16, nm); efp("[shim] --- pila (sig %d tid %ld %s) pc/lr:\n", sig, (long)syscall(SYS_gettid), nm); efp("[shim]   raw pc=%08lx lr=%08lx\n", uc->uc_mcontext.arm_pc, uc->uc_mcontext.arm_lr); sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
+    char nm[24] = {0}; syscall(SYS_prctl, 16, nm); efp("[shim] --- pila (sig %d tid %ld %s) pc/lr:\n", sig, (long)syscall(SYS_gettid), nm); efp("[shim]   raw pc=%08lx lr=%08lx addr=%08lx r0=%08lx r1=%08lx r2=%08lx\n", uc->uc_mcontext.arm_pc, uc->uc_mcontext.arm_lr, (unsigned long)si->si_addr, uc->uc_mcontext.arm_r0, uc->uc_mcontext.arm_r1, uc->uc_mcontext.arm_r2); sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
     for (int i = 0; i < 300; i++) { if (((unsigned long)(sp + i) & 0xfff) == 0 || i == 0) { if (msync((void *)((unsigned long)(sp + i) & ~0xfffUL), 1, MS_ASYNC)) break; } sym(sp[i]); }  /* no cruzar el final de la pila */
-    (void)sig; (void)si;
+    (void)sig;
 }
 #include <dirent.h>
 /* DUMPAT=n: a los n s manda SIGUSR1 a cada hilo (uno por segundo) para ver dónde está parado cada uno */

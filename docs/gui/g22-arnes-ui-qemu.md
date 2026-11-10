@@ -35,7 +35,7 @@ emulada. Es el único camino para verificar menús sin arriesgar la unidad (cada
 | 0x10 | connect | `{0x80000, 0x20000, 0x8000, 0}` (valores de `__k_4u_connect`) |
 | 0 / 1 / 2 | stat / wai / sig sem | Semáforos propios (cuenta inicial 1; `0x83037a` = señal de salida de `im.elf`, inicial 0); aviso `BLOQUEO sem` tras 8 s sin señal |
 | 3 | stat_msgq | devuelve 0 y lo registra |
-| 4 | snd_msg | `0x8f0139/a` trazas (texto) · colas con callback registrado → se entrega a un hilo proxy (idx 13) · `ACKQ` (por defecto `d9016e,7a0029`): acuse genérico a la cola dinámica que viaja en el cuerpo (cabecera `0x61003c`, estado 0) · resto: descartado y registrado |
+| 4 | snd_msg | `0x8f0139/a` trazas (texto) · colas con callback registrado → se entrega a un hilo proxy (idx 13) · `ACKQ` (por defecto `d9016e,7a0029,61003c`): acuse genérico a la cola dinámica que viaja en el cuerpo (cabecera `0x61003c`, estado 0) · resto: descartado y registrado |
 | 5 | snd_sync_msg | colas con callback registrado → devuelve `{cb,arg}` y el emisor llama `cb(msg,arg)` en su hilo (`__osal_finish_sync_cb` lo cierra con la 2.ª llamada) · `0x8f013a` trazas · `0x3e014d` **backup** (op 0 tamaño, 3 lectura, 4 lectura de 4 B, 8 escritura descartada; datos de `bk.tbl`) · `0x14c0424` **dmm** (código 7: área por nombre → phys desde `0x80000000`, 64 MiB por área) |
 | 6 | snd_sync_direct | responde 0 (`0x910042`… sin modelar) |
 | 7 | rcv_msg | colas dinámicas (`dynamic_id` tipo `0x2a`) leen su buzón con el *timeout* pedido; las demás «duermen» y devuelven `E_TMOUT` |
@@ -56,7 +56,8 @@ Otros ganchos: cualquier otro `/dev/*` → fd inerte sobre `/dev/null` con `mmap
 |---|---|
 | `WAIT` / `TAILN` | `im.sh`: segundos de espera (50) y líneas finales mostradas (40) |
 | `FULLLOG=1` | `im.sh`: trae el registro completo del guest al anfitrión (`DIR_TRABAJO/guest.log`, gzip+base64 por la consola) |
-| `ACKQ=hex,hex,…` | colas de kernel que reciben acuse genérico (por defecto `d9016e,7a0029`) |
+| `ACKQ=hex,hex,…` | colas de kernel que reciben acuse genérico (por defecto `d9016e,7a0029,61003c`) |
+| `DEVSTACK=1` | pila del llamador en la 4.ª repetición de cada ioctl de un dispositivo genérico (los ioctl genéricos se registran las 5 primeras veces y cada 4096, con módulo+offset del llamador) |
 | `VERB=1` | muestra valloc/free/direct, `MSGHEX` de envíos a colas de kernel y `LOGRAW` |
 | `TIDLOG=1` | antepone el tid a cada línea |
 | `BKV=1` | registra cada petición al backup (por defecto solo los ids ausentes) |
@@ -112,8 +113,24 @@ con pools `mpool_0x10` (`libObj+0x65f420`), y los *callbacks* del controlador GL
 
 - `idx 8/13/5` modelados: antes las colas con callback (MWF, HDMI `0x9c015b`, etc.) no recibían nada; ahora hay ≈ 300 entregas asíncronas por arranque y `libMWF` (`EventWrapper::CallBackPoint`) responde. Corregido en el camino el orden de argumentos del registro (`t[0]`=arg, `t[1]`=cb) y el argumento del registro síncrono (`t[2]`).
 - Referencia nueva: `threads=49 modulos=46` (+`libMWF`, `libmpr*`, `MediaMount/Detect`), sin `ABORT` ni `ioctl ignorada`.
-- El trabajador B (`THREAD_INFRA0`) espera en `rcv_msg` de una cola dinámica tras enviar a **`0x61003c`** (`m[0]=1, m[1]=0x000e1700, m[3]=-1, m[4]`=cola de respuesta; cabecera `m[-4]`=cola): orden de `dmpNative::InternalCmd` (`int_cmd.cpp`). Con `ACKQ=d9016e,7a0029,61003c` la respuesta pasa la aserción `int_cmd.cpp:171` (`req_id` en `+6` debe ser **0**; medido con `TRACEFN=6a2612`: `r2=0xe` copiado frente a `r3=0` esperado) y el sistema avanza hasta `DataflowInfraPin::RequestDisconnect` (`libObj+0x6a7f60`), que aborta con «invalid phys 0x01704021»: recibe nuestro acuse (cola de respuesta en `m[4]`) donde espera una dirección física. Por eso `61003c` **no** está en el `ACKQ` por defecto.
+- El trabajador B (`THREAD_INFRA0`) espera en `rcv_msg` de una cola dinámica tras enviar a **`0x61003c`** (`m[0]=1, m[1]=0x000e1700, m[3]=-1, m[4]`=cola de respuesta; cabecera `m[-4]`=cola): orden de `dmpNative::InternalCmd` (`int_cmd.cpp`). Con `ACKQ=d9016e,7a0029,61003c` la respuesta pasa la aserción `int_cmd.cpp:171` (`req_id` en `+6` debe ser **0**; medido con `TRACEFN=6a2612`: `r2=0xe` copiado frente a `r3=0` esperado) y el sistema avanza hasta `DataflowInfraPin::RequestDisconnect` (`libObj+0x6a7f60`), que aborta con «invalid phys 0x01704021»: recibe nuestro acuse (cola de respuesta en `m[4]`) donde espera una dirección física. Esto se resolvió en el avance 19 (§5.2); `61003c` ya está en el `ACKQ` por defecto.
 - Siguiente (F2): modelar el protocolo de pines de `stream.ko` (`DataflowInfraPin::Request*`, `_MSG_PIN_REQUEST_*`): desensamblar `0x6a7968`/`0x6a7f60` y fabricar respuestas con direcciones físicas de las áreas `dmm`.
+
+### 5.2 Avance 19 (09-11-2026): órdenes de `InternalCmd`, backup `nread`, GPU de DMP y dmm 1/9
+
+Cadena resuelta, en el orden en que cada tramo bloqueaba el arranque (todo medido con el registro del guest, `TRACEFN` y desensamblado):
+
+1. **`0x61003c` = alloc de `dmpNative::InternalCmd`**: petición `{1, tamaño=0xe1700, 0, -1, cola, ?:req_id}` (cabecera `m[-4]`=cola); respuesta `+6`=`req_id` (= `m[5]&0xffff`: 0,1,2,3 en las 4 peticiones), `+0x10`=phys, `+0x14`=tamaño (leídos por `libObj+0x6a2626` → `MMapBase::Map`, que aborta con «invalid phys» si no está alineado). El shim reparte phys desde `0xa0000000` (4 KiB, en orden).
+2. **Backup `op 30` = `Backup_nread(id, buf, tamaño)`**: copia `min(len, tamaño)` a `buf` y devuelve los bytes copiados; `SystemImpl::initialize_setting` (`SystemImpl.cpp:156`) exige `== sizeof(setting)` (id `0x1700000`, 4 B). Códigos de `libbackup.so`: get_datasize 1, get_datasize_multi 2, get_attribute 3, read 4, read_4Byte 5, read_multi 6 (los números del shim anterior estaban desplazados para `op 0/3/4`, que sí funcionan en la práctica porque `m[0]` ya es el índice interno).
+3. **`/dev/dmpgles2`** (GPU de DMP, módulo `grm_gles.ko`): `libObj+0x6c53e0` llama `ioctl(0xc0048211)` en bucle mientras la salida (`[arg]`) ≠ 0; el shim devuelve 0 → la espera termina (antes: 390 000 líneas de registro y un hilo a 100 %). También se ven `0x80048206`, `0xc0048202`, `0x80048263` (init, devuelven 0 sin efecto) y `mmap(/dev/dmpgles2, 0x20000)` anónimo.
+4. **dmm códigos 1 y 9** (`snd_sync_msg` a `0x14c0424`, `libObj+0x6b9158`): `1` = crear área `{1, 0x258, "\0ws_image_space", …}` (el resultado va en `+0x1c`; si ahí queda el tamaño `MAMessage::send` lo lee como error: «returned error 67108864»), `9` = reservar `{9, 0, tamaño, alineación}`. Con ambos respondidos `GraphicsHAL hal_create` **supera** su aserción (`di_hal.cpp:174`).
+
+Estado tras el avance 19: `im.elf` ya no aborta dentro del GL/`hal_create` y carga `libWlanResource`, pero acaba en un SIGSEGV **no determinista** (a veces `libObj+0x7b0359` con `memset` sobre un puntero devuelto por el asignador de `MemorySpace`, a veces un mutex nulo en `libpthread`), precedido de `MemorySpaceImpl.cpp:437 partially duplicated element found`. Hipótesis (INFERENCIA): las áreas que el shim devuelve para dmm 1/9 solapan o repiten elementos que `MemorySpaceImpl` ya conoce (el tamaño y la alineación de las reservas y el orden código 9 → 1 no coinciden con lo que haría `dmm.ko`), y el segundo SEGV es una carrera por un objeto aún no inicializado.
+
+Siguiente (F2, continuación):
+- **dmm**: desensamblar el cliente `MemorySpaceImpl` (`libObj+0x6b86c8…0x6b9300`) para fijar el formato real de las respuestas de los códigos 1 y 9 y los demás (2–8); hasta ahora solo se conoce el 7.
+- **Determinismo**: ejecutar varias veces con `TIDLOG` y comparar el primer hilo en divergir (la carrera sugiere que algún servicio responde antes de que su cola receptora esté registrada).
+- Servicios aún sin respuesta: `0x80003b` (5 envíos), `0x7a0020` (input.ko), `0x5700f9`, `0x5a0048`, `0x16f4010`; backup `op 1`/`op 5`.
 
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
