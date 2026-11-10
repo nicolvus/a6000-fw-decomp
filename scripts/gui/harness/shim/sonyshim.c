@@ -358,6 +358,11 @@ int ioctl(int fd, unsigned long req, ...) {
                 if (cmd < 16 && p1 > 0x10000 && ((cmd & 1) == 0 || cmd == 9)) { vdfcb[cmd] = (void *)p1; return 0; }
                 if ((cmd & 1) && cmd < 8) { pthread_t t; pthread_create(&t, 0, vdf_ack, (void *)(unsigned long)cmd); pthread_detach(t); return 0; }
             }
+            /* UPMON=1: respuesta de upm.ko a ON_CMP (0x92015b en 0x920021; upm.ko 0xf638→0xf6fc): envía APP_ON = {0x92015a, estado, 0x1d, 0x1e} a la cola 0x920168 */
+            if (getenv("UPMON") && w[0] == 0x920021 && ((unsigned *)m)[0] == 0x92015b) {
+                unsigned *a = calloc(64, 4); a[0] = 0x92015a; a[2] = 0x1d; a[3] = 0x1e; int ok = cb_deliver(0x920168, a), mb = 0;
+                if (!ok && getenv("UPMON")[0] == '2') { if (!is_dynq(0x920168)) dynq_add(0x920168); mbx_post_raw(0x920168, a); mb = 1; }
+                LOG("UPMON: ON_CMP -> APP_ON a 0x920168: %s", ok ? "callback" : mb ? "buzón" : "SIN CALLBACK"); return 0; }
             if (syncmbx_q(w[0])) { if (!is_dynq(w[0])) dynq_add(w[0]); mbx_post_raw(w[0], (unsigned *)m); LOG("snd_msg %#x -> buzón (SYNCMBX) w0=%#x", w[0], ((unsigned *)m)[0]); return 0; }
             if (cb_deliver(w[0], m)) { if (getenv("VERB")) LOG("snd_msg %#x -> callback", w[0]); return 0; }
             /* Servicios de kernel con acuse genérico (ACKQ=d9016e,7a0029,…; 0xd9016e registro de puerto de vídeo, 0x7a0029 input.ko): se

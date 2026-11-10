@@ -327,6 +327,13 @@ Método: contrastar línea a línea el registro real (`mem-20261020-log`, 129.72
 - **Siguiente corte**: `im.elf` envía `0x92015b` (`word1=1`) a la cola de kernel `0x920021` (log del shim: «descartado») y en la cámara `upm.ko` responde con `ON_CMP`→`APP_ON, go active(res)`, tras lo cual empieza `Root Draw`/UI. Falta modelar esa respuesta (qué mensaje y a qué cola) y comprobar que la UI avanza (F3/F4). Receta: `scripts/gui/harness/run_retry.sh <etq> "WAIT=100 CVWAIT=0 POKE=fef348 FULLLOG=1 KEYQ=7a0020 KEYONACTIVE=0 NOJOIN=2 SYNCMBX=94016a INJECT=70:94016a:92015a"`.
 - No verificado: que el resto de `main` tras el `join` omitido (limpiezas, `THREAD_APP`) sea inocuo; una sola ejecución.
 
+#### 5.18n `ON_CMP`→`APP_ON` y el destinatario `0x920168` (10-11-2026)
+
+- **Respuesta de `upm.ko` (desensamblado ARM de `upm.ko`, `.text` en `0x34`)**: el dispatcher de `EV OFF` trata `0x92015b` (= `ON_CMP`, el aviso que `im.elf` envía a `0x920021` al acabar `act_all`, `0x9234`) en `0xf638`: si `[estado+8] == 0x920169` manda `0x920202` a `0x924220` (reply `0x920196`), registra «`ON_CMP -> APP_ON, go active(res)`» y envía **`APP_ON` = `{0x92015a, estado, 0x1d, 0x1e}` a la cola `0x920168`** (`0xf6fc`). `0x92016e` es el mensaje de registro de cola en `upm.ko` (`im.elf` registra `0x920169`; hace falta el equivalente `0x920168` de la app).
+- **Destinatario**: el único registrador de `0x920168` es `ObjHandover_Create` (`libObj+0x41aff4`, `osal_reg_msg_queue_cb(0x920168, cb=libObj+0x41ae68)` y luego `0x92016e`→`0x920021`). En el arnés **nunca se llama** (ni `reg_msg_queue_cb qid=0x920168` ni `Os/Or 0xx_Obj*`, que en la cámara salen en el registro tras `APP_ON`: `Root Draw`, `Ms/Mr 001_libObj.so`, `Or 001_ObjMic…`).
+- Shim: **`UPMON=1|2`** emula la respuesta (`APP_ON` a `0x920168`; con `2` lo deja en un buzón si no hay callback). Resultado con la receta de §5.18m + `UPMON=2`: `UPMON: ON_CMP -> APP_ON a 0x920168: buzón` (sin lector: nadie consume).
+- **Siguiente paso**: averiguar quién crea los objetos de `libObj` (tabla `Obj*_Create`, p. ej. `ObjHandover_Create`) y por qué el arnés no lo hace (`Os 0xx_Obj*` ausente): buscar el arranque de objetos que en el registro real precede/sigue a `Ms 001_libObj.so`. No verificado: el efecto de `APP_ON` en la UI.
+
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
 Verificado: `build.sh` reproduce byte a byte el `sonyshim.so` que se estaba usando (md5 `5307f8ae…` antes de las correcciones);
