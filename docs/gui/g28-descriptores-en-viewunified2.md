@@ -49,3 +49,23 @@ Corrige §5: los ajustes de Picture Profile ya no usan pids prestados.
 - Pruebas: `tests/test_g28_pid_space.py` ejecuta con unicorn el código real de los tres sitios sobre la imagen parcheada (pids antiguos intactos, nuevos resueltos con puntero al modelo reubicado, `PID_MAX+1` rechazado, caso de factoría de `Normal` para los nuevos) y comprueba que ningún pid de PP lo usa un nodo original. Sobre el `viewUnified2.so` final del CFW se emularon además los 34 descriptores (nombre `@M00B`, evento, claves, opciones y valores) y el de Silent: todos correctos.
 - Construcción: `build_cfw_completo.py` 3:33 min (antes 26 min): `tpzl.rebuild` comprime página a página en todos los núcleos, `tpzl.decompressed/_apply` descomprimen en paralelo y `encode_lz` calcula el prefijo común con XOR de enteros (misma salida, 5× más rápido). Auditoría [`audit-3.63.json`](../../analysis/gui/audit-3.63.json) 29/29; `.dat` sha256 `bbc48325b0ade7b9c38ff897113bb6c34fcb7e2f6c76081f42d7d48b300c976e`.
 - Límites: NO instalado ni probado en cámara. Sin comprobar que nada más en la UI indexe por pid con tablas de 233 entradas (el barrido de comparaciones `#0xe8` solo halló los tres sitios); sin resolver el borrado de la cueva `0x43FB7400`, la prioridad Silent > EFCS ni el gris de EFCS con Silent On.
+
+## 7. La cueva `0x43FB7400` se pone a cero (10-11-2026): causa probable del bloqueo al abrir Picture Profile
+
+Evidencia (SWD `analysis/camera-dumps/20261109-swd-360/` + `uptime` de la transcripción; todo con `pp_ram.log` = «OK»):
+
+| Hora local | Firmware · uptime | Cueva `0x83fb7400` | Ganchos `0x837a4db2/4b62/44fa`, `cmp #10` |
+|---|---|---|---|
+| 22:34 | 3.61 · ~100–137 s | `0f 10 11 12 …` (escrita) | presentes |
+| 22:55 | 3.61 · ~1100 s | ceros | presentes |
+| 23:51 | 3.62 · 197 s | ceros | presentes |
+| 00:01 | 3.62 · arranque reciente | escrita | presentes |
+
+El hueco se escribe bien al arrancar y se borra después (entre ~140 s y 197 s en las dos pruebas con ceros), pero los ganchos de código siguen apuntando a ella. Una cueva a cero ejecuta `movs r0,r0` en deslizamiento hasta el primer dato no nulo (`0x43FB8EE0`) y el gancho del `switch` de ids (`0x437a4db2`, antes un `bhi.w`) salta a ella en cada evaluación del tipo de Color Mode. Las tres caídas observadas al abrir Picture Profile en el 3.62 (reinicio, reinicio, apagado con LED) son compatibles con eso: las dos primeras con uptime > 150 s, la tercera con el borrado a mitad de la vigilancia (`mon.log`: últimas lecturas con la cueva escrita, luego error de lectura SWD). **No demostrado**: falta ver el borrado en vivo y quién lo hace (los datos del 3.56–3.58 mostraron las 8 curvas intactas a 60/600/3600 s, así que el hueco no se borra entero; el comprobador antiguo solo miraba curvas, nunca la cueva).
+
+Por qué quedó sin verse: `pp_ram.sh` (a) solo repetía el control de las curvas y (b) si se relanza con los ganchos ya escritos se negaba a escribir («no es el original»), de modo que una cueva a cero no se reparaba nunca.
+
+Corrección (CFW 3.64, `pp_curves_patch.camera_files`): cada sitio puede estar original (se escribe), ya parcheado (se omite) u otro (se aborta); la tarea en segundo plano lee el hueco completo (curvas + cueva) **cada segundo**, y si su md5 cambia registra el uptime y los ganchos alterados, vuelca el hueco ya alterado a `/android/data/pp_hueco_N.bin` (3 como máximo) y reescribe curvas y cueva. CFW 3.64 construido en 3:51 min, `.dat` sha256 `a671db1c3f31c32c1a258df2154c55d049f9184ff803e24af396e9eb700fe03d`, auditoría [`audit-3.64.json`](../../analysis/gui/audit-3.64.json) 29/29 `todo_ok`. Pruebas: `tests/test_g29_pp_ram_vigilancia.py` (memoria falsa en fichero: idempotencia, cueva a cero con ganchos presentes, vigilancia que detecta+repara+vuelca, núcleo distinto no escribe).
+
+Límites: la ventana entre el borrado y la reparación (≤ 1 s) sigue expuesta; el comportamiento real del borrado (cuándo, qué tamaño, quién) solo se sabrá con `pp_ram.log` y `pp_hueco_N.bin` de una cámara con el 3.64; no probado en cámara; sin sonda SWD ni Wi-Fi conectados en esta sesión.
+

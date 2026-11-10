@@ -92,32 +92,46 @@ CFG = (0x43EDF684, 0x43ED4D28 + 0x48)  # bloque de ajustes (LIRO) y su copia de 
 
 
 def camera_files(base: bytes, ps: list[tuple[int, bytes, str]], prueba: int | None) -> tuple[str, bytes]:
-    """Script de arranque de la cámara (salida 1) + fichero de datos. Orden: curvas → punteros → selector; antes comprueba
-    con md5 que TODOS los sitios tienen los bytes originales de la imagen (si no, no escribe nada)."""
+    """Script de arranque de la cámara (salida 1) + fichero de datos. Orden: curvas → punteros → selector → datos → ganchos.
+    G29: cada sitio puede estar en su estado original (se escribe), ya parcheado (se omite) u otro (no se escribe nada); el hueco `GAP` se vigila cada
+    segundo y, si cambia (la cueva 0x43FB7400 leyó ceros con los ganchos presentes), se vuelca a `pp_hueco_N.bin`, se registra el uptime y se reescribe.
+    Variables solo para pruebas (PP_DDW = conv=notrunc con memoria falsa en fichero): PP_DDW, PP_MEM, PP_DATOS, PP_LOG, PP_BB, PP_UPTIME, PP_PERIODO, PP_VUELTAS."""
     ps = sorted(ps, key=lambda p: ("curva", "puntero", "selector", "dato", "gancho").index(p[2].split()[0]))   # datos antes que ganchos de código (G27)
     blob, rows = b"", []
     for a, data, what in ps:
         phys = a + PHYS
         assert phys % 2 == 0 and len(data) % 2 == 0 and len(blob) % 2 == 0
         orig = base[a - BASE:a - BASE + len(data)]
-        rows.append((phys, len(data), len(blob), hashlib.md5(orig).hexdigest(), hashlib.md5(data).hexdigest(), what))
+        rows.append((phys, len(data), len(blob), hashlib.md5(orig).hexdigest(), hashlib.md5(data).hexdigest(), what, GAP[0] <= a < GAP[1]))
         blob += data
-    sh = ["#!/bin/sh", "# pp_ram.sh (G18, generado por pp_curves_patch.py): gammas PP en la RAM del núcleo. Lo lanza s_start_android.sh.",
+    en_hueco = [r for r in rows if r[6]]
+    lo, hi = min(r[0] for r in en_hueco), max(r[0] + r[1] for r in en_hueco)
+    hueco_md5 = hashlib.md5(apply(base, ps)[lo - PHYS - BASE:hi - PHYS - BASE]).hexdigest()
+    escribir = lambda r: f'w {r[0] // 2} {r[1] // 2} {r[2] // 2} {r[4]} "{r[5]}"'
+    sh = ["#!/bin/sh", "# pp_ram.sh (G18/G29, generado por pp_curves_patch.py): gammas y color PP en la RAM del núcleo. Lo lanza s_start_android.sh.",
           # G27: el busybox de la cámara trae md5sum y cut como applets, pero sin enlaces en el PATH (3.60: «md5sum: not found» y no escribió nada)
-          "md5sum() { /bin/busybox md5sum \"$@\"; }; cut() { /bin/busybox cut \"$@\"; }",
-          "D=/usr/bin/pp_curvas.bin", "rd() { dd if=/dev/mem bs=2 skip=$1 count=$2 2>/dev/null | md5sum | cut -c1-32; }  # en medias palabras: $(( )) de ash es de 32 bits",
-          "echo \"pp_ram: inicio $(date)\"", "ok=1"]
-    for phys, n, off, mo, _, what in rows:
-        sh.append(f'[ "$(rd {phys // 2} {n // 2})" = "{mo}" ] || {{ echo "pp_ram: {what} no es el original"; ok=0; }}')
+          "BB=${PP_BB:-/bin/busybox}; md5sum() { $BB md5sum \"$@\"; }; cut() { $BB cut \"$@\"; }",
+          "M=${PP_MEM:-/dev/mem}; D=${PP_DATOS:-/usr/bin/pp_curvas.bin}; L=${PP_LOG:-/android/data}; T=${PP_PERIODO:-1}; U=${PP_UPTIME:-/proc/uptime}",
+          "rd() { dd if=$M bs=2 skip=$1 count=$2 2>/dev/null | md5sum | cut -c1-32; }  # en medias palabras: $(( )) de ash es de 32 bits",
+          "up() { cut -d. -f1 $U; }",
+          'w() { dd if=$D bs=2 skip=$3 count=$2 2>/dev/null | dd of=$M bs=2 seek=$1 $PP_DDW 2>/dev/null; [ "$(rd $1 $2)" = "$4" ] || { echo "pp_ram: FALLO al escribir $5"; ok=0; }; }',
+          'est() { m=$(rd $2 $3); if [ "$m" = "$4" ]; then pend="$pend$1 "; elif [ "$m" != "$5" ]; then echo "pp_ram: $6 no es el original ni el parcheado"; ok=0; fi; }',
+          'p() { case "$pend" in *" $1 "*) return 0;; esac; return 1; }',
+          'echo "pp_ram: inicio $(date) uptime $(up) s"', 'ok=1; pend=" "']
+    for i, (phys, n, off, mo, mn, what, _) in enumerate(rows):
+        sh.append(f'est {i} {phys // 2} {n // 2} {mo} {mn} "{what}"')
     sh.append('[ $ok = 1 ] || { echo "pp_ram: av-cam distinto, no se escribe nada"; exit 1; }')
-    for phys, n, off, _, mn, what in rows:
-        sh.append(f"dd if=$D bs=2 skip={off // 2} count={n // 2} 2>/dev/null | dd of=/dev/mem bs=2 seek={phys // 2} 2>/dev/null")
-        sh.append(f'[ "$(rd {phys // 2} {n // 2})" = "{mn}" ] || {{ echo "pp_ram: FALLO al escribir {what}"; ok=0; }}')
+    for i, r in enumerate(rows):
+        sh.append(f"p {i} && " + escribir(r))
     sh.append('[ $ok = 1 ] && echo "pp_ram: OK" || { echo "pp_ram: ERROR"; exit 1; }')
-    curvas = [r for r in rows if r[5].startswith("curva")]
-    check = " ; ".join(f'[ "$(rd {p // 2} {n // 2})" = "{mn}" ] || echo "pp_ram: {w} alterada a los ${{t}} s"' for p, n, _, _, mn, w in curvas)
-    sh.append(f"( for t in 60 600 3600; do sleep $t; {check}; echo \"pp_ram: comprobación ${{t}} s hecha\"; done ) &"
-              "  # ¿el núcleo pisa el hueco en uso real?")
+    ganchos = " ".join(f'[ "$(rd {r[0] // 2} {r[1] // 2})" = "{r[4]}" ] || g="$g {r[5]}";' for r in rows if r[5].startswith("gancho"))
+    sh.append("reparar() { " + " ".join(escribir(r) + ";" for r in en_hueco) + " }")
+    sh.append(f'vigila() {{ n=0; k=0; while :; do if [ "$(rd {lo // 2} {(hi - lo) // 2})" != "{hueco_md5}" ]; then k=$((k+1)); g=""; {ganchos} '
+              f'echo "pp_ram: hueco alterado a los $(up) s (aviso $k); ganchos alterados:$g"; '
+              f'[ $k -le 3 ] && dd if=$M bs=2 skip={lo // 2} count={(hi - lo) // 2} of=$L/pp_hueco_$k.bin 2>/dev/null; ok=1; reparar; '
+              f'[ $ok = 1 ] && [ "$(rd {lo // 2} {(hi - lo) // 2})" = "{hueco_md5}" ] && echo "pp_ram: hueco reparado" || echo "pp_ram: FALLO al reparar el hueco"; fi; '
+              'n=$((n+1)); [ "$n" = "$PP_VUELTAS" ] && break; sleep $T; done; }')
+    sh.append('if [ -n "$PP_VUELTAS" ]; then vigila; else vigila & fi  # ¿el núcleo pisa el hueco en uso real?')
     if prueba is not None:  # solo para la prueba: fuerza el selector sin UI (CFW de prueba, no el definitivo)
         for c in CFG:
             sh.append(f"( sleep 20; echo -ne '\\{prueba:03o}' | dd of=/dev/mem bs=1 seek={c + 0x153 + PHYS} 2>/dev/null;"
