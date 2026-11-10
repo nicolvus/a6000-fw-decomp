@@ -3,9 +3,19 @@
 # (VERB, TIDLOG, CVWAIT, POKE, SKIPFN, TRACEFN, TRACEPEEK, WATCH, DUMPAT, RCVSTACK, BKV).
 [ -f /cam/harness.env ] && . /cam/harness.env
 export LD_LIBRARY_PATH=/usr/lib
-( LD_PRELOAD=/usr/lib/sonyshim.so chroot /cam /usr/bin/im.elf s g r u l i a > /tmp/im_s.log 2>&1; echo "EXIT=$?" >> /tmp/im_s.log ) &
+# IMSPLIT=1: como bootin.elf, un proceso im.elf por letra (s g r u l i a) y uno final sin argumentos; cada letra activa una fase del IMDB
+# (u = fase 4: appFw.so → Application_System_Init, el hilo de la UI). Sin IMSPLIT: un solo proceso con todas las letras (modo histórico).
+run_im() { ( LD_PRELOAD=/usr/lib/sonyshim.so chroot /cam /usr/bin/im.elf $1 > /tmp/$2.log 2>&1; echo "EXIT=$?" >> /tmp/$2.log ) & }
+if [ -n "$IMSPLIT" ]; then
+  for a in ${IMLETTERS:-s g r u l i a}; do run_im $a im_$a; done
+  [ -n "$IMNOARG" ] && run_im "" im_n
+  : > /tmp/im_s.log
+else
+  run_im "s g r u l i a" im_s
+fi
 sleep ${WAIT:-50}
-P=$(pidof im.elf)
+if [ -n "$IMSPLIT" ]; then for a in ${IMLETTERS:-s g r u l i a} $([ -n "$IMNOARG" ] && echo n); do echo "== im_$a: $(grep -ac 'dlopen(.*) -> 0x' /tmp/im_$a.log) modulos, $(grep -ac '' /tmp/im_$a.log) lineas, EXIT: $(grep -a '^EXIT=' /tmp/im_$a.log)"; cat /tmp/im_$a.log >> /tmp/im_s.log; done; fi
+P=$(pidof im.elf | cut -d' ' -f1)
 echo "alive=$P threads=$(ls /proc/$P/task 2>/dev/null | wc -l) lineas=$(grep -ac '' /tmp/im_s.log) modulos=$(grep -ac 'dlopen(.*) -> 0x' /tmp/im_s.log)"
 grep -a "EXIT=\|ABORT\|Segmentation\|Aborted\|dlopen(.*) -> 0x0\|respuesta a" /tmp/im_s.log | tail -8 | cut -c1-160
 echo "--- ultimas lineas (filtradas)"

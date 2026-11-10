@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""G23 — descriptores de Picture Profile en `cmn_view_processDataMgr.so` (A6000 fw3.21): uno por ProcessId inerte, todos en un único PT_LOAD añadido.
+"""G23/G28 — descriptores de Picture Profile (A6000 fw3.21): uno por ProcessId inerte, todos en un único PT_LOAD añadido.
+
+G28: la UI NO carga `cmn_view_processDataMgr.so`; usa la copia estática del gestor que lleva `viewUnified2.so` (`TABLA_D_VU2`, tabla pid→clase `ELEM_VU2`). `patch(..., tabla_d=TABLA_D_VU2)` y `clase_normal` actúan sobre ella.
 
 Layout (desensamblado de `CmnViewProcessDataElementNormal::getDataModel*`, G23): desc +0x04 cautions por opción · +0x15 nº de opciones · +0x18 modelo · +0x1c nº de modelos;
 modelo +0 nombre · +4 update · +8 evento de escritura · +0xc id de lectura · +0x10 claves de escritura · +0x14 de lectura · +0x18 tipos (1 = número) ·
@@ -8,11 +10,11 @@ Un ajuste = `Ajuste(pid, clave, valores)`; el valor de la opción k es `valores[
 """
 import struct
 from dataclasses import dataclass
-from pathlib import Path
 
 import add_menu_entry as A
 
-TABLA_D = 0x8C268
+TABLA_D = 0x8C268                     # cmn_view_processDataMgr.so (NO la usa la UI, G28)
+TABLA_D_VU2, ELEM_VU2, REF_NORMAL = 0x4457D4, 0x3A5E1C, 0x12   # viewUnified2.so: D[pid] · tabla pid→caso de factoría (u32, en el segmento de código) · pid de clase Normal
 DESC_PALABRAS, MODEL_PALABRAS = 19, 9
 PID_M00B = 0x3F                       # descriptor real con "@M00B": de él se copia el puntero al nombre
 EVENTO_SET, ID_GET = 0x40, 0x49
@@ -27,7 +29,16 @@ class Ajuste:
     evento: int = EVENTO_SET
 
 
-def patch(d: bytes, ajustes) -> bytes:
+def clase_normal(d: bytes, pids, elem: int = ELEM_VU2) -> bytes:
+    """Fuerza la clase `Normal` (la única que usa el descriptor) en los `pids`: `getElement` indexa `elem[pid]` → caso de la factoría; 16 de los pids de PP eran `Custom*Button`."""
+    out, normal = bytearray(d), struct.unpack_from("<I", d, elem + 4 * REF_NORMAL)[0]
+    assert struct.unpack_from("<I", d, elem + 4 * 0x46)[0] == normal, "la tabla de clases no es la esperada"
+    for pid in pids:
+        struct.pack_into("<I", out, elem + 4 * pid, normal)
+    return bytes(out)
+
+
+def patch(d: bytes, ajustes, tabla_d: int = TABLA_D) -> bytes:
     segs = A._segments(d)
     dyn_off, dyn = A._dynamic(d, segs)
     tags = {t: v for t, v in dyn if t}
@@ -35,16 +46,16 @@ def patch(d: bytes, ajustes) -> bytes:
     rel = d[A._off(segs, rel_va):A._off(segs, rel_va) + rel_sz]
     by_off = {struct.unpack_from("<I", rel, i)[0]: struct.unpack_from("<I", rel, i + 4)[0] for i in range(0, rel_sz, 8)}
     word = lambda va, n=1: struct.unpack_from(f"<{n}I", d, A._off(segs, va))
-    ref_model_va = word(word(TABLA_D + 4 * PID_M00B)[0], DESC_PALABRAS)[6]
+    ref_model_va = word(word(tabla_d + 4 * PID_M00B)[0], DESC_PALABRAS)[6]
     name_va, name_rel = word(ref_model_va)[0], by_off[ref_model_va]
     assert name_rel & 0xFF == 0x17 and d[A._off(segs, name_va):A._off(segs, name_va) + 6] == b"@M00B\0"
     assert len({a.pid for a in ajustes}) == len(ajustes)
 
     plan, n_rel, cur_words = [], 0, 0
     for a in ajustes:
-        desc_va = word(TABLA_D + 4 * a.pid)[0]
+        desc_va = word(tabla_d + 4 * a.pid)[0]
         desc = list(word(desc_va, DESC_PALABRAS))
-        assert desc[6] == 0 and desc[5] & 0xFF00 and by_off.get(TABLA_D + 4 * a.pid) is not None, f"el pid {a.pid:#x} no es inerte"
+        assert desc[6] == 0 and desc[5] & 0xFF00 and by_off.get(tabla_d + 4 * a.pid) is not None, f"el pid {a.pid:#x} no es inerte"
         n = len(a.valores)
         assert 0 < n < 256
         n_rel += 7
@@ -74,7 +85,7 @@ def patch(d: bytes, ajustes) -> bytes:
         desc[7] = 1
         desc[1], desc[6] = c, m
         dv = alloc(desc, {1: 0x17, 6: 0x17})
-        struct.pack_into("<I", out, A._off(segs, TABLA_D + 4 * a.pid), dv)       # D[pid] ya tenía su relocación
+        struct.pack_into("<I", out, A._off(segs, tabla_d + 4 * a.pid), dv)       # D[pid] ya tenía su relocación
     rel_new = bytes(rel) + bytes(extra)
     assert len(rel_new) <= rel_new_size
     seg = bytearray(rel_new.ljust(data_va - new_va, b"\0")) + blob

@@ -23,6 +23,8 @@ de los 126 sectores del `nflasha3` oficial).
 """
 from __future__ import annotations
 
+import concurrent.futures
+import os
 import struct
 from dataclasses import dataclass
 
@@ -301,27 +303,40 @@ def _splice(block: bytes, raw: bytes) -> bytes:
     return bytes(out)
 
 
-def rebuild(image: TpzlImage, replacements: dict[int, bytes]) -> tuple[bytes, list[dict]]:
+def _comprimir_bloque(args: tuple[int, bytes, bytes, int]) -> tuple[int, bytes]:
+    """Un bloque nuevo (independiente de los demás): `_splice` + comprobación de ida y vuelta. Corre en un proceso del grupo."""
+    index, original, raw, target = args
+    compressed = _splice(original, raw)
+    if decode_block(compressed, target) != raw:
+        raise TpzlError(f"bloque {index}: la recompresión no reproduce el contenido")
+    return index, compressed
+
+
+def rebuild(image: TpzlImage, replacements: dict[int, bytes], workers: int | None = None) -> tuple[bytes, list[dict]]:
     """Reconstruye la partición cambiando solo los bloques indicados.
 
     `replacements` asocia índice de bloque con sus 65536 B descomprimidos.  El
     resto de bloques se copia byte a byte, sin recomprimir.  En los bloques nuevos solo
     las páginas cambiadas pasan a registros almacenados (`_splice`) y todo se alinea a
-    512 B con relleno 0x00.
+    512 B con relleno 0x00.  Los bloques nuevos se comprimen en paralelo (`workers` procesos; por defecto todos los núcleos).
     """
+    jobs = []
+    for index in sorted(replacements):
+        target = image.target_size(index)
+        if len(replacements[index]) != target:
+            raise TpzlError(f"bloque {index}: {len(replacements[index])} B, esperado {target} B")
+        jobs.append((index, image.block(index), replacements[index], target))
+    workers = workers or os.cpu_count() or 1
+    if workers > 1 and len(jobs) > 1:
+        with concurrent.futures.ProcessPoolExecutor(max_workers=workers) as pool:
+            done = dict(pool.map(_comprimir_bloque, jobs, chunksize=max(1, len(jobs) // (workers * 4))))
+    else:
+        done = dict(map(_comprimir_bloque, jobs))
     blocks: list[bytes] = []
     info: list[dict] = []
     for index, (old_offset, old_size) in enumerate(image.entries):
-        target = image.target_size(index)
         if index in replacements:
-            raw = replacements[index]
-            if len(raw) != target:
-                raise TpzlError(
-                    f"bloque {index}: {len(raw)} B, esperado {target} B"
-                )
-            compressed = _splice(image.block(index), raw)
-            if decode_block(compressed, target) != raw:
-                raise TpzlError(f"bloque {index}: la recompresión no reproduce el contenido")
+            compressed = done[index]
             info.append({
                 "block": index,
                 "offset_old": old_offset,

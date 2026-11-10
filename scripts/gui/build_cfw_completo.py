@@ -27,7 +27,6 @@ import build_package_nflasha15
 import build_pp_menu
 import build_silent_menu_test
 import pp_curves_patch
-import silent_descriptor
 from g22 import patch_libobj_eco, patch_tristate
 
 DEV_A = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev"
@@ -59,7 +58,7 @@ def build_files(work: Path) -> Path:
     silent = work / "silent"
     build_silent_menu_test.main(DEV_A, DEV_B, silent, pid_silent=PID_SILENT)
     stage = work / "stage"
-    for rel in ("lib/cmn_view_processDataMgr.so", "lib/libObj.so", "lib/CautionConfig.so", "lib/viewUnified2.so"):
+    for rel in ("lib/libObj.so", "lib/CautionConfig.so", "lib/viewUnified2.so"):
         (stage / USR / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(orig / rel, stage / USR / rel)
     (stage / USR / "share/app").mkdir(parents=True, exist_ok=True)
@@ -68,10 +67,8 @@ def build_files(work: Path) -> Path:
     shutil.copy(silent / "lib/CautionConfig.so", stage / USR / "lib/CautionConfig.so")   # con el nodo Silent; viewUnified2 se parchea una sola vez (add_menu_entry no es reentrante)
     for f in (silent / "share/app").glob("*.uxc"):
         shutil.copy(f, stage / USR / "share/app" / f.name)
-    pm = stage / USR / "lib/cmn_view_processDataMgr.so"
-    pm.write_bytes(silent_descriptor.patch(pm.read_bytes()))
     pp = work / "pp"
-    build_pp_menu.main(stage, DEV_B, pp, entradas_previas=[SILENT_DELTA], **build_pp_menu.configurar(gam=True, col=True, acc=True))
+    build_pp_menu.main(stage, DEV_B, pp, entradas_previas=[SILENT_DELTA], silent=True, **build_pp_menu.configurar(gam=True, col=True, acc=True))
 
     files = work / "files"
     for rel in json.loads((pp / "MANIFEST.json").read_text())["parcheados"]:

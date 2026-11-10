@@ -3,7 +3,7 @@
 
 Todo son datos, sin código nuevo (G23 «Más páginas»): `pp_menu_spec.py` define los 26 ajustes (claves de la A7S, rangos del validador de la A6000) y el árbol
 carpeta → páginas → ajustes/carpetas. Se construye:
-  lib/cmn_view_processDataMgr.so  26 descriptores (pp_descriptors.py) en ProcessIds inertes (`PIDS`)
+  lib/viewUnified2.so             descriptores (pp_descriptors.py) en ProcessIds inertes (`PIDS`, clase forzada a Normal) dentro de la copia del gestor de procesos (G28)
   lib/CautionConfig.so            nodos de datos puros (raíz+opciones de cada ajuste, carpetas y páginas) en un PT_LOAD RW con relocaciones RELATIVE
   lib/viewUnified2.so             entrada nueva = carpeta «Picture Profile» en las 5 páginas del menú (add_menu_entry.py)
   share/app/string_<idioma>.uxc   textos en ranuras libres (traducción de la A6300 si el inglés coincide; si no, el literal)
@@ -22,6 +22,7 @@ import build_pp_gamma_menu as G
 import patch_libobj_pp
 import pp_descriptors
 import pp_menu_spec as M
+import silent_descriptor
 import uxc_strings
 
 RES = 0x0204_0000
@@ -112,7 +113,7 @@ def patch_caution(data: bytes, ids: dict):
     return bytes(res), carpeta - ref
 
 
-def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gamut=False, acciones=False, entradas_previas=()):
+def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gamut=False, acciones=False, entradas_previas=(), silent=False):
     a, b, dest = Path(dev_a) / "nflasha15_unpacked_unpacked", Path(dev_b) / "nflasha15_unpacked_unpacked", Path(dest)
     (dest / "lib").mkdir(parents=True, exist_ok=True)
     (dest / "share/app").mkdir(parents=True, exist_ok=True)
@@ -128,7 +129,6 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
     assert len(libres) == len(txt)
     ids = dict(zip(txt, libres))
     ajustes = [pp_descriptors.Ajuste(M.PIDS[i], s.clave, tuple(v for _, v in s.opciones), s.evento) for i, s in enumerate(M.SETTINGS.values())]
-    emit("lib/cmn_view_processDataMgr.so", pp_descriptors.patch((a / "lib/cmn_view_processDataMgr.so").read_bytes(), ajustes))
     if saturacion_a6300 or gamma_slog or color_gamut or acciones:     # opt-in: ver patch_libobj_pp.py
         lo = (a / "lib/libObj.so").read_bytes()
         lo = patch_libobj_pp.patch(lo) if saturacion_a6300 else lo
@@ -137,7 +137,12 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
         emit("lib/libObj.so", patch_libobj_pp.patch_bw(patch_libobj_pp.patch_color(lo)) if color_gamut else lo)
     caution, delta = patch_caution((a / "lib/CautionConfig.so").read_bytes(), ids)
     emit("lib/CautionConfig.so", caution)
-    emit("lib/viewUnified2.so", A.patch((a / "lib/viewUnified2.so").read_bytes(), [*entradas_previas, delta]))   # entradas_previas: p. ej. Silent (0xEB0) en el CFW completo
+    # G28: la UI usa la copia del gestor de procesos que lleva viewUnified2.so (cmn_view_processDataMgr.so no se carga): descriptores y clase Normal van ahí
+    vu2 = A.patch((a / "lib/viewUnified2.so").read_bytes(), [*entradas_previas, delta])   # entradas_previas: p. ej. Silent (0xEB0) en el CFW completo
+    if silent:
+        vu2 = silent_descriptor.patch(vu2, silent_descriptor.TABLA_D_VU2, silent_descriptor.DESC_EFCS_VU2)
+    vu2 = pp_descriptors.patch(vu2, ajustes, pp_descriptors.TABLA_D_VU2)
+    emit("lib/viewUnified2.so", pp_descriptors.clase_normal(vu2, [silent_descriptor.PID_NUEVO, *M.PIDS]))
     en_b = uxc_strings.parse((b / "share/app/string_english.uxc").read_bytes())[2]
     inv = {}
     for rid, t in sorted(en_b.items()):

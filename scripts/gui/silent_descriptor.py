@@ -15,13 +15,14 @@ import add_menu_entry as A
 
 PID_NUEVO, PID_EFCS = 0x12, 0x46
 TABLA_D = 0x8C268                    # D[pid]: u32 por ProcessId (process_bindings.py)
+TABLA_D_VU2, DESC_EFCS_VU2 = 0x4457D4, 0x4B7044   # la misma tabla y el descriptor de EFCS en viewUnified2.so (G28: es la que usa la UI)
 DESC_EFCS, DESC_PALABRAS = 0x947F4, 19
 MODEL_PALABRAS, S_PALABRAS = 9, 12
 C1, C2, CLAVE_SET, CLAVE_GET = 0x5B, 0x6C, 0x291, 0x292
 ALIGN = A.ALIGN
 
 
-def patch(d: bytes) -> bytes:
+def patch(d: bytes, tabla_d: int = TABLA_D, desc_efcs: int = DESC_EFCS) -> bytes:
     segs = A._segments(d)
     dyn_off, dyn = A._dynamic(d, segs)
     tags = {t: v for t, v in dyn if t}
@@ -30,18 +31,18 @@ def patch(d: bytes) -> bytes:
     by_off = {struct.unpack_from("<I", rel, i)[0]: struct.unpack_from("<I", rel, i + 4)[0] for i in range(0, rel_sz, 8)}
     word = lambda va, n=1: struct.unpack_from(f"<{n}I", d, A._off(segs, va))
 
-    desc = list(word(DESC_EFCS, DESC_PALABRAS))
+    desc = list(word(desc_efcs, DESC_PALABRAS))
     model_va = desc[6]
     model = list(word(model_va, MODEL_PALABRAS))
     s0_va, s1_va = model[4], model[5]
     s0, s1 = list(word(s0_va, S_PALABRAS)), list(word(s1_va, S_PALABRAS))
     assert (model[2], model[3], s0[0], s1[0]) == (0x54, 0x4F, 0x246, 0x247), (model, s0[:1], s1[:1])
-    assert word(TABLA_D + 4 * PID_EFCS)[0] == DESC_EFCS and by_off.get(TABLA_D + 4 * PID_NUEVO) is not None
+    assert word(tabla_d + 4 * PID_EFCS)[0] == desc_efcs and by_off.get(tabla_d + 4 * PID_NUEVO) is not None
 
     top = max(v + ms for t, _, v, _, _, ms, _, _ in segs if t == 1)
     new_va = (top + ALIGN - 1) // ALIGN * ALIGN
     new_off = (len(d) + ALIGN - 1) // ALIGN * ALIGN
-    blocks = [("model", model_va, model), ("s0", s0_va, s0), ("s1", s1_va, s1), ("desc", DESC_EFCS, desc)]
+    blocks = [("model", model_va, model), ("s0", s0_va, s0), ("s1", s1_va, s1), ("desc", desc_efcs, desc)]
     n_rel = sum(1 for _, va, w in blocks for i in range(len(w)) if va + 4 * i in by_off) + 1
     rel_new_size = rel_sz + 8 * n_rel
     data_va = new_va + (rel_new_size + 15) // 16 * 16
@@ -61,7 +62,7 @@ def patch(d: bytes) -> bytes:
                 extra += struct.pack("<II", place[name] + 4 * i, by_off[src_va + 4 * i])
     # D[0x12] -> descriptor nuevo (el hueco ya tiene su relocación)
     out = bytearray(d)
-    struct.pack_into("<I", out, A._off(segs, TABLA_D + 4 * PID_NUEVO), place["desc"])
+    struct.pack_into("<I", out, A._off(segs, tabla_d + 4 * PID_NUEVO), place["desc"])
     rel_new = bytes(rel) + bytes(extra)
     assert len(rel_new) <= rel_new_size
     seg = bytearray(rel_new.ljust(data_va - new_va, b"\0")) + blob

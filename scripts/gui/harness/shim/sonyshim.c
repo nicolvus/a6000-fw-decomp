@@ -393,7 +393,19 @@ static void *dumper(void *a) {
     for (int i = 0; i < n; i++) { syscall(SYS_tgkill, getpid(), tids[i], SIGUSR1); sleep(1); }
     return 0;
 }
-__attribute__((constructor)) static void shim_init(void) { if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
+/* INJECT="seg:qid:w0,w1,..;seg:qid:.." (todo en hex; sin strtoul: la glibc 2.11 no tiene __isoc23_*): a los seg s entrega un mensaje a la cola síncrona con callback, como haría av-cam */
+static void *injector(void *a) {
+    char *spec = strdup(getenv("INJECT")), *sp1 = 0; (void)a; unsigned long t0 = 0;
+    for (char *it = strtok_r(spec, ";", &sp1); it; it = strtok_r(0, ";", &sp1)) {
+        const char *e; unsigned long at = hexv(it, &e); unsigned q = hexv(e + 1, &e);
+        unsigned *m = calloc(64, 4); int n = 0;
+        while (*e == ':' || *e == ',') { m[n++] = hexv(e + 1, &e); if (n >= 60) break; }
+        if (at > t0) { sleep(at - t0); t0 = at; }
+        int ok = cb_deliver(q, m); efp("[shim] INJECT q=%#x w0=%#x -> %s\n", q, m[0], ok ? "entregado" : "SIN CALLBACK");
+    }
+    return 0;
+}
+__attribute__((constructor)) static void shim_init(void) { if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
     sa.sa_flags = SA_SIGINFO | SA_RESETHAND; sigaction(SIGSEGV, &sa, 0); sigaction(SIGBUS, &sa, 0); sigaction(SIGILL, &sa, 0); sigaction(SIGABRT, &sa, 0); }  /* un fallo imprime la pila y se reintenta por defecto (core) */
 
 /* Experimento (SKIPFN=717830,...): sustituye esas funciones Thumb de libObj por «movs r0,#0; bx lr» (devuelven éxito sin hacer nada). */
