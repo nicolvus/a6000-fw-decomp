@@ -586,3 +586,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 09-11-2026: G22-B avance 21 — cargador completo (66 etapas) y reposo; MEMSCAN: sin píxeles (render por GPU DMP); plan F3 revisado. [G22 §5.4](../docs/gui/g22-arnes-ui-qemu.md).
 - 09-11-2026: G22-B avance 22 — `bootin.elf` lanza 8 procesos `im.elf` (letras → fases del IMDB); `appFw.so` (hilo de la UI) nunca se ejecuta, ni con `bootall`; nuevos `INJECT`, `IMSPLIT`, `IMARGS`. F3–F5 no realizadas. [G22 §5.5](../docs/gui/g22-arnes-ui-qemu.md).
 - 09-11-2026: G22-B avance 23 — la UI arranca (`appFw.so`+`viewUnified2.so`): faltaba señalar el semáforo `0x83037a` (`SEMSIG`). Bitmap de pantalla a cero → F3 depende de la GPU de DMP. [G22 §5.6](../docs/gui/g22-arnes-ui-qemu.md).
+- 10-11-2026: G22-B avance 23b — SEMSIG×4, la UI carga recursos y abre /dev/ldec; pantalla aún a cero (GPU). [G22 §5.6](../docs/gui/g22-arnes-ui-qemu.md).

@@ -428,9 +428,9 @@ static void *injector(void *a) {
     return 0;
 }
 /* SEMSIG: semáforos que en la cámara señala otro procesador (av-cam) y aquí nadie; se dejan señalados al arrancar.
-   0x83037a: el main de im.elf espera en él antes de crear el hilo de aplicación (appFw.so → UI). Lista hex separada por comas; vacío = ninguno. */
+   0x83037a: el main de im.elf (antes de crear el hilo de aplicación appFw.so → UI) y luego el hilo Appframework esperan en él; se señala 4 veces. Lista hex separada por comas; vacío = ninguno. */
 static void presignal(void) {
-    const char *e = getenv("SEMSIG"), *p = e ? e : "83037a";
+    const char *e = getenv("SEMSIG"), *p = e ? e : "83037a,83037a,83037a,83037a";
     while (*p) { const char *q; unsigned id = hexv(p, &q); if (q == p) break; sem_sig(id); p = *q == ',' ? q + 1 : q; }
 }
 __attribute__((constructor)) static void shim_init(void) { presignal(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
