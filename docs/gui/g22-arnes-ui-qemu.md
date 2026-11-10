@@ -299,6 +299,10 @@ Método: contrastar línea a línea el registro real (`mem-20261020-log`, 129.72
 
 `StmMain::mainLoop` (0x3d7c) hace `osal_rcv_msg_tmo(qid 0x1590438, -1)` y despacha por el primer byte del mensaje: 1 deposit, 2 withdraw, 3 inquire, 4 destruct, 5 share, 6 overwrite, 7 parse, 8 peek, 9 depositMulti, 0xa poke, 0xb rawParse, 0x3e dump, 0x3f salir; la cola de respuesta está en `msg[-4]` (cabecera OSAL) y la respuesta es un mensaje nuevo de 0x1c/0x8/… bytes. Es un **servidor petición/respuesta de instancias de imagen** (STM = *stream table manager*), por tanto estar bloqueado en `rcv` es su estado normal y **no** indica una notificación de av-cam ausente. Hipótesis de §5.18h descartada para `0x1590438`. Quedan como candidatas las colas de HAPI (`0x15a0439/3a/3b`, `0x15a40bf/c1`, `DataflowInfraMsg` 0x3001) y las de arranque `0x924126/223/220/3d8`; sin cuerpo de mensaje conocido, generarlas sería adivinar. F3/F4/F5 siguen abiertas.
 
+#### 5.18j `CameraBackground` (cola 0x102021f) tampoco es de av-cam (10-11-2026)
+
+`libInfraCameraBackground.so` no existe como fichero en el volcado (el log `Ii 102_…` es solo la traza de inicio de infra, sin `dlopen`); el código vive en `libObj.so`. Un único emisor a la cola `0x102021f` está en `libObj+0x19d664`: reserva un mensaje de 0x14 B (`osal_valloc_msg_wait`), prioridad 2 si el comando es 0x45 y 1 en otro caso, `word0=0x12`, `word3=comando`, `osal_snd_msg`; el envoltorio `0x19d6e0` manda el comando `0x44` (con `[r0+0x10]=1`). Es decir, la cola recibe **órdenes de la propia aplicación** (como `ScalarSTM`), no notificaciones de av-cam: estar parado en `rcv` es normal. Con §5.18i quedan descartadas dos de las seis colas "de av-cam"; la hipótesis de §5.18h ("falta el flujo de eventos de av-cam en estas colas") no está respaldada. Pendiente: identificar quién debería llamar a `0x19d6e0`/`0x19d664` y qué evento de la app lo dispara.
+
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
 Verificado: `build.sh` reproduce byte a byte el `sonyshim.so` que se estaba usando (md5 `5307f8ae…` antes de las correcciones);
