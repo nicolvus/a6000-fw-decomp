@@ -320,6 +320,13 @@ Método: contrastar línea a línea el registro real (`mem-20261020-log`, 129.72
 - No verificado: qué hilo es el objetivo del `join` (`[0x154c4]`); que `THREAD_INFRA1` termine en la cámara real.
 - **Siguiente paso**: registrar en el shim el valor de `[0x154c0/c4/c8/cc]` y los tids de los hilos creados por `osal_create_waitable_thread` (p. ej. `TRACEFN`/`DUMPTHR` por tid) para saber a cuál espera `main`.
 
+#### 5.18m `act_all` reproducido en el arnés (10-11-2026)
+
+- **Causa de la espera**: `THRLOG=1` (nuevo: interpone `pthread_create`/`pthread_join`) muestra que el `join` pendiente de `main` es sobre el 2.º hilo creado (`THREAD_INFRA1`, cuerpo `0x94c9` → entrada `MWF_Init`), que se queda en `MWF::ObjSignal::GetSignal(-1)` (`libMWF+0x2cb28`, `pthread_cond_wait`) para siempre. En la cámara los `im.elf` van uno por letra y el último (sin argumentos) solo atiende mensajes; aquí un único proceso ejecuta las fases y el bucle MWF nunca termina. (Corrige la lectura de §5.18l: no era `THREAD_INFRA2`.)
+- **Atajo**: `NOJOIN=N` (nuevo) hace que el hilo principal no espere desde su N-ésimo `join` (`NOJOIN=1` falla: `main` adelanta `THREAD_APP` y `libObj` da `undefined symbol _Z17setKeyConfigToISVv`; **`NOJOIN=2`** sirve). Con `NOJOIN=2 SYNCMBX=94016a INJECT=70:94016a:92015a` `main` entra en `rcv_msg(0x94016a)` y consume `CMD_ON`: aparecen `Ia 094_act_all`, `Ia 102_CameraBackground_act` (el pendiente original, `libObj+0x19d6e0`), `Ia 155_SyncAndroid_act` y `EV OFF: act_cmp: 102/155`, igual que en la cámara (`mem-20261020-log` 4639–4651; allí además `f8_InfraMediaPwrMgr_act`).
+- **Siguiente corte**: `im.elf` envía `0x92015b` (`word1=1`) a la cola de kernel `0x920021` (log del shim: «descartado») y en la cámara `upm.ko` responde con `ON_CMP`→`APP_ON, go active(res)`, tras lo cual empieza `Root Draw`/UI. Falta modelar esa respuesta (qué mensaje y a qué cola) y comprobar que la UI avanza (F3/F4). Receta: `scripts/gui/harness/run_retry.sh <etq> "WAIT=100 CVWAIT=0 POKE=fef348 FULLLOG=1 KEYQ=7a0020 KEYONACTIVE=0 NOJOIN=2 SYNCMBX=94016a INJECT=70:94016a:92015a"`.
+- No verificado: que el resto de `main` tras el `join` omitido (limpiezas, `THREAD_APP`) sea inocuo; una sola ejecución.
+
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
 Verificado: `build.sh` reproduce byte a byte el `sonyshim.so` que se estaba usando (md5 `5307f8ae…` antes de las correcciones);

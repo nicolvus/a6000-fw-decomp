@@ -914,3 +914,22 @@ int munmap(void *a, size_t l) {
     if (l >= 0x100000 || r) LOG("munmap(%p, %#zx) -> %d", a, l, r);
     return r;
 }
+
+/* THRLOG=1: registra pthread_create (hilo, rutina inicial) y pthread_join (objetivo) para saber a qué hilo espera el hilo principal de im.elf. */
+static void thr_desc(void *f, char *o, int n) { Dl_info di; if (dladdr(f, &di) && di.dli_fname) snprintf(o, n, "%s+%#lx", strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname, (unsigned long)f - (unsigned long)di.dli_fbase); else snprintf(o, n, "%p", f); }
+int pthread_create(pthread_t *t, const pthread_attr_t *a, void *(*f)(void *), void *arg) {
+    static int (*r)(pthread_t *, const pthread_attr_t *, void *(*)(void *), void *);
+    if (!r) r = dlsym(RTLD_NEXT, "pthread_create");
+    int rc = r(t, a, f, arg);
+    if (getenv("THRLOG")) { char d[96]; thr_desc((void *)f, d, sizeof d); LOG("pthread_create %lx fn=%s (desde tid %ld)", (unsigned long)*t, d, (long)syscall(224)); }
+    return rc;
+}
+int pthread_join(pthread_t t, void **v) {
+    static int (*r)(pthread_t, void **); static int nmj;
+    if (!r) r = dlsym(RTLD_NEXT, "pthread_join");
+    if (getenv("THRLOG")) LOG("pthread_join %lx (tid %ld)", (unsigned long)t, (long)syscall(224));
+    /* NOJOIN=N: desde el N-ésimo join del hilo principal (1 = todos) no espera; el hilo principal de im.elf no espera a los hilos de infra (en la cámara los procesos im.elf van por letras y el último solo atiende mensajes; aquí un único proceso
+     * ejecuta las fases y THREAD_INFRA1 queda en el bucle de MWF para siempre): así llega a su bucle de recepción (0x9e94). shortcut: afecta a todo join del hilo principal. */
+    if (getenv("NOJOIN") && syscall(224) == getpid() && ++nmj >= (int)num(getenv("NOJOIN"))) { LOG("pthread_join %lx omitido (NOJOIN)", (unsigned long)t); return 0; }
+    return r(t, v);
+}
