@@ -241,10 +241,16 @@ Causa del bloqueo de `Appframework` (§5.6) y arreglos en el shim (todos por def
 
 ### 5.14 Avance 31 (10-11-2026): la tecla de encendido llega con `status`; `ViewRootPowerSw` la procesa hasta `isBootEECapNone`
 
-- **Formato del mensaje de entrada** (cola `0x7a0020`, `INJECT=seg:7a0020:w0,w1,…`, tiempos y valores en hex): **`w1` = estado** del evento (`2,1,0,0,0,0` → `callback_convert_not_user_operation … event_code=0x15010010 status=1 prev_status=0`; `2,0,0,0,0,0` → `status=0`). El «INH» del registro es solo la etiqueta del callback; los eventos `0x15010010` son del interruptor de encendido (0 = apagado, 1 = encendido) y mi inyección anterior lo mandaba siempre a 0. Repetir el mismo valor da «same event».
+- **Formato del mensaje de entrada** (cola `0x7a0020`, `INJECT=seg:7a0020:w0,w1,…`, tiempos y valores en hex): **`w2` = estado** del evento (corregido en el avance 32: `2,0,1,0,0,0` → `status=1`; `2,1,0,0,0,0` y `2,0,0,0,0,0` → `status=0`; `w1` no influye). El «INH» del registro es solo la etiqueta del callback; los eventos `0x15010010` son del interruptor de encendido (0 = apagado, 1 = encendido) y mi inyección anterior lo mandaba siempre a 0. Repetir el mismo valor da «same event».
 - Con `status=1`, `ViewRootPowerSw` ejecuta `isBootEECapNone` → «Boot EECap is 84ffe994» (parece un puntero del montón, no un valor) → `ret : 0`, y no avanza a «POWER Key Final to On». Los valores de arranque de `ModelRoot` (`BootKey/BootType/BootBis/EeCap`) siguen `Unknown Value 0x0` (tabla de conversión de 23 entradas en `libObj+0x63c470`: el valor crudo 0 no figura); su origen (servicio de arranque/`upm_get_boot_factor`) no está modelado.
 - `libObj+0x63cf6c` también usa `0x90013d` orden 2 y copia 10 B desde `+0x14` (fecha: 4×u16 + tipo en `+0x1c`, inferido); el shim ya rellena una fecha fija (sin comprobar).
 - Siguiente paso: modelar los datos de arranque crudos (EECap/BootKey…) y repetir `INJECT` con `status=1`; ver si aparece «POWER Key Final to On» y entonces trabajos nuevos en la tabla de la GPU.
+
+### 5.15 Avance 32 (10-11-2026): `BOOTINFO`; el estado del encendido es `w2` (corrige §5.14)
+
+- **Corrección**: en §5.14 atribuí el `status` a `w1`; el registro de la inyección múltiple muestra que es **`w2`** (`2,0,1,0,0,0` → `status=1`; `w1` no influye).
+- Los datos de arranque de `ModelRoot` vienen de `osal_snd_sync_msg` a la cola `0x924127` (mensaje `0x920111`, respuesta de 0x18 B copiada por `ObjHandover` en `libObj+0x41b158`; `ActionGetAllBootInfo` en `libObj+0x63da04` usa las palabras 1–5 de la respuesta). Nuevo `BOOTINFO=a,b,c,d,e` (hex) las rellena. Con `1,1,1,1,1` (y `2,2,2,2,2`) desaparecen los `[M_ROOT] … Unknown Value 0x0`; los valores correctos para cada campo (`BootKey/BootType/BootBis/EeCap`) siguen sin determinar (la tabla de conversión `libObj+0xfd408c` es `{crudo, convertido, nombre}` con crudo 0…22).
+- **Resultado negativo**: con `BOOTINFO=1,1,1,1,1` y `status=1` inyectado a los 80 s, `InputService` acepta el evento pero `ViewRootPowerSw` ya no registra ni siquiera `isBootEECapNone`, no aparece «POWER Key Final to On» y la tabla de la GPU sigue con 4 trabajos. F3/F4/F5 sin cambios.
 
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
