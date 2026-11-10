@@ -65,6 +65,8 @@ def patches(base: bytes, a7s: bytes, a6300: bytes | None = None) -> list[tuple[i
                 out.append((SEL["a6000"] + 2 * i, bytes([SLOG3_AQUI, SLOG3_AQUI]), f"selector {i}"))
             continue
         e = a7s[SEL["a7s"] + 2 * i - BASE:][:2]
+        if i == 5:  # Still: el original de la A6000 nunca usa gamma 0 en vídeo (0,0x0a); (0,0) de la A7S reinició la cámara (10-11-2026)
+            e = bytes([0, 0x0A])
         out.append((SEL["a6000"] + 2 * i, bytes(REMAP.get(x, x) for x in e), f"selector {i}"))
     return out
 

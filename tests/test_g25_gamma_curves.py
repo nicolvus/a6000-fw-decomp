@@ -52,7 +52,7 @@ def test_la_seleccion_de_gamma_emulada_da_0x14_y_0x15_y_no_cambia_lo_demas():
     base, a7s = BASE.read_bytes(), C.A7S.read_bytes()
     new = C.apply(base, C.patches(base, a7s, C.A6300.read_bytes() if C.A6300.is_file() else None))
     got = {s: emu.run(new, s)["bd9"] for s in (0, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)}
-    assert got == {0: 10, 3: 0x16, 4: 10, 5: 0, 6: 0x18, 7: 0x19, 8: 0x1A, 9: 0x1B, 10: 0x14, 11: 0x15, 12: 0x17 if C.A6300.is_file() else 10}
+    assert got == {0: 10, 3: 0x16, 4: 10, 5: 10, 6: 0x18, 7: 0x19, 8: 0x1A, 9: 0x1B, 10: 0x14, 11: 0x15, 12: 0x17 if C.A6300.is_file() else 10}
 
 
 def test_menu_gamma_completo_sigue_el_orden_de_la_a6300():
