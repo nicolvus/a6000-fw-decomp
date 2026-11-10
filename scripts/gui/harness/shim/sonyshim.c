@@ -489,6 +489,16 @@ static void *openviewer(void *a) {
         void (*ctor)(void *) = dlsym(RTLD_DEFAULT, "_ZN9ParamListC1Ev"); static char lb[512];
         if (rq && ctor) { ctor(lb); int rr = rq(getenv("PREACQ"), 0, lb); efp("[shim] PREACQ %s -> %d\n", getenv("PREACQ"), rr); sleep(3); }
     }
+    if (getenv("PRECREATE") && lobj_h) {  /* PRECREATE=modelo: publica el evento «solicitar modelo» (libObj+0x7eb9e8: mm, {?,?,id}) para que Appframework cree el modelo ANTES de abrir la vista */
+        unsigned char *base = (unsigned char *)ov - 0x1251fd; void **pvm = dlsym(lobj_h, "pViewManager");
+        unsigned (*idget)(const char *) = dlsym(lobj_h, "_ZN11IdGenerator3GetEPKc");
+        if (pvm && *pvm && idget) {
+            void *mm = *(void **)((char *)*pvm + 0x18); unsigned fake[4] = { 0, 0, idget(getenv("PRECREATE")), 0 };
+            int (*rq)(void *, void *) = (int (*)(void *, void *))(base + 0x7eb9e8 + 1);
+            efp("[shim] PRECREATE mm=%p id=%#x\n", mm, fake[2]); int rr = rq(mm, fake); efp("[shim] PRECREATE -> %d\n", rr); sleep(3);
+        } else efp("[shim] PRECREATE: sin pViewManager/IdGenerator\n");
+    }
+    { void **pv = dlsym(lobj_h, "pViewManager"); for (int k = 0; pv && !*pv && k < 600; k++) usleep(100000); }  /* openView con ViewManager aún NULL = SIGSEGV (arranque lento) */
     char *spec = strdup(getenv("OPENVIEW")), *sv = 0;
     for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) { efp("[shim] OPENVIEW %s ...\n", it); int r = ov(it, 0); efp("[shim] OPENVIEW %s -> %d\n", it, r); sleep(2); }
     return 0;
