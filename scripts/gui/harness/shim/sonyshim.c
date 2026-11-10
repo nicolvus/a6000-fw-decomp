@@ -436,8 +436,9 @@ static void *dumper(void *a) {
     while (d && (e = readdir(d)) && n < 512) if (e->d_name[0] != '.') tids[n++] = num(e->d_name);
     if (d) closedir(d); efp("[shim] dumper hilos=%d\n", n);
     const char *only = getenv("DUMPTHR");  /* DUMPTHR=subcadena: solo los hilos cuyo nombre la contiene (p. ej. Appframework,UX) */
+    for (int i = 0; i < n; i++) { char fn[64], nm[32] = ""; snprintf(fn, sizeof fn, "/proc/self/task/%d/comm", tids[i]); FILE *f = fopen(fn, "r"); if (f) { if (!fgets(nm, sizeof nm, f)) nm[0] = 0; fclose(f); } nm[strcspn(nm, "\n")] = 0; efp("[shim] HILO %d %s\n", tids[i], nm); }
     for (int i = 0; i < n; i++) {
-        if (only) { char fn[64], nm[32] = ""; snprintf(fn, sizeof fn, "/proc/self/task/%d/comm", tids[i]); FILE *f = fopen(fn, "r"); if (f) { if (!fgets(nm, sizeof nm, f)) nm[0] = 0; fclose(f); } if (!strstr(nm, only)) continue; }
+        if (only) { char fn[64], nm[32] = ""; snprintf(fn, sizeof fn, "/proc/self/task/%d/comm", tids[i]); FILE *f = fopen(fn, "r"); if (f) { if (!fgets(nm, sizeof nm, f)) nm[0] = 0; fclose(f); } { char *l = strdup(only), *sv2 = 0; int ok = 0; for (char *t = strtok_r(l, ",", &sv2); t; t = strtok_r(0, ",", &sv2)) if (strstr(nm, t)) ok = 1; free(l); if (!ok) continue; } }
         syscall(SYS_tgkill, getpid(), tids[i], SIGUSR1); sleep(1);
     }
     return 0;
@@ -457,6 +458,16 @@ unsigned IMDB_find_target_bit(unsigned a, unsigned b, unsigned c, unsigned d) { 
 unsigned IMDB_find_entry(unsigned a, unsigned b, unsigned c, unsigned d) { return imdb_call("IMDB_find_entry", a, b, c, d); }
 unsigned IMDB_get_entries(unsigned a, unsigned b, unsigned c, unsigned d) { return imdb_call("IMDB_get_entries", a, b, c, d); }
 /* INJECT="seg:qid:w0,w1,..;seg:qid:.." (todo en hex; sin strtoul: la glibc 2.11 no tiene __isoc23_*): a los seg s entrega un mensaje a la cola síncrona con callback, como haría av-cam */
+/* OPENVIEW="Vista[,Vista…]" OPENVIEWAT=s: llama a viewManagerIf::openView(nombre, 0) de libObj desde un hilo propio (abrir la vista raíz sin el evento de arranque de av-cam) */
+static void *lobj_h;
+static void *openviewer(void *a) {
+    (void)a; sleep(num(getenv("OPENVIEWAT") ? getenv("OPENVIEWAT") : "40"));
+    int (*ov)(const char *, int) = lobj_h ? dlsym(lobj_h, "_ZN13viewManagerIf8openViewEPKci") : 0;
+    if (!ov) { efp("[shim] OPENVIEW: sin viewManagerIf::openView\n"); return 0; }
+    char *spec = strdup(getenv("OPENVIEW")), *sv = 0;
+    for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) { efp("[shim] OPENVIEW %s ...\n", it); int r = ov(it, 0); efp("[shim] OPENVIEW %s -> %d\n", it, r); sleep(2); }
+    return 0;
+}
 static void *injector(void *a) {
     char *spec = strdup(getenv("INJECT")), *sp1 = 0; (void)a; unsigned long t0 = 0;
     for (char *it = strtok_r(spec, ";/", &sp1); it; it = strtok_r(0, ";", &sp1)) {
@@ -479,7 +490,7 @@ static void presignal(void) {
     const char *e = getenv("SEMSIG"), *p = e ? e : "83037a,83037a,83037a,83037a";
     while (*p) { const char *q; unsigned id = hexv(p, &q); if (q == p) break; sem_sig(id); p = *q == ',' ? q + 1 : q; }
 }
-__attribute__((constructor)) static void shim_init(void) { presignal(); keyq_init(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
+__attribute__((constructor)) static void shim_init(void) { presignal(); keyq_init(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("OPENVIEW")) { pthread_t th; pthread_create(&th, 0, openviewer, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
     sa.sa_flags = SA_SIGINFO | SA_RESETHAND; sigaction(SIGSEGV, &sa, 0); sigaction(SIGBUS, &sa, 0); sigaction(SIGILL, &sa, 0); sigaction(SIGABRT, &sa, 0); }  /* un fallo imprime la pila y se reintenta por defecto (core) */
 
 /* Experimento (SKIPFN=717830,...): sustituye esas funciones Thumb de libObj por «movs r0,#0; bx lr» (devuelven éxito sin hacer nada). */
@@ -555,7 +566,7 @@ void *dlopen(const char *f, int fl) {
     if (f && strstr(f, "viewUnified")) gpu_live = 1;
     LOG("dlopen(%s) ...", f ? f : "(null)");
     void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
-    if (h && f && strstr(f, "libObj.so")) gpu_patch();
+    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); lobj_h = h; }
     if (h && f && strstr(f, "libObj.so") && (getenv("SKIPFN") || getenv("TRACEFN") || getenv("WATCH") || getenv("POKE"))) skip_fns();
     return h;
 }
