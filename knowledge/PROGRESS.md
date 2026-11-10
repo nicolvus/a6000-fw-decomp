@@ -591,3 +591,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 10-11-2026: G22-B avance 24 — GPU mínima (GPUEMU) y protocolo vdf; la UI no se bloquea; pantalla aún a cero (falta renderizar listas DMP). [G22 §5.7](../docs/gui/g22-arnes-ui-qemu.md).
 - 10-11-2026: G22-B avance 24b — KEYQ/INJECT por buzón para teclas; w0=2 aceptado, sin vista. [G22 §5.7](../docs/gui/g22-arnes-ui-qemu.md).
 - 10-11-2026: G22-B avance 25 — bucle de `Appframework`, ruta `openView` → evento `0x11012001`, tabla de vistas vacía, `InputService::activate` desde las vistas; `OPENVIEW`/`HILO`/`DUMPTHR` lista. Sin vista ni píxeles. [G22 §5.8](../docs/gui/g22-arnes-ui-qemu.md).
+- 10-11-2026: G22-B avance 26 — la UI abre ViewScalarboot; GRM 2D sin uso; F3 sigue bloqueada por la GPU de DMP. [G22 §5.9](../docs/gui/g22-arnes-ui-qemu.md).

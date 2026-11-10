@@ -204,6 +204,13 @@ Causa del bloqueo de `Appframework` (§5.6) y arreglos en el shim (todos por def
 - **Hallazgo negativo**: no hay fichero `AppConfig.so` en el firmware; `"AppConfig.so"` es solo el nombre por defecto del argumento de `Application_System_Init` y del hilo.
 - **Siguiente paso para F3/F4**: averiguar quién publica en la cámara el primer evento de `VM` (probable: el modelo de arranque `ModelBoot`/`POWER_CTRL` al recibir un cambio de estado de `ScalarSTM`/`av-cam`) y reproducirlo con `INJECT`/`OPENVIEW` con la clave correcta; después hace falta el renderizador de la GPU (§5.7).
 
+### 5.9 Avance 26 (10-11-2026): la UI sí abre una vista (`ViewScalarboot`); el motor 2D no se usa; F3 sigue bloqueada por la GPU
+
+- **Corrección a §5.8**: `initializeViewConfig/ModelTree/ModelConfig/CautionConfig…` **sí se llaman** (nuevo `DLSYMLOG=1` registra cada `dlsym`: `initializeViewConfig` → `viewUnified2.so`, `initializeModelTree`, etc.). La vista de arranque real es **`ViewScalarboot`** (`viewUnified8.so`, `dlsym(ViewScalarbootToInstance)` ≠ 0, capas `Layer`/`Layout`), no `ViewRoot`: el `OPENVIEW` de §5.8 apuntaba a la clave equivocada. Tras abrirla, `FbPool` crea el *bitmap* y `UpdateStatusMonitor` avanza sin bloqueo.
+- **Motor 2D**: `TRACEFN` sobre `GRM_gpermFillrect/Rectblit` y `GRM_fbrm*YUV` (`libObj+0x615248/0x6153a4/0x6149xx`) **no dispara nunca**: la composición de la UI no pasa por el motor 2D (`grm_gpe`) ni por la presentación YUV; solo queda la GPU de DMP.
+- **Tabla de nombres GL** (`libObj` file `0x10370e0`, 196 nombres `gl*`/`egl*`, paso `0x30`): son cadenas en línea; la tabla de punteros asociada no está identificada (el candidato `0xfca780` da direcciones sin disparo con `TRACEFN`: glDrawElements `0x597014`, glClear `0x462cec`, glBindTexture `0x45fd7c`, etc. → **no verificado**). Las únicas parejas {nombre, función} halladas son 11 `egl*` en `0x1037024`.
+- **Estado**: F3 no cerrada. Falta (a) saber si la vista de arranque dibuja algo (puede ser negra), (b) alcanzar `ViewRoot*` (publicador del primer evento `VM`) y (c) decodificar y rasterizar las listas de la GPU de DMP. F4/F5 siguen dependiendo de F3.
+
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
 Verificado: `build.sh` reproduce byte a byte el `sonyshim.so` que se estaba usando (md5 `5307f8ae…` antes de las correcciones);

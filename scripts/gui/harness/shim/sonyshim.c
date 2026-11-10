@@ -570,6 +570,14 @@ void *dlopen(const char *f, int fl) {
     if (h && f && strstr(f, "libObj.so") && (getenv("SKIPFN") || getenv("TRACEFN") || getenv("WATCH") || getenv("POKE"))) skip_fns();
     return h;
 }
+void *dlsym(void *h, const char *n) {  /* DLSYMLOG=1: símbolos que pide la UI (p. ej. «<Vista>ToInstance», initializeViewConfig) */
+    static void *(*d)(void *, const char *); static int lg = -1;
+    if (!d) d = dlvsym(RTLD_NEXT, "dlsym", "GLIBC_2.4");
+    if (lg < 0) lg = getenv("DLSYMLOG") != 0;
+    void *r = d(h, n);
+    if (lg && n && h != RTLD_NEXT) LOG("dlsym(%s) -> %p", n, r);
+    return r;
+}
 int system(const char *c) {
     static int (*sy)(const char *);
     if (!sy) sy = dlsym(RTLD_NEXT, "system");
