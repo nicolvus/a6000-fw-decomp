@@ -252,6 +252,16 @@ Causa del bloqueo de `Appframework` (§5.6) y arreglos en el shim (todos por def
 - Los datos de arranque de `ModelRoot` vienen de `osal_snd_sync_msg` a la cola `0x924127` (mensaje `0x920111`, respuesta de 0x18 B copiada por `ObjHandover` en `libObj+0x41b158`; `ActionGetAllBootInfo` en `libObj+0x63da04` usa las palabras 1–5 de la respuesta). Nuevo `BOOTINFO=a,b,c,d,e` (hex) las rellena. Con `1,1,1,1,1` (y `2,2,2,2,2`) desaparecen los `[M_ROOT] … Unknown Value 0x0`; los valores correctos para cada campo (`BootKey/BootType/BootBis/EeCap`) siguen sin determinar (la tabla de conversión `libObj+0xfd408c` es `{crudo, convertido, nombre}` con crudo 0…22).
 - **Resultado negativo**: con `BOOTINFO=1,1,1,1,1` y `status=1` inyectado a los 80 s, `InputService` acepta el evento pero `ViewRootPowerSw` ya no registra ni siquiera `isBootEECapNone`, no aparece «POWER Key Final to On» y la tabla de la GPU sigue con 4 trabajos. F3/F4/F5 sin cambios.
 
+### 5.16 Avance 33 (10-11-2026): comparación con el registro real de la cámara (`mem-20261020-log`)
+
+Fuente: [log.txt](../../analysis/camera-dumps/mem-20261020-log/log.txt) (ciclo suspensión/reanudación, no arranque en frío; §5.8).
+
+- **`USBAndClockReady Non-Display` es normal**: en la cámara real aparece idéntico (`getTimeSettled … retVal 1`, `execCheck timeSettled : 2, jackStatus : 2`, `retVal : 0`, `Non-Display`). Confirma la corrección de §5.13. Lo que difiere es que aquí `getModelInfo("model/ROOT")` falla (`retVal 4`); el valor real es `timeSettled=2`, `jackStatus=2`.
+- **`getInputEventStatus … getNumber`**: real **1** (3 consultas, 129.78–130.30 s); aquí **5** (sin evento), **2** si el evento `status=1` llega antes de activar la vista; no se ha obtenido 1 (con `status=0` o `2` se obtiene 5). Los resultados varían entre ejecuciones por la carrera entre `OPENVIEW`, `toActive` e `INJECT`.
+- **Qué ocurre en la cámara tras `POWER_ON` y falta aquí**: cadena `[CmnViewMgrSetSave] MAAJID` repetida cada ≈30 ms, `[ACT_IconFlashEmission] userWidgetUpdate`, `[ACT_ICONAFAREA]` (`GetModelInfo Fail`), `[M_POWER] onGetInfo() m_getEnable==false`, `[CmnViewNoHdmi]`, `[ViewStlRec]` (iconos). Etiquetas del registro real ausentes en el nuestro: `ACT_Icon*`, `CmnViewNoHdmi`, `M_POWER`, `POWER_CTRL`, `ViewRoot`, `M_ROOT`(solo `setCautionOffFactor`), `CAMUSER`, `LIRO`, `AGENT`. Antes de `toActive`, la cámara ejecuta `[POWER_CTRL] isRequiredScalarViewOpen … UNKNOWN=0 UNSET=0` → `ActionOpenScalarApp: ScalarView::SpecialOpen` y `[ViewRoot] GuardExistNoExclusionCautionAndHasModeltreeCtrl … Halt is NOT Called`: **la máquina de estados de `ViewRoot` recibe un evento que aquí no se genera** (nuestra `ViewRoot` se abre a mano con `OPENVIEW`).
+- NVRAM (`20261105-volcado-total-nvram`): el registro `0x1070140` (reloj «forzado») vale 0; el registro real de `ModelRoot` (`BootKey/EeCap`) no está en el registro de la cámara.
+- Siguiente paso: averiguar qué evento (¿de `ModelBoot`/`POWER_CTRL` al terminar el arranque?) activa `isRequiredScalarViewOpen` y reproducirlo; y fijar el orden `toActive`→`INJECT` (p. ej. inyectar tras detectar `toActive`) para eliminar la carrera.
+
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
 Verificado: `build.sh` reproduce byte a byte el `sonyshim.so` que se estaba usando (md5 `5307f8ae…` antes de las correcciones);
