@@ -388,17 +388,26 @@ static void memscan(void);
 static void *dumper(void *a) {
     sleep(num(getenv("DUMPAT"))); (void)a; load_maps();
     if (getenv("MEMSCAN")) memscan();
-    if (getenv("PIXDUMP")) {  /* PIXDUMP=1|off_hex: vuelca el inicio del área /dev/stream con ese offset (por defecto b4000000: búfer de pantalla de FbPool) a /tmp/fb.bin */
-        for (int k = 0; k < nam; k++) if (strstr(amaps[k].dev, "stream") && amaps[k].off == (long)hexv(getenv("PIXDUMP")[0] == '1' ? "b4000000" : getenv("PIXDUMP"), 0)) {
-            size_t n = amaps[k].len < 0x600000 ? amaps[k].len : 0x600000; int fd = open("/tmp/fb.bin", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-            if (fd >= 0) { write(fd, amaps[k].p, n); close(fd); efp("[shim] PIXDUMP %zu B de %s off=%#lx\n", n, amaps[k].dev, amaps[k].off); }
-            break;
+    if (getenv("AREADUMP")) {  /* AREADUMP="dev@off_hex[,dev@off_hex…]" (p. ej. stream@b4000000,dmpgles2@0,mem@80000000): vuelca cada área (máx. 8 MiB) a /tmp/area_<dev>_<off>.bin */
+        char *spec = strdup(getenv("AREADUMP")), *sv = 0;
+        for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) {
+            char *at = strchr(it, '@'); if (!at) continue; *at = 0; long off = (long)hexv(at + 1, 0);
+            for (int k = 0; k < nam; k++) if (strstr(amaps[k].dev, it) && amaps[k].off == off) {
+                size_t n = amaps[k].len < 0x800000 ? amaps[k].len : 0x800000; char fn[96]; snprintf(fn, sizeof fn, "/tmp/area_%s_%lx.bin", it, off);
+                int fd = open(fn, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+                if (fd >= 0) { write(fd, amaps[k].p, n); close(fd); efp("[shim] AREADUMP %s %zu B\n", fn, n); }
+                break;
+            }
         }
     }
     DIR *d = opendir("/proc/self/task"); struct dirent *e; int tids[512], n = 0;
     while (d && (e = readdir(d)) && n < 512) if (e->d_name[0] != '.') tids[n++] = num(e->d_name);
     if (d) closedir(d); efp("[shim] dumper hilos=%d\n", n);
-    for (int i = 0; i < n; i++) { syscall(SYS_tgkill, getpid(), tids[i], SIGUSR1); sleep(1); }
+    const char *only = getenv("DUMPTHR");  /* DUMPTHR=subcadena: solo los hilos cuyo nombre la contiene (p. ej. Appframework,UX) */
+    for (int i = 0; i < n; i++) {
+        if (only) { char fn[64], nm[32] = ""; snprintf(fn, sizeof fn, "/proc/self/task/%d/comm", tids[i]); FILE *f = fopen(fn, "r"); if (f) { if (!fgets(nm, sizeof nm, f)) nm[0] = 0; fclose(f); } if (!strstr(nm, only)) continue; }
+        syscall(SYS_tgkill, getpid(), tids[i], SIGUSR1); sleep(1);
+    }
     return 0;
 }
 
