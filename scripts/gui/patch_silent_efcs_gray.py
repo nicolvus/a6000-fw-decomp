@@ -17,6 +17,10 @@ Donde r6 = resultado de 0xe0c68(ID=0x9551), asumido como el estado de Silent
   - Silent On  → r2 = 1 → EFCS se pone en gris (inhibido)
   • Silent Off → r2 = 0 → EFCS se desinhibe (editable)
 
+ADVERTENCIA (10-11-2026): NO USAR sin verificar. (1) La codificacion original 0x4560 era `cmp r0, ip`; la correcta de `mov r2, r6` es 0x4632.
+(2) El bloque 0x988cc2..0x988f72 se activa con id 0x404 (0xde360()==0x404), no con LIRO 0x40e3; r6 = 0xe0c68(0x9551)
+(tras 0xdc92c si != 0) no esta demostrado que sea 0/1 de Silent. Sin prueba en emulador ni camara.
+
 Uso:
     python3 patch_silent_efcs_gray.py libObj.so libObj.so.patched
 """
@@ -26,7 +30,7 @@ import sys
 
 
 def patch_libobj(data: bytes) -> bytes:
-    """Cambia `movs r2, #1` (0x2201) por `mov r2, r6` (0x4560) en 0x988d88."""
+    """Cambia `movs r2, #1` (0x2201) por `mov r2, r6` (0x4632) en 0x988d88."""
     offset = 0x988d88
 
     w = struct.unpack_from('<H', data, offset)[0]
@@ -36,7 +40,7 @@ def patch_libobj(data: bytes) -> bytes:
             f"se encontró 0x{w:04x}. ¿Binario diferente?"
         )
 
-    data = data[:offset] + struct.pack('<H', 0x4560) + data[offset + 2:]
+    data = data[:offset] + struct.pack('<H', 0x4632) + data[offset + 2:]
     print(f"Parche aplicado en 0x{offset:08x}: movs r2,#1 → mov r2,r6")
     return data
 
