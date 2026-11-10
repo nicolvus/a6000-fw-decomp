@@ -175,6 +175,17 @@ static void mbx_post(unsigned q, const unsigned *req, int req_id0) {  /* req_id0
     if (k < 16) { mbx[k].q = q; mbx[k].msg = body; } else { LOG("mbx lleno: respuesta a %#x perdida", q); free(b); }
     pthread_cond_broadcast(&mbx_c); pthread_mutex_unlock(&mbx_m);
 }
+/* SYNCMBX=qid_hex[,…]: colas con callback síncrono (reg_sync_msg_queue_cb) a las que el propio proceso envía con snd_msg: en la cámara esos envíos
+ * los lee un hilo con rcv_msg (im.elf reenvía a 0x94016a lo que recibe de upm.ko); aquí se entregaban otra vez al callback (bucle). Van a un buzón sin tocar el cuerpo. */
+static int syncmbx_q(unsigned q) { const char *e = getenv("SYNCMBX"); while (e && *e) { const char *n; unsigned v = hexv(e, &n); if (n == e) break; if (v == q) return 1; e = *n == ',' ? n + 1 : n; } return 0; }
+static void mbx_post_raw(unsigned q, const unsigned *req) {
+    unsigned char *b = calloc(1, 0x300); unsigned *body = (unsigned *)(b + 0x20); int k;
+    memcpy(body, req, 0x30);
+    pthread_mutex_lock(&mbx_m);
+    for (k = 0; k < 16 && mbx[k].msg; k++);
+    if (k < 16) { mbx[k].q = q; mbx[k].msg = body; } else { LOG("mbx lleno: mensaje a %#x perdido", q); free(b); }
+    pthread_cond_broadcast(&mbx_c); pthread_mutex_unlock(&mbx_m);
+}
 static int mbx_take(unsigned q, int tmo, void **out) {  /* 0 = recibido, 1 = cola sin buzón (no dinámica), E_TMOUT = nada en tmo ms */
     int k, r = 1; struct timespec ts;
     if (!is_dynq(q)) return 1;
@@ -298,7 +309,7 @@ int ioctl(int fd, unsigned long req, ...) {
             while (dlv_r == dlv_w) pthread_cond_wait(&cb_c, &cb_m);
             out[0] = (unsigned)dlv[dlv_r % 256].cb; out[1] = (unsigned)dlv[dlv_r % 256].arg; out[2] = (unsigned)dlv[dlv_r % 256].msg; out[3] = 0; dlv_r++;
             pthread_mutex_unlock(&cb_m);
-            if (getenv("VERB")) LOG("wait_cb -> cb %#x msg %#x", out[0], out[2]);
+            if (getenv("VERB") || getenv("CBLOG")) LOG("wait_cb -> cb %#x msg %#x w0=%#x", out[0], out[2], out[2] ? *(unsigned *)out[2] : 0);  /* CBLOG=1: solo las entregas a callbacks (sin el ruido de VERB) */
             return 0; }
         case 8: {  /* reg_msg_queue_cb(qid, arg, cb, prio) → {qid, &{arg, cb, prio, 0}}: t[0] es un puntero a objeto (par), t[1] código Thumb (impar) */
             unsigned *t = (unsigned *)w[1];
@@ -347,6 +358,7 @@ int ioctl(int fd, unsigned long req, ...) {
                 if (cmd < 16 && p1 > 0x10000 && ((cmd & 1) == 0 || cmd == 9)) { vdfcb[cmd] = (void *)p1; return 0; }
                 if ((cmd & 1) && cmd < 8) { pthread_t t; pthread_create(&t, 0, vdf_ack, (void *)(unsigned long)cmd); pthread_detach(t); return 0; }
             }
+            if (syncmbx_q(w[0])) { if (!is_dynq(w[0])) dynq_add(w[0]); mbx_post_raw(w[0], (unsigned *)m); LOG("snd_msg %#x -> buzón (SYNCMBX) w0=%#x", w[0], ((unsigned *)m)[0]); return 0; }
             if (cb_deliver(w[0], m)) { if (getenv("VERB")) LOG("snd_msg %#x -> callback", w[0]); return 0; }
             /* Servicios de kernel con acuse genérico (ACKQ=d9016e,7a0029,…; 0xd9016e registro de puerto de vídeo, 0x7a0029 input.ko): se
              * responde a la cola dinámica que viaja en el cuerpo copiando la petición con estado 0 (lo que comprueba el emisor síncrono
@@ -524,6 +536,7 @@ static void *injector(void *a) {
 /* SEMSIG: semáforos que en la cámara señala otro procesador (av-cam) y aquí nadie; se dejan señalados al arrancar.
    0x83037a: el main de im.elf (antes de crear el hilo de aplicación appFw.so → UI) y luego el hilo Appframework esperan en él; se señala 4 veces. Lista hex separada por comas; vacío = ninguno. */
 static void keyq_init(void) {  /* KEYQ=qid_hex[,…]: colas del kernel que un hilo de usuario lee con rcv_msg: se les da buzón (para INJECT) */
+    for (const char *s = getenv("SYNCMBX"); s && *s; ) { const char *n; unsigned v = hexv(s, &n); if (n == s) break; dynq_add(v); s = *n == ',' ? n + 1 : n; }  /* el hilo lector ya espera en rcv_msg al arrancar: el buzón debe existir desde el principio */
     const char *p = getenv("KEYQ"); while (p && *p) { const char *q; unsigned id = hexv(p, &q); if (q == p) break; dynq_add(id); p = *q == ',' ? q + 1 : q; }
 }
 static void presignal(void) {

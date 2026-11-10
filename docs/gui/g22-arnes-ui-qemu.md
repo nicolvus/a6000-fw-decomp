@@ -311,6 +311,13 @@ Método: contrastar línea a línea el registro real (`mem-20261020-log`, 129.72
 - Colas candidatas por emisores (barrido de constantes en el firmware): `0x924126/223/220` son colas de servicio de `libInfraScalarMpr`, `libmprctrl`, `libBizFw2`, `libInfraCacheMgr` y `upm.ko`; `0x9243d8` solo `libObj` y `upm.ko`; `0x15a0439/43b` `libHapiLib`+`libBizFw`+`libObj`; `0x15a40bf` `viewUnified8`+`libObj`; `0x15a40c1` nadie. Todas tienen a `upm.ko` o a bibliotecas de negocio como emisor, ninguna a `av-cam`.
 - **Siguiente paso**: hacer que el shim (emulando `upm.ko`) entregue a `im.elf` los mensajes que el kernel enviaría al terminar las fases (`0x92015a`/`CMD_ON`, y el camino `IM_RES_CMP`→`ACT_ALL`); mirar en `im.elf` qué predicado (`0xad9c`, `0xa5c0`, `0xaf18`) decide `act_all` y qué cola lo alimenta. No verificado: el camino de arranque en frío (el búfer real conservó solo el reanudado tras suspensión) ni el efecto en el arnés (no probado).
 
+#### 5.18l Prueba: inyectar `CMD_ON` a `im.elf` (10-11-2026): el hilo principal aún no está en su bucle de recepción
+
+- Nuevas herramientas del shim: `CBLOG=1` (registra solo las entregas a callbacks, con `w0`) y `SYNCMBX=qid[,…]` (colas con callback **síncrono** a las que el propio proceso envía con `snd_msg`: se entregan a un buzón que lee `rcv_msg`, no otra vez al callback; el buzón existe desde el arranque).
+- `INJECT=45:94016a:92015a` entrega `0x92015a` al callback síncrono `im.elf+0x15b0` (verificado con `CBLOG`); este lo reenvía con `osal_snd_msg` a la **misma** cola `0x94016a` (`0x961c`→`0x91a4`). Sin `SYNCMBX` el shim lo volvía a entregar al callback (recursión: `w0=0x92015a` repetido); con `SYNCMBX=94016a` queda en el buzón (`snd_msg 0x94016a -> buzón`), pero **no se consume**: no aparece `Ia 094_act_all`.
+- Causa (pilas con `DUMPTHR=im.elf`): el bucle que lee esa cola es el final de `main` (`0x9e94`: `osal_rcv_msg_tmo(qid de 0xa580, -1)` → manejador `0xa06c`), y el hilo principal sigue en `0x9c5a` (`osal_wait_thread_exit` de **`THREAD_INFRA2`**, tras pasar el semáforo `0x83037a` y salir `THREAD_INFRA0/1`). `THREAD_INFRA2` (cuerpo `0x94c9`, máscara 4) no termina: su pila está en `libInfraHdmi.so` (espera en `libpthread`/`libsencore`). Es decir, **`CMD_ON` llega pronto: hay que desbloquear antes la salida de `THREAD_INFRA2`** (o dar el mensaje cuando `main` entre en el bucle).
+- No verificado: qué espera exactamente `libInfraHdmi.so+0x2bb8`; que `THREAD_INFRA2` termine en la cámara real (el búfer conservado no incluye el arranque en frío).
+
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
 Verificado: `build.sh` reproduce byte a byte el `sonyshim.so` que se estaba usando (md5 `5307f8ae…` antes de las correcciones);
