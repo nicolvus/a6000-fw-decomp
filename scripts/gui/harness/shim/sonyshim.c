@@ -79,12 +79,12 @@ static int fake_open(const char *p, int fl, mode_t m, int is64) {
     int fd;
     if (!strcmp(p, "/dev/uipc")) {
         fd = real_open_call("/tmp/uipc.shm", O_RDWR | O_CREAT, 0666, is64);
-        if (fd >= 0) { ftruncate(fd, 0x80000); unsigned v = 8; pwrite(fd, &v, 4, 0x10); kind[fd] = D_UIPC; }  /* [base+0x10] = nº de hilos proxy que arranca u_osal_reg_msg_queue_cb */
-    } else {
+        unsigned v = 8;
+        if (fd >= 0) { ftruncate(fd, 0x80000); pwrite(fd, &v, 4, 0x10); }  /* [base+0x10] = nº de hilos proxy que arranca u_osal_reg_msg_queue_cb */
+    } else
         fd = real_open_call("/dev/null", O_RDWR, 0, is64);  /* dispositivo no modelado: fd inerte, queda registrado */
-        if (fd >= 0) kind[fd] = D_GENERIC;
-    }
-    if (fd >= 0) strncpy(devname[fd], p, 31);
+    if (fd >= MAXFD) { LOG("open(%s): fd %d >= MAXFD, sin modelar", p, fd); return fd; }
+    if (fd >= 0) { kind[fd] = strcmp(p, "/dev/uipc") ? D_GENERIC : D_UIPC; strncpy(devname[fd], p, 31); }
     LOG("open(%s, %#x) -> %d (%s)", p, fl, fd, fd >= 0 && kind[fd] == D_UIPC ? "uipc" : "generico");
     return fd;
 }
@@ -108,6 +108,7 @@ static void bk_load(void) {
     int fd = syscall(SYS_open, "/usr/share/bk.tbl", 0);
     if (fd < 0) { LOG("bk.tbl ausente"); return; }
     long sz = syscall(SYS_lseek, fd, 0, 2); syscall(SYS_lseek, fd, 0, 0);
+    if (sz <= 0) { LOG("bk.tbl vacío"); syscall(SYS_close, fd); return; }
     bk = malloc(sz);
     for (long o = 0; o < sz;) { long r = syscall(SYS_read, fd, bk + o, sz - o); if (r <= 0) break; o += r; }
     bklen = sz; syscall(SYS_close, fd); LOG("bk.tbl %ld B", bklen);
@@ -136,23 +137,29 @@ static int direct_service(unsigned qid, unsigned *m) { (void)qid; (void)m; retur
 
 /* Buzones de colas dinámicas de kernel (dynamic_id tipo 0x2a): el servicio 0xd9016e (registro de puerto de vídeo/OSD) se responde copiando la petición. */
 static struct { unsigned q; void *msg; } mbx[16];
+static unsigned dynq[64]; static int ndynq;  /* colas creadas por dynamic_id tipo 0x2a (solo ellas tienen buzón) */
 static pthread_mutex_t mbx_m = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t mbx_c = PTHREAD_COND_INITIALIZER;
+static void dynq_add(unsigned q) { pthread_mutex_lock(&mbx_m); if (ndynq < 64) dynq[ndynq++] = q; else LOG("dynq lleno: %#x sin buzón", q); pthread_mutex_unlock(&mbx_m); }
+static int is_dynq(unsigned q) { for (int k = 0; k < ndynq; k++) if (dynq[k] == q) return 1; return 0; }
 static void mbx_post(unsigned q, const unsigned *req) {
     unsigned char *b = calloc(1, 0x300); unsigned *body = (unsigned *)(b + 0x20); int k;
     memcpy(body, req, 28); body[-1] = 0x61003c; ((unsigned short *)body)[1] = 0;  /* cabecera esperada por 0x6a25e0 y estado 0 */
     pthread_mutex_lock(&mbx_m);
     for (k = 0; k < 16 && mbx[k].msg; k++);
-    if (k < 16) { mbx[k].q = q; mbx[k].msg = body; }
+    if (k < 16) { mbx[k].q = q; mbx[k].msg = body; } else { LOG("mbx lleno: respuesta a %#x perdida", q); free(b); }
     pthread_cond_broadcast(&mbx_c); pthread_mutex_unlock(&mbx_m);
 }
-static int mbx_take(unsigned q, int tmo, void **out) {  /* 0 = recibido, 1 = esta cola no tiene buzón */
-    int k, r = 1; if ((q >> 16) != 0xaf) return 1;
+static int mbx_take(unsigned q, int tmo, void **out) {  /* 0 = recibido, 1 = cola sin buzón (no dinámica), E_TMOUT = nada en tmo ms */
+    int k, r = 1; struct timespec ts;
+    if (!is_dynq(q)) return 1;
+    if (tmo > 0) { clock_gettime(CLOCK_REALTIME, &ts); ts.tv_sec += tmo / 1000; ts.tv_nsec += (tmo % 1000) * 1000000L;
+        if (ts.tv_nsec >= 1000000000L) { ts.tv_sec++; ts.tv_nsec -= 1000000000L; } }
     pthread_mutex_lock(&mbx_m);
     for (;;) {
         for (k = 0; k < 16; k++) if (mbx[k].msg && mbx[k].q == q) { *out = mbx[k].msg; mbx[k].msg = 0; r = 0; goto fin; }
-        if (tmo == 0) { r = -1; break; }
-        pthread_cond_wait(&mbx_c, &mbx_m);
+        if (tmo == 0 || (tmo > 0 && pthread_cond_timedwait(&mbx_c, &mbx_m, &ts))) { r = E_TMOUT; break; }
+        if (tmo < 0) pthread_cond_wait(&mbx_c, &mbx_m);
     }
 fin:
     pthread_mutex_unlock(&mbx_m); return r;
@@ -181,7 +188,7 @@ int ioctl(int fd, unsigned long req, ...) {
         case 2: sem_sig(w[0]); LOG("uipc sig_sem %#x", w[0]); return 0;
         case 7: { unsigned *t = (unsigned *)w[1]; LOG("uipc rcv_msg qid=%#x tmo=%d", w[0], (int)t[1]);
             if ((int)t[1] < 0 && getenv("RCVSTACK")) { static unsigned vq[64]; static int nq; int k, ya = 0; for (k = 0; k < nq; k++) if (vq[k] == w[0]) ya = 1; if (!ya && nq < 64) { vq[nq++] = w[0]; raise(SIGUSR1); } }
-            { void *mm; int rr = mbx_take(w[0], (int)t[1], &mm); if (rr == 0) { *(void **)t[0] = mm; LOG("rcv_msg qid=%#x <- respuesta", w[0]); return 0; } if (rr < 0) return -1; }
+            { void *mm; int rr = mbx_take(w[0], (int)t[1], &mm); if (rr == 0) { *(void **)t[0] = mm; LOG("rcv_msg qid=%#x <- respuesta", w[0]); return 0; } if (rr != 1) return rr; }
             return kernel_sleep((int)t[1]); }
         case 13: LOG("uipc wait_cb (proxy bloqueado)"); return kernel_sleep(-1);
         case 5: {  /* snd_sync_msg {qid, msg}: 0x8f013a es el registro de trazas (u16 + texto "%4X %s %s") */
@@ -198,7 +205,7 @@ int ioctl(int fd, unsigned long req, ...) {
         case 12: {  /* dynamic_id {0, &{tipo, grupo, &id}}: tipo 0x32 = semáforo nuevo */
             static unsigned next = 0x4000;
             unsigned *t = (unsigned *)w[1];
-            if (t[0] == 0x2a && t[2]) { unsigned id = (t[1] << 16) | next++; *(unsigned *)t[2] = id; LOG("uipc dynamic_id cola -> %#x", id); }
+            if (t[0] == 0x2a && t[2]) { unsigned id = (t[1] << 16) | next++; *(unsigned *)t[2] = id; dynq_add(id); LOG("uipc dynamic_id cola -> %#x", id); }
             else if (t[0] == 0x32 && t[2]) { unsigned id = (t[1] << 16) | next++; *(unsigned *)t[2] = id; LOG("uipc dynamic_id sem -> %#x", id); }
             else LOG("uipc dynamic_id tipo=%#x grupo=%#x (sin salida)", t[0], t[1]);
             return 0; }
@@ -256,7 +263,6 @@ static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, L
     ucontext_t *uc = ctx; unsigned *sp = (unsigned *)uc->uc_mcontext.arm_sp;
     if (!nmaps) load_maps();
     char nm[24] = {0}; syscall(SYS_prctl, 16, nm); efp("[shim] --- pila (sig %d tid %ld %s) pc/lr:\n", sig, (long)syscall(SYS_gettid), nm); efp("[shim]   raw pc=%08lx lr=%08lx\n", uc->uc_mcontext.arm_pc, uc->uc_mcontext.arm_lr); sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
-    sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
     for (int i = 0; i < 300; i++) { if (((unsigned long)(sp + i) & 0xfff) == 0 || i == 0) { if (msync((void *)((unsigned long)(sp + i) & ~0xfffUL), 1, MS_ASYNC)) break; } sym(sp[i]); }  /* no cruzar el final de la pila */
     (void)sig; (void)si;
 }
@@ -280,9 +286,9 @@ static unsigned long hexv(const char *s, const char **end) { unsigned long v = 0
 static struct { unsigned long pc; unsigned short orig; } trc[32]; static int ntrc; static unsigned long trc_base;
 static void on_trace(int sig, siginfo_t *si, void *u) {
     mcontext_t *c = &((ucontext_t *)u)->uc_mcontext; unsigned long pc = c->arm_pc & ~1UL; int i;
-    for (i = 0; i < ntrc; i++) if (trc[i].pc == pc) {
-        LOG("TRACE %lx r0=%lx r1=%lx r2=%lx r3=%lx lr=%lx", pc, c->arm_r0, c->arm_r1, c->arm_r2, c->arm_r3, c->arm_lr);
-        for (const char *e = getenv("TRACEPEEK"); e && *e; ) { unsigned long a = hexv(e, &e); LOG("  PEEK %lx = %08x", a, *(unsigned *)(trc_base + a)); while (*e == ',') e++; }
+    for (i = 0; i < ntrc; i++) if (trc[i].pc == pc) {  /* efp, no LOG: fprintf en un manejador de señal puede bloquearse con el cerrojo de stderr de otro hilo */
+        efp("[shim] TRACE %lx r0=%lx r1=%lx r2=%lx r3=%lx lr=%lx\n", pc, c->arm_r0, c->arm_r1, c->arm_r2, c->arm_r3, c->arm_lr);
+        for (const char *e = getenv("TRACEPEEK"); e && *e; ) { unsigned long a = hexv(e, &e); efp("[shim]   PEEK %lx = %08x\n", a, *(unsigned *)(trc_base + a)); while (*e == ',') e++; }
         *(unsigned short *)pc = trc[i].orig; __builtin___clear_cache((char *)pc, (char *)pc + 2); return;
     }
     signal(SIGILL, SIG_DFL);
@@ -373,7 +379,6 @@ void abort_real(void) { static void (*a)(void); if (!a) a = dlsym(RTLD_NEXT, "ab
 /* Experimento (CVWAIT=s): el solicitante de libObj+0x719ed8 (patrón «trabajador», fw 3.21) espera el fin del trabajo sin sostener su
  * cerrojo y puede perder la señal; solo ese punto de llamada espera con tope de s segundos (despertar espurio).
  * El resto de esperas (p. ej. el bucle del trabajador, que no tolera despertares espurios) queda intacto. */
-#define _GNU_SOURCE
 int pthread_cond_wait(pthread_cond_t *c, pthread_mutex_t *m) {
     static int tmo = -1; static int (*real)(pthread_cond_t *, pthread_mutex_t *);
     if (!real) real = dlsym(RTLD_NEXT, "pthread_cond_wait");

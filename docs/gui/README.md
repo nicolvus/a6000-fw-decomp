@@ -126,3 +126,4 @@ Evidencia: `analysis/gui/`. Pruebas: `tests/test_gui_elf_scan.py`.
 - [G11 — Auditoría del −307 y del `nflasha15` recompuesto](g11-auditoria-307-nflasha15.md)
 - [G15 — Picture Profile A6300 → A6000](g15-picture-profile.md) · [G16 — núcleo](g16-picture-profile-nucleo.md) · [G17 — plan C](g17-picture-profile-plan-c.md) · [G18 — curvas en RAM y CFW 3.55t](g18-pp-espacio-y-cfw-355t.md) · [G19 — capa de modelo](g19-menu-pp-capa-modelo.md) · [G20 — construcción del menú](g20-menu-pp-construccion.md)
 - [G21 — Informe de Picture Profile y CFW 3.56](g21-informe-picture-profile.md)
+- [G22-B — Arnés de la UI: `im.elf` bajo QEMU con shim](g22-arnes-ui-qemu.md) · `scripts/gui/harness/` (`setup.sh`, `run.py`, `im.sh`, `shim/`) · `tests/test_gui_harness.py`

@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """Arnés de la UI (G22): arranca el initramfs base + un overlay con /harness.sh en qemu-system-arm (-M virt) y devuelve la consola.
 
-Uso: run.py DIR_TRABAJO SCRIPT.sh [segundos] [extras_qemu...]
-  Debe existir DIR_TRABAJO/{vmlinuz,base.cpio.gz}. El overlay se concatena (el kernel admite cpio.gz concatenados).
+Uso: [SHIMENV="WAIT=60 CVWAIT=0 ..."] run.py DIR_TRABAJO SCRIPT.sh [segundos] [extras_qemu...]
+  Debe existir DIR_TRABAJO/{vmlinuz,base.cpio.gz} (lo crea setup.sh). El overlay se concatena (el kernel admite cpio.gz concatenados).
+  SHIMENV se escribe en /cam/harness.env dentro del guest; im.sh lo exporta antes de arrancar im.elf.
 """
+import os
 import shutil
 import subprocess
 import sys
@@ -18,6 +20,8 @@ with tempfile.TemporaryDirectory() as t:
     (t / "cam").mkdir()
     (t / "cam/harness.sh").write_text(script.read_text())
     (t / "cam/harness.sh").chmod(0o755)
+    if os.environ.get("SHIMENV"):
+        (t / "cam/harness.env").write_text("export " + os.environ["SHIMENV"] + "\n")
     if (work / "overlay").is_dir():  # ficheros extra (p. ej. cam/usr/lib/sonyshim.so)
         shutil.copytree(work / "overlay", t, dirs_exist_ok=True)
     names = subprocess.run(["find", "cam"], cwd=t, capture_output=True, check=True).stdout
