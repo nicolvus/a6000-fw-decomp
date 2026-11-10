@@ -219,6 +219,12 @@ Causa del bloqueo de `Appframework` (§5.6) y arreglos en el shim (todos por def
 - **F3**: el *bitmap* de pantalla (`/dev/stream off=0xb4000000`) sigue a cero con `ViewRoot` activa (`MEMSCAN`). Sigue bloqueada por la GPU de DMP.
 - `DLSYMSTACK=subcadena` (nuevo): pila del que pide ese símbolo.
 
+### 5.11 Avance 28 (10-11-2026): corrección: la GPU no es (todavía) el único bloqueo; la UI no llega a pedir dibujo
+
+- **Tabla de trabajos de la GPU** (`AREADUMP=dmpgles2@0` con `ViewRoot` abierta, 90 s): solo **4 entradas** en toda la ejecución (tipos 3, 6, 6, 3: dos con lista `0x800a3e80` y dos con destino `0x8000de80` 640×480 formato `0x4401`); `GPUDUMP` registra **una sola** lista (las 4 palabras de §5.7). Es decir, la UI **no ha enviado órdenes de dibujo** a la GPU: un rasterizador de DMP no tendría nada que ejecutar. Corrige §5.6/§5.7 («F3 depende solo de la GPU»).
+- **Causa probable**: `ViewRootPowerSw` queda en `USBAndClockReady Non-Display`: `execCheck` (`viewUnified2+0x17094c`) llama `ViewBase::getModelInfo("model/ROOT", 1, …)` (clave de resultado `0x102`) y falla (`TIME get error` → estado 4). `ModelRoot` consulta la fecha (`[M_ROOT] getDateInfo`: `Clock Force Settled` / `OSAL_DATE_NOTIME` / `Error osal_get_date()`), que viene de un servicio de kernel no modelado (no hay importación `osal_get_date` en `libObj`; `libosal_utm.so` no la exporta).
+- **Pendiente para F3**: (1) lograr que `getModelInfo("model/ROOT")` devuelva la hora asentada (¿servicio de fecha en `uipc`?); (2) comprobar entonces si aparecen más trabajos en la tabla; (3) solo después decodificar/rasterizar las listas de la GPU. Herramienta: `/tmp/xref.py`-style (referencias a cadenas Thumb por `ldr`+`add pc`); no incluida.
+
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
 Verificado: `build.sh` reproduce byte a byte el `sonyshim.so` que se estaba usando (md5 `5307f8ae…` antes de las correcciones);
