@@ -175,6 +175,7 @@ fin:
     pthread_mutex_unlock(&mbx_m); return r;
 }
 
+static int num(const char *t) { int v = 0; while (*t >= '0' && *t <= '9') v = v * 10 + *t++ - '0'; return v; }  /* sin atoi: el sysroot nuevo enlaza __isoc23_strtol, que la glibc 2.11 no tiene */
 /* Colas de kernel con callback de usuario (reg_msg_queue_cb, idx 8). En libosal_uipc.so: los hilos proxy bloqueados en wait_cb (idx 13)
  * reciben {cb, arg, msg, 0} y llaman cb(msg, arg); un envío síncrono (idx 5) a una cola con callback devuelve {cb, arg} al emisor en su
  * propio struct, el emisor llama cb(msg, arg) y repite el ioctl(5) para terminar. */
@@ -191,6 +192,49 @@ static int cb_deliver(unsigned q, void *msg) {  /* 1 = encolado para un hilo pro
         else LOG("dlv lleno: mensaje a %#x perdido", q);
     }
     pthread_mutex_unlock(&cb_m); return k >= 0;
+}
+
+/* Servicio de memoria grm_ma.ko (cola 0x14c0424, mensaje de 44 B). Código = u16 de m[0]; tabla de grm_ma.ko:ma_user_sync_cb (medida):
+ *  1 dmm_open  in=m+4  out=m+28 {estado, phys, tamaño, handle}   2 dmm_close  out=m+8    3 create_msp in={base,tamaño,flag,nombre@m+9} out=m+32 {estado, handle}
+ *  4 inválido  5/6 cache flush/invalidate in=m+8 out=m+4          7 findbyname in=nombre@m+4 out=m+20 {estado, phys, tamaño, handle}  8 findbyphys out=m+8
+ *  9 malloc in={handle,tamaño,alineación} out=m+16 {estado, ptr}  10 free in={handle,ptr} out=m+16   11-13 compact out=m+8/m+16/m+8.
+ * shortcut: cada área son 64 MiB anónimos con asignador de rampa; los tamaños reales vienen de DmmConfig.bin (no está en el firmware extraído). */
+static struct { unsigned h, phys, size, off; char name[17]; } msps[64]; static int nmsps; static pthread_mutex_t ma_m = PTHREAD_MUTEX_INITIALIZER;
+static unsigned ma_named = 0x80000000u, ma_dmm = 0xb0000000u;
+static int msp_new(const char *name, unsigned phys, unsigned size) {  /* con el cerrojo tomado; devuelve el índice */
+    if (nmsps >= 64) return -1;
+    msps[nmsps].h = 0xca0000u + nmsps + 1; msps[nmsps].phys = phys; msps[nmsps].size = size; msps[nmsps].off = 0;
+    strncpy(msps[nmsps].name, name, 16); msps[nmsps].name[16] = 0; return nmsps++;
+}
+static int msp_by_h(unsigned h) { for (int k = 0; k < nmsps; k++) if (msps[k].h == h) return k; return -1; }
+static void ma_service(unsigned *m) {
+    unsigned code = m[0] & 0xffff; int k; pthread_mutex_lock(&ma_m);
+    switch (code) {
+    case 1: { char nm[17]; strncpy(nm, (char *)m + 9, 16); nm[16] = 0;
+        for (k = 0; k < nmsps; k++) if (!strcmp(msps[k].name, nm) && msps[k].phys >= 0xb0000000u) break;
+        if (k == nmsps) { k = msp_new(nm, ma_dmm, 0x4000000); ma_dmm += 0x4000000; }
+        m[7] = k < 0 ? (unsigned)-12 : 0; if (k >= 0) { m[8] = msps[k].phys; m[9] = msps[k].size; m[10] = msps[k].h; }
+        LOG("MA open '%s' -> phys %#x handle %#x", nm, k >= 0 ? msps[k].phys : 0, k >= 0 ? msps[k].h : 0); break; }
+    case 2: k = msp_by_h(m[1]); if (k >= 0) msps[k].off = 0; m[2] = 0; LOG("MA close %#x (libera todas sus reservas)", m[1]); break;  /* open → malloc(todo) → close → open → malloc… (hal_create) */
+    case 3: { char nm[17]; strncpy(nm, (char *)m + 9, 16); nm[16] = 0; k = msp_new(nm, m[1], m[2]);
+        m[8] = k < 0 ? (unsigned)-1 : 0; m[9] = k < 0 ? 0 : msps[k].h; LOG("MA create_msp '%s' base %#x size %#x -> handle %#x", nm, m[1], m[2], m[9]); break; }
+    case 5: case 6: m[1] = 0; break;
+    case 7: { char nm[17]; strncpy(nm, (char *)m + 4, 16); nm[16] = 0;
+        for (k = 0; k < nmsps; k++) if (!strcmp(msps[k].name, nm) && msps[k].phys < 0xb0000000u) break;
+        if (k == nmsps) { k = msp_new(nm, ma_named, 0x4000000); ma_named += 0x4000000; }
+        m[5] = 0; m[6] = msps[k].phys; m[7] = msps[k].size; m[8] = msps[k].h; LOG("MA findbyname '%s' -> phys %#x handle %#x", nm, m[6], m[8]); break; }
+    case 8: m[2] = (unsigned)-9; break;
+    case 9: { unsigned al = m[3] > 16 ? m[3] : 16; k = msp_by_h(m[1]);
+        if (k < 0) { m[4] = (unsigned)-9; m[5] = 0; LOG("MA malloc handle %#x desconocido", m[1]); break; }
+        unsigned off = (msps[k].off + al - 1) & ~(al - 1);
+        if (off + m[2] > msps[k].size) { m[4] = (unsigned)-12; m[5] = 0; LOG("MA malloc m=%#x %#x %#x en '%s' (off %#x tam %#x): sin espacio", m[1], m[2], m[3], msps[k].name, msps[k].off, msps[k].size); break; }
+        m[4] = 0; m[5] = msps[k].phys + off; msps[k].off = off + m[2]; LOG("MA malloc %#x/%#x en '%s' -> %#x", m[2], al, msps[k].name, m[5]); break; }
+    case 10: m[4] = 0; break;
+    case 11: case 13: m[2] = 0; break;
+    case 12: m[4] = 0; break;
+    default: LOG("MA código %u sin modelar", code);
+    }
+    pthread_mutex_unlock(&ma_m);
 }
 
 int ioctl(int fd, unsigned long req, ...) {
@@ -240,21 +284,12 @@ int ioctl(int fd, unsigned long req, ...) {
             unsigned *t5 = (unsigned *)w[1];
             unsigned char *m = (unsigned char *)t5[0];
             if (t5[1]) return 0;  /* segunda llamada del emisor: fin del callback síncrono */
+            { static int ns5; const char *e = getenv("STACKQ"); if (e && hexv(e, 0) == w[0] && ++ns5 == 3) raise(SIGUSR1); }  /* STACKQ=qid: pila del emisor en el 3.er envío */
             { pthread_mutex_lock(&cb_m); int k = cb_find(w[0]); if (k >= 0) { t5[1] = (unsigned)cbs[k].cb; t5[2] = (unsigned)cbs[k].arg; } pthread_mutex_unlock(&cb_m);
               if (k >= 0) { if (getenv("VERB")) LOG("snd_sync_msg %#x -> callback directo", w[0]); return 0; } }
             if (w[0] == 0x8f013a) { if (m[2]) LOG("LOG %s", (char *)m + 2); else if (getenv("VERB")) { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
             else if (w[0] == 0x3e014d) backup_service((unsigned *)m);
-            else if (w[0] == 0x14c0424 && ((unsigned *)m)[0] == 7) {  /* área de memoria por nombre (dmm): {7, nombre[16], estado, phys, tamaño, ?} */
-                static unsigned next = 0x80000000;
-                unsigned *r = (unsigned *)m + 5;
-                r[0] = 0; r[1] = next; r[2] = 0x4000000; r[3] = 0; next += 0x4000000;  /* shortcut: 64 MiB por área en orden; tamaños reales en DmmConfig.bin */
-                LOG("dmm área '%s' -> phys %#x size %#x", (char *)m + 4, r[1], r[2]); return 0; }
-            else if (w[0] == 0x14c0424 && (((unsigned *)m)[0] == 1 || ((unsigned *)m)[0] == 9)) {  /* dmm código 1 = crear área {1, tamaño?, "\0nombre"…}; 9 = reservar {9, 0, tamaño, alineación}: respuesta en +0x14 como el código 7 */
-                static unsigned pool = 0xb0000000u; unsigned *q = (unsigned *)m, *r = q + 5, sz, al;
-                if (q[0] == 1) { sz = 0x4000000; al = 0x1000; } else { sz = q[2]; al = q[3] > 0x1000 ? q[3] : 0x1000; }
-                pool = (pool + al - 1) & ~(al - 1);
-                r[0] = 0; r[1] = pool; r[2] = sz; r[3] = 0; if (q[0] == 1) { q[7] = 0; q[8] = pool; q[9] = sz; }  /* código 1: el resultado va en +0x1c (MAMessage::send leía 0x4000000 = tamaño como error) */
-                LOG("dmm código %u (%s) -> phys %#x size %#x", q[0], q[0] == 1 ? (char *)m + 9 : "reserva", pool, sz); pool += (sz + 0xfff) & ~0xfffu; return 0; }
+            else if (w[0] == 0x14c0424) { ma_service((unsigned *)m); return 0; }
             else { char h[200]; int k, o = 0; for (k = 0; k < 16; k++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[k]);
                 LOG("uipc snd_sync_msg qid=%#x datos=%s", w[0], h); }
             return 0; }
@@ -291,6 +326,12 @@ int ioctl(int fd, unsigned long req, ...) {
     }
     if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC) {  /* dispositivo no modelado: éxito, registrado las 5 primeras veces por (dispositivo, orden) y luego cada 4096 */
         static struct { char d[32]; unsigned long r; unsigned n; } seen[64]; static int ns; int k;
+        if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0x80048206 && arg) *(unsigned *)arg = 0x20000;  /* tamaño de la ventana de registros de la GPU (rm_reg_init lo pasa a mmap de /dev/mem; con 0 se mapeaba 1 página y el código escribe en +0x1804) */
+        if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0xc004820d) {  /* espera de interrupción de la GPU (libObj+0x6c5320 repite hasta salida != 0) */
+            const char *e = getenv("GPUIRQ_MS"); unsigned ms = e ? (unsigned)num(e) : 20;  /* GPUIRQ_MS=n: IRQ simulada cada n ms (20 por defecto, necesaria para que termine la init GL); 0 = GPU ociosa, duerme */
+            if (ms && arg) { usleep(ms * 1000u); *(unsigned *)arg = 1; return 0; }
+            for (;;) sleep(3600);
+        }
         if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0xc0048211 && arg) *(unsigned *)arg = 0;  /* espera de la GPU de DMP (libObj+0x6c53e0): repite mientras la salida != 0 → «ya ha terminado» */
         pthread_mutex_lock(&semlock);
         for (k = 0; k < ns && (seen[k].r != req || strcmp(seen[k].d, devname[fd])); k++);
@@ -299,7 +340,7 @@ int ioctl(int fd, unsigned long req, ...) {
         pthread_mutex_unlock(&semlock);
         if (n == 3 && getenv("DEVSTACK")) raise(SIGUSR1);  /* pila del llamador de la 4.ª repetición */
         if (n < 5 || !(n & 4095)) { Dl_info di; void *ra = __builtin_return_address(0); int ok = dladdr(ra, &di) && di.dli_fname;
-            LOG("ioctl(%s, %#lx, %p) arg0=%#x [n=%u] desde %s+%#lx", devname[fd], req, arg, arg ? *(unsigned *)arg : 0, n, ok ? di.dli_fname : "?", ok ? (unsigned long)ra - (unsigned long)di.dli_fbase : 0UL); }
+            LOG("ioctl(%s, %#lx, %p) arg0=%#x [n=%u] desde %s+%#lx", devname[fd], req, arg, (unsigned long)arg > 0x10000 ? *(unsigned *)arg : (unsigned)(unsigned long)arg, n, ok ? di.dli_fname : "?", ok ? (unsigned long)ra - (unsigned long)di.dli_fbase : 0UL); }
         return 0;
     }
     if (!r) r = dlsym(RTLD_NEXT, "ioctl");
@@ -342,7 +383,6 @@ static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, L
 }
 #include <dirent.h>
 /* DUMPAT=n: a los n s manda SIGUSR1 a cada hilo (uno por segundo) para ver dónde está parado cada uno */
-static int num(const char *t) { int v = 0; while (*t >= '0' && *t <= '9') v = v * 10 + *t++ - '0'; return v; }  /* sin atoi: el sysroot nuevo enlaza __isoc23_strtol, que la glibc 2.11 no tiene */
 static void *dumper(void *a) {
     sleep(num(getenv("DUMPAT"))); (void)a; load_maps();
     DIR *d = opendir("/proc/self/task"); struct dirent *e; int tids[512], n = 0;

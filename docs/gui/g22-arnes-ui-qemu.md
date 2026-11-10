@@ -128,9 +128,34 @@ Cadena resuelta, en el orden en que cada tramo bloqueaba el arranque (todo medid
 Estado tras el avance 19: `im.elf` ya no aborta dentro del GL/`hal_create` y carga `libWlanResource`, pero acaba en un SIGSEGV **no determinista** (a veces `libObj+0x7b0359` con `memset` sobre un puntero devuelto por el asignador de `MemorySpace`, a veces un mutex nulo en `libpthread`), precedido de `MemorySpaceImpl.cpp:437 partially duplicated element found`. Hipótesis (INFERENCIA): las áreas que el shim devuelve para dmm 1/9 solapan o repiten elementos que `MemorySpaceImpl` ya conoce (el tamaño y la alineación de las reservas y el orden código 9 → 1 no coinciden con lo que haría `dmm.ko`), y el segundo SEGV es una carrera por un objeto aún no inicializado.
 
 Siguiente (F2, continuación):
-- **dmm**: desensamblar el cliente `MemorySpaceImpl` (`libObj+0x6b86c8…0x6b9300`) para fijar el formato real de las respuestas de los códigos 1 y 9 y los demás (2–8); hasta ahora solo se conoce el 7.
-- **Determinismo**: ejecutar varias veces con `TIDLOG` y comparar el primer hilo en divergir (la carrera sugiere que algún servicio responde antes de que su cola receptora esté registrada).
+- ~~**dmm**: formato de las respuestas de los códigos 1 y 9~~ (resuelto en §5.3: el servicio es `grm_ma.ko`).
+- ~~Determinismo~~: resuelto (§5.3), 3/3 ejecuciones idénticas.
 - Servicios aún sin respuesta: `0x80003b` (5 envíos), `0x7a0020` (input.ko), `0x5700f9`, `0x5a0048`, `0x16f4010`; backup `op 1`/`op 5`.
+
+### 5.3 Avance 20 (09-11-2026): servicio de memoria `grm_ma.ko`, GPU y arranque completo hasta el Window System
+
+El servicio `0x14c0424` **no es `dmm.ko` sino `grm_ma.ko`** (`MAMessage`); su despachador `ma_user_sync_cb` (desensamblado ARM, tabla de saltos) fija el formato real. Código = u16 de `m[0]`; entrada en `m+4`, salida según el código:
+
+| Código | Operación | Entrada → salida |
+|---|---|---|
+| 1 | `dmm_open` | `in[0]`=tipo (0x258), nombre en `m+9` → `m[7]` estado, `m[8]` phys, `m[9]` tamaño, `m[10]` handle del mspace |
+| 2 | `dmm_close` | `m[1]`=handle → `m[2]` (libera todas las reservas del handle: `open → malloc(todo) → close → open → malloc…`) |
+| 3 | `create_msp` | `{base, tamaño, flag, nombre@m+9}` → `m[8]` estado, `m[9]` handle |
+| 5 / 6 | cache flush / invalidate | `m[1]` |
+| 7 | `findbyname` | nombre en `m+4` → `m[5]` estado (−9 si no existe), `m[6]` phys, `m[7]` tamaño, `m[8]` handle |
+| 9 | `malloc` | `{handle, tamaño, alineación}` → `m[4]` estado, `m[5]` puntero (phys) |
+| 10 | `free` | `{handle, ptr}` → `m[4]` |
+| 4 | inválido | — |
+
+El shim (`ma_service`) lleva una tabla de mspaces (64 MiB anónimos por área, asignador de rampa; el código 7 devolvía antes un área **nueva** en cada consulta del mismo nombre: de ahí `MemorySpaceImpl.cpp:437 partially duplicated element`). Resto de lo emulado en esta tanda:
+
+- **GPU de DMP** (`/dev/dmpgles2`): `0x80048206` → tamaño de la ventana de registros (`0x20000`; con 0 se mapeaba una página y `rm_reg_init` escribía en `+0x1804`, SIGSEGV); `0xc0048211` (espera de fin) → salida 0; `0xc004820d` (espera de interrupción, bucle de `libObj+0x6c5320`) → **IRQ simulada cada 20 ms** (`GPUIRQ_MS`; con 0 la GPU duerme y la init GL no termina; sin espera el hilo hacía 78 millones de ioctl/70 s).
+- ioctl con argumento entero (p. ej. `UI_SET_EVBIT` de `/dev/uinput`) ya no se desreferencian en el registro (SIGSEGV del propio shim).
+- `STACKQ=qid` (pila del emisor en el 3.er envío síncrono a esa cola).
+
+**Estado de referencia (3 de 3 ejecuciones)**: `alive=<pid> threads=73 modulos=60–61`, sin aborto, sin SIGSEGV. `libgrm.so` termina su carga (`grm_init` retorna), `hal_create` pasa, arranca el Window System (`[WindowServer] init … w = 640 h = 480 buffer num = 2`, hilo `UX_WINDOW_SYSTEM`) y se cargan `libuxengine`, `libInfraTp/Indctr/Hotshoe/Sircs/Dial/Lanc`, `libInputServant`, `libScalarDaemon`, `libHapiLib`, `libInfraSelector`. El hilo `HotshoeResource` sondea `0x720018` (≈ 5 envíos/s: comportamiento normal). Nota: **`appFw.so` no existe como biblioteca** en este firmware; las suposiciones de los avances 7–8 sobre «etapa 4» eran erróneas.
+
+Siguiente: F3 (pantalla) y F4 (entrada). Pistas: el Window System usa 2 búferes de 640×480 y un hilo propio; `GRM_fbrm*YUV` son stubs de 8 bytes en `libObj` (`0x614924…0x61496c`, tablas de salto); la presentación real sale por servicios del «kernel» aún sin respuesta (`0x80003b`, `0x5700f9`, `0x5a0048`, `0x16f4010`, `0x7a0020`).
 
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 

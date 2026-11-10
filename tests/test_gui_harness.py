@@ -53,3 +53,18 @@ def test_shim_compila_y_exporta_los_ganchos(tmp_path: Path) -> None:
     syms = subprocess.run(["readelf", "--dyn-syms", "-W", str(so)], capture_output=True, text=True, check=True).stdout
     for hook in ("open", "open64", "ioctl", "mmap", "fopen", "dlopen", "pthread_cond_wait", "munmap", "abort"):
         assert f" {hook}\n" in syms or f" {hook}@" in syms, hook
+
+
+@pytest.mark.skipif(not (os.environ.get("A6000_HARNESS_RUN") and (WORK / "base.cpio.gz").exists() and shutil.which("qemu-system-arm")),
+                    reason="prueba lenta (≈ 2 min): A6000_HARNESS_RUN=1 y setup.sh hecho")
+def test_arranque_en_qemu_llega_a_la_pila_de_ventanas() -> None:
+    """Referencia del avance 19+: im.elf vivo, > 55 módulos cargados, sin aborto; libgrm cargada y WindowServer iniciado."""
+    env = {**os.environ, "SHIMENV": "WAIT=70 CVWAIT=0 POKE=fef348 FULLLOG=1"}
+    out = subprocess.run([sys.executable, str(HARNESS / "run.py"), str(WORK), str(HARNESS / "im.sh"), "220"],
+                         capture_output=True, text=True, check=True, env=env).stdout
+    head = next(line for line in out.splitlines() if line.startswith("alive="))
+    assert "alive=" in head and "alive= " not in head, head          # im.elf sigue vivo
+    assert int(head.split("modulos=")[1]) >= 55, head
+    assert "EXIT=" not in out
+    log = (WORK / "guest.log").read_text(errors="replace")
+    assert "B  Ii 080_libgrm.so" in log and "Initialize Window System" in log
