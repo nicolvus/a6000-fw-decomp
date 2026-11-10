@@ -538,7 +538,7 @@ static unsigned long hexv(const char *s, const char **end) { unsigned long v = 0
 static unsigned long gpu_pc;  /* libObj+0x6c4c46: «str r1,[r3,r0]» de rm_reg_write (off=r0, valor=r1, base=r3); se sustituye por UDF para ver cada escritura */
 static volatile unsigned gpu_kicks;
 /* Experimento (TRACEFN=716800,6cd1e0,...): traza de una sola vez (UDF + restauración) de la entrada de esas funciones de libObj: r0-r3 y lr. */
-static struct { unsigned long pc; unsigned short orig; } trc[32]; static int ntrc; static unsigned long trc_base;
+static struct { unsigned long pc; unsigned short orig; } trc[32]; static int ntrc; static unsigned long trc_base; static volatile unsigned long app_sys;  /* app_sys: r0 de AppSystem::dispatch (libObj+0x7eed0c) en su primera traza */
 static void on_trace(int sig, siginfo_t *si, void *u) {
     mcontext_t *c = &((ucontext_t *)u)->uc_mcontext; unsigned long pc = c->arm_pc & ~1UL; int i;
     if (gpu_pc && pc == gpu_pc) {  /* rm_reg_write: se hace el almacenamiento y se salta la instrucción; 0x1804 = timbre de la GPU (GPUEMU) */
@@ -547,6 +547,7 @@ static void on_trace(int sig, siginfo_t *si, void *u) {
         c->arm_pc += 2; return;
     }
     for (i = 0; i < ntrc; i++) if (trc[i].pc == pc) {  /* efp, no LOG: fprintf en un manejador de señal puede bloquearse con el cerrojo de stderr de otro hilo */
+        if (pc == trc_base + 0x7eed0c) app_sys = c->arm_r0;
         efp("[shim] TRACE %lx r0=%lx r1=%lx r2=%lx r3=%lx lr=%lx\n", pc, c->arm_r0, c->arm_r1, c->arm_r2, c->arm_r3, c->arm_lr);
         for (const char *e = getenv("TRACEPEEK"); e && *e; ) { unsigned long a = hexv(e, &e); efp("[shim]   PEEK %lx = %08x\n", a, *(unsigned *)(trc_base + a)); while (*e == ',') e++; }
         { const char *e = getenv("TRACEDEREF");  /* «reg:off:palabras» (hex): vuelca palabras en *(reg+off), p. ej. 4:24:90 = tabla de teclas de InfraInput; con «d» delante («d0:a0:20») vuelca desde reg+off sin desreferenciar */
@@ -658,6 +659,21 @@ int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name
     if (real && getenv("GMIPROBE") && !strcmp(name, "model/ROOT") && info == 6) {  /* una vez: prueba info 0..10 de model/ROOT con una lista propia */
         static int done; if (!done++) { void (*ctor)(void *) = dlsym(RTLD_DEFAULT, "_ZN9ParamListC1Ev"), (*dtor)(void *) = dlsym(RTLD_DEFAULT, "_ZN9ParamListD1Ev");
             if (ctor && dtor) for (int i = 0; i <= 10; i++) { char buf[256] = {0}; ctor(buf); int rr = real(self, name, i, buf, 0); LOG("GMIPROBE model/ROOT info %d -> %d", i, rr); dtor(buf); } }
+    }
+    if (!r && real && getenv("GMIDRAIN") && !strcmp(name, "model/ROOT")) {  /* GMIDRAIN=1: la vista pide un modelo que aún no existe → se vacía reentrantemente la cola de Appframework (hasPending 0x7eec8c / pop 0x7ef940 / dispatch 0x7eed0c) y se reintenta */
+        static unsigned char *app; static int tries; void **pvm = lobj_h ? dlsym(lobj_h, "pViewManager") : 0;
+        unsigned char *base = lobj_h ? (unsigned char *)dlsym(lobj_h, "_ZN13viewManagerIf8openViewEPKci") - 0x1251fd : 0;
+        if (base && pvm && *pvm && tries++ < 3) {
+            void *vm = *pvm, *mm = *(void **)((char *)vm + 0x18);
+            if (!app) { app = (unsigned char *)app_sys; LOG("GMIDRAIN AppSystem=%p (hace falta TRACEFN=7eed0c)", app); }
+            if (app) { int (*pend)(void *) = (int (*)(void *))(base + 0x7eec8c + 1); void *(*pop)(void *) = (void *(*)(void *))(base + 0x7ef940 + 1); void (*disp)(void *, void *) = (void (*)(void *, void *))(base + 0x7eed0c + 1);
+                unsigned (*gdest)(void *) = dlsym(lobj_h, "_ZN5Event7getDestEv"); void *stash[256]; int ns = 0, n = 0, nd = 0;
+                while (n < 400 && pend(app)) { void *ev = pop(*(void **)(app + 0x10)); n++; unsigned d = gdest ? gdest(ev) : 0xff;
+                    if (d == 2) { disp(app, ev); nd++; } else if (ns < 256) stash[ns++] = ev; }  /* solo eventos puros de ModelManager (dest 2): los de ViewManager reentrantes derriban el proceso */
+                { int (*pe)(void *, void *) = dlsym(RTLD_NEXT, "_ZN12ModelManager9pushEventEP5Event"); for (int k = 0; k < ns; k++) pe(mm, stash[k]); }
+                LOG("GMIDRAIN despachados=%d reencolados=%d", nd, ns);
+                r = real(self, name, info, list, flt); LOG("GMIDRAIN %d eventos; getModelInfo(%s,%d) -> %d", n, name, info, r); }
+        }
     }
     if (!r && real && getenv("GMIRETRY")) for (int k = 0; k < 20 && !r; k++) { usleep(50000); r = real(self, name, info, list, flt); if (r) LOG("getModelInfo(%s, %d) acierta en el reintento %d", name, info, k + 1); }  /* ¿carrera con la inicialización del modelo? */
     if (getenv("GMILOG")) { static int n; if (n++ < 400) LOG("getModelInfo(%s, %d) -> %d", name, info, r); }
