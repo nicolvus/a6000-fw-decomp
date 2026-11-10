@@ -103,6 +103,8 @@ def camera_files(base: bytes, ps: list[tuple[int, bytes, str]], prueba: int | No
         rows.append((phys, len(data), len(blob), hashlib.md5(orig).hexdigest(), hashlib.md5(data).hexdigest(), what))
         blob += data
     sh = ["#!/bin/sh", "# pp_ram.sh (G18, generado por pp_curves_patch.py): gammas PP en la RAM del núcleo. Lo lanza s_start_android.sh.",
+          # G27: el busybox de la cámara trae md5sum y cut como applets, pero sin enlaces en el PATH (3.60: «md5sum: not found» y no escribió nada)
+          "md5sum() { /bin/busybox md5sum \"$@\"; }; cut() { /bin/busybox cut \"$@\"; }",
           "D=/usr/bin/pp_curvas.bin", "rd() { dd if=/dev/mem bs=2 skip=$1 count=$2 2>/dev/null | md5sum | cut -c1-32; }  # en medias palabras: $(( )) de ash es de 32 bits",
           "echo \"pp_ram: inicio $(date)\"", "ok=1"]
     for phys, n, off, mo, _, what in rows:
