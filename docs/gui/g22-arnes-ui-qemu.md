@@ -211,6 +211,14 @@ Causa del bloqueo de `Appframework` (§5.6) y arreglos en el shim (todos por def
 - **Tabla de nombres GL** (`libObj` file `0x10370e0`, 196 nombres `gl*`/`egl*`, paso `0x30`): son cadenas en línea; la tabla de punteros asociada no está identificada (el candidato `0xfca780` da direcciones sin disparo con `TRACEFN`: glDrawElements `0x597014`, glClear `0x462cec`, glBindTexture `0x45fd7c`, etc. → **no verificado**). Las únicas parejas {nombre, función} halladas son 11 `egl*` en `0x1037024`.
 - **Estado**: F3 no cerrada. Falta (a) saber si la vista de arranque dibuja algo (puede ser negra), (b) alcanzar `ViewRoot*` (publicador del primer evento `VM`) y (c) decodificar y rasterizar las listas de la GPU de DMP. F4/F5 siguen dependiendo de F3.
 
+### 5.10 Avance 27 (10-11-2026): `ViewRoot` abierta y `InputService` recibe teclas
+
+- **La clave de `openView` es `view/ROOT`** (nombres `view/…` de `viewUnified2/8.so`: `view/ROOT`, `view/SCALAR`, `view/SNAP_SHOT_BOOT`, `view/ROOT_SELECTOR`…), no `ViewRoot`. `SHIMENV='OPENVIEW=view/ROOT OPENVIEWAT=40'` carga `ViewRootToInstance`, `ViewRootSelector`, `ViewRootPowerSw` (`[ViewRootPowerSw] getCurrentLayout_POWER_ON`, `Root Draw`) y `ModelRoot`, `ModelAirplane`, `ModelJet`…; `InputService::activate` ya registra la tecla (`toActive … key_code=0x2 event_code=0x15010010`).
+- La vista de arranque espontánea es `ViewScalarboot` (= `view/SNAP_SHOT_BOOT`, arranque desde instantánea); la transición a `ViewRoot` no ocurre sola porque falta el evento de av-cam. Pendiente: `ViewRootPowerSw` queda en `USBAndClockReady Non-Display` (`getTimeSettled … TIME get error`: falta la hora/reloj).
+- **F4 (entrada)**: con `KEYQ=7a0020` e `INJECT` el mensaje llega a `I-InputMain` → `InputService` (`callback_convert_not_user_operation … INH event_code=0x15010010`; las repeticiones dan «same event»). Corregido en el shim el separador de `INJECT` (solo el primer mensaje se separaba por `/`; los tiempos son **hexadecimales**). No se ha encontrado aún la combinación `w1…w5` que dispare una acción de vista; y sin imagen no se puede comprobar el efecto.
+- **F3**: el *bitmap* de pantalla (`/dev/stream off=0xb4000000`) sigue a cero con `ViewRoot` activa (`MEMSCAN`). Sigue bloqueada por la GPU de DMP.
+- `DLSYMSTACK=subcadena` (nuevo): pila del que pide ese símbolo.
+
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
 Verificado: `build.sh` reproduce byte a byte el `sonyshim.so` que se estaba usando (md5 `5307f8ae…` antes de las correcciones);
@@ -240,7 +248,7 @@ despreciable), `direct_service` responde 0 a todo.
 | F1 Cobertura de uipc (**ioctl hechos 09-11-2026; faltan servicios**) | `idx 3/8/9/13` y callbacks modelados (§2.1); quedan servicios de kernel sin respuesta (`0x7a0020`, `0x5700f9`, `0x5a0048`, `0x16f4010`, `0x61003c`), backup `op 1`/`op 5` (ids que son punteros) y `snd_sync_direct 0x910042` | Arranque sin ninguna línea «descartado»/«sin modelar» |
 | F2 Desbloquear `grm_init` | (a) con `TIDLOG` seguir al trabajador B tras la respuesta `0xd9016e` hasta su siguiente espera; (b) identificar el servicio de la segunda petición (`0xaf404a`) y responderla como `0xd9016e`; (c) si el bloqueo es el asignador, imitar `65f420` (pools) en lugar de `malloc`; (d) si son los *callbacks* GL, sustituir la ruta GL entera (`0x717830` con `SKIPFN`) y satisfacer `grm_ma` con un asignador falso que no aborte en la limpieza | `grm_init` retorna, `THREAD_INFRA0/1` avanzan y **`appFw.so` se carga** (etapa 4) |
 | F3 Pantalla (**bloqueada solo por la GPU, §5.6**) | No hay `/dev/fb0`: enganchar la presentación de [G03](g03-compositor.md) (`GRM_fbrmUpdateYUV` / `0x12e6d0`) para volcar la superficie YUV a `/tmp` y convertirla a PNG en el anfitrión | Imagen reconocible del menú o de la pantalla de disparo |
-| F4 Entrada (**pendiente; la UI ya arranca, §5.6**) | Modelar `input`/`sircs` (teclas, rueda) por `uipc` o `/dev/input` para navegar | Cambio de pantalla al inyectar una tecla |
+| F4 Entrada (**parcial: ViewRoot abierta y teclas llegan a InputService, §5.10; sin efecto verificable**) | Modelar `input`/`sircs` (teclas, rueda) por `uipc` o `/dev/input` para navegar | Cambio de pantalla al inyectar una tecla |
 | F5 Uso (**no iniciada: depende de F3**) | Arrancar con los `nflasha15` modificados (3.5x, G10/G12/G15–G27) montando el `/usr` del paquete en `/cam/usr` | Menú modificado visible en emulación antes de instalar en cámara |
 
 Riesgos: la semántica de los servicios de kernel de Sony se infiere del cliente (no hay fuente de los `.ko`); el GPU de DMP no es

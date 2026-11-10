@@ -470,7 +470,7 @@ static void *openviewer(void *a) {
 }
 static void *injector(void *a) {
     char *spec = strdup(getenv("INJECT")), *sp1 = 0; (void)a; unsigned long t0 = 0;
-    for (char *it = strtok_r(spec, ";/", &sp1); it; it = strtok_r(0, ";", &sp1)) {
+    for (char *it = strtok_r(spec, ";/", &sp1); it; it = strtok_r(0, ";/", &sp1)) {
         const char *e; unsigned long at = hexv(it, &e); unsigned q = hexv(e + 1, &e);
         unsigned *m = calloc(64, 4); int n = 0;
         while (*e == ':' || *e == ',') { m[n++] = hexv(e + 1, &e); if (n >= 60) break; }
@@ -576,6 +576,7 @@ void *dlsym(void *h, const char *n) {  /* DLSYMLOG=1: símbolos que pide la UI (
     if (lg < 0) lg = getenv("DLSYMLOG") != 0;
     void *r = d(h, n);
     if (lg && n && h != RTLD_NEXT) LOG("dlsym(%s) -> %p", n, r);
+    { const char *e = getenv("DLSYMSTACK"); if (e && n && strstr(n, e)) raise(SIGUSR1); }  /* pila del que pide ese símbolo */
     return r;
 }
 int system(const char *c) {
