@@ -664,6 +664,15 @@ void *dlopen(const char *f, int fl) {
     }
     return h;
 }
+/* osal_snd_sync_msg(qid, msg, cb, arg): SYNCLOG=1 registra los envíos síncronos que fallan (p. ej. 0xFFFFFC04 = cola local sin manejador registrado) */
+int osal_snd_sync_msg(int qid, void *msg, void *cb, void *arg) {
+    static int (*real)(int, void *, void *, void *);
+    if (!real) real = dlsym(RTLD_NEXT, "osal_snd_sync_msg");
+    int r = real ? real(qid, msg, cb, arg) : -1;
+    { const char *e = getenv("SYNCOK"); while (r && e && *e) { unsigned q = hexv(e, &e); if (*e == ',') e++; if (q == (unsigned)qid) { LOG("SYNCOK qid=%#x -> 0", qid); r = 0; } } }  /* SYNCOK=qid,…: colas locales sin manejador (servicio de otro proceso) que responden «bien» */
+    if (r && getenv("SYNCLOG")) { static int n; if (n++ < 200) { void *lr = __builtin_return_address(0); Dl_info di; int ok = dladdr(lr, &di); LOG("osal_snd_sync_msg qid=%#x ret=%#x lr=%p %s+%#lx msg=%08x %08x %08x", qid, r, lr, ok ? di.dli_fname : "?", ok ? (unsigned long)((char *)lr - (char *)di.dli_fbase) : 0, ((unsigned *)msg)[0], ((unsigned *)msg)[1], ((unsigned *)msg)[2]); } }
+    return r;
+}
 /* ModelManager::pushEvent(Event*): PUSHLOG=1 registra quién publica eventos de modelo (lr y primeras palabras del Event) */
 int _ZN12ModelManager9pushEventEP5Event(void *mm, unsigned *ev) {
     static int (*real)(void *, void *);

@@ -65,6 +65,7 @@ Otros ganchos: cualquier otro `/dev/*` → fd inerte sobre `/dev/null` con `mmap
 | `POKE=dir` | escribe la dirección de `malloc` en `libObj+dir` (asignador del GPU: `fef348`) |
 | `SKIPFN=dir[=v],…` | sustituye funciones Thumb de `libObj` por `movs r0,#v; bx lr` |
 | `STARTEV=id,…` | publica `Event(id,2,0)` con `ModelManager::pushEvent` (11004002/12/13 = arranque de modelos) |
+| `SYNCLOG=1` / `SYNCOK=qid,…` | registra los `osal_snd_sync_msg` que fallan (qid, retorno, llamador) / hace que esas colas locales sin manejador respondan 0 |
 | `TRACEFN=dir,…` / `TRACEPEEK=dir,…` | traza única de entrada (`r0–r3`, `lr`) mediante UDF + `SIGILL`; `TRACEPEEK` lee palabras de `libObj` en cada traza |
 | `WATCH=dir` | hilo que sondea cada ms `libObj+dir` y registra cambios |
 | `DUMPAT=n` | a los n s manda `SIGUSR1` a cada hilo: pila con nombre |
@@ -363,6 +364,13 @@ Método: contrastar línea a línea el registro real (`mem-20261020-log`, 129.72
 - **Herramientas/avisos**: `STARTEV=id[:valor[:clave]]`, `STARTGAP` (hex, s), `STACKTXT`, `VERB5`; segfault intermitente en el arranque (`IMCfg Backup_read_multi() NG`, sin relación con `STARTEV`: repetir la ejecución); el kernel netboot solo ve 8 vCPU (`-smp` mayor no sirve).
 - **Hipótesis descartada**: que `0x7eac60` devuelva error (rama `0x7ed8bc`→`0x7eb4d8`): `TRACEFN=7eb4d8` no se dispara en ningún momento de la ejecución con `Mi 00A` colgado. Lectura de código: `Mi` = `0x7f11ca` (crea el modelo con `…ToInstance` y llama a `vtable+0x28`, su `init`), registrado como `B`(`0x7ead5a`, evento `0x11004008`, estado 3) y `E`(`0x7ead80…`); el `init` de `ModelSalvage` entra en su máquina propia (`ActionMemoriseWaitSalvageInfoStable`) y el `E` no llega. El hilo `Appframework` queda en su bucle `0x7ed984`→`0x7eeee8` (ocioso).
 - **Siguiente**: (1) averiguar qué dispara `InfraSalvageStatus` hacia `ModelSalvage` tras su `Init`; (2) o saltar `00A` quitándolo de la lista de modelos (la tabla no está como enteros planos en `.rodata`; buscar `ModelIdSoTable` en `0x7ee360`).
+
+#### 5.18r Origen del `NG 0xFFFFFC04` de `getSalvageStatus` y límite del `Mi 00A` (11-11-2026)
+
+- Herramientas nuevas del shim: `SYNCLOG=1` (interpone `osal_snd_sync_msg` y registra qid, retorno, llamador `lib+off` y 3 primeras palabras de las llamadas que fallan) y `SYNCOK=qid,…` (esas colas responden 0).
+- **Medido**: `0xFFFFFC04` no sale del `uipc` del shim (no hay `sync5` previo) sino de `libosal_uipc.so` `__osal_snd_sync_msg` (`+0x40b0`): con el bit `0x8000` del qid a 0 la cola es **local al proceso** y, si no hay manejador registrado (`[cola+0x18]==0`), devuelve `0xFFFFFC04` (código de cola inexistente). Fallos en el arranque: qids `0x1088262`, `0x12282f6`, `0x1428403`, `0xa2827a`, `0x13e8402` (`WRPPR_NET_SVC … error -1020`) y **`0xae8114`** (llamador `libObj+0x41e0f7`, mensaje `0x1003 w1=1`, 0x14 B), justo antes del `NG` de `getSalvageStatus`. Ningún módulo cargado registra esos grupos: en la cámara los atienden otros procesos.
+- **Resultado negativo**: `SYNCOK=ae8114` elimina el `NG` pero `Mi 00A` sigue sin `E` (`ActionMemoriseWaitSa…` y reposo): el `NG` y la espera de `00A` son **independientes** (confirma §5.18p). Corrección: `libObj+0x7af520` no es código (la sección que lo rodea contiene formato de `vsnprintf`); el callback de `reg_sync_msg_queue_cb qid=0x17f04b0` queda por localizar.
+- **Siguiente**: localizar qué evento libera `ActionClearWait…` (`0x5d860c`): buscar quién escribe `this+0xa1=0` en `ModelSalvage` (tabla de acciones por posición relativa, no por puntero absoluto) y publicarlo con `STARTEV`; alternativa: parchear `0x5d85f0` (`ActionMemoriseWait…`) para que no marque `+0xa1`.
 
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
