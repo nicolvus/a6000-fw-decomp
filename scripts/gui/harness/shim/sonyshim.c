@@ -158,10 +158,10 @@ static int direct_service(unsigned qid, unsigned *m) {
 
 /* Buzones de colas dinámicas de kernel (dynamic_id tipo 0x2a): el servicio 0xd9016e (registro de puerto de vídeo/OSD) se responde copiando la petición. */
 static struct { unsigned q; void *msg; } mbx[16];
-static unsigned dynq[64]; static int ndynq;  /* colas creadas por dynamic_id tipo 0x2a (solo ellas tienen buzón) */
+static unsigned dynq[256]; static int ndynq;  /* colas creadas por dynamic_id tipo 0x2a (solo ellas tienen buzón) */
 static pthread_mutex_t mbx_m = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t mbx_c = PTHREAD_COND_INITIALIZER;
-static void dynq_add(unsigned q) { pthread_mutex_lock(&mbx_m); if (ndynq < 64) dynq[ndynq++] = q; else LOG("dynq lleno: %#x sin buzón", q); pthread_mutex_unlock(&mbx_m); }
+static void dynq_add(unsigned q) { pthread_mutex_lock(&mbx_m); if (ndynq < 256) dynq[ndynq++] = q; else LOG("dynq lleno: %#x sin buzón", q); pthread_mutex_unlock(&mbx_m); }
 static int is_dynq(unsigned q) { for (int k = 0; k < ndynq; k++) if (dynq[k] == q) return 1; return 0; }
 static void mbx_post(unsigned q, const unsigned *req, int req_id0) {  /* req_id0: dmpNative::InternalCmd (0x61003c) espera req_id 0 en +6 (medido con TRACEFN en 0x6a2612: r2=0xe copiado, r3=0 esperado) */
     unsigned char *b = calloc(1, 0x300); unsigned *body = (unsigned *)(b + 0x20); int k;
@@ -304,6 +304,8 @@ int ioctl(int fd, unsigned long req, ...) {
         case 7: { unsigned *t = (unsigned *)w[1]; LOG("uipc rcv_msg qid=%#x tmo=%d", w[0], (int)t[1]);
             if ((int)t[1] < 0 && getenv("RCVSTACK")) { static unsigned vq[64]; static int nq; int k, ya = 0; for (k = 0; k < nq; k++) if (vq[k] == w[0]) ya = 1; if (!ya && nq < 64) { vq[nq++] = w[0]; raise(SIGUSR1); } }
             { void *mm; int rr = mbx_take(w[0], (int)t[1], &mm); if (rr == 0) { *(void **)t[0] = mm; LOG("rcv_msg qid=%#x <- respuesta", w[0]); return 0; } if (rr != 1) return rr; }
+            if ((int)t[1] < 0) {  /* espera indefinida en una cola estática: se le da buzón para que una respuesta posterior (ACKQ0) la despierte */
+                void *mm; dynq_add(w[0]); if (mbx_take(w[0], -1, &mm) == 0) { *(void **)t[0] = mm; LOG("rcv_msg qid=%#x <- respuesta (cola estática)", w[0]); return 0; } }
             return kernel_sleep((int)t[1]); }
         case 13: {  /* wait_cb {0, &out[4]}: el proxy espera una entrega y llama out[0](out[2], out[1]) */
             unsigned *out = (unsigned *)w[1];
@@ -375,6 +377,10 @@ int ioctl(int fd, unsigned long req, ...) {
             if (w[0] == 0x4015e && !getenv("NO4015E") && is_dynq(((unsigned *)m)[-1])) {  /* libObj+0x8138b8 (ObjStillRecorder…): petición {0, orden, …} con la cola de respuesta en la cabecera (m[-1]); exige {1, orden, 0, …} y, para 0x1000, +0xc = phys de un área de 0xc40 B que mapea de /dev/mem (aquí anónima a cero) */
                 unsigned *rq = (unsigned *)m, rp[12] = { 1, rq[1], 0, rq[1] == 0x1000 ? 0x8f000000u : 0 };
                 mbx_post_raw(rq[-1], rp); LOG("snd_msg 0x4015e orden %#x -> respuesta a %#x", rq[1], rq[-1]); return 0; }
+            { const char *e = getenv("ACKQ0"); int ack = 0;  /* ACKQ0=qid,…: la cola de respuesta va en la palabra 0 y es estática (p. ej. ObjMic → 0x58003f {0x2d0117, 0xa0a0a0a0}); se crea su buzón y se responde con eco y estado 0 */
+              while (e && *e) { if (hexv(e, &e) == w[0]) ack = 1; while (*e == ',') e++; }
+              unsigned rq = ((unsigned *)m)[0];
+              if (ack && rq > 0x10000 && rq < 0x2000000) { if (!is_dynq(rq)) dynq_add(rq); mbx_post(rq, (unsigned *)m, 0); LOG("snd_msg %#x -> acuse ACKQ0 a %#x", w[0], rq); return 0; } }
             { const char *e = getenv("ACKQ"); if (!e) e = "d9016e,7a0029,61003c"; int ack = 0;
               while (*e) { if (hexv(e, &e) == w[0]) ack = 1; while (*e == ',') e++; }
               if (getenv("MSGHEXQ") && hexv(getenv("MSGHEXQ"), 0) == w[0]) {  /* MSGHEXQ=qid: vuelca 4+16 palabras del mensaje y la pila del emisor (2 primeras veces) */
@@ -671,6 +677,18 @@ void *dlopen(const char *f, int fl) {
         }
     }
     return h;
+}
+/* testmode_debugPrint(nivel, cat, ?, fmt, ...) de libObj (+0x7f0cb8; fmt en r3, varargs detrás): DBGPRINT=1 registra cada llamada
+   (errores de las envolturas WRPPR/ObjHandover que en la cámara van a un registro de pruebas). Sin DBGPRINT reenvía 8 palabras al original. */
+int testmode_debugPrint(int lvl, int cat, int x, const char *fmt, ...) {
+    va_list ap; va_start(ap, fmt);
+    if (getenv("DBGPRINT")) { static int n; char b[300]; vsnprintf(b, sizeof b, fmt ? fmt : "(null)", ap); va_end(ap);
+        if (n++ < 3000) { void *lr = __builtin_return_address(0); Dl_info di; int ok = dladdr(lr, &di);
+            LOG("DBG %d/%#x %s+%#lx: %s", lvl, cat, ok ? strrchr(di.dli_fname, '/') + 1 : "?", ok ? (unsigned long)((char *)lr - (char *)di.dli_fbase) : 0UL, b); }
+        return 0; }
+    static int (*real)(int, int, int, const char *, ...); if (!real) real = dlsym(RTLD_NEXT, "testmode_debugPrint");
+    unsigned w[8]; for (int k = 0; k < 8; k++) w[k] = va_arg(ap, unsigned); va_end(ap);
+    return real ? real(lvl, cat, x, fmt, w[0], w[1], w[2], w[3], w[4], w[5], w[6], w[7]) : 0;
 }
 /* SALVAGE=n (hex): la petición 0x1003 de información de salvamento (libObj+0x41e098 → cola 0xae8114, servida por otro proceso en la cámara)
    recibe su respuesta 0x1004 {+0x14 = n entradas}: se entrega al callback real libObj+0x41e420 desde otro hilo (el emisor tiene tomado
