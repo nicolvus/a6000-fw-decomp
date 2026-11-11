@@ -51,3 +51,18 @@ Cámara: ILCE-6000 (fw base 3.21 + CFW). Pruebas en vivo por telnet (`192.168.1.
 2. Lectura del valor en el menú: trazar `0x4a5adc`/notificación `0x8577`; alternativa, descriptor con respaldo NVRAM.
 3. Con cámara: saturación mínima y B&W mirando el byte `+0x24` del mensaje; probar Silent > EFCS; abrir PP tras >5 min y leer `pp_ram.log`.
 4. Localizar el factor de inhibición del nodo EFCS (pid `0x46`) para el gris con Silent On.
+
+## 6. Actualización 11-11-2026 (CFW 3.66–3.73)
+
+Este informe cubría hasta el 3.65; lo posterior, con los cambios que invalidan §3 y §5:
+
+| Versión | Cambio | Estado |
+|---|---|---|
+| 3.67 | S-Log3 con valor de app 2; selector de perfil lee `getModelInfo 0x4a` clave `0x275`; eco `0x4a5836` | selector PP1–PP9 **funciona** (usuario); S-Log2/3 sin diferencia visible |
+| 3.68 | `CamMsgConv` corregida (0x480→10, 0x481→11); EFCS en gris con Silent On (`isGrayedOut`) | sin probar en cámara |
+| 3.69–3.72 | trazas `CFW_TRACE=1` en `libObj` (relativas al PC desde `8afedebe`) | diagnóstico |
+| 3.71 | **parche PP del núcleo en `nflasha3`** (`build_base_pp.py`, G31); desaparecen `pp_ram.sh` y su vigilante | instalado, 100 % Done |
+| 3.73 | repintado instantáneo (el eco marca los ids `0x49`/`0x4a`) y menú **plano** de 6 filas por página | instalado; sin prueba funcional registrada |
+
+Correcciones a §3/§5: «vigilante muerto» y «arreglar el vigilante» quedan **superados** (ya no hay vigilante); «valor vuelve al por defecto» tiene causa medida con el 3.72 (`[obj+8] = −1`, sin notificación; la lectura periódica lo corregía) y arreglo en el 3.73; la estructura de carpetas anidadas de la A6300 **no funciona** en la A6000 (la UI no abre carpetas anidadas y solo muestra 6 filas). Pendientes vivos: [PENDIENTES § G30-C](../PENDIENTES.md).
+

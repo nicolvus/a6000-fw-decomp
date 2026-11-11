@@ -609,3 +609,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 10-11-2026: G22-B avance 35n — `ON_CMP`→`APP_ON` a `0x920168` (registrada por `ObjHandover_Create`, no llamado en el arnés); shim `UPMON`. [G22 §5.18n](../docs/gui/g22-arnes-ui-qemu.md).
 - 10-11-2026: G22-B avance 35o — el arnés no ejecuta el arranque de módulos/objetos de `libObj` (`Mi/Ma/Tc/Ts/Md/Ms`, `Os/Or`) que en la cámara precede/sigue a `APP_ON`. [G22 §5.18o](../docs/gui/g22-arnes-ui-qemu.md).
 - 10-11-2026: G22-B avance 35p — `Mi/Ma/Ts/Md/Ms/Mr` = ciclo de vida de modelos de `ModelManager` (logger `libObj+0x7efef0`); falta el evento de arranque en bloque. [G22 §5.18p](../docs/gui/g22-arnes-ui-qemu.md).
+- 11-11-2026: CFW 3.69–3.73 instalados; parche PP en la imagen (G31); menú PP plano y repintado instantáneo. Actualizados PENDIENTES (G15–G20 revisados, G24-A, G30-C), G29 §6 y CURRENT. [PENDIENTES](../docs/PENDIENTES.md).
