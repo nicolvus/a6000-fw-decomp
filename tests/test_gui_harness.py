@@ -86,3 +86,16 @@ def test_ciclo_de_modelos_completo_con_acuse_adf() -> None:
         assert tag in log, tag
     # §5.18w: estado inicial del jack USB (KEYINIT) → el checker de ViewRootPowerSw coincide con la cámara sin PATCHFN
     assert "execCheck timeSettled : 2, jackStatus : 2" in log and "execCheck retVal : 0" in log
+
+
+def test_gpu_jobs_decodifica_lista_y_tabla() -> None:
+    """Formato medido en §5.18y: pares registro/valor, escritura consecutiva (0x0450f026 + 5 palabras) y fin 0x010=0x12345678."""
+    import struct as st
+    sys.path.insert(0, str(HARNESS))
+    from gpu_jobs import decodifica_lista, trabajos
+    words = [0x0041F000, 2, 0x0450F026, 7, 1, 2, 3, 4, 0x0202F000, 0x90000004, 0x0010F000, 0x12345678, 0xDEAD]
+    lista = decodifica_lista(st.pack(f"<{len(words)}I", *words), 0, len(words))
+    assert lista == [(0x41, [2]), (0x450, [7, 1, 2, 3, 4]), (0x202, [0x90000004]), (0x10, [0x12345678])]
+    win = bytearray(0xE8 + 2 * 0x8C)
+    st.pack_into("<I", win, 0xE8 + 0x8C + 16, 7)
+    assert [(k, e[4]) for k, e in trabajos(bytes(win))] == [(1, 7)]

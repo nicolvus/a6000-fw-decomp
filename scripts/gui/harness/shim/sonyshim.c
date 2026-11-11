@@ -615,7 +615,7 @@ static unsigned long hexv(const char *s, const char **end) { unsigned long v = 0
 static unsigned long gpu_pc;  /* libObj+0x6c4c46: «str r1,[r3,r0]» de rm_reg_write (off=r0, valor=r1, base=r3); se sustituye por UDF para ver cada escritura */
 static volatile unsigned gpu_kicks;
 /* Experimento (TRACEFN=716800,6cd1e0,...): traza de una sola vez (UDF + restauración) de la entrada de esas funciones de libObj: r0-r3 y lr. */
-static struct { unsigned long pc; unsigned short orig; } trc[32]; static int ntrc; static unsigned long trc_base; static volatile unsigned long app_sys;  /* app_sys: r0 de AppSystem::dispatch (libObj+0x7eed0c) en su primera traza */
+static struct { unsigned long pc, step; unsigned short orig, orig2; unsigned hits; } trc[32]; static int ntrc; static unsigned long trc_base; static volatile unsigned long app_sys;  /* app_sys: r0 de AppSystem::dispatch (libObj+0x7eed0c) en su primera traza */
 static void on_trace(int sig, siginfo_t *si, void *u) {
     mcontext_t *c = &((ucontext_t *)u)->uc_mcontext; unsigned long pc = c->arm_pc & ~1UL; int i;
     if (gpu_pc && pc == gpu_pc) {  /* rm_reg_write: se hace el almacenamiento y se salta la instrucción; 0x1804 = timbre de la GPU (GPUEMU) */
@@ -623,14 +623,25 @@ static void on_trace(int sig, siginfo_t *si, void *u) {
         { static int nw; if (getenv("GPUTRACE") && nw++ < 200) efp("[shim] REGW off=%#lx val=%#lx kicks=%u\n", c->arm_r0, c->arm_r1, gpu_kicks); }
         c->arm_pc += 2; return;
     }
+    for (i = 0; i < ntrc; i++) if (trc[i].step && trc[i].step == pc) {  /* TRACEREP: paso hecho; se restaura la instrucción siguiente y se rearma la entrada */
+        *(unsigned short *)pc = trc[i].orig2; trc[i].step = 0; *(unsigned short *)trc[i].pc = 0xde00;
+        __builtin___clear_cache((char *)pc, (char *)pc + 2); __builtin___clear_cache((char *)trc[i].pc, (char *)trc[i].pc + 2); return;
+    }
     for (i = 0; i < ntrc; i++) if (trc[i].pc == pc) {  /* efp, no LOG: fprintf en un manejador de señal puede bloquearse con el cerrojo de stderr de otro hilo */
         if (pc == trc_base + 0x7eed0c) app_sys = c->arm_r0;
-        efp("[shim] TRACE %lx r0=%lx r1=%lx r2=%lx r3=%lx lr=%lx\n", pc, c->arm_r0, c->arm_r1, c->arm_r2, c->arm_r3, c->arm_lr);
+        unsigned h = ++trc[i].hits, mx = getenv("TRACEMAX") ? (unsigned)hexv(getenv("TRACEMAX"), 0) : 4;
+        int show = h <= mx || !(h & (h - 1));  /* TRACEREP: las mx primeras y luego en potencias de 2 */
+        if (show) efp("[shim] TRACE %lx n=%u r0=%lx r1=%lx r2=%lx r3=%lx lr=%lx\n", pc - trc_base, h, c->arm_r0, c->arm_r1, c->arm_r2, c->arm_r3, c->arm_lr);
+        if (show) {
         for (const char *e = getenv("TRACEPEEK"); e && *e; ) { unsigned long a = hexv(e, &e); efp("[shim]   PEEK %lx = %08x\n", a, *(unsigned *)(trc_base + a)); while (*e == ',') e++; }
         { const char *e = getenv("TRACEDEREF");  /* «reg:off:palabras» (hex): vuelca palabras en *(reg+off), p. ej. 4:24:90 = tabla de teclas de InfraInput; con «d» delante («d0:a0:20») vuelca desde reg+off sin desreferenciar */
           if (e && *e) { int dr = *e == 'd'; e += dr; unsigned long rg = hexv(e, &e), off = hexv(e + 1, &e), n = hexv(e + 1, 0), *rv = &c->arm_r0; unsigned *q = dr ? (unsigned *)(rv[rg] + off) : (unsigned *)*(unsigned long *)(rv[rg] + off);
-            for (unsigned long k = 0; k < n && q; k += 9) efp("[shim]   DEREF %p+%lx: %08x %08x %08x %08x %08x %08x %08x %08x %08x\n", q, k * 4, q[k], q[k+1], q[k+2], q[k+3], q[k+4], q[k+5], q[k+6], q[k+7], q[k+8]); } }
-        *(unsigned short *)pc = trc[i].orig; __builtin___clear_cache((char *)pc, (char *)pc + 2); return;
+            for (unsigned long k = 0; k < n && q; k += 9) efp("[shim]   DEREF %p+%lx: %08x %08x %08x %08x %08x %08x %08x %08x %08x\n", q, k * 4, q[k], q[k+1], q[k+2], q[k+3], q[k+4], q[k+5], q[k+6], q[k+7], q[k+8]); } } }
+        *(unsigned short *)pc = trc[i].orig; __builtin___clear_cache((char *)pc, (char *)pc + 2);
+        if (getenv("TRACEREP")) {  /* TRACEREP=1: trampa repetible; UDF temporal en la instrucción siguiente (solo válido si la trazada no salta: entradas de función).
+                                      shortcut: otro hilo que pase por la entrada mientras está desarmada no se cuenta; si hace falta exactitud, usar un contador en el código */
+            unsigned long nx = pc + (((trc[i].orig >> 11) >= 0x1d) ? 4 : 2); trc[i].step = nx; trc[i].orig2 = *(unsigned short *)nx; *(unsigned short *)nx = 0xde00; __builtin___clear_cache((char *)nx, (char *)nx + 2); }
+        return;
     }
     signal(SIGILL, SIG_DFL);
 }
