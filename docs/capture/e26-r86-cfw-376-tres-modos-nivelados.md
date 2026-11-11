@@ -36,3 +36,8 @@ Límite (R85 §7): el degradado vertical sigue; EFCS uniforme solo hasta 1/500.
 2. Tabla EFCS: `PYTHONPATH=references/pmca .venv/bin/python scripts/senser_efcs_table_write.py --tabla analysis/e26-r85/tabla-r86.json --execute`.
 3. Tripletas ARW (Silent / EFCS on / EFCS off) a 1/4000, 1/1000, 1/500, 1/250, 1/125, 1/60, **sin** app ni parche RAM: Silent/off y on/off ≈ 1.
 Reversión: reinstalar 3.74/3.75 (`.dat` en `pkg-374w`/`pkg-375w`) y `--zero` para la tabla.
+
+## 6. Instalación (11-11-2026, MEDIDO; autorizada por el usuario: «instálalo»)
+* `pmca-console firmware --flash --confirm …/package-3.76/firmware_packed.dat` (la versión actual de `pmca-console` ya no admite `-f`): primer intento «unexpected response (device returned more data than requested)» al pasar a modo actualizador (`054c:03e2`); segundo, con la cámara ya en ese modo, `Done`. Arranca normal (`054c:07c4`) y `pmca-console info` da **firmware 3.76**. Registros `analysis/gui/g22/install-3.76*.log`.
+* Tabla EFCS: la NVRAM tenía la de prueba (`e167d007…` = {30000, 2000}). `senser_efcs_table_write.py --tabla tabla-r86.json --execute` (dos expiraciones al entrar en service mode, como en R84): «verificación en memoria: OK», «sincronizado a flash»; la cámara se apagó sola al terminar. Registro `analysis/e26-r85/escritura-tabla-r86.log`.
+* Falta: relectura de la tabla tras encender y las tripletas de comprobación (§5.3).
