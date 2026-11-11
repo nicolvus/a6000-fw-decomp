@@ -42,6 +42,10 @@ BOUNDS = (   # «perfil ≤ 9» → «≤ 10» (dirección, original, nuevo)
     (0x4C0AE0, "b8f1090f", "b8f10a0f"), (0x4C0B08, "b8f1090f", "b8f10a0f"),
 )
 MAX_PERFIL = 10
+PPINIT_OFF, RP_OFF = 0x300, 0x400                       # posiciones fijas en la cueva: `ppinit` (≤ 0x100 B) y, a partir de RP_OFF, Reset, la tabla y la bandera
+MARCA_FABRICA = 0x5A                                       # valor del elemento-marca: cabe en un byte por si el elemento es de 1 byte
+FLAG_VA = 0                                                # dirección de la bandera «ya inicializado» (la fija cave_code)
+N_ELEMENTOS = pp_factory.N_PERFILES * pp_factory.N_PARAMS   # 341
 SITE_GMI = (0x4A5AEC, bytes.fromhex("5d292de9f04f"), "cmp r1,#0x5d; push.w {r4-r11,lr}")
 MARCA = 0x132754   # marca un id como cambiado en el modelo (+0x66/+0x68); el objeto de Gamma tiene id de notificación −1, así que 0x4a5836 no avisa a la vista
 SETTER_ESTADO, FLUSH, VUELVE_PERFIL_OK, VUELVE_PERFIL_NVRAM, VUELVE_ECO, VUELVE_GUARDA = 0x4A5836, 0x13259C, 0x4A785E, 0x4A7850, 0x4C0BFC, 0x4C0D70
@@ -63,6 +67,10 @@ def cave_code(base: int) -> tuple[bytes, dict[int, int]]:
     cnt_perfil = f"{_ptr('r12', DATA + 0x50)} ldr r3, [r12]; adds r3, #1; str r3, [r12];" if TRACE else ""
     perfil = f"""
         {cnt_perfil}
+        push {{r0, r1, r2, r3, r12, lr}}
+        mov r0, r5
+        bl {base + PPINIT_OFF:#x}
+        pop {{r0, r1, r2, r3, r12, lr}}
         ldr.w r3, [r5, #0x274]
         cmp r3, #10
         bhi.n nvram
@@ -116,7 +124,8 @@ def cave_code(base: int) -> tuple[bytes, dict[int, int]]:
     """
     out = out.ljust(k - base, b"\0") + _asm(guarda, k)
     hooks = {SITE_PERFIL[0]: p, SITE_ECO[0]: e, SITE_GUARDA[0]: k}
-    rp = base + ((len(out) + 3) & ~3)
+    assert len(out) <= PPINIT_OFF, hex(len(out))
+    rp = base + RP_OFF
     # Reset: el perfil a restablecer es el elegido en el menú ([this+0x274], ≤ 10) y, si no lo hay, el de la NVRAM (como antes). Las banderas del cmp sirven al `bls` original.
     rperfil = f"""
         ldr.w r3, [r4, #0x274]
@@ -142,9 +151,67 @@ def cave_code(base: int) -> tuple[bytes, dict[int, int]]:
     """
     b4 = _asm(rvalor, rv)
     assert len(b4) <= 0x20, len(b4)
+    tabla = pp_factory.tabla()
+    global FLAG_VA
+    flag_va = FLAG_VA = tabla_va + len(tabla)
+    # ppinit(this): una sola vez por arranque, si el elemento-marca (bloque 1 de «defaults» = this+0xab4+0x7c, ya sin uso) no vale MARCA, escribe la tabla de fábrica en los
+    # elementos de NVRAM de los 11 perfiles y luego la marca. Si no se puede leer/escribir la marca no toca nada y reintenta en la siguiente llamada.
+    ppinit = f"""
+        push {{r4, r5, r6, r7, r8, lr}}
+        mov r4, r0
+        adr.w r5, {flag_va:#x}
+        ldr r1, [r5]
+        cmp r1, #0
+        bne.w fin
+        sub sp, #8
+        addw r6, r4, #0xab4
+        adds r6, #0x7c
+        ldr r6, [r6]
+        movs r1, #0
+        str r1, [sp]
+        mov r0, r6
+        mov r1, sp
+        blx #0xdd5f4
+        cmp r0, #0
+        bne.w reintenta
+        ldr r1, [sp]
+        uxtb r1, r1
+        cmp r1, #{MARCA_FABRICA}
+        beq hecho
+        movs r1, #{MARCA_FABRICA}
+        str r1, [sp]
+        mov r0, r6
+        mov r1, sp
+        blx #0xdd874
+        cmp r0, #0
+        bne.w reintenta
+        adr.w r7, {tabla_va:#x}
+        movs r6, #0
+        movw r8, #{N_ELEMENTOS}
+    lazo:
+        addw r0, r4, #0x5dc
+        ldr.w r0, [r0, r6, lsl #2]
+        ldr.w r1, [r7, r6, lsl #2]
+        str r1, [sp]
+        mov r1, sp
+        blx #0xdd874
+        adds r6, #1
+        cmp r6, r8
+        bne lazo
+    hecho:
+        movs r1, #1
+        str r1, [r5]
+    reintenta:
+        add sp, #8
+    fin:
+        pop {{r4, r5, r6, r7, r8, pc}}
+    """
+    bi = _asm(ppinit, base + PPINIT_OFF)
+    assert len(bi) <= RP_OFF - PPINIT_OFF, hex(len(bi))
+    out = out.ljust(PPINIT_OFF, b"\0") + bi
     out = out.ljust(rp - base, b"\0") + b3
     out = out.ljust(rv - base, b"\0") + b4
-    out = out.ljust(tabla_va - base, b"\0") + pp_factory.tabla()
+    out = out.ljust(tabla_va - base, b"\0") + tabla + b"\0\0\0\0"
     hooks[SITE_RPERFIL[0]], hooks[SITE_RVALOR[0]] = rp, rv
     if TRACE:                                                    # registro de los últimos 16 ids de getModelInfo (r1) y de cuántas veces se llama
         g = base + ((len(out) + 3) & ~3)
@@ -177,7 +244,7 @@ def patch(d: bytes) -> bytes:
     assert loads[0][2] == 0 and loads[0][1] == 0 and loads[0][2] + loads[0][5] <= CAVE_VA and CAVE_VA + ALIGN <= (loads[1][2] & ~(ALIGN - 1)), "hueco de VA no libre"
     code, hooks = cave_code(CAVE_VA)
     new_off = (len(d) + ALIGN - 1) // ALIGN * ALIGN                  # offset ≡ VA (mod página)
-    new_seg = [1, new_off, CAVE_VA, CAVE_VA, 0, 0, 7 if TRACE else 5, ALIGN]   # PT_LOAD R-X (RWX con trazas)
+    new_seg = [1, new_off, CAVE_VA, CAVE_VA, 0, 0, 7, ALIGN]   # PT_LOAD RWX (la bandera de ppinit y las trazas escriben aquí)
     i1 = segs.index(loads[0]) + 1
     order = segs[:i1] + [new_seg] + segs[i1:]                         # los LOAD deben ir en orden ascendente de VA
     assert [s[2] for s in order if s[0] == 1] == sorted(s[2] for s in order if s[0] == 1)

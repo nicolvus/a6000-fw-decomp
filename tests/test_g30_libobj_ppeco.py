@@ -19,7 +19,7 @@ needs = pytest.mark.skipif(not LIB.is_file(), reason="libObj ausente")
 THIS, FRAME = 0x20000000, 0x20100000
 
 
-def _maquina(img: bytes) -> Uc:
+def _maquina(img: bytes, inicial: bool = False) -> Uc:
     phoff, phnum = struct.unpack_from("<I", img, 28)[0], struct.unpack_from("<H", img, 44)[0]
     mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
     mu.mem_map(0, 0x1100000)
@@ -29,6 +29,8 @@ def _maquina(img: bytes) -> Uc:
         if t == 1 and va == E.CAVE_VA:
             mu.mem_write(va, img[off:off + fs])
     mu.mem_map(THIS, 0x200000)
+    if not inicial:
+        mu.mem_write(E.FLAG_VA, struct.pack("<I", 1))                    # ppinit ya hecho (se prueba aparte)
     return mu
 
 
@@ -126,6 +128,7 @@ def test_trazas_usan_direccion_relativa_al_pc_y_no_dependen_de_la_base_de_carga(
         if t == 1 and va == E.CAVE_VA:
             mu.mem_write(base + va, img[off:off + fs])
     mu.mem_map(THIS, 0x200000)
+    mu.mem_write(base + E.FLAG_VA, struct.pack("<I", 1))
     mu.mem_write(THIS + 0x274, struct.pack("<I", 3))
     mu.reg_write(UC_ARM_REG_R5, THIS)
     mu.reg_write(UC_ARM_REG_R7, FRAME)
@@ -248,3 +251,72 @@ def test_reset_completo_del_perfil_10_escribe_los_31_valores_de_fabrica_en_sus_e
     mu.emu_start(0x4C0E62 | 1, 0x4C0EE4, count=20000)
     esperado = {0x1000 + 10 * 31 + i: v for i, v in enumerate(PF.perfil(10))}
     assert escritos == esperado and not leidos
+
+
+def _nvram(mu, marca=0, falla_lee=False, falla_escribe_marca=False):
+    """NVRAM simulada de los elementos: lecturas (0xdd5f4) y escrituras (0xdd874); devuelve (escrituras en orden, nº de lecturas)."""
+    for n in range(400):
+        mu.mem_write(THIS + 0x5DC + 4 * n, struct.pack("<I", 0x1000 + n))
+    marca_id = 0x1000 + 341
+    escrituras, lecturas = [], []
+
+    def h(uc, addr, size, _):
+        if addr == 0xDD5F4:
+            lecturas.append(uc.reg_read(UC_ARM_REG_R0))
+            uc.mem_write(uc.reg_read(UC_ARM_REG_R1), struct.pack("<I", marca))
+            uc.reg_write(UC_ARM_REG_R0, 1 if falla_lee else 0)
+            uc.reg_write(UC_ARM_REG_PC, uc.reg_read(UC_ARM_REG_LR))
+        elif addr == 0xDD874:
+            hid, v = uc.reg_read(UC_ARM_REG_R0), struct.unpack("<i", bytes(uc.mem_read(uc.reg_read(UC_ARM_REG_R1), 4)))[0]
+            escrituras.append((hid, v))
+            uc.reg_write(UC_ARM_REG_R0, 1 if (falla_escribe_marca and hid == marca_id) else 0)
+            uc.reg_write(UC_ARM_REG_PC, uc.reg_read(UC_ARM_REG_LR))
+    from unicorn import UC_HOOK_CODE
+    mu.hook_add(UC_HOOK_CODE, h)
+    return escrituras, lecturas
+
+
+def _selector(mu):
+    mu.mem_write(THIS + 0x274, struct.pack("<I", 3))
+    mu.reg_write(UC_ARM_REG_R5, THIS)
+    mu.reg_write(UC_ARM_REG_R7, FRAME)
+    mu.reg_write(UC_ARM_REG_SP, THIS + 0x1F0000)
+    mu.reg_write(UC_ARM_REG_LR, 0x1234)
+    mu.emu_start(0x4A784C | 1, 0x4A785E, count=100000)
+
+
+def _flag(mu):
+    return struct.unpack("<I", bytes(mu.mem_read(E.FLAG_VA, 4)))[0]
+
+
+@needs
+def test_primer_arranque_escribe_los_valores_de_fabrica_en_los_11_perfiles_y_la_marca_una_sola_vez():
+    mu = _maquina(E.patch(LIB.read_bytes()), inicial=True)
+    escrituras, lecturas = _nvram(mu)
+    _selector(mu)
+    marca_id = 0x1000 + 341
+    assert escrituras[0] == (marca_id, E.MARCA_FABRICA) and _flag(mu) == 1
+    tabla = struct.unpack("<341i", PF.tabla())
+    assert escrituras[1:] == [(0x1000 + k, tabla[k]) for k in range(341)]
+    assert escrituras[1 + 10 * 31 + 7][1] == PF.GAMMA["slog3"]                            # PP10: gamma S-Log3
+    n = len(escrituras)
+    _selector(mu)                                                                          # segunda llamada: la bandera evita todo trabajo
+    assert len(escrituras) == n and len(lecturas) == 1
+    assert struct.unpack("<I", bytes(mu.mem_read(FRAME + 0x54, 4)))[0] == 3                # y el selector sigue devolviendo el perfil
+
+
+@needs
+def test_con_la_marca_ya_puesta_no_se_toca_la_nvram():
+    mu = _maquina(E.patch(LIB.read_bytes()), inicial=True)
+    escrituras, _ = _nvram(mu, marca=E.MARCA_FABRICA)
+    _selector(mu)
+    assert escrituras == [] and _flag(mu) == 1
+
+
+@needs
+def test_si_la_nvram_falla_no_se_aplica_nada_y_se_reintenta_despues():
+    for kw in (dict(falla_lee=True), dict(falla_escribe_marca=True)):
+        mu = _maquina(E.patch(LIB.read_bytes()), inicial=True)
+        escrituras, _ = _nvram(mu, **kw)
+        _selector(mu)
+        assert _flag(mu) == 0 and all(h == 0x1000 + 341 for h, _ in escrituras)            # a lo sumo el intento de escribir la marca

@@ -14,18 +14,21 @@ Continúa [G34](g34-auditoria-estatica-pp-nucleo.md). **Solo estática + Unicorn
 |---|---|
 | Límites ≤ 9 → ≤ 10 | 5 bytes en `0x4a7860`, `0x4b4184`, `0x4b73de`, `0x4c0ae0`, `0x4c0b08`; el gancho del selector (`cmp #10`) |
 | **PP10** | menú: Off (9), PP1–PP9 (0–8), **PP10 (10)**, también en Copy y Reset. Almacenamiento = los 31 elementos que eran los «defaults» del PP1 |
+| **Valores de fábrica desde el primer arranque** | `ppinit` (cueva de `libObj`, se llama desde la lectura `getModelInfo 0x4a`, la del selector): si el elemento-marca (bloque 1 de «defaults», `this+0xab4+0x7c`, ya sin uso) no vale `0x5A`, escribe la marca y después los 341 valores de `pp_factory.tabla()` en los elementos de NVRAM de los 11 perfiles. Una sola vez (la marca queda en NVRAM) y una vez por arranque (bandera en RAM; el segmento de la cueva pasa a RWX). Si la lectura o la escritura de la marca fallan, no toca nada y reintenta en la siguiente llamada |
 | Reset con valores de fábrica | gancho en `0x4c0e62`: usa el perfil elegido en el menú (`[this+0x274]` ≤ 10) y, si no, el de la NVRAM; gancho en `0x4c0ea2`: en vez de leer el elemento «default» escribe el valor de `pp_factory.tabla()` (11 perfiles × 31 palabras) |
+
+**Reset** no es un botón de un solo valor: su fila deja elegir el PP (PP1…PP10) y restablece ese perfil a los valores de fábrica de la tabla; sigue disponible, pero ya no hace falta para tener los valores iniciales.
 
 Valores de fábrica (`pp_factory.py`; dominio de la app): PP1 Movie/Movie · PP2 Still/Still · PP3 ITU709/ITU709 Matrix · PP4 ITU709(800 %)/ITU709 Matrix · PP5 Cine1/Cinema · PP6 Cine2/Cinema · PP7 y PP8 S-Log2/S-Gamut · PP9 S-Log3/S-Gamut3.Cine · **PP10 S-Log3/S-Gamut3** · bloque «Off» Movie/Movie neutro. Resto de parámetros neutros: nivel de Color Mode 4, Black Gamma Range Middle (nivel 0), Knee automático (Sensibilidad Mid, Max Point 4 = 100 %), Point 6, Detail automático (Limit 7, B/W Type3), todo lo demás 0.
 
 ## 3. Pruebas (Unicorn sobre la `libObj` parcheada)
 
-Límites a 10 (el selector devuelve 10; 11 cae a la NVRAM); Reset elige el perfil del menú; el valor de cada parámetro sale de la tabla; **bucle real de Reset del PP10**: escribe exactamente los 31 valores de fábrica en los elementos `this+0xab4…` y no lee ningún elemento de defaults. `tests/test_g*.py`: 124 pasan. Auditoría independiente del `.dat` (3.75, `ecb977c3…`): 24/25 (el fallo esperado: `nflasha3` cambia por el parche PP).
+`ppinit`: primer arranque (marca + 341 valores exactos, PP10 con S-Log3), marca ya puesta (nada se toca), fallo de lectura/escritura de la marca (nada se aplica, bandera a 0), segunda llamada (sin trabajo). Límites a 10 (el selector devuelve 10; 11 cae a la NVRAM); Reset elige el perfil del menú; el valor de cada parámetro sale de la tabla; **bucle real de Reset del PP10**: escribe exactamente los 31 valores de fábrica en los elementos `this+0xab4…` y no lee ningún elemento de defaults. `tests/test_g*.py`: 124 pasan. Auditoría independiente del `.dat` (3.75, `faf23dc7…`): 24/25 (el fallo esperado: `nflasha3` cambia por el parche PP).
 
 ## 4. Límites y riesgos (NO verificado)
 
 1. **Los valores de fábrica salen de la documentación de Sony recordada de memoria**, no de este firmware (la tabla real está en la NVRAM de fábrica de la cámara): PP8 igual al PP7, nivel de Color Mode 4, Max Point 4, Point 6 son suposiciones. Se ajustan en `pp_factory.py`.
-2. **Reset es por perfil** y hay que pulsarlo en cada uno: el NVRAM ya existente no se reescribe solo. No se añadió «restablecer todos».
+2. La inicialización sobrescribe **una vez** los valores que hubiera en la NVRAM de los 11 perfiles (cualquier ajuste previo del usuario se pierde en ese primer arranque). Las filas del menú pueden mostrar el valor anterior hasta volver a elegir el perfil (leen estados en caché). Si la NVRAM no admite la escritura del elemento-marca, no se aplica nada.
 3. No se sabe si los elementos de NVRAM que eran los «defaults» del PP1 son **escribibles** (podrían ser de solo lectura): si no lo fueran, PP10 se aplicaría pero no se conservaría tras apagar.
 4. Otras comprobaciones de perfil ≤ 9 fuera de `libObj.so` (vistas, `viewUnified2.so`, NVRAM del backup) no se han buscado.
 5. PP10 y el «Off» del selector comparten ahora el rango 0–10 de la API del modelo; «Off» sigue siendo el bloque 9.
