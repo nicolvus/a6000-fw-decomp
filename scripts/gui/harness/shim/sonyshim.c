@@ -372,6 +372,9 @@ int ioctl(int fd, unsigned long req, ...) {
             /* Servicios de kernel con acuse genérico (ACKQ=d9016e,7a0029,…; 0xd9016e registro de puerto de vídeo, 0x7a0029 input.ko): se
              * responde a la cola dinámica que viaja en el cuerpo copiando la petición con estado 0 (lo que comprueba el emisor síncrono
              * 0x6a2550 de libObj). shortcut: a 0x61003c la misma respuesta hace saltar la aserción de 0x6a25d2; modelarla cuando se conozca su formato. */
+            if (w[0] == 0x4015e && !getenv("NO4015E") && is_dynq(((unsigned *)m)[-1])) {  /* libObj+0x8138b8 (ObjStillRecorder…): petición {0, orden, …} con la cola de respuesta en la cabecera (m[-1]); exige {1, orden, 0, …} y, para 0x1000, +0xc = phys de un área de 0xc40 B que mapea de /dev/mem (aquí anónima a cero) */
+                unsigned *rq = (unsigned *)m, rp[12] = { 1, rq[1], 0, rq[1] == 0x1000 ? 0x8f000000u : 0 };
+                mbx_post_raw(rq[-1], rp); LOG("snd_msg 0x4015e orden %#x -> respuesta a %#x", rq[1], rq[-1]); return 0; }
             { const char *e = getenv("ACKQ"); if (!e) e = "d9016e,7a0029,61003c"; int ack = 0;
               while (*e) { if (hexv(e, &e) == w[0]) ack = 1; while (*e == ',') e++; }
               if (getenv("MSGHEXQ") && hexv(getenv("MSGHEXQ"), 0) == w[0]) {  /* MSGHEXQ=qid: vuelca 4+16 palabras del mensaje y la pila del emisor (2 primeras veces) */
