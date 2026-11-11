@@ -52,7 +52,7 @@ def wait_done(t=60) -> str:
 
 trip = []
 try:
-    print("fmt", get("/fmt?v=raw"), "| iso", get(f"/iso?v={a.iso}"), flush=True)
+    print("fmt", get("/fmt?v=rawjpeg"), "| iso", get(f"/iso?v={a.iso}"), flush=True)
     for sp in SPEEDS:
         n, d = sp.split("/")
         print(sp, get(f"/ss?n={n}&d={d}"), flush=True)

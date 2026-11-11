@@ -32,7 +32,7 @@ public class Main extends Activity implements SurfaceHolder.Callback {
     private volatile int openRetries;
     private volatile int lastShotR5;
     private final StringBuilder shotLog = new StringBuilder();  // CSV: n,t_inicio_ms,ms_hasta_jpeg,bytes
-    private static final String VERSION = "v9";
+    private static final String VERSION = "v9b";
     private TextView info;
     private String keyLog = "-";
 
@@ -176,6 +176,7 @@ public class Main extends Activity implements SurfaceHolder.Callback {
             Camera.Parameters prm = camera == null ? null : camera.getParameters();
             if (prm == null) { open(); prm = camera.getParameters(); }
             Object pm = cameraEx.getClass().getMethod("createParametersModifier", Camera.Parameters.class).invoke(cameraEx, prm);
+            if ("raw".equals(v)) return "fmt-rechazado raw (sin JPEG; el callback de la app nunca se probó así, sospechoso de R87): usar rawjpeg";
             if (v != null) { pm.getClass().getMethod("setPictureStorageFormat", String.class).invoke(pm, v); camera.setParameters(prm); }
             Object pm2 = modifier();
             return "fmt " + pm2.getClass().getMethod("getPictureStorageFormat").invoke(pm2);
@@ -198,7 +199,7 @@ public class Main extends Activity implements SurfaceHolder.Callback {
 
     // ---- v9 (E26-R87): modo de obturador por disparo (Mecánico / EFCS / Electrónico) forzando el bloque de ajustes en RAM ----
     // +0x210 (EFCS, 1 = desactivado) y +0x238 (Silent) del bloque 0x43EDF684: el copiador de patch_tristate los lee al construir la captura.
-    // El firmware puede reescribirlos durante el disparo: se fuerzan cada 20 ms hasta el callback y luego se restauran los del menú.
+    // Se escriben una vez antes de takePicture (el copiador los lee al construir la captura) y se restauran en el callback.
     private static final long SILENT_A = 0x83EDF8BCL;
     private volatile int modeE = -1, modeS = -1;   // -1 = no forzar (lo que diga el menú)
     private volatile String modeName = "menu";
@@ -225,19 +226,13 @@ public class Main extends Activity implements SurfaceHolder.Callback {
         final byte[] e = {(byte) modeE, 0}, s = {(byte) modeS, 0};
         memWrite(EFCS_A, e); memWrite(SILENT_A, s);
         if (!java.util.Arrays.equals(memRead(EFCS_A, 2), e) || !java.util.Arrays.equals(memRead(SILENT_A, 2), s)) throw new Exception("mode-verificacion");
-        forcing = true;
-        new Thread(new Runnable() { public void run() {
-            long t0 = android.os.SystemClock.elapsedRealtime();
-            while (forcing && android.os.SystemClock.elapsedRealtime() - t0 < 40000) {
-                try { memWrite(EFCS_A, e); memWrite(SILENT_A, s); Thread.sleep(20); } catch (Throwable t) { break; }
-            }
-        }}).start();
+        forcing = true;   // v9b: una sola escritura; v9 reescribía cada 20 ms (2 Runtime.exec = 2 fork de la VM cada 20 ms, sospechoso del reinicio de R87)
     }
 
     private synchronized void modeStop() {
         if (!forcing) return;
         forcing = false;
-        try { Thread.sleep(40); memWrite(EFCS_A, modeOrigE); memWrite(SILENT_A, modeOrigS); } catch (Throwable t) { Log.e(TAG, "modeStop", t); }
+        try { memWrite(EFCS_A, modeOrigE); memWrite(SILENT_A, modeOrigS); } catch (Throwable t) { Log.e(TAG, "modeStop", t); }
     }
 
     // NO USAR (T049): Runtime.exec se colgó entre las dos escrituras y dejó ShutMode 0 forzado. El parche se aplica desde el PC con guardián: scripts/camera_silent.py.
