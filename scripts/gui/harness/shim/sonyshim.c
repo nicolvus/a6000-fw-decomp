@@ -144,6 +144,8 @@ static void backup_service(unsigned *m) {
 /* Servicios de kernel por snd_sync_direct (mm 0x910042, ...). shortcut: sin modelar, responde 0 */
 /* 0x90013d cmd 2 = osal_get_date (ModelRoot::getDateInfo, libObj+0x63c2bc): +0x12 estado, +0x1c tipo (0 sin hora, 1/3 asentada; DATETYPE, 1 por defecto). */
 static unsigned long hexv(const char *s, const char **end);
+/* el arg de ioctl a veces es un entero (p. ej. un qid de libInfraKikiLogGenerator): solo se lee si la página está mapeada */
+static int readable(const void *p) { return (unsigned long)p > 0x10000 && msync((void *)((unsigned long)p & ~4095UL), 4, MS_ASYNC) == 0; }
 static int direct_service(unsigned qid, unsigned *m) {
     if (m[0] == 0x28 && ((unsigned short *)m)[8] == 2 && !getenv("NODATE")) {
         unsigned short *h = (unsigned short *)m; const char *e = getenv("DATETYPE");
@@ -372,6 +374,9 @@ int ioctl(int fd, unsigned long req, ...) {
              * 0x6a2550 de libObj). shortcut: a 0x61003c la misma respuesta hace saltar la aserción de 0x6a25d2; modelarla cuando se conozca su formato. */
             { const char *e = getenv("ACKQ"); if (!e) e = "d9016e,7a0029,61003c"; int ack = 0;
               while (*e) { if (hexv(e, &e) == w[0]) ack = 1; while (*e == ',') e++; }
+              if (getenv("MSGHEXQ") && hexv(getenv("MSGHEXQ"), 0) == w[0]) {  /* MSGHEXQ=qid: vuelca 4+16 palabras del mensaje y la pila del emisor (2 primeras veces) */
+                  static int nh; char h[300]; int o = 0; for (int k = -4; k < 16; k++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[k]);
+                  LOG("MSGHEXQ %#x %s", w[0], h); if (nh++ < 2) raise(SIGUSR1); }
               if (ack) for (int k = 0; k < 6; k++) if (is_dynq(((unsigned *)m)[k])) { mbx_post(((unsigned *)m)[k], (unsigned *)m, w[0] == 0x61003c); LOG("snd_msg %#x -> acuse genérico a %#x (palabra %d)", w[0], ((unsigned *)m)[k], k); return 0; } }
             if (w[0] == 0x9a015a || w[0] == 0x9c015b) { static int n; if (n++ < 4) raise(SIGUSR1); if (n > 5) { usleep(20000); return 0; } }  /* bucle HDMI: pila y silencio */
             if (getenv("VERB")) { char h[200]; int k, o = 0; for (k = -32; k < 32; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]); LOG("MSGHEX %#x %s", w[0], h); }
@@ -387,7 +392,7 @@ int ioctl(int fd, unsigned long req, ...) {
         static struct { char d[32]; unsigned long r; unsigned n; } seen[64]; static int ns; int k;
         if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0x80048206 && arg) *(unsigned *)arg = 0x20000;  /* tamaño de la ventana de registros de la GPU (rm_reg_init lo pasa a mmap de /dev/mem; con 0 se mapeaba 1 página y el código escribe en +0x1804) */
         if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0xc0048212 && arg && *(unsigned *)arg == 1) gpu_ack = 1;  /* el controlador reconoce el aviso de fin (GPUEMU) */
-        if (getenv("GPUTRACE") && gpu_live && !strcmp(devname[fd], "/dev/dmpgles2")) { static int gn; if (gn++ < 600) LOG("GPU ioctl %#lx arg=%p val=%#x", req, arg, (unsigned long)arg > 0x10000 ? *(unsigned *)arg : 0u); }  /* GPUTRACE=1: cada ioctl de la GPU tras cargar las vistas (primeros 600), sin deduplicar */
+        if (getenv("GPUTRACE") && gpu_live && !strcmp(devname[fd], "/dev/dmpgles2")) { static int gn; if (gn++ < 600) LOG("GPU ioctl %#lx arg=%p val=%#x", req, arg, readable(arg) ? *(unsigned *)arg : 0u); }  /* GPUTRACE=1: cada ioctl de la GPU tras cargar las vistas (primeros 600), sin deduplicar */
         if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0xc004820d) {  /* espera de interrupción de la GPU (libObj+0x6c5320 repite hasta salida != 0) */
             const char *e = getenv("GPUIRQ_MS"); unsigned ms = e ? (unsigned)num(e) : 20;  /* GPUIRQ_MS=n: IRQ simulada cada n ms (20 por defecto, necesaria para que termine la init GL); 0 = GPU ociosa, duerme */
             if (ms && arg) { usleep(ms * 1000u); *(unsigned *)arg = 1; return 0; }
@@ -401,7 +406,7 @@ int ioctl(int fd, unsigned long req, ...) {
         pthread_mutex_unlock(&semlock);
         if (n == 3 && getenv("DEVSTACK")) raise(SIGUSR1);  /* pila del llamador de la 4.ª repetición */
         if (n < 5 || !(n & 4095)) { Dl_info di; void *ra = __builtin_return_address(0); int ok = dladdr(ra, &di) && di.dli_fname;
-            LOG("ioctl(%s, %#lx, %p) arg0=%#x [n=%u] desde %s+%#lx", devname[fd], req, arg, (unsigned long)arg > 0x10000 ? *(unsigned *)arg : (unsigned)(unsigned long)arg, n, ok ? di.dli_fname : "?", ok ? (unsigned long)ra - (unsigned long)di.dli_fbase : 0UL); }
+            LOG("ioctl(%s, %#lx, %p) arg0=%#x [n=%u] desde %s+%#lx", devname[fd], req, arg, readable(arg) ? *(unsigned *)arg : (unsigned)(unsigned long)arg, n, ok ? di.dli_fname : "?", ok ? (unsigned long)ra - (unsigned long)di.dli_fbase : 0UL); }
         return 0;
     }
     if (!r) r = dlsym(RTLD_NEXT, "ioctl");
@@ -664,11 +669,26 @@ void *dlopen(const char *f, int fl) {
     }
     return h;
 }
+/* SALVAGE=n (hex): la petición 0x1003 de información de salvamento (libObj+0x41e098 → cola 0xae8114, servida por otro proceso en la cámara)
+   recibe su respuesta 0x1004 {+0x14 = n entradas}: se entrega al callback real libObj+0x41e420 desde otro hilo (el emisor tiene tomado
+   el cerrojo 0x41db30), que fija el estado global libObj+0x10aa698 (n=0 → 2, n>0 → 1) y publica el Event 0x16050001 a ModelManager. */
+static void *salvage_reply(void *a) {
+    static unsigned buf[0x80]; usleep(200000);
+    Dl_info di; void *sym = dlsym(RTLD_DEFAULT, "ModelSalvageToInstance"); unsigned long base = sym && dladdr(sym, &di) ? (unsigned long)di.dli_fbase : 0;
+    if (!base) { LOG("SALVAGE: libObj no hallada"); return 0; }
+    buf[0] = 0x1004; buf[5] = (unsigned)(unsigned long)a;
+    LOG("SALVAGE respuesta 0x1004 n=%u -> libObj+0x41e420", buf[5]);
+    ((void (*)(void *))(base + 0x41e421))(buf);
+    LOG("SALVAGE estado libObj+0x10aa698 = %u", *(unsigned *)(base + 0x10aa698));
+    return 0;
+}
 /* osal_snd_sync_msg(qid, msg, cb, arg): SYNCLOG=1 registra los envíos síncronos que fallan (p. ej. 0xFFFFFC04 = cola local sin manejador registrado) */
 int osal_snd_sync_msg(int qid, void *msg, void *cb, void *arg) {
     static int (*real)(int, void *, void *, void *);
     if (!real) real = dlsym(RTLD_NEXT, "osal_snd_sync_msg");
     int r = real ? real(qid, msg, cb, arg) : -1;
+    if (r && qid == 0xae8114 && getenv("SALVAGE") && ((unsigned *)msg)[0] == 0x1003) {
+        pthread_t t; pthread_create(&t, 0, salvage_reply, (void *)hexv(getenv("SALVAGE"), 0)); pthread_detach(t); r = 0; }
     { const char *e = getenv("SYNCOK"); while (r && e && *e) { unsigned q = hexv(e, &e); if (*e == ',') e++; if (q == (unsigned)qid) { LOG("SYNCOK qid=%#x -> 0", qid); r = 0; } } }  /* SYNCOK=qid,…: colas locales sin manejador (servicio de otro proceso) que responden «bien» */
     if (r && getenv("SYNCLOG")) { static int n; if (n++ < 200) { void *lr = __builtin_return_address(0); Dl_info di; int ok = dladdr(lr, &di); LOG("osal_snd_sync_msg qid=%#x ret=%#x lr=%p %s+%#lx msg=%08x %08x %08x", qid, r, lr, ok ? di.dli_fname : "?", ok ? (unsigned long)((char *)lr - (char *)di.dli_fbase) : 0, ((unsigned *)msg)[0], ((unsigned *)msg)[1], ((unsigned *)msg)[2]); } }
     return r;
