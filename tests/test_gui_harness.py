@@ -69,3 +69,17 @@ def test_arranque_en_qemu_llega_a_la_pila_de_ventanas() -> None:
     log = (WORK / "guest.log").read_text(errors="replace")
     assert "B  Ii 080_libgrm.so" in log and "Initialize Window System" in log
     assert "E  Ii 083_appFw.so" in log and "dlopen(viewUnified2.so) ->" in log  # hilo de aplicación (SEMSIG) y vistas cargadas
+
+
+@pytest.mark.skipif(not (os.environ.get("A6000_HARNESS_RUN") and (WORK / "base.cpio.gz").exists() and shutil.which("qemu-system-arm")),
+                    reason="prueba lenta (≈ 4 min): A6000_HARNESS_RUN=1 y setup.sh hecho")
+def test_ciclo_de_modelos_completo_con_acuse_adf() -> None:
+    """§5.18v: con la respuesta dataflow de ADF (ACKQ0=58003f) ObjMic termina Og, Mi 0ED cierra y el arranque llega a Ts y Mr."""
+    env = {**os.environ, "SHIMENV": "WAIT=200 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT OPENVIEWAT=40 STARTEV=11004002:100,11004012,11004013 "
+                                     "STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f FULLLOG=1"}
+    subprocess.run([sys.executable, str(HARNESS / "run.py"), str(WORK), str(HARNESS / "im.sh"), "300"],
+                   capture_output=True, text=True, check=True, env=env)
+    log = (WORK / "guest.log").read_text(errors="replace")
+    assert "PrcGetFuncComp(seq_id=" in log and "Unregisterd msg" not in log
+    for tag in ("E  Og 001_ObjMic", "E  Mi 0ED_libObj.so", "E  Ts", "E  Mr 0DC_libObj.so"):
+        assert tag in log, tag

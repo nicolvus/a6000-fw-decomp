@@ -158,6 +158,7 @@ static int direct_service(unsigned qid, unsigned *m) {
 
 /* Buzones de colas dinámicas de kernel (dynamic_id tipo 0x2a): el servicio 0xd9016e (registro de puerto de vídeo/OSD) se responde copiando la petición. */
 static struct { unsigned q; void *msg; } mbx[16];
+static unsigned long tron_base; static void trace_fns(unsigned long base);
 static unsigned dynq[256]; static int ndynq;  /* colas creadas por dynamic_id tipo 0x2a (solo ellas tienen buzón) */
 static pthread_mutex_t mbx_m = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t mbx_c = PTHREAD_COND_INITIALIZER;
@@ -187,6 +188,21 @@ static void mbx_post_raw(unsigned q, const unsigned *req) {
     for (k = 0; k < 16 && mbx[k].msg; k++);
     if (k < 16) { mbx[k].q = q; mbx[k].msg = body; } else { LOG("mbx lleno: mensaje a %#x perdido", q); free(b); }
     pthread_cond_broadcast(&mbx_c); pthread_mutex_unlock(&mbx_m);
+}
+/* Mensajes dataflow de libBizFw2 (DataFlowInfraCh::AddDataflowHeader): {cola_resp, 0xa0a0a0a0, u16 1, u16 total, desp=0x14, total} + carga
+ * {u16 cate, u16 msg, u16 len, u16 ver, …}. El receptor (URendezvous::ReceiveInfraAckCompMsg) casa remitente (cabecera −1 = cola destino),
+ * cate y msg^0x8000 con lo registrado en el envío (AdfCh::SendMsgWithSeqId: 0x58003f); err en carga+8 = 0, resto a cero (p. ej. ADF GetFunc). */
+static void dataflow_reply(unsigned src, unsigned q, const unsigned char *req) {
+    unsigned char *b = calloc(1, 0x300), *p; unsigned *body = (unsigned *)(b + 0x20); unsigned off = ((const unsigned *)req)[3], k;
+    const unsigned short *rp = (const unsigned short *)(req + (off < 0x100 ? off : 0x14));
+    body[-1] = src; ((unsigned char *)body)[-8] = 2;  /* osal_msg_size (libosal_uipc+0x4a0c): bloques de 32 B en cabecera−8 → 2*32−12 = 0x34 */
+    body[0] = src; body[1] = 0xa0a0a0a0; body[2] = 1 | (0x34u << 16); body[3] = 0x14; body[4] = 0x34;
+    p = (unsigned char *)body + 0x14; ((unsigned short *)p)[0] = rp[0]; ((unsigned short *)p)[1] = rp[1] ^ 0x8000; ((unsigned short *)p)[2] = 0x20; ((unsigned short *)p)[3] = rp[3];
+    pthread_mutex_lock(&mbx_m);
+    for (k = 0; k < 16 && mbx[k].msg; k++);
+    if (k < 16) { mbx[k].q = q; mbx[k].msg = body; } else { LOG("mbx lleno: dataflow a %#x perdido", q); free(b); }
+    pthread_cond_broadcast(&mbx_c); pthread_mutex_unlock(&mbx_m);
+    LOG("snd_msg %#x dataflow cate=%#x msg=%#x -> comp a %#x", src, rp[0], rp[1], q);
 }
 static int mbx_take(unsigned q, int tmo, void **out) {  /* 0 = recibido, 1 = cola sin buzón (no dinámica), E_TMOUT = nada en tmo ms */
     int k, r = 1; struct timespec ts;
@@ -333,7 +349,7 @@ int ioctl(int fd, unsigned long req, ...) {
             { static int ns5; const char *e = getenv("STACKQ"); if (e && hexv(e, 0) == w[0] && ++ns5 == 3) raise(SIGUSR1); }  /* STACKQ=qid: pila del emisor en el 3.er envío */
             { pthread_mutex_lock(&cb_m); int k = cb_find(w[0]); if (k >= 0) { t5[1] = (unsigned)cbs[k].cb; t5[2] = (unsigned)cbs[k].arg; } pthread_mutex_unlock(&cb_m);
               if (k >= 0) { if (getenv("VERB")) LOG("snd_sync_msg %#x -> callback directo", w[0]); return 0; } }
-            if (w[0] == 0x8f013a) { if (m[2]) LOG("LOG %s", (char *)m + 2); else if (getenv("VERB")) { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
+            if (w[0] == 0x8f013a) { if (m[2] && tron_base && strstr((char *)m + 2, getenv("TRACEON"))) { unsigned long b = tron_base; tron_base = 0; trace_fns(b); LOG("TRACEON: trazas armadas"); } if (m[2]) LOG("LOG %s", (char *)m + 2); else if (getenv("VERB")) { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
             else if (w[0] == 0x3e014d) backup_service((unsigned *)m);
             else if (w[0] == 0x924127 && ((unsigned *)m)[0] == 0x920111 && getenv("BOOTINFO")) {  /* BOOTINFO=a,b,c,d,e (hex): respuesta de arranque (ObjHandover, libObj+0x41b158) → palabras 1–5 */
                 const char *e = getenv("BOOTINFO"); for (int k = 1; k <= 5 && *e; k++) { ((unsigned *)m)[k] = hexv(e, &e); if (*e == ',') e++; }
@@ -380,7 +396,9 @@ int ioctl(int fd, unsigned long req, ...) {
             { const char *e = getenv("ACKQ0"); int ack = 0;  /* ACKQ0=qid,…: la cola de respuesta va en la palabra 0 y es estática (p. ej. ObjMic → 0x58003f {0x2d0117, 0xa0a0a0a0}); se crea su buzón y se responde con eco y estado 0 */
               while (e && *e) { if (hexv(e, &e) == w[0]) ack = 1; while (*e == ',') e++; }
               unsigned rq = ((unsigned *)m)[0];
-              if (ack && rq > 0x10000 && rq < 0x2000000) { if (!is_dynq(rq)) dynq_add(rq); mbx_post(rq, (unsigned *)m, 0); LOG("snd_msg %#x -> acuse ACKQ0 a %#x", w[0], rq); return 0; } }
+              if (ack && rq > 0x10000 && rq < 0x2000000) { if (!is_dynq(rq)) dynq_add(rq);
+                  if (((unsigned *)m)[1] == 0xa0a0a0a0) { dataflow_reply(w[0], rq, (unsigned char *)m); return 0; }
+                  mbx_post(rq, (unsigned *)m, 0); LOG("snd_msg %#x -> acuse ACKQ0 a %#x", w[0], rq); return 0; } }
             { const char *e = getenv("ACKQ"); if (!e) e = "d9016e,7a0029,61003c"; int ack = 0;
               while (*e) { if (hexv(e, &e) == w[0]) ack = 1; while (*e == ',') e++; }
               if (getenv("MSGHEXQ") && hexv(getenv("MSGHEXQ"), 0) == w[0]) {  /* MSGHEXQ=qid: vuelca 4+16 palabras del mensaje y la pila del emisor (2 primeras veces) */
@@ -626,7 +644,7 @@ static void skip_fns(void) {
     if (getenv("POKE")) {  /* POKE=dir=malloc: escribe la dirección de malloc en libObj+dir (asignador del GPU de DMP, experimento) */
         const char *e = getenv("POKE"); unsigned long a = hexv(e, &e); *(void **)(base + a) = (void *)malloc; LOG("POKE libObj+%#lx = malloc (%p)", a, (void *)malloc);
     }
-    if (getenv("TRACEFN")) trace_fns(base);
+    if (getenv("TRACEFN")) { if (getenv("TRACEON")) tron_base = base; else trace_fns(base); }  /* TRACEON=texto: arma las trazas cuando el registro de libObj emite ese texto (las trazas son de un solo disparo) */
     if (getenv("WATCH") && !watch_addr) { pthread_t th; watch_addr = base + hexv(getenv("WATCH"), 0); pthread_create(&th, 0, watcher, 0); }
     for (const char *e = getenv("SKIPFN"); e && *e; ) {
         unsigned long a = hexv(e, &e); unsigned char *p = (unsigned char *)(base + a);
