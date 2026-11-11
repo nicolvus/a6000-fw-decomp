@@ -58,8 +58,8 @@ Perfil vertical (on/off por bandas): 1/350 → 1,53 … 1,23; 1/3000 → 7,9 …
 
 ## 5. Aplicar la tabla R85 (requiere la cámara en USB, escribe NVRAM; reversible con `--zero`)
 ```
-PYTHONPATH=references/pmca .venv/bin/python scripts/senser_efcs_table_write.py --tabla analysis/e26-r85/tabla-r85.json            # simulación
-PYTHONPATH=references/pmca .venv/bin/python scripts/senser_efcs_table_write.py --tabla analysis/e26-r85/tabla-r85.json --execute  # escribe
+PYTHONPATH=references/pmca .venv/bin/python scripts/senser_efcs_table_write.py --tabla analysis/e26-r85/tabla-r85b.json            # simulación
+PYTHONPATH=references/pmca .venv/bin/python scripts/senser_efcs_table_write.py --tabla analysis/e26-r85/tabla-r85b.json --execute  # escribe
 ```
 Después, una tanda ARW EFCS on/off a 1/4000, 1/2000, 1/1000, 1/500, 1/250, 1/125 (misma escena) para el refinado con
 `e26_r76_calibrar_efcs.py ajustar … --previo tabla-r85.json` (`e26_r85_calibrar_fotos.py` solo admite un `c` previo constante).
@@ -72,3 +72,21 @@ Después, una tanda ARW EFCS on/off a 1/4000, 1/2000, 1/1000, 1/500, 1/250, 1/12
 | E26-R85-SILENT-CFW | Calibración del electrónico persistente en el CFW (C3 de E25-16 en `av-cam`, solo foto y `cap+0x41d = 1`) |
 | E26-R85-SILENT-RAPIDO | Medir el electrónico calibrado de 1/500 a 1/4000 (el modelo R56 no cubre < 100 filas) y acotar `r5` en RemoteShutter |
 | E26-R85-GRAD | Degradado vertical de EFCS ≥ 1/1000 (físico, ligado a E26-R74-FISICO) |
+
+## 7. Segunda tanda DSC03786–03806 (11-11-2026, MEDIDO)
+Solo ARW, ISO 100, misma escena por tripleta; orden Electrónico → EFCS on → EFCS off. Velocidades 1/60, 1/125, 1/500 (×2), 1/1000, 1/2000, 1/4000 (falta 1/250).
+La NVRAM seguía con la tabla `--test` (c = 2000): las pérdidas rápidas salen ≈ 1 ms como en §2, lo que con la tabla R85 sería imposible (pérdida ≈ 0).
+
+| Velocidad (T Darwin) | EFCS on/off | Bandas on/off (arriba → abajo) | Pérdida (c = 2000) | Electrónico/off |
+|---|---|---|---|---|
+| 1/60 (15625) | 0,99 | 0,99 … 1,05 | — | 2,7 (1,7 → 5,4) ≈ 43 ms |
+| 1/125 (7812) | 1,00 | 1,00 … 1,02 | — | 4,6 (2,3 → 8,8) ≈ 36 ms |
+| 1/500 (1953) | 1,51 / 1,54 | 1,63 → 1,29 | 978 µs | ≈ 10 (sat. 55–68 %) |
+| 1/1000 (976) | 2,06 | 2,38 → 1,57 | 964 µs | ≈ 19 (sat.) |
+| 1/2000 (488) | 3,43 | 4,82 → 2,07 | 814 µs | ≈ 50 (sat.) |
+| 1/4000 (244) | 5,06 | 9,24 → 2,85 | 1008 µs | ≈ 106 (sat.) |
+
+* **Nuevo (MEDIDO):** a 1/60 y 1/125 EFCS on = off **aunque la tabla pide +2000 µs**: en esos tiempos `c` no tiene efecto y no hay pérdida que compensar (cola del modelo confirmada). El calibrador ignora los puntos con x ≥ 4570 µs.
+* **Pérdida EFCS** prácticamente plana ≈ 0,8–1,16 ms de 1/4000 a 1/350 (seis puntos). Tabla final **R85b** (`analysis/e26-r85/tabla-r85b.json`, sustituye a la R85): `[(1304, 1008), (1465, 953), (2205, 880), (2240, 1008), (2349, 899), (2457, 1116), (2609, 1008), (4411, 1023), (5863, 733), (7008, 474), (12000, 5)]`; predicción de media 0,96–1,02 de 1/4000 a 1/30. Tramo 1/350–1/160 modelado (sin 1/250 medido).
+* **Degradado vertical (MEDIDO):** diferencia arriba–abajo ≈ 0,67 ms (1/500), 0,79 ms (1/1000), ≈ 1,3–1,6 ms (1/2000–1/4000). Con la tabla nivelada en media: 1/500 ±17 %, 1/1000 ≈ ±40 %, 1/2000–1/4000 arriba muy claro y abajo negro. EFCS útil y uniforme hasta 1/500.
+* **Electrónico:** tomado sin el parche RAM; sigue integrando ≈ 36–43 ms a 1/60–1/125 y cada vez más en proporción a velocidades rápidas (≈ +1,5 EV a 1/60, +2,2 EV a 1/125, saturado desde 1/500), con degradado ×3–4 arriba → abajo. Confirma §3.2.

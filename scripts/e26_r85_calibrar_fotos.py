@@ -82,7 +82,7 @@ def puntos(medidas: list[dict], c_previo: int) -> list[tuple[float, float]]:
     for m in medidas:
         t = m["t_darwin_us"]
         x = P.separacion(t + c_previo)
-        if x is not None:
+        if x is not None and x < COLA[0][0]:   # R85b: desde 1/125 (x ≥ 6384) c no cambia nada (on/off = 1,00 con c = 2000): cola, no pérdida
             pts.setdefault(x, []).append(t + c_previo - m["on_off"] * t)     # pérdida = T' − E_on
     return sorted((x, statistics.mean(v)) for x, v in pts.items())
 
