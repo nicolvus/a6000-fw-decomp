@@ -98,6 +98,6 @@ def test_camconv_gamma_valueid_a_selector():
         return mu.reg_read(UC_ARM_REG_PC) & ~1, bytes(mu.mem_read(0x2000001A, 1))[0]
 
     new = P.patch_gamma(LIB.read_bytes())
-    for sel, vid in enumerate(P.VALUEID):
+    for sel, vid in enumerate(P.CAMCONV_TABLA):
         assert run(new, vid)[1] == sel
     assert run(new, 0x482)[0] == 0x9B3770 and run(new, 0)[0] == 0x9B3770

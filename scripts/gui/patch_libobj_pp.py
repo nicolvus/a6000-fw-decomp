@@ -30,6 +30,9 @@ TABLA = 0x4B4784
 CAMCONV, CAMCONV_FIN, CAMCONV_ERR, CAMCONV_STORE = 0x9B36DE, 0x9B3744, 0x9B3770, 0x9B3744
 # S-Log3 usa el valor de app 2 (no 12): con 12 el menú no lo enviaba al núcleo (prueba en cámara 10-11-2026, CFW 3.66); el 0x1B9 original (app 2) no lo usa ningún menú.
 VALUEID = (0x1B7, 0x1B8, 0x585, 0x1BA, 0x39C, 0x39D, 0x39E, 0x39F, 0x3A0, 0x3A1, 0x481, 0x480)
+# Selector del núcleo por VALUEID (`CamMsgConv`): el original da 0x480 → 10 y 0x481 → 11 (la tabla de app tiene 10 → 0x481 y 11 → 0x480): los dos últimos van intercambiados.
+# Con la misma tabla en los dos sitios (CFW 3.60–3.67) S-Log2 y ITU709(800%) salían con la curva del otro (selector 10 = curva de S-Log2, 11 = ITU709(800%) de la A7S).
+CAMCONV_TABLA = VALUEID[:10] + (VALUEID[11], VALUEID[10])
 ORIG_CASE7 = bytes.fromhex("092d" "00f28e80")                   # cmp r5,#9; bhi.w error (little endian)
 ORIG_SITE = bytes.fromhex("63d1" "07e0")                        # bne 0x4b445a; b 0x4b43a4
 ORIG_CAMCONV = bytes.fromhex("40f29d33" "9842" "0646")          # movw r3,#0x39d; cmp r0,r3; mov r6,r0
@@ -108,7 +111,7 @@ def patch_gamma(d: bytes) -> bytes:
     tabla_cc = CAMCONV + 0x16
     nuevo = _hw(0x4606) + _busca(CAMCONV + 2, tabla_cc, CAMCONV_STORE, CAMCONV_ERR, 0x4281, False, len(VALUEID))   # mov r6,r0; … cmp r1,r0
     assert CAMCONV + len(nuevo) == tabla_cc and tabla_cc % 4 == 0, hex(tabla_cc)
-    nuevo += b"".join(_hw(v) for v in VALUEID + (0,))
+    nuevo += b"".join(_hw(v) for v in CAMCONV_TABLA + (0,))
     assert CAMCONV + len(nuevo) <= CAMCONV_FIN, len(nuevo)
     out[oc:oc + CAMCONV_FIN - CAMCONV] = nuevo + _hw(0xBF00) * ((CAMCONV_FIN - CAMCONV - len(nuevo)) // 2)
     return bytes(out)

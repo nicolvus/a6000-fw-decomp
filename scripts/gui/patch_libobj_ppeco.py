@@ -24,7 +24,7 @@ ALIGN = 0x1000
 # (dirección, bytes originales, descripción)
 SITE_PERFIL = (0x4A784C, bytes.fromhex("d5f88c0f"), "ldr.w r0,[r5,#0xf8c]")          # inicio del bloque que lee la NVRAM en el caso 0x4a
 SITE_ECO = (0x4C0BE2, bytes.fromhex("874907f59e70"), "ldr r1,[pc,#0x21c]; add.w r0,r7,#0x13c")  # inicio del log «ok» del 2.º bucle
-SETTER_ESTADO, VUELVE_PERFIL_OK, VUELVE_PERFIL_NVRAM, VUELVE_ECO = 0x4A5836, 0x4A785E, 0x4A7850, 0x4C0BFC
+SETTER_ESTADO, FLUSH, VUELVE_PERFIL_OK, VUELVE_PERFIL_NVRAM, VUELVE_ECO = 0x4A5836, 0x13259C, 0x4A785E, 0x4A7850, 0x4C0BFC
 
 
 def _asm(src: str, addr: int) -> bytes:
@@ -53,9 +53,13 @@ def cave_code(base: int) -> tuple[bytes, dict[int, int]]:
         addw r3, r3, #0x4b6
         add.w r3, r4, r3, lsl #2
         ldr r0, [r3, #4]
+        str.w r0, [r7, #0x14c]
         movs r1, #1
         ldr.w r2, [r7, #0x148]
         bl {SETTER_ESTADO:#x}
+        ldr.w r0, [r7, #0x14c]
+        ldr r0, [r0]
+        bl {FLUSH:#x}
         add.w sb, sb, #1
         b.w {VUELVE_ECO:#x}
     """

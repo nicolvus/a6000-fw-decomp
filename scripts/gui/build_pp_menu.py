@@ -143,7 +143,7 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
     vu2 = A.patch((a / "lib/viewUnified2.so").read_bytes(), [*entradas_previas, delta])   # entradas_previas: p. ej. Silent (0xEB0) en el CFW completo
     if silent:
         vu2 = silent_descriptor.patch(vu2, silent_descriptor.TABLA_D_VU2, silent_descriptor.DESC_EFCS_VU2)
-    emit("lib/viewUnified2.so", pid_space.patch(vu2, ajustes))
+    emit("lib/viewUnified2.so", pid_space.patch(vu2, ajustes, gris_efcs=silent))   # G30: con Silent, EFCS en gris cuando Silent está On
     en_b = uxc_strings.parse((b / "share/app/string_english.uxc").read_bytes())[2]
     inv = {}
     for rid, t in sorted(en_b.items()):

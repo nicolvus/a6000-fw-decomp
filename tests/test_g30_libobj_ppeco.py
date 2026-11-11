@@ -81,14 +81,20 @@ def test_eco_llama_al_setter_de_estado_con_el_objeto_del_parametro_y_el_valor_de
     mu.reg_write(UC_ARM_REG_R4, THIS)
     mu.reg_write(UC_ARM_REG_R7, FRAME)
     mu.reg_write(UC_ARM_REG_R9, 5)
-    llamadas = []
+    llamadas, flush = [], []
+    modelo = 0x20190000
+    mu.mem_write(obj, struct.pack("<I", modelo))                                   # [wrapper] = objeto con las banderas de cambio
 
     def setter(uc, log):
         llamadas.append((uc.reg_read(UC_ARM_REG_R0), uc.reg_read(UC_ARM_REG_R1), uc.reg_read(UC_ARM_REG_R2)))
         uc.reg_write(UC_ARM_REG_PC, uc.reg_read(UC_ARM_REG_LR) | 1)            # return
 
-    _correr(mu, 0x4C0BE2, 0x4C0BFC, {0x4A5836: setter})
-    assert llamadas == [(obj, 1, valor)]
+    def flush_(uc, log):
+        flush.append(uc.reg_read(UC_ARM_REG_R0))
+        uc.reg_write(UC_ARM_REG_PC, uc.reg_read(UC_ARM_REG_LR) | 1)
+
+    _correr(mu, 0x4C0BE2, 0x4C0BFC, {0x4A5836: setter, 0x13259C: flush_})
+    assert llamadas == [(obj, 1, valor)] and flush == [modelo]                    # tras actualizar el estado se vacía la lista de cambios del modelo (notifica a la vista)
     assert mu.reg_read(UC_ARM_REG_R9) == 6                                         # sb += 1 (cuenta de parámetros convertidos)
 
 

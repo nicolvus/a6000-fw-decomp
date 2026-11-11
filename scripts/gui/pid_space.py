@@ -30,7 +30,10 @@ REF_NORMAL, PID_M00B = 0x12, 0x3F               # pid de clase Normal · pid con
 SITIO_GET = (0x1B4568, bytes.fromhex("e829f8b5"), 0x1B4598, ELEM - 0x1B457E)             # cmp r1,#0xe8 ; push {r3-r7,lr}
 SITIO_INIT = (0x25D8F2, bytes.fromhex("e82a0ad8"), 0x25D910, D - 0x25D8FE)               # cmp r2,#0xe8 ; bhi 0x25d90c
 SITIO_SET = (0x25D91C, bytes.fromhex("e82909d8"), 0x25D938, D - 0x25D928)  # cmp r1,#0xe8 ; bhi 0x25d934
-CODIGO_RESERVA = 0x80
+CODIGO_RESERVA = 0xC0
+# G30: EFCS (pid 0x46) en gris con Silent On. `CmnViewProcessDataMgr::isGrayedOut(pid)` (copia de viewUnified2, 0x1b4696) pasa por un tramo nuevo: si pid == 0x46 devuelve
+# (valor de Silent == 1) usando `CmnViewProcessDataMgr::getValue(pid, int&)` (0x1b475a) sobre el pid 0x12 (Silent, índice de opción 1 = On); si no, ejecuta el prólogo original.
+SITIO_GRIS, GET_VALUE_VU2, PID_EFCS, PID_SILENT = (0x1B4696, bytes.fromhex("80b500af")), 0x1B475A, 0x46, 0x12
 
 
 def _asm(src: str, addr: int) -> bytes:
@@ -51,7 +54,35 @@ def tramos(code_va: int) -> tuple[bytes, dict[int, int]]:
     return bytes(cod), {SITIO_GET[0]: s_get, SITIO_INIT[0]: s_init, SITIO_SET[0]: s_set}
 
 
-def patch(d: bytes, ajustes) -> bytes:
+def tramo_gris(va: int) -> bytes:
+    src = f"""
+        cmp r1, #{PID_EFCS:#x}
+        bne orig
+        push {{r4, lr}}
+        sub sp, #8
+        movs r1, #{PID_SILENT:#x}
+        movs r3, #0
+        str r3, [sp]
+        mov r2, sp
+        bl {GET_VALUE_VU2:#x}
+        ldr r0, [sp]
+        cmp r0, #1
+        ite eq
+        moveq r0, #1
+        movne r0, #0
+        add sp, #8
+        pop {{r4, pc}}
+    orig:
+        push {{r7, lr}}
+        add r7, sp, #0
+        b.w {SITIO_GRIS[0] + 4:#x}
+    """
+    b = _asm(src, va)
+    assert len(b) <= 0x40, len(b)
+    return b
+
+
+def patch(d: bytes, ajustes, gris_efcs: bool = False) -> bytes:
     segs = A._segments(d)
     dyn_off, dyn = A._dynamic(d, segs)
     tags = {t: v for t, v in dyn if t}
@@ -84,6 +115,11 @@ def patch(d: bytes, ajustes) -> bytes:
     d_va = elem_va + 4 * n_new
     data_va = d_va + 4 * n_new
     cod, hooks = tramos(code_va)
+    cod = bytearray(cod)
+    if gris_efcs:
+        assert d[SITIO_GRIS[0]:SITIO_GRIS[0] + 4] == SITIO_GRIS[1], "isGrayedOut de viewUnified2 no es el esperado"
+        t = tramo_gris(code_va + 0x60)
+        cod[0x60:0x60 + len(t)] = t
 
     blob, extra = bytearray(), bytearray()
 
@@ -115,6 +151,8 @@ def patch(d: bytes, ajustes) -> bytes:
     out = bytearray(d)
     for va, orig, lit, _ in (SITIO_GET, SITIO_INIT, SITIO_SET):                 # ganchos y literales (código: el VA del primer LOAD es el offset)
         out[va:va + 4] = _asm(f"b.w {hooks[va]:#x}", va)
+    if gris_efcs:
+        out[SITIO_GRIS[0]:SITIO_GRIS[0] + 4] = _asm(f"b.w {code_va + 0x60:#x}", SITIO_GRIS[0])
     struct.pack_into("<I", out, SITIO_GET[2], (elem_va - 0x1B457E) & 0xFFFFFFFF)
     struct.pack_into("<I", out, SITIO_INIT[2], (d_va - 0x25D8FE) & 0xFFFFFFFF)
     struct.pack_into("<I", out, SITIO_SET[2], (d_va - 0x25D928) & 0xFFFFFFFF)
