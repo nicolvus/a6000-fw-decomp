@@ -32,7 +32,7 @@ public class Main extends Activity implements SurfaceHolder.Callback {
     private volatile int openRetries;
     private volatile int lastShotR5;
     private final StringBuilder shotLog = new StringBuilder();  // CSV: n,t_inicio_ms,ms_hasta_jpeg,bytes
-    private static final String VERSION = "v8c";
+    private static final String VERSION = "v9";
     private TextView info;
     private String keyLog = "-";
 
@@ -113,11 +113,13 @@ public class Main extends Activity implements SurfaceHolder.Callback {
                     else { sil = silentApply(r5); if (sil.startsWith("silent r5=")) lastShotR5 = r5; else throw new Exception(sil); }
                 }
                 silentLog = sil;
+                modeStart();
                 last = "shooting";
                 final long t0 = android.os.SystemClock.elapsedRealtime();
                 camera.takePicture(null, null, new Camera.PictureCallback() {
                     public void onPictureTaken(byte[] data, Camera cam) {
                         silentRevert("cb");   // primero revertir: el estado «done» ya no ve el parche
+                        modeStop();
                         final long ms = android.os.SystemClock.elapsedRealtime() - t0;
                         int id = ++count;
                         try {
@@ -131,7 +133,7 @@ public class Main extends Activity implements SurfaceHolder.Callback {
                         release();
                     }
                 });
-            } catch (Throwable t) { last = "shoot-error " + cause(t); Log.e(TAG, "shoot", t); release(); }
+            } catch (Throwable t) { modeStop(); last = "shoot-error " + cause(t); Log.e(TAG, "shoot", t); release(); }
         }});
     }
 
@@ -193,6 +195,50 @@ public class Main extends Activity implements SurfaceHolder.Callback {
         return "reopen n=" + n + " gap=" + gap + " fails=" + fails + " " + sb;
     }
 
+
+    // ---- v9 (E26-R87): modo de obturador por disparo (Mecánico / EFCS / Electrónico) forzando el bloque de ajustes en RAM ----
+    // +0x210 (EFCS, 1 = desactivado) y +0x238 (Silent) del bloque 0x43EDF684: el copiador de patch_tristate los lee al construir la captura.
+    // El firmware puede reescribirlos durante el disparo: se fuerzan cada 20 ms hasta el callback y luego se restauran los del menú.
+    private static final long SILENT_A = 0x83EDF8BCL;
+    private volatile int modeE = -1, modeS = -1;   // -1 = no forzar (lo que diga el menú)
+    private volatile String modeName = "menu";
+    private volatile boolean forcing;
+    private byte[] modeOrigE, modeOrigS;
+
+    private String modeCmd(String req) {
+        int a = req.indexOf("v=");
+        String v = a < 0 ? "" : req.substring(a + 2).split("[ &]")[0];
+        if (v.equals("mech")) { modeE = 1; modeS = 0; }
+        else if (v.equals("efcs")) { modeE = 0; modeS = 0; }
+        else if (v.equals("silent")) { modeE = 1; modeS = 1; }
+        else if (v.equals("menu")) { modeE = -1; modeS = -1; }
+        else if (v.equals("raw")) { modeE = q(req, "e", 1); modeS = q(req, "s", 0); }
+        if (!v.isEmpty()) modeName = v;
+        String cur;
+        try { cur = "efcs=" + hex(memRead(EFCS_A, 2)) + " silent=" + hex(memRead(SILENT_A, 2)); } catch (Throwable t) { cur = "lectura-error " + cause(t); }
+        return "mode " + modeName + " (e=" + modeE + " s=" + modeS + ") ram " + cur;
+    }
+
+    private synchronized void modeStart() throws Exception {
+        if (modeE < 0) return;
+        modeOrigE = memRead(EFCS_A, 2); modeOrigS = memRead(SILENT_A, 2);
+        final byte[] e = {(byte) modeE, 0}, s = {(byte) modeS, 0};
+        memWrite(EFCS_A, e); memWrite(SILENT_A, s);
+        if (!java.util.Arrays.equals(memRead(EFCS_A, 2), e) || !java.util.Arrays.equals(memRead(SILENT_A, 2), s)) throw new Exception("mode-verificacion");
+        forcing = true;
+        new Thread(new Runnable() { public void run() {
+            long t0 = android.os.SystemClock.elapsedRealtime();
+            while (forcing && android.os.SystemClock.elapsedRealtime() - t0 < 40000) {
+                try { memWrite(EFCS_A, e); memWrite(SILENT_A, s); Thread.sleep(20); } catch (Throwable t) { break; }
+            }
+        }}).start();
+    }
+
+    private synchronized void modeStop() {
+        if (!forcing) return;
+        forcing = false;
+        try { Thread.sleep(40); memWrite(EFCS_A, modeOrigE); memWrite(SILENT_A, modeOrigS); } catch (Throwable t) { Log.e(TAG, "modeStop", t); }
+    }
 
     // NO USAR (T049): Runtime.exec se colgó entre las dos escrituras y dejó ShutMode 0 forzado. El parche se aplica desde el PC con guardián: scripts/camera_silent.py.
     // ---- Modo silencioso (E25-11): ShutMode 0 + r5 calculado desde la velocidad, parche RAM de BIONZ con reversión ----
@@ -488,6 +534,7 @@ public class Main extends Activity implements SurfaceHolder.Callback {
                         o.close(); s.close(); continue;
                     }
                     if (req.startsWith("GET /silent")) last = silentCmd(req);
+                    else if (req.startsWith("GET /mode")) last = modeCmd(req);
                     else if (req.startsWith("GET /params")) last = params();
                     else if (req.startsWith("GET /iso")) last = iso(q(req, "v", -1));
                     else if (req.startsWith("GET /fmt")) { int a = req.indexOf("v="); last = fmt(a < 0 ? null : req.substring(a + 2).split("[ &]")[0]); }
