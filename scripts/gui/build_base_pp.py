@@ -15,9 +15,10 @@ sys.path.insert(0, str(ROOT / "scripts/gui"))
 sys.path.insert(0, str(ROOT / "scripts"))
 import pp_curves_patch
 from e25_27 import build, fatimg, sums, tarball, tpzl
+from g22 import patch_silent_r5
 
 
-def main(base_tar: Path, out_tar: Path, color: bool = True, tone: bool = True) -> dict:
+def main(base_tar: Path, out_tar: Path, color: bool = True, tone: bool = True, silent_r5: bool = True) -> dict:
     tar = base_tar.read_bytes()
     entries, _ = tarball.parse(tar)
     members = {e.name: e.data for e in entries}
@@ -29,6 +30,8 @@ def main(base_tar: Path, out_tar: Path, color: bool = True, tone: bool = True) -
         src.write_bytes(bionz)
         pp_curves_patch.main(src, Path(tmp) / "pp", None, color=color, tone=tone)
         nuevo = (Path(tmp) / "pp/av-cam.pp.bin").read_bytes()
+    if silent_r5:   # E26-R86: Silent con ShutMode 0 + r5 desde la velocidad (calibración R56), solo en foto
+        nuevo = patch_silent_r5.apply_bytes(nuevo)
     assert len(nuevo) == len(bionz) and nuevo != bionz
     fat2, _ = fat.patch(build.AVCAM_NAME, nuevo)
     part2, info = tpzl.patch_decompressed(part, fat2)
@@ -46,5 +49,6 @@ if __name__ == "__main__":
     ap.add_argument("salida", type=Path)
     ap.add_argument("--sin-color", action="store_true")
     ap.add_argument("--sin-tono", action="store_true")
+    ap.add_argument("--sin-silent-r5", action="store_true")
     a = ap.parse_args()
-    print(main(a.base, a.salida, not a.sin_color, not a.sin_tono))
+    print(main(a.base, a.salida, not a.sin_color, not a.sin_tono, not a.sin_silent_r5))

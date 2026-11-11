@@ -6,7 +6,7 @@ Encadena lo ya hecho, sin duplicar ninguna lógica:
   2. `build_pp_menu` sobre esos ficheros (menú PP de 33 ajustes con Color Mode Level, gamma S-Log2/S-Log3/ITU709(800%), Color Mode B&W/S-Gamut/S-Gamut3(.Cine),
      Copy y Reset; `patch_libobj_pp`);
   3. eco de Silent en `libObj` (`g22.patch_libobj_eco`, 3.59) y, G30, eco del estado PP + selector de perfil (`patch_libobj_ppeco`, 3.67);
-  4. `build_base_pp` (G31): `pp_curves_patch --color` sobre el BIONZ del CFW (3.38 + `g22.patch_tristate`) escrito en `nflasha3` (curvas de gamma, tablas y
+  4. `build_base_pp` (G31; E26-R86 añade `g22.patch_silent_r5`, Silent calibrado): `pp_curves_patch --color` sobre el BIONZ del CFW (3.38 + `g22.patch_tristate`) escrito en `nflasha3` (curvas de gamma, tablas y
      código de S-Gamut3/.Cine permanentes en la imagen; sin `pp_ram.sh` ni vigilante);
   5. `build_nflasha15` (/usr con TPZL) y `build_package_nflasha15` (tar base del 3.57 con el BIONZ de tres estados, Darwin v3, sin `nflasha5`) → `.dat`.
 Uso: build_cfw_completo.py SALIDA [--version 3.60]
