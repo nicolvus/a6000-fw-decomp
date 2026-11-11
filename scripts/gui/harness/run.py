@@ -32,7 +32,7 @@ with tempfile.TemporaryDirectory() as t:
     gz = subprocess.run(["gzip", "-1"], input=cpio, capture_output=True, check=True).stdout
     initrd.write_bytes((work / "base.cpio.gz").read_bytes() + gz)
     ncpu = min(int(os.environ.get("QEMU_SMP", 8)), 8)  # el kernel netboot armmp de Debian trae NR_CPUS=8: más vCPU no se ven (medido: -smp 12 → 8 en /proc/cpuinfo)
-    cmd = ["qemu-system-arm", "-M", "virt", "-cpu", "cortex-a15", "-smp", str(ncpu), "-accel", "tcg,thread=multi,tb-size=2048", "-m", "1536", "-kernel", str(work / "vmlinuz"), "-initrd", str(initrd),
+    cmd = ["qemu-system-arm", "-M", "virt", "-cpu", "cortex-a15", "-smp", str(ncpu), "-accel", "tcg,thread=multi", "-m", "1536", "-kernel", str(work / "vmlinuz"), "-initrd", str(initrd),
            "-append", "console=ttyAMA0 quiet loglevel=3", "-nographic", "-no-reboot", *extra]
     log = work / "last.log"
     with open(log, "wb") as out:
