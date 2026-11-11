@@ -204,6 +204,15 @@ static void dataflow_reply(unsigned src, unsigned q, const unsigned char *req) {
     pthread_cond_broadcast(&mbx_c); pthread_mutex_unlock(&mbx_m);
     LOG("snd_msg %#x dataflow cate=%#x msg=%#x -> comp a %#x", src, rp[0], rp[1], q);
 }
+/* KEYINIT=key:estado:índice,… (hex): estados iniciales que el driver de entrada informa (mensaje de 0x7a0020, receptor libObj+0x806f88: w0 clave,
+ * w2 valor, w4 índice físico = palabra 9 de la entrada de evento) para la lista de InfraInput (entradas de 0x44 B: +0 clave, +4 evento, +0x14 estado,
+ * 0x7fffffff = desconocido → InputService::getInputEventStatus falla); p. ej. 7000001:1:177 = jack USB (evento 0x15040010).
+ * Se envían una vez a 0x7a0020 al ver KEYINITON=texto en el registro de libObj (por defecto, con el toActive de InputService). */
+static void keyinit_send(void) {
+    static int done; if (done || !is_dynq(0x7a0020)) return; done = 1;
+    for (const char *e = getenv("KEYINIT"); e && *e; ) { unsigned km[12] = { 0 }; km[0] = hexv(e, &e); if (*e == ':') km[2] = hexv(e + 1, &e); if (*e == ':') km[4] = hexv(e + 1, &e);
+        mbx_post_raw(0x7a0020, km); LOG("KEYINIT key=%#x status=%#x idx=%#x", km[0], km[2], km[4]); while (*e == ',') e++; }
+}
 static int mbx_take(unsigned q, int tmo, void **out) {  /* 0 = recibido, 1 = cola sin buzón (no dinámica), E_TMOUT = nada en tmo ms */
     int k, r = 1; struct timespec ts;
     if (!is_dynq(q)) return 1;
@@ -349,7 +358,8 @@ int ioctl(int fd, unsigned long req, ...) {
             { static int ns5; const char *e = getenv("STACKQ"); if (e && hexv(e, 0) == w[0] && ++ns5 == 3) raise(SIGUSR1); }  /* STACKQ=qid: pila del emisor en el 3.er envío */
             { pthread_mutex_lock(&cb_m); int k = cb_find(w[0]); if (k >= 0) { t5[1] = (unsigned)cbs[k].cb; t5[2] = (unsigned)cbs[k].arg; } pthread_mutex_unlock(&cb_m);
               if (k >= 0) { if (getenv("VERB")) LOG("snd_sync_msg %#x -> callback directo", w[0]); return 0; } }
-            if (w[0] == 0x8f013a) { if (m[2] && tron_base && strstr((char *)m + 2, getenv("TRACEON"))) { unsigned long b = tron_base; tron_base = 0; trace_fns(b); LOG("TRACEON: trazas armadas"); } if (m[2]) LOG("LOG %s", (char *)m + 2); else if (getenv("VERB")) { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
+            if (w[0] == 0x8f013a) { if (m[2] && getenv("KEYINITON") && strstr((char *)m + 2, getenv("KEYINITON"))) keyinit_send();
+              if (m[2] && tron_base && strstr((char *)m + 2, getenv("TRACEON"))) { unsigned long b = tron_base; tron_base = 0; trace_fns(b); LOG("TRACEON: trazas armadas"); } if (m[2]) LOG("LOG %s", (char *)m + 2); else if (getenv("VERB")) { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
             else if (w[0] == 0x3e014d) backup_service((unsigned *)m);
             else if (w[0] == 0x924127 && ((unsigned *)m)[0] == 0x920111 && getenv("BOOTINFO")) {  /* BOOTINFO=a,b,c,d,e (hex): respuesta de arranque (ObjHandover, libObj+0x41b158) → palabras 1–5 */
                 const char *e = getenv("BOOTINFO"); for (int k = 1; k <= 5 && *e; k++) { ((unsigned *)m)[k] = hexv(e, &e); if (*e == ',') e++; }
@@ -371,7 +381,8 @@ int ioctl(int fd, unsigned long req, ...) {
                 char t[420]; int k; for (k = 0; k < 410; k++) t[k] = (m[k] >= 32 && m[k] < 127) ? m[k] : '.'; t[410] = 0;
                 { char c[420]; int o = 0, pd = 1; for (k = 0; t[k]; k++) { if (t[k] == '.') { if (!pd) c[o++] = ' '; pd = 1; } else { c[o++] = t[k]; pd = 0; } } c[o] = 0; if (o > 6) LOG("TRAZA %s", c); }
                 { const char *ka = getenv("KEYONACTIVE"), *kp = strstr(t, "toActive:3515 insert key_code=0x");  /* KEYONACTIVE=estado_hex: el driver de entrada de la cámara informa el estado inicial de cada tecla cuando InputService la activa (aquí, la tecla de encendido) */
-                  if (ka && kp && is_dynq(0x7a0020)) { unsigned kc = hexv(kp + 32, 0), kmsg[6] = { kc, 0, hexv(ka, 0), 0, 0, 0 }; mbx_post(0x7a0020, kmsg, 0); LOG("KEYONACTIVE key=%#x status=%#x", kc, kmsg[2]); } }
+                  if (ka && kp && is_dynq(0x7a0020)) { unsigned kc = hexv(kp + 32, 0), kmsg[6] = { kc, 0, hexv(ka, 0), 0, 0, 0 }; mbx_post(0x7a0020, kmsg, 0); LOG("KEYONACTIVE key=%#x status=%#x", kc, kmsg[2]); }
+                  if (kp && !getenv("KEYINITON")) keyinit_send(); }
                 if (getenv("STACKTXT") && strstr(t, getenv("STACKTXT"))) { static int ns; if (ns++ < 2) raise(SIGUSR1); }  /* STACKTXT=texto: pila del hilo que emite esa traza */
                 if (strstr(t, "MMapBase")) { char h[500]; int o = 0; for (k = 0; k < 200; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]); LOG("TRAZAHEX %s", h); }
                 return 0; }
