@@ -105,3 +105,26 @@ def test_el_elf_parcheado_tiene_el_segmento_nuevo_en_orden_y_sin_solapes():
     loads = [struct.unpack_from("<8I", img, phoff + 32 * i) for i in range(phnum) if struct.unpack_from("<I", img, phoff + 32 * i)[0] == 1]
     assert [s[2] for s in loads] == sorted(s[2] for s in loads) and len(loads) == 3
     assert (loads[1][2] - loads[1][1]) % 0x1000 == 0 and loads[0][2] + loads[0][5] <= loads[1][2] and loads[1][2] + loads[1][5] <= loads[2][2] & ~0xFFF
+
+
+@needs
+def test_trazas_usan_direccion_relativa_al_pc_y_no_dependen_de_la_base_de_carga(monkeypatch):
+    """Regresión 3.69: movw/movt absolutos dieron SIGSEGV en cámara; la cueva trazada debe contar en DATA aunque el .so cargue en otra base."""
+    monkeypatch.setattr(E, "TRACE", True)
+    img = E.patch(LIB.read_bytes())
+    base = 0x3000000
+    mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
+    mu.mem_map(base, 0x1100000)
+    phoff, phnum = struct.unpack_from("<I", img, 28)[0], struct.unpack_from("<H", img, 44)[0]
+    mu.mem_write(base, img[:0xFCA5A4])
+    for i in range(phnum):
+        t, off, va, _, fs, _, _, _ = struct.unpack_from("<8I", img, phoff + 32 * i)
+        if t == 1 and va == E.CAVE_VA:
+            mu.mem_write(base + va, img[off:off + fs])
+    mu.mem_map(THIS, 0x200000)
+    mu.mem_write(THIS + 0x274, struct.pack("<I", 3))
+    mu.reg_write(UC_ARM_REG_R5, THIS)
+    mu.reg_write(UC_ARM_REG_R7, FRAME)
+    mu.reg_write(UC_ARM_REG_SP, THIS + 0x1F0000)
+    mu.emu_start((base + 0x4A784C) | 1, base + 0x4A785E, count=200)
+    assert struct.unpack("<I", bytes(mu.mem_read(base + E.DATA + 0x50, 4)))[0] == 1

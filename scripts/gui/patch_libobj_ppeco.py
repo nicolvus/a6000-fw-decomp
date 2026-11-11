@@ -36,14 +36,15 @@ def _asm(src: str, addr: int) -> bytes:
     return bytes(enc)
 
 
-def _movw_movt(reg: str, val: int) -> str:
-    return f"movw {reg}, #{val & 0xFFFF:#x}; movt {reg}, #{val >> 16:#x};"
+def _ptr(reg: str, val: int) -> str:
+    """Dirección de la zona de datos relativa al PC: libObj.so se carga en una base arbitraria, un movw/movt absoluto daría SIGSEGV."""
+    return f"adr.w {reg}, {val:#x};"
 
 
 def cave_code(base: int) -> tuple[bytes, dict[int, int]]:
     """Código nuevo (concatenado) y {sitio: dirección del tramo}."""
     p = base
-    cnt_perfil = f"{_movw_movt('r0', DATA + 0x50)} ldr r1, [r0]; adds r1, #1; str r1, [r0];" if TRACE else ""
+    cnt_perfil = f"{_ptr('r12', DATA + 0x50)} ldr r3, [r12]; adds r3, #1; str r3, [r12];" if TRACE else ""
     perfil = f"""
         {cnt_perfil}
         ldr.w r3, [r5, #0x274]
@@ -57,7 +58,7 @@ def cave_code(base: int) -> tuple[bytes, dict[int, int]]:
     """
     b1 = _asm(perfil, p)
     e = base + ((len(b1) + 3) & ~3)
-    cnt_eco = f"{_movw_movt('r3', DATA + 0x48)} ldr r0, [r3]; adds r0, #1; str r0, [r3]; ldr.w r0, [r7, #0x148]; str r0, [r3, #4];" if TRACE else ""
+    cnt_eco = f"{_ptr('r12', DATA + 0x48)} ldr r3, [r12]; adds r3, #1; str r3, [r12]; ldr.w r3, [r7, #0x148]; str r3, [r12, #4];" if TRACE else ""
     eco = f"""
         ldr r3, [r7, #4]
         ldr.w r3, [r3, #0x560]
@@ -82,7 +83,7 @@ def cave_code(base: int) -> tuple[bytes, dict[int, int]]:
         g = base + ((len(out) + 3) & ~3)
         gmi = f"""
             push {{r4, r5}}
-            {_movw_movt('r4', DATA)}
+            {_ptr('r4', DATA)}
             ldr r5, [r4]; adds r5, #1; str r5, [r4]
             ldr r5, [r4, #4]; and r5, r5, #15
             add.w r12, r4, #8
