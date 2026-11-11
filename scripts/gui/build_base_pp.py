@@ -17,7 +17,7 @@ import pp_curves_patch
 from e25_27 import build, fatimg, sums, tarball, tpzl
 
 
-def main(base_tar: Path, out_tar: Path, color: bool = True) -> dict:
+def main(base_tar: Path, out_tar: Path, color: bool = True, tone: bool = True) -> dict:
     tar = base_tar.read_bytes()
     entries, _ = tarball.parse(tar)
     members = {e.name: e.data for e in entries}
@@ -27,7 +27,7 @@ def main(base_tar: Path, out_tar: Path, color: bool = True) -> dict:
     with tempfile.TemporaryDirectory() as tmp:
         src = Path(tmp) / "av-cam.base.bin"
         src.write_bytes(bionz)
-        pp_curves_patch.main(src, Path(tmp) / "pp", None, color=color)
+        pp_curves_patch.main(src, Path(tmp) / "pp", None, color=color, tone=tone)
         nuevo = (Path(tmp) / "pp/av-cam.pp.bin").read_bytes()
     assert len(nuevo) == len(bionz) and nuevo != bionz
     fat2, _ = fat.patch(build.AVCAM_NAME, nuevo)
@@ -45,5 +45,6 @@ if __name__ == "__main__":
     ap.add_argument("base", type=Path)
     ap.add_argument("salida", type=Path)
     ap.add_argument("--sin-color", action="store_true")
+    ap.add_argument("--sin-tono", action="store_true")
     a = ap.parse_args()
-    print(main(a.base, a.salida, not a.sin_color))
+    print(main(a.base, a.salida, not a.sin_color, not a.sin_tono))

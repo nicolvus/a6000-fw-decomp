@@ -141,12 +141,15 @@ def camera_files(base: bytes, ps: list[tuple[int, bytes, str]], prueba: int | No
     return "\n".join(sh) + "\n", blob
 
 
-def main(base_path: Path, out: Path, prueba: int | None = None, color: bool = False) -> dict:
+def main(base_path: Path, out: Path, prueba: int | None = None, color: bool = False, tone: bool = False) -> dict:
     base, a7s = base_path.read_bytes(), A7S.read_bytes()
     ps = patches(base, a7s, A6300.read_bytes() if A6300.is_file() else None)
     if color:  # G27: S-Gamut3 / S-Gamut3.Cine (código + datos en el hueco, tras las curvas)
         import pp_color_patch
         ps += pp_color_patch.patches(base, pp_color_patch.PRESET_A6300.read_bytes())
+    if tone:  # G33: Black Level, Black Gamma, Knee y Gamma Still sobre la curva (código + datos en la cueva tras los de color)
+        import pp_tone_patch
+        ps += pp_tone_patch.patches(base)
     check_base(base, ps)
     new = apply(base, ps)
     # autocomprobación: releer como lo haría el núcleo
@@ -175,5 +178,5 @@ def main(base_path: Path, out: Path, prueba: int | None = None, color: bool = Fa
 
 if __name__ == "__main__":
     pos = [x for x in sys.argv[1:] if not x.startswith("--")]
-    m = main(Path(pos[0]), Path(pos[1]), int(pos[2]) if len(pos) > 2 else None, "--color" in sys.argv)
+    m = main(Path(pos[0]), Path(pos[1]), int(pos[2]) if len(pos) > 2 else None, "--color" in sys.argv, "--tone" in sys.argv)
     print(m["base_sha256"][:16], "→", m["pp_sha256"][:16], "bytes distintos", m["bytes_distintos"], "escrituras", len(m["escrituras"]))
