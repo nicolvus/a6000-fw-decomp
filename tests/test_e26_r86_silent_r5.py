@@ -23,8 +23,8 @@ def avcam():
 def test_r5_como_r56(avcam):
     import patch_silent_r5 as R
     img = R.apply_bytes(avcam)
-    assert R.emular(img, 0x1600) == (0x1234, 3320, 0)      # 1/60: valor medido en R56 §7
-    assert R.emular(img, 0x1800) == (0x1234, 4077, 0)      # 1/250
+    assert R.emular(img, 0x1600) == (0x1234, 3341, 0)      # 1/60 con el ajuste R87
+    assert R.emular(img, 0x1800) == (0x1234, 4025, 0)      # 1/250
     assert R.emular(img, 0x1C00)[1:] == (4218, 0)          # 1/4000: acotado a 1 línea
     assert R.emular(img, 0x1300)[1:] == (1, 3)             # 1/8: no cabe en un cuadro, no se toca
     assert R.emular(img, 0x1A00, silent=0)[1:] == (1, 3)   # Silent desactivado: no se toca

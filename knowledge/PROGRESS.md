@@ -620,3 +620,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 11-11-2026: R85 §7, segunda tanda DSC03786–03806: tabla EFCS final R85b; a 1/60–1/125 `c` no actúa; EFCS uniforme solo hasta 1/500; electrónico sigue sin calibrar sin el parche RAM.
 - 11-11-2026: E26-R86 CFW 3.76 (3.75 + Silent calibrado en la imagen BIONZ) y tabla EFCS R86 de la segunda tanda; construido, emulado y auditado, sin instalar. [R86](../docs/capture/e26-r86-cfw-376-tres-modos-nivelados.md)
 - 11-11-2026: CFW 3.76 instalado (arranca) y tabla EFCS R86 escrita en NVRAM; faltan fotos de comprobación. [R86 §6](../docs/capture/e26-r86-cfw-376-tres-modos-nivelados.md)
+- 11-11-2026: E26-R87 disparo remoto de los tres modos; Silent del 3.76 corregido y recalibrado (CFW 3.77, sin instalar); tabla EFCS R87. [R87](../docs/capture/e26-r87-disparo-remoto-y-recalibracion.md)

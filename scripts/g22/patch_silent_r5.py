@@ -6,10 +6,11 @@ NOMINAL de la app (1/60 = 16 667 µs); aquí T sale del Tv (1/60 = 2^-6 s = 15 6
 Enganche (el de C3-B de E25-26): `0x438c82fe bl 0x436d6118` de la secuencia de foto `0x438c828c`, paso 0, justo antes de
 `SetExposure` (`0x438c830c`, `r1 = cap+0x64c`). La cueva:
   * llama a `0x436d6118` como el original y devuelve su r0;
-  * solo actúa con `cap+0x41d == 1` (Silent, escrito por el copiador de `patch_tristate`);
+  * solo actúa con Silent activado: byte vivo `0x43EDF684+0x238` (el mismo que usa el envío a Darwin). R87 (medido en RAM):
+    `cap+0x41d` vale 0 en el objeto de esta secuencia (`r4` ≠ objeto del copiador de `patch_tristate`), así que la versión del 3.76 nunca actuaba;
   * Tv = `ajustes+0x162` (ajustes = `0x4383fbc4([cap+0x1e0], [cap+0x1d8])`, el mismo par que `0x4383fd6c` con r6 = cap+0x20);
   * solo 1/16 s … 1/16000 (`0x1400 <= Tv <= 0x1e00`); `q8 = 0x4382fa94(Tv)` (µs·256);
-  * `líneas = q8·K >> 32` (K = 2^32/(15,48·256)), `r5 = 4329 − líneas`; si `r5 < 10` (no cabe en un cuadro) no toca nada;
+  * `líneas = q8·K >> 32` (K = 2^32/(17,135·256)), `r5 = 4252 − líneas` (R87; el ajuste R56 de 3.35 dejaba 1/250 en 0,73 y 1/500 en 0,40); si `r5 < 10` (no cabe en un cuadro) no toca nada;
     `r5 <= 4218` (por encima de ~1/600 el modelo da ≤ 0 líneas: 1 línea, NO medido);
   * escribe `cap+0x64c` (u16, `param+0` = r5 de SetExposure) y `cap+0x655 = 0` (`param+9` = ShutMode).
 Cueva en el hueco de G18 tras el código de `pp_tone_patch` y antes de su búfer `W` (`0x43FB7EC0`).
@@ -24,8 +25,9 @@ from e25_24.thumb import bl
 BASE = PB.BASE
 HOOK, HOOK_OLD, IMAGER = 0x438C82FE, bytes.fromhex("0df60bff"), 0x436D6118
 SETTINGS, TV2US = 0x4383FBC4, 0x4382FA94
+LIVE_SILENT = 0x43EDF684 + 0x238           # ajuste Silent vivo (patch_tristate.LIVE_BASE + 0x238)
 CAVE, CAVE_END = 0x43FB7E00, 0x43FB7EC0      # W de pp_tone_patch empieza en 0x43FB7EC0
-LINE_US, R5_LAG, R5_FULL, R5_MIN = 11719 / 757, 110, 4219, 10   # 15,48 µs: ajuste exacto a 1/60 → 3320 y 1/250 → 4077 con T real
+LINE_US, R5_LAG, R5_FULL, R5_MIN = 17.135, 33, 4219, 10   # R87: E = 17,135 µs·n + 564 µs medido en cámara (7 velocidades, 1/2000…1/50)
 K = round(2**32 / (LINE_US * 256))
 TV_MIN, TV_MAX = 0x1400, 0x1E00
 
@@ -37,7 +39,9 @@ def cave_bytes() -> bytes:
         mov r5, r4
         bl {IMAGER:#x}
         mov r6, r0
-        ldrb.w r3, [r5, #0x41d]
+        movw r3, #{LIVE_SILENT & 0xFFFF:#x}
+        movt r3, #{LIVE_SILENT >> 16:#x}
+        ldrb r3, [r3]
         cmp r3, #1
         bne done
         ldr.w r0, [r5, #0x1e0]
@@ -118,7 +122,7 @@ def emular(img: bytes, tv: int, silent: int = 1) -> tuple[int, int, int]:
     mu.mem_map(stack - 0x10000, 0x20000)
     mu.mem_map(cap, 0x10000)
     mu.mem_map(end, 0x1000)
-    mu.mem_write(cap + 0x41D, bytes([silent]))
+    mu.mem_write(LIVE_SILENT, bytes([silent]))
     mu.mem_write(cap + 0x64C, struct.pack("<H", 1))
     mu.mem_write(cap + 0x655, b"\x03")
     mu.mem_write(cap + 0x1E0, struct.pack("<I", 0))
