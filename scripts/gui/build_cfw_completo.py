@@ -5,7 +5,7 @@ Encadena lo ya hecho, sin duplicar ninguna lógica:
   1. `build_silent_menu_test` (nodo Silent con ProcessId 0x12, página del menú, textos) + `silent_descriptor` (descriptor 0x12) → ficheros del 3.57+;
   2. `build_pp_menu` sobre esos ficheros (menú PP de 33 ajustes con Color Mode Level, gamma S-Log2/S-Log3/ITU709(800%), Color Mode B&W/S-Gamut/S-Gamut3(.Cine),
      Copy y Reset; `patch_libobj_pp`);
-  3. eco de Silent en `libObj` (`g22.patch_libobj_eco`, 3.59);
+  3. eco de Silent en `libObj` (`g22.patch_libobj_eco`, 3.59) y, G30, eco del estado PP + selector de perfil (`patch_libobj_ppeco`, 3.67);
   4. `pp_curves_patch --color` sobre el BIONZ del CFW (3.38 + `g22.patch_tristate`): `pp_ram.sh` + `pp_curvas.bin` que `s_start_android.sh` lanza al arrancar
      (curvas de gamma, tablas y código de S-Gamut3/.Cine, escritos en la RAM del núcleo con comprobación previa de bytes);
   5. `build_nflasha15` (/usr con TPZL) y `build_package_nflasha15` (tar base del 3.57 con el BIONZ de tres estados, Darwin v3, sin `nflasha5`) → `.dat`.
@@ -25,6 +25,7 @@ import build_cfw_hooks as H
 import build_nflasha15
 import build_package_nflasha15
 import build_pp_menu
+import patch_libobj_ppeco
 import build_silent_menu_test
 import pp_curves_patch
 from g22 import patch_libobj_eco, patch_tristate
@@ -74,7 +75,7 @@ def build_files(work: Path) -> Path:
     for rel in json.loads((pp / "MANIFEST.json").read_text())["parcheados"]:
         (files / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(pp / rel, files / rel)
-    (files / "lib/libObj.so").write_bytes(eco((pp / "lib/libObj.so").read_bytes()))
+    (files / "lib/libObj.so").write_bytes(patch_libobj_ppeco.patch(eco((pp / "lib/libObj.so").read_bytes())))   # G30: eco del estado PP y selector de perfil (nuevo LOAD al final)
     # núcleo: BIONZ del CFW (3.38 + tres estados) → pp_ram.sh + pp_curvas.bin
     bionz, _ = patch_tristate.apply_bytes((ROOT / "analysis/e25-27/artifacts-338/av-cam.integrated.bin").read_bytes())
     (work / "av-cam.cfw.bin").write_bytes(bionz)

@@ -27,6 +27,8 @@ class Ajuste:
     clave: int                        # clave de escritura (0x1f8 + 4·i); la de lectura es clave + 2
     valores: tuple
     evento: int = EVENTO_SET
+    id_get: int = ID_GET
+    clave_get: int | None = None      # por defecto clave + 2
 
 
 def clase_normal(d: bytes, pids, elem: int = ELEM_VU2) -> bytes:
@@ -79,10 +81,10 @@ def patch(d: bytes, ajustes, tabla_d: int = TABLA_D) -> bytes:
         return va
 
     for a, desc, n, punteros in plan:
-        s, g, t = alloc([a.clave]), alloc([a.clave + 2]), alloc([1])
+        s, g, t = alloc([a.clave]), alloc([a.clave + 2 if a.clave_get is None else a.clave_get]), alloc([1])
         v = alloc([x & 0xFFFFFFFF for x in a.valores])
         c = alloc([NADA] * n)
-        m = alloc([name_va, 1, a.evento, ID_GET, s, g, t, v, 1 | (n << 8)], {0: name_rel, 4: 0x17, 5: 0x17, 6: 0x17, 7: 0x17})
+        m = alloc([name_va, 1, a.evento, a.id_get, s, g, t, v, 1 | (n << 8)], {0: name_rel, 4: 0x17, 5: 0x17, 6: 0x17, 7: 0x17})
         desc[5] = (desc[5] & ~0xFF00) | (n << 8)
         desc[7] = 1
         desc[1], desc[6] = c, m

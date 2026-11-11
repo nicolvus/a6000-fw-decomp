@@ -101,10 +101,10 @@ def patch(d: bytes, ajustes) -> bytes:
     for a in ajustes:
         n = len(a.valores)
         assert 0 < n < 256
-        s, g, t = alloc([a.clave]), alloc([a.clave + 2]), alloc([1])
+        s, g, t = alloc([a.clave]), alloc([a.clave + 2 if a.clave_get is None else a.clave_get]), alloc([1])
         v = alloc([x & 0xFFFFFFFF for x in a.valores])
         c = alloc([P.NADA] * n)
-        m = alloc([name_va, 1, a.evento, P.ID_GET, s, g, t, v, 1 | (n << 8)], {0: name_rel, 4: 0x17, 5: 0x17, 6: 0x17, 7: 0x17})
+        m = alloc([name_va, 1, a.evento, a.id_get, s, g, t, v, 1 | (n << 8)], {0: name_rel, 4: 0x17, 5: 0x17, 6: 0x17, 7: 0x17})
         desc = [P.NADA, c, 0, 0, 0, n << 8, m, 1, 0, 0, 0, 0xFFFFFFFF, 0, 0, 0, 0, 0, 0, 0]
         d_new[a.pid] = alloc(desc, {1: 0x17, 6: 0x17})
         extra.extend(struct.pack("<II", d_va + 4 * a.pid, 0x17))
@@ -137,5 +137,5 @@ def patch(d: bytes, ajustes) -> bytes:
 
 if __name__ == "__main__":
     import pp_menu_spec as M
-    aj = [P.Ajuste(M.PIDS[i], s.clave, tuple(v for _, v in s.opciones), s.evento) for i, s in enumerate(M.SETTINGS.values())]
+    aj = [P.Ajuste(M.PIDS[i], s.clave, tuple(v for _, v in s.opciones), s.evento, s.id_get, s.clave_get) for i, s in enumerate(M.SETTINGS.values())]
     Path(sys.argv[2]).write_bytes(patch(Path(sys.argv[1]).read_bytes(), aj))

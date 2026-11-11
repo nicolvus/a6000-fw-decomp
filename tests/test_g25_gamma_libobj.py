@@ -51,14 +51,15 @@ def call(img: bytes, fn: int, case: int, val: int):
 
 
 @needs
-def test_app2obj_acepta_13_valores_y_rechaza_el_14():
+def test_app2obj_acepta_12_valores_y_rechaza_el_13():
     old, new = LIB.read_bytes(), P.patch_gamma(LIB.read_bytes())
     for v in range(10):
-        assert call(old, APP2OBJ_FN, 7, v) == (1, P.VALUEID[v]) == call(new, APP2OBJ_FN, 7, v)   # comportamiento anterior intacto
+        if v != 2:                                                              # app 2 pasa a ser S-Log3 (0x585); el 0x1B9 original no lo usa el menú
+            assert call(old, APP2OBJ_FN, 7, v) == (1, P.VALUEID[v]) == call(new, APP2OBJ_FN, 7, v)   # comportamiento anterior intacto
     assert call(old, APP2OBJ_FN, 7, 10)[0] == 0 and call(old, APP2OBJ_FN, 7, 11)[0] == 0
     assert call(new, APP2OBJ_FN, 7, 10) == (1, 0x481) and call(new, APP2OBJ_FN, 7, 11) == (1, 0x480)
-    assert call(new, APP2OBJ_FN, 7, 12) == (1, 0x585)   # S-Log3 (G26)
-    assert call(new, APP2OBJ_FN, 7, 13)[0] == 0
+    assert call(new, APP2OBJ_FN, 7, 2) == (1, 0x585)   # S-Log3 (G26)
+    assert call(new, APP2OBJ_FN, 7, 12)[0] == 0
 
 
 @needs
@@ -66,7 +67,7 @@ def test_obj2app_es_la_inversa():
     old, new = LIB.read_bytes(), P.patch_gamma(LIB.read_bytes())
     for app, vid in enumerate(P.VALUEID):
         assert call(new, OBJ2APP_FN, 7, vid) == (1, app)
-        if app < 10:
+        if app < 10 and app != 2:
             assert call(old, OBJ2APP_FN, 7, vid) == (1, app)
     assert call(new, OBJ2APP_FN, 7, 0x482)[0] == 0 and call(new, OBJ2APP_FN, 7, 0x1B6)[0] == 0
 

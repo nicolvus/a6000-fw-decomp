@@ -19,6 +19,8 @@ class S:
     opciones: tuple                       # ((texto, valor), …)
     evidencia: str
     evento: int = 0x40                    # evento de escritura de `@M00B` (0x40 = SET_PICTURE_PROFILE, 0x41 = copiar perfil)
+    id_get: int = 0x49                    # id de lectura (`getModelInfo`): 0x49 = los 31 parámetros (claves c+1, c+2); 0x4a = perfil actual (clave 0x275)
+    clave_get: int | None = None          # clave de lectura; por defecto clave + 2
 
 
 def num(lo, hi):
@@ -27,7 +29,7 @@ def num(lo, hi):
 
 K = lambda i: 0x1F8 + 4 * i
 SETTINGS = {s.id: s for s in (
-    S("sel", "Picture Profile", 0x274, (("Off", 9),) + tuple((f"PP{k + 1}", k) for k in range(9)), "clave+mapa"),
+    S("sel", "Picture Profile", 0x274, (("Off", 9),) + tuple((f"PP{k + 1}", k) for k in range(9)), "clave+mapa", id_get=0x4A, clave_get=0x275),  # 0x49 no devuelve 0x276 (solo 31 claves hasta 0x272): se lee con 0x4a
     S("gamma", "Gamma", K(7), (("Movie", 4), ("Still", 5), ("ITU709", 3), ("Cine1", 6), ("Cine2", 7), ("Cine3", 8), ("Cine4", 9)), "clave+G20"),
     S("bg_range", "Range", K(8), (("Wide", 0), ("Middle", 1), ("Narrow", 2)), "clave+mapa"),
     S("bg_level", "Level", K(9), num(-7, 7), "clave+rango"),
@@ -54,8 +56,8 @@ SETTINGS = {s.id: s for s in (
     S("reset", "Reset", 0x274, tuple((f"PP{k + 1}", k) for k in range(9)), "INFERENCIA (G26): evento 0x42 → `ActionExePictureprofileReset` (necesita patch_actions); el valor = PP a restablecer (el reset real acepta 0–9)", 0x42),
     S("color_level", "Color Mode Level", K(1), num(1, 8), "clave K(1)=0x1fc (A7S ColorModeLevel) + rango 1..8 del caso 1 del validador de la A6000 (byte 9 del 0x4066)"),
 )}
-# Gamma con el orden y las opciones de la A6300; 10/11/12 = app de ITU709(800%)/S-Log2/S-Log3 en la `libObj` parcheada (G25/G26)
-GAMMA_COMPLETA = ((("Movie", 4), ("Still", 5)) + tuple((f"Cine{k}", 5 + k) for k in range(1, 5)) + (("ITU709", 3), ("ITU709(800%)", 10), ("S-Log2", 11), ("S-Log3", 12)))
+# Gamma con el orden y las opciones de la A6300; 10/11/2 = app de ITU709(800%)/S-Log2/S-Log3 en la `libObj` parcheada (G25/G26)
+GAMMA_COMPLETA = ((("Movie", 4), ("Still", 5)) + tuple((f"Cine{k}", 5 + k) for k in range(1, 5)) + (("ITU709", 3), ("ITU709(800%)", 10), ("S-Log2", 11), ("S-Log3", 2)))
 # Color Mode con el orden y las opciones de la A6300 (G26): app 8 = B&W (0x504), 9 = S-Gamut (0x505) como la A7S, 10 = S-Gamut3 (0x583), 11 = S-Gamut3.Cine (0x584) en la `libObj` parcheada
 COLOR_MODE_COMPLETO = (("Movie", 5), ("Still", 6), ("Cinema", 7), ("Pro", 3), ("ITU709 Matrix", 4), ("Black & White", 8), ("S-Gamut", 9), ("S-Gamut3.Cine", 11), ("S-Gamut3", 10))
 # árbol como la A6300 (carpeta → páginas → ajustes u otras carpetas)

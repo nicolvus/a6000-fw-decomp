@@ -28,7 +28,8 @@ def patch(d: bytes) -> bytes:
 APP2OBJ, OBJ2APP_SITE, STUB = 0x4B4774, 0x4B4390, 0x4B479E
 TABLA = 0x4B4784
 CAMCONV, CAMCONV_FIN, CAMCONV_ERR, CAMCONV_STORE = 0x9B36DE, 0x9B3744, 0x9B3770, 0x9B3744
-VALUEID = (0x1B7, 0x1B8, 0x1B9, 0x1BA, 0x39C, 0x39D, 0x39E, 0x39F, 0x3A0, 0x3A1, 0x481, 0x480, 0x585)
+# S-Log3 usa el valor de app 2 (no 12): con 12 el menú no lo enviaba al núcleo (prueba en cámara 10-11-2026, CFW 3.66); el 0x1B9 original (app 2) no lo usa ningún menú.
+VALUEID = (0x1B7, 0x1B8, 0x585, 0x1BA, 0x39C, 0x39D, 0x39E, 0x39F, 0x3A0, 0x3A1, 0x481, 0x480)
 ORIG_CASE7 = bytes.fromhex("092d" "00f28e80")                   # cmp r5,#9; bhi.w error (little endian)
 ORIG_SITE = bytes.fromhex("63d1" "07e0")                        # bne 0x4b445a; b 0x4b43a4
 ORIG_CAMCONV = bytes.fromhex("40f29d33" "9842" "0646")          # movw r3,#0x39d; cmp r0,r3; mov r6,r0
@@ -93,21 +94,21 @@ def patch_gamma(d: bytes) -> bytes:
     # App2Obj, caso 7: cmp r5,#12; bhi.w error; adr r3,tabla; ldrh.w r3,[r3,r5,lsl #1]; b 0x4b4852; nop; tabla de 13 halfwords (0x4b4784…0x4b479e)
     code = _hw(0x2D00 | (len(VALUEID) - 1)) + d[o7 + 2:o7 + 6]
     code += adr(3, APP2OBJ + 6, TABLA) + _hw(0xF833, 0x3015) + _hw(0xE000 | ((0x4B4852 - (APP2OBJ + 0xC + 4)) >> 1)) + _hw(0xBF00)
-    code += b"".join(_hw(v) for v in VALUEID)
+    code += b"".join(_hw(v) for v in VALUEID + (0,))                # el 13.º halfword es relleno (la tabla ocupa 13 en el original)
     assert APP2OBJ + len(code) == STUB
     out[o7:o7 + len(code)] = code
     # Obj2App: el sitio salta a una búsqueda en la misma tabla (r5 = VALUEID → r3 = valor de app → 0x4b4416); si no está, error (0x4b445a)
     fin = 0x4B47C4
-    st = _busca(STUB, TABLA, STUB + 24, 0x4B445A, 0x42A9, True)      # cmp r1,r5
+    st = _busca(STUB, TABLA, STUB + 24, 0x4B445A, 0x42A9, True, len(VALUEID))      # cmp r1,r5
     st += b_w(STUB + len(st), 0x4B4416)
     assert STUB + len(st) <= fin and 24 == len(st) - 4, len(st)
     out[ost:fin] = st + _hw(0xBF00) * ((fin - STUB - len(st)) // 2)
     out[os_:os_ + 4] = b_w(OBJ2APP_SITE, STUB)
     # CamMsgConv (0x9b36de…0x9b3743): VALUEID de gamma → selector = índice en la tabla (había una cadena de comparaciones de 12 casos)
     tabla_cc = CAMCONV + 0x16
-    nuevo = _hw(0x4606) + _busca(CAMCONV + 2, tabla_cc, CAMCONV_STORE, CAMCONV_ERR, 0x4281, False)   # mov r6,r0; … cmp r1,r0
+    nuevo = _hw(0x4606) + _busca(CAMCONV + 2, tabla_cc, CAMCONV_STORE, CAMCONV_ERR, 0x4281, False, len(VALUEID))   # mov r6,r0; … cmp r1,r0
     assert CAMCONV + len(nuevo) == tabla_cc and tabla_cc % 4 == 0, hex(tabla_cc)
-    nuevo += b"".join(_hw(v) for v in VALUEID)
+    nuevo += b"".join(_hw(v) for v in VALUEID + (0,))
     assert CAMCONV + len(nuevo) <= CAMCONV_FIN, len(nuevo)
     out[oc:oc + CAMCONV_FIN - CAMCONV] = nuevo + _hw(0xBF00) * ((CAMCONV_FIN - CAMCONV - len(nuevo)) // 2)
     return bytes(out)

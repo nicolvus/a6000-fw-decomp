@@ -34,7 +34,7 @@ GAMMAS = [0x16, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D]
 # (mismos casos del switch y de la rodilla que 0x16 y 0x18–0x1b) y cuya curva de vídeo está vacía en la A6000.
 REMAP = {0x1C: 0x14, 0x1D: 0x15}
 CON_CODIGO = {0x16, 0x18, 0x19, 0x1A, 0x1B, 0x14, 0x15}
-SEL_IDX = range(3, 13)  # 3 → 0x16, 4/5 → Movie/Still forzadas, 6–9 → 0x18–0x1b, 10/11 → 0x14/0x15, 12 → 0x17 (S-Log3, G26)
+SEL_IDX = range(2, 12)  # 2 → 0x17 (S-Log3, app 2), 3 → 0x16, 4/5 → Movie/Still, 6–9 → 0x18–0x1b, 10/11 → 0x14/0x15
 
 
 def u32(d: bytes, a: int) -> int:
@@ -60,7 +60,7 @@ def patches(base: bytes, a7s: bytes, a6300: bytes | None = None) -> list[tuple[i
         out.append((dst, bytes(src), f"curva 0x{SLOG3_AQUI:02x}"))
         out.append((TAB["a6000"] + 8 * SLOG3_AQUI + 4, struct.pack("<I", dst), f"puntero vídeo 0x{SLOG3_AQUI:02x}"))
     for i in SEL_IDX:
-        if i == 12:
+        if i == 2:
             if a6300 is not None:
                 out.append((SEL["a6000"] + 2 * i, bytes([SLOG3_AQUI, SLOG3_AQUI]), f"selector {i}"))
             continue
@@ -159,8 +159,8 @@ def main(base_path: Path, out: Path, prueba: int | None = None, color: bool = Fa
         ref = a_ref[u32(a_ref, t_ref + 8 * og + 4) - BASE:][:CURVE]
         assert c[:0x1012] == ref[:0x1012] and c[0x1013] == ref[0x1013] and c[0x1015:] == ref[0x1015:] and c[0x1012] == 4 and c[0x1014] == g
     assert [list(new[SEL["a6000"] + 2 * i - BASE:][:2]) for i in range(13)] == \
-        [[0, 10]] * 3 + [[0x16, 0x16], [10, 10], [0, 10], [0x18, 0x18], [0x19, 0x19], [0x1A, 0x1A], [0x1B, 0x1B], [0x14, 0x14], [0x15, 0x15],
-                         [0x17, 0x17] if A6300.is_file() else [0, 10]]
+        [[0, 10]] * 2 + [[0x17, 0x17] if A6300.is_file() else [0, 10]] + [[0x16, 0x16], [10, 10], [0, 10], [0x18, 0x18], [0x19, 0x19], [0x1A, 0x1A], [0x1B, 0x1B],
+                                                                       [0x14, 0x14], [0x15, 0x15], [0, 10]]
     diff = sum(a != b for a, b in zip(base, new))
     out.mkdir(parents=True, exist_ok=True)
     (out / "av-cam.pp.bin").write_bytes(new)

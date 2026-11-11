@@ -41,7 +41,7 @@ def test_slog3_de_la_a6300_en_la_gamma_0x17_selector_12():
     assert c[0x1014] == 0x17 and c[0x1012] == 4 and c[:0x1012] == ref[:0x1012] and c[0x1015:] == ref[0x1015:]
     assert struct.unpack_from("<I", base, C.TAB["a6000"] + 8 * 0x17 + 4 - C.BASE)[0] == 0
     assert list(a63[0x43DB1E31 + 2 * 9 - C.BASE:][:2]) == [0x1F, 0x1F]             # la A6300 usa (0x1f,0x1f) para su selector 12
-    assert [list(new[C.SEL["a6000"] - C.BASE + 2 * 12:][:2])] == [[0x17, 0x17]]
+    assert [list(new[C.SEL["a6000"] - C.BASE + 2 * 2:][:2])] == [[0x17, 0x17]]
 
 
 @needs
@@ -51,10 +51,10 @@ def test_la_seleccion_de_gamma_emulada_da_0x14_y_0x15_y_no_cambia_lo_demas():
     spec.loader.exec_module(emu)
     base, a7s = BASE.read_bytes(), C.A7S.read_bytes()
     new = C.apply(base, C.patches(base, a7s, C.A6300.read_bytes() if C.A6300.is_file() else None))
-    got = {s: emu.run(new, s)["bd9"] for s in (0, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)}
-    assert got == {0: 10, 3: 0x16, 4: 10, 5: 10, 6: 0x18, 7: 0x19, 8: 0x1A, 9: 0x1B, 10: 0x14, 11: 0x15, 12: 0x17 if C.A6300.is_file() else 10}
+    got = {s: emu.run(new, s)["bd9"] for s in (0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12)}
+    assert got == {0: 10, 2: 0x17 if C.A6300.is_file() else 10, 3: 0x16, 4: 10, 5: 10, 6: 0x18, 7: 0x19, 8: 0x1A, 9: 0x1B, 10: 0x14, 11: 0x15, 12: 10}
 
 
 def test_menu_gamma_completo_sigue_el_orden_de_la_a6300():
     assert [t for t, _ in M.GAMMA_COMPLETA] == ["Movie", "Still", "Cine1", "Cine2", "Cine3", "Cine4", "ITU709", "ITU709(800%)", "S-Log2", "S-Log3"]
-    assert dict(M.GAMMA_COMPLETA)["ITU709(800%)"] == 10 and dict(M.GAMMA_COMPLETA)["S-Log2"] == 11 and dict(M.GAMMA_COMPLETA)["S-Log3"] == 12
+    assert dict(M.GAMMA_COMPLETA)["ITU709(800%)"] == 10 and dict(M.GAMMA_COMPLETA)["S-Log2"] == 11 and dict(M.GAMMA_COMPLETA)["S-Log3"] == 2
