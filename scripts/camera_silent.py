@@ -2,7 +2,7 @@
 
 Por qué no desde la app: `Runtime.exec` se colgó entre las dos escrituras en T049 y dejó ShutMode 0 forzado. Aquí cada parche va en UN comando de telnet,
 y antes se arranca en la cámara un guardián independiente de la app y del PC: si en 25 s no aparece su archivo de aviso, escribe los bytes originales.
-Constantes: tiempo de línea 15,2 µs y exposición nula en r5 = 4219 (T044, T046, T047). Solo RAM."""
+Constantes: exposición nula en r5 = 4219 (T044, T046, T047); r5 = 4219 − (T/16,73 µs − 97), calibrado contra el mecánico (R56 §7, como RemoteShutter v8c). Solo RAM."""
 import os
 import sys
 import time
@@ -13,7 +13,7 @@ from camera_telnet import run
 HOST = os.environ.get("A6000_HOST", "192.168.1.29")
 SM_A, SM_O, SM_N = 0x836D6FB6, "91f80990", "4ff00009"
 R5_A, R5_O = 0x836D7000, "28125ffa85fe"
-LINE_US, R5_FULL, R5_MIN = 15.2, 4219, 10
+LINE_US, R5_LAG, R5_FULL, R5_MIN = 16.73, 97, 4219, 10   # R56 §7: RAW electrónico = mecánico ±2 % (1/250, 1/60, 1/15)
 GUARD_S = 25
 FLAG = "/android/dev/sg_"  # tmpfs: /android/data (nflasha17) cuelga la E/S (R51 §6)
 
@@ -49,7 +49,8 @@ def r5_bytes(v: int) -> str:
 
 def r5_for(seconds: float) -> int:
     """r5 para una velocidad en segundos, o -1 si la exposición no cabe en el cuadro completo (≈ 64 ms)."""
-    r5 = R5_FULL - round(seconds * 1e6 / LINE_US)
+    r5 = R5_FULL - (round(seconds * 1e6 / LINE_US) - R5_LAG)
+    r5 = min(r5, R5_FULL - 1)  # shortcut: por encima de ~1/600 el modelo R56 da ≤ 0 filas (no medido); se fija 1 fila hasta calibrar 1/500…1/4000
     return r5 if r5 >= R5_MIN else -1
 
 

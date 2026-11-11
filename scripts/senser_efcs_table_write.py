@@ -2,13 +2,16 @@
 """Escribe la tabla EFCS por velocidad de Darwin v3 (R82) en la NVRAM de la cámara (propiedad 0x1850000, G+0x48..0x7f).
 Sin volcado previo a fichero: lee la NVRAM en memoria, cambia solo esos 56 bytes (exige que estén a cero), recalcula el checksum,
 escribe, relee y sincroniza. ESCRIBE en la cámara solo con --execute (por defecto lee y muestra). Reversión: --zero.
-Tablas: modelo R82 (por defecto), --zero (neutra), --test (prueba de llegada a Darwin: una sola entrada, c = 2000 µs a todas las velocidades).
-Uso: senser_efcs_table_write.py [--execute] [--zero | --test]   (PYTHONPATH=references/pmca)"""
+Tablas: modelo R82 (por defecto), --zero (neutra), --test (prueba de llegada a Darwin: una sola entrada, c = 2000 µs a todas las velocidades),
+--tabla JSON (clave "tabla" = [[Tmax, c], ...], p. ej. la calibrada de R85: analysis/e26-r85/tabla-r85.json).
+Uso: senser_efcs_table_write.py [--execute] [--zero | --test | --tabla JSON]   (PYTHONPATH=references/pmca)"""
 import argparse
 import io
+import json
 import os
 import struct
 import sys
+from pathlib import Path
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'references', 'pmca'))
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'e26_r76'))
@@ -25,6 +28,7 @@ ap = argparse.ArgumentParser()
 ap.add_argument('--execute', action='store_true')
 ap.add_argument('--zero', action='store_true', help='deja la tabla a ceros (neutra)')
 ap.add_argument('--test', action='store_true', help='c = 2000 µs (máximo) a todas las velocidades: sobreexpone ~+0,8 EV a 1/1000 si Darwin lo lee')
+ap.add_argument('--tabla', help='JSON con "tabla": [[Tmax µs, c µs], ...] (salida de e26_r85_calibrar_fotos.py)')
 args = ap.parse_args()
 
 
@@ -41,8 +45,10 @@ def run(cam):
     model = P.tabla_bytes(MODEL, g42)
     assert g42 == 3407 and model == DOC, 'la tabla calculada no coincide con la de R82'
     cur_tab = bytes(g[P.TAB_OFF:])
-    assert cur_tab in (bytes(56), DOC, P.tabla_bytes([(30000, 2000)], g42)), 'tabla actual desconocida: abortar'
-    new = bytes(56) if args.zero else P.tabla_bytes([(30000, 2000)], g42) if args.test else model
+    test = P.tabla_bytes([(30000, 2000)], g42)
+    propia = P.tabla_bytes([tuple(e) for e in json.loads(Path(args.tabla).read_text())['tabla']], g42) if args.tabla else None
+    assert cur_tab in (bytes(56), DOC, test, propia), 'tabla actual desconocida: abortar'
+    new = bytes(56) if args.zero else test if args.test else propia or model
     if not args.execute:
         print('SIMULACIÓN. Escribiría:', new.hex())
         return
