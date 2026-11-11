@@ -10,7 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts/gui"))
 pytest.importorskip("unicorn")
 from unicorn import UC_HOOK_CODE, Uc, UC_ARCH_ARM, UC_MODE_THUMB
-from unicorn.arm_const import UC_ARM_REG_LR, UC_ARM_REG_PC, UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R2, UC_ARM_REG_R3, UC_ARM_REG_R4, UC_ARM_REG_R5, UC_ARM_REG_R7, UC_ARM_REG_R9, UC_ARM_REG_SP
+from unicorn.arm_const import UC_ARM_REG_LR, UC_ARM_REG_PC, UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R2, UC_ARM_REG_R3, UC_ARM_REG_R4, UC_ARM_REG_R5, UC_ARM_REG_R7, UC_ARM_REG_R8, UC_ARM_REG_R9, UC_ARM_REG_SP
 
 import patch_libobj_ppeco as E
 
@@ -81,7 +81,7 @@ def test_eco_llama_al_setter_de_estado_con_el_objeto_del_parametro_y_el_valor_de
     mu.reg_write(UC_ARM_REG_R4, THIS)
     mu.reg_write(UC_ARM_REG_R7, FRAME)
     mu.reg_write(UC_ARM_REG_R9, 5)
-    llamadas, flush = [], []
+    llamadas, flush, marcas = [], [], []
     modelo = 0x20190000
     mu.mem_write(obj, struct.pack("<I", modelo))                                   # [wrapper] = objeto con las banderas de cambio
 
@@ -93,8 +93,12 @@ def test_eco_llama_al_setter_de_estado_con_el_objeto_del_parametro_y_el_valor_de
         flush.append(uc.reg_read(UC_ARM_REG_R0))
         uc.reg_write(UC_ARM_REG_PC, uc.reg_read(UC_ARM_REG_LR) | 1)
 
-    _correr(mu, 0x4C0BE2, 0x4C0BFC, {0x4A5836: setter, 0x13259C: flush_})
-    assert llamadas == [(obj, 1, valor)] and flush == [modelo]                    # tras actualizar el estado se vacía la lista de cambios del modelo (notifica a la vista)
+    def marca(uc, log):
+        marcas.append((uc.reg_read(UC_ARM_REG_R0), uc.reg_read(UC_ARM_REG_R1)))
+        uc.reg_write(UC_ARM_REG_PC, uc.reg_read(UC_ARM_REG_LR) | 1)
+
+    _correr(mu, 0x4C0BE2, 0x4C0BFC, {0x4A5836: setter, 0x13259C: flush_, 0x132754: marca})
+    assert llamadas == [(obj, 1, valor)] and marcas == [(modelo, 0x49), (modelo, 0x4A)] and flush == [modelo]                    # tras actualizar el estado se vacía la lista de cambios del modelo (notifica a la vista)
     assert mu.reg_read(UC_ARM_REG_R9) == 6                                         # sb += 1 (cuenta de parámetros convertidos)
 
 
@@ -128,3 +132,24 @@ def test_trazas_usan_direccion_relativa_al_pc_y_no_dependen_de_la_base_de_carga(
     mu.reg_write(UC_ARM_REG_SP, THIS + 0x1F0000)
     mu.emu_start((base + 0x4A784C) | 1, base + 0x4A785E, count=200)
     assert struct.unpack("<I", bytes(mu.mem_read(base + E.DATA + 0x50, 4)))[0] == 1
+
+
+@needs
+def test_guardado_del_perfil_avisa_a_la_vista_despues_de_guardarlo():
+    """El selector Off/PP1–PP9 se leía con el valor viejo: la marca de cambio debe ir DESPUÉS de `str [this+0x274]`."""
+    mu = _maquina(E.patch(LIB.read_bytes()))
+    mu.reg_write(UC_ARM_REG_R4, THIS)
+    mu.reg_write(UC_ARM_REG_R8, 4)
+    eventos = []
+
+    def marca(uc, log):
+        eventos.append(("marca", uc.reg_read(UC_ARM_REG_R0), uc.reg_read(UC_ARM_REG_R1), struct.unpack("<I", bytes(uc.mem_read(THIS + 0x274, 4)))[0]))
+        uc.reg_write(UC_ARM_REG_PC, uc.reg_read(UC_ARM_REG_LR) | 1)
+
+    def flush_(uc, log):
+        eventos.append(("flush", uc.reg_read(UC_ARM_REG_R0)))
+        uc.reg_write(UC_ARM_REG_PC, uc.reg_read(UC_ARM_REG_LR) | 1)
+
+    _correr(mu, 0x4C0D6C, 0x4C0D70, {0x132754: marca, 0x13259C: flush_})
+    assert struct.unpack("<I", bytes(mu.mem_read(THIS + 0x274, 4)))[0] == 4
+    assert eventos == [("marca", THIS, 0x4A, 4), ("marca", THIS, 0x49, 4), ("flush", THIS)]

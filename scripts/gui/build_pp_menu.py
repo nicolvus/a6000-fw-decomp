@@ -175,7 +175,7 @@ def sin_acciones():
     """Quita Copy y Reset del menú: sin `patch_actions` el despachador de `libObj` (0x4cfb9c) manda sus eventos 0x41/0x42 al error 0x4d02b8."""
     for k in ("copy", "reset"):
         M.SETTINGS.pop(k)
-    M.TREE[2][0][:] = [x for x in M.TREE[2][0] if x not in ("copy", "reset")]
+    M.TREE[2][:] = M.paginar([x for x in M.ORDEN if x in M.SETTINGS])
 
 
 def configurar(sat=False, gam=False, col=False, acc=False):

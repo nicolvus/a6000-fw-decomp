@@ -55,7 +55,7 @@ def test_arbol_y_descriptores(tmp_path):
             walk(k)
 
     walk(syms["cmnViewSettingNodeRootAelWShutter"] + delta)
-    assert len(roots) == len(M.SETTINGS) and cnt == {"carpeta": 9, "pagina": 10, "opcion": sum(len(s.opciones) for s in M.SETTINGS.values())}
+    assert len(roots) == len(M.SETTINGS) and cnt == {"carpeta": 1, "pagina": len(M.TREE[2]), "opcion": sum(len(s.opciones) for s in M.SETTINGS.values())}
     assert dict(roots) == {M.PIDS[i]: len(s.opciones) for i, s in enumerate(M.SETTINGS.values())}
 
     ajustes = [D.Ajuste(M.PIDS_PRESTADOS[i], s.clave, tuple(v for _, v in s.opciones)) for i, s in enumerate(M.SETTINGS.values())]
@@ -90,7 +90,7 @@ def test_sin_copy_reset_el_menu_no_usa_los_eventos_41_42():
     """G27: la `libObj` sin `patch_actions` rechaza 0x41/0x42; el menú por defecto no debe ofrecerlos (subproceso: muta la spec)."""
     code = ("import sys; sys.path.insert(0, 'scripts/gui'); import build_pp_menu as B, pp_menu_spec as M; B.sin_acciones(); "
             "assert {s.evento for s in M.SETTINGS.values()} == {0x40} and 'Copy' not in B.textos() and 'Reset' not in B.textos(); "
-            "assert M.TREE[2][0][:2] == ['sel', 'gamma']")
+            "assert M.TREE[2][0][:2] == ['sel', 'gamma'] and all(len(p) <= 6 for p in M.TREE[2])")
     assert subprocess.run([sys.executable, "-c", code], cwd=ROOT, check=False).returncode == 0
 
 
@@ -99,10 +99,19 @@ def test_color_mode_level_clave_1_rango_del_validador():
     s = M.SETTINGS["color_level"]
     assert (s.clave, s.evento, [v for _, v in s.opciones]) == (0x1FC, 0x40, list(range(1, 9)))
     assert M.PIDS[list(M.SETTINGS).index("color_level")] == 0xE9 + 33 and len(set(M.PIDS)) == len(M.PIDS) and min(M.PIDS) >= 0xE9
-    assert M.TREE[2][1][:3] == ["color_mode", "color_level", "saturation"]
+    assert M.TREE[2][2][:3] == ["color_mode", "color_level", "saturation"]
     if not (LIB / "libObj.so").is_file():
         return
     sys.path.insert(0, str(ROOT / "tests"))
     from test_g25_gamma_libobj import APP2OBJ_FN, call
     d = (LIB / "libObj.so").read_bytes()
     assert [v for v in range(-20, 21) if call(d, APP2OBJ_FN, 1, v)[0] == 1] == list(range(1, 9))
+
+
+def test_menu_plano_6_filas_por_pagina_sin_carpetas_anidadas():
+    """Medido en cámara (11-11-2026): la interfaz muestra 6 filas por página y las carpetas anidadas no abren."""
+    paginas = M.TREE[2]
+    assert all(len(p) <= 6 for p in paginas) and all(isinstance(x, str) for p in paginas for x in p)
+    assert sorted(x for p in paginas for x in p) == sorted(M.SETTINGS)
+    etiquetas = [s.label for s in M.SETTINGS.values()]
+    assert len(set(etiquetas)) == len(etiquetas), "etiquetas repetidas: sin carpetas ya no se distinguen"

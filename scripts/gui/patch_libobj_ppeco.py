@@ -5,6 +5,8 @@ Prueba en cámara con el 3.66 (10-11-2026): (a) el menú no repinta el valor rec
 Causas (estáticas, sin probar en cámara):
   (a) La lectura `getModelInfo` 0x49 (`0x4a77bc`) devuelve un estado en caché (`0x4a5adc(obj, 1)`) que solo actualiza la notificación del núcleo `0x8577`
       (`0x4b4498` → `0x4a5836(obj, 1, valor_app)`); en la A6000 esa notificación no llega (mismo defecto que Silent, ver `g22/patch_libobj_eco.py`).
+      Medido en cámara (3.72, 11-11-2026): el estado se guarda bien al instante, pero el objeto de estado tiene `[obj+8] = −1` y `0x4a5836` solo notifica con id válido; el menú se
+      ponía al día con la lectura periódica. El eco marca además los ids de lectura `0x49`/`0x4a` (`0x132754`) antes de vaciar (`0x13259c`): repinta al instante.
       Arreglo: en `pvt_ActionSetPictureProfile` (`0x4c0a78`), segundo bucle, cuando el parámetro i de la lista se convierte bien (rama del log «ok» en `0x4c0be2`),
       se llama a `0x4a5836(obj_i, 1, valor_app)` con el mismo cálculo de objeto que `0x4b4638`. Sustituye al log (14 B) por un salto a código nuevo.
   (b) El selector se leía con 0x49 y clave 0x276, pero ese recorrido solo trae 31 claves (`0x1f8 + 4·i`, +1/+2 → hasta 0x272). El caso `0x4a` de `getModelInfo`
@@ -25,10 +27,12 @@ ALIGN = 0x1000
 # (dirección, bytes originales, descripción)
 SITE_PERFIL = (0x4A784C, bytes.fromhex("d5f88c0f"), "ldr.w r0,[r5,#0xf8c]")          # inicio del bloque que lee la NVRAM en el caso 0x4a
 SITE_ECO = (0x4C0BE2, bytes.fromhex("874907f59e70"), "ldr r1,[pc,#0x21c]; add.w r0,r7,#0x13c")  # inicio del log «ok» del 2.º bucle
+SITE_GUARDA = (0x4C0D6C, bytes.fromhex("c4f87482"), "str.w r8,[r4,#0x274]")          # guarda el perfil elegido tras un envío correcto
 TRACE = os.environ.get("CFW_TRACE") == "1"                 # CFW de diagnóstico: contadores en RAM (segmento RWX) legibles con /proc/PID/mem
 DATA = CAVE_VA + 0x100          # [0] nº de getModelInfo · [4] índice · [8..0x47] últimos 16 ids · [0x48] ecos · [0x4c] último valor del eco · [0x50] casos 0x4a
 SITE_GMI = (0x4A5AEC, bytes.fromhex("5d292de9f04f"), "cmp r1,#0x5d; push.w {r4-r11,lr}")
-SETTER_ESTADO, FLUSH, VUELVE_PERFIL_OK, VUELVE_PERFIL_NVRAM, VUELVE_ECO = 0x4A5836, 0x13259C, 0x4A785E, 0x4A7850, 0x4C0BFC
+MARCA = 0x132754   # marca un id como cambiado en el modelo (+0x66/+0x68); el objeto de Gamma tiene id de notificación −1, así que 0x4a5836 no avisa a la vista
+SETTER_ESTADO, FLUSH, VUELVE_PERFIL_OK, VUELVE_PERFIL_NVRAM, VUELVE_ECO, VUELVE_GUARDA = 0x4A5836, 0x13259C, 0x4A785E, 0x4A7850, 0x4C0BFC, 0x4C0D70
 
 
 def _asm(src: str, addr: int) -> bytes:
@@ -71,6 +75,13 @@ def cave_code(base: int) -> tuple[bytes, dict[int, int]]:
         bl {SETTER_ESTADO:#x}
         ldr.w r0, [r7, #0x14c]
         ldr r0, [r0]
+        str.w r0, [r7, #0x14c]
+        movs r1, #0x49
+        bl {MARCA:#x}
+        ldr.w r0, [r7, #0x14c]
+        movs r1, #0x4a
+        bl {MARCA:#x}
+        ldr.w r0, [r7, #0x14c]
         bl {FLUSH:#x}
         {cnt_eco}
         add.w sb, sb, #1
@@ -78,7 +89,21 @@ def cave_code(base: int) -> tuple[bytes, dict[int, int]]:
     """
     b2 = _asm(eco, e)
     out = b1.ljust(e - base, b"\0") + b2
-    hooks = {SITE_PERFIL[0]: p, SITE_ECO[0]: e}
+    k = base + ((len(out) + 3) & ~3)
+    guarda = f"""
+        str.w r8, [r4, #0x274]
+        mov r0, r4
+        movs r1, #0x4a
+        bl {MARCA:#x}
+        mov r0, r4
+        movs r1, #0x49
+        bl {MARCA:#x}
+        mov r0, r4
+        bl {FLUSH:#x}
+        b.w {VUELVE_GUARDA:#x}
+    """
+    out = out.ljust(k - base, b"\0") + _asm(guarda, k)
+    hooks = {SITE_PERFIL[0]: p, SITE_ECO[0]: e, SITE_GUARDA[0]: k}
     if TRACE:                                                    # registro de los últimos 16 ids de getModelInfo (r1) y de cuántas veces se llama
         g = base + ((len(out) + 3) & ~3)
         gmi = f"""
@@ -100,7 +125,7 @@ def cave_code(base: int) -> tuple[bytes, dict[int, int]]:
 
 
 def patch(d: bytes) -> bytes:
-    for va, orig, what in (SITE_PERFIL, SITE_ECO, *((SITE_GMI,) if TRACE else ())):
+    for va, orig, what in (SITE_PERFIL, SITE_ECO, SITE_GUARDA, *((SITE_GMI,) if TRACE else ())):
         assert d[va:va + len(orig)] == orig, f"{va:#x} ({what}): {d[va:va + len(orig)].hex()}"
     phoff, phnum = struct.unpack_from("<I", d, 28)[0], struct.unpack_from("<H", d, 44)[0]
     segs = [list(struct.unpack_from("<8I", d, phoff + 32 * i)) for i in range(phnum)]
@@ -122,7 +147,7 @@ def patch(d: bytes) -> bytes:
     out = bytearray(d)
     for va, src in hooks.items():
         patch_bytes = _asm(f"b.w {src:#x}", va)
-        orig = {SITE_PERFIL[0]: SITE_PERFIL[1], SITE_ECO[0]: SITE_ECO[1], SITE_GMI[0]: SITE_GMI[1]}[va]
+        orig = {SITE_PERFIL[0]: SITE_PERFIL[1], SITE_ECO[0]: SITE_ECO[1], SITE_GUARDA[0]: SITE_GUARDA[1], SITE_GMI[0]: SITE_GMI[1]}[va]
         out[va:va + len(orig)] = patch_bytes.ljust(len(orig), b"\0")
         if len(orig) > len(patch_bytes):
             out[va + len(patch_bytes):va + len(orig)] = b"\x00\xbf" * ((len(orig) - len(patch_bytes)) // 2)
