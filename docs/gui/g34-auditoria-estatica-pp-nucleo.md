@@ -36,3 +36,7 @@ Continúa [G32](g32-auditoria-picture-profile-3-73.md) y [G33](g33-pp-black-knee
 1. Subir la amplitud de Black Gamma (p. ej. `14·nivel`, ≈6 % a +7) y reconstruir (3.75): único cambio de constantes con respaldo claro en el análisis.
 2. Medir con `pp_probe.py` en cámara: cfg `0x138…0x15f` tras cambiar cada ajuste, snapshot `pp`, caché y `W`.
 3. Si la caché no se rellena en ningún modo: mover el gancho de curva a otro constructor (revisar `0x43854d14` y los otros llamadores de la tabla).
+
+## 5. Black Gamma ampliado (CFW 3.75, construido, sin instalar)
+
+`pp_tone.c`: amplitud por nivel = `RANGO/32` códigos (antes 5 fijos). Tope por monotonía: la campana `4t(1−t)` tiene pendiente máxima `4·A/RANGO`; con más de `RANGO/28` por nivel la curva dejaría de ser monótona y el recorte monótono crearía una meseta. Emulado (Unicorn) sobre el `AV-CAM.BIN` del paquete 3.75 (escala de la curva 0…1023): Wide ±7 → +66/−67 códigos (6,5 %), Middle ±7 → +44/−45, Narrow ±7 → +22/−23; monótona en todos los casos, sin cambios fuera del rango, neutro devuelve el puntero original. `tests/test_g33_pp_tone.py` (15 pruebas con test_g31) en verde. `.dat` 3.75 sha256 `3cd190fba2adbb72a2979554bdea522e43647da55b683a7cf16a6594423c2866`, **no instalado** (instalar exige autorización expresa) y sin auditoría independiente.

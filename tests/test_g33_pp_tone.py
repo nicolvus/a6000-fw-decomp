@@ -112,9 +112,12 @@ def test_black_gamma_actua_solo_en_sombras_y_segun_el_rango(cam):
     y = cam.u16s(cam.curva(p, 21), 2048)
     cambia = [i for i in range(2048) if y[i] != orig[i]]
     assert cambia and max(orig[i] for i in cambia) <= 310 and all(y[i] > orig[i] for i in cambia)
+    assert max(y[i] - orig[i] for i in cambia) >= 60          # +7 ancho: ≈4 % de la curva (con 5·nivel, 35 códigos, pasaba inadvertido)
     cam.pp(sel=4, kmax=4, bgl=7, bgr=2)
     y2 = cam.u16s(cam.curva(p, 21), 2048)
     assert max(orig[i] for i in range(2048) if y2[i] != orig[i]) <= 104
+    assert 15 <= max(y2[i] - orig[i] for i in range(2048)) and all(a <= b for a, b in zip(y, y[1:])) and all(a <= b for a, b in zip(y2, y2[1:]))
+    assert sum(1 for i in range(2048) if y[i] == y[i - 1]) <= sum(1 for i in range(2048) if orig[i] == orig[i - 1]) + 16      # sin mesetas nuevas (redondeo: la LUT solo muestrea 96 puntos)
     cam.pp(sel=4, kmax=4, bgl=-7, bgr=1)
     y3 = cam.u16s(cam.curva(p, 21), 2048)
     assert any(y3[i] < orig[i] for i in range(2048)) and not any(y3[i] > orig[i] for i in range(2048))

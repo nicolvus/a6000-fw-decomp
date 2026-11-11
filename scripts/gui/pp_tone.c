@@ -88,7 +88,7 @@ u16 *pp_curve(u16 *orig, u32 idx)
         s32 v = base[i];
         if (bgl && v < (s32)RANGO[r]) {
             t = ((u32)v * rk) >> 10;                                 /* 0…1024 */
-            v += (bgl * 5 * (s32)((4 * t * (1024 - t)) >> 10)) >> 10;
+            v += (bgl * (s32)RANGO[r] * (s32)(((4 * t * (1024 - t)) >> 10) >> 2)) >> 13;   /* ±RANGO/32 por nivel: con más pendiente la curva dejaría de ser monótona y se aplanaría */
         }
         if (bl && v < top)
             v += (s32)(((bl * 4 * (top - v)) * rtop) >> 20);
