@@ -22,6 +22,8 @@ from pathlib import Path
 
 from keystone import KS_ARCH_ARM, KS_MODE_THUMB, Ks
 
+import pp_factory
+
 CAVE_VA = 0xFCB000                         # entre el fin del 1.er LOAD (0xFCA5A4) y el inicio de la página del 2.º (0xFD2000)
 ALIGN = 0x1000
 # (dirección, bytes originales, descripción)
@@ -30,6 +32,16 @@ SITE_ECO = (0x4C0BE2, bytes.fromhex("874907f59e70"), "ldr r1,[pc,#0x21c]; add.w 
 SITE_GUARDA = (0x4C0D6C, bytes.fromhex("c4f87482"), "str.w r8,[r4,#0x274]")          # guarda el perfil elegido tras un envío correcto
 TRACE = os.environ.get("CFW_TRACE") == "1"                 # CFW de diagnóstico: contadores en RAM (segmento RWX) legibles con /proc/PID/mem
 DATA = CAVE_VA + 0x100          # [0] nº de getModelInfo · [4] índice · [8..0x47] últimos 16 ids · [0x48] ecos · [0x4c] último valor del eco · [0x50] casos 0x4a
+# G35: PP10 = perfil 10 (sus 31 elementos caen justo tras los 10 perfiles actuales: this+0x5dc+10·0x7c = this+0xab4, donde estaban los elementos de «valores por defecto»,
+# que Reset deja de usar) y valores de fábrica por perfil (pp_factory.py) en Reset.
+SITE_RPERFIL = (0x4C0E62, bytes.fromhex("7b69092b"), "ldr r3,[r7,#0x14]; cmp r3,#9")          # Reset: perfil a restablecer
+SITE_RVALOR = (0x4C0EA2, bytes.fromhex("d3f8b40a1cf4a6eb"), "ldr.w r0,[r3,#0xab4]; blx 0xdd5f4")  # Reset: valor por defecto del parámetro
+VUELVE_RPERFIL, VUELVE_RVALOR = 0x4C0E66, 0x4C0EAA
+BOUNDS = (   # «perfil ≤ 9» → «≤ 10» (dirección, original, nuevo)
+    (0x4A7860, "092b", "0a2b"), (0x4B4184, "092b", "0a2b"), (0x4B73DE, "092b", "0a2b"),
+    (0x4C0AE0, "b8f1090f", "b8f10a0f"), (0x4C0B08, "b8f1090f", "b8f10a0f"),
+)
+MAX_PERFIL = 10
 SITE_GMI = (0x4A5AEC, bytes.fromhex("5d292de9f04f"), "cmp r1,#0x5d; push.w {r4-r11,lr}")
 MARCA = 0x132754   # marca un id como cambiado en el modelo (+0x66/+0x68); el objeto de Gamma tiene id de notificación −1, así que 0x4a5836 no avisa a la vista
 SETTER_ESTADO, FLUSH, VUELVE_PERFIL_OK, VUELVE_PERFIL_NVRAM, VUELVE_ECO, VUELVE_GUARDA = 0x4A5836, 0x13259C, 0x4A785E, 0x4A7850, 0x4C0BFC, 0x4C0D70
@@ -52,7 +64,7 @@ def cave_code(base: int) -> tuple[bytes, dict[int, int]]:
     perfil = f"""
         {cnt_perfil}
         ldr.w r3, [r5, #0x274]
-        cmp r3, #9
+        cmp r3, #10
         bhi.n nvram
         str r3, [r7, #0x54]
         b.w {VUELVE_PERFIL_OK:#x}
@@ -104,6 +116,36 @@ def cave_code(base: int) -> tuple[bytes, dict[int, int]]:
     """
     out = out.ljust(k - base, b"\0") + _asm(guarda, k)
     hooks = {SITE_PERFIL[0]: p, SITE_ECO[0]: e, SITE_GUARDA[0]: k}
+    rp = base + ((len(out) + 3) & ~3)
+    # Reset: el perfil a restablecer es el elegido en el menú ([this+0x274], ≤ 10) y, si no lo hay, el de la NVRAM (como antes). Las banderas del cmp sirven al `bls` original.
+    rperfil = f"""
+        ldr.w r3, [r4, #0x274]
+        cmp r3, #{MAX_PERFIL}
+        bls.n listo
+        ldr r3, [r7, #0x14]
+        cmp r3, #{MAX_PERFIL}
+        b.w {VUELVE_RPERFIL:#x}
+    listo:
+        str r3, [r7, #0x14]
+        b.w {VUELVE_RPERFIL:#x}
+    """
+    b3 = _asm(rperfil, rp)
+    rv = rp + ((len(b3) + 3) & ~3)
+    tabla_va = rv + 0x20                                         # el tramo de valor mide 0x1a B (comprobado abajo)
+    rvalor = f"""
+        subs r0, r3, r4
+        adr.w r12, {tabla_va:#x}
+        ldr r0, [r12, r0]
+        str r0, [r1]
+        movs r0, #0
+        b.w {VUELVE_RVALOR:#x}
+    """
+    b4 = _asm(rvalor, rv)
+    assert len(b4) <= 0x20, len(b4)
+    out = out.ljust(rp - base, b"\0") + b3
+    out = out.ljust(rv - base, b"\0") + b4
+    out = out.ljust(tabla_va - base, b"\0") + pp_factory.tabla()
+    hooks[SITE_RPERFIL[0]], hooks[SITE_RVALOR[0]] = rp, rv
     if TRACE:                                                    # registro de los últimos 16 ids de getModelInfo (r1) y de cuántas veces se llama
         g = base + ((len(out) + 3) & ~3)
         gmi = f"""
@@ -125,7 +167,9 @@ def cave_code(base: int) -> tuple[bytes, dict[int, int]]:
 
 
 def patch(d: bytes) -> bytes:
-    for va, orig, what in (SITE_PERFIL, SITE_ECO, SITE_GUARDA, *((SITE_GMI,) if TRACE else ())):
+    for va, orig, _ in BOUNDS:
+        assert d[va:va + len(orig) // 2] == bytes.fromhex(orig), f"{va:#x} (límite de perfil): {d[va:va + len(orig) // 2].hex()}"
+    for va, orig, what in (SITE_PERFIL, SITE_ECO, SITE_GUARDA, SITE_RPERFIL, SITE_RVALOR, *((SITE_GMI,) if TRACE else ())):
         assert d[va:va + len(orig)] == orig, f"{va:#x} ({what}): {d[va:va + len(orig)].hex()}"
     phoff, phnum = struct.unpack_from("<I", d, 28)[0], struct.unpack_from("<H", d, 44)[0]
     segs = [list(struct.unpack_from("<8I", d, phoff + 32 * i)) for i in range(phnum)]
@@ -147,11 +191,14 @@ def patch(d: bytes) -> bytes:
     out = bytearray(d)
     for va, src in hooks.items():
         patch_bytes = _asm(f"b.w {src:#x}", va)
-        orig = {SITE_PERFIL[0]: SITE_PERFIL[1], SITE_ECO[0]: SITE_ECO[1], SITE_GUARDA[0]: SITE_GUARDA[1], SITE_GMI[0]: SITE_GMI[1]}[va]
+        orig = {x[0]: x[1] for x in (SITE_PERFIL, SITE_ECO, SITE_GUARDA, SITE_GMI, SITE_RPERFIL, SITE_RVALOR)}[va]
         out[va:va + len(orig)] = patch_bytes.ljust(len(orig), b"\0")
         if len(orig) > len(patch_bytes):
             out[va + len(patch_bytes):va + len(orig)] = b"\x00\xbf" * ((len(orig) - len(patch_bytes)) // 2)
     out = out.ljust(new_off, b"\0") + seg
+    for va, orig, nuevo in BOUNDS:
+        assert out[va:va + len(orig) // 2] == bytes.fromhex(orig), f"{va:#x}: {out[va:va + len(orig) // 2].hex()}"
+        out[va:va + len(orig) // 2] = bytes.fromhex(nuevo)
     struct.pack_into("<I", out, 28, phdr_off)
     struct.pack_into("<H", out, 44, len(order))
     return bytes(out)

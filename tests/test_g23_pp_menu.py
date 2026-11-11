@@ -83,7 +83,7 @@ def test_parche_libobj_saturacion_solo_cambia_seis_bytes():
 
 def test_copy_usa_evento_41_y_clave_del_selector():
     s = M.SETTINGS["copy"]
-    assert (s.evento, s.clave, [v for _, v in s.opciones]) == (0x41, 0x274, list(range(9)))
+    assert (s.evento, s.clave, [v for _, v in s.opciones]) == (0x41, 0x274, list(range(9)) + [10])
 
 
 def test_sin_copy_reset_el_menu_no_usa_los_eventos_41_42():

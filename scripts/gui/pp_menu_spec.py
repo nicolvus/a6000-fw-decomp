@@ -28,8 +28,9 @@ def num(lo, hi):
 
 
 K = lambda i: 0x1F8 + 4 * i
+PERFILES = tuple((f"PP{k + 1}", k) for k in range(9)) + (("PP10", 10),)   # G35: PP10 = perfil 10 (el 9 es el bloque del selector «Off»)
 SETTINGS = {s.id: s for s in (
-    S("sel", "Picture Profile", 0x274, (("Off", 9),) + tuple((f"PP{k + 1}", k) for k in range(9)), "clave+mapa", id_get=0x4A, clave_get=0x275),  # 0x49 no devuelve 0x276 (solo 31 claves hasta 0x272): se lee con 0x4a
+    S("sel", "Picture Profile", 0x274, (("Off", 9),) + PERFILES, "clave+mapa", id_get=0x4A, clave_get=0x275),  # 0x49 no devuelve 0x276 (solo 31 claves hasta 0x272): se lee con 0x4a
     S("gamma", "Gamma", K(7), (("Movie", 4), ("Still", 5), ("ITU709", 3), ("Cine1", 6), ("Cine2", 7), ("Cine3", 8), ("Cine4", 9)), "clave+G20"),
     S("bg_range", "Black Gamma Range", K(8), (("Wide", 0), ("Middle", 1), ("Narrow", 2)), "clave+mapa"),
     S("bg_level", "Black Gamma Level", K(9), num(-7, 7), "clave+rango"),
@@ -40,7 +41,7 @@ SETTINGS = {s.id: s for s in (
     S("knee_point", "Knee Point", K(14), num(0, 12), "clave+rango"),
     S("knee_slope", "Knee Slope", K(15), num(-5, 5), "clave+rango"),
     S("color_mode", "Color Mode", K(0), (("Movie", 5), ("Still", 6), ("Cinema", 7), ("Pro", 3), ("ITU709 Matrix", 4)), "clave+VALUEID"),
-    S("copy", "Copy", 0x274, tuple((f"PP{k + 1}", k) for k in range(9)), "INFERENCIA: evento 0x41 y clave 0x274 de `Copy::setValue` (A7S); el valor = PP destino", 0x41),
+    S("copy", "Copy", 0x274, PERFILES, "INFERENCIA: evento 0x41 y clave 0x274 de `Copy::setValue` (A7S); el valor = PP destino", 0x41),
     S("saturation", "Saturation", K(29), num(-8, 7), "clave+rango(A6000: -8..+7, la A6300 -32..+32); -8 = blanco y negro en el núcleo (G27)"),
     S("phase", "Color Phase", K(30), num(-7, 7), "clave+rango"),
     *(S(f"cd_{c.lower()}", f"Color Depth {c}", K(23 + i), num(-7, 7), "clave+rango") for i, c in enumerate("RGBCMY")),
@@ -53,7 +54,7 @@ SETTINGS = {s.id: s for s in (
     S("wb_filter", "WB Filter Type", 0x200, (("LB/CC", 0), ("R/B", 1)), "clave+VALUEID (caso 2 → WB_SHIFT_LB_CC 0x1b2 / WB_SHIFT_RGAIN_BGAIN 0x1b3); rótulos de la A6300 NO verificados"),
     *(S(f"wb_{k}", f"WB {t}", K(3 + i), num(-9, 9), "clave A7S `WbShift` + validador (caso 3–6: -9..+9)") for i, (k, t) in enumerate((("lb", "LB"), ("cc", "CC"), ("r", "R"), ("b", "B")))),
     S("det_hilight", "Hi-Light Detail", K(22), num(0, 4), "clave+rango"),
-    S("reset", "Reset", 0x274, tuple((f"PP{k + 1}", k) for k in range(9)), "INFERENCIA (G26): evento 0x42 → `ActionExePictureprofileReset` (necesita patch_actions); el valor = PP a restablecer (el reset real acepta 0–9)", 0x42),
+    S("reset", "Reset", 0x274, PERFILES, "INFERENCIA (G26): evento 0x42 → `ActionExePictureprofileReset` (necesita patch_actions); el valor = PP a restablecer (el reset real acepta 0–9)", 0x42),
     S("color_level", "Color Mode Level", K(1), num(1, 8), "clave K(1)=0x1fc (A7S ColorModeLevel) + rango 1..8 del caso 1 del validador de la A6000 (byte 9 del 0x4066)"),
 )}
 # Gamma con el orden y las opciones de la A6300; 10/11/2 = app de ITU709(800%)/S-Log2/S-Log3 en la `libObj` parcheada (G25/G26)

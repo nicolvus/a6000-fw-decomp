@@ -153,3 +153,98 @@ def test_guardado_del_perfil_avisa_a_la_vista_despues_de_guardarlo():
     _correr(mu, 0x4C0D6C, 0x4C0D70, {0x132754: marca, 0x13259C: flush_})
     assert struct.unpack("<I", bytes(mu.mem_read(THIS + 0x274, 4)))[0] == 4
     assert eventos == [("marca", THIS, 0x4A, 4), ("marca", THIS, 0x49, 4), ("flush", THIS)]
+
+
+# ---- G35: PP10 (perfil 10) y valores de fábrica en Reset ----
+import pp_factory as PF
+
+
+@needs
+def test_los_limites_de_perfil_aceptan_hasta_10():
+    img = E.patch(LIB.read_bytes())
+    for va, _, nuevo in E.BOUNDS:
+        assert img[va:va + len(nuevo) // 2].hex() == nuevo
+    mu = _maquina(img)
+    mu.mem_write(THIS + 0x274, struct.pack("<I", 10))
+    mu.reg_write(UC_ARM_REG_R5, THIS)
+    mu.reg_write(UC_ARM_REG_R7, FRAME)
+    _correr(mu, 0x4A784C, 0x4A785E)
+    assert struct.unpack("<I", bytes(mu.mem_read(FRAME + 0x54, 4)))[0] == 10              # el selector devuelve PP10
+    mu.mem_write(THIS + 0x274, struct.pack("<I", 11))
+    mu.mem_write(THIS + 0xF8C, struct.pack("<I", 0x777))
+    _correr(mu, 0x4A784C, 0x4A7850)
+    assert mu.reg_read(UC_ARM_REG_R0) == 0x777                                            # 11 no es perfil: cae a la NVRAM
+
+
+@needs
+def test_reset_usa_el_perfil_elegido_en_el_menu_y_si_no_el_de_la_nvram():
+    mu = _maquina(E.patch(LIB.read_bytes()))
+    mu.reg_write(UC_ARM_REG_R4, THIS)
+    mu.reg_write(UC_ARM_REG_R7, FRAME)
+    for perfil in (0, 9, 10):
+        mu.mem_write(THIS + 0x274, struct.pack("<I", perfil))
+        mu.mem_write(FRAME + 0x14, struct.pack("<I", 3))
+        _correr(mu, 0x4C0E62, E.VUELVE_RPERFIL)
+        assert struct.unpack("<I", bytes(mu.mem_read(FRAME + 0x14, 4)))[0] == perfil
+    mu.mem_write(THIS + 0x274, struct.pack("<I", 0x1070EE2))                              # sin perfil elegido: el de la NVRAM (leído en [r7+0x14])
+    mu.mem_write(FRAME + 0x14, struct.pack("<I", 4))
+    _correr(mu, 0x4C0E62, E.VUELVE_RPERFIL)
+    assert struct.unpack("<I", bytes(mu.mem_read(FRAME + 0x14, 4)))[0] == 4
+
+
+@needs
+def test_reset_escribe_el_valor_de_fabrica_del_parametro_en_lugar_de_leer_la_nvram():
+    mu = _maquina(E.patch(LIB.read_bytes()))
+    for perfil, i, esperado in ((10, 7, PF.GAMMA["slog3"]), (6, 0, PF.COLOR["sgamut"]), (0, 7, PF.GAMMA["movie"]), (2, 7, PF.GAMMA["itu709"]), (4, 0, PF.COLOR["cinema"])):
+        mu.reg_write(UC_ARM_REG_R4, THIS)
+        mu.reg_write(UC_ARM_REG_R3, THIS + 4 * (perfil * 31 + i))
+        mu.reg_write(UC_ARM_REG_R1, FRAME + 0x10)
+        mu.reg_write(UC_ARM_REG_R0, 0x55)
+        _correr(mu, 0x4C0EA2, E.VUELVE_RVALOR)
+        assert struct.unpack("<i", bytes(mu.mem_read(FRAME + 0x10, 4)))[0] == esperado and mu.reg_read(UC_ARM_REG_R0) == 0
+
+
+def test_la_tabla_de_fabrica_tiene_11_perfiles_con_31_parametros_y_pp10_es_slog3_sgamut3():
+    assert len(PF.tabla()) == 11 * 31 * 4
+    assert PF.perfil(10)[7] == PF.GAMMA["slog3"] and PF.perfil(10)[0] == PF.COLOR["sgamut3"] and PF.perfil(8)[0] == PF.COLOR["sgamut3cine"]
+    assert all(len(PF.perfil(k)) == 31 for k in range(11))
+
+
+@needs
+def test_reset_completo_del_perfil_10_escribe_los_31_valores_de_fabrica_en_sus_elementos():
+    """Bucle real de `pvt_ActionExePictureProfileReset` (0x4c0e62…0x4c0ee4) con la NVRAM simulada: PP10 usa los elementos de [this+0xab4…]."""
+    mu = _maquina(E.patch(LIB.read_bytes()))
+    for n in range(10 * 31 * 2 + 31):                                    # handles distintos por posición: actuales (0x5dc…) y de «defaults» (0xab4…, = perfil 10)
+        mu.mem_write(THIS + 0x5DC + 4 * n, struct.pack("<I", 0x1000 + n))
+    mu.mem_write(THIS + 0x274, struct.pack("<I", 10))
+    escritos, leidos = {}, []
+
+    def nvram_lee(uc, log):                                              # NO debe leerse ningún elemento de «valores por defecto»
+        leidos.append(uc.reg_read(UC_ARM_REG_R0))
+        uc.reg_write(UC_ARM_REG_R0, 0)
+        uc.reg_write(UC_ARM_REG_PC, uc.reg_read(UC_ARM_REG_LR))
+
+    def nvram_escribe(uc, log):
+        h, p = uc.reg_read(UC_ARM_REG_R0), uc.reg_read(UC_ARM_REG_R1)
+        escritos[h] = struct.unpack("<i", bytes(uc.mem_read(p, 4)))[0]
+        uc.reg_write(UC_ARM_REG_R0, 0)
+        uc.reg_write(UC_ARM_REG_PC, uc.reg_read(UC_ARM_REG_LR))
+
+    mu.reg_write(UC_ARM_REG_R4, THIS)
+    mu.reg_write(UC_ARM_REG_R7, FRAME)
+    mu.reg_write(UC_ARM_REG_R5, 0)
+    mu.mem_write(FRAME + 0x14, struct.pack("<I", 0))
+    mu.reg_write(UC_ARM_REG_SP, THIS + 0x1F0000)
+
+    def h(uc, addr, size, _):
+        if addr == 0xDD5F4:
+            nvram_lee(uc, None)
+        elif addr == 0xDD874:
+            nvram_escribe(uc, None)
+        elif addr == 0x4C0EE4:
+            uc.emu_stop()
+    mu.hook_add(UC_HOOK_CODE, h)
+    mu.reg_write(UC_ARM_REG_LR, 0)
+    mu.emu_start(0x4C0E62 | 1, 0x4C0EE4, count=20000)
+    esperado = {0x1000 + 10 * 31 + i: v for i, v in enumerate(PF.perfil(10))}
+    assert escritos == esperado and not leidos
