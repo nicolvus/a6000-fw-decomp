@@ -22,9 +22,9 @@ struct pp { s8 black; u8 bgr; s8 bgl; u8 sel; u8 kmode; u8 kmax; u8 ksens; u8 kp
 extern volatile struct pp pp;
 extern struct { u32 src; u32 key[4]; u32 ok; } cache;
 
-static const u16 RANGO[3] = {307, 205, 102};                 /* Black Gamma Range: Wide / Middle / Narrow = 30 % / 20 % / 10 % de 1023 */
-static const u16 RANGO_K[3] = {3415, 5115, 10280};           /* 2^20 / RANGO */
-static const u8 SLOPE_AUTO[3] = {200, 225, 245};             /* sensibilidad High / Mid / Low, Q8: la rodilla automática es suave (el valor por defecto de Max Point no está verificado) */
+static const u16 RANGO[3] = {400, 256, 128};                 /* Black Gamma Range: Wide / Middle / Narrow = 39 % / 25 % / 12,5 % de 1023 */
+static const u16 RANGO_K[3] = {2621, 4096, 8192};           /* 2^20 / RANGO */
+static const u8 SLOPE_AUTO[3] = {96, 128, 160};             /* sensibilidad High / Mid / Low, Q8: la rodilla automática es suave (el valor por defecto de Max Point no está verificado) */
 
 /* a / b sin libgcc (solo una vez por llamada) */
 static u32 udiv(u32 a, u32 b)
@@ -91,7 +91,7 @@ u16 *pp_curve(u16 *orig, u32 idx)
             v += (bgl * (s32)RANGO[r] * (s32)(((4 * t * (1024 - t)) >> 10) >> 2)) >> 13;   /* ±RANGO/32 por nivel: con más pendiente la curva dejaría de ser monótona y se aplanaría */
         }
         if (bl && v < top)
-            v += (s32)(((bl * 4 * (top - v)) * rtop) >> 20);
+            v += (s32)(((bl * 6 * (top - v)) * rtop) >> 20);
         if (knee && v > pt)
             v = pt + (((v - pt) * sl) >> 8);
         v = v < 0 ? 0 : v > 2047 ? 2047 : v;
@@ -122,8 +122,8 @@ void pp_gain(u16 *g)
     l = pp.dlimit > 7 ? 7 : pp.dlimit;
     cap = (0x1FF * (l + 4)) / 11;                                   /* Limit 7 = sin recorte */
     a = a > cap ? cap : a;
-    v = ((s32)g[1] * (256 + 38 * pp.dvh)) >> 8;                     /* V/H −2…+2 → vertical 0,70…1,30, horizontal inverso */
-    h = ((s32)g[2] * (256 - 38 * pp.dvh)) >> 8;
+    v = ((s32)g[1] * (256 + 60 * pp.dvh)) >> 8;                     /* V/H −2…+2 → vertical 0,70…1,30, horizontal inverso */
+    h = ((s32)g[2] * (256 - 60 * pp.dvh)) >> 8;
     g[0] = (u16)(a < 0 ? 0 : a > 0x1FF ? 0x1FF : a);
     g[1] = (u16)(v < 0 ? 0 : v > 0x10 ? 0x10 : v);
     g[2] = (u16)(h < 0 ? 0 : h > 0x10 ? 0x10 : h);
@@ -136,7 +136,7 @@ void pp_coring(u16 *c)
     u32 f, i, x;
     if (!pp.sel || pp.dmode != 1)
         return;
-    f = 256 + 40 * (pp.dcrisp > 7 ? 7 : pp.dcrisp);
+    f = 256 + 100 * (pp.dcrisp > 7 ? 7 : pp.dcrisp);
     for (i = 0; i < 6; i++) {
         x = ((u32)c[IDX[i]] * f) >> 8;
         c[IDX[i]] = (u16)(x > 0x1FF ? 0x1FF : x);

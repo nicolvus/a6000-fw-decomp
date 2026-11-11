@@ -39,4 +39,18 @@ Continúa [G32](g32-auditoria-picture-profile-3-73.md) y [G33](g33-pp-black-knee
 
 ## 5. Black Gamma ampliado (CFW 3.75, construido, sin instalar)
 
-`pp_tone.c`: amplitud por nivel = `RANGO/32` códigos (antes 5 fijos). Tope por monotonía: la campana `4t(1−t)` tiene pendiente máxima `4·A/RANGO`; con más de `RANGO/28` por nivel la curva dejaría de ser monótona y el recorte monótono crearía una meseta. Emulado (Unicorn) sobre el `AV-CAM.BIN` del paquete 3.75 (escala de la curva 0…1023): Wide ±7 → +66/−67 códigos (6,5 %), Middle ±7 → +44/−45, Narrow ±7 → +22/−23; monótona en todos los casos, sin cambios fuera del rango, neutro devuelve el puntero original. `tests/test_g33_pp_tone.py` (15 pruebas con test_g31) en verde. `.dat` 3.75 sha256 `3cd190fba2adbb72a2979554bdea522e43647da55b683a7cf16a6594423c2866`, **no instalado** (instalar exige autorización expresa) y sin auditoría independiente.
+`pp_tone.c`: amplitud por nivel = `RANGO/32` códigos (antes 5 fijos). Tope por monotonía: la campana `4t(1−t)` tiene pendiente máxima `4·A/RANGO`; con más de `RANGO/28` por nivel la curva dejaría de ser monótona y el recorte monótono crearía una meseta. Emulado (Unicorn) sobre el `AV-CAM.BIN` del paquete 3.75 (escala de la curva 0…1023): Wide ±7 → +66/−67 códigos (6,5 %), Middle ±7 → +44/−45, Narrow ±7 → +22/−23; monótona en todos los casos, sin cambios fuera del rango, neutro devuelve el puntero original. `tests/test_g33_pp_tone.py` (15 pruebas con test_g31) en verde. `.dat` 3.75 sha256 `bae03dd3ea47ff99ac92574d8a5b9034bbfd3b4cc802e77682d5d2847532f4bf` (sustituye al anterior), **no instalado** (instalar exige autorización expresa) y sin auditoría independiente.
+
+## 6. Revisión de rangos poco amplios (3.75, emulado sobre el `AV-CAM.BIN` del paquete)
+
+Escala de la curva 0…1023. Efecto máximo medido antes → después:
+
+| Ajuste | Antes | Después | Cambio |
+|---|---|---|---|
+| Black Gamma Wide / Middle / Narrow (±7) | 66 / 44 / 22 (6,5 / 4,3 / 2,2 %) | 87 / 55 / 28 (8,5 / 5,4 / 2,7 %) | rangos 39 / 25 / 12,5 % (antes 30 / 20 / 10 %), amplitud RANGO/32 por nivel |
+| Black Level ±15 | 59 / 57 (5,8 %) | 89 / 83 (8,7 %) | 6 códigos por paso (antes 4) |
+| Knee automático (Max Point 0, High / Mid / Low) | blanco 1000 / 1010 / 1018 (−2,2…−0,5 %) | 958 / 971 / 984 (−6,4…−3,8 %) | pendiente 0,375 / 0,5 / 0,625 (antes 0,78 / 0,88 / 0,96) |
+| V/H Balance ±2 (base 8/8) | (5,10) / (10,5) | (4,11) / (11,4) | ±60/256 por paso (antes ±38) |
+| Crispening 7 (coring base 10/20/30) | 20/41/62 (×2,1) | 37/74/112 (×3,7) | +100/256 por paso (antes +40) |
+
+Sin cambio por ser ya amplios: Knee manual (blanco 805…985 con Point 0, nada con Point 12 = 100 %), Detail Level (×0,18…×1,82), Limit. Detail sigue solo con Detail Mode Manual. Tests: 15 de 15. **No instalado.**
