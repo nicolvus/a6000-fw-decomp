@@ -40,10 +40,32 @@ Etiquetas: **MEDIDO** · **VERIFICADO** (bytes/esquema) · **INFERENCIA**. Firmw
    su `+0x00` alterna `0x0fff`/`0x00c0` en lecturas consecutivas.
 5. Estado final: bit 20 a 0, `+0x04` de u0 a 0, CPU reanudada. Nada más escrito.
 
+## 3b. Corrección: el firmware pulsa el sensor cada 100 ms (MEDIDO, misma fecha)
+
+* Puntos de observación (`wp`) en el núcleo 3 (`dbgbase 0x80116000`, el del RTOS; los núcleos 0–2 estaban en `0x40049e9c`):
+  el firmware lee u0 ch6 en `0x4398ee1e` (lectura de canal del driver, `r1 = 6`) de forma repetida y, vistas desde la CPU,
+  ch6 ≈ `0xa5` y ch7 ≈ `0x3c8`. Detener el núcleo en cada lectura **bloquea la cámara** (no dispara): no repetir sin límite.
+* Por AHB-AP (sin detener nada) a ~5 kHz: ráfagas **cada 100,0 ms** (el periodo que arma `startOrientationRollNotify`), cada una
+  con una caída tipo RC de pocos ms. Las lecturas de §3 caían entre pulsos: **corrige §3.1, §3.4 y la «contradicción» de §4**. El atributo
+  `CSW` del AP no influye. No hace falta forzar el GPIO: el LED lo gobierna el firmware (el bit 20 sigue siendo INFERENCIA).
+* **Giro controlado (65 s, 656 pulsos, 0 errores SWD;** usuario: horizontal → vertical disparador arriba → horizontal → vertical
+  disparador abajo → boca abajo → horizontal, ~10 s cada una). Mediana del pico por tramo de 10 s:
+
+| Tramo | 0–10 | 10–20 | 20–30 | 30–40 | 40–50 | 50–65 s |
+|---|---|---|---|---|---|---|
+| ch6 | 144 | 144 | 148 | 149 | 150 | 149 |
+| ch7 | 158 | 158 | 161 | 162 | 163 | 163 |
+
+  Ninguna posición produce un salto: la deriva total es de 6 cuentas en ch6 y 5 en ch7 (≈ 0,6 % de fondo de escala), monótona.
+  En sesiones anteriores, también en horizontal, ch7 valía 968 (40 s) y 154 (1,1 s): el nivel de ch7 cambió **entre** sesiones, no
+  con el giro. `pulsos-65s-rotando.log.gz`, `picos-65s-rotando.txt`, `pulseR.cfg`.
+
 ## 4. Conclusión
 
 * **Como nivel:** con lo medido **no es viable demostrarlo**. El sensor es óptico, de dos canales, pensado para estados discretos
   (horizontal / vertical a cada lado); como mucho daría roll grueso y nunca pitch. La A6300 usa (INFERENCIA) un sensor distinto para su nivel.
-* **Contradicción abierta:** forzando el bit 20 la salida sigue a 0 aunque el ADC convierte. Hipótesis: (a) b20 no es `ROTATE_SENS_ON`,
-  (b) hace falta otra condición (alimentación de `VCC_ACCEL`, modo del pin), (c) la conversión de ch6/7 necesita una secuencia del driver no
-  reproducida. Pendiente **F9** en `PENDIENTES.md`.
+* **Medida directa (§3b):** girando la cámara por las seis posiciones, ch6/ch7 no cambian más de 6 cuentas. **Como nivel, descartado**
+  con lo medido: no hay respuesta continua al ángulo.
+* **Abierto:** tampoco se vio el salto discreto que cabría esperar para horizontal/vertical. O la lectura de pico no captura la
+  información (p. ej. la importante es otra muestra del pulso), o el sensor de esta unidad está atascado. Comprobación barata: ver si las
+  fotos verticales salen marcadas como verticales (rotación en reproducción/EXIF). Pendiente **F9**.
