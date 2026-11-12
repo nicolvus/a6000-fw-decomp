@@ -72,3 +72,9 @@ Pruebas: `tests/test_g2*.py tests/test_g3*.py` 106 pasan (nueva `test_g36_ningun
 
 NO verificado (cámara): qué muestra cada fila cuando el valor actual pertenece a la otra fila del mismo ajuste (puede quedar sin marca o marcar la 1.ª opción);
 que el tope sea también 7 en las filas numéricas (se cubre igualmente al partir).
+
+## 6. Instalación (11-11-2026, MEDIDO; autorizada por el usuario: «Sí, instálalo»)
+
+`pmca-console firmware --flash --confirm …/package-3.78/firmware_packed.dat`: primer intento «unexpected response (device returned more data than requested)» al pasar
+a modo actualizador (`054c:03e2`), como en el 3.76; segundo, con la cámara ya en ese modo, `Done`. Arranca normal (`054c:07c4`) y `pmca-console info` da **firmware 3.78**.
+Registros `analysis/gui/g22/install-3.78.log` y `install-3.78b.log`. Falta la prueba funcional del menú (PP7–PP10, S-Log2/S-Log3, valores positivos).

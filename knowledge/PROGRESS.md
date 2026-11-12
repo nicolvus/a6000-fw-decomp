@@ -623,3 +623,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 11-11-2026: E26-R87 disparo remoto de los tres modos; Silent del 3.76 corregido y recalibrado (CFW 3.77, sin instalar); tabla EFCS R87. [R87](../docs/capture/e26-r87-disparo-remoto-y-recalibracion.md)
 - 11-11-2026: G36 auditoría del selector PP del 3.77 (no pasa de PP6): la ruta de `libObj`/NVRAM/`CamMsgConv` acepta PP7–PP10; la causa es el tope de 7 opciones por lista de la clase Normal, que afecta a 25 de 34 filas. [G36](../docs/gui/g36-selector-pp-tope-7-opciones.md)
 - 11-11-2026: G36 §5 CFW 3.78: filas del menú PP partidas en grupos de ≤ 7 opciones (76 filas, 13 páginas, PID_MAX 0x140); 106 pruebas, auditoría como el 3.76; sin instalar. [G36](../docs/gui/g36-selector-pp-tope-7-opciones.md)
+- 11-11-2026: CFW 3.78 instalado; arranca y reporta 3.78; falta la prueba funcional del menú PP. [G36 §6](../docs/gui/g36-selector-pp-tope-7-opciones.md)
