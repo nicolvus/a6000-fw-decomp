@@ -23,11 +23,13 @@
  * corrompía environ (glibc 2.11, SIGSEGV en ULOGIOD_MAIN): aquí la tabla solo se rellena y nunca se reasigna. shortcut: 24 cambios, nombre ≤ 23 y valor ≤ 79. */
 extern char **environ;
 static struct { char n[24]; char v[80]; volatile int on; } hotenv[24];
+static volatile int wl_v = -1, wla_v = -1;  /* cachés de WAITLOG/WLALL; el cambio en caliente los invalida */
 static void hotenv_set(const char *n, const char *v) {
     int k, free_k = -1; if (strlen(n) > 23 || strlen(v) > 79) return;
     for (k = 0; k < 24; k++) { if (hotenv[k].on && !strcmp(hotenv[k].n, n)) break; if (!hotenv[k].on && free_k < 0) free_k = k; }
     if (k == 24) { if (free_k < 0) return; k = free_k; hotenv[k].on = 0; strcpy(hotenv[k].n, n); }
     strcpy(hotenv[k].v, v); hotenv[k].on = *v ? 1 : 2; /* 2 = ocultar */
+    wl_v = wla_v = -1;
 }
 char *getenv(const char *n) {
     for (int k = 0; k < 24; k++) if (hotenv[k].on && !strcmp(hotenv[k].n, n)) return hotenv[k].on == 1 ? hotenv[k].v : 0;
@@ -44,7 +46,7 @@ static char devname[MAXFD][32];
 
 #define E_TMOUT (-1022)
 static void live_msg(const char *, const char *, int);
-static int wl_all(void); static void wl_logfwd(const char *, ...); static void wl_live(const char *, int); static void wl_key(unsigned); static int wl_on(void); static double wl_ts(void); static const char *tname(int, char *, size_t);
+static void menu_track(const char *); static int wl_all(void); static void wl_logfwd(const char *, ...); static void wl_live(const char *, int); static void wl_key(unsigned); static int wl_on(void); static double wl_ts(void); static const char *tname(int, char *, size_t);
 static int wl_begin(const char *k, unsigned a, int tmo, void *ra); static void wl_end(int slot);  /* WAITLOG=ms: registro de esperas largas (ver abajo) */
 static pthread_mutex_t semlock = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t semcond = PTHREAD_COND_INITIALIZER;
@@ -507,7 +509,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
                   if (getenv("MSGBODY") && readable(m)) { char h[400]; int o = 0; for (int q = 0; q < 24; q++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[q]); LOG("MSGBODY sync %#x %s", w[0], h); }
                   return 0; } }
             if (w[0] == 0x8f013a) { if (m[2] && getenv("KEYINITON") && strstr((char *)m + 2, getenv("KEYINITON"))) keyinit_send();
-              if (m[2] && tron_base && strstr((char *)m + 2, getenv("TRACEON"))) { unsigned long b = tron_base; tron_base = 0; trace_fns(b); LOG("TRACEON: trazas armadas"); } if (m[2]) LOG("LOG %s", (char *)m + 2); else if (getenv("VERB")) { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
+              if (m[2] && tron_base && strstr((char *)m + 2, getenv("TRACEON"))) { unsigned long b = tron_base; tron_base = 0; trace_fns(b); LOG("TRACEON: trazas armadas"); } if (m[2]) { menu_track((char *)m + 2); LOG("LOG %s", (char *)m + 2); } else if (getenv("VERB")) { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
             else if (w[0] == 0x3e014d) backup_service((unsigned *)m);
             else if (w[0] == 0x924127 && ((unsigned *)m)[0] == 0x920111 && getenv("BOOTINFO")) {  /* BOOTINFO=a,b,c,d,e (hex): respuesta de arranque (ObjHandover, libObj+0x41b158) → palabras 1–5 */
                 const char *e = getenv("BOOTINFO"); for (int k = 1; k <= 5 && *e; k++) { ((unsigned *)m)[k] = hexv(e, &e); if (*e == ',') e++; }
@@ -664,7 +666,7 @@ static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, L
  * dar EINTR a la aplicación). */
 static struct { long tid; const char *k; unsigned a; int tmo; void *ra; struct timespec t0; int dumped, used; } wls[128];
 static pthread_mutex_t wl_m = PTHREAD_MUTEX_INITIALIZER;
-static int wl_ms(void) { static int v = -1; if (v < 0) v = getenv("WAITLOG") ? num(getenv("WAITLOG")) : 0; return v; }
+static int wl_ms(void) { if (wl_v < 0) wl_v = getenv("WAITLOG") ? num(getenv("WAITLOG")) : 0; return wl_v; }
 static int wl_on(void) { return wl_ms() > 0; }
 static long wl_el(struct timespec *t0) { struct timespec n; clock_gettime(CLOCK_MONOTONIC, &n); return (n.tv_sec - t0->tv_sec) * 1000 + (n.tv_nsec - t0->tv_nsec) / 1000000; }
 static double wl_ts(void) { struct timespec n; clock_gettime(CLOCK_MONOTONIC, &n); return n.tv_sec + n.tv_nsec / 1e9; }
@@ -752,6 +754,45 @@ unsigned IMDB_get_entries(unsigned a, unsigned b, unsigned c, unsigned d) { retu
 /* INJECT="seg:qid:w0,w1,..;seg:qid:.." (todo en hex; sin strtoul: la glibc 2.11 no tiene __isoc23_*): a los seg s entrega un mensaje a la cola síncrona con callback, como haría av-cam */
 /* OPENVIEW="Vista[,Vista…]" OPENVIEWAT=s: llama a viewManagerIf::openView(nombre, 0) de libObj desde un hilo propio (abrir la vista raíz sin el evento de arranque de av-cam) */
 static void *lobj_h;
+/* MENU: con la vista de disparo ausente nadie abre el menú al pulsar MENU (en la cámara DefRootView::ActionOpenSettingMenu pide «@V00E» = BASE_MENU 0x0E → SETTINGMENUX 0x7C).
+ * Se sigue por las trazas de la UI si hay menú abierto (Vn/Vd de 07C o 039); con el menú cerrado la pulsación de MENU abre «@V00E» en vez de ir a la cola de teclas. */
+static volatile int menu_open;
+static void menu_track(const char *t) {
+    const char *p = strstr(t, " Vn "); if (!p) p = strstr(t, " Vd "); if (!p) return;
+    if (strncmp(p + 4, "07C_", 4) && strncmp(p + 4, "039_", 4)) return;
+    menu_open = p[2] == 'n';
+}
+
+/* PRECREATE=modelo o «M modelo» en caliente: publica el evento «solicitar modelo» (libObj+0x7eb9e8: mm, {?,?,id}) para que Appframework cree el modelo (p. ej. @M00F = ModelStillRec, el que atiende los ajustes de disparo) */
+/* PREACQST=i,j,… o «A i» en caliente: ModelManager::acquireStatus(i) (índice de estado; libObj+0x7eb0a2) */
+static void acquire_status(int i) {
+    void **pvm = dlsym(lobj_h, "pViewManager"); unsigned char *base = (unsigned char *)dlsym(lobj_h, "_ZN13viewManagerIf8openViewEPKci") - 0x1251fd;
+    if (pvm && *pvm) { void *mm = *(void **)((char *)*pvm + 0x18); int (*aq)(void *, int) = (int (*)(void *, int))(base + 0x7eb0a2 + 1); int rr = aq(mm, i); efp("[shim] PREACQST acquireStatus(%d) -> %d\n", i, rr); }
+}
+static void model_create(const char *nm) {
+    int (*ov)(const char *, int) = dlsym(lobj_h, "_ZN13viewManagerIf8openViewEPKci"); unsigned char *base = (unsigned char *)ov - 0x1251fd; void **pvm = dlsym(lobj_h, "pViewManager");
+    unsigned (*idget)(const char *) = dlsym(lobj_h, "_ZN11IdGenerator3GetEPKc");
+    if (pvm && *pvm && idget) {
+        void *mm = *(void **)((char *)*pvm + 0x18); unsigned fake[4] = { 0, 0, idget(nm), 0 };
+        int (*rq)(void *, void *) = (int (*)(void *, void *))(base + 0x7eb9e8 + 1);
+        efp("[shim] PRECREATE mm=%p id=%#x\n", mm, fake[2]); int rr = rq(mm, fake); efp("[shim] PRECREATE -> %d\n", rr); sleep(3);
+    } else efp("[shim] PRECREATE: sin pViewManager/IdGenerator\n");
+}
+/* STARTEV=id,id,… (o «S id[:modelo[:clave]],…» en caliente): construye Event(id,2,0) como en libObj+0x7f25f0 y lo publica con ModelManager::pushEvent (p. ej. 11004002=Tc, 11004012=Ts, 11004013=→estado 7) */
+static void startev(const char *spec) {
+        void **pvm = dlsym(lobj_h, "pViewManager");
+        void (*ector)(void *, unsigned long, unsigned char, unsigned char) = dlsym(RTLD_DEFAULT, "_ZN5EventC1Emhh");
+        int (*push)(void *, void *) = dlsym(RTLD_DEFAULT, "_ZN12ModelManager9pushEventEP5Event");
+        for (int k = 0; pvm && !*pvm && k < 600; k++) usleep(100000);
+        if (pvm && *pvm && ector && push) {
+            void *mm = *(void **)((char *)*pvm + 0x18); unsigned char *base = (unsigned char *)dlsym(lobj_h, "_ZN13viewManagerIf8openViewEPKci") - 0x1251fd;
+            for (const char *e = spec; e && *e; ) { unsigned long id = hexv(e, &e); void *ev = calloc(1, 0x10);  /* Event ocupa 0x10 (operator new(0x10) en el original); lo posee el ModelManager */
+                ector(ev, id, 2, 0);
+                if (*e == ':') { int mid = (int)hexv(e + 1, &e); unsigned long pk = 0x18; if (*e == ':') pk = hexv(e + 1, &e);  /* id:valor[:clave] */ void *pr = calloc(1, 0x10); ((void (*)(void *, int))(base + 0xf0fb0 + 1))(pr, mid);  /* STARTEV=id:modelo → parámetro 0x18 = Param<int>(modelo), como 0x7f2618 */
+                    void (*addp)(void *, unsigned long, void *) = dlsym(RTLD_DEFAULT, "_ZN5Event12addParameterEmP9ParamBase"); if (addp) addp(ev, pk, pr); }
+                int rr = push(mm, ev); efp("[shim] STARTEV %#lx -> %d\n", id, rr); sleep(getenv("STARTGAP") ? (unsigned)hexv(getenv("STARTGAP"), 0) : 2); while (*e && *e != ',') e++; while (*e == ',') e++; }  /* avanza siempre: hexv no acepta mayúsculas */
+        } else efp("[shim] STARTEV: faltan pViewManager/Event::Event/ModelManager::pushEvent\n");
+}
 static void *openviewer(void *a) {
     (void)a; sleep(num(getenv("OPENVIEWAT") ? getenv("OPENVIEWAT") : "40"));
     int (*ov)(const char *, int) = lobj_h ? dlsym(lobj_h, "_ZN13viewManagerIf8openViewEPKci") : 0;
@@ -762,33 +803,10 @@ static void *openviewer(void *a) {
         if (rq && ctor) { ctor(lb); int rr = rq(getenv("PREACQ"), 0, lb); efp("[shim] PREACQ %s -> %d\n", getenv("PREACQ"), rr); sleep(3); }
     }
     if (getenv("PREACQST") && lobj_h) {  /* PREACQST=i,j,…: llama a ModelManager::acquireStatus(i) (índice de estado) antes de abrir vistas */
-        void **pvm = dlsym(lobj_h, "pViewManager"); unsigned char *base = (unsigned char *)ov - 0x1251fd;
-        if (pvm && *pvm) { void *mm = *(void **)((char *)*pvm + 0x18); int (*aq)(void *, int) = (int (*)(void *, int))(base + 0x7eb0a2 + 1);
-            for (const char *e = getenv("PREACQST"); e && *e; ) { int i = (int)hexv(e, &e); int rr = aq(mm, i); efp("[shim] PREACQST acquireStatus(%d) -> %d\n", i, rr); sleep(2); while (*e == ',') e++; } }
+        for (const char *e = getenv("PREACQST"); e && *e; ) { int i = (int)hexv(e, &e); acquire_status(i); sleep(2); while (*e == ',') e++; }
     }
-    if (getenv("PRECREATE") && lobj_h) {  /* PRECREATE=modelo: publica el evento «solicitar modelo» (libObj+0x7eb9e8: mm, {?,?,id}) para que Appframework cree el modelo ANTES de abrir la vista */
-        unsigned char *base = (unsigned char *)ov - 0x1251fd; void **pvm = dlsym(lobj_h, "pViewManager");
-        unsigned (*idget)(const char *) = dlsym(lobj_h, "_ZN11IdGenerator3GetEPKc");
-        if (pvm && *pvm && idget) {
-            void *mm = *(void **)((char *)*pvm + 0x18); unsigned fake[4] = { 0, 0, idget(getenv("PRECREATE")), 0 };
-            int (*rq)(void *, void *) = (int (*)(void *, void *))(base + 0x7eb9e8 + 1);
-            efp("[shim] PRECREATE mm=%p id=%#x\n", mm, fake[2]); int rr = rq(mm, fake); efp("[shim] PRECREATE -> %d\n", rr); sleep(3);
-        } else efp("[shim] PRECREATE: sin pViewManager/IdGenerator\n");
-    }
-    if (getenv("STARTEV") && lobj_h) {  /* STARTEV=id,id,…: construye Event(id,2,0) como en libObj+0x7f25f0 y lo publica con ModelManager::pushEvent (p. ej. 11004002=Tc, 11004012=Ts, 11004013=→estado 7) */
-        void **pvm = dlsym(lobj_h, "pViewManager");
-        void (*ector)(void *, unsigned long, unsigned char, unsigned char) = dlsym(RTLD_DEFAULT, "_ZN5EventC1Emhh");
-        int (*push)(void *, void *) = dlsym(RTLD_DEFAULT, "_ZN12ModelManager9pushEventEP5Event");
-        for (int k = 0; pvm && !*pvm && k < 600; k++) usleep(100000);
-        if (pvm && *pvm && ector && push) {
-            void *mm = *(void **)((char *)*pvm + 0x18); unsigned char *base = (unsigned char *)dlsym(lobj_h, "_ZN13viewManagerIf8openViewEPKci") - 0x1251fd;
-            for (const char *e = getenv("STARTEV"); e && *e; ) { unsigned long id = hexv(e, &e); void *ev = calloc(1, 0x10);  /* Event ocupa 0x10 (operator new(0x10) en el original); lo posee el ModelManager */
-                ector(ev, id, 2, 0);
-                if (*e == ':') { int mid = (int)hexv(e + 1, &e); unsigned long pk = 0x18; if (*e == ':') pk = hexv(e + 1, &e);  /* id:valor[:clave] */ void *pr = calloc(1, 0x10); ((void (*)(void *, int))(base + 0xf0fb0 + 1))(pr, mid);  /* STARTEV=id:modelo → parámetro 0x18 = Param<int>(modelo), como 0x7f2618 */
-                    void (*addp)(void *, unsigned long, void *) = dlsym(RTLD_DEFAULT, "_ZN5Event12addParameterEmP9ParamBase"); if (addp) addp(ev, pk, pr); }
-                int rr = push(mm, ev); efp("[shim] STARTEV %#lx -> %d\n", id, rr); sleep(getenv("STARTGAP") ? (unsigned)hexv(getenv("STARTGAP"), 0) : 2); while (*e && *e != ',') e++; while (*e == ',') e++; }  /* avanza siempre: hexv no acepta mayúsculas */
-        } else efp("[shim] STARTEV: faltan pViewManager/Event::Event/ModelManager::pushEvent\n");
-    }
+    if (getenv("PRECREATE") && lobj_h) model_create(getenv("PRECREATE"));
+    if (getenv("STARTEV") && lobj_h) startev(getenv("STARTEV"));
     { void **pv = dlsym(lobj_h, "pViewManager"); for (int k = 0; pv && !*pv && k < 600; k++) usleep(100000); }  /* openView con ViewManager aún NULL = SIGSEGV (arranque lento) */
     char *spec = strdup(getenv("OPENVIEW")), *sv = 0;
     for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) { efp("[shim] OPENVIEW %s ...\n", it); int r = ov(it, 0); efp("[shim] OPENVIEW %s -> %d\n", it, r); sleep(getenv("OPENVIEWGAP") ? (unsigned)hexv(getenv("OPENVIEWGAP"), 0) : 2); }
@@ -974,6 +992,11 @@ int _ZN3MWF5ObjIf17IssueCommandAsyncEPvPNS_6ObjMsgE(void *h, void *msg) {
 /* SETLOG=1: registra (con retorno) los eslabones de un cambio de ajuste del menú en cmn_view_processDataMgr / wrapperSettingUtil (≤ 4 argumentos de registro); reenvía a la implementación real */
 #define SETHOOK(sym) int sym(unsigned a, unsigned b, unsigned c, unsigned d) { static int (*r)(unsigned, unsigned, unsigned, unsigned); if (!r) r = dlsym(RTLD_NEXT, #sym); \
     if (getenv("SETLOG")) LOG("SET> " #sym " %x %x %x %x", a, b, c, d); int x = r(a, b, c, d); if (getenv("SETLOG")) LOG("SET< " #sym " -> %#x", x); return x; }
+/* SETLOG=1 también registra las peticiones de modelo de las vistas (primer argumento = nombre «@Mxxx»/«model/…»): el ajuste EFCS pasa por @M00F (process-bindings-a6000.json) */
+#define MODHOOK(sym) int sym(const char *a, unsigned b, unsigned c, unsigned d) { static int (*r)(const char *, unsigned, unsigned, unsigned); if (!r) r = dlsym(RTLD_NEXT, #sym); \
+    int x = r(a, b, c, d); if (getenv("SETLOG")) LOG("SETMOD " #sym " %s %x %x %x -> %#x", readable(a) ? a : "?", b, c, d, x); return x; }
+MODHOOK(_ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_)
+MODHOOK(_ZN13viewManagerIf19requestModelExecuteEPKcmP9ParamList)
 SETHOOK(_ZN21CmnViewProcessDataMgr8setValueEii)
 SETHOOK(_ZN21CmnViewProcessDataMgr8execProcEi)
 SETHOOK(_ZN31CmnViewProcessDataElementNormal8setValueEi)
@@ -1271,7 +1294,7 @@ static void gpu_draw(unsigned list) {
  * {«A6KF», ancho | alto << 16, listas, µs de dibujo, µs de relleno/copias, µs de LDEC (acumulados)} + RGBA4444 lineal. Entrada: «R» reenvía el fotograma; líneas «K clave valor índice» (hex) → mensaje {clave, 0, valor, 0, índice} a la cola del driver de entrada 0x7a0020 (§5.18z′). */
 static int live_fd = -1; static volatile int live_force;
 static pthread_mutex_t live_wm = PTHREAD_MUTEX_INITIALIZER;  /* los fotogramas y las líneas de WAITLOG comparten el puerto: no se mezclan */
-static int wl_all(void) { static int v = -1; if (v < 0) v = getenv("WAITLOG") && getenv("WLALL") ? 1 : 0; return v; }  /* WLALL=1 (con WAITLOG): cada LOG del shim también va a shim.log, con hora */
+static int wl_all(void) { if (wla_v < 0) wla_v = getenv("WAITLOG") && getenv("WLALL") ? 1 : 0; return wla_v; }  /* WLALL=1 (con WAITLOG): cada LOG del shim también va a shim.log, con hora */
 static void wl_logfwd(const char *f, ...) {
     char b[400]; int o = snprintf(b, sizeof b, "%.2f ", wl_ts()); va_list v; va_start(v, f); o += vsnprintf(b + o, sizeof b - o - 2, f, v); va_end(v);
     if (o > (int)sizeof b - 2) o = sizeof b - 2; b[o++] = '\n';
@@ -1286,6 +1309,13 @@ static void live_msg(const char *tag, const char *txt, int n) {  /* «\x01TAG te
     if (live_fd < 0) return;
     pthread_mutex_lock(&live_wm); write(live_fd, "\x01", 1); write(live_fd, tag, strlen(tag)); write(live_fd, " ", 1); write(live_fd, txt, n); write(live_fd, "\n", 1); pthread_mutex_unlock(&live_wm);
 }
+static void *startevhot(void *a) { startev(a); free(a); return 0; }
+static void *acqhot(void *a) { acquire_status((int)hexv(a, 0)); free(a); return 0; }
+static void *modelhot(void *a) { model_create(a); free(a); return 0; }
+static void *openhot(void *a) {
+    int (*ov)(const char *, int) = lobj_h ? dlsym(lobj_h, "_ZN13viewManagerIf8openViewEPKci") : 0;
+    char *nm = a; int r = ov ? ov(nm, 0) : -99; LOG("OPENHOT %s -> %d", nm, r); free(nm); return 0;
+}
 static void *live_keys(void *a) {
     (void)a; char buf[256]; int n = 0;
     for (;;) {
@@ -1295,9 +1325,16 @@ static void *live_keys(void *a) {
             *nl = 0; const char *e;
             if (ln[0] == 'T') { LOG("hora del anfitrión %s", ln + 2); date_base = (long long)hexv(ln + 2, &e); date_mono0 = mono_s(); date_have = 1; }  /* «T epoch_local_hex»: hora local del anfitrión (+ desfase del usuario); se avanza con el reloj monotónico */
             if (ln[0] == 'E') { char *eq = strchr(ln + 2, '='); if (eq) { *eq = 0; hotenv_set(ln + 2, eq + 1); LOG("env %s=%s", ln + 2, eq + 1); } }  /* «E NOMBRE=valor»: diagnóstico en caliente (VERB, GPUDRAWLOG…) sin arranque en frío */
+            if (ln[0] == 'S' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, startevhot, nm); pthread_detach(th); }  /* «S id[:modelo]»: publica un evento del ModelManager en caliente */
+            if (ln[0] == 'A' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, acqhot, nm); pthread_detach(th); }  /* «A i»: acquireStatus(i) en caliente */
+            if (ln[0] == 'M' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, modelhot, nm); pthread_detach(th); }  /* «M @Mxxx»: crea el modelo en caliente */
+            if (ln[0] == 'O') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, openhot, nm); pthread_detach(th); }  /* «O vista»: viewManagerIf::openView(vista, 0) en caliente */
             if (ln[0] == 'Y') date_type = (int)hexv(ln + 2, &e);
             if (ln[0] == 'R') live_force = 1;  /* el anfitrión se acaba de conectar (p. ej. tras restaurar el estado): reenviar el fotograma actual */
-            if (ln[0] == 'K') { unsigned m[12] = {0}; m[0] = hexv(ln + 2, &e); m[2] = hexv(e + 1, &e); m[4] = hexv(e + 1, &e); mbx_post_raw(0x7a0020, m); if (wl_on()) wl_key(m[0]); }
+            if (ln[0] == 'K') { unsigned m[12] = {0}; static int swallow; m[0] = hexv(ln + 2, &e); m[2] = hexv(e + 1, &e); m[4] = hexv(e + 1, &e);
+                if (m[0] == 0x1ab && m[2] == 1 && !menu_open) { swallow = 1; menu_open = 1; pthread_t th; pthread_create(&th, 0, openhot, strdup("@V00E")); pthread_detach(th); LOG("MENU con el menú cerrado: openView @V00E"); }
+                else if (m[0] == 0x1ab && swallow) { if (m[2] == 0) swallow = 0; }  /* la suelta de la pulsación que abrió el menú no llega a la UI */
+                else { mbx_post_raw(0x7a0020, m); if (wl_on()) wl_key(m[0]); } }
             ln = nl + 1;
         }
         n = strlen(ln); memmove(buf, ln, n);

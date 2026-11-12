@@ -79,6 +79,14 @@ def test_gpu_draw_no_descarta_listas_de_mas_de_64_vertices() -> None:
     assert "n > 64" not in draw and "n > 4095" in draw and "sx[4096]" in draw
 
 
+def test_menu_se_reabre_con_la_ruta_real_de_la_camara() -> None:
+    """§5.18z⁷: MENU con el menú cerrado abre «@V00E» (DefRootView::ActionOpenSettingMenu); el menú inicial usa la misma ruta y el shim sigue su estado por las trazas Vn/Vd."""
+    live, _ = _live()
+    assert "OPENVIEW=view/ROOT,@V00E" in live.SHIMENV
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    assert 'strncmp(p + 4, "07C_", 4)' in src and '"@V00E"' in src and "m[0] == 0x1ab && m[2] == 1 && !menu_open" in src
+
+
 @pytest.mark.skipif(not (os.environ.get("A6000_HARNESS_RUN") and (WORK / "base.cpio.gz").exists() and shutil.which("qemu-system-arm")),
                     reason="prueba lenta (≈ 2 min): A6000_HARNESS_RUN=1 y setup.sh hecho")
 def test_arranque_en_qemu_llega_a_la_pila_de_ventanas() -> None:
