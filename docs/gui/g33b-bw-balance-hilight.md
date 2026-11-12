@@ -66,7 +66,33 @@ La rama nativa no deja ningún índice sin efecto: en Manual **sustituye** valor
 
 Propuesta: `pp_bwhl_patch.CAVE = 0x43faf290` (0x24 B, alineada, sin solape), aplicada **después** de `pp_curves_patch`, que exige todo el hueco a cero. G32-D no necesita cueva. Riesgo común a todo el hueco: G28 observó que se borra en ejecución (NO_VERIFICADO quién lo hace).
 
-## 9. Límites
+## 9. Qué depende de `patch_bw` (VERIFICADO con bytes, 12-11-2026)
+
+- **Núcleo**: un barrido capstone de `0x43600000…0x43d00000` busca `cmn #7`/`cmn #8`/`cmp #0xf8` a menos de 8 instrucciones de una lectura de `+0x24` (saturación del resumen) o de `cfg+0x14e`. Sale **un único** sitio, `0x437a273e`, que es el que reescribe G32-D. Fuera de él, la saturación −8 solo llega al proveedor `0x438280d0` (grupo `0x30`, G34) como un valor de color más: sin `patch_bw`, B&W conserva la saturación que elija el usuario.
+- **`libObj`**: `patch_bw` solo toca `SAT_SITE 0x9b35a2` (pasa a ser `b.w` a la cueva) y su cueva `0x9b328c` (20 B que `patch_color` deja como `nop`). En el 3.80 (`pkg-380w/files/lib/libObj.so`) están aplicados los dos: `fff773be` y `237a082b…`. Ningún otro parche lee esa cueva, y `COLOR.index(0x504) = 8`: es el tipo que compara G32-D.
+- **Conclusión**: con G32-D, `patch_bw` sobra y además estorba, porque convierte B&W en Movie con saturación −8, que ya no da monocromo. Hay que quitarlo. La cueva vuelve a quedar en `nop`.
+
+## 10. Plan de integración conjunta (G32-C, G32-D y G33-B)
+
+Imagen del núcleo (`build_base_pp.bionz_cfw`, sobre el BIONZ del CFW), en este orden:
+1. `pp_curves_patch.main(…, color, tone)`: curvas, color y G33 (`pp_tone_patch`). Exige todo el hueco de G18 a cero, así que va primero.
+2. `patch_silent_r5.apply_bytes` (R86, cueva `0x43fb7e00…0x43fb7ec0`), como hasta ahora.
+3. `pp_slog3_core_patch` (G32-C): tres cambios en sitio, sin cueva.
+4. `pp_bw_mono_patch.patches` (G32-D): en sitio, `0x437a2728…0x437a2743`.
+5. `pp_bwhl_patch.patches(img, pp_bwhl_patch.CAVE)` (G33-B): cueva `0x43faf290…0x43faf2b4` y dos literales. Solo Hi-Light (`bw=None`) mientras no haya valores de B/W calibrados.
+Cada `patches()` comprueba sus bytes originales: si algún paso anterior tocara su sitio, la construcción falla en vez de mezclar parches.
+
+`libObj` (`build_pp_menu.py:140`): dejar `patch_libobj_pp.patch_color(lo)` **sin** `patch_bw`. Actualizar `tests/test_g26_color_libobj.py::test_bw_envia_movie_y_saturacion_menos_8` (retirarla o invertirla) y el texto de G27 §3.
+
+Pruebas que hay que ejecutar: `tests/test_g25_gamma_curves.py`, `test_g31_base_pp.py`, `test_g33_pp_tone.py`, `test_e26_r86_silent_r5.py`, `test_g32c_slog3_core.py`, `test_g32d_pp_bw_mono.py`, `test_g33b_pp_bwhl.py`, `test_g26_color_libobj.py`, `test_g30_libobj_ppeco.py` y `test_g23_pp_menu.py`; después, `audit_package_nflasha15.py` sobre el `.dat`. En cámara: B&W con Saturación 0 (debe salir monocromo), Movie con Saturación −8 (debe salir en color) y Detail Manual con Hi-Light 0…4.
+
+## 11. G35-A sigue vigente en la serie 3.79/3.80 (VERIFICADO con bytes)
+
+- `libObj.so` es **idéntica** en `pkg-375w`, `pkg-379w` y `pkg-380w` (sha256 `7937a86e34b7…`, 17 439 312 B). Están los 5 límites `≤ 9 → ≤ 10` (`0x4a7860`, `0x4b4184`, `0x4b73de`: `0a2b`; `0x4c0ae0`, `0x4c0b08`: `b8f10a0f`), los ganchos de Reset `0x4c0e62`/`0x4c0ea2` y la tabla de `pp_factory.tabla()` (1 364 B, 1 aparición). Es decir, `ppinit`, PP10 y Reset con valores de fábrica viajan sin cambios en el 3.79/3.80.
+- Menú: cumple el tope de G36. El selector es `Off/PP4` + `PP5/PP10` (6 opciones), y Copy y Reset se quitaron del menú (G36 §8). Reset ya no es accesible desde la UI, pero no hace falta: `ppinit` carga los valores de fábrica en el primer arranque.
+- Veredicto: **no hay que portar nada** (ya está en el 3.79/3.80) **ni descartarlo**. La fila no se cierra porque lo que queda es medir en cámara: que la marca y los valores persistan tras apagar, que PP10 se guarde y que los valores de `pp_factory.py` (de memoria) sean los deseados. Lo de Reset por slot queda fuera de alcance mientras no vuelva al menú.
+
+## 12. Límites
 
 - Nada medido en cámara. Tampoco está verificado que las funciones APC se ejecuten con PP (G34 §3).
 - La identidad `P` = `this` de `0x43afa0ce` se deduce del patrón común de campos y de la coincidencia semántica, no de una cadena de llamadas completa (NO_VERIFICADO del todo).
