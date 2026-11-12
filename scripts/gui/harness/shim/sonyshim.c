@@ -307,6 +307,9 @@ static void ma_service(unsigned *m) {
  * Formato LZPT de Sony (fwtool lz77, scripts/e25_27/tpzl.py): registros 0xF0 = LZ77 con banderas LSB primero (bit 1 = copia de 2 B:
  * longitud tabla[b0>>4], distancia 12 bits; distancia 0 = fin del registro) o 0x0F = almacenado (tamaño u16 en +2). */
 static unsigned char *phys2pn(unsigned a, unsigned n);
+/* LIVE: tiempo acumulado (µs) de dibujo de listas, relleno/copias, LDEC y nº de listas; viajan en la cabecera de cada fotograma (live.py los muestra) */
+static volatile unsigned st_rast, st_gpu, st_ldec, st_lists;
+static unsigned now_us(void) { struct timespec t; clock_gettime(CLOCK_MONOTONIC, &t); return (unsigned)(t.tv_sec * 1000000u + t.tv_nsec / 1000); }
 static unsigned ldec_inflate(const unsigned char *s, unsigned n, unsigned char *d, unsigned cap) {
     static const unsigned char lt[16] = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 32, 64};
     unsigned i = 0, o = 0;
@@ -469,7 +472,7 @@ int ioctl(int fd, unsigned long req, ...) {
         }
         if (!strcmp(devname[fd], "/dev/ldec") && req == 1 && readable(arg)) {  /* descompresión LZPT de las imágenes de la UI (§5.18z′) */
             unsigned *q = (unsigned *)arg; unsigned char *d = phys2pn(q[2], q[3]); const unsigned char *src = (const unsigned char *)(unsigned long)q[0];
-            unsigned o = d && readable(src) ? ldec_inflate(src, q[1], d, q[3]) : 0; static int nl;
+            unsigned t0 = now_us(), o = d && readable(src) ? ldec_inflate(src, q[1], d, q[3]) : 0; static int nl; st_ldec += now_us() - t0;
             if (!o || (getenv("LDECLOG") && nl++ < 400)) LOG("LDEC %#x B → %#x (cap %#x) r=%#x c=%#x %#x %#x: %#x B", q[1], q[2], q[3], q[4], q[5], q[6], q[7], o);
             return 0;
         }
@@ -635,6 +638,7 @@ static void *injector(void *a) {
 }
 /* SEMSIG: semáforos que en la cámara señala otro procesador (av-cam) y aquí nadie; se dejan señalados al arrancar.
    0x83037a: el main de im.elf (antes de crear el hilo de aplicación appFw.so → UI) y luego el hilo Appframework esperan en él; se señala 4 veces. Lista hex separada por comas; vacío = ninguno. */
+static void live_init(void);
 static void keyq_init(void) {  /* KEYQ=qid_hex[,…]: colas del kernel que un hilo de usuario lee con rcv_msg: se les da buzón (para INJECT) */
     for (const char *s = getenv("SYNCMBX"); s && *s; ) { const char *n; unsigned v = hexv(s, &n); if (n == s) break; dynq_add(v); s = *n == ',' ? n + 1 : n; }  /* el hilo lector ya espera en rcv_msg al arrancar: el buzón debe existir desde el principio */
     const char *p = getenv("KEYQ"); while (p && *p) { const char *q; unsigned id = hexv(p, &q); if (q == p) break; dynq_add(id); p = *q == ',' ? q + 1 : q; }
@@ -643,7 +647,7 @@ static void presignal(void) {
     const char *e = getenv("SEMSIG"), *p = e ? e : "83037a,83037a,83037a,83037a";
     while (*p) { const char *q; unsigned id = hexv(p, &q); if (q == p) break; sem_sig(id); p = *q == ',' ? q + 1 : q; }
 }
-__attribute__((constructor)) static void shim_init(void) { presignal(); keyq_init(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("OPENVIEW")) { pthread_t th; pthread_create(&th, 0, openviewer, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
+__attribute__((constructor)) static void shim_init(void) { presignal(); keyq_init(); live_init(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("OPENVIEW")) { pthread_t th; pthread_create(&th, 0, openviewer, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
     sa.sa_flags = SA_SIGINFO | SA_RESETHAND; sigaction(SIGSEGV, &sa, 0); sigaction(SIGBUS, &sa, 0); sigaction(SIGILL, &sa, 0); sigaction(SIGABRT, &sa, 0); }  /* un fallo imprime la pila y se reintenta por defecto (core) */
 
 /* Experimento (SKIPFN=717830,...): sustituye esas funciones Thumb de libObj por «movs r0,#0; bx lr» (devuelven éxito sin hacer nada). */
@@ -903,7 +907,7 @@ static void *rt_thread(void *a) {
  * (+4 cabeza y +0x10 cuenta de la cola de ejecución que vacía el planificador de libObj, 0x6c60e0; +0xc trabajo en curso; +0x14 estado, 2 = inactiva;
  * +0xe8 tabla de 0x320 trabajos de 0x8c B). Relleno y transferencias se ejecutan al escribir el registro de inicio (gpu_exec); por cada lista
  * (+0x1804) el estado pasa a «ocupada» (1) GPUEMU_MS ms y vuelve a 2. Hasta §5.18y se «avisaba del fin» escribiendo +4/+0x10: eso reencolaba el
- * trabajo 0 (un relleno) y atascaba o rompía la cola (§5.18z). shortcut: las listas no se rasterizan aquí (GPUDUMP + gpu_raster.py fuera de línea). */
+ * trabajo 0 (un relleno) y atascaba o rompía la cola (§5.18z). Las listas se dibujan aquí solo con GPURAST/LIVE (gpu_draw); si no, GPUDUMP + gpu_raster.py. */
 static unsigned char *phys2p(unsigned phys) {  /* fase → dirección en nuestras áreas anónimas de /dev/stream y /dev/mem */
     for (int k = 0; k < nam; k++) { unsigned long o = (unsigned long)amaps[k].off; if ((!strstr(amaps[k].dev, "stream") && !strstr(amaps[k].dev, "mem")) || o < 0x80000000ul) continue; if (phys >= o && phys < o + amaps[k].len) return (unsigned char *)amaps[k].p + (phys - o); }
     return 0;
@@ -916,12 +920,17 @@ static unsigned tile_off(unsigned x, unsigned y, unsigned w) {  /* mosaico 8×8 
  * Transferencia: 0xc00 origen>>2, 0xc04 destino>>2, 0xc08/0xc0c tamaño de salida/entrada (w | h<<16), 0xc10 indicadores (bit 0 volteo vertical,
  * bit 1 entrada lineal → salida en mosaico, si no mosaico → lineal; bit 3 TextureCopy; bits 8-10/12-14 formato de entrada/salida, 0 RGBA8,
  * 1 RGB8, resto 16 bits), 0xc18 bit 0 inicio; TextureCopy: 0xc20 bytes, 0xc24/0xc28 línea de entrada/salida = ancho | hueco<<16 en unidades de 16 B. */
-static void gpu_exec(unsigned off, unsigned val) {
+static volatile unsigned live_da, live_w, live_h, live_seq;
+static void gpu_exec1(unsigned off, unsigned val);
+static void gpu_exec(unsigned off, unsigned val) { unsigned t0 = now_us(); gpu_exec1(off, val); st_gpu += now_us() - t0; }
+static void gpu_exec1(unsigned off, unsigned val) {
     volatile unsigned *r = gw0; if (!r || !(val & 1)) return;
     if (off == 0x1c) {
         unsigned a = r[0x10 / 4] << 3, n = (r[0x14 / 4] << 3) - a, v = r[0x18 / 4], wd = (val >> 8) & 3; unsigned char *p = phys2pn(a, n);
         if (!p || n > 0x4000000) { efp("[shim] GPUEMU relleno %#x+%#x fuera de área\n", a, n); return; }
-        for (unsigned i = 0; i < n; i += wd + 2) for (unsigned b = 0; b < wd + 2 && i + b < n; b++) p[i + b] = v >> (8 * b);
+        if (wd == 0 && !((unsigned long)p & 1)) for (unsigned i = 0; i < n / 2; i++) ((unsigned short *)p)[i] = v;  /* 16 y 32 bits por palabras (TCG) */
+        else if (wd == 2 && !((unsigned long)p & 3)) for (unsigned i = 0; i < n / 4; i++) ((unsigned *)p)[i] = v;
+        else for (unsigned i = 0; i < n; i += wd + 2) for (unsigned b = 0; b < wd + 2 && i + b < n; b++) p[i + b] = v >> (8 * b);
     } else if (off == 0xc18) {
         unsigned fl = r[0xc10 / 4], sa = r[0xc00 / 4] << 2, da = r[0xc04 / 4] << 2;
         if (fl & 8) {
@@ -941,9 +950,144 @@ static void gpu_exec(unsigned off, unsigned val) {
         unsigned w = iw < ow ? iw : ow, h = ih < oh ? ih : oh;
         for (unsigned y = 0; y < h; y++) for (unsigned x = 0; x < w; x++) {
             unsigned ly = fl & 1 ? h - 1 - y : y;
-            if (fl & 2) memcpy(d + tile_off(x, y, ow) * b, s + (ly * iw + x) * b, b); else memcpy(d + (ly * ow + x) * b, s + tile_off(x, y, iw) * b, b);
+            unsigned di = fl & 2 ? tile_off(x, y, ow) : ly * ow + x, si = fl & 2 ? ly * iw + x : tile_off(x, y, iw);
+            if (b == 2) ((unsigned short *)d)[di] = ((unsigned short *)s)[si]; else if (b == 4) ((unsigned *)d)[di] = ((unsigned *)s)[si]; else memcpy(d + di * b, s + si * b, b);
+        }
+        if (da >> 24 == 0xb4 && !(fl & 2)) { live_da = da; live_w = w; live_h = h; live_seq++; }  /* LIVE: copia a la pantalla (0xb4000000/0xb4096000) = fotograma presentado */
+    }
+}
+/* GPURAST=1 (o LIVE): dibuja cada lista en el búfer de color como gpu_raster.py (§5.18z): estado hasta el primer 0x202, tira de N vértices de 0x40 B
+ * (pos f0-f1, color f3-f6, UV f7-f8, afín f9-f14), textura 0x589/0x586/0x58f (4 RGBA4444, 8 A8; Morton 8×8), scissor 0x47/0x48, mezcla «sobre».
+ * Búfer de color: 0x112 = dirección>>4, 0x113 = alto<<16 | ancho, RGBA4444 en mosaico con la y invertida (la copia 0x4401 voltea al presentar).
+ * Bucle interno solo con enteros (en TCG la coma flotante de ARM se emula con softfloat); regla arriba-izquierda: sin doble mezcla en aristas compartidas.
+ * shortcut: sin shaders ni combinadores (el marco de foco naranja sale aproximado), muestreo al más cercano; ampliar si una pantalla sale mal. */
+#define DIV255(x) (((x) + 128 + (((x) + 128) >> 8)) >> 8)  /* x/255 redondeado, exacto en 0..65535, sin división (TCG) */
+static void gpu_draw(unsigned list) {
+    unsigned *w = (unsigned *)phys2p(list); if (!w) return;
+    static unsigned r[0x800], cba, cbw = 640, cbh = 480; unsigned char set[0x800]; memset(set, 0, sizeof set);
+    for (int i = 0; i < 20000; ) {
+        unsigned h = w[i], v = w[i + 1], reg = h >> 16, ne = ((h >> 12) & 0xf) && (h & 0xfff) == 0x026 ? 5 : 1;
+        if (((h >> 12) & 0xf) && reg < 0x800) { r[reg] = v; set[reg] = 1; if (reg == 0x202) break; }
+        i += 1 + ne;
+        if ((reg == 0x10 && v == 0x12345678) || (!h && !v)) return;
+    }
+    if (set[0x112]) cba = r[0x112] << 4;
+    if (set[0x113]) { cbw = r[0x113] & 0xffff; cbh = r[0x113] >> 16; }
+    unsigned n = r[0x202] & 0xfff;
+    if (!set[0x202] || r[0x202] >> 24 != 0x90 || n < 3 || n > 64 || !set[0x203] || !set[0x216] || !cba || cbw > 2048 || cbh > 2048) return;
+    unsigned short *cb = (unsigned short *)phys2pn(cba, cbw * cbh * 2), *ix = (unsigned short *)phys2p(r[0x203]); unsigned char *vx = phys2p(r[0x216]);
+    if (!cb || !ix || !vx) return;
+    unsigned tw = set[0x586] ? r[0x586] >> 16 : 0, th = set[0x586] ? r[0x586] & 0xffff : 0, fmt = set[0x58f] ? r[0x58f] : 0;
+    unsigned tbpp = fmt == 4 ? 2 : fmt == 8 ? 1 : 0;
+    unsigned char *tex = tw && th && tbpp ? phys2pn((r[0x589] << 3), tw * th * tbpp) : 0;
+    int cx0 = 0, cy0 = 0, cx1 = (int)cbw, cy1 = (int)cbh;
+    if (set[0x47] && set[0x48]) {
+        short a = (short)(r[0x47] & 0xffff), b = (short)(r[0x47] >> 16), c = (short)(r[0x48] & 0xffff), d = (short)(r[0x48] >> 16);
+        cx0 = 320 + a / 2; cy0 = 240 - d / 2; cx1 = 320 + c / 2; cy1 = 240 - b / 2;
+        if (cx0 < 0) cx0 = 0; if (cy0 < 0) cy0 = 0; if (cx1 > (int)cbw) cx1 = cbw; if (cy1 > (int)cbh) cy1 = cbh;
+    }
+    float sx[64], sy[64], at[64][6];  /* u y v en texeles, r g b a en 0..255 */
+    for (unsigned k = 0; k < n; k++) {
+        float *q = (float *)(vx + ix[k] * 0x40u);
+        sx[k] = q[9] * q[0] + q[10] * q[1] + q[11]; sy[k] = q[12] * q[0] + q[13] * q[1] + q[14];
+        at[k][0] = q[7] * tw; at[k][1] = q[8] * th; for (int c = 0; c < 4; c++) at[k][2 + c] = q[3 + c] * 255.f;
+    }
+    for (unsigned t = 0; t + 2 < n; t++) {
+        int A = t, B = t + 1, C = t + 2;
+        long long ax = (long long)(sx[A] * 16), ay = (long long)(sy[A] * 16), bx = (long long)(sx[B] * 16), by = (long long)(sy[B] * 16), qx = (long long)(sx[C] * 16), qy = (long long)(sy[C] * 16);
+        long long area = (bx - ax) * (qy - ay) - (by - ay) * (qx - ax);
+        if (!area) continue;
+        if (area < 0) { long long tx = bx, ty = by; bx = qx; by = qy; qx = tx; qy = ty; int ti = B; B = C; C = ti; area = -area; }
+        float fx0 = sx[A], fx1 = sx[A], fy0 = sy[A], fy1 = sy[A];
+        if (sx[B] < fx0) fx0 = sx[B]; if (sx[C] < fx0) fx0 = sx[C]; if (sx[B] > fx1) fx1 = sx[B]; if (sx[C] > fx1) fx1 = sx[C];
+        if (sy[B] < fy0) fy0 = sy[B]; if (sy[C] < fy0) fy0 = sy[C]; if (sy[B] > fy1) fy1 = sy[B]; if (sy[C] > fy1) fy1 = sy[C];
+        int x0 = (int)fx0 - 1, x1 = (int)fx1 + 2, y0 = (int)fy0 - 1, y1 = (int)fy1 + 2;
+        if (x0 < cx0) x0 = cx0; if (y0 < cy0) y0 = cy0; if (x1 > cx1) x1 = cx1; if (y1 > cy1) y1 = cy1;
+        if (x0 >= x1 || y0 >= y1) continue;
+        /* aristas BC, CA, AB: E(P) = (q−p)×(P−p); dentro si las tres ≥ 0 (> 0 en aristas que no son arriba-izquierda) */
+        long long ex[3] = {qx - bx, ax - qx, bx - ax}, ey[3] = {qy - by, ay - qy, by - ay}, ox[3] = {bx, qx, ax}, oy[3] = {by, qy, ay}, e0[3]; int bias[3];
+        long long px0 = x0 * 16 + 8, py0 = y0 * 16 + 8;
+        for (int e = 0; e < 3; e++) { e0[e] = ex[e] * (py0 - oy[e]) - ey[e] * (px0 - ox[e]); bias[e] = (ey[e] < 0 || (ey[e] == 0 && ex[e] > 0)) ? 0 : -1; }
+        /* atributos: plano a + gx·x + gy·y en 16.16 desde el centro del píxel (x0, y0) */
+        int base[6], gx[6], gy[6]; float fa = (float)area;
+        for (int c = 0; c < 6; c++) {
+            float va = at[A][c], vb = at[B][c], vc = at[C][c];
+            float dx = (-(float)ey[0] * va - (float)ey[1] * vb - (float)ey[2] * vc) * 16 / fa, dy = ((float)ex[0] * va + (float)ex[1] * vb + (float)ex[2] * vc) * 16 / fa;
+            float v0 = ((float)e0[0] * va + (float)e0[1] * vb + (float)e0[2] * vc) / fa;
+            base[c] = (int)(v0 * 65536); gx[c] = (int)(dx * 65536); gy[c] = (int)(dy * 65536);
+        }
+        for (int y = y0; y < y1; y++) {
+            long long e[3] = {e0[0], e0[1], e0[2]}; int a[6]; for (int c = 0; c < 6; c++) a[c] = base[c];
+            unsigned short *row = cb; unsigned ty = cbh - 1 - y;
+            for (int x = x0; x < x1; x++) {
+                if (e[0] + bias[0] >= 0 && e[1] + bias[1] >= 0 && e[2] + bias[2] >= 0) {
+                    int sr = a[2] >> 16, sg = a[3] >> 16, sb = a[4] >> 16, sa = a[5] >> 16;
+                    if (tex) {
+                        int u = a[0] >> 16, v = a[1] >> 16; if (u < 0) u = 0; if (u >= (int)tw) u = tw - 1; if (v < 0) v = 0; if (v >= (int)th) v = th - 1;
+                        unsigned o = tile_off(u, v, tw);
+                        if (fmt == 8) sa = DIV255(sa * tex[o]);
+                        else { unsigned tv = ((unsigned short *)tex)[o]; sr = DIV255(sr * (int)(tv >> 12) * 17); sg = DIV255(sg * (int)((tv >> 8) & 15) * 17); sb = DIV255(sb * (int)((tv >> 4) & 15) * 17); sa = DIV255(sa * (int)(tv & 15) * 17); }
+                    }
+                    if (sa > 0) {
+                        unsigned short *d = row + tile_off(x, ty, cbw); unsigned dv = *d;
+                        if (sa > 255) sa = 255;
+                        if (sr > 255) sr = 255; if (sg > 255) sg = 255; if (sb > 255) sb = 255; if (sr < 0) sr = 0; if (sg < 0) sg = 0; if (sb < 0) sb = 0;
+                        int orr = sr, og = sg, ob = sb, oa = 255;
+                        if (sa < 255) {
+                            int ia = 255 - sa, dr = (dv >> 12) * 17, dg = ((dv >> 8) & 15) * 17, db = ((dv >> 4) & 15) * 17, dA = (dv & 15) * 17;
+                            orr = DIV255(sr * sa + dr * ia); og = DIV255(sg * sa + dg * ia); ob = DIV255(sb * sa + db * ia); oa = sa + DIV255(dA * ia);
+                        }
+                        *d = (unsigned short)(DIV255(orr * 15) << 12 | DIV255(og * 15) << 8 | DIV255(ob * 15) << 4 | DIV255(oa * 15));
+                    }
+                }
+                for (int k = 0; k < 3; k++) e[k] -= ey[k] * 16;
+                for (int c = 0; c < 6; c++) a[c] += gx[c];
+            }
+            for (int k = 0; k < 3; k++) e0[k] += ex[k] * 16;
+            for (int c = 0; c < 6; c++) base[c] += gy[c];
         }
     }
+}
+/* LIVE=/dev/vportNp1 (G22-D, live.py): puerto virtio-serial con el anfitrión. Salida: cada fotograma presentado que cambia, cabecera
+ * {«A6KF», ancho | alto << 16, listas, µs de dibujo, µs de relleno/copias, µs de LDEC (acumulados)} + RGBA4444 lineal. Entrada: «R» reenvía el fotograma; líneas «K clave valor índice» (hex) → mensaje {clave, 0, valor, 0, índice} a la cola del driver de entrada 0x7a0020 (§5.18z′). */
+static int live_fd = -1; static volatile int live_force;
+static void *live_keys(void *a) {
+    (void)a; char buf[256]; int n = 0;
+    for (;;) {
+        int k = read(live_fd, buf + n, sizeof buf - 1 - n); if (k <= 0) { usleep(20000); continue; }
+        n += k; buf[n] = 0; char *ln = buf, *nl;
+        while ((nl = strchr(ln, '\n'))) {
+            *nl = 0; const char *e;
+            if (ln[0] == 'R') live_force = 1;  /* el anfitrión se acaba de conectar (p. ej. tras restaurar el estado): reenviar el fotograma actual */
+            if (ln[0] == 'K') { unsigned m[12] = {0}; m[0] = hexv(ln + 2, &e); m[2] = hexv(e + 1, &e); m[4] = hexv(e + 1, &e); mbx_post_raw(0x7a0020, m); }
+            ln = nl + 1;
+        }
+        n = strlen(ln); memmove(buf, ln, n);
+    }
+    return 0;
+}
+static void *live_frames(void *a) {
+    (void)a; unsigned seen = 0; unsigned char *last = 0, *cur = 0; size_t cap = 0;
+    for (;;) {
+        usleep(4000);
+        if (live_seq == seen && !live_force) continue;
+        int force = live_force; live_force = 0; seen = live_seq; unsigned wd = live_w, ht = live_h; size_t len = (size_t)wd * ht * 2;
+        unsigned char *p = phys2pn(live_da, len); if (!p || !len) continue;
+        if (len > cap) { free(last); free(cur); last = calloc(1, len + 24); cur = malloc(len + 24); cap = len; }
+        memcpy(cur + 24, p, len);
+        if (!force && !memcmp(cur + 24, last + 24, len)) continue;
+        unsigned hd[6] = {0x464b3641, wd | ht << 16, st_lists, st_rast, st_gpu, st_ldec};  /* «A6KF», ancho | alto << 16, contadores */
+        memcpy(cur, hd, 24);
+        for (size_t o = 0; o < len + 24; ) { ssize_t k = write(live_fd, cur + o, len + 24 - o); if (k <= 0) { usleep(10000); continue; } o += k; }
+        unsigned char *t = last; last = cur; cur = t;
+    }
+    return 0;
+}
+static void live_init(void) {
+    const char *dev = getenv("LIVE"); if (!dev) return;
+    static int (*op)(const char *, int, ...); if (!op) op = dlsym(RTLD_NEXT, "open");
+    live_fd = op(dev, O_RDWR); if (live_fd < 0) { efp("[shim] LIVE %s no se abre\n", dev); return; }
+    pthread_t t; pthread_create(&t, 0, live_keys, 0); pthread_create(&t, 0, live_frames, 0); efp("[shim] LIVE %s listo\n", dev);
 }
 /* GPUDUMP=fichero: cada lista de órdenes (pares {reg<<16|0xf000, valor} hasta la marca 0x12345678) se anexa en texto: «JOB n lista=… » + «reg valor» */
 static void gpu_dumplist(unsigned list, int n) {
@@ -966,7 +1110,7 @@ static void gpu_dumplist(unsigned list, int n) {
     fclose(f);
 }
 static void *gpu_thread(void *a) {
-    (void)a; unsigned done = 0; const char *e = getenv("GPUEMU_MS"); unsigned ms = e ? (unsigned)num(e) : 3; int n = 0;
+    (void)a; unsigned done = 0; const char *e = getenv("GPUEMU_MS"); unsigned ms = e ? (unsigned)num(e) : 3; int n = 0, rast = getenv("GPURAST") || getenv("LIVE");
     for (;;) {
         usleep(100);
         if (getenv("RINGWATCH") && gw1) {  /* RINGWATCH=1: cada ~2 s, entradas de la tabla de trabajos (ventana +0xe8, 0x8c B) con algún dato; byte 0 = en curso */
@@ -977,7 +1121,9 @@ static void *gpu_thread(void *a) {
         }
         if (gpu_kicks == done) continue;
         unsigned k = done++, v = kick_list[k % 64];  /* una vuelta por timbre, en orden */
-        gw1[5] = 1; usleep(ms * 1000u); gw1[5] = 2;  /* ocupada → inactiva: el hilo GL espera el 2 (libObj+0x6c35a0/0x6c66c4) */
+        gw1[5] = 1;  /* ocupada → inactiva: el hilo GL espera el 2 (libObj+0x6c35a0/0x6c66c4) */
+        if (rast) { unsigned t0 = now_us(); gpu_draw(v); st_rast += now_us() - t0; st_lists++; } else usleep(ms * 1000u);
+        gw1[5] = 2;
         if (!gpu_live) continue;
         if (n++ < 40) efp("[shim] GPUEMU lista %d: %#x\n", n, v);
         gpu_dumplist(v, n);

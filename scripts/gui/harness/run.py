@@ -14,36 +14,46 @@ import sys
 import tempfile
 from pathlib import Path
 
-work, script = Path(sys.argv[1]), Path(sys.argv[2])
-secs = int(sys.argv[3]) if len(sys.argv) > 3 else 120
-extra = sys.argv[4:]
-with tempfile.TemporaryDirectory() as t:
-    t = Path(t)
+
+def build_initrd(work: Path, script: Path, t: Path, shimenv: str = "", overlay2: str = "") -> Path:
+    """initrd = base.cpio.gz + cpio.gz con /cam/harness.sh, harness.env (SHIMENV), DIR/overlay y OVERLAY2; lo deja en t/initrd.gz."""
     (t / "cam").mkdir()
     (t / "cam/harness.sh").write_text(script.read_text())
     (t / "cam/harness.sh").chmod(0o755)
-    if os.environ.get("SHIMENV"):
-        (t / "cam/harness.env").write_text("export " + os.environ["SHIMENV"] + "\n")
+    if shimenv:
+        (t / "cam/harness.env").write_text("export " + shimenv + "\n")
     if (work / "overlay").is_dir():  # ficheros extra (p. ej. cam/usr/lib/sonyshim.so)
         shutil.copytree(work / "overlay", t, dirs_exist_ok=True)
-    if os.environ.get("OVERLAY2"):  # F5: /usr de un nflasha15 de CFW (pkg_usr.py); va después del base, así que sustituye a los de Sony
-        shutil.copytree(os.environ["OVERLAY2"], t, dirs_exist_ok=True)
+    if overlay2:  # F5: /usr de un nflasha15 de CFW (pkg_usr.py); va después del base, así que sustituye a los de Sony
+        shutil.copytree(overlay2, t, dirs_exist_ok=True)
     names = subprocess.run(["find", "cam"], cwd=t, capture_output=True, check=True).stdout
     cpio = subprocess.run(["cpio", "-o", "-H", "newc", "-R", "0:0", "--quiet"], input=names, cwd=t, capture_output=True, check=True).stdout
     initrd = t / "initrd.gz"
     gz = subprocess.run(["gzip", "-1"], input=cpio, capture_output=True, check=True).stdout
     initrd.write_bytes((work / "base.cpio.gz").read_bytes() + gz)
-    ncpu = min(int(os.environ.get("QEMU_SMP", 8)), 8)  # el kernel netboot armmp de Debian trae NR_CPUS=8: más vCPU no se ven (medido: -smp 12 → 8 en /proc/cpuinfo)
-    cmd = ["qemu-system-arm", "-M", "virt", "-cpu", "cortex-a15", "-smp", str(ncpu), "-accel", "tcg,thread=multi", "-m", "1536", "-kernel", str(work / "vmlinuz"), "-initrd", str(initrd),
-           "-append", "console=ttyAMA0 quiet loglevel=3", "-nographic", "-no-reboot", *extra]
-    log = work / "last.log"
-    with open(log, "wb") as out:
-        p = subprocess.Popen(cmd, stdout=out, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL)
-        try:
-            p.wait(timeout=secs)
-        except subprocess.TimeoutExpired:
-            p.kill()
-            p.wait()
+    return initrd
+
+
+def qemu_cmd(work: Path, initrd: Path, extra: list[str], console: list[str] | None = None) -> list[str]:
+    ncpu = min(int(os.environ.get("QEMU_SMP", "8")), 8)  # el kernel netboot armmp de Debian trae NR_CPUS=8: más vCPU no se ven (medido: -smp 12 → 8 en /proc/cpuinfo)
+    return ["qemu-system-arm", "-M", "virt", "-cpu", "cortex-a15", "-smp", str(ncpu), "-accel", "tcg,thread=multi,tb-size=512", "-m", "1536",
+            "-kernel", str(work / "vmlinuz"), "-initrd", str(initrd), "-append", "console=ttyAMA0 quiet loglevel=3",
+            *(console if console is not None else ["-nographic"]), "-no-reboot", *extra]
+
+
+def main() -> None:
+    work, script = Path(sys.argv[1]), Path(sys.argv[2])
+    secs = int(sys.argv[3]) if len(sys.argv) > 3 else 120
+    with tempfile.TemporaryDirectory() as t:
+        initrd = build_initrd(work, script, Path(t), os.environ.get("SHIMENV", ""), os.environ.get("OVERLAY2", ""))
+        log = work / "last.log"
+        with open(log, "wb") as out:
+            p = subprocess.Popen(qemu_cmd(work, initrd, sys.argv[4:]), stdout=out, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL)
+            try:
+                p.wait(timeout=secs)
+            except subprocess.TimeoutExpired:
+                p.kill()
+                p.wait()
     text = log.read_text(errors="replace")
     while "=====GUESTFILE-BEGIN" in text and "=====GUESTFILE-END" in text:  # ficheros extra (fb.bin…): gzip+base64 → DIR_TRABAJO/<nombre>
         pre, rest = text.split("=====GUESTFILE-BEGIN", 1)
@@ -57,3 +67,7 @@ with tempfile.TemporaryDirectory() as t:
         (work / "guest.log").write_bytes(data)
         text = text.split("=====GUESTLOG-BEGIN", 1)[0] + f"[guest.log: {data.count(b'\n')} líneas]"
     print(text[-20000:])
+
+
+if __name__ == "__main__":
+    main()

@@ -629,3 +629,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 11-11-2026: CFW 3.78 instalado; arranca y reporta 3.78; falta la prueba funcional del menú PP. [G36 §6](../docs/gui/g36-selector-pp-tope-7-opciones.md)
 - 11-11-2026: el 3.78 se cuelga al entrar en Picture Profile (hipótesis 13 páginas); CFW 3.79 con 35 filas en 6 páginas (numéricos a 7 valores, sin Copy/Reset) construido y auditado, sin instalar. [G36 §7–§8](../docs/gui/g36-selector-pp-tope-7-opciones.md)
 - 12-11-2026: G22 F5: el arnés arranca con el `nflasha15` del CFW (`pkg_usr.py`, `OVERLAY2`); 3.79 abre la carpeta Picture Profile; el 3.78 reproduce su cuelgue (`SIGSEGV` `libObj+0x5b6242`). [G22 §5.18z″](../docs/gui/g22-arnes-ui-qemu.md)
+- 12-11-2026: G22-D ventana en vivo (`live.py`): GPU en el invitado, virtio-serial, teclado, estado de VM restaurable; ~1 s por tecla. [G22 §5.18z‴](../docs/gui/g22-arnes-ui-qemu.md)
