@@ -26,7 +26,7 @@ CONFIG_DEFECTO = {
     "version": 1,
     "firmware": {"origen": "sony", "overlay": "", "dat": ""},  # origen: sony | overlay | dat
     "teclas": TECLAS_DEFECTO,
-    # NO_VERIFICADO / próximamente: se guardan, pero ninguna tarea los aplica todavía
+    # sensor y sd los aplica live.py (T4); red sigue sin efecto (T5)
     "sensor": {"fuente": "imagen", "ruta": ""},  # imagen | video | webcam
     "sd": {"tamano_gb": 4, "carpeta": ""},
     "red": {"telnet": False, "wifi": False},
@@ -88,9 +88,13 @@ def valida_config(d: object, botones: list[str] | None = None) -> dict:
     sensor = {**CONFIG_DEFECTO["sensor"], **(d.get("sensor") or {})}
     if sensor["fuente"] not in ("imagen", "video", "webcam"):
         raise ValueError("sensor.fuente debe ser imagen, video o webcam")
+    if not isinstance(sensor["ruta"], str):
+        raise ValueError("sensor.ruta debe ser texto")  # noqa: TRY004
     sd = {**CONFIG_DEFECTO["sd"], **(d.get("sd") or {})}
     if not isinstance(sd["tamano_gb"], (int, float)) or isinstance(sd["tamano_gb"], bool) or not 0 < sd["tamano_gb"] <= 2048:
         raise ValueError("sd.tamano_gb debe estar entre 0 y 2048")
+    if not isinstance(sd["carpeta"], str):
+        raise ValueError("sd.carpeta debe ser texto")  # noqa: TRY004
     red = {**CONFIG_DEFECTO["red"], **(d.get("red") or {})}
     return {"version": 1, "firmware": fw, "teclas": teclas, "sensor": sensor, "sd": sd,
             "red": {"telnet": bool(red["telnet"]), "wifi": bool(red["wifi"])}}

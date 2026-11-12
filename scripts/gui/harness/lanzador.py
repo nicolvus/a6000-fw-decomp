@@ -122,12 +122,13 @@ Un perfil nuevo arranca en frío (≈ 2,5 min) y después se restaura en segundo
 <section><h2>Mapa de teclas</h2><p class="mut">Pulsa «Capturar» y luego la tecla del teclado. Un botón puede tener varias teclas; una tecla, un solo botón.
 Solo figuran los botones con código de cámara medido; Fn, reproducción, rueda y dial se añadirán cuando se verifiquen.</p>
 <table id="tt"></table><div class="row"><button id="rst">Restablecer valores por defecto</button></div></section>
-<section><h2>Fuente del sensor <span class="soon">próximamente</span></h2><fieldset disabled><div class="row">
+<section><h2>Fuente del sensor</h2><fieldset><div class="row">
 <select id="sfu"><option value="imagen">Imagen</option><option value="video">Vídeo</option><option value="webcam">Webcam</option></select>
-<input type="text" id="sru" size="40" placeholder="ruta del fichero"></div></fieldset>
-<p class="mut">Hoy la imagen se elige en la ventana en vivo (se compone bajo la OSD). Estos ajustes se guardan pero aún no tienen efecto.</p></section>
-<section><h2>Tarjeta SD <span class="soon">próximamente</span></h2><fieldset disabled><div class="row">Tamaño <input type="number" id="sgb" min="1" max="2048" step="1" style="width:80px"> GB
-&nbsp; Carpeta <input type="text" id="sca" size="40" placeholder="directorio del anfitrión"></div></fieldset></section>
+<input type="text" id="sru" size="40" placeholder="imagen o vídeo del anfitrión (opcional)"></div></fieldset>
+<p class="mut">Es la fuente inicial de la ventana en vivo; allí se cambia en caliente (imagen, vídeo en bucle o cámara web, que pide permiso al navegador). La imagen se compone bajo la OSD en 3:2 y se guarda tal cual entra: la cámara no la procesa (sin Picture Profile).</p></section>
+<section><h2>Tarjeta SD</h2><fieldset><div class="row">Tamaño <input type="number" id="sgb" min="1" max="2048" step="1" style="width:80px"> GB
+&nbsp; Carpeta <input type="text" id="sca" size="40" placeholder="vacío = ~/A6000-SD"></div></fieldset>
+<p class="mut">Disparo (botón «disparador») y MOVIE los guarda el anfitrión en esa carpeta con la estructura de la A6000 (<code>DCIM/100MSDCF/DSC00001.JPG</code>, <code>PRIVATE/M4ROOT/CLIP/C0001.MP4</code>); no se escribe si se supera el tamaño.</p></section>
 <section><h2>Red <span class="soon">próximamente</span></h2><fieldset disabled><div class="row"><label><input type="checkbox" id="rte"> Telnet</label>
 <label><input type="checkbox" id="rwi"> Wi-Fi por red local</label></div></fieldset></section>
 </main><footer><button class="p" id="go">Iniciar</button><span id="msg" class="mut"></span><span style="flex:1"></span>

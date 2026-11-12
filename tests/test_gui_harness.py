@@ -293,3 +293,30 @@ def test_emu_config_detecta_paquete_a6000() -> None:
         E.cabecera_dat(a6300.read_bytes())
     with pytest.raises(E.DatError, match="No es un paquete"):
         E.cabecera_dat(b"no soy un dat" * 100)
+
+
+def test_sd_emu_numeracion_cuota_y_exif(tmp_path: Path) -> None:
+    """T4: DCIM/NNNMSDCF/DSCnnnnn (modo Serie, paso de carpeta a los 9999), clips C%04d, cuota y EXIF mínimo."""
+    sys.path.insert(0, str(HARNESS))
+    import io
+
+    import sd_emu as S
+    from PIL import Image
+    assert S.siguiente_foto(tmp_path) == (100, 1) and S.siguiente_clip(tmp_path) == 1
+    assert S.ruta_foto(tmp_path, 100, 1) == tmp_path / "DCIM/100MSDCF/DSC00001.JPG"
+    d = tmp_path / "DCIM/100MSDCF"
+    d.mkdir(parents=True)
+    (d / "DSC00007.ARW").write_bytes(b"x" * 10)  # los RAW también cuentan en la serie
+    assert S.siguiente_foto(tmp_path) == (100, 8)
+    (d / "DSC09999.JPG").write_bytes(b"x")
+    assert S.siguiente_foto(tmp_path) == (101, 1)
+    c = tmp_path / "PRIVATE/M4ROOT/CLIP"
+    c.mkdir(parents=True)
+    (c / "C0003.MP4").write_bytes(b"x")
+    assert S.siguiente_clip(tmp_path) == 4 and S.ruta_clip(tmp_path, 4) == c / "C0004.MP4"
+    assert S.usado(tmp_path) == 12 and S.cabe(tmp_path, 1, 1 << 30) is False and S.cabe(tmp_path, 1, 1000)
+    assert S.estado(tmp_path, 4)["libre"] == 4 * (1 << 30) - 12
+    buf = io.BytesIO()
+    Image.new("RGB", (30, 20), "red").save(buf, "JPEG")
+    ex = Image.open(io.BytesIO(S.jpeg_con_exif(buf.getvalue()))).getexif()
+    assert (ex[0x010F], ex[0x0110]) == ("SONY", "ILCE-6000") and ex.get_ifd(0x8769)[0x9003] == ex[0x0132]

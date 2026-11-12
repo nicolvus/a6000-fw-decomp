@@ -36,6 +36,7 @@ from PIL import Image
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import run
+import sensor_web
 
 # escenario de F3/F4 sin volcados: ciclo de modelos, menú abierto, cola de teclas 0x7a0020
 SHIMENV = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/GLOBAL_MENU OPENVIEWAT=40 OPENVIEWGAP=14 "
@@ -244,26 +245,21 @@ small,#st{color:var(--mut)}label{display:block;margin:10px 0 4px}</style></head>
 <div class="pad"><span></span><button data-k="arriba">▲</button><span></span><button data-k="izquierda">◀</button>
 <button data-k="intro">OK</button><button data-k="derecha">▶</button><span></span><button data-k="abajo">▼</button><span></span></div>
 <button data-k="menu">MENU</button><button data-k="disparador">Disparador</button>
-<label>Imagen del sensor (debajo de la OSD)</label><input type="file" id="img" accept="image/*">
-<label><input type="checkbox" id="ver" checked> mostrar imagen</label>
+<!--SENSOR-->
 <label>Escala <select id="esc"><option>1</option><option selected>1.5</option><option>2</option></select></label>
 <p><button id="guardar">Guardar estado</button> <a id="volver" href="#" hidden>⚙ Configurador</a></p><small>Teclado: flechas, Intro, Esc/M = MENU, espacio = disparador. «Guardar estado» hace que el
 próximo arranque empiece en esta pantalla. La imagen no se procesa con los ajustes de la cámara (av-cam no se emula).</small></aside></main>
 <script>
-const c=document.getElementById('c'),x=c.getContext('2d'),st=document.getElementById('st');let osd=new Image(),fondo=null,info={};
-function pinta(){x.fillStyle='#000';x.fillRect(0,0,640,480);if(fondo&&document.getElementById('ver').checked){const r=Math.max(640/fondo.width,480/fondo.height),
-w=fondo.width*r,h=fondo.height*r;x.drawImage(fondo,(640-w)/2,(480-h)/2,w,h)}if(osd.complete)x.drawImage(osd,0,0)}
+const c=document.getElementById('c'),x=c.getContext('2d'),st=document.getElementById('st');let osd=new Image(),info={};/*SENSORJS*/
 const es=new EventSource('/eventos');es.onmessage=e=>{const i=new Image();i.onload=()=>{osd=i;pinta()};i.src='data:image/png;base64,'+e.data};
 setInterval(async()=>{try{info=await (await fetch('/estado')).json();st.textContent=info.texto}catch(e){st.textContent='sin conexión'}},1000);
-const tecla=(k,v)=>fetch('/tecla',{method:'POST',body:JSON.stringify({k,v})});
+const tecla=(k,v)=>{if(k=='disparador'&&v==1)disparo();return fetch('/tecla',{method:'POST',body:JSON.stringify({k,v})})};
 document.querySelectorAll('[data-k]').forEach(b=>{b.onpointerdown=()=>tecla(b.dataset.k,1);b.onpointerup=b.onpointerleave=e=>{if(e.type=='pointerup'||e.buttons)tecla(b.dataset.k,0)}});
 let mapa={ArrowUp:'arriba',ArrowDown:'abajo',ArrowLeft:'izquierda',ArrowRight:'derecha',Enter:'intro',Escape:'menu',KeyM:'menu',Space:'disparador'};
-fetch('/config').then(r=>r.json()).then(c=>{if(c.mapa)mapa=c.mapa;if(c.lanzador){const a=document.getElementById('volver');a.href=c.lanzador;a.hidden=false;
+fetch('/config').then(r=>r.json()).then(c=>{if(c.mapa)mapa=c.mapa;sensorInicio(c.sensor);if(c.lanzador){const a=document.getElementById('volver');a.href=c.lanzador;a.hidden=false;
 a.onclick=async e=>{e.preventDefault();st.textContent='guardando y cerrando…';await fetch('/salir',{method:'POST'});setTimeout(()=>location.href=c.lanzador,1500)}}}).catch(()=>{});
 addEventListener('keydown',e=>{const k=mapa[e.code];if(!k||e.target.tagName=='INPUT'&&e.target.type!='checkbox')return;e.preventDefault();if(!e.repeat)tecla(k,1)});
 addEventListener('keyup',e=>{const k=mapa[e.code];if(k){e.preventDefault();tecla(k,0)}});
-document.getElementById('img').onchange=e=>{const f=e.target.files[0];if(!f)return;const i=new Image();i.onload=()=>{fondo=i;pinta()};i.src=URL.createObjectURL(f)};
-c.ondragover=e=>e.preventDefault();c.ondrop=e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(f){const i=new Image();i.onload=()=>{fondo=i;pinta()};i.src=URL.createObjectURL(f)}};
 document.getElementById('ver').onchange=pinta;document.getElementById('esc').onchange=e=>c.style.width=640*e.target.value+'px';
 document.getElementById('guardar').onclick=async()=>{st.textContent='guardando…';alert(await (await fetch('/guardar',{method:'POST'})).text())};
 </script></body></html>"""
@@ -276,7 +272,7 @@ def configuracion() -> dict:
     """Mapa de teclas del config.json del configurador (se relee en cada carga de la página); sin config, la página usa su mapa fijo."""
     from emu_config import carga_config, mapa_inverso
     cfg = carga_config(Path(CONFIG["ruta"])) if CONFIG["ruta"] else None
-    return {"mapa": mapa_inverso(cfg["teclas"]) if cfg else None, "lanzador": CONFIG["lanzador"]}
+    return {"mapa": mapa_inverso(cfg["teclas"]) if cfg else None, "lanzador": CONFIG["lanzador"], "sensor": cfg["sensor"] if cfg else None}
 
 
 def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
@@ -293,8 +289,10 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
             self.wfile.write(cuerpo)
 
         def do_GET(self) -> None:
+            if sensor_web.maneja(self, "GET", self.path.partition("?")[0], b"", CONFIG["ruta"]):  # sensor, SD y grabación (T4)
+                return
             if self.path == "/":
-                self.responde(PAGINA.encode(), "text/html; charset=utf-8")
+                self.responde(PAGINA.replace("<!--SENSOR-->", sensor_web.HTML).replace("/*SENSORJS*/", sensor_web.JS).encode(), "text/html; charset=utf-8")
             elif self.path == "/estado":
                 t = time.time() - vm.t0
                 fase = ("restaurado" if vm.restaurado else "arranque en frío") + f", {t:.0f} s"
@@ -325,6 +323,8 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
 
         def do_POST(self) -> None:
             cuerpo = self.rfile.read(int(self.headers.get("Content-Length", 0)))
+            if sensor_web.maneja(self, "POST", self.path, cuerpo, CONFIG["ruta"]):
+                return
             if self.path == "/tecla":
                 d = json.loads(cuerpo)
                 k, i = TECLAS[d["k"]]
