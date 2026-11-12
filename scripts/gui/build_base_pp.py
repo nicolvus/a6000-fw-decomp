@@ -13,7 +13,10 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts/gui"))
 sys.path.insert(0, str(ROOT / "scripts"))
+import pp_bw_mono_patch
+import pp_bwhl_patch
 import pp_curves_patch
+import pp_slog3_core_patch
 from e25_27 import build, fatimg, sums, tarball, tpzl
 from g22 import patch_silent_r5
 
@@ -27,7 +30,11 @@ def bionz_cfw(bionz: bytes, color: bool = True, tone: bool = True, silent_r5: bo
         nuevo = (Path(tmp) / "pp/av-cam.pp.bin").read_bytes()
     if silent_r5:   # E26-R86: Silent con ShutMode 0 + r5 desde la velocidad (calibración R56), solo en foto
         nuevo = patch_silent_r5.apply_bytes(nuevo)
-    return nuevo
+    # G33-B §10 (3.81): S-Log3 (G32-C), B&W monocromo por tipo (G32-D) y Hi-Light (G33-B, sin B/W calibrado); cada paso comprueba sus bytes originales
+    nuevo = bytearray(pp_slog3_core_patch.apply(bytes(nuevo)))
+    for a, code, _ in pp_bw_mono_patch.patches(bytes(nuevo)) + pp_bwhl_patch.patches(bytes(nuevo), pp_bwhl_patch.CAVE):
+        nuevo[a - pp_slog3_core_patch.BASE:a - pp_slog3_core_patch.BASE + len(code)] = code
+    return bytes(nuevo)
 
 
 def main(base_tar: Path, out_tar: Path, color: bool = True, tone: bool = True, silent_r5: bool = True) -> dict:

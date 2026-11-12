@@ -25,7 +25,13 @@ def test_imagen_con_pp_equivale_al_nucleo_de_pp_ram(tmp_path):
     b1 = fatimg.Fat16.parse(img.decompressed()).read(build.AVCAM_NAME)
     pp_curves_patch.main(_escribe(tmp_path, b0), tmp_path / "pp", None, color=True, tone=True)
     import patch_silent_r5  # E26-R86: la imagen lleva además el Silent calibrado
-    assert b1 == patch_silent_r5.apply_bytes((tmp_path / "pp/av-cam.pp.bin").read_bytes()) and b1 != b0 and res["bytes_cambiados"] > 30000
+    import pp_bw_mono_patch
+    import pp_bwhl_patch
+    import pp_slog3_core_patch  # G33-B §10 (3.81): + S-Log3, B&W y Hi-Light
+    esperado = bytearray(pp_slog3_core_patch.apply(patch_silent_r5.apply_bytes((tmp_path / "pp/av-cam.pp.bin").read_bytes())))
+    for a, code, _ in pp_bw_mono_patch.patches(bytes(esperado)) + pp_bwhl_patch.patches(bytes(esperado), pp_bwhl_patch.CAVE):
+        esperado[a - pp_slog3_core_patch.BASE:a - pp_slog3_core_patch.BASE + len(code)] = code
+    assert b1 == bytes(esperado) and b1 != b0 and res["bytes_cambiados"] > 30000
 
 
 def _escribe(d, data):

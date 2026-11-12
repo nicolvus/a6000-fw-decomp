@@ -167,6 +167,8 @@ def test_los_limites_de_perfil_aceptan_hasta_10():
     img = E.patch(LIB.read_bytes())
     for va, _, nuevo in E.BOUNDS:
         assert img[va:va + len(nuevo) // 2].hex() == nuevo
+    for va in (0x4DB4B4, 0x4DB4DC):                                                      # G35 §5: pvt_SetParamParamPictureProfile
+        assert img[va:va + 4].hex() == "b8f10a0f"
     mu = _maquina(img)
     mu.mem_write(THIS + 0x274, struct.pack("<I", 10))
     mu.reg_write(UC_ARM_REG_R5, THIS)

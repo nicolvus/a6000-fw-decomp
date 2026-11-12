@@ -37,6 +37,8 @@ Consecuencias:
 
 ## 3. Hecho — B&W con efecto en imagen
 
+> **3.81 (G33-B §10):** `patch_bw` ya no se aplica; B&W llega al núcleo como tipo 8 y lo trata `pp_bw_mono_patch` (G32-D). Lo que sigue describe el 3.60–3.80.
+
 `patch_libobj_pp.patch_bw` (20 B en el hueco que deja `patch_color`, `0x9b328c`; lo aplica `--color-gamut`): al escribir la saturación en el `0x4066` (`0x9b35a2`), si el tipo es B&W (8) envía **tipo 5 (Movie) y saturación −8**. El núcleo queda como en la A7S: caso Movie del `switch` más indicador monocromo. El ajuste Saturation guardado no cambia; solo cambia el mensaje.
 Test Unicorn `test_bw_envia_movie_y_saturacion_menos_8`: B&W → (5, `0xf8`); los demás tipos y saturaciones pasan intactos; sin `patch_color` el parche se niega.
 

@@ -72,8 +72,8 @@ def test_menu_color_mode_sigue_a_la_a6300():
 
 
 @needs
-def test_bw_envia_movie_y_saturacion_menos_8():
-    """G27: el núcleo de la A6000 no conoce el tipo 8; su B&W es saturación < −7 (indicador monocromo, `av-cam 0x437a273c`)."""
+def test_bw_llega_al_nucleo_como_tipo_8_sin_tocar_la_saturacion():
+    """G33-B §10 (3.81): `libObj` ya no traduce B&W a Movie + saturación −8 (`patch_bw` retirado del CFW); el núcleo trata el tipo 8 (`pp_bw_mono_patch`)."""
     from unicorn import UC_ARCH_ARM, UC_HOOK_CODE, UC_MODE_THUMB, Uc
     from unicorn.arm_const import UC_ARM_REG_R0, UC_ARM_REG_R4
 
@@ -90,10 +90,10 @@ def test_bw_envia_movie_y_saturacion_menos_8():
         m = bytes(mu.mem_read(0x20000000, 0x20))
         return m[8], m[0x15]
 
-    old, new = nuevo(), P.patch_bw(nuevo())
-    assert run(new, 8, 3) == (5, 0xF8)                                   # B&W → Movie + saturación −8
+    old = nuevo()
+    assert run(old, 8, 3) == (8, 3)                                      # B&W pasa tal cual: tipo 8, saturación del usuario
     for tipo in (0, 5, 7, 9, 11):
         for sat in (-8, 0, 7):
-            assert run(new, tipo, sat) == run(old, tipo, sat) == (tipo, sat & 0xFF)
-    with pytest.raises(AssertionError):
-        P.patch_bw(P.patch_gamma(LIB.read_bytes()))                      # exige patch_color (usa su hueco)
+            assert run(old, tipo, sat) == (tipo, sat & 0xFF)
+    src = (ROOT / "scripts/gui/build_pp_menu.py").read_text()
+    assert "patch_bw(" not in src                                        # el constructor no aplica patch_bw

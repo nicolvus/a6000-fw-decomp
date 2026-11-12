@@ -127,3 +127,56 @@ Regla del `AGENTS.md` (reinicio experimental): no reutilizar direcciones de sesi
 * Persistencia: ninguno de los dos se ha verificado (que `+0x238` se restaure al arrancar, ni la vuelta a Off tras reiniciar, G22-A (3)).
 * Un único menú de 3 valores (como `CustomStillShutterType` de la A6300) no se hizo, porque la A6000 no tiene `SequenceSetShutterType`.
   Los dos menús con Silent dominante dan los tres estados igual que el A6300.
+
+## 9. CFW 3.81: integración conjunta (G22-A + G32-C + G32-D + G33-B + G35-A), construido, NO instalado
+
+Plan del [G33-B §10](g33b-bw-balance-hilight.md). Núcleo (`build_base_pp.bionz_cfw`), sobre 3.38 + tres estados (copiador del 3.80), en este orden:
+`pp_curves_patch` (curvas, color, tono G33), `patch_silent_r5`, `pp_slog3_core_patch` (G32-C), `pp_bw_mono_patch` (G32-D) y
+`pp_bwhl_patch` en la cueva `0x43faf290` (G33-B, solo Hi-Light, `bw=None`). Cada paso comprueba sus bytes originales.
+
+`libObj`: `patch_color` sin `patch_bw` (`build_pp_menu.py`). Ahora B&W llega al núcleo como tipo 8, con la saturación del usuario.
+`patch_libobj_ppeco.BOUNDS` lleva además `0x4DB4B4`/`0x4DB4DC` `≤ 9 → ≤ 10` (`pvt_SetParamParamPictureProfile`, G35 §5; comprobado en el
+`libObj.so` del paquete: `b8f10a0f` en los dos).
+
+Pruebas, primero las regresiones que fallaban:
+* `test_g26…::test_bw_llega_al_nucleo_como_tipo_8_sin_tocar_la_saturacion` sustituye a `test_bw_envia_movie_y_saturacion_menos_8`;
+* `test_g30…::test_los_limites_de_perfil_aceptan_hasta_10` incluye los dos sitios nuevos;
+* `test_g22_audit_bionz` exige S-Log3, B&W y Hi-Light en la imagen;
+* `test_g31_base_pp` compone la imagen esperada paso a paso.
+
+Resultado: **88/88** en las diez suites de PP (g25, g31, g33, r86, g32c, g32d, g33b, g26, g30 y g23) más `test_g22_audit_bionz`
+y `test_g22_tres_estados`; ruff sin avisos nuevos.
+
+La auditoría acepta solo dos imágenes exactas: 3.38 + tres estados, o `bionz_cfw` completo. Por eso el BIONZ del 3.73–3.80, que no lleva
+G32-C/D ni G33-B, ya **no** pasa con esta versión de la auditoría.
+
+`.dat` `analysis/gui/g22/pkg-381w/pkg-3.81/package-3.81/firmware_packed.dat`, sha256
+`26854785922b84760005680495e76ec2f8382c3f56609f8c9042936ef529caf1`; auditoría [`audit-3.81.json`](../../analysis/gui/audit-3.81.json) **29/29**.
+Menú y `/usr` iguales que el 3.80, salvo `libObj.so`.
+
+No se emuló la UI: el arnés QEMU requiere la VM interactiva, que usa otro agente, y no se arrancó. **NO_VERIFICADO** en el arnés.
+
+### Lista de comprobación en cámara (3.81)
+
+Antes de nada, aplicar el paso 0 del §7: reinicio experimental, línea base, sin escribir RAM/NVRAM y solo fotos normales en RAW + JPEG.
+
+1. **Tres estados** (§7, combinaciones A–D):
+   * A tiene cortinas;
+   * B tiene EFCS;
+   * C y D: sin cortinas, la Tv del EXIF y la exposición dentro de ±1/3 EV de A;
+   * D igual que C.
+2. **S-Log3** (G32-C): Gamma S-Log3 en un PP. La vista y el JPEG deben salir planos, como S-Log2 y no como Movie. Comparar con S-Log2 en la
+   misma escena.
+3. **B&W** (G32-D):
+   * Color Mode B&W con Saturación 0: debe salir monocromo;
+   * Movie con Saturación −8: debe salir **en color** (antes salía monocromo);
+   * B&W con Saturación +7: debe seguir monocromo.
+4. **Hi-Light** (G33-B): Detail en Manual, Hi-Light 0…4, escena con altas luces. Debe haber un cambio progresivo en el detalle de las altas
+   luces (escala NO_VERIFICADA).
+5. **PP10** (G35-A):
+   * elegir PP10, cambiar un valor (p. ej. Black Level +5), fotografiar y comprobar que se aplica;
+   * apagar y encender: PP10 y el valor siguen ahí;
+   * PP1–PP9 conservan sus valores de fábrica (`pp_factory.py`).
+6. Al final: releer los hashes y comprobar que no hay modificaciones; guardar los RAW y el registro en `analysis/camera-dumps/<fecha>-381/`.
+   Si algo falla: volver al 3.79 con una versión mayor.
+

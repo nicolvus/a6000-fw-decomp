@@ -137,7 +137,7 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
         lo = patch_libobj_pp.patch(lo) if saturacion_a6300 else lo
         lo = patch_libobj_pp.patch_gamma(lo) if gamma_slog or acciones else lo
         lo = patch_libobj_pp.patch_actions(lo) if acciones else lo
-        emit("lib/libObj.so", patch_libobj_pp.patch_bw(patch_libobj_pp.patch_color(lo)) if color_gamut else lo)
+        emit("lib/libObj.so", patch_libobj_pp.patch_color(lo) if color_gamut else lo)   # G33-B §10: sin patch_bw, el núcleo trata B&W (pp_bw_mono_patch)
     caution, delta = patch_caution((a / "lib/CautionConfig.so").read_bytes(), ids)
     emit("lib/CautionConfig.so", caution)
     # G28: la UI usa la copia del gestor de procesos que lleva viewUnified2.so (cmn_view_processDataMgr.so no se carga) y los pids originales los usa casi todos algún nodo:

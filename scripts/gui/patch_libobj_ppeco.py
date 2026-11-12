@@ -40,6 +40,7 @@ VUELVE_RPERFIL, VUELVE_RVALOR = 0x4C0E66, 0x4C0EAA
 BOUNDS = (   # «perfil ≤ 9» → «≤ 10» (dirección, original, nuevo)
     (0x4A7860, "092b", "0a2b"), (0x4B4184, "092b", "0a2b"), (0x4B73DE, "092b", "0a2b"),
     (0x4C0AE0, "b8f1090f", "b8f10a0f"), (0x4C0B08, "b8f1090f", "b8f10a0f"),
+    (0x4DB4B4, "b8f1090f", "b8f10a0f"), (0x4DB4DC, "b8f1090f", "b8f10a0f"),   # G35 §5: pvt_SetParamParamPictureProfile
 )
 MAX_PERFIL = 10
 PPINIT_OFF, RP_OFF = 0x300, 0x400                       # posiciones fijas en la cueva: `ppinit` (≤ 0x100 B) y, a partir de RP_OFF, Reset, la tabla y la bandera
