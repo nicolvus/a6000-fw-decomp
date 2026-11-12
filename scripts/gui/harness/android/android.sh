@@ -4,7 +4,9 @@ export PATH=/bin:/sbin:/usr/bin:/usr/sbin
 [ -f /cam/harness.env ] && . /cam/harness.env
 echo "T6 uname: $(uname -r)"
 insmod /cam/t6mod/${BINDERKO:-binder32}.ko devices=binder 2>&1 | tail -2
-[ -z "$NOUIPC" ] && insmod /cam/t6mod/uipc_stub.ko 2>&1 | tail -1  # adición del emulador: /dev/uipc mínimo (ver uipc_stub.c)
+[ -f /cam/t6mod/ashmem.ko ] && insmod /cam/t6mod/ashmem.ko 2>&1 | tail -1          # build_ashmem.sh
+U=${UIPCKO:-uipc_shared}; [ -f /cam/t6mod/$U.ko ] || U=uipc_stub                    # uipc_shared.ko: /dev/uipc entre procesos (build_uipc.sh)
+[ -z "$NOUIPC" ] && insmod /cam/t6mod/$U.ko 2>&1 | tail -1 && echo "T6 uipc: $U"
 echo "T6 binder: $(ls -l /dev/binder 2>&1 | cut -c1-60) | misc: $(grep -c binder /proc/misc)"
 [ -e /dev/ashmem ] && echo "T6 ashmem: presente" || echo "T6 ashmem: AUSENTE (ashmem_linux no existe en 6.12)"
 for d in proc sys dev; do mount --bind /$d /cam/and/$d; done
@@ -31,9 +33,12 @@ zyg)  # sin init de Android (sin propiedades): servicemanager + zygote a mano; /
   chroot /cam/and /system/bin/servicemanager > /tmp/sm.log 2>&1 &
   sleep 2
   env ANDROID_ROOT=/system ANDROID_DATA=/data ANDROID_ASSETS=/system/app EXTERNAL_STORAGE=/mnt/sdcard BOOTCLASSPATH="$BCP" LD_LIBRARY_PATH=/system/lib \
-    chroot /cam/and /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server > /tmp/zyg.log 2>&1 &
+    chroot /cam/and $([ -x /cam/and/zygote_launch ] && echo /zygote_launch) /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server > /tmp/zyg.log 2>&1 &
+  ZP=$!
   sleep ${WAIT:-60}
   echo "T6 procesos:"; ps | grep -E "app_process|servicemanager|system_server"
+  kill -0 $ZP 2>/dev/null && echo "T6 zygote vivo" || { wait $ZP; echo "T6 zygote salida=$?"; }
+  echo "T6 data: $(ls /cam/and/data /cam/and/data/dalvik-cache 2>&1 | tr '\n' ' ' | cut -c1-300)"
   echo "T6 zyg.log:"; tail -20 /tmp/zyg.log | cut -c1-200
   for l in main system; do echo "T6 log $l:"; tr -c '[:print:]' '\n' < /cam/and/dev/log/$l | grep -E '.{6,}' | tail -${LOGN:-60} | cut -c1-200; done ;;
 esac

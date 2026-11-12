@@ -84,3 +84,18 @@ El shim emula `/dev/uipc` **dentro de un proceso**: abre `/tmp/uipc.shm` y resue
 Resultado: 1 passed. ruff y mypy sin avisos. Desde esta revisión la prueba cubre también mensajes de 8148 B, la cabecera del `.ko`, el doble `free`, el agotamiento y la recuperación del espacio.
 
 **Prueba en el invitado (lista, sin ejecutar):** `build_uipc.sh` compila también `uipc_guest_test.c`, un binario ARM estático sin libc con syscalls directas. `prueba_uipc.sh` carga el módulo y lanza esa prueba. Dos procesos, cada uno con su `open`/`mmap`, se sincronizan con un semáforo y entregan un mensaje de 5000 B por callback (`wait_cb`). La prueba comprueba el contenido y la cabecera, el `free` y un `rcv` con tiempo agotado de 100 ms; imprime `UIPC OK` o `FALLO n`. Bajo `qemu-arm` en el anfitrión, sin `/dev/uipc`, termina con `FALLO 01` en ambos procesos, como se espera: confirma el binario y las syscalls. Se ejecuta en un `DIR_TRABAJO` propio con `run.py`, nunca en la VM interactiva.
+
+## 7. Medición en el invitado (12-11-2026)
+
+Se usó `run.py` con un `DIR_TRABAJO` propio (`analysis/gui/g22/harness/t6`, ignorado), sin red ni puerto, y una sola VM a la vez que se apagó sola al terminar. Los logs están en `t6/uipc_prueba.log` y `t6/zyg_diag3.log`.
+
+- **`prueba_uipc.sh`: PASA.** `insmod uipc_shared.ko` crea `/dev/uipc` (`crw-rw-rw- 10,258`). `uipc_guest_test` imprime `UIPC OK` (salida 0), lo que confirma:
+  - semáforo entre procesos con espera real de hasta 5 s;
+  - `valloc` de 5000 B y entrega por callback a otro proceso (`wait_cb` devuelve `{cb, arg}`, el contenido y la cabecera `[-8]` = 157 bloques);
+  - `free`;
+  - `rcv` con tiempo agotado: −1022 tras 100 ms.
+
+  En el invitado no hay `timeout` de busybox; se sustituyó por un vigilante con `sleep` y `killall`.
+- **Convenio del tiempo agotado, resuelto por evidencia estática** (`libosal_uipc.so` de `nflasha16`): tras cada `ioctl` hace `r = ioctl(...); if (r == -1) r = -errno;` y compara `r` con −1021 para reintentar (`u_uipc_exit` 0x57f0–0x5824, `u_osal_reg_msg_queue_cb` 0x58ec–0x5914). Por tanto, un −1022 devuelto por el kernel (que libc entrega como `-1/errno 1022`) y el −1022 directo del shim **llegan iguales** al llamador. Ante una señal, el módulo devuelve ahora −1021 (no `-ERESTARTSYS`), para que la biblioteca reintente como con el `.ko` real.
+- **Zygote con `binder32` + `ashmem` + `uipc_shared`:** primero salía con código 0 y sin traza. Con `diag.sh`, la salida estándar mostró que **Dalvik arranca** (`dalvikvm -version` = 1.4.0) y que `ZygoteInit.main` se ejecuta, pero falla en `ANDROID_SOCKET_zygote unset`, porque sin el init de Android no hay socket. `zygote_launch.c` (nuevo, ARM sin libc) crea `/dev/socket/zygote` y exporta la variable. Con él, el log `main` muestra `Zygote: Preloading classes...`, `setreuid() failed. errno: 2` y después **`dalvikvm-gc: Could not mmap 1748992-byte ashmem region 'dalvik-mark-stack'` → `VM aborting`**. `libosal_uipc` ya no es el bloqueo: el zygote pasa la carga de clases con el `/dev/uipc` real.
+- **Frontera siguiente (sin resolver):** el `mmap` de una región ashmem en el GC. Probablemente el camino `MAP_PRIVATE` del port a 6.12 de `build_ashmem.sh` (`vma_set_anonymous` + `vma_set_file`); NO_VERIFICADO, falta el errno. Después vendrán el `setreuid` (errno 2) y las propiedades sin init (system_server).

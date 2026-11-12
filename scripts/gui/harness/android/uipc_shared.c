@@ -34,7 +34,7 @@ struct fctx { int pid; pid_t tgid; uint32_t conn[4]; };
 		if (_r != UC_AGAIN) break; \
 		if (!_t) { _r = E_TMOUT; break; } \
 		_t = wait_event_interruptible_timeout(WQ, READ_ONCE(gen) != _g, _t); \
-		if (_t < 0) { _r = -ERESTARTSYS; break; } } _r; })
+		if (_t < 0) { _r = -1021; break; } } _r; })  /* señal: libosal_uipc reintenta el ioctl con −1021 (u_osal_reg_msg_queue_cb 0x58f4) */
 
 static int sync_slot(uint32_t off)
 {

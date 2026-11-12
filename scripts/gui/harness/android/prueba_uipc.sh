@@ -5,5 +5,5 @@ D=${UIPCDIR:-/cam/t6mod}
 rmmod uipc_stub 2>/dev/null
 insmod $D/uipc_shared.ko || { echo "UIPC insmod FALLO"; exit 1; }
 ls -l /dev/uipc
-timeout 20 $D/uipc_guest_test; echo "UIPC salida=$?"
+( sleep 20; killall uipc_guest_test 2>/dev/null ) & $D/uipc_guest_test; echo "UIPC salida=$?"
 dmesg | grep -i uipc | tail -5

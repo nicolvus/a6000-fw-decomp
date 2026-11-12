@@ -15,3 +15,6 @@ ls -la "$W/uipcs/uipc_shared.ko"
 clang --target=armv7a-linux-gnueabihf -marm -O1 -Wall -ffreestanding -fno-builtin -fno-stack-protector -nostdlib -static -fuse-ld=lld \
   -o "$W/uipcs/uipc_guest_test" "$S/uipc_guest_test.c"
 cp "$S/prueba_uipc.sh" "$W/uipcs/"
+# lanzador del zygote (socket ANDROID_SOCKET_zygote sin init de Android); va a overlay/cam/and/zygote_launch
+clang --target=armv7a-linux-gnueabihf -marm -O1 -Wall -ffreestanding -fno-builtin -fno-stack-protector -nostdlib -static -fuse-ld=lld \
+  -o "$W/uipcs/zygote_launch" "$S/zygote_launch.c"
