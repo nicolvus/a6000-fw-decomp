@@ -185,7 +185,7 @@ def _reducir(s, maximo):
     ops = [s.opciones[round(i * (len(s.opciones) - 1) / (maximo - 1))] for i in range(maximo)]
     neutro = pp_factory.NEUTRO.get((s.clave - 0x1F8) // 4, 0)
     vals = [v for _, v in ops]
-    if neutro not in vals and neutro in dict((v, t) for t, v in s.opciones):
+    if neutro not in vals and any(v == neutro for _, v in s.opciones):
         cerca = min(range(maximo), key=lambda i: abs(vals[i] - neutro))
         ops[cerca] = next(o for o in s.opciones if o[1] == neutro)
     return tuple(ops)
