@@ -78,8 +78,8 @@ def msg_hora(ahora: float) -> bytes:
 
 
 class Vm:
-    def __init__(self, work: Path, pkg: str) -> None:
-        self.dir = work / "live" / (Path(pkg).name if pkg else "sony")
+    def __init__(self, work: Path, pkg: str, perfil: str = "") -> None:
+        self.dir = work / "live" / (perfil or (Path(pkg).name if pkg else "sony"))
         self.dir.mkdir(parents=True, exist_ok=True)
         self.estado, self.ui, self.mon = self.dir / "estado.zst", self.dir / "ui.sock", self.dir / "mon.sock"
         initrd, sello = self.dir / "initrd.gz", self.dir / "huella.txt"
@@ -247,7 +247,7 @@ small,#st{color:var(--mut)}label{display:block;margin:10px 0 4px}</style></head>
 <label>Imagen del sensor (debajo de la OSD)</label><input type="file" id="img" accept="image/*">
 <label><input type="checkbox" id="ver" checked> mostrar imagen</label>
 <label>Escala <select id="esc"><option>1</option><option selected>1.5</option><option>2</option></select></label>
-<p><button id="guardar">Guardar estado</button></p><small>Teclado: flechas, Intro, Esc/M = MENU, espacio = disparador. «Guardar estado» hace que el
+<p><button id="guardar">Guardar estado</button> <a id="volver" href="#" hidden>⚙ Configurador</a></p><small>Teclado: flechas, Intro, Esc/M = MENU, espacio = disparador. «Guardar estado» hace que el
 próximo arranque empiece en esta pantalla. La imagen no se procesa con los ajustes de la cámara (av-cam no se emula).</small></aside></main>
 <script>
 const c=document.getElementById('c'),x=c.getContext('2d'),st=document.getElementById('st');let osd=new Image(),fondo=null,info={};
@@ -257,14 +257,26 @@ const es=new EventSource('/eventos');es.onmessage=e=>{const i=new Image();i.onlo
 setInterval(async()=>{try{info=await (await fetch('/estado')).json();st.textContent=info.texto}catch(e){st.textContent='sin conexión'}},1000);
 const tecla=(k,v)=>fetch('/tecla',{method:'POST',body:JSON.stringify({k,v})});
 document.querySelectorAll('[data-k]').forEach(b=>{b.onpointerdown=()=>tecla(b.dataset.k,1);b.onpointerup=b.onpointerleave=e=>{if(e.type=='pointerup'||e.buttons)tecla(b.dataset.k,0)}});
-const mapa={ArrowUp:'arriba',ArrowDown:'abajo',ArrowLeft:'izquierda',ArrowRight:'derecha',Enter:'intro',Escape:'menu',m:'menu',M:'menu',' ':'disparador'};
-addEventListener('keydown',e=>{const k=mapa[e.key];if(!k||e.target.tagName=='INPUT'&&e.target.type!='checkbox')return;e.preventDefault();if(!e.repeat)tecla(k,1)});
-addEventListener('keyup',e=>{const k=mapa[e.key];if(k){e.preventDefault();tecla(k,0)}});
+let mapa={ArrowUp:'arriba',ArrowDown:'abajo',ArrowLeft:'izquierda',ArrowRight:'derecha',Enter:'intro',Escape:'menu',KeyM:'menu',Space:'disparador'};
+fetch('/config').then(r=>r.json()).then(c=>{if(c.mapa)mapa=c.mapa;if(c.lanzador){const a=document.getElementById('volver');a.href=c.lanzador;a.hidden=false;
+a.onclick=async e=>{e.preventDefault();st.textContent='guardando y cerrando…';await fetch('/salir',{method:'POST'});setTimeout(()=>location.href=c.lanzador,1500)}}}).catch(()=>{});
+addEventListener('keydown',e=>{const k=mapa[e.code];if(!k||e.target.tagName=='INPUT'&&e.target.type!='checkbox')return;e.preventDefault();if(!e.repeat)tecla(k,1)});
+addEventListener('keyup',e=>{const k=mapa[e.code];if(k){e.preventDefault();tecla(k,0)}});
 document.getElementById('img').onchange=e=>{const f=e.target.files[0];if(!f)return;const i=new Image();i.onload=()=>{fondo=i;pinta()};i.src=URL.createObjectURL(f)};
 c.ondragover=e=>e.preventDefault();c.ondrop=e=>{e.preventDefault();const f=e.dataTransfer.files[0];if(f){const i=new Image();i.onload=()=>{fondo=i;pinta()};i.src=URL.createObjectURL(f)}};
 document.getElementById('ver').onchange=pinta;document.getElementById('esc').onchange=e=>c.style.width=640*e.target.value+'px';
 document.getElementById('guardar').onclick=async()=>{st.textContent='guardando…';alert(await (await fetch('/guardar',{method:'POST'})).text())};
 </script></body></html>"""
+
+
+CONFIG: dict = {"ruta": "", "lanzador": ""}  # lo fija main (--config, --lanzador)
+
+
+def configuracion() -> dict:
+    """Mapa de teclas del config.json del configurador (se relee en cada carga de la página); sin config, la página usa su mapa fijo."""
+    from emu_config import carga_config, mapa_inverso
+    cfg = carga_config(Path(CONFIG["ruta"])) if CONFIG["ruta"] else None
+    return {"mapa": mapa_inverso(cfg["teclas"]) if cfg else None, "lanzador": CONFIG["lanzador"]}
 
 
 def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
@@ -290,6 +302,8 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
                 if vm.p.poll() is not None:
                     texto = f"QEMU terminó (código {vm.p.returncode})"
                 self.responde(json.dumps({"texto": texto, "fotogramas": vm.seq}).encode(), "application/json")
+            elif self.path == "/config":  # mapa de teclado {KeyboardEvent.code: botón} y enlace al configurador (lanzador.py)
+                self.responde(json.dumps(configuracion()).encode(), "application/json")
             elif self.path == "/eventos":
                 self.send_response(200)
                 self.send_header("Content-Type", "text/event-stream")
@@ -340,8 +354,12 @@ def main() -> None:
     ap.add_argument("work", type=Path)
     ap.add_argument("--pkg", default="", help="overlay de pkg_usr.py (CFW)")
     ap.add_argument("--puerto", type=int, default=8600)
+    ap.add_argument("--perfil-dir", default="", help="nombre del directorio de perfil en live/ (por defecto sony o el nombre del overlay)")
+    ap.add_argument("--config", default="", help="config.json del configurador (mapa de teclas)")
+    ap.add_argument("--lanzador", default="", help="URL del configurador (enlace «volver»)")
     a = ap.parse_args()
-    vm = Vm(a.work.resolve(), str(Path(a.pkg).resolve()) if a.pkg else "")
+    CONFIG.update(ruta=a.config, lanzador=a.lanzador)
+    vm = Vm(a.work.resolve(), str(Path(a.pkg).resolve()) if a.pkg else "", a.perfil_dir)
     srv = servidor(vm, a.puerto)
     print(f"http://127.0.0.1:{a.puerto}  ({'restaurando estado' if vm.restaurado else 'arranque en frío, ≈ 2,5 min hasta el menú'})", flush=True)
     for sig in (signal.SIGINT, signal.SIGTERM):  # salir = guardar el estado y cerrar QEMU

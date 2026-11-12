@@ -260,3 +260,36 @@ def test_msg_hora_lleva_la_hora_local() -> None:
     import time
     t = 1_800_000_000.7
     assert live.msg_hora(t) == f"T {int(t) + time.localtime(t).tm_gmtoff:x}\n".encode()
+
+
+def test_emu_config_valida_teclas_y_defaults(tmp_path: Path) -> None:
+    """T3: la config se completa con valores por defecto, rechaza botones/teclas repetidas y se guarda de forma atómica."""
+    sys.path.insert(0, str(HARNESS))
+    import emu_config as E
+    botones = E.botones_conocidos()
+    assert {"arriba", "abajo", "izquierda", "derecha", "menu", "intro", "disparador"} <= set(botones)  # las claves del literal TECLAS de live.py
+    cfg = E.valida_config({"teclas": {"disparador": ["KeyP"], "menu": ["Escape"]}}, botones)
+    assert cfg["teclas"]["disparador"] == ["KeyP"] and cfg["teclas"]["arriba"] == ["ArrowUp"] and cfg["sd"]["tamano_gb"] == 4
+    assert E.mapa_inverso(cfg["teclas"])["KeyP"] == "disparador"
+    for malo in ({"teclas": {"menu": ["KeyM"], "intro": ["KeyM"]}}, {"teclas": {"fn": ["KeyF"]}}, {"teclas": {"menu": ["Ctrl+M"]}},
+                 {"firmware": {"origen": "dat"}}, {"firmware": {"origen": "x"}}, {"sd": {"tamano_gb": 0}}, {"sensor": {"fuente": "tv"}}):
+        with pytest.raises(ValueError):
+            E.valida_config(malo, botones)
+    ruta = tmp_path / "c/config.json"
+    assert E.carga_config(ruta) == E.valida_config({})  # sin fichero: valores por defecto
+    E.guarda_config({"red": {"telnet": True}}, ruta)
+    assert E.carga_config(ruta)["red"] == {"telnet": True, "wifi": False}
+
+
+def test_emu_config_detecta_paquete_a6000() -> None:
+    """T3: la cabecera FDAT identifica modelo/versión; un .dat de otra cámara o un fichero cualquiera dan un error claro."""
+    sys.path.insert(0, str(HARNESS))
+    import emu_config as E
+    a6000, a6300 = ROOT / "analysis/darwin-patch/fdat/firmware_packed.dat", ROOT / "firmware/extracted/a6300-fw201/FirmwareData_ILCE6300.dat"
+    if not (a6000.exists() and a6300.exists()):
+        pytest.skip("faltan los .dat de ejemplo")
+    assert E.cabecera_dat(a6000.read_bytes())["version"] == "3.22"
+    with pytest.raises(E.DatError, match="otro modelo"):
+        E.cabecera_dat(a6300.read_bytes())
+    with pytest.raises(E.DatError, match="No es un paquete"):
+        E.cabecera_dat(b"no soy un dat" * 100)
