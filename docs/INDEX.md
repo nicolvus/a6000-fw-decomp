@@ -390,7 +390,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-200 informes.
+201 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -493,6 +493,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R86 — CFW 3.76: Silent calibrado en la imagen y tabla EFCS de la segunda tanda (11-11-2026)](capture/e26-r86-cfw-376-tres-modos-nivelados.md)
 - **—** [E26-R87 — Disparo remoto de los tres modos, fallo del Silent del 3.76 y recalibración (11-11-2026)](capture/e26-r87-disparo-remoto-y-recalibracion.md)
 - **—** [E26-R88 — Sensor de orientación horizontal/vertical (SE7750): esquema, firmware y medida SWD (11-11-2026)](capture/e26-r88-sensor-inclinacion-swd.md)
+- **—** [E26-R89 — ADJUST, dmode y smode en la A6000 fw3.21 (arranque sin app)](capture/e26-r89-adjust-dmode-smode-a6000.md)
 - **—** [E26-R9 — Sony A6000: ejecución desde RAM mediante BootROM/UART](capture/e26-r9-bootrom-ram-execution.md)
 - **—** [E26-RECOVERY — incidente 3.25 (investigación abierta)](capture/e26-recovery.md)
 - **—** [Registro de pruebas en cámara (solo software, USB)](capture/registro-pruebas-camara.md)
