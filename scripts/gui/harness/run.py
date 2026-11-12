@@ -9,14 +9,31 @@ import base64
 import gzip
 import os
 import shutil
+import struct
 import subprocess
 import sys
 import tempfile
 from pathlib import Path
 
 
-def build_initrd(work: Path, script: Path, t: Path, shimenv: str = "", overlay2: str = "") -> Path:
-    """initrd = base.cpio.gz + cpio.gz con /cam/harness.sh, harness.env (SHIMENV), DIR/overlay y OVERLAY2; lo deja en t/initrd.gz."""
+def bk_patch(tbl: bytes, cambios: dict[int, bytes]) -> bytes:
+    """bk.tbl ({id u32, len u32, datos rellenados a 4}*) con los registros de `cambios` sustituidos (o añadidos si no existían)."""
+    out, o, vistos = bytearray(), 0, set()
+    while o + 8 <= len(tbl):
+        i, n = struct.unpack_from("<II", tbl, o)
+        datos = cambios.get(i, tbl[o + 8:o + 8 + n])
+        vistos.add(i)
+        out += struct.pack("<II", i, len(datos)) + datos + b"\0" * (-len(datos) % 4)
+        o += 8 + ((n + 3) & ~3)
+    for i, datos in cambios.items():
+        if i not in vistos:
+            out += struct.pack("<II", i, len(datos)) + datos + b"\0" * (-len(datos) % 4)
+    return bytes(out)
+
+
+def build_initrd(work: Path, script: Path, t: Path, shimenv: str = "", overlay2: str = "", nvram: dict[int, bytes] | None = None) -> Path:
+    """initrd = base.cpio.gz + cpio.gz con /cam/harness.sh, harness.env (SHIMENV), DIR/overlay y OVERLAY2; lo deja en t/initrd.gz.
+    nvram = registros de backup cambiados por la UI (live.py): se aplican sobre /usr/share/bk.tbl de la copia, nunca sobre el volcado."""
     (t / "cam").mkdir()
     (t / "cam/harness.sh").write_text(script.read_text())
     (t / "cam/harness.sh").chmod(0o755)
@@ -26,6 +43,9 @@ def build_initrd(work: Path, script: Path, t: Path, shimenv: str = "", overlay2:
         shutil.copytree(work / "overlay", t, dirs_exist_ok=True)
     if overlay2:  # F5: /usr de un nflasha15 de CFW (pkg_usr.py); va después del base, así que sustituye a los de Sony
         shutil.copytree(overlay2, t, dirs_exist_ok=True)
+    bk = t / "cam/usr/share/bk.tbl"
+    if nvram and bk.exists():
+        bk.write_bytes(bk_patch(bk.read_bytes(), nvram))
     names = subprocess.run(["find", "cam"], cwd=t, capture_output=True, check=True).stdout
     cpio = subprocess.run(["cpio", "-o", "-H", "newc", "-R", "0:0", "--quiet"], input=names, cwd=t, capture_output=True, check=True).stdout
     initrd = t / "initrd.gz"

@@ -3,7 +3,10 @@
 
 uso: live.py DIR_TRABAJO [--pkg OVERLAY2] [--puerto 8600]
   Abre http://127.0.0.1:8600. La primera vez arranca en frío (≈ 2,5 min hasta el menú) y, 20 s después de la primera pantalla, guarda el
-  estado de la VM en DIR/live/<sony|paquete>/estado.zst; las siguientes lo restauran (segundos). «Guardar estado» lo rehace en cualquier pantalla.
+  estado de la VM en DIR/live/<sony|paquete>/estado.zst; las siguientes lo restauran (segundos). Se guarda también al salir (Ctrl+C, SIGTERM,
+  POST /salir) y con «Guardar estado»; el guardado es atómico. El estado se invalida solo si cambia el shim, im.sh, run.py, SHIMENV o el overlay.
+  Persistencia: la hora local del anfitrión se envía al invitado («T») al conectar y cada 30 s (sobrevive a restaurar un estado viejo);
+  las escrituras de la UI a la NVRAM («NV») van a nvram.json del perfil y se aplican sobre la copia de bk.tbl en cada arranque en frío.
   --pkg = salida de pkg_usr.py (CFW). Teclas: flechas, Intro, Esc/M = MENU, espacio = disparador; botones en la página.
 Cadena: el shim dibuja cada lista de la GPU en el búfer de color (gpu_draw), la copia a pantalla (0xb4…) marca el fotograma y el hilo LIVE
 lo envía por virtio-serial (RGBA4444) solo si cambió; aquí se pasa a PNG y se empuja al navegador por SSE. Teclas al revés: «K clave valor índice».
@@ -12,10 +15,12 @@ av-cam, que el arnés no ejecuta.
 """
 import argparse
 import base64
+import hashlib
 import io
 import json
 import os
 import re
+import signal
 import socket
 import struct
 import subprocess
@@ -49,17 +54,47 @@ def rgba4444_png(w: int, h: int, raw: bytes) -> bytes:
     return out.getvalue()
 
 
+def huella(work: Path, pkg: str, shimenv: str) -> str:
+    """Hash de todo lo que fija el initrd y la RAM guardada: shim (overlay), im.sh, run.py, SHIMENV y el overlay del paquete."""
+    h = hashlib.sha256(shimenv.encode())
+    ficheros = [HERE / "im.sh", HERE / "run.py"]
+    for raiz in (work / "overlay", Path(pkg) if pkg else None):
+        if raiz and raiz.is_dir():
+            ficheros += sorted(f for f in raiz.rglob("*") if f.is_file())
+    for f in ficheros:
+        h.update(f.name.encode() + b"\0" + f.read_bytes() + b"\0")
+    return h.hexdigest()
+
+
+def escribe_atomico(destino: Path, datos: bytes) -> None:
+    tmp = destino.with_name(destino.name + ".tmp")
+    tmp.write_bytes(datos)
+    tmp.replace(destino)
+
+
+def msg_hora(ahora: float) -> bytes:
+    """«T época_local_hex»: hora local del anfitrión (UTC + zona); el shim la avanza con su reloj monotónico."""
+    return f"T {int(ahora) + time.localtime(ahora).tm_gmtoff:x}\n".encode()
+
+
 class Vm:
     def __init__(self, work: Path, pkg: str) -> None:
         self.dir = work / "live" / (Path(pkg).name if pkg else "sony")
         self.dir.mkdir(parents=True, exist_ok=True)
         self.estado, self.ui, self.mon = self.dir / "estado.zst", self.dir / "ui.sock", self.dir / "mon.sock"
-        initrd = self.dir / "initrd.gz"
+        initrd, sello = self.dir / "initrd.gz", self.dir / "huella.txt"
+        self.nvram_f = self.dir / "nvram.json"
+        self.nvram = {int(k, 16): bytes.fromhex(v) for k, v in self.carga(self.nvram_f).items()}
+        actual = huella(work, pkg, SHIMENV)
+        if not sello.exists() or sello.read_text() != actual:  # cambió el shim, im.sh, run.py, SHIMENV u overlay: el estado ya no vale
+            for f in (self.estado, initrd, sello):
+                f.unlink(missing_ok=True)
         restaurar = self.estado.exists() and initrd.exists()
-        if not restaurar:  # el estado guardado solo vale con el mismo initrd (tamaño de las ROM de QEMU)
+        if not restaurar:  # el estado guardado solo vale con el mismo initrd (tamaño de las ROM de QEMU); en frío se rehace con la NVRAM actual
             import tempfile
             with tempfile.TemporaryDirectory() as t:
-                initrd.write_bytes(run.build_initrd(work, HERE / "im.sh", Path(t), SHIMENV, pkg).read_bytes())
+                escribe_atomico(initrd, run.build_initrd(work, HERE / "im.sh", Path(t), SHIMENV, pkg, self.nvram).read_bytes())
+            sello.write_text(actual)
         for s in (self.ui, self.mon):
             s.unlink(missing_ok=True)
         extra = ["-chardev", f"socket,id=ui,path={self.ui},server=on,wait=off", "-device", "virtio-serial-device",
@@ -71,10 +106,33 @@ class Vm:
         self.t0, self.restaurado = time.time(), restaurar
         self.png, self.seq, self.cv = b"", 0, threading.Condition()
         self.sock: socket.socket | None = None
+        self.cerrojo = threading.Lock()  # un solo guardado a la vez
         self.fps, self.coste = 0.0, ""
         threading.Thread(target=self.lector, daemon=True).start()
+        threading.Thread(target=self.reloj, daemon=True).start()
         if not restaurar:
             threading.Thread(target=self.autoguardado, daemon=True).start()
+
+    @staticmethod
+    def carga(f: Path) -> dict:
+        try:
+            return json.loads(f.read_text())
+        except (OSError, ValueError):
+            return {}
+
+    def envia(self, datos: bytes) -> None:
+        if self.sock:
+            try:
+                self.sock.sendall(datos)
+            except OSError:
+                pass
+
+    def reloj(self) -> None:
+        """Pone la hora real en el invitado al conectar (también tras restaurar un estado de hace días) y la reajusta cada 30 s."""
+        while True:
+            if self.sock:
+                self.envia(msg_hora(time.time()))
+            time.sleep(30 if self.sock else 0.5)
 
     def autoguardado(self) -> None:
         """Arranque en frío: guarda el estado 20 s después de la primera pantalla (el menú ya pintado) para que el siguiente arranque sea inmediato."""
@@ -96,6 +154,13 @@ class Vm:
                 return
             buf += d
             while True:
+                if buf.startswith(b"\x01NV "):  # NV id hex: la UI escribió un registro de backup
+                    j = buf.find(b"\n")
+                    if j < 0:
+                        break
+                    self.nv(buf[4:j].decode())
+                    buf = buf[j + 1:]
+                    continue
                 if buf.startswith(b"\x01WL "):  # línea de diagnóstico del shim (WAITLOG): va a shim.log
                     j = buf.find(b"\n")
                     if j < 0:
@@ -124,6 +189,11 @@ class Vm:
                     self.png, self.seq, self.fps = png, self.seq + 1, len(marcas) / 2
                     self.cv.notify_all()
 
+    def nv(self, texto: str) -> None:
+        i, _, datos = texto.partition(" ")
+        self.nvram[int(i, 16)] = bytes.fromhex(datos)
+        escribe_atomico(self.nvram_f, json.dumps({f"{k:x}": v.hex() for k, v in self.nvram.items()}).encode())
+
     def tecla(self, k: int, v: int, i: int) -> None:
         if self.sock:
             self.sock.sendall(f"K {k:x} {v:x} {i:x}\n".encode())
@@ -144,19 +214,23 @@ class Vm:
         return out.decode(errors="replace")
 
     def guardar(self) -> str:
-        tmp = self.estado.with_suffix(".tmp")
-        self.monitor(f'migrate "exec:zstd -1 -T0 > {tmp}"')
-        for _ in range(600):
-            info = self.monitor("info migrate")
-            if re.search(r"status:\s*completed", info, re.IGNORECASE):  # QEMU 11: «Status: completed»; antes «Migration status: completed»
-                tmp.replace(self.estado)
-                self.monitor("cont")
-                return f"estado guardado ({self.estado.stat().st_size >> 20} MiB)"
-            if re.search(r"status:\s*(failed|cancelled)", info, re.IGNORECASE):
-                self.monitor("cont")
-                return "fallo al guardar: " + info[-300:]
-            time.sleep(0.5)
-        return "tiempo agotado al guardar"
+        with self.cerrojo:
+            tmp = self.estado.with_suffix(".tmp")  # se escribe aparte y se renombra al terminar: un corte no deja un estado a medias
+            tmp.unlink(missing_ok=True)
+            self.monitor(f'migrate "exec:zstd -1 -T0 > {tmp}"')
+            for _ in range(600):
+                info = self.monitor("info migrate")
+                if re.search(r"status:\s*completed", info, re.IGNORECASE):  # QEMU 11: «Status: completed»; antes «Migration status: completed»
+                    tmp.replace(self.estado)
+                    self.monitor("cont")
+                    return f"estado guardado ({self.estado.stat().st_size >> 20} MiB)"
+                if re.search(r"status:\s*(failed|cancelled)", info, re.IGNORECASE):
+                    tmp.unlink(missing_ok=True)
+                    self.monitor("cont")
+                    return "fallo al guardar: " + info[-300:]
+                time.sleep(0.5)
+            tmp.unlink(missing_ok=True)
+            return "tiempo agotado al guardar"
 
 
 PAGINA = """<!doctype html><html lang="es"><head><meta charset="utf-8"><title>A6000 en vivo</title><style>
@@ -194,6 +268,7 @@ document.getElementById('guardar').onclick=async()=>{st.textContent='guardando�
 
 
 def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
+    srv: ThreadingHTTPServer
     class H(BaseHTTPRequestHandler):
         def log_message(self, *a: object) -> None:
             pass
@@ -245,12 +320,19 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
                 if vm.sock:
                     vm.sock.sendall(b"R\n")
                 self.responde(b"ok", "text/plain")
+            elif self.path == "/linea":  # diagnóstico: una línea cruda al invitado (p. ej. «Y 3» = tipo de fecha del shim)
+                vm.envia(cuerpo.strip() + b"\n")
+                self.responde(b"ok", "text/plain")
+            elif self.path == "/salir":  # guarda el estado y cierra (main lo hace al salir de serve_forever)
+                self.responde(b"saliendo", "text/plain")
+                threading.Thread(target=srv.shutdown, daemon=True).start()
             elif self.path == "/guardar":
                 self.responde(vm.guardar().encode(), "text/plain; charset=utf-8")
             else:
                 self.send_error(404)
 
-    return ThreadingHTTPServer(("127.0.0.1", puerto), H)
+    srv = ThreadingHTTPServer(("127.0.0.1", puerto), H)
+    return srv
 
 
 def main() -> None:
@@ -262,10 +344,16 @@ def main() -> None:
     vm = Vm(a.work.resolve(), str(Path(a.pkg).resolve()) if a.pkg else "")
     srv = servidor(vm, a.puerto)
     print(f"http://127.0.0.1:{a.puerto}  ({'restaurando estado' if vm.restaurado else 'arranque en frío, ≈ 2,5 min hasta el menú'})", flush=True)
+    for sig in (signal.SIGINT, signal.SIGTERM):  # salir = guardar el estado y cerrar QEMU
+        signal.signal(sig, lambda *_: threading.Thread(target=srv.shutdown, daemon=True).start())
     try:
         srv.serve_forever()
     finally:
-        vm.p.terminate()
+        if vm.p.poll() is None:
+            if vm.seq:  # solo hay estado válido si ya se pintó una pantalla
+                print(vm.guardar(), flush=True)
+            vm.p.terminate()
+            vm.p.wait()
 
 
 if __name__ == "__main__":

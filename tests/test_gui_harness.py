@@ -207,3 +207,49 @@ def test_cfw_379_muestra_silent_y_picture_profile(tmp_path: Path) -> None:
     assert "E  Vo 00000027" in (w / "guest.log").read_text(errors="replace")
     subprocess.run([sys.executable, str(HARNESS / "gpu_raster.py"), str(w), str(w / "submenu.png")], check=True, capture_output=True)
     assert filas_de_texto(w / "submenu.png") == 6
+
+
+def _live():
+    sys.path.insert(0, str(HARNESS))
+    import live
+    import run
+    return live, run
+
+
+def test_bk_patch_sustituye_y_anade_registros() -> None:
+    _, run = _live()
+    tbl = struct.pack("<II", 1, 1) + b"\x05\0\0\0" + struct.pack("<II", 2, 5) + b"abcde\0\0\0"
+    out = run.bk_patch(tbl, {1: b"\x09", 2: b"xy", 7: b"\x01\x02\x03\x04"})
+    assert out == (struct.pack("<II", 1, 1) + b"\x09\0\0\0" + struct.pack("<II", 2, 2) + b"xy\0\0" + struct.pack("<II", 7, 4) + b"\x01\x02\x03\x04")
+    assert run.bk_patch(tbl, {}) == tbl
+
+
+def test_huella_cambia_con_el_shim_el_entorno_y_el_overlay(tmp_path: Path) -> None:
+    live, _ = _live()
+    (tmp_path / "overlay/cam/usr/lib").mkdir(parents=True)
+    so = tmp_path / "overlay/cam/usr/lib/sonyshim.so"
+    so.write_bytes(b"uno")
+    pkg = tmp_path / "pkg"
+    pkg.mkdir()
+    base = live.huella(tmp_path, "", "A=1")
+    assert live.huella(tmp_path, "", "A=1") == base
+    assert live.huella(tmp_path, "", "A=2") != base
+    so.write_bytes(b"dos")
+    assert live.huella(tmp_path, "", "A=1") != base
+    (pkg / "x").write_bytes(b"1")
+    assert live.huella(tmp_path, str(pkg), "A=1") != live.huella(tmp_path, "", "A=1")
+
+
+def test_escribe_atomico_no_deja_temporales(tmp_path: Path) -> None:
+    live, _ = _live()
+    f = tmp_path / "nvram.json"
+    live.escribe_atomico(f, b"{}")
+    live.escribe_atomico(f, b'{"a": 1}')
+    assert f.read_bytes() == b'{"a": 1}' and [p.name for p in tmp_path.iterdir()] == ["nvram.json"]
+
+
+def test_msg_hora_lleva_la_hora_local() -> None:
+    live, _ = _live()
+    import time
+    t = 1_800_000_000.7
+    assert live.msg_hora(t) == f"T {int(t) + time.localtime(t).tm_gmtoff:x}\n".encode()

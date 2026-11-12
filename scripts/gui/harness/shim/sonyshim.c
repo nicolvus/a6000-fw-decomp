@@ -27,6 +27,7 @@ static char devname[MAXFD][32];
 #define LOG(...) do { fprintf(stderr, getenv("TIDLOG") ? "[shim %ld] " : "[shim] ", (long)syscall(224)); fprintf(stderr, __VA_ARGS__); fputc('\n', stderr); if (wl_all()) wl_logfwd(__VA_ARGS__); } while (0)
 
 #define E_TMOUT (-1022)
+static void live_msg(const char *, const char *, int);
 static int wl_all(void); static void wl_logfwd(const char *, ...); static void wl_live(const char *, int); static void wl_key(unsigned); static int wl_on(void); static double wl_ts(void); static const char *tname(int, char *, size_t);
 static int wl_begin(const char *k, unsigned a, int tmo, void *ra); static void wl_end(int slot);  /* WAITLOG=ms: registro de esperas largas (ver abajo) */
 static pthread_mutex_t semlock = PTHREAD_MUTEX_INITIALIZER;
@@ -129,6 +130,7 @@ static unsigned *bk_find(unsigned id, unsigned *len) {
         if (((unsigned *)(bk + o))[0] == id) { *len = ((unsigned *)(bk + o))[1]; return (unsigned *)(bk + o + 8); }
     return 0;
 }
+static int readable(const void *p);
 static void backup_service(unsigned *m) {
     unsigned op = m[0], n = m[2], *id = m + 6, len = 0, *d = bk_find(id[0], &len);
     m[1] = 0;
@@ -140,7 +142,15 @@ static void backup_service(unsigned *m) {
         if (c && n >= 3 && id[1]) memcpy((void *)id[1], d, c);
         m[1] = c; break; }
     case 4: m[1] = d ? *d : 0; break;                                           /* read_4Byte */
-    case 8: break;                                                              /* write: se descarta */
+    case 8: {  /* Backup_write(grupo = id>>16, id, buf) medido en la UI (los argumentos van en m[6..8]; el tamaño es el del registro): se aplica a la tabla en RAM y se avisa al anfitrión («NV id hex»), que lo guarda en nvram.json del perfil y lo carga sobre bk.tbl en el siguiente arranque en frío */
+        unsigned wid = id[1], wl = 0, *wd = n >= 3 ? bk_find(wid, &wl) : 0; m[1] = 0;
+        if (wd && wl && wl <= 4096 && readable((void *)id[2])) {
+            static char ln[8300]; static pthread_mutex_t lm = PTHREAD_MUTEX_INITIALIZER; pthread_mutex_lock(&lm);
+            int o = snprintf(ln, sizeof ln, "%x ", wid); for (unsigned i = 0; i < wl; i++) o += sprintf(ln + o, "%02x", ((unsigned char *)id[2])[i]);
+            memcpy(wd, (void *)id[2], wl); live_msg("NV", ln, o); pthread_mutex_unlock(&lm); m[1] = wl;
+        } else LOG("backup write id=%#x sin registro o buffer ilegible", wid);
+        return;  /* sin la línea de registro genérica: id[0] no es el id */
+    }
     default: LOG("backup op=%u n=%u id0=%#x (sin modelar)", op, n, id[0]);
     }
     if (getenv("BKV") || !d) LOG("backup op=%u n=%u id=%#x len=%u r=%#x %s", op, n, id[0], len, m[1], d ? "" : "ausente");
@@ -151,6 +161,9 @@ static void backup_service(unsigned *m) {
 static unsigned long hexv(const char *s, const char **end);
 /* el arg de ioctl a veces es un entero (p. ej. un qid de libInfraKikiLogGenerator): solo se lee si la página está mapeada */
 static int readable(const void *p) { return (unsigned long)p > 0x10000 && msync((void *)((unsigned long)p & ~4095UL), 4, MS_ASYNC) == 0; }
+static volatile long long date_base, date_mono0; static volatile int date_have, date_type = -1;  /* date_type: «Y n» del anfitrión (diagnóstico) pisa DATETYPE */
+static long long mono_s(void) { struct timespec t; clock_gettime(CLOCK_MONOTONIC, &t); return t.tv_sec; }
+static long long date_local(void) { return date_have ? date_base + mono_s() - date_mono0 : (long long)time(0); }  /* sin «T» del anfitrión: reloj del invitado (UTC) */
 static int direct_service(unsigned qid, unsigned *m) {
     /* Reloj del núcleo (libObj+0x804610, I-InputRepeat, CIFInfraIndctr): 0x910042 devuelve la hora en µs (64 bit, m[6..7]) y 0x910041 duerme hasta el plazo absoluto m[6..7]; sin esto la hora era 0, el plazo
      * (+20 ms) siempre vencido y el hilo giraba al 100 % de CPU. shortcut: unidades (µs) y época (arranque) inferidas del +0x4e20 que suma el llamador, no medidas en la cámara. */
@@ -162,9 +175,14 @@ static int direct_service(unsigned qid, unsigned *m) {
     }
     if (m[0] == 0x28 && ((unsigned short *)m)[8] == 2 && !getenv("NODATE")) {
         unsigned short *h = (unsigned short *)m; const char *e = getenv("DATETYPE");
-        h[9] = 0; h[14] = e ? (unsigned short)hexv(e, 0) : 1;
-        h[10] = 2026; h[11] = 11; h[12] = 10; h[13] = 13;  /* shortcut: fecha fija; formato (+0x14: 4×u16 + tipo en +0x1c) inferido de libObj+0x63cf6c (memcpy de 10 B), sin comprobar */
-        static int n; if (n++ < 3) LOG("direct %#x get_date -> tipo %u", qid, h[14]);
+        h[9] = 0; h[14] = date_type >= 0 ? (unsigned short)date_type : e ? (unsigned short)hexv(e, 0) : 1;
+        { time_t tt = (time_t)date_local(); struct tm g; gmtime_r(&tt, &g); unsigned char *b = (unsigned char *)m;  /* formato de libObj+0x4f10dc (osal_get_date): +0x14 año u16; +0x16 mes, día, hora, min, seg (u8); +0x1c tipo */
+          h[10] = g.tm_year + 1900; b[0x16] = g.tm_mon + 1; b[0x17] = g.tm_mday; b[0x18] = g.tm_hour; b[0x19] = g.tm_min; b[0x1a] = g.tm_sec; }
+        static int n; if (n++ < 40) LOG("direct %#x get_date -> %u-%u-%u %u:%02u:%02u tipo %u (base %d)", qid, h[10], ((unsigned char *)m)[0x16], ((unsigned char *)m)[0x17], ((unsigned char *)m)[0x18], ((unsigned char *)m)[0x19], ((unsigned char *)m)[0x1a], h[14], date_have);
+    }
+    else if (m[0] == 0x28 && qid == 0x90013d) {  /* otras órdenes del servicio de fecha (¿ajuste de hora?): se registran para modelarlas */
+        char b[100]; int o = 0; for (int i = 4; i < 10; i++) o += sprintf(b + o, "%08x ", m[i]);
+        LOG("direct %#x fecha cmd=%u datos=%s", qid, ((unsigned short *)m)[8], b);
     }
     return 0;
 }
@@ -1217,6 +1235,10 @@ static void wl_live(const char *b, int n) {  /* «\x01WL texto\n» ; trylock: ef
     { int k = 0; while (pthread_mutex_trylock(&live_wm)) if (++k > 50) return; else usleep(1000); }  /* hasta 50 ms: un fotograma en curso retiene el puerto; así no se pierden líneas ni se bloquea un manejador de señal */
     write(live_fd, "\x01WL ", 4); write(live_fd, b, n); pthread_mutex_unlock(&live_wm);
 }
+static void live_msg(const char *tag, const char *txt, int n) {  /* «\x01TAG texto\n» al anfitrión; bloquea hasta tener el puerto (no se pierden cambios) */
+    if (live_fd < 0) return;
+    pthread_mutex_lock(&live_wm); write(live_fd, "\x01", 1); write(live_fd, tag, strlen(tag)); write(live_fd, " ", 1); write(live_fd, txt, n); write(live_fd, "\n", 1); pthread_mutex_unlock(&live_wm);
+}
 static void *live_keys(void *a) {
     (void)a; char buf[256]; int n = 0;
     for (;;) {
@@ -1224,6 +1246,8 @@ static void *live_keys(void *a) {
         n += k; buf[n] = 0; char *ln = buf, *nl;
         while ((nl = strchr(ln, '\n'))) {
             *nl = 0; const char *e;
+            if (ln[0] == 'T') { LOG("hora del anfitrión %s", ln + 2); date_base = (long long)hexv(ln + 2, &e); date_mono0 = mono_s(); date_have = 1; }  /* «T epoch_local_hex»: hora local del anfitrión (+ desfase del usuario); se avanza con el reloj monotónico */
+            if (ln[0] == 'Y') date_type = (int)hexv(ln + 2, &e);
             if (ln[0] == 'R') live_force = 1;  /* el anfitrión se acaba de conectar (p. ej. tras restaurar el estado): reenviar el fotograma actual */
             if (ln[0] == 'K') { unsigned m[12] = {0}; m[0] = hexv(ln + 2, &e); m[2] = hexv(e + 1, &e); m[4] = hexv(e + 1, &e); mbx_post_raw(0x7a0020, m); if (wl_on()) wl_key(m[0]); }
             ln = nl + 1;
