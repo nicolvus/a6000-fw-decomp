@@ -8,6 +8,7 @@ Features wanted on the A6000, inherited from other Sony models and other brands,
 
 - ⬜ Silent Shooting ([state](en-14-Current-state)) — _Origin: Sony α7S_
 - ⬜ Picture Profiles PP1–PP10 — _Origin: ≈Sony α7R III_
+- ⬜ JPEG Extra Fine quality — _Origin: Sony α6300_
 
 ## Pending
 

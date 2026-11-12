@@ -45,6 +45,7 @@ Detalle en [Objetivos](https://github.com/nicolvus/a6000-fw-decomp/wiki/16-Objet
 |---|---|---|---|
 | Silent Shooting | En curso | Sony α7S | ⬜ |
 | Picture Profiles PP1–PP10 | En curso | ≈Sony α7R III | ⬜ |
+| Calidad JPEG Extra Fine | En curso | Sony α6300 | ⬜ |
 | Obturación máxima 1/8000 | Foto | ≈Sony α7 | ⬜ |
 | ISO expandido hasta 409600 | Foto | Sony α7S | ⬜ |
 | Pixel Shift Multi Shooting / High Res Shot / Handheld High Res Shot | Foto | ≈Sony α7R III; Olympus E-M1 II, E-M1X; Panasonic G9 | ⬜ |

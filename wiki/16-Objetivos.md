@@ -8,6 +8,7 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 
 - ⬜ Silent Shooting ([estado](14-Estado-actual)) — _Origen: Sony α7S_
 - ⬜ Picture Profiles PP1–PP10 — _Origen: ≈Sony α7R III_
+- ⬜ Calidad JPEG Extra Fine — _Origen: Sony α6300_
 
 ## Pendientes
 
