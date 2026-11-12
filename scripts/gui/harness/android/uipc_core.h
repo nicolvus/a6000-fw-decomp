@@ -12,7 +12,11 @@
 #endif
 
 #define UC_SHM      0x80000u   /* __k_uipc_cdev_mmap exige exactamente este tamaño */
-#define UC_HDR      0x20u      /* cabecera antes del cuerpo: [-8] tamaño en bloques de 32 B, [-4] cola origen (modelo del shim) */
+#define UC_HDR      12u        /* cabecera verificada en osal_uipc.ko (0x2d4c–0x2e1c, osal_msg_size 0x475c): [0] enlace, [4] nº de bloques de 32 B,
+                                  [5] banderas (bits 0–5 = 1; bit 6 = cabecera extendida +24), [6] u16 = 1, [8] 0xa5a5a5a5; cuerpo en +12 */
+#define UC_BLK      32u
+#define UC_NBLK     (UC_SHM / UC_BLK)
+#define UC_MAXMSG   (255 * UC_BLK - UC_HDR)   /* el nº de bloques es un byte: 8148 B */
 #define UC_NQ       256
 #define UC_NSEM     256
 #define UC_DEPTH    64
@@ -33,13 +37,14 @@ struct uc_proc { int used; uint32_t base; struct uc_cb dlv[UC_DEPTH]; unsigned r
 struct uc_sem { uint32_t id; int count; };
 struct uc {
 	uint8_t *shm;                                       /* UC_SHM bytes, mapeados en todos los procesos */
-	uint32_t brk; uint32_t freel[UC_SHM / 0x1000]; unsigned nfree;
+	uint8_t used[UC_NBLK / 8];                          /* mapa de bloques de 32 B */
 	struct uc_q q[UC_NQ]; struct uc_sem s[UC_NSEM]; struct uc_proc p[UC_NPROC];
 	uint32_t next_dyn;
 };
 
 void uc_init(struct uc *u, uint8_t *shm);
 int  uc_connect(struct uc *u, uint32_t user_base, uint32_t out[4]);   /* idx 0x10; devuelve nº de proceso */
+void uc_disconnect(struct uc *u, int pid);                            /* cierre del descriptor */
 int  uc_valloc(struct uc *u, int pid, uint32_t src_q, uint32_t size, uint32_t *user_ptr); /* idx 0xa */
 int  uc_free(struct uc *u, int pid, uint32_t user_ptr);                /* idx 0xb */
 int  uc_snd(struct uc *u, int pid, uint32_t qid, uint32_t user_ptr);   /* idx 4 */

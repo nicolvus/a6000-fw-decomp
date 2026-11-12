@@ -39,7 +39,14 @@ Los índices coinciden con la tabla del shim (`sonyshim.c:459`). **Diferencia ha
 ## 3. Mensajes, colas y semáforos
 
 - `qid` = `grupo << 16 | índice`. `osal_valloc_msg_wait` rechaza índices `≥ 0x800` y trata aparte el bit `0x8000`. Para los grupos 0x3e y 0x8f se llama a `uipc_oom` en caso de falta de memoria.
-- Cabecera del mensaje: `osal_msg_size` lee `[-8]` (bloques de 32 B) y `[-7]`, y resta 12 o 20 según la variante. El shim usa `[-8] = 2 → 0x34 B` y `[-4]` = cola origen. Se coloca en `vpool_alloc`/`fblock` (bloques de 32 B y de 8 B).
+- **Cabecera del mensaje (verificada)**: es de 12 B y el cuerpo empieza en `bloque + 12`. La escribe el asignador de 0x2cf4–0x2e1c y la lee `osal_msg_size` (0x475c):
+  - `+0`: enlace de cola.
+  - `+4` (`cuerpo[-8]`): nº de bloques de 32 B, igual a `(tamaño + 43) & ~31` dividido entre 32. Vale 0 en un `fblock` de 32 B para cuerpos ≤ 20 B.
+  - `+5` (`[-7]`): banderas. Bits 0–5 = 1; bit 6 = cabecera extendida, que resta 24 al tamaño útil; bit 7 = 0.
+  - `+6` (`[-6]`): u16 = 1.
+  - `+8` (`[-4]`): `0xa5a5a5a5`, el literal en `.text+0x2e68`.
+
+  El tamaño útil es `bloques·32 − 12`, o 20 si `bloques = 0`. Como el nº de bloques es un byte, el **máximo es 8148 B**. **Corrige al shim**: `[-4]` no es la cola origen al asignar, sino `0xa5a5a5a5`. NO_VERIFICADO si el envío la sobrescribe.
 - Entrega con callback: `reg_msg_queue_cb` instala `__k_user_msg_cb` en el kernel. Cada envío a esa cola se encola para el proceso dueño, y sus hilos proxy (`[0x10]` de la memoria compartida = 8 hilos) lo recogen con `wait_cb` (idx 13). Después llaman `cb(msg, arg)` en espacio de usuario. Los síncronos (`sync = 1`, `__k_is_user_sync_cb`) se cierran con una segunda llamada `snd_sync_msg` (el shim lo trata con `t5[1] != 0`).
 - Semáforos: `get_bsem`, `osal_wai_sem_tmo`/`osal_sig_sem`. Ids dinámicos de tipo 0x32 y colas de tipo 0x2a (`osal_dynamic_id`).
 - NO_VERIFICADO: la numeración exacta de `osal_dynamic_id`, el formato de `stat_*`, la semántica de `broadcast`/`log`/`rt mode` y la prioridad de mensajes (`osal_set_msg_pri`).
@@ -50,9 +57,21 @@ El shim emula `/dev/uipc` **dentro de un proceso**: abre `/tmp/uipc.shm` y resue
 
 ## 5. Diseño propuesto
 
-1. **`uipc_core.c` (hecho, prototipo):** núcleo sin bloqueos y sin dependencias que implementa las secciones 1–3 sobre un búfer de 0x80000 B: traducción por base de proceso, colas FIFO, callbacks por proceso dueño, semáforos, ids dinámicos y `connect`. Compila tanto en el kernel como en el anfitrión.
-2. **Módulo `uipc_shared.ko` (pendiente):** sustituye a `uipc_stub.c`. Un `misc` `/dev/uipc` con `vmalloc_user(0x80000)` y `remap_vmalloc_range` en cada `mmap`. `ioctl` copia los 8 B y las estructuras de la tabla y llama a `uc_*` bajo un mutex. Si recibe `UC_AGAIN`, espera en `wait_event_interruptible_timeout` con el tmo dado, y cada `snd`/`sig` hace `wake_up_all`.
-3. **Servicios de kernel (Backup, etc.):** se quedan en el shim del proceso principal. En modo compartido (variable nueva, p. ej. `UIPC_SHARED=1`, que deberá implementar el dueño de `sonyshim.c`), el shim reenvía al `/dev/uipc` real los `ioctl` de colas que no resuelve. Además se registra con `reg_sync_msg_queue_cb` como dueño de las colas de servicio (`0x3e014d`, `0x14c0424`…). Así una petición de Tweak llega por `wait_cb` a un proxy del shim y la atiende el `backup_service` actual, que escribe la misma NVRAM emulada. Al trasladar el estado de colas del shim al módulo, sus punteros deben pasar a la ventana compartida: `valloc` debe asignar en el `mmap` y no con `calloc` (`sonyshim.c:470`).
+1. **`uipc_core.c` (hecho):** núcleo sin bloqueos ni dependencias que implementa las secciones 1–3 sobre un búfer de 0x80000 B. Incluye traducción por base de proceso, colas FIFO, callbacks por proceso dueño, semáforos e ids dinámicos. **Asigna bloques de 32 B contiguos** con mapa de bits (primer hueco), escribe la cabecera del `.ko` y admite hasta 8148 B. `connect` crea la cola dinámica del grupo 0x3f. Diferencia con el `.ko`: no usa `fblock` (bloques = 0) para cuerpos ≤ 20 B; da el mismo tamaño útil.
+2. **Módulo `uipc_shared.ko` (hecho, `uipc_shared.c` + `build_uipc.sh`; compila sin avisos contra 6.12.113 con `clang` sin `-w`; sin probar en el invitado):** sustituye a `uipc_stub.c`.
+   - Dispositivo `misc` `/dev/uipc` (0666) con `vmalloc_user(0x80000)` y `remap_vmalloc_range` en cada `mmap`, que fija la base del proceso.
+   - Cada `open` es un proceso de `uipc_core` y comprueba el `tgid` como el `.ko`. `release` desconecta y libera sus colas.
+   - Los 17 ioctls se atienden bajo un mutex. Las esperas usan `wait_event_interruptible_timeout` sobre un contador de generación (tmo en ms: < 0 infinito, 0 sondeo). `rcv`/`valloc`/`wai_sem`/`wait_cb` esperan de verdad.
+   - `snd_sync_msg` a otro proceso encola al dueño y espera su cierre (segunda llamada con `cb ≠ 0`). Si el dueño es el mismo proceso, devuelve `{cb, arg}` como el shim. `snd_sync_direct` copia sus 16 B a un bloque compartido, hace la entrega síncrona y los devuelve.
+   - NO_VERIFICADO:
+     - tiempo agotado: el módulo devuelve −1022 como valor del `ioctl`, que a través de libc llega como `-1/errno 1022`. El shim devuelve −1022 directamente. Comprobar qué espera `libosal_uipc.so`;
+     - formatos de `stat_*` (se devuelven ceros);
+     - modos 0xe/0xf (sin efecto).
+3. **Servicios de kernel (Backup, etc.) — especificación para el agente de la VM (dueño de `sonyshim.c`):** se quedan en el shim del proceso principal. En modo compartido (variable nueva, p. ej. `UIPC_SHARED=1`), el shim reenvía al `/dev/uipc` real los `ioctl` de colas que no resuelve. Además se registra con `reg_sync_msg_queue_cb` como dueño de las colas de servicio (`0x3e014d`, `0x14c0424`…). Así una petición de Tweak llega por `wait_cb` a un proxy del shim y la atiende el `backup_service` actual, que escribe la misma NVRAM emulada. Al trasladar el estado de colas del shim al módulo, sus punteros deben pasar a la ventana compartida: `valloc` debe asignar en el `mmap` y no con `calloc` (`sonyshim.c:470`). Pasos concretos en el shim:
+   - a) no redirigir `open("/dev/uipc")` a `/tmp/uipc.shm` si existe el dispositivo real;
+   - b) en el `ioctl`, llamar al `ioctl` real para los índices 0–2, 4 (salvo los servicios que el shim intercepta), 7–0xd y 0x10;
+   - c) arrancar un hilo que haga `reg_sync_msg_queue_cb` de las colas de servicio y atienda `wait_cb` llamando a `backup_service`/`ma_service`/`direct_service`, y cerrar cada entrega con `snd_sync_msg {msg, cb≠0}`;
+   - d) la cabecera `[-4]` es `0xa5a5a5a5` (sección 3).
 4. **Orden de prueba:** cargar `binder32` + `ashmem` + `uipc_shared`. Luego el `MODE=zyg` de `android.sh` y, para T5b, `WS_SubProcess.elf`. El criterio sale de PENDIENTES: zygote pasa de `libosal_uipc` y «Conf. punto acceso» muestra la lista de redes.
 
 ## 6. Prueba
@@ -62,4 +81,6 @@ El shim emula `/dev/uipc` **dentro de un proceso**: abre `/tmp/uipc.shm` y resue
 - entrega por callback, tanto de lo encolado antes del registro como después;
 - `unreg`, semáforos, ids dinámicos y límites de tamaño.
 
-Resultado: 1 passed. ruff y mypy sin avisos.
+Resultado: 1 passed. ruff y mypy sin avisos. Desde esta revisión la prueba cubre también mensajes de 8148 B, la cabecera del `.ko`, el doble `free`, el agotamiento y la recuperación del espacio.
+
+**Prueba en el invitado (lista, sin ejecutar):** `build_uipc.sh` compila también `uipc_guest_test.c`, un binario ARM estático sin libc con syscalls directas. `prueba_uipc.sh` carga el módulo y lanza esa prueba. Dos procesos, cada uno con su `open`/`mmap`, se sincronizan con un semáforo y entregan un mensaje de 5000 B por callback (`wait_cb`). La prueba comprueba el contenido y la cabecera, el `free` y un `rcv` con tiempo agotado de 100 ms; imprime `UIPC OK` o `FALLO n`. Bajo `qemu-arm` en el anfitrión, sin `/dev/uipc`, termina con `FALLO 01` en ambos procesos, como se espera: confirma el binario y las syscalls. Se ejecuta en un `DIR_TRABAJO` propio con `run.py`, nunca en la VM interactiva.

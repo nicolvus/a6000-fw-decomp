@@ -32,7 +32,16 @@ int main(void)
 	uint32_t s; assert(uc_dynamic_id(&u, UC_DYN_SEM, 0x12, &s) == 0 && (s >> 16) == 0x12 && (s & 0x8000));
 	assert(uc_wai_sem(&u, s) == UC_AGAIN && uc_sig_sem(&u, s) == 0 && uc_wai_sem(&u, s) == 0 && uc_wai_sem(&u, s) == UC_AGAIN);
 	assert(uc_dynamic_id(&u, 7, 0, &s) == UC_INVAL);
-	assert(uc_valloc(&u, a, 0, 0x1000, &m) == UC_INVAL);
+	assert(uc_valloc(&u, a, 0, 8149, &m) == UC_INVAL);
+	/* mensaje grande (> 4 KiB) y cabecera del .ko */
+	uint8_t *h; assert(uc_valloc(&u, a, 0, 8148, &m) == 0); h = shm + (m - 0x40000000) - 12;
+	assert(h[4] == 255 && h[5] == 1 && h[6] == 1 && *(uint32_t *)(h + 8) == 0xa5a5a5a5u);
+	assert(uc_free(&u, a, m) == 0 && uc_free(&u, a, m) == UC_INVAL);
+	/* se agota y se recupera */
+	uint32_t v[600]; int n = 0; while (n < 600 && uc_valloc(&u, a, 0, 4000, &v[n]) == 0) n++;
+	assert(n > 0 && n < 600 && uc_valloc(&u, a, 0, 4000, &m) == UC_NOMEM);
+	while (n--) assert(uc_free(&u, a, v[n]) == 0);
+	assert(uc_valloc(&u, a, 0, 20, &m) == 0 && (m - 0x40000000 - 12) % 32 == 0);
 	puts("uipc_core OK");
 	return 0;
 }

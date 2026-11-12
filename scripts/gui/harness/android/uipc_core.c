@@ -10,7 +10,8 @@
 void uc_init(struct uc *u, uint8_t *shm)
 {
 	memset(u, 0, sizeof(*u));
-	u->shm = shm; u->brk = 0x1000; u->next_dyn = 1;     /* la primera página queda para la cabecera global (connect: [0x10] = nº de proxies) */
+	u->shm = shm; u->next_dyn = 1;
+	memset(u->used, 0xff, 0x1000 / UC_BLK / 8);        /* la primera página queda para la cabecera global (connect: [0x10] = nº de proxies) */
 	shm[0x10] = 8;
 }
 
@@ -33,6 +34,13 @@ int uc_connect(struct uc *u, uint32_t user_base, uint32_t out[4])
 	return UC_NOMEM;
 }
 
+void uc_disconnect(struct uc *u, int pid)
+{
+	if (pid < 0 || pid >= UC_NPROC) return;
+	for (int i = 0; i < UC_NQ; i++) if (u->q[i].owner == pid) u->q[i].owner = -1;
+	u->p[pid].used = 0;
+}
+
 static struct uc_q *qget(struct uc *u, uint32_t id, int make)
 {
 	struct uc_q *f = 0;
@@ -41,18 +49,27 @@ static struct uc_q *qget(struct uc *u, uint32_t id, int make)
 	return make ? f : 0;
 }
 
-/* shortcut: bloques fijos de 4 KiB (cuerpo ≤ 0xfe0 B); el .ko usa vpool/fblock de 32 B. Ampliar si un mensaje real supera 4 KiB. */
+#define UC_USED(o) (u->used[(o) / UC_BLK / 8] & (1u << ((o) / UC_BLK % 8)))
+static void mark(struct uc *u, uint32_t o, unsigned n, int on)
+{
+	for (; n--; o += UC_BLK) { uint8_t *b = &u->used[o / UC_BLK / 8], m = 1u << (o / UC_BLK % 8); *b = on ? *b | m : *b & ~m; }
+}
+
+/* Bloques de 32 B contiguos (primer hueco), como vpool del .ko: n = ceil((size + 12) / 32). La cabecera reproduce la de 0x2d4c–0x2e1c
+ * salvo que [4] nunca vale 0 (el .ko usa fblock con [4] = 0 para cuerpos ≤ 20 B; osal_msg_size da 20 en ambos casos). */
 int uc_valloc(struct uc *u, int pid, uint32_t src_q, uint32_t size, uint32_t *user_ptr)
 {
-	uint32_t o;
-	if (pid < 0 || pid >= UC_NPROC || !u->p[pid].used || size > 0x1000 - UC_HDR) return UC_INVAL;
-	if (u->nfree) o = u->freel[--u->nfree];
-	else if (u->brk + 0x1000 <= UC_SHM) { o = u->brk; u->brk += 0x1000; }
-	else return UC_NOMEM;
-	memset(u->shm + o, 0, 0x1000);
-	u->shm[o + UC_HDR - 8] = (uint8_t)((size + 12 + 31) / 32);
-	memcpy(u->shm + o + UC_HDR - 4, &src_q, 4);
-	*user_ptr = u->p[pid].base + o + UC_HDR; return 0;
+	unsigned n = (size + UC_HDR + UC_BLK - 1) / UC_BLK, run = 0;
+	uint32_t o, a = 0, mk = 0xa5a5a5a5u;
+	(void)src_q;
+	if (pid < 0 || pid >= UC_NPROC || !u->p[pid].used || size > UC_MAXMSG) return UC_INVAL;
+	for (o = 0; o < UC_SHM && run < n; o += UC_BLK) { if (UC_USED(o)) run = 0; else if (!run++) a = o; }
+	if (run < n) return UC_NOMEM;
+	mark(u, a, n, 1);
+	memset(u->shm + a, 0, n * UC_BLK);
+	u->shm[a + 4] = (uint8_t)n; u->shm[a + 5] = 1; u->shm[a + 6] = 1;
+	memcpy(u->shm + a + 8, &mk, 4);
+	*user_ptr = u->p[pid].base + a + UC_HDR; return 0;
 }
 
 int uc_free(struct uc *u, int pid, uint32_t user_ptr)
@@ -60,8 +77,8 @@ int uc_free(struct uc *u, int pid, uint32_t user_ptr)
 	uint32_t o; int r = u2o(u, pid, user_ptr, &o);
 	if (r) return r;
 	o -= UC_HDR;
-	if (o & 0xfff || o < 0x1000) return UC_INVAL;
-	u->freel[u->nfree++] = o; return 0;
+	if (o % UC_BLK || o < 0x1000 || !UC_USED(o) || !u->shm[o + 4] || o + u->shm[o + 4] * UC_BLK > UC_SHM) return UC_INVAL;
+	mark(u, o, u->shm[o + 4], 0); return 0;
 }
 
 int uc_snd(struct uc *u, int pid, uint32_t qid, uint32_t user_ptr)
