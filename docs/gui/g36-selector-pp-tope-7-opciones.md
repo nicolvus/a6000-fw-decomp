@@ -78,3 +78,34 @@ que el tope sea también 7 en las filas numéricas (se cubre igualmente al parti
 `pmca-console firmware --flash --confirm …/package-3.78/firmware_packed.dat`: primer intento «unexpected response (device returned more data than requested)» al pasar
 a modo actualizador (`054c:03e2`), como en el 3.76; segundo, con la cámara ya en ese modo, `Done`. Arranca normal (`054c:07c4`) y `pmca-console info` da **firmware 3.78**.
 Registros `analysis/gui/g22/install-3.78.log` y `install-3.78b.log`. Falta la prueba funcional del menú (PP7–PP10, S-Log2/S-Log3, valores positivos).
+
+## 7. El 3.78 se cuelga al entrar en Picture Profile (usuario, 11-11-2026)
+
+Sin red ni registros de la cámara: causa NO determinada. Respecto al 3.77 (entra bien) solo cambian dos cosas fuera de lo probado:
+- **13 páginas** en la carpeta (3.77: 6). En el firmware de Sony las carpetas propias tienen ≤ 2 páginas y los nodos de `_INIT_70` (`viewUnified2.so`,
+  407 llamadas a `CmnViewSettingNode(…, n, …)`) usan n ≤ 8 salvo uno de 16: no hay ninguna carpeta con más de 8 hijos de este tipo. Hipótesis principal.
+- **pids hasta `0x134`** (3.77: hasta `0x10A`, ya > `0xFF`); las tres comprobaciones de pid están parcheadas (`pid_space`), y la búsqueda de otros topes
+  `0xE8/0xE9` en el código no da un consumidor claro. Hipótesis secundaria.
+`libObj.so`, `nflasha3` y los textos (163 ranuras libres asignadas) no explican un cuelgue al abrir la carpeta. Reversión: reinstalar el 3.77 (`pkg-377w`).
+
+## 8. CFW 3.79: ≤ 7 opciones y ≤ 6 páginas (construido, sin instalar)
+
+Elegido por el usuario («6 págs, sin Copy/Reset»). `build_pp_menu.partir()` ahora: quita Copy y Reset del menú (la `libObj` sigue igual: `ppinit` ya carga los
+valores de fábrica); reduce cada ajuste **numérico** de más de 7 valores a 7 repartidos por todo el rango con los extremos (`_reducir`; si falta el neutro de
+`pp_factory.NEUTRO`, sustituye al más cercano); y parte en dos filas los enumerados largos. `PID_MAX` vuelve a `0x110`.
+
+| Fila | Valores |
+|---|---|
+| Picture Profile | `Off/PP4` (Off, PP1–PP4) · `PP5/PP10` (PP5–PP10) |
+| Gamma | `Movie/Cine3` · `Cine4/S-Log3` (Cine4, ITU709, ITU709(800%), S-Log2, S-Log3) |
+| Color Mode | `Movie/Pro` · `ITU709 Matrix/S-Gamut3` (ITU709 Matrix, B&W, S-Gamut, S-Gamut3.Cine, S-Gamut3) |
+| Black Level | −15, −10, −5, 0, +5, +10, +15 |
+| ±7 (BG Level, Phase, Color Depth ×6, Detail Level) | −7, −5, −2, 0, +2, +5, +7 |
+| WB LB/CC/R/B | −9, −6, −3, 0, +3, +6, +9 |
+| Saturation | −8, −6, −3, 0, +2, +4, +7 |
+| Knee Point / Knee Slope | 0–12 de 2 en 2 / −5, −3, −2, 0, +2, +3, +5 |
+| Color Mode Level / Detail Limit / Crispening | 1, 2, 4–8 / 0, 1, 2, 4–7 / 0, 1, 2, 4–7 |
+
+**35 filas, 6 páginas, pids `0xE9…0x10B`** (3.77: 34 filas, 6 páginas, hasta `0x10A`). `.dat` `analysis/gui/g22/pkg-379w/pkg-3.79/package-3.79/firmware_packed.dat`,
+sha256 `04b414c90dba6fb4d01ba0d162ac4bdb0931c8c29e5d14dec6e32799eaf44a67`; `libObj.so` y `base-pp.tar` idénticos al 3.77. 106 pruebas (la de G36 reescrita);
+auditoría 22/24 con los mismos fallos esperados y aviso de `fsck` que el 3.76/3.78. Sin probar en cámara.

@@ -23,6 +23,7 @@ import build_pp_gamma_menu as G
 import patch_libobj_pp
 import pid_space
 import pp_descriptors
+import pp_factory
 import pp_menu_spec as M
 import silent_descriptor
 import uxc_strings
@@ -179,12 +180,28 @@ def sin_acciones():
     M.TREE[2][:] = M.paginar([x for x in M.ORDEN if x in M.SETTINGS])
 
 
+def _reducir(s, maximo):
+    """`maximo` valores repartidos por todo el rango numérico (extremos incluidos) y, si falta, el neutro de fábrica en lugar del más cercano."""
+    ops = [s.opciones[round(i * (len(s.opciones) - 1) / (maximo - 1))] for i in range(maximo)]
+    neutro = pp_factory.NEUTRO.get((s.clave - 0x1F8) // 4, 0)
+    vals = [v for _, v in ops]
+    if neutro not in vals and neutro in dict((v, t) for t, v in s.opciones):
+        cerca = min(range(maximo), key=lambda i: abs(vals[i] - neutro))
+        ops[cerca] = next(o for o in s.opciones if o[1] == neutro)
+    return tuple(ops)
+
+
 def partir(maximo=M.OPCIONES_POR_LISTA):
-    """G36: la lista de opciones de la clase Normal no pasa de la 7.ª (cámara, 3.77). Cada ajuste más largo se parte en filas equilibradas de ≤ `maximo` opciones con la
-    misma clave/evento/lectura y etiqueta «Ajuste primera/última»; la spec, el orden y los pids se rehacen en el sitio (main y build_nodes guardan sus referencias)."""
+    """G36: la lista de opciones de la clase Normal no pasa de la 7.ª (cámara, 3.77) y con 13 páginas (3.78) el menú se colgaba al entrar; se deja ≤ 6 páginas como
+    el 3.77: sin Copy/Reset (los valores de fábrica ya los carga `ppinit`), los numéricos con `maximo` valores repartidos y los enumerados más largos partidos en filas
+    equilibradas con la misma clave/evento/lectura («Ajuste primera/última»). La spec, el orden y los pids se rehacen en el sitio (main y build_nodes guardan sus referencias)."""
+    for k in ("copy", "reset"):
+        M.SETTINGS.pop(k, None)
     nuevos, orden = {}, []
     for k in [x for x in M.ORDEN if x in M.SETTINGS] + [x for x in M.SETTINGS if x not in M.ORDEN]:
         s = M.SETTINGS[k]
+        if len(s.opciones) > maximo and all(t.lstrip("+-").isdigit() for t, _ in s.opciones):
+            s = replace(s, opciones=_reducir(s, maximo))
         n = -(-len(s.opciones) // maximo)
         if n == 1:
             nuevos[k] = s

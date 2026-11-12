@@ -117,18 +117,21 @@ def test_menu_plano_6_filas_por_pagina_sin_carpetas_anidadas():
     assert len(set(etiquetas)) == len(etiquetas), "etiquetas repetidas: sin carpetas ya no se distinguen"
 
 
-def test_g36_ninguna_fila_pasa_de_7_opciones_y_se_conservan_todas():
-    """G36: la lista de la clase Normal no pasa de la 7.ª opción (cámara, 3.77): configurar() parte cada ajuste en filas de ≤ 7 opciones con la misma clave
-    (subproceso: muta la spec)."""
-    code = ("import sys; sys.path.insert(0, 'scripts/gui'); import copy, build_pp_menu as B, pp_menu_spec as M, pid_space as S; "
+def test_g36_ninguna_fila_pasa_de_7_opciones_y_caben_en_6_paginas():
+    """G36: la lista de la clase Normal no pasa de la 7.ª opción (3.77) y el 3.78 (13 páginas) se colgaba al entrar: configurar() deja ≤ 7 opciones por fila
+    y ≤ 6 páginas (como el 3.77): enumerados partidos con la misma clave, numéricos con 7 valores repartidos (incluido el neutro), sin Copy/Reset (subproceso)."""
+    code = ("import sys; sys.path.insert(0, 'scripts/gui'); import build_pp_menu as B, pp_menu_spec as M, pid_space as S, pp_factory as F; "
             "B.configurar(gam=True, col=True, acc=True); "
-            "assert all(len(s.opciones) <= 7 for s in M.SETTINGS.values()); "
+            "assert all(len(s.opciones) <= 7 for s in M.SETTINGS.values()) and len(M.TREE[2]) <= 6; "
             "assert len(M.SETTINGS) == len(M.PIDS) == len(set(M.PIDS)) and min(M.PIDS) == 0xE9 and max(M.PIDS) <= S.PID_MAX; "
             "assert len({s.label for s in M.SETTINGS.values()}) == len(M.SETTINGS); "
             "assert all(len(p) <= 6 for p in M.TREE[2]) and sorted(x for p in M.TREE[2] for x in p) == sorted(M.SETTINGS); "
-            "sel = [s for s in M.SETTINGS.values() if s.clave == 0x274 and s.evento == 0x40]; "
+            "assert not {s.evento for s in M.SETTINGS.values()} & {0x41, 0x42}; "
+            "sel = [s for s in M.SETTINGS.values() if s.clave == 0x274]; "
             "assert [v for s in sel for _, v in s.opciones] == [9, 0, 1, 2, 3, 4, 5, 6, 7, 8, 10] and all(s.id_get == 0x4A for s in sel); "
-            "bl = [v for s in M.SETTINGS.values() if s.clave == M.K(10) for _, v in s.opciones]; assert bl == list(range(-15, 16)); "
+            "v = lambda c: [x for s in M.SETTINGS.values() if s.clave == c for _, x in s.opciones]; "
+            "assert v(M.K(10)) == [-15, -10, -5, 0, 5, 10, 15] and v(M.K(3)) == [-9, -6, -3, 0, 3, 6, 9]; "
+            "assert all(F.NEUTRO.get(i, 0) in v(M.K(i)) for i in range(31) if i not in (0, 7) and v(M.K(i))); "
             "g = [t for s in M.SETTINGS.values() if s.clave == 0x214 for t, _ in s.opciones]; assert 'S-Log3' in g and len(g) == 10")
     r = subprocess.run([sys.executable, "-c", code], cwd=ROOT, check=False, capture_output=True, text=True)
     assert r.returncode == 0, r.stderr[-800:]
