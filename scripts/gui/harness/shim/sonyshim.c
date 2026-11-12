@@ -303,6 +303,31 @@ static void ma_service(unsigned *m) {
     pthread_mutex_unlock(&ma_m);
 }
 
+/* /dev/ldec (ldec.ko, descompresor por hardware): ioctl 1 {origen virtual, longitud, destino físico, capacidad, registros, canal, 0, 0xa0}.
+ * Formato LZPT de Sony (fwtool lz77, scripts/e25_27/tpzl.py): registros 0xF0 = LZ77 con banderas LSB primero (bit 1 = copia de 2 B:
+ * longitud tabla[b0>>4], distancia 12 bits; distancia 0 = fin del registro) o 0x0F = almacenado (tamaño u16 en +2). */
+static unsigned char *phys2pn(unsigned a, unsigned n);
+static unsigned ldec_inflate(const unsigned char *s, unsigned n, unsigned char *d, unsigned cap) {
+    static const unsigned char lt[16] = {3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 32, 64};
+    unsigned i = 0, o = 0;
+    while (i < n && o < cap) {
+        unsigned k = s[i++];
+        if (k == 0x0f) { if (i + 3 > n) break; unsigned sz = s[i + 1] | s[i + 2] << 8; i += 3; while (sz-- && i < n && o < cap) d[o++] = s[i++]; continue; }
+        if (k != 0xf0) break;  /* relleno a cero tras el último registro */
+        for (int end = 0; !end && i < n; ) {
+            unsigned f = s[i++];
+            for (int b = 0; b < 8 && !end && i < n; b++) {
+                if (!(f >> b & 1)) { if (o < cap) d[o++] = s[i]; i++; continue; }
+                if (i + 2 > n) { end = 1; break; }
+                unsigned len = lt[s[i] >> 4], dist = (s[i] & 15) << 8 | s[i + 1]; i += 2;
+                if (!dist) end = 1;
+                else if (dist > o) return o;  /* flujo corrupto */
+                else for (unsigned t = 0; t < len && o < cap; t++, o++) d[o] = d[o - dist];
+            }
+        }
+    }
+    return o;
+}
 int ioctl(int fd, unsigned long req, ...) {
     static int (*r)(int, unsigned long, ...);
     va_list a; va_start(a, req); void *arg = va_arg(a, void *); va_end(a);
@@ -435,7 +460,12 @@ int ioctl(int fd, unsigned long req, ...) {
             for (;;) sleep(3600);
         }
         if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0xc0048211 && arg) *(unsigned *)arg = 0;  /* espera de la GPU de DMP (libObj+0x6c53e0): repite mientras la salida != 0 → «ya ha terminado» */
-        if (getenv("LDECLOG") && !strcmp(devname[fd], "/dev/ldec") && readable(arg)) { unsigned *q = (unsigned *)arg; static int nl; if (nl++ < 12) { LOG("LDEC req=%#lx %08x %08x %08x %08x %08x %08x %08x %08x", req, q[0], q[1], q[2], q[3], q[4], q[5], q[6], q[7]); if (readable((void *)(unsigned long)q[0])) { unsigned char *b = (unsigned char *)(unsigned long)q[0]; LOG("LDEC src %02x%02x%02x%02x %02x%02x%02x%02x %02x%02x%02x%02x %02x%02x%02x%02x %02x%02x%02x%02x %02x%02x%02x%02x", b[0],b[1],b[2],b[3],b[4],b[5],b[6],b[7],b[8],b[9],b[10],b[11],b[12],b[13],b[14],b[15],b[16],b[17],b[18],b[19],b[20],b[21],b[22],b[23]); } } }  /* LDECLOG=1: parámetros de /dev/ldec (§5.18z) */
+        if (!strcmp(devname[fd], "/dev/ldec") && req == 1 && readable(arg)) {  /* descompresión LZPT de las imágenes de la UI (§5.18z′) */
+            unsigned *q = (unsigned *)arg; unsigned char *d = phys2pn(q[2], q[3]); const unsigned char *src = (const unsigned char *)(unsigned long)q[0];
+            unsigned o = d && readable(src) ? ldec_inflate(src, q[1], d, q[3]) : 0; static int nl;
+            if (!o || (getenv("LDECLOG") && nl++ < 12)) LOG("LDEC %#x B → %#x (cap %#x): %#x B", q[1], q[2], q[3], o);
+            return 0;
+        }
         pthread_mutex_lock(&semlock);
         for (k = 0; k < ns && (seen[k].r != req || strcmp(seen[k].d, devname[fd])); k++);
         if (k == ns && ns < 64) { strncpy(seen[ns].d, devname[fd], 31); seen[ns].r = req; seen[ns++].n = 0; }

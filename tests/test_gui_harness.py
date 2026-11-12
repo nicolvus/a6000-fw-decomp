@@ -123,7 +123,7 @@ def test_gpu_raster_dibuja_cuadrilatero_a8_trasladado(tmp_path: Path) -> None:
 @pytest.mark.skipif(not (os.environ.get("A6000_HARNESS_RUN") and (WORK / "base.cpio.gz").exists() and shutil.which("qemu-system-arm")),
                     reason="prueba lenta (≈ 5 min): A6000_HARNESS_RUN=1 y setup.sh hecho")
 def test_menu_global_se_dibuja() -> None:
-    """§5.18z: con la cola de la GPU sin reencolados, view/GLOBAL_MENU lanza ≥ 15 listas; el rasterizador saca su texto."""
+    """§5.18z: con la cola de la GPU sin reencolados y /dev/ldec emulado, view/GLOBAL_MENU lanza ≥ 15 listas; el rasterizador saca texto e imágenes."""
     import numpy as np
     from PIL import Image
     gpu = WORK / "gpu.txt"
@@ -138,3 +138,5 @@ def test_menu_global_se_dibuja() -> None:
     subprocess.run([sys.executable, str(HARNESS / "gpu_raster.py"), str(WORK), str(WORK / "menu.png")], check=True, capture_output=True)
     img = np.asarray(Image.open(WORK / "menu.png"))
     assert (img.max(axis=2) > 128).sum() > 5000  # texto blanco/gris de las seis categorías y el título
+    i16 = img.astype(int)
+    assert ((i16.max(axis=2) - i16.min(axis=2)) > 40).sum() > 10000  # fotos de fondo en color: imágenes LZPT de /dev/ldec (§5.18z)
