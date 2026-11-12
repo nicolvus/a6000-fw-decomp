@@ -43,3 +43,6 @@ Código: `sensor_web.py` (página y puntos HTTP de `live.py`), `sd_emu.py` (nume
 
 ## Límites
 Solo escritorio con navegador; el disparo/MOVIE de la UI emulada (firmware) no escriben en la SD: pendiente G22-E/T4b; el overlay se compara con el `/usr` de `harness/stage` (hay que haber ejecutado `setup.sh`). Fn, reproducción, rueda y dial no tienen código verificado aún y no figuran.
+
+## ISP emulado (T9, Picture Profile en la ventana en vivo)
+Panel «ISP (BIONZ X emulado)» bajo la fuente de sensor: «aplicar» procesa con un shader WebGL2 lo que se ve, la foto (`/sd/foto`) y el vídeo (`/sd/video`); el mensaje de guardado indica qué etapas son reales. Elige perfil (PP1–PP10, «Off»), gamma, color mode, black level, saturación, fase, color depth, detail y el modo de obturador medido (Mecánico/EFCS/Silent por bandas, R87). Cada cambio escribe los mismos ids de Backup que `libObj` (1 B por ajuste) en el `nvram.json` del perfil (se aplica en el siguiente arranque en frío; el cambio por menú sigue pendiente). Pipeline, fuentes y calibración: [G23-ISP](g23-isp-bionz-emulado.md). Comprobación sin QEMU: `.venv/bin/python scripts/gui/isp/prueba_shader.py --captura x.png`.

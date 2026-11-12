@@ -35,6 +35,7 @@ from PIL import Image
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+import isp_web
 import run
 import sensor_web
 
@@ -307,6 +308,8 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
         def do_GET(self) -> None:
             if sensor_web.maneja(self, "GET", self.path.partition("?")[0], b"", CONFIG["ruta"]):  # sensor, SD y grabación (T4)
                 return
+            if isp_web.maneja(self, "GET", self.path, b"", vm):  # ISP emulado (T9)
+                return
             if self.path == "/":
                 self.responde(PAGINA.replace("<!--SENSOR-->", sensor_web.HTML).replace("/*SENSORJS*/", sensor_web.JS).encode(), "text/html; charset=utf-8")
             elif self.path == "/estado":
@@ -342,6 +345,8 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
         def do_POST(self) -> None:
             cuerpo = self.rfile.read(int(self.headers.get("Content-Length", 0)))
             if sensor_web.maneja(self, "POST", self.path, cuerpo, CONFIG["ruta"]):
+                return
+            if isp_web.maneja(self, "POST", self.path, cuerpo, vm):
                 return
             if self.path == "/tecla":
                 d = json.loads(cuerpo)

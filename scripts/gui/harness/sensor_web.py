@@ -1,7 +1,7 @@
 """Sensor, SD y grabación de la ventana en vivo (G22-E/T4): HTML+JS de la página y puntos HTTP de `live.py`.
 
 El disparo y la grabación los inicia hoy el ANFITRIÓN (botón/tecla en la página), no el firmware: el código de cámara de MOVIE no está
-verificado. El fotograma guardado es la entrada del sensor sin procesar: av-cam/BIONZ no está emulado, no hay Picture Profile.
+verificado. El fotograma guardado es la entrada del sensor, procesada por el ISP emulado (T9, isp_web.py) si está activado.
 Puntos: GET /sd/estado, GET /sensor/media (fichero local de la config, con Range), POST /sd/foto (JPEG), POST /sd/video (WebM/MP4).
 """
 import json
@@ -12,6 +12,7 @@ import tempfile
 from pathlib import Path
 
 import emu_config as E
+import isp_web
 import sd_emu as S
 
 EXT_MEDIA = {".jpg", ".jpeg", ".png", ".webp", ".bmp", ".gif", ".mp4", ".webm", ".mkv", ".mov", ".avi", ".m4v"}
@@ -23,8 +24,8 @@ HTML = """<label>Fuente del sensor <select id="fuente"><option value="imagen">Im
 <label><input type="checkbox" id="ver" checked> mostrar imagen</label>
 <div><button id="movie">● MOVIE</button> <span id="recst"></span></div>
 <div id="sdst"></div>
-<small id="aviso">Disparador y MOVIE los lanza el anfitrión (la ventana), no el firmware. Se guarda la entrada del sensor <b>sin procesar</b>:
-av-cam/BIONZ no está emulado, no se aplica Picture Profile ni ajuste alguno. Código de MOVIE: NO_VERIFICADO.</small>"""
+<small id="aviso">Disparador y MOVIE los lanza el anfitrión (la ventana), no el firmware. Con «aplicar» desactivado se guarda la entrada del sensor <b>sin procesar</b>;
+activado, el ISP emulado (panel de abajo) procesa lo que se ve y lo que se guarda: curvas y matriz REALES, el resto aproximado (ver «Etapas»). Código de MOVIE: NO_VERIFICADO.</small>""" + isp_web.HTML
 
 JS = r"""
 const SN={tipo:'ninguna',img:null,vid:document.createElement('video'),stream:null,rec:null,t0:0,trozos:[],cfg:{}};
@@ -32,7 +33,7 @@ SN.vid.muted=true;SN.vid.loop=true;SN.vid.playsInline=true;
 const cap=document.createElement('canvas');cap.width=1536;cap.height=1024;const cg=cap.getContext('2d');
 function dibujaSensor(g,W,H){const s=SN.tipo=='imagen'?SN.img:SN.tipo=='ninguna'?null:SN.vid;if(!s)return false;
 const sw=s.videoWidth||s.naturalWidth||0,sh=s.videoHeight||s.naturalHeight||0;if(!sw||!sh)return false;
-const r=Math.max(W/sw,H/sh),w=sw*r,h=sh*r;g.save();g.beginPath();g.rect(0,0,W,H);g.clip();g.drawImage(s,(W-w)/2,(H-h)/2,w,h);g.restore();return true}
+const r=Math.max(W/sw,H/sh),w=sw*r,h=sh*r;g.save();g.beginPath();g.rect(0,0,W,H);g.clip();if(window.ISP&&ISP.on)ISP.dibuja(g,s,(W-w)/2,(H-h)/2,w,h,W,H);else g.drawImage(s,(W-w)/2,(H-h)/2,w,h);g.restore();return true}
 function pinta(){x.fillStyle='#000';x.fillRect(0,0,640,480);if(document.getElementById('ver').checked){x.save();x.translate(0,26.5);dibujaSensor(x,640,427);x.restore()}
 if(osd.complete)x.drawImage(osd,0,0);
 if(SN.rec){const s=Math.floor((Date.now()-SN.t0)/1000);x.fillStyle='#e22';x.beginPath();x.arc(24,24,8,0,7);x.fill();x.fillStyle='#fff';x.font='16px monospace';
@@ -56,19 +57,19 @@ async function sdEstado(){try{const s=await (await fetch('/sd/estado')).json(),g
 document.getElementById('sdst').textContent=`SD ${g(s.cuota)} GB · libre ${g(s.libre)} GB · ${s.fotos} fotos · ≈ ${s.disparos_aprox} disparos / ${s.minutos_xavcs_aprox} min XAVC S restantes · ${s.raiz}`}catch(e){}}
 async function disparo(){if(!SN.tipo||SN.tipo=='ninguna'){aviso('elige una fuente de sensor para disparar');return}
 if(!dibujaSensor(cg,1536,1024)){aviso('la fuente aún no tiene fotograma');return}
-cap.toBlob(async b=>{const r=await fetch('/sd/foto',{method:'POST',body:b});const j=await r.json();aviso(r.ok?'foto guardada: '+j.ruta:'foto NO guardada: '+j.error);sdEstado()},'image/jpeg',.92)}
+cap.toBlob(async b=>{const r=await fetch('/sd/foto',{method:'POST',body:b});const j=await r.json();aviso(r.ok?'foto guardada: '+j.ruta+ISP.nota():'foto NO guardada: '+j.error);sdEstado()},'image/jpeg',.92)}
 document.getElementById('movie').onclick=()=>SN.rec?paraRec():iniciaRec();
 function iniciaRec(){if(!SN.tipo||SN.tipo=='ninguna'){aviso('elige una fuente de sensor para grabar');return}
 const tipos=['video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'],t=tipos.find(v=>MediaRecorder.isTypeSupported(v));
 SN.trozos=[];SN.rec=new MediaRecorder(cap.captureStream(30),{mimeType:t,videoBitsPerSecond:8e6});SN.rec.ondataavailable=e=>e.data.size&&SN.trozos.push(e.data);
 SN.rec.onstop=async()=>{aviso('guardando vídeo…');const r=await fetch('/sd/video',{method:'POST',headers:{'Content-Type':SN.rec.mimeType||'video/webm'},body:new Blob(SN.trozos)});
-const j=await r.json();SN.rec=null;aviso(r.ok?'vídeo guardado: '+j.ruta+(j.nota?' ('+j.nota+')':''):'vídeo NO guardado: '+j.error);document.getElementById('movie').textContent='● MOVIE';sdEstado()};
+const j=await r.json();SN.rec=null;aviso(r.ok?'vídeo guardado: '+j.ruta+(j.nota?' ('+j.nota+')':'')+ISP.nota():'vídeo NO guardado: '+j.error);document.getElementById('movie').textContent='● MOVIE';sdEstado()};
 dibujaSensor(cg,1536,1024);SN.t0=Date.now();SN.rec.start(500);document.getElementById('movie').textContent='■ PARAR';aviso('grabando…')}
 function paraRec(){if(SN.rec&&SN.rec.state!='inactive')SN.rec.stop()}
 function sensorInicio(c){SN.cfg=c||{};if(c&&c.fuente){fuente.value=c.fuente;muestra();if(c.fuente=='webcam')ponWebcam().catch(e=>aviso('cámara: '+e.message));
 else if(c.ruta)Promise.resolve((c.fuente=='video'?ponVideo:ponImagen)('/sensor/media?'+Date.now())).catch(e=>aviso(e.message))}sdEstado()}
 muestra();sdEstado();
-"""
+""" + isp_web.JS
 
 
 def _cfg(ruta: str) -> dict:
