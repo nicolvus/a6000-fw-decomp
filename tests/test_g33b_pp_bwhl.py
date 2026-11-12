@@ -19,7 +19,7 @@ from unicorn.arm_const import (
     UC_ARM_REG_SP,
 )
 
-CAVE, CTX, SP = 0x43FAF290, 0x46000000, 0x47000800   # CAVE: solo para la prueba (hueco de G18), no es una asignación
+CAVE, CTX, SP = P.CAVE, 0x46000000, 0x47000800
 
 
 def run(img: bytes, start: int, end: int, gotreg: int, mode: int, idx: int, slot: int) -> int:

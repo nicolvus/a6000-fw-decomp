@@ -16,6 +16,9 @@ HL_LIT, BW_LIT = 0x438B172C, 0x438B1A1C                           # literales de
 # shortcut: anchura estimada; leer el bloque 0x43f9a1c2 en cámara (o medir con G33-A) antes de instalar.
 HL = (0, 6, 12, 18, 24)
 SIZE = 0x24                                                       # puntero (4 B) + T (0x20 B)
+# Cueva propuesta: cabeza del hueco de G18 antes de SLOT0 de pp_curves_patch (0x43faf28c…0x43faf300, 0x74 B libres y sin uso).
+# Aplicar después de pp_curves_patch, que exige todo el hueco a cero.
+CAVE = 0x43FAF290
 
 
 def patches(base: bytes, cave: int, hl=HL, bw=None) -> list[tuple[int, bytes, str]]:

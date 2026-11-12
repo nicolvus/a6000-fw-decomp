@@ -35,15 +35,38 @@ La rama nativa no deja ningún índice sin efecto: en Manual **sustituye** valor
 `pp_bwhl_patch.patches(base, cave, hl=HL, bw=None)` no modifica código. Cambia el literal GOT de cada sitio elegido (`0x438b172c` para Hi-Light y `0x438b1a1c` para B/W, ambos con `0x73a0` original) por `cave − GOT`, de modo que `r3` apunte a una tabla propia `T` (`T[0] = 1`). Cada uno de esos literales tiene un solo lector, y los otros seis sitios conservan la bandera original. Ocupa 0x24 B de cueva (puntero + `T`). Por defecto solo activa Hi-Light; **B/W solo se activa si se pasan sus 5 bytes**, porque no hay ningún valor neutro conocido.
 
 - La prueba (Unicorn sobre los sitios reales) comprueba: original con la rama cerrada (`sp+0x7c = r0`); con el parche en Manual, `sp+0x7c = r7 + HL[i]`; en Auto, sin cambios; B/W sin tocar salvo que se pida (con `0x43`, `sp+0x34 = 3` y `sp+0x36 = 4`); y las comprobaciones de los bytes originales.
-- **No se asigna cueva**: el hueco de G18 está repartido entre G33, R86 y los trabajos en curso. La prueba usa `0x43faf290` solo dentro de la emulación.
+- Cueva: ver §8 (propuesta `0x43faf290`).
 - **Valores**: `HL = (0, 6, 12, 18, 24)` son estimaciones (`shortcut`). Ni Hi-Light ni B/W tienen valores de Sony para la A6000, porque la propiedad está a cero. Antes de integrarlo hay que leer `sp+0x7a/0x7c` y `sp+0x34/0x36` en ejecución (Auto) para elegir valores próximos a lo nativo.
 
 ## 5. G32-D: `caps[3]` (VERIFICADO el origen; sin parche)
 
 - `caps = 0x43e964a4` es la entrada 0 de la misma tabla: propiedad de Backup **`0x30000`**. En el volcado real, `[3] = 0x40`, con el bit 1 a 0. El indicador monocromo (`0x437a2732`: `bl 0x43aeb0cc` = `(caps[3] >> 1) & 1`, luego `saturación < −7`) no se activa en la A6000.
-- Hay dos opciones y no se ha hecho ninguna. (a) Escribir en NVRAM `0x30000[3] |= 2`: es un cambio de producción, necesita autorización y puede afectar a otros lectores del bit (no auditados). (b) Parchear el núcleo para que la condición sea «Color Mode = B&W» en lugar del bit, como la A7S (`id == 0x17`). Quitar solo el `bne` de `0x437a273a` **no es seguro**: cualquier Saturación PP ≤ −8 activaría el modo monocromo.
+- Opciones: (a) escribir en NVRAM `0x30000[3] |= 2` (producción, necesita autorización; otros lectores del bit sin auditar), descartada; (b) parche del núcleo por tipo B&W, hecho en §7. Quitar solo el `bne` de `0x437a273a` **no es seguro**: cualquier Saturación PP ≤ −8 activaría el modo monocromo.
 
-## 6. Límites
+## 7. G32-D: parche por tipo B&W (construido offline, sin integrar ni instalar)
+
+- **A7S** (`av-cam` fw3.20, por bytes): en `0x438c3b7a…0x438c3ba2`, monocromo = (`caps[3]` bit 1 **y** saturación `[+0x25]` ≤ umbral de tabla `[GOT…]+0x44`) **o** `[resumen+0x22] == 0x17` (id B&W).
+- **A6000**: no tiene id B&W (tabla de tipos 1–7, G27). El tipo sí llega al resumen: `0x437aa8f8` hace `resumen[+0x31] = cfg+0x138` y B&W es el tipo 8. `scripts/gui/pp_bw_mono_patch.py` reescribe en el mismo sitio `0x437a2728…0x437a2743` (28 B, sin cueva; bytes originales comprobados): monocromo = (`+0x31 == 8`). Conserva `r1 = 1`, `r7` = saturación y `r3 = [r4+8]`, y las dos salidas originales (`strb` 1 en `0x437a2744` o 0 en `0x437a279e`).
+- Prueba `tests/test_g32d_pp_bw_mono.py` (Unicorn sobre el sitio real): en el original, B&W no activa el monocromo con `caps[3] = 0x40` y la saturación −8 sí lo hace con el bit 1; con el parche, B&W lo activa y la saturación −8 o −32 y los tipos 0, 1, 7 y 9 no.
+- **Requisito de integración**: la `libObj` tiene que enviar el tipo 8. `patch_libobj_pp.patch_bw` lo convierte en Movie (5) + saturación −8, y con este parche esa combinación ya no da monocromo. Al integrarlo hay que quitar `patch_bw` del constructor (archivo de otros agentes; no se ha tocado). El tipo 8 en el núcleo se trata como Movie (G27 §2).
+- NO_VERIFICADO: que el indicador `+0x88` baste por sí solo para la imagen monocroma (en la A7S sí, por B&W = id `0x17` sin saturación). No se ha medido en cámara.
+
+## 8. Reparto del hueco de G18 (`0x43faf28c…0x43fb8ee0`) y cueva propuesta
+
+| Rango | Uso | Fuente |
+|---|---|---|
+| `0x43faf28c…0x43faf300` | **libre** (0x74 B, a cero en el archivo) | — |
+| `0x43faf300…0x43fb7400` | 8 curvas × 0x1020 | `pp_curves_patch` (`SLOT0`, `STRIDE`) |
+| `0x43fb7400…0x43fb7500` | color | `pp_color_patch` |
+| `0x43fb7500…0x43fb7982` | snapshot, caché, ASM y `pp_tone.bin` (0x3ca B) | `pp_tone_patch` (G33) |
+| `0x43fb7982…0x43fb7e00` | libre dentro de la cueva declarada de G33 (que exige todo `0x43fb7500…0x43fb8ee0` a cero) | — |
+| `0x43fb7e00…0x43fb7ec0` | Silent | `scripts/g22/patch_silent_r5.py` (R86) |
+| `0x43fb7ec0…0x43fb8ee0` | copia `W` de la curva | G33 |
+| — | G32-C (`pp_slog3_core_patch.py`) y G32-D | solo en sitio, sin cueva |
+
+Propuesta: `pp_bwhl_patch.CAVE = 0x43faf290` (0x24 B, alineada, sin solape), aplicada **después** de `pp_curves_patch`, que exige todo el hueco a cero. G32-D no necesita cueva. Riesgo común a todo el hueco: G28 observó que se borra en ejecución (NO_VERIFICADO quién lo hace).
+
+## 9. Límites
 
 - Nada medido en cámara. Tampoco está verificado que las funciones APC se ejecuten con PP (G34 §3).
 - La identidad `P` = `this` de `0x43afa0ce` se deduce del patrón común de campos y de la coincidencia semántica, no de una cadena de llamadas completa (NO_VERIFICADO del todo).
