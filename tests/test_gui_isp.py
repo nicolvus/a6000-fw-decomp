@@ -149,3 +149,28 @@ def test_dro_y_detalle_en_cpu() -> None:
     assert np.allclose(M.aplica(plano, {"det_level": 7}, T), M.aplica(plano, {}, T))
     borde = np.concatenate([np.full((4, 4, 3), 0.2), np.full((4, 4, 3), 0.7)], 1)
     assert M.aplica(borde, {"det_level": 7}, T)[1, 3].mean() < M.aplica(borde, {}, T)[1, 3].mean()   # halo a ambos lados del borde
+
+
+def test_conjunto_de_deltas_como_av_cam_0x437a44d0() -> None:
+    d = bytearray(0x600)
+    d[0x100 + 7 * 24:0x100 + 8 * 24] = bytes(range(1, 25))       # conjunto 7 (Standard, +0x7b)
+    d[0x480:0x480 + 24] = b"\xff" * 24                           # conjunto 0xe = −1 (int8)
+    base = list(range(10, 18))
+    v = M.conjunto_deltas(bytes(d), 7, base)
+    assert v.shape == (3, 8) and v.dtype == np.int16
+    assert v[0].tolist() == [b + s for b, s in zip(base, range(1, 9))]
+    assert v[1].tolist() == (v[0] + np.arange(9, 17)).tolist() and v[2].tolist() == (v[0] + np.arange(17, 25)).tolist()
+    assert M.conjunto_deltas(bytes(d), 0xE, [0] * 8)[2].tolist() == [-2] * 8
+    with pytest.raises(ValueError):
+        M.conjunto_deltas(bytes(d), 0x19, base)
+
+
+def test_tono4_neutro_en_grises_y_activo_solo_en_foto() -> None:
+    gris = np.full((2, 2, 3), 0.4)
+    assert np.allclose(M.tono4(gris), gris, atol=1e-6)
+    rojo = np.array([[[0.8, 0.2, 0.2]]])
+    assert not np.allclose(M.tono4(rojo), rojo, atol=1e-3)
+    lin = np.full((2, 2, 3), 0.05)
+    lin[0, 0] = (0.2, 0.02, 0.02)
+    assert not np.allclose(M.aplica(lin, {"gamma": 5}, T, True, 1.0, True), M.aplica(lin, {"gamma": 5}, T, True, 1.0, True, tono=False))
+    assert np.allclose(M.aplica(lin, {}, T, False, 1.0, True), M.aplica(lin, {}, T, False, 1.0, True, tono=False))   # vídeo/shader: sin cambio

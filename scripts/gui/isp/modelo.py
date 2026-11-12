@@ -93,6 +93,35 @@ def dro_auto_k(lin: np.ndarray) -> float:
     return float(np.clip((0.073 / p50) ** 0.228, 0.66, 1.46))
 
 
+def conjunto_deltas(d30001: bytes, idx: int, base: list[int]) -> np.ndarray:
+    """Puerto de `av-cam.bin 0x437a44d0` (REAL, g23 §4.2): conjunto `idx` de 24 int8 de Backup 0x30001 (0–0xd en +0x100, 0xe–0x17 en +0x480, 0x18 en +0x390)
+    → 3 variantes de 8 int16: v0 = base + s[0:8], v1 = v0 + s[8:16], v2 = v0 + s[16:24]. `base` = 4 int8 + 4 u8 de estado en tiempo de ejecución (NO_VERIFICADO)."""
+    if not 0 <= idx < 0x19:
+        raise ValueError(f"conjunto {idx:#x} fuera de rango")
+    o = 0x100 + 0x18 * idx if idx < 0xE else 0x390 if idx == 0x18 else 0x480 + 0x18 * (idx - 0xE)
+    s = np.frombuffer(d30001[o:o + 24], np.int8).astype(np.int16)
+    v0 = np.asarray(base, np.int16) + s[:8]
+    return np.stack([v0, v0 + s[8:16], v0 + s[16:24]])
+
+
+# Ajuste de croma por 4 ejes de tono (giro y ganancia, interpolación lineal entre ejes sobre atan2(Cr, Cb)): la estructura 4 + 4 sale del firmware
+# (0x437a44d0/0x43aee18c: 4 valores con signo ×4 y 4 sin signo ×8); shortcut: valores MEDIDOS (ajuste en 16 ARW Standard, validado en otros 16), no los de Sony; recalibrar con carta de color.
+TONO4_EJES, TONO4_GIRO, TONO4_GAN = (-122.408, -25.894, 49.68, 123.572), (8.478, -4.377, 35.0, -6.88), (1.172, 1.313, 0.6, 1.307)
+
+
+def tono4(y: np.ndarray) -> np.ndarray:
+    """Aplica TONO4_* a una imagen codificada [0,1] (H,W,3); los grises no cambian."""
+    ej, rot, g = np.radians(TONO4_EJES), np.radians(TONO4_GIRO), np.array(TONO4_GAN)
+    luma = y @ W709
+    cb, cr = (y[..., 2] - luma) / 1.8556, (y[..., 0] - luma) / 1.5748
+    h = np.arctan2(cr, cb)
+    xp = np.concatenate([ej - 2 * np.pi, ej, ej + 2 * np.pi])
+    r, gg = np.interp(h, xp, np.tile(rot, 3)), np.interp(h, xp, np.tile(g, 3))
+    cb, cr = (cb * np.cos(r) - cr * np.sin(r)) * gg, (cb * np.sin(r) + cr * np.cos(r)) * gg
+    r_, b_ = luma + 1.5748 * cr, luma + 1.8556 * cb
+    return np.clip(np.stack([r_, (luma - 0.2126 * r_ - 0.0722 * b_) / 0.7152, b_], -1), 0, 1)
+
+
 def srgb_a_lineal(v: np.ndarray) -> np.ndarray:   # APROX: el RAW del sensor no está disponible; la fuente se trata como sRGB
     return np.where(v <= 0.04045, v / 12.92, ((v + 0.055) / 1.055) ** 2.4)
 
@@ -114,7 +143,7 @@ def ganancia_filas(bandas: list | None, h: int) -> np.ndarray:
 
 
 def aplica(rgb: np.ndarray, p: dict | None = None, t: Tablas | None = None, foto: bool = False, exposicion: float = 2.0,
-           entrada_lineal: bool = False, bandas: list | None = None) -> np.ndarray:
+           entrada_lineal: bool = False, bandas: list | None = None, tono: bool = True) -> np.ndarray:
     """rgb: float [0,1] (H,W,3) sRGB (o ya lineal con `entrada_lineal`, p. ej. un RAW con negro/WB aplicados) → salida [0,1] (códigos de la curva, recortados a 1).
     `bandas` = ganancia de exposición por bandas verticales (modo de obturador MEDIDO, ver g23 §6)."""
     t = t or Tablas()
@@ -143,8 +172,8 @@ def aplica(rgb: np.ndarray, p: dict | None = None, t: Tablas | None = None, foto
     r_ = luma + 1.5748 * cr
     b_ = luma + 1.8556 * cb
     g_ = (luma - 0.2126 * r_ - 0.0722 * b_) / 0.7152
-    out = np.stack([r_, g_, b_], -1)
-    return np.clip(out, 0, 1)
+    out = np.clip(np.stack([r_, g_, b_], -1), 0, 1)
+    return tono4(out) if tono and foto else out                                 # foto Standard: ajuste de 4 ejes (MEDIDO); vídeo/shader sin él
 
 
 def valor_a_bytes(v: int) -> bytes:
