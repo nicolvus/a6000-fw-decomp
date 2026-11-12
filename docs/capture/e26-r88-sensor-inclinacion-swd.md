@@ -60,12 +60,30 @@ Etiquetas: **MEDIDO** · **VERIFICADO** (bytes/esquema) · **INFERENCIA**. Firmw
   En sesiones anteriores, también en horizontal, ch7 valía 968 (40 s) y 154 (1,1 s): el nivel de ch7 cambió **entre** sesiones, no
   con el giro. `pulsos-65s-rotando.log.gz`, `picos-65s-rotando.txt`, `pulseR.cfg`.
 
+## 3c. Giro controlado tras reiniciar la cámara (MEDIDO; anula la lectura de §3b)
+
+La cámara estaba colgada durante §3b (el usuario la reinició; causa probable: las paradas del núcleo 3 por los puntos de
+observación). Las cifras de §3b se tomaron con el firmware colgado y **no valen para la orientación**. Repetición, 65 s,
+666 pulsos, 0 errores SWD, misma secuencia pedida al usuario:
+
+| Tramo | ch6 (`VH_SENSE_1`) | ch7 (`VH_SENSE_2`) | Estado |
+|---|---|---|---|
+| 0–10 s | 104 → 115 | 136 → 152 | bajo / bajo |
+| 11–19 s | 145–167 | 967 | bajo / **alto** |
+| 20–31 s | 964 | 967 | **alto / alto** |
+| 32–64 s | 964 | 200–227 | **alto** / bajo |
+
+* **Salida binaria por canal:** «alto» ≈ 964–967 (casi fondo de escala) y «bajo» ≈ 100–230. Los cambios son saltos de un pulso a
+  otro (100 ms); dentro de un estado solo hay deriva lenta (≤ 30 cuentas), sin relación con el ángulo.
+* **Cuatro combinaciones** de dos bits = cuatro orientaciones a 90°: el diseño típico de un detector óptico de 4 direcciones.
+* La asignación estado → orientación no se pudo fijar: la secuencia observada no repite el estado inicial al volver a horizontal
+  (posible histéresis del elemento móvil o tiempos distintos a los pedidos). `picos-65s-rotando-tras-reinicio.txt`.
+
 ## 4. Conclusión
 
 * **Como nivel:** con lo medido **no es viable demostrarlo**. El sensor es óptico, de dos canales, pensado para estados discretos
   (horizontal / vertical a cada lado); como mucho daría roll grueso y nunca pitch. La A6300 usa (INFERENCIA) un sensor distinto para su nivel.
-* **Medida directa (§3b):** girando la cámara por las seis posiciones, ch6/ch7 no cambian más de 6 cuentas. **Como nivel, descartado**
-  con lo medido: no hay respuesta continua al ángulo.
-* **Abierto:** tampoco se vio el salto discreto que cabría esperar para horizontal/vertical. O la lectura de pico no captura la
-  información (p. ej. la importante es otra muestra del pulso), o el sensor de esta unidad está atascado. Comprobación barata: ver si las
-  fotos verticales salen marcadas como verticales (rotación en reproducción/EXIF). Pendiente **F9**.
+* **Medida directa (§3c):** cada canal es binario (≈ 964 o ≈ 100–230), con saltos de un pulso a otro. Dos bits dan cuatro orientaciones
+  a 90°; no hay salida proporcional al ángulo. **Como nivel, descartado** (F9 cerrado). Para un nivel haría falta un acelerómetro
+  añadido por hardware.
+* Límite: no se fijó qué combinación corresponde a cada orientación.
