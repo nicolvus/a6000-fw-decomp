@@ -120,6 +120,18 @@ def mounted_diff(ext_new: bytes, ext_old: bytes) -> list[str]:
     return sorted(rel(ln) for ln in out.splitlines())
 
 
+def bionz_g22_checks(bz_base: bytes, bz_new: bytes) -> dict:
+    """BIONZ = 3.38 + `patch_tristate` y, desde el 3.73, exactamente + parche PP del núcleo + Silent calibrado (`build_base_pp.bionz_cfw`); nada más."""
+    import build_base_pp
+    from g22 import patch_tristate as P
+    tri = P.apply_bytes(bz_base)[0]
+    cfw = build_base_pp.bionz_cfw(tri)
+    diff = {P.BASE + i for i, (a, b) in enumerate(zip(bz_base, bz_new)) if a != b}
+    extra = {P.BASE + i for i, (a, b) in enumerate(zip(tri, cfw)) if a != b} if bz_new == cfw else set()
+    return {"g22.bionz_es_3.38_mas_patch_tristate": bz_new in (tri, cfw) and len(bz_new) == len(bz_base),
+            "g22.bionz_solo_cambia_el_parche": bool(diff) and diff <= P.allowed_addresses() | extra}
+
+
 def run(dat: Path, pkg: Path, base_dat: Path, darwin_v3: bool, sin_wbi: bool = False, bionz_g22: bool = False) -> dict:
     keys = A.load_keys()
     ver, cont, new = open_dat(dat, keys)
@@ -168,16 +180,13 @@ def run(dat: Path, pkg: Path, base_dat: Path, darwin_v3: bool, sin_wbi: bool = F
                   "darwin_solo_rango_r82": all(build.PD.BASE + i in build.efcs_tabla_allowed_addresses()
                                                for i, (a, b) in enumerate(zip(base[build.DARWIN_CORE], new[build.DARWIN_CORE])) if a != b)}
     g22 = {}
-    if bionz_g22:  # G22: nflasha3 = la de Sony con el BIONZ del 3.38 + patch_tristate (solo esos bytes), bloque 0 de Sony
-        from g22 import patch_tristate as P
+    if bionz_g22:  # G22: nflasha3 = la de Sony con el BIONZ del 3.38 + parches documentados (bionz_g22_checks), bloque 0 de Sony
         fat_new = build.fatimg.Fat16.parse(tpzl.TpzlImage.parse(new[build.NFLASHA3]).decompressed())
         fat_base = build.fatimg.Fat16.parse(tpzl.TpzlImage.parse(base[build.NFLASHA3]).decompressed())
         bz_new, bz_base = fat_new.read(build.AVCAM_NAME), fat_base.read(build.AVCAM_NAME)
-        diff = {P.BASE + i for i, (a, b) in enumerate(zip(bz_base, bz_new)) if a != b}
         stock3 = tpzl.TpzlImage.parse(build.load_originals().members[build.NFLASHA3])
         new3 = tpzl.TpzlImage.parse(new[build.NFLASHA3])
-        g22 = {"g22.bionz_es_3.38_mas_patch_tristate": bz_new == P.apply_bytes(bz_base)[0] and len(bz_new) == len(bz_base),
-               "g22.bionz_solo_cambia_el_parche": bool(diff) and diff <= P.allowed_addresses(),
+        g22 = {**bionz_g22_checks(bz_base, bz_new),
                "g22.nflasha3_bloque_0_igual_que_sony": new3.block(0) == stock3.block(0),
                "g22.nflasha3_mismo_numero_de_bloques": len(new3.entries) == len(stock3.entries)}
     checks = {
