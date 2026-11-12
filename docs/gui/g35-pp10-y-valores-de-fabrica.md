@@ -32,3 +32,19 @@ Valores de fábrica (`pp_factory.py`; dominio de la app): PP1 Movie/Movie · PP2
 3. No se sabe si los elementos de NVRAM que eran los «defaults» del PP1 son **escribibles** (podrían ser de solo lectura): si no lo fueran, PP10 se aplicaría pero no se conservaría tras apagar.
 4. Otras comprobaciones de perfil ≤ 9 fuera de `libObj.so` (vistas, `viewUnified2.so`, NVRAM del backup) no se han buscado.
 5. PP10 y el «Off» del selector comparten ahora el rango 0–10 de la API del modelo; «Off» sigue siendo el bloque 9.
+
+## 5. Otros límites ≤ 9 en el 3.80 (auditoría estática, 12-11-2026)
+
+Barrido capstone de `pkg-380w`: `libObj.so`, `viewUnified2.so` y `CautionConfig.so` (las únicas bibliotecas que cambia el CFW). Busca `cmp`/`cmn #9` o `#0xa` a ±40 instrucciones de las claves `0x274…0x276`. En el `/usr` de fábrica (fw3.21, 175 bibliotecas), solo `libObj.so` contiene «PictureProfile».
+
+| Sitio | Qué es | Veredicto |
+|---|---|---|
+| `libObj` `0x4db4b4` y `0x4db4dc` (`cmp.w r8,#9`, bytes `b8f1090f`) | **`pvt_SetParamParamPictureProfile`** (`0x4db454`; cadenas `targetPpNo`, `Bkup_Read Err1/2`). Lee el perfil de la clave `0x274`; si es > 9, usa el de la NVRAM (`[this+0xf8c]`, que el CFW no actualiza, G30) y, si ese también es > 9, da error. Después lee los 31 elementos `this+0x5dc + pp·0x7c` y los convierte con `ChangeParamApp2Obj` | **Rompe PP10**: con PP10 elegido se envían los parámetros de otro perfil. G35 no lo había parcheado |
+| `libObj` `0x9e03c0…0x9e991a` (19 sitios), `0x952ea4`, `0x966c84` | comprobaciones de **rango de id de clave** (`id − 0x21f ≤ 9`) | no tienen que ver con el perfil |
+| `libObj` `0x8eb674`; `0x13d858` y `0x596886` (`#0xa`) | `add r1, sp, #0x274` (desplazamiento de pila) / otras claves | no tienen que ver con el perfil |
+| `viewUnified2` `0x143fb8`, `0x14674a` (`#0xa`) | árboles `switch` id → clave | no tienen que ver con el perfil |
+
+**Parche propuesto (no construido)**: añadir a `patch_libobj_ppeco.BOUNDS` `(0x4DB4B4, "b8f1090f", "b8f10a0f")` y `(0x4DB4DC, "b8f1090f", "b8f10a0f")`, con la misma codificación que `0x4c0ae0`/`0x4c0b08`. Con 10, `0x5dc + 10·0x7c = 0xab4` lee los elementos de PP10. También hay que ampliar `tests/test_g30_libobj_ppeco.py` con los dos sitios. Va en la integración conjunta (G33-B §10), junto con el resto de `patch_libobj_ppeco`.
+
+NO_VERIFICADO: si `pvt_SetParamParamPictureProfile` es la ruta que envía los parámetros al núcleo al elegir el perfil o una ruta paralela a `pvt_ActionSetPictureProfile` (`0x4c0a78`, ya parcheada). El barrido es heurístico (solo cerca de las claves): un límite que reciba el perfil por argumento, lejos de `0x274`, no aparecería.
+
