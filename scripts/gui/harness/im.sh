@@ -25,8 +25,11 @@ P=$(pidof im.elf | cut -d' ' -f1)
 if [ -n "$TOPTHR" ]; then  # TOPTHR=1: hilos que más CPU gastan en 5 s (ticks de utime+stime), para buscar sondeos que roban CPU emulada
   for t in /proc/[0-9]*/task/*; do echo "$t $(cut -d' ' -f14,15 $t/stat 2>/dev/null) $(cat $t/comm 2>/dev/null)"; done > /tmp/top1; sleep 5
   for t in /proc/[0-9]*/task/*; do echo "$t $(cut -d' ' -f14,15 $t/stat 2>/dev/null) $(cat $t/comm 2>/dev/null)"; done > /tmp/top2
-  awk 'NR==FNR{a[$1]=$2+$3;next}{d=$2+$3-a[$1]; if(d>2) print d, $1, $4}' /tmp/top1 /tmp/top2 | sort -rn | head -20 | sed 's/^/TOPTHR /'
+  awk 'NR==FNR{a[$1]=$2+$3;next}{d=$2+$3-a[$1]; if(d>2) print d, $1, $4}' /tmp/top1 /tmp/top2 | sort -rn | head -20 > /tmp/top3; sed 's/^/TOPTHR /' /tmp/top3
+  # TOPTHR=2: además, 40 muestras de /proc/TID/syscall (nº de llamada, 2 primeros argumentos) de los 8 hilos más gastones → TOPSYS
+  if [ "$TOPTHR" = 2 ]; then for t in $(head -8 /tmp/top3 | cut -d' ' -f2); do for i in $(seq 40); do echo "$(cat $t/comm) $(cut -d' ' -f1-3 $t/syscall 2>/dev/null)"; done; done | sort | uniq -c | sort -rn | head -40 | sed 's/^/TOPSYS /'; fi
 fi
+[ -n "$SYSTAT" ] && grep -a "SYSTAT" /tmp/im_s.log | tail -${SYSTATN:-60} | sed "s/^\[shim\] //"  # SYSTAT=1 (shim): ioctl emulados que giran, por hilo
 echo "alive=$P threads=$(ls /proc/$P/task 2>/dev/null | wc -l) lineas=$(grep -ac '' /tmp/im_s.log) modulos=$(grep -ac 'dlopen(.*) -> 0x' /tmp/im_s.log)"
 grep -a "EXIT=\|ABORT\|Segmentation\|Aborted\|dlopen(.*) -> 0x0\|respuesta a" /tmp/im_s.log | tail -8 | cut -c1-160
 echo "--- ultimas lineas (filtradas)"

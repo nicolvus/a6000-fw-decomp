@@ -15,6 +15,7 @@
 #include <pthread.h>
 #include <time.h>
 #include <unistd.h>
+#include <poll.h>
 
 #define MAXFD 1024
 enum { D_NONE = 0, D_UIPC, D_GENERIC };
@@ -147,6 +148,14 @@ static unsigned long hexv(const char *s, const char **end);
 /* el arg de ioctl a veces es un entero (p. ej. un qid de libInfraKikiLogGenerator): solo se lee si la página está mapeada */
 static int readable(const void *p) { return (unsigned long)p > 0x10000 && msync((void *)((unsigned long)p & ~4095UL), 4, MS_ASYNC) == 0; }
 static int direct_service(unsigned qid, unsigned *m) {
+    /* Reloj del núcleo (libObj+0x804610, I-InputRepeat, CIFInfraIndctr): 0x910042 devuelve la hora en µs (64 bit, m[6..7]) y 0x910041 duerme hasta el plazo absoluto m[6..7]; sin esto la hora era 0, el plazo
+     * (+20 ms) siempre vencido y el hilo giraba al 100 % de CPU. shortcut: unidades (µs) y época (arranque) inferidas del +0x4e20 que suma el llamador, no medidas en la cámara. */
+    if (qid == 0x910042 && m[0] == 0x20 || qid == 0x910041 && m[0] == 0x28) {
+        struct timespec t; clock_gettime(CLOCK_MONOTONIC, &t);
+        if (qid == 0x910042) { unsigned long long us = t.tv_sec * 1000000ull + t.tv_nsec / 1000; m[6] = (unsigned)us; m[7] = (unsigned)(us >> 32); }
+        else { unsigned long long us = m[6] | (unsigned long long)m[7] << 32; t.tv_sec = us / 1000000; t.tv_nsec = us % 1000000 * 1000; clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &t, 0); }
+        return 0;
+    }
     if (m[0] == 0x28 && ((unsigned short *)m)[8] == 2 && !getenv("NODATE")) {
         unsigned short *h = (unsigned short *)m; const char *e = getenv("DATETYPE");
         h[9] = 0; h[14] = e ? (unsigned short)hexv(e, 0) : 1;
@@ -331,9 +340,60 @@ static unsigned ldec_inflate(const unsigned char *s, unsigned n, unsigned char *
     }
     return o;
 }
+static void efp(const char *f, ...);
+/* GPUEMU: timbres de la GPU y su finalización se señalan por futex (async-signal-safe: el timbre llega desde el manejador SIGSEGV de REGTRAP) en vez de sondear con usleep */
+static volatile unsigned gpu_kicks, gpu_irq_seq, gpu_last_us;
+static void fut_wake(volatile unsigned *a) { syscall(SYS_futex, a, 129 /* WAKE_PRIVATE */, 0x7fffffff, 0, 0, 0); }
+static void fut_wait(volatile unsigned *a, unsigned v, unsigned ms) { struct timespec t = { ms / 1000, ms % 1000 * 1000000L }; syscall(SYS_futex, a, 128 /* WAIT_PRIVATE */, v, ms ? &t : 0, 0, 0); }
+/* SYSTAT=1: contadores de ioctl emulados por (hilo, dispositivo, orden, 1.ª palabra de uipc); cada 5 s imprime los >2000 llamadas/intervalo con el nombre del hilo → busca sondeos que giran sin bloquear */
+static struct { long tid; char dev[24]; unsigned long req, w0; volatile unsigned n, last; } sst[512];
+static void systat_key(const char *dv, unsigned long req, unsigned long w0) {
+    long tid = syscall(224);
+    for (int i = 0; i < 512; i++) {
+        if (sst[i].tid == tid && sst[i].req == req && sst[i].w0 == w0 && !strcmp(sst[i].dev, dv)) { sst[i].n++; return; }
+        if (!sst[i].tid && __sync_bool_compare_and_swap(&sst[i].tid, 0, tid)) { strncpy(sst[i].dev, dv, 23); sst[i].req = req; sst[i].w0 = w0; sst[i].n = 1; return; }
+    }
+}
+static void systat_add(int fd, unsigned long req, void *arg) {
+    int u = kind[fd] == D_UIPC; systat_key(u ? "uipc" : devname[fd], u ? req & 0x7fffffff : req, u && readable(arg) ? *(unsigned *)arg : 0);
+}
+/* libObj (grm_*, libObj+0x6170fc) calcula el plazo con clock_gettime(CLOCK_MONOTONIC) pero la condición es CLOCK_REALTIME (glibc 2.11 sin condattr_setclock efectivo): el plazo (con «infinito» = 0x7fffffff ms) cae en 1970,
+ * pthread_cond_timedwait da ETIMEDOUT al instante y grm_gpe/grm_result giran al 100 %. Un plazo absoluto cercano al reloj monotónico y muy anterior al real se traslada al reloj real. */
+int pthread_cond_timedwait(pthread_cond_t *c, pthread_mutex_t *m, const struct timespec *t) {
+    static int (*real)(pthread_cond_t *, pthread_mutex_t *, const struct timespec *); if (!real) real = dlsym(RTLD_NEXT, "pthread_cond_timedwait");
+    struct timespec rt = {0}, mt = {0}, fix;
+    if (t && clock_gettime(CLOCK_REALTIME, &rt) == 0 && clock_gettime(CLOCK_MONOTONIC, &mt) == 0 && rt.tv_sec > mt.tv_sec + 86400 && t->tv_sec >= mt.tv_sec - 86400 && t->tv_sec < mt.tv_sec + 2200000) {
+        long long rel = (long long)(t->tv_sec - mt.tv_sec) * 1000000000LL + (t->tv_nsec - mt.tv_nsec);
+        /* shortcut: tope de 20 ms; con la espera larga (10 s) un aviso perdido retrasaba la tecla 12 s (grm_* esperaba sin sondear). Sondeo barato; quitar si se halla el emisor que no avisa */
+        if (rel > 20000000LL) rel = 20000000LL; if (rel < 0) rel = 0;
+        rel += rt.tv_nsec; fix.tv_sec = rt.tv_sec + rel / 1000000000LL; fix.tv_nsec = rel % 1000000000LL;
+        t = &fix;
+    }
+    return real(c, m, t);
+}
+static void *systat_thread(void *a) {
+    (void)a; for (;;) { sleep(5);
+        for (int i = 0; i < 512; i++) if (sst[i].tid && sst[i].n - sst[i].last > 2000) { char nm[32] = "?", p[64]; snprintf(p, sizeof p, "/proc/self/task/%ld/comm", sst[i].tid); FILE *f = fopen(p, "r"); if (f) { if (fgets(nm, sizeof nm, f)) nm[strcspn(nm, "\n")] = 0; fclose(f); }
+            Dl_info di; int lib = sst[i].dev[0] != '/' && strcmp(sst[i].dev, "uipc") && dladdr((void *)sst[i].req, &di) && di.dli_fname;
+            efp("[shim] SYSTAT %ld %s %s req=%#lx w0=%#lx %u/5s %s\n", sst[i].tid, nm, sst[i].dev, lib ? sst[i].req - (unsigned long)di.dli_fbase : sst[i].req, sst[i].w0, sst[i].n - sst[i].last, lib ? di.dli_fname : ""); }
+        for (int i = 0; i < 512; i++) sst[i].last = sst[i].n; }
+    return 0;
+}
+/* read/poll/select sobre dispositivos «genéricos» (= /dev/null): sin esto devuelven al instante (EOF/listo) y el hilo del driver (UsbControl, I-InputRepeat…) gira al 100 % */
+ssize_t read(int fd, void *b, size_t n) {
+    static ssize_t (*real)(int, void *, size_t); if (!real) real = dlsym(RTLD_NEXT, "read");
+    if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC) { if (getenv("SYSTAT")) systat_add(fd, 0x100000, 0); if (!getenv("NOBLOCKDEV")) for (;;) sleep(3600); }
+    return real(fd, b, n);
+}
+int poll(struct pollfd *f, nfds_t n, int tmo) {
+    static int (*real)(struct pollfd *, nfds_t, int); if (!real) real = dlsym(RTLD_NEXT, "poll");
+    for (nfds_t i = 0; i < n; i++) if (f[i].fd >= 0 && f[i].fd < MAXFD && kind[f[i].fd] == D_GENERIC) { if (getenv("SYSTAT")) systat_add(f[i].fd, 0x100001, 0); break; }
+    return real(f, n, tmo);
+}
 int ioctl(int fd, unsigned long req, ...) {
     static int (*r)(int, unsigned long, ...);
     va_list a; va_start(a, req); void *arg = va_arg(a, void *); va_end(a);
+    if (fd >= 0 && fd < MAXFD && kind[fd] && getenv("SYSTAT")) { static int th; if (!th++) { pthread_t t; pthread_create(&t, 0, systat_thread, 0); } systat_add(fd, req, arg); }
     if (fd >= 0 && fd < MAXFD && kind[fd] == D_UIPC) {
         unsigned idx = req & 0x7fffffff;  /* índices según u_osal_* de libosal_uipc.so: 0 stat_sem 1 wai_sem 2 sig_sem 3 stat_msgq 4 snd_msg
             5 snd_sync_msg 6 snd_sync_direct 7 rcv_msg 8 reg_msg_queue_cb 9 unreg 0xa valloc 0xb free 0xc dynamic_id 0xd wait_cb 0xe/0xf modos de cola 0x10 connect */
@@ -459,7 +519,9 @@ int ioctl(int fd, unsigned long req, ...) {
         if (getenv("GPUTRACE") && gpu_live && !strcmp(devname[fd], "/dev/dmpgles2")) { static int gn; if (gn++ < 600) LOG("GPU ioctl %#lx arg=%p val=%#x", req, arg, readable(arg) ? *(unsigned *)arg : 0u); }  /* GPUTRACE=1: cada ioctl de la GPU tras cargar las vistas (primeros 600), sin deduplicar */
         if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0xc004820d) {  /* espera de interrupción de la GPU (libObj+0x6c5320 repite hasta salida != 0) */
             const char *e = getenv("GPUIRQ_MS"); unsigned ms = e ? (unsigned)num(e) : 20;  /* GPUIRQ_MS=n: IRQ simulada cada n ms (20 por defecto, necesaria para que termine la init GL); 0 = GPU ociosa, duerme */
-            if (ms && arg) { usleep(ms * 1000u); *(unsigned *)arg = 1; return 0; }
+            if (ms && arg) {  /* la IRQ llega al acabar un trabajo (gpu_thread despierta el futex); sin trabajo, cada ms (init GL) y, con la GPU ociosa >2 s, cada 200 ms */
+                unsigned seq = gpu_irq_seq, idle = gpu_kicks && now_us() - gpu_last_us > 2000000u;
+                fut_wait(&gpu_irq_seq, seq, idle ? 200 : ms); *(unsigned *)arg = 1; return 0; }
             for (;;) sleep(3600);
         }
         if (!strcmp(devname[fd], "/dev/dmpgles2") && (req == 0xc0048211 || req == 0xc0048212) && arg) {  /* cerrojos del núcleo de la GPU (libObj 0x6c53e0 toma: repite
@@ -653,7 +715,7 @@ __attribute__((constructor)) static void shim_init(void) { presignal(); keyq_ini
 /* Experimento (SKIPFN=717830,...): sustituye esas funciones Thumb de libObj por «movs r0,#0; bx lr» (devuelven éxito sin hacer nada). */
 static unsigned long hexv(const char *s, const char **end) { unsigned long v = 0; for (;; s++) { int c = *s; if (c >= '0' && c <= '9') c -= '0'; else if (c >= 'a' && c <= 'f') c -= 'a' - 10; else break; v = v * 16 + c; } if (end) *end = s; return v; }
 static unsigned long gpu_pc;  /* libObj+0x6c4c46: «str r1,[r3,r0]» de rm_reg_write (off=r0, valor=r1, base=r3); se sustituye por UDF para ver cada escritura */
-static volatile unsigned gpu_kicks, kick_list[64];  /* GPUEMU: timbres (0x1804) y lista de cada uno */
+static volatile unsigned kick_list[64];  /* GPUEMU: timbres (0x1804) y lista de cada uno */
 /* Experimento (TRACEFN=716800,6cd1e0,...): traza de una sola vez (UDF + restauración) de la entrada de esas funciones de libObj: r0-r3 y lr. */
 static struct { unsigned long pc, step; unsigned short orig, orig2; unsigned hits; } trc[32]; static int ntrc; static unsigned long trc_base; static volatile unsigned long app_sys;  /* app_sys: r0 de AppSystem::dispatch (libObj+0x7eed0c) en su primera traza */
 static void gpu_exec(unsigned off, unsigned val);
@@ -661,7 +723,7 @@ static void on_trace(int sig, siginfo_t *si, void *u) {
     mcontext_t *c = &((ucontext_t *)u)->uc_mcontext; unsigned long pc = c->arm_pc & ~1UL; int i;
     if (gpu_pc && pc == gpu_pc) {  /* rm_reg_write: se hace el almacenamiento y se salta la instrucción; 0x1804 = timbre de la GPU (GPUEMU) */
         *(volatile unsigned *)(c->arm_r3 + c->arm_r0) = c->arm_r1;
-        if (c->arm_r0 == 0x1804) { kick_list[gpu_kicks % 64] = c->arm_r1; gpu_kicks++; }
+        if (c->arm_r0 == 0x1804) { kick_list[gpu_kicks % 64] = c->arm_r1; gpu_kicks++; fut_wake(&gpu_kicks); }
         gpu_exec(c->arm_r0, c->arm_r1);
         { static int nw; if (getenv("GPUTRACE") && gpu_live && nw++ < 3000) efp("[shim] REGW off=%#lx val=%#lx kicks=%u\n", c->arm_r0, c->arm_r1, gpu_kicks); }
         c->arm_pc += 2; return;
@@ -886,7 +948,7 @@ static void rt_segv(int sig, siginfo_t *si, void *ctx) {
         for (int q = 0; q < nseen; q++) if (seenk[q] == key) dup = 1;
         if (!dup && nseen < 512) { seenk[nseen++] = key; n = 0; } else n = 2000;
         if (n++ < 1500) efp("[shim] REGTRAP tid %ld %s w%d+%#lx pc=libObj+%#x lr=libObj+%#x\n", (long)syscall(224), (uc->uc_mcontext.error_code & (1 << 11)) ? "ESC" : "LEC", k, (unsigned long)(a - rtw[k].p), libobj_off((void *)uc->uc_mcontext.arm_pc), libobj_off((void *)uc->uc_mcontext.arm_lr));
-        if (k == 0 && a >= rtw[0].p + 0x1000 && a < rtw[0].p + 0x2000) { kick_list[gpu_kicks % 64] = gw0 ? gw0[0x1804 / 4] : 0; gpu_kicks++; }  /* timbre de la GPU (GPUEMU) visto desde REGTRAP */
+        if (k == 0 && a >= rtw[0].p + 0x1000 && a < rtw[0].p + 0x2000) { kick_list[gpu_kicks % 64] = gw0 ? gw0[0x1804 / 4] : 0; gpu_kicks++; fut_wake(&gpu_kicks); }  /* timbre de la GPU (GPUEMU) visto desde REGTRAP */
         mprotect(rtw[k].p, rtw[k].len, PROT_READ | PROT_WRITE); return;
     }
     sigaction(SIGSEGV, &rt_old, 0);  /* no es nuestra: el manejador previo (pila) al reintentar */
@@ -913,8 +975,12 @@ static unsigned char *phys2p(unsigned phys) {  /* fase → dirección en nuestra
     return 0;
 }
 static unsigned char *phys2pn(unsigned a, unsigned n) { unsigned char *p = phys2p(a), *q = n ? phys2p(a + n - 1) : p; return p && q == p + n - 1 ? p : 0; }  /* área contigua de n B */
+static long long fdiv_ll(long long a, long long b) {  /* ⌊a/b⌋ con b > 0 sin libgcc (no hay __aeabi_ldivmod): estimación en double y ajuste exacto */
+    long long q = (long long)((double)a / (double)b); while (q * b > a) q--; while ((q + 1) * b <= a) q++; return q;
+}
+static const unsigned char tile_mx[8] = {0, 1, 4, 5, 16, 17, 20, 21}, tile_my[8] = {0, 2, 8, 10, 32, 34, 40, 42};  /* bits de x en 0,2,4 y de y en 1,3,5 del orden de Morton */
 static unsigned tile_off(unsigned x, unsigned y, unsigned w) {  /* mosaico 8×8 en orden de Morton (PICA), en píxeles */
-    return ((y >> 3) * (w >> 3) + (x >> 3)) * 64 + ((x & 1) | (y & 1) << 1 | (x & 2) << 1 | (y & 2) << 2 | (x & 4) << 2 | (y & 4) << 3);
+    return ((y >> 3) * (w >> 3) + (x >> 3)) * 64 + tile_mx[x & 7] + tile_my[y & 7];
 }
 /* Relleno: 0x10 inicio>>3, 0x14 fin>>3, 0x18 valor, 0x1c control (bit 0 inicio; bits 8-9 ancho 0=16, 1=24, 2=32 bits).
  * Transferencia: 0xc00 origen>>2, 0xc04 destino>>2, 0xc08/0xc0c tamaño de salida/entrada (w | h<<16), 0xc10 indicadores (bit 0 volteo vertical,
@@ -939,7 +1005,8 @@ static void gpu_exec1(unsigned off, unsigned val) {
             unsigned char *s = phys2pn(sa, n / iw * (iw + ig)), *d = phys2pn(da, n / ow * (ow + og));
             if (!s || !d) { efp("[shim] GPUEMU TextureCopy %#x→%#x (%#x B) fuera de área\n", sa, da, n); return; }
             if (getenv("GPUTRACE")) { unsigned nz = 0; for (unsigned i = 0; i < n; i++) nz += s[i] != 0; efp("[shim] GPUEMU TextureCopy %#x→%#x %#x B (origen no nulo %u B)\n", sa, da, n, nz); }
-            for (unsigned k = 0, si = 0, di = 0; k < n; k++) { d[di++] = s[si++]; if ((k + 1) % iw == 0) si += ig; if ((k + 1) % ow == 0) di += og; }
+            if (iw == ow) { for (unsigned k = 0; k < n; k += iw, s += iw + ig, d += ow + og) memcpy(d, s, n - k < iw ? n - k : iw); }  /* mismo ancho de línea: una copia por línea */
+            else for (unsigned k = 0, si = 0, di = 0; k < n; k++) { d[di++] = s[si++]; if ((k + 1) % iw == 0) si += ig; if ((k + 1) % ow == 0) di += og; }
             return;
         }
         static const unsigned char bpp[8] = {4, 3, 2, 2, 2, 2, 2, 2};
@@ -948,12 +1015,15 @@ static void gpu_exec1(unsigned off, unsigned val) {
         if (!s || !d || b != bpp[(fl >> 12) & 7]) { efp("[shim] GPUEMU transferencia %#x→%#x fl=%#x sin modelar\n", sa, da, fl); return; }  /* shortcut: sin conversión de formato ni escalado */
         if (getenv("GPUTRACE")) { unsigned nz = 0; for (unsigned i = 0; i < iw * ih * b; i++) nz += s[i] != 0; efp("[shim] GPUEMU DT %#x→%#x %ux%u→%ux%u fl=%#x origen no nulo=%u B\n", sa, da, iw, ih, ow, oh, fl, nz); }
         unsigned w = iw < ow ? iw : ow, h = ih < oh ? ih : oh;
-        for (unsigned y = 0; y < h; y++) for (unsigned x = 0; x < w; x++) {
-            unsigned ly = fl & 1 ? h - 1 - y : y;
-            unsigned di = fl & 2 ? tile_off(x, y, ow) : ly * ow + x, si = fl & 2 ? ly * iw + x : tile_off(x, y, iw);
-            if (b == 2) ((unsigned short *)d)[di] = ((unsigned short *)s)[si]; else if (b == 4) ((unsigned *)d)[di] = ((unsigned *)s)[si]; else memcpy(d + di * b, s + si * b, b);
+        for (unsigned y = 0; y < h; y++) {  /* una fila: lado en mosaico por (y>>3) y tablas de Morton, lado lineal por filas; 16 y 32 bits por palabras */
+            unsigned ly = fl & 1 ? h - 1 - y : y, tb = (y >> 3) * ((fl & 2 ? ow : iw) >> 3) * 64 + tile_my[y & 7];
+            unsigned short *d2 = (unsigned short *)d, *s2 = (unsigned short *)s; unsigned *d4 = (unsigned *)d, *s4 = (unsigned *)s;
+            for (unsigned x = 0; x < w; x++) {
+                unsigned t = tb + (x >> 3) * 64 + tile_mx[x & 7], di = fl & 2 ? t : ly * ow + x, si = fl & 2 ? ly * iw + x : t;
+                if (b == 2) d2[di] = s2[si]; else if (b == 4) d4[di] = s4[si]; else memcpy(d + di * b, s + si * b, b);
+            }
         }
-        if (da >> 24 == 0xb4 && !(fl & 2)) { live_da = da; live_w = w; live_h = h; live_seq++; }  /* LIVE: copia a la pantalla (0xb4000000/0xb4096000) = fotograma presentado */
+        if (da >> 24 == 0xb4 && !(fl & 2)) { live_da = da; live_w = w; live_h = h; live_seq++; fut_wake(&live_seq); }  /* LIVE: copia a la pantalla (0xb4000000/0xb4096000) = fotograma presentado */
     }
 }
 /* GPURAST=1 (o LIVE): dibuja cada lista en el búfer de color como gpu_raster.py (§5.18z): estado hasta el primer 0x202, tira de N vértices de 0x40 B
@@ -1017,19 +1087,32 @@ static void gpu_draw(unsigned list) {
             base[c] = (int)(v0 * 65536); gx[c] = (int)(dx * 65536); gy[c] = (int)(dy * 65536);
         }
         for (int y = y0; y < y1; y++) {
-            long long e[3] = {e0[0], e0[1], e0[2]}; int a[6]; for (int c = 0; c < 6; c++) a[c] = base[c];
-            unsigned short *row = cb; unsigned ty = cbh - 1 - y;
-            for (int x = x0; x < x1; x++) {
-                if (e[0] + bias[0] >= 0 && e[1] + bias[1] >= 0 && e[2] + bias[2] >= 0) {
-                    int sr = a[2] >> 16, sg = a[3] >> 16, sb = a[4] >> 16, sa = a[5] >> 16;
+            /* tramo [i0, i1] de píxeles dentro de la fila: cada arista es lineal (e + bias − ey·16·i ≥ 0), se resuelve en vez de probar los píxeles del rectángulo envolvente */
+            long long i0 = 0, i1 = x1 - x0 - 1;
+            for (int k = 0; k < 3 && i0 <= i1; k++) {
+                long long st = -ey[k] * 16, c0 = e0[k] + bias[k];
+                if (st == 0) { if (c0 < 0) i1 = -1; }
+                else if (st > 0) { if (c0 < 0) { long long l = fdiv_ll(-c0 + st - 1, st); if (l > i0) i0 = l; } }
+                else if (c0 < 0) i1 = -1; else { long long h = fdiv_ll(c0, -st); if (h < i1) i1 = h; }
+            }
+            if (i0 <= i1) {
+                unsigned a[6]; for (int c = 0; c < 6; c++) a[c] = (unsigned)base[c] + (unsigned)gx[c] * (unsigned)i0;
+                unsigned short *row = cb; unsigned ty = cbh - 1 - y, rbase = (ty >> 3) * (cbw >> 3) * 64 + tile_my[ty & 7];
+                /* textura RGBA4444 con color de vértice constante 255: modular por 255 es la identidad (DIV255(255·17·n) = 17·n) y un texel opaco se copia tal cual (DIV255(17·n·15) = n) */
+                int wh = fmt == 4 && tex && !gx[2] && !gx[3] && !gx[4] && !gx[5] && (int)a[2] >> 16 == 255 && (int)a[3] >> 16 == 255 && (int)a[4] >> 16 == 255 && (int)a[5] >> 16 == 255;
+                for (int x = x0 + (int)i0; x <= x0 + (int)i1; x++) {
+                    unsigned tv = 0;
+                    int sr = (int)a[2] >> 16, sg = (int)a[3] >> 16, sb = (int)a[4] >> 16, sa = (int)a[5] >> 16;
                     if (tex) {
-                        int u = a[0] >> 16, v = a[1] >> 16; if (u < 0) u = 0; if (u >= (int)tw) u = tw - 1; if (v < 0) v = 0; if (v >= (int)th) v = th - 1;
+                        int u = (int)a[0] >> 16, v = (int)a[1] >> 16; if (u < 0) u = 0; if (u >= (int)tw) u = tw - 1; if (v < 0) v = 0; if (v >= (int)th) v = th - 1;
                         unsigned o = tile_off(u, v, tw);
                         if (fmt == 8) sa = DIV255(sa * tex[o]);
-                        else { unsigned tv = ((unsigned short *)tex)[o]; sr = DIV255(sr * (int)(tv >> 12) * 17); sg = DIV255(sg * (int)((tv >> 8) & 15) * 17); sb = DIV255(sb * (int)((tv >> 4) & 15) * 17); sa = DIV255(sa * (int)(tv & 15) * 17); }
+                        else if (wh) { tv = ((unsigned short *)tex)[o]; sr = (tv >> 12) * 17; sg = ((tv >> 8) & 15) * 17; sb = ((tv >> 4) & 15) * 17; sa = (tv & 15) * 17; }
+                        else { tv = ((unsigned short *)tex)[o]; sr = DIV255(sr * (int)(tv >> 12) * 17); sg = DIV255(sg * (int)((tv >> 8) & 15) * 17); sb = DIV255(sb * (int)((tv >> 4) & 15) * 17); sa = DIV255(sa * (int)(tv & 15) * 17); }
                     }
                     if (sa > 0) {
-                        unsigned short *d = row + tile_off(x, ty, cbw); unsigned dv = *d;
+                        unsigned short *d = row + rbase + (x >> 3) * 64 + tile_mx[x & 7]; unsigned dv = *d;
+                        if (wh && sa == 255) { *d = (unsigned short)tv; for (int c = 0; c < 6; c++) a[c] += gx[c]; continue; }
                         if (sa > 255) sa = 255;
                         if (sr > 255) sr = 255; if (sg > 255) sg = 255; if (sb > 255) sb = 255; if (sr < 0) sr = 0; if (sg < 0) sg = 0; if (sb < 0) sb = 0;
                         int orr = sr, og = sg, ob = sb, oa = 255;
@@ -1039,9 +1122,8 @@ static void gpu_draw(unsigned list) {
                         }
                         *d = (unsigned short)(DIV255(orr * 15) << 12 | DIV255(og * 15) << 8 | DIV255(ob * 15) << 4 | DIV255(oa * 15));
                     }
+                    for (int c = tex ? 0 : 2; c < 6; c++) a[c] += gx[c];
                 }
-                for (int k = 0; k < 3; k++) e[k] -= ey[k] * 16;
-                for (int c = 0; c < 6; c++) a[c] += gx[c];
             }
             for (int k = 0; k < 3; k++) e0[k] += ex[k] * 16;
             for (int c = 0; c < 6; c++) base[c] += gy[c];
@@ -1069,8 +1151,7 @@ static void *live_keys(void *a) {
 static void *live_frames(void *a) {
     (void)a; unsigned seen = 0; unsigned char *last = 0, *cur = 0; size_t cap = 0;
     for (;;) {
-        usleep(4000);
-        if (live_seq == seen && !live_force) continue;
+        if (live_seq == seen && !live_force) { fut_wait(&live_seq, seen, 100); if (live_seq == seen && !live_force) continue; }  /* despierta con cada copia a pantalla; 100 ms por si llega «R» (live_force) */
         int force = live_force; live_force = 0; seen = live_seq; unsigned wd = live_w, ht = live_h; size_t len = (size_t)wd * ht * 2;
         unsigned char *p = phys2pn(live_da, len); if (!p || !len) continue;
         if (len > cap) { free(last); free(cur); last = calloc(1, len + 24); cur = malloc(len + 24); cap = len; }
@@ -1112,7 +1193,7 @@ static void gpu_dumplist(unsigned list, int n) {
 static void *gpu_thread(void *a) {
     (void)a; unsigned done = 0; const char *e = getenv("GPUEMU_MS"); unsigned ms = e ? (unsigned)num(e) : 3; int n = 0, rast = getenv("GPURAST") || getenv("LIVE");
     for (;;) {
-        usleep(100);
+        if (getenv("RINGWATCH")) usleep(100); else if (gpu_kicks == done) fut_wait(&gpu_kicks, done, 0);  /* RINGWATCH necesita el pulso de 100 µs; si no, duerme hasta el timbre */
         if (getenv("RINGWATCH") && gw1) {  /* RINGWATCH=1: cada ~2 s, entradas de la tabla de trabajos (ventana +0xe8, 0x8c B) con algún dato; byte 0 = en curso */
             static unsigned tick; if (++tick % 20000 == 0) {
                 char b[800]; int o = 0, c = 0; for (unsigned q = 0; q < 0x320 && c < 6 && 0xe8 + (q + 1) * 0x8c <= 0x20000; q++) { volatile unsigned *e = gw1 + (0xe8 + q * 0x8c) / 4; int nz = 0; for (int i = 0; i < 35; i++) if (e[i]) nz = 1; if (nz) { c++; o += snprintf(b + o, sizeof b - o, " [%u: b0=%u w1=%#x w2=%#x w3=%#x w4=%#x w5=%#x w6=%#x]", q, (unsigned)(e[0] & 0xff), e[1], e[2], e[3], e[4], e[5], e[6]); } }
@@ -1123,7 +1204,7 @@ static void *gpu_thread(void *a) {
         unsigned k = done++, v = kick_list[k % 64];  /* una vuelta por timbre, en orden */
         gw1[5] = 1;  /* ocupada → inactiva: el hilo GL espera el 2 (libObj+0x6c35a0/0x6c66c4) */
         if (rast) { unsigned t0 = now_us(); gpu_draw(v); st_rast += now_us() - t0; st_lists++; } else usleep(ms * 1000u);
-        gw1[5] = 2;
+        gw1[5] = 2; gpu_last_us = now_us(); gpu_irq_seq++; fut_wake(&gpu_irq_seq);
         if (!gpu_live) continue;
         if (n++ < 40) efp("[shim] GPUEMU lista %d: %#x\n", n, v);
         gpu_dumplist(v, n);
