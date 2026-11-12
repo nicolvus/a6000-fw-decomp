@@ -16,15 +16,19 @@
 #include <time.h>
 #include <unistd.h>
 #include <poll.h>
+#include <sys/select.h>
+#include <dirent.h>
 
 #define MAXFD 1024
 enum { D_NONE = 0, D_UIPC, D_GENERIC };
 static unsigned char kind[MAXFD];
 static char devname[MAXFD][32];
 
-#define LOG(...) do { fprintf(stderr, getenv("TIDLOG") ? "[shim %ld] " : "[shim] ", (long)syscall(224)); fprintf(stderr, __VA_ARGS__); fputc('\n', stderr); } while (0)
+#define LOG(...) do { fprintf(stderr, getenv("TIDLOG") ? "[shim %ld] " : "[shim] ", (long)syscall(224)); fprintf(stderr, __VA_ARGS__); fputc('\n', stderr); if (wl_all()) wl_logfwd(__VA_ARGS__); } while (0)
 
 #define E_TMOUT (-1022)
+static int wl_all(void); static void wl_logfwd(const char *, ...); static void wl_live(const char *, int); static void wl_key(unsigned); static int wl_on(void); static double wl_ts(void); static const char *tname(int, char *, size_t);
+static int wl_begin(const char *k, unsigned a, int tmo, void *ra); static void wl_end(int slot);  /* WAITLOG=ms: registro de esperas largas (ver abajo) */
 static pthread_mutex_t semlock = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t semcond = PTHREAD_COND_INITIALIZER;
 static struct { unsigned id; int cnt; } sems[16384];
@@ -34,7 +38,7 @@ static int sem_slot(unsigned id) {
     if (f < 0) { LOG("tabla de semáforos llena"); abort(); }
     sems[f].id = id; sems[f].cnt = (id == 0x83037a) ? 0 : 1; return f;  /* shortcut: cuenta inicial 1 (cerrojos); 0x83037a es la señal de salida de im.elf. Mejorar si algún semáforo de señal debe empezar en 0 */
 }
-static int sem_wait(unsigned id, int tmo_ms) {  /* tmo: 0 = sondeo, -1 = infinito */
+static int uipc_sem_wait(unsigned id, int tmo_ms) {  /* tmo: 0 = sondeo, -1 = infinito */
     struct timespec ts; int r = 0;
     pthread_mutex_lock(&semlock);
     int i = sem_slot(id);
@@ -344,7 +348,20 @@ static void efp(const char *f, ...);
 /* GPUEMU: timbres de la GPU y su finalización se señalan por futex (async-signal-safe: el timbre llega desde el manejador SIGSEGV de REGTRAP) en vez de sondear con usleep */
 static volatile unsigned gpu_kicks, gpu_irq_seq, gpu_last_us;
 static void fut_wake(volatile unsigned *a) { syscall(SYS_futex, a, 129 /* WAKE_PRIVATE */, 0x7fffffff, 0, 0, 0); }
+static volatile unsigned *gw0, *gw1;
+static volatile unsigned kick_list[64];
+static volatile unsigned gpu_done;  /* listas ya dibujadas por gpu_thread */
+/* La GPU real ejecuta en orden las listas y las transferencias; aquí las listas las dibuja gpu_thread (asíncrono) y las copias/rellenos se ejecutan en el hilo de la UI al escribir
+ * el registro de inicio. Sin esperar, la copia a pantalla (0xc18) podía ir antes del dibujo de la lista ya timbrada → fotograma viejo y el cambio real no se enviaba hasta la
+ * siguiente copia (una tecla «sin efecto» durante 12 s). gpu_sync espera (máx. 2 s) a que se dibujen los timbres dados hasta ahora. */
+
 static void fut_wait(volatile unsigned *a, unsigned v, unsigned ms) { struct timespec t = { ms / 1000, ms % 1000 * 1000000L }; syscall(SYS_futex, a, 128 /* WAIT_PRIVATE */, v, ms ? &t : 0, 0, 0); }
+static void gpu_kick(unsigned list) { kick_list[gpu_kicks % 64] = list; gpu_kicks++; fut_wake(&gpu_kicks); }
+static void gpu_sync(void) {
+    unsigned t = gpu_kicks;
+    for (int i = 0; i < 200; i++) { unsigned d = gpu_done; if ((int)(t - d) <= 0) return; fut_wait(&gpu_done, d, 10); }
+    efp("[shim] GPUEMU gpu_sync: %u listas sin dibujar tras 2 s\n", t - gpu_done);
+}
 /* SYSTAT=1: contadores de ioctl emulados por (hilo, dispositivo, orden, 1.ª palabra de uipc); cada 5 s imprime los >2000 llamadas/intervalo con el nombre del hilo → busca sondeos que giran sin bloquear */
 static struct { long tid; char dev[24]; unsigned long req, w0; volatile unsigned n, last; } sst[512];
 static void systat_key(const char *dv, unsigned long req, unsigned long w0) {
@@ -359,7 +376,9 @@ static void systat_add(int fd, unsigned long req, void *arg) {
 }
 /* libObj (grm_*, libObj+0x6170fc) calcula el plazo con clock_gettime(CLOCK_MONOTONIC) pero la condición es CLOCK_REALTIME (glibc 2.11 sin condattr_setclock efectivo): el plazo (con «infinito» = 0x7fffffff ms) cae en 1970,
  * pthread_cond_timedwait da ETIMEDOUT al instante y grm_gpe/grm_result giran al 100 %. Un plazo absoluto cercano al reloj monotónico y muy anterior al real se traslada al reloj real. */
-int pthread_cond_timedwait(pthread_cond_t *c, pthread_mutex_t *m, const struct timespec *t) {
+static int cond_timedwait_in(pthread_cond_t *c, pthread_mutex_t *m, const struct timespec *t, void *ra);
+int pthread_cond_timedwait(pthread_cond_t *c, pthread_mutex_t *m, const struct timespec *t) { return cond_timedwait_in(c, m, t, __builtin_return_address(0)); }
+static int cond_timedwait_in(pthread_cond_t *c, pthread_mutex_t *m, const struct timespec *t, void *ra) {
     static int (*real)(pthread_cond_t *, pthread_mutex_t *, const struct timespec *); if (!real) real = dlsym(RTLD_NEXT, "pthread_cond_timedwait");
     struct timespec rt = {0}, mt = {0}, fix;
     if (t && clock_gettime(CLOCK_REALTIME, &rt) == 0 && clock_gettime(CLOCK_MONOTONIC, &mt) == 0 && rt.tv_sec > mt.tv_sec + 86400 && t->tv_sec >= mt.tv_sec - 86400 && t->tv_sec < mt.tv_sec + 2200000) {
@@ -369,7 +388,7 @@ int pthread_cond_timedwait(pthread_cond_t *c, pthread_mutex_t *m, const struct t
         rel += rt.tv_nsec; fix.tv_sec = rt.tv_sec + rel / 1000000000LL; fix.tv_nsec = rel % 1000000000LL;
         t = &fix;
     }
-    return real(c, m, t);
+    { int ws = wl_begin("cond_timedwait", (unsigned)(unsigned long)c, -2, ra); int rr = real(c, m, t); wl_end(ws); return rr; }
 }
 static void *systat_thread(void *a) {
     (void)a; for (;;) { sleep(5);
@@ -385,12 +404,18 @@ ssize_t read(int fd, void *b, size_t n) {
     if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC) { if (getenv("SYSTAT")) systat_add(fd, 0x100000, 0); if (!getenv("NOBLOCKDEV")) for (;;) sleep(3600); }
     return real(fd, b, n);
 }
+/* WAITLOG: esperas del sistema (no UIPC) que también pueden frenar una tecla */
+#define WL_CALL(kind, id, tmo, call) ({ int ws_ = wl_begin(kind, id, tmo, __builtin_return_address(0)); __typeof__(call) r_ = (call); wl_end(ws_); r_; })
+int usleep(useconds_t us) { static int (*real)(useconds_t); if (!real) real = dlsym(RTLD_NEXT, "usleep"); return WL_CALL("usleep", 0, (int)(us / 1000), real(us)); }
+unsigned int sleep(unsigned int s) { static unsigned (*real)(unsigned); if (!real) real = dlsym(RTLD_NEXT, "sleep"); return WL_CALL("sleep", 0, (int)(s * 1000), real(s)); }
+int nanosleep(const struct timespec *t, struct timespec *r) { static int (*real)(const struct timespec *, struct timespec *); if (!real) real = dlsym(RTLD_NEXT, "nanosleep"); return WL_CALL("nanosleep", 0, t ? (int)(t->tv_sec * 1000 + t->tv_nsec / 1000000) : 0, real(t, r)); }
+int select(int n, fd_set *r, fd_set *w, fd_set *e, struct timeval *t) { static int (*real)(int, fd_set *, fd_set *, fd_set *, struct timeval *); if (!real) real = dlsym(RTLD_NEXT, "select"); return WL_CALL("select", 0, t ? (int)(t->tv_sec * 1000 + t->tv_usec / 1000) : -1, real(n, r, w, e, t)); }
 int poll(struct pollfd *f, nfds_t n, int tmo) {
     static int (*real)(struct pollfd *, nfds_t, int); if (!real) real = dlsym(RTLD_NEXT, "poll");
     for (nfds_t i = 0; i < n; i++) if (f[i].fd >= 0 && f[i].fd < MAXFD && kind[f[i].fd] == D_GENERIC) { if (getenv("SYSTAT")) systat_add(f[i].fd, 0x100001, 0); break; }
-    return real(f, n, tmo);
+    return WL_CALL("poll", n ? (unsigned)f[0].fd : 0, tmo, real(f, n, tmo));
 }
-int ioctl(int fd, unsigned long req, ...) {
+static int ioctl_in(int fd, unsigned long req, ...) {
     static int (*r)(int, unsigned long, ...);
     va_list a; va_start(a, req); void *arg = va_arg(a, void *); va_end(a);
     if (fd >= 0 && fd < MAXFD && kind[fd] && getenv("SYSTAT")) { static int th; if (!th++) { pthread_t t; pthread_create(&t, 0, systat_thread, 0); } systat_add(fd, req, arg); }
@@ -411,7 +436,7 @@ int ioctl(int fd, unsigned long req, ...) {
             if (getenv("VERB")) LOG("uipc valloc qid=%#x size=%u -> %p", w[0], t[1], b + 0x20);
             return 0; }
         case 0: LOG("uipc stat_sem %#x", w[0]); return 0;
-        case 1: { LOG("uipc wai_sem? %#x tmo=%d", w[0], (int)w[1]); int r = sem_wait(w[0], (int)w[1]); LOG("uipc wai_sem %#x tmo=%d -> %d", w[0], (int)w[1], r); return r; }
+        case 1: { LOG("uipc wai_sem? %#x tmo=%d", w[0], (int)w[1]); int r = uipc_sem_wait(w[0], (int)w[1]); LOG("uipc wai_sem %#x tmo=%d -> %d", w[0], (int)w[1], r); return r; }
         case 2: sem_sig(w[0]); LOG("uipc sig_sem %#x", w[0]); return 0;
         case 7: { unsigned *t = (unsigned *)w[1]; LOG("uipc rcv_msg qid=%#x tmo=%d", w[0], (int)t[1]);
             if ((int)t[1] < 0 && getenv("RCVSTACK")) { static unsigned vq[64]; static int nq; int k, ya = 0; for (k = 0; k < nq; k++) if (vq[k] == w[0]) ya = 1; if (!ya && nq < 64) { vq[nq++] = w[0]; raise(SIGUSR1); } }
@@ -551,6 +576,14 @@ int ioctl(int fd, unsigned long req, ...) {
     if (!r) r = dlsym(RTLD_NEXT, "ioctl");
     return r(fd, req, arg);
 }
+int ioctl(int fd, unsigned long req, ...) {  /* envoltorio: con WAITLOG registra las esperas UIPC largas (sem 1: w[0]=id,w[1]=tmo; rcv_msg 7: w[0]=qid,t[1]=tmo) */
+    va_list a; va_start(a, req); void *arg = va_arg(a, void *); va_end(a);
+    unsigned idx = req & 0x7fffffff;
+    if (!wl_on() || fd < 0 || fd >= MAXFD || kind[fd] != D_UIPC || (idx != 1 && idx != 7 && idx != 5 && idx != 6)) return ioctl_in(fd, req, arg);
+    unsigned *w = arg; char k[16]; snprintf(k, sizeof k, "uipc%u", idx);
+    int ws = wl_begin(k, w[0], idx == 1 ? (int)w[1] : idx == 7 ? (int)((unsigned *)w[1])[1] : -2, __builtin_return_address(0));
+    int rr = ioctl_in(fd, req, arg); wl_end(ws); return rr;
+}
 
 static unsigned hex(const char *p, char **end) {
     unsigned v = 0;
@@ -559,7 +592,7 @@ static unsigned hex(const char *p, char **end) {
 }
 static void efp(const char *f, ...) {  /* escritura sin cerrojo de stderr: usable desde el manejador de señal */
     char b[300]; va_list v; va_start(v, f); int n = vsnprintf(b, sizeof b, f, v); va_end(v);
-    if (n > 0) { if (n > (int)sizeof b - 1) n = sizeof b - 1; write(2, b, n); }
+    if (n > 0) { if (n > (int)sizeof b - 1) n = sizeof b - 1; write(2, b, n); if (wl_on()) wl_live(b, n); }  /* WAITLOG: también al anfitrión por el canal live (shim.log; la consola del invitado frenaba el proceso) */
 }
 static struct { unsigned lo, hi, off; char name[96]; } maps[512];
 static int nmaps;
@@ -586,7 +619,46 @@ static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, L
     for (int i = 0; i < 300; i++) { if (((unsigned long)(sp + i) & 0xfff) == 0 || i == 0) { if (msync((void *)((unsigned long)(sp + i) & ~0xfffUL), 1, MS_ASYNC)) break; } sym(sp[i]); }  /* no cruzar el final de la pila */
     (void)sig;
 }
-#include <dirent.h>
+
+/* WAITLOG=ms (diagnóstico, apagado por defecto; con live.py: SHIMEXTRA="WAITLOG=1500"): registra toda espera que supere ms en UIPC (sem, rcv_msg, envíos síncronos),
+ * condiciones, poll/select/sleep/usleep/nanosleep: hilo, primitiva, id/qid, plazo y dirección de retorno (módulo+offset). Las esperas infinitas solo salen al terminar
+ * (despertar tardío). Las líneas van a stderr y, por el canal live, a DIR/live/<vm>/shim.log del anfitrión (con su hora delante), junto con «tecla», «copia a pantalla»
+ * y «fotograma enviado» (hora del invitado = CLOCK_MONOTONIC). WLALL=1 reenvía además cada LOG del shim; WAITSTACK=1 manda SIGUSR1 al hilo que espera (pila; puede
+ * dar EINTR a la aplicación). */
+static struct { long tid; const char *k; unsigned a; int tmo; void *ra; struct timespec t0; int dumped, used; } wls[128];
+static pthread_mutex_t wl_m = PTHREAD_MUTEX_INITIALIZER;
+static int wl_ms(void) { static int v = -1; if (v < 0) v = getenv("WAITLOG") ? num(getenv("WAITLOG")) : 0; return v; }
+static int wl_on(void) { return wl_ms() > 0; }
+static long wl_el(struct timespec *t0) { struct timespec n; clock_gettime(CLOCK_MONOTONIC, &n); return (n.tv_sec - t0->tv_sec) * 1000 + (n.tv_nsec - t0->tv_nsec) / 1000000; }
+static double wl_ts(void) { struct timespec n; clock_gettime(CLOCK_MONOTONIC, &n); return n.tv_sec + n.tv_nsec / 1e9; }
+static void wl_desc(void *ra, char *o, int n) { Dl_info di; if (dladdr(ra, &di) && di.dli_fname) snprintf(o, n, "%s+%#lx", strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname, (unsigned long)ra - (unsigned long)di.dli_fbase); else snprintf(o, n, "%p", ra); }
+static void *wl_watch(void *x) {
+    (void)x; for (;;) { usleep(250000);
+        for (int i = 0; i < 128; i++) {
+            pthread_mutex_lock(&wl_m); typeof(wls[0]) e = wls[i]; int hit = e.used && !e.dumped && wl_el(&e.t0) >= wl_ms(); if (hit) wls[i].dumped = 1; pthread_mutex_unlock(&wl_m);
+            if (!hit) continue;  /* dladdr/fopen fuera del cerrojo: dladdr toma el cerrojo del cargador y se cruzaría con un dlopen */
+            char d[96], nm[32]; wl_desc(e.ra, d, sizeof d); tname((int)e.tid, nm, sizeof nm);
+            if (e.tmo != -1) efp("[shim] WAITLOG %.2f espera>%dms tid %ld %s %s id=%#x tmo=%d ra=%s\n", wl_ts(), wl_ms(), e.tid, nm, e.k, e.a, e.tmo, d);
+            if (getenv("WAITSTACK")) syscall(SYS_tgkill, getpid(), (int)e.tid, SIGUSR1); } }
+    return 0;
+}
+static int wl_begin(const char *k, unsigned a, int tmo, void *ra) {
+    if (!wl_on()) return -1;
+    if ((unsigned long)ra - (unsigned long)&wl_on < 0x30000UL || (unsigned long)&wl_on - (unsigned long)ra < 0x30000UL) return -1;  /* esperas internas del shim: ya las cubre el ioctl */
+    static int th; if (!th++) { pthread_t t; pthread_create(&t, 0, wl_watch, 0); }
+    int s = -1; pthread_mutex_lock(&wl_m);
+    for (int i = 0; i < 128 && s < 0; i++) if (!wls[i].used) s = i;
+    if (s >= 0) { wls[s].used = 1; wls[s].dumped = 0; wls[s].tid = syscall(224); wls[s].k = k; wls[s].a = a; wls[s].tmo = tmo; wls[s].ra = ra; clock_gettime(CLOCK_MONOTONIC, &wls[s].t0); }
+    pthread_mutex_unlock(&wl_m); return s;
+}
+static void wl_end(int s) {
+    if (s < 0) return;
+    pthread_mutex_lock(&wl_m); typeof(wls[0]) e = wls[s]; long ms = wl_el(&e.t0); wls[s].used = 0; pthread_mutex_unlock(&wl_m);
+    if (!e.dumped) return;
+    char d[96], nm[32]; wl_desc(e.ra, d, sizeof d); tname((int)e.tid, nm, sizeof nm);
+    efp("[shim] WAITLOG %.2f fin tid %ld %s %s id=%#x tmo=%d tras %ld ms ra=%s\n", wl_ts(), e.tid, nm, e.k, e.a, e.tmo, ms, d);
+}
+static void wl_key(unsigned k) { efp("[shim] WAITLOG %.2f tecla %#x\n", wl_ts(), k); }
 /* DUMPAT=n: a los n s manda SIGUSR1 a cada hilo (uno por segundo) para ver dónde está parado cada uno */
 static struct { void *p; size_t len; long off; char dev[32]; } amaps[64]; static int nam;
 static void memscan(void);
@@ -715,7 +787,7 @@ __attribute__((constructor)) static void shim_init(void) { presignal(); keyq_ini
 /* Experimento (SKIPFN=717830,...): sustituye esas funciones Thumb de libObj por «movs r0,#0; bx lr» (devuelven éxito sin hacer nada). */
 static unsigned long hexv(const char *s, const char **end) { unsigned long v = 0; for (;; s++) { int c = *s; if (c >= '0' && c <= '9') c -= '0'; else if (c >= 'a' && c <= 'f') c -= 'a' - 10; else break; v = v * 16 + c; } if (end) *end = s; return v; }
 static unsigned long gpu_pc;  /* libObj+0x6c4c46: «str r1,[r3,r0]» de rm_reg_write (off=r0, valor=r1, base=r3); se sustituye por UDF para ver cada escritura */
-static volatile unsigned kick_list[64];  /* GPUEMU: timbres (0x1804) y lista de cada uno */
+/* GPUEMU: timbres (0x1804) y lista de cada uno */
 /* Experimento (TRACEFN=716800,6cd1e0,...): traza de una sola vez (UDF + restauración) de la entrada de esas funciones de libObj: r0-r3 y lr. */
 static struct { unsigned long pc, step; unsigned short orig, orig2; unsigned hits; } trc[32]; static int ntrc; static unsigned long trc_base; static volatile unsigned long app_sys;  /* app_sys: r0 de AppSystem::dispatch (libObj+0x7eed0c) en su primera traza */
 static void gpu_exec(unsigned off, unsigned val);
@@ -723,7 +795,7 @@ static void on_trace(int sig, siginfo_t *si, void *u) {
     mcontext_t *c = &((ucontext_t *)u)->uc_mcontext; unsigned long pc = c->arm_pc & ~1UL; int i;
     if (gpu_pc && pc == gpu_pc) {  /* rm_reg_write: se hace el almacenamiento y se salta la instrucción; 0x1804 = timbre de la GPU (GPUEMU) */
         *(volatile unsigned *)(c->arm_r3 + c->arm_r0) = c->arm_r1;
-        if (c->arm_r0 == 0x1804) { kick_list[gpu_kicks % 64] = c->arm_r1; gpu_kicks++; fut_wake(&gpu_kicks); }
+        if (c->arm_r0 == 0x1804) gpu_kick(c->arm_r1);
         gpu_exec(c->arm_r0, c->arm_r1);
         { static int nw; if (getenv("GPUTRACE") && gpu_live && nw++ < 3000) efp("[shim] REGW off=%#lx val=%#lx kicks=%u\n", c->arm_r0, c->arm_r1, gpu_kicks); }
         c->arm_pc += 2; return;
@@ -938,7 +1010,7 @@ static void memscan(void) {
 /* REGTRAP=1: las ventanas de registros de la GPU (/dev/dmpgles2 y /dev/mem off=1, 0x20000 B) se mantienen en PROT_NONE; cada acceso falla, se registra
  * (tid, PC, dirección, lectura/escritura) y se abre la ventana 1,5 ms; el hilo de trampa registra además los cambios de contenido (escrituras con su valor).
  * Sirve para saber qué registros consulta el controlador de libObj (p. ej. para decidir que un trabajo terminó). */
-static volatile unsigned *gw0, *gw1;
+
 static unsigned libobj_off(void *ra);
 static struct { unsigned char *p; size_t len; unsigned snap[0x8000]; } rtw[2]; static int nrtw; static struct sigaction rt_old;
 static void rt_segv(int sig, siginfo_t *si, void *ctx) {
@@ -948,7 +1020,7 @@ static void rt_segv(int sig, siginfo_t *si, void *ctx) {
         for (int q = 0; q < nseen; q++) if (seenk[q] == key) dup = 1;
         if (!dup && nseen < 512) { seenk[nseen++] = key; n = 0; } else n = 2000;
         if (n++ < 1500) efp("[shim] REGTRAP tid %ld %s w%d+%#lx pc=libObj+%#x lr=libObj+%#x\n", (long)syscall(224), (uc->uc_mcontext.error_code & (1 << 11)) ? "ESC" : "LEC", k, (unsigned long)(a - rtw[k].p), libobj_off((void *)uc->uc_mcontext.arm_pc), libobj_off((void *)uc->uc_mcontext.arm_lr));
-        if (k == 0 && a >= rtw[0].p + 0x1000 && a < rtw[0].p + 0x2000) { kick_list[gpu_kicks % 64] = gw0 ? gw0[0x1804 / 4] : 0; gpu_kicks++; fut_wake(&gpu_kicks); }  /* timbre de la GPU (GPUEMU) visto desde REGTRAP */
+        if (k == 0 && a >= rtw[0].p + 0x1000 && a < rtw[0].p + 0x2000) gpu_kick(gw0 ? gw0[0x1804 / 4] : 0);  /* timbre de la GPU (GPUEMU) visto desde REGTRAP */
         mprotect(rtw[k].p, rtw[k].len, PROT_READ | PROT_WRITE); return;
     }
     sigaction(SIGSEGV, &rt_old, 0);  /* no es nuestra: el manejador previo (pila) al reintentar */
@@ -988,7 +1060,7 @@ static unsigned tile_off(unsigned x, unsigned y, unsigned w) {  /* mosaico 8×8 
  * 1 RGB8, resto 16 bits), 0xc18 bit 0 inicio; TextureCopy: 0xc20 bytes, 0xc24/0xc28 línea de entrada/salida = ancho | hueco<<16 en unidades de 16 B. */
 static volatile unsigned live_da, live_w, live_h, live_seq;
 static void gpu_exec1(unsigned off, unsigned val);
-static void gpu_exec(unsigned off, unsigned val) { unsigned t0 = now_us(); gpu_exec1(off, val); st_gpu += now_us() - t0; }
+static void gpu_exec(unsigned off, unsigned val) { if (gw0 && (val & 1) && !getenv("NOGPUSYNC")) gpu_sync(); unsigned t0 = now_us(); gpu_exec1(off, val); st_gpu += now_us() - t0; }
 static void gpu_exec1(unsigned off, unsigned val) {
     volatile unsigned *r = gw0; if (!r || !(val & 1)) return;
     if (off == 0x1c) {
@@ -1023,7 +1095,7 @@ static void gpu_exec1(unsigned off, unsigned val) {
                 if (b == 2) d2[di] = s2[si]; else if (b == 4) d4[di] = s4[si]; else memcpy(d + di * b, s + si * b, b);
             }
         }
-        if (da >> 24 == 0xb4 && !(fl & 2)) { live_da = da; live_w = w; live_h = h; live_seq++; fut_wake(&live_seq); }  /* LIVE: copia a la pantalla (0xb4000000/0xb4096000) = fotograma presentado */
+        if (da >> 24 == 0xb4 && !(fl & 2)) { live_da = da; live_w = w; live_h = h; live_seq++; fut_wake(&live_seq); if (wl_on()) efp("[shim] WAITLOG %.2f copia a pantalla seq=%u\n", wl_ts(), live_seq); }  /* LIVE: copia a la pantalla (0xb4000000/0xb4096000) = fotograma presentado */
     }
 }
 /* GPURAST=1 (o LIVE): dibuja cada lista en el búfer de color como gpu_raster.py (§5.18z): estado hasta el primer 0x202, tira de N vértices de 0x40 B
@@ -1133,6 +1205,18 @@ static void gpu_draw(unsigned list) {
 /* LIVE=/dev/vportNp1 (G22-D, live.py): puerto virtio-serial con el anfitrión. Salida: cada fotograma presentado que cambia, cabecera
  * {«A6KF», ancho | alto << 16, listas, µs de dibujo, µs de relleno/copias, µs de LDEC (acumulados)} + RGBA4444 lineal. Entrada: «R» reenvía el fotograma; líneas «K clave valor índice» (hex) → mensaje {clave, 0, valor, 0, índice} a la cola del driver de entrada 0x7a0020 (§5.18z′). */
 static int live_fd = -1; static volatile int live_force;
+static pthread_mutex_t live_wm = PTHREAD_MUTEX_INITIALIZER;  /* los fotogramas y las líneas de WAITLOG comparten el puerto: no se mezclan */
+static int wl_all(void) { static int v = -1; if (v < 0) v = getenv("WAITLOG") && getenv("WLALL") ? 1 : 0; return v; }  /* WLALL=1 (con WAITLOG): cada LOG del shim también va a shim.log, con hora */
+static void wl_logfwd(const char *f, ...) {
+    char b[400]; int o = snprintf(b, sizeof b, "%.2f ", wl_ts()); va_list v; va_start(v, f); o += vsnprintf(b + o, sizeof b - o - 2, f, v); va_end(v);
+    if (o > (int)sizeof b - 2) o = sizeof b - 2; b[o++] = '\n';
+    if (live_fd < 0) return; pthread_mutex_lock(&live_wm); write(live_fd, "\x01WL ", 4); write(live_fd, b, o); pthread_mutex_unlock(&live_wm);
+}
+static void wl_live(const char *b, int n) {  /* «\x01WL texto\n» ; trylock: efp se usa también en manejadores de señal */
+    if (live_fd < 0) return;
+    { int k = 0; while (pthread_mutex_trylock(&live_wm)) if (++k > 50) return; else usleep(1000); }  /* hasta 50 ms: un fotograma en curso retiene el puerto; así no se pierden líneas ni se bloquea un manejador de señal */
+    write(live_fd, "\x01WL ", 4); write(live_fd, b, n); pthread_mutex_unlock(&live_wm);
+}
 static void *live_keys(void *a) {
     (void)a; char buf[256]; int n = 0;
     for (;;) {
@@ -1141,7 +1225,7 @@ static void *live_keys(void *a) {
         while ((nl = strchr(ln, '\n'))) {
             *nl = 0; const char *e;
             if (ln[0] == 'R') live_force = 1;  /* el anfitrión se acaba de conectar (p. ej. tras restaurar el estado): reenviar el fotograma actual */
-            if (ln[0] == 'K') { unsigned m[12] = {0}; m[0] = hexv(ln + 2, &e); m[2] = hexv(e + 1, &e); m[4] = hexv(e + 1, &e); mbx_post_raw(0x7a0020, m); }
+            if (ln[0] == 'K') { unsigned m[12] = {0}; m[0] = hexv(ln + 2, &e); m[2] = hexv(e + 1, &e); m[4] = hexv(e + 1, &e); mbx_post_raw(0x7a0020, m); if (wl_on()) wl_key(m[0]); }
             ln = nl + 1;
         }
         n = strlen(ln); memmove(buf, ln, n);
@@ -1159,7 +1243,10 @@ static void *live_frames(void *a) {
         if (!force && !memcmp(cur + 24, last + 24, len)) continue;
         unsigned hd[6] = {0x464b3641, wd | ht << 16, st_lists, st_rast, st_gpu, st_ldec};  /* «A6KF», ancho | alto << 16, contadores */
         memcpy(cur, hd, 24);
+        pthread_mutex_lock(&live_wm);
         for (size_t o = 0; o < len + 24; ) { ssize_t k = write(live_fd, cur + o, len + 24 - o); if (k <= 0) { usleep(10000); continue; } o += k; }
+        pthread_mutex_unlock(&live_wm);
+        if (wl_on()) efp("[shim] WAITLOG %.2f fotograma enviado seq=%u\n", wl_ts(), seen);
         unsigned char *t = last; last = cur; cur = t;
     }
     return 0;
@@ -1204,6 +1291,7 @@ static void *gpu_thread(void *a) {
         unsigned k = done++, v = kick_list[k % 64];  /* una vuelta por timbre, en orden */
         gw1[5] = 1;  /* ocupada → inactiva: el hilo GL espera el 2 (libObj+0x6c35a0/0x6c66c4) */
         if (rast) { unsigned t0 = now_us(); gpu_draw(v); st_rast += now_us() - t0; st_lists++; } else usleep(ms * 1000u);
+        gpu_done = done; fut_wake(&gpu_done);
         gw1[5] = 2; gpu_last_us = now_us(); gpu_irq_seq++; fut_wake(&gpu_irq_seq);
         if (!gpu_live) continue;
         if (n++ < 40) efp("[shim] GPUEMU lista %d: %#x\n", n, v);
@@ -1292,7 +1380,7 @@ int pthread_cond_wait(pthread_cond_t *c, pthread_mutex_t *m) {
         }
         return r;
     }
-    return real(c, m);
+    { int ws = wl_begin("cond_wait", (unsigned)(unsigned long)c, -1, __builtin_return_address(0)); int rr = real(c, m); wl_end(ws); return rr; }
 }
 /* MUTEXWATCH=s: un pthread_mutex_lock que espera más de s segundos registra quién lo retiene (glibc 2.11 ARM: __owner en +8) y manda
  * SIGUSR1 al dueño y al solicitante (pila). pthread_cond_wait con MUTEXWATCH registra una vez por llamador las esperas > s con dirección

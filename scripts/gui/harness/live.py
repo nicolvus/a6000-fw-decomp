@@ -14,6 +14,7 @@ import argparse
 import base64
 import io
 import json
+import os
 import re
 import socket
 import struct
@@ -34,7 +35,7 @@ import run
 # escenario de F3/F4 sin volcados: ciclo de modelos, menú abierto, cola de teclas 0x7a0020
 SHIMENV = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/GLOBAL_MENU OPENVIEWAT=40 OPENVIEWGAP=14 "
            "STARTEV=11004002:100,11004012,11004013 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f "
-           "KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177 KEYINITON=06A_viewUnified2 LIVE=auto")
+           "KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177 KEYINITON=06A_viewUnified2 LIVE=auto " + os.environ.get("SHIMEXTRA", ""))  # SHIMEXTRA="WAITLOG=3000": variables de diagnóstico del shim
 # {clave KEY_TACT_*, índice físico} medidos en §5.18z′
 TECLAS = {"arriba": (0x3, 0x1), "abajo": (0x30, 0x5), "izquierda": (0x15, 0x3), "derecha": (0x1AF, 0x14), "menu": (0x1AB, 0x11),
           "intro": (0xE000000, 0x1BC), "disparador": (0xA7, 0xE)}
@@ -95,6 +96,14 @@ class Vm:
                 return
             buf += d
             while True:
+                if buf.startswith(b"\x01WL "):  # línea de diagnóstico del shim (WAITLOG): va a shim.log
+                    j = buf.find(b"\n")
+                    if j < 0:
+                        break
+                    with (self.dir / "shim.log").open("ab") as f:
+                        f.write(f"{time.time() % 1000:.2f} ".encode() + buf[4:j + 1])  # hora del anfitrión (mod 1000 s) delante, para comparar con la del invitado
+                    buf = buf[j + 1:]
+                    continue
                 i = buf.find(b"A6KF")
                 if i < 0 or len(buf) < i + 24:
                     break
@@ -215,9 +224,10 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
                 try:
                     while True:
                         with vm.cv:
-                            vm.cv.wait_for(lambda v=visto: vm.seq != v, timeout=15)
+                            nuevo = vm.cv.wait_for(lambda v=visto: vm.seq != v, timeout=15)
                             png, visto = vm.png, vm.seq
-                        self.wfile.write(b"data: " + base64.b64encode(png) + b"\n\n" if png else b": vivo\n\n")
+                        # sin fotograma nuevo en 15 s solo un comentario de vida: reenviar el último hacía que parecieran fotogramas nuevos
+                        self.wfile.write(b"data: " + base64.b64encode(png) + b"\n\n" if nuevo and png else b": vivo\n\n")
                         self.wfile.flush()
                 except (BrokenPipeError, ConnectionResetError):
                     return
@@ -230,6 +240,10 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
                 d = json.loads(cuerpo)
                 k, i = TECLAS[d["k"]]
                 vm.tecla(k, int(d["v"]), i)
+                self.responde(b"ok", "text/plain")
+            elif self.path == "/refrescar":  # pide al invitado el fotograma actual (aunque no haya cambiado): sirve para comprobar si una tecla cambió la pantalla
+                if vm.sock:
+                    vm.sock.sendall(b"R\n")
                 self.responde(b"ok", "text/plain")
             elif self.path == "/guardar":
                 self.responde(vm.guardar().encode(), "text/plain; charset=utf-8")

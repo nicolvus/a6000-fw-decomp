@@ -631,3 +631,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 12-11-2026: G22 F5: el arnés arranca con el `nflasha15` del CFW (`pkg_usr.py`, `OVERLAY2`); 3.79 abre la carpeta Picture Profile; el 3.78 reproduce su cuelgue (`SIGSEGV` `libObj+0x5b6242`). [G22 §5.18z″](../docs/gui/g22-arnes-ui-qemu.md)
 - 12-11-2026: G22-D ventana en vivo (`live.py`): GPU en el invitado, virtio-serial, teclado, estado de VM restaurable; ~1 s por tecla. [G22 §5.18z‴](../docs/gui/g22-arnes-ui-qemu.md)
 - 12-11-2026: G22-D rendimiento: esperas emuladas que giraban corregidas en el shim; CPU en reposo 598 % → ~75 %, 0,3–0,4 s por tecla. [G22 §5.18z⁗](../docs/gui/g22-arnes-ui-qemu.md)
+- 12-11-2026: G22-D: las teclas de 12,5 s eran un reenvío del SSE a los 15 s más una carrera copia/dibujo en la GPU emulada (`gpu_sync`); ninguna tecla > 1,1 s; diagnóstico `WAITLOG`. [G22 §5.18z⁗](../docs/gui/g22-arnes-ui-qemu.md)
