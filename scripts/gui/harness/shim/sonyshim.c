@@ -165,7 +165,7 @@ static void backup_service(unsigned *m) {
         if (wd && wl && wl <= 4096 && readable((void *)id[2])) {
             static char ln[8300]; static pthread_mutex_t lm = PTHREAD_MUTEX_INITIALIZER; pthread_mutex_lock(&lm);
             int o = snprintf(ln, sizeof ln, "%x ", wid); for (unsigned i = 0; i < wl; i++) o += sprintf(ln + o, "%02x", ((unsigned char *)id[2])[i]);
-            memcpy(wd, (void *)id[2], wl); live_msg("NV", ln, o); pthread_mutex_unlock(&lm); m[1] = wl;
+            memcpy(wd, (void *)id[2], wl); live_msg("NV", ln, o); if (getenv("SETLOG")) LOG("NV %s", ln); pthread_mutex_unlock(&lm); m[1] = wl;
         } else LOG("backup write id=%#x sin registro o buffer ilegible", wid);
         return;  /* sin la línea de registro genérica: id[0] no es el id */
     }
@@ -809,7 +809,7 @@ static void *openviewer(void *a) {
     if (getenv("STARTEV") && lobj_h) startev(getenv("STARTEV"));
     { void **pv = dlsym(lobj_h, "pViewManager"); for (int k = 0; pv && !*pv && k < 600; k++) usleep(100000); }  /* openView con ViewManager aún NULL = SIGSEGV (arranque lento) */
     char *spec = strdup(getenv("OPENVIEW")), *sv = 0;
-    for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) { efp("[shim] OPENVIEW %s ...\n", it); int r = ov(it, 0); efp("[shim] OPENVIEW %s -> %d\n", it, r); sleep(getenv("OPENVIEWGAP") ? (unsigned)hexv(getenv("OPENVIEWGAP"), 0) : 2); }
+    for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) { efp("[shim] OPENVIEW %s ...\n", it); int r = ov(it, 0); efp("[shim] OPENVIEW %s -> %d\n", it, r); if (getenv("POSTROOTEV") && !strcmp(it, "view/ROOT")) { sleep(8); startev(getenv("POSTROOTEV")); }  /* POSTROOTEV: tras abrir view/ROOT (su @T100 termina antes) la vista raíz pide @T0E3 (viewUnified2+0x16c58c) */ sleep(getenv("OPENVIEWGAP") ? (unsigned)hexv(getenv("OPENVIEWGAP"), 0) : 2); }
     return 0;
 }
 static void *injector(void *a) {
@@ -985,8 +985,10 @@ static void *salvage_reply(void *a) {
 /* MWF::ObjIf::IssueCommandAsync(objeto, ObjMsg*): la UI emite así los cambios de ajustes (p. ej. EFCS = ObjMsg(0x3100, 0x75fa) + param 0x9776); IMCMDLOG=1 registra destino, cabecera del mensaje y retorno */
 int _ZN3MWF5ObjIf17IssueCommandAsyncEPvPNS_6ObjMsgE(void *h, void *msg) {
     static int (*real)(void *, void *); if (!real) real = dlsym(RTLD_NEXT, "_ZN3MWF5ObjIf17IssueCommandAsyncEPvPNS_6ObjMsgE");
-    int r = real(h, msg);
-    if (getenv("IMCMDLOG")) { char t[400]; int o = 0; if (readable(msg)) for (int q = 0; q < 24; q++) o += snprintf(t + o, sizeof t - o, "%08x ", ((unsigned *)msg)[q]); t[o] = 0; LOG("IssueCommandAsync obj=%p msg=%p -> %d : %s", h, msg, r, t); }
+    void *ra = __builtin_return_address(0); int r = real(h, msg);
+    if (getenv("IMCMDLOG")) { char t[400]; int o = 0; if (readable(msg)) for (int q = 0; q < 24; q++) o += snprintf(t + o, sizeof t - o, "%08x ", ((unsigned *)msg)[q]); t[o] = 0;
+        Dl_info di = {0}; dladdr(ra, &di);  /* llamante como biblioteca+desplazamiento: identifica la rutina emisora (p. ej. libObj+0x6896ac = EFCS 0x75fa) */
+        LOG("IssueCommandAsync obj=%p msg=%p -> %d ra=%s+%#lx : %s", h, msg, r, di.dli_fname ? strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname : "?", (unsigned long)ra - (unsigned long)di.dli_fbase, t); }
     return r;
 }
 /* SETLOG=1: registra (con retorno) los eslabones de un cambio de ajuste del menú en cmn_view_processDataMgr / wrapperSettingUtil (≤ 4 argumentos de registro); reenvía a la implementación real */

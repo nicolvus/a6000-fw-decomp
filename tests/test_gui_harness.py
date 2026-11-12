@@ -87,6 +87,14 @@ def test_menu_se_reabre_con_la_ruta_real_de_la_camara() -> None:
     assert 'strncmp(p + 4, "07C_", 4)' in src and '"@V00E"' in src and "m[0] == 0x1ab && m[2] == 1 && !menu_open" in src
 
 
+def test_postrootev_crea_modelstillrec_tras_view_root() -> None:
+    """§5.18z⁸: tras abrir view/ROOT el shim lanza @T0E3 (POSTROOTEV), que instancia model/STILL_REC (@M00F)."""
+    live, _ = _live()
+    assert "POSTROOTEV=11004002:e3" in live.SHIMENV
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    assert 'getenv("POSTROOTEV") && !strcmp(it, "view/ROOT")' in src and 'startev(getenv("POSTROOTEV"))' in src
+
+
 @pytest.mark.skipif(not (os.environ.get("A6000_HARNESS_RUN") and (WORK / "base.cpio.gz").exists() and shutil.which("qemu-system-arm")),
                     reason="prueba lenta (≈ 2 min): A6000_HARNESS_RUN=1 y setup.sh hecho")
 def test_arranque_en_qemu_llega_a_la_pila_de_ventanas() -> None:

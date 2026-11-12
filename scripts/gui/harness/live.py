@@ -41,7 +41,7 @@ import sensor_web
 
 # escenario de F3/F4 sin volcados: ciclo de modelos, menú abierto, cola de teclas 0x7a0020
 SHIMENV = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,@V00E OPENVIEWAT=40 OPENVIEWGAP=14 "
-           "STARTEV=11004002:100,11004012,11004013 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f "
+           "STARTEV=11004002:100,11004012,11004013 POSTROOTEV=11004002:e3 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f "
            "KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177 KEYINITON=06A_viewUnified2 LIVE=auto " + os.environ.get("SHIMEXTRA", ""))  # SHIMEXTRA="WAITLOG=3000": variables de diagnóstico del shim
 # {clave KEY_TACT_*, índice físico} medidos en §5.18z′
 TECLAS = {"arriba": (0x3, 0x1), "abajo": (0x30, 0x5), "izquierda": (0x15, 0x3), "derecha": (0x1AF, 0x14), "menu": (0x1AB, 0x11),
