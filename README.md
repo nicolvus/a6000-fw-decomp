@@ -100,6 +100,8 @@ Detalle en [Objetivos](https://github.com/nicolvus/a6000-fw-decomp/wiki/16-Objet
 | Carga USB con la cámara encendida | Sistema y conectividad | ≈Sony α7 II | ⬜ |
 | FTP Background Transfer | Sistema y conectividad | Sony α9 | ⬜ |
 
+**Descartadas:** nivel digital (≈Sony α6300): el sensor de orientación de la A6000 es óptico y binario (cuatro posiciones a 90°), sin acelerómetro ([R88](docs/capture/e26-r88-sensor-inclinacion-swd.md)).
+
 ## Copyright y uso
 
 **Copyright.** Los dos `.dat` del [release `fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) son el

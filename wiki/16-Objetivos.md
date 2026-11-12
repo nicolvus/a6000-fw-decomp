@@ -82,3 +82,7 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 
 - ⬜ Carga USB con la cámara encendida — _Origen: ≈Sony α7 II_
 - ⬜ FTP Background Transfer — _Origen: Sony α9_
+
+## Descartadas
+
+- ❌ Nivel digital (horizonte virtual) — _Origen: ≈Sony α6300_. La A6000 no tiene acelerómetro: su sensor de orientación (SE7750) es óptico y cada uno de sus dos canales solo da alto o bajo, así que distingue cuatro posiciones a 90° y nada intermedio. Medido por SWD girando la cámara ([R88](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r88-sensor-inclinacion-swd.md)).

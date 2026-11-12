@@ -82,3 +82,7 @@ Features wanted on the A6000, inherited from other Sony models and other brands,
 
 - ⬜ USB charging while powered on — _Origin: ≈Sony α7 II_
 - ⬜ FTP Background Transfer — _Origin: Sony α9_
+
+## Discarded
+
+- ❌ Digital level (virtual horizon) — _Origin: ≈Sony α6300_. The A6000 has no accelerometer: its orientation sensor (SE7750) is optical and each of its two channels is only high or low, so it tells four 90° positions apart and nothing in between. Measured over SWD while rotating the camera ([R88](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r88-sensor-inclinacion-swd.md)).
