@@ -1,0 +1,50 @@
+# G36 — El selector PP del 3.77 no pasa de PP6: tope de 7 opciones por lista (auditoría, 11-11-2026)
+
+Síntoma (usuario, CFW 3.77 en cámara): en la fila «Picture Profile» el cursor no pasa de PP6: al pulsar hacia PP7–PP10 se queda en PP6. La lista tiene 11 opciones (Off, PP1–PP10) y PP6 es la **7.ª**.
+
+## 1. Descartado: la cadena del modelo (`libObj`) acepta PP7–PP10 (VERIFICADO, estático + Unicorn)
+
+Comprobado sobre la `libObj.so` del paquete 3.77 (`analysis/gui/g22/pkg-377w/files/lib/libObj.so`):
+
+| Eslabón | Comprobación | Resultado |
+|---|---|---|
+| Límite de perfil | `pvt_ActionSetPictureProfile` (`0x4c0a78`): `cmp r8,#0xa; bls` en `0x4c0ae0`/`0x4c0b08` | admite 0–10 |
+| Elementos de NVRAM por perfil | constructor `0x4a9a56` emulado: `[this+0x5dc+(p·31+i)·4]` → perfiles 0–3 en `0x10702f8+p…`, 4–9 en `0x107062b+(p−4)…`, PP10 en `0x1070631…`; contrastados con el volcado `20261105-volcado-total-nvram` (`pmca.backup`) | los 11 bloques existen, 1 B, `attr = 0` (escribibles) |
+| Valores de fábrica de PP7–PP10 (`pp_factory`) → VALUEID | `App2Obj` (`0x4b46b8`) emulado: Gamma y Color Mode | acepta 0–11 en ambos (S-Log2/3, S-Gamut, S-Gamut3(.Cine)) |
+| `CamMsgConv` del mensaje `0x75ae` (`0x9b3200`) | emulado con los 31 parámetros de cada perfil 0–10 | mismo resultado en los 11 perfiles: Color (`0x9673`) y Gamma (`0x967a`) convierten sin error |
+| Tablas parcheadas | `0x9b3274` (Color, 12 VALUEID) y `0x9b36f4` (Gamma, 12) | correctas |
+
+Nada en la ruta del modelo distingue PP6 de PP7: el fallo no está en `libObj` ni en la NVRAM.
+
+## 2. Causa: la lista de opciones de la UI no pasa de la 7.ª (VERIFICADO en cámara + estructura)
+
+- **Cámara (usuario):** el cursor se detiene en la 7.ª opción (PP6) de una lista de 11.
+- **Estructura (`viewUnified2.so` fw 3.21 + `analysis/gui/settings-sweep.json`):** todos los pids nuevos del PP usan la clase **Normal** (caso de factoría 0 en `ELEM_VU2` `0x3A5E1C`, la de `REF_NORMAL = 0x12`). En el firmware de Sony esa clase la usan **67 ajustes y ninguno pasa de 5 opciones**; todos los ajustes con más de 7 (Drive Mode 32, ISO 48, Language 33, Zebra 9, Phase Detection AF 8…) tienen **clase propia**. La lista de la clase Normal nunca se ejercita por encima de 7 en el firmware original.
+- Coincide con el tope de 6 filas por página del menú (G29 §6): la UI de la A6000 no desplaza estas listas.
+
+## 3. Alcance en el 3.77 (25 de 34 filas tienen más de 7 opciones)
+
+Con el tope de 7, solo se alcanzan las 7 primeras opciones de cada fila:
+
+| Fila | Opciones | Última alcanzable | Inalcanzable |
+|---|---|---|---|
+| Picture Profile | 11 | PP6 | PP7–PP10 |
+| Copy / Reset | 10 | PP7 | PP8–PP10 |
+| Gamma | 10 | ITU709 | ITU709(800%), S-Log2, S-Log3 |
+| Color Mode | 9 | S-Gamut | S-Gamut3.Cine, S-Gamut3 |
+| Black Level | 31 | −9 | −8…+15 |
+| Black Gamma Level, Color Phase, Color Depth ×6, Detail Level | 15 | −1 | 0…+7 |
+| Saturation | 16 | −2 | −1…+7 |
+| WB LB/CC/R/B | 19 | −3 | −2…+9 |
+| Knee Point / Knee Slope | 13 / 11 | 6 / +1 | 7–12 / +2…+5 |
+| Detail Limit, Detail Crispening, Color Mode Level | 8 | 6 / 6 / 7 | 7 / 7 / 8 |
+
+Consecuencias que explica: (a) PP7–PP10 no se eligen (este informe); (b) **S-Log2/S-Log3 «sin diferencia visible»** desde el 3.67 (G30-C, G32-C): por la fila Gamma no se pueden elegir (posiciones 9–10); (c) en los ajustes centrados en 0 el valor neutro y los positivos son inalcanzables: puede explicar parte de G33-A («no hacen nada visible, salvo Saturación»).
+
+## 4. Arreglo (sin hacer; decisión pendiente, PENDIENTES G36-A)
+
+1. **Partir cada fila en grupos de ≤ 7 opciones** con la misma clave (p. ej. «Picture Profile», «Picture Profile 7-10»; «Black Level −15…−9», …): 34 → 76 filas, 13 páginas de 6. Mínimo y dentro del comportamiento comprobado; queda sin probar cómo pinta una fila el valor actual cuando no está entre sus opciones.
+2. **Menos opciones por ajuste numérico** (pasos de 2, rango recortado): pocas filas, pierde resolución.
+3. **Clase con desplazamiento** (reutilizar la de un ajuste de Sony con lista larga): sin las filas extra, pero cada clase lleva su propia lógica de modelo; requiere RE de la vista y es lo de mayor riesgo.
+
+No verificado: el mecanismo exacto del tope dentro de la vista (no localizado en el código); que el tope sea 7 en las filas numéricas (deducido; comprobable abriendo Black Level y viendo si el cursor para en −9).
