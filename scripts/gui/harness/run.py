@@ -26,6 +26,8 @@ with tempfile.TemporaryDirectory() as t:
         (t / "cam/harness.env").write_text("export " + os.environ["SHIMENV"] + "\n")
     if (work / "overlay").is_dir():  # ficheros extra (p. ej. cam/usr/lib/sonyshim.so)
         shutil.copytree(work / "overlay", t, dirs_exist_ok=True)
+    if os.environ.get("OVERLAY2"):  # F5: /usr de un nflasha15 de CFW (pkg_usr.py); va después del base, así que sustituye a los de Sony
+        shutil.copytree(os.environ["OVERLAY2"], t, dirs_exist_ok=True)
     names = subprocess.run(["find", "cam"], cwd=t, capture_output=True, check=True).stdout
     cpio = subprocess.run(["cpio", "-o", "-H", "newc", "-R", "0:0", "--quiet"], input=names, cwd=t, capture_output=True, check=True).stdout
     initrd = t / "initrd.gz"

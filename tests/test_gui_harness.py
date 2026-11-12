@@ -17,6 +17,23 @@ CAM_LIB = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image
 WORK = Path(os.environ.get("A6000_HARNESS_WORK", ROOT / "analysis/gui/g22/harness"))
 
 
+# F4: DERECHA (0x1af, índice 0x14) a los 150 s e INTRO (CEC 0xe000000, índice 0x1bc) a los 160 s abren «Ajustes personalizados», página 4
+SUBMENU_ENV = ("WAIT=200 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/GLOBAL_MENU OPENVIEWAT=40 OPENVIEWGAP=14 "
+               "STARTEV=11004002:100,11004012,11004013 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f FULLLOG=1 "
+               "KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177 KEYINITON=06A_viewUnified2 GPUDUMP=/tmp/gpu.txt "
+               "DUMPAT=185 DUMPTHR=ninguno AREADUMP=stream@80000000,stream@bc000000 "
+               "INJECT=96:7a0020:1af,0,1,0,14/96:7a0020:1af,0,0,0,14/a0:7a0020:e000000,0,1,0,1bc/a0:7a0020:e000000,0,0,0,1bc")
+PKG379 = ROOT / "analysis/gui/g22/pkg-379w"
+
+
+def filas_de_texto(png: Path) -> int:
+    """Filas de ajustes de la página del submenú: franjas con texto claro en la columna de nombres."""
+    import numpy as np
+    from PIL import Image
+    b = (np.asarray(Image.open(png))[130:420, 20:330].max(axis=2) > 128).any(axis=1)
+    return int(np.count_nonzero(np.diff(b.astype(int)) == 1) + b[0])
+
+
 def bk_find(tbl: bytes, wanted: int) -> bytes | None:
     """Mismo recorrido que `bk_find()` en sonyshim.c: registros {id u32, len u32, datos rellenados a 4}."""
     o = 0
@@ -151,11 +168,7 @@ def test_teclas_derecha_e_intro_abren_submenu() -> None:
     from PIL import Image
     gpu = WORK / "gpu.txt"
     gpu.unlink(missing_ok=True)
-    keys = "96:7a0020:1af,0,1,0,14/96:7a0020:1af,0,0,0,14/a0:7a0020:e000000,0,1,0,1bc/a0:7a0020:e000000,0,0,0,1bc"
-    env = {**os.environ, "SHIMENV": "WAIT=200 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/GLOBAL_MENU OPENVIEWAT=40 OPENVIEWGAP=14 "
-                                     "STARTEV=11004002:100,11004012,11004013 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f FULLLOG=1 "
-                                     "KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177 KEYINITON=06A_viewUnified2 GPUDUMP=/tmp/gpu.txt "
-                                     f"DUMPAT=185 DUMPTHR=ninguno AREADUMP=stream@80000000,stream@bc000000 INJECT={keys}"}
+    env = {**os.environ, "SHIMENV": SUBMENU_ENV}
     subprocess.run([sys.executable, str(HARNESS / "run.py"), str(WORK), str(HARNESS / "im.sh"), "300"],
                    capture_output=True, text=True, check=True, env=env)
     log = (WORK / "guest.log").read_text(errors="replace")
@@ -164,3 +177,33 @@ def test_teclas_derecha_e_intro_abren_submenu() -> None:
     subprocess.run([sys.executable, str(HARNESS / "gpu_raster.py"), str(WORK), str(WORK / "submenu.png")], check=True, capture_output=True)
     img = np.asarray(Image.open(WORK / "submenu.png"))
     assert (img[130:380, 20:620].max(axis=2) > 128).sum() > 8000  # cinco filas de ajustes con su valor
+    assert filas_de_texto(WORK / "submenu.png") == 5  # firmware de Sony; el 3.79 añade dos (F5)
+
+
+@pytest.mark.skipif(not ((PKG379 / "nflasha15-379.bin").exists() and (WORK / "stage/cam/usr").is_dir() and shutil.which("debugfs")),
+                    reason="CFW 3.79 construido y setup.sh hecho")
+def test_pkg_usr_saca_solo_los_ficheros_del_paquete(tmp_path: Path) -> None:
+    """F5: el /usr leído de la imagen TPZL del 3.79 difiere del de Sony justo en los ficheros que el constructor sustituyó."""
+    import json
+    out = subprocess.run([sys.executable, str(HARNESS / "pkg_usr.py"), str(PKG379 / "nflasha15-379.bin"), str(WORK / "stage/cam/usr"), str(tmp_path)],
+                         capture_output=True, text=True, check=True).stdout.split()
+    assert out == json.loads((PKG379 / "build-nflasha15.json").read_text())["ficheros"]
+    assert (tmp_path / "cam/usr/lib/viewUnified2.so").stat().st_mode & 0o111
+
+
+@pytest.mark.skipif(not (os.environ.get("A6000_HARNESS_RUN") and (WORK / "base.cpio.gz").exists() and shutil.which("qemu-system-arm")
+                         and (PKG379 / "nflasha15-379.bin").exists()),
+                    reason="prueba lenta (≈ 5 min): A6000_HARNESS_RUN=1, setup.sh hecho y CFW 3.79 construido")
+def test_cfw_379_muestra_silent_y_picture_profile(tmp_path: Path) -> None:
+    """F5: con el /usr del nflasha15 del 3.79 la página 4 de «Ajustes personalizados» tiene 6 filas (Sony: 5): «Silent Shooting» y «Picture Profile»."""
+    subprocess.run([sys.executable, str(HARNESS / "pkg_usr.py"), str(PKG379 / "nflasha15-379.bin"), str(WORK / "stage/cam/usr"), str(tmp_path / "ovl")],
+                   capture_output=True, check=True)
+    w = tmp_path / "w"
+    w.mkdir()
+    for n in ("vmlinuz", "base.cpio.gz", "overlay"):
+        (w / n).symlink_to(WORK / n)
+    env = {**os.environ, "SHIMENV": SUBMENU_ENV, "OVERLAY2": str(tmp_path / "ovl")}
+    subprocess.run([sys.executable, str(HARNESS / "run.py"), str(w), str(HARNESS / "im.sh"), "300"], capture_output=True, text=True, check=True, env=env)
+    assert "E  Vo 00000027" in (w / "guest.log").read_text(errors="replace")
+    subprocess.run([sys.executable, str(HARNESS / "gpu_raster.py"), str(w), str(w / "submenu.png")], check=True, capture_output=True)
+    assert filas_de_texto(w / "submenu.png") == 6
