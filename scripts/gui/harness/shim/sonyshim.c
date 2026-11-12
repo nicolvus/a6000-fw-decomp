@@ -229,7 +229,6 @@ fin:
 }
 
 static volatile int gpu_live;  /* GPUEMU: la UI ya envía actualizaciones de pantalla (dlopen de viewUnified*.so): a partir de ahí los trabajos terminan con aviso */
-static volatile int gpu_ack;  /* GPUEMU: el controlador reconoció el aviso de fin de trabajo */
 static int num(const char *t) { int v = 0; while (*t >= '0' && *t <= '9') v = v * 10 + *t++ - '0'; return v; }  /* sin atoi: el sysroot nuevo enlaza __isoc23_strtol, que la glibc 2.11 no tiene */
 /* Colas de kernel con callback de usuario (reg_msg_queue_cb, idx 8). En libosal_uipc.so: los hilos proxy bloqueados en wait_cb (idx 13)
  * reciben {cb, arg, msg, 0} y llaman cb(msg, arg); un envío síncrono (idx 5) a una cola con callback devuelve {cb, arg} al emisor en su
@@ -429,7 +428,6 @@ int ioctl(int fd, unsigned long req, ...) {
     if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC) {  /* dispositivo no modelado: éxito, registrado las 5 primeras veces por (dispositivo, orden) y luego cada 4096 */
         static struct { char d[32]; unsigned long r; unsigned n; } seen[64]; static int ns; int k;
         if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0x80048206 && arg) *(unsigned *)arg = 0x20000;  /* tamaño de la ventana de registros de la GPU (rm_reg_init lo pasa a mmap de /dev/mem; con 0 se mapeaba 1 página y el código escribe en +0x1804) */
-        if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0xc0048212 && arg && *(unsigned *)arg == 1) gpu_ack = 1;  /* el controlador reconoce el aviso de fin (GPUEMU) */
         if (getenv("GPUTRACE") && gpu_live && !strcmp(devname[fd], "/dev/dmpgles2")) { static int gn; if (gn++ < 600) LOG("GPU ioctl %#lx arg=%p val=%#x", req, arg, readable(arg) ? *(unsigned *)arg : 0u); }  /* GPUTRACE=1: cada ioctl de la GPU tras cargar las vistas (primeros 600), sin deduplicar */
         if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0xc004820d) {  /* espera de interrupción de la GPU (libObj+0x6c5320 repite hasta salida != 0) */
             const char *e = getenv("GPUIRQ_MS"); unsigned ms = e ? (unsigned)num(e) : 20;  /* GPUIRQ_MS=n: IRQ simulada cada n ms (20 por defecto, necesaria para que termine la init GL); 0 = GPU ociosa, duerme */
@@ -437,6 +435,7 @@ int ioctl(int fd, unsigned long req, ...) {
             for (;;) sleep(3600);
         }
         if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0xc0048211 && arg) *(unsigned *)arg = 0;  /* espera de la GPU de DMP (libObj+0x6c53e0): repite mientras la salida != 0 → «ya ha terminado» */
+        if (getenv("LDECLOG") && !strcmp(devname[fd], "/dev/ldec") && readable(arg)) { unsigned *q = (unsigned *)arg; static int nl; if (nl++ < 12) { LOG("LDEC req=%#lx %08x %08x %08x %08x %08x %08x %08x %08x", req, q[0], q[1], q[2], q[3], q[4], q[5], q[6], q[7]); if (readable((void *)(unsigned long)q[0])) { unsigned char *b = (unsigned char *)(unsigned long)q[0]; LOG("LDEC src %02x%02x%02x%02x %02x%02x%02x%02x %02x%02x%02x%02x %02x%02x%02x%02x %02x%02x%02x%02x %02x%02x%02x%02x", b[0],b[1],b[2],b[3],b[4],b[5],b[6],b[7],b[8],b[9],b[10],b[11],b[12],b[13],b[14],b[15],b[16],b[17],b[18],b[19],b[20],b[21],b[22],b[23]); } } }  /* LDECLOG=1: parámetros de /dev/ldec (§5.18z) */
         pthread_mutex_lock(&semlock);
         for (k = 0; k < ns && (seen[k].r != req || strcmp(seen[k].d, devname[fd])); k++);
         if (k == ns && ns < 64) { strncpy(seen[ns].d, devname[fd], 31); seen[ns].r = req; seen[ns++].n = 0; }
@@ -613,14 +612,17 @@ __attribute__((constructor)) static void shim_init(void) { presignal(); keyq_ini
 /* Experimento (SKIPFN=717830,...): sustituye esas funciones Thumb de libObj por «movs r0,#0; bx lr» (devuelven éxito sin hacer nada). */
 static unsigned long hexv(const char *s, const char **end) { unsigned long v = 0; for (;; s++) { int c = *s; if (c >= '0' && c <= '9') c -= '0'; else if (c >= 'a' && c <= 'f') c -= 'a' - 10; else break; v = v * 16 + c; } if (end) *end = s; return v; }
 static unsigned long gpu_pc;  /* libObj+0x6c4c46: «str r1,[r3,r0]» de rm_reg_write (off=r0, valor=r1, base=r3); se sustituye por UDF para ver cada escritura */
-static volatile unsigned gpu_kicks;
+static volatile unsigned gpu_kicks, kick_list[64];  /* GPUEMU: timbres (0x1804) y lista de cada uno */
 /* Experimento (TRACEFN=716800,6cd1e0,...): traza de una sola vez (UDF + restauración) de la entrada de esas funciones de libObj: r0-r3 y lr. */
 static struct { unsigned long pc, step; unsigned short orig, orig2; unsigned hits; } trc[32]; static int ntrc; static unsigned long trc_base; static volatile unsigned long app_sys;  /* app_sys: r0 de AppSystem::dispatch (libObj+0x7eed0c) en su primera traza */
+static void gpu_exec(unsigned off, unsigned val);
 static void on_trace(int sig, siginfo_t *si, void *u) {
     mcontext_t *c = &((ucontext_t *)u)->uc_mcontext; unsigned long pc = c->arm_pc & ~1UL; int i;
     if (gpu_pc && pc == gpu_pc) {  /* rm_reg_write: se hace el almacenamiento y se salta la instrucción; 0x1804 = timbre de la GPU (GPUEMU) */
-        *(volatile unsigned *)(c->arm_r3 + c->arm_r0) = c->arm_r1; if (c->arm_r0 == 0x1804) gpu_kicks++;
-        { static int nw; if (getenv("GPUTRACE") && nw++ < 200) efp("[shim] REGW off=%#lx val=%#lx kicks=%u\n", c->arm_r0, c->arm_r1, gpu_kicks); }
+        *(volatile unsigned *)(c->arm_r3 + c->arm_r0) = c->arm_r1;
+        if (c->arm_r0 == 0x1804) { kick_list[gpu_kicks % 64] = c->arm_r1; gpu_kicks++; }
+        gpu_exec(c->arm_r0, c->arm_r1);
+        { static int nw; if (getenv("GPUTRACE") && gpu_live && nw++ < 3000) efp("[shim] REGW off=%#lx val=%#lx kicks=%u\n", c->arm_r0, c->arm_r1, gpu_kicks); }
         c->arm_pc += 2; return;
     }
     for (i = 0; i < ntrc; i++) if (trc[i].step && trc[i].step == pc) {  /* TRACEREP: paso hecho; se restaura la instrucción siguiente y se rearma la entrada */
@@ -843,7 +845,7 @@ static void rt_segv(int sig, siginfo_t *si, void *ctx) {
         for (int q = 0; q < nseen; q++) if (seenk[q] == key) dup = 1;
         if (!dup && nseen < 512) { seenk[nseen++] = key; n = 0; } else n = 2000;
         if (n++ < 1500) efp("[shim] REGTRAP tid %ld %s w%d+%#lx pc=libObj+%#x lr=libObj+%#x\n", (long)syscall(224), (uc->uc_mcontext.error_code & (1 << 11)) ? "ESC" : "LEC", k, (unsigned long)(a - rtw[k].p), libobj_off((void *)uc->uc_mcontext.arm_pc), libobj_off((void *)uc->uc_mcontext.arm_lr));
-        if (k == 0 && a >= rtw[0].p + 0x1000 && a < rtw[0].p + 0x2000) gpu_kicks++;  /* timbre de la GPU (GPUEMU) visto desde REGTRAP */
+        if (k == 0 && a >= rtw[0].p + 0x1000 && a < rtw[0].p + 0x2000) { kick_list[gpu_kicks % 64] = gw0 ? gw0[0x1804 / 4] : 0; gpu_kicks++; }  /* timbre de la GPU (GPUEMU) visto desde REGTRAP */
         mprotect(rtw[k].p, rtw[k].len, PROT_READ | PROT_WRITE); return;
     }
     sigaction(SIGSEGV, &rt_old, 0);  /* no es nuestra: el manejador previo (pila) al reintentar */
@@ -859,13 +861,52 @@ static void *rt_thread(void *a) {
     }
     return 0;
 }
-/* GPUEMU (activo por defecto; GPUEMU=0 lo desactiva): GPU de DMP mínima. Ventanas: gw0 = motor (/dev/mem off=1; el controlador empuja la dirección de la lista de
- * órdenes en +0x1804), gw1 = registros de /dev/dmpgles2 (+4 índice del trabajo terminado, 0xffffffff = ninguno; +0x10 resultados pendientes; +0x14 estado, 2 = inactiva).
- * Al cambiar +0x1804: estado «ocupada» (1) unos GPUEMU_MS ms, luego se avisa del fin (+4 = GPUEMU_JOB, +0x10 = 1) y la GPU vuelve a 2; el aviso se retira cuando el
- * controlador lo reconoce con ioctl 0xc0048212 (arg 1). shortcut: no se ejecuta ninguna orden (no hay dibujo); solo desbloquea los hilos que esperan a la GPU. */
+/* GPUEMU (activo por defecto; GPUEMU=0 lo desactiva): GPU de DMP mínima. Ventanas: gw0 = registros del motor (/dev/mem off=1, mapa externo de la PICA:
+ * 0x10–0x1c relleno de memoria, 0xc00–0xc28 display transfer/TextureCopy, 0x1800/0x1804 lista de órdenes), gw1 = página compartida de /dev/dmpgles2
+ * (+4 cabeza y +0x10 cuenta de la cola de ejecución que vacía el planificador de libObj, 0x6c60e0; +0xc trabajo en curso; +0x14 estado, 2 = inactiva;
+ * +0xe8 tabla de 0x320 trabajos de 0x8c B). Relleno y transferencias se ejecutan al escribir el registro de inicio (gpu_exec); por cada lista
+ * (+0x1804) el estado pasa a «ocupada» (1) GPUEMU_MS ms y vuelve a 2. Hasta §5.18y se «avisaba del fin» escribiendo +4/+0x10: eso reencolaba el
+ * trabajo 0 (un relleno) y atascaba o rompía la cola (§5.18z). shortcut: las listas no se rasterizan aquí (GPUDUMP + gpu_raster.py fuera de línea). */
 static unsigned char *phys2p(unsigned phys) {  /* fase → dirección en nuestras áreas anónimas de /dev/stream y /dev/mem */
     for (int k = 0; k < nam; k++) { unsigned long o = (unsigned long)amaps[k].off; if ((!strstr(amaps[k].dev, "stream") && !strstr(amaps[k].dev, "mem")) || o < 0x80000000ul) continue; if (phys >= o && phys < o + amaps[k].len) return (unsigned char *)amaps[k].p + (phys - o); }
     return 0;
+}
+static unsigned char *phys2pn(unsigned a, unsigned n) { unsigned char *p = phys2p(a), *q = n ? phys2p(a + n - 1) : p; return p && q == p + n - 1 ? p : 0; }  /* área contigua de n B */
+static unsigned tile_off(unsigned x, unsigned y, unsigned w) {  /* mosaico 8×8 en orden de Morton (PICA), en píxeles */
+    return ((y >> 3) * (w >> 3) + (x >> 3)) * 64 + ((x & 1) | (y & 1) << 1 | (x & 2) << 1 | (y & 2) << 2 | (x & 4) << 2 | (y & 4) << 3);
+}
+/* Relleno: 0x10 inicio>>3, 0x14 fin>>3, 0x18 valor, 0x1c control (bit 0 inicio; bits 8-9 ancho 0=16, 1=24, 2=32 bits).
+ * Transferencia: 0xc00 origen>>2, 0xc04 destino>>2, 0xc08/0xc0c tamaño de salida/entrada (w | h<<16), 0xc10 indicadores (bit 0 volteo vertical,
+ * bit 1 entrada lineal → salida en mosaico, si no mosaico → lineal; bit 3 TextureCopy; bits 8-10/12-14 formato de entrada/salida, 0 RGBA8,
+ * 1 RGB8, resto 16 bits), 0xc18 bit 0 inicio; TextureCopy: 0xc20 bytes, 0xc24/0xc28 línea de entrada/salida = ancho | hueco<<16 en unidades de 16 B. */
+static void gpu_exec(unsigned off, unsigned val) {
+    volatile unsigned *r = gw0; if (!r || !(val & 1)) return;
+    if (off == 0x1c) {
+        unsigned a = r[0x10 / 4] << 3, n = (r[0x14 / 4] << 3) - a, v = r[0x18 / 4], wd = (val >> 8) & 3; unsigned char *p = phys2pn(a, n);
+        if (!p || n > 0x4000000) { efp("[shim] GPUEMU relleno %#x+%#x fuera de área\n", a, n); return; }
+        for (unsigned i = 0; i < n; i += wd + 2) for (unsigned b = 0; b < wd + 2 && i + b < n; b++) p[i + b] = v >> (8 * b);
+    } else if (off == 0xc18) {
+        unsigned fl = r[0xc10 / 4], sa = r[0xc00 / 4] << 2, da = r[0xc04 / 4] << 2;
+        if (fl & 8) {
+            unsigned n = r[0xc20 / 4], iw = (r[0xc24 / 4] & 0xffff) * 16, ig = (r[0xc24 / 4] >> 16) * 16, ow = (r[0xc28 / 4] & 0xffff) * 16, og = (r[0xc28 / 4] >> 16) * 16;
+            if (!iw) iw = n; if (!ow) ow = n;
+            unsigned char *s = phys2pn(sa, n / iw * (iw + ig)), *d = phys2pn(da, n / ow * (ow + og));
+            if (!s || !d) { efp("[shim] GPUEMU TextureCopy %#x→%#x (%#x B) fuera de área\n", sa, da, n); return; }
+            if (getenv("GPUTRACE")) efp("[shim] GPUEMU TextureCopy %#x→%#x %#x B\n", sa, da, n);
+            for (unsigned k = 0, si = 0, di = 0; k < n; k++) { d[di++] = s[si++]; if ((k + 1) % iw == 0) si += ig; if ((k + 1) % ow == 0) di += og; }
+            return;
+        }
+        static const unsigned char bpp[8] = {4, 3, 2, 2, 2, 2, 2, 2};
+        unsigned iw = r[0xc0c / 4] & 0xffff, ih = r[0xc0c / 4] >> 16, ow = r[0xc08 / 4] & 0xffff, oh = r[0xc08 / 4] >> 16, b = bpp[(fl >> 8) & 7];
+        unsigned char *s = phys2pn(sa, iw * ih * b), *d = phys2pn(da, ow * oh * b);
+        if (!s || !d || b != bpp[(fl >> 12) & 7]) { efp("[shim] GPUEMU transferencia %#x→%#x fl=%#x sin modelar\n", sa, da, fl); return; }  /* shortcut: sin conversión de formato ni escalado */
+        if (getenv("GPUTRACE")) { unsigned nz = 0; for (unsigned i = 0; i < iw * ih * b; i++) nz += s[i] != 0; efp("[shim] GPUEMU DT %#x→%#x %ux%u→%ux%u fl=%#x origen no nulo=%u B\n", sa, da, iw, ih, ow, oh, fl, nz); }
+        unsigned w = iw < ow ? iw : ow, h = ih < oh ? ih : oh;
+        for (unsigned y = 0; y < h; y++) for (unsigned x = 0; x < w; x++) {
+            unsigned ly = fl & 1 ? h - 1 - y : y;
+            if (fl & 2) memcpy(d + tile_off(x, y, ow) * b, s + (ly * iw + x) * b, b); else memcpy(d + (ly * ow + x) * b, s + tile_off(x, y, iw) * b, b);
+        }
+    }
 }
 /* GPUDUMP=fichero: cada lista de órdenes (pares {reg<<16|0xf000, valor} hasta la marca 0x12345678) se anexa en texto: «JOB n lista=… » + «reg valor» */
 static void gpu_dumplist(unsigned list, int n) {
@@ -873,11 +914,22 @@ static void gpu_dumplist(unsigned list, int n) {
     unsigned *w = (unsigned *)phys2p(list); if (!w) { efp("[shim] GPUDUMP lista %#x sin área\n", list); return; }
     FILE *f = fopen(fn, "a"); if (!f) return; fprintf(f, "JOB %d lista=%#x\n", n, list);
     if (gw1) { fprintf(f, "TABLA"); for (int i = 0xe8 / 4; i < (0xe8 + 0x100) / 4; i++) fprintf(f, " %x:%08x", i * 4, gw1[i]); fprintf(f, "\n"); }
-    for (int i = 0; i < 20000; i += 2) { unsigned h = w[i], v = w[i + 1]; fprintf(f, "%04x %08x %08x\n", h >> 16, h & 0xffff, v); if ((h >> 16) == 0x10 && v == 0x12345678) break; if (!h && !v) { fprintf(f, "FIN-NULO\n"); break; } }
+    unsigned ib = 0, vb = 0;  /* 0x203 = índices (u16), 0x216 = vértices (0x40 B: pos 3f, color 4f, uv 2f…), §5.18z */
+    for (int i = 0; i < 20000; ) {
+        unsigned h = w[i], v = w[i + 1], ne = ((h >> 12) & 0xf) && (h & 0xfff) == 0x026 ? 5 : 1;  /* 0x026: valor + 4 palabras (uniformes 0x450) */
+        fprintf(f, "%04x %08x", h >> 16, h & 0xffff); for (unsigned k = 1; k <= ne; k++) fprintf(f, " %08x", w[i + k]); fprintf(f, "\n");
+        if ((h >> 12) & 0xf) { if ((h >> 16) == 0x203) ib = v; if ((h >> 16) == 0x216) vb = v; }
+        i += 1 + ne;
+        if ((h >> 16) == 0x10 && v == 0x12345678) break;
+        if (!h && !v) { fprintf(f, "FIN-NULO\n"); break; }
+    }
+    /* shortcut: copia hecha en el hilo de GPUEMU unos ms después del timbre, no en el timbre; vale mientras la UI no reescriba el búfer antes */
+    unsigned short *ix = ib ? (unsigned short *)phys2p(ib) : 0; unsigned char *vx = vb ? phys2p(vb) : 0;
+    if (ix && vx) for (int k = 0; k < 4; k++) { float *q = (float *)(vx + ix[k] * 0x40u); fprintf(f, "VTX %u", ix[k]); for (int c = 0; c < 16; c++) fprintf(f, " %g", q[c]); fprintf(f, "\n"); }
     fclose(f);
 }
 static void *gpu_thread(void *a) {
-    (void)a; unsigned done = 0; const char *e = getenv("GPUEMU_MS"), *j = getenv("GPUEMU_JOB"); unsigned ms = e ? (unsigned)num(e) : 3, job = j ? (unsigned)num(j) : 0; int n = 0;
+    (void)a; unsigned done = 0; const char *e = getenv("GPUEMU_MS"); unsigned ms = e ? (unsigned)num(e) : 3; int n = 0;
     for (;;) {
         usleep(100);
         if (getenv("RINGWATCH") && gw1) {  /* RINGWATCH=1: cada ~2 s, entradas de la tabla de trabajos (ventana +0xe8, 0x8c B) con algún dato; byte 0 = en curso */
@@ -887,17 +939,11 @@ static void *gpu_thread(void *a) {
             }
         }
         if (gpu_kicks == done) continue;
-        done = gpu_kicks; unsigned v = gw0 ? gw0[0x1804 / 4] : 0;
-        gw1[5] = 1; usleep(ms * 1000u); gw1[5] = 2;  /* ocupada → inactiva: grm_init lo necesita en cada trabajo */
-        if (!gpu_live) continue;  /* durante el arranque los trabajos no generan aviso de fin: el controlador no lo espera */
-        usleep(ms * 1000u);
-        unsigned idx = 0xffffffffu;  /* el controlador anota el trabajo en la tabla de la ventana (+0xe8, entradas de 0x8c B, [+0x14] = id) antes de empujar la lista */
-        for (unsigned q = 0; q < 0x320 && 0xe8 + (q + 1) * 0x8c <= 0x20000; q++) if (gw1[(0xe8 + q * 0x8c + 0x14) / 4]) { idx = q; break; }
-        if (idx == 0xffffffffu && j) idx = job;
-        if (idx != 0xffffffffu) { gpu_ack = 0; gw1[4] = 1; gw1[1] = idx; }
-        if (n++ < 40) efp("[shim] GPUEMU trabajo %d: lista %#x terminada (+4=%#x)\n", n, v, idx);
+        unsigned k = done++, v = kick_list[k % 64];  /* una vuelta por timbre, en orden */
+        gw1[5] = 1; usleep(ms * 1000u); gw1[5] = 2;  /* ocupada → inactiva: el hilo GL espera el 2 (libObj+0x6c35a0/0x6c66c4) */
+        if (!gpu_live) continue;
+        if (n++ < 40) efp("[shim] GPUEMU lista %d: %#x\n", n, v);
         gpu_dumplist(v, n);
-        if (idx != 0xffffffffu) { for (int k = 0; k < 2000 && !gpu_ack; k++) usleep(500); gw1[1] = 0xffffffffu; gw1[4] = 0; }
     }
     return 0;
 }
@@ -923,7 +969,7 @@ void *mmap(void *a, size_t l, int pr, int fl, int fd, off_t o) {
         if (!l) l = 0x1000;  /* shortcut: len 0 no es válido; el monitor de MWF lo pide sin argumentos */
         void *r = m(a, l, pr, (fl & ~MAP_SHARED) | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
         if (r != MAP_FAILED && nam < 64) { amaps[nam].p = r; amaps[nam].len = l; amaps[nam].off = o; strncpy(amaps[nam].dev, devname[fd], 31); nam++; }
-        if (r != MAP_FAILED && !strcmp(devname[fd], "/dev/dmpgles2") && l == 0x20000) { ((unsigned *)r)[1] = 0xffffffffu; ((unsigned *)r)[5] = 2; }  /* reg +4 = índice del trabajo terminado (libObj+0x6c61b0); 0xffffffff = ninguno; reg +0x14 = estado de la GPU (el bucle del hilo GL, libObj+0x6c35a0/0x6c66c4, gira hasta que vale 2 = inactiva). A 0 el controlador cree que el trabajo 0 acaba de terminar y gira reteniendo su cerrojo */
+        if (r != MAP_FAILED && !strcmp(devname[fd], "/dev/dmpgles2") && l == 0x20000) { ((unsigned *)r)[1] = 0xffffffffu; ((unsigned *)r)[5] = 2; }  /* reg +4 = cabeza de la cola de ejecución (libObj+0x6c60e0/0x6c61b0); 0xffffffff = vacía; reg +0x14 = estado de la GPU (el bucle del hilo GL, libObj+0x6c35a0/0x6c66c4, gira hasta que vale 2 = inactiva). A 0 el planificador sacaría una y otra vez el trabajo 0 de la cola */
         if (r != MAP_FAILED) gpuemu_add(devname[fd], o, r, l);
         if (getenv("REGTRAP") && r != MAP_FAILED && ((!strcmp(devname[fd], "/dev/dmpgles2") && l == 0x20000) || (!strcmp(devname[fd], "/dev/mem") && l == 0x20000 && o == 1))) regtrap_add(r, l);
         LOG("mmap(%s, len=%#zx off=%#lx) -> %p (anónima)", devname[fd], l, (long)o, r); return r;

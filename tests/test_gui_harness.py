@@ -99,3 +99,42 @@ def test_gpu_jobs_decodifica_lista_y_tabla() -> None:
     win = bytearray(0xE8 + 2 * 0x8C)
     st.pack_into("<I", win, 0xE8 + 0x8C + 16, 7)
     assert [(k, e[4]) for k, e in trabajos(bytes(win))] == [(1, 7)]
+
+
+def test_gpu_raster_dibuja_cuadrilatero_a8_trasladado(tmp_path: Path) -> None:
+    """§5.18z: textura A8 en mosaico 8×8, cuadrilátero local 8×8 con traslación (10, 20) por la matriz afín del vértice."""
+    import numpy as np
+    from PIL import Image
+    sys.path.insert(0, str(HARNESS))
+    from gpu_raster import main
+    tex = bytearray(64)
+    tex[0] = 0xFF  # píxel (0, 0) de la textura: índice de Morton 0
+    (tmp_path / "area_stream_80000000.bin").write_bytes(bytes(tex))
+    regs = "0586 0000f000 00080008\n0589 0000f000 10000000\n058f 0000f000 00000008\n0202 0000f000 90000004\n"
+    vtx = "".join(f"VTX {k} {x} {y} 1 1 1 1 1 {u} {v} 1 0 10 0 1 20 0\n" for k, (x, y, u, v) in enumerate([(0, 0, 0, 0), (0, 8, 0, 1), (8, 0, 1, 0), (8, 8, 1, 1)]))
+    (tmp_path / "gpu.txt").write_text("JOB 1 lista=0x800a4740\n" + regs + vtx)
+    main(tmp_path, tmp_path / "out.png")
+    img = np.asarray(Image.open(tmp_path / "out.png"))
+    assert img[20, 10].tolist() == [255, 255, 255]   # texel (0,0) opaco → blanco en (10, 20)
+    assert img[20, 11].tolist() == [0, 0, 0] and img[19, 10].tolist() == [0, 0, 0]
+    assert int(img.sum()) == 3 * 255
+
+
+@pytest.mark.skipif(not (os.environ.get("A6000_HARNESS_RUN") and (WORK / "base.cpio.gz").exists() and shutil.which("qemu-system-arm")),
+                    reason="prueba lenta (≈ 5 min): A6000_HARNESS_RUN=1 y setup.sh hecho")
+def test_menu_global_se_dibuja() -> None:
+    """§5.18z: con la cola de la GPU sin reencolados, view/GLOBAL_MENU lanza ≥ 15 listas; el rasterizador saca su texto."""
+    import numpy as np
+    from PIL import Image
+    gpu = WORK / "gpu.txt"
+    gpu.unlink(missing_ok=True)
+    env = {**os.environ, "SHIMENV": "WAIT=160 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/GLOBAL_MENU OPENVIEWAT=40 OPENVIEWGAP=14 "
+                                     "STARTEV=11004002:100,11004012,11004013 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f FULLLOG=1 "
+                                     "KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177 KEYINITON=06A_viewUnified2 GPUDUMP=/tmp/gpu.txt "
+                                     "DUMPAT=150 DUMPTHR=ninguno AREADUMP=stream@80000000,stream@bc000000"}
+    subprocess.run([sys.executable, str(HARNESS / "run.py"), str(WORK), str(HARNESS / "im.sh"), "270"],
+                   capture_output=True, text=True, check=True, env=env)
+    assert gpu.read_text().count("\n0202 0000f000 90000004") >= 15
+    subprocess.run([sys.executable, str(HARNESS / "gpu_raster.py"), str(WORK), str(WORK / "menu.png")], check=True, capture_output=True)
+    img = np.asarray(Image.open(WORK / "menu.png"))
+    assert (img.max(axis=2) > 128).sum() > 5000  # texto blanco/gris de las seis categorías y el título
