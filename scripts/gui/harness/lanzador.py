@@ -129,8 +129,9 @@ Solo figuran los botones con código de cámara medido; Fn, reproducción, rueda
 <section><h2>Tarjeta SD</h2><fieldset><div class="row">Tamaño <input type="number" id="sgb" min="1" max="2048" step="1" style="width:80px"> GB
 &nbsp; Carpeta <input type="text" id="sca" size="40" placeholder="vacío = ~/A6000-SD"></div></fieldset>
 <p class="mut">Disparo (botón «disparador») y MOVIE los guarda el anfitrión en esa carpeta con la estructura de la A6000 (<code>DCIM/100MSDCF/DSC00001.JPG</code>, <code>PRIVATE/M4ROOT/CLIP/C0001.MP4</code>); no se escribe si se supera el tamaño.</p></section>
-<section><h2>Red <span class="soon">próximamente</span></h2><fieldset disabled><div class="row"><label><input type="checkbox" id="rte"> Telnet</label>
-<label><input type="checkbox" id="rwi"> Wi-Fi por red local</label></div></fieldset></section>
+<section><h2>Red</h2><fieldset><div class="row"><label><input type="checkbox" id="rte"> Telnet</label>
+<label><input type="checkbox" id="rwi"> Wi-Fi por red local</label> &nbsp; Puerto telnet <input type="number" id="rpu" min="1024" max="65535" style="width:80px"></div></fieldset>
+<p class="mut">La A6000 solo ofrece telnet (OpenMemories Tweak, puerto 23, root) por Wi-Fi; aquí el invitado tiene una interfaz <code>ath0</code> en la red del ordenador (slirp) y <code>telnetd</code> del busybox de la cámara llega por <code>127.0.0.1:puerto</code>. Cambiar la red reinicia en frío (≈ 2,5 min). Sin adb: el firmware no trae <code>adbd</code>. El menú Inalámbrico no se activa (ver la guía).</p></section>
 </main><footer><button class="p" id="go">Iniciar</button><span id="msg" class="mut"></span><span style="flex:1"></span>
 <span id="vm" class="mut"></span><button id="stop" hidden>Parar VM</button><button id="quit">Cerrar emulador</button></footer>
 <script>
@@ -139,14 +140,14 @@ const api=async(u,o)=>{const r=await fetch(u,o);const t=await r.text();let j;try
 const msg=(t,c)=>{$('msg').textContent=t;$('msg').className=c||'mut'};
 function pinta(){document.querySelector(`[name=or][value=${cfg.firmware.origen}]`).checked=true;$('ov').value=cfg.firmware.overlay;
 $('datsel').textContent=cfg.firmware.dat||'ninguno';$('sfu').value=cfg.sensor.fuente;$('sru').value=cfg.sensor.ruta;$('sgb').value=cfg.sd.tamano_gb;
-$('sca').value=cfg.sd.carpeta;$('rte').checked=cfg.red.telnet;$('rwi').checked=cfg.red.wifi;
+$('sca').value=cfg.sd.carpeta;$('rte').checked=cfg.red.telnet;$('rwi').checked=cfg.red.wifi;$('rpu').value=cfg.red.puerto;
 $('tt').innerHTML='<tr><th>Botón de la cámara</th><th>Teclas</th><th></th></tr>';
 for(const b of botones){const tr=$('tt').insertRow();tr.insertCell().textContent=b;const c=tr.insertCell();
 for(const k of cfg.teclas[b]||[]){const s=document.createElement('span');s.className='chip';s.textContent=k;const x=document.createElement('b');x.textContent='×';
 x.onclick=()=>{cfg.teclas[b]=cfg.teclas[b].filter(y=>y!=k);guarda()};s.append(x);c.append(s)}
 const bt=document.createElement('button');bt.textContent=cap==b?'Pulsa una tecla…':'Capturar';if(cap==b)bt.className='cap';bt.onclick=()=>{cap=cap==b?null:b;pinta()};tr.insertCell().append(bt)}}
 function lee(){const o=document.querySelector('[name=or]:checked').value;cfg.firmware.origen=o;cfg.firmware.overlay=$('ov').value;cfg.sensor={fuente:$('sfu').value,ruta:$('sru').value};
-cfg.sd={tamano_gb:+$('sgb').value||4,carpeta:$('sca').value};cfg.red={telnet:$('rte').checked,wifi:$('rwi').checked}}
+cfg.sd={tamano_gb:+$('sgb').value||4,carpeta:$('sca').value};cfg.red={telnet:$('rte').checked,wifi:$('rwi').checked,puerto:+$('rpu').value||2323}}
 async function guarda(){lee();try{cfg=(await api('/api/config',{method:'POST',body:JSON.stringify(cfg)})).config;msg('guardado','okc')}catch(e){msg(e.message,'err');await carga()}pinta()}
 async function carga(){const r=await api('/api/config');cfg=r.config;botones=r.botones;$('ov').innerHTML=r.overlays.map(o=>`<option>${o}</option>`).join('');
 if(!cfg.firmware.overlay&&r.overlays.length)cfg.firmware.overlay=r.overlays[0];$('ov').value=cfg.firmware.overlay;vm(r.vm);pinta()}

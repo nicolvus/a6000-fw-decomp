@@ -278,7 +278,7 @@ def test_emu_config_valida_teclas_y_defaults(tmp_path: Path) -> None:
     ruta = tmp_path / "c/config.json"
     assert E.carga_config(ruta) == E.valida_config({})  # sin fichero: valores por defecto
     E.guarda_config({"red": {"telnet": True}}, ruta)
-    assert E.carga_config(ruta)["red"] == {"telnet": True, "wifi": False}
+    assert E.carga_config(ruta)["red"] == {"telnet": True, "wifi": False, "puerto": 2323}
 
 
 def test_emu_config_detecta_paquete_a6000() -> None:
@@ -320,3 +320,20 @@ def test_sd_emu_numeracion_cuota_y_exif(tmp_path: Path) -> None:
     Image.new("RGB", (30, 20), "red").save(buf, "JPEG")
     ex = Image.open(io.BytesIO(S.jpeg_con_exif(buf.getvalue()))).getexif()
     assert (ex[0x010F], ex[0x0110]) == ("SONY", "ILCE-6000") and ex.get_ifd(0x8769)[0x9003] == ex[0x0132]
+
+
+def test_red_args_telnet_y_wifi():
+    import live
+    assert live.red_args(None) == ("", [])
+    assert live.red_args({"telnet": False, "wifi": False}) == ("", [])
+    net, args = live.red_args({"telnet": True, "wifi": True, "puerto": 8623})
+    assert net == " NET=telnet,wifi"
+    assert "user,id=n0,hostfwd=tcp:127.0.0.1:8623-:23" in args and "virtio-net-device,netdev=n0,mac=fc:c2:de:3a:5d:5c" in args
+    net, args = live.red_args({"wifi": True})
+    assert net == " NET=wifi" and "hostfwd" not in args[1]
+
+
+def test_red_puerto_valido():
+    import emu_config as E
+    with pytest.raises(ValueError, match="puerto"):
+        E.valida_config({"red": {"puerto": 80}})

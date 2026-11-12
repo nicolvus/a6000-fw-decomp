@@ -9,6 +9,24 @@ if [ -n "$LIVE" ]; then
   for i in 1 2 3 4 5 6 7 8 9 10; do for f in /sys/class/virtio-ports/*/name; do [ "$(cat $f 2>/dev/null)" = a6000ui ] && LIVE=/dev/$(basename $(dirname $f)); done; [ -e "$LIVE" ] && break; sleep 1; done
   export LIVE; echo "LIVE=$LIVE"
 fi
+# NET (live.py, T5): lista «telnet,wifi». Emulador, no cámara: virtio-net con slirp de QEMU hace de enlace Wi-Fi (la cámara usa ath6kl_sdio + SDIO, sin emular).
+# La interfaz se llama ath0 como en libNetService.so/pump.conf de la cámara. DHCP: udhcpc del instalador (la cámara usa su `pump`); telnetd es el busybox de la cámara en /cam
+# como lo lanza OpenMemories Tweak (`busybox telnetd -l sh`, puerto 23, root sin contraseña). Resultado en /tmp/net.log (consola).
+if [ -n "$NET" ]; then
+  modprobe virtio_mmio; modprobe virtio_net
+  for i in 1 2 3 4 5 6 7 8 9 10; do [ -e /sys/class/net/eth0 ] && break; sleep 1; done
+  ip link set eth0 name ath0; ip link set ath0 up
+  printf '%s\n' '#!/bin/sh' '[ "$1" = bound ] || [ "$1" = renew ] || exit 0' 'ip addr add $ip/${mask:-24} dev $interface' '[ -n "$router" ] && ip route add default via ${router%% *}' \
+    'for d in $dns; do echo "nameserver $d"; done > /etc/resolv.conf; cp /etc/resolv.conf /cam/etc/resolv.conf' > /tmp/dhcp.sh; chmod +x /tmp/dhcp.sh
+  udhcpc -i ath0 -n -q -s /tmp/dhcp.sh 2>&1 | tail -3
+  case ",$NET," in *,telnet,*)
+    # /cam no trae enlaces de applets (sh, ls…): se crean aparte en /cam/.net/bin (añadido del emulador) para no alterar el entorno de im.elf
+    mkdir -p /cam/.net/bin /cam/dev/pts; mount -t devpts devpts /cam/dev/pts
+    for a in $(chroot /cam /bin/busybox 2>&1 | sed -n '/Currently defined/,$p' | sed 1d | tr -d ' \n' | tr ',' ' '); do ln -sf /bin/busybox /cam/.net/bin/$a; done
+    PATH=/.net/bin:/bin:/sbin:/usr/bin:/usr/sbin chroot /cam /bin/busybox telnetd -l /.net/bin/sh && echo "NET telnetd: puerto 23 (root, sin contraseña)" ;;
+  esac
+  ip -4 addr show ath0 | grep inet; echo "NET listo: $NET"
+fi
 # IMSPLIT=1: como bootin.elf, un proceso im.elf por letra (s g r u l i a) y uno final sin argumentos; cada letra activa una fase del IMDB
 # (u = fase 4: appFw.so → Application_System_Init, el hilo de la UI). Sin IMSPLIT: un solo proceso con todas las letras (modo histórico).
 run_im() { ( LD_PRELOAD=/usr/lib/sonyshim.so chroot /cam /usr/bin/im.elf $1 > /tmp/$2.log 2>&1; echo "EXIT=$?" >> /tmp/$2.log ) & }

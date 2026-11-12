@@ -39,7 +39,7 @@ import run
 import sensor_web
 
 # escenario de F3/F4 sin volcados: ciclo de modelos, menú abierto, cola de teclas 0x7a0020
-SHIMENV = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/GLOBAL_MENU OPENVIEWAT=40 OPENVIEWGAP=14 "
+SHIMENV = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,@V00E OPENVIEWAT=40 OPENVIEWGAP=14 "
            "STARTEV=11004002:100,11004012,11004013 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f "
            "KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177 KEYINITON=06A_viewUnified2 LIVE=auto " + os.environ.get("SHIMEXTRA", ""))  # SHIMEXTRA="WAITLOG=3000": variables de diagnóstico del shim
 # {clave KEY_TACT_*, índice físico} medidos en §5.18z′
@@ -53,6 +53,19 @@ def rgba4444_png(w: int, h: int, raw: bytes) -> bytes:
     out = io.BytesIO()
     Image.fromarray(img, "RGBA").save(out, "PNG", compress_level=1)
     return out.getvalue()
+
+
+MAC_CAMARA = "fc:c2:de:3a:5d:5c"  # la que muestra «Mostr. Direcc. MAC» (PsmNsGetMacAddress, NVRAM del volcado); ath0 la lleva como en la cámara
+
+
+def red_args(red: dict | None) -> tuple[str, list[str]]:
+    """(NET para SHIMENV, args de QEMU) de la config red: slirp (red local del anfitrión) + virtio-net; telnet = hostfwd 127.0.0.1:puerto → 23 del invitado."""
+    red = red or {}
+    modos = [m for m in ("telnet", "wifi") if red.get(m)]
+    if not modos:
+        return "", []
+    fwd = f",hostfwd=tcp:127.0.0.1:{red.get('puerto', 2323)}-:23" if "telnet" in modos else ""
+    return " NET=" + ",".join(modos), ["-netdev", "user,id=n0" + fwd, "-device", f"virtio-net-device,netdev=n0,mac={MAC_CAMARA}"]
 
 
 def huella(work: Path, pkg: str, shimenv: str) -> str:
@@ -79,14 +92,17 @@ def msg_hora(ahora: float) -> bytes:
 
 
 class Vm:
-    def __init__(self, work: Path, pkg: str, perfil: str = "") -> None:
+    def __init__(self, work: Path, pkg: str, perfil: str = "", red: dict | None = None) -> None:
+        net, net_args = red_args(red)
+        self.red = red if net else {}
+        shimenv = SHIMENV + net
         self.dir = work / "live" / (perfil or (Path(pkg).name if pkg else "sony"))
         self.dir.mkdir(parents=True, exist_ok=True)
         self.estado, self.ui, self.mon = self.dir / "estado.zst", self.dir / "ui.sock", self.dir / "mon.sock"
         initrd, sello = self.dir / "initrd.gz", self.dir / "huella.txt"
         self.nvram_f = self.dir / "nvram.json"
         self.nvram = {int(k, 16): bytes.fromhex(v) for k, v in self.carga(self.nvram_f).items()}
-        actual = huella(work, pkg, SHIMENV)
+        actual = huella(work, pkg, shimenv)
         if not sello.exists() or sello.read_text() != actual:  # cambió el shim, im.sh, run.py, SHIMENV u overlay: el estado ya no vale
             for f in (self.estado, initrd, sello):
                 f.unlink(missing_ok=True)
@@ -94,12 +110,12 @@ class Vm:
         if not restaurar:  # el estado guardado solo vale con el mismo initrd (tamaño de las ROM de QEMU); en frío se rehace con la NVRAM actual
             import tempfile
             with tempfile.TemporaryDirectory() as t:
-                escribe_atomico(initrd, run.build_initrd(work, HERE / "im.sh", Path(t), SHIMENV, pkg, self.nvram).read_bytes())
+                escribe_atomico(initrd, run.build_initrd(work, HERE / "im.sh", Path(t), shimenv, pkg, self.nvram).read_bytes())
             sello.write_text(actual)
         for s in (self.ui, self.mon):
             s.unlink(missing_ok=True)
         extra = ["-chardev", f"socket,id=ui,path={self.ui},server=on,wait=off", "-device", "virtio-serial-device",
-                 "-device", "virtserialport,chardev=ui,name=a6000ui,nr=1", "-monitor", f"unix:{self.mon},server=on,wait=off"]
+                 "-device", "virtserialport,chardev=ui,name=a6000ui,nr=1", "-monitor", f"unix:{self.mon},server=on,wait=off", *net_args]
         if restaurar:
             extra += ["-incoming", f"exec:zstd -dc {self.estado}"]
         self.cmd = run.qemu_cmd(work, initrd, extra, ["-display", "none", "-serial", f"file:{self.dir / 'consola.log'}"])
@@ -297,6 +313,8 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
                 t = time.time() - vm.t0
                 fase = ("restaurado" if vm.restaurado else "arranque en frío") + f", {t:.0f} s"
                 texto = f"{fase} · {vm.seq} fotogramas · {vm.fps:.1f} fps · último: {vm.coste}" if vm.seq else f"{fase}: esperando la primera pantalla…"
+                if vm.red.get("telnet"):
+                    texto += f" · telnet 127.0.0.1:{vm.red['puerto']}"
                 if vm.p.poll() is not None:
                     texto = f"QEMU terminó (código {vm.p.returncode})"
                 self.responde(json.dumps({"texto": texto, "fotogramas": vm.seq}).encode(), "application/json")
@@ -359,7 +377,9 @@ def main() -> None:
     ap.add_argument("--lanzador", default="", help="URL del configurador (enlace «volver»)")
     a = ap.parse_args()
     CONFIG.update(ruta=a.config, lanzador=a.lanzador)
-    vm = Vm(a.work.resolve(), str(Path(a.pkg).resolve()) if a.pkg else "", a.perfil_dir)
+    from emu_config import carga_config
+    red = carga_config(Path(a.config))["red"] if a.config else None
+    vm = Vm(a.work.resolve(), str(Path(a.pkg).resolve()) if a.pkg else "", a.perfil_dir, red)
     srv = servidor(vm, a.puerto)
     print(f"http://127.0.0.1:{a.puerto}  ({'restaurando estado' if vm.restaurado else 'arranque en frío, ≈ 2,5 min hasta el menú'})", flush=True)
     for sig in (signal.SIGINT, signal.SIGTERM):  # salir = guardar el estado y cerrar QEMU

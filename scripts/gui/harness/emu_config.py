@@ -26,10 +26,10 @@ CONFIG_DEFECTO = {
     "version": 1,
     "firmware": {"origen": "sony", "overlay": "", "dat": ""},  # origen: sony | overlay | dat
     "teclas": TECLAS_DEFECTO,
-    # sensor y sd los aplica live.py (T4); red sigue sin efecto (T5)
+    # sensor, sd (T4) y red (T5) los aplica live.py; red.puerto = puerto del anfitrión que reenvía al telnet (23) del invitado
     "sensor": {"fuente": "imagen", "ruta": ""},  # imagen | video | webcam
     "sd": {"tamano_gb": 4, "carpeta": ""},
-    "red": {"telnet": False, "wifi": False},
+    "red": {"telnet": False, "wifi": False, "puerto": 2323},
 }
 
 MODELO_A6000 = 0x41030035  # build.MODEL (e25_27); región 0
@@ -96,8 +96,10 @@ def valida_config(d: object, botones: list[str] | None = None) -> dict:
     if not isinstance(sd["carpeta"], str):
         raise ValueError("sd.carpeta debe ser texto")  # noqa: TRY004
     red = {**CONFIG_DEFECTO["red"], **(d.get("red") or {})}
+    if not isinstance(red["puerto"], int) or isinstance(red["puerto"], bool) or not 1024 <= red["puerto"] <= 65535:
+        raise ValueError("red.puerto debe estar entre 1024 y 65535")
     return {"version": 1, "firmware": fw, "teclas": teclas, "sensor": sensor, "sd": sd,
-            "red": {"telnet": bool(red["telnet"]), "wifi": bool(red["wifi"])}}
+            "red": {"telnet": bool(red["telnet"]), "wifi": bool(red["wifi"]), "puerto": red["puerto"]}}
 
 
 def carga_config(ruta: Path = CONFIG_RUTA) -> dict:
