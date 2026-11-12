@@ -19,6 +19,22 @@
 #include <sys/select.h>
 #include <dirent.h>
 
+/* getenv con tabla de cambios en caliente («E NOMBRE=valor» del anfitrión; valor vacío = quitar). setenv() desde otro hilo mientras el resto llama a getenv
+ * corrompía environ (glibc 2.11, SIGSEGV en ULOGIOD_MAIN): aquí la tabla solo se rellena y nunca se reasigna. shortcut: 24 cambios, nombre ≤ 23 y valor ≤ 79. */
+extern char **environ;
+static struct { char n[24]; char v[80]; volatile int on; } hotenv[24];
+static void hotenv_set(const char *n, const char *v) {
+    int k, free_k = -1; if (strlen(n) > 23 || strlen(v) > 79) return;
+    for (k = 0; k < 24; k++) { if (hotenv[k].on && !strcmp(hotenv[k].n, n)) break; if (!hotenv[k].on && free_k < 0) free_k = k; }
+    if (k == 24) { if (free_k < 0) return; k = free_k; hotenv[k].on = 0; strcpy(hotenv[k].n, n); }
+    strcpy(hotenv[k].v, v); hotenv[k].on = *v ? 1 : 2; /* 2 = ocultar */
+}
+char *getenv(const char *n) {
+    for (int k = 0; k < 24; k++) if (hotenv[k].on && !strcmp(hotenv[k].n, n)) return hotenv[k].on == 1 ? hotenv[k].v : 0;
+    size_t l = strlen(n); for (char **e = environ; e && *e; e++) if (!strncmp(*e, n, l) && (*e)[l] == '=') return *e + l + 1;
+    return 0;
+}
+
 #define MAXFD 1024
 enum { D_NONE = 0, D_UIPC, D_GENERIC };
 static unsigned char kind[MAXFD];
@@ -487,7 +503,9 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             if (t5[1]) return 0;  /* segunda llamada del emisor: fin del callback síncrono */
             { static int ns5; const char *e = getenv("STACKQ"); if (e && hexv(e, 0) == w[0] && ++ns5 == 3) raise(SIGUSR1); }  /* STACKQ=qid: pila del emisor en el 3.er envío */
             { pthread_mutex_lock(&cb_m); int k = cb_find(w[0]); if (k >= 0) { t5[1] = (unsigned)cbs[k].cb; t5[2] = (unsigned)cbs[k].arg; } pthread_mutex_unlock(&cb_m);
-              if (k >= 0) { if (getenv("VERB")) LOG("snd_sync_msg %#x -> callback directo", w[0]); return 0; } }
+              if (k >= 0) { if (getenv("VERB")) LOG("snd_sync_msg %#x -> callback directo", w[0]);
+                  if (getenv("MSGBODY") && readable(m)) { char h[400]; int o = 0; for (int q = 0; q < 24; q++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[q]); LOG("MSGBODY sync %#x %s", w[0], h); }
+                  return 0; } }
             if (w[0] == 0x8f013a) { if (m[2] && getenv("KEYINITON") && strstr((char *)m + 2, getenv("KEYINITON"))) keyinit_send();
               if (m[2] && tron_base && strstr((char *)m + 2, getenv("TRACEON"))) { unsigned long b = tron_base; tron_base = 0; trace_fns(b); LOG("TRACEON: trazas armadas"); } if (m[2]) LOG("LOG %s", (char *)m + 2); else if (getenv("VERB")) { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
             else if (w[0] == 0x3e014d) backup_service((unsigned *)m);
@@ -527,6 +545,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
                 if (!ok && getenv("UPMON")[0] == '2') { if (!is_dynq(0x920168)) dynq_add(0x920168); mbx_post_raw(0x920168, a); mb = 1; }
                 LOG("UPMON: ON_CMP -> APP_ON a 0x920168: %s", ok ? "callback" : mb ? "buzón" : "SIN CALLBACK"); return 0; }
             if (syncmbx_q(w[0])) { if (!is_dynq(w[0])) dynq_add(w[0]); mbx_post_raw(w[0], (unsigned *)m); LOG("snd_msg %#x -> buzón (SYNCMBX) w0=%#x", w[0], ((unsigned *)m)[0]); return 0; }
+            if (getenv("MSGBODY") && readable(m)) { char h[400]; int o = 0; for (int q = -4; q < 20; q++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[q]); LOG("MSGBODY snd %#x %s", w[0], h); }
             if (cb_deliver(w[0], m)) { if (getenv("VERB")) LOG("snd_msg %#x -> callback", w[0]); return 0; }
             /* Servicios de kernel con acuse genérico (ACKQ=d9016e,7a0029,…; 0xd9016e registro de puerto de vídeo, 0x7a0029 input.ko): se
              * responde a la cola dinámica que viaja en el cuerpo copiando la petición con estado 0 (lo que comprueba el emisor síncrono
@@ -552,7 +571,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
                 ((unsigned *)m)[0], ((unsigned *)m)[1]); return 0; }
         case 6: { unsigned char *m = (unsigned char *)w[1]; char h[200]; int k, o = 0;
             for (k = 0; k < 64; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]);
-            if (getenv("VERB")) LOG("uipc snd_sync_direct qid=%#x msg=%s", w[0], h); return direct_service(w[0], (unsigned *)m); }
+            if (getenv("VERB") || (getenv("MSGBODY") && w[0] != 0x910041 && w[0] != 0x910042)) LOG("uipc snd_sync_direct qid=%#x msg=%s", w[0], h); return direct_service(w[0], (unsigned *)m); }
         default: LOG("uipc ioctl idx=%u args %#x %#x (ignorada)", idx, w[0], w[1]); return 0;
         }
     }
@@ -840,10 +859,11 @@ static void on_trace(int sig, siginfo_t *si, void *u) {
     }
     signal(SIGILL, SIG_DFL);
 }
+static int trc_lib_done; static const char *trc_env = "TRACEFN";  /* TRACELIB=lib: TRACEFN2 = entradas relativas a esa biblioteca (p. ej. cmn_view_processDataMgr.so; cubre llamadas virtuales que SETHOOK no ve) */
 static void trace_fns(unsigned long base) {
     trc_base = base;
     struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_trace; sa.sa_flags = SA_SIGINFO | SA_NODEFER; sigaction(SIGILL, &sa, 0);
-    for (const char *e = getenv("TRACEFN"); e && *e && ntrc < 32; ) {
+    for (const char *e = getenv(trc_env); e && *e && ntrc < 32; ) {
         unsigned long a = hexv(e, &e), pc = base + a; unsigned short *p = (unsigned short *)pc;
         mprotect((void *)(pc & ~4095UL), 8192, PROT_READ | PROT_WRITE | PROT_EXEC);
         trc[ntrc].pc = pc; trc[ntrc++].orig = *p; *p = 0xde00; __builtin___clear_cache((char *)p, (char *)p + 2);
@@ -894,6 +914,12 @@ void *dlopen(const char *f, int fl) {
     LOG("dlopen(%s) ...", f ? f : "(null)");
     void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
     if (h && f && strstr(f, "libObj.so")) { gpu_patch(); lobj_h = h; }
+    if (h && f && getenv("TRACELIB") && (strstr(f, getenv("TRACELIB")) || strstr(f, "viewUnified")) && !trc_lib_done) {  /* la biblioteca puede entrar como dependencia de viewUnified*: se busca en /proc/self/maps tras cada dlopen hasta hallarla */
+        char ln[256]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");
+        while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, getenv("TRACELIB"))) { base = hexv(ln, 0); break; }
+        if (m) fclose(m);
+        if (base) { trc_lib_done = 1; trc_env = "TRACEFN2"; trace_fns(base); LOG("TRACELIB %s base %#lx", getenv("TRACELIB"), base); }
+    }
     if (h && f && strstr(f, "libObj.so") && (getenv("SKIPFN") || getenv("TRACEFN") || getenv("WATCH") || getenv("POKE"))) skip_fns();
     if (h && f && getenv("PATCHFN")) {  /* PATCHFN="lib.so:off_hex=val_hex[,…]": sustituye la función Thumb en lib+off por «movs r0,#val; bx lr» (p. ej. viewUnified2.so:17094c=3) */
         char *spec = strdup(getenv("PATCHFN")), *sv = 0; unsigned long base = *(unsigned long *)h;  /* link_map.l_addr */
@@ -938,6 +964,26 @@ static void *salvage_reply(void *a) {
     LOG("SALVAGE estado libObj+0x10aa698 = %u", *(unsigned *)(base + 0x10aa698));
     return 0;
 }
+/* MWF::ObjIf::IssueCommandAsync(objeto, ObjMsg*): la UI emite así los cambios de ajustes (p. ej. EFCS = ObjMsg(0x3100, 0x75fa) + param 0x9776); IMCMDLOG=1 registra destino, cabecera del mensaje y retorno */
+int _ZN3MWF5ObjIf17IssueCommandAsyncEPvPNS_6ObjMsgE(void *h, void *msg) {
+    static int (*real)(void *, void *); if (!real) real = dlsym(RTLD_NEXT, "_ZN3MWF5ObjIf17IssueCommandAsyncEPvPNS_6ObjMsgE");
+    int r = real(h, msg);
+    if (getenv("IMCMDLOG")) { char t[400]; int o = 0; if (readable(msg)) for (int q = 0; q < 24; q++) o += snprintf(t + o, sizeof t - o, "%08x ", ((unsigned *)msg)[q]); t[o] = 0; LOG("IssueCommandAsync obj=%p msg=%p -> %d : %s", h, msg, r, t); }
+    return r;
+}
+/* SETLOG=1: registra (con retorno) los eslabones de un cambio de ajuste del menú en cmn_view_processDataMgr / wrapperSettingUtil (≤ 4 argumentos de registro); reenvía a la implementación real */
+#define SETHOOK(sym) int sym(unsigned a, unsigned b, unsigned c, unsigned d) { static int (*r)(unsigned, unsigned, unsigned, unsigned); if (!r) r = dlsym(RTLD_NEXT, #sym); \
+    if (getenv("SETLOG")) LOG("SET> " #sym " %x %x %x %x", a, b, c, d); int x = r(a, b, c, d); if (getenv("SETLOG")) LOG("SET< " #sym " -> %#x", x); return x; }
+SETHOOK(_ZN21CmnViewProcessDataMgr8setValueEii)
+SETHOOK(_ZN21CmnViewProcessDataMgr8execProcEi)
+SETHOOK(_ZN31CmnViewProcessDataElementNormal8setValueEi)
+SETHOOK(_ZN31CmnViewProcessDataElementNormal8execProcEv)
+SETHOOK(_ZN31CmnViewProcessDataElementNormal15setValueToModelEh)
+SETHOOK(_ZN31CmnViewProcessDataElementNormal16setValueToBackupEh)
+SETHOOK(_ZN31CmnViewProcessDataElementNormal22getDataModelSetEventIdEhRm)
+SETHOOK(_ZN31CmnViewProcessDataElementNormal22getDataModelSetParamIdEhhRm)
+SETHOOK(_ZN18WrapperSettingUtil11writeBackupEP15ViewBaseProductja)
+SETHOOK(_ZN18WrapperSettingUtil11writeBackupEP15ViewBaseProductjaa)
 /* osal_snd_sync_msg(qid, msg, cb, arg): SYNCLOG=1 registra los envíos síncronos que fallan (p. ej. 0xFFFFFC04 = cola local sin manejador registrado) */
 int osal_snd_sync_msg(int qid, void *msg, void *cb, void *arg) {
     static int (*real)(int, void *, void *, void *);
@@ -1134,7 +1180,8 @@ static void gpu_draw(unsigned list) {
     if (set[0x112]) cba = r[0x112] << 4;
     if (set[0x113]) { cbw = r[0x113] & 0xffff; cbh = r[0x113] >> 16; }
     unsigned n = r[0x202] & 0xfff;
-    if (!set[0x202] || r[0x202] >> 24 != 0x90 || n < 3 || n > 64 || !set[0x203] || !set[0x216] || !cba || cbw > 2048 || cbh > 2048) return;
+    if (getenv("GPUDRAWLOG")) LOG("gpu_draw lista %#x: 202=%#x(set %d) n=%u 203=%d 216=%d 586=%#x(%d) 58f=%#x(%d) 589=%#x scissor %#x %#x", list, r[0x202], set[0x202], n, set[0x203], set[0x216], r[0x586], set[0x586], r[0x58f], set[0x58f], r[0x589], r[0x47], r[0x48]);
+    if (!set[0x202] || r[0x202] >> 24 != 0x90 || n < 3 || n > 4095 || !set[0x203] || !set[0x216] || !cba || cbw > 2048 || cbh > 2048) return;
     unsigned short *cb = (unsigned short *)phys2pn(cba, cbw * cbh * 2), *ix = (unsigned short *)phys2p(r[0x203]); unsigned char *vx = phys2p(r[0x216]);
     if (!cb || !ix || !vx) return;
     unsigned tw = set[0x586] ? r[0x586] >> 16 : 0, th = set[0x586] ? r[0x586] & 0xffff : 0, fmt = set[0x58f] ? r[0x58f] : 0;
@@ -1146,7 +1193,7 @@ static void gpu_draw(unsigned list) {
         cx0 = 320 + a / 2; cy0 = 240 - d / 2; cx1 = 320 + c / 2; cy1 = 240 - b / 2;
         if (cx0 < 0) cx0 = 0; if (cy0 < 0) cy0 = 0; if (cx1 > (int)cbw) cx1 = cbw; if (cy1 > (int)cbh) cy1 = cbh;
     }
-    float sx[64], sy[64], at[64][6];  /* u y v en texeles, r g b a en 0..255 */
+    static float sx[4096], sy[4096], at[4096][6];  /* u y v en texeles, r g b a en 0..255; solo gpu_thread dibuja. Las listas de marcos/9-slice llevan hasta ~450 vértices (con >64 se omitían: sin marco de foco) */
     for (unsigned k = 0; k < n; k++) {
         float *q = (float *)(vx + ix[k] * 0x40u);
         sx[k] = q[9] * q[0] + q[10] * q[1] + q[11]; sy[k] = q[12] * q[0] + q[13] * q[1] + q[14];
@@ -1247,6 +1294,7 @@ static void *live_keys(void *a) {
         while ((nl = strchr(ln, '\n'))) {
             *nl = 0; const char *e;
             if (ln[0] == 'T') { LOG("hora del anfitrión %s", ln + 2); date_base = (long long)hexv(ln + 2, &e); date_mono0 = mono_s(); date_have = 1; }  /* «T epoch_local_hex»: hora local del anfitrión (+ desfase del usuario); se avanza con el reloj monotónico */
+            if (ln[0] == 'E') { char *eq = strchr(ln + 2, '='); if (eq) { *eq = 0; hotenv_set(ln + 2, eq + 1); LOG("env %s=%s", ln + 2, eq + 1); } }  /* «E NOMBRE=valor»: diagnóstico en caliente (VERB, GPUDRAWLOG…) sin arranque en frío */
             if (ln[0] == 'Y') date_type = (int)hexv(ln + 2, &e);
             if (ln[0] == 'R') live_force = 1;  /* el anfitrión se acaba de conectar (p. ej. tras restaurar el estado): reenviar el fotograma actual */
             if (ln[0] == 'K') { unsigned m[12] = {0}; m[0] = hexv(ln + 2, &e); m[2] = hexv(e + 1, &e); m[4] = hexv(e + 1, &e); mbx_post_raw(0x7a0020, m); if (wl_on()) wl_key(m[0]); }

@@ -72,6 +72,13 @@ def test_shim_compila_y_exporta_los_ganchos(tmp_path: Path) -> None:
         assert f" {hook}\n" in syms or f" {hook}@" in syms, hook
 
 
+def test_gpu_draw_no_descarta_listas_de_mas_de_64_vertices() -> None:
+    """§5.18z⁶: el marco de foco y las filas del menú son listas de 118–454 vértices; con tope 64 no se dibujaban y el cursor desaparecía."""
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    draw = src[src.index("static void gpu_draw("):src.index("/* LIVE=/dev/vportNp1")]
+    assert "n > 64" not in draw and "n > 4095" in draw and "sx[4096]" in draw
+
+
 @pytest.mark.skipif(not (os.environ.get("A6000_HARNESS_RUN") and (WORK / "base.cpio.gz").exists() and shutil.which("qemu-system-arm")),
                     reason="prueba lenta (≈ 2 min): A6000_HARNESS_RUN=1 y setup.sh hecho")
 def test_arranque_en_qemu_llega_a_la_pila_de_ventanas() -> None:
