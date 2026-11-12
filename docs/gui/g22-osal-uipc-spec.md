@@ -1,0 +1,65 @@
+# G22-E: especificación de `osal_uipc` y `/dev/uipc` compartido entre procesos (T5b/T6)
+
+Fecha: 12-11-2026. Análisis estático de `firmware/extracted/fw321/.../nflasha15_unpacked_unpacked/kmod/osal_uipc.ko` (37 264 B, `vermagic 3.0.27_nl-rt106`, «OSAL Version 3.0», compilado el 24-01-2019) con `llvm-objdump -d -r` y `llvm-readelf -r`. Se cruzó con el modelo en proceso de `scripts/gui/harness/shim/sonyshim.c` (solo lectura). No se usó REA, ninguna VM ni la cámara. Las direcciones son desplazamientos en `.text` del `.ko`.
+
+## 1. Interfaz `ioctl` (`__k_uipc_cdev_ioctl`, 0x5a0)
+
+- `cmd & 0x7fffffff` = índice 0–16; un índice mayor de 16 da `-EINVAL`. `arg` apunta a 8 B de usuario `{w0, w1}` (`copy_from_user` de 8). El manejador es `tabla[idx](w0, w1, ctx)`, con la tabla en `.rodata+0x28` según `.rel.rodata`.
+- Si no es `connect` (16) y `ctx+0x14` (base de usuario del `mmap`) vale 0: `-EINVAL`. Primero hay que llamar a `connect` y hacer el `mmap`.
+- Si `ctx+0x10` no coincide con el campo `+0xcc` de la tarea actual: `printk("called from different process")` y `-EINVAL`. Un descriptor no se comparte entre procesos: cada proceso abre el suyo.
+
+| idx | Manejador | Entrada (`w0`, `*w1`) | Salida |
+|---|---|---|---|
+| 0 | `__k_4u_stat_sem` | id | 12 B |
+| 1 | `__k_4u_wai_sem_tmo` | id, tmo (ms; 0 = sondeo, −1 = infinito, según el shim) | ret |
+| 2 | `__k_4u_sig_sem` | id | ret |
+| 3 | `__k_4u_stat_msgq` | qid | 16 B |
+| 4 | `__k_4u_snd_msg` | qid, puntero de usuario al cuerpo | ret |
+| 5 | `__k_4u_snd_sync_msg` | qid, `&{msg, cb, arg}` (12 B, de ida y vuelta) | 12 B |
+| 6 | `__k_4u_snd_sync_direct` | qid, 16 B; copia el mensaje a un bloque del kernel y lo envía síncrono | 16 B |
+| 7 | `__k_4u_rcv_msg_tmo` | qid, `&{out, tmo}` (8 B) | 4 B: puntero de usuario |
+| 8 | `__k_4u_reg_msg_queue_cb` | qid, `&{arg, cb, prio, sync}` (16 B) | 4 B |
+| 9 | `__k_4u_unreg_msg_queue_cb` | qid | ret |
+| 0xa | `__k_4u_valloc_msg_wait` | qid, `&{out, size, tmo}` (12 B) | 4 B: puntero de usuario |
+| 0xb | `__k_4u_free_msg` | qid, puntero | ret |
+| 0xc | `__k_4u_dynamic_id` | 0, `&{tipo, grupo, &id}` (12 B) | 4 B |
+| 0xd | `__k_4u_wait_cb` | 0, `&out[4]` (16 B) | `{cb, arg, msg, 0}` (16 B) |
+| 0xe | `__k_4u_set_msgq_broadcast_mode` | qid, modo | ret |
+| 0xf | `__k_4u_set_msgq_log_mode` | qid, modo | ret |
+| 0x10 | `__k_4u_connect` | `w0`, `w1` = `&out[4]` | `{0x80000, 0x20000, 0x8000, qid_dinámica}` |
+
+Los índices coinciden con la tabla del shim (`sonyshim.c:459`). **Diferencia hallada:** `connect` devuelve en `out[3]` una cola dinámica creada con `osal_dynamic_id(0x2a, 0x3f, &out[3])` (0x4c8–0x4d4) y la guarda en `ctx+0x2c`. Tanto el shim como `uipc_stub.c` devuelven 0.
+
+## 2. Memoria compartida (`__k_uipc_cdev_mmap`, 0x2a8)
+
+- Solo acepta `vm_end − vm_start == 0x80000`; con otro tamaño da `-EINVAL`.
+- Hace `remap_pfn_range` del **mismo búfer global** (puntero en `.bss+0x28`) en cada proceso. Todos los procesos ven la misma memoria y cada uno la tiene en su propia dirección. Guarda `vm_start` en `ctx+0x14`.
+- Traducción de usuario a kernel (rutina 0x1ae0, usada por `snd`/`free`/`rcv`/`valloc`): `o = ptr − ctx.base`; si `o ≥ 0x80000`, error; si no, `kbase + o`. **Los mensajes viven en esta memoria compartida** y los punteros solo son válidos tras restar la base del proceso.
+
+## 3. Mensajes, colas y semáforos
+
+- `qid` = `grupo << 16 | índice`. `osal_valloc_msg_wait` rechaza índices `≥ 0x800` y trata aparte el bit `0x8000`. Para los grupos 0x3e y 0x8f se llama a `uipc_oom` en caso de falta de memoria.
+- Cabecera del mensaje: `osal_msg_size` lee `[-8]` (bloques de 32 B) y `[-7]`, y resta 12 o 20 según la variante. El shim usa `[-8] = 2 → 0x34 B` y `[-4]` = cola origen. Se coloca en `vpool_alloc`/`fblock` (bloques de 32 B y de 8 B).
+- Entrega con callback: `reg_msg_queue_cb` instala `__k_user_msg_cb` en el kernel. Cada envío a esa cola se encola para el proceso dueño, y sus hilos proxy (`[0x10]` de la memoria compartida = 8 hilos) lo recogen con `wait_cb` (idx 13). Después llaman `cb(msg, arg)` en espacio de usuario. Los síncronos (`sync = 1`, `__k_is_user_sync_cb`) se cierran con una segunda llamada `snd_sync_msg` (el shim lo trata con `t5[1] != 0`).
+- Semáforos: `get_bsem`, `osal_wai_sem_tmo`/`osal_sig_sem`. Ids dinámicos de tipo 0x32 y colas de tipo 0x2a (`osal_dynamic_id`).
+- NO_VERIFICADO: la numeración exacta de `osal_dynamic_id`, el formato de `stat_*`, la semántica de `broadcast`/`log`/`rt mode` y la prioridad de mensajes (`osal_set_msg_pri`).
+
+## 4. Por qué no basta el shim
+
+El shim emula `/dev/uipc` **dentro de un proceso**: abre `/tmp/uipc.shm` y resuelve en el mismo espacio de direcciones las colas, los callbacks y los servicios de kernel (Backup `0x3e014d`, `ma_service`, acuses). Un segundo proceso, como el `WS_SubProcess.elf` de T5b o el zygote, `system_server` y Tweak de T6, no comparte ese estado. Además, los binarios bionic de Android no cargan el shim, que es glibc. Hace falta un dispositivo de caracteres real con `ioctl` y `mmap`. Con CUSE no se puede, porque no permite `mmap`, así que **la vía es un módulo de kernel**. Un demonio con socket solo serviría a procesos glibc que carguen el shim.
+
+## 5. Diseño propuesto
+
+1. **`uipc_core.c` (hecho, prototipo):** núcleo sin bloqueos y sin dependencias que implementa las secciones 1–3 sobre un búfer de 0x80000 B: traducción por base de proceso, colas FIFO, callbacks por proceso dueño, semáforos, ids dinámicos y `connect`. Compila tanto en el kernel como en el anfitrión.
+2. **Módulo `uipc_shared.ko` (pendiente):** sustituye a `uipc_stub.c`. Un `misc` `/dev/uipc` con `vmalloc_user(0x80000)` y `remap_vmalloc_range` en cada `mmap`. `ioctl` copia los 8 B y las estructuras de la tabla y llama a `uc_*` bajo un mutex. Si recibe `UC_AGAIN`, espera en `wait_event_interruptible_timeout` con el tmo dado, y cada `snd`/`sig` hace `wake_up_all`.
+3. **Servicios de kernel (Backup, etc.):** se quedan en el shim del proceso principal. En modo compartido (variable nueva, p. ej. `UIPC_SHARED=1`, que deberá implementar el dueño de `sonyshim.c`), el shim reenvía al `/dev/uipc` real los `ioctl` de colas que no resuelve. Además se registra con `reg_sync_msg_queue_cb` como dueño de las colas de servicio (`0x3e014d`, `0x14c0424`…). Así una petición de Tweak llega por `wait_cb` a un proxy del shim y la atiende el `backup_service` actual, que escribe la misma NVRAM emulada. Al trasladar el estado de colas del shim al módulo, sus punteros deben pasar a la ventana compartida: `valloc` debe asignar en el `mmap` y no con `calloc` (`sonyshim.c:470`).
+4. **Orden de prueba:** cargar `binder32` + `ashmem` + `uipc_shared`. Luego el `MODE=zyg` de `android.sh` y, para T5b, `WS_SubProcess.elf`. El criterio sale de PENDIENTES: zygote pasa de `libosal_uipc` y «Conf. punto acceso» muestra la lista de redes.
+
+## 6. Prueba
+
+`tests/test_uipc_core.py` compila `uipc_core.c` y `uipc_core_test.c` con `cc` y comprueba lo siguiente con dos procesos de bases distintas:
+- envío y recepción con traducción de punteros, y rechazo de punteros fuera de la ventana;
+- entrega por callback, tanto de lo encolado antes del registro como después;
+- `unreg`, semáforos, ids dinámicos y límites de tamaño.
+
+Resultado: 1 passed. ruff y mypy sin avisos.
