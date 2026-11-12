@@ -61,7 +61,8 @@ def test_solo_cambia_lo_previsto_y_revierte(pair):
 @needs
 @pytest.mark.parametrize("efcs,silent", [(0, 0), (0, 1), (1, 0), (1, 1)])
 def test_copiador_igual_que_sony_salvo_el_byte_nuevo(pair, efcs, silent):
-    """0x43845f2e..0x43845fa4: misma memoria de `cap` y mismo `sb`; solo se añade cap+0x41d = silent (Silent manda sobre EFCS)."""
+    """0x43845f2e..0x43845fa4: misma memoria de `cap` y mismo `sb`; se añade cap+0x41d = silent y, con Silent, cap+0x41c = 1 (EFCS de Sony
+    desactivado, como el A6300: Silent manda sobre EFCS; G22-A, el estado EFCS On + Silent On equivale al (1,1) medido en R87)."""
     orig, out = pair
     rng = random.Random(7)
     blk_bytes = bytes(rng.randrange(256) for _ in range(0x600))
@@ -83,8 +84,8 @@ def test_copiador_igual_que_sony_salvo_el_byte_nuevo(pair, efcs, silent):
     mem_n, sb_n = run(out)
     assert sb_o == sb_n
     diff = [i for i in range(0x1000) if mem_o[i] != mem_n[i]]
-    assert diff == ([0x41D] if silent else [])
-    assert mem_n[0x41C] == efcs and mem_n[0x41D] == silent
+    assert diff == ([0x41C] if silent and not efcs else []) + ([0x41D] if silent else [])
+    assert mem_n[0x41C] == efcs | silent and mem_n[0x41D] == silent
 
 
 @needs

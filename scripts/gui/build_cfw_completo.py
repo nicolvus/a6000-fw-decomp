@@ -31,7 +31,7 @@ from g22 import patch_libobj_eco
 
 DEV_A = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev"
 DEV_B = ROOT / "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev"
-BASE_TAR = ROOT / "analysis/gui/g22/base-357.tar"
+BASE_TAR = ROOT / "analysis/gui/g22/base-380.tar"   # G22-A (3.80): build_base_tar.py con el copiador cap+0x41c = EFCS | silent; el 3.57–3.79 usó base-357.tar
 USR = "nflasha15_unpacked_unpacked"
 PID_SILENT, SILENT_DELTA = 0x12, 0xEB0     # nodo de Silent = RootAelWShutter + 0xEB0 (build_silent_menu_test)
 

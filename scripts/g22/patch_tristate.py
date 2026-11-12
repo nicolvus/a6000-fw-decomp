@@ -2,11 +2,12 @@
 
 `electronic = [ajustes+0x238]` (Silent manda sobre EFCS; `[+0x210]` sigue siendo el EFCS de Sony). Sin cuevas (R55: el bloque TPZL 0 no se toca).
 Sitios (todos en línea):
-  1. copiador `0x43845f2e` (118 B, mismo tamaño): tras `cap+0x41c` = EFCS escribe `cap+0x41d` = electronic (bit 8 de esa palabra);
+  1. copiador `0x43845f2e` (118 B, mismo tamaño): `cap+0x41c` = EFCS | silent (G22-A: con Silent el EFCS de Sony queda desactivado, como el A6300;
+     EFCS On + Silent On = el (1,1) medido en R87) y `cap+0x41d` = electronic (bit 8 de esa palabra; `ldrb` de `+0x238`);
      los dos lectores de Sony que comparan `== 1` (`0x4384219e`, `0x43842270`) pasan a `ldrb.w` (mismo tamaño); los demás hacen `strb`;
      para ganar sitio se quitan las recargas `ldr r3,[r5]` (r2 de temporal, r0 libre: liveness comprobada con capstone).
   2. paquete de la foto `0x43841472`: `ldr.w r3,[sb,#0x41c]` -> `ldrb.w r3,[sb,#0x41d]` (mismo tamaño).
-  3. envío `0x438d01aa..0x438d01c2`: `pkt[0x0e] = [+0x210] & [+0x238]`; el `cbnz r6` de `0x438d01a2` apunta a `0x438d01aa`
+  3. envío `0x438d01aa..0x438d01c2`: `pkt[0x0e] = [+0x238]` (el `ands` del diseño se sustituyó por `mov r3,r2`); el `cbnz r6` de `0x438d01a2` apunta a `0x438d01aa`
      y `cbz r6` elige `0x438d01c8` (r6 == 0) o `0x438d01c2`.
 """
 from __future__ import annotations
@@ -27,7 +28,7 @@ SITES: tuple[tuple[int, bytes, bytes, str], ...] = (
     (0x43841472, bytes.fromhex("d9f81c34"), bytes.fromhex("99f81d34"), "CTOR: ldrb.w r3,[sb,#0x41d]"),
     (0x43845F2E,
      bytes.fromhex("2b68d3f81022c4f81c24d3f8bc22c4f82024d3f8a020d3f80c31c4f8382484f843342b6893f8eb3484f844342b68d3f8943384f845342b68d3f82024d3f82c35c4f84824c4f88c3494f8423284f843322b681b6aa3f10309d9f1000343eb090384f842322b68d3f88021c4f8bc2393f8f13184f8d633"),
-     bytes.fromhex("2b68d3f81022c4f81c24d3f8380200bf84f81d04d3f8bc22c4f82024d3f8a020c4f83824d3f80c2184f8432493f8eb2484f84424d3f8942384f84524d3f82024c4f84824d3f82c25c4f88c2494f8422284f843221a6aa2f10309d9f1000242eb090284f84222d3f88021c4f8bc2393f8f12184f8d623"),
+     bytes.fromhex("2b68d3f8102293f838020243c4f81c2484f81d04d3f8bc22c4f82024d3f8a020c4f83824d3f80c2184f8432493f8eb2484f84424d3f8942384f84524d3f82024c4f84824d3f82c25c4f88c2494f8422284f843221a6aa2f10309d9f1000242eb090284f84222d3f88021c4f8bc2393f8f12184f8d623"),
      "copiador: cap+0x41d = silent"),
 )
 
