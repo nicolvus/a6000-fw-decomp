@@ -138,5 +138,5 @@ def test_menu_global_se_dibuja() -> None:
     subprocess.run([sys.executable, str(HARNESS / "gpu_raster.py"), str(WORK), str(WORK / "menu.png")], check=True, capture_output=True)
     img = np.asarray(Image.open(WORK / "menu.png"))
     assert (img.max(axis=2) > 128).sum() > 5000  # texto blanco/gris de las seis categorías y el título
-    i16 = img.astype(int)
-    assert ((i16.max(axis=2) - i16.min(axis=2)) > 40).sum() > 10000  # fotos de fondo en color: imágenes LZPT de /dev/ldec (§5.18z)
+    mx = img.max(axis=2)
+    assert ((mx > 20) & (mx < 128)).sum() > 60000  # medios tonos de las fotos de fondo: imágenes LZPT de /dev/ldec (§5.18z; sin ellas el fondo es negro)
