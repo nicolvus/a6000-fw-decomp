@@ -14,6 +14,7 @@ import hashlib
 import json
 import struct
 import sys
+from dataclasses import replace
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
@@ -178,6 +179,29 @@ def sin_acciones():
     M.TREE[2][:] = M.paginar([x for x in M.ORDEN if x in M.SETTINGS])
 
 
+def partir(maximo=M.OPCIONES_POR_LISTA):
+    """G36: la lista de opciones de la clase Normal no pasa de la 7.ª (cámara, 3.77). Cada ajuste más largo se parte en filas equilibradas de ≤ `maximo` opciones con la
+    misma clave/evento/lectura y etiqueta «Ajuste primera/última»; la spec, el orden y los pids se rehacen en el sitio (main y build_nodes guardan sus referencias)."""
+    nuevos, orden = {}, []
+    for k in [x for x in M.ORDEN if x in M.SETTINGS] + [x for x in M.SETTINGS if x not in M.ORDEN]:
+        s = M.SETTINGS[k]
+        n = -(-len(s.opciones) // maximo)
+        if n == 1:
+            nuevos[k] = s
+            orden.append(k)
+            continue
+        cortes = [len(s.opciones) * i // n for i in range(n + 1)]
+        for i in range(n):
+            ops = s.opciones[cortes[i]:cortes[i + 1]]
+            kid = f"{k}_{i + 1}"
+            nuevos[kid] = replace(s, id=kid, label=f"{s.label} {ops[0][0]}/{ops[-1][0]}", opciones=ops)
+            orden.append(kid)
+    M.SETTINGS.clear()
+    M.SETTINGS.update(nuevos)
+    M.TREE[2][:] = M.paginar(orden)
+    M.PIDS[:] = range(pid_space.PID_PRIMERO, pid_space.PID_PRIMERO + len(nuevos))
+
+
 def configurar(sat=False, gam=False, col=False, acc=False):
     """Ajusta la spec según las opciones (como la línea de órdenes) y devuelve los argumentos con nombre de `main`."""
     if not acc:
@@ -188,6 +212,7 @@ def configurar(sat=False, gam=False, col=False, acc=False):
         M.SETTINGS["saturation"] = M.S("saturation", "Saturation", 0x26C, M.num(-32, 32), "clave+parche libObj (opt-in)")
     if col:        # B&W con efecto (Movie + saturación −8), S-Gamut (= Movie, G27 §5) y S-Gamut3(.Cine) (efecto con `pp_curves_patch.py --color`, G27 §6)
         M.SETTINGS["color_mode"] = M.S("color_mode", "Color Mode", M.K(0), M.COLOR_MODE_COMPLETO, "clave+VALUEID+parche libObj (opt-in)")
+    partir()
     return {"saturacion_a6300": sat, "gamma_slog": gam, "color_gamut": col, "acciones": acc}
 
 

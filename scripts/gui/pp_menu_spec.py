@@ -65,6 +65,7 @@ COLOR_MODE_COMPLETO = (("Movie", 5), ("Still", 6), ("Cinema", 7), ("Pro", 3), ("
 # es una fila de la carpeta «Picture Profile», en páginas de 6 con la etiqueta desambiguada. `F` solo queda para la raíz.
 F = lambda label, *pages: ("folder", label, pages)
 FILAS_POR_PAGINA = 6
+OPCIONES_POR_LISTA = 7   # G36: la lista de opciones de la clase Normal no pasa de la 7.ª (cámara, 3.77); build_pp_menu.partir parte los ajustes más largos
 ORDEN = ["sel", "copy", "reset", "gamma", "black_level", "bg_range", "bg_level", "knee_mode", "knee_max", "knee_sens", "knee_point", "knee_slope",
          "color_mode", "color_level", "saturation", "phase", *(f"cd_{c}" for c in "rgbcmy"), "wb_filter", "wb_lb", "wb_cc", "wb_r", "wb_b",
          "det_level", "det_mode", "det_vh", "det_bw", "det_limit", "det_crisp", "det_hilight"]

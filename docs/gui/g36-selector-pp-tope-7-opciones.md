@@ -41,10 +41,34 @@ Con el tope de 7, solo se alcanzan las 7 primeras opciones de cada fila:
 
 Consecuencias que explica: (a) PP7–PP10 no se eligen (este informe); (b) **S-Log2/S-Log3 «sin diferencia visible»** desde el 3.67 (G30-C, G32-C): por la fila Gamma no se pueden elegir (posiciones 9–10); (c) en los ajustes centrados en 0 el valor neutro y los positivos son inalcanzables: puede explicar parte de G33-A («no hacen nada visible, salvo Saturación»).
 
-## 4. Arreglo (sin hacer; decisión pendiente, PENDIENTES G36-A)
+## 4. Arreglo (opciones consideradas; elegida la 1)
 
 1. **Partir cada fila en grupos de ≤ 7 opciones** con la misma clave (p. ej. «Picture Profile», «Picture Profile 7-10»; «Black Level −15…−9», …): 34 → 76 filas, 13 páginas de 6. Mínimo y dentro del comportamiento comprobado; queda sin probar cómo pinta una fila el valor actual cuando no está entre sus opciones.
 2. **Menos opciones por ajuste numérico** (pasos de 2, rango recortado): pocas filas, pierde resolución.
 3. **Clase con desplazamiento** (reutilizar la de un ajuste de Sony con lista larga): sin las filas extra, pero cada clase lleva su propia lógica de modelo; requiere RE de la vista y es lo de mayor riesgo.
 
 No verificado: el mecanismo exacto del tope dentro de la vista (no localizado en el código); que el tope sea 7 en las filas numéricas (deducido; comprobable abriendo Black Level y viendo si el cursor para en −9).
+
+## 5. CFW 3.78: filas partidas en grupos de ≤ 7 (construido, sin instalar)
+
+Elegida la opción 1 (usuario). `build_pp_menu.partir()` (lo llama `configurar`, después de las opciones S-Log/S-Gamut/Copy/Reset) parte cada ajuste de más de
+`pp_menu_spec.OPCIONES_POR_LISTA = 7` opciones en filas **equilibradas** con la misma clave, evento y lectura; la etiqueta indica el tramo («Black Level -15/-10»).
+Resultado: **76 filas en 13 páginas de 6**, pids `0xE9…0x134`; `pid_space.PID_MAX` sube de `0x110` a `0x140` (`0xA0 << 1`, inmediato válido de `cmp.w`).
+
+| Ajuste | Filas |
+|---|---|
+| Picture Profile | `Off/PP4`, `PP5/PP10` |
+| Copy, Reset | `PP1/PP5`, `PP6/PP10` |
+| Gamma | `Movie/Cine3`, `Cine4/S-Log3` |
+| Color Mode | `Movie/Pro`, `ITU709 Matrix/S-Gamut3` |
+| Black Level | 5 filas de 6–7 valores |
+| 15 valores (BG Level, Phase, Color Depth ×6, Detail Level) / 16 (Saturation) / 19 (WB) | 3 filas cada uno |
+| Knee Point (13), Knee Slope (11), 8 valores (Detail Limit/Crispening, Color Mode Level) | 2 filas cada uno |
+
+Paquete `analysis/gui/g22/pkg-378w/pkg-3.78/package-3.78/firmware_packed.dat`, sha256 `33a4dc68e2963680559a6d2fde242add912e9cc46a199366b7b00e8a9d62a010`.
+Frente al 3.77 solo cambian `viewUnified2.so`, `CautionConfig.so` y los textos (`libObj.so` y `base-pp.tar`/`nflasha3` idénticos, sha256 comparados).
+Pruebas: `tests/test_g2*.py tests/test_g3*.py` 106 pasan (nueva `test_g36_ninguna_fila_pasa_de_7_opciones_y_se_conservan_todas`). Auditoría independiente
+(`analysis/gui/g22/audit-3.78.json`): 22/24, los mismos dos fallos esperados y el mismo aviso de `fsck` (contadores de bloques libres) que el 3.76 instalado.
+
+NO verificado (cámara): qué muestra cada fila cuando el valor actual pertenece a la otra fila del mismo ajuste (puede quedar sin marca o marcar la 1.ª opción);
+que el tope sea también 7 en las filas numéricas (se cubre igualmente al partir).
