@@ -3,8 +3,9 @@
 
 Dos entradas:
   * ARW de la A6000 (`compara_real.py DSC03773.ARW …`): el ARW lleva la vista previa JPEG que generó la propia BIONZ X a partir de ese RAW → par
-    (RAW del sensor, salida real). El modelo recibe el RAW con negro restado, balance de blancos as-shot y matriz cámara→sRGB lineal (dcraw), SIN ISP de Sony.
-    Lee del MakerNote el Creative Style, el DRO y la temperatura de color con que se hizo el disparo (la vista previa los incluye; el modelo no modela DRO).
+    (RAW del sensor, salida real). El modelo recibe el RAW con negro restado y balance de blancos as-shot; la matriz del estilo (Backup 0x30001 índice 0 = SR2 0x7800) y la curva (SR2 0x7802) son las del modelo.
+    Lee del MakerNote el Creative Style, el DRO y la temperatura de color con que se hizo el disparo. Entrada: demosaico real, negro/WB/matriz del SR2 del propio ARW y alineación de lente (raw_entrada.py);
+    DRO: sin modelar (`sin_dro`), aproximado por una ganancia global fijada con la mediana de la escena (`dro_auto_k`, MEDIDO) o la mejor (`k`).
   * Par JPEG: `--entrada original.jpg --foto camara.jpg` (misma escena; la entrada se trata como sRGB, APROX).
 Además mide la curva tonal real (mediana de la vista previa por bandas de señal lineal) y busca la exposición de entrada `k` y la curva (`--barrido`) que mejor explican la salida.
 Requiere .venv con numpy, Pillow y (solo ARW) rawpy. Uso: `.venv/bin/python scripts/gui/isp/compara_real.py DSC03773.ARW --barrido [--salida out.json]`.
@@ -12,7 +13,6 @@ Requiere .venv con numpy, Pillow y (solo ARW) rawpy. Uso: `.venv/bin/python scri
 from __future__ import annotations
 
 import argparse
-import io
 import json
 import struct
 import sys
@@ -23,8 +23,8 @@ from PIL import Image
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import modelo as M
+import raw_entrada as R
 
-TAM = (1616, 1080)   # tamaño de la vista previa de la A6000
 SRGB2XYZ = np.array([[0.4124564, 0.3575761, 0.1804375], [0.2126729, 0.7151522, 0.0721750], [0.0193339, 0.1191920, 0.9503041]])
 MAKER = {0xB020: "creative_style", 0xB021: "color_temp_K", 0xB025: "dro", 0xB026: "estabilizador", 0xB029: "color_mode", 0xB023: "scene_mode", 0xB024: "zone_matching"}
 
@@ -62,27 +62,23 @@ def maker_sony(b: bytes) -> dict:
 
 
 def lee_arw(ruta: Path) -> tuple[np.ndarray, np.ndarray, dict]:
-    import rawpy
-    with rawpy.imread(str(ruta)) as r:
-        s = r.sizes
-        raw = r.raw_image[s.top_margin:s.top_margin + s.height, s.left_margin:s.left_margin + s.width].astype(np.float32)
-        bl = np.array(r.black_level_per_channel, np.float32)
-        wb = np.array(r.camera_whitebalance[:3], np.float32)
-        wb /= wb[1]
-        xyz2cam = np.array(r.rgb_xyz_matrix[:3], float)
-        blanco = float(r.white_level)
-        patron = r.raw_pattern.tolist()
-        prev = np.asarray(Image.open(io.BytesIO(r.extract_thumb().data)).convert("RGB"), np.float32) / 255
-    assert patron == [[0, 1], [3, 2]], patron   # RGGB; otro patrón: ampliar aquí
-    R, G1, G2, B = raw[0::2, 0::2] - bl[0], raw[0::2, 1::2] - bl[1], raw[1::2, 0::2] - bl[3], raw[1::2, 1::2] - bl[2]
-    cam = np.stack([R, (G1 + G2) / 2, B], -1) / (blanco - bl.max()) * wb       # media 2x2 (media resolución): sin demosaico
-    rgb2cam = xyz2cam @ SRGB2XYZ
-    rgb2cam /= rgb2cam.sum(1, keepdims=True)
-    lin = np.clip(cam @ np.linalg.inv(rgb2cam).T, 0, None)
-    a = np.asarray(Image.fromarray(lin.astype(np.float32)[..., 0]).resize(TAM, Image.BOX))
-    lin_r = np.stack([a] + [np.asarray(Image.fromarray(lin[..., c].astype(np.float32)).resize(TAM, Image.BOX)) for c in (1, 2)], -1)
-    prev = np.asarray(Image.fromarray((prev * 255).astype(np.uint8)).resize(TAM, Image.BOX), np.float32) / 255 if prev.shape[1::-1] != TAM else prev
-    return lin_r, prev, maker_sony(ruta.read_bytes())
+    """ARW → (RGB lineal tras negro, WB as-shot y demosaico real, alineado con la vista previa; vista previa 0-1; meta). Ver raw_entrada.py (g23 §4)."""
+    d = R.carga(ruta)
+    return d["lin"], d["prev"], {**maker_sony(ruta.read_bytes()), "alineacion_cc": round(d["cc"], 3)}
+
+
+def zonas(a: np.ndarray, b: np.ndarray) -> dict:
+    """ΔE76 medio por zonas de la vista previa `b`: sombras L*<30, medios 30-70, altas >70, saturados C*>40 y planos (sin gradiente en la vista previa: sin efecto del desalineado ni del realce)."""
+    import cv2
+    la, lb = lab(a), lab(b)
+    d = np.linalg.norm(la - lb, axis=-1)
+    g = cv2.cvtColor(b.astype(np.float32), cv2.COLOR_RGB2GRAY)
+    plano = cv2.dilate(np.hypot(cv2.Sobel(g, cv2.CV_32F, 1, 0), cv2.Sobel(g, cv2.CV_32F, 0, 1)), np.ones((9, 9))) < 0.03
+    plano[:20] = plano[-20:] = False
+    plano[:, :20] = plano[:, -20:] = False
+    c = np.hypot(lb[..., 1], lb[..., 2])
+    z = {"sombras": lb[..., 0] < 30, "medios": (lb[..., 0] >= 30) & (lb[..., 0] <= 70), "altas": lb[..., 0] > 70, "saturados": c > 40, "planos": plano}
+    return {k: (round(float(d[m].mean()), 2) if m.sum() > 200 else None) for k, m in z.items()}
 
 
 def curva_tonal(lin: np.ndarray, prev: np.ndarray, n: int = 24) -> list[list[float]]:
@@ -135,17 +131,25 @@ def main() -> int:
         r["modelo"] = {}
         for g in gammas:
             p = {**a.ajustes, "gamma": g}
+            etiqueta = f"{g}:{M.GAMMA_NOMBRES[g]}:{t.curva(g, True)[0]}"
             if a.exposicion:
                 k, e = a.exposicion, delta_e(M.aplica(lin, p, t, True, a.exposicion, es_lineal), prev)
+                out = {"k": round(k, 3), **e}
             elif es_lineal:
-                k, e = mejor_k(t, lin, prev, p, True)
+                k1 = M.dro_auto_k(lin)
+                sal1 = M.aplica(lin, p, t, True, 1.0, True)
+                sal2 = M.aplica(lin, p, t, True, k1, True)
+                ks, e = mejor_k(t, lin, prev, p, True)
+                out = {"k": round(ks, 3), **e, "sin_dro": {**delta_e(sal1, prev), "zonas": zonas(sal1, prev)}, "dro_auto_k": {"k": round(k1, 3), **delta_e(sal2, prev), "zonas": zonas(sal2, prev)},
+                       "k_optimo_zonas": zonas(M.aplica(lin, p, t, True, ks, True), prev)}
             else:
-                k, e = 1.0, delta_e(M.aplica(lin, p, t, True, 1.0, False), prev)
-            r["modelo"][f"{g}:{M.GAMMA_NOMBRES[g]}:{M.CURVA_VIDEO[g] if g != 5 else 'a6000_f00'}"] = {"k": round(k, 3), **e}
+                out = {"k": 1.0, **delta_e(M.aplica(lin, p, t, True, 1.0, False), prev)}
+            r["modelo"][etiqueta] = out
         res[nombre] = r
         print(f"{nombre} {meta}")
         for k_, v in r["modelo"].items():
-            print(f"  gamma {k_:32s} k={v['k']:<6} ΔE76 media {v['dE76_media']:5.1f} mediana {v['dE76_mediana']:5.1f} p95 {v['dE76_p95']:5.1f} dif RGB {v['dif_canal_RGB_8bit_media']}")
+            extra = f" | sin DRO {v['sin_dro']['dE76_media']:.1f} · DRO auto (k={v['dro_auto_k']['k']}) {v['dro_auto_k']['dE76_media']:.1f}" if "sin_dro" in v else ""
+            print(f"  gamma {k_:34s} k*={v['k']:<6} ΔE76 media {v['dE76_media']:5.1f} mediana {v['dE76_mediana']:5.1f} p95 {v['dE76_p95']:5.1f}{extra}")
     if a.salida:
         a.salida.write_text(json.dumps(res, indent=1))
     return 0

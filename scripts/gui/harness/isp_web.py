@@ -12,14 +12,14 @@ from urllib.parse import parse_qs, urlparse
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "isp"))
 import modelo as M
 
-ETAPAS = [  # (etapa, estado, fuente)
-    ("Entrada sRGB→lineal × exposición", "APROX", "el RAW del sensor no existe en la emulación; la exposición (nivel de entrada de la LUT) es ajustable"),
-    ("Black Level", "APROX", "orden y existencia por G16; paso por unidad sin verificar"),
-    ("Matriz de color (Backup 0x30001)", "REAL (valores) / APROX (uso)", "matrices del volcado real; solo Movie=índice 0 verificado; se aplican sobre sRGB lineal"),
-    ("Gamma: curva por número (2048 pt)", "REAL", "av-cam.bin A6000/A7S/A6300; asignación valor app→curva por G25/G18; foto Still = gamma 0"),
-    ("Saturación / Color Phase / Color Depth", "APROX", "−8 = B&W es REAL (G27); escalas y pesos por tono sin verificar"),
-    ("Detail", "APROX", "máscara de enfoque sobre la luminancia; sin dato del firmware"),
-    ("Black Gamma, Knee, YCbCr/rango", "NO_VERIFICADO", "no implementado; la cola de 13 u16 de cada curva (rodilla/rango) no está decodificada"),
+ETAPAS = [  # (etapa, estado, fuente); detalle por etapa en docs/gui/g23-isp-bionz-emulado.md §1
+    ("Entrada sRGB→lineal × exposición", "APROX", "en la emulación no hay RAW del sensor; con ARW reales la entrada es REAL (demosaico + negro/WB/matriz del SR2); k = DRO global aproximado (MEDIDO, 31 ARW)"),
+    ("Matriz de color (Backup 0x30001)", "REAL", "índice 0 = SR2 0x7800 de los ARW del Creative Style Standard, byte a byte; todos los Color Mode de la A6000 usan los índices 0/6/7/8, que son idénticos (G27); S-Gamut3(.Cine) solo en A6300"),
+    ("Gamma: curva por número (2048 pt)", "REAL", "av-cam.bin A6000/A7S/A6300; ITU709(0x16) = BT.709 y S-Log2(0x1c)/S-Log3(0x1f) = fórmulas Sony por forma; 10/11 resueltos con CamMsgConv (g23 §3); foto Standard = SR2 0x7802"),
+    ("Black Level / Black Gamma / Knee", "REAL (estructura del CFW) / ESTIMADO (constantes)", "los aplica el CFW del proyecto sobre la curva (pp_tone.c, G33): mismas operaciones enteras; no son valores de Sony"),
+    ("Saturación / Color Phase / Color Depth", "APROX", "−8 = B&W es REAL (G27); el firmware reenvía los valores a otro procesador (G34): escalas y pesos por tono sin verificar"),
+    ("Detail", "APROX", "máscara de enfoque sobre la luminancia; el firmware calcula ganancias APC con tablas por ISO (G33) que no se han mapeado a la imagen"),
+    ("YCbCr/rango, DRO real, ruido", "NO_VERIFICADO", "no implementado (DRO solo como ganancia global); cola de 13 u16 de cada curva sin decodificar"),
 ]
 
 HTML = """<fieldset id="isp"><legend>ISP (BIONZ X emulado)</legend>
@@ -56,13 +56,13 @@ gl_init(){const cv=this.cv=document.createElement('canvas');const gl=this.gl=cv.
 const vs=`#version 300 es
 in vec2 a;out vec2 uv;void main(){uv=a*.5+.5;uv.y=1.-uv.y;gl_Position=vec4(a,0,1);}`;
 const fs=`#version 300 es
-precision highp float;uniform sampler2D img;uniform highp sampler2D lut;uniform float k,bl,row,sat,ph,det;uniform mat3 M;uniform float d[6];uniform float bd[8];uniform vec2 px;in vec2 uv;out vec4 o;
+precision highp float;uniform sampler2D img;uniform highp sampler2D lut;uniform float k,row,sat,ph,det;uniform mat3 M;uniform float d[6];uniform float bd[8];uniform vec2 px;in vec2 uv;out vec4 o;
 const vec3 W=vec3(.2126,.7152,.0722);const float H[6]=float[6](0.,2.0943951,4.1887902,3.1415927,5.2359878,1.0471976);
 vec3 s2l(vec3 v){return mix(pow((v+.055)/1.055,vec3(2.4)),v/12.92,lessThanEqual(v,vec3(.04045)));}
 float L(float x){float f=clamp(x,0.,1.)*2047.;int i=min(int(f),2046);float t=f-float(i);return mix(texelFetch(lut,ivec2(i,int(row)),0).r,texelFetch(lut,ivec2(i+1,int(row)),0).r,t);}
 void main(){vec3 c=texture(img,uv).rgb;
 if(det!=0.){float a=dot(c,W),b=0.;b+=dot(texture(img,uv+vec2(px.x,0)).rgb,W);b+=dot(texture(img,uv-vec2(px.x,0)).rgb,W);b+=dot(texture(img,uv+vec2(0,px.y)).rgb,W);b+=dot(texture(img,uv-vec2(0,px.y)).rgb,W);c+=det*(a-b*.25);}
-float fy=clamp(uv.y*8.-.5,0.,7.);int fi=min(int(fy),6);float gb=mix(bd[fi],bd[fi+1],fy-float(fi));vec3 l=s2l(clamp(c,0.,1.))*k*gb;l=max(l-bl,0.);l=max(M*l,0.);vec3 y=vec3(L(l.r),L(l.g),L(l.b));
+float fy=clamp(uv.y*8.-.5,0.,7.);int fi=min(int(fy),6);float gb=mix(bd[fi],bd[fi+1],fy-float(fi));vec3 l=s2l(clamp(c,0.,1.))*k*gb;l=max(M*l,0.);vec3 y=vec3(L(l.r),L(l.g),L(l.b));
 float lu=dot(y,W),cb=(y.b-lu)/1.8556,cr=(y.r-lu)/1.5748;float cs=cos(ph),sn=sin(ph);float cb2=cb*cs-cr*sn,cr2=cb*sn+cr*cs;float h=atan(cr2,cb2),g=0.;
 for(int i=0;i<6;i++){float w=max(cos(h-H[i]),0.);g+=w*w*d[i];}
 g=sat*(1.+g);cb2*=g;cr2*=g;float r=lu+1.5748*cr2,b=lu+1.8556*cb2,gg=(lu-.2126*r-.0722*b)/.7152;o=vec4(clamp(vec3(r,gg,b),0.,1.),1);}`;
@@ -70,13 +70,23 @@ const sh=(t,s)=>{const x=gl.createShader(t);gl.shaderSource(x,s);gl.compileShade
 const pr=this.pr=gl.createProgram();gl.attachShader(pr,sh(gl.VERTEX_SHADER,vs));gl.attachShader(pr,sh(gl.FRAGMENT_SHADER,fs));gl.linkProgram(pr);gl.useProgram(pr);
 const b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);const a=gl.getAttribLocation(pr,'a');gl.enableVertexAttribArray(a);gl.vertexAttribPointer(a,2,gl.FLOAT,false,0,0);
 const tx=(u)=>{const t=gl.createTexture();gl.activeTexture(gl.TEXTURE0+u);gl.bindTexture(gl.TEXTURE_2D,t);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.CLAMP_TO_EDGE);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);return t};
-this.timg=tx(0);gl.activeTexture(gl.TEXTURE1);const tl=tx(1);gl.texImage2D(gl.TEXTURE_2D,0,gl.R32F,2048,this.nl,0,gl.RED,gl.FLOAT,this.lut);
+this.timg=tx(0);gl.activeTexture(gl.TEXTURE1);const tl=tx(1);gl.texImage2D(gl.TEXTURE_2D,0,gl.R32F,2048,this.nl+1,0,gl.RED,gl.FLOAT,null);gl.texSubImage2D(gl.TEXTURE_2D,0,0,0,2048,this.nl,gl.RED,gl.FLOAT,this.lut);
 this.u=n=>gl.getUniformLocation(pr,n);gl.uniform1i(this.u('img'),0);gl.uniform1i(this.u('lut'),1);this.pre=document.createElement('canvas');return true},
 params(){const p=this.p,t=this.t,gl=this.gl,u=this.u;const m=t.matrices[t.matriz_de_color[p.color_mode]??t.matriz_defecto];
-gl.uniform1f(u('k'),this.k);gl.uniform1f(u('bl'),p.black_level*t.pasos.black);gl.uniform1f(u('row'),this.curvas.indexOf(this.curvaNombre().clave));
+gl.uniform1f(u('k'),this.k);gl.uniform1f(u('row'),this.nl);this.sube_curva();
 gl.uniformMatrix3fv(u('M'),false,new Float32Array([m[0]/1024,m[3]/1024,m[6]/1024,m[1]/1024,m[4]/1024,m[7]/1024,m[2]/1024,m[5]/1024,m[8]/1024]));
 gl.uniform1f(u('sat'),Math.max(0,1+p.saturation*t.pasos.sat));gl.uniform1f(u('ph'),p.phase*t.pasos.fase*Math.PI/180);
 gl.uniform1fv(u('d'),new Float32Array(['r','g','b','c','m','y'].map(c=>p['cd_'+c]*t.pasos.depth)));gl.uniform1f(u('det'),p.det_level*t.pasos.detalle);gl.uniform1fv(u('bd'),new Float32Array(this.bandas()))},
+/* Black Level / Black Gamma / Knee: puerto de modelo.curva_pp (pp_tone.c); fila nl de la textura = curva activa */
+curva_pp(b,g,q){const log=g==2||g==10||g==11,bl=q.black_level,bgl=log?0:q.bg_level,r=Math.min(q.bg_range,2),RG=[400,256,128],RK=[2621,4096,8192],SA=[96,128,160];let pt=0,sl=256,kn=false;
+if(g>=3&&g<=5){if(q.knee_mode==1){pt=Math.floor(1023*(750+25*Math.min(q.knee_point,12))/1000);sl=128-18*q.knee_slope}else{pt=Math.floor(1023*(900+25*Math.min(q.knee_max,4))/1000);sl=SA[Math.min(q.knee_sens,2)]}kn=pt<1023&&sl<256}
+const o=new Float32Array(2048);if(!(bl||bgl||kn)){for(let i=0;i<2048;i++)o[i]=b[i]/1023;return o}
+const top=Math.max(b[2047],64),rt=Math.floor(1048576/top);let prev=0;
+for(let i=0;i<2048;i++){let v=b[i];if(bgl&&v<RG[r]){const t=(v*RK[r])>>10;v+=(bgl*RG[r]*(((4*t*(1024-t))>>10)>>2))>>13}
+if(bl&&v<top)v+=((bl*6*(top-v))*rt)>>20;if(kn&&v>pt)v=pt+(((v-pt)*sl)>>8);v=Math.min(Math.max(v,0),2047);v=Math.max(v,prev);prev=v;o[i]=v/1023}return o},
+sube_curva(){const p=this.p,k=this.t.curva_de_gamma[p.gamma].clave,i=this.curvas.indexOf(k),b=new Array(2048);for(let j=0;j<2048;j++)b[j]=Math.round(this.lut[i*2048+j]*1023);
+const key=JSON.stringify([p.gamma,p.black_level,p.bg_range,p.bg_level,p.knee_mode,p.knee_sens,p.knee_max,p.knee_point,p.knee_slope]);if(key==this._ck)return;this._ck=key;
+const gl=this.gl;gl.activeTexture(gl.TEXTURE1);gl.texSubImage2D(gl.TEXTURE_2D,0,0,this.nl,2048,1,gl.RED,gl.FLOAT,this.curva_pp(b,p.gamma,p))},
 bandas(){const m=document.getElementById('isp_ob').value,f=this.t.obturador[+document.getElementById('isp_ob2').value];let b=m&&f?f[m].slice():[];
 if(!b.some(v=>v!==null))return new Float32Array(8).fill(1);b=b.map((v,i)=>{if(v!==null)return v;let r=null,dm=9;b.forEach((w,j)=>{if(w!==null&&Math.abs(i-j)<dm){dm=Math.abs(i-j);r=w}});return r});return b},
 dibuja(g,s,dx,dy,w,h,W,H){if(!this.gl&&!this.gl_init()){g.drawImage(s,dx,dy,w,h);return}
@@ -85,8 +95,8 @@ const q=pre.getContext('2d');q.fillStyle='#000';q.fillRect(0,0,W,H);q.drawImage(
 gl.activeTexture(gl.TEXTURE0);gl.bindTexture(gl.TEXTURE_2D,this.timg);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA,gl.RGBA,gl.UNSIGNED_BYTE,pre);
 this.params();gl.uniform2f(this.u('px'),1/W,1/H);gl.drawArrays(gl.TRIANGLE_STRIP,0,4);g.drawImage(cv,0,0)},
 /* punto de control para pruebas: aplica el shader a un color sRGB 8 bits y devuelve el RGB de salida 8 bits */
-sonda(rgb){const W=4,H=4,p=document.createElement('canvas');p.width=W;p.height=H;const c=p.getContext('2d');c.fillStyle=`rgb(${rgb})`;c.fillRect(0,0,W,H);
-const g=document.createElement('canvas').getContext('2d');g.canvas.width=W;g.canvas.height=H;const on=this.on;this.on=true;this.dibuja(g,p,0,0,W,H,W,H);this.on=on;return Array.from(g.getImageData(1,1,1,1).data.slice(0,3))}};
+sonda(rgb,rgb2){const W=rgb2?8:4,H=4,p=document.createElement('canvas');p.width=W;p.height=H;const c=p.getContext('2d');c.fillStyle=`rgb(${rgb})`;c.fillRect(0,0,W,H);if(rgb2){c.fillStyle=`rgb(${rgb2})`;c.fillRect(W/2,0,W/2,H)}
+const g=document.createElement('canvas').getContext('2d');g.canvas.width=W;g.canvas.height=H;const on=this.on;this.on=true;this.dibuja(g,p,0,0,W,H,W,H);this.on=on;const d=Array.from(g.getImageData(rgb2?3:1,1,rgb2?2:1,1).data);return rgb2?[...d.slice(0,3),...d.slice(4,7)]:d.slice(0,3)}};
 ISP.init().catch(e=>{document.getElementById('isp_info').textContent='ISP: '+e.message});
 """
 
@@ -100,15 +110,18 @@ def _tablas_json(t: "M.Tablas") -> dict:
     claves = sorted({*M.CURVA_VIDEO.values(), *M.CURVA_FOTO.values()})
     estado = {"a6000": "REAL (A6000)", "a7s": "REAL (A7S, instalada por el CFW)", "a6300": "REAL (A6300, instalada por el CFW)"}
     def num(k): return int(k.split("_")[1][1:], 16)
-    c_gamma = {str(g): {"clave": k, "numero": num(k), "nombre": M.GAMMA_NOMBRES[g], "estado": estado[k.split("_")[0]] + ("; identificación de la curva con el nombre: INFERENCIA (G16)" if g in (3, 10, 11) else "")}
+    c_gamma = {str(g): {"clave": k, "numero": num(k), "nombre": M.GAMMA_NOMBRES[g], "estado": estado[k.split("_")[0]] + ("; nombre de la curva VERIFICADO por forma (g23 §3)" if g in (2, 3, 10, 11) else "")}
                for g, k in M.CURVA_VIDEO.items()}
     perf = [f"PP{i + 1}" for i in range(9)] + ["Off (bloque neutro)", "PP10"]
-    params = {str(i): {"id": v[0], "etiqueta": v[1], "min": v[2], "max": v[3]} for i, v in M.PARAMS.items() if v[0] not in ("color_level", "bg_range", "bg_level", "knee_mode")}
+    params = {str(i): {"id": v[0], "etiqueta": v[1], "min": v[2], "max": v[3]} for i, v in M.PARAMS.items() if v[0] not in ("color_level", "det_mode")}
     params["7"]["opciones"] = {str(g): n for g, n in M.GAMMA_NOMBRES.items()}
+    params["8"]["opciones"] = {"0": "Wide", "1": "Middle", "2": "Narrow"}
+    params["11"]["opciones"] = {"0": "Auto", "1": "Manual"}
+    params["12"]["opciones"] = {"0": "High", "1": "Mid", "2": "Low"}
     params["0"]["opciones"] = {str(g): n for g, n in M.COLOR_NOMBRES.items() if g != 8}
     return {"curvas": claves, "curva_de_gamma": c_gamma, "perfiles": perf, "params": params, "neutro": M.NEUTRO, "etapas": ETAPAS,
             "matrices": t.matrices.__mul__(1024).round().astype(int).reshape(-1, 9).tolist(), "matriz_de_color": {str(k): v for k, v in M.MATRIZ_COLOR.items()}, "matriz_defecto": M.MATRIZ_DEFECTO,
-            "pasos": {"black": M.PASO_BLACK, "sat": M.PASO_SAT, "fase": M.PASO_FASE_GRADOS, "depth": M.PASO_DEPTH, "detalle": 0.15},
+            "pasos": {"sat": M.PASO_SAT, "fase": M.PASO_FASE_GRADOS, "depth": M.PASO_DEPTH, "detalle": M.PASO_DETALLE},
             "ids": t.pp_ids, "obturador": _bandas()}
 
 

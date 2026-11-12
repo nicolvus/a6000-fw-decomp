@@ -23,7 +23,10 @@ import modelo as M
 
 CHROME = next(iter(sorted((Path.home() / ".cache/ms-playwright").glob("chromium_headless_shell-*/chrome-headless-shell-linux64/chrome-headless-shell"))), None) or shutil.which("chromium")
 PUNTOS = [(0, 0, 0), (255, 255, 255), (128, 128, 128), (30, 30, 30), (200, 60, 40), (40, 160, 90), (60, 80, 220), (250, 220, 20)]
-CASOS = {"movie": {"gamma": 4}, "cine1": {"gamma": 6, "saturation": 2}, "slog2": {"gamma": 11, "phase": 3, "cd_r": 4}, "still_bl": {"gamma": 5, "black_level": 5, "saturation": -3}}
+CASOS = {"movie": {"gamma": 4}, "cine1": {"gamma": 6, "saturation": 2}, "slog2": {"gamma": 11, "phase": 3, "cd_r": 4}, "still_bl": {"gamma": 5, "black_level": 5, "saturation": -3},
+         "bg_knee": {"gamma": 4, "black_level": -6, "bg_range": 1, "bg_level": 5, "knee_mode": 1, "knee_point": 3, "knee_slope": 2}, "knee_auto": {"gamma": 3, "knee_max": 1, "knee_sens": 2},
+         "detalle": {"gamma": 4, "det_level": 6}}
+BORDE = ((60, 90, 120), (200, 180, 160))   # Detail solo actúa en bordes: sonda de dos colores (columnas 3 y 4, a ambos lados del borde)
 
 
 class VmFalsa:
@@ -39,14 +42,20 @@ class VmFalsa:
         self.nvram[int(i, 16)] = bytes.fromhex(d)
 
 
-def prueba_js() -> str:
+def prueba_js(frames: int = 0) -> str:
+    bucle = ("const s=document.createElement('canvas');s.width=640;s.height=480;const sc=s.getContext('2d'),gr=sc.createLinearGradient(0,0,640,480);gr.addColorStop(0,'#123');gr.addColorStop(1,'#fed');sc.fillStyle=gr;sc.fillRect(0,0,640,480);"
+             "const gg=document.createElement('canvas');gg.width=640;gg.height=480;const g=gg.getContext('2d');ISP.on=true;ISP.p=Object.assign({},ISP.t.neutro,{gamma:6,saturation:2,det_level:3,black_level:3,knee_mode:1,knee_point:4});"
+             f"for(let i=0;i<{frames};i++){{ISP.p.saturation=i%4;ISP.dibuja(g,s,0,0,640,480,640,480);g.getImageData(0,0,1,1)}}") if frames else ""
     return ("(async()=>{while(!(window.ISP&&ISP.t&&ISP.lut))await new Promise(r=>setTimeout(r,50));ISP.k=2;ISP.on=true;const R={};"
             f"const P={json.dumps(PUNTOS)},C={json.dumps(CASOS)};"
-            "try{for(const [n,c] of Object.entries(C)){ISP.p=Object.assign({},ISP.t.neutro,c);R[n]=P.map(p=>ISP.sonda(p));}}catch(e){R.error=String(e.stack)}"
+            f"const B={json.dumps(BORDE)};"
+            "try{for(const [n,c] of Object.entries(C)){ISP.p=Object.assign({},ISP.t.neutro,c);R[n]=P.map(p=>ISP.sonda(p));R[n+'_borde']=ISP.sonda(B[0],B[1]);}}catch(e){R.error=String(e.stack)}"
+            f"try{{{bucle}}}catch(e){{R.error=String(e.stack)}}"
             "document.body.insertAdjacentHTML('beforeend','<pre id=res>'+JSON.stringify(R)+'</pre>')})()")
 
 
 def main() -> int:
+    frames = int(sys.argv[sys.argv.index("--fps") + 1]) if "--fps" in sys.argv else 0
     puerto = int(sys.argv[sys.argv.index("--puerto") + 1]) if "--puerto" in sys.argv else 8604
     captura = sys.argv[sys.argv.index("--captura") + 1] if "--captura" in sys.argv else None
     if not CHROME:
@@ -56,7 +65,7 @@ def main() -> int:
     import isp_web
     import sensor_web
     pagina = ("<!doctype html><meta charset=utf-8><body><canvas id=c width=640 height=480></canvas><aside>" + sensor_web.HTML + "</aside><script>"
-              "const c=document.getElementById('c'),x=c.getContext('2d'),st={};let osd=new Image(),info={};" + sensor_web.JS + prueba_js() + "</script></body>").encode()
+              "const c=document.getElementById('c'),x=c.getContext('2d'),st={};let osd=new Image(),info={};" + sensor_web.JS + prueba_js(frames) + "</script></body>").encode()
 
     class H(BaseHTTPRequestHandler):
         def log_message(self, *a: object) -> None:
@@ -81,8 +90,11 @@ def main() -> int:
     srv = ThreadingHTTPServer(("127.0.0.1", puerto), H)
     threading.Thread(target=srv.serve_forever, daemon=True).start()
     try:
-        args = [str(CHROME), "--no-sandbox", "--use-angle=swiftshader", "--enable-unsafe-swiftshader", "--ignore-gpu-blocklist", "--virtual-time-budget=8000", "--enable-logging=stderr", "--v=0"]
-        r = subprocess.run([*args, "--dump-dom", f"http://127.0.0.1:{puerto}/"], check=False, capture_output=True, text=True, timeout=90)
+        gpu = ["--use-angle=gl-egl", "--use-gl=angle", "--enable-gpu-rasterization"] if "--gpu" in sys.argv else ["--use-angle=swiftshader", "--enable-unsafe-swiftshader"]
+        args = [str(CHROME), "--no-sandbox", *gpu, "--ignore-gpu-blocklist", "--virtual-time-budget=8000", "--enable-logging=stderr", "--v=0"]
+        t0 = time.time()
+        r = subprocess.run([*args, "--dump-dom", f"http://127.0.0.1:{puerto}/"], check=False, capture_output=True, text=True, timeout=600)
+        print(f"página {time.time() - t0:.1f} s ({frames} fotogramas de 640×480)")
         out = r.stdout
         print([l for l in r.stderr.splitlines() if 'CONSOLE' in l or 'rror' in l][:8])
         if captura:
@@ -101,10 +113,15 @@ def main() -> int:
     t = M.Tablas()
     peor = 0.0
     for n, c in CASOS.items():
-        ref = np.round(M.aplica(np.array(PUNTOS, float)[None] / 255, c, t, exposicion=2.0)[0] * 255)
+        ref = np.round(np.array([M.aplica(np.array([[p]], float) / 255, c, t, exposicion=2.0)[0, 0] for p in PUNTOS]) * 255)   # cada punto en su propia imagen: Detail mira a los vecinos
         d = np.abs(ref - np.array(res[n])).max()
         peor = max(peor, d)
-        print(f"{n}: máx |shader − CPU| = {d:.0f}/255")
+        img = np.broadcast_to(np.array([BORDE[0]] * 4 + [BORDE[1]] * 4, float) / 255, (4, 8, 3)).copy()
+        rb = np.round(M.aplica(img, c, t, exposicion=2.0)[1, 3:5] * 255).ravel()
+        db = np.abs(rb - np.array(res[n + "_borde"])).max()
+        d = max(d, db)
+        peor = max(peor, d)
+        print(f"{n}: máx |shader − CPU| = {d:.0f}/255 (borde {db:.0f})")
     return 0 if peor <= 2 else 1
 
 
