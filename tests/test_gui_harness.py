@@ -140,3 +140,27 @@ def test_menu_global_se_dibuja() -> None:
     assert (img.max(axis=2) > 128).sum() > 5000  # texto blanco/gris de las seis categorías y el título
     mx = img.max(axis=2)
     assert ((mx > 20) & (mx < 128)).sum() > 60000  # medios tonos de las fotos de fondo: imágenes LZPT de /dev/ldec (§5.18z; sin ellas el fondo es negro)
+
+
+@pytest.mark.skipif(not (os.environ.get("A6000_HARNESS_RUN") and (WORK / "base.cpio.gz").exists() and shutil.which("qemu-system-arm")),
+                    reason="prueba lenta (≈ 5 min): A6000_HARNESS_RUN=1 y setup.sh hecho")
+def test_teclas_derecha_e_intro_abren_submenu() -> None:
+    """§5.18z (F4): DERECHA (clave 0x1af, índice 0x14) y INTRO (CEC 0xe000000, índice 0x1bc) por la cola del driver 0x7a0020
+    abren la vista 0x27 (Ajustes personalizados); el submenú se dibuja con tiras de 16 vértices (pestaña activa)."""
+    import numpy as np
+    from PIL import Image
+    gpu = WORK / "gpu.txt"
+    gpu.unlink(missing_ok=True)
+    keys = "96:7a0020:1af,0,1,0,14/96:7a0020:1af,0,0,0,14/a0:7a0020:e000000,0,1,0,1bc/a0:7a0020:e000000,0,0,0,1bc"
+    env = {**os.environ, "SHIMENV": "WAIT=200 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/GLOBAL_MENU OPENVIEWAT=40 OPENVIEWGAP=14 "
+                                     "STARTEV=11004002:100,11004012,11004013 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f FULLLOG=1 "
+                                     "KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177 KEYINITON=06A_viewUnified2 GPUDUMP=/tmp/gpu.txt "
+                                     f"DUMPAT=185 DUMPTHR=ninguno AREADUMP=stream@80000000,stream@bc000000 INJECT={keys}"}
+    subprocess.run([sys.executable, str(HARNESS / "run.py"), str(WORK), str(HARNESS / "im.sh"), "300"],
+                   capture_output=True, text=True, check=True, env=env)
+    log = (WORK / "guest.log").read_text(errors="replace")
+    assert "E  Vo 00000027" in log  # vista del submenú abierta por la tecla
+    assert "\n0202 0000f000 90000010" in gpu.read_text()
+    subprocess.run([sys.executable, str(HARNESS / "gpu_raster.py"), str(WORK), str(WORK / "submenu.png")], check=True, capture_output=True)
+    img = np.asarray(Image.open(WORK / "submenu.png"))
+    assert (img[130:380, 20:620].max(axis=2) > 128).sum() > 8000  # cinco filas de ajustes con su valor

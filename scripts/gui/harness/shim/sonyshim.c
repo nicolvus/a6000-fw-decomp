@@ -459,11 +459,18 @@ int ioctl(int fd, unsigned long req, ...) {
             if (ms && arg) { usleep(ms * 1000u); *(unsigned *)arg = 1; return 0; }
             for (;;) sleep(3600);
         }
-        if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0xc0048211 && arg) *(unsigned *)arg = 0;  /* espera de la GPU de DMP (libObj+0x6c53e0): repite mientras la salida != 0 → «ya ha terminado» */
+        if (!strcmp(devname[fd], "/dev/dmpgles2") && (req == 0xc0048211 || req == 0xc0048212) && arg) {  /* cerrojos del núcleo de la GPU (libObj 0x6c53e0 toma: repite
+            mientras la salida ≠ 0; 0x6c5450 suelta), id 1 = cola de trabajos, 2 = …; antes la toma siempre «acertaba» y productor (0x6c58c0) y planificador (0x6c6680)
+            corrían a la vez: callbacks basura y SIGSEGV en libObj+0x6c51a0 (§5.18z) */
+            static volatile int held[8]; unsigned id = *(unsigned *)arg & 7;
+            if (req == 0xc0048212) { __sync_lock_release(&held[id]); return 0; }
+            if (__sync_lock_test_and_set(&held[id], 1)) { usleep(200); *(unsigned *)arg = 1; } else *(unsigned *)arg = 0;
+            return 0;
+        }
         if (!strcmp(devname[fd], "/dev/ldec") && req == 1 && readable(arg)) {  /* descompresión LZPT de las imágenes de la UI (§5.18z′) */
             unsigned *q = (unsigned *)arg; unsigned char *d = phys2pn(q[2], q[3]); const unsigned char *src = (const unsigned char *)(unsigned long)q[0];
             unsigned o = d && readable(src) ? ldec_inflate(src, q[1], d, q[3]) : 0; static int nl;
-            if (!o || (getenv("LDECLOG") && nl++ < 12)) LOG("LDEC %#x B → %#x (cap %#x): %#x B", q[1], q[2], q[3], o);
+            if (!o || (getenv("LDECLOG") && nl++ < 400)) LOG("LDEC %#x B → %#x (cap %#x) r=%#x c=%#x %#x %#x: %#x B", q[1], q[2], q[3], q[4], q[5], q[6], q[7], o);
             return 0;
         }
         pthread_mutex_lock(&semlock);
@@ -621,7 +628,7 @@ static void *injector(void *a) {
         while (*e == ':' || *e == ',') { m[n++] = hexv(e + 1, &e); if (n >= 60) break; }
         if (at > t0) { sleep(at - t0); t0 = at; }
         int ok = cb_deliver(q, m); const char *how = "callback";
-        if (!ok && is_dynq(q)) { mbx_post(q, m, 0); ok = 1; how = "buzón"; }  /* cola que un hilo lee con rcv_msg (p. ej. KEYQ=7a0020, el driver de entrada) */
+        if (!ok && is_dynq(q)) { if (q == 0x7a0020) mbx_post_raw(q, m); else mbx_post(q, m, 0); ok = 1; how = "buzón"; }  /* cola que un hilo lee con rcv_msg; 0x7a0020 (driver de entrada: {clave, 0, valor, 0, índice físico}) sin tocar w0 (§5.18w) */
         efp("[shim] INJECT q=%#x w0=%#x -> %s\n", q, m[0], ok ? how : "SIN CALLBACK NI BUZÓN");
     }
     return 0;
@@ -922,7 +929,7 @@ static void gpu_exec(unsigned off, unsigned val) {
             if (!iw) iw = n; if (!ow) ow = n;
             unsigned char *s = phys2pn(sa, n / iw * (iw + ig)), *d = phys2pn(da, n / ow * (ow + og));
             if (!s || !d) { efp("[shim] GPUEMU TextureCopy %#x→%#x (%#x B) fuera de área\n", sa, da, n); return; }
-            if (getenv("GPUTRACE")) efp("[shim] GPUEMU TextureCopy %#x→%#x %#x B\n", sa, da, n);
+            if (getenv("GPUTRACE")) { unsigned nz = 0; for (unsigned i = 0; i < n; i++) nz += s[i] != 0; efp("[shim] GPUEMU TextureCopy %#x→%#x %#x B (origen no nulo %u B)\n", sa, da, n, nz); }
             for (unsigned k = 0, si = 0, di = 0; k < n; k++) { d[di++] = s[si++]; if ((k + 1) % iw == 0) si += ig; if ((k + 1) % ow == 0) di += og; }
             return;
         }
@@ -944,18 +951,18 @@ static void gpu_dumplist(unsigned list, int n) {
     unsigned *w = (unsigned *)phys2p(list); if (!w) { efp("[shim] GPUDUMP lista %#x sin área\n", list); return; }
     FILE *f = fopen(fn, "a"); if (!f) return; fprintf(f, "JOB %d lista=%#x\n", n, list);
     if (gw1) { fprintf(f, "TABLA"); for (int i = 0xe8 / 4; i < (0xe8 + 0x100) / 4; i++) fprintf(f, " %x:%08x", i * 4, gw1[i]); fprintf(f, "\n"); }
-    unsigned ib = 0, vb = 0;  /* 0x203 = índices (u16), 0x216 = vértices (0x40 B: pos 3f, color 4f, uv 2f…), §5.18z */
+    unsigned ib = 0, vb = 0, drawn = 0;  /* 0x203 = índices (u16), 0x216 = vértices (0x40 B: pos 3f, color 4f, uv 2f…), §5.18z */
     for (int i = 0; i < 20000; ) {
         unsigned h = w[i], v = w[i + 1], ne = ((h >> 12) & 0xf) && (h & 0xfff) == 0x026 ? 5 : 1;  /* 0x026: valor + 4 palabras (uniformes 0x450) */
         fprintf(f, "%04x %08x", h >> 16, h & 0xffff); for (unsigned k = 1; k <= ne; k++) fprintf(f, " %08x", w[i + k]); fprintf(f, "\n");
-        if ((h >> 12) & 0xf) { if ((h >> 16) == 0x203) ib = v; if ((h >> 16) == 0x216) vb = v; }
+        if ((h >> 12) & 0xf && !drawn) { if ((h >> 16) == 0x203) ib = v; if ((h >> 16) == 0x216) vb = v; if ((h >> 16) == 0x202) drawn = v & 0xfff; }  /* estado del primer disparo: después la lista redefine 0x216 (sublistas 0x281) */
         i += 1 + ne;
         if ((h >> 16) == 0x10 && v == 0x12345678) break;
         if (!h && !v) { fprintf(f, "FIN-NULO\n"); break; }
     }
     /* shortcut: copia hecha en el hilo de GPUEMU unos ms después del timbre, no en el timbre; vale mientras la UI no reescriba el búfer antes */
     unsigned short *ix = ib ? (unsigned short *)phys2p(ib) : 0; unsigned char *vx = vb ? phys2p(vb) : 0;
-    if (ix && vx) for (int k = 0; k < 4; k++) { float *q = (float *)(vx + ix[k] * 0x40u); fprintf(f, "VTX %u", ix[k]); for (int c = 0; c < 16; c++) fprintf(f, " %g", q[c]); fprintf(f, "\n"); }
+    if (ix && vx) for (unsigned k = 0; k < (drawn && drawn <= 64 ? drawn : 4); k++) {  /* nº de vértices = 0x202 & 0xfff (4 cuadrilátero, 16 marco de 9 trozos) */ float *q = (float *)(vx + ix[k] * 0x40u); fprintf(f, "VTX %u", ix[k]); for (int c = 0; c < 16; c++) fprintf(f, " %g", q[c]); fprintf(f, "\n"); }
     fclose(f);
 }
 static void *gpu_thread(void *a) {
