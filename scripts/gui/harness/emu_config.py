@@ -18,7 +18,9 @@ CONFIG_RUTA = Path.home() / ".config/a6000-emu/config.json"
 
 # Códigos de evento del navegador (KeyboardEvent.code) por botón de la cámara; la lista de botones sale de TECLAS de live.py.
 TECLAS_DEFECTO = {"arriba": ["ArrowUp"], "abajo": ["ArrowDown"], "izquierda": ["ArrowLeft"], "derecha": ["ArrowRight"],
-                  "intro": ["Enter", "NumpadEnter"], "menu": ["Escape", "KeyM"], "disparador": ["Space"]}
+                  "intro": ["Enter", "NumpadEnter"], "menu": ["Escape", "KeyM"], "disparador": ["Space"], "semipulsacion": ["KeyS"],
+                  "movie": ["KeyR"], "fn": ["KeyF"], "disp": ["KeyD"], "c1": ["Digit1"], "ael": ["KeyA"], "reproduccion": ["KeyP"],
+                  "borrar": ["Delete"], "rueda_izq": ["KeyQ"], "rueda_der": ["KeyE"], "dial_izq": ["KeyZ"], "dial_der": ["KeyX"]}
 BOTONES_DEFECTO = tuple(TECLAS_DEFECTO)
 RE_TECLA = re.compile(r"^[A-Za-z0-9]{1,24}$")
 
@@ -84,7 +86,9 @@ def valida_config(d: object, botones: list[str] | None = None) -> dict:
         raise ValueError("firmware.origen debe ser sony, overlay o dat")
     if fw["origen"] != "sony" and not (fw["overlay"] if fw["origen"] == "overlay" else fw["dat"]):
         raise ValueError("falta elegir el overlay o importar el .dat")
-    teclas = valida_teclas({**TECLAS_DEFECTO, **(d.get("teclas") or {})}, botones)
+    propias = d.get("teclas") or {}
+    usadas = {c for v in propias.values() if isinstance(v, list) for c in v}  # un botón nuevo no hereda una tecla que el usuario ya asignó
+    teclas = valida_teclas({**{b: [c for c in v if c not in usadas] for b, v in TECLAS_DEFECTO.items()}, **propias}, botones)
     sensor = {**CONFIG_DEFECTO["sensor"], **(d.get("sensor") or {})}
     if sensor["fuente"] not in ("imagen", "video", "webcam"):
         raise ValueError("sensor.fuente debe ser imagen, video o webcam")

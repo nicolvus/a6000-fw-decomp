@@ -80,11 +80,32 @@ def test_gpu_draw_no_descarta_listas_de_mas_de_64_vertices() -> None:
 
 
 def test_menu_se_reabre_con_la_ruta_real_de_la_camara() -> None:
-    """§5.18z⁷: MENU con el menú cerrado abre «@V00E» (DefRootView::ActionOpenSettingMenu); el menú inicial usa la misma ruta y el shim sigue su estado por las trazas Vn/Vd."""
-    live, _ = _live()
-    assert "OPENVIEW=view/ROOT,@V00E" in live.SHIMENV
+    """§5.18z⁷: MENU con el menú cerrado abre «@V00E» (DefRootView::ActionOpenSettingMenu) y el shim sigue su estado por las trazas Vn/Vd."""
     src = (HARNESS / "shim/sonyshim.c").read_text()
     assert 'strncmp(p + 4, "07C_", 4)' in src and '"@V00E"' in src and "m[0] == 0x1ab && m[2] == 1 && !menu_open" in src
+
+
+def test_arranca_en_la_pantalla_de_disparo() -> None:
+    """§5.18z¹²: con ModelStillRec creado (POSTROOTEV), view/STLREC (0x88) dibuja la OSD de disparo como en la cámara ([CmnViewMgrSetSave] MAAJID);
+    el emulador arranca en ella, sin el menú abierto (MENU lo abre por @V00E)."""
+    live, _ = _live()
+    assert "OPENVIEW=view/ROOT,view/STLREC" in live.SHIMENV and "@V00E" not in live.SHIMENV
+
+
+def test_botones_y_diales_de_la_a6000_con_indices_del_driver() -> None:
+    """§5.18z¹²: {clave, índice físico} de la tabla del driver de InfraInput volcada en el arranque (this+0x18, 0x30 B por índice);
+    los diales llevan el paso con signo (callback_dial_signed_speed) y el dial de modos va a callback_mode_dial (KEY_POS_MODE_DIAL)."""
+    live, _ = _live()
+    t = live.TECLAS
+    assert t["fn"] == (0x70A1, 0x95) and t["disp"] == (0x1F9, 0x21) and t["movie"] == (0x1F0, 0x1A) and t["borrar"] == (0x1F8, 0x20)
+    assert t["semipulsacion"] == (0x1F1, 0x1B) and t["c1"] == (0x66, 0xD) and t["reproduccion"] == (0x1F7, 0x1F)
+    assert t["rueda_der"] == (0x10000015, 0x1E5, 1) and t["rueda_izq"] == (0x10000015, 0x1E5, -1)
+    assert t["dial_der"] == (0x10000014, 0x1E4, 1) and t["dial_izq"] == (0x10000014, 0x1E4, -1)
+    assert live.DIAL_MODO == (0x7025, 0x27) and len(live.POSICIONES_MODO) == 9
+    sent = []
+    vm = type("V", (), {"tecla": lambda self, k, v, i: sent.append((k, v, i))})()
+    live.pulsa(vm, "rueda_izq", 1); live.pulsa(vm, "rueda_izq", 0); live.pulsa(vm, "fn", 1); live.pulsa(vm, "fn", 0)
+    assert sent == [(0x10000015, 0xFFFFFFFF, 0x1E5), (0x70A1, 1, 0x95), (0x70A1, 0, 0x95)]  # el giro no tiene suelta
 
 
 def test_postrootev_crea_modelstillrec_tras_view_root() -> None:
@@ -324,7 +345,8 @@ def test_emu_config_valida_teclas_y_defaults(tmp_path: Path) -> None:
     cfg = E.valida_config({"teclas": {"disparador": ["KeyP"], "menu": ["Escape"]}}, botones)
     assert cfg["teclas"]["disparador"] == ["KeyP"] and cfg["teclas"]["arriba"] == ["ArrowUp"] and cfg["sd"]["tamano_gb"] == 4
     assert E.mapa_inverso(cfg["teclas"])["KeyP"] == "disparador"
-    for malo in ({"teclas": {"menu": ["KeyM"], "intro": ["KeyM"]}}, {"teclas": {"fn": ["KeyF"]}}, {"teclas": {"menu": ["Ctrl+M"]}},
+    assert E.valida_config({"teclas": {"menu": ["KeyF"]}}, botones)["teclas"]["fn"] == []  # un botón nuevo no hereda una tecla ya asignada
+    for malo in ({"teclas": {"menu": ["KeyM"], "intro": ["KeyM"]}}, {"teclas": {"zoom": ["KeyF"]}}, {"teclas": {"menu": ["Ctrl+M"]}},
                  {"firmware": {"origen": "dat"}}, {"firmware": {"origen": "x"}}, {"sd": {"tamano_gb": 0}}, {"sensor": {"fuente": "tv"}}):
         with pytest.raises(ValueError):
             E.valida_config(malo, botones)

@@ -76,3 +76,25 @@ Con el arnés, en una sola ejecución:
 - filtrar por los eventos de §2. Eso da `w0` y `w4` exactos para cada tecla.
 
 Para los diales, inyectar el evento de estado con `w2` = 1 o −1 y ver si gira la selección.
+
+## 5. Tabla física del driver, volcada en el arranque (13-11-2026): clave e índice VERIFICADOS
+
+Método: trampa de un disparo en `libObj+0x8070d4` (manejador de `I-InputMain`, `r4` = `InfraInput`) con `TRACEDEREF=4:18:1800`: `[this+0x18]` es la tabla física, 0x30 B por índice (512 índices; `+0` firma `0x2159454b`, `+4` tipo, `+8` clave, `+0x10…` tiempos de repetición, `+0x20` indicadores: `0x40` = posición, `0x2` = dial). Las 7 teclas de §1 salen idénticas, así que la tabla es la que usa el driver. Las listas clave → evento de `InfraInput` (dev 2 y 4) salen con `TRACEFN=8058ce TRACEDEREF=0:2c:a00`; las de los diales y de Reproducción las añade la vista al activarse (tabla de `viewUnified2.so` `0x4a27d8`: `{0x7ffffffe, clave, evento}`).
+
+| Botón A6000 | Clave `w0` | Índice `w4` | Evento | Comprobado en el arnés |
+|---|---|---|---|---|
+| Semipulsación (S1) | `0x1f1` `KEY_TACT_LOCK` | `0x1b` | `0x15010020` | llega a la cola |
+| MOVIE | `0x1f0` `KEY_TACT_STARTSTOP` | `0x1a` | `0x15010050` | `Vn 054` + `requestModelExecute model/STILL_REC` |
+| Fn | `0x70a1` | `0x95` | `0x15010120` | abre el menú rápido (`Vn 030_viewUnified4`), [captura](img/g22-fn-menu-rapido.png) |
+| DISP | `0x1f9` `KEY_TACT_DISP` | `0x21` | `0x150101a0` | cambia la información de la pantalla de disparo |
+| C1 | `0x66` `KEY_TACT_CUSTOM` | `0xd` | NO_VERIFICADO | sin efecto visible |
+| AEL | `0x7090` | `0x84` | `0x15010140` | sin efecto visible |
+| Reproducción | `0x1f7` `KEY_TACT_PLAY` | `0x1f` | `0x150100f0` (tabla de la vista) | sin efecto visible (sin medios) |
+| C2 / Borrar | `0x1f8` `KEY_TACT_DELETE` | `0x20` | NO_VERIFICADO | abre la Guía en cámara (`Vn 069_viewUnified6`), [captura](img/g22-c2-guia-en-camara.png) |
+| Dial superior (giro) | `0x10000014` | `0x1e4` | `0x15070030` → `callback_dial_signed_speed` | `w2` = paso con signo (1 / −1); en el menú cambia de pestaña |
+| Rueda trasera (giro) | `0x10000015` | `0x1e5` | `0x15070040` | `w2` = paso con signo; en el menú mueve la selección |
+| Dial de modos | `0x7025` `KEY_POS_MODE_DIAL` | `0x27` | `0x15070050` → `callback_mode_dial` | el evento llega (`w2` = valor nuevo, `w3` = anterior); la UI consulta `model/CAMERA` info `0xf` y no cambia nada |
+
+- Qué dial es el superior y cuál la rueda es INFERENCIA por el comportamiento en el menú; `0x10000016/17` (índices `0x1e6/0x1e7`) dan los mismos eventos.
+- **Dial de modos**: el número de cada posición es NO_VERIFICADO; `live.py` manda la posición 0–8 en el orden físico. El cambio de modo de exposición sigue la misma vía que el EFCS (`MSGID_SET_EXPOSURE_MODE_CMD` a `ObjCamera`, que la deja en cola en el modo LRM `0x60`, [g22-respuesta-efcs-objcamera §10](g22-respuesta-efcs-objcamera.md)), así que en el arnés no cambia el modo. Cierre: número de posición con la NVRAM o el registro de una cámara real, y respuesta de `ObjCamera` emulada.
+- Encendido (`0x2`, índice `0`) no se expone: apagaría la UI emulada.

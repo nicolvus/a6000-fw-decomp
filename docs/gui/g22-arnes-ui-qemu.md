@@ -547,6 +547,12 @@ Método: contrastar línea a línea el registro real (`mem-20261020-log`, 129.72
 - **Búsqueda estática**: las apariciones de `#0x7f5` (2037) en `libObj` son números de línea de traza. El límite y la conversión del widget (`PAS_BtnDateTime`, `PAS_BtnDateTimeConverter` en `viewUnified2.so`) no están localizados. Falta trazar en la vista quién consume `0x101…0x106` y `0x10a`.
 - **Trampa documentada** en el docstring de `run.py`: sin `FULLLOG=1`, el `guest.log` no es el de esa ejecución.
 
+#### 5.18z¹² G22-E: arranque en la pantalla de disparo y botonera completa (13-11-2026)
+
+- **Pantalla de disparo**: con `ModelStillRec` ya creado (`POSTROOTEV`, §5.18z⁸), `openView("view/STLREC")` (0x88) dibuja la OSD de disparo y produce la misma secuencia que el registro real tras el encendido (`[CmnViewMgrSetSave] MAAJID`, `ACT_IconFlashEmission`, `ACT_ICONAFAREA`). Antes, al cerrar el menú quedaba `ViewRootPowerSw` sin nada visible (0 listas). `live.py` arranca ahora con `OPENVIEW=view/ROOT,view/STLREC` (antes `…,@V00E`, el menú); MENU sigue abriendo el menú por `@V00E` y al cerrarlo vuelve a la pantalla de disparo. Medido en dos arranques en frío (perfil `disparo`, puerto 8694). Se ven el marco de enfoque, SteadyShot OFF y el formato 1080 ([captura](img/g22-pantalla-disparo.png)); DISP cambia la cantidad de información. Faltan el modo, la batería, las fotos restantes y la exposición: los de exposición dependen de av-cam, y el resto no se ha investigado. Prueba `test_arranca_en_la_pantalla_de_disparo`.
+- **Botonera completa**: tabla física del driver de `InfraInput` volcada en el arranque (índice → clave), [g22-t7-mapa-teclas §5](g22-t7-mapa-teclas.md). `live.py` tiene ahora semipulsación, MOVIE, Fn, DISP, C1, AEL, Reproducción, C2/Borrar, el dial superior y la rueda trasera (paso con signo, sin suelta) y el dial de modos (`POST /modo {"p": 0..8}` → `KEY_POS_MODE_DIAL`). El configurador los ofrece solos (claves de `TECLAS`); un botón nuevo no hereda una tecla que el usuario ya tenga asignada. Prueba `test_botones_y_diales_de_la_a6000_con_indices_del_driver`.
+- **Límite**: el dial de modos entrega el evento real a `InputService::callback_mode_dial`, pero el modo no cambia. El número de cada posición es NO_VERIFICADO, y el cambio de modo pasa por `ObjCamera`, igual que el EFCS (§10 de [g22-respuesta-efcs-objcamera](g22-respuesta-efcs-objcamera.md)).
+
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
 Verificado: `build.sh` reproduce byte a byte el `sonyshim.so` que se estaba usando (md5 `5307f8ae…` antes de las correcciones);

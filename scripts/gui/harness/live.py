@@ -39,13 +39,28 @@ import isp_web
 import run
 import sensor_web
 
-# escenario de F3/F4 sin volcados: ciclo de modelos, menú abierto, cola de teclas 0x7a0020
-SHIMENV = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,@V00E OPENVIEWAT=40 OPENVIEWGAP=14 "
+# escenario sin volcados: ciclo de modelos, pantalla de disparo (view/STLREC, §5.18z¹²), cola de teclas 0x7a0020
+SHIMENV = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/STLREC OPENVIEWAT=40 OPENVIEWGAP=14 "
            "STARTEV=11004002:100,11004012,11004013 POSTROOTEV=11004002:e3 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f "
            "KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177 KEYINITON=06A_viewUnified2 LIVE=auto " + os.environ.get("SHIMEXTRA", ""))  # SHIMEXTRA="WAITLOG=3000": variables de diagnóstico del shim
-# {clave KEY_TACT_*, índice físico} medidos en §5.18z′
+# {clave KEY_*, índice físico[, paso del dial]}: tabla del driver de InfraInput volcada en el arranque (§5.18z¹²; las 7 primeras, también §5.18z′).
+# Los diales no tienen suelta: cada pulsación es un paso con signo (callback_dial_signed_speed); dial = 0x15070030, rueda = 0x15070040.
 TECLAS = {"arriba": (0x3, 0x1), "abajo": (0x30, 0x5), "izquierda": (0x15, 0x3), "derecha": (0x1AF, 0x14), "menu": (0x1AB, 0x11),
-          "intro": (0xE000000, 0x1BC), "disparador": (0xA7, 0xE)}
+          "intro": (0xE000000, 0x1BC), "disparador": (0xA7, 0xE), "semipulsacion": (0x1F1, 0x1B), "movie": (0x1F0, 0x1A),
+          "fn": (0x70A1, 0x95), "disp": (0x1F9, 0x21), "c1": (0x66, 0xD), "ael": (0x7090, 0x84), "reproduccion": (0x1F7, 0x1F),
+          "borrar": (0x1F8, 0x20), "rueda_izq": (0x10000015, 0x1E5, -1), "rueda_der": (0x10000015, 0x1E5, 1),
+          "dial_izq": (0x10000014, 0x1E4, -1), "dial_der": (0x10000014, 0x1E4, 1)}
+DIAL_MODO = (0x7025, 0x27)  # KEY_POS_MODE_DIAL → evento 0x15070050 → InputService::callback_mode_dial (valor = posición)
+# shortcut: el número de cada posición es NO_VERIFICADO (orden físico del dial); fijarlo con la NVRAM o el registro de una cámara real
+POSICIONES_MODO = ("Auto inteligente", "Auto superior", "P", "A", "S", "M", "Película", "Panorama", "SCN")
+
+
+def pulsa(vm: "Vm", nombre: str, v: int) -> None:
+    k, i, *paso = TECLAS[nombre]
+    if not paso:
+        vm.tecla(k, v, i)
+    elif v:
+        vm.tecla(k, paso[0] & 0xFFFFFFFF, i)
 
 
 def rgba4444_png(w: int, h: int, raw: bytes) -> bytes:
@@ -255,16 +270,22 @@ PAGINA = """<!doctype html><html lang="es"><head><meta charset="utf-8"><title>A6
 :root{--bg:#111;--fg:#ddd;--mut:#888;--acc:#e8732a}body{margin:0;background:var(--bg);color:var(--fg);font:14px system-ui,sans-serif}
 main{display:flex;gap:16px;padding:16px;flex-wrap:wrap;align-items:flex-start}canvas{width:640px;height:auto;max-width:100%;image-rendering:pixelated;background:#000;border:1px solid #333;outline:none}
 aside{width:280px}button{background:#222;color:var(--fg);border:1px solid #444;border-radius:4px;padding:6px 10px;margin:2px;cursor:pointer}
-button:active{background:var(--acc)}.pad{display:grid;grid-template-columns:repeat(3,64px);gap:4px;margin:8px 0}.pad button{margin:0}
+button:active{background:var(--acc)}.pad{display:grid;grid-template-columns:repeat(3,64px);gap:4px;margin:8px 0}.pad button{margin:0}.fila{display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin:4px 0}h3{margin:12px 0 4px;font-size:13px;color:var(--mut)}#modo{min-width:9em;text-align:center}
 small,#st{color:var(--mut)}label{display:block;margin:10px 0 4px}</style></head><body><main>
 <canvas id="c" width="640" height="480" tabindex="0"></canvas><aside>
 <div id="st">conectando…</div>
-<div class="pad"><span></span><button data-k="arriba">▲</button><span></span><button data-k="izquierda">◀</button>
-<button data-k="intro">OK</button><button data-k="derecha">▶</button><span></span><button data-k="abajo">▼</button><span></span></div>
-<button data-k="menu">MENU</button><button data-k="disparador">Disparador</button>
+<h3>Arriba</h3>
+<div class="fila"><button data-k="semipulsacion" title="semipulsación (S1)">½ Disparo</button><button data-k="disparador">Disparador</button><button data-k="c1">C1</button></div>
+<div class="fila">Modo <button id="modo_izq">⟲</button><b id="modo">?</b><button id="modo_der">⟳</button></div>
+<div class="fila">Dial <button data-k="dial_izq">⟲</button><button data-k="dial_der">⟳</button></div>
+<h3>Detrás</h3>
+<div class="fila"><button data-k="movie">● MOVIE</button><button data-k="menu">MENU</button><button data-k="ael">AEL</button><button data-k="fn">Fn</button></div>
+<div class="pad"><button data-k="rueda_izq" title="girar la rueda">⟲</button><button data-k="arriba">▲</button><button data-k="rueda_der" title="girar la rueda">⟳</button><button data-k="izquierda">◀</button>
+<button data-k="intro">OK</button><button data-k="derecha">▶</button><button data-k="disp">DISP</button><button data-k="abajo">▼</button><span></span></div>
+<div class="fila"><button data-k="reproduccion">▶ Reprod.</button><button data-k="borrar">C2 / 🗑</button></div>
 <!--SENSOR-->
 <label>Escala <select id="esc"><option selected>1</option><option>1.5</option><option>2</option></select></label>
-<p><button id="guardar">Guardar estado</button> <a id="volver" href="#" hidden>⚙ Configurador</a></p><small>Teclado: flechas, Intro, Esc/M = MENU, espacio = disparador. «Guardar estado» hace que el
+<p><button id="guardar">Guardar estado</button> <a id="volver" href="#" hidden>⚙ Configurador</a></p><small>Teclado: flechas, Intro, Esc/M = MENU, espacio = disparador S = ½ disparo, R = MOVIE, F = Fn, D = DISP, Q/E = rueda, Z/X = dial, P = reproducir, Supr = C2 (cámbialas en el configurador). «Guardar estado» hace que el
 próximo arranque empiece en esta pantalla. La imagen no se procesa con los ajustes de la cámara (av-cam no se emula).</small></aside></main>
 <script>
 const c=document.getElementById('c'),x=c.getContext('2d'),st=document.getElementById('st');let osd=new Image(),info={};/*SENSORJS*/
@@ -272,11 +293,14 @@ const es=new EventSource('/eventos');es.onmessage=e=>{const i=new Image();i.onlo
 setInterval(async()=>{try{info=await (await fetch('/estado')).json();st.textContent=info.texto}catch(e){st.textContent='sin conexión'}},1000);
 const tecla=(k,v)=>{if(k=='disparador'&&v==1)disparo();return fetch('/tecla',{method:'POST',body:JSON.stringify({k,v})})};
 document.querySelectorAll('[data-k]').forEach(b=>{b.onpointerdown=()=>tecla(b.dataset.k,1);b.onpointerup=b.onpointerleave=e=>{if(e.type=='pointerup'||e.buttons)tecla(b.dataset.k,0)}});
-let mapa={ArrowUp:'arriba',ArrowDown:'abajo',ArrowLeft:'izquierda',ArrowRight:'derecha',Enter:'intro',Escape:'menu',KeyM:'menu',Space:'disparador'};
+let mapa={ArrowUp:'arriba',ArrowDown:'abajo',ArrowLeft:'izquierda',ArrowRight:'derecha',Enter:'intro',Escape:'menu',KeyM:'menu',Space:'disparador',KeyS:'semipulsacion',KeyR:'movie',KeyF:'fn',KeyD:'disp',Digit1:'c1',KeyA:'ael',KeyP:'reproduccion',Delete:'borrar',KeyQ:'rueda_izq',KeyE:'rueda_der',KeyZ:'dial_izq',KeyX:'dial_der'};
 fetch('/config').then(r=>r.json()).then(c=>{if(c.mapa)mapa=c.mapa;sensorInicio(c.sensor);if(c.lanzador){const a=document.getElementById('volver');a.href=c.lanzador;a.hidden=false;
 a.onclick=async e=>{e.preventDefault();st.textContent='guardando y cerrando…';await fetch('/salir',{method:'POST'});setTimeout(()=>location.href=c.lanzador,1500)}}}).catch(()=>{});
 addEventListener('keydown',e=>{const k=mapa[e.code];if(!k||e.target.tagName=='INPUT'&&e.target.type!='checkbox')return;e.preventDefault();if(!e.repeat)tecla(k,1)});
 addEventListener('keyup',e=>{const k=mapa[e.code];if(k){e.preventDefault();tecla(k,0)}});
+const MODOS=__MODOS__;let modo=0;const pm=d=>{modo=(modo+d+MODOS.length)%MODOS.length;document.getElementById('modo').textContent=MODOS[modo];
+return fetch('/modo',{method:'POST',body:JSON.stringify({p:modo})})};document.getElementById('modo').textContent=MODOS[0];
+document.getElementById('modo_izq').onclick=()=>pm(-1);document.getElementById('modo_der').onclick=()=>pm(1);
 document.getElementById('ver').onchange=pinta;document.getElementById('esc').onchange=e=>c.style.width=640*e.target.value+'px';
 document.getElementById('guardar').onclick=async()=>{st.textContent='guardando…';alert(await (await fetch('/guardar',{method:'POST'})).text())};
 </script></body></html>"""
@@ -311,7 +335,7 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
             if isp_web.maneja(self, "GET", self.path, b"", vm):  # ISP emulado (T9)
                 return
             if self.path == "/":
-                self.responde(PAGINA.replace("<!--SENSOR-->", sensor_web.HTML).replace("/*SENSORJS*/", sensor_web.JS).encode(), "text/html; charset=utf-8")
+                self.responde(PAGINA.replace("<!--SENSOR-->", sensor_web.HTML).replace("/*SENSORJS*/", sensor_web.JS).replace("__MODOS__", json.dumps(POSICIONES_MODO, ensure_ascii=False)).encode(), "text/html; charset=utf-8")
             elif self.path == "/estado":
                 t = time.time() - vm.t0
                 fase = ("restaurado" if vm.restaurado else "arranque en frío") + f", {t:.0f} s"
@@ -350,8 +374,14 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
                 return
             if self.path == "/tecla":
                 d = json.loads(cuerpo)
-                k, i = TECLAS[d["k"]]
-                vm.tecla(k, int(d["v"]), i)
+                pulsa(vm, d["k"], int(d["v"]))
+                self.responde(b"ok", "text/plain")
+            elif self.path == "/modo":  # dial de modos: posición 0..8 de POSICIONES_MODO
+                p = int(json.loads(cuerpo)["p"])
+                if not 0 <= p < len(POSICIONES_MODO):
+                    self.send_error(400)
+                    return
+                vm.tecla(DIAL_MODO[0], p, DIAL_MODO[1])
                 self.responde(b"ok", "text/plain")
             elif self.path == "/refrescar":  # pide al invitado el fotograma actual (aunque no haya cambiado): sirve para comprobar si una tecla cambió la pantalla
                 if vm.sock:
