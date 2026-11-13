@@ -16,6 +16,24 @@ sed -i -e 's|current->mm->get_unmapped_area(file, addr|mm_get_unmapped_area(curr
        -e 's|ret = shmem_zero_setup(vma);|ret = shmem_mmap_orig(asma->file, vma); /* shmem_zero_setup ya no se exporta */|' \
        -e 's|^static int ashmem_mmap(struct file \*file, struct vm_area_struct \*vma)$|static int (*shmem_mmap_orig)(struct file *, struct vm_area_struct *);\n&|' ashmem.c
 echo 'MODULE_LICENSE("GPL");' >> ashmem.c
+# traza de errores (T6): mmap/ioctl que fallan se registran en dmesg con el nombre de la región y el errno
+cat > trace.inc <<'EOF'
+static int ashmem_mmap(struct file *f, struct vm_area_struct *v)
+{
+	int r = ashmem_mmap_real(f, v); struct ashmem_area *a = f->private_data;
+	if (r) pr_info("ashmem: mmap '%s' len=%lu flags=%#lx -> %d\n", a->name + ASHMEM_NAME_PREFIX_LEN, v->vm_end - v->vm_start, v->vm_flags, r);
+	return r;
+}
+static long ashmem_ioctl(struct file *f, unsigned int c, unsigned long a)
+{
+	long r = ashmem_ioctl_real(f, c, a);
+	if (r < 0) pr_info("ashmem: ioctl %#x -> %ld\n", c, r);
+	return r;
+}
+EOF
+sed -i -e 's|^static int ashmem_mmap(struct file \*file|static int ashmem_mmap_real(struct file *file|' \
+       -e 's|^static long ashmem_ioctl(struct file \*file|static long ashmem_ioctl_real(struct file *file|' \
+       -e 's|^static const struct file_operations ashmem_fops = {|#include "trace.inc"\n&|' ashmem.c
 echo 'obj-m += ashmem.o' > Makefile
 make -C "$H" ARCH=arm LLVM=1 M="$W/ash" modules 2>&1 | grep -E "error" || true
 ls -la "$W/ash/ashmem.ko"

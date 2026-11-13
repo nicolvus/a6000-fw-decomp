@@ -37,3 +37,17 @@ Fecha: 12-11-2026. Solo emulador y análisis estático; sin cámara, sin flasheo
 ## Prototipo de esta sesión
 
 `scripts/gui/harness/android/build_ashmem.sh DIR_TRABAJO` descarga `ashmem.c` de Linux 5.15.170, lo adapta a 6.12 (`mm_get_unmapped_area`, `vm_flags_clear`, `mmap` de shmem en vez de `shmem_zero_setup`, que ya no se exporta, sin shrinker) y lo compila con el entorno de `build_binder32.sh`. Se versionan también los scripts previos sin commit de T6 (`android.sh`, `prep.sh`, `build_binder32.sh`, `uipc_stub.c`). Para medirlo falta añadir `insmod ashmem.ko` en `android.sh` y una ejecución `MODE=zyg` cuando la VM esté libre.
+
+## Medición 13-11-2026: zygote → system_server
+
+Solo emulador (`run.py`, `DIR_TRABAJO=analysis/gui/g22/harness/t6`, salidas en `analysis/gui/g22/harness/runs/t6-*`, ignorados). Sin cámara ni flasheo.
+
+| Paso | Resultado | Evidencia |
+|---|---|---|
+| `chmod 666 /dev/ashmem /dev/binder` (como `ueventd.rc` del firmware) | **MEDIDO**: desaparece `Could not mmap … 'dalvik-mark-stack'`; el zygote (euid 9999 al precargar) termina la precarga y crea system_server (`Entered system_init()`) | `t6/init4.log` |
+| `MODE=init`: gralloc `diadem` | **MEDIDO**: `[Connect][121]osal_valloc_msg error err = -9` → SIGSEGV de system_server. `-9` es EBADF: `u_osal_valloc_msg_wait` (0x5a50) devuelve `-errno` del `ioctl`; el hijo del fork reabre `/dev/uipc` en el `pthread_atfork` de `u_uipc_init` (0x6414/0x6438 → `do_init` 0x6180) y cierra el fd si `open`/`mmap` fallan | `t6/init4.log`, desensamblado de `libosal_uipc.so` |
+| Causa del EBADF | **MEDIDO**: en el `/dev` de Android, `/dev/uipc` es `c 251,207` (número del `osal_uipc.ko` real; la cadena `/dev/uipc` está en el `/init` de Sony), pero `uipc_shared.ko` es misc `10:260` (sysfs). `android.sh` rehace el nodo con el número de sysfs cada vez que init lo recrea (4–8 veces al arrancar) | `runs/t6-init7.out`, `runs/t6-init9.out` |
+| Con el nodo corregido | **MEDIDO**: sin EBADF; gralloc registra `OSAL_MSGQ_GID_HAL` y falla en `[getBufferManager][178]osal error!!` (`osal_snd_sync_msg err = -1022`, tiempo agotado) → `failed to get BufferManager` → SIGSEGV en `system_init()` | `runs/t6-init9.out`, `runs/t6-init10.out` (`couldn't open framebuffer HAL (Invalid argument)`) |
+| `MODE=zyg` (sin init ni propiedades) | **MEDIDO**: la parte nativa de system_server termina (`entering thread pool`), Java llega a EntropyService/PowerManager y muere en `ActivityManagerService.getIntProp` (`unable to parse '' as integer`) | `t6/zyg12.log` |
+
+**Bloqueo actual:** `gralloc.diadem.so` necesita un servidor `BufferManager` al otro lado de uipc (en la cámara lo da el sistema Sony fuera de Android); sin él no hay SurfaceFlinger y system_server cae. Opciones siguientes, sin probar: (a) quitar `gralloc.diadem.so` para que libhardware use `gralloc.default.so` (necesita `/dev/graphics/fb0`, no comprobado en `-M virt`); (b) un servidor `BufferManager` mínimo sobre `uipc_shared` (protocolo sin estudiar); (c) registrar `uipc_shared.ko` en `251:207` en vez de rehacer el nodo (shortcut actual en `android.sh`).

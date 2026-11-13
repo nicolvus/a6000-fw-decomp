@@ -20,6 +20,8 @@ for m in drivers/android/binder_linux drivers/usb/gadget/libcomposite drivers/us
 done
 cp -a "$DEV/nflasha16_unpacked_unpacked" "$O/cam/and/system"          # /system de la cámara (Android 2.3.7 GWK74)
 cp -a "$RD"/init "$RD"/init.rc "$RD"/default.prop "$RD"/ueventd.rc "$RD"/init.goldfish.rc "$RD"/ueventd.goldfish.rc "$O/cam/and/"
+echo '/dev/uipc                 0666   root       root' >> "$O/cam/and/ueventd.rc"   # adición del emulador: osal_uipc lo abren procesos no root (system_server uid 1000)
+printf '0 0 android\n' > "$O/cam/and/system/lib/egl/egl.cfg"                       # adición del emulador: EGL por software (no hay /dev/dmpgles2)
 mkdir -p "$O"/cam/and/sbin "$O"/cam/and/data "$O"/cam/and/cache "$O"/cam/and/proc "$O"/cam/and/sys "$O"/cam/and/dev "$O"/cam/and/mnt
 chmod -R a+rX "$O/cam/and"; chmod 755 "$O/cam/and/init" "$O"/cam/and/system/bin/* "$O"/cam/and/system/xbin/* 2>/dev/null || true
 [ -f "$W/b32/binder_linux.ko" ] && cp "$W/b32/binder_linux.ko" "$O/cam/t6mod/binder32.ko"; [ -f "$W/uipc/uipc_stub.ko" ] && cp "$W/uipc/uipc_stub.ko" "$O/cam/t6mod/"  # build_binder32.sh

@@ -18,3 +18,6 @@ cp "$S/prueba_uipc.sh" "$W/uipcs/"
 # lanzador del zygote (socket ANDROID_SOCKET_zygote sin init de Android); va a overlay/cam/and/zygote_launch
 clang --target=armv7a-linux-gnueabihf -marm -O1 -Wall -ffreestanding -fno-builtin -fno-stack-protector -nostdlib -static -fuse-ld=lld \
   -o "$W/uipcs/zygote_launch" "$S/zygote_launch.c"
+# prueba de ashmem.ko en el invitado (mmap privado/compartido como dvmAllocRegion)
+clang --target=armv7a-linux-gnueabihf -marm -O1 -Wall -ffreestanding -fno-builtin -fno-stack-protector -nostdlib -static -fuse-ld=lld \
+  -o "$W/uipcs/ashmem_guest_test" "$S/ashmem_guest_test.c"
