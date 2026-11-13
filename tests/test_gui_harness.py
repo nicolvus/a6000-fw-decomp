@@ -102,6 +102,15 @@ def test_vdf_59000e_responde_y_stat_msgq_cuenta_pendientes() -> None:
     assert "o[0] = n; o[1] = o[2] = o[3] = 0;" in src
 
 
+def test_efcs_emula_respuesta_objcamera_y_backup_107086e() -> None:
+    """g22-respuesta-efcs-objcamera §6: la orden 0x75fa (libObj+0x689745) no llega a ObjCamera en el arnés; el shim aplica
+    el efecto de CMP 0x75fb/EVT 0x85a6 (ranuras SET/ACT del modelo) y escribe Backup 0x107086e (1 = Activar, 2 = Desactivar);
+    al crear ModelStillRec (libObj+0x681eb2) carga las ranuras desde ese registro para que el ajuste sobreviva al arranque en frío."""
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    assert "efcs_ra = base + 0x689745" in src and "efcs_pc = base + 0x681eb2" in src
+    assert "0x107086e" in src and "base + 0x68e0ce + 1" in src and 'getenv("NOEFCS")' in src
+
+
 def test_fecha_inicial_900141_orden_3_responde_con_fecha() -> None:
     """§5.18z¹⁰: osal_get_init_date (libObj+0x4f5b94) usa snd_sync_direct a 0x900141 orden 3; el shim respondía ceros sin registrar."""
     src = (HARNESS / "shim/sonyshim.c").read_text()

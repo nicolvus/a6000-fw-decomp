@@ -79,3 +79,23 @@ Resultado esperado: la fila pasa a «Desactivar» (aviso `0x4f`), `NV 107086e 02
 
 - «Ajuste de zoom» (`model/CAMERA 9/62`): no analizado aquí; mismo síntoma, misma hipótesis (despacho de `ObjCamera`).
 - No se implementó en el arnés: la causa del no-despacho (§3) y los valores de `SET`/`ACT` necesitan ejecución en vivo.
+
+## 8. Implementado en el arnés (13-11-2026, medido en QEMU)
+
+**Trampas (perfil `efcs`, puerto 8693, `HARNESS_OUT=analysis/gui/g22/harness/runs/efcs-*`, gitignored).**
+- `0xa1b21c` sí se ejecuta en el arranque, llamada desde otra secuencia de `ObjCamera` (`0x960be8`, selector `0x40ec`): el envío a LIRO funciona.
+- Con trampas de un disparo en `0x95a308` (la secuencia), `0xad76f2` (el caso `0x75fa` del despachador de órdenes `0xad4ce4`, único que construye la secuencia) y `0xad7712/0xad7716` (crear y encolar), tras `IssueCommandAsync … ra=libObj.so+0x689745 -> 0` **no salta ninguna**. Tampoco se despierta ningún hilo de `ObjCamera` (`CAMUSER_OBJCAME`, `CAMUSER_CAMMANA`, `CAMUSER_CAMPOST`, `ObjCameraAgent`) en `WAITLOG`.
+- Conclusión (VERIFICADO): la orden **no llega al despachador de `ObjCamera`**; se corta antes, en la entrega del mensaje por `MWF`. LIRO no interviene. No se encontró por qué no llega a la cola de `ObjCamera` (el hilo `CAMUSER_OBJCAME` está en una espera indefinida desde el arranque; las pilas de `WAITSTACK` salen entrelazadas). Por eso no se pudo arreglar el reparto y se emula (opción B).
+
+**Emulación (`sonyshim.c`, `NOEFCS=1` la desactiva).**
+- `IssueCommandAsync` es ahora un envoltorio desnudo que pasa `r4`/`r5` del llamante. Si el llamante es `libObj+0x689745` (`pvt_SetFrontEShutterMode`), la orden se acepta (`-> 0`) y `r5` ∈ {1, 2}:
+  - aplica el efecto de CMP + EVT: `0x68e0ce([modelo+0x534], 0|1, v)` (ranuras `SET` y `ACT` = valor pedido, con aviso `0x4f` a la vista), igual que `0x678d3c`;
+  - escribe **Backup `0x107086e` = v (1 B)** por el servicio de Backup del shim (`NV 107086e 0v` → `nvram.json`).
+- Arranque: trampa de un disparo en `libObj+0x681eb2` (`ModelStillRec`, justo después de crear el envoltorio `+0x534`). Carga las dos ranuras desde `0x107086e` con el `set` de la propiedad (vtable `+0x14`), para que la fila y el diálogo coincidan. En la cámara real eso lo hace la notificación de arranque de `ObjCamera` (aquí no hay).
+- No se fabrican los `ObjMsg` `0x75fb`/`0x85a6`: se aplica su efecto en el modelo (`pvt_subActionObjectFrontEShutterModeCmpEvt` solo guarda las dos ranuras y avisa a la vista).
+
+**Medido.** Arranque en frío con `0x107086e = 02` (`bk.tbl` real) → fila «Desactivar». Activar en caliente → `NV 107086e 01`, la fila cambia. Arranque en frío → ranuras = 1. Desactivar → `NV 107086e 02`. Borrado `estado.zst` y arranque en frío → «Desactivar» (`runs/efcs-emu1/caliente_activar.png`, `caliente_desactivar.png`, `frio_desactivar.png`). Prueba `test_efcs_emula_respuesta_objcamera_y_backup_107086e`.
+
+**Límites.** Igual que en §6: `SET = ACT = v` y el momento de escribir el Backup son INFERENCIA (falta comparar la NVRAM real antes y después). Con la `libObj` de otro firmware no se arma (comprueba los bytes de `0x681eb2`).
+
+**«Ajuste de zoom» (`model/CAMERA`): no hecho.** Por INFERENCIA tiene la misma causa: sus dos órdenes van al mismo objeto de `ObjCamera` y tampoco reciben respuesta. Emularlo exige otra especificación estática (órdenes candidatas `MSGID_SET_DIRECT_SMART_EZOOM_MODE_CMD` `0x7612` / `…PRECISION…` `0x7614`, parámetros `0x9798`/`0x979b`, registro de Backup sin identificar).
