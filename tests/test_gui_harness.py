@@ -108,6 +108,14 @@ def test_botones_y_diales_de_la_a6000_con_indices_del_driver() -> None:
     assert sent == [(0x10000015, 0xFFFFFFFF, 0x1E5), (0x70A1, 1, 0x95), (0x70A1, 0, 0x95)]  # el giro no tiene suelta
 
 
+def test_sensor_de_ojo_pasa_la_imagen_al_visor() -> None:
+    """Botón «Ojo en el visor» (V): como la A6000 con Visor/Monitor en automático, apaga el monitor y muestra la imagen en el visor pequeño.
+    Lo hace la ventana (anfitrión): la señal del sensor en el firmware está sin localizar (§5.18z¹³)."""
+    live, _ = _live()
+    p = live.PAGINA
+    assert 'id="evf"' in p and 'id="ojo"' in p and "KeyV" in p and "pinta0=pinta" in p
+
+
 def test_postrootev_crea_modelstillrec_tras_view_root() -> None:
     """§5.18z⁸: tras abrir view/ROOT el shim lanza @T0E3 (POSTROOTEV), que instancia model/STILL_REC (@M00F)."""
     live, _ = _live()

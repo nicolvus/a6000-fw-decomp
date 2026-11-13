@@ -271,9 +271,11 @@ PAGINA = """<!doctype html><html lang="es"><head><meta charset="utf-8"><title>A6
 main{display:flex;gap:16px;padding:16px;flex-wrap:wrap;align-items:flex-start}canvas{width:640px;height:auto;max-width:100%;image-rendering:pixelated;background:#000;border:1px solid #333;outline:none}
 aside{width:280px}button{background:#222;color:var(--fg);border:1px solid #444;border-radius:4px;padding:6px 10px;margin:2px;cursor:pointer}
 button:active{background:var(--acc)}.pad{display:grid;grid-template-columns:repeat(3,64px);gap:4px;margin:8px 0}.pad button{margin:0}.fila{display:flex;gap:4px;align-items:center;flex-wrap:wrap;margin:4px 0}h3{margin:12px 0 4px;font-size:13px;color:var(--mut)}#modo{min-width:9em;text-align:center}
+.evf{display:flex;flex-direction:column;gap:4px;margin:8px 0}#evf{width:256px;height:192px;border:1px solid #333;background:#000}#ojo[aria-pressed=true]{background:var(--acc)}
 small,#st{color:var(--mut)}label{display:block;margin:10px 0 4px}</style></head><body><main>
 <canvas id="c" width="640" height="480" tabindex="0"></canvas><aside>
 <div id="st">conectando…</div>
+<div class="evf"><canvas id="evf" width="320" height="240"></canvas><button id="ojo" aria-pressed="false" title="sensor de ojo (V)">👁 Ojo en el visor</button></div>
 <h3>Arriba</h3>
 <div class="fila"><button data-k="semipulsacion" title="semipulsación (S1)">½ Disparo</button><button data-k="disparador">Disparador</button><button data-k="c1">C1</button></div>
 <div class="fila">Modo <button id="modo_izq">⟲</button><b id="modo">?</b><button id="modo_der">⟳</button></div>
@@ -285,7 +287,7 @@ small,#st{color:var(--mut)}label{display:block;margin:10px 0 4px}</style></head>
 <div class="fila"><button data-k="reproduccion">▶ Reprod.</button><button data-k="borrar">C2 / 🗑</button></div>
 <!--SENSOR-->
 <label>Escala <select id="esc"><option selected>1</option><option>1.5</option><option>2</option></select></label>
-<p><button id="guardar">Guardar estado</button> <a id="volver" href="#" hidden>⚙ Configurador</a></p><small>Teclado: flechas, Intro, Esc/M = MENU, espacio = disparador S = ½ disparo, R = MOVIE, F = Fn, D = DISP, Q/E = rueda, Z/X = dial, P = reproducir, Supr = C2 (cámbialas en el configurador). «Guardar estado» hace que el
+<p><button id="guardar">Guardar estado</button> <a id="volver" href="#" hidden>⚙ Configurador</a></p><small>Teclado: flechas, Intro, Esc/M = MENU, espacio = disparador S = ½ disparo, R = MOVIE, F = Fn, D = DISP, Q/E = rueda, Z/X = dial, P = reproducir, Supr = C2, V = ojo en el visor (cámbialas en el configurador). «Guardar estado» hace que el
 próximo arranque empiece en esta pantalla. La imagen no se procesa con los ajustes de la cámara (av-cam no se emula).</small></aside></main>
 <script>
 const c=document.getElementById('c'),x=c.getContext('2d'),st=document.getElementById('st');let osd=new Image(),info={};/*SENSORJS*/
@@ -298,6 +300,12 @@ fetch('/config').then(r=>r.json()).then(c=>{if(c.mapa)mapa=c.mapa;sensorInicio(c
 a.onclick=async e=>{e.preventDefault();st.textContent='guardando y cerrando…';await fetch('/salir',{method:'POST'});setTimeout(()=>location.href=c.lanzador,1500)}}}).catch(()=>{});
 addEventListener('keydown',e=>{const k=mapa[e.code];if(!k||e.target.tagName=='INPUT'&&e.target.type!='checkbox')return;e.preventDefault();if(!e.repeat)tecla(k,1)});
 addEventListener('keyup',e=>{const k=mapa[e.code];if(k){e.preventDefault();tecla(k,0)}});
+/* sensor de ojo: el efecto del hardware (monitor apagado, imagen en el visor) lo hace la ventana; el firmware no recibe la señal (§5.18z¹³) */
+const ev=document.getElementById('evf'),ex=ev.getContext('2d'),ojoB=document.getElementById('ojo');let ojo=false;const pinta0=pinta;
+pinta=function(){pinta0();ex.fillStyle='#000';ex.fillRect(0,0,320,240);if(!ojo)return;ex.drawImage(c,0,0,320,240);x.fillStyle='#000';x.fillRect(0,0,640,480);
+x.fillStyle='#555';x.font='18px system-ui';x.textAlign='center';x.fillText('Monitor apagado: ojo en el visor',320,240);x.textAlign='start'};
+const ponOjo=v=>{ojo=v;ojoB.setAttribute('aria-pressed',v);pinta()};ojoB.onclick=()=>ponOjo(!ojo);
+addEventListener('keydown',e=>{if(e.code=='KeyV'&&!e.repeat&&e.target.tagName!='INPUT'){e.preventDefault();ponOjo(!ojo)}});
 const MODOS=__MODOS__;let modo=0;const pm=d=>{modo=(modo+d+MODOS.length)%MODOS.length;document.getElementById('modo').textContent=MODOS[modo];
 return fetch('/modo',{method:'POST',body:JSON.stringify({p:modo})})};document.getElementById('modo').textContent=MODOS[0];
 document.getElementById('modo_izq').onclick=()=>pm(-1);document.getElementById('modo_der').onclick=()=>pm(1);

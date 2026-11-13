@@ -824,7 +824,7 @@ static void startev(const char *spec) {
             void *mm = *(void **)((char *)*pvm + 0x18); unsigned char *base = (unsigned char *)dlsym(lobj_h, "_ZN13viewManagerIf8openViewEPKci") - 0x1251fd;
             for (const char *e = spec; e && *e; ) { unsigned long id = hexv(e, &e); void *ev = calloc(1, 0x10);  /* Event ocupa 0x10 (operator new(0x10) en el original); lo posee el ModelManager */
                 ector(ev, id, 2, 0);
-                if (*e == ':') { int mid = (int)hexv(e + 1, &e); unsigned long pk = 0x18; if (*e == ':') pk = hexv(e + 1, &e);  /* id:valor[:clave] */ void *pr = calloc(1, 0x10); ((void (*)(void *, int))(base + 0xf0fb0 + 1))(pr, mid);  /* STARTEV=id:modelo → parámetro 0x18 = Param<int>(modelo), como 0x7f2618 */
+                while (*e == ':' || *e == ';') { int mid = (int)hexv(e + 1, &e); unsigned long pk = 0x18; if (*e == ':') pk = hexv(e + 1, &e);  /* id:valor[:clave][;valor:clave…] */ void *pr = calloc(1, 0x10); ((void (*)(void *, int))(base + 0xf0fb0 + 1))(pr, mid);  /* STARTEV=id:modelo → parámetro 0x18 = Param<int>(modelo), como 0x7f2618 */
                     void (*addp)(void *, unsigned long, void *) = dlsym(RTLD_DEFAULT, "_ZN5Event12addParameterEmP9ParamBase"); if (addp) addp(ev, pk, pr); }
                 int rr = push(mm, ev); efp("[shim] STARTEV %#lx -> %d\n", id, rr); sleep(getenv("STARTGAP") ? (unsigned)hexv(getenv("STARTGAP"), 0) : 2); while (*e && *e != ',') e++; while (*e == ',') e++; }  /* avanza siempre: hexv no acepta mayúsculas */
         } else efp("[shim] STARTEV: faltan pViewManager/Event::Event/ModelManager::pushEvent\n");
@@ -1059,12 +1059,21 @@ __attribute__((used, noinline)) static int issue_cmd(void *h, void *msg, unsigne
 __attribute__((naked)) int _ZN3MWF5ObjIf17IssueCommandAsyncEPvPNS_6ObjMsgE(void *h, void *msg) {
     __asm__ volatile("mov r2, r4\n\tmov r3, r5\n\tb issue_cmd\n");  /* lr intacto: issue_cmd ve el llamante real */
 }
+/* GMIDUMP=@M018,model/CAMERA: parámetros de la lista que devuelve getModelInfo (lista → {inicio, fin} de punteros a ParamBase; tipo/clave/valor en +4/+8/+0xc) */
+static void gmi_dump(const char *name, int info, void *list) {
+    const char *g = getenv("GMIDUMP"); if (!g || !list || !strstr(g, name) || !readable(list)) return;
+    unsigned *vec = *(unsigned **)list, *a = 0, *e = 0; char b[600]; int o = 0; b[0] = 0;
+    if (readable(vec)) { a = (unsigned *)(unsigned long)vec[0]; e = (unsigned *)(unsigned long)vec[1]; }
+    for (int k = 0; k < 16 && a && a < e && readable(a); k++, a++) { unsigned *q = (unsigned *)(unsigned long)*a; if (readable(q)) o += snprintf(b + o, sizeof b - o, "%x/%x/%x ", q[1], q[2], q[3]); }
+    LOG("GMIDUMP %s %d: %s", name, info, b);
+}
 /* SETLOG=1: registra (con retorno) los eslabones de un cambio de ajuste del menú en cmn_view_processDataMgr / wrapperSettingUtil (≤ 4 argumentos de registro); reenvía a la implementación real */
 #define SETHOOK(sym) int sym(unsigned a, unsigned b, unsigned c, unsigned d) { static int (*r)(unsigned, unsigned, unsigned, unsigned); if (!r) r = dlsym(RTLD_NEXT, #sym); \
     if (getenv("SETLOG")) LOG("SET> " #sym " %x %x %x %x", a, b, c, d); int x = r(a, b, c, d); if (getenv("SETLOG")) LOG("SET< " #sym " -> %#x", x); return x; }
 /* SETLOG=1 también registra las peticiones de modelo de las vistas (primer argumento = nombre «@Mxxx»/«model/…»): el ajuste EFCS pasa por @M00F (process-bindings-a6000.json) */
 #define MODHOOK(sym) int sym(const char *a, unsigned b, unsigned c, unsigned d) { static int (*r)(const char *, unsigned, unsigned, unsigned); if (!r) r = dlsym(RTLD_NEXT, #sym); \
-    int x = r(a, b, c, d); if (getenv("SETLOG")) LOG("SETMOD " #sym " %s %x %x %x -> %#x", readable(a) ? a : "?", b, c, d, x); return x; }
+    int x = r(a, b, c, d); if (getenv("SETLOG")) LOG("SETMOD " #sym " %s %x %x %x -> %#x", readable(a) ? a : "?", b, c, d, x); \
+    if (x && readable(a)) gmi_dump(a, (int)b, (void *)(unsigned long)c); return x; }
 MODHOOK(_ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_)
 MODHOOK(_ZN13viewManagerIf19requestModelExecuteEPKcmP9ParamList)
 SETHOOK(_ZN21CmnViewProcessDataMgr8setValueEii)
@@ -1135,12 +1144,7 @@ int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name
     }
     if (!r && real && getenv("GMIRETRY")) for (int k = 0; k < 20 && !r; k++) { usleep(50000); r = real(self, name, info, list, flt); if (r) LOG("getModelInfo(%s, %d) acierta en el reintento %d", name, info, k + 1); }  /* ¿carrera con la inicialización del modelo? */
     if (getenv("GMILOG")) { static int n; if (n++ < 400) LOG("getModelInfo(%s, %d) -> %d", name, info, r); }
-    if (getenv("GMIDUMP") && r && list && strstr(getenv("GMIDUMP"), name)) {  /* GMIDUMP=@M018: parámetros de la lista (lista → {inicio, fin} de punteros a ParamBase; valor en +0xc) */
-        unsigned *vec = *(unsigned **)list, *a = 0, *e = 0; char b[600]; int o = 0; b[0] = 0;
-        if (readable(vec)) { a = (unsigned *)(unsigned long)vec[0]; e = (unsigned *)(unsigned long)vec[1]; }
-        for (int k = 0; k < 16 && a && a < e && readable(a); k++, a++) { unsigned *q = (unsigned *)(unsigned long)*a; if (readable(q)) o += snprintf(b + o, sizeof b - o, "%x/%x/%x ", q[1], q[2], q[3]); }
-        char ra[80]; wl_desc(__builtin_return_address(0), ra, sizeof ra); LOG("GMIDUMP %s %d (%s): %s", name, info, ra, b);
-    }
+    if (r) gmi_dump(name, info, list);
     return r;
 }
 void *dlsym(void *h, const char *n) {  /* DLSYMLOG=1: símbolos que pide la UI (p. ej. «<Vista>ToInstance», initializeViewConfig) */

@@ -12,7 +12,7 @@ Guarda `~/.config/a6000-emu/config.json` (fuera del repo; `--config` lo cambia).
 - **Iniciar** lanza `live.py` (puerto 8600; `--puerto-vm`) con el overlay elegido y salta a su ventana; en la ventana, «⚙ Configurador» guarda el estado, cierra la VM y vuelve. «Cerrar emulador» detiene VM y lanzador. Solo se toca el proceso lanzado por el propio lanzador.
 
 ## Botones y diales (13-11-2026)
-La ventana arranca en la pantalla de disparo. Tiene todos los botones de la A6000 salvo el de encendido: semipulsación (S), disparador (espacio), MOVIE (R), MENU (Esc/M), Fn (F), DISP (D), C1 (1), AEL (A), Reproducción (P) y C2/Borrar (Supr). La cruceta va con las flechas e Intro. El dial superior se gira con Z/X, la rueda trasera con Q/E, y el dial de modos con ⟲/⟳. El dial de modos manda el evento real, pero en el arnés el modo no cambia ([g22-t7-mapa-teclas §5](g22-t7-mapa-teclas.md)).
+La ventana arranca en la pantalla de disparo. Tiene todos los botones de la A6000 salvo el de encendido: semipulsación (S), disparador (espacio), MOVIE (R), MENU (Esc/M), Fn (F), DISP (D), C1 (1), AEL (A), Reproducción (P) y C2/Borrar (Supr). La cruceta va con las flechas e Intro. El dial superior se gira con Z/X, la rueda trasera con Q/E, y el dial de modos con ⟲/⟳. El dial de modos manda el evento real, pero en el arnés el modo no cambia ([g22-t7-mapa-teclas §5](g22-t7-mapa-teclas.md)). «👁 Ojo en el visor» (V) apaga el monitor y pasa la imagen al visor pequeño; lo hace la ventana, no el firmware ([§5.18z¹³](g22-arnes-ui-qemu.md)).
 
 ## Opciones de `live.py` añadidas
 `--perfil-dir NOMBRE` (directorio de perfil propio, útil para pruebas en paralelo), `--config` (mapa de teclas), `--lanzador URL` (enlace de vuelta).
