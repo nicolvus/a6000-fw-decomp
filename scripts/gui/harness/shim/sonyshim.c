@@ -192,11 +192,20 @@ static int direct_service(unsigned qid, unsigned *m) {
         return 0;
     }
     /* 0x900141 orden 3 = osal_get_init_date (libObj+0x4f5b94, desde ActionModelSuspend): fecha inicial de ModelClock (+0x84/+0x8e, INFO_INITIAL_DATE_TIME).
-     * En la cámara la sirve libObj+0xb58be8 leyendo Backup 0x900004–0x90000f con el mismo formato y +0x1c = 0 (g22-respuestas-59000e-900141.md §3.2). */
-    int init = m[0] == 0x28 && qid == 0x900141 && ((unsigned short *)m)[8] == 3;
-    if (m[0] == 0x28 && (((unsigned short *)m)[8] == 2 || init) && !getenv("NODATE")) {
+     * Como el callback real libObj+0xb58be8 (0xb58c60…0xb58dbe): lee la NVRAM; año = 0x90000e + 0x90000f; +0x1c y +0x22 a 0; sin registro → estado ≠ 0. */
+    if (m[0] == 0x28 && qid == 0x900141 && ((unsigned short *)m)[8] == 3) {
+        static const unsigned ids[] = { 0x90000e, 0x90000f, 0x900008, 0x900004, 0x900006, 0x900007, 0x900009, 0x90000a, 0x900005 };
+        static const unsigned char off[] = { 0x14, 0, 0x16, 0x17, 0x18, 0x19, 0x1a, 0x1e, 0x20 };
+        unsigned char *b = (unsigned char *)m; unsigned short *h = (unsigned short *)m; memset(b + 0x14, 0, 0x10);
+        for (int k = 0; k < 9; k++) { unsigned l = 0, *d = bk_find(ids[k], &l);
+            if (!d) { h[9] = 0xfc04; LOG("direct 0x900141 fecha inicial: falta Backup %#x", ids[k]); return 0; }
+            if (k == 1) h[10] += *(unsigned char *)d; else memcpy(b + off[k], d, l > 2 ? 2 : l); }
+        h[9] = 0; LOG("direct 0x900141 fecha inicial (NVRAM) -> %u-%u-%u %u:%02u:%02u área %d verano %d", h[10], b[0x16], b[0x17], b[0x18], b[0x19], b[0x1a], (short)h[15], (short)h[16]);
+        return 0;
+    }
+    if (m[0] == 0x28 && ((unsigned short *)m)[8] == 2 && !getenv("NODATE")) {
         unsigned short *h = (unsigned short *)m; const char *e = getenv("DATETYPE");
-        h[9] = 0; h[14] = init ? 0 : date_type >= 0 ? (unsigned short)date_type : e ? (unsigned short)hexv(e, 0) : 1;
+        h[9] = 0; h[14] = date_type >= 0 ? (unsigned short)date_type : e ? (unsigned short)hexv(e, 0) : 1;
         { time_t tt = (time_t)date_local(); struct tm g; gmtime_r(&tt, &g); unsigned char *b = (unsigned char *)m;  /* formato de libObj+0x4f10dc (osal_get_date): +0x14 año u16; +0x16 mes, día, hora, min, seg (u8); +0x1c tipo */
           h[10] = g.tm_year + 1900; b[0x16] = g.tm_mon + 1; b[0x17] = g.tm_mday; b[0x18] = g.tm_hour; b[0x19] = g.tm_min; b[0x1a] = g.tm_sec; }
         static int n; if (n++ < 40) LOG("direct %#x get_date -> %u-%u-%u %u:%02u:%02u tipo %u (base %d)", qid, h[10], ((unsigned char *)m)[0x16], ((unsigned char *)m)[0x17], ((unsigned char *)m)[0x18], ((unsigned char *)m)[0x19], ((unsigned char *)m)[0x1a], h[14], date_have);

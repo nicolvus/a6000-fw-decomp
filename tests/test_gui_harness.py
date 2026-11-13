@@ -105,7 +105,9 @@ def test_vdf_59000e_responde_y_stat_msgq_cuenta_pendientes() -> None:
 def test_fecha_inicial_900141_orden_3_responde_con_fecha() -> None:
     """§5.18z¹⁰: osal_get_init_date (libObj+0x4f5b94) usa snd_sync_direct a 0x900141 orden 3; el shim respondía ceros sin registrar."""
     src = (HARNESS / "shim/sonyshim.c").read_text()
-    assert "qid == 0x900141 && ((unsigned short *)m)[8] == 3" in src and "h[14] = init ? 0" in src
+    assert "qid == 0x900141 && ((unsigned short *)m)[8] == 3" in src
+    # mismo orden de Backup_read que libObj+0xb58c60…0xb58dbe: año = 0x90000e + 0x90000f, luego mes, día, hora, min, seg, área, verano
+    assert "0x90000e, 0x90000f, 0x900008, 0x900004, 0x900006, 0x900007, 0x900009, 0x90000a, 0x900005" in src
 
 
 @pytest.mark.skipif(not (os.environ.get("A6000_HARNESS_RUN") and (WORK / "base.cpio.gz").exists() and shutil.which("qemu-system-arm")),
