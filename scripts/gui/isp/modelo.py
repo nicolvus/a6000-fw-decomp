@@ -55,7 +55,7 @@ class Tablas:
 
     def curva(self, gamma_app: int, foto: bool = False) -> tuple[str, np.ndarray]:
         k = CURVA_FOTO.get(gamma_app) if foto else None
-        k = k if k in self.curvas else CURVA_VIDEO[gamma_app]
+        k = k if k is not None and k in self.curvas else CURVA_VIDEO[gamma_app]
         return k, self.curvas[k].astype(float) / 1023.0
 
 

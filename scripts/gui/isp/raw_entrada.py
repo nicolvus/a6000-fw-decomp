@@ -5,7 +5,7 @@ Evidencia (g23 §4):
     se lee entero (209 etiquetas) y los datos tienen sentido: `0x7310` negro 512 ×4, `0x7313` WB RGGB (3148, 1024, 1024, 1644)/1024, `0x7800` matriz 3×3 (filas suman 1024) y `0x7802` curva de tono de 512 puntos (10 bit).
   * `0x7800` = byte a byte la matriz de Backup `0x30001` índices 0/2/5–8 (`tablas.json`): la matriz de color del estilo Standard es esa (REAL).
   * La vista previa (1616×1080) es el fotograma completo de 6024×4024 con **corrección de lente** (distorsión de barril; las líneas rectas del ARW salen curvas): el modelo no puede compararse píxel a píxel
-    sin alinear. La corrección es radial `s = f·(1 + k1·r² + k2·r⁴)` + traslación; se ajusta por foto maximizando la correlación de gradientes (MEDIDO; los parámetros de la lente no están en el ARW de la A6000: SR2 no trae 0x7032–0x7036).
+    sin alinear. La corrección es radial `s = f·(1 + k1·r² + k2·r⁴)` + traslación; se ajusta por foto maximizando la correlación de gradientes (MEDIDO). T9-E: los parámetros de la lente SÍ están en el IFD del RAW (`0x7032/0x7035/0x7037`, no en SR2) y `carga` los usa (`lente_arw`).
 Requiere numpy, rawpy, Pillow, opencv-python-headless y scipy (`.venv`).
 """
 from __future__ import annotations
@@ -69,6 +69,60 @@ def mapas(p: np.ndarray, W: int, H: int, w: int, h: int) -> tuple[np.ndarray, np
     return ((X * f + p[3] + 1) / 2 * W - 0.5).astype(np.float32), ((((Y * f + p[4]) * (w / h)) + 1) / 2 * H - 0.5).astype(np.float32)
 
 
+# Desplazamiento fijo del centro óptico respecto del RAW (MEDIDO: mediana de 32 ajustes por foto, desviación 2·10⁻⁴/4·10⁻⁴, ≈ 3 px de la vista previa).
+DX_LENTE, DY_LENTE = -0.00407, 0.000185
+# Escala: la vista previa conserva el aumento medio de la corrección: f = K·c(r)/media(c) (MEDIDO en 32 ARW de 4 focales, K = 0,9919 ± 0,0018; el escalado de Sony NO_VERIFICADO).
+K_LENTE = 0.99194
+
+
+def lente_arw(b: bytes) -> dict | None:
+    """Parámetros de corrección de lente del IFD del RAW (SubIFD 0x14a; REAL): `0x7037` distorsión, `0x7035` aberración cromática (R y B), `0x7032` viñeteo; int16 con n nodos.
+    None si el ARW no los trae."""
+    def ifd(o: int) -> list[tuple[int, int, int, int]]:
+        n = struct.unpack_from("<H", b, o)[0]
+        return [struct.unpack_from("<HHII", b, o + 2 + 12 * i) for i in range(n)]
+    sub = [v for t, _, c, v in ifd(struct.unpack_from("<I", b, 4)[0]) if t == 0x14A]
+    if not sub:
+        return None
+    tg = {t: np.array(struct.unpack_from(f"<{c}h", b, v), float) for t, ty, c, v in ifd(sub[0]) if t in (0x7032, 0x7035, 0x7037) and ty == 8}
+    if len(tg) < 3:
+        return None
+    d, ca, vg = tg[0x7037], tg[0x7035], tg[0x7032]
+    n, nc = int(d[0]), int(ca[0]) // 2
+    return {"dist": d[1:1 + n], "ca_r": ca[1:1 + nc], "ca_b": ca[1 + nc:1 + 2 * nc], "vig": vg[1:1 + int(vg[0])]}
+
+
+def factor_lente(L: dict, rd: np.ndarray, canal: int) -> np.ndarray:
+    """Radio fuente / radio destino en función del radio normalizado a la semidiagonal: 1 + dist·2⁻¹⁴, por (1 + ca·2⁻²¹) en R/B. Escalas y nodos
+    equiespaciados como darktable/RawTherapee (shortcut: escala NO_VERIFICADA en el firmware; la valida el ajuste por foto, < 0,5 px de media)."""
+    f = 1 + L["dist"] / 16384
+    if canal != 1:
+        f = f * (1 + L["ca_r" if canal == 0 else "ca_b"] / 2097152)
+    return np.interp(rd, np.linspace(0, 1, len(f)), f)
+
+
+def ganancia_vineteo(L: dict, rd: np.ndarray) -> np.ndarray:
+    """1/caída de luz, caída = 2^(0,5 − 2^(v·2⁻¹³ − 1)) (darktable). La vista previa de la A6000 NO la aplica (MEDIDO, g23 §4.3): solo informativa."""
+    v = 2 ** (0.5 - 2 ** (L["vig"] / 8192 - 1))
+    return np.interp(rd, np.linspace(0, 1, len(v)), 1 / v)
+
+
+def mapas_lente(L: dict, W: int, H: int, w: int, h: int, canal: int, dx: float = DX_LENTE, dy: float = DY_LENTE) -> tuple[np.ndarray, np.ndarray]:
+    """Como `mapas`, pero con el factor radial de los parámetros del ARW en vez del ajuste por foto."""
+    xs, ys = (np.arange(w) + 0.5) / w * 2 - 1, ((np.arange(h) + 0.5) / h * 2 - 1) * (h / w)
+    X, Y = np.meshgrid(xs, ys)
+    rd = np.hypot(X, Y) / np.hypot(1, h / w)
+    f = factor_lente(L, rd, canal) * K_LENTE / factor_lente(L, rd, 1).mean()
+    return ((X * f + dx + 1) / 2 * W - 0.5).astype(np.float32), ((((Y * f + dy) * (w / h)) + 1) / 2 * H - 0.5).astype(np.float32)
+
+
+def alinea_lente(a: np.ndarray, L: dict, w: int = TAM[0], h: int = TAM[1]) -> np.ndarray:
+    import cv2
+    src = np.ascontiguousarray(a, np.float32)
+    return np.stack([cv2.remap(np.ascontiguousarray(src[..., c]), *mapas_lente(L, a.shape[1], a.shape[0], w, h, c), cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+                     for c in range(3)], -1)
+
+
 def alinea(a: np.ndarray, p: np.ndarray, w: int = TAM[0], h: int = TAM[1]) -> np.ndarray:
     import cv2
     sx, sy = mapas(p, a.shape[1], a.shape[0], w, h)
@@ -120,6 +174,9 @@ def carga(ruta: Path, geometria: dict | None = None) -> dict:
     rgb = demosaico(raw, bl, wb)
     grande = cv2.resize(rgb, (TAM[0] * 2, TAM[1] * 2), interpolation=cv2.INTER_AREA)
     geo = (geometria or json.loads(GEOMETRIA.read_text() if GEOMETRIA.is_file() else "{}")).get(ruta.stem)
+    L = lente_arw(b)
+    if geo is None and L is not None:   # foto nueva: parámetros de lente del propio ARW (T9-E, ~0,9 px); el ajuste guardado se prefiere porque alinea mejor los bordes (g23 §4.3)
+        return {"lin": alinea_lente(grande, L), "prev": prev, "sr2": s, "geo": None, "lente": L, "cc": float("nan")}
     if geo is None:
         p, cc = ajusta_geometria(grande, prev)
     else:

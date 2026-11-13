@@ -174,3 +174,22 @@ def test_tono4_neutro_en_grises_y_activo_solo_en_foto() -> None:
     lin[0, 0] = (0.2, 0.02, 0.02)
     assert not np.allclose(M.aplica(lin, {"gamma": 5}, T, True, 1.0, True), M.aplica(lin, {"gamma": 5}, T, True, 1.0, True, tono=False))
     assert np.allclose(M.aplica(lin, {}, T, False, 1.0, True), M.aplica(lin, {}, T, False, 1.0, True, tono=False))   # vídeo/shader: sin cambio
+
+
+def test_mapas_lente_sin_correccion_es_escalado_centrado() -> None:
+    cero = {"dist": np.zeros(11), "ca_r": np.zeros(11), "ca_b": np.zeros(11), "vig": np.zeros(11)}
+    for c in range(3):
+        sx, sy = R.mapas_lente(cero, 3232, 2160, 1616, 1080, c, dx=0, dy=0)
+        k = R.K_LENTE
+        assert np.allclose(sx, (((np.arange(1616) + 0.5) / 1616 * 2 - 1) * k + 1)[None, :] * 1616 - 0.5, atol=1e-2)
+        assert np.allclose(sy, (((np.arange(1080) + 0.5) / 1080 * 2 - 1) * k + 1)[:, None] * 1080 - 0.5, atol=1e-2)
+
+
+@pytest.mark.skipif(not ARW.is_file(), reason="sin ARW real")
+def test_lente_del_arw_coincide_con_el_ajuste_por_foto() -> None:
+    L = R.lente_arw(ARW.read_bytes())
+    assert L is not None and len(L["dist"]) == 11 and len(L["ca_r"]) == len(L["ca_b"]) == 11 and len(L["vig"]) == 11
+    p = np.array(R.json.loads(R.GEOMETRIA.read_text())[ARW.stem]["p"])
+    a = np.stack(R.mapas_lente(L, 3232, 2160, 1616, 1080, 1), -1)
+    b = np.stack(R.mapas(p, 3232, 2160, 1616, 1080), -1)
+    assert np.linalg.norm(a - b, axis=-1).mean() / 2 < 1.0          # < 1 px de la vista previa de media
