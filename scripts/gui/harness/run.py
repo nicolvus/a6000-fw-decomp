@@ -64,9 +64,11 @@ def qemu_cmd(work: Path, initrd: Path, extra: list[str], console: list[str] | No
 def main() -> None:
     work, script = Path(sys.argv[1]), Path(sys.argv[2])
     secs = int(sys.argv[3]) if len(sys.argv) > 3 else 120
+    res = Path(os.environ.get("HARNESS_OUT") or work)  # HARNESS_OUT: salidas propias (last.log, guest.log, extraídos) para varias VM en paralelo sobre el mismo DIR_TRABAJO
+    res.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryDirectory() as t:
         initrd = build_initrd(work, script, Path(t), os.environ.get("SHIMENV", ""), os.environ.get("OVERLAY2", ""))
-        log = work / "last.log"
+        log = res / "last.log"
         with open(log, "wb") as out:
             p = subprocess.Popen(qemu_cmd(work, initrd, sys.argv[4:]), stdout=out, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL)
             try:
@@ -78,13 +80,13 @@ def main() -> None:
     while "=====GUESTFILE-BEGIN" in text and "=====GUESTFILE-END" in text:  # ficheros extra (fb.bin…): gzip+base64 → DIR_TRABAJO/<nombre>
         pre, rest = text.split("=====GUESTFILE-BEGIN", 1)
         head, blob = rest.split("=====GUESTFILE-END", 1)[0].split("\n", 1)
-        (work / head.strip()).write_bytes(gzip.decompress(base64.b64decode("".join(blob.split()))))
+        (res / head.strip()).write_bytes(gzip.decompress(base64.b64decode("".join(blob.split()))))
         text = pre + f"[{head.strip()} extraído]" + rest.split("=====GUESTFILE-END", 1)[1]
     if "=====GUESTLOG-BEGIN" in text and "=====GUESTLOG-END" in text:  # FULLLOG=1 en im.sh
         head, blob = text.split("=====GUESTLOG-BEGIN", 1)[1].split("=====GUESTLOG-END", 1)[0].split("\n", 1)
         raw = base64.b64decode("".join(blob.split()))
         data = gzip.decompress(raw) if "gzip" in head else raw
-        (work / "guest.log").write_bytes(data)
+        (res / "guest.log").write_bytes(data)
         text = text.split("=====GUESTLOG-BEGIN", 1)[0] + f"[guest.log: {data.count(b'\n')} líneas]"
     print(text[-20000:])
 
