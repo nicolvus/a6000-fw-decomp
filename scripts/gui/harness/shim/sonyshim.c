@@ -253,12 +253,12 @@ static void mbx_post_raw(unsigned q, const unsigned *req) {
 /* Mensajes dataflow de libBizFw2 (DataFlowInfraCh::AddDataflowHeader): {cola_resp, 0xa0a0a0a0, u16 1, u16 total, desp=0x14, total} + carga
  * {u16 cate, u16 msg, u16 len, u16 ver, …}. El receptor (URendezvous::ReceiveInfraAckCompMsg) casa remitente (cabecera −1 = cola destino),
  * cate y msg^0x8000 con lo registrado en el envío (AdfCh::SendMsgWithSeqId: 0x58003f); err en carga+8 = 0, resto a cero (p. ej. ADF GetFunc). */
-static void dataflow_reply(unsigned src, unsigned q, const unsigned char *req) {
+static void dataflow_reply(unsigned src, unsigned q, const unsigned char *req, int echo) {  /* echo: copia carga+8..+0x13 de la petición (pin de 0x50004) */
     unsigned char *b = calloc(1, 0x300), *p; unsigned *body = (unsigned *)(b + 0x20); unsigned off = ((const unsigned *)req)[3], k;
     const unsigned short *rp = (const unsigned short *)(req + (off < 0x100 ? off : 0x14));
     body[-1] = src; ((unsigned char *)body)[-8] = 2;  /* osal_msg_size (libosal_uipc+0x4a0c): bloques de 32 B en cabecera−8 → 2*32−12 = 0x34 */
     body[0] = src; body[1] = 0xa0a0a0a0; body[2] = 1 | (0x34u << 16); body[3] = 0x14; body[4] = 0x34;
-    p = (unsigned char *)body + 0x14; ((unsigned short *)p)[0] = rp[0]; ((unsigned short *)p)[1] = rp[1] ^ 0x8000; ((unsigned short *)p)[2] = 0x20; ((unsigned short *)p)[3] = rp[3];
+    p = (unsigned char *)body + 0x14; ((unsigned short *)p)[0] = rp[0]; ((unsigned short *)p)[1] = rp[1] ^ 0x8000; ((unsigned short *)p)[2] = 0x20; ((unsigned short *)p)[3] = rp[3]; if (echo) memcpy(p + 8, rp + 4, 12);
     pthread_mutex_lock(&mbx_m);
     for (k = 0; k < 16 && mbx[k].msg; k++);
     if (k < 16) { mbx[k].q = q; mbx[k].msg = body; } else { LOG("mbx lleno: dataflow a %#x perdido", q); free(b); }
@@ -585,13 +585,17 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             if (w[0] == 0x4015e && !getenv("NO4015E") && is_dynq(((unsigned *)m)[-1])) {  /* libObj+0x8138b8 (ObjStillRecorder…): petición {0, orden, …} con la cola de respuesta en la cabecera (m[-1]); exige {1, orden, 0, …} y, para 0x1000, +0xc = phys de un área de 0xc40 B que mapea de /dev/mem (aquí anónima a cero) */
                 unsigned *rq = (unsigned *)m, rp[12] = { 1, rq[1], 0, rq[1] == 0x1000 ? 0x8f000000u : 0 };
                 mbx_post_raw(rq[-1], rp); LOG("snd_msg 0x4015e orden %#x -> respuesta a %#x", rq[1], rq[-1]); return 0; }
+            /* 0x50004: InfraPin de CAMUSER (libObj 0xa14f88): dataflow {cate 0x1000, msg 0/1, …, pinType, pinDir, pinNo}; la respuesta tipo 1 (0x20 B)
+               debe repetir pinType/pinDir/pinNo (0x97ecd4 los compara; con ceros «PinGet REQ … CMP[[0][0][0]]»); state, osalId y Err = 0 (NO_VERIFICADO) */
+            if (w[0] == 0x50004 && !getenv("NO50004") && ((unsigned *)m)[1] == 0xa0a0a0a0) { unsigned rq = ((unsigned *)m)[0];
+                if (rq > 0x10000 && rq < 0x2000000) { if (!is_dynq(rq)) dynq_add(rq); dataflow_reply(w[0], rq, (unsigned char *)m, 1); return 0; } }
             if (w[0] == 0x59000e && !getenv("NOVDF59") && ((unsigned *)m)[0] > 0x10000 && ((unsigned *)m)[0] < 0x2000000) {
                 unsigned rq = ((unsigned *)m)[0]; if (!is_dynq(rq)) dynq_add(rq); vdf_reply(rq, (unsigned char *)m); return 0; }
             { const char *e = getenv("ACKQ0"); int ack = 0;  /* ACKQ0=qid,…: la cola de respuesta va en la palabra 0 y es estática (p. ej. ObjMic → 0x58003f {0x2d0117, 0xa0a0a0a0}); se crea su buzón y se responde con eco y estado 0 */
               while (e && *e) { if (hexv(e, &e) == w[0]) ack = 1; while (*e == ',') e++; }
               unsigned rq = ((unsigned *)m)[0];
               if (ack && rq > 0x10000 && rq < 0x2000000) { if (!is_dynq(rq)) dynq_add(rq);
-                  if (((unsigned *)m)[1] == 0xa0a0a0a0) { dataflow_reply(w[0], rq, (unsigned char *)m); return 0; }
+                  if (((unsigned *)m)[1] == 0xa0a0a0a0) { dataflow_reply(w[0], rq, (unsigned char *)m, 0); return 0; }
                   mbx_post(rq, (unsigned *)m, 0); LOG("snd_msg %#x -> acuse ACKQ0 a %#x", w[0], rq); return 0; } }
             { const char *e = getenv("ACKQ"); if (!e) e = "d9016e,7a0029,61003c"; int ack = 0;
               while (*e) { if (hexv(e, &e) == w[0]) ack = 1; while (*e == ',') e++; }
@@ -926,6 +930,7 @@ static void trace_fns(unsigned long base) {
     for (const char *e = getenv(trc_env); e && *e && ntrc < 32; ) {
         unsigned long a = hexv(e, &e), pc = base + a; unsigned short *p = (unsigned short *)pc;
         mprotect((void *)(pc & ~4095UL), 8192, PROT_READ | PROT_WRITE | PROT_EXEC);
+        if (*p == 0xde00) { while (*e == ',') e++; continue; }  /* ya armada (rearmado en caliente): no guardar el UDF como original */
         trc[ntrc].pc = pc; trc[ntrc++].orig = *p; *p = 0xde00; __builtin___clear_cache((char *)p, (char *)p + 2);
         while (*e == ',') e++;
     }
@@ -1134,7 +1139,7 @@ int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name
         unsigned *vec = *(unsigned **)list, *a = 0, *e = 0; char b[600]; int o = 0; b[0] = 0;
         if (readable(vec)) { a = (unsigned *)(unsigned long)vec[0]; e = (unsigned *)(unsigned long)vec[1]; }
         for (int k = 0; k < 16 && a && a < e && readable(a); k++, a++) { unsigned *q = (unsigned *)(unsigned long)*a; if (readable(q)) o += snprintf(b + o, sizeof b - o, "%x/%x/%x ", q[1], q[2], q[3]); }
-        LOG("GMIDUMP %s %d: %s", name, info, b);
+        char ra[80]; wl_desc(__builtin_return_address(0), ra, sizeof ra); LOG("GMIDUMP %s %d (%s): %s", name, info, ra, b);
     }
     return r;
 }
@@ -1395,7 +1400,8 @@ static void *live_keys(void *a) {
         while ((nl = strchr(ln, '\n'))) {
             *nl = 0; const char *e;
             if (ln[0] == 'T') { LOG("hora del anfitrión %s", ln + 2); date_base = (long long)hexv(ln + 2, &e); date_mono0 = mono_s(); date_have = 1; }  /* «T epoch_local_hex»: hora local del anfitrión (+ desfase del usuario); se avanza con el reloj monotónico */
-            if (ln[0] == 'E') { char *eq = strchr(ln + 2, '='); if (eq) { *eq = 0; hotenv_set(ln + 2, eq + 1); LOG("env %s=%s", ln + 2, eq + 1); } }  /* «E NOMBRE=valor»: diagnóstico en caliente (VERB, GPUDRAWLOG…) sin arranque en frío */
+            if (ln[0] == 'E') { char *eq = strchr(ln + 2, '='); if (eq) { *eq = 0; hotenv_set(ln + 2, eq + 1); LOG("env %s=%s", ln + 2, eq + 1);
+                if (!strcmp(ln + 2, "TRACEFN") && trc_base) { trace_fns(trc_base); LOG("TRACEFN armadas en caliente (%d)", ntrc); } } }  /* «E NOMBRE=valor»: diagnóstico en caliente (VERB, GPUDRAWLOG…) sin arranque en frío; «E TRACEFN=…» arma trampas de un disparo (exige TRACEFN en el arranque, que fija la base de libObj) */
             if (ln[0] == 'S' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, startevhot, nm); pthread_detach(th); }  /* «S id[:modelo]»: publica un evento del ModelManager en caliente */
             if (ln[0] == 'A' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, acqhot, nm); pthread_detach(th); }  /* «A i»: acquireStatus(i) en caliente */
             if (ln[0] == 'M' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, modelhot, nm); pthread_detach(th); }  /* «M @Mxxx»: crea el modelo en caliente */

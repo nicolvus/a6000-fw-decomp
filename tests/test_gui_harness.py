@@ -111,6 +111,19 @@ def test_efcs_emula_respuesta_objcamera_y_backup_107086e() -> None:
     assert "0x107086e" in src and "base + 0x68e0ce + 1" in src and 'getenv("NOEFCS")' in src
 
 
+def test_50004_pinget_responde_con_eco_de_pin() -> None:
+    """g22-respuesta-efcs-objcamera §10: CAMUSER (libObj 0xaeebee → 0xa14f88) pide por dataflow a 0x50004 {cate 0x1000, msg} con
+    pinType/pinDir/pinNo en carga+8..+0x13 y compara la respuesta tipo 1 (0x20 B) con lo pedido (0x97ecd4); con ceros queda en error."""
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    assert 'w[0] == 0x50004 && !getenv("NO50004")' in src and "dataflow_reply(w[0], rq, (unsigned char *)m, 1)" in src
+
+
+def test_tracefn_se_arma_en_caliente_sin_pisar_trampas_armadas() -> None:
+    """§10: «E TRACEFN=…» arma trampas tras el arranque; una dirección aún armada (UDF 0xde00) no se vuelve a guardar como original."""
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    assert '!strcmp(ln + 2, "TRACEFN") && trc_base) { trace_fns(trc_base)' in src and "if (*p == 0xde00)" in src
+
+
 def test_fecha_inicial_900141_orden_3_responde_con_fecha() -> None:
     """§5.18z¹⁰: osal_get_init_date (libObj+0x4f5b94) usa snd_sync_direct a 0x900141 orden 3; el shim respondía ceros sin registrar."""
     src = (HARNESS / "shim/sonyshim.c").read_text()
