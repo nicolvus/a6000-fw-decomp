@@ -520,6 +520,13 @@ Método: contrastar línea a línea el registro real (`mem-20261020-log`, 129.72
 - **Nuevo en el shim**: con `SETLOG=1` cada `Backup_write` deja `NV id valor` con marca de tiempo en `shim.log`; `IMCMDLOG` añade `ra=biblioteca+desplazamiento` del llamante.
 - **Límites**: en la tercera sesión la UI dejó de dibujar (`0 listas`, teclas recibidas por `I-InputRecv` sin efecto) tras unos minutos navegando por pestañas; no se analizó (no pasó en la primera sesión). EFCS y zoom necesitan que `ObjCamera` responda: emular su respuesta solo con el registro/propiedad verificado de la cámara real (requisito de fidelidad), hoy desconocido para EFCS (`0x1070361` sigue siendo solo candidato). **Actualizado 13-11-2026**: registro `0x107086e` y forma de CMP/EVT en [g22-respuesta-efcs-objcamera](g22-respuesta-efcs-objcamera.md); `0x1070361` descartado.
 
+#### 5.18z¹⁰ G22-E: `0x900141` orden 3 respondía ceros en silencio (13-11-2026)
+
+- **Causa corregida (estática, `libObj` 3.21)**: `osal_get_init_date` (`libObj+0x4f5b94`) envía 0x28 B por `osal_snd_sync_direct` a `0x900141` con orden 3 en `+0x10` y copia `rsp+0x14` (10 B) a `ModelClock+0x84` y `rsp+0x1e` (6 B) a `+0x8e` si `+0x12` = 0. En el shim, `snd_sync_direct` (ioctl idx 6) solo pasa por `direct_service`, que **nunca** entrega a `cb_deliver`. Para la orden 3 no hacía nada ni dejaba traza: devolvía estado 0 con la fecha a cero, y además no se veía en el registro. Por eso la afirmación anterior «no hay ningún mensaje a `0x900141`» no se podía comprobar.
+- **Cambio**: `direct_service` responde `0x900141` orden 3 con el formato de §3.2 de [g22-respuestas](g22-respuestas-59000e-900141.md): `+0x14…+0x1a` de `date_local()` (como la orden 2), `+0x1c` = 0 (lo que pone el callback real `0xb58be8`), y `+0x1e…+0x23` a cero. Lo registra como `direct 0x900141 get_date -> …`. Prueba: `test_fecha_inicial_900141_orden_3_responde_con_fecha`.
+- **Medido (2 arranques en frío de 200 s y 300 s, shim nuevo por `OVERLAY2`)**: **no aparece ninguna línea `direct 0x900141`**. Hay seis `get_date` de `0x90013d` y trazas `ActionModelSuspend` de otros modelos, pero `ModelClock::ActionModelSuspend` (`0x4f2d10`) no se ejecuta en ese tiempo y sin abrir la página. `TRACEFN=4f2d10,4f5b94,4f1584` no dejó salida en `guest.log`: `efp` no llega a ese fichero, NO concluyente.
+- **Estado**: Fecha/Hora **sin verificar**. Si `ModelClock` llega a suspenderse, ahora la fecha inicial sería coherente. Falta averiguar qué dispara `0x4f2d10` (r1 = `0xd` en la medición anterior a los 65 s) y comprobarlo en la página con `live.py` (perfil propio) y `HARNESS_OUT`.
+
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
 Verificado: `build.sh` reproduce byte a byte el `sonyshim.so` que se estaba usando (md5 `5307f8ae…` antes de las correcciones);

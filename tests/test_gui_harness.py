@@ -102,6 +102,12 @@ def test_vdf_59000e_responde_y_stat_msgq_cuenta_pendientes() -> None:
     assert "o[0] = n; o[1] = o[2] = o[3] = 0;" in src
 
 
+def test_fecha_inicial_900141_orden_3_responde_con_fecha() -> None:
+    """§5.18z¹⁰: osal_get_init_date (libObj+0x4f5b94) usa snd_sync_direct a 0x900141 orden 3; el shim respondía ceros sin registrar."""
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    assert "qid == 0x900141 && ((unsigned short *)m)[8] == 3" in src and "h[14] = init ? 0" in src
+
+
 @pytest.mark.skipif(not (os.environ.get("A6000_HARNESS_RUN") and (WORK / "base.cpio.gz").exists() and shutil.which("qemu-system-arm")),
                     reason="prueba lenta (≈ 2 min): A6000_HARNESS_RUN=1 y setup.sh hecho")
 def test_arranque_en_qemu_llega_a_la_pila_de_ventanas() -> None:
