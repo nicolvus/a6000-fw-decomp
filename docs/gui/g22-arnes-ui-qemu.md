@@ -533,6 +533,20 @@ Método: contrastar línea a línea el registro real (`mem-20261020-log`, 129.72
   - con la NVRAM (versión final): `31-12-2037 0:00` ([captura](img/g22-fecha-hora-nvram.png)).
   La hora y el minuto siguen a `+0x87/+0x88`, pero día, mes y año salen al máximo del intervalo. `INFO_INITIAL_DATE_TIME` (`0x4f1584`) entrega año `+0x84`, mes, día, hora, min y seg (`+0x86…+0x8a`), área `+0x8e` y un parámetro más. Falta saber cómo la vista convierte esos valores (¿aplica el área de −300 min y se sale por debajo del mínimo?). **NO_VERIFICADO**. Fecha coherente en pantalla: **no conseguida**.
 
+#### 5.18z¹¹ G22-E: Fecha/Hora sale en 31-12-2037: los datos del modelo son correctos (13-11-2026)
+
+- **Lo que pide la página** (live.py, perfil `fecha0`, puerto 8612, `SHIMEXTRA="WAITLOG=3000 WLALL=1 GMILOG=1 GMIDUMP=@M018"`): al abrir «Fecha/Hora», `getModelInfo(@M018 = model/CLOCK)` con las infos 4, 5 y 0, y después la 1. Es el `switch` de `ModelClock` en `0x4f1286` (`tbh`, infos 0–7: 0 → `0x4f129a` CURRENT_LOCALTIME, 1 → `0x4f14e4` INITIAL_DATE_TIME, 4 → `0x4f1954`, 5 → `0x4f1a6a`).
+- **Valores entregados** (nuevo diagnóstico `GMIDUMP`: tipo/clave/valor de cada `ParamBase` de la lista):
+  - info 4: `0x100` = 1, `0x109` = 0;
+  - info 5: `0x10a` = `0x3c`, la constante 60 de `0x4f56e8`;
+  - info 0: `0x100` = 0 (válida), `0x101…0x106` = **2026, 11, 13, 2, 50, 33**, la hora del anfitrión (UTC) servida por `0x90013d`;
+  - info 1: `0x101…0x106` = **2014, 1, 1, 0, 0, 0**, `0x108` (área) = 0, `0x109` = 0.
+  **Los datos que salen de `ModelClock` son coherentes**; la conversión a `31-12-2037` está en el lado de la vista o del widget.
+- **Hipótesis del área −300: descartada.** Con `0x90000a` = 0 en la NVRAM del perfil (`fecha0`) la página muestra lo mismo, `31-12-2037 0:00` ([captura](img/g22-fecha-hora-area0.png)).
+- **Pista sin cerrar**: hora y minuto siguen a la fecha inicial (0:00 con la NVRAM; 23:59 cuando la fecha inicial era la del anfitrión, 5:11), no a la hora actual (2:50). Si la página toma la fecha inicial y le resta algo, 2014-01-01 0:00 menos un día caería por debajo de 2014 y daría la vuelta al máximo de 2037. Eso cuadra con el `0:00`, pero **no** con el `23:59` del primer caso. NO_VERIFICADO.
+- **Búsqueda estática**: las apariciones de `#0x7f5` (2037) en `libObj` son números de línea de traza. El límite y la conversión del widget (`PAS_BtnDateTime`, `PAS_BtnDateTimeConverter` en `viewUnified2.so`) no están localizados. Falta trazar en la vista quién consume `0x101…0x106` y `0x10a`.
+- **Trampa documentada** en el docstring de `run.py`: sin `FULLLOG=1`, el `guest.log` no es el de esa ejecución.
+
 ## 6. Auditoría del 09-11-2026 (esta sesión)
 
 Verificado: `build.sh` reproduce byte a byte el `sonyshim.so` que se estaba usando (md5 `5307f8ae…` antes de las correcciones);

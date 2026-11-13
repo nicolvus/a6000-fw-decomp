@@ -4,6 +4,8 @@
 Uso: [SHIMENV="WAIT=60 CVWAIT=0 ..."] run.py DIR_TRABAJO SCRIPT.sh [segundos] [extras_qemu...]
   Debe existir DIR_TRABAJO/{vmlinuz,base.cpio.gz} (lo crea setup.sh). El overlay se concatena (el kernel admite cpio.gz concatenados).
   SHIMENV se escribe en /cam/harness.env dentro del guest; im.sh lo exporta antes de arrancar im.elf.
+  guest.log (registro completo del shim, TRACEFN, …) solo se extrae con FULLLOG=1 en SHIMENV; sin él, el guest.log que haya en la
+  carpeta de salida es de una ejecución anterior (o de otra VM si no se usa HARNESS_OUT).
 """
 import base64
 import gzip

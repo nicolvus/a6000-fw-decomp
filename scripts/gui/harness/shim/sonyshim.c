@@ -1130,6 +1130,12 @@ int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name
     }
     if (!r && real && getenv("GMIRETRY")) for (int k = 0; k < 20 && !r; k++) { usleep(50000); r = real(self, name, info, list, flt); if (r) LOG("getModelInfo(%s, %d) acierta en el reintento %d", name, info, k + 1); }  /* ¿carrera con la inicialización del modelo? */
     if (getenv("GMILOG")) { static int n; if (n++ < 400) LOG("getModelInfo(%s, %d) -> %d", name, info, r); }
+    if (getenv("GMIDUMP") && r && list && strstr(getenv("GMIDUMP"), name)) {  /* GMIDUMP=@M018: parámetros de la lista (lista → {inicio, fin} de punteros a ParamBase; valor en +0xc) */
+        unsigned *vec = *(unsigned **)list, *a = 0, *e = 0; char b[600]; int o = 0; b[0] = 0;
+        if (readable(vec)) { a = (unsigned *)(unsigned long)vec[0]; e = (unsigned *)(unsigned long)vec[1]; }
+        for (int k = 0; k < 16 && a && a < e && readable(a); k++, a++) { unsigned *q = (unsigned *)(unsigned long)*a; if (readable(q)) o += snprintf(b + o, sizeof b - o, "%x/%x/%x ", q[1], q[2], q[3]); }
+        LOG("GMIDUMP %s %d: %s", name, info, b);
+    }
     return r;
 }
 void *dlsym(void *h, const char *n) {  /* DLSYMLOG=1: símbolos que pide la UI (p. ej. «<Vista>ToInstance», initializeViewConfig) */
