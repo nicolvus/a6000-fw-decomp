@@ -709,7 +709,7 @@ static void *wl_watch(void *x) {
             pthread_mutex_lock(&wl_m); typeof(wls[0]) e = wls[i]; int hit = e.used && !e.dumped && wl_el(&e.t0) >= wl_ms(); if (hit) wls[i].dumped = 1; pthread_mutex_unlock(&wl_m);
             if (!hit) continue;  /* dladdr/fopen fuera del cerrojo: dladdr toma el cerrojo del cargador y se cruzaría con un dlopen */
             char d[96], nm[32]; wl_desc(e.ra, d, sizeof d); tname((int)e.tid, nm, sizeof nm);
-            if (e.tmo != -1) efp("[shim] WAITLOG %.2f espera>%dms tid %ld %s %s id=%#x tmo=%d ra=%s\n", wl_ts(), wl_ms(), e.tid, nm, e.k, e.a, e.tmo, d);
+            if (e.tmo != -1 || getenv("WAITINF")) efp("[shim] WAITLOG %.2f espera>%dms tid %ld %s %s id=%#x tmo=%d ra=%s\n", wl_ts(), wl_ms(), e.tid, nm, e.k, e.a, e.tmo, d);
             if (getenv("WAITSTACK")) syscall(SYS_tgkill, getpid(), (int)e.tid, SIGUSR1); } }
     return 0;
 }
