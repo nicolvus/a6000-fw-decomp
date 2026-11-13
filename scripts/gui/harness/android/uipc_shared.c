@@ -3,7 +3,8 @@
 // Interfaz según docs/gui/g22-osal-uipc-spec.md: ioctl(fd, idx [| 0x80000000], &{w0, w1}), mmap de 0x80000 B común a todos los procesos.
 // Las esperas usan una sola cola de espera global (wake_up_all en cada cambio): simple; suficiente para decenas de hilos.
 #include <linux/module.h>
-#include <linux/miscdevice.h>
+#include <linux/cdev.h>
+#include <linux/device.h>
 #include <linux/fs.h>
 #include <linux/mm.h>
 #include <linux/sched.h>
@@ -170,17 +171,33 @@ static int uipc_release(struct inode *i, struct file *f)
 static const struct file_operations fops = {
 	.owner = THIS_MODULE, .open = uipc_open, .release = uipc_release, .unlocked_ioctl = uipc_ioctl, .mmap = uipc_mmap,
 };
-static struct miscdevice dev = { MISC_DYNAMIC_MINOR, "uipc", &fops, .mode = 0666 };
+/* c 251,207 como el osal_uipc.ko real: el /init de Sony crea /dev/uipc con ese número fijo (medido 13-11-2026) */
+#define UIPC_DEV MKDEV(251, 207)
+static struct cdev cd;
+static struct class *cls;
+static char *uipc_devnode(const struct device *d, umode_t *mode) { if (mode) *mode = 0666; return NULL; }
 
 static int __init uipc_init(void)
 {
-	void *shm = vmalloc_user(UC_SHM);
+	void *shm = vmalloc_user(UC_SHM); int r;
 	U = vzalloc(sizeof(*U));
 	if (!U || !shm) { vfree(U); vfree(shm); return -ENOMEM; }
 	uc_init(U, shm);
-	return misc_register(&dev);
+	r = register_chrdev_region(UIPC_DEV, 1, "uipc");
+	if (r) goto e_mem;
+	cdev_init(&cd, &fops); r = cdev_add(&cd, UIPC_DEV, 1);
+	if (r) goto e_reg;
+	cls = class_create("uipc");
+	if (IS_ERR(cls)) { r = PTR_ERR(cls); goto e_cdev; }
+	cls->devnode = uipc_devnode;
+	if (IS_ERR(device_create(cls, NULL, UIPC_DEV, NULL, "uipc"))) { r = -ENODEV; goto e_cls; }
+	return 0;
+e_cls: class_destroy(cls);
+e_cdev: cdev_del(&cd);
+e_reg: unregister_chrdev_region(UIPC_DEV, 1);
+e_mem: vfree(U->shm); vfree(U); return r;
 }
-static void __exit uipc_exit(void) { misc_deregister(&dev); vfree(U->shm); vfree(U); }
+static void __exit uipc_exit(void) { device_destroy(cls, UIPC_DEV); class_destroy(cls); cdev_del(&cd); unregister_chrdev_region(UIPC_DEV, 1); vfree(U->shm); vfree(U); }
 module_init(uipc_init);
 module_exit(uipc_exit);
 MODULE_LICENSE("GPL");

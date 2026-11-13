@@ -873,6 +873,10 @@ __attribute__((constructor)) static void shim_init(void) { presignal(); keyq_ini
 
 /* Experimento (SKIPFN=717830,...): sustituye esas funciones Thumb de libObj por «movs r0,#0; bx lr» (devuelven éxito sin hacer nada). */
 static unsigned long hexv(const char *s, const char **end) { unsigned long v = 0; for (;; s++) { int c = *s; if (c >= '0' && c <= '9') c -= '0'; else if (c >= 'a' && c <= 'f') c -= 'a' - 10; else break; v = v * 16 + c; } if (end) *end = s; return v; }
+/* EFCS (docs/gui/g22-respuesta-efcs-objcamera.md): la orden 0x75fa no llega a ObjCamera en el arnés (ni su caso 0xad76f2 ni la secuencia 0x95a308
+   se ejecutan), así que no hay CMP 0x75fb / EVT 0x85a6. efcs_pc: UDF de un disparo en ModelStillRec tras crear el envoltorio +0x534 (r4 = modelo);
+   carga las ranuras SET/ACT (+0x20/+0x24 de la propiedad FRONT_E_SHUTTER_MODE, [modelo+0x428]) desde Backup 0x107086e. efcs_ra: llamante de la orden. */
+static unsigned long efcs_ra, efcs_pc; static unsigned short efcs_orig;
 static unsigned long gpu_pc;  /* libObj+0x6c4c46: «str r1,[r3,r0]» de rm_reg_write (off=r0, valor=r1, base=r3); se sustituye por UDF para ver cada escritura */
 /* GPUEMU: timbres (0x1804) y lista de cada uno */
 /* Experimento (TRACEFN=716800,6cd1e0,...): traza de una sola vez (UDF + restauración) de la entrada de esas funciones de libObj: r0-r3 y lr. */
@@ -880,6 +884,12 @@ static struct { unsigned long pc, step; unsigned short orig, orig2; unsigned hit
 static void gpu_exec(unsigned off, unsigned val);
 static void on_trace(int sig, siginfo_t *si, void *u) {
     mcontext_t *c = &((ucontext_t *)u)->uc_mcontext; unsigned long pc = c->arm_pc & ~1UL; int i;
+    if (efcs_pc && pc == efcs_pc) {  /* se restaura la instrucción y se reejecuta; solo valores 1/2 del registro (av-cam 0x2d9e7c acepta esos) */
+        unsigned len = 0, *d = bk_find(0x107086e, &len), v = d && len ? *(unsigned char *)d : 0; unsigned *prop = *(unsigned **)(c->arm_r4 + 0x428);
+        if ((v == 1 || v == 2) && prop) for (int k = 0; k < 2; k++) ((void (*)(void *, unsigned, unsigned))((void **)*(void **)prop)[5])(prop, k, v);  /* set (vtable+0x14, 0x41589e): ranura + palabra de estado */
+        *(unsigned short *)pc = efcs_orig; __builtin___clear_cache((char *)pc, (char *)pc + 2); efcs_pc = 0;
+        efp("[shim] EFCS: ModelStillRec %#lx, ranuras SET/ACT = %u (Backup 0x107086e)\n", c->arm_r4, v); return;
+    }
     if (gpu_pc && pc == gpu_pc) {  /* rm_reg_write: se hace el almacenamiento y se salta la instrucción; 0x1804 = timbre de la GPU (GPUEMU) */
         *(volatile unsigned *)(c->arm_r3 + c->arm_r0) = c->arm_r1;
         if (c->arm_r0 == 0x1804) gpu_kick(c->arm_r1);
@@ -957,13 +967,24 @@ static void gpu_patch(void) {  /* GPUEMU: ver arriba (gpu_thread); libObj 3.21: 
     struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_trace; sa.sa_flags = SA_SIGINFO | SA_NODEFER; sigaction(SIGILL, &sa, 0);
     LOG("GPUEMU: timbre de la GPU en libObj+0x6c4c46 (%p)", (void *)p);
 }
+static void efcs_patch(void) {  /* NOEFCS=1 la desactiva; exige los bytes de 3.21 («movs r0,#0xc» en 0x681eb2) */
+    if (efcs_ra || getenv("NOEFCS")) return;
+    unsigned long base = 0; char ln[256]; FILE *m = fopen("/proc/self/maps", "r");
+    while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, "libObj.so")) { base = hexv(ln, 0); break; }
+    if (m) fclose(m);
+    unsigned short *p = (unsigned short *)(base + 0x681eb2);
+    if (!base || *p != 0x200c) { LOG("EFCS: libObj distinta (%#x): sin emulación", base ? *p : 0); return; }
+    efcs_ra = base + 0x689745; efcs_pc = base + 0x681eb2; efcs_orig = *p; LOG("EFCS: emulación armada (libObj %#lx)", base);
+    mprotect((void *)((unsigned long)p & ~4095UL), 8192, PROT_READ | PROT_WRITE | PROT_EXEC); *p = 0xde00; __builtin___clear_cache((char *)p, (char *)p + 2);
+    struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_trace; sa.sa_flags = SA_SIGINFO | SA_NODEFER; sigaction(SIGILL, &sa, 0);
+}
 void *dlopen(const char *f, int fl) {
     static void *(*d)(const char *, int);
     if (!d) d = dlsym(RTLD_NEXT, "dlopen");
     if (f && strstr(f, "viewUnified")) gpu_live = 1;
     LOG("dlopen(%s) ...", f ? f : "(null)");
     void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
-    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); lobj_h = h; }
+    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lobj_h = h; }
     if (h && f && getenv("TRACELIB") && (strstr(f, getenv("TRACELIB")) || strstr(f, "viewUnified")) && !trc_lib_done) {  /* la biblioteca puede entrar como dependencia de viewUnified*: se busca en /proc/self/maps tras cada dlopen hasta hallarla */
         char ln[256]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");
         while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, getenv("TRACELIB"))) { base = hexv(ln, 0); break; }
@@ -1015,13 +1036,23 @@ static void *salvage_reply(void *a) {
     return 0;
 }
 /* MWF::ObjIf::IssueCommandAsync(objeto, ObjMsg*): la UI emite así los cambios de ajustes (p. ej. EFCS = ObjMsg(0x3100, 0x75fa) + param 0x9776); IMCMDLOG=1 registra destino, cabecera del mensaje y retorno */
-int _ZN3MWF5ObjIf17IssueCommandAsyncEPvPNS_6ObjMsgE(void *h, void *msg) {
+/* El envoltorio desnudo pasa r4/r5 del llamante (callee-saved): en pvt_SetFrontEShutterMode (libObj 0x6896ac) r4 = ModelStillRec, r5 = valor 1/2 */
+__attribute__((used, noinline)) static int issue_cmd(void *h, void *msg, unsigned long r4, unsigned long r5) {
     static int (*real)(void *, void *); if (!real) real = dlsym(RTLD_NEXT, "_ZN3MWF5ObjIf17IssueCommandAsyncEPvPNS_6ObjMsgE");
     void *ra = __builtin_return_address(0); int r = real(h, msg);
+    if (efcs_ra && (unsigned long)ra == efcs_ra && !r && (r5 == 1 || r5 == 2)) {  /* efecto de CMP 0x75fb + EVT 0x85a6 (SET = ACT = pedido) y Backup 0x107086e */
+        unsigned long base = efcs_ra - 0x689745; void (*set)(void *, unsigned, unsigned) = (void *)(base + 0x68e0ce + 1);  /* guarda la ranura y avisa a la vista (info 0x4f) */
+        void *w = *(void **)(r4 + 0x534); set(w, 0, r5); set(w, 1, r5);
+        unsigned char b = r5; unsigned bm[16] = {8, 0, 3, 0, 0, 0, 0x107, 0x107086e, (unsigned)&b}; backup_service(bm);
+        LOG("EFCS emulado: modelo %#lx valor %lu (1 = Activar, 2 = Desactivar)", r4, r5);
+    }
     if (getenv("IMCMDLOG")) { char t[400]; int o = 0; if (readable(msg)) for (int q = 0; q < 24; q++) o += snprintf(t + o, sizeof t - o, "%08x ", ((unsigned *)msg)[q]); t[o] = 0;
         Dl_info di = {0}; dladdr(ra, &di);  /* llamante como biblioteca+desplazamiento: identifica la rutina emisora (p. ej. libObj+0x6896ac = EFCS 0x75fa) */
-        LOG("IssueCommandAsync obj=%p msg=%p -> %d ra=%s+%#lx : %s", h, msg, r, di.dli_fname ? strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname : "?", (unsigned long)ra - (unsigned long)di.dli_fbase, t); }
+        LOG("IssueCommandAsync obj=%p msg=%p -> %d r4=%#lx r5=%#lx ra=%s+%#lx : %s", h, msg, r, r4, r5, di.dli_fname ? strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname : "?", (unsigned long)ra - (unsigned long)di.dli_fbase, t); }
     return r;
+}
+__attribute__((naked)) int _ZN3MWF5ObjIf17IssueCommandAsyncEPvPNS_6ObjMsgE(void *h, void *msg) {
+    __asm__ volatile("mov r2, r4\n\tmov r3, r5\n\tb issue_cmd\n");  /* lr intacto: issue_cmd ve el llamante real */
 }
 /* SETLOG=1: registra (con retorno) los eslabones de un cambio de ajuste del menú en cmn_view_processDataMgr / wrapperSettingUtil (≤ 4 argumentos de registro); reenvía a la implementación real */
 #define SETHOOK(sym) int sym(unsigned a, unsigned b, unsigned c, unsigned d) { static int (*r)(unsigned, unsigned, unsigned, unsigned); if (!r) r = dlsym(RTLD_NEXT, #sym); \

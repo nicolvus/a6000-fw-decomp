@@ -51,3 +51,13 @@ Solo emulador (`run.py`, `DIR_TRABAJO=analysis/gui/g22/harness/t6`, salidas en `
 | `MODE=zyg` (sin init ni propiedades) | **MEDIDO**: la parte nativa de system_server termina (`entering thread pool`), Java llega a EntropyService/PowerManager y muere en `ActivityManagerService.getIntProp` (`unable to parse '' as integer`) | `t6/zyg12.log` |
 
 **Bloqueo actual:** `gralloc.diadem.so` necesita un servidor `BufferManager` al otro lado de uipc (en la cámara lo da el sistema Sony fuera de Android); sin él no hay SurfaceFlinger y system_server cae. Opciones siguientes, sin probar: (a) quitar `gralloc.diadem.so` para que libhardware use `gralloc.default.so` (necesita `/dev/graphics/fb0`, no comprobado en `-M virt`); (b) un servidor `BufferManager` mínimo sobre `uipc_shared` (protocolo sin estudiar); (c) registrar `uipc_shared.ko` en `251:207` en vez de rehacer el nodo (shortcut actual en `android.sh`).
+
+## Medición 13-11-2026 (2): Android arranca hasta el launcher Scalar
+
+| Paso | Resultado | Evidencia |
+|---|---|---|
+| `uipc_shared.ko` registrado en `c 251,207` (`register_chrdev_region` + `cdev` + clase con modo 0666), como el `osal_uipc.ko` real | **MEDIDO**: `/dev/uipc` del `/init` de Sony ya apunta al módulo; se retira el rehecho del nodo de `android.sh`. Mismo bloqueo `BufferManager` con `gralloc.diadem.so` | `runs/t6-c251.out` |
+| `-M virt` sin framebuffer | **MEDIDO**: no hay `/dev/fb*`; `/sys/class/graphics` solo tiene `fbcon` | `runs/t6-fb0.out` |
+| `NODIADEM=1` (aparta `gralloc.diadem.so`; libhardware usa `gralloc.default.so`) | **MEDIDO**: system_server queda vivo; 53 servicios en binder (`activity`, `window`, `package`, `SurfaceFlinger`); arrancan `scalaralauncher`, `scalarasoftkeyboard` y `avindex.process`; `dumpsys activity` da `mResumedActivity` = `com.sony.scalar.dlsys.scalaralauncher/.ScalarALauncher`. Con init hay propiedades: Activity Manager no cae (el fallo de `getIntProp` era solo de `MODE=zyg`) | `runs/t6-fb0.out`, `runs/t6-dbg3`, `runs/t6-launcher.out` |
+
+No hizo falta un servidor `BufferManager` ni especificar su protocolo. Límites: sin framebuffer no se ve nada (SurfaceFlinger existe pero no hay superficie de salida verificada); con `gralloc.default` los ficheros de `/dev/log` crecen (~0,6–0,9 MB) pero no contienen texto legible (0 líneas ≥ 6 caracteres; causa sin estudiar), por eso `android.sh` lee el estado por `service list` y `dumpsys`. Siguiente: aportar framebuffer (p. ej. `-device ramfb` o virtio-gpu con fbdev) para ver el launcher y probar una app PMCA.
