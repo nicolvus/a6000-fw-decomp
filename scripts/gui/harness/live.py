@@ -253,7 +253,7 @@ class Vm:
 
 PAGINA = """<!doctype html><html lang="es"><head><meta charset="utf-8"><title>A6000 en vivo</title><style>
 :root{--bg:#111;--fg:#ddd;--mut:#888;--acc:#e8732a}body{margin:0;background:var(--bg);color:var(--fg);font:14px system-ui,sans-serif}
-main{display:flex;gap:16px;padding:16px;flex-wrap:wrap}canvas{width:960px;max-width:100%;image-rendering:pixelated;background:#000;border:1px solid #333;outline:none}
+main{display:flex;gap:16px;padding:16px;flex-wrap:wrap;align-items:flex-start}canvas{width:640px;height:auto;max-width:100%;image-rendering:pixelated;background:#000;border:1px solid #333;outline:none}
 aside{width:280px}button{background:#222;color:var(--fg);border:1px solid #444;border-radius:4px;padding:6px 10px;margin:2px;cursor:pointer}
 button:active{background:var(--acc)}.pad{display:grid;grid-template-columns:repeat(3,64px);gap:4px;margin:8px 0}.pad button{margin:0}
 small,#st{color:var(--mut)}label{display:block;margin:10px 0 4px}</style></head><body><main>
@@ -263,7 +263,7 @@ small,#st{color:var(--mut)}label{display:block;margin:10px 0 4px}</style></head>
 <button data-k="intro">OK</button><button data-k="derecha">▶</button><span></span><button data-k="abajo">▼</button><span></span></div>
 <button data-k="menu">MENU</button><button data-k="disparador">Disparador</button>
 <!--SENSOR-->
-<label>Escala <select id="esc"><option>1</option><option selected>1.5</option><option>2</option></select></label>
+<label>Escala <select id="esc"><option selected>1</option><option>1.5</option><option>2</option></select></label>
 <p><button id="guardar">Guardar estado</button> <a id="volver" href="#" hidden>⚙ Configurador</a></p><small>Teclado: flechas, Intro, Esc/M = MENU, espacio = disparador. «Guardar estado» hace que el
 próximo arranque empiece en esta pantalla. La imagen no se procesa con los ajustes de la cámara (av-cam no se emula).</small></aside></main>
 <script>
