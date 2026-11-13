@@ -95,6 +95,13 @@ def test_postrootev_crea_modelstillrec_tras_view_root() -> None:
     assert 'getenv("POSTROOTEV") && !strcmp(it, "view/ROOT")' in src and 'startev(getenv("POSTROOTEV"))' in src
 
 
+def test_vdf_59000e_responde_y_stat_msgq_cuenta_pendientes() -> None:
+    """§5.18z⁹: cada petición a 0x59000e recibe respuesta tipo 2 (MSGID 0x8200) y stat_msgq informa los pendientes (freeOsalId no se bloquea)."""
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    assert "w[0] == 0x59000e && !getenv(\"NOVDF59\")" in src and "body[-1] = 0x8200" in src
+    assert "o[0] = n; o[1] = o[2] = o[3] = 0;" in src
+
+
 @pytest.mark.skipif(not (os.environ.get("A6000_HARNESS_RUN") and (WORK / "base.cpio.gz").exists() and shutil.which("qemu-system-arm")),
                     reason="prueba lenta (≈ 2 min): A6000_HARNESS_RUN=1 y setup.sh hecho")
 def test_arranque_en_qemu_llega_a_la_pila_de_ventanas() -> None:

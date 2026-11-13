@@ -253,6 +253,19 @@ static void dataflow_reply(unsigned src, unsigned q, const unsigned char *req) {
     pthread_cond_broadcast(&mbx_c); pthread_mutex_unlock(&mbx_m);
     LOG("snd_msg %#x dataflow cate=%#x msg=%#x -> comp a %#x", src, rp[0], rp[1], q);
 }
+/* Servicio VDF 0x59000e (g22-respuestas-59000e-900141.md §1): VdfCh::sndRcvAsyncDataflowMsg espera UNA respuesta por petición en la cola
+ * de origen (primera palabra del cuerpo). Tipo 2 de ReceiveASync: MSGID 0x8200 (≠ 0xc2019f/0xc20219/0x61003c/0x1590438) y cuerpo de 0x40 B
+ * a cero (resultado 0 en rsp+0xc/+0x14) con cuerpo+4 ≠ 0xa0a0a0a0; se copia la cabecera VDF de 8 B (nadie la comprueba). */
+static void vdf_reply(unsigned q, const unsigned char *req) {
+    unsigned char *b = calloc(1, 0x300); unsigned *body = (unsigned *)(b + 0x20), k; unsigned off = ((const unsigned *)req)[3];
+    body[-1] = 0x8200; ((unsigned char *)body)[-8] = 3;  /* 3 bloques de 32 B → 3*32−12 = 0x54 ≥ 0x40 */
+    memcpy(body, req + (off < 0x100 ? off : 0x14), 8);
+    pthread_mutex_lock(&mbx_m);
+    for (k = 0; k < 16 && mbx[k].msg; k++);
+    if (k < 16) { mbx[k].q = q; mbx[k].msg = body; } else { LOG("mbx lleno: VDF a %#x perdido", q); free(b); }
+    pthread_cond_broadcast(&mbx_c); pthread_mutex_unlock(&mbx_m);
+    LOG("snd_msg 0x59000e VDF orden %#x -> respuesta tipo 2 a %#x", ((const unsigned short *)body)[1], q);
+}
 /* KEYINIT=key:estado:índice,… (hex): estados iniciales que el driver de entrada informa (mensaje de 0x7a0020, receptor libObj+0x806f88: w0 clave,
  * w2 valor, w4 índice físico = palabra 9 de la entrada de evento) para la lista de InfraInput (entradas de 0x44 B: +0 clave, +4 evento, +0x14 estado,
  * 0x7fffffff = desconocido → InputService::getInputEventStatus falla); p. ej. 7000001:1:177 = jack USB (evento 0x15040010).
@@ -497,7 +510,12 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             { Dl_info di; const char *fn = "?"; unsigned long off = 0; if (dladdr((void *)(t[1] & ~1u), &di) && di.dli_fname) { fn = strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname; off = (t[1] & ~1u) - (unsigned long)di.dli_fbase; }
               LOG("uipc reg_%smsg_queue_cb qid=%#x arg=%#x cb=%#x (%s+%#lx) t2=%#x%s", t[3] == 1 ? "sync_" : "", w[0], t[0], t[1], fn, off, t[2], k < 0 ? " (tabla llena)" : ""); } return 0; }
         case 9: { pthread_mutex_lock(&cb_m); int k = cb_find(w[0]); if (k >= 0) cbs[k].q = 0; pthread_mutex_unlock(&cb_m); LOG("uipc unreg_msg_queue_cb qid=%#x", w[0]); return 0; }
-        case 3: LOG("uipc stat_msgq %#x (sin modelar: 0)", w[0]); return 0;
+        case 3: {  /* stat_msgq: 16 B, palabra 0 = mensajes pendientes. libBizFw DataflowInfraCh::freeOsalId (0x34dc8) vacía la cola con rcv
+                      bloqueante mientras sea > 0: sin rellenarla quedaba basura y ObjRenderer se colgaba tras cada orden VDF (§5.18z⁸). shortcut: resto de campos a 0 (formato NO_VERIFICADO) */
+            unsigned n = 0, *o = (unsigned *)w[1];
+            pthread_mutex_lock(&mbx_m); for (int k = 0; k < 16; k++) if (mbx[k].msg && mbx[k].q == w[0]) n++; pthread_mutex_unlock(&mbx_m);
+            if (readable(o)) { o[0] = n; o[1] = o[2] = o[3] = 0; }
+            if (getenv("VERB")) LOG("uipc stat_msgq %#x -> %u pendientes", w[0], n); return 0; }
         case 5: {  /* snd_sync_msg {qid, &{msg, cb, arg}}: 0x8f013a es el registro de trazas (u16 + texto "%4X %s %s") */
             unsigned *t5 = (unsigned *)w[1];
             if (getenv("VERB5") && w[0] != 0x8f013a && w[0] != 0x720018) LOG("sync5 qid=%#x t5[1]=%#x", w[0], ((unsigned *)w[1])[1]);
@@ -555,6 +573,8 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             if (w[0] == 0x4015e && !getenv("NO4015E") && is_dynq(((unsigned *)m)[-1])) {  /* libObj+0x8138b8 (ObjStillRecorder…): petición {0, orden, …} con la cola de respuesta en la cabecera (m[-1]); exige {1, orden, 0, …} y, para 0x1000, +0xc = phys de un área de 0xc40 B que mapea de /dev/mem (aquí anónima a cero) */
                 unsigned *rq = (unsigned *)m, rp[12] = { 1, rq[1], 0, rq[1] == 0x1000 ? 0x8f000000u : 0 };
                 mbx_post_raw(rq[-1], rp); LOG("snd_msg 0x4015e orden %#x -> respuesta a %#x", rq[1], rq[-1]); return 0; }
+            if (w[0] == 0x59000e && !getenv("NOVDF59") && ((unsigned *)m)[0] > 0x10000 && ((unsigned *)m)[0] < 0x2000000) {
+                unsigned rq = ((unsigned *)m)[0]; if (!is_dynq(rq)) dynq_add(rq); vdf_reply(rq, (unsigned char *)m); return 0; }
             { const char *e = getenv("ACKQ0"); int ack = 0;  /* ACKQ0=qid,…: la cola de respuesta va en la palabra 0 y es estática (p. ej. ObjMic → 0x58003f {0x2d0117, 0xa0a0a0a0}); se crea su buzón y se responde con eco y estado 0 */
               while (e && *e) { if (hexv(e, &e) == w[0]) ack = 1; while (*e == ',') e++; }
               unsigned rq = ((unsigned *)m)[0];
