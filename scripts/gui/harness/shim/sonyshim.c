@@ -1,6 +1,7 @@
 /* Capa LD_PRELOAD del arnés de la UI (G22-B): sustituye los dispositivos del kernel 3.0.27 de Sony que el userland de la cámara
  * espera (/dev/uipc, ...) y registra el resto de accesos a /dev. Compilar con build.sh (clang --target=arm, glibc 2.11 de la cámara). */
 #define _GNU_SOURCE
+#include "shimlogic.h"
 #include <dlfcn.h>
 #include <ucontext.h>
 #include <signal.h>
@@ -47,7 +48,7 @@ static char devname[MAXFD][32];
 #define E_TMOUT (-1022)
 static void live_msg(const char *, const char *, int);
 static void avq_flush(unsigned q); static void avq_rec(void *p, unsigned sz); static int avq_q(unsigned q); static void avq_forward(unsigned q, const unsigned char *m);
-static void menu_track(const char *); static int wl_all(void); static void wl_logfwd(const char *, ...); static void wl_live(const char *, int); static void wl_key(unsigned); static int wl_on(void); static double wl_ts(void); static const char *tname(int, char *, size_t);
+static void menu_track(const char *); static void logmark(const char *); static int wl_all(void); static void wl_logfwd(const char *, ...); static void wl_live(const char *, int); static void wl_key(unsigned); static int wl_on(void); static double wl_ts(void); static const char *tname(int, char *, size_t);
 static int wl_begin(const char *k, unsigned a, int tmo, void *ra); static void wl_end(int slot);  /* WAITLOG=ms: registro de esperas largas (ver abajo) */
 static pthread_mutex_t semlock = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t semcond = PTHREAD_COND_INITIALIZER;
@@ -335,6 +336,8 @@ static struct { void *cb, *arg, *msg; } dlv[256]; static unsigned dlv_r, dlv_w;
 static pthread_mutex_t cb_m = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t cb_c = PTHREAD_COND_INITIALIZER;
 static unsigned long hexv(const char *s, const char **end);
+/* §5.37: contexto del callback de osal_reg_msg_queue_cb (reg_ctx_is_t2, shimlogic.h); REGARG0=1 restaura el criterio anterior (siempre t[0]). */
+static int reg_ctx(const unsigned *t) { return !getenv("REGARG0") && reg_ctx_is_t2(t); }
 static int cb_find(unsigned q) { for (int k = 0; k < ncbs; k++) if (cbs[k].q == q) return k; return -1; }
 static int cb_deliver(unsigned q, void *msg) {  /* 1 = encolado para un hilo proxy */
     pthread_mutex_lock(&cb_m); int k = cb_find(q);
@@ -567,7 +570,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             unsigned *t = (unsigned *)w[1];
             pthread_mutex_lock(&cb_m);
             int k = cb_find(w[0]); if (k < 0 && ncbs < 128) k = ncbs++;
-            if (k >= 0) { cbs[k].q = w[0]; cbs[k].cb = (void *)t[1]; cbs[k].arg = (void *)(t[3] == 1 ? t[2] : t[0]); }  /* t[3]==1: registro síncrono, el argumento va en t[2] (EventWrapper de libMWF) */
+            if (k >= 0) { cbs[k].q = w[0]; cbs[k].cb = (void *)t[1]; cbs[k].arg = (void *)(t[3] == 1 || reg_ctx(t) ? t[2] : t[0]); }  /* t[3]==1: registro síncrono, el argumento va en t[2] (EventWrapper de libMWF) */
             pthread_mutex_unlock(&cb_m); avq_flush(w[0]);
             if (getenv("FRONTRM") && ((t[1] & ~1u) & 0xfff) == 0x638 && w[0] >= 0xaf0000 && w[0] < 0xb00000) { pthread_t th; pthread_mutex_lock(&cb_m); int kk = cb_find(w[0]); if (kk >= 0 && getenv("FRONTARG2")) cbs[kk].arg = (void *)t[2]; pthread_mutex_unlock(&cb_m); LOG("FRONTRM: cola %#x t0=%#x [t0]=%#x t2=%#x", w[0], t[0], readable((void *)t[0]) ? *(unsigned *)t[0] : 0, t[2]); pthread_create(&th, 0, frontrm_th, (void *)(unsigned long)w[0]); pthread_detach(th); }  /* +0xd638 */
             { Dl_info di; const char *fn = "?"; unsigned long off = 0; if (dladdr((void *)(t[1] & ~1u), &di) && di.dli_fname) { fn = strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname; off = (t[1] & ~1u) - (unsigned long)di.dli_fbase; }
@@ -590,7 +593,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
                   if (getenv("MSGBODY") && readable(m)) { char h[400]; int o = 0; for (int q = 0; q < 24; q++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[q]); LOG("MSGBODY sync %#x cab=%08x %08x %08x %s", w[0], ((unsigned *)m)[-3], ((unsigned *)m)[-2], ((unsigned *)m)[-1], h); }
                   return 0; } }
             if (w[0] == 0x8f013a) { if (m[2] && keyiniton() && strstr((char *)m + 2, keyiniton())) keyinit_send();
-              if (m[2] && tron_base && strstr((char *)m + 2, getenv("TRACEON"))) { unsigned long b = tron_base; tron_base = 0; trace_fns(b); LOG("TRACEON: trazas armadas"); } if (m[2]) { menu_track((char *)m + 2); LOG("LOG %s", (char *)m + 2); } else if (getenv("VERB")) { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
+              if (m[2] && tron_base && strstr((char *)m + 2, getenv("TRACEON"))) { unsigned long b = tron_base; tron_base = 0; trace_fns(b); LOG("TRACEON: trazas armadas"); } if (m[2]) { menu_track((char *)m + 2); LOG("LOG %s", (char *)m + 2); logmark((char *)m + 2); } else if (getenv("VERB")) { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
             else if (w[0] == 0x3e014d) backup_service((unsigned *)m);
             else if (w[0] == 0x924127 && ((unsigned *)m)[0] == 0x920111 && getenv("BOOTINFO")) {  /* BOOTINFO=a,b,c,d,e (hex): respuesta de arranque (ObjHandover, libObj+0x41b158) → palabras 1–5 */
                 const char *e = getenv("BOOTINFO"); for (int k = 1; k <= 5 && *e; k++) { ((unsigned *)m)[k] = hexv(e, &e); if (*e == ',') e++; }
@@ -610,7 +613,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
         case 4: { unsigned char *m = (unsigned char *)w[1];
             if (w[0] == 0x8f0139 || w[0] == 0x8f013a) {  /* registro de trazas asíncrono: texto ASCII dentro del mensaje */
                 char t[420]; int k; for (k = 0; k < 410; k++) t[k] = (m[k] >= 32 && m[k] < 127) ? m[k] : '.'; t[410] = 0;
-                { char c[420]; int o = 0, pd = 1; for (k = 0; t[k]; k++) { if (t[k] == '.') { if (!pd) c[o++] = ' '; pd = 1; } else { c[o++] = t[k]; pd = 0; } } c[o] = 0; if (o > 6) LOG("TRAZA %s", c); }
+                { char c[420]; int o = 0, pd = 1; for (k = 0; t[k]; k++) { if (t[k] == '.') { if (!pd) c[o++] = ' '; pd = 1; } else { c[o++] = t[k]; pd = 0; } } c[o] = 0; if (o > 6) { LOG("TRAZA %s", c); logmark(c); } }
                 { const char *ka = getenv("KEYONACTIVE"), *kp = strstr(t, "toActive:3515 insert key_code=0x");  /* KEYONACTIVE=estado_hex: el driver de entrada de la cámara informa el estado inicial de cada tecla cuando InputService la activa (aquí, la tecla de encendido) */
                   if (ka && kp && is_dynq(0x7a0020)) { unsigned kc = hexv(kp + 32, 0), kmsg[6] = { kc, 0, hexv(ka, 0), 0, 0, 0 }; mbx_post(0x7a0020, kmsg, 0); LOG("KEYONACTIVE key=%#x status=%#x", kc, kmsg[2]); }
                   /* KEYINITAFTER=texto: envía el KEYINIT cuando una traza lo contiene (p. ej. callback_convert_not_user_operation, tras el bucle de toActive: con el envío en la primera inserción la entrada del dial aún no está registrada y el estado se pierde o llega tarde: carrera medida en §5.26) */
@@ -832,6 +835,13 @@ static void wl_end(int s) {
     if (!e.dumped) return;
     char d[96], nm[32]; wl_desc(e.ra, d, sizeof d); tname((int)e.tid, nm, sizeof nm);
     efp("[shim] WAITLOG %.2f fin tid %ld %s %s id=%#x tmo=%d tras %ld ms ra=%s\n", wl_ts(), e.tid, nm, e.k, e.a, e.tmo, ms, d);
+}
+/* LOGMARK="texto1,texto2" (sin espacios: SHIMENV se exporta por /cam/harness.env) (diagnóstico, §5.37): reenvía al anfitrión (con WAITLOG>0) solo las líneas del registro de la cámara que contienen alguno de esos textos, con la hora de wl_ts();
+ * mide el orden de hitos sin el coste de WLALL (que reenvía todas y frena el arranque). */
+static void logmark(const char *txt) {
+    const char *e = getenv("LOGMARK"); if (!e || !wl_on()) return;
+    char c[256], *sv = 0; snprintf(c, sizeof c, "%s", e);
+    for (char *it = strtok_r(c, ",", &sv); it; it = strtok_r(0, ";", &sv)) if (strstr(txt, it)) { efp("[shim] LOGMARK %.2f %s\n", wl_ts(), txt); break; }
 }
 static void wl_key(unsigned k) { efp("[shim] WAITLOG %.2f tecla %#x\n", wl_ts(), k); }
 /* DUMPAT=n: a los n s manda SIGUSR1 a cada hilo (uno por segundo) para ver dónde está parado cada uno */
@@ -1221,19 +1231,40 @@ int osal_snd_sync_msg(int qid, void *msg, void *cb, void *arg) {
     static int (*real)(int, void *, void *, void *);
     if (!real) real = dlsym(RTLD_NEXT, "osal_snd_sync_msg");
     int r = real ? real(qid, msg, cb, arg) : -1;
+    /* SYNCWAIT=qid:segundos (§5.37): una cola local sin receptor aún (0xFFFFFC04) se reintenta cada 250 ms hasta ese plazo. En la cámara InfraDatabase (cola 0x37807c) ya atiende cuando
+     * ObjCntMgr::onStarting llama a SendDbCommand; aquí Ii 0c7 libmprctrl (MprCtrl::Init) tarda ≈ 60 s más que el arranque de ObjCntMgr.
+     * shortcut: espera acotada en el emisor en lugar de acelerar MprCtrl::Init; mejorar si se encuentra qué frena a Ii 0c7. */
+    { const char *e = getenv("SYNCWAIT"); if (real && e && (int)hexv(e, &e) == qid && *e == ':') { int n = num(e + 1) * 4, i;
+        for (i = 0; r == (int)0xfffffc04 && i < n; i++) { if (!i) efp("[shim] SYNCWAIT %.2f qid=%#x espera receptor\n", wl_ts(), qid); usleep(250000); r = real(qid, msg, cb, arg); }
+        if (i) efp("[shim] SYNCWAIT %.2f qid=%#x r=%#x tras %d ms\n", wl_ts(), qid, r, i * 250); } }
     if (r && qid == 0xae8114 && getenv("SALVAGE") && ((unsigned *)msg)[0] == 0x1003) {
         pthread_t t; pthread_create(&t, 0, salvage_reply, (void *)hexv(getenv("SALVAGE"), 0)); pthread_detach(t); r = 0; }
     { const char *e = getenv("SYNCOK"); while (r && e && *e) { unsigned q = hexv(e, &e); if (*e == ',') e++; if (q == (unsigned)qid) { LOG("SYNCOK qid=%#x -> 0", qid); r = 0; } } }  /* SYNCOK=qid,…: colas locales sin manejador (servicio de otro proceso) que responden «bien» */
     if (r && getenv("SYNCLOG")) { static int n; if (n++ < 200) { void *lr = __builtin_return_address(0); Dl_info di; int ok = dladdr(lr, &di); LOG("osal_snd_sync_msg qid=%#x ret=%#x lr=%p %s+%#lx msg=%08x %08x %08x", qid, r, lr, ok ? di.dli_fname : "?", ok ? (unsigned long)((char *)lr - (char *)di.dli_fbase) : 0, ((unsigned *)msg)[0], ((unsigned *)msg)[1], ((unsigned *)msg)[2]); } }
     return r;
 }
-/* RTCLAMP=1 (§5.36): osal_create_waitable_thread de libmpr pide prioridad RT 117–123 (medido con THREADLOG: modo=4, prioridad 0x75/0x78/0x7b); Linux solo admite ≤ 99, sched_setscheduler falla (EINVAL) y el hilo de órdenes del MPR no arranca (ret = -1024), con lo que MprCtrl::Init espera para siempre el CBID_GET_PRE_FIRST_MOUNT_INFO.
- * shortcut: se recorta a sched_get_priority_max(policy) (la jerarquía relativa entre hilos RT se pierde); mejorar si hace falta respetar el orden entre prioridades > 99. */
+/* Prioridades RT (§5.37): la cámara usa CONFIG_MAX_USER_RT_PRIO=160 (prioridades 1..159, sin traducción en libosal_utm); el kernel del invitado solo 1..99. rtprio.h las mapea de forma
+ * monótona (RTMAP=0 la desactiva y deja pasar el valor tal cual, §5.36: los hilos de libmpr con 117/120/123 fallarían con EINVAL). sched_get_priority_max informa 159 como la cámara. */
+static int rt_pol(int policy) { return policy == SCHED_FIFO || policy == SCHED_RR; }
+static int rt_on(void) { return !getenv("RTMAP") || atoi(getenv("RTMAP")); }
+static int rt_host_max(int policy) { static int (*real)(int); if (!real) real = dlsym(RTLD_NEXT, "sched_get_priority_max"); return real(policy); }
+static int rt_conv(int policy, int p) { if (!rt_on() || !rt_pol(policy)) return p; int m = rtprio_map(p, rt_host_max(policy)); if (m != p) LOG("RTMAP prioridad %d -> %d (policy %d)", p, m, policy); return m; }
+int sched_get_priority_max(int policy) { return rt_on() && rt_pol(policy) ? CAM_RT_PRIO_MAX : rt_host_max(policy); }
 int sched_setscheduler(pid_t pid, int policy, const struct sched_param *p) {
     static int (*real)(pid_t, int, const struct sched_param *); if (!real) real = dlsym(RTLD_NEXT, "sched_setscheduler");
-    if (getenv("RTCLAMP") && readable(p) && p->sched_priority > sched_get_priority_max(policy)) {
-        struct sched_param c = { sched_get_priority_max(policy) }; LOG("RTCLAMP prioridad %d -> %d (policy %d)", p->sched_priority, c.sched_priority, policy); return real(pid, policy, &c); }
+    if (readable(p)) { struct sched_param c = { rt_conv(policy, p->sched_priority) }; return real(pid, policy, &c); }
     return real(pid, policy, p);
+}
+int pthread_setschedparam(pthread_t t, int policy, const struct sched_param *p) {
+    static int (*real)(pthread_t, int, const struct sched_param *); if (!real) real = dlsym(RTLD_NEXT, "pthread_setschedparam");
+    if (readable(p)) { struct sched_param c = { rt_conv(policy, p->sched_priority) }; return real(t, policy, &c); }
+    return real(t, policy, p);
+}
+int pthread_attr_setschedparam(pthread_attr_t *a, const struct sched_param *p) {
+    static int (*real)(pthread_attr_t *, const struct sched_param *); if (!real) real = dlsym(RTLD_NEXT, "pthread_attr_setschedparam");
+    int pol = SCHED_OTHER; pthread_attr_getschedpolicy(a, &pol);  /* shortcut: la política del atributo puede fijarse después de la prioridad; entonces no se mapea, mejorar si algún hilo lo hace */
+    if (readable(p)) { struct sched_param c = { rt_conv(pol, p->sched_priority) }; return real(a, &c); }
+    return real(a, p);
 }
 /* THREADLOG=1 (diagnóstico, §5.36): registra osal_create_waitable_thread (entrada = libmpr/libXXX+off, retorno) y osal_exit_thread (quién sale); no cambia el comportamiento. */
 static void thr_fn(const char *tag, void *a, int r, void *lr, unsigned m1, unsigned m5) { Dl_info di; const char *f = "?"; unsigned long o = 0;

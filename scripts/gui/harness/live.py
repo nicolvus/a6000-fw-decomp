@@ -61,11 +61,12 @@ SHIMENV_BASE = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/STLREC
 SHIMEXTRA = os.environ.get("SHIMEXTRA", "")  # SHIMEXTRA="WAITLOG=3000": variables de diagnóstico del shim
 # Tarjeta SD emulada (G22-E §5.5–§5.15): conjunto mínimo para que ModelMedia vea una SD montada, salga EEStart sin PATCHFN y la pantalla de grabación se dibuje (--sin-sd lo apaga).
 # Incluye atajos (shortcut: comentados en sonyshim.c): INSHORT (inserción forzada), NULLMWF/TABLE0 (objetos de ObjCntMgr sin crear) y SKIPFN de métodos de ObjCntMgr/ObjMedia.
-# §5.35–§5.36: onStarting de ObjCntMgr aborta en SendDbCommand (libObj+0x826ed0) si InfraDatabase aún no arrancó. InfraDatabase solo arranca cuando cierra Ii 0c7 libmprctrl (MprCtrl::Init espera
-# el CBID_GET_PRE_FIRST_MOUNT_INFO del hilo de órdenes del MPR); ese hilo no se creaba (libmpr pide prioridad RT 117–123; Linux admite 99); con SHIMEXTRA="RTCLAMP=1" cierra (≈ 40 s tras B, y 20 s después de onStarting), pero destapa un SIGSEGV de UpmWrapper (libmprctrl+0x1fcaf), por eso no va por defecto.
-# shortcut: SendDbCommand devuelve OK sin servidor InfraDatabase (la respuesta no se rellena), mejorar cuando Ii 0c7 cierre antes de ObjCntMgr::onStarting (hoy: 75 s frente a 54 s de arranque del invitado).
-TARJETA_SKIPFN = "7fa3d4=0,826ed0=0"
-TARJETA_ENV = ("BKMULTIPTR=1 FRONTRM=3 FRONTARG2=1 FRONTRMDELAY=3 INSHORT=1 SDIMG=1 SDSECT=8388608 NULLMWF=1 ")
+# §5.35–§5.37: ObjCntMgr::onStarting llama a SendDbCommand (libObj+0x826ed0), cuya cola 0x37807c es la de InfraDatabase, que arranca al cerrar Ii 0c7 libmprctrl (MprCtrl::Init espera el
+# CBID_GET_PRE_FIRST_MOUNT_INFO del hilo de órdenes del MPR). El hilo no se creaba (libmpr pide prioridad RT 117–123 y el kernel del invitado admite 99; la cámara usa CONFIG_MAX_USER_RT_PRIO=160): el shim
+# mapea las prioridades de forma monótona (RTMAP, por defecto; shimlogic.h), y UpmWrapper recibe su contexto correcto (REGARG0=1 lo desactiva). Ii 0c7 cierra ≈ 60 s después de empezar, ~25 s después de onStarting.
+# shortcut: SYNCWAIT reintenta cada 250 ms (hasta 300 s) los envíos síncronos a la cola 0x37807c sin receptor, en vez de acelerar MprCtrl::Init; la respuesta es la real de InfraDatabase (ya no hay SKIPFN de SendDbCommand).
+TARJETA_SKIPFN = "7fa3d4=0"
+TARJETA_ENV = ("BKMULTIPTR=1 FRONTRM=3 FRONTARG2=1 FRONTRMDELAY=3 INSHORT=1 SDIMG=1 SDSECT=8388608 NULLMWF=1 SYNCWAIT=37807c:300 ")
 
 
 def construye_shimenv(tarjeta: bool = True, extra: str | None = None, quita: str | None = None) -> str:

@@ -14,7 +14,8 @@ def test_shimenv_por_defecto_trae_la_sd_emulada():
     for k in ("SDIMG", "SDSECT", "FRONTRM", "BKMULTIPTR", "INSHORT", "NULLMWF"):
         assert k in v, k
     assert v["SDSECT"] == "8388608"  # 4 GB / 512 B
-    assert v["SKIPFN"] == "7fa3d4=0,826ed0=0"  # §5.36: un único atajo de ObjCntMgr (SendDbCommand)
+    assert v["SKIPFN"] == "7fa3d4=0"  # §5.37: SendDbCommand ya no se salta; lo cubre SYNCWAIT (espera de la cola de InfraDatabase)
+    assert v["SYNCWAIT"] == "37807c:300"
     assert live.construye_shimenv(True, "").count("SKIPFN=") == 1
 
 
@@ -48,20 +49,21 @@ def test_vista_de_grabacion_se_abre_con_el_modo_p():
 def test_quita_retira_variables_y_direcciones_de_skipfn():
     """§5.35: LIVE_QUITA (opt-in de diagnostico) permite medir sin un atajo concreto sin tocar el codigo."""
     env = live.construye_shimenv(True, quita="NULLMWF,SKIPFN:7fa3d4")
-    assert "NULLMWF" not in env and "7fa3d4=0" not in env and "826ed0=0" in env
+    assert "NULLMWF" not in env and "7fa3d4=0" not in env and "826ed0" not in env
     assert "NULLMWF=1" in live.construye_shimenv(True)
 
 
 def test_atajos_de_objcntmgr_sustituidos_por_senddbcommand():
     """§5.35: con SendDbCommand (0x826ed0) forzado a OK, onStarting crea de verdad 0x4b8, 0x4e8 y la tabla 0x117c: TABLE0 y los SKIPFN del componente de estado sobran."""
     env = live.construye_shimenv(True, quita="")
-    assert "826ed0=0" in env and "TABLE0" not in env  # §5.36: InfraDatabase arranca con RTCLAMP pero 37 s después de onStarting
+    assert "826ed0" not in env and "TABLE0" not in env  # §5.37: SendDbCommand real; SYNCWAIT espera a InfraDatabase (cierra Ii 0c7 ≈ 25 s después de onStarting)
     for a in ("81685a", "829d78", "829da0", "829de8", "829e70", "829eb8", "829f00", "829faa", "829fc0"):
         assert f"{a}=0" not in env
     assert "84569a=0" not in env and "84570e=0" not in env  # el aviso de temperatura ya no cae: el objeto existe
 
 
-def test_rtclamp_es_opt_in():
-    """§5.36: RTCLAMP=1 (SHIMEXTRA) hace que el hilo de órdenes del MPR arranque (libmpr pide prioridad RT 117–123 > 99) y cierre Ii 0c7, pero destapa un SIGSEGV de UpmWrapper: no va por defecto."""
-    assert "RTCLAMP" not in live.construye_shimenv(True, "")
-    assert "RTCLAMP=1" in live.construye_shimenv(True, "RTCLAMP=1")
+def test_prioridades_rt_y_espera_de_infradatabase_por_defecto():
+    """§5.37: sin RTCLAMP (sustituido por RTMAP, activo por defecto en el shim) ni SKIPFN de SendDbCommand; RTMAP/REGARG0 solo se pasan para desactivarlos."""
+    env = live.construye_shimenv(True, "")
+    assert "RTCLAMP" not in env and "RTMAP" not in env and "REGARG0" not in env and "826ed0" not in env
+    assert "SYNCWAIT=37807c:300" in env and "RTMAP=0" in live.construye_shimenv(True, "RTMAP=0")
