@@ -43,9 +43,23 @@ import run
 import sensor_web
 
 # escenario sin volcados: ciclo de modelos, pantalla de disparo (view/STLREC, §5.18z¹²), cola de teclas 0x7a0020
-SHIMENV = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/STLREC OPENVIEWAT=40 OPENVIEWGAP=14 "
+SHIMENV_BASE = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/STLREC OPENVIEWAT=40 OPENVIEWGAP=14 "
            "STARTEV=11004002:100,11004012,11004013 POSTROOTEV=11004002:e3 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f "
-           "KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177 KEYINITON=06A_viewUnified2 LIVE=auto " + os.environ.get("SHIMEXTRA", ""))  # SHIMEXTRA="WAITLOG=3000": variables de diagnóstico del shim
+           "KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177 KEYINITON=06A_viewUnified2 LIVE=auto ")
+SHIMEXTRA = os.environ.get("SHIMEXTRA", "")  # SHIMEXTRA="WAITLOG=3000": variables de diagnóstico del shim
+# Tarjeta SD emulada (G22-E §5.5–§5.15): conjunto mínimo para que ModelMedia vea una SD montada, salga EEStart sin PATCHFN y la pantalla de grabación se dibuje (--sin-sd lo apaga).
+# Incluye atajos (shortcut: comentados en sonyshim.c): INSHORT (inserción forzada), NULLMWF/TABLE0 (objetos de ObjCntMgr sin crear) y SKIPFN de métodos de ObjCntMgr/ObjMedia.
+TARJETA_SKIPFN = "7fa3d4=0,84569a=0,84570e=0,81685a=0,829d78=0,829da0=0,829de8=0,829e70=0,829eb8=0,829f00=0,829faa=0,829fc0=0"
+TARJETA_ENV = ("BKMULTIPTR=1 FRONTRM=3 FRONTARG2=1 FRONTRMDELAY=3 INSHORT=1 SDIMG=1 SDSECT=8388608 NULLMWF=1 TABLE0=1 ")
+
+
+def construye_shimenv(tarjeta: bool = True, extra: str | None = None) -> str:
+    """SHIMENV del arnés: base + (con `tarjeta`) SD emulada y sus atajos + SHIMEXTRA (que manda si repite variables)."""
+    base = SHIMENV_BASE.replace("SKIPFN=7fa3d4=0 ", f"SKIPFN={TARJETA_SKIPFN} " if tarjeta else "SKIPFN=7fa3d4=0 ")
+    return base + (TARJETA_ENV if tarjeta else "") + (SHIMEXTRA if extra is None else extra)
+
+
+SHIMENV = construye_shimenv()
 # {clave KEY_*, índice físico[, paso del dial]}: tabla del driver de InfraInput volcada en el arranque (§5.18z¹²; las 7 primeras, también §5.18z′).
 # Los diales no tienen suelta: cada pulsación es un paso con signo (callback_dial_signed_speed); dial = 0x15070030, rueda = 0x15070040.
 TECLAS = {"arriba": (0x3, 0x1), "abajo": (0x30, 0x5), "izquierda": (0x15, 0x3), "derecha": (0x1AF, 0x14), "menu": (0x1AB, 0x11),
@@ -111,10 +125,10 @@ def msg_hora(ahora: float) -> bytes:
 
 
 class Vm:
-    def __init__(self, work: Path, pkg: str, perfil: str = "", red: dict | None = None, avcam: bool = False) -> None:
+    def __init__(self, work: Path, pkg: str, perfil: str = "", red: dict | None = None, avcam: bool = False, tarjeta: bool = True) -> None:
         net, net_args = red_args(red)
         self.red = red if net else {}
-        shimenv = SHIMENV + net
+        shimenv = construye_shimenv(tarjeta) + net
         self.puente = None
         if avcam:  # av-cam (LIRO VM, scripts/gui/avcam) atiende las colas de kernel que im.elf le envía; ver puente.py
             sys.path.insert(0, str(HERE.parent / "avcam"))
@@ -459,6 +473,7 @@ def main() -> None:
     ap.add_argument("--config", default="", help="config.json del configurador (mapa de teclas)")
     ap.add_argument("--avcam", action=argparse.BooleanOptionalAction, default=None,
                     help="conecta im.elf con av-cam ejecutado en la LIRO VM (puente.py); por defecto se activa si hay unicorn, av-cam.bin y liro.ko")
+    ap.add_argument("--sin-sd", action="store_true", help="no emula la tarjeta SD (arranque anterior: ModelMedia sin soporte, sin EEStart); por defecto hay una SD FAT32 montada")
     ap.add_argument("--lanzador", default="", help="URL del configurador (enlace «volver»)")
     a = ap.parse_args()
     CONFIG.update(ruta=a.config, lanzador=a.lanzador)
@@ -466,7 +481,7 @@ def main() -> None:
         a.avcam = avcam_disponible()
     from emu_config import carga_config
     red = carga_config(Path(a.config))["red"] if a.config else None
-    vm = Vm(a.work.resolve(), str(Path(a.pkg).resolve()) if a.pkg else "", a.perfil_dir, red, a.avcam)
+    vm = Vm(a.work.resolve(), str(Path(a.pkg).resolve()) if a.pkg else "", a.perfil_dir, red, a.avcam, not a.sin_sd)
     srv = servidor(vm, a.puerto)
     print(f"http://127.0.0.1:{a.puerto}  ({'restaurando estado' if vm.restaurado else 'arranque en frío, ≈ 2,5 min hasta el menú'})", flush=True)
     for sig in (signal.SIGINT, signal.SIGTERM):  # salir = guardar el estado y cerrar QEMU

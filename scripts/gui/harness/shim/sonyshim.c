@@ -632,7 +632,8 @@ static int ioctl_in(int fd, unsigned long req, ...) {
              * responde a la cola dinámica que viaja en el cuerpo copiando la petición con estado 0 (lo que comprueba el emisor síncrono
              * 0x6a2550 de libObj). shortcut: a 0x61003c la misma respuesta hace saltar la aserción de 0x6a25d2; modelarla cuando se conozca su formato. */
             if (w[0] == 0x4015e && !getenv("NO4015E") && is_dynq(((unsigned *)m)[-1])) {  /* libObj+0x8138b8 (ObjStillRecorder…): petición {0, orden, …} con la cola de respuesta en la cabecera (m[-1]); exige {1, orden, 0, …} y, para 0x1000, +0xc = phys de un área de 0xc40 B que mapea de /dev/mem (aquí anónima a cero) */
-                unsigned *rq = (unsigned *)m, rp[12] = { 1, rq[1], 0, rq[1] == 0x1000 ? 0x8f000000u : 0 };
+                unsigned *rq = (unsigned *)m; unsigned char *rb = calloc(1, 0x100); unsigned *rp = (unsigned *)(rb + 0x20);  /* en el montón: el lector la consume después de volver este snd_msg (antes era un array de pila → basura, y ObjCntMgr nunca reservaba su tabla de 0xc40 B) */
+                rp[0] = 1; rp[1] = rq[1]; rp[2] = 0; rp[3] = rq[1] == 0x1000 ? 0x8f000000u : 0; rb[0x20 - 8] = 2;
                 mbx_post_raw(rq[-1], rp); LOG("snd_msg 0x4015e orden %#x -> respuesta a %#x", rq[1], rq[-1]); return 0; }
             /* 0x50004: InfraPin de CAMUSER (libObj 0xa14f88): dataflow {cate 0x1000, msg 0/1, …, pinType, pinDir, pinNo}; la respuesta tipo 1 (0x20 B)
                debe repetir pinType/pinDir/pinNo (0x97ecd4 los compara; con ceros «PinGet REQ … CMP[[0][0][0]]»); state, osalId y Err = 0 (NO_VERIFICADO) */
@@ -756,14 +757,20 @@ static void sym(unsigned v) {
     for (int i = 0; i < nmaps; i++)
         if (v >= maps[i].lo && v < maps[i].hi) { efp("[shim]   %08x %s+%#x\n", v, maps[i].name, v - maps[i].lo + maps[i].off); return; }
 }
+static void *lobj_h;
 static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, LR y direcciones de código halladas en la pila */
     ucontext_t *uc = ctx; unsigned *sp = (unsigned *)uc->uc_mcontext.arm_sp;
+    if (sig == SIGSEGV && getenv("TABLE0") && lobj_h) {  /* shortcut: la instancia de ObjCntMgr que ve EEStart no reserva su tabla de 0xc40 B (this+0x117c: solo la crea el constructor 0x82a038, que corrió en otra instancia; ver §5.15); en el fallo de libObj+0x84b042 (ldr r3,[r3,#4] con r3 = NULL) se le da una tabla a ceros y se reintenta. Mejorar al localizar qué Create/constructor debe invocar 0x825850 para esta instancia. */
+        static unsigned long lb; if (!lb) { void *sy = dlsym(lobj_h, "pViewManager"); Dl_info di; if (sy && dladdr(sy, &di)) lb = (unsigned long)di.dli_fbase; }
+        if (lb && uc->uc_mcontext.arm_pc == lb + 0x84b042 && uc->uc_mcontext.arm_r3 == 0) { unsigned char *tb = calloc(1, 0xc40); *(unsigned char **)(uc->uc_mcontext.arm_r4 + 0x117c) = tb; uc->uc_mcontext.arm_r3 = (unsigned long)tb;
+            static volatile int nt; if (nt++ < 4) efp("[shim] TABLE0: tabla de 0xc40 B a ceros en this=%#lx\n", uc->uc_mcontext.arm_r4); return; }
+    }
     if (sig == SIGSEGV && getenv("NULLMWF") && uc->uc_mcontext.arm_r0 == 0) {  /* shortcut: ver mwf_nullsafe; las funciones de MonCtrl (libMWF+0x2f400..0x2f700) con this NULL «devuelven 0» al llamador; mejorar creando el MonCtrl que falta */
         static unsigned long mb; if (!mb) { void *sy = dlsym(RTLD_DEFAULT, "_ZN3MWF6ObjMsgC1Ev"); Dl_info di; if (sy && dladdr(sy, &di)) mb = (unsigned long)di.dli_fbase; }
         unsigned long pc = uc->uc_mcontext.arm_pc;
         if (mb && pc >= mb + 0x2f400 && pc < mb + 0x2f700) { unsigned long lr = uc->uc_mcontext.arm_lr; { static volatile int nr; if (nr++ < 12 || (nr & 0xffff) == 0) efp("[shim] NULLMWF recupera #%d pc=libMWF+%#lx lr=%#lx tid %ld\n", nr, pc - mb, lr - mb, (long)syscall(SYS_gettid)); } uc->uc_mcontext.arm_pc = lr & ~1UL; if (lr & 1) uc->uc_mcontext.arm_cpsr |= 0x20; else uc->uc_mcontext.arm_cpsr &= ~0x20UL; return; }
     }
-    if (sig == SIGSEGV && getenv("NULLMWF")) signal(SIGSEGV, SIG_DFL);  /* fallo no recuperable: se imprime la pila y el reintento mata el proceso como antes */
+    if (sig == SIGSEGV && (getenv("NULLMWF") || getenv("TABLE0"))) signal(SIGSEGV, SIG_DFL);  /* fallo no recuperable: se imprime la pila y el reintento mata el proceso como antes */
     if (!nmaps) load_maps();
     char nm[24] = {0}; syscall(SYS_prctl, 16, nm); efp("[shim] --- pila (sig %d tid %ld %s) pc/lr:\n", sig, (long)syscall(SYS_gettid), nm); efp("[shim]   raw pc=%08lx lr=%08lx addr=%08lx r0=%08lx r1=%08lx r2=%08lx\n", uc->uc_mcontext.arm_pc, uc->uc_mcontext.arm_lr, (unsigned long)si->si_addr, uc->uc_mcontext.arm_r0, uc->uc_mcontext.arm_r1, uc->uc_mcontext.arm_r2); sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
     for (int i = 0; i < 300; i++) { if (((unsigned long)(sp + i) & 0xfff) == 0 || i == 0) { if (msync((void *)((unsigned long)(sp + i) & ~0xfffUL), 1, MS_ASYNC)) break; } sym(sp[i]); }  /* no cruzar el final de la pila */
@@ -961,7 +968,7 @@ static void presignal(void) {
     while (*p) { const char *q; unsigned id = hexv(p, &q); if (q == p) break; sem_sig(id); p = *q == ',' ? q + 1 : q; }
 }
 __attribute__((constructor)) static void shim_init(void) { if (getenv("CPUWATCH")) { pthread_t tw; pthread_create(&tw, 0, cpu_watch, 0); } presignal(); keyq_init(); live_init(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("OPENVIEW")) { pthread_t th; pthread_create(&th, 0, openviewer, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
-    sa.sa_flags = SA_SIGINFO | (getenv("NULLMWF") ? 0 : SA_RESETHAND); sigaction(SIGSEGV, &sa, 0);  /* con NULLMWF el manejador sobrevive a las recuperaciones (antes SA_RESETHAND lo quitaba y el siguiente SEGV mataba im.elf: EXIT=139); on_usr1 lo restablece solo si el fallo no es recuperable */ sigaction(SIGBUS, &sa, 0); sigaction(SIGILL, &sa, 0); sigaction(SIGABRT, &sa, 0); }  /* un fallo imprime la pila y se reintenta por defecto (core) */
+    sa.sa_flags = SA_SIGINFO | ((getenv("NULLMWF") || getenv("TABLE0")) ? 0 : SA_RESETHAND); sigaction(SIGSEGV, &sa, 0);  /* con NULLMWF el manejador sobrevive a las recuperaciones (antes SA_RESETHAND lo quitaba y el siguiente SEGV mataba im.elf: EXIT=139); on_usr1 lo restablece solo si el fallo no es recuperable */ sigaction(SIGBUS, &sa, 0); sigaction(SIGILL, &sa, 0); sigaction(SIGABRT, &sa, 0); }  /* un fallo imprime la pila y se reintenta por defecto (core) */
 
 /* Experimento (SKIPFN=717830,...): sustituye esas funciones Thumb de libObj por «movs r0,#0; bx lr» (devuelven éxito sin hacer nada). */
 static unsigned long hexv(const char *s, const char **end) { unsigned long v = 0; for (;; s++) { int c = *s; if (c >= '0' && c <= '9') c -= '0'; else if (c >= 'a' && c <= 'f') c -= 'a' - 10; else break; v = v * 16 + c; } if (end) *end = s; return v; }
