@@ -47,6 +47,9 @@ import sensor_web
 # Con /modo p=3 desde la vista iAUTO+ la vista pasa a «P» (±0,0). El número inicial de P no se encontró.
 # shortcut: solo el 2 está verificado como valor inicial; el resto de posiciones (POSICIONES_MODO) sigue sin verificar, mejorar cuando se derive la tabla del código de InputService.
 DIAL_INICIAL = 2
+# Giro a P tras el arranque (/modo p=3, MEDIDO en §5.24: desde la vista iAUTO+ la vista pasa a «P»; como estado inicial 3 da la vista de película).
+# shortcut: es un giro automático del dial, no la posición real de arranque; mejorar cuando se encuentre el estado inicial de P (0–15 probados: solo 2 da vista rica).
+MODO_TRAS_ARRANQUE = None  # medido en el perfil z1: el giro automático a 3 10 s tras la primera pantalla dio la vista de película, no «P» (en r1, a mano y tras abrir/cerrar menús, sí)
 # escenario sin volcados: ciclo de modelos, pantalla de disparo (view/STLREC, §5.18z¹²), cola de teclas 0x7a0020
 SHIMENV_BASE = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/STLREC OPENVIEWAT=40 OPENVIEWGAP=14 "
            "STARTEV=11004002:100,11004012,11004013 POSTROOTEV=11004002:e3 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f "
@@ -176,6 +179,7 @@ class Vm:
             self.puente = puente.Puente(self.envia, self.dir / "avcam.jsonl", puente.A.Emisor(None) if ae else None)
             threading.Thread(target=self.avq_hilo, daemon=True).start()
         threading.Thread(target=self.lector, daemon=True).start()
+        threading.Thread(target=self.gira_dial, daemon=True).start()
         threading.Thread(target=self.reloj, daemon=True).start()
         if not restaurar:
             threading.Thread(target=self.autoguardado, daemon=True).start()
@@ -193,6 +197,14 @@ class Vm:
                 self.sock.sendall(datos)
             except OSError:
                 pass
+
+    def gira_dial(self) -> None:
+        """Con la primera pantalla dibujada gira el dial a MODO_TRAS_ARRANQUE (None = no)."""
+        while not self.seq:
+            time.sleep(1)
+        time.sleep(10)
+        if MODO_TRAS_ARRANQUE is not None and not self.restaurado:
+            self.tecla(DIAL_MODO[0], MODO_TRAS_ARRANQUE, DIAL_MODO[1])
 
     def avq_hilo(self) -> None:
         """Mensajes del invitado a av-cam, en orden y fuera del hilo lector."""

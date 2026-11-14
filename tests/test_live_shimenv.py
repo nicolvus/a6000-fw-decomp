@@ -28,8 +28,13 @@ def test_shimextra_manda_sobre_el_conjunto():
     assert variables(live.construye_shimenv(True, "FRONTRM=9"))["FRONTRM"] == "9"
 
 
-def test_dial_inicial_en_P_y_keyiniton_vacio():
+def test_dial_inicial_2_iauto_plus_y_keyiniton_vacio():
     """§5.23: el dial se informa al activarse InputService (KEYINITON vacío) y con la posición medida 2 = iAUTO+ (vista rica)."""
     env = live.construye_shimenv(True)
     assert "KEYINIT=7000001:1:177,7025:2:27 " in env and "KEYINITON= " in env
     assert live.DIAL_INICIAL == 2
+
+
+def test_giro_automatico_del_dial_desactivado_por_defecto():
+    """§5.24: el giro a P tras el arranque no es fiable (perfil z1); solo es opt-in."""
+    assert live.MODO_TRAS_ARRANQUE is None
