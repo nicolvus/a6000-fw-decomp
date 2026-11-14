@@ -123,3 +123,25 @@ Resultado esperado: la fila pasa a «Desactivar» (aviso `0x4f`), `NV 107086e 02
 **Herramienta nueva del shim.** `E TRACEFN=dir,…` por `POST /linea` arma en caliente trampas de un disparo (necesita `TRACEFN` en el arranque, que fija la base de `libObj`; se ignoran las que ya estén armadas). Límites: el valor de `E` admite 79 caracteres (unas 10 direcciones por línea) y la tabla de trampas tiene 32 entradas por arranque (las trampas ya disparadas no se reutilizan).
 
 **Límites.** Un arranque en frío de cuatro acabó en `SIGSEGV` en `libObj+0x7f25e6` al abrir `view/ROOT` («`STARTEV: faltan pViewManager…`»: el `STARTEV` corrió antes de que estuvieran los símbolos; es el fallo ya conocido sin `STARTEV`, §5.18z de G22). No se repitió en los tres siguientes; no se puede descartar que el cambio de tiempos de `0x50004` lo haga más probable. Las pruebas se hicieron con la pantalla de disparo como vista inicial (cambio en curso de `live.py`, ajeno a esta tarea): el menú se abre con MENU.
+
+## 11. Máquina de modos LRM de `ExcMgr` y prueba con `Ts` (13-11-2026, medido en QEMU)
+
+**Máquina de modos (VERIFICADO, desensamblado de `libObj` `0x9919f0`, `0x996796`).** `[gestor+0]` (s8) es el modo y `[gestor+1]` el anterior. `0x996796`: si el modo es `0x60` y llega `cate 0x3100 / 0x7502` (**`MSGID_EE_NEUTRAL_CMD`**, emitida por `pvt_ExeEENeutralCmd` `0x67c4a8`), va por `0x993546`/`0x993924`. Cualquier otro mensaje pasa antes por `0x9919f0`, que cambia el modo, y luego por el `tbb` de `0x9967d0` (caso 0 = `0x60` → en espera, `0x9952b6`). Transiciones de `0x9919f0` (solo `cate 0x3100`):
+- `0x7502` EE_NEUTRAL → `0x60`.
+- `0x7500` **`MSGID_EE_START_CMD`** (`pvt_ExeEEStartCmd` `0x67c568`) → según su parámetro `0x9503`: 3 → `0x62`, 4 → `0x63`, 5 → `0x64`, 6 → `0x65`, 7 → `0x66`, 8 → `0x67`, `0x3a6` → `0x68`. Otro valor: error «UNKNOWN PARAMID»; sin el parámetro: «PARAMID_EE_TYPE is NULL».
+- `0x7504` → si el modo es `0x60`, pasa a `0x61`.
+- `0x766a` → guarda el modo y pasa a `0x69`; `0x766c` → lo restaura.
+- Además, `cate 0x3130`, mensaje `0xa002`/`0xa043` → `0x61`.
+
+`0x60` = imagen en vivo en reposo (INFERENCIA, por EE_NEUTRAL y por `LRM_SCALAR_BUFF`). Mientras no llegue `EE_START`, todas las órdenes quedan en espera.
+
+**Por qué no llega `EE_START` (VERIFICADO).** La emite `pvt_ExeEEStartForSetInit` (`0x67ccd0`) desde la acción `SetInit` de `ModelStillRec` (`0x68b4bc`, llamada desde `0x699d72`/`0x69a7ce`/`0x69abc8`). Con trampas de un disparo en frío, ninguna de esas rutinas se ejecuta. La causa: `POSTROOTEV=11004002:e3` crea los modelos de disparo (`F00_*`) **después** del `Ts` (`0x11004012`) de `STARTEV`, así que nunca reciben `Md`/`Ms` (el arranque de modelo; en el registro real todos los modelos pasan `Tc → Ts → Md/Ms`, §5.18p de G22).
+
+**Prueba con `Ts` tras crearlos (`S 11004012` en caliente, o `POSTROOTEV=11004002:e3,11004012`).** Resultados medidos:
+- Los modelos `F00_00F` (`ModelStillRec`), `F00_106`, `0FF`, `0F3`, `00B`, `0D2`, `F00`, `010`, `05A`, `0D4`, `0D3` y `00C` registran `Md` y `Ms`, y `ModelStillRec` empieza a mandar órdenes.
+- Tras un ciclo de MENU, el gestor está en **`0x61`** (`TRACE 996796 … r3=61`). La cola de ejecución (`0x993d10`, `0x9948d4`) funciona por primera vez, y sale un mensaje a la cola de kernel **`0x30001`** = `CamMgr` de av-cam (S21; el shim la descarta).
+- Sigue sin salir `EE_START` (`SetInit` de `ModelStillRec` no se ejecuta ni con `Ts`).
+- Los iconos no cambian. Además, el menú Fn sale casi todo en gris y con «Función desactivada actualmente» ([captura](img/g22-fn-inhibido-tras-ts.png)): los modelos ya arrancados aplican las inhibiciones de cámara no lista.
+
+**Decisión.** El `Ts` no se deja por defecto: empeora el uso (Fn inhibido) y no trae los iconos. **Siguiente barrera (INFERENCIA)**: los valores que pintan los iconos llegan por las notificaciones de `ObjCamera` tras las respuestas de av-cam (`CamMgr` `0x30001` y LIRO). Desbloquearlos exige emular esas respuestas con el formato verificado en `av-cam.bin` (REA). Antes falta localizar el evento que lanza `SetInit` de `ModelStillRec` (la acción del `switch` `0x699d72`/`0x69a7ce`/`0x69abc8`).
+
