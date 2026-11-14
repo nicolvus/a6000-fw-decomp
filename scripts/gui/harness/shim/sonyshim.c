@@ -46,6 +46,7 @@ static char devname[MAXFD][32];
 
 #define E_TMOUT (-1022)
 static void live_msg(const char *, const char *, int);
+static void avq_flush(unsigned q); static void avq_rec(void *p, unsigned sz); static int avq_q(unsigned q); static void avq_forward(unsigned q, const unsigned char *m);
 static void menu_track(const char *); static int wl_all(void); static void wl_logfwd(const char *, ...); static void wl_live(const char *, int); static void wl_key(unsigned); static int wl_on(void); static double wl_ts(void); static const char *tname(int, char *, size_t);
 static int wl_begin(const char *k, unsigned a, int tmo, void *ra); static void wl_end(int slot);  /* WAITLOG=ms: registro de esperas largas (ver abajo) */
 static pthread_mutex_t semlock = PTHREAD_MUTEX_INITIALIZER;
@@ -493,17 +494,17 @@ static int ioctl_in(int fd, unsigned long req, ...) {
         case 10: {  /* valloc_msg_wait {qid, &{out, size, tmo}}: mensaje para una cola de kernel (se descarta al enviarlo) */
             unsigned *t = (unsigned *)w[1];
             unsigned char *b = calloc(1, t[1] + 0x240);
-            *(void **)t[0] = b + 0x20;
+            *(void **)t[0] = b + 0x20; avq_rec(b + 0x20, t[1]);
             if (getenv("VERB")) LOG("uipc valloc qid=%#x size=%u -> %p", w[0], t[1], b + 0x20);
             return 0; }
         case 0: LOG("uipc stat_sem %#x", w[0]); return 0;
         case 1: { LOG("uipc wai_sem? %#x tmo=%d", w[0], (int)w[1]); int r = uipc_sem_wait(w[0], (int)w[1]); LOG("uipc wai_sem %#x tmo=%d -> %d", w[0], (int)w[1], r); return r; }
         case 2: sem_sig(w[0]); LOG("uipc sig_sem %#x", w[0]); return 0;
-        case 7: { unsigned *t = (unsigned *)w[1]; LOG("uipc rcv_msg qid=%#x tmo=%d", w[0], (int)t[1]);
+        case 7: { unsigned *t = (unsigned *)w[1]; LOG("uipc rcv_msg qid=%#x tmo=%d", w[0], (int)t[1]); avq_flush(w[0]);
             if ((int)t[1] < 0 && getenv("RCVSTACK")) { static unsigned vq[64]; static int nq; int k, ya = 0; for (k = 0; k < nq; k++) if (vq[k] == w[0]) ya = 1; if (!ya && nq < 64) { vq[nq++] = w[0]; raise(SIGUSR1); } }
             { void *mm; int rr = mbx_take(w[0], (int)t[1], &mm); if (rr == 0) { *(void **)t[0] = mm; LOG("rcv_msg qid=%#x <- respuesta", w[0]); return 0; } if (rr != 1) return rr; }
             if ((int)t[1] < 0) {  /* espera indefinida en una cola estática: se le da buzón para que una respuesta posterior (ACKQ0) la despierte */
-                void *mm; dynq_add(w[0]); if (mbx_take(w[0], -1, &mm) == 0) { *(void **)t[0] = mm; LOG("rcv_msg qid=%#x <- respuesta (cola estática)", w[0]); return 0; } }
+                void *mm; dynq_add(w[0]); avq_flush(w[0]); if (mbx_take(w[0], -1, &mm) == 0) { *(void **)t[0] = mm; LOG("rcv_msg qid=%#x <- respuesta (cola estática)", w[0]); return 0; } }
             return kernel_sleep((int)t[1]); }
         case 13: {  /* wait_cb {0, &out[4]}: el proxy espera una entrega y llama out[0](out[2], out[1]) */
             unsigned *out = (unsigned *)w[1];
@@ -518,7 +519,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             pthread_mutex_lock(&cb_m);
             int k = cb_find(w[0]); if (k < 0 && ncbs < 128) k = ncbs++;
             if (k >= 0) { cbs[k].q = w[0]; cbs[k].cb = (void *)t[1]; cbs[k].arg = (void *)(t[3] == 1 ? t[2] : t[0]); }  /* t[3]==1: registro síncrono, el argumento va en t[2] (EventWrapper de libMWF) */
-            pthread_mutex_unlock(&cb_m);
+            pthread_mutex_unlock(&cb_m); avq_flush(w[0]);
             { Dl_info di; const char *fn = "?"; unsigned long off = 0; if (dladdr((void *)(t[1] & ~1u), &di) && di.dli_fname) { fn = strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname; off = (t[1] & ~1u) - (unsigned long)di.dli_fbase; }
               LOG("uipc reg_%smsg_queue_cb qid=%#x arg=%#x cb=%#x (%s+%#lx) t2=%#x%s", t[3] == 1 ? "sync_" : "", w[0], t[0], t[1], fn, off, t[2], k < 0 ? " (tabla llena)" : ""); } return 0; }
         case 9: { pthread_mutex_lock(&cb_m); int k = cb_find(w[0]); if (k >= 0) cbs[k].q = 0; pthread_mutex_unlock(&cb_m); LOG("uipc unreg_msg_queue_cb qid=%#x", w[0]); return 0; }
@@ -605,6 +606,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
               if (ack) for (int k = 0; k < 6; k++) if (is_dynq(((unsigned *)m)[k])) { mbx_post(((unsigned *)m)[k], (unsigned *)m, w[0] == 0x61003c); LOG("snd_msg %#x -> acuse genérico a %#x (palabra %d)", w[0], ((unsigned *)m)[k], k); return 0; } }
             if (w[0] == 0x9a015a || w[0] == 0x9c015b) { static int n; if (n++ < 4) raise(SIGUSR1); if (n > 5) { usleep(20000); return 0; } }  /* bucle HDMI: pila y silencio */
             if (getenv("VERB")) { char h[200]; int k, o = 0; for (k = -32; k < 32; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]); LOG("MSGHEX %#x %s", w[0], h); }
+            if (avq_q(w[0])) { avq_forward(w[0], m); return 0; }
             LOG("uipc snd_msg a la cola de kernel %#x (descartado) cab=%02x%02x%02x%02x datos=%08x %08x", w[0], m[-12], m[-11], m[-10], m[-9],
                 ((unsigned *)m)[0], ((unsigned *)m)[1]); return 0; }
         case 6: { unsigned char *m = (unsigned char *)w[1]; char h[200]; int k, o = 0;
@@ -1389,6 +1391,49 @@ static void live_msg(const char *tag, const char *txt, int n) {  /* «\x01TAG te
     if (live_fd < 0) return;
     pthread_mutex_lock(&live_wm); write(live_fd, "\x01", 1); write(live_fd, tag, strlen(tag)); write(live_fd, " ", 1); write(live_fd, txt, n); write(live_fd, "\n", 1); pthread_mutex_unlock(&live_wm);
 }
+/* AVQ=qid_hex[,…] (puente con la LIRO VM del anfitrión, scripts/gui/avcam/puente.py): los mensajes que im.elf envía a esas colas de kernel (av-cam: CamMgr 0x30001)
+ * viajan por el puerto LIVE como «\x01AVQ qid tam cabecera cuerpo» (hex); las respuestas llegan como línea «Q qid src cuerpo_hex» y se entregan como si las enviara el kernel. */
+static struct { void *p; unsigned sz; } avq_ring[256]; static unsigned avq_n;
+static void avq_rec(void *p, unsigned sz) { avq_ring[avq_n++ % 256].p = p; avq_ring[(avq_n - 1) % 256].sz = sz; }
+static int avq_q(unsigned q) { const char *e = getenv("AVQ"); while (e && *e) { const char *n; unsigned v = hexv(e, &n); if (n == e) break; if (v == q) return 1; e = *n == ',' ? n + 1 : n; } return 0; }
+static void avq_forward(unsigned q, const unsigned char *m) {
+    unsigned sz = 0x40, k; for (k = 0; k < 256; k++) if (avq_ring[k].p == m) { sz = avq_ring[k].sz; }
+    if (sz > 0x400) sz = 0x400;
+    char *t = malloc(40 + 2 * (12 + sz)); int o = sprintf(t, "%x %x ", q, sz);
+    for (k = 0; k < 12; k++) o += sprintf(t + o, "%02x", m[k - 12]);
+    t[o++] = ' '; for (k = 0; k < sz; k++) o += sprintf(t + o, "%02x", m[k]);
+    LOG("AVQ → anfitrión cola %#x tam %u", q, sz); live_msg("AVQ", t, o); free(t);
+}
+static unsigned avq_hex2(const char *p) { unsigned v = 0; for (int i = 0; i < 2; i++) { char c = p[i]; v = v * 16 + (c >= 97 ? c - 87 : c >= 65 ? c - 55 : c - 48); } return v; }
+static struct { unsigned q; char *txt; } avq_pend[128]; static int avq_np; static pthread_mutex_t avq_pm = PTHREAD_MUTEX_INITIALIZER;
+static int avq_deliver(unsigned q, const char *hd, const char *h, unsigned n) {  /* 1 = entregado */
+    unsigned k; int df = n >= 8 && !memcmp(h + 8, "a0a0a0a0", 8);  /* respuesta dataflow: su emisor llama a rcv_msg después del envío, así que el buzón se crea ya */
+    if (cb_find(q) < 0 && !is_dynq(q) && df) dynq_add(q);
+    if (cb_find(q) < 0 && !is_dynq(q)) return 0;
+    unsigned char *b = calloc(1, n + 0x240), *body = b + 0x20; for (k = 0; k < 12; k++) body[k - 12] = avq_hex2(hd + 2 * k);
+    for (k = 0; k < n; k++) body[k] = avq_hex2(h + 2 * k);
+    if (!body[-8]) body[-8] = (n + 12 + 31) / 32;
+    if (cb_deliver(q, body)) { LOG("AVQ ← respuesta a %#x (callback) %u B", q, n); return 1; }
+    pthread_mutex_lock(&mbx_m); for (k = 0; k < 16 && mbx[k].msg; k++); if (k < 16) { mbx[k].q = q; mbx[k].msg = body; } else { LOG("mbx lleno: AVQ a %#x perdida", q); free(b); }
+    pthread_cond_broadcast(&mbx_c); pthread_mutex_unlock(&mbx_m); LOG("AVQ ← respuesta a %#x (buzón) %u B", q, n); return 1;
+}
+static void avq_inject(const char *ln) {  /* «Q qid cabecera_hex(12 B) cuerpo_hex»; sin receptor aún (cola que im.elf registrará después) queda pendiente, como en la cola del kernel */
+    const char *e; unsigned q = hexv(ln, &e); const char *hd = e + 1; const char *h = strchr(hd, ' '); if (!h) return; h++;
+    unsigned n = strlen(h) / 2; char *c = strdup(ln);
+    if (avq_deliver(q, hd, h, n)) { free(c); return; }
+    pthread_mutex_lock(&avq_pm);
+    if (avq_np < 128) { avq_pend[avq_np].q = q; avq_pend[avq_np++].txt = c; LOG("AVQ ← %#x sin receptor todavía (pendiente, %u B)", q, n); } else { LOG("AVQ pendientes llenos: %#x perdido", q); free(c); }
+    pthread_mutex_unlock(&avq_pm);
+}
+static void avq_flush(unsigned q) {  /* im.elf acaba de registrar/esperar en q: entrega lo que av-cam envió antes */
+    if (!avq_np) return;
+    pthread_mutex_lock(&avq_pm);
+    for (int i = 0; i < avq_np; i++) if (avq_pend[i].q == q) {
+        const char *e; hexv(avq_pend[i].txt, &e); const char *hd = e + 1; const char *h = strchr(hd, ' ') + 1;
+        if (avq_deliver(q, hd, h, strlen(h) / 2)) { free(avq_pend[i].txt); avq_pend[i] = avq_pend[--avq_np]; i--; }
+    }
+    pthread_mutex_unlock(&avq_pm);
+}
 static void *startevhot(void *a) { startev(a); free(a); return 0; }
 static void *acqhot(void *a) { acquire_status((int)hexv(a, 0)); free(a); return 0; }
 static void *modelhot(void *a) { model_create(a); free(a); return 0; }
@@ -1397,7 +1442,7 @@ static void *openhot(void *a) {
     char *nm = a; int r = ov ? ov(nm, 0) : -99; LOG("OPENHOT %s -> %d", nm, r); free(nm); return 0;
 }
 static void *live_keys(void *a) {
-    (void)a; char buf[256]; int n = 0;
+    (void)a; static char buf[8192]; int n = 0;
     for (;;) {
         int k = read(live_fd, buf + n, sizeof buf - 1 - n); if (k <= 0) { usleep(20000); continue; }
         n += k; buf[n] = 0; char *ln = buf, *nl;
@@ -1411,6 +1456,7 @@ static void *live_keys(void *a) {
             if (ln[0] == 'M' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, modelhot, nm); pthread_detach(th); }  /* «M @Mxxx»: crea el modelo en caliente */
             if (ln[0] == 'O') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, openhot, nm); pthread_detach(th); }  /* «O vista»: viewManagerIf::openView(vista, 0) en caliente */
             if (ln[0] == 'Y') date_type = (int)hexv(ln + 2, &e);
+            if (ln[0] == 'Q' && ln[1] == ' ') avq_inject(ln + 2);
             if (ln[0] == 'R') live_force = 1;  /* el anfitrión se acaba de conectar (p. ej. tras restaurar el estado): reenviar el fotograma actual */
             if (ln[0] == 'K') { unsigned m[12] = {0}; static int swallow; m[0] = hexv(ln + 2, &e); m[2] = hexv(e + 1, &e); m[4] = hexv(e + 1, &e);
                 if (m[0] == 0x1ab && m[2] == 1 && !menu_open) { swallow = 1; menu_open = 1; pthread_t th; pthread_create(&th, 0, openhot, strdup("@V00E")); pthread_detach(th); LOG("MENU con el menú cerrado: openView @V00E"); }

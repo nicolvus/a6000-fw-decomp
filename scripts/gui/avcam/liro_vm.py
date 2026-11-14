@@ -108,6 +108,8 @@ class Vm:
     slots: dict[int, int] = field(default_factory=dict)
     libres: list[int] = field(default_factory=list)
     nslots: int = 0
+    limite: float | None = None  # tiempo virtual máximo (ms): el puente lo ata al reloj real; None = adelantar al siguiente plazo
+    msz: dict[int, int] = field(default_factory=dict)  # tamaño pedido a osal_valloc_msg_wait por mensaje (para reenviarlo entero)
     ncb: int = 0
     queues: dict[int, collections.deque] = field(default_factory=dict)   # colas OSAL locales (por qid)
     qcb: dict[int, tuple] = field(default_factory=dict)                   # qid → (callback, arg)
@@ -451,20 +453,25 @@ def api(vm: Vm, i: int) -> int | None:
     if n == "osal_valloc_msg_wait":
         m = vm.malloc(min(a(2), 0x800) + 12) + 12  # cabecera de 12 B delante (msg−4 = cola de respuesta, 0x43b51726)
         vm.wr(a(1), m)
+        vm.msz[m] = min(a(2), 0x800)
+        vm.wr(m - 8, -(-(vm.msz[m] + 12) // 32), 1)  # bloques de 32 B (osal_msg_size)
         return E_OK
     if n in ("osal_snd_msg", "osal_snd_sync_msg", "osal_snd_sync_direct"):
         q, m = a(0), a(1)
         if q == 0x910041 and m:  # sleep(ms) del núcleo (0x43591e20: ms en m+0x18); sin esto la tarea gira sobre el reloj
             return bloquea(("sleep",), max(vm.rd(m + 0x18), 1))
-        datos = bytes(vm.uc.mem_read(m, 0x30)) if m else b""
+        datos = bytes(vm.uc.mem_read(m, vm.msz.get(m, 0x30))) if m else b""
+        cab = bytes(vm.uc.mem_read(m - 12, 12)) if m else b""
         if servicio_kernel(vm, q, m, t):
             if n == "osal_snd_msg" and m:  # asíncrono: la respuesta vuelve en el mismo búfer a la cola de msg−4
-                entrega(vm, vm.rd(m - 4), m)
+                rq = vm.rd(m - 4)
+                vm.wr(m - 4, q)  # el kernel cambia la cabecera: el receptor ve como origen la cola destino (av-cam: «rcv Invalid Src!»)
+                entrega(vm, rq, m)
             return E_OK
         if q in vm.queues or q in vm.qcb:
             entrega(vm, q, m)
         else:
-            vm.salida_ext.append((vm.t, t.name, n, q, datos.hex()))
+            vm.salida_ext.append((vm.t, t.name, n, q, datos.hex(), cab.hex()))
         return E_OK
     if n == "liro_osal_rcv_msg_tmo":
         cola = vm.queues.setdefault(a(0), collections.deque())
@@ -479,11 +486,17 @@ def api(vm: Vm, i: int) -> int | None:
         vm.log.append(f"{vm.t:9.1f} {t.name}: {n} '{nt.name}' entry={a(1):#x}")
         return tid
     if n == "osal_dynamic_id":  # (n, grupo, &qid): cola dinámica nueva del grupo (osal_uipc.ko); el número exacto no importa mientras sea único
+        if a(0) != 0x2A:  # otros tipos (0x4a: liberar; el 3.er argumento es el id, no un puntero) no devuelven nada
+            vm.queues.pop(a(2), None)
+            return E_OK
         vm.dyn_n += 1
         nq = (a(1) << 16) | (0x700 + vm.dyn_n)
         vm.queues.setdefault(nq, collections.deque())
         vm.wr(a(2), nq)
         return E_OK
+    if n == "osal_msg_size":  # tamaño útil del mensaje: bloques de 32 B de la cabecera (m−8) × 32 − 12 (libosal_uipc+0x4a0c, como en el shim)
+        bl = vm.rd(a(0) - 8, 1) or -(-(vm.msz.get(a(0), 0) + 12) // 32)
+        return bl * 32 - 12
     if n in ("osal_thread_id",):
         return t.tid
     if n in ("osal_subsystem_id",):
@@ -515,6 +528,7 @@ def servicio_kernel(vm: Vm, q: int, m: int, t: Task) -> bool:
     """Servicios que en la cámara dan los módulos del kernel; True si el mensaje queda atendido."""
     if q == 0x61003C and m:  # dmm.ko: av-cam 0x4394d74c pide AllocUnitNew {u16 1, s16 err, u32 tipo}; lee err +2, manejador +4, dirección +0x10
         orden = vm.rd(m, 2)
+        comp = vm.rd(m + 0x14, 2)
         vm.wr(m, orden | 0x8000, 2)  # la respuesta lleva el id de la orden con 0x8000 (av-cam: «ERR_DMM_DIFFERENT_COMP msg_id 5, my_id 0x8001»)
         if orden in (1, 5):
             vm.dmm_n += 1
@@ -524,7 +538,7 @@ def servicio_kernel(vm: Vm, q: int, m: int, t: Task) -> bool:
             vm.wr(m + 0x10, base)
             vm.wr(m + 8, base)  # INFERENCIA: el envoltorio 0x43a833fa lee dirección en +8 y tamaño en +0xc (→ *r1, *r2), 0x435c5126 los usa para su reserva lineal
             vm.wr(m + 0xC, DMM_UNIDAD)
-            vm.wr(m + 6, 0x1111, 2)  # INFERENCIA: 0x43620b12 exige 0x1111 en la respuesta (+6) para la petición con +0x14=0x1111
+            vm.wr(m + 6, comp, 2)  # INFERENCIA: la respuesta repite el u16 de la petición en +0x14 (0x1111 en la ruta síncrona de 0x43620a90, 0x55 en AsyncAllocNew); av-cam lo compara («DIFFERENT_COMP»)
             vm.log.append(f"{vm.t:9.1f} {t.name}: DMM orden {orden} ({'AllocUnitNew' if orden == 1 else 'OpenUnit'}) → {base:#x} (unidad {vm.dmm_n})")
         else:
             vm.wr(m + 2, 0, 2)
@@ -654,6 +668,9 @@ def planifica(vm: Vm, pasos_max: int) -> None:
             prox += [c[2] for c in vm.cycs.values() if c[3] and c[0]]
             if not prox:
                 vm.log.append(f"{vm.t:9.1f} sin tareas listas ni esperas con plazo: reposo")
+                return
+            if vm.limite is not None and min(prox) > vm.limite:
+                vm.t = max(vm.t, vm.limite)
                 return
             vm.t = min(prox)
             for x in vm.tasks.values():

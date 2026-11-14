@@ -19,6 +19,7 @@ import hashlib
 import io
 import json
 import os
+import queue
 import re
 import signal
 import socket
@@ -108,10 +109,16 @@ def msg_hora(ahora: float) -> bytes:
 
 
 class Vm:
-    def __init__(self, work: Path, pkg: str, perfil: str = "", red: dict | None = None) -> None:
+    def __init__(self, work: Path, pkg: str, perfil: str = "", red: dict | None = None, avcam: bool = False) -> None:
         net, net_args = red_args(red)
         self.red = red if net else {}
         shimenv = SHIMENV + net
+        self.puente = None
+        if avcam:  # av-cam (LIRO VM, scripts/gui/avcam) atiende las colas de kernel que im.elf le envía; ver puente.py
+            sys.path.insert(0, str(HERE.parent / "avcam"))
+            import puente
+            shimenv += " AVQ=" + ",".join(f"{q:x}" for q in puente.colas_avcam() if q > 0x100)
+            self.avq_cola: queue.Queue = queue.Queue()
         self.dir = work / "live" / (perfil or (Path(pkg).name if pkg else "sony"))
         self.dir.mkdir(parents=True, exist_ok=True)
         self.estado, self.ui, self.mon = self.dir / "estado.zst", self.dir / "ui.sock", self.dir / "mon.sock"
@@ -141,6 +148,9 @@ class Vm:
         self.sock: socket.socket | None = None
         self.cerrojo = threading.Lock()  # un solo guardado a la vez
         self.fps, self.coste = 0.0, ""
+        if avcam:
+            self.puente = puente.Puente(self.envia, self.dir / "avcam.jsonl")
+            threading.Thread(target=self.avq_hilo, daemon=True).start()
         threading.Thread(target=self.lector, daemon=True).start()
         threading.Thread(target=self.reloj, daemon=True).start()
         if not restaurar:
@@ -159,6 +169,11 @@ class Vm:
                 self.sock.sendall(datos)
             except OSError:
                 pass
+
+    def avq_hilo(self) -> None:
+        """Mensajes del invitado a av-cam, en orden y fuera del hilo lector."""
+        while True:
+            self.puente.desde_invitado(self.avq_cola.get())
 
     def reloj(self) -> None:
         """Pone la hora real en el invitado al conectar (también tras restaurar un estado de hace días) y la reajusta cada 30 s."""
@@ -179,6 +194,9 @@ class Vm:
             time.sleep(0.1)
         s = socket.socket(socket.AF_UNIX)
         s.connect(str(self.ui))
+        if self.puente and not self.restaurado:
+            self.sock = s
+            self.puente.reenvia_arranque()
         s.sendall(b"R\n")  # tras restaurar, el invitado reenvía la pantalla actual aunque no haya cambiado
         self.sock, buf, marcas, prev = s, b"", [], None
         while True:
@@ -192,6 +210,14 @@ class Vm:
                     if j < 0:
                         break
                     self.nv(buf[4:j].decode())
+                    buf = buf[j + 1:]
+                    continue
+                if buf.startswith(b"\x01AVQ "):  # AVQ qid tam cabecera cuerpo: mensaje de im.elf a una cola de av-cam
+                    j = buf.find(b"\n")
+                    if j < 0:
+                        break
+                    if self.puente:
+                        self.avq_cola.put(buf[5:j].decode())
                     buf = buf[j + 1:]
                     continue
                 if buf.startswith(b"\x01WL "):  # línea de diagnóstico del shim (WAITLOG): va a shim.log
@@ -410,6 +436,15 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
     return srv
 
 
+def avcam_disponible() -> bool:
+    """unicorn + av-cam.bin + liro.ko (los dos binarios no se versionan): sin ellos el arnés sigue funcionando como antes."""
+    try:
+        import unicorn  # noqa: F401
+    except ImportError:
+        return False
+    return all((HERE.parent.parent.parent / r).exists() for r in ("analysis/rea-independent/input/av-cam.bin", "analysis/camera-extract/usr/kmod/liro.ko"))
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("work", type=Path)
@@ -417,12 +452,16 @@ def main() -> None:
     ap.add_argument("--puerto", type=int, default=8600)
     ap.add_argument("--perfil-dir", default="", help="nombre del directorio de perfil en live/ (por defecto sony o el nombre del overlay)")
     ap.add_argument("--config", default="", help="config.json del configurador (mapa de teclas)")
+    ap.add_argument("--avcam", action=argparse.BooleanOptionalAction, default=None,
+                    help="conecta im.elf con av-cam ejecutado en la LIRO VM (puente.py); por defecto se activa si hay unicorn, av-cam.bin y liro.ko")
     ap.add_argument("--lanzador", default="", help="URL del configurador (enlace «volver»)")
     a = ap.parse_args()
     CONFIG.update(ruta=a.config, lanzador=a.lanzador)
+    if a.avcam is None:
+        a.avcam = avcam_disponible()
     from emu_config import carga_config
     red = carga_config(Path(a.config))["red"] if a.config else None
-    vm = Vm(a.work.resolve(), str(Path(a.pkg).resolve()) if a.pkg else "", a.perfil_dir, red)
+    vm = Vm(a.work.resolve(), str(Path(a.pkg).resolve()) if a.pkg else "", a.perfil_dir, red, a.avcam)
     srv = servidor(vm, a.puerto)
     print(f"http://127.0.0.1:{a.puerto}  ({'restaurando estado' if vm.restaurado else 'arranque en frío, ≈ 2,5 min hasta el menú'})", flush=True)
     for sig in (signal.SIGINT, signal.SIGTERM):  # salir = guardar el estado y cerrar QEMU
