@@ -176,7 +176,7 @@ static void backup_service(unsigned *m) {
         if (!getenv("NOBKMULTI") && readable((void *)id[0]) && readable((void *)id[1])) {
             const unsigned *ids = (const unsigned *)id[0]; unsigned char *out = (unsigned char *)id[1]; unsigned o = 0, k, l2, *dd;
             for (k = 0; k < 0x110 && (dd = bk_find(ids[k], &l2)); k++) { memcpy(out + o, dd, l2); o += l2; }
-            m[1] = 0; LOG("backup read_multi: %u ids, %u B", k, o); return; }
+            m[1] = k; LOG("backup read_multi: %u ids, %u B", k, o); return; }  /* retorno = nº de ids leídos (IMCfg: «Backup_read_multi() NG!!! readNum = 0» con 0) */
         LOG("backup op=5 n=%u id0=%#x id1=%#x (sin modelar)", n, id[0], id[1]); return; }
     default: LOG("backup op=%u n=%u id0=%#x (sin modelar)", op, n, id[0]);
     }
@@ -233,6 +233,8 @@ static unsigned dynq[256]; static int ndynq;  /* colas creadas por dynamic_id ti
 static pthread_mutex_t mbx_m = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t mbx_c = PTHREAD_COND_INITIALIZER;
 static void dynq_add(unsigned q) { pthread_mutex_lock(&mbx_m); if (ndynq < 256) dynq[ndynq++] = q; else LOG("dynq lleno: %#x sin buzón", q); pthread_mutex_unlock(&mbx_m); }
+static unsigned dynmade[256]; static int ndynmade;  /* colas creadas por osal_dynamic_id (tipo 0x2a): un snd_msg a ellas es de proceso a proceso y va a su buzón */
+static int dynmade_q(unsigned q) { for (int k = 0; k < ndynmade; k++) if (dynmade[k] == q) return 1; return 0; }
 static int is_dynq(unsigned q) { for (int k = 0; k < ndynq; k++) if (dynq[k] == q) return 1; return 0; }
 static void mbx_post(unsigned q, const unsigned *req, int req_id0) {  /* req_id0: dmpNative::InternalCmd (0x61003c) espera req_id 0 en +6 (medido con TRACEFN en 0x6a2612: r2=0xe copiado, r3=0 esperado) */
     unsigned char *b = calloc(1, 0x300); unsigned *body = (unsigned *)(b + 0x20); int k;
@@ -250,6 +252,8 @@ static void mbx_post(unsigned q, const unsigned *req, int req_id0) {  /* req_id0
 }
 /* SYNCMBX=qid_hex[,…]: colas con callback síncrono (reg_sync_msg_queue_cb) a las que el propio proceso envía con snd_msg: en la cámara esos envíos
  * los lee un hilo con rcv_msg (im.elf reenvía a 0x94016a lo que recibe de upm.ko); aquí se entregaban otra vez al callback (bucle). Van a un buzón sin tocar el cuerpo. */
+/* Colas de servicio de kernel que el shim atiende con acuse genérico (ACKQ, por defecto d9016e,7a0029,61003c): el receptor existe. */
+static int ackq_q(unsigned q) { const char *e = getenv("ACKQ"); if (!e) e = "d9016e,7a0029,61003c"; while (*e) { const char *n; unsigned v = hexv(e, &n); if (n == e) break; if (v == q) return 1; e = *n == ',' ? n + 1 : n; } return 0; }
 static int syncmbx_q(unsigned q) { const char *e = getenv("SYNCMBX"); while (e && *e) { const char *n; unsigned v = hexv(e, &n); if (n == e) break; if (v == q) return 1; e = *n == ',' ? n + 1 : n; } return 0; }
 static void mbx_post_raw(unsigned q, const unsigned *req) {
     unsigned char *b = calloc(1, 0x300); unsigned *body = (unsigned *)(b + 0x20); int k;
@@ -336,6 +340,18 @@ static void cb_call(void *cb, void *arg, void *msg) {  /* entrega cb(msg, arg) a
     pthread_mutex_unlock(&cb_m);
 }
 static void *vdfcb[16];  /* vdf (cola de kernel 0x80003b): comandos pares 2,4,6,8,9 = registro de callbacks de usuario (m[1]); 5 = actualización de pantalla */
+/* FRONTRM=estado_hex: el «Front» (módulo de kernel del front-end, no av-cam: ninguna cadena de av-cam trata soportes) informa a libInfraMediaDetect del slot de tarjeta extraíble por la cola de
+ * CallbackPointFromFront (libInfraMediaDetect.so+0xd638): cuerpo {2, ?, ?, EnFlag (bit0 = RM1), rm1 (bit0 hold, bits1–2 port_state, bits4–7 RemoveCnt), rm2, rm3} (p_frRMDATAGetMsg, ParseInternalMessage 0x1e2fc).
+ * FRONTRM=2 → RM1 habilitado, port_state 1 (INFERENCIA: 1 = tarjeta presente). Se envía 3 s tras registrar la cola, dentro de los 10 s que ThreadRM espera su primer evento. */
+static void *frontrm_th(void *a) {
+    unsigned q = (unsigned)(unsigned long)a; const char *e = getenv("FRONTRM"); unsigned st = e ? (unsigned)hexv(e, 0) : 0;
+    sleep(3);
+    unsigned char *b = calloc(1, 0x300); unsigned char *m = b + 0x20; m[-8] = 1;  /* cabecera de osal_msg_size: 1 bloque = 20 B */
+    ((unsigned *)m)[-1] = 0x28017c;  /* emisor: m_osalidForFrontMediaNotify (valor por defecto de la biblioteca) */
+    m[0] = 2; m[3] = 1; m[4] = (unsigned char)st;
+    int ok = cb_deliver(q, m); LOG("FRONTRM: RMDATA {en=1, rm1=%#x} a %#x: %s", st, q, ok ? "callback" : "SIN CALLBACK");
+    return 0;
+}
 static void *vdf_ack(void *a) {  /* petición c (1 exec, 3 break, 5 update, 7 mute) → callback registrado con el comando c+1 (2 exec_cb, 4 break_cb, 6 update_cb, 8 mute_cb); VDFUPD=99: diagnóstico */
     unsigned c = (unsigned)(unsigned long)a; usleep(3000);
     if (getenv("VDFUPD") && num(getenv("VDFUPD")) == 99) { static int once; if (once++) return 0; for (int k = 0; k < 16; k++) if (vdfcb[k]) { cb_call(vdfcb[k], 0, calloc(1, 256)); LOG("vdf: prueba callback del cmd %d (%p)", k, vdfcb[k]); usleep(500000); } return 0; }
@@ -503,6 +519,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             unsigned *t = (unsigned *)w[1];
             unsigned char *b = calloc(1, t[1] + 0x240);
             *(void **)t[0] = b + 0x20; avq_rec(b + 0x20, t[1]);
+            b[0x20 - 8] = (t[1] + 12 + 31) / 32 > 255 ? 255 : (t[1] + 12 + 31) / 32;  /* cabecera de osal_msg_size (bloques de 32 B − 12), como la fija el kernel al reservar; sin ella IMCfg rechazaba 0x1004 («Illegal Size») */
             if (getenv("VERB")) LOG("uipc valloc qid=%#x size=%u -> %p", w[0], t[1], b + 0x20);
             return 0; }
         case 0: LOG("uipc stat_sem %#x", w[0]); return 0;
@@ -528,6 +545,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             int k = cb_find(w[0]); if (k < 0 && ncbs < 128) k = ncbs++;
             if (k >= 0) { cbs[k].q = w[0]; cbs[k].cb = (void *)t[1]; cbs[k].arg = (void *)(t[3] == 1 ? t[2] : t[0]); }  /* t[3]==1: registro síncrono, el argumento va en t[2] (EventWrapper de libMWF) */
             pthread_mutex_unlock(&cb_m); avq_flush(w[0]);
+            if (getenv("FRONTRM") && ((t[1] & ~1u) & 0xfff) == 0x638 && w[0] >= 0xaf0000 && w[0] < 0xb00000) { pthread_t th; pthread_create(&th, 0, frontrm_th, (void *)(unsigned long)w[0]); pthread_detach(th); }  /* +0xd638 */
             { Dl_info di; const char *fn = "?"; unsigned long off = 0; if (dladdr((void *)(t[1] & ~1u), &di) && di.dli_fname) { fn = strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname; off = (t[1] & ~1u) - (unsigned long)di.dli_fbase; }
               LOG("uipc reg_%smsg_queue_cb qid=%#x arg=%#x cb=%#x (%s+%#lx) t2=%#x%s", t[3] == 1 ? "sync_" : "", w[0], t[0], t[1], fn, off, t[2], k < 0 ? " (tabla llena)" : ""); } return 0; }
         case 9: { pthread_mutex_lock(&cb_m); int k = cb_find(w[0]); if (k >= 0) cbs[k].q = 0; pthread_mutex_unlock(&cb_m); LOG("uipc unreg_msg_queue_cb qid=%#x", w[0]); return 0; }
@@ -535,8 +553,8 @@ static int ioctl_in(int fd, unsigned long req, ...) {
                       bloqueante mientras sea > 0: sin rellenarla quedaba basura y ObjRenderer se colgaba tras cada orden VDF (§5.18z⁸). shortcut: resto de campos a 0 (formato NO_VERIFICADO) */
             unsigned n = 0, *o = (unsigned *)w[1];
             pthread_mutex_lock(&mbx_m); for (int k = 0; k < 16; k++) if (mbx[k].msg && mbx[k].q == w[0]) n++; pthread_mutex_unlock(&mbx_m);
-            if (readable(o)) { o[0] = n; o[1] = o[2] = o[3] = 0; }
-            if (getenv("VERB")) LOG("uipc stat_msgq %#x -> %u pendientes", w[0], n); return 0; }
+            if (readable(o)) { o[0] = n; o[1] = ackq_q(w[0]); o[2] = o[3] = 0; }  /* palabra 1 ≠ 0 = hay receptor (InfraMediaDetectThreadRM::RegistInfraInput lo exige para 0x7a0029, input.ko); INFERENCIA del uso */
+            if (getenv("VERB") || ackq_q(w[0])) LOG("uipc stat_msgq %#x -> %u pendientes, receptor %d", w[0], n, ackq_q(w[0])); return 0; }
         case 5: {  /* snd_sync_msg {qid, &{msg, cb, arg}}: 0x8f013a es el registro de trazas (u16 + texto "%4X %s %s") */
             unsigned *t5 = (unsigned *)w[1];
             if (getenv("VERB5") && w[0] != 0x8f013a && w[0] != 0x720018) LOG("sync5 qid=%#x t5[1]=%#x", w[0], ((unsigned *)w[1])[1]);
@@ -545,7 +563,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             { static int ns5; const char *e = getenv("STACKQ"); if (e && hexv(e, 0) == w[0] && ++ns5 == 3) raise(SIGUSR1); }  /* STACKQ=qid: pila del emisor en el 3.er envío */
             { pthread_mutex_lock(&cb_m); int k = cb_find(w[0]); if (k >= 0) { t5[1] = (unsigned)cbs[k].cb; t5[2] = (unsigned)cbs[k].arg; } pthread_mutex_unlock(&cb_m);
               if (k >= 0) { if (getenv("VERB")) LOG("snd_sync_msg %#x -> callback directo", w[0]);
-                  if (getenv("MSGBODY") && readable(m)) { char h[400]; int o = 0; for (int q = 0; q < 24; q++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[q]); LOG("MSGBODY sync %#x %s", w[0], h); }
+                  if (getenv("MSGBODY") && readable(m)) { char h[400]; int o = 0; for (int q = 0; q < 24; q++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[q]); LOG("MSGBODY sync %#x cab=%08x %08x %08x %s", w[0], ((unsigned *)m)[-3], ((unsigned *)m)[-2], ((unsigned *)m)[-1], h); }
                   return 0; } }
             if (w[0] == 0x8f013a) { if (m[2] && getenv("KEYINITON") && strstr((char *)m + 2, getenv("KEYINITON"))) keyinit_send();
               if (m[2] && tron_base && strstr((char *)m + 2, getenv("TRACEON"))) { unsigned long b = tron_base; tron_base = 0; trace_fns(b); LOG("TRACEON: trazas armadas"); } if (m[2]) { menu_track((char *)m + 2); LOG("LOG %s", (char *)m + 2); } else if (getenv("VERB")) { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
@@ -560,7 +578,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
         case 12: {  /* dynamic_id {0, &{tipo, grupo, &id}}: tipo 0x32 = semáforo nuevo */
             static unsigned next = 0x4000;
             unsigned *t = (unsigned *)w[1];
-            if (t[0] == 0x2a && t[2]) { unsigned id = (t[1] << 16) | next++; *(unsigned *)t[2] = id; dynq_add(id); LOG("uipc dynamic_id cola -> %#x", id); }
+            if (t[0] == 0x2a && t[2]) { unsigned id = (t[1] << 16) | next++; *(unsigned *)t[2] = id; dynq_add(id); if (ndynmade < 256) dynmade[ndynmade++] = id; LOG("uipc dynamic_id cola -> %#x", id); }
             else if (t[0] == 0x32 && t[2]) { unsigned id = (t[1] << 16) | next++; *(unsigned *)t[2] = id; LOG("uipc dynamic_id sem -> %#x", id); }
             else LOG("uipc dynamic_id tipo=%#x grupo=%#x (sin salida)", t[0], t[1]);
             return 0; }
@@ -615,6 +633,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             if (w[0] == 0x9a015a || w[0] == 0x9c015b) { static int n; if (n++ < 4) raise(SIGUSR1); if (n > 5) { usleep(20000); return 0; } }  /* bucle HDMI: pila y silencio */
             if (getenv("VERB")) { char h[200]; int k, o = 0; for (k = -32; k < 32; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]); LOG("MSGHEX %#x %s", w[0], h); }
             if (avq_q(w[0])) { avq_forward(w[0], m); return 0; }
+            if (dynmade_q(w[0])) { mbx_post_raw(w[0], (unsigned *)m); LOG("snd_msg %#x -> buzón de cola dinámica w0=%#x", w[0], ((unsigned *)m)[0]); return 0; }
             LOG("uipc snd_msg a la cola de kernel %#x (descartado) cab=%02x%02x%02x%02x datos=%08x %08x", w[0], m[-12], m[-11], m[-10], m[-9],
                 ((unsigned *)m)[0], ((unsigned *)m)[1]); return 0; }
         case 6: { unsigned char *m = (unsigned char *)w[1]; char h[200]; int k, o = 0;
