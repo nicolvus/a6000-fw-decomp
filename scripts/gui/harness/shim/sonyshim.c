@@ -175,7 +175,9 @@ static void backup_service(unsigned *m) {
         /* read_multi(ids, buf): los datos de cada id, en orden y sin relleno, a buf (INFERENCIA: el recuento no viaja; la lista acaba en el primer id que no está en la tabla). NOBKMULTI=1 lo desactiva */
         if (!getenv("NOBKMULTI") && readable((void *)id[0]) && readable((void *)id[1])) {
             const unsigned *ids = (const unsigned *)id[0]; unsigned char *out = (unsigned char *)id[1]; unsigned o = 0, k, l2, *dd;
-            for (k = 0; k < 0x110 && (dd = bk_find(ids[k], &l2)); k++) { memcpy(out + o, dd, l2); o += l2; }
+            /* Backup_read_multi(ids[], destinos[]) (libObj+0x13cf18, InfraMediaConfig, 64 ids de 1 B): arg1 es una tabla de punteros de destino, uno por id (la tabla `ids` y la de punteros van aparte: medido en el desensamblado); el otro llamador (SetInit) pasa un búfer contiguo. Se distingue por si arg1[0] es un puntero legible. */
+            const unsigned *pp = (const unsigned *)out; int porptr = getenv("BKMULTIPTR") && pp[0] > 0x10000 && readable((void *)pp[0]);  /* BKMULTIPTR=1: opt-in; con él InfraMediaConfig ve los soportes y ObjMedia arranca, pero luego ObjCmdMgr cae en libObj+0x8456b4 (§5.8) y el arranque se congela */
+            for (k = 0; k < 0x110 && (dd = bk_find(ids[k], &l2)); k++) { if (porptr) memcpy((void *)pp[k], dd, l2); else memcpy(out + o, dd, l2); o += l2; }
             m[1] = k; LOG("backup read_multi: %u ids, %u B", k, o); return; }  /* retorno = nº de ids leídos (IMCfg: «Backup_read_multi() NG!!! readNum = 0» con 0) */
         LOG("backup op=5 n=%u id0=%#x id1=%#x (sin modelar)", n, id[0], id[1]); return; }
     default: LOG("backup op=%u n=%u id0=%#x (sin modelar)", op, n, id[0]);
@@ -345,7 +347,7 @@ static void *vdfcb[16];  /* vdf (cola de kernel 0x80003b): comandos pares 2,4,6,
  * FRONTRM=2 → RM1 habilitado, port_state 1 (INFERENCIA: 1 = tarjeta presente). Se envía 3 s tras registrar la cola, dentro de los 10 s que ThreadRM espera su primer evento. */
 static void *frontrm_th(void *a) {
     unsigned q = (unsigned)(unsigned long)a; const char *e = getenv("FRONTRM"); unsigned st = e ? (unsigned)hexv(e, 0) : 0;
-    sleep(3);
+    { const char *d = getenv("FRONTRMDELAY"); sleep(d ? atoi(d) : 40); }  /* tras ObjMedia::onStarting (≈ 28 s después del registro) */
     unsigned char *b = calloc(1, 0x300); unsigned char *m = b + 0x20; m[-8] = 1;  /* cabecera de osal_msg_size: 1 bloque = 20 B */
     ((unsigned *)m)[-1] = 0x28017c;  /* emisor: m_osalidForFrontMediaNotify (valor por defecto de la biblioteca) */
     m[0] = 2; m[3] = 1; m[4] = (unsigned char)st;
@@ -545,7 +547,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             int k = cb_find(w[0]); if (k < 0 && ncbs < 128) k = ncbs++;
             if (k >= 0) { cbs[k].q = w[0]; cbs[k].cb = (void *)t[1]; cbs[k].arg = (void *)(t[3] == 1 ? t[2] : t[0]); }  /* t[3]==1: registro síncrono, el argumento va en t[2] (EventWrapper de libMWF) */
             pthread_mutex_unlock(&cb_m); avq_flush(w[0]);
-            if (getenv("FRONTRM") && ((t[1] & ~1u) & 0xfff) == 0x638 && w[0] >= 0xaf0000 && w[0] < 0xb00000) { pthread_t th; pthread_create(&th, 0, frontrm_th, (void *)(unsigned long)w[0]); pthread_detach(th); }  /* +0xd638 */
+            if (getenv("FRONTRM") && ((t[1] & ~1u) & 0xfff) == 0x638 && w[0] >= 0xaf0000 && w[0] < 0xb00000) { pthread_t th; pthread_mutex_lock(&cb_m); int kk = cb_find(w[0]); if (kk >= 0 && getenv("FRONTARG2")) cbs[kk].arg = (void *)t[2]; pthread_mutex_unlock(&cb_m); LOG("FRONTRM: cola %#x t0=%#x [t0]=%#x t2=%#x", w[0], t[0], readable((void *)t[0]) ? *(unsigned *)t[0] : 0, t[2]); pthread_create(&th, 0, frontrm_th, (void *)(unsigned long)w[0]); pthread_detach(th); }  /* +0xd638 */
             { Dl_info di; const char *fn = "?"; unsigned long off = 0; if (dladdr((void *)(t[1] & ~1u), &di) && di.dli_fname) { fn = strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname; off = (t[1] & ~1u) - (unsigned long)di.dli_fbase; }
               LOG("uipc reg_%smsg_queue_cb qid=%#x arg=%#x cb=%#x (%s+%#lx) t2=%#x%s", t[3] == 1 ? "sync_" : "", w[0], t[0], t[1], fn, off, t[2], k < 0 ? " (tabla llena)" : ""); } return 0; }
         case 9: { pthread_mutex_lock(&cb_m); int k = cb_find(w[0]); if (k >= 0) cbs[k].q = 0; pthread_mutex_unlock(&cb_m); LOG("uipc unreg_msg_queue_cb qid=%#x", w[0]); return 0; }
