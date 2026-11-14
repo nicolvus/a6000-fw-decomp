@@ -677,7 +677,8 @@ static int ioctl_in(int fd, unsigned long req, ...) {
     }
     if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && getenv("SDIMG") && arg) {  /* SD emulada (INFERENCIA de los campos, medida en libInfraMediaCommon: mmc_mount/mmc_open/FUN_0001eac0) */
         unsigned *a = (unsigned *)arg, tot = sd_sectors();
-        if (!strcmp(devname[fd], "/dev/mmca-char") && req == 5) { memset(a, 0, 0xc0); ((unsigned char *)a)[0] = 3; a[0x20 / 4] = tot - 1; a[0x2c / 4] = 8192; a[0x34 / 4] = 512; LOG("SDIMG: ioctl 5 -> SD, %u sectores", tot); return 0; }
+        if (!strcmp(devname[fd], "/dev/mmca-char") && req == 5) { memset(a, 0, 0xc0); ((unsigned char *)a)[0] = 3; a[0x20 / 4] = tot - 1; a[0x2c / 4] = 8192; a[0x34 / 4] = 512;
+            { unsigned long long by = (unsigned long long)tot * 512; a[0x24 / 4] = (unsigned)by; a[0x28 / 4] = (unsigned)(by >> 32); }  /* capacidad en bytes (lo @+0x24, hi @+0x28): mcmn_drv_mmc_open la clasifica (hi 0 y lo ≤ 0x80000000 → 0x8200 SDSC; en otro caso hasta hi 8 → 0x8201 SDHC; más → 0x8202 SDXC); 4 GB = hi 1, lo 0 → SDHC */ LOG("SDIMG: ioctl 5 -> SD, %u sectores", tot); return 0; }
         if (!strcmp(devname[fd], "/dev/mmca") && (req == 0x10f || req == 0x110)) {  /* E/S de sectores del driver mmc (libInfraMediaCommon+0xec28 leer / +0xeb4c escribir): {estado, búfer, sector, nº de sectores}; INFERENCIA del orden de campos por la llamada de libInfraFsys (búfer, sector, cuenta) */
             unsigned long n = (unsigned long)a[3] * 512; off_t o = (off_t)a[2] * 512; ssize_t r = req == 0x10f ? pread(fd, (void *)a[1], n, o) : pwrite(fd, (void *)a[1], n, o);
             a[0] = r == (ssize_t)n ? 0 : 0x80000001u; sd_log(req == 0x10f ? "leer" : "escribir", fd, (long)a[2], (long)a[3], (long)r); return 0; }
