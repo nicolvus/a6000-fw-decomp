@@ -61,9 +61,9 @@ SHIMENV_BASE = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/STLREC
 SHIMEXTRA = os.environ.get("SHIMEXTRA", "")  # SHIMEXTRA="WAITLOG=3000": variables de diagnóstico del shim
 # Tarjeta SD emulada (G22-E §5.5–§5.15): conjunto mínimo para que ModelMedia vea una SD montada, salga EEStart sin PATCHFN y la pantalla de grabación se dibuje (--sin-sd lo apaga).
 # Incluye atajos (shortcut: comentados en sonyshim.c): INSHORT (inserción forzada), NULLMWF/TABLE0 (objetos de ObjCntMgr sin crear) y SKIPFN de métodos de ObjCntMgr/ObjMedia.
-# §5.35: onStarting de ObjCntMgr abortaba en SendDbCommand (libObj+0x826ed0: la cola 0x37807c de InfraDatabase no tiene receptor, osal_snd_sync_msg = 0xfffffc04) antes de crear 0x4b8, 0x4e8 y la tabla 0x117c.
-# Con 826ed0=0 esos componentes se crean por su ruta real y ya no hacen falta TABLE0 ni los SKIPFN 84569a/84570e/81685a/829d78…829fc0 (medido, 3 min estable).
-# shortcut: SendDbCommand devuelve OK sin servidor InfraDatabase (la respuesta no se rellena), mejorar cuando arranque InfraDatabase (Init de la libObj; probablemente bloqueado tras Ii 0c7 libmprctrl, que no termina).
+# §5.35–§5.36: onStarting de ObjCntMgr aborta en SendDbCommand (libObj+0x826ed0) si InfraDatabase aún no arrancó. InfraDatabase solo arranca cuando cierra Ii 0c7 libmprctrl (MprCtrl::Init espera
+# el CBID_GET_PRE_FIRST_MOUNT_INFO del hilo de órdenes del MPR); ese hilo no se creaba (libmpr pide prioridad RT 117–123; Linux admite 99); con SHIMEXTRA="RTCLAMP=1" cierra (≈ 40 s tras B, y 20 s después de onStarting), pero destapa un SIGSEGV de UpmWrapper (libmprctrl+0x1fcaf), por eso no va por defecto.
+# shortcut: SendDbCommand devuelve OK sin servidor InfraDatabase (la respuesta no se rellena), mejorar cuando Ii 0c7 cierre antes de ObjCntMgr::onStarting (hoy: 75 s frente a 54 s de arranque del invitado).
 TARJETA_SKIPFN = "7fa3d4=0,826ed0=0"
 TARJETA_ENV = ("BKMULTIPTR=1 FRONTRM=3 FRONTARG2=1 FRONTRMDELAY=3 INSHORT=1 SDIMG=1 SDSECT=8388608 NULLMWF=1 ")
 

@@ -1227,6 +1227,32 @@ int osal_snd_sync_msg(int qid, void *msg, void *cb, void *arg) {
     if (r && getenv("SYNCLOG")) { static int n; if (n++ < 200) { void *lr = __builtin_return_address(0); Dl_info di; int ok = dladdr(lr, &di); LOG("osal_snd_sync_msg qid=%#x ret=%#x lr=%p %s+%#lx msg=%08x %08x %08x", qid, r, lr, ok ? di.dli_fname : "?", ok ? (unsigned long)((char *)lr - (char *)di.dli_fbase) : 0, ((unsigned *)msg)[0], ((unsigned *)msg)[1], ((unsigned *)msg)[2]); } }
     return r;
 }
+/* RTCLAMP=1 (§5.36): osal_create_waitable_thread de libmpr pide prioridad RT 117–123 (medido con THREADLOG: modo=4, prioridad 0x75/0x78/0x7b); Linux solo admite ≤ 99, sched_setscheduler falla (EINVAL) y el hilo de órdenes del MPR no arranca (ret = -1024), con lo que MprCtrl::Init espera para siempre el CBID_GET_PRE_FIRST_MOUNT_INFO.
+ * shortcut: se recorta a sched_get_priority_max(policy) (la jerarquía relativa entre hilos RT se pierde); mejorar si hace falta respetar el orden entre prioridades > 99. */
+int sched_setscheduler(pid_t pid, int policy, const struct sched_param *p) {
+    static int (*real)(pid_t, int, const struct sched_param *); if (!real) real = dlsym(RTLD_NEXT, "sched_setscheduler");
+    if (getenv("RTCLAMP") && readable(p) && p->sched_priority > sched_get_priority_max(policy)) {
+        struct sched_param c = { sched_get_priority_max(policy) }; LOG("RTCLAMP prioridad %d -> %d (policy %d)", p->sched_priority, c.sched_priority, policy); return real(pid, policy, &c); }
+    return real(pid, policy, p);
+}
+/* THREADLOG=1 (diagnóstico, §5.36): registra osal_create_waitable_thread (entrada = libmpr/libXXX+off, retorno) y osal_exit_thread (quién sale); no cambia el comportamiento. */
+static void thr_fn(const char *tag, void *a, int r, void *lr, unsigned m1, unsigned m5) { Dl_info di; const char *f = "?"; unsigned long o = 0;
+    if (dladdr(a, &di) && di.dli_fname) { f = strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname; o = (unsigned long)a - (unsigned long)di.dli_fbase; }
+    Dl_info dl; const char *lf = "?"; unsigned long lo = 0;
+    if (dladdr(lr, &dl) && dl.dli_fname) { lf = strrchr(dl.dli_fname, '/') ? strrchr(dl.dli_fname, '/') + 1 : dl.dli_fname; lo = (unsigned long)lr - (unsigned long)dl.dli_fbase; }
+    LOG("THREADLOG %s entrada=%s+%#lx ret=%d desde %s+%#lx modo=%u mascara=%#x", tag, f, o, r, lf, lo, m1, m5); }
+int osal_create_waitable_thread(void *p, void *h) {
+    static int (*real)(void *, void *); if (!real) real = dlsym(RTLD_NEXT, "osal_create_waitable_thread");
+    int r = real ? real(p, h) : -1;
+    if (getenv("THREADLOG") && readable(p)) thr_fn("create", ((void **)p)[2], r, __builtin_return_address(0), ((unsigned *)p)[1], ((unsigned *)p)[5]);
+    return r;
+}
+void osal_exit_thread(int c) {
+    static void (*real)(int); if (!real) real = dlsym(RTLD_NEXT, "osal_exit_thread");
+    if (getenv("THREADLOG")) thr_fn("exit", 0, c, __builtin_return_address(0), 0, 0);
+    if (real) real(c);
+    for (;;) pause();
+}
 /* ModelManager::pushEvent(Event*): PUSHLOG=1 registra quién publica eventos de modelo (lr y primeras palabras del Event) */
 int _ZN12ModelManager9pushEventEP5Event(void *mm, unsigned *ev) {
     static int (*real)(void *, void *);

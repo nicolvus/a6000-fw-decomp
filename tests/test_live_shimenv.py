@@ -14,7 +14,7 @@ def test_shimenv_por_defecto_trae_la_sd_emulada():
     for k in ("SDIMG", "SDSECT", "FRONTRM", "BKMULTIPTR", "INSHORT", "NULLMWF"):
         assert k in v, k
     assert v["SDSECT"] == "8388608"  # 4 GB / 512 B
-    assert v["SKIPFN"].startswith("7fa3d4=0,") and "826ed0=0" in v["SKIPFN"]  # el SKIPFN base se amplía, no se duplica
+    assert v["SKIPFN"] == "7fa3d4=0,826ed0=0"  # §5.36: un único atajo de ObjCntMgr (SendDbCommand)
     assert live.construye_shimenv(True, "").count("SKIPFN=") == 1
 
 
@@ -55,7 +55,13 @@ def test_quita_retira_variables_y_direcciones_de_skipfn():
 def test_atajos_de_objcntmgr_sustituidos_por_senddbcommand():
     """§5.35: con SendDbCommand (0x826ed0) forzado a OK, onStarting crea de verdad 0x4b8, 0x4e8 y la tabla 0x117c: TABLE0 y los SKIPFN del componente de estado sobran."""
     env = live.construye_shimenv(True, quita="")
-    assert "826ed0=0" in env and "TABLE0" not in env
+    assert "826ed0=0" in env and "TABLE0" not in env  # §5.36: InfraDatabase arranca con RTCLAMP pero 37 s después de onStarting
     for a in ("81685a", "829d78", "829da0", "829de8", "829e70", "829eb8", "829f00", "829faa", "829fc0"):
         assert f"{a}=0" not in env
     assert "84569a=0" not in env and "84570e=0" not in env  # el aviso de temperatura ya no cae: el objeto existe
+
+
+def test_rtclamp_es_opt_in():
+    """§5.36: RTCLAMP=1 (SHIMEXTRA) hace que el hilo de órdenes del MPR arranque (libmpr pide prioridad RT 117–123 > 99) y cierre Ii 0c7, pero destapa un SIGSEGV de UpmWrapper: no va por defecto."""
+    assert "RTCLAMP" not in live.construye_shimenv(True, "")
+    assert "RTCLAMP=1" in live.construye_shimenv(True, "RTCLAMP=1")
