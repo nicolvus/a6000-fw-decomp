@@ -675,3 +675,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 14-11-2026: G22-E tarea 21: la vista pide el info 0x35 del modelo 0xb solo 2 veces; 0x4d1984 guarda el AE cada segundo sin notificar a las vistas; 0x53 lo piden los modelos 0x5a/0xa (§5.27).
 - 14-11-2026: G22-E tarea 22: estado 8 con DISPx8: 4 disenos que pintan EV (+0,5 por modo), ISO AUTO, 24M FINE 3:2, AWB A2 G1 pero no velocidad/f/icono de modo; falta traza de retorno de getModelInfo y emisor de info cambiado (§5.28).
 - 14-11-2026: G22-E tarea 23: causa del modo ausente: ModeToSetInitParam no se ejecuta (modo 0x7fffffff al primer getRecViewFromDial, 0,28 s tras KEYINIT) -> SetInit sin modo -> nunca SET_EXPOSURE_MODE_CMD; LIVE_MODO_TRAS opt-in (§5.29).
+- 14-11-2026: G22-E tarea 24: SendEventInitData solo redistribuye estado guardado (sin peticion al driver); ModeToSetInitParam no corre ni con KEYINIT temprano: corrige 5.29; sin cambios de codigo (§5.30).
