@@ -672,3 +672,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 14-11-2026: G22-E tarea 18: dial 0-15 al arrancar (solo 2 = iAUTO+ rica; ninguno P); giro automatico a P no fiable; wrapperShutterSpeed.so/wrapperAperture.so/wrapperIso.so son bibliotecas propias aun sin trazar (§5.24).
 - 14-11-2026: G22-E tarea 19: 0x7025 = KEY_POS_MODE_DIAL verificado; wrapper*.so no se cargan (corrige §5.24, sin armado diferido); vista rica de iAUTO+ no reproducible en v1; sin cambios de codigo (§5.25).
 - 14-11-2026: G22-E tarea 20: la vista rica exige DISPx3 antes de Fn (escaneos previos solo con Fn invalidos); estados 8/9 dan diseno de disparo con ISO AUTO (PASM probable); KEYINITAFTER en el shim; inhibicion del dial documentada (§5.26).
+- 14-11-2026: G22-E tarea 21: la vista pide el info 0x35 del modelo 0xb solo 2 veces; 0x4d1984 guarda el AE cada segundo sin notificar a las vistas; 0x53 lo piden los modelos 0x5a/0xa (§5.27).
