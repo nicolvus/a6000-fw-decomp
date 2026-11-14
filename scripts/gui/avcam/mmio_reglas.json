@@ -21,6 +21,16 @@
    "y": "0x1",
    "pc": "0x4393278c, 0x439328c4, 0x43932928",
    "evidencia": "mismos bloques: escribe 1 en +0x30 y espera leer 0; INFERENCIA: arranque que se borra solo"
+  },
+  {
+   "rango": [
+    "0xf2000000",
+    "0xf2100000"
+   ],
+   "desp": "0x018",
+   "o": "0x80",
+   "pc": "0x43b5e770, 0x43b5e776",
+   "evidencia": "bloques 0xf200X000: tsk 0x38 vacía la FIFO (lee +0x8c) hasta que +0x18 bit 7 sube; INFERENCIA: FIFO vacía (UART/SPI de 'Senser')"
   }
  ]
 }

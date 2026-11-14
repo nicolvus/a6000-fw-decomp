@@ -54,8 +54,9 @@ REGLAS = Path(__file__).with_name("mmio_reglas.json")
 BASE, IMG_LO, IMG_SZ = 0x43541000, 0x43540000, 0x00D00000   # imagen + .data/.bss (hasta 0x44240000)
 TRAP_BASE, NAPI = 0xFFF00000, 209
 TASK_EXIT = TRAP_BASE + 4 * NAPI                              # retorno de una tarea / entrada → fin
-HEAP, HEAP_SZ = 0x50000000, 0x04000000
+HEAP, HEAP_SZ = 0x50000000, 0x0C000000
 STACKS, STACK_SZ = 0x60000000, 0x10000
+STACK_MAP = 0x04000000                                        # 1024 pilas de 64 KiB
 E_OK, E_TMOUT, E_NOEXS, E_PAR = 0, -50, -42, -17
 TMO_POL, TMO_FEVR = 0, -1
 QUANTUM = 200_000                                             # instrucciones por turno antes de ceder
@@ -103,6 +104,11 @@ class Vm:
     sems: dict[int, list] = field(default_factory=dict)     # id → [cuenta, máx]
     flgs: dict[int, int] = field(default_factory=dict)
     mbxs: dict[int, collections.deque] = field(default_factory=dict)
+    mbfs: dict[int, collections.deque] = field(default_factory=dict)
+    slots: dict[int, int] = field(default_factory=dict)
+    libres: list[int] = field(default_factory=list)
+    nslots: int = 0
+    ncb: int = 0
     queues: dict[int, collections.deque] = field(default_factory=dict)   # colas OSAL locales (por qid)
     qcb: dict[int, tuple] = field(default_factory=dict)                   # qid → (callback, arg)
     cycs: dict[int, list] = field(default_factory=dict)                   # id → [handler, periodo, prox, activo, exinf]
@@ -168,7 +174,8 @@ def carga(avcam: Path, bkp: Path) -> Vm:
     uc.mem_map(TRAP_BASE, 0x1000)
     uc.mem_write(TRAP_BASE, b"\x1e\xff\x2f\xe1" * (NAPI + 1))  # bx lr (nunca se ejecuta: la trampa para antes)
     uc.mem_map(HEAP, HEAP_SZ)
-    uc.mem_map(STACKS, 0x01000000)
+    uc.mem_map(STACKS, STACK_MAP)
+    uc.mem_map(0x80000000, 0x04000000)  # shortcut: RAM física (gl_common/ISP, p. ej. 0x82d90000) como memoria llana; el mapa real está en DmmConfig.bin (ausente)
     names = api_names()
     desc = struct.unpack_from("<I", img, 0x14)[0]
     uc.mem_write(desc + 0x24, b"".join(struct.pack("<I", TRAP_BASE + 4 * i if names[i] else 0) for i in range(NAPI)))
@@ -224,7 +231,10 @@ def carga(avcam: Path, bkp: Path) -> Vm:
 def crea_tarea(vm: Vm, tid: int, name: str, entry: int, pri: int, r0: int = 0) -> Task:
     previo = vm.uc.context_save()
     t = Task(tid, name, entry, pri)
-    sp = STACKS + 0x01000000 - STACK_SZ * (len(vm.tasks) + 1)
+    if tid not in vm.slots:  # una pila por tarea (reiniciarla la reutiliza); las efímeras (cb/cyc) devuelven la suya al terminar
+        vm.slots[tid] = vm.libres.pop() if vm.libres else vm.nslots + 1
+        vm.nslots = max(vm.nslots, vm.slots[tid])
+    sp = STACKS + STACK_MAP - STACK_SZ * vm.slots[tid]
     uc = vm.uc
     uc.reg_write(UC_ARM_REG_SP, sp)
     uc.reg_write(UC_ARM_REG_LR, TASK_EXIT)
@@ -373,6 +383,24 @@ def api(vm: Vm, i: int) -> int | None:
             vm.wr(a(1), buz.popleft())
             return E_OK
         return bloquea(("mbx", a(0), a(1)), sgn(a(2)))
+    if n == "tsnd_mbf":  # (id, msg, tam, tmo): µITRON 4 mensaje de tamaño variable; shortcut: sin límite de tamaño del búfer
+        dato = bytes(vm.uc.mem_read(a(1), a(2)))
+        w = [x for x in vm.tasks.values() if x.estado == "espera" and x.espera[:2] == ("mbf", a(0))]
+        if w:
+            vm.uc.mem_write(w[0].espera[2], dato)
+            despierta(vm, w[0], len(dato))
+        else:
+            vm.mbfs.setdefault(a(0), collections.deque()).append(dato)
+        return E_OK
+    if n == "trcv_mbf":  # (id, &buf, tmo) → tamaño recibido
+        buz = vm.mbfs.setdefault(a(0), collections.deque())
+        if buz:
+            dato = buz.popleft()
+            vm.uc.mem_write(a(1), dato)
+            return len(dato)
+        return bloquea(("mbf", a(0), a(1)), sgn(a(2)))
+    if n == "rel_mpf":
+        return E_OK
     if n in ("tget_mpf", "tget_mpl"):
         sz = 0x1000 if n == "tget_mpf" else a(1)
         vm.wr(a(2) if n == "tget_mpl" else a(1), vm.malloc(sz))
@@ -426,6 +454,8 @@ def api(vm: Vm, i: int) -> int | None:
         return E_OK
     if n in ("osal_snd_msg", "osal_snd_sync_msg", "osal_snd_sync_direct"):
         q, m = a(0), a(1)
+        if q == 0x910041 and m:  # sleep(ms) del núcleo (0x43591e20: ms en m+0x18); sin esto la tarea gira sobre el reloj
+            return bloquea(("sleep",), max(vm.rd(m + 0x18), 1))
         datos = bytes(vm.uc.mem_read(m, 0x30)) if m else b""
         if servicio_kernel(vm, q, m, t):
             if n == "osal_snd_msg" and m:  # asíncrono: la respuesta vuelve en el mismo búfer a la cola de msg−4
@@ -492,12 +522,16 @@ def servicio_kernel(vm: Vm, q: int, m: int, t: Task) -> bool:
             vm.wr(m + 2, 0, 2)
             vm.wr(m + 4, vm.dmm_n, 2)
             vm.wr(m + 0x10, base)
+            vm.wr(m + 8, base)  # INFERENCIA: el envoltorio 0x43a833fa lee dirección en +8 y tamaño en +0xc (→ *r1, *r2), 0x435c5126 los usa para su reserva lineal
+            vm.wr(m + 0xC, DMM_UNIDAD)
+            vm.wr(m + 6, 0x1111, 2)  # INFERENCIA: 0x43620b12 exige 0x1111 en la respuesta (+6) para la petición con +0x14=0x1111
             vm.log.append(f"{vm.t:9.1f} {t.name}: DMM orden {orden} ({'AllocUnitNew' if orden == 1 else 'OpenUnit'}) → {base:#x} (unidad {vm.dmm_n})")
         else:
             vm.wr(m + 2, 0, 2)
             vm.log.append(f"{vm.t:9.1f} {t.name}: DMM orden {orden} sin modelar (responde 0)")
         return True
     if q == 0x910042 and m and vm.rd(m) == 0x20:  # reloj del núcleo: µs (64 bit) en m[6..7], como el shim de la UI
+        vm.t += 0.01  # shortcut: cada lectura del reloj cuesta 10 µs virtuales, para que los sondeos de tiempo (esperas activas) terminen
         us = int(vm.t * 1000)
         vm.wr(m + 24, us & 0xFFFFFFFF)
         vm.wr(m + 28, us >> 32)
@@ -521,7 +555,8 @@ def entrega(vm: Vm, q: int, m: int) -> None:
     if q in vm.qcb:
         cb, arg = vm.qcb[q]
         viejo = vm.cur
-        h = crea_tarea(vm, 0x20000 + len(vm.tasks), f"cb{q:#x}", cb, -1, m)
+        vm.ncb += 1
+        h = crea_tarea(vm, 0x20000 + vm.ncb, f"cb{q:#x}", cb, -1, m)
         vm.uc.context_restore(h.ctx)
         vm.uc.reg_write(UC_ARM_REG_R1, arg)
         h.ctx = vm.uc.context_save()
@@ -572,7 +607,7 @@ def corre(vm: Vm, t: Task, cupo: int) -> None:
             sp = uc.reg_read(UC_ARM_REG_SP)
             pila = [w for w in struct.unpack("<128I", uc.mem_read(sp, 512)) if 0x43541000 <= w < 0x43fa0000 and w & 1]
             vm.log.append(f"{vm.t:9.1f} {t.name}: ERROR {e} pc={uc.reg_read(UC_ARM_REG_PC):#x} lr={uc.reg_read(UC_ARM_REG_LR):#x} {vm.fallo} "
-                          f"pila≈{[hex(w) for w in pila[:12]]}")
+                          f"r0-r7={[hex(uc.reg_read(UC_ARM_REG_R0 + k)) for k in range(8)]} pila≈{[hex(w) for w in pila[:12]]}")
             break
         restante = 0 if vm.trampa is None else restante - 1
         if vm.trampa is None:
@@ -603,6 +638,7 @@ def planifica(vm: Vm, pasos_max: int) -> None:
                 if h.estado == "espera":
                     vm.log.append(f"{vm.t:9.1f} cyc{cid:#x}: el manejador se bloqueó (no permitido en μITRON)")
                 del vm.tasks[h.tid]
+                vm.libres.append(vm.slots.pop(h.tid))
                 total += QUANTUM // 10
         while vm.pendientes_cb:  # callbacks de cola: se ejecutan hasta volver (contexto de kernel en la cámara)
             h = vm.pendientes_cb.pop(0)
@@ -610,6 +646,7 @@ def planifica(vm: Vm, pasos_max: int) -> None:
             if h.estado == "espera":
                 vm.log.append(f"{vm.t:9.1f} {h.name}: el callback quedó bloqueado")
             vm.tasks.pop(h.tid, None)
+            vm.libres.append(vm.slots.pop(h.tid))
             total += QUANTUM // 10
         listas = sorted((x for x in vm.tasks.values() if x.estado == "lista"), key=lambda x: (x.pri, x.tid))
         if not listas:
@@ -621,7 +658,7 @@ def planifica(vm: Vm, pasos_max: int) -> None:
             vm.t = min(prox)
             for x in vm.tasks.values():
                 if x.estado == "espera" and x.despertar is not None and x.despertar <= vm.t:
-                    despierta(vm, x, E_TMOUT)
+                    despierta(vm, x, E_OK if x.espera == ("sleep",) else E_TMOUT)
             continue
         for x in listas:
             corre(vm, x, QUANTUM)
