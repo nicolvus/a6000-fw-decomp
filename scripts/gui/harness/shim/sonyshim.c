@@ -170,6 +170,14 @@ static void backup_service(unsigned *m) {
         } else LOG("backup write id=%#x sin registro o buffer ilegible", wid);
         return;  /* sin la línea de registro genérica: id[0] no es el id */
     }
+    case 5: {  /* read_multi(tabla, nº): diagnóstico (BKMULTI=1 vuelca la tabla) */
+        if (getenv("BKMULTI") && readable((void *)id[0])) { char h[400]; int o = 0; for (int k = 0; k < 24; k++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)id[0])[k]); LOG("backup read_multi tabla=%#x arg1=%#x: %s", id[0], id[1], h); }
+        /* read_multi(ids, buf): los datos de cada id, en orden y sin relleno, a buf (INFERENCIA: el recuento no viaja; la lista acaba en el primer id que no está en la tabla). NOBKMULTI=1 lo desactiva */
+        if (!getenv("NOBKMULTI") && readable((void *)id[0]) && readable((void *)id[1])) {
+            const unsigned *ids = (const unsigned *)id[0]; unsigned char *out = (unsigned char *)id[1]; unsigned o = 0, k, l2, *dd;
+            for (k = 0; k < 0x110 && (dd = bk_find(ids[k], &l2)); k++) { memcpy(out + o, dd, l2); o += l2; }
+            m[1] = 0; LOG("backup read_multi: %u ids, %u B", k, o); return; }
+        LOG("backup op=5 n=%u id0=%#x id1=%#x (sin modelar)", n, id[0], id[1]); return; }
     default: LOG("backup op=%u n=%u id0=%#x (sin modelar)", op, n, id[0]);
     }
     if (getenv("BKV") || !d) LOG("backup op=%u n=%u id=%#x len=%u r=%#x %s", op, n, id[0], len, m[1], d ? "" : "ausente");
@@ -1434,6 +1442,14 @@ static void avq_flush(unsigned q) {  /* im.elf acaba de registrar/esperar en q: 
     }
     pthread_mutex_unlock(&avq_pm);
 }
+/* «F desp_hex a0 a1 a2 a3» (live.py /linea): llama en caliente a libObj+desp(a0..a3) en un hilo propio (diagnóstico: p. ej. el despachador de acciones de ModelStillRec, 69c608(this, id)) */
+static void *fnhot(void *a) {
+    const char *e; char *ln = a; unsigned long off = hexv(ln, &e), v[4]; for (int k = 0; k < 4; k++) { v[k] = *e == ' ' ? hexv(e + 1, &e) : 0; }
+    Dl_info di; void *sym = lobj_h ? dlsym(lobj_h, "_ZN12ModelManager9pushEventEP5Event") : 0;
+    if (!sym || !dladdr(sym, &di)) { LOG("F: sin base de libObj"); free(a); return 0; }
+    unsigned long (*f)(unsigned long, unsigned long, unsigned long, unsigned long) = (void *)((unsigned long)di.dli_fbase + off + 1);
+    LOG("F libObj+%#lx(%#lx,%#lx,%#lx,%#lx) ...", off, v[0], v[1], v[2], v[3]); unsigned long r = f(v[0], v[1], v[2], v[3]); LOG("F -> %#lx", r); free(a); return 0;
+}
 static void *startevhot(void *a) { startev(a); free(a); return 0; }
 static void *acqhot(void *a) { acquire_status((int)hexv(a, 0)); free(a); return 0; }
 static void *modelhot(void *a) { model_create(a); free(a); return 0; }
@@ -1457,6 +1473,7 @@ static void *live_keys(void *a) {
             if (ln[0] == 'O') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, openhot, nm); pthread_detach(th); }  /* «O vista»: viewManagerIf::openView(vista, 0) en caliente */
             if (ln[0] == 'Y') date_type = (int)hexv(ln + 2, &e);
             if (ln[0] == 'Q' && ln[1] == ' ') avq_inject(ln + 2);
+            if (ln[0] == 'F' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, fnhot, nm); pthread_detach(th); }
             if (ln[0] == 'R') live_force = 1;  /* el anfitrión se acaba de conectar (p. ej. tras restaurar el estado): reenviar el fotograma actual */
             if (ln[0] == 'K') { unsigned m[12] = {0}; static int swallow; m[0] = hexv(ln + 2, &e); m[2] = hexv(e + 1, &e); m[4] = hexv(e + 1, &e);
                 if (m[0] == 0x1ab && m[2] == 1 && !menu_open) { swallow = 1; menu_open = 1; pthread_t th; pthread_create(&th, 0, openhot, strdup("@V00E")); pthread_detach(th); LOG("MENU con el menú cerrado: openView @V00E"); }
