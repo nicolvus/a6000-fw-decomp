@@ -37,6 +37,8 @@ from PIL import Image
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
 import isp_web
+import sd_emu
+import sd_image
 import run
 import sensor_web
 
@@ -133,7 +135,10 @@ class Vm:
         if not restaurar:  # el estado guardado solo vale con el mismo initrd (tamaño de las ROM de QEMU); en frío se rehace con la NVRAM actual
             import tempfile
             with tempfile.TemporaryDirectory() as t:
-                escribe_atomico(initrd, run.build_initrd(work, HERE / "im.sh", Path(t), shimenv, pkg, self.nvram).read_bytes())
+                cabeza = None
+                if "SDIMG=1" in shimenv:  # SD legible: imagen FAT32 de la carpeta de sd_emu (sectores en SDSECT, que ya va en shimenv)
+                    cabeza = Path(t) / "sd.head"; sd_image.construye(sd_emu.raiz_sd(""), cabeza, 4.0)
+                escribe_atomico(initrd, run.build_initrd(work, HERE / "im.sh", Path(t), shimenv, pkg, self.nvram, cabeza).read_bytes())
             sello.write_text(actual)
         for s in (self.ui, self.mon):
             s.unlink(missing_ok=True)

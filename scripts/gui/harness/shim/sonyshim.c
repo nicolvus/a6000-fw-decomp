@@ -94,6 +94,7 @@ static int real_open_call(const char *p, int fl, mode_t m, int is64) {
     return (is64 ? o64 : o)(p, fl, m);
 }
 
+static unsigned sd_sectors(void) { const char *e = getenv("SDSECT"); unsigned v = 0; while (e && *e >= '0' && *e <= '9') v = v * 10 + *e++ - '0'; return v ? v : 8388608; }
 static int fake_open(const char *p, int fl, mode_t m, int is64) {
     if (strncmp(p, "/dev/", 5) != 0 && strncmp(p, "/proc/self", 10) != 0 && strncmp(p, "/tmp/", 5) != 0) {
         int r = real_open_call(p, fl, m, is64); LOG("open(%s) -> %d", p, r); return r;
@@ -106,6 +107,11 @@ static int fake_open(const char *p, int fl, mode_t m, int is64) {
         fd = real_open_call("/tmp/uipc.shm", O_RDWR | O_CREAT, 0666, is64);
         unsigned v = 8;
         if (fd >= 0) { ftruncate(fd, 0x80000); pwrite(fd, &v, 4, 0x10); }  /* [base+0x10] = nº de hilos proxy que arranca u_osal_reg_msg_queue_cb */
+    } else if (!strcmp(p, "/dev/mmca") && getenv("SDIMG")) {  /* SD emulada legible: /sd.img = disco de SDSECT sectores (hueco disperso) con la cabeza FAT32 de sd_image.py (/usr/share/sd.head) encima */
+        static int listo; if (!listo) { listo = 1; int h = real_open_call("/usr/share/sd.head", O_RDONLY, 0, is64), d = real_open_call("/sd.img", O_RDWR | O_CREAT | O_TRUNC, 0666, is64);
+            if (h >= 0 && d >= 0) { ftruncate(d, (off_t)sd_sectors() * 512); char b[65536]; ssize_t n; off_t o = 0; while ((n = read(h, b, sizeof b)) > 0) { pwrite(d, b, n, o); o += n; } LOG("SDIMG: /sd.img %u sectores, cabeza %ld B", sd_sectors(), (long)o); }
+            if (h >= 0) close(h); if (d >= 0) close(d); }
+        fd = real_open_call("/sd.img", fl & ~0x10000 /* sin O_DIRECT: tmpfs no lo admite */, 0, is64);
     } else
         fd = real_open_call("/dev/null", O_RDWR, 0, is64);  /* dispositivo no modelado: fd inerte, queda registrado */
     if (fd >= MAXFD) { LOG("open(%s): fd %d >= MAXFD, sin modelar", p, fd); return fd; }
@@ -487,10 +493,24 @@ static void *systat_thread(void *a) {
     return 0;
 }
 /* read/poll/select sobre dispositivos «genéricos» (= /dev/null): sin esto devuelven al instante (EOF/listo) y el hilo del driver (UsbControl, I-InputRepeat…) gira al 100 % */
+static int sd_fd(int fd); static void sd_log(const char *op, int fd, long a, long b, long r);
 ssize_t read(int fd, void *b, size_t n) {
     static ssize_t (*real)(int, void *, size_t); if (!real) real = dlsym(RTLD_NEXT, "read");
-    if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC) { if (getenv("SYSTAT")) systat_add(fd, 0x100000, 0); if (!getenv("NOBLOCKDEV")) for (;;) sleep(3600); }
-    return real(fd, b, n);
+    if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && !(getenv("SDIMG") && !strcmp(devname[fd], "/dev/mmca"))) { if (getenv("SYSTAT")) systat_add(fd, 0x100000, 0); if (!getenv("NOBLOCKDEV")) for (;;) sleep(3600); }
+    { ssize_t r = real(fd, b, n); if (sd_fd(fd)) sd_log("read", fd, 0, (long)n, (long)r); return r; }
+}
+/* SDIMG: traza de E/S sobre la imagen (primeras 80 llamadas) para ver qué lee libInfraFsys */
+static int sd_fd(int fd) { return fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && !strcmp(devname[fd], "/dev/mmca") && getenv("SDIMG"); }
+static void sd_log(const char *op, int fd, long a, long b, long r) { static int n; if (n++ < 80) LOG("SDIO %s fd=%d a=%ld b=%ld -> %ld", op, fd, a, b, r); }
+off64_t lseek64(int fd, off64_t o, int w) { static off64_t (*real)(int, off64_t, int); if (!real) real = dlsym(RTLD_NEXT, "lseek64"); off64_t r = real(fd, o, w); if (sd_fd(fd)) sd_log("lseek64", fd, (long)(o / 512), w, (long)(r / 512)); return r; }
+ssize_t pread64(int fd, void *b, size_t n, off64_t o) { static ssize_t (*real)(int, void *, size_t, off64_t); if (!real) real = dlsym(RTLD_NEXT, "pread64"); ssize_t r = real(fd, b, n, o); if (sd_fd(fd)) sd_log("pread64", fd, (long)(o / 512), (long)n, (long)r); return r; }
+ssize_t pwrite64(int fd, const void *b, size_t n, off64_t o) { static ssize_t (*real)(int, const void *, size_t, off64_t); if (!real) real = dlsym(RTLD_NEXT, "pwrite64"); ssize_t r = real(fd, b, n, o); if (sd_fd(fd)) sd_log("pwrite64", fd, (long)(o / 512), (long)n, (long)r); return r; }
+long syscall(long n, ...) {  /* SDIMG: libInfraMediaCommon importa syscall(); se registra lo que haga sobre la imagen (fd en el primer argumento) */
+    static long (*real)(long, long, long, long, long, long, long); if (!real) real = dlsym(RTLD_NEXT, "syscall");
+    va_list ap; va_start(ap, n); long a0 = va_arg(ap, long), a1 = va_arg(ap, long), a2 = va_arg(ap, long), a3 = va_arg(ap, long), a4 = va_arg(ap, long), a5 = va_arg(ap, long); va_end(ap);
+    long r = real(n, a0, a1, a2, a3, a4, a5);
+    { static __thread int en; if (!en && n != 224 && getenv("SDIMG") && sd_fd((int)a0)) { en = 1; sd_log("syscall", (int)a0, n, a2, r); en = 0; } }
+    return r;
 }
 /* WAITLOG: esperas del sistema (no UIPC) que también pueden frenar una tecla */
 #define WL_CALL(kind, id, tmo, call) ({ int ws_ = wl_begin(kind, id, tmo, __builtin_return_address(0)); __typeof__(call) r_ = (call); wl_end(ws_); r_; })
@@ -654,6 +674,14 @@ static int ioctl_in(int fd, unsigned long req, ...) {
         default: LOG("uipc ioctl idx=%u args %#x %#x (ignorada)", idx, w[0], w[1]); return 0;
         }
     }
+    if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && getenv("SDIMG") && arg) {  /* SD emulada (INFERENCIA de los campos, medida en libInfraMediaCommon: mmc_mount/mmc_open/FUN_0001eac0) */
+        unsigned *a = (unsigned *)arg, tot = sd_sectors();
+        if (!strcmp(devname[fd], "/dev/mmca-char") && req == 5) { memset(a, 0, 0xc0); ((unsigned char *)a)[0] = 3; a[0x20 / 4] = tot - 1; a[0x2c / 4] = 8192; a[0x34 / 4] = 512; LOG("SDIMG: ioctl 5 -> SD, %u sectores", tot); return 0; }
+        if (!strcmp(devname[fd], "/dev/mmca") && (req == 0x10f || req == 0x110)) {  /* E/S de sectores del driver mmc (libInfraMediaCommon+0xec28 leer / +0xeb4c escribir): {estado, búfer, sector, nº de sectores}; INFERENCIA del orden de campos por la llamada de libInfraFsys (búfer, sector, cuenta) */
+            unsigned long n = (unsigned long)a[3] * 512; off_t o = (off_t)a[2] * 512; ssize_t r = req == 0x10f ? pread(fd, (void *)a[1], n, o) : pwrite(fd, (void *)a[1], n, o);
+            a[0] = r == (ssize_t)n ? 0 : 0x80000001u; sd_log(req == 0x10f ? "leer" : "escribir", fd, (long)a[2], (long)a[3], (long)r); return 0; }
+        if (!strcmp(devname[fd], "/dev/mmca") && req == 0x104) { memset(a, 0, 0x50); a[0x24 / 4] = 0; a[0x38 / 4] = tot; LOG("SDIMG: ioctl 0x104 -> inicio 0, %u sectores", tot); return 0; }
+    }
     if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC) {  /* dispositivo no modelado: éxito, registrado las 5 primeras veces por (dispositivo, orden) y luego cada 4096 */
         static struct { char d[32]; unsigned long r; unsigned n; } seen[64]; static int ns; int k;
         if (!strcmp(devname[fd], "/dev/dmpgles2") && req == 0x80048206 && arg) *(unsigned *)arg = 0x20000;  /* tamaño de la ventana de registros de la GPU (rm_reg_init lo pasa a mmap de /dev/mem; con 0 se mapeaba 1 página y el código escribe en +0x1804) */
@@ -730,6 +758,11 @@ static void sym(unsigned v) {
 }
 static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, LR y direcciones de código halladas en la pila */
     ucontext_t *uc = ctx; unsigned *sp = (unsigned *)uc->uc_mcontext.arm_sp;
+    if (sig == SIGSEGV && getenv("NULLMWF") && uc->uc_mcontext.arm_r0 == 0) {  /* shortcut: ver mwf_nullsafe; las funciones de MonCtrl (libMWF+0x2f400..0x2f700) con this NULL «devuelven 0» al llamador; mejorar creando el MonCtrl que falta */
+        static unsigned long mb; if (!mb) { void *sy = dlsym(RTLD_DEFAULT, "_ZN3MWF6ObjMsgC1Ev"); Dl_info di; if (sy && dladdr(sy, &di)) mb = (unsigned long)di.dli_fbase; }
+        unsigned long pc = uc->uc_mcontext.arm_pc;
+        if (mb && pc >= mb + 0x2f400 && pc < mb + 0x2f700) { unsigned long lr = uc->uc_mcontext.arm_lr; { static volatile int nr; if (nr++ < 12 || (nr & 0xffff) == 0) efp("[shim] NULLMWF recupera #%d pc=libMWF+%#lx lr=%#lx tid %ld\n", nr, pc - mb, lr - mb, (long)syscall(SYS_gettid)); } uc->uc_mcontext.arm_pc = lr & ~1UL; if (lr & 1) uc->uc_mcontext.arm_cpsr |= 0x20; else uc->uc_mcontext.arm_cpsr &= ~0x20UL; return; }
+    }
     if (!nmaps) load_maps();
     char nm[24] = {0}; syscall(SYS_prctl, 16, nm); efp("[shim] --- pila (sig %d tid %ld %s) pc/lr:\n", sig, (long)syscall(SYS_gettid), nm); efp("[shim]   raw pc=%08lx lr=%08lx addr=%08lx r0=%08lx r1=%08lx r2=%08lx\n", uc->uc_mcontext.arm_pc, uc->uc_mcontext.arm_lr, (unsigned long)si->si_addr, uc->uc_mcontext.arm_r0, uc->uc_mcontext.arm_r1, uc->uc_mcontext.arm_r2); sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
     for (int i = 0; i < 300; i++) { if (((unsigned long)(sp + i) & 0xfff) == 0 || i == 0) { if (msync((void *)((unsigned long)(sp + i) & ~0xfffUL), 1, MS_ASYNC)) break; } sym(sp[i]); }  /* no cruzar el final de la pila */
@@ -979,6 +1012,20 @@ static void trace_fns(unsigned long base) {
 /* Experimento (WATCH=dir): hilo que sondea cada ms la palabra libObj+dir y registra sus cambios. */
 static unsigned long watch_addr;
 static void *watcher(void *a) { volatile unsigned *p = (unsigned *)watch_addr; unsigned old = *p; LOG("WATCH inicio %p = %08x", (void *)p, old); for (;;) { unsigned v = *p; if (v != old) { LOG("WATCH %p %08x -> %08x", (void *)p, old, v); old = v; } usleep(1000); } return 0; }
+/* NULLMWF=1: libMWF+0x2f694 (MonCtrl: lee [this+4]) cae con this = NULL cuando un objeto de ObjCntMgr/ObjMedia no tiene MonCtrl (libObj+0x81b124 pasa [this+0x104] = NULL); en la cámara el objeto lo tiene.
+ * shortcut: la función devuelve 0 (traza desactivada) con this NULL; mejorar al crear el MonCtrl que falta. Se reescriben sus 8 primeros bytes con un salto a un trampolín que primero comprueba r0. */
+static void mwf_nullsafe(void) {
+    if (!getenv("NULLMWF")) return;
+    void *sym = dlsym(RTLD_DEFAULT, "_ZN3MWF6ObjMsgC1Ev"); Dl_info di; if (!sym || !dladdr(sym, &di)) { LOG("NULLMWF: libMWF no encontrada"); return; }
+    unsigned char *base = di.dli_fbase, *fn = base + 0x2f694;
+    unsigned char *tr = mmap(0, 4096, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0); if (tr == MAP_FAILED) return;
+    static const unsigned char code[] = { 0x28, 0xb1, 0x43, 0x68, 0xb0, 0xb5, 0x04, 0x46, 0x00, 0xaf, 0xdf, 0xf8, 0x08, 0xf0, 0x00, 0x20, 0x70, 0x47, 0x00, 0xbf };
+    memcpy(tr, code, sizeof code); unsigned long ret = (unsigned long)(fn + 8) | 1; memcpy(tr + 0x14, &ret, 4);
+    unsigned long pg = (unsigned long)fn & ~4095UL; mprotect((void *)pg, 8192, PROT_READ | PROT_WRITE | PROT_EXEC);
+    unsigned long dst = (unsigned long)tr | 1; unsigned char sw[8] = { 0xdf, 0xf8, 0x00, 0xf0 }; memcpy(sw + 4, &dst, 4); memcpy(fn, sw, 8);
+    __builtin___clear_cache((char *)fn, (char *)fn + 8); __builtin___clear_cache((char *)tr, (char *)tr + 32);
+    LOG("NULLMWF: libMWF %p, parcheada +0x2f694 (MonCtrl con this NULL devuelve 0)", base);
+}
 static void skip_fns(void) {
     char ln[256]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");
     while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, "libObj.so")) { base = hexv(ln, 0); break; }
@@ -1030,7 +1077,7 @@ void *dlopen(const char *f, int fl) {
     if (f && strstr(f, "viewUnified")) gpu_live = 1;
     LOG("dlopen(%s) ...", f ? f : "(null)");
     void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
-    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lobj_h = h; }
+    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lobj_h = h; mwf_nullsafe(); }
     if (h && f && getenv("TRACELIB") && (strstr(f, getenv("TRACELIB")) || strstr(f, "viewUnified")) && !trc_lib_done) {  /* la biblioteca puede entrar como dependencia de viewUnified*: se busca en /proc/self/maps tras cada dlopen hasta hallarla */
         char ln[256]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");
         while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, getenv("TRACELIB"))) { base = hexv(ln, 0); break; }

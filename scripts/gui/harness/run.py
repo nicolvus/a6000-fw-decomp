@@ -33,7 +33,7 @@ def bk_patch(tbl: bytes, cambios: dict[int, bytes]) -> bytes:
     return bytes(out)
 
 
-def build_initrd(work: Path, script: Path, t: Path, shimenv: str = "", overlay2: str = "", nvram: dict[int, bytes] | None = None) -> Path:
+def build_initrd(work: Path, script: Path, t: Path, shimenv: str = "", overlay2: str = "", nvram: dict[int, bytes] | None = None, sd_head: Path | None = None) -> Path:
     """initrd = base.cpio.gz + cpio.gz con /cam/harness.sh, harness.env (SHIMENV), DIR/overlay y OVERLAY2; lo deja en t/initrd.gz.
     nvram = registros de backup cambiados por la UI (live.py): se aplican sobre /usr/share/bk.tbl de la copia, nunca sobre el volcado."""
     (t / "cam").mkdir()
@@ -45,6 +45,8 @@ def build_initrd(work: Path, script: Path, t: Path, shimenv: str = "", overlay2:
         shutil.copytree(work / "overlay", t, dirs_exist_ok=True)
     if overlay2:  # F5: /usr de un nflasha15 de CFW (pkg_usr.py); va después del base, así que sustituye a los de Sony
         shutil.copytree(overlay2, t, dirs_exist_ok=True)
+    if sd_head:  # cabeza de la imagen FAT32 de la SD emulada (sd_image.py); el shim la monta como /dev/mmca
+        shutil.copyfile(sd_head, t / "cam/usr/share/sd.head")
     bk = t / "cam/usr/share/bk.tbl"
     if nvram and bk.exists():
         bk.write_bytes(bk_patch(bk.read_bytes(), nvram))
