@@ -14,6 +14,7 @@ def test_velocidad_0x2014_disposicion_del_conversor():
     assert struct.unpack_from("<H", m, 0x08)[0] == 1 and struct.unpack_from("<I", m, 0x0C)[0] == 125   # SHUT_SPEED_NUMER/DENOM
     assert struct.unpack_from("<HxxI", m, 0x10) == (1, 4000)    # MIN_NUMER/DENOM
     assert struct.unpack_from("<HxxI", m, 0x18) == (30, 1)      # MAX_NUMER/DENOM
+    assert struct.unpack_from('<H', m, 0x21)[0] >= 1   # PreTypeCheck exige SHUT_SPEED_DEGREE >= 1 (si no, descarta el evento)
     assert m[0x20] == 1 and len(m) >= 0x23                      # SHUT_DATA_VALID, SHUT_SPEED_DEGREE en 0x21
 
 

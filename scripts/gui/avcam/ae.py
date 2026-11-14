@@ -32,8 +32,8 @@ def _cab(id_: int, largo: int) -> bytearray:
     return m
 
 
-def msg_velocidad(num: int, den: int, minimo: tuple[int, int], maximo: tuple[int, int], valido: bool = True, grados: int = 0) -> bytes:
-    """0x2014 → PARAMID_SHUT_SPEED_NUMER/DENOM (0x951c/d), _MIN_ (0x95b8/9), _MAX_ (0x95ba/b), SHUT_DATA_VALID 0x95bc, SHUT_SPEED_DEGREE 0x9871."""
+def msg_velocidad(num: int, den: int, minimo: tuple[int, int], maximo: tuple[int, int], valido: bool = True, grados: int = 1) -> bytes:
+    """0x2014 → PARAMID_SHUT_SPEED_NUMER/DENOM (0x951c/d), _MIN_ (0x95b8/9), _MAX_ (0x95ba/b), SHUT_DATA_VALID 0x95bc, SHUT_SPEED_DEGREE 0x9871 (mínimo 1: con 0 `PreTypeCheck` rechaza el evento entero, medido en el perfil p1)."""
     m = _cab(ID_VELOCIDAD, 0x23)
     struct.pack_into("<H", m, 0x08, num)
     struct.pack_into("<I", m, 0x0C, den)
