@@ -1458,6 +1458,13 @@ static void *rqhot(void *a) {
     if (rq && ctor) { ctor(lb); int rr = rq(ln, code, lb); LOG("X requestModelExecute(%s, %#lx) -> %d", ln, code, rr); } else LOG("X: sin requestModelExecute");
     free(a); return 0;
 }
+/* «P desp_hex n_hex» (/linea): vuelca n bytes de libObj+desp en el registro (diagnóstico de globales) */
+static void *peekhot(void *a) {
+    const char *e; char *ln = a; unsigned long off = hexv(ln, &e), n = *e == ' ' ? hexv(e + 1, &e) : 16; if (n > 64) n = 64;
+    Dl_info di; void *sym = lobj_h ? dlsym(lobj_h, "_ZN12ModelManager9pushEventEP5Event") : 0;
+    if (sym && dladdr(sym, &di)) { unsigned char *q = (unsigned char *)di.dli_fbase + off; char h[200]; int o = 0; for (unsigned long k = 0; k < n; k++) o += snprintf(h + o, sizeof h - o, "%02x", q[k]); LOG("P libObj+%#lx: %s", off, h); }
+    free(a); return 0;
+}
 static void *startevhot(void *a) { startev(a); free(a); return 0; }
 static void *acqhot(void *a) { acquire_status((int)hexv(a, 0)); free(a); return 0; }
 static void *modelhot(void *a) { model_create(a); free(a); return 0; }
@@ -1482,6 +1489,7 @@ static void *live_keys(void *a) {
             if (ln[0] == 'Y') date_type = (int)hexv(ln + 2, &e);
             if (ln[0] == 'Q' && ln[1] == ' ') avq_inject(ln + 2);
             if (ln[0] == 'X' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, rqhot, nm); pthread_detach(th); }
+            if (ln[0] == 'P' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, peekhot, nm); pthread_detach(th); }
             if (ln[0] == 'F' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, fnhot, nm); pthread_detach(th); }
             if (ln[0] == 'R') live_force = 1;  /* el anfitrión se acaba de conectar (p. ej. tras restaurar el estado): reenviar el fotograma actual */
             if (ln[0] == 'K') { unsigned m[12] = {0}; static int swallow; m[0] = hexv(ln + 2, &e); m[2] = hexv(e + 1, &e); m[4] = hexv(e + 1, &e);
