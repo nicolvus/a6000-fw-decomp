@@ -561,7 +561,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             unsigned *t5 = (unsigned *)w[1];
             if (getenv("VERB5") && w[0] != 0x8f013a && w[0] != 0x720018) LOG("sync5 qid=%#x t5[1]=%#x", w[0], ((unsigned *)w[1])[1]);
             unsigned char *m = (unsigned char *)t5[0];
-            if (t5[1]) return 0;  /* segunda llamada del emisor: fin del callback síncrono */
+            if (t5[1]) { if (getenv("MSGBODY") && w[0] == 0xcf016d && readable(m)) { char h[400]; int o = 0; for (int q = 0; q < 24; q++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[q]); LOG("REPLY sync %#x %s", w[0], h); } return 0; }  /* segunda llamada del emisor: fin del callback síncrono (REPLY = respuesta ya escrita por el receptor) */
             { static int ns5; const char *e = getenv("STACKQ"); if (e && hexv(e, 0) == w[0] && ++ns5 == 3) raise(SIGUSR1); }  /* STACKQ=qid: pila del emisor en el 3.er envío */
             { pthread_mutex_lock(&cb_m); int k = cb_find(w[0]); if (k >= 0) { t5[1] = (unsigned)cbs[k].cb; t5[2] = (unsigned)cbs[k].arg; } pthread_mutex_unlock(&cb_m);
               if (k >= 0) { if (getenv("VERB")) LOG("snd_sync_msg %#x -> callback directo", w[0]);
@@ -627,7 +627,10 @@ static int ioctl_in(int fd, unsigned long req, ...) {
                   if (((unsigned *)m)[1] == 0xa0a0a0a0) { dataflow_reply(w[0], rq, (unsigned char *)m, 0); return 0; }
                   mbx_post(rq, (unsigned *)m, 0); LOG("snd_msg %#x -> acuse ACKQ0 a %#x", w[0], rq); return 0; } }
             if (w[0] == 0xd9016e && ((unsigned *)m)[0] == 2 && (((unsigned *)m)[1] & 0xffff) == 1 && getenv("FRONTRM")) {  /* MCMND (InfraMediaDetectThreadRM::CheckInsertedMedia): {2, 1, 8, id de respuesta @+8, …, id de slot @+0x18} → tipo de soporte insertado @+0x1c (1 = MS?, 2 = MS, 3 = SD, 4 = SSD según CheckInsertedMedia): slot 0x101 = SD (INFERENCIA), el resto vacío */
-                unsigned *q = (unsigned *)m; q[7] = q[6] == 0x101 ? 3 : 0; LOG("MCMND: slot %#x -> tipo %u", q[6], q[7]); }
+                unsigned *q = (unsigned *)m, rq = q[2]; unsigned char *rb = calloc(1, 0x300); unsigned *r = (unsigned *)(rb + 0x20);
+                memcpy(r, q, 0x20); r[7] = q[6] == 0x101 ? 3 : 0; rb[0x20 - 8] = 2;  /* respuesta propia (el acuse genérico solo copia 28 B y perdía el tipo @+0x1c); 2 bloques = 52 B ≥ 0x18 */
+                if (rq > 0x10000 && rq < 0x2000000) { if (!is_dynq(rq)) dynq_add(rq); mbx_post_raw(rq, r); }
+                LOG("MCMND: slot %#x -> tipo %u (respuesta a %#x)", q[6], r[7], rq); return 0; }
             { const char *e = getenv("ACKQ"); if (!e) e = "d9016e,7a0029,61003c"; int ack = 0;
               while (*e) { if (hexv(e, &e) == w[0]) ack = 1; while (*e == ',') e++; }
               if (getenv("MSGHEXQ") && hexv(getenv("MSGHEXQ"), 0) == w[0]) {  /* MSGHEXQ=qid: vuelca 4+16 palabras del mensaje y la pila del emisor (2 primeras veces) */
@@ -638,6 +641,11 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             if (getenv("VERB")) { char h[200]; int k, o = 0; for (k = -32; k < 32; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]); LOG("MSGHEX %#x %s", w[0], h); }
             if (avq_q(w[0])) { avq_forward(w[0], m); return 0; }
             if (dynmade_q(w[0])) { mbx_post_raw(w[0], (unsigned *)m); LOG("snd_msg %#x -> buzón de cola dinámica w0=%#x", w[0], ((unsigned *)m)[0]); return 0; }
+            if (w[0] == 0x7a0020 && getenv("FRONTRM") && ((unsigned *)m)[0] == 0x0c000003 && is_dynq(0x7a0020)) {  /* shortcut: en la cámara la cola del driver de entrada devuelve al lector de libObj lo que Detect publica con NotifyToInfraInput (clave 0x0c000003 = soporte 0x1000, estado @+8, ex_info @+0xc); aquí solo se reenvía esa clave (filtro explícito: el resto de envíos a 0x7a0020 se siguen descartando) y el índice físico queda en 0 como lo manda Detect. Mejorar cuando se conozca el mapeo clave→índice de InfraInput. */
+                unsigned char *rb = calloc(1, 0x300); memcpy(rb + 0x20, m, 0x20); rb[0x20 - 8] = 2;
+                if (getenv("INSHORT")) { unsigned *r = (unsigned *)(rb + 0x20); r[2] = 1; r[3] = 0xd1000000u | (r[3] & 0xffff); }  /* shortcut: Detect.StartInOut publica estado 0 (su CheckInsertedMedia no deja el índice ≥ 0, causa sin aclarar); se fuerza el mensaje que enviaría con SD insertada (estado 1, ex_info = deviceID 0xd100 << 16 | recuento, como arma StartInOut); mejorar al aclarar por qué media+200 < 0 */
+                mbx_post_raw(0x7a0020, (unsigned *)(rb + 0x20));
+                LOG("INLOOP: 0x0c000003 estado=%u ex=%#x -> lector de entrada", ((unsigned *)m)[2], ((unsigned *)m)[3]); return 0; }
             LOG("uipc snd_msg a la cola de kernel %#x (descartado) cab=%02x%02x%02x%02x datos=%08x %08x", w[0], m[-12], m[-11], m[-10], m[-9],
                 ((unsigned *)m)[0], ((unsigned *)m)[1]); return 0; }
         case 6: { unsigned char *m = (unsigned char *)w[1]; char h[200]; int k, o = 0;
