@@ -49,7 +49,7 @@ import sensor_web
 DIAL_INICIAL = 2
 # Giro a P tras el arranque (/modo p=3, MEDIDO en §5.24: desde la vista iAUTO+ la vista pasa a «P»; como estado inicial 3 da la vista de película).
 # shortcut: es un giro automático del dial, no la posición real de arranque; mejorar cuando se encuentre el estado inicial de P (0–15 probados: solo 2 da vista rica).
-MODO_TRAS_ARRANQUE = None  # medido en el perfil z1: el giro automático a 3 10 s tras la primera pantalla dio la vista de película, no «P» (en r1, a mano y tras abrir/cerrar menús, sí)
+MODO_TRAS_ARRANQUE = int(os.environ["LIVE_MODO_TRAS"]) if os.environ.get("LIVE_MODO_TRAS") else None  # LIVE_MODO_TRAS=3: giro automático a P tras la primera pantalla (opt-in; §5.29)
 # escenario sin volcados: ciclo de modelos, pantalla de disparo (view/STLREC, §5.18z¹²), cola de teclas 0x7a0020
 SHIMENV_BASE = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/STLREC OPENVIEWAT=40 OPENVIEWGAP=14 "
            "STARTEV=11004002:100,11004012,11004013 POSTROOTEV=11004002:e3 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f "

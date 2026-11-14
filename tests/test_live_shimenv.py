@@ -37,4 +37,4 @@ def test_dial_inicial_2_iauto_plus_y_keyiniton_vacio():
 
 def test_giro_automatico_del_dial_desactivado_por_defecto():
     """§5.24: el giro a P tras el arranque no es fiable (perfil z1); solo es opt-in."""
-    assert live.MODO_TRAS_ARRANQUE is None
+    assert live.MODO_TRAS_ARRANQUE is None  # solo con LIVE_MODO_TRAS=n en el entorno
