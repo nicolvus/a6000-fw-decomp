@@ -125,7 +125,7 @@ def msg_hora(ahora: float) -> bytes:
 
 
 class Vm:
-    def __init__(self, work: Path, pkg: str, perfil: str = "", red: dict | None = None, avcam: bool = False, tarjeta: bool = True) -> None:
+    def __init__(self, work: Path, pkg: str, perfil: str = "", red: dict | None = None, avcam: bool = False, tarjeta: bool = True, ae: bool = False) -> None:
         net, net_args = red_args(red)
         self.red = red if net else {}
         shimenv = construye_shimenv(tarjeta) + net
@@ -168,7 +168,7 @@ class Vm:
         self.cerrojo = threading.Lock()  # un solo guardado a la vez
         self.fps, self.coste = 0.0, ""
         if avcam:
-            self.puente = puente.Puente(self.envia, self.dir / "avcam.jsonl")
+            self.puente = puente.Puente(self.envia, self.dir / "avcam.jsonl", puente.A.Emisor(None) if ae else None)
             threading.Thread(target=self.avq_hilo, daemon=True).start()
         threading.Thread(target=self.lector, daemon=True).start()
         threading.Thread(target=self.reloj, daemon=True).start()
@@ -474,6 +474,7 @@ def main() -> None:
     ap.add_argument("--avcam", action=argparse.BooleanOptionalAction, default=None,
                     help="conecta im.elf con av-cam ejecutado en la LIRO VM (puente.py); por defecto se activa si hay unicorn, av-cam.bin y liro.ko")
     ap.add_argument("--sin-sd", action="store_true", help="no emula la tarjeta SD (arranque anterior: ModelMedia sin soporte, sin EEStart); por defecto hay una SD FAT32 montada")
+    ap.add_argument("--sin-ae", action="store_true", help="no emite el AE de escena constante a ObjCamera (atajo de ae.py; av-cam no lo genera); por defecto se emite")
     ap.add_argument("--lanzador", default="", help="URL del configurador (enlace «volver»)")
     a = ap.parse_args()
     CONFIG.update(ruta=a.config, lanzador=a.lanzador)
@@ -481,7 +482,7 @@ def main() -> None:
         a.avcam = avcam_disponible()
     from emu_config import carga_config
     red = carga_config(Path(a.config))["red"] if a.config else None
-    vm = Vm(a.work.resolve(), str(Path(a.pkg).resolve()) if a.pkg else "", a.perfil_dir, red, a.avcam, not a.sin_sd)
+    vm = Vm(a.work.resolve(), str(Path(a.pkg).resolve()) if a.pkg else "", a.perfil_dir, red, a.avcam, not a.sin_sd, not a.sin_ae)
     srv = servidor(vm, a.puerto)
     print(f"http://127.0.0.1:{a.puerto}  ({'restaurando estado' if vm.restaurado else 'arranque en frío, ≈ 2,5 min hasta el menú'})", flush=True)
     for sig in (signal.SIGINT, signal.SIGTERM):  # salir = guardar el estado y cerrar QEMU

@@ -15,6 +15,7 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
+import ae as A
 import liro_vm as L
 
 # colas de salida de av-cam que el invitado no debe recibir: teclas (las pone el anfitrión), servicios del núcleo y trazas
@@ -38,15 +39,23 @@ def arranca() -> tuple[L.Vm, float]:
 
 
 class Puente:
-    def __init__(self, enviar, registro: Path | None = None) -> None:
-        """enviar(línea: bytes): manda una línea al invitado. registro: JSONL con todo lo que entra y sale (evidencia)."""
-        self.enviar, self.registro = enviar, registro
+    def __init__(self, enviar, registro: Path | None = None, ae: A.Emisor | None = None) -> None:
+        """enviar(línea: bytes): manda una línea al invitado. registro: JSONL con todo lo que entra y sale (evidencia).
+        ae: emisor opcional del AE (ae.py, atajo: av-cam no lo genera); arranca con la primera orden de ObjCamera a CamMgr (0x30001)."""
+        self.enviar, self.registro, self.ae = enviar, registro, ae
+        if ae:
+            ae.enviar = self._envia_ae
         self.cerrojo = threading.RLock()
         self.vm, t0 = arranca()
         self.vm.limite, self.t_real0, self.t_virt0 = t0, time.monotonic(), t0
         self.visto = len(self.vm.salida_ext)  # lo emitido durante el arranque se guarda aparte: solo se reenvía en un arranque en frío del invitado
         self.n_in = self.n_out = 0
         threading.Thread(target=self._reloj, daemon=True).start()
+
+    def _envia_ae(self, linea: bytes) -> None:
+        q, cab, datos = linea.decode().split()[1:]
+        self._anota(sale=f"0x{q}", tarea="ae.py", cab=cab, datos=datos)
+        self.enviar(linea)
 
     def reenvia_arranque(self) -> None:
         """Arranque en frío del invitado: av-cam ya arrancó (en la cámara lo hace antes que im.elf) y sus avisos esperan en las colas del kernel; el shim los
@@ -95,6 +104,8 @@ class Puente:
             vm.msz[m] = tam
             self.n_in += 1
             self._anota(entra=f"{q:#x}", cab=cab, datos=cuerpo)
+            if self.ae and q == 0x30001:
+                self.ae.arranca()
             L.entrega(vm, q, m)
             self._avanza()
 
