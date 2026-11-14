@@ -128,7 +128,7 @@ def test_vdf_59000e_responde_y_stat_msgq_cuenta_pendientes() -> None:
     """§5.18z⁹: cada petición a 0x59000e recibe respuesta tipo 2 (MSGID 0x8200) y stat_msgq informa los pendientes (freeOsalId no se bloquea)."""
     src = (HARNESS / "shim/sonyshim.c").read_text()
     assert "w[0] == 0x59000e && !getenv(\"NOVDF59\")" in src and "body[-1] = 0x8200" in src
-    assert "o[0] = n; o[1] = o[2] = o[3] = 0;" in src
+    assert "o[0] = n; o[1] = ackq_q(w[0]); o[2] = o[3] = 0;" in src
 
 
 def test_efcs_emula_respuesta_objcamera_y_backup_107086e() -> None:
