@@ -1450,6 +1450,14 @@ static void *fnhot(void *a) {
     unsigned long (*f)(unsigned long, unsigned long, unsigned long, unsigned long) = (void *)((unsigned long)di.dli_fbase + off + 1);
     LOG("F libObj+%#lx(%#lx,%#lx,%#lx,%#lx) ...", off, v[0], v[1], v[2], v[3]); unsigned long r = f(v[0], v[1], v[2], v[3]); LOG("F -> %#lx", r); free(a); return 0;
 }
+/* «X modelo codigo_hex» (/linea): viewManagerIf::requestModelExecute(modelo, codigo, ParamList vacía) en caliente (diagnóstico: p. ej. «X model/STILL_REC 0») */
+static void *rqhot(void *a) {
+    char *ln = a, *sp = strchr(ln, ' '); unsigned long code = 0; if (sp) { *sp = 0; code = hexv(sp + 1, 0); }
+    int (*rq)(const char *, unsigned long, void *) = lobj_h ? dlsym(lobj_h, "_ZN13viewManagerIf19requestModelExecuteEPKcmP9ParamList") : 0;
+    void (*ctor)(void *) = dlsym(RTLD_DEFAULT, "_ZN9ParamListC1Ev"); char *lb = calloc(1, 512);  /* en el montón: el receptor lo libera */
+    if (rq && ctor) { ctor(lb); int rr = rq(ln, code, lb); LOG("X requestModelExecute(%s, %#lx) -> %d", ln, code, rr); } else LOG("X: sin requestModelExecute");
+    free(a); return 0;
+}
 static void *startevhot(void *a) { startev(a); free(a); return 0; }
 static void *acqhot(void *a) { acquire_status((int)hexv(a, 0)); free(a); return 0; }
 static void *modelhot(void *a) { model_create(a); free(a); return 0; }
@@ -1473,6 +1481,7 @@ static void *live_keys(void *a) {
             if (ln[0] == 'O') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, openhot, nm); pthread_detach(th); }  /* «O vista»: viewManagerIf::openView(vista, 0) en caliente */
             if (ln[0] == 'Y') date_type = (int)hexv(ln + 2, &e);
             if (ln[0] == 'Q' && ln[1] == ' ') avq_inject(ln + 2);
+            if (ln[0] == 'X' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, rqhot, nm); pthread_detach(th); }
             if (ln[0] == 'F' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, fnhot, nm); pthread_detach(th); }
             if (ln[0] == 'R') live_force = 1;  /* el anfitrión se acaba de conectar (p. ej. tras restaurar el estado): reenviar el fotograma actual */
             if (ln[0] == 'K') { unsigned m[12] = {0}; static int swallow; m[0] = hexv(ln + 2, &e); m[2] = hexv(e + 1, &e); m[4] = hexv(e + 1, &e);
