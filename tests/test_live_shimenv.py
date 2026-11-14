@@ -38,3 +38,8 @@ def test_dial_inicial_2_iauto_plus_y_keyiniton_vacio():
 def test_giro_automatico_del_dial_desactivado_por_defecto():
     """§5.24: el giro a P tras el arranque no es fiable (perfil z1); solo es opt-in."""
     assert live.MODO_TRAS_ARRANQUE is None  # solo con LIVE_MODO_TRAS=n en el entorno
+
+
+def test_vista_de_grabacion_se_abre_con_el_modo_p():
+    """§5.31: el segundo argumento de openView es el modo de grabación (medido: 3 = P)."""
+    assert live.VISTA_REC == 3 and "OPENVIEWARG=3 " in live.construye_shimenv(True)

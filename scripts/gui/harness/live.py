@@ -50,10 +50,14 @@ DIAL_INICIAL = 2
 # Giro a P tras el arranque (/modo p=3, MEDIDO en §5.24: desde la vista iAUTO+ la vista pasa a «P»; como estado inicial 3 da la vista de película).
 # shortcut: es un giro automático del dial, no la posición real de arranque; mejorar cuando se encuentre el estado inicial de P (0–15 probados: solo 2 da vista rica).
 MODO_TRAS_ARRANQUE = int(os.environ["LIVE_MODO_TRAS"]) if os.environ.get("LIVE_MODO_TRAS") else None  # LIVE_MODO_TRAS=3: giro automático a P tras la primera pantalla (opt-in; §5.29)
+# Modo de grabación con el que se abre view/STLREC (segundo argumento de viewManagerIf::openView = parámetro de vista; la cámara pasa el que devuelve getRecViewFromDial).
+# MEDIDO (§5.31, icono de modo en pantalla): 2 = iAUTO+, 3 = P, 4 = A, 5 = S, 6 = M (1: sin icono; 0 = antes, setInitForRec recibía int=0 y el modelo nunca recibía modo).
+# shortcut: valor fijo medido, no derivado del dial real (el dial sigue sin efecto en getRecViewFromDial); mejorar cuando getRecViewFromDial devuelva el modo.
+VISTA_REC = 3
 # escenario sin volcados: ciclo de modelos, pantalla de disparo (view/STLREC, §5.18z¹²), cola de teclas 0x7a0020
 SHIMENV_BASE = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/STLREC OPENVIEWAT=40 OPENVIEWGAP=14 "
            "STARTEV=11004002:100,11004012,11004013 POSTROOTEV=11004002:e3 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f "
-           f"KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177,7025:{DIAL_INICIAL:x}:27 KEYINITON= KEYINITAFTER=not_user_operation LIVE=auto ")
+           f"KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177,7025:{DIAL_INICIAL:x}:27 KEYINITON= KEYINITAFTER=not_user_operation OPENVIEWARG={VISTA_REC:x} LIVE=auto ")
 SHIMEXTRA = os.environ.get("SHIMEXTRA", "")  # SHIMEXTRA="WAITLOG=3000": variables de diagnóstico del shim
 # Tarjeta SD emulada (G22-E §5.5–§5.15): conjunto mínimo para que ModelMedia vea una SD montada, salga EEStart sin PATCHFN y la pantalla de grabación se dibuje (--sin-sd lo apaga).
 # Incluye atajos (shortcut: comentados en sonyshim.c): INSHORT (inserción forzada), NULLMWF/TABLE0 (objetos de ObjCntMgr sin crear) y SKIPFN de métodos de ObjCntMgr/ObjMedia.

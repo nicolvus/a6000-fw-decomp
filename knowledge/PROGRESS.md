@@ -676,3 +676,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 14-11-2026: G22-E tarea 22: estado 8 con DISPx8: 4 disenos que pintan EV (+0,5 por modo), ISO AUTO, 24M FINE 3:2, AWB A2 G1 pero no velocidad/f/icono de modo; falta traza de retorno de getModelInfo y emisor de info cambiado (§5.28).
 - 14-11-2026: G22-E tarea 23: causa del modo ausente: ModeToSetInitParam no se ejecuta (modo 0x7fffffff al primer getRecViewFromDial, 0,28 s tras KEYINIT) -> SetInit sin modo -> nunca SET_EXPOSURE_MODE_CMD; LIVE_MODO_TRAS opt-in (§5.29).
 - 14-11-2026: G22-E tarea 24: SendEventInitData solo redistribuye estado guardado (sin peticion al driver); ModeToSetInitParam no corre ni con KEYINIT temprano: corrige 5.29; sin cambios de codigo (§5.30).
+- 14-11-2026: G22-E tarea 25: CORRIGE 5.29/5.30: la causa era openView("view/STLREC", 0); OPENVIEWARG = modo (3 = P): icono P desde el arranque, getIso corre; velocidad/f pendientes (§5.31).

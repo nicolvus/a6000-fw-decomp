@@ -888,7 +888,8 @@ unsigned IMDB_find_target_bit(unsigned a, unsigned b, unsigned c, unsigned d) { 
 unsigned IMDB_find_entry(unsigned a, unsigned b, unsigned c, unsigned d) { return imdb_call("IMDB_find_entry", a, b, c, d); }
 unsigned IMDB_get_entries(unsigned a, unsigned b, unsigned c, unsigned d) { return imdb_call("IMDB_get_entries", a, b, c, d); }
 /* INJECT="seg:qid:w0,w1,..;seg:qid:.." (todo en hex; sin strtoul: la glibc 2.11 no tiene __isoc23_*): a los seg s entrega un mensaje a la cola síncrona con callback, como haría av-cam */
-/* OPENVIEW="Vista[,Vista…]" OPENVIEWAT=s: llama a viewManagerIf::openView(nombre, 0) de libObj desde un hilo propio (abrir la vista raíz sin el evento de arranque de av-cam) */
+/* OPENVIEWARG=n (hex): segundo argumento de openView para view/STLREC (la cámara pasa el modo de grabación de getRecViewFromDial; con 0 setInitForRec recibe int=0, §5.31). shortcut: valor medido, sin derivar del dial.
+ * OPENVIEW="Vista[,Vista…]" OPENVIEWAT=s: llama a viewManagerIf::openView(nombre, 0) de libObj desde un hilo propio (abrir la vista raíz sin el evento de arranque de av-cam) */
 static void *lobj_h;
 /* MENU: con la vista de disparo ausente nadie abre el menú al pulsar MENU (en la cámara DefRootView::ActionOpenSettingMenu pide «@V00E» = BASE_MENU 0x0E → SETTINGMENUX 0x7C).
  * Se sigue por las trazas de la UI si hay menú abierto (Vn/Vd de 07C o 039); con el menú cerrado la pulsación de MENU abre «@V00E» en vez de ir a la cola de teclas. */
@@ -945,7 +946,7 @@ static void *openviewer(void *a) {
     if (getenv("STARTEV") && lobj_h) startev(getenv("STARTEV"));
     { void **pv = dlsym(lobj_h, "pViewManager"); for (int k = 0; pv && !*pv && k < 600; k++) usleep(100000); }  /* openView con ViewManager aún NULL = SIGSEGV (arranque lento) */
     char *spec = strdup(getenv("OPENVIEW")), *sv = 0;
-    for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) { efp("[shim] OPENVIEW %s ...\n", it); int r = ov(it, 0); efp("[shim] OPENVIEW %s -> %d\n", it, r); if (getenv("POSTROOTEV") && !strcmp(it, "view/ROOT")) { sleep(8); startev(getenv("POSTROOTEV")); }  /* POSTROOTEV: tras abrir view/ROOT (su @T100 termina antes) la vista raíz pide @T0E3 (viewUnified2+0x16c58c) */ sleep(getenv("OPENVIEWGAP") ? (unsigned)hexv(getenv("OPENVIEWGAP"), 0) : 2); }
+    for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) { efp("[shim] OPENVIEW %s ...\n", it); int r = ov(it, !strcmp(it, "view/STLREC") && getenv("OPENVIEWARG") ? (int)hexv(getenv("OPENVIEWARG"), 0) : 0); efp("[shim] OPENVIEW %s -> %d\n", it, r); if (getenv("POSTROOTEV") && !strcmp(it, "view/ROOT")) { sleep(8); startev(getenv("POSTROOTEV")); }  /* POSTROOTEV: tras abrir view/ROOT (su @T100 termina antes) la vista raíz pide @T0E3 (viewUnified2+0x16c58c) */ sleep(getenv("OPENVIEWGAP") ? (unsigned)hexv(getenv("OPENVIEWGAP"), 0) : 2); }
     return 0;
 }
 static void *injector(void *a) {
