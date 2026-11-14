@@ -658,3 +658,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 14-11-2026: G22-E ModelMedia tarea 4: MCMND corregido, bucle 0x7a0020 filtrado a 0x0c000003 y atajo INSHORT=1: ActionMediaDetectIns y montaje iniciado; ObjCntMgr cae después (libObj+0x8456b4 / 0x816860); EEStart sin PATCHFN aun no sale (§5.10).
 - 14-11-2026: G22-E ModelMedia tarea 5: ActionMediaMount con atajos (SKIPFN getter 0x81685a, aviso de temperatura); montaje FS falla 0x80000050 (/dev/mmca sin FS); EEStart sin PATCHFN aun no sale (§5.11).
 - 14-11-2026: G22-E tarea 6: SD FAT32 legible (sd_image.py, SDIMG, ioctl 0x10f/0x110 de /dev/mmca): Fsys mount OK y ActionMediaMount; NULLMWF/SKIPFN como atajos; freeze tras MSGID_OPEN; EEStart sin PATCHFN aun no sale (§5.12).
+- 14-11-2026: G22-E tarea 7: el congelamiento tras MSGID_OPEN es un interbloqueo (8 vCPU en WFI, sin pantalla), no un bucle; CPUWATCH en el shim; EEStart sin PATCHFN aun no sale (§5.13).

@@ -781,6 +781,19 @@ static int wl_on(void) { return wl_ms() > 0; }
 static long wl_el(struct timespec *t0) { struct timespec n; clock_gettime(CLOCK_MONOTONIC, &n); return (n.tv_sec - t0->tv_sec) * 1000 + (n.tv_nsec - t0->tv_nsec) / 1000000; }
 static double wl_ts(void) { struct timespec n; clock_gettime(CLOCK_MONOTONIC, &n); return n.tv_sec + n.tv_nsec / 1e9; }
 static void wl_desc(void *ra, char *o, int n) { Dl_info di; if (dladdr(ra, &di) && di.dli_fname) snprintf(o, n, "%s+%#lx", strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname, (unsigned long)ra - (unsigned long)di.dli_fbase); else snprintf(o, n, "%p", ra); }
+/* CPUWATCH=1: cada 4 s mira stat de cada hilo en /proc/self/task; el hilo que gasta > 60 % de CPU recibe SIGUSR1 (pila con módulo+offset) una vez cada 16 s (diagnóstico de bucles de espera activa) */
+static void *cpu_watch(void *x) {
+    (void)x; static long prev[4096]; static int last[4096]; struct timespec ts4 = { 4, 0 };
+    for (int round = 0;; round++) { syscall(SYS_nanosleep, &ts4, 0);
+        DIR *d = opendir("/proc/self/task"); if (!d) continue; struct dirent *e;
+        while ((e = readdir(d))) { long tid = num(e->d_name); if (tid <= 0) continue; char fn[64], b[512]; snprintf(fn, sizeof fn, "/proc/self/task/%ld/stat", tid);
+            int f = open(fn, O_RDONLY); if (f < 0) continue; ssize_t n = read(f, b, sizeof b - 1); close(f); if (n <= 0) continue; b[n] = 0;
+            char *q = strrchr(b, ')'); if (!q) continue; long ut = 0, st = 0; { char *t = q + 2; int ti = 0; while (*t && ti < 13) { if (*t == ' ') { ti++; t++; if (ti == 11) ut = num(t); if (ti == 12) st = num(t); } else t++; } }  /* sin sscanf/strtol: no sirven en el hilo del shim con la glibc 2.11 */
+            int k = tid % 4096; long cur = ut + st; long dl = cur - prev[k]; prev[k] = cur;
+            if (round > 0 && dl > 60 && round - last[k] > 3) { last[k] = round; efp("[shim] CPUWATCH tid %ld gasta %ld ticks/4 s\n", tid, dl); syscall(SYS_tgkill, getpid(), (int)tid, SIGUSR1); } }
+        closedir(d); }
+    return 0;
+}
 static void *wl_watch(void *x) {
     (void)x; for (;;) { usleep(250000);
         for (int i = 0; i < 128; i++) {
@@ -946,7 +959,7 @@ static void presignal(void) {
     const char *e = getenv("SEMSIG"), *p = e ? e : "83037a,83037a,83037a,83037a";
     while (*p) { const char *q; unsigned id = hexv(p, &q); if (q == p) break; sem_sig(id); p = *q == ',' ? q + 1 : q; }
 }
-__attribute__((constructor)) static void shim_init(void) { presignal(); keyq_init(); live_init(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("OPENVIEW")) { pthread_t th; pthread_create(&th, 0, openviewer, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
+__attribute__((constructor)) static void shim_init(void) { if (getenv("CPUWATCH")) { pthread_t tw; pthread_create(&tw, 0, cpu_watch, 0); } presignal(); keyq_init(); live_init(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("OPENVIEW")) { pthread_t th; pthread_create(&th, 0, openviewer, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
     sa.sa_flags = SA_SIGINFO | SA_RESETHAND; sigaction(SIGSEGV, &sa, 0); sigaction(SIGBUS, &sa, 0); sigaction(SIGILL, &sa, 0); sigaction(SIGABRT, &sa, 0); }  /* un fallo imprime la pila y se reintenta por defecto (core) */
 
 /* Experimento (SKIPFN=717830,...): sustituye esas funciones Thumb de libObj por «movs r0,#0; bx lr» (devuelven éxito sin hacer nada). */
