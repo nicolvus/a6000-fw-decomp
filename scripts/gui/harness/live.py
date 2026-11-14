@@ -42,10 +42,15 @@ import sd_image
 import run
 import sensor_web
 
+# Posición inicial del dial de modo (KEY_POS_MODE_DIAL 0x7025, índice físico 0x27) que el driver informa a InputService al activarse (se envía con el toActive: antes se perdía).
+# MEDIDO (§5.23, enviado con el toActive): estado 2 → vista rica iAUTO+ («i📷+», ISO AUTO, Fn completo); 0, 1, 3, 4, 5 y 6 → la vista mínima de película («Cebra»); sin estado, 0x7fffffff.
+# Con /modo p=3 desde la vista iAUTO+ la vista pasa a «P» (±0,0). El número inicial de P no se encontró.
+# shortcut: solo el 2 está verificado como valor inicial; el resto de posiciones (POSICIONES_MODO) sigue sin verificar, mejorar cuando se derive la tabla del código de InputService.
+DIAL_INICIAL = 2
 # escenario sin volcados: ciclo de modelos, pantalla de disparo (view/STLREC, §5.18z¹²), cola de teclas 0x7a0020
 SHIMENV_BASE = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/STLREC OPENVIEWAT=40 OPENVIEWGAP=14 "
            "STARTEV=11004002:100,11004012,11004013 POSTROOTEV=11004002:e3 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f "
-           "KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177 KEYINITON=06A_viewUnified2 LIVE=auto ")
+           f"KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177,7025:{DIAL_INICIAL:x}:27 KEYINITON= LIVE=auto ")
 SHIMEXTRA = os.environ.get("SHIMEXTRA", "")  # SHIMEXTRA="WAITLOG=3000": variables de diagnóstico del shim
 # Tarjeta SD emulada (G22-E §5.5–§5.15): conjunto mínimo para que ModelMedia vea una SD montada, salga EEStart sin PATCHFN y la pantalla de grabación se dibuje (--sin-sd lo apaga).
 # Incluye atajos (shortcut: comentados en sonyshim.c): INSHORT (inserción forzada), NULLMWF/TABLE0 (objetos de ObjCntMgr sin crear) y SKIPFN de métodos de ObjCntMgr/ObjMedia.

@@ -26,3 +26,10 @@ def test_shimenv_sin_sd_es_el_anterior():
 
 def test_shimextra_manda_sobre_el_conjunto():
     assert variables(live.construye_shimenv(True, "FRONTRM=9"))["FRONTRM"] == "9"
+
+
+def test_dial_inicial_en_P_y_keyiniton_vacio():
+    """§5.23: el dial se informa al activarse InputService (KEYINITON vacío) y con la posición medida 2 = iAUTO+ (vista rica)."""
+    env = live.construye_shimenv(True)
+    assert "KEYINIT=7000001:1:177,7025:2:27 " in env and "KEYINITON= " in env
+    assert live.DIAL_INICIAL == 2
