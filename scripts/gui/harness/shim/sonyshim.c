@@ -763,6 +763,7 @@ static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, L
         unsigned long pc = uc->uc_mcontext.arm_pc;
         if (mb && pc >= mb + 0x2f400 && pc < mb + 0x2f700) { unsigned long lr = uc->uc_mcontext.arm_lr; { static volatile int nr; if (nr++ < 12 || (nr & 0xffff) == 0) efp("[shim] NULLMWF recupera #%d pc=libMWF+%#lx lr=%#lx tid %ld\n", nr, pc - mb, lr - mb, (long)syscall(SYS_gettid)); } uc->uc_mcontext.arm_pc = lr & ~1UL; if (lr & 1) uc->uc_mcontext.arm_cpsr |= 0x20; else uc->uc_mcontext.arm_cpsr &= ~0x20UL; return; }
     }
+    if (sig == SIGSEGV && getenv("NULLMWF")) signal(SIGSEGV, SIG_DFL);  /* fallo no recuperable: se imprime la pila y el reintento mata el proceso como antes */
     if (!nmaps) load_maps();
     char nm[24] = {0}; syscall(SYS_prctl, 16, nm); efp("[shim] --- pila (sig %d tid %ld %s) pc/lr:\n", sig, (long)syscall(SYS_gettid), nm); efp("[shim]   raw pc=%08lx lr=%08lx addr=%08lx r0=%08lx r1=%08lx r2=%08lx\n", uc->uc_mcontext.arm_pc, uc->uc_mcontext.arm_lr, (unsigned long)si->si_addr, uc->uc_mcontext.arm_r0, uc->uc_mcontext.arm_r1, uc->uc_mcontext.arm_r2); sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
     for (int i = 0; i < 300; i++) { if (((unsigned long)(sp + i) & 0xfff) == 0 || i == 0) { if (msync((void *)((unsigned long)(sp + i) & ~0xfffUL), 1, MS_ASYNC)) break; } sym(sp[i]); }  /* no cruzar el final de la pila */
@@ -960,7 +961,7 @@ static void presignal(void) {
     while (*p) { const char *q; unsigned id = hexv(p, &q); if (q == p) break; sem_sig(id); p = *q == ',' ? q + 1 : q; }
 }
 __attribute__((constructor)) static void shim_init(void) { if (getenv("CPUWATCH")) { pthread_t tw; pthread_create(&tw, 0, cpu_watch, 0); } presignal(); keyq_init(); live_init(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("OPENVIEW")) { pthread_t th; pthread_create(&th, 0, openviewer, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
-    sa.sa_flags = SA_SIGINFO | SA_RESETHAND; sigaction(SIGSEGV, &sa, 0); sigaction(SIGBUS, &sa, 0); sigaction(SIGILL, &sa, 0); sigaction(SIGABRT, &sa, 0); }  /* un fallo imprime la pila y se reintenta por defecto (core) */
+    sa.sa_flags = SA_SIGINFO | (getenv("NULLMWF") ? 0 : SA_RESETHAND); sigaction(SIGSEGV, &sa, 0);  /* con NULLMWF el manejador sobrevive a las recuperaciones (antes SA_RESETHAND lo quitaba y el siguiente SEGV mataba im.elf: EXIT=139); on_usr1 lo restablece solo si el fallo no es recuperable */ sigaction(SIGBUS, &sa, 0); sigaction(SIGILL, &sa, 0); sigaction(SIGABRT, &sa, 0); }  /* un fallo imprime la pila y se reintenta por defecto (core) */
 
 /* Experimento (SKIPFN=717830,...): sustituye esas funciones Thumb de libObj por «movs r0,#0; bx lr» (devuelven éxito sin hacer nada). */
 static unsigned long hexv(const char *s, const char **end) { unsigned long v = 0; for (;; s++) { int c = *s; if (c >= '0' && c <= '9') c -= '0'; else if (c >= 'a' && c <= 'f') c -= 'a' - 10; else break; v = v * 16 + c; } if (end) *end = s; return v; }
@@ -1038,6 +1039,21 @@ static void mwf_nullsafe(void) {
     unsigned long dst = (unsigned long)tr | 1; unsigned char sw[8] = { 0xdf, 0xf8, 0x00, 0xf0 }; memcpy(sw + 4, &dst, 4); memcpy(fn, sw, 8);
     __builtin___clear_cache((char *)fn, (char *)fn + 8); __builtin___clear_cache((char *)tr, (char *)tr + 32);
     LOG("NULLMWF: libMWF %p, parcheada +0x2f694 (MonCtrl con this NULL devuelve 0)", base);
+    /* ConPrintfMessage (+0x2f81a) y ConPrintf (+0x2f850): this NULL → regreso inmediato (void). Se copian los 12 primeros bytes (instrucciones completas, sin PC) a un trampolín con cbz r0. */
+    static int hecho;
+    if (!hecho) { hecho = 1;
+        static const unsigned off[2] = { 0x2f81a, 0x2f850 };
+        for (int i = 0; i < 2; i++) {
+            unsigned char *f = base + off[i], *t2 = mmap(0, 4096, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0); if (t2 == MAP_FAILED) continue;
+            static const unsigned char head[] = { 0x38, 0xb1 };  /* cbz r0, +0x12 */
+            memcpy(t2, head, 2); memcpy(t2 + 2, f, 12);
+            static const unsigned char tail[] = { 0xdf, 0xf8, 0x04, 0xf0, 0x70, 0x47 };  /* ldr.w pc,[pc,#4] ; L: bx lr ; (dato en +0x14) */
+            memcpy(t2 + 0x0e, tail, 6); unsigned long back = (unsigned long)(f + 12) | 1; memcpy(t2 + 0x14, &back, 4);
+            unsigned long dst = (unsigned long)t2 | 1, doff = ((((unsigned long)f + 4) & ~3UL) + 4) - (unsigned long)f; unsigned char sw[12] = { 0xdf, 0xf8, 0x04, 0xf0, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf, 0x00, 0xbf };
+            if (doff > 8) continue; memcpy(sw + doff, &dst, 4);
+            unsigned long pg = (unsigned long)f & ~4095UL; mprotect((void *)pg, 8192, PROT_READ | PROT_WRITE | PROT_EXEC);
+            memcpy(f, sw, 12); __builtin___clear_cache((char *)f, (char *)f + 12); __builtin___clear_cache((char *)t2, (char *)t2 + 32);
+            LOG("NULLMWF: +%#x protegida (this NULL = regreso inmediato)", off[i]); } }
 }
 static void skip_fns(void) {
     char ln[256]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");

@@ -37,6 +37,15 @@ if [ -n "$IMSPLIT" ]; then
 else
   run_im "${IMARGS:-s g r u l i a}" im_s
 fi
+# PMWAIT=s (diagnóstico, fuera del proceso im.elf): a los s segundos y cada PMEVERY (60) s vuelca por la consola comm/estado/wchan/syscall de cada hilo de im.elf y su mapa de módulos
+# («PM» en consola.log); sirve para construir el grafo de espera de un interbloqueo (syscall: nº, argumentos, sp, pc).
+if [ -n "$PMWAIT" ]; then
+  echo 1 > /proc/sys/debug/exception-trace 2>/dev/null; ls /proc/sys/debug 2>/dev/null | sed "s/^/PM sysdebug /"
+  ( sleep $PMWAIT; for r in 1 2 3; do PP=$(for d in /proc/[0-9]*; do echo "$(ls $d/task 2>/dev/null | wc -l) ${d#/proc/}"; done | sort -rn | head -1 | cut -d" " -f2); echo "PM-BEGIN $r pid=$PP"; tail -4 /tmp/im_s.log | cut -c1-200 | sed "s/^/PM imlog /"; grep -a -A12 "pila (sig 11" /tmp/im_s.log | tail -26 | cut -c1-150 | sed "s/^/PM segv /"; grep -a "EXIT=" /tmp/im_s.log | sed "s/^/PM imexit /"; dmesg | grep -a "unhandled\|segfault\|potentially" | tail -6 | sed "s/^/PM dmesg /"; ps | grep -a "im.elf\|busybox" | head -5 | sed "s/^/PM ps /"
+      for t in /proc/$PP/task/*; do echo "PM $(basename $t) $(cat $t/comm) st=$(cut -d' ' -f3 $t/stat) wchan=$(cat $t/wchan) sys=$(cat $t/syscall)"; done
+      [ $r = 1 ] && grep -a "\.so\|im.elf" /proc/$PP/maps | grep -a "r-xp\|r--p" | awk '{print "PMMAP",$1,$6}'
+      echo "PM-END $r"; sleep ${PMEVERY:-60}; done ) &
+fi
 sleep ${WAIT:-50}
 if [ -n "$IMSPLIT" ]; then for a in ${IMLETTERS:-s g r u l i a} $([ -n "$IMNOARG" ] && echo n); do echo "== imp_$a: $(grep -ac 'dlopen(.*) -> 0x' /tmp/imp_$a.log) modulos, $(grep -ac '' /tmp/imp_$a.log) lineas, EXIT: $(grep -a '^EXIT=' /tmp/imp_$a.log)"; echo "### imp_$a" >> /tmp/im_s.log; cat /tmp/imp_$a.log >> /tmp/im_s.log; done; fi
 P=$(pidof im.elf | cut -d' ' -f1)
