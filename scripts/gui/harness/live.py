@@ -61,14 +61,24 @@ SHIMENV_BASE = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/STLREC
 SHIMEXTRA = os.environ.get("SHIMEXTRA", "")  # SHIMEXTRA="WAITLOG=3000": variables de diagnóstico del shim
 # Tarjeta SD emulada (G22-E §5.5–§5.15): conjunto mínimo para que ModelMedia vea una SD montada, salga EEStart sin PATCHFN y la pantalla de grabación se dibuje (--sin-sd lo apaga).
 # Incluye atajos (shortcut: comentados en sonyshim.c): INSHORT (inserción forzada), NULLMWF/TABLE0 (objetos de ObjCntMgr sin crear) y SKIPFN de métodos de ObjCntMgr/ObjMedia.
-TARJETA_SKIPFN = "7fa3d4=0,84569a=0,84570e=0,81685a=0,829d78=0,829da0=0,829de8=0,829e70=0,829eb8=0,829f00=0,829faa=0,829fc0=0"
-TARJETA_ENV = ("BKMULTIPTR=1 FRONTRM=3 FRONTARG2=1 FRONTRMDELAY=3 INSHORT=1 SDIMG=1 SDSECT=8388608 NULLMWF=1 TABLE0=1 ")
+# §5.35: onStarting de ObjCntMgr abortaba en SendDbCommand (libObj+0x826ed0: la cola 0x37807c de InfraDatabase no tiene receptor, osal_snd_sync_msg = 0xfffffc04) antes de crear 0x4b8, 0x4e8 y la tabla 0x117c.
+# Con 826ed0=0 esos componentes se crean por su ruta real y ya no hacen falta TABLE0 ni los SKIPFN 84569a/84570e/81685a/829d78…829fc0 (medido, 3 min estable).
+# shortcut: SendDbCommand devuelve OK sin servidor InfraDatabase (la respuesta no se rellena), mejorar cuando arranque InfraDatabase (Init de la libObj; probablemente bloqueado tras Ii 0c7 libmprctrl, que no termina).
+TARJETA_SKIPFN = "7fa3d4=0,826ed0=0"
+TARJETA_ENV = ("BKMULTIPTR=1 FRONTRM=3 FRONTARG2=1 FRONTRMDELAY=3 INSHORT=1 SDIMG=1 SDSECT=8388608 NULLMWF=1 ")
 
 
-def construye_shimenv(tarjeta: bool = True, extra: str | None = None) -> str:
-    """SHIMENV del arnés: base + (con `tarjeta`) SD emulada y sus atajos + SHIMEXTRA (que manda si repite variables)."""
+def construye_shimenv(tarjeta: bool = True, extra: str | None = None, quita: str | None = None) -> str:
+    """SHIMENV del arnés: base + (con `tarjeta`) SD emulada y sus atajos + SHIMEXTRA (que manda si repite variables).
+    `quita` (LIVE_QUITA, diagnóstico opt-in): «NOMBRE,SKIPFN:dir» retira variables o direcciones de SKIPFN para medir sin ese atajo."""
     base = SHIMENV_BASE.replace("SKIPFN=7fa3d4=0 ", f"SKIPFN={TARJETA_SKIPFN} " if tarjeta else "SKIPFN=7fa3d4=0 ")
-    return base + (TARJETA_ENV if tarjeta else "") + (SHIMEXTRA if extra is None else extra)
+    env = base + (TARJETA_ENV if tarjeta else "") + (SHIMEXTRA if extra is None else extra)
+    for q in filter(None, (quita if quita is not None else os.environ.get("LIVE_QUITA", "")).split(",")):
+        if q.startswith("SKIPFN:"):
+            env = re.sub(rf"(SKIPFN=[^ ]*?)(?:,|(?<==)){q[7:]}=0(?=,| )", lambda m: m.group(1), env).replace("SKIPFN=,", "SKIPFN=")
+        else:
+            env = re.sub(rf"(?:^| ){q}=\S*", "", env)
+    return env
 
 
 SHIMENV = construye_shimenv()
