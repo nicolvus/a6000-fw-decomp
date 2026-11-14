@@ -31,7 +31,7 @@ def test_shimextra_manda_sobre_el_conjunto():
 def test_dial_inicial_2_iauto_plus_y_keyiniton_vacio():
     """§5.23: el dial se informa al activarse InputService (KEYINITON vacío) y con la posición medida 2 = iAUTO+ (vista rica)."""
     env = live.construye_shimenv(True)
-    assert "KEYINIT=7000001:1:177,7025:2:27 " in env and "KEYINITON= " in env
+    assert "KEYINIT=7000001:1:177,7025:2:27 " in env and "KEYINITON= " in env and "KEYINITAFTER=not_user_operation " in env
     assert live.DIAL_INICIAL == 2
 
 
