@@ -347,7 +347,7 @@ static void *vdfcb[16];  /* vdf (cola de kernel 0x80003b): comandos pares 2,4,6,
  * FRONTRM=2 → RM1 habilitado, port_state 1 (INFERENCIA: 1 = tarjeta presente). Se envía 3 s tras registrar la cola, dentro de los 10 s que ThreadRM espera su primer evento. */
 static void *frontrm_th(void *a) {
     unsigned q = (unsigned)(unsigned long)a; const char *e = getenv("FRONTRM"); unsigned st = e ? (unsigned)hexv(e, 0) : 0;
-    { const char *d = getenv("FRONTRMDELAY"); sleep(d ? atoi(d) : 40); }  /* tras ObjMedia::onStarting (≈ 28 s después del registro) */
+    { const char *d = getenv("FRONTRMDELAY"); sleep(d ? num(d) : 40); }  /* tras ObjMedia::onStarting (≈ 28 s después del registro) */
     unsigned char *b = calloc(1, 0x300); unsigned char *m = b + 0x20; m[-8] = 1;  /* cabecera de osal_msg_size: 1 bloque = 20 B */
     ((unsigned *)m)[-1] = 0x28017c;  /* emisor: m_osalidForFrontMediaNotify (valor por defecto de la biblioteca) */
     m[0] = 2; m[3] = 1; m[4] = (unsigned char)st;
@@ -626,6 +626,8 @@ static int ioctl_in(int fd, unsigned long req, ...) {
               if (ack && rq > 0x10000 && rq < 0x2000000) { if (!is_dynq(rq)) dynq_add(rq);
                   if (((unsigned *)m)[1] == 0xa0a0a0a0) { dataflow_reply(w[0], rq, (unsigned char *)m, 0); return 0; }
                   mbx_post(rq, (unsigned *)m, 0); LOG("snd_msg %#x -> acuse ACKQ0 a %#x", w[0], rq); return 0; } }
+            if (w[0] == 0xd9016e && ((unsigned *)m)[0] == 2 && (((unsigned *)m)[1] & 0xffff) == 1 && getenv("FRONTRM")) {  /* MCMND (InfraMediaDetectThreadRM::CheckInsertedMedia): {2, 1, 8, id de respuesta @+8, …, id de slot @+0x18} → tipo de soporte insertado @+0x1c (1 = MS?, 2 = MS, 3 = SD, 4 = SSD según CheckInsertedMedia): slot 0x101 = SD (INFERENCIA), el resto vacío */
+                unsigned *q = (unsigned *)m; q[7] = q[6] == 0x101 ? 3 : 0; LOG("MCMND: slot %#x -> tipo %u", q[6], q[7]); }
             { const char *e = getenv("ACKQ"); if (!e) e = "d9016e,7a0029,61003c"; int ack = 0;
               while (*e) { if (hexv(e, &e) == w[0]) ack = 1; while (*e == ',') e++; }
               if (getenv("MSGHEXQ") && hexv(getenv("MSGHEXQ"), 0) == w[0]) {  /* MSGHEXQ=qid: vuelca 4+16 palabras del mensaje y la pila del emisor (2 primeras veces) */
