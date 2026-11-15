@@ -684,8 +684,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
     }
     if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && getenv("SDIMG") && arg) {  /* SD emulada (INFERENCIA de los campos, medida en libInfraMediaCommon: mmc_mount/mmc_open/FUN_0001eac0) */
         unsigned *a = (unsigned *)arg, tot = sd_sectors();
-        if (!strcmp(devname[fd], "/dev/mmca-char") && req == 5) { memset(a, 0, 0xc0); ((unsigned char *)a)[0] = 3; a[0x20 / 4] = tot - 1; a[0x2c / 4] = 8192; a[0x34 / 4] = 512;
-            { unsigned long long by = (unsigned long long)tot * 512; a[0x24 / 4] = (unsigned)by; a[0x28 / 4] = (unsigned)(by >> 32); }  /* capacidad en bytes (lo @+0x24, hi @+0x28): mcmn_drv_mmc_open la clasifica (hi 0 y lo ≤ 0x80000000 → 0x8200 SDSC; en otro caso hasta hi 8 → 0x8201 SDHC; más → 0x8202 SDXC); 4 GB = hi 1, lo 0 → SDHC */ LOG("SDIMG: ioctl 5 -> SD, %u sectores", tot); return 0; }
+        if (!strcmp(devname[fd], "/dev/mmca-char") && req == 5) { sd_cardinfo_fill(a, tot); LOG("SDIMG: ioctl 5 -> SD, %u sectores", tot); return 0; }
         if (!strcmp(devname[fd], "/dev/mmca") && (req == 0x10f || req == 0x110)) {  /* E/S de sectores del driver mmc (libInfraMediaCommon+0xec28 leer / +0xeb4c escribir): {estado, búfer, sector, nº de sectores}; INFERENCIA del orden de campos por la llamada de libInfraFsys (búfer, sector, cuenta) */
             unsigned long n = (unsigned long)a[3] * 512; off_t o = (off_t)a[2] * 512; ssize_t r = req == 0x10f ? pread(fd, (void *)a[1], n, o) : pwrite(fd, (void *)a[1], n, o);
             a[0] = r == (ssize_t)n ? 0 : 0x80000001u; sd_log(req == 0x10f ? "leer" : "escribir", fd, (long)a[2], (long)a[3], (long)r); return 0; }
@@ -1649,6 +1648,7 @@ static void *openhot(void *a) {
     int (*ov)(const char *, int) = lobj_h ? dlsym(lobj_h, "_ZN13viewManagerIf8openViewEPKci") : 0;
     char *nm = a; int r = ov ? ov(nm, 0) : -99; LOG("OPENHOT %s -> %d", nm, r); free(nm); return 0;
 }
+static void *sddump(void *a);
 static void *live_keys(void *a) {
     (void)a; static char buf[8192]; int n = 0;
     for (;;) {
@@ -1668,6 +1668,7 @@ static void *live_keys(void *a) {
             if (ln[0] == 'X' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, rqhot, nm); pthread_detach(th); }
             if (ln[0] == 'P' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, peekhot, nm); pthread_detach(th); }
             if (ln[0] == 'F' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, fnhot, nm); pthread_detach(th); }
+            if (ln[0] == 'D' && !ln[1]) { pthread_t th; pthread_create(&th, 0, sddump, 0); pthread_detach(th); }
             if (ln[0] == 'R') live_force = 1;  /* el anfitrión se acaba de conectar (p. ej. tras restaurar el estado): reenviar el fotograma actual */
             if (ln[0] == 'K') { unsigned m[12] = {0}; static int swallow; m[0] = hexv(ln + 2, &e); m[2] = hexv(e + 1, &e); m[4] = hexv(e + 1, &e);
                 if (m[0] == 0x1ab && m[2] == 1 && !menu_open) { swallow = 1; menu_open = 1; pthread_t th; pthread_create(&th, 0, openhot, strdup("@V00E")); pthread_detach(th); LOG("MENU con el menú cerrado: openView @V00E"); }
@@ -1888,4 +1889,23 @@ int pthread_join(pthread_t t, void **v) {
      * ejecuta las fases y THREAD_INFRA1 queda en el bucle de MWF para siempre): así llega a su bucle de recepción (0x9e94). shortcut: afecta a todo join del hilo principal. */
     if (getenv("NOJOIN") && syscall(224) == getpid() && ++nmj >= (int)num(getenv("NOJOIN"))) { LOG("pthread_join %lx omitido (NOJOIN)", (unsigned long)t); return 0; }
     return r(t, v);
+}
+
+/* «D»: vuelca al anfitrión los trozos de /sd.img con datos (primeros 256 MiB, bloques de 4 KiB no nulos) como «\x01SDI desplazamiento_hex hex\n» y cierra con «\x01SDE\n»: permite ver
+ * lo que la UI de la cámara escribió en la SD (Formatear, base de datos de imágenes). shortcut: solo 256 MiB, suficiente para FAT/directorios de una SD vacía; ampliar si hace falta. */
+static void *sddump(void *a) {
+    (void)a; int f = real_open_call("/sd.img", O_RDONLY, 0, 0); if (f < 0) { live_msg("SDE", "sin /sd.img", 11); return 0; }
+    static unsigned char b[4096]; static char hx[8192 + 40]; const off_t lim = 256 << 20; off_t pos = 0;
+    while (pos < lim) {
+        off_t ini = syscall(SYS_lseek, f, pos, 3 /* SEEK_DATA */); if (ini < 0 || ini >= lim) break;
+        off_t fin = syscall(SYS_lseek, f, ini, 4 /* SEEK_HOLE */); if (fin > lim) fin = lim;
+        for (off_t o = ini & ~(off_t)4095; o < fin; o += 4096) {
+            ssize_t n = pread(f, b, 4096, o); int nz = 0; for (ssize_t i = 0; i < n; i++) if (b[i]) { nz = 1; break; }
+            if (!nz) continue;
+            int h = snprintf(hx, 40, "%llx ", (unsigned long long)o); for (ssize_t i = 0; i < n; i++) { hx[h++] = "0123456789abcdef"[b[i] >> 4]; hx[h++] = "0123456789abcdef"[b[i] & 15]; }
+            live_msg("SDI", hx, h);
+        }
+        pos = fin;
+    }
+    close(f); live_msg("SDE", "ok", 2); return 0;
 }

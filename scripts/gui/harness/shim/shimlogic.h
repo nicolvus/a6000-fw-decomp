@@ -25,3 +25,18 @@ static inline int reg_ctx_is_t2(const unsigned *t) { return t[2] && t[0] > t[2] 
  * a[0x38/4] (+0x10: out[0x30], cuyo uso es un resto de división con alineación) se deja en `tot` como estaba: shortcut: sin dato verificado del valor real (¿4 MiB de AU?),
  * mejorar cuando se mida en una cámara. */
 static inline void sd_partinfo_fill(unsigned *a, unsigned tot) { memset(a, 0, 0x50); a[0x24 / 4] = tot - 1; a[0x38 / 4] = tot; }
+
+/* 4) ioctl 5 de /dev/mmca-char (info de la tarjeta, §5.40): libInfraMediaCommon+0x1024a hace ioctl(fd, 5, ctx+0x24), así que a[k] cae en ctx+0x24+k. Medido en el código: byte 0 = tipo (3 = SD,
+ * test en +0x10668/+0x10752), a[0x20] = último LBA (ctx+0x44, "max_lba"), a[0x24..0x2c] = capacidad u64 en bytes (ctx+0x48, "card_capacity"), a[0x2c] = erase_unit en sectores (ctx+0x50),
+ * a[0x34] = tamaño de sector. shortcut: erase_unit 8192 sectores (4 MiB, AU típica de SDHC 4 GB) sin dato real de cámara; mejorar al medirlo. */
+static inline void sd_cardinfo_fill(unsigned *a, unsigned tot) {
+    unsigned long long by = (unsigned long long)tot * 512;
+    memset(a, 0, 0xc0); ((unsigned char *)a)[0] = 3; a[0x20 / 4] = tot - 1; a[0x2c / 4] = 8192; a[0x34 / 4] = 512; a[0x24 / 4] = (unsigned)by; a[0x28 / 4] = (unsigned)(by >> 32);
+}
+/* libInfraMediaCommon+0x10776..0x107a2: capacidad (hi:lo) >= 0x800000001 -> 0x8202 (SDXC); > 0x80000000 -> 0x8201 (SDHC); si no 0x8200 (SDSC). */
+static inline unsigned sd_media_class(unsigned lo, unsigned hi) {
+    unsigned long long c = ((unsigned long long)hi << 32) | lo;
+    return c >= 0x800000001ULL ? 0x8202 : c > 0x80000000ULL ? 0x8201 : 0x8200;
+}
+/* libInfraFsys+0x24d14 (solo las clases SD): 0x8200 -> 0x8400, 0x8201 -> 0x8401, 0x8202 -> 0x8402 (§5.39). */
+static inline unsigned sd_fsys_class(unsigned c) { return 0x8400 + (c - 0x8200); }

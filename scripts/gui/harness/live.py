@@ -174,7 +174,7 @@ class Vm:
             with tempfile.TemporaryDirectory() as t:
                 cabeza = None
                 if "SDIMG=1" in shimenv:  # SD legible: imagen FAT32 de la carpeta de sd_emu (sectores en SDSECT, que ya va en shimenv)
-                    cabeza = Path(t) / "sd.head"; sd_image.construye(sd_emu.raiz_sd(""), cabeza, 4.0)
+                    cabeza = Path(t) / "sd.head"; sd_image.construye(sd_emu.raiz_sd(""), cabeza, 4.0, completa=os.environ.get("SD_ESTRUCTURA") == "1")
                 escribe_atomico(initrd, run.build_initrd(work, HERE / "im.sh", Path(t), shimenv, pkg, self.nvram, cabeza).read_bytes())
             sello.write_text(actual)
         for s in (self.ui, self.mon):
@@ -271,6 +271,13 @@ class Vm:
                         self.avq_cola.put(buf[5:j].decode())
                     buf = buf[j + 1:]
                     continue
+                if buf.startswith((b"\x01SDI ", b"\x01SDE")):  # volcado de /sd.img (orden «D» de /sd-volcado): trozos con datos → sd-volcado.img (disperso)
+                    j = buf.find(b"\n")
+                    if j < 0:
+                        break
+                    self.sd_volcado(buf[1:j].decode())
+                    buf = buf[j + 1:]
+                    continue
                 if buf.startswith(b"\x01WL "):  # línea de diagnóstico del shim (WAITLOG): va a shim.log
                     j = buf.find(b"\n")
                     if j < 0:
@@ -298,6 +305,16 @@ class Vm:
                 with self.cv:
                     self.png, self.seq, self.fps = png, self.seq + 1, len(marcas) / 2
                     self.cv.notify_all()
+
+    def sd_volcado(self, linea: str) -> None:
+        """«SDI off hex» escribe el trozo en `sd-volcado.img`; «SDE ok» marca el fin (fichero `sd-volcado.ok`)."""
+        if linea.startswith("SDE"):
+            (self.dir / "sd-volcado.ok").write_text(linea)
+            return
+        _, off, datos = linea.split(" ")
+        with (self.dir / "sd-volcado.img").open("r+b" if (self.dir / "sd-volcado.img").exists() else "wb") as f:
+            f.seek(int(off, 16))
+            f.write(bytes.fromhex(datos))
 
     def nv(self, texto: str) -> None:
         i, _, datos = texto.partition(" ")
@@ -478,6 +495,11 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
             elif self.path == "/salir":  # guarda el estado y cierra (main lo hace al salir de serve_forever)
                 self.responde(b"saliendo", "text/plain")
                 threading.Thread(target=srv.shutdown, daemon=True).start()
+            elif self.path == "/sd-volcado":  # pide al invitado los datos de /sd.img (se reciben en live/<perfil>/sd-volcado.img; fin = sd-volcado.ok)
+                for f in ("sd-volcado.img", "sd-volcado.ok"):
+                    (vm.dir / f).unlink(missing_ok=True)
+                vm.envia(b"D\n")
+                self.responde(b"ok", "text/plain")
             elif self.path == "/guardar":
                 self.responde(vm.guardar().encode(), "text/plain; charset=utf-8")
             else:

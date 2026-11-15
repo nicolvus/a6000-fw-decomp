@@ -62,3 +62,19 @@ def test_ioctl_104_de_la_sd_da_el_ultimo_lba_y_no_un_solo_sector(tmp_path):
     sectores, bloque, estado = map(int, subprocess.run([str(tmp_path / "t")], capture_output=True, text=True, check=True).stdout.split())
     assert sectores == 8388608 and estado == 0
     assert bloque == 8388608  # a[0x38/4] sin tocar: sin dato verificado (se queda como estaba)
+
+
+def test_ioctl_5_de_la_sd_se_clasifica_sdhc_8201_como_en_libinframediacommon(tmp_path):
+    """§5.40: libInfraMediaCommon+0x10770 lee la capacidad (u64) en ctx+0x48 = a[0x24/4..0x28/4] del ioctl 5 (el buffer es ctx+0x24) y clasifica: >= 0x800000001 -> 0x8202
+    SDXC; > 0x80000000 -> 0x8201 SDHC; si no 0x8200. libInfraFsys+0x24d14 la pasa a 0x8401 (SDHC)/0x8400 (SDSC). Una SD de 4 GB debe dar 0x8201 -> 0x8401."""
+    cc = shutil.which("cc") or shutil.which("gcc") or shutil.which("clang")
+    if not cc:
+        pytest.skip("sin compilador de C")
+    (tmp_path / "t.c").write_text('#include <stdio.h>\n#include <string.h>\n#include "shimlogic.h"\n'
+                                  'int main(void) { unsigned s[] = {2097152, 8388608, 67108864, 134217728}; for (int i = 0; i < 4; i++) { unsigned a[0x30]; sd_cardinfo_fill(a, s[i]);'
+                                  ' printf("%x %x %x %u\\n", sd_media_class(a[0x24 / 4], a[0x28 / 4]), sd_fsys_class(sd_media_class(a[0x24 / 4], a[0x28 / 4])), ((unsigned char *)a)[0], a[0x20 / 4] + 1); } return 0; }\n')
+    subprocess.run([cc, "-I", str(SHIM), str(tmp_path / "t.c"), "-o", str(tmp_path / "t")], check=True)
+    f = [ln.split() for ln in subprocess.run([str(tmp_path / "t")], capture_output=True, text=True, check=True).stdout.strip().split("\n")]
+    assert [x[0] for x in f] == ["8200", "8201", "8201", "8202"]  # 1 GB SDSC, 4 GB SDHC, 32 GB (0x800000000 < 0x800000001: SDHC), 64 GB SDXC
+    assert [x[1] for x in f][1] == "8401" and f[0][1] == "8400"
+    assert f[1][2] == "3" and f[1][3] == "8388608"

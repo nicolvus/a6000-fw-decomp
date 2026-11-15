@@ -26,3 +26,16 @@ def test_imagen_fat32_con_estructura_a6000(tmp_path):
     for c in ("DCIM", "PRIVATE", "PRIVATE/M4ROOT/CLIP"):
         assert "Directory" in mdir(img, c) or "Volume" in mdir(img, c), c
     assert "DSC00001" in mdir(img, "DCIM/100MSDCF")
+
+
+def test_estructura_completa_de_codigo_es_opt_in(tmp_path):
+    """§5.40: las carpetas que libmpr (xavcIfo_DbDirMngr) nombra bajo \\PRIVATE\\M4ROOT (SUB, THMBNL, GENERAL) y el \\AVF_INFO del índice AV solo van con completa=True."""
+    base, comp = tmp_path / "b.head", tmp_path / "c.head"
+    raiz = tmp_path / "sd"
+    sd_image.construye(raiz, base, 1.0)
+    sd_image.construye(raiz, comp, 1.0, completa=True)
+    (tmp_path / "b.img").write_bytes(base.read_bytes())
+    (tmp_path / "c.img").write_bytes(comp.read_bytes())
+    for c in ("PRIVATE/M4ROOT/SUB", "PRIVATE/M4ROOT/THMBNL", "PRIVATE/M4ROOT/GENERAL", "AVF_INFO"):
+        assert "Directory" not in mdir(tmp_path / "b.img", c) and "Volume" not in mdir(tmp_path / "b.img", c), c
+        assert "Directory" in mdir(tmp_path / "c.img", c) or "Volume" in mdir(tmp_path / "c.img", c), c
