@@ -32,7 +32,8 @@ K = round(2**32 / (LINE_US * 256))
 TV_MIN, TV_MAX = 0x1400, 0x1E00
 
 
-def cave_bytes() -> bytes:
+def cave_bytes(post: str = "") -> bytes:
+    """`post`: Thumb opcional que corre con r2 = líneas y debe dejarlas en r2 (g63 Flicker Scan); destruye r0-r3."""
     from keystone import KS_ARCH_ARM, KS_MODE_THUMB, Ks
     asm = f"""
         push {{r3, r4, r5, r6, r7, lr}}
@@ -58,6 +59,7 @@ def cave_bytes() -> bytes:
         movw r3, #{K & 0xFFFF:#x}
         movt r3, #{K >> 16:#x}
         umull r1, r2, r0, r3
+        {post}
         movw r3, #{R5_FULL + R5_LAG}
         subs r3, r3, r2
         cmp r3, #{R5_MIN}
@@ -103,7 +105,7 @@ def r5_esperado(tv: int, q8: int) -> int | None:
     return None if r5 < R5_MIN else min(r5, R5_FULL - 1)
 
 
-def emular(img: bytes, tv: int, silent: int = 1) -> tuple[int, int, int]:
+def emular(img: bytes, tv: int, silent: int = 1, backup: int | None = None) -> tuple[int, int, int]:
     """Ejecuta el enganche con Unicorn sobre la imagen parcheada: devuelve (r0, cap+0x64c, cap+0x655)."""
     from unicorn import UC_ARCH_ARM, UC_MODE_THUMB, Uc
     from unicorn.arm_const import (
@@ -118,6 +120,8 @@ def emular(img: bytes, tv: int, silent: int = 1) -> tuple[int, int, int]:
     mu.mem_map(lo, size)
     mu.mem_write(BASE, img)
     mu.mem_write(IMAGER, bytes.fromhex("41f23420") + bytes.fromhex("7047"))    # stub: movw r0,#0x1234; bx lr
+    if backup is not None:      # Backup_read simulado: escribe el byte `backup` en [r1] y devuelve 0 (g56)
+        mu.mem_write(0x435613B0, bytes([backup, 0x22, 0x0A, 0x70, 0x00, 0x20, 0x70, 0x47]))
     stack, cap, end = 0x10000000, 0x20000000, 0x30000000
     mu.mem_map(stack - 0x10000, 0x20000)
     mu.mem_map(cap, 0x10000)

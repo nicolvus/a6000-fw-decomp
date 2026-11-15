@@ -44,6 +44,8 @@ AJUSTES = (
     Ajuste("n_disparos", "N. disparos", ID_LIBRES[5], (("10", 10), ("30", 30), ("60", 60), ("100", 100), ("300", 300), ("999", 999), ("Sin tope", 0)), PID_PRIMERO + 5),
     # G62 seguimiento AE en la serie del intervalómetro: Normal (AE por toma, de fábrica) o Bloqueado (AEL tras la 1.ª toma, se libera al acabar la serie)
     Ajuste("seguim_ae", "Seguim. AE", ID_LIBRES[6], (("Normal", 0), ("Bloqueado", 1)), PID_PRIMERO + 6),
+    # G63 Flicker Scan (Silent): redondea la exposición al múltiplo más cercano del periodo del parpadeo (líneas de 17,135 µs: 100 Hz = 584, 120 Hz = 486)
+    Ajuste("flicker_scan", "Flicker Scan", ID_LIBRES[7], (("Off", 0), ("50 Hz", 584), ("60 Hz", 486)), PID_PRIMERO + 7),
 )
 POR_ID = {a.id: a for a in AJUSTES}
 
