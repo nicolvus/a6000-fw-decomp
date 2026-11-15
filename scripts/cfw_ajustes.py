@@ -34,8 +34,8 @@ AJUSTES = (
     Ajuste("bulb_timer", "Bulb Timer", ID_LIBRES[0],
            # 7 opciones: tope de la lista de la clase Normal medido en cámara (G36); no medido para este nodo, por prudencia no se pasa de 7
            (("Off", 0), ("5 s", 5), ("30 s", 30), ("1 min", 60), ("2 min", 120), ("5 min", 300), ("15 min", 900)), PID_PRIMERO),
-    # inerte (sin consumidor): demuestra que varios ajustes conviven en la carpeta
-    Ajuste("cfw_test", "CFW test", ID_LIBRES[1], (("Off", 0), ("On", 1)), PID_PRIMERO + 1),
+    # G71 LUT 3D: Off = de fábrica; LUT1…3 = tablas 5×9×9 del `.dat` (`scripts/lut/lut_patch.py`). Reutiliza el id del antiguo «CFW test» (inerte, sin consumidor)
+    Ajuste("lut", "LUT", ID_LIBRES[1], (("Off", 0), ("LUT1", 1), ("LUT2", 2), ("LUT3", 3)), PID_PRIMERO + 1),
     # G57 Focus Bracket: nº de tomas (el valor es N) y paso (s16 del comando de lente 0x1D; unidades y sentido NO medidos, g57 §4)
     Ajuste("fb_n", "Focus Bracket", ID_LIBRES[2], (("Off", 0), ("3", 3), ("5", 5), ("10", 10), ("15", 15), ("20", 20), ("30", 30)), PID_PRIMERO + 2),
     Ajuste("fb_paso", "Focus Br. paso", ID_LIBRES[3], (("Fino", 4), ("Medio", 16), ("Grueso", 64)), PID_PRIMERO + 3),
