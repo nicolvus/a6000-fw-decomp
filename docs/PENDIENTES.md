@@ -749,3 +749,4 @@ Carril separado: no reutiliza ni modifica conclusiones de captura/sensor. Índic
 
 - 15-11-2026 · G22-E tarea 43 ([§5.49](gui/g22-avcam-puente.md)): `ACT_LabelStillRemainConverter` se ejecuta una sola vez y no hay eventos hacia la etiqueta; STLREC no adjunta `@M07F` (sí `@M00B/@M00F/…`); «--E-» no viene de la tabla de 7 segmentos (no se ejecuta). Parcial; abierto G22-E-1e.
 - 15-11-2026 · G22-E tarea 44 ([§5.50](gui/g22-avcam-puente.md)): el widget del contador se refresca y lee `@M00F` info 7 (`0x10a/0x1fb`), que recibe `remain = 0`; `GetStillContentsRemain` devuelve éxito con salida a cero (STLREC y MFM); corrige §5.49/§5.33 (parcial).
+| G58-SMILE | CERRADO (ya existe) | 15-11-2026 · [g58](gui/g58-smile-shutter.md): Smile Shutter ya está en el menú de fábrica de la A6000 («Sonrisa/Detec. cara», 4.º icono; tipo 29 → lista `Default`). Sin parche. **SMILE-CAM**: comprobar en cámara que dispara al sonreír (criterio: foto automática con la opción en Smile Shutter). |
