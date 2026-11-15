@@ -88,3 +88,39 @@ def test_envoltorios_resuelven_con_nextsym_y_no_con_dlsym_literal():
     src = (Path(__file__).resolve().parents[1] / "scripts/gui/harness/shim/sonyshim.c").read_text()
     assert not re.findall(r'dlsym\(RTLD_NEXT, *"', src)
     assert "nx_ptr[i] = dlsym(RTLD_NEXT, nx_names[i])" in src  # shim_init los resuelve antes de que arranque cualquier hilo
+
+
+def test_sigsegv_diagnostico_no_se_pierde_en_el_invitado():
+    """§5.42: la pila del manejador del shim y el dmesg quedaban en /tmp del invitado; im.sh los vuelca a la consola al morir im.elf, y SIGLOG=1 registra quién cambia la acción de SIGSEGV."""
+    from pathlib import Path
+
+    h = Path(__file__).resolve().parents[1] / "scripts/gui/harness"
+    src, sh = (h / "shim/sonyshim.c").read_text(), (h / "im.sh").read_text()
+    assert "imexit_diag" in sh and "IMSEGV" in sh and "IMDMESG" in sh
+    assert 'getenv("SIGLOG")' in src and "int sigaction(" in src and '"sigaction"' in src
+
+
+def test_envoltorios_no_reservan_marcos_grandes_en_la_pila():
+    """§5.42: `char b[65536]` en fake_open gastaba 64 KiB de pila en CADA open(); THREAD_INFRA1/2 de libObj tienen 256 KiB y se desbordaban (SEGV al azar del arranque)."""
+    import re
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "scripts/gui/harness/shim/sonyshim.c").read_text()
+    grandes = [m.group(0) for m in re.finditer(r"(?<!static )(?:char|unsigned char|uint8_t|unsigned)\s+\w+\[(\d+|0x[0-9a-f]+)\]", src) if int(m.group(1), 0) >= 16384 and "snap" not in m.group(0)]  # snap: miembro de una estructura estática (rtw)
+    assert not grandes, grandes
+
+
+def test_envio_sincrono_no_se_reentra_en_la_misma_cola(tmp_path):
+    """§5.42: el callback de la cola síncrona 0x924126 (libObj+0x7ddd88) vuelve a enviar a esa cola; el shim lo entrega en el mismo hilo y recursa (240 B por nivel) hasta agotar la pila (SEGV de arranque)."""
+    cc = shutil.which("cc") or shutil.which("gcc") or shutil.which("clang")
+    if not cc:
+        pytest.skip("sin compilador de C")
+    (tmp_path / "t.c").write_text(r'''#include <stdio.h>
+#include "shimlogic.h"
+int main(void) { sync_nest s = {{0}, 0}; int a = sync_nest_enter(&s, 0x924126), b = sync_nest_enter(&s, 0x924126), c = sync_nest_enter(&s, 0x720018);
+    sync_nest_leave(&s, 0x720018); sync_nest_leave(&s, 0x924126); int d = sync_nest_enter(&s, 0x924126);
+    for (int i = 0; i < 20; i++) sync_nest_enter(&s, 0x1000 + i); printf("%d %d %d %d %d", a, b, c, d, s.n <= 8); return 0; }
+''')
+    subprocess.run([cc, "-I", str(SHIM), str(tmp_path / "t.c"), "-o", str(tmp_path / "t")], check=True)
+    # primera entrega sí, anidada en la misma cola no, otra cola sí, tras salir se puede volver a entregar, y la pila está acotada
+    assert subprocess.run([str(tmp_path / "t")], capture_output=True, text=True, check=True).stdout == "1 0 1 1 1"

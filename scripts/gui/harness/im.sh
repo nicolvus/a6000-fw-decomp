@@ -8,7 +8,7 @@ export LD_LIBRARY_PATH=/usr/lib
 if [ -n "$LIVE" ]; then
   modprobe virtio_mmio
   for i in 1 2 3 4 5 6 7 8 9 10; do for f in /sys/class/virtio-ports/*/name; do [ "$(cat $f 2>/dev/null)" = a6000ui ] && LIVE=/dev/$(basename $(dirname $f)); done; [ -e "$LIVE" ] && break; sleep 1; done
-  export LIVE; echo "LIVE=$LIVE"
+  export LIVE; echo "LIVE=$LIVE"; echo 1 > /proc/sys/kernel/print-fatal-signals 2>/dev/null
 fi
 # NET (live.py, T5): lista «telnet,wifi». Emulador, no cámara: virtio-net con slirp de QEMU hace de enlace Wi-Fi (la cámara usa ath6kl_sdio + SDIO, sin emular).
 # La interfaz se llama ath0 como en libNetService.so/pump.conf de la cámara. DHCP: udhcpc del instalador (la cámara usa su `pump`); telnetd es el busybox de la cámara en /cam
@@ -30,13 +30,25 @@ if [ -n "$NET" ]; then
 fi
 # IMSPLIT=1: como bootin.elf, un proceso im.elf por letra (s g r u l i a) y uno final sin argumentos; cada letra activa una fase del IMDB
 # (u = fase 4: appFw.so → Application_System_Init, el hilo de la UI). Sin IMSPLIT: un solo proceso con todas las letras (modo histórico).
-run_im() { ( LD_PRELOAD=/usr/lib/sonyshim.so chroot /cam /usr/bin/im.elf $1 > /tmp/$2.log 2>&1; r=$?; echo "EXIT=$r" >> /tmp/$2.log; [ -n "$LIVE" ] && echo "IMEXIT $2 $r" ) & }
+# Al morir im.elf (LIVE): vuelca por la consola lo que el invitado deja en /tmp (la pila del manejador del shim, las últimas líneas y dmesg), para que el SEGV del arranque deje traza en consola.log del anfitrión (§5.42)
+imexit_diag() {  # busybox grep no tiene -A: awk imprime la línea que casa y las N siguientes
+  ctx() { awk -v n="$2" -v pre="$3" 'c>0{print pre $0; c--} $0~p{print pre $0; c=n}' p="$1" ; }
+  ctx "SIGLOG" 1 "IMSIGLOG " < /tmp/$1.log | head -30 | cut -c1-150
+  ctx "pila .sig (11|7|4|6) " ${IMSEGVN:-45} "IMSEGV " < /tmp/$1.log | head -${IMSEGVN:-45} | cut -c1-150
+  grep -a "pthread_create" /tmp/$1.log | head -${IMTHRN:-30} | cut -c1-150 | sed "s/^/IMTHR /"
+  tail -6 /tmp/$1.log | cut -c1-150 | sed "s/^/IMTAIL /"; dmesg | ctx "potentially" 16 "IMDMESG " | tail -${IMDMN:-18} | cut -c1-150; }
+run_im() { ( LD_PRELOAD=/usr/lib/sonyshim.so chroot /cam /usr/bin/im.elf $1 > /tmp/$2.log 2>&1; r=$?; echo "EXIT=$r" >> /tmp/$2.log; [ -n "$LIVE" ] && { [ "$r" != 0 ] && imexit_diag $2; echo "IMEXIT $2 $r"; } ) & }
 if [ -n "$IMSPLIT" ]; then
   for a in ${IMLETTERS:-s g r u l i a}; do run_im $a imp_$a; done
   [ -n "$IMNOARG" ] && run_im "" imp_n
   : > /tmp/im_s.log
 else
   run_im "${IMARGS:-s g r u l i a}" im_s
+fi
+# STKRSS=s (diagnóstico §5.42, fuera del proceso im.elf): a los s segundos (y de nuevo cada 20 s) imprime «STKRSS tamaño_KiB rss_KiB» de cada mapa anónimo de 200 KiB a 2 MiB de im.elf: la marca de agua de las pilas de THREAD_INFRA1/2 (256 KiB en libObj; con STACKPAD el mapa crece, el RSS es el uso real).
+if [ -n "$STKRSS" ]; then
+  ( sleep $STKRSS; for r in 1 2 3; do PP=$(for d in /proc/[0-9]*; do echo "$(ls $d/task 2>/dev/null | wc -l) ${d#/proc/}"; done | sort -rn | head -1 | cut -d" " -f2)
+      awk '/^[0-9a-f]+-[0-9a-f]+ /{n=$1;nm=$6} /^Size:/{sz=$2} /^Rss:/{if (nm=="" && sz>=200 && sz<=2100) print "STKRSS", n, sz, $2}' /proc/$PP/smaps | head -20; sleep 20; done ) &
 fi
 # PMWAIT=s (diagnóstico, fuera del proceso im.elf): a los s segundos y cada PMEVERY (60) s vuelca por la consola comm/estado/wchan/syscall de cada hilo de im.elf y su mapa de módulos
 # («PM» en consola.log); sirve para construir el grafo de espera de un interbloqueo (syscall: nº, argumentos, sp, pc).

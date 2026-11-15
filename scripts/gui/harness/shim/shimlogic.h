@@ -40,3 +40,13 @@ static inline unsigned sd_media_class(unsigned lo, unsigned hi) {
 }
 /* libInfraFsys+0x24d14 (solo las clases SD): 0x8200 -> 0x8400, 0x8201 -> 0x8401, 0x8202 -> 0x8402 (§5.39). */
 static inline unsigned sd_fsys_class(unsigned c) { return 0x8400 + (c - 0x8200); }
+
+/* §5.42: colas síncronas cuyo callback se está ejecutando en este hilo (el shim entrega el callback en el hilo emisor). Un envío a una cola que ya está en curso no se entrega otra vez:
+ * libObj+0x7ddd88 (callback de 0x924126) vuelve a enviar a 0x924126 y la recursión agotaba la pila. shortcut: tope de 8 colas anidadas distintas; las demás se entregan sin guardar. */
+typedef struct { unsigned q[8]; int n; } sync_nest;
+static inline int sync_nest_enter(sync_nest *s, unsigned qid) {
+    for (int i = 0; i < s->n; i++) if (s->q[i] == qid) return 0;
+    if (s->n < 8) s->q[s->n++] = qid;
+    return 1;
+}
+static inline void sync_nest_leave(sync_nest *s, unsigned qid) { if (s->n && s->q[s->n - 1] == qid) s->n--; }

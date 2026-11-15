@@ -15,7 +15,7 @@
 /* nextsym: los envoltorios resuelven la función real con dlsym(RTLD_NEXT) en su primera llamada, y dlsym toma el cerrojo del cargador (dl_load_lock). Si el hilo principal lo tiene
  * (dlopen ejecutando el constructor de una biblioteca que espera a un hilo recién creado) y ese hilo es el primero en llamar a un envoltorio, ambos se bloquean (arranque colgado con
  * avcam.jsonl en 4478 B, §5.41). Por eso las funciones de libc/libpthread se resuelven una vez en el constructor del shim y la búsqueda posterior no toca el cargador. */
-static const char *const nx_names[] = {"abort", "close", "dlopen", "fopen", "ioctl", "lseek64", "mmap", "munmap", "nanosleep", "open", "open64", "poll", "pread64", "pthread_attr_setschedparam", "pthread_cond_timedwait", "pthread_cond_wait", "pthread_create", "pthread_join", "pthread_mutex_lock", "pthread_mutex_timedlock", "pthread_mutex_unlock", "pthread_setschedparam", "pwrite64", "read", "sched_get_priority_max", "sched_setscheduler", "select", "sleep", "syscall", "system", "usleep"};
+static const char *const nx_names[] = {"abort", "close", "dlopen", "fopen", "ioctl", "lseek64", "mmap", "munmap", "nanosleep", "open", "open64", "poll", "pread64", "pthread_attr_setschedparam", "pthread_cond_timedwait", "pthread_cond_wait", "pthread_create", "pthread_join", "pthread_mutex_lock", "pthread_mutex_timedlock", "pthread_mutex_unlock", "pthread_setschedparam", "pwrite64", "read", "sched_get_priority_max", "sched_setscheduler", "select", "sigaction", "signal", "sleep", "syscall", "system", "usleep"};
 static void *nx_ptr[sizeof nx_names / sizeof *nx_names];
 static void *nextsym(const char *n) {
     for (unsigned i = 0; i < sizeof nx_names / sizeof *nx_names; i++) if (!strcmp(nx_names[i], n)) return nx_ptr[i] ? nx_ptr[i] : (nx_ptr[i] = dlsym(RTLD_NEXT, n));
@@ -120,7 +120,7 @@ static int fake_open(const char *p, int fl, mode_t m, int is64) {
         if (fd >= 0) { ftruncate(fd, 0x80000); pwrite(fd, &v, 4, 0x10); }  /* [base+0x10] = nº de hilos proxy que arranca u_osal_reg_msg_queue_cb */
     } else if (!strcmp(p, "/dev/mmca") && getenv("SDIMG")) {  /* SD emulada legible: /sd.img = disco de SDSECT sectores (hueco disperso) con la cabeza FAT32 de sd_image.py (/usr/share/sd.head) encima */
         static int listo; if (!listo) { listo = 1; int h = real_open_call("/usr/share/sd.head", O_RDONLY, 0, is64), d = real_open_call("/sd.img", O_RDWR | O_CREAT | O_TRUNC, 0666, is64);
-            if (h >= 0 && d >= 0) { ftruncate(d, (off_t)sd_sectors() * 512); char b[65536]; ssize_t n; off_t o = 0; while ((n = read(h, b, sizeof b)) > 0) { pwrite(d, b, n, o); o += n; } LOG("SDIMG: /sd.img %u sectores, cabeza %ld B", sd_sectors(), (long)o); }
+            if (h >= 0 && d >= 0) { ftruncate(d, (off_t)sd_sectors() * 512); char *b = malloc(65536); ssize_t n; off_t o = 0; while (b && (n = read(h, b, 65536)) > 0) { pwrite(d, b, n, o); o += n; } free(b);  /* en el montón: un búfer local de 64 KiB reservaba esa pila en cada open() (THREAD_INFRA de libObj tiene 256 KiB, §5.42) */ LOG("SDIMG: /sd.img %u sectores, cabeza %ld B", sd_sectors(), (long)o); }
             if (h >= 0) close(h); if (d >= 0) close(d); }
         fd = real_open_call("/sd.img", fl & ~0x10000 /* sin O_DIRECT: tmpfs no lo admite */, 0, is64);
     } else
@@ -596,9 +596,12 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             unsigned *t5 = (unsigned *)w[1];
             if (getenv("VERB5") && w[0] != 0x8f013a && w[0] != 0x720018) LOG("sync5 qid=%#x t5[1]=%#x", w[0], ((unsigned *)w[1])[1]);
             unsigned char *m = (unsigned char *)t5[0];
-            if (t5[1]) { if (getenv("MSGBODY") && w[0] == 0xcf016d && readable(m)) { char h[400]; int o = 0; for (int q = 0; q < 24; q++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[q]); LOG("REPLY sync %#x %s", w[0], h); } return 0; }  /* segunda llamada del emisor: fin del callback síncrono (REPLY = respuesta ya escrita por el receptor) */
+            static __thread sync_nest sn;  /* §5.42: colas cuyo callback corre en este hilo */
+            if (t5[1]) { sync_nest_leave(&sn, w[0]); if (getenv("MSGBODY") && w[0] == 0xcf016d && readable(m)) { char h[400]; int o = 0; for (int q = 0; q < 24; q++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[q]); LOG("REPLY sync %#x %s", w[0], h); } return 0; }  /* segunda llamada del emisor: fin del callback síncrono (REPLY = respuesta ya escrita por el receptor) */
             { static int ns5; const char *e = getenv("STACKQ"); if (e && hexv(e, 0) == w[0] && ++ns5 == 3) raise(SIGUSR1); }  /* STACKQ=qid: pila del emisor en el 3.er envío */
-            { pthread_mutex_lock(&cb_m); int k = cb_find(w[0]); if (k >= 0) { t5[1] = (unsigned)cbs[k].cb; t5[2] = (unsigned)cbs[k].arg; } pthread_mutex_unlock(&cb_m);
+            { pthread_mutex_lock(&cb_m); int k = cb_find(w[0]); int dentro = k >= 0 && !getenv("SYNCREENTRY") && !sync_nest_enter(&sn, w[0]);  /* shortcut: un envío a la cola cuyo callback ya corre en este hilo no se entrega otra vez (SYNCREENTRY=1 lo restaura; ver sync_nest) */
+              if (dentro) { static int nre; if (nre++ < 4) LOG("snd_sync_msg %#x reentrante: sin entrega (§5.42)", w[0]); k = -1; }
+              if (k >= 0) { t5[1] = (unsigned)cbs[k].cb; t5[2] = (unsigned)cbs[k].arg; } pthread_mutex_unlock(&cb_m);
               if (k >= 0) { if (getenv("VERB")) LOG("snd_sync_msg %#x -> callback directo", w[0]);
                   if (getenv("MSGBODY") && readable(m)) { char h[400]; int o = 0; for (int q = 0; q < 24; q++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[q]); LOG("MSGBODY sync %#x cab=%08x %08x %08x %s", w[0], ((unsigned *)m)[-3], ((unsigned *)m)[-2], ((unsigned *)m)[-1], h); }
                   return 0; } }
@@ -770,9 +773,26 @@ static void load_maps(void) {
     }
     if (f) fclose(f);
 }
+static unsigned long stk_top;  /* tope de la pila del hilo caído (STKSCAN) */
+static int sym_at = -1;  /* ≥ 0: desplazamiento en palabras desde sp (STKSCAN) */
 static void sym(unsigned v) {
     for (int i = 0; i < nmaps; i++)
-        if (v >= maps[i].lo && v < maps[i].hi) { efp("[shim]   %08x %s+%#x\n", v, maps[i].name, v - maps[i].lo + maps[i].off); return; }
+        if (v >= maps[i].lo && v < maps[i].hi) { if (sym_at >= 0) efp("[shim]   @%#x %08x %s+%#x\n", sym_at * 4, v, maps[i].name, v - maps[i].lo + maps[i].off); else efp("[shim]   %08x %s+%#x\n", v, maps[i].name, v - maps[i].lo + maps[i].off); return; }
+}
+/* SIGLOG=1 (diagnóstico, §5.42): registra quién cambia la acción de SIGSEGV (im.elf o sus librerías pueden sustituir el manejador del shim: el SEGV del arranque moría sin pila) con su librería+offset. */
+static void siglog(int sig, const void *h, unsigned fl, void *ra) {
+    if (sig != SIGSEGV || !getenv("SIGLOG")) return;
+    efp("[shim] SIGLOG SIGSEGV h=%p flags=%#x tid %ld por:\n", h, fl, (long)syscall(SYS_gettid)); load_maps(); sym((unsigned)(unsigned long)ra);
+}
+int sigaction(int sig, const struct sigaction *a, struct sigaction *o) {
+    static int (*real)(int, const struct sigaction *, struct sigaction *); if (!real) real = nextsym("sigaction");
+    if (a) siglog(sig, (void *)a->sa_sigaction, a->sa_flags, __builtin_return_address(0));
+    return real(sig, a, o);
+}
+void (*signal(int sig, void (*h)(int)))(int) {
+    static void (*(*real)(int, void (*)(int)))(int); if (!real) real = nextsym("signal");
+    siglog(sig, (void *)h, 0, __builtin_return_address(0));
+    return real(sig, h);
 }
 static void *lobj_h;
 static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, LR y direcciones de código halladas en la pila */
@@ -790,7 +810,11 @@ static void on_usr1(int sig, siginfo_t *si, void *ctx) {  /* diagnóstico: PC, L
     if (sig == SIGSEGV && (getenv("NULLMWF") || getenv("TABLE0"))) signal(SIGSEGV, SIG_DFL);  /* fallo no recuperable: se imprime la pila y el reintento mata el proceso como antes */
     if (!nmaps) load_maps();
     char nm[24] = {0}; syscall(SYS_prctl, 16, nm); efp("[shim] --- pila (sig %d tid %ld %s) pc/lr:\n", sig, (long)syscall(SYS_gettid), nm); efp("[shim]   raw pc=%08lx lr=%08lx addr=%08lx r0=%08lx r1=%08lx r2=%08lx\n", uc->uc_mcontext.arm_pc, uc->uc_mcontext.arm_lr, (unsigned long)si->si_addr, uc->uc_mcontext.arm_r0, uc->uc_mcontext.arm_r1, uc->uc_mcontext.arm_r2); sym(uc->uc_mcontext.arm_pc); sym(uc->uc_mcontext.arm_lr);
-    for (int i = 0; i < 300; i++) { if (((unsigned long)(sp + i) & 0xfff) == 0 || i == 0) { if (msync((void *)((unsigned long)(sp + i) & ~0xfffUL), 1, MS_ASYNC)) break; } sym(sp[i]); }  /* no cruzar el final de la pila */
+    if (getenv("STKSCAN")) { pthread_attr_t pa; void *sa_; size_t ssz; if (!pthread_getattr_np(pthread_self(), &pa)) { pthread_attr_getstack(&pa, &sa_, &ssz); efp("[shim] STACKINFO self=%lx pila=%p+%zu sp=%#lx\n", (unsigned long)pthread_self(), sa_, ssz, (unsigned long)sp); stk_top = (unsigned long)sa_ + ssz; } }
+    if (getenv("STKSCAN")) { FILE *mf = fopen("/proc/self/maps", "r"); char ln[256], pv[256] = ""; int show = 0; while (mf && fgets(ln, sizeof ln, mf)) {  /* regiones vecinas a sp */
+            char *e; unsigned lo = hex(ln, &e), hi = hex(e + 1, &e); if (show) { efp("[shim] MAPS+ %s", ln); show = 0; } if ((unsigned long)sp >= lo && (unsigned long)sp < hi) { efp("[shim] MAPS- %s", pv); efp("[shim] MAPS= %s", ln); show = 1; } strcpy(pv, ln); } if (mf) fclose(mf); }
+    int nsc = getenv("STKSCAN") ? (int)num(getenv("STKSCAN")) : 300;  /* STKSCAN=palabras (diagnóstico §5.42): profundidad de pila a escanear; con ello cada acierto lleva su desplazamiento desde sp */
+    for (int i = 0; i < nsc && (!stk_top || (unsigned long)(sp + i) < stk_top); i++) { if (((unsigned long)(sp + i) & 0xfff) == 0 || i == 0) { if (msync((void *)((unsigned long)(sp + i) & ~0xfffUL), 1, MS_ASYNC)) break; } sym_at = getenv("STKSCAN") ? i : -1; sym(sp[i]); }  sym_at = -1;  /* no cruzar el final de la pila */
     (void)sig;
 }
 
@@ -1900,7 +1924,7 @@ int pthread_create(pthread_t *t, const pthread_attr_t *a, void *(*f)(void *), vo
     if (a && getenv("STACKPAD") && !pthread_attr_getstack(a, &sa_, &ssz) && !sa_) { pa = *a; pthread_attr_getstacksize(&pa, &ssz); pthread_attr_setstacksize(&pa, ssz + num(getenv("STACKPAD"))); a = &pa; }
     if (getenv("ALTSTK")) { struct thr_arg *ta = malloc(sizeof *ta); if (ta) { ta->f = f; ta->arg = arg; f = thr_tramp; arg = ta; } }
     int rc = r(t, a, f, arg);
-    if (getenv("THRLOG")) { char d[96]; thr_desc((void *)f, d, sizeof d); LOG("pthread_create %lx fn=%s (desde tid %ld)", (unsigned long)*t, d, (long)syscall(224)); }
+    if (getenv("THRLOG")) { char d[96]; thr_desc((void *)f, d, sizeof d); size_t sz = 0; if (a) pthread_attr_getstacksize(a, &sz); LOG("pthread_create %lx fn=%s (desde tid %ld) pila=%zu", (unsigned long)*t, d, (long)syscall(224), sz); }
     return rc;
 }
 int pthread_join(pthread_t t, void **v) {
