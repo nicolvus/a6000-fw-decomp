@@ -28,7 +28,7 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 - ◐ Anti-Flicker Shooting / Flicker Reduction / Flicker Scan — _Origen: Canon EOS 7D Mark II; Nikon D500, D850; Fujifilm X-T3; Olympus E-M1 II, E-M1X_. **Flicker Scan: implementado sin cámara** (CFW sin construir): ajuste «Flicker Scan» Off/50 Hz/60 Hz en la carpeta «CFW» que, en Silent, redondea la exposición al múltiplo más cercano del periodo (584/486 líneas de 17,135 µs); Unicorn + arnés ([g63](../docs/gui/g63-flicker-scan.md)). **Anti-flicker con sincronía: pendiente por fases** (la A6000 no tiene detector de parpadeo; sin medida de fase ni de latencia de disparo).
 - 🔶 Keystone Compensation — _Origen: Olympus E-M1 II, E-M1X_ — hay rejilla 11×11 int16 de desplazamientos en el motor de distorsión (av-cam); falta confirmar que el motor la aplica ([g64](gui/g64-keystone-motor-geometrico.md), KEYSTONE-1)
 - 🔶 Live ND — _Origen: Olympus E-M1X_ — parcial: útil solo con exposición por fotograma ≥ 1/20 s (hueco ≤ 25 %); enganche del YC antes del JPEG localizado (`0x438c6f68`) y cueva contador probada en Unicorn; falta acumulador ([g65](gui/g65-live-nd-acumulador-f1.md))
-- ⬜ Rating de fotografías en cámara — _Origen: ≈Sony α9_
+- ⬜ Rating de fotografías en cámara — _Origen: ≈Sony α9_ — parcial, sin código: no hay Rating latente en 3.21/α6300/A7S; Rotar (`libmpr` `0x373ae0`) solo sobrescribe Orientation, hay que insertar 0x4746/0x4749 ([g66](gui/g66-rating-en-camara.md), RATING-1…3)
 
 ### Imagen y color
 
