@@ -106,7 +106,15 @@ static int real_open_call(const char *p, int fl, mode_t m, int is64) {
 }
 
 static unsigned sd_sectors(void) { const char *e = getenv("SDSECT"); unsigned v = 0; while (e && *e >= '0' && *e <= '9') v = v * 10 + *e++ - '0'; return v ? v : 8388608; }
+/* NFLASH4 (§5.43, opt-in): /dev/nflasha4 (y su variante char /dev/cnflasha4) = copia escribible de /usr/share/nflasha4.img (volcado real de la partición MPR); fd real, no inerte. */
+static int nf_name(const char *p) { return getenv("NFLASH4") && (!strcmp(p, "/dev/nflasha4") || !strcmp(p, "/dev/cnflasha4")); }
+static int nf_fd(int fd) { return fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && nf_name(devname[fd]); }
 static int fake_open(const char *p, int fl, mode_t m, int is64) {
+    if (getenv("NFLASH4") && !strcmp(p, "/sys/block/nflasha0/nflasha0p4/start")) {  /* inicio de la partición en sectores (DFA::GetDeviceInfo) */
+        char t[16]; nflash_start_text(t, sizeof t); int w = real_open_call("/tmp/nf4start", O_RDWR | O_CREAT | O_TRUNC, 0666, is64);
+        if (w >= 0) { if (write(w, t, strlen(t)) < 0) { /* sin sitio: se devuelve el fichero vacío */ } close(w); }
+        int r = real_open_call("/tmp/nf4start", O_RDONLY, 0, is64); LOG("NFLASH4 open(%s) -> %d (%s)", p, r, t); return r;
+    }
     if (strncmp(p, "/dev/", 5) != 0 && strncmp(p, "/proc/self", 10) != 0 && strncmp(p, "/tmp/", 5) != 0) {
         int r = real_open_call(p, fl, m, is64); LOG("open(%s) -> %d", p, r); return r;
     }
@@ -123,6 +131,12 @@ static int fake_open(const char *p, int fl, mode_t m, int is64) {
             if (h >= 0 && d >= 0) { ftruncate(d, (off_t)sd_sectors() * 512); char *b = malloc(65536); ssize_t n; off_t o = 0; while (b && (n = read(h, b, 65536)) > 0) { pwrite(d, b, n, o); o += n; } free(b);  /* en el montón: un búfer local de 64 KiB reservaba esa pila en cada open() (THREAD_INFRA de libObj tiene 256 KiB, §5.42) */ LOG("SDIMG: /sd.img %u sectores, cabeza %ld B", sd_sectors(), (long)o); }
             if (h >= 0) close(h); if (d >= 0) close(d); }
         fd = real_open_call("/sd.img", fl & ~0x10000 /* sin O_DIRECT: tmpfs no lo admite */, 0, is64);
+    } else if (nf_name(p)) {
+        static int listo; if (!listo) { listo = 1; int h = real_open_call("/usr/share/nflasha4.img", O_RDONLY, 0, is64), d = real_open_call("/nflasha4.img", O_RDWR | O_CREAT | O_TRUNC, 0666, is64);
+            if (h >= 0 && d >= 0) { char *b = malloc(65536); ssize_t n; off_t o = 0; while (b && (n = read(h, b, 65536)) > 0) { pwrite(d, b, n, o); o += n; } free(b); LOG("NFLASH4: %lld B de /usr/share/nflasha4.img", (long long)o); }
+            else LOG("NFLASH4: falta /usr/share/nflasha4.img (h=%d d=%d)", h, d);
+            if (h >= 0) close(h); if (d >= 0) close(d); }
+        fd = real_open_call("/nflasha4.img", fl & ~0x10000, 0, is64);
     } else
         fd = real_open_call("/dev/null", O_RDWR, 0, is64);  /* dispositivo no modelado: fd inerte, queda registrado */
     if (fd >= MAXFD) { LOG("open(%s): fd %d >= MAXFD, sin modelar", p, fd); return fd; }
@@ -511,7 +525,7 @@ static void *systat_thread(void *a) {
 static int sd_fd(int fd); static void sd_log(const char *op, int fd, long a, long b, long r);
 ssize_t read(int fd, void *b, size_t n) {
     static ssize_t (*real)(int, void *, size_t); if (!real) real = nextsym("read");
-    if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && !(getenv("SDIMG") && !strcmp(devname[fd], "/dev/mmca"))) { if (getenv("SYSTAT")) systat_add(fd, 0x100000, 0); if (!getenv("NOBLOCKDEV")) for (;;) sleep(3600); }
+    if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && !nf_fd(fd) && !(getenv("SDIMG") && !strcmp(devname[fd], "/dev/mmca"))) { if (getenv("SYSTAT")) systat_add(fd, 0x100000, 0); if (!getenv("NOBLOCKDEV")) for (;;) sleep(3600); }
     { ssize_t r = real(fd, b, n); if (sd_fd(fd)) sd_log("read", fd, 0, (long)n, (long)r); return r; }
 }
 /* SDIMG: traza de E/S sobre la imagen (primeras 80 llamadas) para ver qué lee libInfraFsys */
@@ -695,6 +709,8 @@ static int ioctl_in(int fd, unsigned long req, ...) {
         default: LOG("uipc ioctl idx=%u args %#x %#x (ignorada)", idx, w[0], w[1]); return 0;
         }
     }
+    if (nf_fd(fd) && req == 0x6e07 && arg) {  /* lblkinfo de DFA::GetDeviceInfo (libmpr+0x2a40c0); tamaño real del fichero */
+        off_t n = lseek(fd, 0, SEEK_END); lseek(fd, 0, SEEK_SET); nflash_lblkinfo_fill((unsigned *)arg, n > 0 ? (unsigned)n : 0); LOG("NFLASH4 ioctl 0x6e07 -> lblk 0x20000 x %u", ((unsigned *)arg)[2]); return 0; }
     if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && getenv("SDIMG") && arg) {  /* SD emulada (INFERENCIA de los campos, medida en libInfraMediaCommon: mmc_mount/mmc_open/FUN_0001eac0) */
         unsigned *a = (unsigned *)arg, tot = sd_sectors();
         if (!strcmp(devname[fd], "/dev/mmca-char") && req == 5) { sd_cardinfo_fill(a, tot); LOG("SDIMG: ioctl 5 -> SD, %u sectores", tot); return 0; }

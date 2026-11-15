@@ -420,3 +420,26 @@ def test_red_puerto_valido():
     import emu_config as E
     with pytest.raises(ValueError, match="puerto"):
         E.valida_config({"red": {"puerto": 80}})
+
+
+def test_build_initrd_incluye_nflasha4_solo_si_se_pide(tmp_path: Path) -> None:
+    """§5.43: la imagen de /dev/nflasha4 (opt-in) viaja en /usr/share/nflasha4.img del initrd."""
+    import gzip
+    import subprocess as sp
+
+    sys.path.insert(0, str(ROOT / "scripts" / "gui" / "harness"))
+    import run
+
+    work = tmp_path / "w"
+    work.mkdir()
+    (work / "base.cpio.gz").write_bytes(gzip.compress(b""))
+    img = tmp_path / "n4.bin"
+    img.write_bytes(b"\xff" * 8192)
+    script = tmp_path / "s.sh"
+    script.write_text("#!/bin/sh\n")
+    for con in (False, True):
+        t = tmp_path / f"t{con}"
+        t.mkdir()
+        ini = run.build_initrd(work, script, t, nflash4=img if con else None)
+        lista = sp.run(["cpio", "-it", "--quiet"], input=gzip.decompress(ini.read_bytes()), capture_output=True, check=True).stdout.decode()
+        assert ("cam/usr/share/nflasha4.img" in lista) is con

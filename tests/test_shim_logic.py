@@ -124,3 +124,21 @@ int main(void) { sync_nest s = {{0}, 0}; int a = sync_nest_enter(&s, 0x924126), 
     subprocess.run([cc, "-I", str(SHIM), str(tmp_path / "t.c"), "-o", str(tmp_path / "t")], check=True)
     # primera entrega sí, anidada en la misma cola no, otra cola sí, tras salir se puede volver a entregar, y la pila está acotada
     assert subprocess.run([str(tmp_path / "t")], capture_output=True, text=True, check=True).stdout == "1 0 1 1 1"
+
+
+def test_nflasha4_responde_a_la_ioctl_de_libmpr_y_al_inicio_de_la_particion(tmp_path):
+    """§5.43: libmpr (DFA::GetDeviceInfo, +0x2a40c0) abre /dev/nflasha4, hace ioctl 0x6e07 con un {?, lblk_size, num_of_lblks, ltu_size} y lee el inicio de la partición en
+    /sys/block/nflasha0/nflasha0p4/start; con el dispositivo inerte (/dev/null, tamaño 0) FlashLib no veía ningún sector y las tablas de respaldo del MPR (RcsTbl) quedaban vacías."""
+    cc = shutil.which("cc") or shutil.which("gcc") or shutil.which("clang")
+    if not cc:
+        pytest.skip("sin compilador de C")
+    (tmp_path / "t.c").write_text(r'''#include <stdio.h>
+#include <string.h>
+#include "shimlogic.h"
+int main(void) { unsigned a[8]; memset(a, 0xaa, sizeof a); nflash_lblkinfo_fill(a, 10u << 20); char s[16]; nflash_start_text(s, sizeof s);
+    printf("%#x %u %#x %s %#x", a[1], a[2], a[3], s, a[4] & a[7]); return 0; }
+''')
+    subprocess.run([cc, "-I", str(SHIM), str(tmp_path / "t.c"), "-o", str(tmp_path / "t")], check=True)
+    # bloque lógico 128 KiB (paso medido entre cabeceras del volcado), 10 MiB = 80 bloques, unidad 0x200; inicio 0x3140000 / 512.
+    # La estructura es de 16 B: a[4..] son variables vecinas de la pila de libmpr ([r7+0x78] = 0x200 se usa de divisor; ponerla a 0 daba SIGFPE en el arranque, c43c).
+    assert subprocess.run([str(tmp_path / "t")], capture_output=True, text=True, check=True).stdout == "0x20000 80 0x200 100864\n 0xaaaaaaaa"

@@ -50,3 +50,11 @@ static inline int sync_nest_enter(sync_nest *s, unsigned qid) {
     return 1;
 }
 static inline void sync_nest_leave(sync_nest *s, unsigned qid) { if (s->n && s->q[s->n - 1] == qid) s->n--; }
+
+/* §5.43: /dev/nflasha4 = partición «MPR» (0x3140000, 10 MiB) que libmpr usa como DFB (DVD Flash Backup: FlashLib/DFA). DFA::GetDeviceInfo (libmpr+0x2a40c0) hace ioctl(fd, 0x6e07, &b) con b = {?, lblk_size,
+ * num_of_lblks, ltu_size} (solo los registra), y lee el inicio de la partición (sectores de 512 B) de /sys/block/nflasha0/nflasha0p4/start; el tamaño sale de lseek(SEEK_END) y los bloques son de 0x20000 B
+ * (dirección = bloque * 0x20000 + desplazamiento; paso medido entre cabeceras del volcado). shortcut: lblk_size 0x20000 y ltu_size 0x200 son los valores previos de libmpr/el paso del volcado, no medidos en el ioctl
+ * real de la cámara; mejorar si un volcado del driver los da. */
+#include <stdio.h>
+static inline void nflash_lblkinfo_fill(unsigned *a, unsigned nbytes) { memset(a, 0, 0x10); a[1] = 0x20000; a[2] = nbytes / 0x20000; a[3] = 0x200; }
+static inline void nflash_start_text(char *s, unsigned n) { snprintf(s, n, "%u\n", 0x3140000u / 512); }

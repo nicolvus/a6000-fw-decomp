@@ -67,3 +67,13 @@ def test_prioridades_rt_y_espera_de_infradatabase_por_defecto():
     env = live.construye_shimenv(True, "")
     assert "RTCLAMP" not in env and "RTMAP" not in env and "REGARG0" not in env and "826ed0" not in env
     assert "SYNCWAIT=37807c:300" in env and "RTMAP=0" in live.construye_shimenv(True, "RTMAP=0")
+
+
+def test_nflasha4_es_opt_in(monkeypatch, tmp_path):
+    """§5.43: sin LIVE_NFLASH4 el arnés no sirve /dev/nflasha4 (dispositivo inerte, como antes); con la ruta añade NFLASH4=<huella> al SHIMENV."""
+    assert "NFLASH4" not in variables(live.construye_shimenv(True, ""))
+    img = tmp_path / "n4.bin"
+    img.write_bytes(b"\xff" * 4096)
+    monkeypatch.setenv("LIVE_NFLASH4", str(img))
+    v = variables(live.construye_shimenv(True, ""))
+    assert len(v["NFLASH4"]) == 12 and v["NFLASH4"] != "1"

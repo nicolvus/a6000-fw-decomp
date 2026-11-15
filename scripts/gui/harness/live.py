@@ -69,11 +69,17 @@ TARJETA_SKIPFN = "7fa3d4=0"
 TARJETA_ENV = ("BKMULTIPTR=1 FRONTRM=3 FRONTARG2=1 FRONTRMDELAY=3 INSHORT=1 SDIMG=1 SDSECT=8388608 NULLMWF=1 SYNCWAIT=37807c:300 ")
 
 
+def nflash4_img() -> Path | None:
+    return Path(os.environ["LIVE_NFLASH4"]) if os.environ.get("LIVE_NFLASH4") else None
+
+
 def construye_shimenv(tarjeta: bool = True, extra: str | None = None, quita: str | None = None) -> str:
     """SHIMENV del arnés: base + (con `tarjeta`) SD emulada y sus atajos + SHIMEXTRA (que manda si repite variables).
     `quita` (LIVE_QUITA, diagnóstico opt-in): «NOMBRE,SKIPFN:dir» retira variables o direcciones de SKIPFN para medir sin ese atajo."""
     base = SHIMENV_BASE.replace("SKIPFN=7fa3d4=0 ", f"SKIPFN={TARJETA_SKIPFN} " if tarjeta else "SKIPFN=7fa3d4=0 ")
     env = base + (TARJETA_ENV if tarjeta else "") + (SHIMEXTRA if extra is None else extra)
+    if nflash4_img():  # opt-in (§5.43): LIVE_NFLASH4=volcado de /dev/nflasha4; la huella hace que cambiar de imagen invalide el estado guardado
+        env += f" NFLASH4={hashlib.sha256(nflash4_img().read_bytes()).hexdigest()[:12]}"
     for q in filter(None, (quita if quita is not None else os.environ.get("LIVE_QUITA", "")).split(",")):
         if q.startswith("SKIPFN:"):
             env = re.sub(rf"(SKIPFN=[^ ]*?)(?:,|(?<==)){q[7:]}=0(?=,| )", lambda m: m.group(1), env).replace("SKIPFN=,", "SKIPFN=")
@@ -175,7 +181,7 @@ class Vm:
                 cabeza = None
                 if "SDIMG=1" in shimenv:  # SD legible: imagen FAT32 de la carpeta de sd_emu (sectores en SDSECT, que ya va en shimenv)
                     cabeza = Path(t) / "sd.head"; sd_image.construye(sd_emu.raiz_sd(""), cabeza, 4.0, completa=os.environ.get("SD_ESTRUCTURA") == "1")
-                escribe_atomico(initrd, run.build_initrd(work, HERE / "im.sh", Path(t), shimenv, pkg, self.nvram, cabeza).read_bytes())
+                escribe_atomico(initrd, run.build_initrd(work, HERE / "im.sh", Path(t), shimenv, pkg, self.nvram, cabeza, nflash4_img()).read_bytes())
             sello.write_text(actual)
         for s in (self.ui, self.mon):
             s.unlink(missing_ok=True)
