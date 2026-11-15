@@ -17,7 +17,7 @@ Features wanted on the A6000, inherited from other Sony models and other brands,
 - ⬜ Maximum shutter speed 1/8000 — _Origin: ≈Sony α7_
 - ⬜ Expanded ISO up to 409600 — _Origin: Sony α7S_
 - ⬜ Pixel Shift Multi Shooting / High Res Shot / Handheld High Res Shot — _Origin: ≈Sony α7R III; Olympus E-M1 II, E-M1X; Panasonic G9_
-- ⬜ Pre Capture photo / Pro Capture / Pre-Burst 4K/6K — _Origin: Olympus E-M1 II; Panasonic GH5, G9_
+- ⬜ Pre Capture photo / Pro Capture / Pre-Burst 4K/6K — _Origin: Olympus E-M1 II; Panasonic GH5, G9_. Full-resolution Pro Capture: feasible in phases, not implemented (the S1/S2 predicate and the burst queue are still unlocated; ring of N×24 MB). The 4K/6K part is ruled out (g50). See [g51](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/gui/g51-pro-capture.md).
 - ⬜ Post Focus — _Origin: Panasonic GH5, G9_
 - ⬜ Multiple Exposure — _Origin: Canon EOS 7D Mark II; Nikon D850; Olympus E-M1 II_
 - ⬜ Live Composite — _Origin: Olympus E-M1 II_
