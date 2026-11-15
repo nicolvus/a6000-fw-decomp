@@ -18,7 +18,6 @@ Features wanted on the A6000, inherited from other Sony models and other brands,
 - ⬜ Expanded ISO up to 409600 — _Origin: Sony α7S_
 - ⬜ Pixel Shift Multi Shooting / High Res Shot / Handheld High Res Shot — _Origin: ≈Sony α7R III; Olympus E-M1 II, E-M1X; Panasonic G9_
 - ⬜ Pre Capture photo / Pro Capture / Pre-Burst 4K/6K — _Origin: Olympus E-M1 II; Panasonic GH5, G9_. Full-resolution Pro Capture: feasible in phases, not implemented (the S1/S2 predicate and the burst queue are still unlocated; ring of N×24 MB). The 4K/6K part is ruled out (g50). See [g51](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/gui/g51-pro-capture.md).
-- ⬜ Post Focus — _Origin: Panasonic GH5, G9_
 - ⬜ Multiple Exposure — _Origin: Canon EOS 7D Mark II; Nikon D850; Olympus E-M1 II_
 - ⬜ Live Composite — _Origin: Olympus E-M1 II_
 - ⬜ Live Bulb / Live Time — _Origin: Olympus E-M1 II_
@@ -85,5 +84,6 @@ Features wanted on the A6000, inherited from other Sony models and other brands,
 
 ## Discarded
 
+- ❌ Post Focus — _Origin: Panasonic GH5, G9_. Depends on 4K/6K Photo (discarded in g50: no readout mode of 3840+ columns, encoder too weak) and the A6000 has no touchscreen (no panel in the service manual; the firmware «Touch» strings belong to face detection). Variants: focus sweep in FHD video → `G50-FHDPHOTO`; full-resolution burst sweep → Focus Shift Shooting. See [g52](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/gui/g52-post-focus.md).
 - ❌ 4K/6K Photo (incl. 4K Photo Burst S/S) — _Origin: Panasonic GH5, G9_. The A6000's IMX210 only reads 6000×4000 at 15 fps or 1996×1124 at 60 Hz (no mode of 3840+ columns), the encoder tops out at 1080p60 (about 135 Mpx/s vs 249 for 4K30) and the firmware lacks the A6300's Photo Capture view. See [g50](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/gui/g50-4k-6k-photo.md).
 - ❌ Digital level (virtual horizon) — _Origin: ≈Sony α6300_. The A6000 has no accelerometer: its orientation sensor (SE7750) is optical and each of its two channels is only high or low, so it tells four 90° positions apart and nothing in between. Measured over SWD while rotating the camera ([R88](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r88-sensor-inclinacion-swd.md)).
