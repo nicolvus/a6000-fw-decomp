@@ -28,3 +28,5 @@ Corrección: no hace falta tocar la rama de fin ni leer S2. Basta **sustituir `T
 - Que `T = 0` ⇔ BULB es inferencia (E25-17 §2.4): solo se cubre la rama `cap+0x740 = 0`; otras rutas (`0x43af6564`, `cap+0x736`) no se tocaron.
 - La celda está en RAM de imagen (zona de cueva): que sea escribible en cámara y cómo persiste (NVRAM) no está resuelto; la fase 2 (menú Off/5 s…15 min) debe escribirla desde un manejador, con el patrón de `+0x238`/g39. No se hizo menú ni arnés.
 - Precisión: sin medir en cámara (fin con granularidad de cuadro en el último tramo).
+
+> Actualización 15-11-2026 ([g56](g56-ajustes-propios-cfw.md)): la celda fija `0x43541920` ya no existe; la cueva lee el ajuste de menú «Bulb Timer» (id de Backup `0x1070210`, índice 0–8) con `Backup_read`.

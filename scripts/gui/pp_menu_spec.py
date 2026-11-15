@@ -21,6 +21,7 @@ class S:
     evento: int = 0x40                    # evento de escritura de `@M00B` (0x40 = SET_PICTURE_PROFILE, 0x41 = copiar perfil)
     id_get: int = 0x49                    # id de lectura (`getModelInfo`): 0x49 = los 31 parámetros (claves c+1, c+2); 0x4a = perfil actual (clave 0x275)
     clave_get: int | None = None          # clave de lectura; por defecto clave + 2
+    backup: int | None = None             # cfw_ajustes: id de Backup (1 B) que escribe la UI directamente (descriptor «solo respaldo», sin modelo; `clave` se ignora)
 
 
 def num(lo, hi):

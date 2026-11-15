@@ -30,6 +30,7 @@ REF_NORMAL, PID_M00B = 0x12, 0x3F               # pid de clase Normal · pid con
 SITIO_GET = (0x1B4568, bytes.fromhex("e829f8b5"), 0x1B4598, ELEM - 0x1B457E)             # cmp r1,#0xe8 ; push {r3-r7,lr}
 SITIO_INIT = (0x25D8F2, bytes.fromhex("e82a0ad8"), 0x25D910, D - 0x25D8FE)               # cmp r2,#0xe8 ; bhi 0x25d90c
 SITIO_SET = (0x25D91C, bytes.fromhex("e82909d8"), 0x25D938, D - 0x25D928)  # cmp r1,#0xe8 ; bhi 0x25d934
+PID_BACKUP = 0x55                               # g56: pid nativo «solo respaldo» (descriptor sin modelo, palabra 8 = [id], 9 = 1): plantilla y clase de elemento
 CODIGO_RESERVA = 0xC0
 # G30: EFCS (pid 0x46) en gris con Silent On. `CmnViewProcessDataMgr::isGrayedOut(pid)` (copia de viewUnified2, 0x1b4696) pasa por un tramo nuevo: si pid == 0x46 devuelve
 # (valor de Silent == 1) usando `CmnViewProcessDataMgr::getValue(pid, int&)` (0x1b475a) sobre el pid 0x12 (Silent, índice de opción 1 = On); si no, ejecuta el prólogo original.
@@ -132,11 +133,23 @@ def patch(d: bytes, ajustes, gris_efcs: bool = False) -> bytes:
         return va
 
     d_new = d_old + [0] * (n_new - N_ORIG)
+    clase_respaldo = {}
     for i, r in d_rel_old.items():                                   # las entradas antiguas conservan su relocación en la tabla nueva
         extra.extend(struct.pack("<II", d_va + 4 * i, r))
     for a in ajustes:
         n = len(a.valores)
         assert 0 < n < 256
+        if a.backup:       # g56: «solo respaldo» como los 54 descriptores nativos (p. ej. 0x55): sin modelo (palabras 6-7 = 0), palabra 8 = puntero a [id], 9 = 1; la UI escribe el índice
+            c = alloc([P.NADA] * n)
+            tpl_va = d_old[PID_BACKUP]                                   # plantilla nativa: mismas palabras y la clase de elemento de los pids «solo respaldo»
+            desc = list(word(tpl_va, P.DESC_PALABRAS))
+            assert desc[6] == 0 and desc[9] == 1
+            desc[1], desc[5], desc[8] = c, (desc[5] & ~0xFF00) | (n << 8), alloc([a.backup])
+            rels = {i: by_off[tpl_va + 4 * i] for i in range(P.DESC_PALABRAS) if tpl_va + 4 * i in by_off}
+            d_new[a.pid] = alloc(desc, {**rels, 1: 0x17, 8: 0x17})
+            clase_respaldo[a.pid] = elem[PID_BACKUP]
+            extra.extend(struct.pack("<II", d_va + 4 * a.pid, 0x17))
+            continue
         s, g, t = alloc([a.clave]), alloc([a.clave + 2 if a.clave_get is None else a.clave_get]), alloc([1])
         v = alloc([x & 0xFFFFFFFF for x in a.valores])
         c = alloc([P.NADA] * n)
@@ -145,6 +158,8 @@ def patch(d: bytes, ajustes, gris_efcs: bool = False) -> bytes:
         d_new[a.pid] = alloc(desc, {1: 0x17, 6: 0x17})
         extra.extend(struct.pack("<II", d_va + 4 * a.pid, 0x17))
     elem_new = elem + [normal] * (n_new - N_ORIG)
+    for pid, cl in clase_respaldo.items():
+        elem_new[pid] = cl
     tablas = struct.pack(f"<{n_new}I", *elem_new) + struct.pack(f"<{n_new}I", *d_new)
     assert len(rel) + len(extra) <= rel_new_size
 
@@ -175,5 +190,5 @@ def patch(d: bytes, ajustes, gris_efcs: bool = False) -> bytes:
 
 if __name__ == "__main__":
     import pp_menu_spec as M
-    aj = [P.Ajuste(M.PIDS[i], s.clave, tuple(v for _, v in s.opciones), s.evento, s.id_get, s.clave_get) for i, s in enumerate(M.SETTINGS.values())]
+    aj = [P.Ajuste(M.PIDS[i], s.clave, tuple(v for _, v in s.opciones), s.evento, s.id_get, s.clave_get, s.backup) for i, s in enumerate(M.SETTINGS.values())]
     Path(sys.argv[2]).write_bytes(patch(Path(sys.argv[1]).read_bytes(), aj))

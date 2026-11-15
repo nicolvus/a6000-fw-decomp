@@ -1,0 +1,43 @@
+# G56 — Circuito genérico de «ajustes propios del CFW» (menú → id de Backup → av-cam) y Bulb Timer (15-11-2026)
+
+Sin cámara, sin CFW construido, sin tocar `scripts/gui/harness/`. Código: `scripts/cfw_ajustes.py` (tabla + generadores), `scripts/g55/bulb_timer_patch.py` (primer consumidor), tests `tests/test_cfw_ajustes.py` (5) y `python3 scripts/g55/bulb_timer_patch.py` (Unicorn).
+
+## 1. Cadena de ajustes que ya viajan menú → av-cam
+
+| Ajuste | Nodo de menú | ProcessId → descriptor | Camino hasta `libObj` | Id de Backup | Cómo lo lee av-cam |
+|---|---|---|---|---|---|
+| EFCS (`+0x210`) | `CustomFrontCurtainShutter` | `0x46`, `@M00F`, escritura `0x54`, claves `0x246/0x247` | `libObj` `0x6896ac` arma `ObjMsg(0x3100, 0x75fa)` → LIRO `0x4099` | `0x107086e` (1 B, 1/2) | manejador → byte `+0x210` del bloque `0x43EDF684`; **además** al arrancar `av-cam` `0x43818368` lee el id con `Backup_read` (`bl 0x435613b0`, r0 = id, r1 = búfer de 1 B) y reenvía `{05, 99 40, valor}` ([g22-respuesta-efcs-objcamera](g22-respuesta-efcs-objcamera.md) §5) |
+| Silent (`+0x238`) | `SilentShutterRoot` | `0x12`, `@M00F`, escritura `0x5b`, claves `0x291/0x292` | `libObj` `0x689ea4` → mensaje `0x768e` → LIRO `0x40e3` | — (sin id verificado) | manejador `0x438032d4` → byte `+0x238` ([g22a](g22a-tres-estados-obturador.md) §1) |
+| Picture Profile | nodos de `build_pp_menu` | pids `0xE9…`, `@M00B`, evento `0x40`, claves `0x1f8+4·i` | `pvt_ChangePictureProfileParamApp2Obj` → NVRAM por perfil (`[this+0x5dc+perfil·0x7c+4·i]`) | ids `0x1070ee2…` del modelo | el núcleo lee el selector por LIRO (`pp_*_patch.py`) |
+| **54 ajustes «solo respaldo» nativos** (p. ej. pid `0x55`, id `0x1070be8`; `0x2e`, `0x31`, `0x39`…) | nodos de Sony | descriptor con palabras 6-7 = 0 (sin modelo), palabra 8 = puntero a `[id]`, 9 = 1 (`viewUnified2` tabla `D`, `0x4457D4`) | **ninguno**: la UI escribe el id directamente con `Backup_write` (op 8 del servicio `0x3e014d`; el arnés lo recoge como `NV id valor`) | el del descriptor | `Backup_read(id, &b)` por la tabla de servicios (`0x435613b0` → `[tabla+0x298]`) |
+
+## 2. Elección: (a) id de Backup propio, escrito por un descriptor «solo respaldo»
+Frente a (b) reutilizar el canal `+0x210`:
+- (b) exige, por cada ajuste, un mensaje `libObj` (`ObjMsg`), un selector LIRO y un manejador en `av-cam` (tres piezas de Sony, ninguna genérica), y en el arnés la orden a `ObjCamera` **no tiene respuesta** (g22-arnes-ui-qemu §5.18z, «Límite del cambio de ajustes»): no se vería nunca la escritura.
+- (a) usa la mitad de la cadena que ya es genérica: descriptor nativo «solo respaldo» (hay 54) + `Backup_read` desde una cueva de av-cam (el mismo servicio que usa `av-cam` para restaurar EFCS al arrancar). N ajustes = N filas de tabla, sin código nuevo de Sony.
+
+**Ids libres** (script en el informe, §6): de los 3 279 ids `0x107xxxx` del volcado `20261105-post-apagado-limpio`, 1 533 no aparecen como palabra de 32 bits (alineada o no) en ninguna `.so`, ejecutable de `/usr` ni `av-cam.bin` 3.21; el 0 de `movw/movt #0x107` en esos binarios (la UI de Sony carga los ids con `ldr` de literal). Elegido el hueco **`0x1070210…0x1070219`** (10 ids de 1 B, valor `00`, mismo tamaño en 4 volcados de fechas distintas, vecinos también sin literal): registrados (la escritura exige que el registro exista, g22-arnes §5.18z⁴), persisten con la NVRAM. Límite: «sin literal» no excluye un acceso por `base + índice`; hay literales en `0x1070200/0x1070201` y desde `0x1070220`; el hueco queda entre ambos.
+
+## 3. Implementación (`scripts/cfw_ajustes.py`)
+- `Ajuste(id, label, backup, opciones, pid)` y la tabla `AJUSTES` (Bulb Timer: id `0x1070210`, pid `0xE9`, opciones Off/5 s/10 s/30 s/1/2/5/10/15 min; el byte guardado es el **índice** de la opción).
+- (i) Menú: `construir(dev_a, dev_b, dest)` vuelca la tabla en `pp_menu_spec` y reutiliza `build_pp_menu.main` (nodos de datos en `CautionConfig.so`, pid nuevo + descriptor en `viewUnified2.so` por `pid_space`, entrada en las 5 páginas por `add_menu_entry`, textos en los `string_*.uxc`). Cambios mínimos en código existente: campo `backup` en `pp_menu_spec.S` y `pp_descriptors.Ajuste`, rama «solo respaldo» en `pid_space.patch`, y `build_pp_menu` pasa la spec viva a `build_nodes`/`textos` (antes usaba los valores por defecto ligados al importar).
+- (ii) av-cam: `leer_asm(a)` (Thumb, keystone) deja en r0 el valor de la opción guardada (tabla `u16` tras el código; byte fuera de tabla → 0) llamando a `Backup_read` `0x435613b0`; `ensamblar(src, va)`.
+- Bulb Timer: `scripts/g55/bulb_timer_patch.py` ya no usa la celda `0x43541920`: el gancho `0x438c74f6` (4 bytes, test de bytes originales) salta a la cueva `0x43541900`, que devuelve T de fábrica si ≠ 0 y si no `segundos·1000` del ajuste; guarda/restaura r3 y lr.
+
+## 4. Pruebas
+- **Unicorn** (bytes reales de `av-cam.bin` 3.21, `Backup_read` simulado comprobando el id y devolviendo el índice): Off y byte 255 → sin fin (3000 tramos, como fábrica); índice 1 (5 s) → 151 tramos de 33 ms + último de 17 ms = 5000 ms; índice 8 (15 min) → 27 272 tramos + último; T de fábrica ≠ 0 manda; imagen original → sin fin. `tests/test_cfw_ajustes.py` (5 tests, 30 pasan con el resto del arnés; skips por falta de firmware/volcado) y `python3 scripts/g55/bulb_timer_patch.py`.
+- **Arnés** (overlay y perfil propios `g56a`, puerto 8756, sin tocar `scripts/gui/harness/`; qemu parado y perfil borrado al acabar):
+  - **Entrada de menú: VERIFICADO** (descriptor de modelo inerte, es decir, el camino de Picture Profile): «Bulb Timer: Off» aparece en Ajustes personalizados p. 4, entre «AEL con obturad.» y «e-Prim. cortin. obtur.» (`img/g56-bulb-timer-menu-entrada.png`) y la lista muestra Off/5 s/10 s/30 s/1 min/2 min… con desplazamiento a las 9 opciones (`img/g56-bulb-timer-menu-lista.png`, `g56-bulb-timer-menu-10s.png`). Con 9 opciones el menú no se cuelga en el arnés (el tope de 7 de G36 era del menú PP en cámara; **no medido** para esta entrada en cámara).
+  - **Escritura en el Backup: NO LOGRADA.** Con el descriptor «solo respaldo» (id libre `0x1070210`; después con la plantilla nativa del pid `0x55`; y con el id nativo `0x1070be8`) el arnés arranca, pero **`Appframework` muere con SIGSEGV al abrir el menú** (`pc=…20e2e`, `addr=0`, `r0=1`; pila `libObj+0x120aed` ← `0x120b3f` ← `0x7efc97` ← `0x7f405d`, llamada virtual `[vt+0x94]`). Con el mismo nodo y un descriptor de modelo inerte no ocurre. Como el id nativo también cae, la causa **no es el id libre**, sino el descriptor/clase «solo respaldo» de un pid nuevo (o una propiedad que los nodos de esos ajustes llevan y el nuestro no). No se pudo elegir un valor ni ver `NV id valor`. Pendiente CFWAJ-F1.
+- Por tanto el tramo **menú → Backup** de la cadena (a) está **sin demostrar**; el tramo **Backup → av-cam → corte del BULB** sí (Unicorn).
+
+## 5. Cómo añadir un ajuste nuevo en 3 pasos (cuando CFWAJ-F1 cierre el tramo del menú)
+1. Una fila en `AJUSTES` de `scripts/cfw_ajustes.py`: `Ajuste("mi_id", "Etiqueta", id_de_backup, (("Off", 0), ("Opción", valor), …), pid)` con un id de `ID_LIBRES` y el siguiente pid libre desde `0xE9` (con más de un ajuste hay que agruparlos en una carpeta: `construir` hoy admite una entrada directa).
+2. En el parche de av-cam: `cfw.leer_asm(cfw.POR_ID["mi_id"])` dentro de la cueva (deja el valor en r0; destruye r0-r3 y lr: guarda lo que el gancho necesite), y un test Unicorn que simule `Backup_read` (`cfw.BACKUP_READ`) como `bulb_timer_patch.emular`.
+3. `python3 scripts/cfw_ajustes.py DEV_A6000 DEV_A6300 SALIDA` → `lib/viewUnified2.so`, `lib/CautionConfig.so`, `share/app/string_*.uxc` para el paquete; prueba en el arnés con `live.py … --pkg OVERLAY --perfil-dir PROPIO` y captura.
+
+## 6. Límites
+- Menú → Backup sin demostrar (ver §4); no usar `backup=` en una construcción real hasta cerrar CFWAJ-F1 (en el arnés el menú se cae). Alternativa si no cierra: canal (b), con mensaje `libObj` + selector LIRO + manejador propios.
+- Bulb Timer: el disparador sigue haciendo falta para iniciar (BULBTIMER-F2 (a), bloqueo del BULB, **no trazado** en esta sesión por falta de margen); sin medida en cámara; el ajuste solo se lee dentro de la rama `cap+0x740 = 0` (g55 §4).
+- Ids libres: criterio negativo (sin literal de 32 bits en `.so`/ejecutables/av-cam); no excluye acceso por `base + índice` ni que la UI necesite registrar el id en una tabla propia (no comprobado).
+- Textos: «Bulb Timer» y las opciones en inglés en todos los idiomas salvo coincidencia con cadenas existentes de la A6300.

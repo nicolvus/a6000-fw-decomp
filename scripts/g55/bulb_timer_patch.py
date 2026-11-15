@@ -1,9 +1,9 @@
 """G55 — Bulb Timer (fase 1): el temporizador por tramos del host (`0x438c74b0`) acaba solo cuando el objetivo T = 0 (BULB) se sustituye
-por una celda propia en segundos (0 = desactivado = fábrica). Solo bytes del `av-cam` del `.dat`; sin construir CFW.
+por el ajuste de menú «Bulb Timer» (id de Backup 1 B de `cfw_ajustes`; índice 0 = Off = fábrica). Solo bytes del `av-cam` del `.dat`; sin construir CFW.
 
-Enganche: `0x438c74f6 ldrh.w r0,[r3,#0x66]` (T = [ajustes+0x66], 0 en BULB) -> `bl cueva`. La cueva devuelve T si ≠ 0; si no, `celda·1000` (ms, I).
+Enganche: `0x438c74f6 ldrh.w r0,[r3,#0x66]` (T = [ajustes+0x66], 0 en BULB) -> `bl cueva`. La cueva devuelve T si ≠ 0; si no, `segundos·1000` (ms, I).
 `S2` soltado sigue cortando por la misma rama (`0x8000`, E25-17 §2.2): el fin es «S2 soltado O T alcanzado».
-Cueva+celda en el hueco cero `0x43541900` (0x435418e4..0x43541b00; la cueva de 0x43541800/20 es de otro parche).
+Cueva en el hueco cero `0x43541900` (0x435418e4..0x43541b00; la cueva de 0x43541800/20 es de otro parche).
 """
 from __future__ import annotations
 
@@ -14,30 +14,31 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts"))
 from e25_24.thumb import bl  # noqa: E402
+import cfw_ajustes as cfw  # noqa: E402
 
 BASE = 0x43541000
 HOOK, HOOK_OLD = 0x438C74F6, bytes.fromhex("b3f86600")      # ldrh.w r0,[r3,#0x66]; sigue `b 0x438c7512`
-CAVE, CELL, CAVE_END = 0x43541900, 0x43541920, 0x43541930   # CELL: u16 segundos (0 = off)
+CAVE, CAVE_END = 0x43541900, 0x43541B00   # hueco cero hasta 0x43541b00 (la de 0x43541800/20 es de otro parche)
 FUNC = 0x438C74B0
 SRC = ROOT / "analysis/rea-independent/input/av-cam.bin"
 
 
 def cave_bytes() -> bytes:
-    from keystone import KS_ARCH_ARM, KS_MODE_THUMB, Ks
+    """T de fábrica si ≠ 0; si no, segundos del ajuste «Bulb Timer» (id de Backup, `cfw_ajustes`) · 1000 ms."""
+    a = cfw.POR_ID["bulb_timer"]
     asm = f"""
         ldrh.w r0, [r3, #0x66]
-        cbnz r0, done
-        movw r1, #{CELL & 0xFFFF:#x}
-        movt r1, #{CELL >> 16:#x}
-        ldrh r1, [r1]
+        cbnz r0, ya
+        push {{r3, lr}}
+        {cfw.leer_asm(a)}
         mov.w r2, #1000
-        mul r0, r1, r2
-    done:
+        mul r0, r0, r2
+        pop {{r3, lr}}
+    ya:
         bx lr
     """
-    enc, _ = Ks(KS_ARCH_ARM, KS_MODE_THUMB).asm(asm, CAVE)
-    code = bytes(enc)
-    assert len(code) <= CELL - CAVE, len(code)
+    code = cfw.ensamblar(asm, CAVE)
+    assert len(code) <= CAVE_END - CAVE, len(code)
     return code
 
 
@@ -54,7 +55,7 @@ def apply_bytes(data: bytes) -> bytes:
     return bytes(out)
 
 
-def emular(img: bytes, seg: int, t_cfg: int = 0, periodo: int = 33, max_tramos: int = 3000):
+def emular(img: bytes, idx: int, t_cfg: int = 0, periodo: int = 33, max_tramos: int = 3000):
     """Repite `0x438c74b0` como el flujo real (bulbFrameCount++ por tramo). Devuelve (tramos completos, ticks del tramo final) o (max, None) si no acaba."""
     from unicorn import UC_ARCH_ARM, UC_HOOK_CODE, UC_MODE_THUMB, Uc
     from unicorn.arm_const import UC_ARM_REG_LR, UC_ARM_REG_PC, UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R5, UC_ARM_REG_SP
@@ -65,7 +66,6 @@ def emular(img: bytes, seg: int, t_cfg: int = 0, periodo: int = 33, max_tramos: 
     mu.mem_map(stack - 0x10000, 0x20000)
     mu.mem_map(cap, 0x10000)
     mu.mem_map(end, 0x1000)
-    mu.mem_write(CELL, struct.pack("<H", seg))
     mu.mem_write(0x43E95950 + 0x66, struct.pack("<H", t_cfg))
     rets = {0x43B1F1C2: 0, 0x436D6118: 0, 0x436D6264: periodo, 0x4355FAF0: 0, 0x43901A8C: 0}
     armado = []
@@ -73,11 +73,16 @@ def emular(img: bytes, seg: int, t_cfg: int = 0, periodo: int = 33, max_tramos: 
     def code(uc, addr, size, _):
         if addr == 0x43B1F1EC:
             armado.append(uc.reg_read(UC_ARM_REG_R1))
+        if addr == cfw.BACKUP_READ:           # Backup_read(id, búfer): el ajuste vive en la NVRAM; aquí solo se comprueba el id y se devuelve el índice
+            assert uc.reg_read(UC_ARM_REG_R0) == cfw.POR_ID["bulb_timer"].backup
+            uc.mem_write(uc.reg_read(UC_ARM_REG_R1), bytes([idx]))
+            uc.reg_write(UC_ARM_REG_R0, 0)
+            uc.reg_write(UC_ARM_REG_PC, uc.reg_read(UC_ARM_REG_LR))
         if addr in rets or addr == 0x43B1F1EC:
             uc.reg_write(UC_ARM_REG_R0, rets.get(addr, 0))
             uc.reg_write(UC_ARM_REG_PC, uc.reg_read(UC_ARM_REG_LR))
     mu.hook_add(UC_HOOK_CODE, code, begin=0x43B1F1EC, end=0x43B1F1EC)
-    for a in rets:
+    for a in (*rets, cfw.BACKUP_READ):
         mu.hook_add(UC_HOOK_CODE, code, begin=a, end=a)
     for n in range(max_tramos):
         mu.mem_write(cap + 0x72C, struct.pack("<I", n))
@@ -96,11 +101,12 @@ if __name__ == "__main__":
     orig = SRC.read_bytes()
     img = apply_bytes(orig)
     assert img[HOOK - BASE:HOOK - BASE + 4] != HOOK_OLD and len(img) == len(orig)
-    assert emular(img, 0) == (3000, None), "con 0 debe esperar a S2 (sin fin propio)"
-    assert emular(orig, 5) == (3000, None), "original: la celda no existe en fábrica"
-    n, ticks = emular(img, 5)
+    assert emular(img, 0) == (3000, None), "Off: espera a S2 (sin fin propio)"
+    assert emular(img, 200) == (3000, None), "byte fuera de la tabla = Off"
+    assert emular(orig, 1) == (3000, None), "original: el ajuste no existe en fábrica"
+    n, ticks = emular(img, 1)                                               # 5 s
     assert (n, ticks) == (151, (5000 - 151 * 33) * 31250), (n, ticks)       # 152 tramos: 151 de 33 ms y el último de 17 ms
-    assert emular(img, 5, t_cfg=2000)[0] == 60                              # T de fábrica ≠ 0 manda sobre la celda
-    n, ticks = emular(img, 900, max_tramos=30000)
+    assert emular(img, 1, t_cfg=2000)[0] == 60                              # T de fábrica ≠ 0 manda sobre el ajuste
+    n, ticks = emular(img, 8, max_tramos=30000)                             # 15 min
     assert (n, ticks) == (27272, (900000 - 27272 * 33) * 31250), (n, ticks)
     print("OK", n)

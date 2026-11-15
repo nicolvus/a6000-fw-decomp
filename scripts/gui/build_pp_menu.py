@@ -90,7 +90,7 @@ def patch_caution(data: bytes, ids: dict):
 
     def run(base):
         seg = G.Segmento(base)
-        return seg, build_nodes(seg, vt, ids)
+        return seg, build_nodes(seg, vt, ids, M.TREE, M.SETTINGS, M.PIDS)
 
     n_rel = len(run(new_va)[0].rels)                      # el nº de relocaciones no depende de la base
     seg, carpeta = run(new_va + (rel_sz + 8 * n_rel + 15) // 16 * 16)
@@ -127,11 +127,11 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
         manifest["originales"][rel] = hashlib.sha256((a / rel).read_bytes()).hexdigest()
         manifest["parcheados"][rel] = hashlib.sha256(data).hexdigest()
 
-    txt = textos()
+    txt = textos(M.TREE, M.SETTINGS)
     libres = G.free_ids(a, len(txt), {0xF3E8, 0xF515, 0xF56A})
     assert len(libres) == len(txt)
     ids = dict(zip(txt, libres))
-    ajustes = [pp_descriptors.Ajuste(M.PIDS[i], s.clave, tuple(v for _, v in s.opciones), s.evento, s.id_get, s.clave_get) for i, s in enumerate(M.SETTINGS.values())]
+    ajustes = [pp_descriptors.Ajuste(M.PIDS[i], s.clave, tuple(v for _, v in s.opciones), s.evento, s.id_get, s.clave_get, s.backup) for i, s in enumerate(M.SETTINGS.values())]
     if saturacion_a6300 or gamma_slog or color_gamut or acciones:     # opt-in: ver patch_libobj_pp.py
         lo = (a / "lib/libObj.so").read_bytes()
         lo = patch_libobj_pp.patch(lo) if saturacion_a6300 else lo

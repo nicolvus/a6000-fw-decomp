@@ -29,6 +29,7 @@ class Ajuste:
     evento: int = EVENTO_SET
     id_get: int = ID_GET
     clave_get: int | None = None      # por defecto clave + 2
+    backup: int | None = None         # id de Backup de 1 B: descriptor «solo respaldo» sin modelo (solo lo usa pid_space)
 
 
 def clase_normal(d: bytes, pids, elem: int = ELEM_VU2) -> bytes:
