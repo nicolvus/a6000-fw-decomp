@@ -39,13 +39,17 @@ AJUSTES = (
     # G57 Focus Bracket: nº de tomas (el valor es N) y paso (s16 del comando de lente 0x1D; unidades y sentido NO medidos, g57 §4)
     Ajuste("fb_n", "Focus Bracket", ID_LIBRES[2], (("Off", 0), ("3", 3), ("5", 5), ("10", 10), ("15", 15), ("20", 20), ("30", 30)), PID_PRIMERO + 2),
     Ajuste("fb_paso", "Focus Br. paso", ID_LIBRES[3], (("Fino", 4), ("Medio", 16), ("Grueso", 64)), PID_PRIMERO + 3),
+    # G61 autodisparador continuo (`libObj`): espera entre tomas en segundos (Off = la de fábrica de cada modo) y nº de tomas (0 = sin tope)
+    Ajuste("intervalo", "Intervalo", ID_LIBRES[4], (("Off", 0), ("2 s", 2), ("5 s", 5), ("10 s", 10), ("30 s", 30), ("60 s", 60), ("5 min", 300)), PID_PRIMERO + 4),
+    Ajuste("n_disparos", "N. disparos", ID_LIBRES[5], (("10", 10), ("30", 30), ("60", 60), ("100", 100), ("300", 300), ("999", 999), ("Sin tope", 0)), PID_PRIMERO + 5),
 )
 POR_ID = {a.id: a for a in AJUSTES}
 
 
-def leer_asm(a: Ajuste, tabla: str = "tab") -> str:
+def leer_asm(a: Ajuste, tabla: str = "tab", llamada: str = f"bl {BACKUP_READ:#x}") -> str:
     """Thumb para keystone: deja en r0 el valor (u16) de la opción guardada de `a` (0 si el byte no es una opción). Destruye r0-r3 y lr (el llamante debe haber guardado lr);
-    la tabla de valores va tras `b.w fin_<tabla>` y el código termina en la etiqueta `fin_<tabla>`."""
+    la tabla de valores va tras `b.w fin_<tabla>` y el código termina en la etiqueta `fin_<tabla>`.
+    `llamada`: instrucción que lee el Backup (por defecto la de `av-cam`; en `libObj` es `blx 0xdd5f4`, mismos argumentos r0 = id, r1 = búfer)."""
     n = len(a.opciones)
     return f"""
         sub sp, #8
@@ -54,7 +58,7 @@ def leer_asm(a: Ajuste, tabla: str = "tab") -> str:
         movw r0, #{a.backup & 0xFFFF:#x}
         movt r0, #{a.backup >> 16:#x}
         mov r1, sp
-        bl {BACKUP_READ:#x}
+        {llamada}
         ldrb r0, [sp]
         add sp, #8
         cmp r0, #{n}

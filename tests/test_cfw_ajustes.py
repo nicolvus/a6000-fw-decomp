@@ -8,7 +8,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / "scripts"), str(ROOT / "scripts/gui"), str(ROOT / "scripts/g55"), str(ROOT / "references/pmca")]
-import cfw_ajustes as C  # noqa: E402
+import cfw_ajustes as C
 
 DEV_A = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev"
 DEV_B = ROOT / "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev"
@@ -33,7 +33,7 @@ def test_tabla_ajustes():
     assert len(set(ids)) == len(ids) and set(ids) <= set(C.ID_LIBRES)
     assert len({a.pid for a in C.AJUSTES}) == len(C.AJUSTES)
     for a in C.AJUSTES:
-        assert (a.opciones[0][1] == 0 or a.id == "fb_paso") and len(a.opciones) < 256       # el índice 0 = Off/fábrica; el byte es el índice
+        assert (a.opciones[0][1] == 0 or a.id in ("fb_paso", "n_disparos")) and len(a.opciones) < 256       # el índice 0 = Off/fábrica; el byte es el índice
 
 
 @pytest.mark.skipif(not DUMP.exists(), reason="sin volcado")
