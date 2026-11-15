@@ -44,7 +44,7 @@ Features wanted on the A6000, inherited from other Sony models and other brands,
 
 ### Video
 
-- ⬜ Full HD / HD 120 fps — _Origin: ≈Sony α6300_
+- 🔧 Full HD / HD 120 fps — _Origin: ≈Sony α6300_. Partial: 1080p120 ruled out (readout ~69 fps max, 249 Mpx/s > 135); 720p120 has its pieces in the firmware (sensor mode 0x12 at 120 Hz, MP4 720p100 encoder, "120p 50M" menu node absent from the A6000 list), chain not closed, no CFW ([G70](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/gui/g70-hd-120fps.md)).
 - ⬜ Variable Frame Rate — _Origin: Panasonic GH5_
 - ⬜ Internal 4K — _Origin: ≈Sony α7R II_
 - ⬜ Dual Video Recording — _Origin: ≈Sony α7R III_
