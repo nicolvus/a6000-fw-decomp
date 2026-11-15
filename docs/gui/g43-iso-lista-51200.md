@@ -1,6 +1,8 @@
 # G43 — Lista ISO hasta 51200: parche del menú hecho y probado en el arnés; la UI oculta 32000+ por el MAX (16-11-2026; PARCIAL, sin CFW)
 
-Continúa [G42](g42-iso-consumidor.md). Mismo mecanismo que [G39](g39-extra-fine-menu.md), con un obstáculo más.
+Continúa [G42](g42-iso-consumidor.md).
+
+> Actualización G44: la inyección del MAX en el arnés NO funciona con tipo 4/`0x1002` ([G44](g44-iso-arnes-inyeccion.md)); §4 sigue vigente salvo el punto 1. Mismo mecanismo que [G39](g39-extra-fine-menu.md), con un obstáculo más.
 
 ## 1. Listas de nodos y rama de la A6000
 `CmnViewSettingNodeISOSensitivity::_getSubNode` (`CautionConfig.so+0x107d7c`, fw 3.21) lee el **mismo id `0x1070316`** (lectura de Backup, tipo de modelo) que Calidad (G39), hace `tbb` sobre `byte-1` (0..0x1d; otro → `Default`) y carga dos literales GOT (nodos, NumOf). Las matrices son de punteros con relocaciones; los nodos se construyen en tiempo de carga (`.bss`).
