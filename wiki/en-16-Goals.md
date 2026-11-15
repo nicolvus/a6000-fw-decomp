@@ -18,7 +18,7 @@ Features wanted on the A6000, inherited from other Sony models and other brands,
 - ⬜ Expanded ISO up to 409600 — _Origin: Sony α7S_
 - ⬜ Pixel Shift Multi Shooting / High Res Shot / Handheld High Res Shot — _Origin: ≈Sony α7R III; Olympus E-M1 II, E-M1X; Panasonic G9_
 - ⬜ Pre Capture photo / Pro Capture / Pre-Burst 4K/6K — _Origin: Olympus E-M1 II; Panasonic GH5, G9_. Full-resolution Pro Capture: feasible in phases, not implemented (the S1/S2 predicate and the burst queue are still unlocated; ring of N×24 MB). The 4K/6K part is ruled out (g50). See [g51](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/gui/g51-pro-capture.md).
-- ⬜ Multiple Exposure — _Origin: Canon EOS 7D Mark II; Nikon D850; Olympus E-M1 II_
+- ⬜ Multiple Exposure — _Origin: Canon EOS 7D Mark II; Nikon D850; Olympus E-M1 II_. Partial (static): the Apollo/HME engine behind MFNR/Twilight is motion estimation only, with no add/max/min operation nor switchable alignment; a custom accumulator is needed. Pending `MULTIEXP-ACC` ([g53](../docs/gui/g53-multiple-exposure-motor-fusion.md)).
 - ⬜ Live Composite — _Origin: Olympus E-M1 II_
 - ⬜ Live Bulb / Live Time — _Origin: Olympus E-M1 II_
 - ⬜ Bulb Timer — _Origin: Canon EOS 7D Mark II_
