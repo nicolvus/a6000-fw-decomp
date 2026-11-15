@@ -70,3 +70,20 @@ def test_menu_descriptor_solo_respaldo(tmp_path):
     cn = (tmp_path / "lib/CautionConfig.so").read_bytes()
     assert len(cn) > len((DEV_A / "nflasha15_unpacked_unpacked/lib/CautionConfig.so").read_bytes())
     assert (tmp_path / "share/app/string_english.uxc").read_bytes().count(b"Bulb Timer") >= 1
+
+
+@necesita_fw
+def test_descriptor_respaldo_tabla_valores_no_nula(tmp_path):
+    """CFWAJ-F1: palabra 8 del descriptor -> {id, tabla índice→valor, …}; con la tabla a NULL `libObj` caía con SIGSEGV al abrir el menú (g56 §4)."""
+    import add_menu_entry as A
+    C.construir(DEV_A, DEV_B, tmp_path)
+    d = (tmp_path / "lib/viewUnified2.so").read_bytes()
+    segs = A._segments(d)
+    w = lambda va, n=1: struct.unpack_from(f"<{n}I", d, A._off(segs, va))
+    d_va = (w(0x25D910)[0] + 0x25D8FE) & 0xFFFFFFFF            # literal reapuntado a la tabla de descriptores ampliada
+    a = C.AJUSTES[0]
+    desc = w(w(d_va + 4 * a.pid)[0], 19)
+    ident, vals, *_ = w(desc[8], 4)
+    assert ident == a.backup and vals
+    assert list(w(vals, len(a.opciones))) == list(range(len(a.opciones)))
+    assert desc[5] >> 8 == desc[17] >> 8 == len(a.opciones) and desc[13]

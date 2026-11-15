@@ -144,9 +144,12 @@ def patch(d: bytes, ajustes, gris_efcs: bool = False) -> bytes:
             tpl_va = d_old[PID_BACKUP]                                   # plantilla nativa: mismas palabras y la clase de elemento de los pids «solo respaldo»
             desc = list(word(tpl_va, P.DESC_PALABRAS))
             assert desc[6] == 0 and desc[9] == 1
-            desc[1], desc[5], desc[8] = c, (desc[5] & ~0xFF00) | (n << 8), alloc([a.backup])
+            # palabra 8 -> {id, tabla índice→valor (null = SIGSEGV de libObj en el menú, CFWAJ-F1), 0, 1}; palabras 13/17: lista de n «nada» y n << 8 como el 0x55
+            vals = alloc(list(range(n)))
+            desc[1], desc[5], desc[8] = c, (desc[5] & ~0xFF00) | (n << 8), alloc([a.backup, vals, 0, 1], {1: 0x17})
+            desc[13], desc[17] = alloc([P.NADA] * n), n << 8
             rels = {i: by_off[tpl_va + 4 * i] for i in range(P.DESC_PALABRAS) if tpl_va + 4 * i in by_off}
-            d_new[a.pid] = alloc(desc, {**rels, 1: 0x17, 8: 0x17})
+            d_new[a.pid] = alloc(desc, {**rels, 1: 0x17, 8: 0x17, 13: 0x17})
             clase_respaldo[a.pid] = elem[PID_BACKUP]
             extra.extend(struct.pack("<II", d_va + 4 * a.pid, 0x17))
             continue

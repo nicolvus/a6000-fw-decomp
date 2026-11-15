@@ -22,3 +22,6 @@ No hace falta tocar `libObj`: el 3.79 (G36 §8, 6 páginas, ≤ 7 opciones por f
 ## 4. Siguiente paso para la causa exacta
 
 En el arnés (otro agente, VM): volcar en la señal 11 `sp`, `r4–r11` y 256 B de pila, o poner un punto de parada en `0x5b6224` con el 3.78 y leer `lr` real; con el llamador, buscar el array/tope de páginas y decidir si merece parchearse (solo si se quieren > 6 páginas).
+
+## Nota 15-11-2026: ¿lo explica el campo nulo de CFWAJ-F1?
+No. El fallo de [g56](g56-ajustes-propios-cfw.md) (`libObj+0x120aed`, método virtual `+0x94` que lee la tabla índice→valor NULL de la palabra 8 de un descriptor «solo respaldo») es otro sitio, otra clase y otro síntoma que el de aquí (`libObj+0x5b6242`, `calcWorldClipArea` con `r1=0x0205cb2f`). Los nodos de PP usan el descriptor con modelo (palabra 6 → `{nombre, 1, evento, id_get, claves, tabla de valores, …}`, `pid_space.patch` rellena `s,g,t,v`), sin ninguna palabra a cero; en el arnés el menú PP no se cae. Comprobación solo estática (sin tocar PP): la hipótesis queda **descartada para el 3.78**.
