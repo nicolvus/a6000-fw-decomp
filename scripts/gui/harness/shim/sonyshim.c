@@ -11,6 +11,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+/* nextsym: los envoltorios resuelven la función real con dlsym(RTLD_NEXT) en su primera llamada, y dlsym toma el cerrojo del cargador (dl_load_lock). Si el hilo principal lo tiene
+ * (dlopen ejecutando el constructor de una biblioteca que espera a un hilo recién creado) y ese hilo es el primero en llamar a un envoltorio, ambos se bloquean (arranque colgado con
+ * avcam.jsonl en 4478 B, §5.41). Por eso las funciones de libc/libpthread se resuelven una vez en el constructor del shim y la búsqueda posterior no toca el cargador. */
+static const char *const nx_names[] = {"abort", "close", "dlopen", "fopen", "ioctl", "lseek64", "mmap", "munmap", "nanosleep", "open", "open64", "poll", "pread64", "pthread_attr_setschedparam", "pthread_cond_timedwait", "pthread_cond_wait", "pthread_create", "pthread_join", "pthread_mutex_lock", "pthread_mutex_timedlock", "pthread_mutex_unlock", "pthread_setschedparam", "pwrite64", "read", "sched_get_priority_max", "sched_setscheduler", "select", "sleep", "syscall", "system", "usleep"};
+static void *nx_ptr[sizeof nx_names / sizeof *nx_names];
+static void *nextsym(const char *n) {
+    for (unsigned i = 0; i < sizeof nx_names / sizeof *nx_names; i++) if (!strcmp(nx_names[i], n)) return nx_ptr[i] ? nx_ptr[i] : (nx_ptr[i] = dlsym(RTLD_NEXT, n));
+    return dlsym(RTLD_NEXT, n);
+}
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <pthread.h>
@@ -91,7 +101,7 @@ static int kernel_sleep(int tmo_ms) {  /* espera de una cola de kernel que nunca
 
 static int real_open_call(const char *p, int fl, mode_t m, int is64) {
     static int (*o)(const char *, int, ...), (*o64)(const char *, int, ...);
-    if (!o) { o = dlsym(RTLD_NEXT, "open"); o64 = dlsym(RTLD_NEXT, "open64"); }
+    if (!o) { o = nextsym("open"); o64 = nextsym("open64"); }
     return (is64 ? o64 : o)(p, fl, m);
 }
 
@@ -126,7 +136,7 @@ int open64(const char *p, int fl, ...) { va_list a; va_start(a, fl); mode_t m = 
 
 int close(int fd) {
     static int (*c)(int);
-    if (!c) c = dlsym(RTLD_NEXT, "close");
+    if (!c) c = nextsym("close");
     if (fd >= 0 && fd < MAXFD) kind[fd] = D_NONE;
     return c(fd);
 }
@@ -478,7 +488,7 @@ static void systat_add(int fd, unsigned long req, void *arg) {
 static int cond_timedwait_in(pthread_cond_t *c, pthread_mutex_t *m, const struct timespec *t, void *ra);
 int pthread_cond_timedwait(pthread_cond_t *c, pthread_mutex_t *m, const struct timespec *t) { return cond_timedwait_in(c, m, t, __builtin_return_address(0)); }
 static int cond_timedwait_in(pthread_cond_t *c, pthread_mutex_t *m, const struct timespec *t, void *ra) {
-    static int (*real)(pthread_cond_t *, pthread_mutex_t *, const struct timespec *); if (!real) real = dlsym(RTLD_NEXT, "pthread_cond_timedwait");
+    static int (*real)(pthread_cond_t *, pthread_mutex_t *, const struct timespec *); if (!real) real = nextsym("pthread_cond_timedwait");
     struct timespec rt = {0}, mt = {0}, fix;
     if (t && clock_gettime(CLOCK_REALTIME, &rt) == 0 && clock_gettime(CLOCK_MONOTONIC, &mt) == 0 && rt.tv_sec > mt.tv_sec + 86400 && t->tv_sec >= mt.tv_sec - 86400 && t->tv_sec < mt.tv_sec + 2200000) {
         long long rel = (long long)(t->tv_sec - mt.tv_sec) * 1000000000LL + (t->tv_nsec - mt.tv_nsec);
@@ -500,18 +510,18 @@ static void *systat_thread(void *a) {
 /* read/poll/select sobre dispositivos «genéricos» (= /dev/null): sin esto devuelven al instante (EOF/listo) y el hilo del driver (UsbControl, I-InputRepeat…) gira al 100 % */
 static int sd_fd(int fd); static void sd_log(const char *op, int fd, long a, long b, long r);
 ssize_t read(int fd, void *b, size_t n) {
-    static ssize_t (*real)(int, void *, size_t); if (!real) real = dlsym(RTLD_NEXT, "read");
+    static ssize_t (*real)(int, void *, size_t); if (!real) real = nextsym("read");
     if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && !(getenv("SDIMG") && !strcmp(devname[fd], "/dev/mmca"))) { if (getenv("SYSTAT")) systat_add(fd, 0x100000, 0); if (!getenv("NOBLOCKDEV")) for (;;) sleep(3600); }
     { ssize_t r = real(fd, b, n); if (sd_fd(fd)) sd_log("read", fd, 0, (long)n, (long)r); return r; }
 }
 /* SDIMG: traza de E/S sobre la imagen (primeras 80 llamadas) para ver qué lee libInfraFsys */
 static int sd_fd(int fd) { return fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && !strcmp(devname[fd], "/dev/mmca") && getenv("SDIMG"); }
 static void sd_log(const char *op, int fd, long a, long b, long r) { static int n; if (n++ < 80) LOG("SDIO %s fd=%d a=%ld b=%ld -> %ld", op, fd, a, b, r); }
-off64_t lseek64(int fd, off64_t o, int w) { static off64_t (*real)(int, off64_t, int); if (!real) real = dlsym(RTLD_NEXT, "lseek64"); off64_t r = real(fd, o, w); if (sd_fd(fd)) sd_log("lseek64", fd, (long)(o / 512), w, (long)(r / 512)); return r; }
-ssize_t pread64(int fd, void *b, size_t n, off64_t o) { static ssize_t (*real)(int, void *, size_t, off64_t); if (!real) real = dlsym(RTLD_NEXT, "pread64"); ssize_t r = real(fd, b, n, o); if (sd_fd(fd)) sd_log("pread64", fd, (long)(o / 512), (long)n, (long)r); return r; }
-ssize_t pwrite64(int fd, const void *b, size_t n, off64_t o) { static ssize_t (*real)(int, const void *, size_t, off64_t); if (!real) real = dlsym(RTLD_NEXT, "pwrite64"); ssize_t r = real(fd, b, n, o); if (sd_fd(fd)) sd_log("pwrite64", fd, (long)(o / 512), (long)n, (long)r); return r; }
+off64_t lseek64(int fd, off64_t o, int w) { static off64_t (*real)(int, off64_t, int); if (!real) real = nextsym("lseek64"); off64_t r = real(fd, o, w); if (sd_fd(fd)) sd_log("lseek64", fd, (long)(o / 512), w, (long)(r / 512)); return r; }
+ssize_t pread64(int fd, void *b, size_t n, off64_t o) { static ssize_t (*real)(int, void *, size_t, off64_t); if (!real) real = nextsym("pread64"); ssize_t r = real(fd, b, n, o); if (sd_fd(fd)) sd_log("pread64", fd, (long)(o / 512), (long)n, (long)r); return r; }
+ssize_t pwrite64(int fd, const void *b, size_t n, off64_t o) { static ssize_t (*real)(int, const void *, size_t, off64_t); if (!real) real = nextsym("pwrite64"); ssize_t r = real(fd, b, n, o); if (sd_fd(fd)) sd_log("pwrite64", fd, (long)(o / 512), (long)n, (long)r); return r; }
 long syscall(long n, ...) {  /* SDIMG: libInfraMediaCommon importa syscall(); se registra lo que haga sobre la imagen (fd en el primer argumento) */
-    static long (*real)(long, long, long, long, long, long, long); if (!real) real = dlsym(RTLD_NEXT, "syscall");
+    static long (*real)(long, long, long, long, long, long, long); if (!real) real = nextsym("syscall");
     va_list ap; va_start(ap, n); long a0 = va_arg(ap, long), a1 = va_arg(ap, long), a2 = va_arg(ap, long), a3 = va_arg(ap, long), a4 = va_arg(ap, long), a5 = va_arg(ap, long); va_end(ap);
     long r = real(n, a0, a1, a2, a3, a4, a5);
     { static __thread int en; if (!en && n != 224 && getenv("SDIMG") && sd_fd((int)a0)) { en = 1; sd_log("syscall", (int)a0, n, a2, r); en = 0; } }
@@ -519,12 +529,12 @@ long syscall(long n, ...) {  /* SDIMG: libInfraMediaCommon importa syscall(); se
 }
 /* WAITLOG: esperas del sistema (no UIPC) que también pueden frenar una tecla */
 #define WL_CALL(kind, id, tmo, call) ({ int ws_ = wl_begin(kind, id, tmo, __builtin_return_address(0)); __typeof__(call) r_ = (call); wl_end(ws_); r_; })
-int usleep(useconds_t us) { static int (*real)(useconds_t); if (!real) real = dlsym(RTLD_NEXT, "usleep"); return WL_CALL("usleep", 0, (int)(us / 1000), real(us)); }
-unsigned int sleep(unsigned int s) { static unsigned (*real)(unsigned); if (!real) real = dlsym(RTLD_NEXT, "sleep"); return WL_CALL("sleep", 0, (int)(s * 1000), real(s)); }
-int nanosleep(const struct timespec *t, struct timespec *r) { static int (*real)(const struct timespec *, struct timespec *); if (!real) real = dlsym(RTLD_NEXT, "nanosleep"); return WL_CALL("nanosleep", 0, t ? (int)(t->tv_sec * 1000 + t->tv_nsec / 1000000) : 0, real(t, r)); }
-int select(int n, fd_set *r, fd_set *w, fd_set *e, struct timeval *t) { static int (*real)(int, fd_set *, fd_set *, fd_set *, struct timeval *); if (!real) real = dlsym(RTLD_NEXT, "select"); return WL_CALL("select", 0, t ? (int)(t->tv_sec * 1000 + t->tv_usec / 1000) : -1, real(n, r, w, e, t)); }
+int usleep(useconds_t us) { static int (*real)(useconds_t); if (!real) real = nextsym("usleep"); return WL_CALL("usleep", 0, (int)(us / 1000), real(us)); }
+unsigned int sleep(unsigned int s) { static unsigned (*real)(unsigned); if (!real) real = nextsym("sleep"); return WL_CALL("sleep", 0, (int)(s * 1000), real(s)); }
+int nanosleep(const struct timespec *t, struct timespec *r) { static int (*real)(const struct timespec *, struct timespec *); if (!real) real = nextsym("nanosleep"); return WL_CALL("nanosleep", 0, t ? (int)(t->tv_sec * 1000 + t->tv_nsec / 1000000) : 0, real(t, r)); }
+int select(int n, fd_set *r, fd_set *w, fd_set *e, struct timeval *t) { static int (*real)(int, fd_set *, fd_set *, fd_set *, struct timeval *); if (!real) real = nextsym("select"); return WL_CALL("select", 0, t ? (int)(t->tv_sec * 1000 + t->tv_usec / 1000) : -1, real(n, r, w, e, t)); }
 int poll(struct pollfd *f, nfds_t n, int tmo) {
-    static int (*real)(struct pollfd *, nfds_t, int); if (!real) real = dlsym(RTLD_NEXT, "poll");
+    static int (*real)(struct pollfd *, nfds_t, int); if (!real) real = nextsym("poll");
     for (nfds_t i = 0; i < n; i++) if (f[i].fd >= 0 && f[i].fd < MAXFD && kind[f[i].fd] == D_GENERIC) { if (getenv("SYSTAT")) systat_add(f[i].fd, 0x100001, 0); break; }
     return WL_CALL("poll", n ? (unsigned)f[0].fd : 0, tmo, real(f, n, tmo));
 }
@@ -725,7 +735,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             LOG("ioctl(%s, %#lx, %p) arg0=%#x [n=%u] desde %s+%#lx", devname[fd], req, arg, readable(arg) ? *(unsigned *)arg : (unsigned)(unsigned long)arg, n, ok ? di.dli_fname : "?", ok ? (unsigned long)ra - (unsigned long)di.dli_fbase : 0UL); }
         return 0;
     }
-    if (!r) r = dlsym(RTLD_NEXT, "ioctl");
+    if (!r) r = nextsym("ioctl");
     return r(fd, req, arg);
 }
 int ioctl(int fd, unsigned long req, ...) {  /* envoltorio: con WAITLOG registra las esperas UIPC largas (sem 1: w[0]=id,w[1]=tmo; rcv_msg 7: w[0]=qid,t[1]=tmo) */
@@ -840,7 +850,7 @@ static void wl_end(int s) {
 static void logmark(const char *txt) {
     const char *e = getenv("LOGMARK"); if (!e || !wl_on()) return;
     char c[256], *sv = 0; snprintf(c, sizeof c, "%s", e);
-    for (char *it = strtok_r(c, ",", &sv); it; it = strtok_r(0, ";", &sv)) if (strstr(txt, it)) { efp("[shim] LOGMARK %.2f %s\n", wl_ts(), txt); break; }
+    for (char *it = strtok_r(c, ",", &sv); it; it = strtok_r(0, ",", &sv)) if (strstr(txt, it)) { efp("[shim] LOGMARK %.2f %s\n", wl_ts(), txt); break; }
 }
 static void wl_key(unsigned k) { efp("[shim] WAITLOG %.2f tecla %#x\n", wl_ts(), k); }
 /* DUMPAT=n: a los n s manda SIGUSR1 a cada hilo (uno por segundo) para ver dónde está parado cada uno */
@@ -982,8 +992,9 @@ static void presignal(void) {
     const char *e = getenv("SEMSIG"), *p = e ? e : "83037a,83037a,83037a,83037a";
     while (*p) { const char *q; unsigned id = hexv(p, &q); if (q == p) break; sem_sig(id); p = *q == ',' ? q + 1 : q; }
 }
-__attribute__((constructor)) static void shim_init(void) { if (getenv("CPUWATCH")) { pthread_t tw; pthread_create(&tw, 0, cpu_watch, 0); } presignal(); keyq_init(); live_init(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("OPENVIEW")) { pthread_t th; pthread_create(&th, 0, openviewer, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
-    sa.sa_flags = SA_SIGINFO | ((getenv("NULLMWF") || getenv("TABLE0")) ? 0 : SA_RESETHAND); sigaction(SIGSEGV, &sa, 0);  /* con NULLMWF el manejador sobrevive a las recuperaciones (antes SA_RESETHAND lo quitaba y el siguiente SEGV mataba im.elf: EXIT=139); on_usr1 lo restablece solo si el fallo no es recuperable */ sigaction(SIGBUS, &sa, 0); sigaction(SIGILL, &sa, 0); sigaction(SIGABRT, &sa, 0); }  /* un fallo imprime la pila y se reintenta por defecto (core) */
+__attribute__((constructor)) static void shim_init(void) { for (unsigned i = 0; i < sizeof nx_names / sizeof *nx_names; i++) nx_ptr[i] = dlsym(RTLD_NEXT, nx_names[i]); if (getenv("CPUWATCH")) { pthread_t tw; pthread_create(&tw, 0, cpu_watch, 0); } presignal(); keyq_init(); live_init(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("OPENVIEW")) { pthread_t th; pthread_create(&th, 0, openviewer, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
+    if (getenv("ALTSTK")) { stack_t ss; ss.ss_size = 65536; ss.ss_sp = malloc(ss.ss_size); ss.ss_flags = 0; if (ss.ss_sp) sigaltstack(&ss, 0); }
+    sa.sa_flags = SA_SIGINFO | (getenv("ALTSTK") ? SA_ONSTACK : 0) | ((getenv("NULLMWF") || getenv("TABLE0")) ? 0 : SA_RESETHAND); sigaction(SIGSEGV, &sa, 0);  /* con NULLMWF el manejador sobrevive a las recuperaciones (antes SA_RESETHAND lo quitaba y el siguiente SEGV mataba im.elf: EXIT=139); on_usr1 lo restablece solo si el fallo no es recuperable */ sigaction(SIGBUS, &sa, 0); sigaction(SIGILL, &sa, 0); sigaction(SIGABRT, &sa, 0); }  /* un fallo imprime la pila y se reintenta por defecto (core) */
 
 /* Experimento (SKIPFN=717830,...): sustituye esas funciones Thumb de libObj por «movs r0,#0; bx lr» (devuelven éxito sin hacer nada). */
 static unsigned long hexv(const char *s, const char **end) { unsigned long v = 0; for (;; s++) { int c = *s; if (c >= '0' && c <= '9') c -= '0'; else if (c >= 'a' && c <= 'f') c -= 'a' - 10; else break; v = v * 16 + c; } if (end) *end = s; return v; }
@@ -1124,7 +1135,7 @@ static void efcs_patch(void) {  /* NOEFCS=1 la desactiva; exige los bytes de 3.2
 }
 void *dlopen(const char *f, int fl) {
     static void *(*d)(const char *, int);
-    if (!d) d = dlsym(RTLD_NEXT, "dlopen");
+    if (!d) d = nextsym("dlopen");
     if (f && strstr(f, "viewUnified")) gpu_live = 1;
     LOG("dlopen(%s) ...", f ? f : "(null)");
     void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
@@ -1162,7 +1173,7 @@ int testmode_debugPrint(int lvl, int cat, int x, const char *fmt, ...) {
         if (n++ < 3000) { void *lr = __builtin_return_address(0); Dl_info di; int ok = dladdr(lr, &di);
             LOG("DBG %d/%#x %s+%#lx: %s", lvl, cat, ok ? strrchr(di.dli_fname, '/') + 1 : "?", ok ? (unsigned long)((char *)lr - (char *)di.dli_fbase) : 0UL, b); }
         return 0; }
-    static int (*real)(int, int, int, const char *, ...); if (!real) real = dlsym(RTLD_NEXT, "testmode_debugPrint");
+    static int (*real)(int, int, int, const char *, ...); if (!real) real = nextsym("testmode_debugPrint");
     unsigned w[8]; for (int k = 0; k < 8; k++) w[k] = va_arg(ap, unsigned); va_end(ap);
     return real ? real(lvl, cat, x, fmt, w[0], w[1], w[2], w[3], w[4], w[5], w[6], w[7]) : 0;
 }
@@ -1182,7 +1193,7 @@ static void *salvage_reply(void *a) {
 /* MWF::ObjIf::IssueCommandAsync(objeto, ObjMsg*): la UI emite así los cambios de ajustes (p. ej. EFCS = ObjMsg(0x3100, 0x75fa) + param 0x9776); IMCMDLOG=1 registra destino, cabecera del mensaje y retorno */
 /* El envoltorio desnudo pasa r4/r5 del llamante (callee-saved): en pvt_SetFrontEShutterMode (libObj 0x6896ac) r4 = ModelStillRec, r5 = valor 1/2 */
 __attribute__((used, noinline)) static int issue_cmd(void *h, void *msg, unsigned long r4, unsigned long r5) {
-    static int (*real)(void *, void *); if (!real) real = dlsym(RTLD_NEXT, "_ZN3MWF5ObjIf17IssueCommandAsyncEPvPNS_6ObjMsgE");
+    static int (*real)(void *, void *); if (!real) real = nextsym("_ZN3MWF5ObjIf17IssueCommandAsyncEPvPNS_6ObjMsgE");
     void *ra = __builtin_return_address(0); int r = real(h, msg);
     if (efcs_ra && (unsigned long)ra == efcs_ra && !r && (r5 == 1 || r5 == 2)) {  /* efecto de CMP 0x75fb + EVT 0x85a6 (SET = ACT = pedido) y Backup 0x107086e */
         unsigned long base = efcs_ra - 0x689745; void (*set)(void *, unsigned, unsigned) = (void *)(base + 0x68e0ce + 1);  /* guarda la ranura y avisa a la vista (info 0x4f) */
@@ -1228,7 +1239,7 @@ SETHOOK(_ZN18WrapperSettingUtil11writeBackupEP15ViewBaseProductjaa)
 /* osal_snd_sync_msg(qid, msg, cb, arg): SYNCLOG=1 registra los envíos síncronos que fallan (p. ej. 0xFFFFFC04 = cola local sin manejador registrado) */
 int osal_snd_sync_msg(int qid, void *msg, void *cb, void *arg) {
     static int (*real)(int, void *, void *, void *);
-    if (!real) real = dlsym(RTLD_NEXT, "osal_snd_sync_msg");
+    if (!real) real = nextsym("osal_snd_sync_msg");
     int r = real ? real(qid, msg, cb, arg) : -1;
     /* SYNCWAIT=qid:segundos (§5.37): una cola local sin receptor aún (0xFFFFFC04) se reintenta cada 250 ms hasta ese plazo. En la cámara InfraDatabase (cola 0x37807c) ya atiende cuando
      * ObjCntMgr::onStarting llama a SendDbCommand; aquí Ii 0c7 libmprctrl (MprCtrl::Init) tarda ≈ 60 s más que el arranque de ObjCntMgr.
@@ -1246,21 +1257,21 @@ int osal_snd_sync_msg(int qid, void *msg, void *cb, void *arg) {
  * monótona (RTMAP=0 la desactiva y deja pasar el valor tal cual, §5.36: los hilos de libmpr con 117/120/123 fallarían con EINVAL). sched_get_priority_max informa 159 como la cámara. */
 static int rt_pol(int policy) { return policy == SCHED_FIFO || policy == SCHED_RR; }
 static int rt_on(void) { return !getenv("RTMAP") || atoi(getenv("RTMAP")); }
-static int rt_host_max(int policy) { static int (*real)(int); if (!real) real = dlsym(RTLD_NEXT, "sched_get_priority_max"); return real(policy); }
+static int rt_host_max(int policy) { static int (*real)(int); if (!real) real = nextsym("sched_get_priority_max"); return real(policy); }
 static int rt_conv(int policy, int p) { if (!rt_on() || !rt_pol(policy)) return p; int m = rtprio_map(p, rt_host_max(policy)); if (m != p) LOG("RTMAP prioridad %d -> %d (policy %d)", p, m, policy); return m; }
 int sched_get_priority_max(int policy) { return rt_on() && rt_pol(policy) ? CAM_RT_PRIO_MAX : rt_host_max(policy); }
 int sched_setscheduler(pid_t pid, int policy, const struct sched_param *p) {
-    static int (*real)(pid_t, int, const struct sched_param *); if (!real) real = dlsym(RTLD_NEXT, "sched_setscheduler");
+    static int (*real)(pid_t, int, const struct sched_param *); if (!real) real = nextsym("sched_setscheduler");
     if (readable(p)) { struct sched_param c = { rt_conv(policy, p->sched_priority) }; return real(pid, policy, &c); }
     return real(pid, policy, p);
 }
 int pthread_setschedparam(pthread_t t, int policy, const struct sched_param *p) {
-    static int (*real)(pthread_t, int, const struct sched_param *); if (!real) real = dlsym(RTLD_NEXT, "pthread_setschedparam");
+    static int (*real)(pthread_t, int, const struct sched_param *); if (!real) real = nextsym("pthread_setschedparam");
     if (readable(p)) { struct sched_param c = { rt_conv(policy, p->sched_priority) }; return real(t, policy, &c); }
     return real(t, policy, p);
 }
 int pthread_attr_setschedparam(pthread_attr_t *a, const struct sched_param *p) {
-    static int (*real)(pthread_attr_t *, const struct sched_param *); if (!real) real = dlsym(RTLD_NEXT, "pthread_attr_setschedparam");
+    static int (*real)(pthread_attr_t *, const struct sched_param *); if (!real) real = nextsym("pthread_attr_setschedparam");
     int pol = SCHED_OTHER; pthread_attr_getschedpolicy(a, &pol);  /* shortcut: la política del atributo puede fijarse después de la prioridad; entonces no se mapea, mejorar si algún hilo lo hace */
     if (readable(p)) { struct sched_param c = { rt_conv(pol, p->sched_priority) }; return real(a, &c); }
     return real(a, p);
@@ -1272,13 +1283,13 @@ static void thr_fn(const char *tag, void *a, int r, void *lr, unsigned m1, unsig
     if (dladdr(lr, &dl) && dl.dli_fname) { lf = strrchr(dl.dli_fname, '/') ? strrchr(dl.dli_fname, '/') + 1 : dl.dli_fname; lo = (unsigned long)lr - (unsigned long)dl.dli_fbase; }
     LOG("THREADLOG %s entrada=%s+%#lx ret=%d desde %s+%#lx modo=%u mascara=%#x", tag, f, o, r, lf, lo, m1, m5); }
 int osal_create_waitable_thread(void *p, void *h) {
-    static int (*real)(void *, void *); if (!real) real = dlsym(RTLD_NEXT, "osal_create_waitable_thread");
+    static int (*real)(void *, void *); if (!real) real = nextsym("osal_create_waitable_thread");
     int r = real ? real(p, h) : -1;
     if (getenv("THREADLOG") && readable(p)) thr_fn("create", ((void **)p)[2], r, __builtin_return_address(0), ((unsigned *)p)[1], ((unsigned *)p)[5]);
     return r;
 }
 void osal_exit_thread(int c) {
-    static void (*real)(int); if (!real) real = dlsym(RTLD_NEXT, "osal_exit_thread");
+    static void (*real)(int); if (!real) real = nextsym("osal_exit_thread");
     if (getenv("THREADLOG")) thr_fn("exit", 0, c, __builtin_return_address(0), 0, 0);
     if (real) real(c);
     for (;;) pause();
@@ -1286,25 +1297,25 @@ void osal_exit_thread(int c) {
 /* ModelManager::pushEvent(Event*): PUSHLOG=1 registra quién publica eventos de modelo (lr y primeras palabras del Event) */
 int _ZN12ModelManager9pushEventEP5Event(void *mm, unsigned *ev) {
     static int (*real)(void *, void *);
-    if (!real) real = dlsym(RTLD_NEXT, "_ZN12ModelManager9pushEventEP5Event");
+    if (!real) real = nextsym("_ZN12ModelManager9pushEventEP5Event");
     if (getenv("PUSHLOG")) { static int n; if (n++ < 600) { unsigned long lr = (unsigned long)__builtin_return_address(0); Dl_info di; const char *lib = dladdr((void *)lr, &di) ? di.dli_fname : "?"; LOG("pushEvent lr=%lx (%s+%lx) ev=%08x %08x %08x %08x %08x", lr, lib, dladdr((void *)lr, &di) ? lr - (unsigned long)di.dli_fbase : 0, ev[0], ev[1], ev[2], ev[3], ev[4]); } }
     return real ? real(mm, ev) : 0;
 }
 /* ModelManager::acquireStatus/releaseStatus(int): PUSHLOG=1 registra quién fija el «estado» del sistema (0x4/0x5/0x7 0000…) */
 int _ZN12ModelManager13acquireStatusEi(void *mm, int st) {
-    static int (*real)(void *, int); if (!real) real = dlsym(RTLD_NEXT, "_ZN12ModelManager13acquireStatusEi");
+    static int (*real)(void *, int); if (!real) real = nextsym("_ZN12ModelManager13acquireStatusEi");
     if (getenv("PUSHLOG")) { unsigned long lr = (unsigned long)__builtin_return_address(0); Dl_info di; int ok = dladdr((void *)lr, &di); LOG("acquireStatus(%#x) lr=%lx (+%lx)", st, lr, ok ? lr - (unsigned long)di.dli_fbase : 0); }
     return real ? real(mm, st) : 0;
 }
 int _ZN12ModelManager13releaseStatusEi(void *mm, int st) {
-    static int (*real)(void *, int); if (!real) real = dlsym(RTLD_NEXT, "_ZN12ModelManager13releaseStatusEi");
+    static int (*real)(void *, int); if (!real) real = nextsym("_ZN12ModelManager13releaseStatusEi");
     if (getenv("PUSHLOG")) { unsigned long lr = (unsigned long)__builtin_return_address(0); Dl_info di; int ok = dladdr((void *)lr, &di); LOG("releaseStatus(%#x) lr=%lx (+%lx)", st, lr, ok ? lr - (unsigned long)di.dli_fbase : 0); }
     return real ? real(mm, st) : 0;
 }
 /* ViewBase::getModelInfo(nombre, info, lista, filtro): las vistas piden datos de modelo por aquí (PLT → este símbolo antes que libObj). GMILOG=1 registra cada petición y su resultado. */
 int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name, int info, void *list, const void *flt) {
     static int (*real)(void *, const char *, int, void *, const void *);
-    if (!real) real = dlsym(RTLD_NEXT, "_ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_");
+    if (!real) real = nextsym("_ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_");
     int r = real ? real(self, name, info, list, flt) : 0;
     if (real && r && getenv("GMIPROBE2") && !strcmp(name, "model/ROOT") && info == 6) {  /* misma lista que la vista: info 1 y 7, y se restaura la 6 */
         static int n2; if (n2++ < 3) { int a = real(self, name, 1, list, flt), b = real(self, name, 7, list, flt), c = real(self, name, 6, list, flt); LOG("GMIPROBE2 misma lista: info1=%d info7=%d info6=%d", a, b, c); }
@@ -1323,7 +1334,7 @@ int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name
                 unsigned (*gdest)(void *) = dlsym(lobj_h, "_ZN5Event7getDestEv"); void *stash[256]; int ns = 0, n = 0, nd = 0;
                 while (n < 400 && pend(app)) { void *ev = pop(*(void **)(app + 0x10)); n++; unsigned d = gdest ? gdest(ev) : 0xff;
                     if (d == 2) { disp(app, ev); nd++; } else if (ns < 256) stash[ns++] = ev; }  /* solo eventos puros de ModelManager (dest 2): los de ViewManager reentrantes derriban el proceso */
-                { int (*pe)(void *, void *) = dlsym(RTLD_NEXT, "_ZN12ModelManager9pushEventEP5Event"); for (int k = 0; k < ns; k++) pe(mm, stash[k]); }
+                { int (*pe)(void *, void *) = nextsym("_ZN12ModelManager9pushEventEP5Event"); for (int k = 0; k < ns; k++) pe(mm, stash[k]); }
                 LOG("GMIDRAIN despachados=%d reencolados=%d", nd, ns);
                 r = real(self, name, info, list, flt); LOG("GMIDRAIN %d eventos; getModelInfo(%s,%d) -> %d", n, name, info, r); }
         }
@@ -1344,7 +1355,7 @@ void *dlsym(void *h, const char *n) {  /* DLSYMLOG=1: símbolos que pide la UI (
 }
 int system(const char *c) {
     static int (*sy)(const char *);
-    if (!sy) sy = dlsym(RTLD_NEXT, "system");
+    if (!sy) sy = nextsym("system");
     int r = sy(c); LOG("system(%s) -> %d", c ? c : "(null)", r); return r;
 }
 
@@ -1701,7 +1712,7 @@ static void *live_frames(void *a) {
 }
 static void live_init(void) {
     const char *dev = getenv("LIVE"); if (!dev) return;
-    static int (*op)(const char *, int, ...); if (!op) op = dlsym(RTLD_NEXT, "open");
+    static int (*op)(const char *, int, ...); if (!op) op = nextsym("open");
     live_fd = op(dev, O_RDWR); if (live_fd < 0) { efp("[shim] LIVE %s no se abre\n", dev); return; }
     pthread_t t; pthread_create(&t, 0, live_keys, 0); pthread_create(&t, 0, live_frames, 0); efp("[shim] LIVE %s listo\n", dev);
 }
@@ -1758,13 +1769,13 @@ static void gpuemu_add(const char *dev, off_t off, void *p, size_t len) {
 static void regtrap_add(void *p, size_t len) {
     if (nrtw >= 2 || len > 0x20000) return;
     rtw[nrtw].p = p; rtw[nrtw].len = len; efp("[shim] REGTRAP ventana w%d = %p\n", nrtw, p); nrtw++;
-    if (nrtw == 1) { struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = rt_segv; sa.sa_flags = SA_SIGINFO | SA_NODEFER; sigaction(SIGSEGV, &sa, &rt_old); }
+    if (nrtw == 1) { struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = rt_segv; sa.sa_flags = SA_SIGINFO | SA_NODEFER | (getenv("ALTSTK") ? SA_ONSTACK : 0); sigaction(SIGSEGV, &sa, &rt_old); }
     if (nrtw == 2 || 1) { static int th; if (!th++) { pthread_t t; pthread_create(&t, 0, rt_thread, 0); } }
 }
 /* mmap de dispositivos no modelados (/dev/mem, fb, ...): memoria anónima a cero */
 void *mmap(void *a, size_t l, int pr, int fl, int fd, off_t o) {
     static void *(*m)(void *, size_t, int, int, int, off_t);
-    if (!m) m = dlsym(RTLD_NEXT, "mmap");
+    if (!m) m = nextsym("mmap");
     if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC) {
         if (!l) l = 0x1000;  /* shortcut: len 0 no es válido; el monitor de MWF lo pide sin argumentos */
         void *r = m(a, l, pr, (fl & ~MAP_SHARED) | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
@@ -1780,7 +1791,7 @@ void *mmap64(void *a, size_t l, int pr, int fl, int fd, off64_t o) { return mmap
 
 FILE *fopen(const char *p, const char *m) {
     static FILE *(*f)(const char *, const char *);
-    if (!f) f = dlsym(RTLD_NEXT, "fopen");
+    if (!f) f = nextsym("fopen");
     if (!strcmp(p, "/proc/modules")) {  /* libObj (MemoryAllocator.cpp:45) exige «grm_ma » en /proc/modules: módulos de kernel de Sony simulados */
         FILE *w = f("/tmp/modules", "w");
         if (w) { fputs("grm_ma 1 0 - Live 0x0\ngrm_gles 1 0 - Live 0x0\n", w); fclose(w); p = "/tmp/modules"; }
@@ -1799,7 +1810,7 @@ void abort_regs(unsigned *r) {
     fprintf(stderr, "[shim] ABORT r4=%08x r5=%08x r6=%08x r7=%08x r8=%08x lr=%08x\n", r[4], r[5], r[6], r[7], r[8], r[13]);
     sym(r[13]);
 }
-void abort_real(void) { static void (*a)(void); if (!a) a = dlsym(RTLD_NEXT, "abort"); a(); for (;;); }
+void abort_real(void) { static void (*a)(void); if (!a) a = nextsym("abort"); a(); for (;;); }
 
 static int mw_secs(void); static const char *tname(int, char *, size_t); static unsigned libobj_off(void *);
 /* Experimento (CVWAIT=s): el solicitante de libObj+0x719ed8 (patrón «trabajador», fw 3.21) espera el fin del trabajo sin sostener su
@@ -1807,7 +1818,7 @@ static int mw_secs(void); static const char *tname(int, char *, size_t); static 
  * El resto de esperas (p. ej. el bucle del trabajador, que no tolera despertares espurios) queda intacto. */
 int pthread_cond_wait(pthread_cond_t *c, pthread_mutex_t *m) {
     static int tmo = -1; static int (*real)(pthread_cond_t *, pthread_mutex_t *);
-    if (!real) real = dlsym(RTLD_NEXT, "pthread_cond_wait");
+    if (!real) real = nextsym("pthread_cond_wait");
     if (tmo < 0) { const char *e = getenv("CVWAIT"); tmo = 0; while (e && *e >= '0' && *e <= '9') tmo = tmo * 10 + *e++ - '0'; }
     if (tmo) {
         Dl_info di; void *ra = __builtin_return_address(0);
@@ -1840,7 +1851,7 @@ static int mt_suffix(void) { static int v = -2; if (v == -2) { const char *e = g
 static void mt_log(const char *what, pthread_mutex_t *m, void *ra) { static int n; if (mt_suffix() >= 0 && (((unsigned long)m & 0xfff) == (unsigned long)mt_suffix()) && n < 6000) { n++; char a[32]; efp("[shim] MUTEXTRACE %s %p tid %ld %s libObj+%#x\n", what, (void *)m, (long)syscall(224), tname((int)syscall(224), a, sizeof a), libobj_off(ra)); if (getenv("MUTEXSTACK") && what[0] == 'l' && strstr(a, getenv("MUTEXSTACK"))) raise(SIGUSR1); } }
 int pthread_mutex_lock(pthread_mutex_t *m) {
     static int (*real)(pthread_mutex_t *), (*tl)(pthread_mutex_t *, const struct timespec *);
-    if (!real) { real = dlsym(RTLD_NEXT, "pthread_mutex_lock"); tl = dlsym(RTLD_NEXT, "pthread_mutex_timedlock"); }
+    if (!real) { real = nextsym("pthread_mutex_lock"); tl = nextsym("pthread_mutex_timedlock"); }
     mt_log("lock", m, __builtin_return_address(0));
     int w = mw_secs(); if (!w || !tl) return real(m);
     struct timespec ts; clock_gettime(CLOCK_REALTIME, &ts); ts.tv_sec += w;
@@ -1856,7 +1867,7 @@ int pthread_mutex_lock(pthread_mutex_t *m) {
  * justos y el hilo trabajador de la GPU (que lo vuelve a tomar enseguida) deja sin cerrojo al hilo de la aplicación. */
 int pthread_mutex_unlock(pthread_mutex_t *m) {
     static int (*real)(pthread_mutex_t *); static int us = -1;
-    if (!real) real = dlsym(RTLD_NEXT, "pthread_mutex_unlock");
+    if (!real) real = nextsym("pthread_mutex_unlock");
     if (us < 0) { const char *e = getenv("FAIRMUTEX"); us = 0; while (e && *e >= '0' && *e <= '9') us = us * 10 + *e++ - '0'; }
     mt_log("unlock", m, __builtin_return_address(0));
     int w = us ? ((int *)m)[0] : 0, r = real(m);
@@ -1866,7 +1877,7 @@ int pthread_mutex_unlock(pthread_mutex_t *m) {
 /* Registro de munmap grandes (MMapBase de libObj aborta si desmapea algo no mapeado). */
 int munmap(void *a, size_t l) {
     static int (*m)(void *, size_t);
-    if (!m) m = dlsym(RTLD_NEXT, "munmap");
+    if (!m) m = nextsym("munmap");
     int r = m(a, l);
     if (l >= 0x100000 || r) LOG("munmap(%p, %#zx) -> %d", a, l, r);
     return r;
@@ -1874,16 +1885,27 @@ int munmap(void *a, size_t l) {
 
 /* THRLOG=1: registra pthread_create (hilo, rutina inicial) y pthread_join (objetivo) para saber a qué hilo espera el hilo principal de im.elf. */
 static void thr_desc(void *f, char *o, int n) { Dl_info di; if (dladdr(f, &di) && di.dli_fname) snprintf(o, n, "%s+%#lx", strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname, (unsigned long)f - (unsigned long)di.dli_fbase); else snprintf(o, n, "%p", f); }
+/* ALTSTK=1 (diagnóstico): cada hilo estrena una pila alterna para SIGSEGV (con SA_ONSTACK en los manejadores): un desbordamiento de pila deja de matar el proceso sin rastro (el núcleo no puede
+ * montar el marco de la señal) y el manejador imprime pc/dirección. STACKPAD=n: suma n bytes al tamaño de pila de cada hilo con atributos explícitos. shortcut: solo para depurar. */
+struct thr_arg { void *(*f)(void *); void *arg; };
+static void *thr_tramp(void *p) {
+    struct thr_arg ta = *(struct thr_arg *)p; free(p);
+    stack_t ss; ss.ss_size = 65536; ss.ss_sp = malloc(ss.ss_size); ss.ss_flags = 0; if (ss.ss_sp) sigaltstack(&ss, 0);
+    return ta.f(ta.arg);
+}
 int pthread_create(pthread_t *t, const pthread_attr_t *a, void *(*f)(void *), void *arg) {
     static int (*r)(pthread_t *, const pthread_attr_t *, void *(*)(void *), void *);
-    if (!r) r = dlsym(RTLD_NEXT, "pthread_create");
+    if (!r) r = nextsym("pthread_create");
+    pthread_attr_t pa; size_t ssz; void *sa_;
+    if (a && getenv("STACKPAD") && !pthread_attr_getstack(a, &sa_, &ssz) && !sa_) { pa = *a; pthread_attr_getstacksize(&pa, &ssz); pthread_attr_setstacksize(&pa, ssz + num(getenv("STACKPAD"))); a = &pa; }
+    if (getenv("ALTSTK")) { struct thr_arg *ta = malloc(sizeof *ta); if (ta) { ta->f = f; ta->arg = arg; f = thr_tramp; arg = ta; } }
     int rc = r(t, a, f, arg);
     if (getenv("THRLOG")) { char d[96]; thr_desc((void *)f, d, sizeof d); LOG("pthread_create %lx fn=%s (desde tid %ld)", (unsigned long)*t, d, (long)syscall(224)); }
     return rc;
 }
 int pthread_join(pthread_t t, void **v) {
     static int (*r)(pthread_t, void **); static int nmj;
-    if (!r) r = dlsym(RTLD_NEXT, "pthread_join");
+    if (!r) r = nextsym("pthread_join");
     if (getenv("THRLOG")) LOG("pthread_join %lx (tid %ld)", (unsigned long)t, (long)syscall(224));
     /* NOJOIN=N: desde el N-ésimo join del hilo principal (1 = todos) no espera; el hilo principal de im.elf no espera a los hilos de infra (en la cámara los procesos im.elf van por letras y el último solo atiende mensajes; aquí un único proceso
      * ejecuta las fases y THREAD_INFRA1 queda en el bucle de MWF para siempre): así llega a su bucle de recepción (0x9e94). shortcut: afecta a todo join del hilo principal. */

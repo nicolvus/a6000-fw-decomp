@@ -78,3 +78,13 @@ def test_ioctl_5_de_la_sd_se_clasifica_sdhc_8201_como_en_libinframediacommon(tmp
     assert [x[0] for x in f] == ["8200", "8201", "8201", "8202"]  # 1 GB SDSC, 4 GB SDHC, 32 GB (0x800000000 < 0x800000001: SDHC), 64 GB SDXC
     assert [x[1] for x in f][1] == "8401" and f[0][1] == "8400"
     assert f[1][2] == "3" and f[1][3] == "8388608"
+
+
+def test_envoltorios_resuelven_con_nextsym_y_no_con_dlsym_literal():
+    """§5.41: dlsym toma el cerrojo del cargador; un hilo nuevo que lo pida mientras el principal está en dlopen cuelga el arranque."""
+    import re
+    from pathlib import Path
+
+    src = (Path(__file__).resolve().parents[1] / "scripts/gui/harness/shim/sonyshim.c").read_text()
+    assert not re.findall(r'dlsym\(RTLD_NEXT, *"', src)
+    assert "nx_ptr[i] = dlsym(RTLD_NEXT, nx_names[i])" in src  # shim_init los resuelve antes de que arranque cualquier hilo

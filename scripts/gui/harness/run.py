@@ -60,7 +60,7 @@ def build_initrd(work: Path, script: Path, t: Path, shimenv: str = "", overlay2:
 
 def qemu_cmd(work: Path, initrd: Path, extra: list[str], console: list[str] | None = None) -> list[str]:
     ncpu = min(int(os.environ.get("QEMU_SMP", "8")), 8)  # el kernel netboot armmp de Debian trae NR_CPUS=8: más vCPU no se ven (medido: -smp 12 → 8 en /proc/cpuinfo)
-    return ["qemu-system-arm", "-M", "virt", "-cpu", "cortex-a15", "-smp", str(ncpu), "-accel", "tcg,thread=multi,tb-size=512", "-m", "1536",
+    return ["qemu-system-arm", "-M", "virt", "-cpu", "cortex-a15", "-smp", str(ncpu), "-accel", os.environ.get("QEMU_ACCEL", "tcg,thread=multi,tb-size=512"), "-m", "1536",
             "-kernel", str(work / "vmlinuz"), "-initrd", str(initrd), "-append", "console=ttyAMA0 quiet loglevel=3",
             *(console if console is not None else ["-nographic"]), "-no-reboot", *extra]
 

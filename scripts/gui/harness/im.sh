@@ -3,6 +3,7 @@
 # (VERB, TIDLOG, CVWAIT, POKE, SKIPFN, TRACEFN, TRACEPEEK, WATCH, DUMPAT, RCVSTACK, BKV).
 [ -f /cam/harness.env ] && . /cam/harness.env
 export LD_LIBRARY_PATH=/usr/lib
+[ -n "$NOASLR" ] && echo 0 > /proc/sys/kernel/randomize_va_space  # NOASLR=1 (diagnóstico): sin ASLR en el invitado, para separar fallos de colisión de mapeos aleatorios
 # LIVE=auto (live.py): puerto virtio-serial «a6000ui» con el anfitrión; virtio_mmio es módulo en el kernel de Debian. El shim recibe la ruta /dev/vportNpM.
 if [ -n "$LIVE" ]; then
   modprobe virtio_mmio
@@ -29,7 +30,7 @@ if [ -n "$NET" ]; then
 fi
 # IMSPLIT=1: como bootin.elf, un proceso im.elf por letra (s g r u l i a) y uno final sin argumentos; cada letra activa una fase del IMDB
 # (u = fase 4: appFw.so → Application_System_Init, el hilo de la UI). Sin IMSPLIT: un solo proceso con todas las letras (modo histórico).
-run_im() { ( LD_PRELOAD=/usr/lib/sonyshim.so chroot /cam /usr/bin/im.elf $1 > /tmp/$2.log 2>&1; echo "EXIT=$?" >> /tmp/$2.log ) & }
+run_im() { ( LD_PRELOAD=/usr/lib/sonyshim.so chroot /cam /usr/bin/im.elf $1 > /tmp/$2.log 2>&1; r=$?; echo "EXIT=$r" >> /tmp/$2.log; [ -n "$LIVE" ] && echo "IMEXIT $2 $r" ) & }
 if [ -n "$IMSPLIT" ]; then
   for a in ${IMLETTERS:-s g r u l i a}; do run_im $a imp_$a; done
   [ -n "$IMNOARG" ] && run_im "" imp_n
@@ -40,8 +41,8 @@ fi
 # PMWAIT=s (diagnóstico, fuera del proceso im.elf): a los s segundos y cada PMEVERY (60) s vuelca por la consola comm/estado/wchan/syscall de cada hilo de im.elf y su mapa de módulos
 # («PM» en consola.log); sirve para construir el grafo de espera de un interbloqueo (syscall: nº, argumentos, sp, pc).
 if [ -n "$PMWAIT" ]; then
-  echo 1 > /proc/sys/debug/exception-trace 2>/dev/null; ls /proc/sys/debug 2>/dev/null | sed "s/^/PM sysdebug /"
-  ( sleep $PMWAIT; for r in 1 2 3; do PP=$(for d in /proc/[0-9]*; do echo "$(ls $d/task 2>/dev/null | wc -l) ${d#/proc/}"; done | sort -rn | head -1 | cut -d" " -f2); echo "PM-BEGIN $r pid=$PP"; tail -4 /tmp/im_s.log | cut -c1-200 | sed "s/^/PM imlog /"; grep -a "pila (sig 11" /tmp/im_s.log | tail -3 | cut -c1-150 | sed "s/^/PM segv /"; grep -a "EXIT=" /tmp/im_s.log | sed "s/^/PM imexit /"; dmesg | grep -a "unhandled\|segfault\|potentially" | tail -6 | sed "s/^/PM dmesg /"; ps | grep -a "im.elf\|busybox" | head -5 | sed "s/^/PM ps /"
+  echo 1 > /proc/sys/kernel/print-fatal-signals 2>/dev/null; ls /proc/sys/debug 2>/dev/null | sed "s/^/PM sysdebug /"
+  ( sleep $PMWAIT; for r in 1 2 3; do PP=$(for d in /proc/[0-9]*; do echo "$(ls $d/task 2>/dev/null | wc -l) ${d#/proc/}"; done | sort -rn | head -1 | cut -d" " -f2); echo "PM-BEGIN $r pid=$PP"; tail -${PMTAIL:-4} /tmp/im_s.log | cut -c1-200 | sed "s/^/PM imlog /"; grep -a -A25 "pila (sig \(11\|6\|4\|7\) " /tmp/im_s.log | head -40 | cut -c1-150 | sed "s/^/PM segv /"; [ -n "$PMSTK" ] && grep -a -A14 "pila (sig 10" /tmp/im_s.log | head -$PMSTK | cut -c1-120 | sed "s/^/PM stk /"; grep -a "EXIT=" /tmp/im_s.log | sed "s/^/PM imexit /"; dmesg | grep -a -A9 "potentially" | tail -12 | sed "s/^/PM dmesg /"; ps | grep -a "im.elf\|busybox" | head -5 | sed "s/^/PM ps /"
       for t in /proc/$PP/task/*; do echo "PM $(basename $t) $(cat $t/comm) st=$(cut -d' ' -f3 $t/stat) wchan=$(cat $t/wchan) sys=$(cat $t/syscall)"; done
       [ $r = 1 ] && grep -a "\.so\|im.elf" /proc/$PP/maps | grep -a "r-xp\|r--p" | awk '{print "PMMAP",$1,$6}'
       echo "PM-END $r"; sleep ${PMEVERY:-60}; done ) &

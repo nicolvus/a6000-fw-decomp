@@ -509,6 +509,39 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
     return srv
 
 
+def arranque_fallido(consola: str, transcurrido: float, fotogramas: int, limite: float) -> bool:
+    """Un arranque en frío fallido: im.elf murió («IMEXIT» de im.sh, SEGV intermitente del arranque) o no hay pantalla pasado `limite` s (cuelgue)."""
+    return not fotogramas and ("IMEXIT " in consola or transcurrido > limite)
+
+
+def supervisa(argv: list[str], consola: Path, avcam: Path, puerto: int, intentos: int, limite: float) -> int:
+    """shortcut: el SEGV silencioso de im.elf al arrancar (no localizado, §5.41) se esquiva repitiendo el arranque en frío hasta `intentos` veces; mejorar al hallar su causa.
+    El hijo es este mismo script con LIVE_HIJO=1; el padre solo vigila y reenvía SIGTERM/SIGINT."""
+    import urllib.request
+    hijo: subprocess.Popen | None = None
+    for sig in (signal.SIGINT, signal.SIGTERM):
+        signal.signal(sig, lambda *_: hijo and hijo.send_signal(signal.SIGTERM))
+    for n in range(1, intentos + 1):
+        consola.unlink(missing_ok=True); avcam.unlink(missing_ok=True); (consola.parent / "shim.log").unlink(missing_ok=True)
+        t0 = time.time()
+        hijo = subprocess.Popen([sys.executable, *argv], env={**os.environ, "LIVE_HIJO": "1"})
+        fotogramas = 0
+        while hijo.poll() is None and not fotogramas:
+            time.sleep(3)
+            try:
+                fotogramas = json.load(urllib.request.urlopen(f"http://127.0.0.1:{puerto}/estado", timeout=3))["fotogramas"]
+            except (OSError, ValueError):
+                pass
+            txt = consola.read_text(errors="replace") if consola.exists() else ""
+            if arranque_fallido(txt, time.time() - t0, fotogramas, limite) and n < intentos:
+                print(f"arranque {n}/{intentos} fallido a los {time.time() - t0:.0f} s: se repite", flush=True)
+                hijo.send_signal(signal.SIGTERM); hijo.wait(60)
+                break
+        else:
+            return hijo.wait()
+    return hijo.wait() if hijo else 1
+
+
 def avcam_disponible() -> bool:
     """unicorn + av-cam.bin + liro.ko (los dos binarios no se versionan): sin ellos el arnés sigue funcionando como antes."""
     try:
@@ -531,6 +564,11 @@ def main() -> None:
     ap.add_argument("--sin-ae", action="store_true", help="no emite el AE de escena constante a ObjCamera (atajo de ae.py; av-cam no lo genera); por defecto se emite")
     ap.add_argument("--lanzador", default="", help="URL del configurador (enlace «volver»)")
     a = ap.parse_args()
+    perfil = a.perfil_dir or (Path(a.pkg).name if a.pkg else "sony")
+    intentos = int(os.environ.get("LIVE_REINTENTOS", "6"))  # 0/1: sin reintentos
+    if intentos > 1 and not os.environ.get("LIVE_HIJO") and not (a.work.resolve() / "live" / perfil / "estado.zst").exists():
+        d = a.work.resolve() / "live" / perfil
+        sys.exit(supervisa(sys.argv, d / "consola.log", d / "avcam.jsonl", a.puerto, intentos, float(os.environ.get("LIVE_ARRANQUE_MAX", "260"))))
     CONFIG.update(ruta=a.config, lanzador=a.lanzador)
     if a.avcam is None:
         a.avcam = avcam_disponible()
