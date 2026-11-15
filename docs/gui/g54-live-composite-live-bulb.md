@@ -1,0 +1,29 @@
+# G54 — Live Composite y Live Bulb/Live Time (Olympus): viabilidad (estático, sin parche)
+
+Fecha 15-11-2026. Solo estático sobre `av-cam.bin` 3.21 y `libObj.so` (cadenas con `strings`) más los informes ya existentes; sin cámara, sin CFW, sin sesión REA. Evidencia = cadenas con offset o dirección ya verificada en informes citados; lo demás va marcado NO VERIFICADO.
+
+## 1. Live Composite = `MULTIEXP-ACC` (modo máximo) + disparo repetido + vista previa
+### (a) ¿Se puede repetir el disparo automáticamente?
+- **Existe de fábrica un modelo de disparo con intervalo**: `libObj.so` exporta `ModelStillIntervalRecToInstance` (`0x66cb61`, `modelStillIntervalRec.so`) y contiene `STILL_INTERVAL_REC` (+`_DUAL`, `_STREAMING`), `KEY_REMOTE_INTERVAL_REC`, `sendIntervalRecStartCmp/StopCmp/CountEvt/ModeCmp`, `[AGENT]: *** INTERVAL_REC: SYSCNT ERROR!`. Es una lista de modelos de disparo ya conocida ([objhandover-2a](../capture/objhandover-2a-topology.md)). Esa maquinaria es la que usan las funciones de intervalo/remoto de Sony; en la A6000 no hay entrada de menú (ver pendiente del Intervalómetro interno). `av-cam.bin`: `CapMgr) SetIntervalTimer()`, semáforos `CAPTURE_INTERVAL` y `GetCaptureIntervalResource`: temporizador de intervalo entre capturas en la capa de captura.
+- **Autodisparador continuo** («Autodisparador (cont.)»): solo está confirmado su lado de parámetros: `libObj` valida `PARAMID_DATA_SELF_TIMER_MODE`, `_INTERVAL`, `_REPEAT` y `_WITH_DRIVE_MODE`, y `SequenceSelfTimerReq` (`MSGID_SELF_TIMER_REQ_CMD/CMP`, `GuardGsSelftimerOn/Off`). Es decir, número de repeticiones e intervalo son **datos**, no código fijo. Falta localizar la tabla que los rellena (por modo de Drive) y qué pasa entre disparos (NO VERIFICADO; REA no abierto).
+- **Ráfaga en Silent** (duda F2 de [g51](g51-pro-capture.md)): sigue plausible, no demostrada (misma tabla de 15 filas, `0x437eabfc`).
+- Conclusión: hay tres vías de repetición ya existentes (Intervalo-Rec, Autodisparador cont., ráfaga). Ninguna está verificada con acumulación; la elegida debe conservar el búfer entre tomas (F1 de `MULTIEXP-ACC`).
+
+### (b) ¿Se puede mostrar una imagen del búfer acumulado en la revisión?
+- La revisión automática posterior a la captura es `CaptureUtilityPreReview.cpp` (`AfterViewContRcStart*` `0x437f94d8/0x437f96f0/0x438c7bea`, [electronic-still-low-resolution](../capture/electronic-still-low-resolution.md)); en `av-cam.bin`, `Stage_RchRcv_Resize_AutoReview` (`0x43cad765`) escala a las unidades `0x50b0b`/`0x50b2e` (caso 4 de `FUN_43b1ad32`, [s20](../capture/s20-rawplay-stage-reuse.md)); modos `MODE_CAP_PREREVIEW` y `MODE_SNR_BUS_THROUGH_PREREVIEW` ([s632](../capture/s632-mode.md)). El pintado lo hace `libObj` (`SequencePinDeliverAutoReview`, `PARAMID_AUTO_REVIEW_LAYOUT_TYPE` con tipos SINGLE/CONTINUATION/ADVANCE/REVIEW_EFFECT/CWB/FACE_RECORD, `BKID_RENDERER_L_PRM_DELIVER_MODE_AUTOREVIEW_*`).
+- Es decir: el búfer que pinta la revisión es una unidad YC reducida producida por esa etapa a partir de la captura. Hay dos tipos que parecen útiles (CONTINUATION, REVIEW_EFFECT, «continuación» entre tomas de ráfaga), pero **no está probado** qué búfer pinta cada uno ni que se pueda sustituir por el acumulador. Plan: en la cueva, tras acumular, hacer que `Stage_RchRcv_Resize_AutoReview` lea del acumulador reducido (o copiar el acumulador reducido a la unidad `0x50b0b`).
+
+## 2. Live Bulb / Live Time
+- **Obturador mecánico: imposible, con evidencia.** La exposición BULB/larga mecánica la cronometra el host por tramos de cuadro (`0x438c74b0`, [E25-17 §2.2](../capture/e25-17-bulb-exposicion-electronica-larga.md)) y la lectura es un paso final: `ReadExecute` `0x438c814c` ([E25-17 §2.4](../capture/e25-17-bulb-exposicion-electronica-larga.md)); `cap+0x728` vale 0 durante la exposición y solo se escribe al terminar ([E25-19c](../capture/e25-19c-fin-exposicion-mensaje-temporizador.md)); «la lectura no se puede retrasar» ni adelantar con ningún mecanismo comprobado (E25-17 H2). Físicamente la cortina cierra el sensor a oscuras (sin Live View en la exposición): no hay imagen que leer sin terminar la toma.
+- **Electrónico (E25-17), lectura no destructiva: sin evidencia.** El IMX210 integra «hasta la orden de lectura» (inferencia, E25-17 H2); `svd+1` cuadros se atribuyen por diseño, no medidos (E25-17 §0.4). Búsqueda en el repo de «non-destructive/no destructiva/CDS»: sin resultados en docs/analysis propios. `SplitExpRead` (`0x438c8038`, `cap+0x4b84`) divide la **lectura del último tramo** (RAW), no lee a mitad. Un CMOS de obturador rodante (reset + lectura por filas) pierde la carga al leer: leer a mitad equivale a cerrar la exposición. Sin modo de lectura no destructiva documentado, la vía es sumar exposiciones cortas.
+- **Veredicto**: Live Bulb/Live Time original **descartado** (mecánico: la lectura es final; electrónico: sin lectura no destructiva en el sensor/firmware conocido, no medido en cámara); **derivado** a Live Composite en modo suma (cada tramo corto se lee, se acumula y se muestra).
+
+## 3. Parche pequeño
+Ninguno verificable. No se localizó la tabla de intervalo/número del autodisparador continuo (falta REA sobre el origen de `PARAMID_DATA_SELF_TIMER_*`), así que no hay bytes originales que fijar. No se escribió parche ni test.
+
+## 4. Fases (ligadas a `MULTIEXP-ACC`)
+- `MULTIEXP-ACC` F1–F3 (acumulador máx/suma, búfer entre tomas) sin cambios.
+- `LIVECOMP-F1` repetición automática: localizar la tabla de `PARAMID_DATA_SELF_TIMER_MODE/INTERVAL/REPEAT/WITH_DRIVE_MODE` y el despachador de `STILL_INTERVAL_REC`; decidir cuál usa Live Composite (Silent + ráfaga como respaldo).
+- `LIVECOMP-F2` vista previa: determinar qué búfer pinta `PreReview`/`AutoReview` (CONTINUATION/REVIEW_EFFECT) y sustituir por el acumulador reducido; Unicorn con test de bytes.
+- `LIVECOMP-F3` menú: entrada nueva sin sustituir; prueba en arnés (overlay).
+Límites: todo estático por cadenas; sin cámara; sin ejecutar el firmware.

@@ -19,8 +19,8 @@ Features wanted on the A6000, inherited from other Sony models and other brands,
 - ⬜ Pixel Shift Multi Shooting / High Res Shot / Handheld High Res Shot — _Origin: ≈Sony α7R III; Olympus E-M1 II, E-M1X; Panasonic G9_
 - ⬜ Pre Capture photo / Pro Capture / Pre-Burst 4K/6K — _Origin: Olympus E-M1 II; Panasonic GH5, G9_. Full-resolution Pro Capture: feasible in phases, not implemented (the S1/S2 predicate and the burst queue are still unlocated; ring of N×24 MB). The 4K/6K part is ruled out (g50). See [g51](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/gui/g51-pro-capture.md).
 - ⬜ Multiple Exposure — _Origin: Canon EOS 7D Mark II; Nikon D850; Olympus E-M1 II_. Partial (static): the Apollo/HME engine behind MFNR/Twilight is motion estimation only, with no add/max/min operation nor switchable alignment; a custom accumulator is needed. Pending `MULTIEXP-ACC` ([g53](../docs/gui/g53-multiple-exposure-motor-fusion.md)).
-- ⬜ Live Composite — _Origin: Olympus E-M1 II_
-- ⬜ Live Bulb / Live Time — _Origin: Olympus E-M1 II_
+- ⬜ Live Composite — _Origin: Olympus E-M1 II_. Partial (static): = `MULTIEXP-ACC` in max mode; automatic repeat and review already exist in the firmware (`STILL_INTERVAL_REC` model, continuous self-timer parameters, `Stage_RchRcv_Resize_AutoReview`) but their tables and buffers are not located yet. Open items `LIVECOMP-F1..F3` ([g54](../docs/gui/g54-live-composite-live-bulb.md)).
+- ⬜ Live Bulb / Live Time — _Origin: Olympus E-M1 II_. Discarded in its original form (mechanical shutter reads out only at the end; no documented non-destructive read on the IMX210); folded into Live Composite in sum mode ([g54](../docs/gui/g54-live-composite-live-bulb.md)).
 - ⬜ Bulb Timer — _Origin: Canon EOS 7D Mark II_
 - ⬜ Focus Shift Shooting / Focus Stacking — _Origin: Nikon D850; Panasonic GH5, G9; Olympus E-M1 II, E-M1X_
 - ⬜ Smile Shutter — _Origin: Sony α5100_
