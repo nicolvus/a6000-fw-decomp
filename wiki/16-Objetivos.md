@@ -20,7 +20,7 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 - ⬜ Multiple Exposure — _Origen: Canon EOS 7D Mark II; Nikon D850; Olympus E-M1 II_. Parcial (estático): el motor Apollo/HME de MFNR/Twilight es solo estimación de movimiento, sin operación suma/máx/mín ni alineación desactivable; hace falta acumulador propio. Pendiente `MULTIEXP-ACC` ([g53](../docs/gui/g53-multiple-exposure-motor-fusion.md)).
 - ⬜ Live Composite — _Origen: Olympus E-M1 II_. Parcial (estático): = `MULTIEXP-ACC` en modo máximo; la repetición automática y la revisión existen de fábrica (modelo `STILL_INTERVAL_REC`, parámetros del autodisparador continuo, `Stage_RchRcv_Resize_AutoReview`) pero falta localizar sus tablas y búferes. Pendientes `LIVECOMP-F1..F3` ([g54](../docs/gui/g54-live-composite-live-bulb.md)).
 - ⬜ Live Bulb / Live Time — _Origen: Olympus E-M1 II_. Descartado en su forma original (con obturador mecánico la lectura es al final; sin lectura no destructiva documentada en el IMX210); derivado a Live Composite en modo suma ([g54](../docs/gui/g54-live-composite-live-bulb.md)).
-- ⬜ Bulb Timer — _Origen: Canon EOS 7D Mark II_
+- ⬜ Bulb Timer — _Origen: Canon EOS 7D Mark II_. Parcial: BULB ya cronometra por tramos y `T = 0` es «sin límite»; un gancho de 4 bytes (`0x438c74f6`) sustituye T por una celda en segundos (0 = fábrica), probado en Unicorn (5 s ⇒ 152 tramos). Sin menú ni medición; S2 sigue iniciando ([g55](../docs/gui/g55-bulb-timer.md)).
 - ⬜ Focus Shift Shooting / Focus Stacking — _Origen: Nikon D850; Panasonic GH5, G9; Olympus E-M1 II, E-M1X_
 - ⬜ Smile Shutter — _Origen: Sony α5100_
 - ⬜ Intervalómetro interno — _Origen: ≈Sony α9_
