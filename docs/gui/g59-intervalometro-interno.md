@@ -24,3 +24,6 @@ Estático sobre `libObj.so` 3.21 (`analysis/camera-extract/usr/lib/libObj.so`, T
 
 ## 5. Límites
 No se localizó el emisor de `0x8077…` ni el efecto real de arrancar el modelo; no se probó nada en el arnés (no hay ajuste ni consumidor). El intervalo en Backup `0x1070ab3…6` no se miró en NVRAM real.
+
+## Actualización 15-11-2026
+[g60](g60-autodisparador-continuo.md): el autodisparador continuo de `libObj` sí contiene un bucle disparo→espera→disparo y el gancho de fin de captura (`0x66df4e`); es la vía viable en lugar de `ModelStillIntervalRec`.
