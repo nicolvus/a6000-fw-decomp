@@ -689,7 +689,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
         if (!strcmp(devname[fd], "/dev/mmca") && (req == 0x10f || req == 0x110)) {  /* E/S de sectores del driver mmc (libInfraMediaCommon+0xec28 leer / +0xeb4c escribir): {estado, búfer, sector, nº de sectores}; INFERENCIA del orden de campos por la llamada de libInfraFsys (búfer, sector, cuenta) */
             unsigned long n = (unsigned long)a[3] * 512; off_t o = (off_t)a[2] * 512; ssize_t r = req == 0x10f ? pread(fd, (void *)a[1], n, o) : pwrite(fd, (void *)a[1], n, o);
             a[0] = r == (ssize_t)n ? 0 : 0x80000001u; sd_log(req == 0x10f ? "leer" : "escribir", fd, (long)a[2], (long)a[3], (long)r); return 0; }
-        if (!strcmp(devname[fd], "/dev/mmca") && req == 0x104) { memset(a, 0, 0x50); a[0x24 / 4] = 0; a[0x38 / 4] = tot; LOG("SDIMG: ioctl 0x104 -> inicio 0, %u sectores", tot); return 0; }
+        if (!strcmp(devname[fd], "/dev/mmca") && req == 0x104) { sd_partinfo_fill(a, tot); LOG("SDIMG: ioctl 0x104 -> último LBA %u (%u sectores)", tot - 1, tot); return 0; }
     }
     if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC) {  /* dispositivo no modelado: éxito, registrado las 5 primeras veces por (dispositivo, orden) y luego cada 4096 */
         static struct { char d[32]; unsigned long r; unsigned n; } seen[64]; static int ns; int k;

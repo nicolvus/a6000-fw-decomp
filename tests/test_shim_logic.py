@@ -47,3 +47,18 @@ def test_identidad_si_el_anfitrion_admite_159(tablas):
 def test_contexto_de_registro_es_t2_si_t0_es_miembro_de_t2(tablas):
     upm, lejos, sin_ctx, mismo = tablas[2]
     assert (upm, lejos, sin_ctx, mismo) == (1, 0, 0, 0)  # solo UpmWrapper (this+0x2c con this) cambia a t[2]
+
+
+def test_ioctl_104_de_la_sd_da_el_ultimo_lba_y_no_un_solo_sector(tmp_path):
+    """§5.39: libInfraMediaCommon+0x10702 calcula los sectores del soporte como `out[0x1c] + 1` (out = a + 8, a[0x24/4] = último LBA); con a[0x24/4] = 0 el PDM de
+    libInfraFsys veía una partición de 1 sector (pdm_part_logical_read devolvía 0x12 en el LBA 0x20 = FAT) y Fsys_Mount desmontaba el volumen."""
+    cc = shutil.which("cc") or shutil.which("gcc") or shutil.which("clang")
+    if not cc:
+        pytest.skip("sin compilador de C")
+    (tmp_path / "t.c").write_text('#include <stdio.h>\n#include <string.h>\n#include "shimlogic.h"\n'
+                                  'int main(void) { unsigned a[20]; memset(a, 0xaa, sizeof a); sd_partinfo_fill(a, 8388608);'
+                                  ' printf("%u %u %u", a[0x24 / 4] + 1, a[0x38 / 4], a[0]); return 0; }\n')
+    subprocess.run([cc, "-I", str(SHIM), str(tmp_path / "t.c"), "-o", str(tmp_path / "t")], check=True)
+    sectores, bloque, estado = map(int, subprocess.run([str(tmp_path / "t")], capture_output=True, text=True, check=True).stdout.split())
+    assert sectores == 8388608 and estado == 0
+    assert bloque == 8388608  # a[0x38/4] sin tocar: sin dato verificado (se queda como estaba)

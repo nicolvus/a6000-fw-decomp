@@ -6,6 +6,7 @@
  * shortcut: identidad hasta host_max/2 (los hilos bajos conservan su valor) y, por encima, tramo lineal monótono hasta 159 -> host_max (pares vecinos pueden coincidir; con 99
  * los valores medidos 117/120/123 dan 80/81/82);
  * mejorar con un kernel de invitado con CONFIG_MAX_USER_RT_PRIO=160, donde el mapeo es la identidad. */
+#include <string.h>
 #define CAM_RT_PRIO_MAX 159
 static inline int rtprio_map(int p, int host_max) {
     int k = host_max / 2;
@@ -18,3 +19,9 @@ static inline int rtprio_map(int p, int host_max) {
  * (0 < t[0]-t[2] < 0x400; UpmWrapper registra this+0x2c con this) el contexto es t[2], no t[0]. shortcut: heurística por forma, no por la API del kernel;
  * mejorar si un registro con t[0] dentro de t[2] espera de verdad &miembro. */
 static inline int reg_ctx_is_t2(const unsigned *t) { return t[2] && t[0] > t[2] && t[0] - t[2] < 0x400; }
+
+/* 3) ioctl 0x104 de /dev/mmca (SD emulada, §5.39): libInfraMediaCommon+0xeac0 copia a[2..0x14) (0x48 B) y +0x10702 saca de ellos el nº de sectores como `a[0x24/4] + 1`
+ * (último LBA + 1), que libInfraFsys (PDM) usa como tamaño de la partición: con 0 el PDM veía 1 sector y rechazaba toda lectura de FAT (pdm_part_logical_read -> 0x12).
+ * a[0x38/4] (+0x10: out[0x30], cuyo uso es un resto de división con alineación) se deja en `tot` como estaba: shortcut: sin dato verificado del valor real (¿4 MiB de AU?),
+ * mejorar cuando se mida en una cámara. */
+static inline void sd_partinfo_fill(unsigned *a, unsigned tot) { memset(a, 0, 0x50); a[0x24 / 4] = tot - 1; a[0x38 / 4] = tot; }
