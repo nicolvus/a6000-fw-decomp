@@ -17,3 +17,15 @@ Continúa [G43](g43-iso-lista-51200.md). Sin cambios en `scripts/gui/harness/` n
 1. Ejecutar con `run.py` (no `live.py`) y `TRACEFN=4c1240,4db7c4,4e0ea8,49fc94 TRACEPEEK` para ver quién llama a `0x4c1240`, con qué ObjMsg, y qué valor (`r1/r2`) guarda `0x49fc94` en `0x96ff` en el arranque. De ahí sale el rango inicial real.
 2. Con el id del mensaje que llega al conmutador `0x4cf7a8` (índice del caso `0x4d0000`), inyectar ese mensaje (o, solo para la prueba, parchear el valor inicial de `0x96ff` en una copia de `libObj`, opción B).
 3. Confirmar 32000/40000/51200 y 50/64/80 visibles y que el valor llega a av-cam (`entra` en `avcam.jsonl`).
+
+## 4. Medición G45 (15-11-2026; perfil propio `g45a`, `live.py` con `SHIMEXTRA="WAITLOG=1000000 TRACEREP=1 TRACEMAX=8 TRACEFN=…"`; `run.py` no sirve para pulsar teclas, y en `live.py` las trazas salen por `WAITLOG` a `shim.log`, no por la consola)
+* Overlay: `CautionConfig.so` con el parche del caso 29 (G43) en `/usr/lib` (el `/lib/CautionConfig.so` del base es un enlace a `../usr/lib`, así que basta). Ruta de teclas verificada: `menu` abre en Ajustes pág. 5; `izquierda ×7` llega a Cámara pág. 5; `izquierda`, `intro` abre ISO.
+* Resultado visual: `docs/gui/img/g45-iso-menu-caso29-sin-50-64-80.png`: la lista es `[ISO AUTO multi-frame] AUTO, 100, 125, 160…` (hasta 25600 al envolver): **sin 50/64/80 pese al parche**.
+* Trazas (libObj): al arranque `0x4db7c4` se llama una vez (r3=1) y `0x49fc94` (escritor de id→valor) ~128+ veces con ids `0x95bd,0x95df,0x98a4,0x9844,0x9533…` (el rango `0x96fe/0x96ff/0x989e/0x98a1` aún sin aislar: `TRACEMAX` solo imprime 1-8 y potencias de 2). En una ejecución previa `0x4c1240` (r1=`0x2008340`) + `0x4db7c4` (r3=0) dispararon una vez al operar el menú; en la segunda, tras abrir ISO, no.
+* `_getSubNode` (`CautionConfig+0x107d7c`) con `TRACELIB=CautionConfig.so TRACEFN2=107d7c`: **sin disparo**. No distingue H1/H2: no está confirmado que `TRACELIB` armara la trampa (su `LOG` no se reenvía sin `WLALL`).
+* Conclusión: **H1 vs H2 SIN resolver**. Lo único medido: el parche de caso 29 no cambia la lista visible. Si la A6000 no usa el caso 29 (byte `0x1070316` sin medir) el parche no actúa (H2 parcial); si lo usa, 50/64/80 quedan ocultos por MIN (H1).
+
+## 5. Siguiente paso (ISO-A, ≤ 3 pruebas)
+1. Discriminar sin trazas: pareja de literales de otro caso de `_getSubNode` en TODOS los casos (pares en `0x107e60..0x107e8c`: `(0x4748,0x2e80)`, `(0x9704,0x7d24)`, `(0x9c4c,0x5160)`, `(0x8904,0x64a8)`) y ver si el menú cambia: si cambia ⇒ la función se usa y se filtra (H1); si no ⇒ H2 (otro nodo, p. ej. `viewIso*.uxc`).
+2. Armar la traza de `107d7c` con `WLALL=1` (para ver `TRACELIB … base`) y `TRACEDEREF`.
+3. Aislar `0x49fc94` para `r2∈{0x96fe,0x96ff,0x989e,0x98a1}` (subir `TRACEMAX` solo para esa traza) y leer su valor.
