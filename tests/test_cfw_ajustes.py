@@ -14,6 +14,17 @@ DEV_A = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/d
 DEV_B = ROOT / "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev"
 AVCAM = ROOT / "analysis/rea-independent/input/av-cam.bin"
 DUMP = ROOT / "analysis/camera-dumps/20261105-post-apagado-limpio/backup_flash.bin"
+
+
+@pytest.fixture(autouse=True)
+def _spec_intacta():
+    """`configurar_menu`/`construir` mutan la spec global de `pp_menu_spec`: se restaura para los demás tests."""
+    import pp_menu_spec as M
+    antes = (dict(M.SETTINGS), list(M.PIDS), M.TREE)
+    yield
+    M.SETTINGS.clear(); M.SETTINGS.update(antes[0]); M.PIDS[:] = antes[1]; M.TREE = antes[2]
+
+
 necesita_fw = pytest.mark.skipif(not (DEV_A.exists() and DEV_B.exists() and AVCAM.exists()), reason="sin firmware extraído")
 
 
@@ -66,7 +77,7 @@ def test_menu_descriptor_solo_respaldo(tmp_path):
     segs = A._segments(d)
     w = lambda va, n=1: struct.unpack_from(f"<{n}I", d, A._off(segs, va))
     tabla_d = w(0x4457D4 + 4 * 0)  # noqa: F841  (la tabla ampliada se reapunta; se comprueba por el id)
-    assert struct.pack("<I", C.AJUSTES[0].backup) in d
+    assert all(struct.pack("<I", a.backup) in d for a in C.AJUSTES)
     cn = (tmp_path / "lib/CautionConfig.so").read_bytes()
     assert len(cn) > len((DEV_A / "nflasha15_unpacked_unpacked/lib/CautionConfig.so").read_bytes())
     assert (tmp_path / "share/app/string_english.uxc").read_bytes().count(b"Bulb Timer") >= 1
@@ -81,9 +92,21 @@ def test_descriptor_respaldo_tabla_valores_no_nula(tmp_path):
     segs = A._segments(d)
     w = lambda va, n=1: struct.unpack_from(f"<{n}I", d, A._off(segs, va))
     d_va = (w(0x25D910)[0] + 0x25D8FE) & 0xFFFFFFFF            # literal reapuntado a la tabla de descriptores ampliada
-    a = C.AJUSTES[0]
-    desc = w(w(d_va + 4 * a.pid)[0], 19)
-    ident, vals, *_ = w(desc[8], 4)
-    assert ident == a.backup and vals
-    assert list(w(vals, len(a.opciones))) == list(range(len(a.opciones)))
-    assert desc[5] >> 8 == desc[17] >> 8 == len(a.opciones) and desc[13]
+    for a in C.AJUSTES:                                         # N ajustes: cada uno con su id, su pid y su tabla
+        desc = w(w(d_va + 4 * a.pid)[0], 19)
+        ident, vals, *_ = w(desc[8], 4)
+        assert ident == a.backup and vals
+        assert list(w(vals, len(a.opciones))) == list(range(len(a.opciones)))
+        assert desc[5] >> 8 == desc[17] >> 8 == len(a.opciones) and desc[13]
+
+
+def test_carpeta_cfw_con_todos_los_ajustes():
+    import pp_menu_spec as M
+    C.configurar_menu()
+    _carpeta(M)
+
+
+def _carpeta(M):
+    assert M.TREE[0] == "folder" and M.TREE[1] == C.CARPETA
+    assert [i for pg in M.TREE[2] for i in pg] == [a.id for a in C.AJUSTES]
+    assert max(len(a.opciones) for a in C.AJUSTES) <= M.OPCIONES_POR_LISTA   # tope G36

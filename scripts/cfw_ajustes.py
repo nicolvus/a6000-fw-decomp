@@ -15,6 +15,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts/gui"))
 BACKUP_READ = 0x435613B0          # av-cam 3.21: Backup_read(r0 = id, r1 = búfer) vía tabla de servicios (+0x298)
+CARPETA = "CFW"
 PID_PRIMERO = 0xE9                # primer ProcessId nuevo (pid_space)
 # Ids 1 B sin ningún literal en libs/bin/av-cam del 3.21 (volcados de 4 fechas, valor 0, mismo tamaño): hueco 0x1070208…0x1070219 (g56 §2)
 ID_LIBRES = tuple(range(0x1070210, 0x107021A))
@@ -31,7 +32,10 @@ class Ajuste:
 
 AJUSTES = (
     Ajuste("bulb_timer", "Bulb Timer", ID_LIBRES[0],
-           (("Off", 0), ("5 s", 5), ("10 s", 10), ("30 s", 30), ("1 min", 60), ("2 min", 120), ("5 min", 300), ("10 min", 600), ("15 min", 900)), PID_PRIMERO),
+           # 7 opciones: tope de la lista de la clase Normal medido en cámara (G36); no medido para este nodo, por prudencia no se pasa de 7
+           (("Off", 0), ("5 s", 5), ("30 s", 30), ("1 min", 60), ("2 min", 120), ("5 min", 300), ("15 min", 900)), PID_PRIMERO),
+    # inerte (sin consumidor): demuestra que varios ajustes conviven en la carpeta
+    Ajuste("cfw_test", "CFW test", ID_LIBRES[1], (("Off", 0), ("On", 1)), PID_PRIMERO + 1),
 )
 POR_ID = {a.id: a for a in AJUSTES}
 
@@ -75,14 +79,13 @@ def configurar_menu(ajustes=AJUSTES):
     for a in ajustes:
         M.SETTINGS[a.id] = M.S(a.id, a.label, 0, tuple((t, i) for i, (t, _) in enumerate(a.opciones)), "g56", backup=a.backup)
     M.PIDS[:] = [a.pid or PID_PRIMERO + i for i, a in enumerate(ajustes)]
-    M.TREE = ajustes[0].id            # nodo directo (build_nodes devuelve el nodo del ajuste); con varios, una carpeta como la de PP
+    M.TREE = ("folder", CARPETA, M.paginar([a.id for a in ajustes]))   # carpeta «CFW» en Ajustes personalizados, como la de Picture Profile (g24/g36)
     return M
 
 
 def construir(dev_a, dev_b, dest, ajustes=AJUSTES):
     """Genera `lib/viewUnified2.so`, `lib/CautionConfig.so` y `share/app/string_*.uxc` con la entrada de menú (sin `.dat`)."""
     import build_pp_menu
-    assert len(ajustes) == 1, "una entrada directa; para varias, agrúpalas en una carpeta (pp_menu_spec.TREE)"
     configurar_menu(ajustes)
     build_pp_menu.main(dev_a, dev_b, dest)
 

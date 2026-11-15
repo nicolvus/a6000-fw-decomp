@@ -107,6 +107,6 @@ if __name__ == "__main__":
     n, ticks = emular(img, 1)                                               # 5 s
     assert (n, ticks) == (151, (5000 - 151 * 33) * 31250), (n, ticks)       # 152 tramos: 151 de 33 ms y el último de 17 ms
     assert emular(img, 1, t_cfg=2000)[0] == 60                              # T de fábrica ≠ 0 manda sobre el ajuste
-    n, ticks = emular(img, 8, max_tramos=30000)                             # 15 min
+    n, ticks = emular(img, 6, max_tramos=30000)                             # 15 min
     assert (n, ticks) == (27272, (900000 - 27272 * 33) * 31250), (n, ticks)
     print("OK", n)
