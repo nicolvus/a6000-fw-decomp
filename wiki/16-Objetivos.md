@@ -13,7 +13,6 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 
 ### Foto
 
-- ⬜ Obturación máxima 1/8000 — _Origen: ≈Sony α7_
 - ⬜ ISO expandido hasta 409600 — _Origen: Sony α7S_
 - ⬜ Pixel Shift Multi Shooting / High Res Shot / Handheld High Res Shot — _Origen: ≈Sony α7R III; Olympus E-M1 II, E-M1X; Panasonic G9_
 - ⬜ 4K/6K Photo (incl. 4K Photo Burst S/S) — _Origen: Panasonic GH5, G9_
@@ -85,5 +84,6 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 
 ## Descartadas
 
+- ❌ Obturación máxima 1/8000 — _Origen: ≈Sony α7_. Mecánico limitado a 1/4000 por la cortinilla; EFCS degrada desde 1/1000; el Silent mide una exposición mínima ≈ 0,58 ms (E = 17,135 µs·n + 564 µs), así que 1/8000 sobreexpondría ≈ 2,2 EV ([G38](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/gui/g38-obturacion-1-8000.md)).
 - ❌ Nivel digital (horizonte virtual) — _Origen: ≈Sony α6300_. La A6000 no tiene acelerómetro: su sensor de orientación (SE7750) es óptico y cada uno de sus dos canales solo da alto o bajo, así que distingue cuatro posiciones a 90° y nada intermedio. Medido por SWD girando la cámara ([R88](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r88-sensor-inclinacion-swd.md)).
 - ❌ Calidad JPEG Extra Fine — _Origen: Sony α6300_. No aplicable: la A6000 ya la trae de fábrica (fw 3.21). «Extra fine» (`0xe001`), `JPG_QUALITY_EXFINE` en `libObj` y 120 claves `BKID_IMAGING_DATSZ_*_EXFINE_{TGT,MAX}` en `libmprctrl` (tamaño objetivo/máximo del JPEG); la vista `viewStillImageQuality` es idéntica a la de la α6300 ([G37](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/gui/g37-calidad-jpeg-extra-fine.md)).
