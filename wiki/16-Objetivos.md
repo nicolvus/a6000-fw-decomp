@@ -32,9 +32,9 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 
 ### Imagen y color
 
-- ⬜ S-Log2 — _Origen: ≈Sony α7S_
-- ⬜ S-Log3 — _Origen: ≈Sony α7S II_
-- ⬜ HLG 1-3 — _Origen: ≈Sony α7R III_
+- ◐ S-Log2 — _Origen: ≈Sony α7S_. Parches del firmware hechos (curva `0x14`, menú Gamma, Color Mode/S-Gamut; [g25](../docs/gui/g25-gamma-slog2-itu709-800.md)), integrados en CFW 3.81 sin instalar; falta verificar en cámara.
+- ◐ S-Log3 — _Origen: ≈Sony α7S II_. Parches del firmware hechos (curva `0x17`, núcleo [g32c](../docs/gui/g32c-slog3-nucleo.md), [g26](../docs/gui/g26-slog3-color-mode-a6300.md)), integrados en CFW 3.81 sin instalar; falta verificar en cámara.
+- ◐ HLG 1-3 — _Origen: ≈Sony α7R III_. No existe de fábrica; tablas HLG1/2/3 (ARIB STD-B67, niveles 87/95/100 % aproximados) y parches de menú y `libObj` probados offline, sin CFW ni cámara; falta sitio fiable para las curvas y captura en el arnés ([g67](../docs/gui/g67-hlg-gamma.md)).
 - ⬜ D Range Priority — _Origen: Fujifilm X-T3_
 - ⬜ Color Chrome Effect — _Origen: Fujifilm X-T3_
 - ⬜ Importación de LUTs — _Origen: Sony ZV-E1_

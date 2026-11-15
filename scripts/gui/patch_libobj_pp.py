@@ -33,6 +33,8 @@ VALUEID = (0x1B7, 0x1B8, 0x585, 0x1BA, 0x39C, 0x39D, 0x39E, 0x39F, 0x3A0, 0x3A1,
 # Selector del núcleo por VALUEID (`CamMsgConv`): el original da 0x480 → 10 y 0x481 → 11 (la tabla de app tiene 10 → 0x481 y 11 → 0x480): los dos últimos van intercambiados.
 # Con la misma tabla en los dos sitios (CFW 3.60–3.67) S-Log2 y ITU709(800%) salían con la curva del otro (selector 10 = curva de S-Log2, 11 = ITU709(800%) de la A7S).
 CAMCONV_TABLA = VALUEID[:10] + (VALUEID[11], VALUEID[10])
+# G67: HLG1–3 como valores de app 12–14 con VALUEID 0x586–0x588 (continúan 0x585 = S-Log3; los ids reales de Sony no están en ningún firmware disponible: INFERENCIA).
+VALUEID_HLG = VALUEID + (0x586, 0x587, 0x588)
 ORIG_CASE7 = bytes.fromhex("092d" "00f28e80")                   # cmp r5,#9; bhi.w error (little endian)
 ORIG_SITE = bytes.fromhex("63d1" "07e0")                        # bne 0x4b445a; b 0x4b43a4
 ORIG_CAMCONV = bytes.fromhex("40f29d33" "9842" "0646")          # movw r3,#0x39d; cmp r0,r3; mov r6,r0
@@ -88,30 +90,33 @@ def _busca(at, tabla, hallado, error, cmp_enc, err_largo, n=13):
     return c + (b_w if err_largo else b_n)(at + len(c), error)
 
 
-def patch_gamma(d: bytes) -> bytes:
+def patch_gamma(d: bytes, hlg: bool = False) -> bytes:
+    vid = VALUEID_HLG if hlg else VALUEID
+    camt = vid[:10] + (vid[11], vid[10]) + vid[12:]
+    stub = STUB + 2 * (len(vid) - 12)                               # la tabla crece hacia el trampolín, que se desplaza (hay 12 B libres hasta 0x4b47c4)
     segs = A._segments(d)
-    o7, os_, ost, oc = (A._off(segs, x) for x in (APP2OBJ, OBJ2APP_SITE, STUB, CAMCONV))
+    o7, os_, ost, oc = (A._off(segs, x) for x in (APP2OBJ, OBJ2APP_SITE, stub, CAMCONV))
     assert d[o7:o7 + 6] == ORIG_CASE7 and d[os_:os_ + 4] == ORIG_SITE, "libObj.so no es el fw3.21 esperado"
     assert d[oc:oc + 8] == ORIG_CAMCONV, "libObj.so no es el fw3.21 esperado (CamMsgConv)"
     out = bytearray(d)
     # App2Obj, caso 7: cmp r5,#12; bhi.w error; adr r3,tabla; ldrh.w r3,[r3,r5,lsl #1]; b 0x4b4852; nop; tabla de 13 halfwords (0x4b4784…0x4b479e)
-    code = _hw(0x2D00 | (len(VALUEID) - 1)) + d[o7 + 2:o7 + 6]
+    code = _hw(0x2D00 | (len(vid) - 1)) + d[o7 + 2:o7 + 6]
     code += adr(3, APP2OBJ + 6, TABLA) + _hw(0xF833, 0x3015) + _hw(0xE000 | ((0x4B4852 - (APP2OBJ + 0xC + 4)) >> 1)) + _hw(0xBF00)
-    code += b"".join(_hw(v) for v in VALUEID + (0,))                # el 13.º halfword es relleno (la tabla ocupa 13 en el original)
-    assert APP2OBJ + len(code) == STUB
+    code += b"".join(_hw(v) for v in vid + (0,))                # el 13.º halfword es relleno (la tabla ocupa 13 en el original)
+    assert APP2OBJ + len(code) == stub
     out[o7:o7 + len(code)] = code
     # Obj2App: el sitio salta a una búsqueda en la misma tabla (r5 = VALUEID → r3 = valor de app → 0x4b4416); si no está, error (0x4b445a)
     fin = 0x4B47C4
-    st = _busca(STUB, TABLA, STUB + 24, 0x4B445A, 0x42A9, True, len(VALUEID))      # cmp r1,r5
-    st += b_w(STUB + len(st), 0x4B4416)
-    assert STUB + len(st) <= fin and 24 == len(st) - 4, len(st)
-    out[ost:fin] = st + _hw(0xBF00) * ((fin - STUB - len(st)) // 2)
-    out[os_:os_ + 4] = b_w(OBJ2APP_SITE, STUB)
+    st = _busca(stub, TABLA, stub + 24, 0x4B445A, 0x42A9, True, len(vid))      # cmp r1,r5
+    st += b_w(stub + len(st), 0x4B4416)
+    assert stub + len(st) <= fin and 24 == len(st) - 4, len(st)
+    out[ost:fin] = st + _hw(0xBF00) * ((fin - stub - len(st)) // 2)
+    out[os_:os_ + 4] = b_w(OBJ2APP_SITE, stub)
     # CamMsgConv (0x9b36de…0x9b3743): VALUEID de gamma → selector = índice en la tabla (había una cadena de comparaciones de 12 casos)
     tabla_cc = CAMCONV + 0x16
-    nuevo = _hw(0x4606) + _busca(CAMCONV + 2, tabla_cc, CAMCONV_STORE, CAMCONV_ERR, 0x4281, False, len(VALUEID))   # mov r6,r0; … cmp r1,r0
+    nuevo = _hw(0x4606) + _busca(CAMCONV + 2, tabla_cc, CAMCONV_STORE, CAMCONV_ERR, 0x4281, False, len(vid))   # mov r6,r0; … cmp r1,r0
     assert CAMCONV + len(nuevo) == tabla_cc and tabla_cc % 4 == 0, hex(tabla_cc)
-    nuevo += b"".join(_hw(v) for v in CAMCONV_TABLA + (0,))
+    nuevo += b"".join(_hw(v) for v in camt + (0,))
     assert CAMCONV + len(nuevo) <= CAMCONV_FIN, len(nuevo)
     out[oc:oc + CAMCONV_FIN - CAMCONV] = nuevo + _hw(0xBF00) * ((CAMCONV_FIN - CAMCONV - len(nuevo)) // 2)
     return bytes(out)

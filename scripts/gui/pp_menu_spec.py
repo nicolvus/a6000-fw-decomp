@@ -60,6 +60,8 @@ SETTINGS = {s.id: s for s in (
 )}
 # Gamma con el orden y las opciones de la A6300; 10/11/2 = app de ITU709(800%)/S-Log2/S-Log3 en la `libObj` parcheada (G25/G26)
 GAMMA_COMPLETA = ((("Movie", 4), ("Still", 5)) + tuple((f"Cine{k}", 5 + k) for k in range(1, 5)) + (("ITU709", 3), ("ITU709(800%)", 10), ("S-Log2", 11), ("S-Log3", 2)))
+# G67: HLG1–3 = app 12–14 (VALUEID 0x586–0x588, INFERENCIA); con ellas Gamma tiene 16 opciones → 3 filas de ≤ 7 (partir)
+GAMMA_HLG = GAMMA_COMPLETA + (("HLG1", 12), ("HLG2", 13), ("HLG3", 14))
 # Color Mode con el orden y las opciones de la A6300 (G26): app 8 = B&W (0x504), 9 = S-Gamut (0x505) como la A7S, 10 = S-Gamut3 (0x583), 11 = S-Gamut3.Cine (0x584) en la `libObj` parcheada
 COLOR_MODE_COMPLETO = (("Movie", 5), ("Still", 6), ("Cinema", 7), ("Pro", 3), ("ITU709 Matrix", 4), ("Black & White", 8), ("S-Gamut", 9), ("S-Gamut3.Cine", 11), ("S-Gamut3", 10))
 # Menú PLANO (11-11-2026, medido en cámara): la interfaz de la A6000 muestra 6 filas por página (la 7.ª no aparece) y las carpetas anidadas no abren, así que cada ajuste

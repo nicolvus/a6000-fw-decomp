@@ -41,7 +41,12 @@ def u32(d: bytes, a: int) -> int:
     return struct.unpack_from("<I", d, a - BASE)[0]
 
 
-def patches(base: bytes, a7s: bytes, a6300: bytes | None = None) -> list[tuple[int, bytes, str]]:
+# G67: HLG1–3 = gammas 0x1c–0x1e, selectores 12–14. El hueco de G18 está lleno (9.º hueco = cueva de color/tono): las curvas van a una región provisional de la zona a cero
+# 0x43d620d9…0x43fa8f00 (NO verificado que no se use en ejecución: PENDIENTES HLG-2). Solo con `hlg` explícito.
+HLG_REGION = 0x43F9C000
+
+
+def patches(base: bytes, a7s: bytes, a6300: bytes | None = None, hlg: tuple[int, ...] = ()) -> list[tuple[int, bytes, str]]:
     out = []
     for n, g in enumerate(GAMMAS):
         src = bytearray(a7s[u32(a7s, TAB["a7s"] + 8 * g + 4) - BASE:][:CURVE])
@@ -59,6 +64,16 @@ def patches(base: bytes, a7s: bytes, a6300: bytes | None = None) -> list[tuple[i
         dst = SLOT0 + len(GAMMAS) * STRIDE
         out.append((dst, bytes(src), f"curva 0x{SLOG3_AQUI:02x}"))
         out.append((TAB["a6000"] + 8 * SLOG3_AQUI + 4, struct.pack("<I", dst), f"puntero vídeo 0x{SLOG3_AQUI:02x}"))
+    if hlg:
+        import pp_hlg_curves
+        assert a6300 is not None
+        cola = bytearray(a6300[u32(a6300, TAB_A6300 + 8 * SLOG3_A6300 + 4) - BASE + 0x1000:][:CURVE - 0x1000])
+        cola[0x12] = 4                                  # vídeo, como el resto de curvas de la A6000
+        for n in hlg:
+            g, dst = 0x1B + n, HLG_REGION + (n - 1) * STRIDE
+            out.append((dst, pp_hlg_curves.bloque(n, bytes(cola), g), f"curva 0x{g:02x} HLG{n}"))
+            out.append((TAB["a6000"] + 8 * g + 4, struct.pack("<I", dst), f"puntero vídeo 0x{g:02x}"))
+            out.append((SEL["a6000"] + 2 * (11 + n), bytes([g, g]), f"selector {11 + n}"))
     for i in SEL_IDX:
         if i == 2:
             if a6300 is not None:
@@ -141,9 +156,9 @@ def camera_files(base: bytes, ps: list[tuple[int, bytes, str]], prueba: int | No
     return "\n".join(sh) + "\n", blob
 
 
-def main(base_path: Path, out: Path, prueba: int | None = None, color: bool = False, tone: bool = False) -> dict:
+def main(base_path: Path, out: Path, prueba: int | None = None, color: bool = False, tone: bool = False, hlg: tuple[int, ...] = ()) -> dict:
     base, a7s = base_path.read_bytes(), A7S.read_bytes()
-    ps = patches(base, a7s, A6300.read_bytes() if A6300.is_file() else None)
+    ps = patches(base, a7s, A6300.read_bytes() if A6300.is_file() else None, hlg)
     if color:  # G27: S-Gamut3 / S-Gamut3.Cine (código + datos en el hueco, tras las curvas)
         import pp_color_patch
         ps += pp_color_patch.patches(base, pp_color_patch.PRESET_A6300.read_bytes())
@@ -161,7 +176,7 @@ def main(base_path: Path, out: Path, prueba: int | None = None, color: bool = Fa
         og = SLOG3_A6300 if g == SLOG3_AQUI else og
         ref = a_ref[u32(a_ref, t_ref + 8 * og + 4) - BASE:][:CURVE]
         assert c[:0x1012] == ref[:0x1012] and c[0x1013] == ref[0x1013] and c[0x1015:] == ref[0x1015:] and c[0x1012] == 4 and c[0x1014] == g
-    assert [list(new[SEL["a6000"] + 2 * i - BASE:][:2]) for i in range(13)] == \
+    assert hlg or [list(new[SEL["a6000"] + 2 * i - BASE:][:2]) for i in range(13)] == \
         [[0, 10]] * 2 + [[0x17, 0x17] if A6300.is_file() else [0, 10]] + [[0x16, 0x16], [10, 10], [0, 10], [0x18, 0x18], [0x19, 0x19], [0x1A, 0x1A], [0x1B, 0x1B],
                                                                        [0x14, 0x14], [0x15, 0x15], [0, 10]]
     diff = sum(a != b for a, b in zip(base, new))
@@ -178,5 +193,6 @@ def main(base_path: Path, out: Path, prueba: int | None = None, color: bool = Fa
 
 if __name__ == "__main__":
     pos = [x for x in sys.argv[1:] if not x.startswith("--")]
-    m = main(Path(pos[0]), Path(pos[1]), int(pos[2]) if len(pos) > 2 else None, "--color" in sys.argv, "--tone" in sys.argv)
+    m = main(Path(pos[0]), Path(pos[1]), int(pos[2]) if len(pos) > 2 else None, "--color" in sys.argv, "--tone" in sys.argv,
+             tuple(int(x) for a in sys.argv if a.startswith("--hlg=") for x in a[6:].split(",")))
     print(m["base_sha256"][:16], "→", m["pp_sha256"][:16], "bytes distintos", m["bytes_distintos"], "escrituras", len(m["escrituras"]))
