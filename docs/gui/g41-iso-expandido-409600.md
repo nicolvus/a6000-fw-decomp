@@ -69,3 +69,6 @@ Por tanto el firmware ya porta en `libObj` los códigos hasta **`0x29` (102400)*
 **Lado av-cam**: la rutina `0x435ebd1c…0x435ebf2e` es el `switch` de eventos internos → id de mensaje (`mov r5,#id; bl 0x43a64d60`, `r0` = índice×0x10: `0x2014` en `0x435ebe0a` con `r0=0x70`, `0x2023` en `0x435ebeca`; ids `0x2000…0x2027`); el emisor de los tipo 4 (`0x1002`: `movw #0x1002` en `0x435ea4a6`, struct de `0xd8` B enviado por método virtual) **sin cerrar**: hay 76 `movw #0x1002` en `0x435ea4a6…`, ninguno verificado como el del ISO.
 
 **Siguiente paso (ISO-A)**: (a) en av-cam, de los 76 sitios `movw #0x1002`, el que rellena un byte en `+0x14` (código ISO) y u32 en `+0xc`; de ahí, el origen del tope `0x26`; (b) validar `0x8587`↔`0x3100`/`0x1002` ejecutando `libObj` (`TRACEFN=9aa134`) con un mensaje tipo 4 id `0x1002` inyectado desde el arnés (cambio en `ae.py`/puente: pendiente ajeno); (c) parche MAX=`0x29` + `getIso` según §7.
+
+## 9. Continuación (16-11-2026)
+Estrategia del consumidor y parche del MAX en `libObj`: [G42](g42-iso-consumidor.md). Corrige §2/§7: el menú ISO es una lista estática de nodos (máx. 51200), no solo lo que guarda `libObj`.
