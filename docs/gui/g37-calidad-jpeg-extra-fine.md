@@ -1,4 +1,5 @@
 # G37 — Calidad JPEG Extra Fine: ya existe de fábrica en la A6000 (15-11-2026)
+> **Superado por [G39](g39-extra-fine-menu.md) (15-11-2026):** el menú Calidad de la A6000 NO muestra Extra fine (lista `Type01`); el descarte era erróneo.
 
 **Resultado: DESCARTADO por no aplicable.** La A6000 (fw 3.21) ya trae la calidad «Extra fine» en el firmware de serie: textos, cadena de calidad y tablas de tamaño del codificador. No hay nada que añadir; el objetivo del wiki partía de una suposición («origen α6300») que el firmware desmiente. No se construye CFW.
 
