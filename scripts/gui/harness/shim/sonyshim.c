@@ -596,6 +596,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             int k = cb_find(w[0]); if (k < 0 && ncbs < 128) k = ncbs++;
             if (k >= 0) { cbs[k].q = w[0]; cbs[k].cb = (void *)t[1]; cbs[k].arg = (void *)(t[3] == 1 || reg_ctx(t) ? t[2] : t[0]); }  /* t[3]==1: registro síncrono, el argumento va en t[2] (EventWrapper de libMWF) */
             pthread_mutex_unlock(&cb_m); avq_flush(w[0]);
+            if (getenv("SYNCTRACE")) { static int nrg; if (nrg++ < 600) efp("[shim] SYNCTRACE %.2f reg_%smsg_queue_cb qid=%#x cb=%#x arg=%#x\n", wl_ts(), t[3] == 1 ? "sync_" : "", w[0], t[1], t[3] == 1 ? t[2] : t[0]); }  /* §5.45 */
             if (getenv("FRONTRM") && ((t[1] & ~1u) & 0xfff) == 0x638 && w[0] >= 0xaf0000 && w[0] < 0xb00000) { pthread_t th; pthread_mutex_lock(&cb_m); int kk = cb_find(w[0]); if (kk >= 0 && getenv("FRONTARG2")) cbs[kk].arg = (void *)t[2]; pthread_mutex_unlock(&cb_m); LOG("FRONTRM: cola %#x t0=%#x [t0]=%#x t2=%#x", w[0], t[0], readable((void *)t[0]) ? *(unsigned *)t[0] : 0, t[2]); pthread_create(&th, 0, frontrm_th, (void *)(unsigned long)w[0]); pthread_detach(th); }  /* +0xd638 */
             { Dl_info di; const char *fn = "?"; unsigned long off = 0; if (dladdr((void *)(t[1] & ~1u), &di) && di.dli_fname) { fn = strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname; off = (t[1] & ~1u) - (unsigned long)di.dli_fbase; }
               LOG("uipc reg_%smsg_queue_cb qid=%#x arg=%#x cb=%#x (%s+%#lx) t2=%#x%s", t[3] == 1 ? "sync_" : "", w[0], t[0], t[1], fn, off, t[2], k < 0 ? " (tabla llena)" : ""); } return 0; }
@@ -616,6 +617,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             { pthread_mutex_lock(&cb_m); int k = cb_find(w[0]); int dentro = k >= 0 && !getenv("SYNCREENTRY") && !sync_nest_enter(&sn, w[0]);  /* shortcut: un envío a la cola cuyo callback ya corre en este hilo no se entrega otra vez (SYNCREENTRY=1 lo restaura; ver sync_nest) */
               if (dentro) { static int nre; if (nre++ < 4) LOG("snd_sync_msg %#x reentrante: sin entrega (§5.42)", w[0]); k = -1; }
               if (k >= 0) { t5[1] = (unsigned)cbs[k].cb; t5[2] = (unsigned)cbs[k].arg; } pthread_mutex_unlock(&cb_m);
+              { static int nst; static const char *st; if (!st) st = getenv("SYNCTRACE") ? "1" : "0"; if (st[0] == '1' && w[0] != 0x8f013a && w[0] != 0x3e014d && nst++ < 600) { char a[32]; efp("[shim] SYNCTRACE %.2f tid %ld %s qid=%#x %s\n", wl_ts(), (long)syscall(224), tname((int)syscall(224), a, sizeof a), w[0], k >= 0 ? "callback" : dentro ? "reentrante" : "sin callback"); } }  /* SYNCTRACE=1: destino de cada envio sincrono (diagnostico, §5.45) */
               if (k >= 0) { if (getenv("VERB")) LOG("snd_sync_msg %#x -> callback directo", w[0]);
                   if (getenv("MSGBODY") && readable(m)) { char h[400]; int o = 0; for (int q = 0; q < 24; q++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[q]); LOG("MSGBODY sync %#x cab=%08x %08x %08x %s", w[0], ((unsigned *)m)[-3], ((unsigned *)m)[-2], ((unsigned *)m)[-1], h); }
                   return 0; } }
@@ -1281,6 +1283,7 @@ int osal_snd_sync_msg(int qid, void *msg, void *cb, void *arg) {
     static int (*real)(int, void *, void *, void *);
     if (!real) real = nextsym("osal_snd_sync_msg");
     int r = real ? real(qid, msg, cb, arg) : -1;
+    { static int nss; if (getenv("SYNCTRACE") && qid != 0x8f013a && qid != 0x3e014d && qid != 0x14c0424 && qid != 0x720018 && nss++ < 1500) { char a[32]; efp("[shim] SYNCTRACE %.2f tid %ld %s osal_snd_sync_msg qid=%#x ret=%#x\n", wl_ts(), (long)syscall(224), tname((int)syscall(224), a, sizeof a), qid, r); } }
     /* SYNCWAIT=qid:segundos (§5.37): una cola local sin receptor aún (0xFFFFFC04) se reintenta cada 250 ms hasta ese plazo. En la cámara InfraDatabase (cola 0x37807c) ya atiende cuando
      * ObjCntMgr::onStarting llama a SendDbCommand; aquí Ii 0c7 libmprctrl (MprCtrl::Init) tarda ≈ 60 s más que el arranque de ObjCntMgr.
      * shortcut: espera acotada en el emisor en lugar de acelerar MprCtrl::Init; mejorar si se encuentra qué frena a Ii 0c7. */
@@ -1290,9 +1293,40 @@ int osal_snd_sync_msg(int qid, void *msg, void *cb, void *arg) {
     if (r && qid == 0xae8114 && getenv("SALVAGE") && ((unsigned *)msg)[0] == 0x1003) {
         pthread_t t; pthread_create(&t, 0, salvage_reply, (void *)hexv(getenv("SALVAGE"), 0)); pthread_detach(t); r = 0; }
     { const char *e = getenv("SYNCOK"); while (r && e && *e) { unsigned q = hexv(e, &e); if (*e == ',') e++; if (q == (unsigned)qid) { LOG("SYNCOK qid=%#x -> 0", qid); r = 0; } } }  /* SYNCOK=qid,…: colas locales sin manejador (servicio de otro proceso) que responden «bien» */
-    if (r && getenv("SYNCLOG")) { static int n; if (n++ < 200) { void *lr = __builtin_return_address(0); Dl_info di; int ok = dladdr(lr, &di); LOG("osal_snd_sync_msg qid=%#x ret=%#x lr=%p %s+%#lx msg=%08x %08x %08x", qid, r, lr, ok ? di.dli_fname : "?", ok ? (unsigned long)((char *)lr - (char *)di.dli_fbase) : 0, ((unsigned *)msg)[0], ((unsigned *)msg)[1], ((unsigned *)msg)[2]); } }
+    if (r && getenv("SYNCLOG")) { static int n; if (n++ < 200) { void *lr = __builtin_return_address(0); Dl_info di; int ok = dladdr(lr, &di); efp("[shim] SYNCLOG %.2f tid %ld osal_snd_sync_msg qid=%#x ret=%#x lr=%p %s+%#lx msg=%08x %08x %08x\n", wl_ts(), (long)syscall(224), qid, r, lr, ok ? di.dli_fname : "?", ok ? (unsigned long)((char *)lr - (char *)di.dli_fbase) : 0, ((unsigned *)msg)[0], ((unsigned *)msg)[1], ((unsigned *)msg)[2]); } }
     return r;
 }
+/* §5.45 (SYNCTRACE=1): resultado de MWF::EventBase::Send / EventWrapper::Send, el envio del evento de modelo (ObjCntMgr -> ModelRecRemainInfo). Solo registra; no cambia el resultado. */
+static int mwf_quiet(void) { return !getenv("SYNCTRACE"); }
+static void mwf_ev_log(const char *w, int r) { static int n; if (!mwf_quiet() && n++ < 4000) { char a[32]; efp("[shim] SYNCTRACE %.2f tid %ld %s %s ret=%#x\n", wl_ts(), (long)syscall(224), tname((int)syscall(224), a, sizeof a), w, r); } }
+int _ZN3MWF12EventWrapper4SendEPKviPvi(void *th, const void *a, int b, void *c, int d) {
+    static int (*real)(void *, const void *, int, void *, int); if (!real) real = nextsym("_ZN3MWF12EventWrapper4SendEPKviPvi");
+    int r = real ? real(th, a, b, c, d) : -1; mwf_ev_log("EventWrapper::Send", r); return r; }
+int _ZN3MWF9EventBase4SendEtPKviPi(void *th, unsigned short t, const void *p, int n, int *o) {
+    static int (*real)(void *, unsigned short, const void *, int, int *); if (!real) real = nextsym("_ZN3MWF9EventBase4SendEtPKviPi");
+    int r = real ? real(th, t, p, n, o) : -1; mwf_ev_log("EventBase::Send", r); return r; }
+int _ZN3MWF17MessageSerializer16GetSerializeSizeEPKNS_6ObjMsgEPi(void *th, const unsigned *m, int *o) {
+    static int (*real)(void *, const void *, int *); if (!real) real = nextsym("_ZN3MWF17MessageSerializer16GetSerializeSizeEPKNS_6ObjMsgEPi");
+    int r = real ? real(th, m, o) : -1; static int n; if (!mwf_quiet() && n++ < 4000) efp("[shim] SYNCTRACE %.2f GetSerializeSize ret=%#x size=%d msg=%08x %08x %08x %08x %08x %08x\n", wl_ts(), r, o ? *o : -1, m[0], m[1], m[2], m[3], m[4], m[5]); return r; }
+unsigned _ZNK3MWF11EventSender10GetEventIdEv(void *th) {
+    static unsigned (*real)(void *); if (!real) real = nextsym("_ZNK3MWF11EventSender10GetEventIdEv");
+    unsigned r = real ? real(th) : 0; static int n; if (!mwf_quiet() && n++ < 4000) efp("[shim] SYNCTRACE %.2f EventSender::GetEventId=%#x\n", wl_ts(), r); return r; }
+int _ZN3MWF12EventWrapper16RegisterCallBackEjPFvPviS1_jES1_(void *th, unsigned qid, void *cb, void *arg) {
+    static int (*real)(void *, unsigned, void *, void *); if (!real) real = nextsym("_ZN3MWF12EventWrapper16RegisterCallBackEjPFvPviS1_jES1_");
+    int r = real ? real(th, qid, cb, arg) : -1;
+    if (!mwf_quiet()) { static int n; Dl_info di; int ok = dladdr(cb, &di); void *lr = __builtin_return_address(0); Dl_info dl; int ok2 = dladdr(lr, &dl);
+        if (n++ < 800) efp("[shim] SYNCTRACE %.2f RegisterCallBack qid=%#x cb=%s+%#lx arg=%p ret=%d por %s+%#lx\n", wl_ts(), qid, ok && di.dli_fname ? strrchr(di.dli_fname, '/') + 1 : "?", ok ? (unsigned long)((char *)cb - (char *)di.dli_fbase) : 0, arg, r, ok2 && dl.dli_fname ? strrchr(dl.dli_fname, '/') + 1 : "?", ok2 ? (unsigned long)((char *)lr - (char *)dl.dli_fbase) : 0); }
+    return r; }
+int _ZN3MWF17MessageSerializer11DeserializeEPhiPNS_6ObjMsgEPi(void *th, unsigned char *b, int n, void *m, int *o) {
+    static int (*real)(void *, unsigned char *, int, void *, int *); if (!real) real = nextsym("_ZN3MWF17MessageSerializer11DeserializeEPhiPNS_6ObjMsgEPi");
+    int r = real ? real(th, b, n, m, o) : -1; static int nok, nbad;
+    if (!mwf_quiet()) { if (r) { if (nbad++ < 300) { char a[32]; unsigned *u = (unsigned *)b; efp("[shim] SYNCTRACE %.2f tid %ld %s Deserialize ERR=%#x len=%d datos=%08x %08x %08x %08x %08x %08x\n", wl_ts(), (long)syscall(224), tname((int)syscall(224), a, sizeof a), r, n, u[0], u[1], u[2], u[3], u[4], u[5]); } } else if (++nok <= 5 || !(nok & (nok - 1))) efp("[shim] SYNCTRACE %.2f Deserialize ok n=%d\n", wl_ts(), nok); }
+    return r; }
+int _ZN3MWF10ObjMsgList7EnqueueEPKNS_6ObjMsgE(void *th, const unsigned *m) {
+    static int (*real)(void *, const void *); if (!real) real = nextsym("_ZN3MWF10ObjMsgList7EnqueueEPKNS_6ObjMsgE");
+    int r = real ? real(th, m) : -1;
+    if (!mwf_quiet()) { char a[32]; static int n; if (n < 400 && !strcmp(tname((int)syscall(224), a, sizeof a), "ObjCntMgr")) { n++; efp("[shim] SYNCTRACE %.2f ObjMsgList::Enqueue lista=%p ret=%d msg=%08x %08x %08x %08x\n", wl_ts(), th, r, m[0], m[1], m[2], m[3]); } }
+    return r; }
 /* Prioridades RT (§5.37): la cámara usa CONFIG_MAX_USER_RT_PRIO=160 (prioridades 1..159, sin traducción en libosal_utm); el kernel del invitado solo 1..99. rtprio.h las mapea de forma
  * monótona (RTMAP=0 la desactiva y deja pasar el valor tal cual, §5.36: los hilos de libmpr con 117/120/123 fallarían con EINVAL). sched_get_priority_max informa 159 como la cámara. */
 static int rt_pol(int policy) { return policy == SCHED_FIFO || policy == SCHED_RR; }
