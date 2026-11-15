@@ -33,7 +33,7 @@ def test_tabla_ajustes():
     assert len(set(ids)) == len(ids) and set(ids) <= set(C.ID_LIBRES)
     assert len({a.pid for a in C.AJUSTES}) == len(C.AJUSTES)
     for a in C.AJUSTES:
-        assert a.opciones[0][1] == 0 and len(a.opciones) < 256       # el índice 0 = Off/fábrica; el byte es el índice
+        assert (a.opciones[0][1] == 0 or a.id == "fb_paso") and len(a.opciones) < 256       # el índice 0 = Off/fábrica; el byte es el índice
 
 
 @pytest.mark.skipif(not DUMP.exists(), reason="sin volcado")
@@ -110,3 +110,13 @@ def _carpeta(M):
     assert M.TREE[0] == "folder" and M.TREE[1] == C.CARPETA
     assert [i for pg in M.TREE[2] for i in pg] == [a.id for a in C.AJUSTES]
     assert max(len(a.opciones) for a in C.AJUSTES) <= M.OPCIONES_POR_LISTA   # tope G36
+
+
+@necesita_fw
+def test_focus_bracket_unicorn_bytes_reales():
+    import runpy
+    runpy.run_path(str(C.ROOT / "scripts/g57/focus_bracket_patch.py"), run_name="__main__")
+
+
+def test_leer_asm_fuera_de_tabla_es_cero():
+    assert "movs r0, #0" in C.leer_asm(C.POR_ID["fb_n"])

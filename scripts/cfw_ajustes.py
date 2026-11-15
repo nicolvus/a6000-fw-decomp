@@ -36,6 +36,9 @@ AJUSTES = (
            (("Off", 0), ("5 s", 5), ("30 s", 30), ("1 min", 60), ("2 min", 120), ("5 min", 300), ("15 min", 900)), PID_PRIMERO),
     # inerte (sin consumidor): demuestra que varios ajustes conviven en la carpeta
     Ajuste("cfw_test", "CFW test", ID_LIBRES[1], (("Off", 0), ("On", 1)), PID_PRIMERO + 1),
+    # G57 Focus Bracket: nº de tomas (el valor es N) y paso (s16 del comando de lente 0x1D; unidades y sentido NO medidos, g57 §4)
+    Ajuste("fb_n", "Focus Bracket", ID_LIBRES[2], (("Off", 0), ("3", 3), ("5", 5), ("10", 10), ("15", 15), ("20", 20), ("30", 30)), PID_PRIMERO + 2),
+    Ajuste("fb_paso", "Focus Br. paso", ID_LIBRES[3], (("Fino", 4), ("Medio", 16), ("Grueso", 64)), PID_PRIMERO + 3),
 )
 POR_ID = {a.id: a for a in AJUSTES}
 
@@ -55,7 +58,10 @@ def leer_asm(a: Ajuste, tabla: str = "tab") -> str:
         ldrb r0, [sp]
         add sp, #8
         cmp r0, #{n}
-        bhs.w fin_{tabla}
+        blo ok_{tabla}
+        movs r0, #0
+        b.w fin_{tabla}
+    ok_{tabla}:
         adr.w r1, {tabla}
         ldrh.w r0, [r1, r0, lsl #1]
         b.w fin_{tabla}
