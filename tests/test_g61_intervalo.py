@@ -23,7 +23,7 @@ def test_bytes_originales_e_idempotencia():
     assert orig[a:a + 4] == old and img[a:a + 4] != old
     diff = [i for i in range(len(orig)) if orig[i] != img[i]]
     cuevas = range(P.CAVE, P.CAVE_FIN)
-    assert all(i in cuevas or any(h <= i < h + 4 for h in (*P.ESPERA[0], P.INICIO[0], P.TOMA[0])) for i in diff)
+    assert all(i in cuevas or any(h <= i < h + 4 for h in (*P.ESPERA[0], P.INICIO[0], P.TOMA[0], P.LIBERA[0])) for i in diff)
 
 
 def test_saltos_de_la_cueva_a_destino_exacto():
@@ -33,6 +33,18 @@ def test_saltos_de_la_cueva_a_destino_exacto():
     ds = {i.address: i for i in Cs(CS_ARCH_ARM, CS_MODE_THUMB).disasm(code, va) if i.mnemonic == "b.w"}
     destinos = {int(i.op_str[1:], 16) for i in ds.values()}
     assert {P.FIN_SEQ, P.REARME} <= destinos
+
+
+def test_ramas_de_la_cueva_a_destino_exacto():
+    """Keystone codifica mal `blx`/`b.w` absolutos según la posición: cada rama a destino absoluto va por `_ens` y se decodifica con Capstone."""
+    from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
+    esperado = {P.PLT_MSG, P.PLT_INT, P.PLT_ADD, P.PLT_DTOR_P, P.PLT_ISSUE, P.PLT_DTOR_M, P.OBJ_DE, 0xDD5F4, P.CANCELA, P.CAVE, P.REARME, P.FIN_SEQ}
+    vistos = set()
+    for va, code in P.piezas().values():
+        for i in Cs(CS_ARCH_ARM, CS_MODE_THUMB).disasm(code, va):
+            if i.mnemonic in ("bl", "blx") or (i.mnemonic == "b.w" and not P.CAVE <= int(i.op_str[1:], 16) < P.CAVE_FIN):
+                vistos.add(int(i.op_str[1:], 16))
+    assert vistos == esperado, {hex(x) for x in vistos ^ esperado}
 
 
 def test_cueva_sin_referencias_y_contador_en_pagina_del_bss():
@@ -51,6 +63,18 @@ def test_cueva_sin_referencias_y_contador_en_pagina_del_bss():
 
 def test_unicorn_off_y_intervalo_5s_n10():
     P.comprobar()
+
+
+def test_seguim_ae_bloquea_tras_la_primera_toma_y_libera_al_acabar():
+    """Unicorn: Normal → ningún mensaje AEL; Bloqueado → `MSGID_SET_AEL_CMD` (0x75be, PARAMID_AEL 0x96e6 = ON) tras la toma 1 y OFF al acabar la serie (`comprobar()` cubre los casos)."""
+    import cfw_ajustes
+    S = cfw_ajustes.POR_ID["seguim_ae"]
+    assert S.opciones == (("Normal", 0), ("Bloqueado", 1)) and S.pid == C.PID_PRIMERO + 6
+    img = P.apply_bytes(P.SRC.read_bytes())
+    I, N = C.POR_ID["intervalo"].backup, C.POR_ID["n_disparos"].backup
+    r = P.emular(img, {I: 2, N: 0, S.backup: 1})
+    assert [x[0][1] if x else None for x in r["ael"]] == [P.AEL_ON] + [None] * 8 + [P.AEL_OFF] + [None] * 2
+    assert not any(P.emular(img, {I: 2, N: 0, S.backup: 0})["ael"])
 
 
 def test_ajustes_nuevos_caben_en_el_menu():

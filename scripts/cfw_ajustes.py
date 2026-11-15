@@ -42,6 +42,8 @@ AJUSTES = (
     # G61 autodisparador continuo (`libObj`): espera entre tomas en segundos (Off = la de fábrica de cada modo) y nº de tomas (0 = sin tope)
     Ajuste("intervalo", "Intervalo", ID_LIBRES[4], (("Off", 0), ("2 s", 2), ("5 s", 5), ("10 s", 10), ("30 s", 30), ("60 s", 60), ("5 min", 300)), PID_PRIMERO + 4),
     Ajuste("n_disparos", "N. disparos", ID_LIBRES[5], (("10", 10), ("30", 30), ("60", 60), ("100", 100), ("300", 300), ("999", 999), ("Sin tope", 0)), PID_PRIMERO + 5),
+    # G62 seguimiento AE en la serie del intervalómetro: Normal (AE por toma, de fábrica) o Bloqueado (AEL tras la 1.ª toma, se libera al acabar la serie)
+    Ajuste("seguim_ae", "Seguim. AE", ID_LIBRES[6], (("Normal", 0), ("Bloqueado", 1)), PID_PRIMERO + 6),
 )
 POR_ID = {a.id: a for a in AJUSTES}
 
