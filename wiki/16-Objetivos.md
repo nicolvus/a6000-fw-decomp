@@ -8,7 +8,6 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 
 - ⬜ Silent Shooting ([estado](14-Estado-actual)) — _Origen: Sony α7S_
 - ⬜ Picture Profiles PP1–PP10 — _Origen: ≈Sony α7R III_
-- ⬜ Calidad JPEG Extra Fine — _Origen: Sony α6300_
 
 ## Pendientes
 
@@ -87,3 +86,4 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 ## Descartadas
 
 - ❌ Nivel digital (horizonte virtual) — _Origen: ≈Sony α6300_. La A6000 no tiene acelerómetro: su sensor de orientación (SE7750) es óptico y cada uno de sus dos canales solo da alto o bajo, así que distingue cuatro posiciones a 90° y nada intermedio. Medido por SWD girando la cámara ([R88](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r88-sensor-inclinacion-swd.md)).
+- ❌ Calidad JPEG Extra Fine — _Origen: Sony α6300_. No aplicable: la A6000 ya la trae de fábrica (fw 3.21). «Extra fine» (`0xe001`), `JPG_QUALITY_EXFINE` en `libObj` y 120 claves `BKID_IMAGING_DATSZ_*_EXFINE_{TGT,MAX}` en `libmprctrl` (tamaño objetivo/máximo del JPEG); la vista `viewStillImageQuality` es idéntica a la de la α6300 ([G37](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/gui/g37-calidad-jpeg-extra-fine.md)).
