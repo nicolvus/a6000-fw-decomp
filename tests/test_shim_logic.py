@@ -142,3 +142,17 @@ int main(void) { unsigned a[8]; memset(a, 0xaa, sizeof a); nflash_lblkinfo_fill(
     # bloque lógico 128 KiB (paso medido entre cabeceras del volcado), 10 MiB = 80 bloques, unidad 0x200; inicio 0x3140000 / 512.
     # La estructura es de 16 B: a[4..] son variables vecinas de la pila de libmpr ([r7+0x78] = 0x200 se usa de divisor; ponerla a 0 daba SIGFPE en el arranque, c43c).
     assert subprocess.run([str(tmp_path / "t")], capture_output=True, text=True, check=True).stdout == "0x20000 80 0x200 100864\n 0xaaaaaaaa"
+
+
+@pytest.mark.parametrize("sym", [
+    "_ZN3MWF9ObjSignal9SetSignalEv", "_ZN3MWF10ObjMsgList7DequeueEPNS_6ObjMsgE", "_ZN3MWF13EventReceiver15SetEventHandlerEPNS_12EventHandlerE",
+    "_ZN3MWF11EventSender16SetEventReceiverEPKNS_13EventReceiverE", "_ZN3MWF11EventSender9SendEventEPKNS_6ObjMsgE",
+    "_ZN5EventC1Emhh", "_ZN12EventManager4pushEP5Eventb", "_ZN12ModelManager11checkStatusEi",
+])
+def test_diagnostico_5_46_es_opt_in(sym):
+    """§5.46: cada gancho de diagnóstico del lado consumidor existe y solo registra con SYNCTRACE (mwf_quiet), sin cambiar el resultado."""
+    src = (SHIM / "sonyshim.c").read_text()
+    i = src.index(f"{sym}(")
+    cuerpo = src[i:src.index("\n}\n", i) if "\n}\n" in src[i:i + 3000] else i + 1500]
+    cuerpo = cuerpo[:cuerpo.index("return") + 60] if "return" in cuerpo else cuerpo
+    assert "mwf_quiet()" in src[i:i + 900] and "nextsym(" in cuerpo

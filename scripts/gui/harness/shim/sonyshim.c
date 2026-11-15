@@ -1298,6 +1298,10 @@ int osal_snd_sync_msg(int qid, void *msg, void *cb, void *arg) {
 }
 /* §5.45 (SYNCTRACE=1): resultado de MWF::EventBase::Send / EventWrapper::Send, el envio del evento de modelo (ObjCntMgr -> ModelRecRemainInfo). Solo registra; no cambia el resultado. */
 static int mwf_quiet(void) { return !getenv("SYNCTRACE"); }
+static struct { void *rcv, *lst; unsigned qid; } mwf_rc[600]; static int mwf_nrc;
+static unsigned mwf_qid_de_lista(const void *l, void **rcv) { for (int i = 0; i < mwf_nrc; i++) if (mwf_rc[i].lst == l) { if (rcv) *rcv = mwf_rc[i].rcv; return mwf_rc[i].qid; } return 0; }
+static void mwf_lr(void *lr, char *b, size_t n) { Dl_info d; if (dladdr(lr, &d) && d.dli_fname) snprintf(b, n, "%s+%#lx", strrchr(d.dli_fname, '/') + 1, (unsigned long)((char *)lr - (char *)d.dli_fbase)); else snprintf(b, n, "%p", lr); }
+static void mwf_vt(void *o, char *b, size_t n) { Dl_info d; void *v = o ? ((void **)o)[0] : 0; if (v && dladdr(v, &d) && d.dli_fname) snprintf(b, n, "%s+%#lx", strrchr(d.dli_fname, '/') + 1, (unsigned long)((char *)v - (char *)d.dli_fbase)); else snprintf(b, n, "%p", v); }
 static void mwf_ev_log(const char *w, int r) { static int n; if (!mwf_quiet() && n++ < 4000) { char a[32]; efp("[shim] SYNCTRACE %.2f tid %ld %s %s ret=%#x\n", wl_ts(), (long)syscall(224), tname((int)syscall(224), a, sizeof a), w, r); } }
 int _ZN3MWF12EventWrapper4SendEPKviPvi(void *th, const void *a, int b, void *c, int d) {
     static int (*real)(void *, const void *, int, void *, int); if (!real) real = nextsym("_ZN3MWF12EventWrapper4SendEPKviPvi");
@@ -1325,7 +1329,71 @@ int _ZN3MWF17MessageSerializer11DeserializeEPhiPNS_6ObjMsgEPi(void *th, unsigned
 int _ZN3MWF10ObjMsgList7EnqueueEPKNS_6ObjMsgE(void *th, const unsigned *m) {
     static int (*real)(void *, const void *); if (!real) real = nextsym("_ZN3MWF10ObjMsgList7EnqueueEPKNS_6ObjMsgE");
     int r = real ? real(th, m) : -1;
+    if (!mwf_quiet()) { void *rc; unsigned q = mwf_qid_de_lista(th, &rc); static int nq; if (q && nq++ < 800) { char a[32]; efp("[shim] SYNCTRACE %.2f tid %ld %s ENQ lista=%p rcv=%p qid=%#x ret=%d\n", wl_ts(), (long)syscall(224), tname((int)syscall(224), a, sizeof a), th, rc, q, r); } }
     if (!mwf_quiet()) { char a[32]; static int n; if (n < 400 && !strcmp(tname((int)syscall(224), a, sizeof a), "ObjCntMgr")) { n++; efp("[shim] SYNCTRACE %.2f ObjMsgList::Enqueue lista=%p ret=%d msg=%08x %08x %08x %08x\n", wl_ts(), th, r, m[0], m[1], m[2], m[3]); } }
+    return r; }
+/* §5.46 (SYNCTRACE=1): lado consumidor del evento de modelo. Quien despierta (ObjSignal::SetSignal), quien espera/consume (GetSignal, ObjMsgList::Dequeue) y como se
+ * cablea cada EventReceiver (manejador, id, nombre, filtro). Solo registra; pasan por la PLT de libMWF (los llamadores internos las resuelven por simbolo). */
+static void mwf_t(const char *w, const void *a, unsigned long b, unsigned long c) { char n[32]; static volatile int cnt; int k = cnt; if (k >= 6000) return; cnt = k + 1;
+    efp("[shim] SYNCTRACE %.2f tid %ld %s %s %p %#lx %#lx\n", wl_ts(), (long)syscall(224), tname((int)syscall(224), n, sizeof n), w, a, b, c); }
+static int mwf_nth(int *n) { int k = (*n)++; return k < 6 || !(k & (k - 1)); }  /* las 6 primeras y luego potencias de 2 */
+int _ZN3MWF9ObjSignal9SetSignalEv(void *th) {
+    static int (*real)(void *); if (!real) real = nextsym("_ZN3MWF9ObjSignal9SetSignalEv");
+    static int n; if (!mwf_quiet() && mwf_nth(&n)) mwf_t("SetSignal", th, (unsigned long)__builtin_return_address(0), 0);
+    return real ? real(th) : -1; }
+int _ZN3MWF9ObjSignal9GetSignalEj(void *th, unsigned t) {
+    static int (*real)(void *, unsigned); if (!real) real = nextsym("_ZN3MWF9ObjSignal9GetSignalEj");
+    int r = real ? real(th, t) : -1; static int n; if (!mwf_quiet() && mwf_nth(&n)) mwf_t("GetSignal", th, t, (unsigned long)r);
+    return r; }
+int _ZN3MWF10ObjMsgList7DequeueEPNS_6ObjMsgE(void *th, unsigned *m) {
+    static int (*real)(void *, void *); if (!real) real = nextsym("_ZN3MWF10ObjMsgList7DequeueEPNS_6ObjMsgE");
+    int r = real ? real(th, m) : -1; static int n; if (!mwf_quiet() && r == 0 && mwf_nth(&n)) { void *rc; unsigned q = mwf_qid_de_lista(th, &rc); char a[32]; efp("[shim] SYNCTRACE %.2f tid %ld %s DEQ lista=%p rcv=%p qid=%#x msg=%08x %08x\n", wl_ts(), (long)syscall(224), tname((int)syscall(224), a, sizeof a), th, rc, q, m[0], m[1]); }
+    return r; }
+int _ZN3MWF13EventReceiver15SetEventHandlerEPNS_12EventHandlerE(void *th, void *h) {
+    static int (*real)(void *, void *); if (!real) real = nextsym("_ZN3MWF13EventReceiver15SetEventHandlerEPNS_12EventHandlerE");
+    static int n; if (!mwf_quiet() && n++ < 400) { char v[64], c[64]; mwf_vt(h, v, sizeof v); mwf_lr(__builtin_return_address(0), c, sizeof c); efp("[shim] SYNCTRACE %.2f tid %ld SetEventHandler rcv=%p lista=%p h=%p vt=%s h[1]=%p por %s\n", wl_ts(), (long)syscall(224), th, ((void **)th)[3], h, v, h ? ((void **)h)[1] : 0, c); }
+    return real ? real(th, h) : -1; }
+int _ZN3MWF13EventReceiver10SetEventIdEj(void *th, unsigned id) {
+    static int (*real)(void *, unsigned); if (!real) real = nextsym("_ZN3MWF13EventReceiver10SetEventIdEj");
+    if (!mwf_quiet() && mwf_nrc < 600) { mwf_rc[mwf_nrc].rcv = th; mwf_rc[mwf_nrc].lst = ((void **)th)[3]; mwf_rc[mwf_nrc++].qid = id; }
+    static int n; if (!mwf_quiet() && n++ < 400) { char c[64]; mwf_lr(__builtin_return_address(0), c, sizeof c); efp("[shim] SYNCTRACE %.2f tid %ld SetEventId rcv=%p lista=%p qid=%#x por %s\n", wl_ts(), (long)syscall(224), th, ((void **)th)[3], id, c); }
+    return real ? real(th, id) : -1; }
+int _ZN3MWF13EventReceiver15SetReceiverNameEPKc(void *th, const char *nm) {
+    static int (*real)(void *, const char *); if (!real) real = nextsym("_ZN3MWF13EventReceiver15SetReceiverNameEPKc");
+    static int n; if (!mwf_quiet() && n++ < 400) { char b[48]; snprintf(b, sizeof b, "%s", nm ? nm : "?"); efp("[shim] SYNCTRACE %.2f SetReceiverName rcv=%p lista=%p '%s'\n", wl_ts(), th, ((void **)th)[3], b); }
+    return real ? real(th, nm) : -1; }
+int _ZN3MWF13EventReceiver13SetFilterFlgENS0_8EventFlgEb(void *th, int f, int on) {
+    static int (*real)(void *, int, int); if (!real) real = nextsym("_ZN3MWF13EventReceiver13SetFilterFlgENS0_8EventFlgEb");
+    static int n; if (!mwf_quiet() && n++ < 400) mwf_t("SetFilterFlg", th, f, on);
+    return real ? real(th, f, on) : -1; }
+void _ZN3MWF11EventSender16SetEventReceiverEPKNS_13EventReceiverE(void *th, void *r) {
+    static void (*real)(void *, void *); if (!real) real = nextsym("_ZN3MWF11EventSender16SetEventReceiverEPKNS_13EventReceiverE");
+    static int n; if (!mwf_quiet() && n++ < 600) { char c[64]; mwf_lr(__builtin_return_address(0), c, sizeof c); efp("[shim] SYNCTRACE %.2f tid %ld SetEventReceiver snd=%p rcv=%p por %s\n", wl_ts(), (long)syscall(224), th, r, c); }
+    if (real) real(th, r); }
+void _ZN3MWF11EventSender10SetEventIdEj(void *th, unsigned id) {
+    static void (*real)(void *, unsigned); if (!real) real = nextsym("_ZN3MWF11EventSender10SetEventIdEj");
+    static int n; if (!mwf_quiet() && n++ < 600) { char c[64]; mwf_lr(__builtin_return_address(0), c, sizeof c); efp("[shim] SYNCTRACE %.2f tid %ld Sender::SetEventId snd=%p qid=%#x por %s\n", wl_ts(), (long)syscall(224), th, id, c); }
+    if (real) real(th, id); }
+int _ZN3MWF11EventSender9SendEventEPKNS_6ObjMsgE(void *th, const unsigned *m) {
+    static int (*real)(void *, const void *); if (!real) real = nextsym("_ZN3MWF11EventSender9SendEventEPKNS_6ObjMsgE");
+    static int n; static int (*gc)(const void *), (*gm)(const void *); if (!gc) { gc = nextsym("_ZNK3MWF6ObjMsg13GetCategoryIdEv"); gm = nextsym("_ZNK3MWF6ObjMsg12GetMessageIdEv"); }
+    if (!mwf_quiet() && gc && gc(m) == 0x3700 && n++ < 1500) { char c[64], a[32]; mwf_lr(__builtin_return_address(0), c, sizeof c);  /* solo la categoria 0x3700 (ObjCntMgr -> modelos) */
+        efp("[shim] SYNCTRACE %.2f tid %ld %s SendEvent snd=%p cat=%#x id=%#x por %s\n", wl_ts(), (long)syscall(224), tname((int)syscall(224), a, sizeof a), th, gc(m), gm ? gm(m) : -1, c); }
+    return real ? real(th, m) : -1; }
+/* §5.46: lado modelo (libObj): creacion y envio de Event (EventManager::push -> ModelTree -> acciones de ModelXxx). */
+static int mwf_ev_id(void *e) { static unsigned (*gi)(const void *); if (!gi) gi = nextsym("_ZNK5Event5getIdEv"); return gi && e ? (int)gi(e) : -1; }
+void *_ZN5EventC1Emhh(void *th, unsigned long id, unsigned char a, unsigned char b) {
+    static void *(*real)(void *, unsigned long, unsigned char, unsigned char); if (!real) real = nextsym("_ZN5EventC1Emhh");
+    static int n; if (!mwf_quiet() && n++ < 3000) { char c[64], t[32]; mwf_lr(__builtin_return_address(0), c, sizeof c); efp("[shim] SYNCTRACE %.2f tid %ld %s Event id=%#lx a=%u b=%u por %s\n", wl_ts(), (long)syscall(224), tname((int)syscall(224), t, sizeof t), id, a, b, c); }
+    return real ? real(th, id, a, b) : th; }
+int _ZN12EventManager4pushEP5Eventb(void *th, void *e, int f) {
+    static int (*real)(void *, void *, int); if (!real) real = nextsym("_ZN12EventManager4pushEP5Eventb");
+    static int n; if (!mwf_quiet() && n++ < 3000) { char c[64], t[32]; mwf_lr(__builtin_return_address(0), c, sizeof c); efp("[shim] SYNCTRACE %.2f tid %ld %s push id=%#x dest=%u por %s\n", wl_ts(), (long)syscall(224), tname((int)syscall(224), t, sizeof t), mwf_ev_id(e), e ? ((unsigned char *)e)[8] : 0, c); }
+    { static int nc; if (!mwf_quiet() && nc++ < 3) { char c[64], d[64]; mwf_lr(((void **)th)[1], c, sizeof c); mwf_lr(((void **)th)[2], d, sizeof d); efp("[shim] SYNCTRACE %.2f EventManager=%p cb1=%s cb2=%s\n", wl_ts(), th, c, d); } }
+    return real ? real(th, e, f) : -1; }
+int _ZN12ModelManager11checkStatusEi(void *th, int st) {
+    static int (*real)(void *, int); if (!real) real = nextsym("_ZN12ModelManager11checkStatusEi");
+    int r = real ? real(th, st) : -1; static int n; if (!mwf_quiet() && n < 60 && (n++ < 20 || r)) { char c[64], t[32]; mwf_lr(__builtin_return_address(0), c, sizeof c); efp("[shim] SYNCTRACE %.2f tid %ld %s ModelManager::checkStatus(%#x)=%d por %s\n", wl_ts(), (long)syscall(224), tname((int)syscall(224), t, sizeof t), st, r, c); }
     return r; }
 /* Prioridades RT (§5.37): la cámara usa CONFIG_MAX_USER_RT_PRIO=160 (prioridades 1..159, sin traducción en libosal_utm); el kernel del invitado solo 1..99. rtprio.h las mapea de forma
  * monótona (RTMAP=0 la desactiva y deja pasar el valor tal cual, §5.36: los hilos de libmpr con 117/120/123 fallarían con EINVAL). sched_get_priority_max informa 159 como la cámara. */
