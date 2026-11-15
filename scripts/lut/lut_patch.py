@@ -1,7 +1,7 @@
 """G71 — ajuste CFW «LUT» (Off/LUT1/LUT2/LUT3): sustituye el búfer de 0x654 B de la LUT 3D 5×9×9 que `av-cam` entrega al hardware por una tabla propia del `.dat`.
 
 Dos ganchos de 4 B (`ldr.w rX,[r5,#0xc4]` → `bl cueva`) en la escritura de `0x4381d2a0…0x4381d386`: SA (`0x4381d2fe`, rX = r3, hacia `0x43b67a68`) y MOV/MON/CAP (`0x4381d372`, rX = r1, hacia `memcpy`).
-Off = ningún byte cambia en la ruta (la cueva devuelve el puntero original). La cueva y las 3 tablas van en `0x43FA4000` (zona a cero de 2,3 MB, como HLG; sin verificar que no se use en ejecución: LUT-C).
+Off = ningún byte cambia en la ruta (la cueva devuelve el puntero original). La cueva y las 3 tablas van en `0x43FA4000` (zona a cero de 2,3 MB, como HLG; G72: NO está libre, es memoria viva; parche bloqueado por `ZONA_VERIFICADA`: LUT-C).
 shortcut: solo la etapa LUT 3D está integrada; matriz y curva del `cube_a6000` no (la matriz vive en el preset de Backup y la curva no tiene hueco: LUT-A). `python3 scripts/lut/lut_patch.py` = autocomprobación con Unicorn.
 """
 from __future__ import annotations
@@ -22,6 +22,7 @@ AJ = cfw.POR_ID["lut"]
 HOOKS = ((0x4381D2FE, bytes.fromhex("d5f8c430"), "r3", "r0, r1, r2"),     # ldr.w r3,[r5,#0xc4]
          (0x4381D372, bytes.fromhex("d5f8c410"), "r1", "r0, r2, r3"))     # ldr.w r1,[r5,#0xc4]
 CODE, TABLES = 0x43FA4000, 0x43FA4200
+ZONA_VERIFICADA = False  # G72: 0x43FA4000 es memoria viva (402 B no nulos en el volcado de RAM, `completed` en 0x43FA4B1E); bloqueado hasta reubicar (LUT-C)
 TAM = 0x654
 FUENTES = ("teal_orange", "pelicula", "identidad")                         # LUT1…3 por defecto; `--cube` de cube_a6000 las sustituye
 
@@ -79,6 +80,8 @@ def _una(k: int) -> str:
 def apply_bytes(data: bytes, tablas: list[bytes] | None = None) -> bytes:
     if len(data) != SIZE:
         raise ValueError("tamaño inesperado")
+    if not ZONA_VERIFICADA:
+        raise RuntimeError("LUT: 0x43FA4000 es memoria viva (G72); reubicar antes de construir (LUT-C)")
     tablas = tablas or tablas_por_defecto()
     assert len(tablas) == 3 and all(len(t) == TAM for t in tablas)
     for va, old, _, _ in HOOKS:
@@ -125,6 +128,7 @@ def emular(img: bytes, k: int, opcion: int, orig: int = 0x11223344) -> int:
 
 
 if __name__ == "__main__":
+    ZONA_VERIFICADA = True  # autocomprobación de bytes; no apto para construir (G72)
     img = C.BIN.read_bytes()
     p = apply_bytes(img)
     print("código", entradas(), "diff", sum(a != b for a, b in zip(img, p)), "B")

@@ -37,7 +37,16 @@ def test_permutacion_valida():
 
 @pytest.fixture(scope="module")
 def parcheada():
-    return P.apply_bytes(IMG)
+    P.ZONA_VERIFICADA = True  # el test comprueba los bytes; el bloqueo de G72 se prueba aparte
+    try:
+        return P.apply_bytes(IMG)
+    finally:
+        P.ZONA_VERIFICADA = False
+
+
+def test_bloqueado_hasta_reubicar():
+    with pytest.raises(RuntimeError):
+        P.apply_bytes(IMG)
 
 
 def test_off_igual_que_fabrica_y_lut_elige_tabla(parcheada):

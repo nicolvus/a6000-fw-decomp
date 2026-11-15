@@ -37,3 +37,5 @@ Objetivos de wiki 16 (Fujifilm X-T3 «Color Chrome Effect», X-T5 «Film simulat
 
 ## 6. Pendientes
 CCH-F1…F5 en [PENDIENTES](../PENDIENTES.md).
+
+**Nota G72 (15-11-2026):** la cueva `0x43FB7C00` está en el hueco de G18 (`0x43faf28c…0x43fb8ee0`): ceros idénticos en fichero y volcado de RAM real, 0 referencias `movw/movt`. Es SEGURA (a diferencia de HLG/LUT); ver [g72](g72-zona-cero-av-cam.md).

@@ -39,3 +39,5 @@ Overlay y perfil propios (`g71`, puerto 8771; `--no-avcam`; qemu parado y perfil
 
 ## 6. Pendientes
 CCH-F3 (cerrado en formato), CCH-F5, LUT-A, LUT-B, LUT-C en [PENDIENTES](../PENDIENTES.md).
+
+**Nota G72 (15-11-2026):** `0x43FA4000` NO está libre (402 B no nulos en vivo; `completed` en `0x43FA4B1E`). `lut_patch.apply_bytes` queda bloqueado hasta reubicar; ver [g72](g72-zona-cero-av-cam.md) y LUT-C.

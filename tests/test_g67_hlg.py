@@ -40,7 +40,13 @@ def test_oetf_arib_puntos_conocidos():
 @needs_av
 def test_bloque_con_el_formato_de_s_log3_y_bytes_originales():
     base, a6300 = AVCAM.read_bytes(), C.A6300.read_bytes()
-    ps = C.patches(base, (C.A7S).read_bytes(), a6300, (1, 2, 3))
+    with pytest.raises(RuntimeError):
+        C.patches(base, (C.A7S).read_bytes(), a6300, (1, 2, 3))
+    C.ZONA_VERIFICADA = True
+    try:
+        ps = C.patches(base, (C.A7S).read_bytes(), a6300, (1, 2, 3))
+    finally:
+        C.ZONA_VERIFICADA = False
     C.check_base(base, ps)
     slog3 = a6300[C.u32(a6300, C.TAB_A6300 + 8 * C.SLOG3_A6300 + 4) - C.BASE:][:C.CURVE]
     for n in (1, 2, 3):

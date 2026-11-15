@@ -35,3 +35,5 @@ Un `git stash -q` accidental (cuatro segundos) se deshizo con `pop`; cambios aje
 
 ## 6. Límites
 Sin cámara: no se sabe si el núcleo acepta selectores 12–14 ni si la curva se aplica; los niveles y la rodilla son aproximados; el ISP emulado no acepta curvas nuevas sin tocar `scripts/gui/isp/` (no comprobado).
+
+**Nota G72 (15-11-2026):** `HLG_REGION = 0x43F9C000` NO está libre: es memoria viva (145 B no nulos en el volcado de RAM real). El parche `--hlg` queda bloqueado hasta reubicar; ver [g72](g72-zona-cero-av-cam.md) y HLG-2.

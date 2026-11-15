@@ -42,8 +42,10 @@ def u32(d: bytes, a: int) -> int:
 
 
 # G67: HLG1–3 = gammas 0x1c–0x1e, selectores 12–14. El hueco de G18 está lleno (9.º hueco = cueva de color/tono): las curvas van a una región provisional de la zona a cero
-# 0x43d620d9…0x43fa8f00 (NO verificado que no se use en ejecución: PENDIENTES HLG-2). Solo con `hlg` explícito.
+# 0x43d620d9…0x43fa8f00. G72: esa zona NO está libre (es `.bss`/datos vivos: 508 877 B no nulos en el volcado de RAM de la cámara, 145 B dentro de estas curvas), así que `hlg`
+# queda bloqueado hasta reubicar el bloque (PENDIENTES HLG-2). Solo con `hlg` explícito y `ZONA_VERIFICADA = True` (los tests lo fuerzan).
 HLG_REGION = 0x43F9C000
+ZONA_VERIFICADA = False
 
 
 def patches(base: bytes, a7s: bytes, a6300: bytes | None = None, hlg: tuple[int, ...] = ()) -> list[tuple[int, bytes, str]]:
@@ -65,6 +67,8 @@ def patches(base: bytes, a7s: bytes, a6300: bytes | None = None, hlg: tuple[int,
         out.append((dst, bytes(src), f"curva 0x{SLOG3_AQUI:02x}"))
         out.append((TAB["a6000"] + 8 * SLOG3_AQUI + 4, struct.pack("<I", dst), f"puntero vídeo 0x{SLOG3_AQUI:02x}"))
     if hlg:
+        if not ZONA_VERIFICADA:
+            raise RuntimeError("HLG: 0x43F9C000 es memoria viva (G72); reubicar antes de construir (HLG-2)")
         import pp_hlg_curves
         assert a6300 is not None
         cola = bytearray(a6300[u32(a6300, TAB_A6300 + 8 * SLOG3_A6300 + 4) - BASE + 0x1000:][:CURVE - 0x1000])
