@@ -46,6 +46,8 @@ AJUSTES = (
     Ajuste("seguim_ae", "Seguim. AE", ID_LIBRES[6], (("Normal", 0), ("Bloqueado", 1)), PID_PRIMERO + 6),
     # G63 Flicker Scan (Silent): redondea la exposición al múltiplo más cercano del periodo del parpadeo (líneas de 17,135 µs: 100 Hz = 584, 120 Hz = 486)
     Ajuste("flicker_scan", "Flicker Scan", ID_LIBRES[7], (("Off", 0), ("50 Hz", 584), ("60 Hz", 486)), PID_PRIMERO + 7),
+    # G68 DR Prioridad (libObj, al pulsar a medias): Débil = DRO Lv3 + sesgo −1 EV; Fuerte = DRO Lv5 + sesgo −2 EV (Off = de fábrica). El valor es el nivel (0/1/2)
+    Ajuste("dr_prior", "DR Prioridad", ID_LIBRES[8], (("Off", 0), ("Débil", 1), ("Fuerte", 2)), PID_PRIMERO + 8),
 )
 POR_ID = {a.id: a for a in AJUSTES}
 
