@@ -48,6 +48,9 @@ AJUSTES = (
     Ajuste("flicker_scan", "Flicker Scan", ID_LIBRES[7], (("Off", 0), ("50 Hz", 584), ("60 Hz", 486)), PID_PRIMERO + 7),
     # G68 DR Prioridad (libObj, al pulsar a medias): Débil = DRO Lv3 + sesgo −1 EV; Fuerte = DRO Lv5 + sesgo −2 EV (Off = de fábrica). El valor es el nivel (0/1/2)
     Ajuste("dr_prior", "DR Prioridad", ID_LIBRES[8], (("Off", 0), ("Débil", 1), ("Fuerte", 2)), PID_PRIMERO + 8),
+    # G69 Color Chrome / Film (av-cam): suma desplazamientos a Saturación y Color Depth del mensaje de colorimetría. El valor es el desplazamiento (8·fila) en la tabla de la cueva
+    Ajuste("color_chrome", "Color Chrome", ID_LIBRES[9],
+           (("Off", 0), ("Débil", 8), ("Fuerte", 16), ("Clásico", 24), ("Vivo", 32), ("Suave", 40)), PID_PRIMERO + 9),
 )
 POR_ID = {a.id: a for a in AJUSTES}
 

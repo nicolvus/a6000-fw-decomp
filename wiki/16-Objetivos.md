@@ -36,9 +36,9 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 - ◐ S-Log3 — _Origen: ≈Sony α7S II_. Parches del firmware hechos (curva `0x17`, núcleo [g32c](../docs/gui/g32c-slog3-nucleo.md), [g26](../docs/gui/g26-slog3-color-mode-a6300.md)), integrados en CFW 3.81 sin instalar; falta verificar en cámara.
 - ◐ HLG 1-3 — _Origen: ≈Sony α7R III_. No existe de fábrica; tablas HLG1/2/3 (ARIB STD-B67, niveles 87/95/100 % aproximados) y parches de menú y `libObj` probados offline, sin CFW ni cámara; falta sitio fiable para las curvas y captura en el arnés ([g67](../docs/gui/g67-hlg-gamma.md)).
 - ◐ D Range Priority — _Origen: Fujifilm X-T3_. **Implementado sin cámara** (CFW sin construir, sin instalar): ajuste «DR Prioridad» Off/Débil/Fuerte en la carpeta «CFW» que, al pulsar a medias, fija DRO Lv3/Lv5 y un sesgo de AE de −1/−2 EV (mensajes `0x755a` y `0x759e` a ObjCamera); Unicorn sobre `libObj` + arnés. Límites: no es el DR200/400 del sensor de Fujifilm (sin ganancia analógica extra), sin rodilla, en RAW solo actúa el sesgo, la ganancia de DRO Lv5 (~2 EV) y la codificación del sesgo no están medidas. [g68](../docs/gui/g68-dr-prioridad.md) · DRP-F1…F3.
-- ⬜ Color Chrome Effect — _Origen: Fujifilm X-T3_
-- ⬜ Importación de LUTs — _Origen: Sony ZV-E1_
-- ⬜ Film simulation directo — _Origen: Fujifilm X-T5_
+- ◐ Color Chrome Effect — _Origen: Fujifilm X-T3_. **Implementado sin cámara** (CFW sin construir, sin instalar): ajuste «Color Chrome» Débil/Fuerte que suma Color Depth (+2/+4) a los 6 sectores del paquete de colorimetría de `av-cam`; Unicorn + arnés. Límite: aproximación por tono, no luminancia según saturación (eso exige la LUT 3D 5×9×9 hallada). [g69](../docs/gui/g69-color-chrome-film-lut.md) · CCH-F1…F3.
+- ◐ Importación de LUTs — _Origen: Sony ZV-E1_. **Versión literal descartada**: la LUT 3D del hardware es 5×9×9 (405 nodos de 7 bits, `0x654` B), no 17³/33³. Alternativa: remuestrear un `.cube` a esa rejilla; lectura desde la SD sin comprobar. [g69](../docs/gui/g69-color-chrome-film-lut.md) · CCH-F3, CCH-F5.
+- ◐ Film simulation directo — _Origen: Fujifilm X-T5_. **Parcial sin cámara**: opciones Clásico/Vivo/Suave del mismo ajuste «Color Chrome» (Sat + Color Depth por sector; pesos estimados, no la ciencia de color de Fujifilm); falta separar el ajuste (ids de Backup agotados). [g69](../docs/gui/g69-color-chrome-film-lut.md) · CCH-F4.
 
 ### Video
 
