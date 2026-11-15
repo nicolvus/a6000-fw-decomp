@@ -35,3 +35,23 @@ No se leyó la conversión ISO → ganancia analógica/digital: el único consum
 ## 6. Pendiente
 
 **ISO-A** (ver `docs/PENDIENTES.md`).
+
+## 7. Método identificador → emisor (15-11-2026, ESTÁTICO; sigue PARCIAL, sin parche)
+
+**Ids numéricos (VERIFICADO)**: la tabla de nombres `PARAMID_*` de `libObj` (`0xfdc144`, 1350 punteros, índice = id − `0x9500`; calibrada con `PARAMID_FNO`=`0x951b` y `SHUT_SPEED_NUMER`=`0x951c` de `ae.py`) da `ISO_SPEED_RATE`=`0x951e`, `_MIN`/`_MAX`=`0x96fe`/`0x96ff` (`_SET` `0x9701/2`, `_ACT` `0x9704/5`), `MENU_STD_RANGE_MIN`/`MAX`=`0x989e`/`0x98a1` (`_ACT` `0x98a0/3`).
+
+**av-cam no emite esos ids**: sin `movw #0x96ff/0x98a1/0x951e` (los halfwords `0x96ff`/`0x98a1` hallados son punteros a cadenas `0x439c96ff`, etc.; el `movw #0x9705` de `0x43b2a4c6` es otro mensaje, de AF). Las constantes `0x1ee/0x1ef/0x1f0` de av-cam (`0x435edd80`, `0x439382cc`…) son **números de línea de log** (`0x435ec380` imprime), no claves. Intento descartado: no repetir.
+
+**Receptor en `libObj` (VERIFICADO en bytes)**: el conversor `0x4db7c4` (puntero en la tabla `0x102c34c`; llamado desde `0x4c12a4`) lee del mensaje (`0x42ac00(msg, clave, &v)`) las claves `0x1ee` (valor), `0x1ef` (mín.), `0x1f0` (máx.) y `0x376`/`0x377` (rango estándar mín./máx.), las convierte y escribe `0x951e`, `0x96fe`, `0x96ff`, `0x989e`, `0x98a1` (`0x49fc94`). **Conversores de código propios de `libObj`, que topan antes que `wrapperIso`**:
+* `0x4e0ea8` (valor/mín./máx.; `tbh`, índice ≤ `0x4a`): código `k` → id interno `0x21+k`, con los pasos enteros como ids especiales (`k=0x20`→`0x274` 12800, `0x23`→`0x275` 25600, `0x26`→`0x276` 51200, `0x29`→`0x277` 102400); **`k=0x2a` devuelve 0 (no válido)**; `0x2b…0x4a` son otra serie (`0x1e5…0x501`).
+* `0x4e41c4` (rango estándar; `tbb`, ≤ `0x2a`): misma correspondencia `k`→`0x21+k` con los mismos 4 especiales.
+
+Por tanto el firmware ya porta en `libObj` los códigos hasta **`0x29` (102400)** con id propio; 160000/204800 (`0x2a…0x2c`) exigirían ampliar ambas tablas de `libObj`. El mensaje que trae las claves `0x1ee…0x377` es de av-cam hacia `libObj` (tipo de mensaje del conversor `0x4db7c4`); su emisor en av-cam **sigue sin localizar** (las claves no son inmediatos en av-cam: probablemente `av-cam` las numera con otra base o las genera desde una tabla).
+
+**`wrapperIso::getIso` (`+0x1cb0`)**: es una cadena lineal `cmp r0,#k; movs r3,#ui` (sin tabla, `0x1d3c…0x1f8c+`), con el centinela `0x4f` = «sin valor» y los ids de UI `0x30…0x4e` ya ocupando el rango; **no hay hueco para casos nuevos** (hace falta una cueva y ids de UI nuevos + el `.uxc`): parche (b) no trivial, **no escrito**.
+
+**Cadena exacta y mínima para 102400 (primer paso viable)**: (a) emisor av-cam de `0x1ef/0x1f0/0x376/0x377` (sin localizar) → tope `0x26`→`0x29`; (b) `getIso` y `.uxc` con códigos `0x27…0x29` (UI nuevos > `0x4e`, p. ej. 64000/80000/102400); (c) tabla `0x43bc48e0` ya incluye hasta 204800 (índice `0x2c`), sin ampliar; 409600 (`0x2f`) exigiría 3 entradas más en tabla y en ambos conversores de `libObj` (sin hueco verificado).
+
+**Ganancia**: no leída (sin avance); la tabla de av-cam solo está acotada a `0x2c` por `movs r1,#0x2c; bl 0x43aeb8e4` (`0x437b403e`).
+
+**Siguiente paso concreto**: abrir `av-cam` en REA y buscar los emisores del mensaje de ISO por el **tipo de mensaje** que despacha la tabla `0x102c34c` de `libObj` (índice de `0x4db7c4` en la tabla = id de mensaje: usar ese id como inmediato en av-cam, como `0x2014` de `ae.py`), no por los ids `PARAMID`.
