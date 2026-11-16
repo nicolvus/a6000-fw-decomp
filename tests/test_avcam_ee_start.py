@@ -20,8 +20,8 @@ def _secuencia() -> list[tuple[int, bytes, bytes]]:
     ]
 
 
-def _corre(grupo: int | None = None):  # noqa: ANN202
-    """VM tras entregarle la secuencia (el tiempo virtual avanza 400 ms por orden)."""
+def _corre(grupo: int | None = None, pre=None):
+    """VM tras entregarle la secuencia (el tiempo virtual avanza 400 ms por orden); `pre(vm)` instala ganchos de diagnóstico tras el arranque."""
     pytest.importorskip("unicorn")
     L = pytest.importorskip("liro_vm")
     P = pytest.importorskip("puente")
@@ -29,6 +29,8 @@ def _corre(grupo: int | None = None):  # noqa: ANN202
         pytest.skip("faltan av-cam.bin o liro.ko (no versionados)")
     vm, t0 = P.arranca()
     vm.limite = t0
+    if pre:
+        pre(vm)
     sec = _secuencia()
     for i, (q, cab, datos) in enumerate(sec):
         vm.limite += 400
@@ -72,7 +74,7 @@ def test_0x3003_se_contesta_si_el_secuenciador_esta_en_el_paso_que_la_espera(gru
 
 
 @pytest.mark.xfail(
-    reason="E2E-10 (T7): el secuenciador elige la transición 0→2 (guion de 0x2b palabras en 0x43bf2208) pero se queda en su primera barrera (0x8347) esperando que las palabras de estado de los módulos de imagen (slots 0,1,2,6,8,9) pasen de 0x100/0x200/0/0x700/0x900/0xa00 a 0x105/0x285/0x320/0x780/0x910/0xa10; esos módulos no arrancan en la VM (DFE ParamTable, StaticSetInfo.cpp:398, IDT Init NG, DMM)",
+    reason="E2E-10 (T7): el secuenciador elige la transición 0→2 (guion de 0x2b palabras en 0x43bf2208) pero se queda en su primera barrera (0x8347) esperando que las palabras de estado de los módulos de imagen (slots 0,1,2,6,8,9) pasen de 0x100/0x200/0/0x700/0x900/0xa00 a 0x105/0x285/0x320/0x780/0x910/0xa10; esos módulos no arrancan en la VM (T8: cada uno depende de su máquina de estados propia y de eventos de hardware sin modelar; ver g75 «Tarea 8»)",
     strict=True,
 )
 def test_av_cam_contesta_0x3003_ultimo_paso_de_ee_start() -> None:
@@ -97,3 +99,49 @@ def test_secuenciador_elige_la_transicion_0_a_2_y_espera_el_estado_de_los_modulo
     estado = {0: 0x43E9BD58, 2: 0x43E9C7D8, 8: 0x43E9D018}
     assert {j: vm.rd(a, 2) for j, a in estado.items()} == {0: 0x100, 2: 0, 8: 0x900}
     assert [vm.rd(lista + 0x1C + 2 * j, 2) for j in estado] == [0x105, 0x320, 0x910]
+
+
+def test_eventos_1e_y_17_de_captura_llegan_a_sus_callbacks_y_el_modulo_1_escribe_su_estado() -> None:
+    """E2E-10 (T8, MEDIDO): av-cam registra en el primer VD los eventos BONOBO 0x1e (`0x437918ac` → encola `0x4379155c`) y 0x17 (`0x4378f2cc`); con ellos corre el escritor del slot 0 (`0x437916dc`), que
+    escribe el estado calculado por `0x43796954` (0x100: la máquina de estados lo deja igual mientras su petición `G[0]` valga 0x100, así que no basta para 0x105)."""
+    pytest.importorskip("unicorn")
+    from collections import Counter
+
+    from unicorn import UC_HOOK_CODE
+
+    cuenta: Counter = Counter()
+
+    def pre(vm) -> None:
+        def h(uc, a, s, _) -> None:
+            cuenta[a] += 1
+
+        for a in (0x437918AC, 0x4378F2CC, 0x4379155C, 0x437916DC):
+            vm.uc.hook_add(UC_HOOK_CODE, h, None, a, a)
+
+    vm = _corre(pre=pre)
+    assert all(cuenta[a] > 30 for a in (0x437918AC, 0x4378F2CC, 0x4379155C, 0x437916DC))
+    assert vm.rd(0x43E9BD58, 2) == 0x100
+
+
+def test_diagnostico_si_las_palabras_de_estado_alcanzan_el_guion_0_a_2_completa_y_av_cam_contesta_0x3003() -> None:
+    """E2E-10 (T8, DIAGNÓSTICO, no es arreglo): `HS_Main` lee el estado de cada slot con `437fc56c(slot, estado)` (`0x437906e4…`). Forzando r1 = destino del guion en esa llamada (como si los 11 módulos de imagen hubieran
+    llegado a su estado), el guion 0→2 recorre sus 7 barreras (posición 42 de 43), `[0x43ede338]`=2 y av-cam contesta `{1,0x3003,15}`: no hay más requisitos ocultos tras los módulos."""
+    pytest.importorskip("unicorn")
+    from unicorn import UC_HOOK_CODE
+    from unicorn.arm_const import UC_ARM_REG_R0, UC_ARM_REG_R1
+
+    lista = 0x43EDE340
+
+    def pre(vm) -> None:
+        def h(uc, a, s, _) -> None:
+            d = vm.rd(lista + 0x1C + 2 * uc.reg_read(UC_ARM_REG_R0), 2)
+            if d:
+                uc.reg_write(UC_ARM_REG_R1, d)
+
+        vm.uc.hook_add(UC_HOOK_CODE, h, None, 0x437FC56C, 0x437FC56C)
+
+    vm = _corre(pre=pre)
+    assert vm.rd(lista + 0x18) == 42 and vm.rd(0x43EDE338) == 2
+    M = pytest.importorskip("mensajes")
+    ids = {M.decodifica(bytes.fromhex(x[4])).id for x in vm.salida_ext if x[3] == 0x20002 and bytes.fromhex(x[4])[:1] == b"\x01"}
+    assert 0x3003 in ids

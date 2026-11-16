@@ -25,6 +25,11 @@ EVENTOS_V = (0x1C, 0x1D)
 # hasta que av-cam lo fije se usa el mismo valor.
 OBJ_VD = 0x43E9920C
 PERIODO_V_MS = 33.367
+# Otros eventos de captura que av-cam registra en el primer VD (`0x43791aac` evento 0x1e → callback `0x437918ac`, que encola `0x4379155c` con el
+# estado del módulo 1; `0x43791ac4` evento 0x17 → `0x4378f2cc`; VERIFICADO leyendo y MEDIDO con `0x436ccee4`). NO_VERIFICADO: qué señal de hardware son y
+# su latencia tras la V; se toma media V (el callback 0x1e compara dos contadores de trama que la V reinicia y que a +26 ms ya se han movido: con < ~26 ms corre
+# `0x4379155c` hasta su escritura `0x437916dc`; con 0 ms o ≥ 30 ms no).
+EVENTOS_POST_V = ((0x1E, PERIODO_V_MS / 2), (0x17, PERIODO_V_MS / 2))
 # NO_VERIFICADO: reloj de entrada del contador (preescala +0xe8 = 0x17); con 24 MHz/24 el contador cuenta µs
 CONTADOR_HZ = 1_000_000
 
@@ -95,11 +100,17 @@ class SensorV:
     """V del sensor: cada periodo ocurren los eventos de `EVENTOS_V` en el BONOBO."""
 
     def __init__(self, bonobo: Bonobo, periodo_ms: float = PERIODO_V_MS) -> None:
-        self.bonobo, self.periodo, self.prox = bonobo, periodo_ms, None  # `inicia` al acabar el arranque: la VM lo da por terminado al quedar en reposo
+        self.bonobo, self.periodo = bonobo, periodo_ms
+        self.v_prox: float | None = None  # `inicia` al acabar el arranque: la VM lo da por terminado al quedar en reposo
         self.n = 0
+        self.pend: list[tuple[float, int]] = []  # (tiempo virtual ms, evento) de los EVENTOS_POST_V pendientes
+
+    @property
+    def prox(self) -> float | None:
+        return min([self.v_prox, *(t for t, _ in self.pend)] if self.v_prox is not None else [t for t, _ in self.pend], default=None)
 
     def inicia(self, t: float) -> None:
-        self.prox = t + self.periodo
+        self.v_prox = t + self.periodo
 
     def periodo_ms(self, vm) -> float:  # noqa: ANN001
         o = vm.rd(OBJ_VD)
@@ -107,11 +118,15 @@ class SensorV:
         return vd / 1000 if 1000 < vd < 200_000 else self.periodo
 
     def avanza(self, vm) -> None:  # noqa: ANN001
-        if self.prox is not None and self.prox <= vm.t:
-            self.prox += self.periodo_ms(vm)
+        if self.v_prox is not None and self.v_prox <= vm.t:
+            self.pend += [(self.v_prox + dt, e) for e, dt in EVENTOS_POST_V]
+            self.v_prox += self.periodo_ms(vm)
             self.n += 1
             for e in EVENTOS_V:
                 self.bonobo.evento(e)
+        for t, e in [x for x in self.pend if x[0] <= vm.t]:
+            self.pend.remove((t, e))
+            self.bonobo.evento(e)
 
 
 def instala(vm, periodo_ms: float = PERIODO_V_MS) -> SensorV:  # noqa: ANN001
