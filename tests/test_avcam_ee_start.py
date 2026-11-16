@@ -73,16 +73,15 @@ def test_0x3003_se_contesta_si_el_secuenciador_esta_en_el_paso_que_la_espera(gru
     assert (0x3003, 15) in _respuestas(grupo)
 
 
-def test_paridad_de_v_hace_que_vd_pre_refresque_la_tabla_de_destinos_g() -> None:
-    """E2E-10 (T9, MEDIDO): VD_Pre (`0x43792a0c`) solo copia los destinos del secuenciador (`437fc54c(n)`) en `G=0x43e9b548` (`0x43792e8e…0x43792ef6`) si el bit 0 de `0xf3402028`
-    (leído por `0x43b4c2fc` a `[[0x43e99208+4]+0xc]`) vale 1 o el retardo `[G+0x5d0]` ≤ 1; con la paridad de V (`bonobo.REG_PARIDAD`) G recibe los destinos del guion 0→2 y los
-    módulos 6, 8 y 9 (`0x43e9cf04`, `0x43e9d018`, `0x43eb3d20`) llegan a 0x780/0x910/0xa10. T14: con `Backup_read_multi` también el 0 y el 1 (0x105/0x285); solo el bloque
-    del módulo 3 (`0x43e9c7d8`, destino 0x320; 0x301 en el volcado real) sigue a 0 (ver el xfail)."""
+def test_contador_de_v_y_paridad_como_en_la_camara_real() -> None:
+    """E2E-10 (T15, VERIFICADO con el volcado real): `0x43b4c2fc` lee el contador de V `0xf3402098` y la paridad (bit 0 de `0xf3402028`); `0x4378e1d0` los guarda en
+    `[0x43e9baa8]`/`+4`/`+0xc`. En la cámara `[0x43e9baa8]`=0x2812 con marca de tiempo 342 270 108 µs (= 10 257,7 V de 33 367 µs) y paridad 0 = contador & 1. Con el contador,
+    `0x4378f848` atiende cada V (último atendido `[0x43e992dc]` = contador − 1, como en la cámara: 0x2811) y escribe el bloque del módulo 3 (`0x43e9c7d8`: 0x3xx y luego 1,1,1)."""
     vm = _corre()
-    G = 0x43E9B548
-    assert [vm.rd(G + 2 * k, 2) for k in (0, 1, 2, 6, 7, 8)] == [0x105, 0x320, 0x285, 0x780, 0x910, 0xA10]
-    assert [vm.rd(a, 2) for a in (0x43E9CF04, 0x43E9D018, 0x43EB3D20)] == [0x780, 0x910, 0xA10]
-    assert [vm.rd(a, 2) for a in (0x43E9BD58, 0x43EC7ADC, 0x43E9C7D8)] == [0x105, 0x285, 0]
+    n = vm.rd(0x43E9BAA8)
+    assert n > 50 and vm.rd(0x43E9BAAC) in (n, n + 1) and vm.rd(0x43E9BAB4) == n & 1
+    assert vm.rd(0x43E992DC) in (n - 1, n)
+    assert vm.rd(0x43E9C7D8, 2) >> 8 == 3 and [vm.rd(0x43E9C7DC + 4 * k) for k in range(3)] == [1, 1, 1]
 
 
 def test_clkctrl_sin_master_con_backup_real_coincide_con_la_camara() -> None:
@@ -112,7 +111,7 @@ def test_puente_vigila_registra_escrituras_del_rango(tmp_path, monkeypatch) -> N
 
 
 @pytest.mark.xfail(
-    reason="E2E-10 (T14, g75 «Tarea 14»): el guion 0→2 sigue en la barrera 0x8347 solo por el slot 2: el bloque del módulo 3 (`0x43e9c7d8`, destino 0x320; 0x301 en el volcado real) no lo rellena nadie en la VM; los slots 0, 1, 6, 8 y 9 ya llegan",
+    reason="E2E-10 (T15, g75 «Tarea 15»): el guion 0→2 pasa la barrera 12 y se detiene en la 20 (`0x8a00`): el módulo 9 se queda en 0xa10 (destino 0xa11) y el 11 en 0xc00 (destino 0xc01)",
     strict=True,
 )
 def test_av_cam_contesta_0x3003_ultimo_paso_de_ee_start() -> None:
@@ -133,10 +132,11 @@ def test_secuenciador_elige_la_transicion_0_a_2_y_espera_el_estado_de_los_modulo
     vm = _corre()
     lista = 0x43EDE340  # {tabla, n filas, …, +0xc activo, +0x10 guion, +0x14 largo, +0x18 posición, +0x1c destino por slot}
     assert vm.rd(0x43F9ADE8, 1) == 1 and vm.rd(0x43EDE320) == 2 and vm.rd(lista + 0xC, 1) == 1 and vm.rd(lista + 0x10) == 0x43BF2208
-    assert vm.rd(0x43EDE338) == 0 and vm.rd(lista + 0x18) == 12  # parado en la primera barrera
-    estado = {0: 0x43E9BD58, 1: 0x43EC7ADC, 2: 0x43E9C7D8, 8: 0x43E9D018}
-    assert {j: vm.rd(a, 2) for j, a in estado.items()} == {0: 0x105, 1: 0x285, 2: 0, 8: 0x910}  # T14: solo el slot 2 (bloque del módulo 3) no llega
-    assert [vm.rd(lista + 0x1C + 2 * j, 2) for j in estado] == [0x105, 0x285, 0x320, 0x910]
+    # T15: con el contador de V y `ref_flg` pasa la barrera 12 (0x8347); se detiene en la 20 (`0x8a00`): los slots 9 y 11 no llegan a su destino
+    assert vm.rd(0x43EDE338) == 0 and vm.rd(lista + 0x18) == 20
+    estado = {9: 0x43EB3D20}
+    assert [vm.rd(lista + 0x1C + 2 * j, 2) for j in (9, 11)] == [0xA11, 0xC01]
+    assert vm.rd(estado[9], 2) == 0xA10
 
 
 def test_eventos_1e_y_17_de_captura_llegan_a_sus_callbacks_y_el_modulo_1_escribe_su_estado() -> None:
@@ -329,13 +329,13 @@ def _master(rol: int) -> tuple:
 
 def test_master_de_clkctrl_no_hace_falta_para_el_modulo_0() -> None:
     """E2E-3 (T13 DIAGNÓSTICO, corregido en T14): el receptor `0x435a0596` solo da por válido el «from Master» (etiqueta `0x80c001bd`) si el byte `[0x43e4a5a4]`==2; en el volcado real
-    ese byte vale 0 (cámara en reposo). Con `Backup_read_multi` el módulo 0 ya está en 0x105 sin Master, y forzarlo no mueve nada: el guion sigue en la barrera 12 por el bloque del módulo 3."""
+    ese byte vale 0 (cámara en reposo). Con `Backup_read_multi` el módulo 0 ya está en 0x105 sin Master, y forzarlo no cambia la posición del guion (T15: barrera 20)."""
     vm0, log0 = _master(0)
     assert any("unknown message" in x for x in log0) and vm0.rd(0x43E9BD58, 2) == 0x105
     vm, log = _master(2)
     assert any("Receive Message from Master src=0x80c001bd" in x for x in log)
-    assert [vm.rd(a, 2) for a in (0x43E9BD58, 0x43EC7ADC, 0x43E9C7D8)] == [0x105, 0x285, 0]
-    assert vm.rd(0x43EDE340 + 0x18) == 12
+    assert vm.rd(0x43E9BD58, 2) == 0x105
+    assert vm.rd(0x43EDE340 + 0x18) == vm0.rd(0x43EDE340 + 0x18) == 20
 
 
 def test_idt_cam_de_nflasha3_es_el_de_la_ram_real_y_quita_init_ng() -> None:

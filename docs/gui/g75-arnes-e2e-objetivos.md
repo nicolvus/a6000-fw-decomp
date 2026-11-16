@@ -342,3 +342,19 @@ El rol 2 que exigía T13 tampoco está en la cámara real (en reposo). Los slots
 **Tests.** 5 tests de T8–T13 actualizados al comportamiento medido (módulos 0 y 1 llegan; ClkCtrl sin Master); `test_idt…` nuevo; el xfail de `0x3003` pasa a citar solo el slot 2. Suites con liro_vm/puente/bonobo + `test_gui_harness`: 144 passed, 6 skipped, 1 xfailed.
 
 **Siguiente paso.** Encontrar el escritor del estado del módulo 3: vigilar escrituras en `0x43e9c7d8` desde el **arranque** (no solo tras él) y buscar quién usa el callback `0x4378fd9d` y el puntero de bloque `G+0x1290` en `0x437b4db8`/`0x4386b5a0` (campos `+0x360`, `+0x414`); comparar con los campos del bloque en el volcado real (`0x43e9c7d8…+0x500`).
+
+## Tarea 15 — el estado del módulo 3 lo frenaban dos huecos de la VM: el contador de V del hardware y `ref_flg`; el guion pasa a la barrera 20 (E2E-10, 16-11-2026)
+
+Hecha por el orquestador, en la LIRO VM (Capstone + ganchos Unicorn), sin arranque en vivo.
+
+**1. Cadena (VERIFICADO estático + MEDIDO).** El bloque del módulo 3 (`G+0x1290` = `0x43e9c7d8`) lo escribe `0x43aef444(0x43e99208, G+0x1290)`, llamado desde `0x4378f912` dentro de `0x4378f848`. A esa función la encola (delegados `0x43ada220`/`0x439018b0`) el callback `0x43791454` con el **contador de V** `[[0x43e99208+4]]` = `[0x43e9baa8]` como argumento, y sale en `0x4378f858` si ese contador es igual al último atendido `[0x43e992dc]`. En la VM ambos valían 0, así que nunca pasaba.
+
+**2. Contador de V (VERIFICADO con el volcado real).** `0x43b4c2fc` lee del hardware `0xf3402098` (32 bits, dos lecturas por estabilidad), `0xf3402094` (u16) y `0xf3402028` (bits 0–2); `0x4378e1d0` guarda el contador en `[0x43e9baa8]` y `+4`, la marca de tiempo en `+8` y la paridad en `+0xc`. En la RAM real: contador `0x2812`, marca de tiempo 342 270 108 µs (= 10 257,7 V de 33 367 µs), paridad 0 (= contador & 1) y último atendido `0x2811`. `bonobo.py` ahora incrementa `0xf3402098` en cada V y pone la paridad = contador & 1 (antes alternaba un bit suelto con fase sin verificar; ahora la fase sale del dato real). `0xf3402094` sigue sin modelar (NO_VERIFICADO).
+
+**3. `ref_flg` (µITRON 4.0).** Al atender el contador, `0x4378f8c2` (y `0x43792214`, `0x4378ea30`) copian el patrón del grupo de eventos `0x11` en `G+0x804` leyendo `T_RFLG.flgptn` (`+4`) de `ref_flg`, que la VM no modelaba: quedaba basura de pila (punteros `0x43e9b54x`), el bit 6 activaba `0x437d8f42` y el módulo 6 perdía su petición (`0x43ed1734` a 0). Implementado (`wtskid` = primera tarea en espera, `flgptn` = patrón). En la RAM real `G+0x804` = 0.
+
+**4. Resultado (MEDIDO).** El bloque del módulo 3 queda como en la cámara: `0x3xx` y después 1, 1, 1 (real: `0x301`, 1, 1, 1). Los módulos recorren sus estados (`0x105`, `0x281`, `0x323`, `0x480`, `0x580`, `0x702`, `0x920`) y el guion 0→2 **pasa la barrera 12** (`0x8347`) y se detiene en la **20** (`0x8a00`): el módulo 9 está en `0xa10` (destino `0xa11`) y el 11 en `0xc00` (destino `0xc01`). `0x3003` sigue sin respuesta y S2 sin captura (RelLock: factor 6 y `SetupTable 2→0`, igual que T12).
+
+**Tests.** Nuevo `test_contador_de_v_y_paridad_como_en_la_camara_real`; actualizados el del secuenciador (barrera 20) y el del Master; xfail de `0x3003` con la barrera nueva.
+
+**Siguiente paso.** Barrera 20: qué hace pasar al módulo 9 de `0xa10` a `0xa11` (escritor `0x437b8408`) y al 11 de `0xc00` a `0xc01`; mismo método (escritor → gate → dato de hardware o API sin modelar, contrastado con el volcado real).

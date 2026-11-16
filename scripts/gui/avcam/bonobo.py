@@ -22,8 +22,12 @@ INT_CANALES, INT_TEMPORIZADORES = 0x53, 0x54
 EVENTOS_V = (0x1C, 0x1D)
 # Registro de estado del reloj/temporizador (`0xf3402028`, lo lee `0x43b4c2fc` en cada V y guarda el bit 0 en `[[0x43e99208+4]+0xc]`): INFERENCIA, es la paridad de la V
 # (VD_Pre `0x43793826…0x43793844` compara `[G+0x78c]&1` con ese bit y reajusta el retardo de 2 V; y `0x43792e60…0x43792e80` solo refresca la tabla `G` de
-# destinos del secuenciador cuando el bit vale 1 o el retardo ≤ 1). NO_VERIFICADO: fase (el código se resincroniza con cualquiera) y los bits 1/2.
+# destinos del secuenciador cuando el bit vale 1 o el retardo ≤ 1). NO_VERIFICADO: los bits 1/2.
 REG_PARIDAD = 0xF3402028
+# Contador de V (`0xf3402098`, 32 bits; `0x43b4c2fc` lo lee dos veces por estabilidad y `0x4378e1d0` lo guarda en `[0x43e9baa8]`/`+4`). VERIFICADO con el volcado real
+# `ram-servicio-20261020`: `[0x43e9baa8]` = 0x2812 y la marca de tiempo `[0x43e9bab0]` = 342 270 108 µs = 10 257,7 V de 33 367 µs; la paridad guardada (`+0xc`) = 0 = contador & 1.
+# Sin él, `0x4378f848` (cola de `0x43791454`) ve siempre 0 == último contador atendido (`[0x43e992dc]`, 0x2811 en la cámara) y nunca actualiza el módulo 3 (`G+0x1290`).
+REG_CONTADOR_V = 0xF3402098
 # `vd` = periodo del VD (µs) que av-cam fija para el modo activo: `[[0x43e9920c]+0x24]` (la lee `EC_VD_Post` en `0x43791f76`/`0x43791f8a`; 33 367 µs medidos con las 14 órdenes
 # de EE_START = 1001/30 ms, 29,97 Hz). INFERENCIA: la V del sensor es ese vd (EC_VD_Post compara un retardo de 18 000 µs con vd, y la V a 59,94 Hz lo contradiría);
 # hasta que av-cam lo fije se usa el mismo valor.
@@ -126,7 +130,9 @@ class SensorV:
         if pg not in vm.mmio:
             vm.uc.mem_map(pg, 0x1000)
             vm.mmio[pg] = [0, 0, 0]
-        vm.wr(REG_PARIDAD, vm.rd(REG_PARIDAD) ^ 1)
+        n = (vm.rd(REG_CONTADOR_V) + 1) & 0xFFFFFFFF
+        vm.wr(REG_CONTADOR_V, n)
+        vm.wr(REG_PARIDAD, (vm.rd(REG_PARIDAD) & ~1) | (n & 1))
 
     def avanza(self, vm) -> None:  # noqa: ANN001
         if self.v_prox is not None and self.v_prox <= vm.t:
