@@ -358,3 +358,17 @@ Hecha por el orquestador, en la LIRO VM (Capstone + ganchos Unicorn), sin arranq
 **Tests.** Nuevo `test_contador_de_v_y_paridad_como_en_la_camara_real`; actualizados el del secuenciador (barrera 20) y el del Master; xfail de `0x3003` con la barrera nueva.
 
 **Siguiente paso.** Barrera 20: qué hace pasar al módulo 9 de `0xa10` a `0xa11` (escritor `0x437b8408`) y al 11 de `0xc00` a `0xc01`; mismo método (escritor → gate → dato de hardware o API sin modelar, contrastado con el volcado real).
+
+## Tarea 16 — barrera 20: el módulo 9 esperaba un temporizador de hardware sin modelar; el siguiente bloqueo es el subsistema `[0x43e81240]` del módulo 11 (E2E-10, 16-11-2026)
+
+Hecha por el orquestador, en la LIRO VM (Capstone + ganchos Unicorn), sin arranque en vivo.
+
+**1. Módulo 9 (VERIFICADO estático + MEDIDO).** Su estado sale de una tabla `{estado, clave}` (`0x43befc32`, 24 entradas `0xa00…0xa97`) indexada por la máquina `0x43a12d9c` (estructura `0x4401ad38`: `+2` actual, `+4` pedido, `+7` trabajo en curso, `+8` listo). Para el pedido `0x10` arranca un trabajo asíncrono (`0x43a12d4c`: `+7`=1 y encola `0x43a13418` en `tsk0x5a`), que no terminaba: `tsk0x5a` programaba el **temporizador de un disparo del canal 0xb** (`0xf2403b00`: `+8` = cuenta 0x24b8, `+0` bits 0–2/4–5/16 de configuración, bit 8 interrupción, bit 12 marcha; `+4` bit 0 = ack del manejador) y esperaba en `0xbc0267` el aviso del manejador de la interrupción `0xa4`, que la VM nunca levantaba.
+
+**2. Modelo (`bonobo.Temporizadores`).** Bloque `0xf2403000 + canal·0x100` (literal de `0x43991200`), canales 0xa–0xf → interrupciones 0xa3–0xa8 (stubs de `def_inh` `movs r0,#canal; b.w 0x43990f28`). Al poner el bit 12 vence tras la cuenta (reloj de 1 MHz, NO_VERIFICADO; 0x24b8 = 9,4 ms) y mantiene la línea alta mientras el bit 8 esté activo y no llegue el ack. NO_VERIFICADO: si el modo es periódico (se dispara una vez por arranque). Con él el trabajo termina, el módulo 9 avanza (`0xa82`) y el guion **pasa la barrera 20** hasta la **posición 23**. Test `test_temporizador_0xf2403000_completa_el_trabajo_del_modulo_9`.
+
+**3. Siguiente bloqueo: módulo 11 (VERIFICADO estático + volcado).** HS_Main lee su estado con `0x4377e500 → 0x436e86bc → 0x436e2e30` (`[0x43fea32c]`=1 en la VM y en la cámara). Para pasar de `0xc00` al destino `0xc01` exige `0x436e5828() ≠ 0`, que mira el estado de un subsistema en `[0x43e81240]`: devuelve 1 con 5, 6, 0x13, 0xfe o 0xff. **En la RAM real vale 5; en la VM 0xf0**, el valor inicial que pone `0x436e52bc`. En la VM nadie lo cambia después. El paso a 5 está en `0x436e57f6` (función `0x436e573c`, que actúa cuando `0x436e5728()` = 0x10 y según `0x436e07b4()`), con el registro de trazas 0x125 del mismo módulo. Queda por identificar qué subsistema es (candidatos por su máquina de estados `0xf0 → … → 0x10 → 5/6`: objetivo, flash o batería) y qué entrada lo hace avanzar en la cámara.
+
+**Tests.** Suites con liro_vm/puente/bonobo + `test_gui_harness`: 145 passed, 6 skipped, 1 xfailed (el de `0x3003`, con el bloqueo nuevo). Tres tests del módulo 0 comparan ahora con el destino del guion (avanza a 0x118).
+
+**Siguiente paso.** Recorrer la máquina del subsistema `[0x43e81240]` desde `0xf0`: llamadores de `0x436e573c`, qué devuelve `0x436e5728` y qué orden/interrupción/MMIO produce cada paso, contrastando con los campos vecinos del volcado real (`0x43e81200…0x43e81300`).

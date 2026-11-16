@@ -104,6 +104,51 @@ class Bonobo:
                 self.wr(0x04, self.rd(0x04) | 1 << c)
 
 
+# Temporizadores de un disparo `0xf2403000 + canal·0x100` (literal de `0x43991200`). VERIFICADO leyendo av-cam: `+0` control (bits 0–2 modo, 4–5, 16 de `0x43991118`;
+# bit 8 interrupción `0x439911d4`; bit 12 marcha `0x43991180`/`0x439911a8`), `+4` estado (el manejador escribe bit 0 = ack, `0x43991200`), `+8` cuenta. Interrupción por canal
+# según los stubs de `def_inh` (`movs r0,#canal; b.w 0x43990f28`): canales 0xa–0xf → 0xa3–0xa8. Lo usa p. ej. `tsk0x5a` (`0x43a13418`, módulo 9): cuenta 0x24b8 en el canal 0xb.
+# NO_VERIFICADO: reloj de la cuenta (se toma 1 MHz, como el BONOBO) y si el modo es periódico (se dispara una vez por arranque).
+TMR_BASE = 0xF2403000
+TMR_IRQ = {c: 0x99 + c for c in range(0xA, 0x10)}
+
+
+class Temporizadores:
+    def __init__(self, vm) -> None:  # noqa: ANN001
+        self.vm = vm
+        for c, irq in TMR_IRQ.items():
+            pg = (TMR_BASE + 0x100 * c) & ~0xFFF
+            if pg not in vm.mmio:
+                vm.uc.mem_map(pg, 0x1000)
+                vm.mmio[pg] = [0, 0, 0]
+            a = TMR_BASE + 0x100 * c
+            vm.uc.hook_add(UC_HOOK_MEM_WRITE, self._control, c, a, a + 3)
+            vm.uc.hook_add(UC_HOOK_MEM_WRITE, self._ack, c, a + 4, a + 7)
+            vm.lineas[irq] = lambda c=c: c in self.alto and bool(vm.rd(TMR_BASE + 0x100 * c) & 0x100)
+        self.venc: dict[int, float] = {}
+        self.alto: set[int] = set()
+        vm.fuentes.append(self)
+
+    def _control(self, uc, acc, addr, size, val, c) -> None:  # noqa: ANN001
+        if val & 0x1000 and not self.vm.rd(addr) & 0x1000:
+            self.venc[c] = self.vm.t + self.vm.rd(addr + 8) / CONTADOR_HZ * 1000
+        elif not val & 0x1000:
+            self.venc.pop(c, None)
+
+    def _ack(self, uc, acc, addr, size, val, c) -> None:  # noqa: ANN001
+        if val & 1:
+            self.alto.discard(c)
+
+    @property
+    def prox(self) -> float | None:
+        return min(self.venc.values(), default=None)
+
+    def avanza(self, vm) -> None:  # noqa: ANN001
+        for c, t in list(self.venc.items()):
+            if t <= vm.t:
+                del self.venc[c]
+                self.alto.add(c)
+
+
 class SensorV:
     """V del sensor: cada periodo ocurren los eventos de `EVENTOS_V` en el BONOBO."""
 
@@ -150,5 +195,6 @@ class SensorV:
 def instala(vm, periodo_ms: float = PERIODO_V_MS) -> SensorV:  # noqa: ANN001
     v = SensorV(Bonobo(vm), periodo_ms)
     vm.fuentes.append(v)
+    Temporizadores(vm)
     vm.sensor_v = v  # type: ignore[attr-defined]
     return v
