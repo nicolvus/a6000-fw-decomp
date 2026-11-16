@@ -36,6 +36,7 @@ def arranca(avcam: Path | None = None) -> tuple[L.Vm, float]:
     L.planifica(vm, 20_000_000)
     L.crea_tarea(vm, 2, "entry_main", 0x43541058, 0, 0).estado = "lista"
     L.planifica(vm, 200_000_000)
+    vm.sensor_v.inicia(vm.t)  # shortcut: el sensor empieza a dar V al acabar el arranque (en la cámara, antes)
     return vm, vm.t
 
 

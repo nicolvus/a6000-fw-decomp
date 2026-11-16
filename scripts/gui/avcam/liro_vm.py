@@ -17,6 +17,7 @@ import argparse
 import collections
 import json
 import struct
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -52,6 +53,7 @@ BK = REPO / "analysis/gui/g22/harness/overlay/cam/usr/share/bk.tbl"
 REGLAS = Path(__file__).with_name("mmio_reglas.json")
 
 BASE, IMG_LO, IMG_SZ = 0x43541000, 0x43540000, 0x00D00000   # imagen + .data/.bss (hasta 0x44240000)
+STRICT_PRI = True
 TRAP_BASE, NAPI = 0xFFF00000, 209
 TASK_EXIT = TRAP_BASE + 4 * NAPI                              # retorno de una tarea / entrada → fin
 HEAP, HEAP_SZ = 0x50000000, 0x0C000000
@@ -115,6 +117,9 @@ class Vm:
     qcb: dict[int, tuple] = field(default_factory=dict)                   # qid → (callback, arg)
     cycs: dict[int, list] = field(default_factory=dict)                   # id → [handler, periodo, prox, activo, exinf]
     inh: dict[int, int] = field(default_factory=dict)                     # interrupción → manejador (def_inh)
+    lineas: dict[int, Callable[[], bool]] = field(default_factory=dict)   # interrupción → línea por nivel (True mientras el dispositivo la mantiene alta)
+    fuentes: list = field(default_factory=list)                           # fuentes de tiempo: `.prox` (ms virtuales o None) y `.avanza(vm)` generan los eventos vencidos
+    irqs: collections.Counter = field(default_factory=collections.Counter)  # interrupción → veces que se sirvió
     t: float = 0.0
     heap: int = HEAP
     cur: Task | None = None
@@ -227,6 +232,8 @@ def carga(avcam: Path, bkp: Path) -> Vm:
                 v = int.from_bytes(uc.mem_read(addr, 4), "little")
                 uc.mem_write(addr, ((v & ~r[2]) | r[1]).to_bytes(4, "little"))
         uc.hook_add(UC_HOOK_MEM_READ, h_patron, (desp, o, y), lo, hi - 1)
+    import bonobo  # noqa: PLC0415 (bonobo no importa liro_vm: sin ciclo, pero carga de Unicorn ya hecha)
+    bonobo.instala(vm)
     return vm
 
 
@@ -469,7 +476,7 @@ def api(vm: Vm, i: int) -> int | None:
                 entrega(vm, rq, m)
             return E_OK
         if q in vm.queues or q in vm.qcb:
-            entrega(vm, q, m)
+            entrega(vm, q, m, n == "osal_snd_sync_msg")
         else:
             vm.salida_ext.append((vm.t, t.name, n, q, datos.hex(), cab.hex()))
         return E_OK
@@ -559,8 +566,9 @@ def servicio_kernel(vm: Vm, q: int, m: int, t: Task) -> bool:
     return False
 
 
-def entrega(vm: Vm, q: int, m: int) -> None:
-    """Entrega m a la cola q: a la tarea que la espera, al callback registrado (cb(msg, arg), __default_cb de osal_uipc.ko) o a la cola."""
+def entrega(vm: Vm, q: int, m: int, sincrono: bool = False) -> None:
+    """Entrega m a la cola q: a la tarea que la espera, al callback registrado (cb(msg, arg), __default_cb de osal_uipc.ko) o a la cola.
+    sincrono (osal_snd_sync_msg): el callback corre ya, antes de volver al emisor, que lee su respuesta en el mismo búfer."""
     w = [x for x in vm.tasks.values() if x.estado == "espera" and x.espera[:2] == ("rcv", q)]
     if w:
         vm.wr(w[0].espera[2], m)
@@ -569,13 +577,23 @@ def entrega(vm: Vm, q: int, m: int) -> None:
     if q in vm.qcb:
         cb, arg = vm.qcb[q]
         viejo = vm.cur
+        previo = vm.uc.context_save()  # entrega también se llama desde dentro de una API: los registros de la tarea que envía no se pierden
         vm.ncb += 1
         h = crea_tarea(vm, 0x20000 + vm.ncb, f"cb{q:#x}", cb, -1, m)
         vm.uc.context_restore(h.ctx)
         vm.uc.reg_write(UC_ARM_REG_R1, arg)
         h.ctx = vm.uc.context_save()
+        vm.uc.context_restore(previo)
         h.estado = "lista"
-        vm.pendientes_cb.append(h)
+        if sincrono:
+            corre(vm, h, QUANTUM)
+            if h.estado == "espera":
+                vm.log.append(f"{vm.t:9.1f} {h.name}: el callback síncrono quedó bloqueado")
+            vm.tasks.pop(h.tid, None)
+            vm.libres.append(vm.slots.pop(h.tid))
+            vm.uc.context_restore(previo)
+        else:
+            vm.pendientes_cb.append(h)
         vm.cur = viejo
         return
     vm.queues.setdefault(q, collections.deque()).append(m)
@@ -640,9 +658,30 @@ def corre(vm: Vm, t: Task, cupo: int) -> None:
     t.ctx = uc.context_save()
 
 
+def sirve_irqs(vm: Vm) -> int:
+    """Una pasada sobre las fuentes de tiempo y las líneas de interrupción: cada línea alta ejecuta su manejador (`def_inh`) una vez, hasta volver."""
+    n = 0
+    for f in vm.fuentes:
+        f.avanza(vm)
+    for irq, alta in list(vm.lineas.items()):
+        h = vm.inh.get(irq)
+        if h and alta():
+            vm.irqs[irq] += 1
+            c = crea_tarea(vm, 0x20000 + irq, f"irq{irq:#x}", h, -1, irq)
+            c.estado = "lista"
+            corre(vm, c, QUANTUM)
+            if c.estado == "espera":
+                vm.log.append(f"{vm.t:9.1f} irq{irq:#x}: el manejador se bloqueó (no permitido en μITRON)")
+            del vm.tasks[c.tid]
+            vm.libres.append(vm.slots.pop(c.tid))
+            n += 1
+    return n
+
+
 def planifica(vm: Vm, pasos_max: int) -> None:
     total = 0
     while total < pasos_max:
+        total += sirve_irqs(vm) * (QUANTUM // 10)
         for cid, c in vm.cycs.items():  # manejadores cíclicos: se ejecutan hasta volver, en una tarea efímera
             if c[3] and c[2] <= vm.t and c[0]:
                 c[2] += c[1]
@@ -666,6 +705,8 @@ def planifica(vm: Vm, pasos_max: int) -> None:
         if not listas:
             prox = [x.despertar for x in vm.tasks.values() if x.estado == "espera" and x.despertar is not None]
             prox += [c[2] for c in vm.cycs.values() if c[3] and c[0]]
+            prox += [f.prox for f in vm.fuentes if f.prox is not None]
+            total += 1000  # una fuente periódica nunca se agota: sin esto un `planifica` sin `limite` no terminaría
             if not prox:
                 vm.log.append(f"{vm.t:9.1f} sin tareas listas ni esperas con plazo: reposo")
                 return
@@ -677,6 +718,8 @@ def planifica(vm: Vm, pasos_max: int) -> None:
                 if x.estado == "espera" and x.despertar is not None and x.despertar <= vm.t:
                     despierta(vm, x, E_OK if x.espera == ("sleep",) else E_TMOUT)
             continue
+        if STRICT_PRI:
+            listas = [x for x in listas if x.pri == listas[0].pri]  # μITRON: solo corren las de mayor prioridad (misma prioridad: por turnos)
         for x in listas:
             corre(vm, x, QUANTUM)
             total += QUANTUM

@@ -20,12 +20,11 @@ def _secuencia() -> list[tuple[int, bytes, bytes]]:
     ]
 
 
-def _respuestas(grupo: int | None = None) -> dict[tuple[int, int], bytes]:
-    """{(id, seq): carga} de lo que av-cam emite por 0x20002 tras entregarle la secuencia (el tiempo virtual avanza 400 ms por orden)."""
+def _corre(grupo: int | None = None):  # noqa: ANN202
+    """VM tras entregarle la secuencia (el tiempo virtual avanza 400 ms por orden)."""
     pytest.importorskip("unicorn")
     L = pytest.importorskip("liro_vm")
     P = pytest.importorskip("puente")
-    M = pytest.importorskip("mensajes")
     if not L.AVCAM.exists() or not L.LIRO_KO.exists():
         pytest.skip("faltan av-cam.bin o liro.ko (no versionados)")
     vm, t0 = P.arranca()
@@ -43,6 +42,13 @@ def _respuestas(grupo: int | None = None) -> dict[tuple[int, int], bytes]:
         L.entrega(vm, q, m)
     vm.limite += 3000
     L.planifica(vm, 50_000_000)
+    return vm
+
+
+def _respuestas(grupo: int | None = None) -> dict[tuple[int, int], bytes]:
+    """{(id, seq): carga} de lo que av-cam emite por 0x20002 tras la secuencia."""
+    M = pytest.importorskip("mensajes")
+    vm = _corre(grupo)
     out = {}
     for _t, _tarea, _api, q, datos, cab in vm.salida_ext:
         if q == 0x20002 and bytes.fromhex(datos)[:1] == b"\x01":
@@ -66,8 +72,16 @@ def test_0x3003_se_contesta_si_el_secuenciador_esta_en_el_paso_que_la_espera(gru
 
 
 @pytest.mark.xfail(
-    reason="E2E-10: en frío `[0x43ede338]` = 0 y av-cam deja armada la 0x3003 (estado 1) hasta que el secuenciador de HS_Main (VD del Sync/BONOBO, sin modelar en la VM) llegue a un paso 2/0x3f/0x68",
+    reason="E2E-10 (T6): con V reales HS_Main corre en cada V, pero la lista del secuenciador (0x43e7e340) nunca se elige: 0x437fc404 sale pronto porque [0x43f9ade8]==0 y nadie lo pone a 1; [0x43ede338] sigue en 0",
     strict=True,
 )
 def test_av_cam_contesta_0x3003_ultimo_paso_de_ee_start() -> None:
     assert (0x3003, 15) in _respuestas()
+
+
+def test_bonobo_genera_la_v_y_corre_hs_main_en_cada_v() -> None:
+    """E2E-10: la V del sensor (eventos 0x1c/0x1d del BONOBO, INT 0x53) llega a los callbacks de av-cam y SyncTask ejecuta HS_Main (0x4378fef4) en cada V."""
+    vm = _corre()
+    assert vm.sensor_v.n > 50 and vm.irqs[0x53] >= vm.sensor_v.n
+    assert vm.irqs[0x54] > 0  # temporizadores de un disparo armados por av-cam
+    assert vm.calls["tsnd_mbf"] > vm.sensor_v.n
