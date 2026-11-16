@@ -602,6 +602,8 @@ def main() -> None:
                 print(vm.guardar(), flush=True)
             vm.p.terminate()
             vm.p.wait()
+        if vm.puente:
+            vm.puente.cierra()
 
 
 if __name__ == "__main__":

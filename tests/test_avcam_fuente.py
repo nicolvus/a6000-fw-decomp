@@ -53,6 +53,7 @@ def test_nflasha3_construido_da_otro_sha_y_vm_arranca(av_parcheado: Path, tmp_pa
     primera = log.read_text().splitlines()[0]
     assert hashlib.sha256(img).hexdigest() in primera and '"arranque": "carga"' in primera and '"origen": "av-cam"' in primera
     assert pu.vm is not None
+    pu.cierra()
 
 
 def test_salidas_de_ae_py_marcadas_como_sinteticas(tmp_path: Path) -> None:
@@ -69,6 +70,7 @@ def test_salidas_de_ae_py_marcadas_como_sinteticas(tmp_path: Path) -> None:
     assert enviado == [b"Q 20002 000000000000000000000000 aabb\n"]
     assert [f["origen"] for f in filas if f.get("tarea") == "ae.py"] == ["ae.py"]
     assert all(f["origen"] == "av-cam" for f in filas if f.get("tarea") != "ae.py")
+    pu.cierra()
 
 
 def test_huella_cambia_con_el_av_cam(tmp_path: Path) -> None:

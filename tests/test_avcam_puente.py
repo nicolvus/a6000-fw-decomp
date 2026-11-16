@@ -15,16 +15,18 @@ REQ = ("5700f9", "28", "000000000000000020015500",
        "20015500a0a0a0a0010028001400000028000000001000001400020000000000020000000000000000000000")
 
 
-def _puente(salida: list[bytes]):
+def _puente(salida: list[bytes], request: pytest.FixtureRequest):
     p = pytest.importorskip("puente")
     if not p.L.AVCAM.exists() or not p.L.LIRO_KO.exists():
         pytest.skip("faltan av-cam.bin o liro.ko (no versionados)")
-    return p.Puente(salida.append)
+    pu = p.Puente(salida.append)
+    request.addfinalizer(pu.cierra)  # el hilo del reloj dentro de Unicorn aborta el proceso al cerrar el intérprete
+    return pu
 
 
-def test_av_cam_responde_peticion_dataflow() -> None:
+def test_av_cam_responde_peticion_dataflow(request: pytest.FixtureRequest) -> None:
     salida: list[bytes] = []
-    pu = _puente(salida)
+    pu = _puente(salida, request)
     pu.desde_invitado(" ".join(REQ))
     t0 = time.time()
     while not salida and time.time() - t0 < 3:

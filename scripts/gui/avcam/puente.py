@@ -55,7 +55,9 @@ class Puente:
         self.vm.limite, self.t_real0, self.t_virt0 = t0, time.monotonic(), t0
         self.visto = len(self.vm.salida_ext)  # lo emitido durante el arranque se guarda aparte: solo se reenvía en un arranque en frío del invitado
         self.n_in = self.n_out = 0
-        threading.Thread(target=self._reloj, daemon=True).start()
+        self.fin = threading.Event()
+        self.hilo = threading.Thread(target=self._reloj, daemon=True)
+        self.hilo.start()
 
     def _envia_ae(self, linea: bytes) -> None:
         q, cab, datos = linea.decode().split()[1:]
@@ -76,9 +78,13 @@ class Puente:
             with self.registro.open("a") as f:
                 f.write(json.dumps({"t": round(self.vm.t, 2), "origen": "av-cam", **kw}) + "\n")
 
+    def cierra(self) -> None:
+        """Para el hilo del reloj antes de salir: un hilo daemon dentro de Unicorn durante el cierre del intérprete aborta el proceso («dumped core»)."""
+        self.fin.set()
+        self.hilo.join()
+
     def _reloj(self) -> None:
-        while True:
-            time.sleep(0.02)
+        while not self.fin.wait(0.02):
             with self.cerrojo:
                 self._avanza()
 
