@@ -1,6 +1,13 @@
 {
  "_doc": "Registros de hardware que av-cam espera (bucles de sondeo). Cada lectura devuelve (valor guardado & ~y) | o. Cada regla cita el bucle de av-cam.bin que la exige; el significado del bit es INFERENCIA salvo que diga otra cosa.",
- "reglas": [],
+ "reglas": [
+  {
+   "dir": "0xf2910010",
+   "o": "0x200",
+   "pc": "0x43a1c3e0, 0x43b5e46c, 0x4398f990",
+   "evidencia": "GPIO puerto 0 (0xf2910000 + 0x100·puerto), registro de entrada +0x10; pin 9 = detección del objetivo, activa a nivel bajo: 0x43a1c3e0 = !gpio_get([0x43f52b2c]=0, [0x43f52b50]=9) (valores del volcado real). Bit a 1 = cámara SIN objetivo, estado real de la A6000; con 0 av-cam cree que hay objetivo y espera un handshake de montura que la VM no puede dar (estado [0x43e81240] fijo en 0xf0). NO_VERIFICADO: efectos del modo sin objetivo fuera de la montura"
+  }
+ ],
  "patrones": [
   {
    "rango": [

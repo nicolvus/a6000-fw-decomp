@@ -369,3 +369,20 @@ def test_temporizador_0xf2403000_completa_el_trabajo_del_modulo_9() -> None:
     vm = _corre(pre=pre)
     assert fin and vm.irqs[0xA4] >= 1 and vm.rd(0x4401AD3F, 1) == 0
     assert vm.rd(0x43EB3D20, 2) == 0xA82
+
+
+def test_la_vm_es_una_camara_sin_objetivo() -> None:
+    """E2E-10 (T17, VERIFICADO): la detección del objetivo es `!gpio_get(0, 9)` (`0x43a1c3e0`, registro de entrada `0xf2910010`); la regla de `mmio_reglas.json` pone el bit 9 a 1
+    (sin objetivo, estado real de la A6000) y el estado de la montura `[0x43e81240]` se queda en su valor inicial 0xf0 a la espera del evento de `im.elf` (ver g75 «Tarea 17»)."""
+    pytest.importorskip("unicorn")
+    from unicorn import UC_HOOK_CODE
+    from unicorn.arm_const import UC_ARM_REG_R0
+
+    hay = []
+
+    def pre(vm) -> None:
+        vm.uc.hook_add(UC_HOOK_CODE, lambda uc, *_: hay.append(uc.reg_read(UC_ARM_REG_R0)), None, 0x43A1C3F2, 0x43A1C3F2)
+
+    vm = _corre(pre=pre)
+    assert hay and set(hay) == {1}  # gpio_get = 1 → antes de `eor #1`: sin objetivo
+    assert vm.rd(0x43E81240) == 0xF0

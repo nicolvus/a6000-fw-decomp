@@ -372,3 +372,17 @@ Hecha por el orquestador, en la LIRO VM (Capstone + ganchos Unicorn), sin arranq
 **Tests.** Suites con liro_vm/puente/bonobo + `test_gui_harness`: 145 passed, 6 skipped, 1 xfailed (el de `0x3003`, con el bloqueo nuevo). Tres tests del módulo 0 comparan ahora con el destino del guion (avanza a 0x118).
 
 **Siguiente paso.** Recorrer la máquina del subsistema `[0x43e81240]` desde `0xf0`: llamadores de `0x436e573c`, qué devuelve `0x436e5728` y qué orden/interrupción/MMIO produce cada paso, contrastando con los campos vecinos del volcado real (`0x43e81200…0x43e81300`).
+
+## Tarea 17 — el subsistema del módulo 11 es la montura del objetivo; la VM presentaba «objetivo puesto que no responde» y pasa a «sin objetivo» (E2E-10, 16-11-2026)
+
+Hecha por el orquestador, en la LIRO VM (Capstone + ganchos Unicorn), sin arranque en vivo. Antecedentes en `analysis/s66/lens_power_attach.md` y `analysis/s133_mount_debug/mount_debug.md`.
+
+**1. Qué es `[0x43e81240]` (VERIFICADO por sus cadenas).** Es el estado de la comunicación cuerpo↔objetivo del control de montura (`Mount_Controller.cpp`, trazas `[BL]`, registro 0x125, tarea principal `0x436e5e3c`). `0x436e52bc` lo inicializa a `0xf0`; la tarea de montura lo lleva a 0/1/2…/`0xc` según un byte de evento (`0x436e633e…0x436e639a`: evento 1 → estado 0, 0x80 → 1…) y la respuesta del objetivo a la orden `0x60` lo lleva a 5/6 (`0x436e573c`). En la RAM real (cámara con objetivo) vale 5. El módulo 11 del secuenciador es el «LIF» (interfaz con el objetivo): en la VM se registra `[BL]LIF Command Change : 0xC00 >>> 0xC01` en cada V sin que llegue a cambiar.
+
+**2. Detección del objetivo (VERIFICADO).** `0x43a1c3e0` = `!gpio_get(puerto, pin)` con puerto `[0x43f52b2c]`=0 y pin `[0x43f52b50]`=9 (valores del volcado real); `gpio_get` (`0x43b5e2bc`) lee el registro de entrada `0xf2910000 + 0x100·puerto + 0x10` (o el de salida `+0x40` si el pin está configurado como salida, `0x4398f990`). Con la MMIO a cero la VM decía «objetivo puesto» y av-cam esperaba un handshake CS/DATA/UART que nadie da: un estado que la cámara real no tiene.
+
+**3. Cambio.** Regla en `mmio_reglas.json`: `0xf2910010` con el bit 9 a 1 = **cámara sin objetivo**, estado real de la A6000 (con «Disparo sin objetivo» puede disparar). Con ella `0x436e5828` toma la rama sin objetivo, que acepta el estado 0 o `0xf2` (o el byte `[0x43e81290]`). NO_VERIFICADO: efectos del modo sin objetivo fuera de la montura (AF, apertura, datos EXIF).
+
+**Tests.** `test_la_vm_es_una_camara_sin_objetivo` nuevo; suites con liro_vm/puente/bonobo + `test_gui_harness`: 145 passed, 6 skipped, 1 xfailed antes del test nuevo (que pasa).
+
+**4. Siguiente bloqueo.** El estado sigue en `0xf0`: en la rama sin objetivo hace falta el evento 1 en el byte `0x43e0a770` (GOT +0x21e0). Lo escriben `0x436e96fc` (evento = argumento >> 4) desde `0x4377e3e4` y desde el manejador `0x43af8b80`, que está en la tabla de manejadores de órdenes `0x43ff7478` (lee el byte de datos de la orden). Es decir, lo envía `im.elf`: la secuencia corta de prueba (`tests/avcam_ee_start.json`) no lleva esa orden. **Siguiente paso:** identificar qué id de orden despacha a la entrada `0x43ff7478` (índice en la tabla) y comprobar en un arranque en vivo (que sí lleva todo el tráfico de `im.elf`) si llega y con qué valor; si llega, el guion debería pasar la posición 23.
