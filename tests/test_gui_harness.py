@@ -451,3 +451,11 @@ def test_shim_entrega_a_los_lectores_propios_de_cola_estatica() -> None:
     src = (HARNESS / "shim/sonyshim.c").read_text()
     assert 'if (!e) e = "630130,102021f"' in src and "buzón del lector propio" in src
     assert "memcpy(ol - 3, (unsigned *)m - 3, 12)" in src  # conserva la cola de respuesta que ObjCamera pone en la cabecera (−1)
+
+
+def test_shimenv_deja_pasar_la_cola_0x4015e_a_av_cam() -> None:
+    """E2E-3/T12: sin atajo del shim, libObj habla con el CapIdTblMgr real de av-cam (si no, av-cam no recibe InitEnd y el factor 26 de RelMgr no se libera)."""
+    sys.path.insert(0, str(ROOT / "scripts/gui/harness"))
+    import live
+
+    assert "NO4015E=1" in live.construye_shimenv()

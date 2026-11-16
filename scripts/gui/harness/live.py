@@ -57,7 +57,8 @@ VISTA_REC = 3
 # escenario sin volcados: ciclo de modelos, pantalla de disparo (view/STLREC, §5.18z¹²), cola de teclas 0x7a0020
 SHIMENV_BASE = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/STLREC OPENVIEWAT=40 OPENVIEWGAP=14 "
            "STARTEV=11004002:100,11004012,11004013 POSTROOTEV=11004002:e3 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f "
-           f"KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177,7025:{DIAL_INICIAL:x}:27 KEYINITON= KEYINITAFTER=not_user_operation OPENVIEWARG={VISTA_REC:x} LIVE=auto ")
+           f"KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177,7025:{DIAL_INICIAL:x}:27 KEYINITON= KEYINITAFTER=not_user_operation OPENVIEWARG={VISTA_REC:x} LIVE=auto NO4015E=1 ")  # NO4015E: libObj habla con el CapIdTblMgr real de av-cam (cola 0x4015e); el atajo del shim lo contestaba él y av-cam nunca recibía InitEnd (G75 T12)
+
 SHIMEXTRA = os.environ.get("SHIMEXTRA", "")  # SHIMEXTRA="WAITLOG=3000": variables de diagnóstico del shim
 # Tarjeta SD emulada (G22-E §5.5–§5.15): conjunto mínimo para que ModelMedia vea una SD montada, salga EEStart sin PATCHFN y la pantalla de grabación se dibuje (--sin-sd lo apaga).
 # Incluye atajos (shortcut: comentados en sonyshim.c): INSHORT (inserción forzada), NULLMWF/TABLE0 (objetos de ObjCntMgr sin crear) y SKIPFN de métodos de ObjCntMgr/ObjMedia.

@@ -270,3 +270,37 @@ def test_s2_la_peticion_de_captura_se_deniega_por_dos_factores_de_bloqueo() -> N
     forz = _s2_gate(True)
     assert forz["eba0"] == 1 and forz["warn"] == 0
     assert forz["setup_err"]
+
+
+def test_factor_26_lo_libera_initend_de_capidtblmgr_y_el_6_depende_del_modo() -> None:
+    """E2E-3/T12 (MEDIDO): `0xd013` lo emite el CapIdTblMgr de av-cam (tsk0x5b, cola `0x4015e`, tabla `0x43bf3800`: clave `0x1003`→`0xd013`) al recibir `InitEnd` de libObj (`CapIdTableAcsr::InitEnd` `libObj+0x81c25c`). Con ella el factor 26 se libera; `0x1000/1/2` se contestan por la cola de respuesta y StartAccess/StopAccess mueven el factor 11. El factor 6 sigue activo: lo mantiene `0x4375e74c` mientras el modo `[0x43f68c92]` valga `0x200` (solo `0x207/0x245/0x258/0x209/0x247` lo liberan)."""
+    import struct
+
+    pytest.importorskip("unicorn")
+    L = pytest.importorskip("liro_vm")
+    vm = _corre(2)
+    obj = 0x43EA03E8
+
+    def pide(clave: int) -> list:
+        vm.limite += 300
+        d = struct.pack("<6I", 0, clave, 0, 0, 0, 0)
+        p = vm.malloc(0x60 + 12) + 12
+        vm.uc.mem_write(p - 12, b"\0" * 8 + struct.pack("<I", 0x3040D7))
+        vm.uc.mem_write(p, d)
+        vm.msz[p] = len(d)
+        s0 = len(vm.salida_ext)
+        L.entrega(vm, 0x4015E, p)
+        L.planifica(vm, 20_000_000)
+        vm.limite += 500
+        L.planifica(vm, 20_000_000)
+        return vm.salida_ext[s0:]
+
+    assert vm.rd(obj + 4) & 0x0400_0040 == 0  # factores 6 y 26 activos
+    for clave in (0x1000, 0x1001, 0x1002):
+        r = pide(clave)
+        assert r and r[0][3] == 0x3040D7 and bytes.fromhex(r[0][4])[4:8] == struct.pack("<I", clave)
+    assert vm.rd(obj + 4) & 0x0400_0000 == 0
+    pide(0x1003)
+    assert vm.rd(obj + 4) & 0x0400_0000  # factor 26 liberado
+    assert vm.rd(obj + 4) & 0x40 == 0  # el 6 sigue activo
+    assert vm.rd(0x43F68C92, 2) == 0x200
