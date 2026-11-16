@@ -3,7 +3,7 @@ por el ajuste de menú «Bulb Timer» (id de Backup 1 B de `cfw_ajustes`; índic
 
 Enganche: `0x438c74f6 ldrh.w r0,[r3,#0x66]` (T = [ajustes+0x66], 0 en BULB) -> `bl cueva`. La cueva devuelve T si ≠ 0; si no, `segundos·1000` (ms, I).
 `S2` soltado sigue cortando por la misma rama (`0x8000`, E25-17 §2.2): el fin es «S2 soltado O T alcanzado».
-Cueva en el hueco cero `0x43541900` (0x435418e4..0x43541b00; la cueva de 0x43541800/20 es de otro parche).
+Cueva en `0x43541600` (hueco cero verificado 0x4354141c..0x435418d8, G74). La zona antigua `0x43541900` era memoria viva (GOT `0x44020f00` y datos en RAM).
 """
 from __future__ import annotations
 
@@ -18,7 +18,7 @@ import cfw_ajustes as cfw  # noqa: E402
 
 BASE = 0x43541000
 HOOK, HOOK_OLD = 0x438C74F6, bytes.fromhex("b3f86600")      # ldrh.w r0,[r3,#0x66]; sigue `b 0x438c7512`
-CAVE, CAVE_END = 0x43541900, 0x43541B00   # hueco cero hasta 0x43541b00 (la de 0x43541800/20 es de otro parche)
+CAVE, CAVE_END = 0x43541600, 0x43541680   # dentro de 0x4354141c..0x435418d8 (G74); g57 usa 0x43541500.., g65 0x43541700
 FUNC = 0x438C74B0
 SRC = ROOT / "analysis/rea-independent/input/av-cam.bin"
 
@@ -47,7 +47,7 @@ def apply_bytes(data: bytes) -> bytes:
     if data[h:h + 4] != HOOK_OLD:
         raise ValueError("enganche 0x438c74f6 distinto del original")
     if any(data[CAVE - BASE:CAVE_END - BASE]):
-        raise ValueError("la cueva 0x43541900 no está a cero")
+        raise ValueError("la cueva 0x43541600 no está a cero")
     out = bytearray(data)
     code = cave_bytes()
     out[CAVE - BASE:CAVE - BASE + len(code)] = code

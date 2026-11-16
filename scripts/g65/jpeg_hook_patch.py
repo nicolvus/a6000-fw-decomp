@@ -1,7 +1,7 @@
 """G65 (MULTIEXP-ACC F1) — gancho mínimo en `Stage_EncodeJpeg_MainYC`: contador de llamadas antes de pedir la codificación JPEG del YC principal.
 
 Enganche: `bl 0x438c6d30` en 0x438c6f68 (FUN_43b1aca6, caso 1; r0 = petición, r6 = handle del YC ya revelado, aún sin liberar).
-Cueva vacía (solo cuenta) en 0x44018250 (zona a cero del `av-cam`), contador en 0x44018290. Termina con `b 0x438c6d30` (cola): r0/r1/lr intactos.
+Cueva vacía (solo cuenta) en 0x43541700 (hueco cero verificado 0x4354141c..0x435418d8, G74; la antigua 0x44018250 era memoria viva), contador en 0x43541740. Termina con `b 0x438c6d30` (cola): r0/r1/lr intactos.
 shortcut: contador en la propia imagen (RAM de código, escritura no comprobada en cámara); sin NEON aún, F2 sustituye el cuerpo.
 Solo bytes del `av-cam`; sin construir CFW. `python3 scripts/g65/jpeg_hook_patch.py` = autocomprobación con Unicorn.
 """
@@ -17,7 +17,7 @@ from e25_24.thumb import bl
 
 BASE = 0x43541000
 HOOK, HOOK_OLD, TARGET = 0x438C6F68, bytes.fromhex("fff7e2fe"), 0x438C6D30
-CAVE, CAVE_END, COUNTER = 0x44018250, 0x44018290, 0x44018290
+CAVE, CAVE_END, COUNTER = 0x43541700, 0x43541740, 0x43541740
 RET_OK = 0x438C6F6C
 
 

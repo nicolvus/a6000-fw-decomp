@@ -16,7 +16,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 import cfw_ajustes as cfw
 
 BASE = 0x43541000
-CAVE, CAVE_END = 0x43541500, 0x435417F0       # hueco cero; 0x4354141c y 0x43541800 son de otros parches
+CAVE, CAVE_END = 0x43541500, 0x435415C0       # hueco cero verificado (G74); g55 usa 0x43541600, g65 0x43541700, e25 0x43541800
 CELDA = 0x435417F0                             # contador de tomas (u32, RAM del propio av-cam; cero al arrancar)
 MOVER = 0x43ADB5E6                             # (paso s16, flag) -> encola cmd 0x1D
 PROLOGO = {0x43ADB5E6: bytes.fromhex("1fb500230222"), 0x43ADB17A: bytes.fromhex("f0b585b0"), 0x43ADCC22: bytes.fromhex("1d20")}
@@ -59,7 +59,7 @@ def apply_bytes(data: bytes) -> bytes:
     for a, b in PROLOGO.items():
         if data[a - BASE:a - BASE + len(b)] != b:
             raise ValueError(f"primitiva {a:#x} distinta del original")
-    if any(data[CAVE - BASE:CAVE_END + 4 - BASE]):
+    if any(data[CAVE - BASE:CAVE_END - BASE]) or any(data[CELDA - BASE:CELDA + 4 - BASE]):
         raise ValueError("la cueva 0x43541500 no está a cero")
     out = bytearray(data)
     code = cave_bytes()

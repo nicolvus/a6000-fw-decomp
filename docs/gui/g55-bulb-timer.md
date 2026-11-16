@@ -30,3 +30,6 @@ Corrección: no hace falta tocar la rama de fin ni leer S2. Basta **sustituir `T
 - Precisión: sin medir en cámara (fin con granularidad de cuadro en el último tramo).
 
 > Actualización 15-11-2026 ([g56](g56-ajustes-propios-cfw.md)): la celda fija `0x43541920` ya no existe; la cueva lee el ajuste de menú «Bulb Timer» (id de Backup `0x1070210`, índice 0–8) con `Backup_read`.
+
+
+> Actualización 15-11-2026 ([g74](g74-auditoria-cuevas-campana.md)): la cueva pasó de `0x43541900` (memoria viva: GOT `0x44020f00`) a `0x43541600`.

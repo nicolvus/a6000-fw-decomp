@@ -28,3 +28,6 @@ Acumulador: 24 MP YC422 = 45,8 MB (1 buffer de 8 bit); sumar en 16 bit por canal
 
 ## 4. Veredicto Live ND: PARCIAL (viable con condiciones)
 Útil con t ≥ 1/20 s; ráfaga Silent a ≈ 15 fps no medida. F1 de `MULTIEXP-ACC` avanza: enganche y ciclo de vida del YC localizados; faltan dirección/formato (leer el handle en ejecución) y la reserva del acumulador.
+
+
+> Actualización 15-11-2026 ([g74](g74-auditoria-cuevas-campana.md)): la cueva/contador pasaron de `0x44018250` (memoria viva) a `0x43541700`/`0x43541740`.

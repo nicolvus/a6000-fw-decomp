@@ -35,3 +35,6 @@ Hace falta enviar desde `libObj` el mensaje `0x765a` (→ `SequenceBracketAF` �
 - Si la lectura de Backup falla: «Intervalo» = Off (fábrica) y «N. disparos» = 10.
 - El contador vive en cola de página del `.bss` (si el cargador mapeara solo hasta el fin exacto del `.bss`, escribiría fuera: sin medir en cámara; páginas de 4 KiB o más lo cubren).
 - La espera entre tomas es retardo + tiempo de captura, como de fábrica.
+
+
+> Actualización 15-11-2026 ([g74](g74-auditoria-cuevas-campana.md)): cueva y contador `0x10e2c00` re-auditados: seguros estáticamente (límite: sin mapa de proceso).

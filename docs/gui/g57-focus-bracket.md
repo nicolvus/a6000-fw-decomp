@@ -41,3 +41,6 @@ Se investigó arrancar el bracketing «nativo» desde el menú. Resultado: no ex
 - **Sin switch por modo de avance**: `0xad4ce4` despacha por id de comando (`0x7506` StillCaptureStart, `0x7518` SetDriveMode, `0x7522` SetBracketMode, `0x753e` SelfTimerReq, `0x765a` BracketAF…); son órdenes de la API externa, no el flujo de S2. No hay punto donde «sustituir la secuencia normal por `SequenceBracketAF`».
 - **Consecuencia**: arrancarla desde el menú solo añadiría un rodeo (mensaje `0x765a` → libObj → av-cam) a lo que la cueva `fb_paso` ya hace llamando directamente a la primitiva; seguiría haciendo falta el gancho de fin de captura. Por eso no se parchea `libObj` y la cueva `fb_paso` se **mantiene**. Ventaja menor: la ruta nativa devuelve evento de fin (`0x9502`), pero `0x43adcc22` ya lo da.
 - **Unidades (acota `FOCUSSHIFT-UNIDADES`)**: el paso de la API es **s8 (−128…127)** y av-cam lo extiende a s16; 4/16/64 caben. La escala física (µm/pasos de motor) sigue sin medir.
+
+
+> Actualización 15-11-2026 ([g74](g74-auditoria-cuevas-campana.md)): cueva acotada a `0x43541500…0x435415C0` (celda `0x435417F0` sin cambio); verificada cero fichero/vivo.
