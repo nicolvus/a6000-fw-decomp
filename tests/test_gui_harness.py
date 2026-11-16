@@ -443,3 +443,11 @@ def test_build_initrd_incluye_nflasha4_solo_si_se_pide(tmp_path: Path) -> None:
         ini = run.build_initrd(work, script, t, nflash4=img if con else None)
         lista = sp.run(["cpio", "-it", "--quiet"], input=gzip.decompress(ini.read_bytes()), capture_output=True, check=True).stdout.decode()
         assert ("cam/usr/share/nflasha4.img" in lista) is con
+
+
+def test_shim_entrega_a_los_lectores_propios_de_cola_estatica() -> None:
+    """E2E-9: ObjCamera espera en EE_START la concesión de InfraSelector (0x630130) y el aviso de CAMUSER_CAM_CAP (0x102021f); ambos hilos hacen rcv_msg sobre la cola y
+    reciben lo que el propio im.elf les envía. Antes el shim descartaba esos envíos («a la cola de kernel … (descartado)») y EEStart no terminaba."""
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    assert 'if (!e) e = "630130,102021f"' in src and "buzón del lector propio" in src
+    assert "memcpy(ol - 3, (unsigned *)m - 3, 12)" in src  # conserva la cola de respuesta que ObjCamera pone en la cabecera (−1)

@@ -703,6 +703,11 @@ static int ioctl_in(int fd, unsigned long req, ...) {
                 if (getenv("INSHORT")) { unsigned *r = (unsigned *)(rb + 0x20); r[2] = 1; r[3] = 0xd1000000u | (r[3] & 0xffff); }  /* shortcut: Detect.StartInOut publica estado 0 (su CheckInsertedMedia no deja el índice ≥ 0, causa sin aclarar); se fuerza el mensaje que enviaría con SD insertada (estado 1, ex_info = deviceID 0xd100 << 16 | recuento, como arma StartInOut); mejorar al aclarar por qué media+200 < 0 */
                 mbx_post_raw(0x7a0020, (unsigned *)(rb + 0x20));
                 LOG("INLOOP: 0x0c000003 estado=%u ex=%#x -> lector de entrada", ((unsigned *)m)[2], ((unsigned *)m)[3]); return 0; }
+            { const char *e = getenv("SELFQ"); if (!e) e = "630130,102021f"; int own = 0;  /* SELFQ=qid,…: colas estáticas que el propio im.elf lee con rcv_msg (InfraSelectorThread lee 0x630130 y CallSelector le envía; CAMUSER_CAM_CAP lee 0x102021f y ObjCamera le envía {0x10, serie} en EE_START): el kernel entrega el mensaje al lector, aquí se descartaba y EE_START esperaba para siempre la concesión del recurso */
+              while (*e) { const char *n; unsigned v = hexv(e, &n); if (n == e) break; if (v == w[0]) own = 1; e = *n == ',' ? n + 1 : n; }
+              if (own) { unsigned char *ob = calloc(1, 0x300); unsigned *ol = (unsigned *)(ob + 0x20); int ok;  /* la cabecera del emisor se conserva (ObjCamera pone en −1 la cola de respuesta de su espera síncrona); si viene a 0, el kernel pone la cola de destino: OsalIf::OsalRcvMsg la lee como OSAL_ID y con 0 rechaza el mensaje */
+                  memcpy(ol - 3, (unsigned *)m - 3, 12); memcpy(ol, m, 0x30); if (!ol[-1]) ol[-1] = w[0]; pthread_mutex_lock(&mbx_m); for (ok = 0; ok < 16 && mbx[ok].msg; ok++); if (ok < 16) { mbx[ok].q = w[0]; mbx[ok].msg = ol; } else free(ob); pthread_cond_broadcast(&mbx_c); pthread_mutex_unlock(&mbx_m);
+                  LOG("snd_msg %#x -> buzón del lector propio w0=%#x w1=%#x", w[0], ((unsigned *)m)[0], ((unsigned *)m)[1]); return 0; } }
             LOG("uipc snd_msg a la cola de kernel %#x (descartado) cab=%02x%02x%02x%02x datos=%08x %08x", w[0], m[-12], m[-11], m[-10], m[-9],
                 ((unsigned *)m)[0], ((unsigned *)m)[1]); return 0; }
         case 6: { unsigned char *m = (unsigned char *)w[1]; char h[200]; int k, o = 0;
@@ -1377,7 +1382,7 @@ void _ZN3MWF11EventSender10SetEventIdEj(void *th, unsigned id) {
 int _ZN3MWF11EventSender9SendEventEPKNS_6ObjMsgE(void *th, const unsigned *m) {
     static int (*real)(void *, const void *); if (!real) real = nextsym("_ZN3MWF11EventSender9SendEventEPKNS_6ObjMsgE");
     static int n; static int (*gc)(const void *), (*gm)(const void *); if (!gc) { gc = nextsym("_ZNK3MWF6ObjMsg13GetCategoryIdEv"); gm = nextsym("_ZNK3MWF6ObjMsg12GetMessageIdEv"); }
-    if (!mwf_quiet() && gc && gc(m) == 0x3700 && n++ < 1500) { char c[64], a[32]; mwf_lr(__builtin_return_address(0), c, sizeof c);  /* solo la categoria 0x3700 (ObjCntMgr -> modelos) */
+    if (!mwf_quiet() && gc && (gc(m) == 0x3700 || (getenv("SYNCCAT3100") && gc(m) == 0x3100)) && n++ < 1500) { char c[64], a[32]; mwf_lr(__builtin_return_address(0), c, sizeof c);  /* solo la categoria 0x3700 (ObjCntMgr -> modelos) */
         efp("[shim] SYNCTRACE %.2f tid %ld %s SendEvent snd=%p cat=%#x id=%#x por %s\n", wl_ts(), (long)syscall(224), tname((int)syscall(224), a, sizeof a), th, gc(m), gm ? gm(m) : -1, c); }
     return real ? real(th, m) : -1; }
 /* §5.46: lado modelo (libObj): creacion y envio de Event (EventManager::push -> ModelTree -> acciones de ModelXxx). */
