@@ -304,3 +304,35 @@ def test_factor_26_lo_libera_initend_de_capidtblmgr_y_el_6_depende_del_modo() ->
     assert vm.rd(obj + 4) & 0x0400_0000  # factor 26 liberado
     assert vm.rd(obj + 4) & 0x40 == 0  # el 6 sigue activo
     assert vm.rd(0x43F68C92, 2) == 0x200
+
+
+def _master(rol: int) -> tuple:
+    """T13: tras EE_START entrega a `[CLK_CTRL]` (cola `0xc001bd`) el mensaje «from Master» (etiqueta `0x80c001bd`, `targetVfc=0`); `rol` = byte `[0x43e4a5a4]` que exige `0x435a0596` (DIAGNÓSTICO: nadie lo pone en la VM)."""
+    import struct
+    L = pytest.importorskip("liro_vm")
+    vm = _corre()
+    n0 = len(vm.log)
+    vm.wr(0x43E4A5A4, rol, 1)
+    d = struct.pack("<3I", 0, 1, 0)
+    p = vm.malloc(0x60) + 12
+    vm.uc.mem_write(p - 12, struct.pack("<3I", 0, 1, 0x80C001BD))
+    vm.uc.mem_write(p, d)
+    vm.msz[p] = len(d)
+    vm.limite += 100
+    L.entrega(vm, 0xC001BD, p)
+    for _ in range(6):
+        vm.limite += 1000
+        L.planifica(vm, 50_000_000)
+    return vm, vm.log[n0:]
+
+
+def test_master_de_clkctrl_solo_se_acepta_con_rol_2_y_libera_solo_el_modulo_0() -> None:
+    """E2E-3 (T13, DIAGNÓSTICO, no es un arreglo fiel): el receptor `0x435a0596` solo da por válido el «from Master» (etiqueta `0x80c001bd`) si el byte `[0x43e4a5a4]`==2 (`0x43a48756`); nadie lo escribe en la VM.
+    Con el rol forzado el módulo 0 pasa de 0x100 a su destino 0x105 (`[0x43e991d8]`=1), pero el guion 0→2 sigue en la barrera 12: el módulo 1 (0x200, destino 0x320) y el 2 (0, destino 0x285) no avanzan."""
+    vm0, log0 = _master(0)
+    assert any("unknown message" in x for x in log0) and vm0.rd(0x43E991D8) == 0 and vm0.rd(0x43E9BD58, 2) == 0x100
+    vm, log = _master(2)
+    assert any("Receive Message from Master src=0x80c001bd" in x for x in log)
+    assert vm.rd(0x43E991D8) == 1 and vm.rd(0x43E9BD58, 2) == 0x105
+    assert [vm.rd(a, 2) for a in (0x43EC7ADC, 0x43E9C7D8)] == [0x200, 0]
+    assert vm.rd(0x43EDE340 + 0x18) == 12 and vm.rd(0x43F68C92, 2) == 0x200
