@@ -8,6 +8,7 @@ emite hacia colas ajenas se reenvía (salvo las de `NO_REENVIAR`: entrada, reloj
 """
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 import threading
@@ -22,15 +23,15 @@ import liro_vm as L
 NO_REENVIAR = {0x7A0020, 0x910040, 0x910041, 0x910042, 0x924127, 0x8F0139, 0x8F013A, 0x920021}
 
 
-def colas_avcam() -> list[int]:
+def colas_avcam(avcam: Path | None = None) -> list[int]:
     """Colas de recepción de av-cam (registradas con callback o con tarea en espera): los mensajes del invitado a ellas son para la LIRO VM."""
-    vm = arranca()[0]
+    vm = arranca(avcam)[0]
     q = set(vm.qcb) | {x.espera[1] for x in vm.tasks.values() if x.estado == "espera" and x.espera[:1] == ("rcv",)}
     return sorted(q)
 
 
-def arranca() -> tuple[L.Vm, float]:
-    vm = L.carga(L.AVCAM, L.BK)
+def arranca(avcam: Path | None = None) -> tuple[L.Vm, float]:
+    vm = L.carga(avcam or L.AVCAM, L.BK)
     L.crea_tarea(vm, 1, "entry_pre", 0x43541044, 0, 0).estado = "lista"
     L.planifica(vm, 20_000_000)
     L.crea_tarea(vm, 2, "entry_main", 0x43541058, 0, 0).estado = "lista"
@@ -39,14 +40,18 @@ def arranca() -> tuple[L.Vm, float]:
 
 
 class Puente:
-    def __init__(self, enviar, registro: Path | None = None, ae: A.Emisor | None = None) -> None:
+    def __init__(self, enviar, registro: Path | None = None, ae: A.Emisor | None = None, avcam: Path | None = None) -> None:
         """enviar(línea: bytes): manda una línea al invitado. registro: JSONL con todo lo que entra y sale (evidencia).
-        ae: emisor opcional del AE (ae.py, atajo: av-cam no lo genera); arranca con la primera orden de ObjCamera a CamMgr (0x30001)."""
+        ae: emisor opcional del AE (ae.py, atajo: av-cam no lo genera); arranca con la primera orden de ObjCamera a CamMgr (0x30001).
+        avcam: fichero de av-cam a cargar (por defecto el de fábrica 3.21); su sha256 queda en la primera línea del registro (`arranque`).
+        Cada línea lleva `origen`: «av-cam» (tráfico real de la LIRO VM) o «ae.py» (salida sintética)."""
         self.enviar, self.registro, self.ae = enviar, registro, ae
         if ae:
             ae.enviar = self._envia_ae
         self.cerrojo = threading.RLock()
-        self.vm, t0 = arranca()
+        self.avcam = avcam or L.AVCAM
+        self.vm, t0 = arranca(avcam)
+        self._anota(arranque="carga", sha256=hashlib.sha256(self.avcam.read_bytes()).hexdigest(), ruta=str(self.avcam))
         self.vm.limite, self.t_real0, self.t_virt0 = t0, time.monotonic(), t0
         self.visto = len(self.vm.salida_ext)  # lo emitido durante el arranque se guarda aparte: solo se reenvía en un arranque en frío del invitado
         self.n_in = self.n_out = 0
@@ -54,7 +59,7 @@ class Puente:
 
     def _envia_ae(self, linea: bytes) -> None:
         q, cab, datos = linea.decode().split()[1:]
-        self._anota(sale=f"0x{q}", tarea="ae.py", cab=cab, datos=datos)
+        self._anota(origen="ae.py", sale=f"0x{q}", tarea="ae.py", cab=cab, datos=datos)
         self.enviar(linea)
 
     def reenvia_arranque(self) -> None:
@@ -69,7 +74,7 @@ class Puente:
     def _anota(self, **kw: object) -> None:
         if self.registro:
             with self.registro.open("a") as f:
-                f.write(json.dumps({"t": round(self.vm.t, 2), **kw}) + "\n")
+                f.write(json.dumps({"t": round(self.vm.t, 2), "origen": "av-cam", **kw}) + "\n")
 
     def _reloj(self) -> None:
         while True:

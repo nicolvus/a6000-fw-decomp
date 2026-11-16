@@ -130,9 +130,9 @@ def red_args(red: dict | None) -> tuple[str, list[str]]:
     return " NET=" + ",".join(modos), ["-netdev", "user,id=n0" + fwd, "-device", f"virtio-net-device,netdev=n0,mac={MAC_CAMARA}"]
 
 
-def huella(work: Path, pkg: str, shimenv: str) -> str:
-    """Hash de todo lo que fija el initrd y la RAM guardada: shim (overlay), im.sh, run.py, SHIMENV y el overlay del paquete."""
-    h = hashlib.sha256(shimenv.encode())
+def huella(work: Path, pkg: str, shimenv: str, avcam_sha: str = "") -> str:
+    """Hash de todo lo que fija el initrd y la RAM guardada: shim (overlay), im.sh, run.py, SHIMENV, el overlay del paquete y el av-cam cargado."""
+    h = hashlib.sha256((shimenv + "|avcam=" + avcam_sha).encode())
     ficheros = [HERE / "im.sh", HERE / "run.py"]
     for raiz in (work / "overlay", Path(pkg) if pkg else None):
         if raiz and raiz.is_dir():
@@ -154,23 +154,31 @@ def msg_hora(ahora: float) -> bytes:
 
 
 class Vm:
-    def __init__(self, work: Path, pkg: str, perfil: str = "", red: dict | None = None, avcam: bool = False, tarjeta: bool = True, ae: bool = False) -> None:
+    def __init__(self, work: Path, pkg: str, perfil: str = "", red: dict | None = None, avcam: bool = False, tarjeta: bool = True, ae: bool = False, avcam_de: str = "") -> None:
         net, net_args = red_args(red)
         self.red = red if net else {}
         shimenv = construye_shimenv(tarjeta) + net
+        self.dir = work / "live" / (perfil or (Path(pkg).name if pkg else "sony"))
+        self.dir.mkdir(parents=True, exist_ok=True)
+        self.avcam_ruta, avcam_sha = None, ""
+        if avcam and avcam_de:  # E2E-1: av-cam del artefacto que se instalaría; se guarda en el perfil y su sha entra en la huella
+            sys.path.insert(0, str(HERE.parent / "avcam"))
+            import avcam_fuente
+            img = avcam_fuente.avcam_de(Path(avcam_de))
+            self.avcam_ruta, avcam_sha = self.dir / "av-cam.bin", avcam_fuente.sha(img)
+            if not self.avcam_ruta.exists() or self.avcam_ruta.read_bytes() != img:
+                escribe_atomico(self.avcam_ruta, img)
         self.puente = None
         if avcam:  # av-cam (LIRO VM, scripts/gui/avcam) atiende las colas de kernel que im.elf le envía; ver puente.py
             sys.path.insert(0, str(HERE.parent / "avcam"))
             import puente
-            shimenv += " AVQ=" + ",".join(f"{q:x}" for q in puente.colas_avcam() if q > 0x100)
+            shimenv += " AVQ=" + ",".join(f"{q:x}" for q in puente.colas_avcam(self.avcam_ruta) if q > 0x100)
             self.avq_cola: queue.Queue = queue.Queue()
-        self.dir = work / "live" / (perfil or (Path(pkg).name if pkg else "sony"))
-        self.dir.mkdir(parents=True, exist_ok=True)
         self.estado, self.ui, self.mon = self.dir / "estado.zst", self.dir / "ui.sock", self.dir / "mon.sock"
         initrd, sello = self.dir / "initrd.gz", self.dir / "huella.txt"
         self.nvram_f = self.dir / "nvram.json"
         self.nvram = {int(k, 16): bytes.fromhex(v) for k, v in self.carga(self.nvram_f).items()}
-        actual = huella(work, pkg, shimenv)
+        actual = huella(work, pkg, shimenv, avcam_sha)
         if not sello.exists() or sello.read_text() != actual:  # cambió el shim, im.sh, run.py, SHIMENV u overlay: el estado ya no vale
             for f in (self.estado, initrd, sello):
                 f.unlink(missing_ok=True)
@@ -197,7 +205,7 @@ class Vm:
         self.cerrojo = threading.Lock()  # un solo guardado a la vez
         self.fps, self.coste = 0.0, ""
         if avcam:
-            self.puente = puente.Puente(self.envia, self.dir / "avcam.jsonl", puente.A.Emisor(None) if ae else None)
+            self.puente = puente.Puente(self.envia, self.dir / "avcam.jsonl", puente.A.Emisor(None) if ae else None, self.avcam_ruta)
             threading.Thread(target=self.avq_hilo, daemon=True).start()
         threading.Thread(target=self.lector, daemon=True).start()
         threading.Thread(target=self.gira_dial, daemon=True).start()
@@ -566,6 +574,7 @@ def main() -> None:
     ap.add_argument("--config", default="", help="config.json del configurador (mapa de teclas)")
     ap.add_argument("--avcam", action=argparse.BooleanOptionalAction, default=None,
                     help="conecta im.elf con av-cam ejecutado en la LIRO VM (puente.py); por defecto se activa si hay unicorn, av-cam.bin y liro.ko")
+    ap.add_argument("--avcam-de", default="", help="carga el av-cam de este .dat, tar de firmware o nflasha3 (el artefacto que se instalaría); por defecto el de fábrica 3.21")
     ap.add_argument("--sin-sd", action="store_true", help="no emula la tarjeta SD (arranque anterior: ModelMedia sin soporte, sin EEStart); por defecto hay una SD FAT32 montada")
     ap.add_argument("--sin-ae", action="store_true", help="no emite el AE de escena constante a ObjCamera (atajo de ae.py; av-cam no lo genera); por defecto se emite")
     ap.add_argument("--lanzador", default="", help="URL del configurador (enlace «volver»)")
@@ -580,7 +589,7 @@ def main() -> None:
         a.avcam = avcam_disponible()
     from emu_config import carga_config
     red = carga_config(Path(a.config))["red"] if a.config else None
-    vm = Vm(a.work.resolve(), str(Path(a.pkg).resolve()) if a.pkg else "", a.perfil_dir, red, a.avcam, not a.sin_sd, not a.sin_ae)
+    vm = Vm(a.work.resolve(), str(Path(a.pkg).resolve()) if a.pkg else "", a.perfil_dir, red, a.avcam, not a.sin_sd, not a.sin_ae, str(Path(a.avcam_de).resolve()) if a.avcam_de else "")
     srv = servidor(vm, a.puerto)
     print(f"http://127.0.0.1:{a.puerto}  ({'restaurando estado' if vm.restaurado else 'arranque en frío, ≈ 2,5 min hasta el menú'})", flush=True)
     for sig in (signal.SIGINT, signal.SIGTERM):  # salir = guardar el estado y cerrar QEMU

@@ -66,6 +66,8 @@ class Emulador:
                    "--lanzador", f"http://127.0.0.1:{self.puerto}/"]
             if pkg := self.pkg(cfg):
                 cmd += ["--pkg", pkg]
+                if (a3 := Path(pkg + ".nflasha3")).is_file():  # E2E-1: el av-cam del mismo paquete (junto al overlay, lo deja importa_dat)
+                    cmd += ["--avcam-de", str(a3)]
             if self.perfil:
                 cmd += ["--perfil-dir", self.perfil]
             log = open(self.work / "lanzador-vm.log", "ab")  # noqa: SIM115 - lo hereda el proceso hijo

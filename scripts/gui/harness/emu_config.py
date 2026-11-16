@@ -203,11 +203,14 @@ def importa_dat(dat: bytes, work: Path) -> dict:
     stock = work / "stage/cam/usr"
     if not stock.is_dir():
         raise DatError(f"Falta el /usr de Sony en {stock} (ejecuta setup.sh del arnés).")
+    a3 = next((n for n in miembros if n.endswith("dev/nflasha3")), None)  # el av-cam del paquete, para que el arnés cargue el mismo (E2E-1)
     nombre_ov = f"dat-{info['version']}-{hashlib.sha256(img).hexdigest()[:8]}"
     dest = work / "pkgdat" / nombre_ov
     tmp = work / "pkgdat" / (nombre_ov + ".bin")
     tmp.parent.mkdir(parents=True, exist_ok=True)
     tmp.write_bytes(img)
+    if a3:
+        (work / "pkgdat" / (nombre_ov + ".nflasha3")).write_bytes(miembros[a3])
     try:
         import sys
         sys.path.insert(0, str(HERE))

@@ -90,3 +90,14 @@ Para que la foto emulada sea la de la cámara, lo que habría que **capturar en 
 6. **Corregir EFCS→Desactivar (65535)** y el ruido de `ae.py` (530 mensajes sintéticos en 5 min que ocultan el tráfico real).
 
 Límites de la tarea: no se arregló nada (solo se midió); la ejecución del «Activar» sin `IMCMDLOG`; no se probó `--pkg` con overlays; solo OSD en las capturas (la imagen de sensor la pone el navegador). Evidencia: `docs/gui/img/g75/`.
+
+
+## Tarea 2 — el arnés carga el av-cam del build y separa el tráfico real del atajo AE (16-11-2026)
+
+**E2E-1 (hecho).** `scripts/gui/avcam/avcam_fuente.py` (`avcam_de(ruta)`): `.dat` (descifrado de `emu_config`) → tar → `0700_part_image/dev/nflasha3` (TPZL, `decompressed(1)`) → FAT16 `AV-CAM.BIN`; acepta también tar y `nflasha3` crudo y valida tamaño (11 427 236), `LIRO` y versión 4. `live.py --avcam-de RUTA` lo escribe en `live/<perfil>/av-cam.bin` y se lo pasa a `puente.Puente`/`colas_avcam`; su sha256 entra en la `huella` del perfil (cambiarlo fuerza arranque en frío) y es la primera línea de `avcam.jsonl` (`{"arranque":"carga","sha256":…}`). Sin la opción se usa el de fábrica 3.21. El configurador: `emu_config.importa_dat` deja junto al overlay `pkgdat/<nombre>.nflasha3` y `lanzador.py` añade `--avcam-de` si existe (también para overlays con ese fichero al lado).
+- VERIFICADO (`tests/test_avcam_fuente.py`): el `nflasha3` del 3.21 da `b60c845c…` = `analysis/rea-independent/input/av-cam.bin`; el `base-pp.tar` de `build_base_pp` da otro sha y la VM hace `entry(pre)`/`entry(main)` sin fallo (113 tareas, «Liro Start», sin ERROR, CamMgr esperando), con el registro etiquetado.
+- MEDIDO en vivo: `build_cfw_completo.py` (scratch `analysis/gui/g22/harness/e2e02/`, solo se genera el `.dat`, 3.60, sha `461f6569…`) → `importa_dat` (28 ficheros) → `live.py --pkg pkgdat/dat-3.60-fa0cc447 --avcam-de …firmware_packed.dat --perfil-dir e2e02`. av-cam del build: `be11ee6f2dc7181b445fcb817dcda871933b4eb5d29194d38696526feb842fb0` (distinto del de fábrica), registrado en `avcam.jsonl`. Llega a la pantalla de disparo en ≈ 3 min en frío (captura [t2-disparo.png](img/g75/t2-disparo.png), modo P, NO CARD); 14 fotogramas, sin errores del av-cam parcheado al arrancar (el parche PP/Silent no rompe `entry`).
+
+**E2E-7 (hecho).** Cada línea de `avcam.jsonl` lleva `origen`: `av-cam` (LIRO VM) o `ae.py` (sintético, `_envia_ae`); lo enviado no cambia. En ≈ 3 min de ejecución: 242 de `ae.py` frente a 30 entradas y 20 salidas reales de av-cam (filtrable con `origen`). Test: `test_salidas_de_ae_py_marcadas_como_sinteticas`.
+
+Límites: NO_VERIFICADO que el av-cam parcheado reaccione bien a S/disparo (E2E-3 sigue abierto); la importación de un `.dat` debe ejecutarse desde un script (no `python -`: el pool de `tpzl` falla sin `__main__`); `colas_avcam` y la VM arrancan dos veces el av-cam (coste ≈ 2 s).
