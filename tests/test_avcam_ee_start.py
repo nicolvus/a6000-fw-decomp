@@ -72,7 +72,7 @@ def test_0x3003_se_contesta_si_el_secuenciador_esta_en_el_paso_que_la_espera(gru
 
 
 @pytest.mark.xfail(
-    reason="E2E-10 (T6): con V reales HS_Main corre en cada V, pero la lista del secuenciador (0x43e7e340) nunca se elige: 0x437fc404 sale pronto porque [0x43f9ade8]==0 y nadie lo pone a 1; [0x43ede338] sigue en 0",
+    reason="E2E-10 (T7): el secuenciador elige la transición 0→2 (guion de 0x2b palabras en 0x43bf2208) pero se queda en su primera barrera (0x8347) esperando que las palabras de estado de los módulos de imagen (slots 0,1,2,6,8,9) pasen de 0x100/0x200/0/0x700/0x900/0xa00 a 0x105/0x285/0x320/0x780/0x910/0xa10; esos módulos no arrancan en la VM (DFE ParamTable, StaticSetInfo.cpp:398, IDT Init NG, DMM)",
     strict=True,
 )
 def test_av_cam_contesta_0x3003_ultimo_paso_de_ee_start() -> None:
@@ -85,3 +85,15 @@ def test_bonobo_genera_la_v_y_corre_hs_main_en_cada_v() -> None:
     assert vm.sensor_v.n > 50 and vm.irqs[0x53] >= vm.sensor_v.n
     assert vm.irqs[0x54] > 0  # temporizadores de un disparo armados por av-cam
     assert vm.calls["tsnd_mbf"] > vm.sensor_v.n
+
+
+def test_secuenciador_elige_la_transicion_0_a_2_y_espera_el_estado_de_los_modulos() -> None:
+    """E2E-10 (T7, MEDIDO): la 0x3003 arma `437fc35c` (pone `[0x43f9ade8]`=1, no es un requisito previo); en la V siguiente `437fc404` fija el destino 2, `43b006d0` halla la fila {0→2} (guion `0x43bf2208`, 0x2b palabras) y el guion
+    se detiene en su primera barrera: las palabras de estado de los módulos (`0x43e9bd58`…) no llegan a lo que pide el guion."""
+    vm = _corre()
+    lista = 0x43EDE340  # {tabla, n filas, …, +0xc activo, +0x10 guion, +0x14 largo, +0x18 posición, +0x1c destino por slot}
+    assert vm.rd(0x43F9ADE8, 1) == 1 and vm.rd(0x43EDE320) == 2 and vm.rd(lista + 0xC, 1) == 1 and vm.rd(lista + 0x10) == 0x43BF2208
+    assert vm.rd(0x43EDE338) == 0 and vm.rd(lista + 0x18) == 12  # parado en la primera barrera
+    estado = {0: 0x43E9BD58, 2: 0x43E9C7D8, 8: 0x43E9D018}
+    assert {j: vm.rd(a, 2) for j, a in estado.items()} == {0: 0x100, 2: 0, 8: 0x900}
+    assert [vm.rd(lista + 0x1C + 2 * j, 2) for j in estado] == [0x105, 0x320, 0x910]
