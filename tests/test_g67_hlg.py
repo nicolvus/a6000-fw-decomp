@@ -37,27 +37,72 @@ def test_oetf_arib_puntos_conocidos():
     assert abs(H.oetf(1 / 12) - 0.5) < 1e-6 and abs(H.oetf(1.0) - 1.0) < 1e-6 and H.oetf(0) == 0
 
 
+def _emula_hlg(img, malloc=0x30001000):
+    """Ejecuta el gancho HLG sobre la imagen parcheada con `malloc` simulado; devuelve (unicorn, r3, llamadas a malloc)."""
+    import avcam_dinamico as D
+    from unicorn import UC_ARCH_ARM, UC_MODE_THUMB, Uc
+    from unicorn.arm_const import (
+        UC_ARM_REG_LR,
+        UC_ARM_REG_R0,
+        UC_ARM_REG_R3,
+        UC_ARM_REG_SP,
+    )
+    mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
+    mu.mem_map(0x43541000, 0x00B00000 + 0x200000)
+    mu.mem_write(0x43541000, img)
+    for a, s in ((0x10000000 - 0x10000, 0x20000), (0x20000000, 0x1000), (0x30000000, 0x20000), (0x30100000, 0x1000)):
+        mu.mem_map(a, s)
+    mu.mem_write(D.MALLOC, D.malloc_simulado(0x30100000))
+    mu.mem_write(0x30100004, struct.pack("<I", malloc))
+    mu.mem_write(0x20000000 + 0x7CA, b"\x05")
+    mu.reg_write(UC_ARM_REG_SP, 0x10000000)
+    mu.reg_write(UC_ARM_REG_R3, 0x20000000)
+    mu.reg_write(UC_ARM_REG_R0, 0x1234)
+    mu.reg_write(UC_ARM_REG_LR, 0x30010000 | 1)
+    mu.emu_start(_entrada(img) | 1, 0x30010000, count=2_000_000)
+    return mu, mu.reg_read(UC_ARM_REG_R3), struct.unpack("<I", mu.mem_read(0x30100000, 4))[0]
+
+
+def _entrada(img):
+    import avcam_dinamico as D
+    w = struct.unpack_from("<2H", img, D.HOOK_HLG[0] - C.BASE)               # bl del gancho → destino
+    h1, h2 = w
+    off = ((h1 & 0x7FF) << 12) | ((h2 & 0x7FF) << 1)
+    if off & 0x400000:
+        off -= 0x800000
+    return D.HOOK_HLG[0] + 4 + off
+
+
 @needs_av
-def test_bloque_con_el_formato_de_s_log3_y_bytes_originales():
+def test_hlg_dinamico_unicorn_curvas_punteros_y_fallo():
+    import avcam_dinamico as D
     base, a6300 = AVCAM.read_bytes(), C.A6300.read_bytes()
-    with pytest.raises(RuntimeError):
-        C.patches(base, (C.A7S).read_bytes(), a6300, (1, 2, 3))
-    C.ZONA_VERIFICADA = True
-    try:
-        ps = C.patches(base, (C.A7S).read_bytes(), a6300, (1, 2, 3))
-    finally:
-        C.ZONA_VERIFICADA = False
-    C.check_base(base, ps)
-    slog3 = a6300[C.u32(a6300, C.TAB_A6300 + 8 * C.SLOG3_A6300 + 4) - C.BASE:][:C.CURVE]
-    for n in (1, 2, 3):
-        g = 0x1B + n
-        dst, blk, _ = next(p for p in ps if p[2] == f"curva 0x{g:02x} HLG{n}")
-        assert len(blk) == C.CURVE == len(slog3) and blk[0x1012] == 4 and blk[0x1014] == g
-        assert blk[0x1000:0x1012] == slog3[0x1000:0x1012] and blk[0x1015:] == slog3[0x1015:]
-        assert struct.unpack("<2048H", blk[:0x1000]) == tuple(H.tabla(n))
-        assert not any(base[dst - C.BASE:dst - C.BASE + C.CURVE])          # región a cero antes
-        assert base[C.TAB["a6000"] + 8 * g + 4 - C.BASE:][:4] == b"\0" * 4  # puntero vacío antes
-    assert C.HLG_REGION + 3 * C.STRIDE <= C.GAP[0] + 0x2E000 and C.HLG_REGION >= 0x43D620D9
+    ps = C.patches(base, C.A7S.read_bytes(), a6300, (1, 2, 3))
+    assert not any(w.startswith(("puntero 0x1c", "puntero 0x1d", "puntero 0x1e")) for _, _, w in ps)
+    ps_h = [p for p in ps if p[2].startswith(("dato cueva HLG", "gancho HLG"))]
+    assert len(ps_h) == 2
+    D.comprobar_zonas([(a, a + len(b)) for a, b, w in ps_h if w.startswith("dato")])
+    gancho = next(p for p in ps_h if p[2].startswith("gancho"))
+    assert base[gancho[0] - C.BASE:][:4] == D.HOOK_HLG[1]                  # bytes originales del gancho
+    assert not any(any(base[a - C.BASE:a - C.BASE + len(b)]) for a, b, w in ps_h if w.startswith("dato"))
+    assert all(base[D.SEL + 2 * (11 + n) - C.BASE:][:2] == bytes([0, 0x0A]) and base[D.TAB_PTR + 8 * (0x1B + n) + 4 - C.BASE:][:4] == b"\0" * 4 for n in (1, 2, 3))
+    img = C.apply(base, ps_h)
+    mu, r3, n = _emula_hlg(img)
+    assert n == 1 and r3 == 5                                              # una reserva; la instrucción original (ldrb r3,[r3,#0x7ca]) se ejecutó
+    buf = 0x30001000
+    for k in (1, 2, 3):
+        ptr = struct.unpack("<I", mu.mem_read(D.TAB_PTR + 8 * (0x1B + k) + 4, 4))[0]
+        assert ptr == buf + (k - 1) * D.STRIDE_BUF
+        got = struct.unpack("<2048H", mu.mem_read(ptr, 0x1000))
+        err = max(abs(a - b) for a, b in zip(got, H.tabla(k)))
+        assert err <= 1, err                                                # < 1 código de 10 bits frente a la OETF exacta (real) y ≤ 1 frente a la tabla redondeada
+        assert max(abs(a - b) for a, b in zip(got, D.generar_hlg(*D.esquema(), k))) == 0   # la cueva = réplica Python
+        cola = bytes(mu.mem_read(ptr + 0x1000, 26))
+        assert cola[0x12] == 4 and cola[0x14] == 0x1B + k
+        assert bytes(mu.mem_read(D.SEL + 2 * (11 + k), 2)) == bytes([0x1B + k] * 2)
+    mu2, r3b, n2 = _emula_hlg(img, malloc=0)                               # fallo de reserva: nada escrito, comportamiento de fábrica
+    assert n2 == 1 and r3b == 5
+    assert bytes(mu2.mem_read(D.SEL + 24, 6)) == base[D.SEL + 24 - C.BASE:][:6] and bytes(mu2.mem_read(D.TAB_PTR + 8 * 0x1C + 4, 4)) == b"\0" * 4
 
 
 @needs_av

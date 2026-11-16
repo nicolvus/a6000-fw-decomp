@@ -41,3 +41,5 @@ Overlay y perfil propios (`g71`, puerto 8771; `--no-avcam`; qemu parado y perfil
 CCH-F3 (cerrado en formato), CCH-F5, LUT-A, LUT-B, LUT-C en [PENDIENTES](../PENDIENTES.md).
 
 **Nota G72 (15-11-2026):** `0x43FA4000` NO está libre (402 B no nulos en vivo; `completed` en `0x43FA4B1E`). `lut_patch.apply_bytes` queda bloqueado hasta reubicar; ver [g72](g72-zona-cero-av-cam.md) y LUT-C.
+
+**Nota G73 (15-11-2026):** supera la nota G72 y la ubicación de §3: las 3 tablas van empaquetadas a 21 bits (1064 B) en `0x43C1FF24`, la cueva en `0x43BE3F28` y se desempaquetan a un búfer de `malloc(0x654)`; el puntero original se entrega si `malloc` falla. [g73](g73-memoria-dinamica-hlg-lut.md).

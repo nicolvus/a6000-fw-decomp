@@ -37,3 +37,5 @@ Un `git stash -q` accidental (cuatro segundos) se deshizo con `pop`; cambios aje
 Sin cámara: no se sabe si el núcleo acepta selectores 12–14 ni si la curva se aplica; los niveles y la rodilla son aproximados; el ISP emulado no acepta curvas nuevas sin tocar `scripts/gui/isp/` (no comprobado).
 
 **Nota G72 (15-11-2026):** `HLG_REGION = 0x43F9C000` NO está libre: es memoria viva (145 B no nulos en el volcado de RAM real). El parche `--hlg` queda bloqueado hasta reubicar; ver [g72](g72-zona-cero-av-cam.md) y HLG-2.
+
+**Nota G73 (15-11-2026):** supera la nota G72 y la ubicación de §4: las curvas HLG ya no se guardan (12 KB): se **generan en el montón** (`malloc` `0x43561164`) desde 58 nodos, con cueva en `0x43BE3B28` y gancho en `0x43853ece`; los punteros `0x44001404` y los selectores 12–14 los escribe la cueva solo si la reserva tuvo éxito (si no, fábrica). Detalle, pruebas y riesgos: [g73](g73-memoria-dinamica-hlg-lut.md).

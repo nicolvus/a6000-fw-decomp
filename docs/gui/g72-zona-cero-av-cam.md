@@ -22,4 +22,6 @@ Volcado de RAM de la cámara real en marcha (`analysis/camera-dumps/ram-servicio
 - No se movieron los parches: **no se halló sitio libre verificado**. Huecos reales medidos: el de G18 está lleno; `0x43be3b28` (2 056 B) y `0x43c1ff21` (3 435 B) son ceros idénticos fichero/vivo pero suman 5 491 B (< 5 564 B de la LUT y < 12 384 B de HLG). Un barrido de «funciones sin referencias» dio falsos positivos (cabeceras PIC mal recortadas), así que no se afirma código muerto.
 
 ## 5. Siguiente
+**Resuelto en [g73](g73-memoria-dinamica-hlg-lut.md)** (15-11-2026): HLG y LUT usan solo los dos fragmentos libres verificados de §4 más memoria dinámica (`malloc` `0x43561164`); `ZONA_VERIFICADA` retirado. Lo que sigue es el texto original de esta sección.
+
 Reubicar con espacio verificado (código muerto como G61, o 1 sola curva HLG de 4 122 B + LUT reducida) y quitar el bloqueo; hasta entonces HLG-2 y LUT-C siguen ABIERTOS (ver PENDIENTES).

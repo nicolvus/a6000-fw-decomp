@@ -1,4 +1,5 @@
 """G71 — LUT 3D: empaquetador/generador del `av-cam` (Unicorn), herramienta de descomposición y parche de carga."""
+import struct
 import sys
 from pathlib import Path
 
@@ -7,6 +8,7 @@ import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / "scripts"), str(ROOT / "scripts/lut"), str(ROOT / "scripts/gui")]
+import avcam_dinamico as D
 import cube_a6000 as C
 import lut3d_emu as E
 import lut_patch as P
@@ -17,7 +19,8 @@ IMG = C.BIN.read_bytes()
 def test_ganchos_originales_y_zona_a_cero():
     for va, old, _, _ in P.HOOKS:
         assert IMG[va - P.BASE:va - P.BASE + 4] == old
-    assert not any(IMG[P.CODE - P.BASE:P.TABLES + 3 * P.TAM - P.BASE])
+    for z in (D.ZONA_A, D.ZONA_B):
+        assert not any(IMG[z[0] - P.BASE:z[1] - P.BASE])
 
 
 def test_empaquetador_y_generador_coinciden_con_empaqueta_hw():
@@ -37,35 +40,40 @@ def test_permutacion_valida():
 
 @pytest.fixture(scope="module")
 def parcheada():
-    P.ZONA_VERIFICADA = True  # el test comprueba los bytes; el bloqueo de G72 se prueba aparte
-    try:
-        return P.apply_bytes(IMG)
-    finally:
-        P.ZONA_VERIFICADA = False
-
-
-def test_bloqueado_hasta_reubicar():
-    with pytest.raises(RuntimeError):
-        P.apply_bytes(IMG)
+    return P.apply_bytes(IMG)
 
 
 def test_off_igual_que_fabrica_y_lut_elige_tabla(parcheada):
+    t = P.tablas_por_defecto()
     for k in (0, 1):
         assert P.emular(parcheada, k, 0) == 0x11223344
         assert P.emular(parcheada, k, 9) == 0x11223344           # fuera de opciones = Off
         for o in (1, 2, 3):
-            assert P.emular(parcheada, k, o) == P.TABLES + (o - 1) * P.TAM
+            assert P.emular(parcheada, k, o) == 0x30001000
+            assert P.emular.mem == t[o - 1]                      # desempaquetado = tabla original, byte a byte
 
 
-def test_lut1_escribe_la_tabla_correcta(parcheada):
-    t = P.tablas_por_defecto()
-    assert parcheada[P.TABLES - P.BASE:P.TABLES - P.BASE + P.TAM] == t[0]
-    assert any(t[0]) and not any(t[2])                          # LUT3 = identidad = ceros
+def test_reserva_una_vez_y_fallo_cae_a_fabrica(parcheada):
+    n = [0]
+    P.emular(parcheada, 0, 2, cuenta=n)
+    assert n == [1]
+    P.emular(parcheada, 1, 0, cuenta=n)
+    assert n == [0]                                              # Off no reserva
+    for k in (0, 1):
+        for o in (1, 2, 3):
+            assert P.emular(parcheada, k, o, malloc=0, cuenta=n) == 0x11223344 and n == [1]   # malloc = 0 → puntero original
 
 
-def test_parche_solo_toca_ganchos_y_zona(parcheada):
+def test_empaquetado_21_bits_sin_perdida():
+    perm = list(struct.unpack_from("<405H", IMG, D.PERM - P.BASE))
+    t = P.tablas_por_defecto()[0]
+    assert len(D.empaqueta_21(t, perm)) == D.LUT_BYTES == 1064 and 3 * D.LUT_BYTES + 3 <= D.ZONA_B[1] - D.ZONA_B[0]
+
+
+def test_parche_solo_toca_ganchos_y_zonas_verificadas(parcheada):
     dif = [i + P.BASE for i in range(len(IMG)) if IMG[i] != parcheada[i]]
-    assert all(P.CODE <= a < P.TABLES + 3 * P.TAM or any(h[0] <= a < h[0] + 4 for h in P.HOOKS) for a in dif)
+    assert all(D.ZONA_A[0] <= a < D.ZONA_A[1] or D.ZONA_B[0] <= a < D.ZONA_B[1] or any(h[0] <= a < h[0] + 4 for h in P.HOOKS) for a in dif)
+    assert not any(0x43D620D9 <= a < 0x43FA8F00 for a in dif)   # nada en la zona viva de G72
 
 
 def test_cube_ida_y_vuelta(tmp_path):
@@ -86,3 +94,16 @@ def test_ajuste_lut_en_cfw_ajustes():
     import cfw_ajustes as cfw
     assert [o[0] for o in cfw.POR_ID["lut"].opciones] == ["Off", "LUT1", "LUT2", "LUT3"]
     assert len({a.backup for a in cfw.AJUSTES}) == len(cfw.AJUSTES) == 10
+
+
+def test_hlg_y_lut_no_se_solapan_ni_tocan_zonas_prohibidas():
+    import pp_curves_patch as PC
+    if not PC.A6300.is_file():
+        pytest.skip("A6300 ausente")
+    perm = list(struct.unpack_from("<405H", IMG, D.PERM - P.BASE))
+    cueva, _ = D.lut_codigo(P.AJ, P.HOOKS)
+    esc = [(a, a + len(b)) for a, b in cueva] + [(D.LUT_TABLAS, D.LUT_TABLAS + 3 * D.LUT_BYTES), (D.LUT_CELDA, D.LUT_CELDA + 4)]
+    h = D.hlg_parches(PC.A6300.read_bytes(), PC.TAB_A6300, PC.SLOG3_A6300)
+    esc.append((h[0][0], h[0][0] + len(h[0][1])))
+    D.comprobar_zonas(esc)
+    assert len(perm) == 405

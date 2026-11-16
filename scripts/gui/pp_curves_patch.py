@@ -41,13 +41,8 @@ def u32(d: bytes, a: int) -> int:
     return struct.unpack_from("<I", d, a - BASE)[0]
 
 
-# G67: HLG1–3 = gammas 0x1c–0x1e, selectores 12–14. El hueco de G18 está lleno (9.º hueco = cueva de color/tono): las curvas van a una región provisional de la zona a cero
-# 0x43d620d9…0x43fa8f00. G72: esa zona NO está libre (es `.bss`/datos vivos: 508 877 B no nulos en el volcado de RAM de la cámara, 145 B dentro de estas curvas), así que `hlg`
-# queda bloqueado hasta reubicar el bloque (PENDIENTES HLG-2). Solo con `hlg` explícito y `ZONA_VERIFICADA = True` (los tests lo fuerzan).
-HLG_REGION = 0x43F9C000
-ZONA_VERIFICADA = False
-
-
+# G67/G73: HLG1–3 = gammas 0x1c–0x1e, selectores 12–14. Las curvas (3 × 4122 B) se GENERAN en el montón del núcleo (`malloc`) desde 58 nodos; cueva y datos van en el
+# fragmento libre verificado `0x43BE3B28` (avcam_dinamico, G72/G73) y el gancho es 1 instrucción de la selección de gamma. La cueva escribe punteros y selectores solo si `malloc` tuvo éxito.
 def patches(base: bytes, a7s: bytes, a6300: bytes | None = None, hlg: tuple[int, ...] = ()) -> list[tuple[int, bytes, str]]:
     out = []
     for n, g in enumerate(GAMMAS):
@@ -66,18 +61,10 @@ def patches(base: bytes, a7s: bytes, a6300: bytes | None = None, hlg: tuple[int,
         dst = SLOT0 + len(GAMMAS) * STRIDE
         out.append((dst, bytes(src), f"curva 0x{SLOG3_AQUI:02x}"))
         out.append((TAB["a6000"] + 8 * SLOG3_AQUI + 4, struct.pack("<I", dst), f"puntero vídeo 0x{SLOG3_AQUI:02x}"))
-    if hlg:
-        if not ZONA_VERIFICADA:
-            raise RuntimeError("HLG: 0x43F9C000 es memoria viva (G72); reubicar antes de construir (HLG-2)")
-        import pp_hlg_curves
+    if hlg:  # cualquier HLG pide los tres niveles (una sola reserva de 3 curvas)
+        import avcam_dinamico as D
         assert a6300 is not None
-        cola = bytearray(a6300[u32(a6300, TAB_A6300 + 8 * SLOG3_A6300 + 4) - BASE + 0x1000:][:CURVE - 0x1000])
-        cola[0x12] = 4                                  # vídeo, como el resto de curvas de la A6000
-        for n in hlg:
-            g, dst = 0x1B + n, HLG_REGION + (n - 1) * STRIDE
-            out.append((dst, pp_hlg_curves.bloque(n, bytes(cola), g), f"curva 0x{g:02x} HLG{n}"))
-            out.append((TAB["a6000"] + 8 * g + 4, struct.pack("<I", dst), f"puntero vídeo 0x{g:02x}"))
-            out.append((SEL["a6000"] + 2 * (11 + n), bytes([g, g]), f"selector {11 + n}"))
+        out += D.hlg_parches(a6300, TAB_A6300, SLOG3_A6300)
     for i in SEL_IDX:
         if i == 2:
             if a6300 is not None:
