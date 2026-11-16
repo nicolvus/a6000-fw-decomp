@@ -32,7 +32,8 @@ def colas_avcam(avcam: Path | None = None) -> list[int]:
 
 
 def arranca(avcam: Path | None = None) -> tuple[L.Vm, float]:
-    vm = L.carga(avcam or L.AVCAM, L.BK)
+    idt = avcam.with_name("idt_cam.bin") if avcam else None  # perfil del arnés: junto al av-cam que se cargó
+    vm = L.carga(avcam or L.AVCAM, L.BK, idt if idt and idt.exists() else None)
     L.crea_tarea(vm, 1, "entry_pre", 0x43541044, 0, 0).estado = "lista"
     L.planifica(vm, 20_000_000)
     L.crea_tarea(vm, 2, "entry_main", 0x43541058, 0, 0).estado = "lista"

@@ -76,20 +76,21 @@ def test_0x3003_se_contesta_si_el_secuenciador_esta_en_el_paso_que_la_espera(gru
 def test_paridad_de_v_hace_que_vd_pre_refresque_la_tabla_de_destinos_g() -> None:
     """E2E-10 (T9, MEDIDO): VD_Pre (`0x43792a0c`) solo copia los destinos del secuenciador (`437fc54c(n)`) en `G=0x43e9b548` (`0x43792e8e…0x43792ef6`) si el bit 0 de `0xf3402028`
     (leído por `0x43b4c2fc` a `[[0x43e99208+4]+0xc]`) vale 1 o el retardo `[G+0x5d0]` ≤ 1; con la paridad de V (`bonobo.REG_PARIDAD`) G recibe los destinos del guion 0→2 y los
-    módulos 6, 8 y 9 (`0x43e9cf04`, `0x43e9d018`, `0x43eb3d20`) llegan a 0x780/0x910/0xa10; los módulos 0, 1 y 2 siguen parados (ver el xfail)."""
+    módulos 6, 8 y 9 (`0x43e9cf04`, `0x43e9d018`, `0x43eb3d20`) llegan a 0x780/0x910/0xa10. T14: con `Backup_read_multi` también el 0 y el 1 (0x105/0x285); solo el bloque
+    del módulo 3 (`0x43e9c7d8`, destino 0x320; 0x301 en el volcado real) sigue a 0 (ver el xfail)."""
     vm = _corre()
     G = 0x43E9B548
     assert [vm.rd(G + 2 * k, 2) for k in (0, 1, 2, 6, 7, 8)] == [0x105, 0x320, 0x285, 0x780, 0x910, 0xA10]
     assert [vm.rd(a, 2) for a in (0x43E9CF04, 0x43E9D018, 0x43EB3D20)] == [0x780, 0x910, 0xA10]
-    assert [vm.rd(a, 2) for a in (0x43E9BD58, 0x43EC7ADC, 0x43E9C7D8)] == [0x100, 0x200, 0]
+    assert [vm.rd(a, 2) for a in (0x43E9BD58, 0x43EC7ADC, 0x43E9C7D8)] == [0x105, 0x285, 0]
 
 
-def test_eslabon_clkctrl_la_transicion_del_modulo_0_espera_el_vfc_del_maestro() -> None:
-    """E2E-10 (T9, MEDIDO): con G[0]=0x105 la máquina `0x43796954` solo avanza si `[0x43e991d8]`=`[G+0x778]` (=1); `0x43e991d8` se carga de `0x43e991dc` cuando `[0x43e991d0]`==0, pero `0x4378e0fc`
-    pone `[0x43e991d0]`=-1 porque `[0x43e4a5c0]` (targetVfc de `[CLK_CTRL]`, el que fija `0x435a0596` al recibir el mensaje `0x80c001bd` «from Master») sigue en su valor inicial 0xffff0000."""
+def test_clkctrl_sin_master_con_backup_real_coincide_con_la_camara() -> None:
+    """E2E-10 (T14, MEDIDO; corrige T9/T13): el bloqueo del módulo 0 por ClkCtrl era un síntoma de `Backup_read_multi` sin modelar. Con él, `[0x43e4a5c0]` (targetVfc) vale 0xffffffff
+    —el mismo valor que en el volcado real `ram-servicio-20261020`—, `[0x43e991d0]`=0 y el módulo 0 llega a 0x105 sin ningún mensaje «from Master»."""
     vm = _corre()
-    assert vm.rd(0x43E991D0) == 0xFFFFFFFF and vm.rd(0x43E991D8) == 0 and vm.rd(0x43E991DC) == 1 and vm.rd(0x43E9B548 + 0x778) == 1
-    assert vm.rd(0x43E4A5C0) == 0xFFFF0000
+    assert vm.rd(0x43E4A5C0) == 0xFFFFFFFF and vm.rd(0x43E991D0) == 0
+    assert vm.rd(0x43E9BD58, 2) == 0x105
 
 
 def test_puente_vigila_registra_escrituras_del_rango(tmp_path, monkeypatch) -> None:
@@ -111,7 +112,7 @@ def test_puente_vigila_registra_escrituras_del_rango(tmp_path, monkeypatch) -> N
 
 
 @pytest.mark.xfail(
-    reason="E2E-10 (T9, g75 «Tarea 9»): el secuenciador elige 0→2 pero se queda en la barrera 0x8347: con la paridad de V los módulos 6, 8 y 9 llegan a su destino, pero el 0 espera `[0x43e991d8]`=1 (ClkCtrl: falta el mensaje `0x80c001bd` del «Master») y los 1 y 2 dependen de sus propias máquinas de estado",
+    reason="E2E-10 (T14, g75 «Tarea 14»): el guion 0→2 sigue en la barrera 0x8347 solo por el slot 2: el bloque del módulo 3 (`0x43e9c7d8`, destino 0x320; 0x301 en el volcado real) no lo rellena nadie en la VM; los slots 0, 1, 6, 8 y 9 ya llegan",
     strict=True,
 )
 def test_av_cam_contesta_0x3003_ultimo_paso_de_ee_start() -> None:
@@ -133,14 +134,14 @@ def test_secuenciador_elige_la_transicion_0_a_2_y_espera_el_estado_de_los_modulo
     lista = 0x43EDE340  # {tabla, n filas, …, +0xc activo, +0x10 guion, +0x14 largo, +0x18 posición, +0x1c destino por slot}
     assert vm.rd(0x43F9ADE8, 1) == 1 and vm.rd(0x43EDE320) == 2 and vm.rd(lista + 0xC, 1) == 1 and vm.rd(lista + 0x10) == 0x43BF2208
     assert vm.rd(0x43EDE338) == 0 and vm.rd(lista + 0x18) == 12  # parado en la primera barrera
-    estado = {0: 0x43E9BD58, 2: 0x43E9C7D8, 8: 0x43E9D018}
-    assert {j: vm.rd(a, 2) for j, a in estado.items()} == {0: 0x100, 2: 0, 8: 0x910}  # T9: el 8 ya alcanza su destino con la paridad de V
-    assert [vm.rd(lista + 0x1C + 2 * j, 2) for j in estado] == [0x105, 0x320, 0x910]
+    estado = {0: 0x43E9BD58, 1: 0x43EC7ADC, 2: 0x43E9C7D8, 8: 0x43E9D018}
+    assert {j: vm.rd(a, 2) for j, a in estado.items()} == {0: 0x105, 1: 0x285, 2: 0, 8: 0x910}  # T14: solo el slot 2 (bloque del módulo 3) no llega
+    assert [vm.rd(lista + 0x1C + 2 * j, 2) for j in estado] == [0x105, 0x285, 0x320, 0x910]
 
 
 def test_eventos_1e_y_17_de_captura_llegan_a_sus_callbacks_y_el_modulo_1_escribe_su_estado() -> None:
     """E2E-10 (T8, MEDIDO): av-cam registra en el primer VD los eventos BONOBO 0x1e (`0x437918ac` → encola `0x4379155c`) y 0x17 (`0x4378f2cc`); con ellos corre el escritor del slot 0 (`0x437916dc`), que
-    escribe el estado calculado por `0x43796954` (0x100: la máquina de estados lo deja igual mientras su petición `G[0]` valga 0x100, así que no basta para 0x105)."""
+    escribe el estado calculado por `0x43796954` (T14: con `Backup_read_multi` llega a su destino 0x105)."""
     pytest.importorskip("unicorn")
     from collections import Counter
 
@@ -157,7 +158,7 @@ def test_eventos_1e_y_17_de_captura_llegan_a_sus_callbacks_y_el_modulo_1_escribe
 
     vm = _corre(pre=pre)
     assert all(cuenta[a] > 30 for a in (0x437918AC, 0x4378F2CC, 0x4379155C, 0x437916DC))
-    assert vm.rd(0x43E9BD58, 2) == 0x100
+    assert vm.rd(0x43E9BD58, 2) == 0x105
 
 
 def test_diagnostico_si_las_palabras_de_estado_alcanzan_el_guion_0_a_2_completa_y_av_cam_contesta_0x3003() -> None:
@@ -326,13 +327,30 @@ def _master(rol: int) -> tuple:
     return vm, vm.log[n0:]
 
 
-def test_master_de_clkctrl_solo_se_acepta_con_rol_2_y_libera_solo_el_modulo_0() -> None:
-    """E2E-3 (T13, DIAGNÓSTICO, no es un arreglo fiel): el receptor `0x435a0596` solo da por válido el «from Master» (etiqueta `0x80c001bd`) si el byte `[0x43e4a5a4]`==2 (`0x43a48756`); nadie lo escribe en la VM.
-    Con el rol forzado el módulo 0 pasa de 0x100 a su destino 0x105 (`[0x43e991d8]`=1), pero el guion 0→2 sigue en la barrera 12: el módulo 1 (0x200, destino 0x320) y el 2 (0, destino 0x285) no avanzan."""
+def test_master_de_clkctrl_no_hace_falta_para_el_modulo_0() -> None:
+    """E2E-3 (T13 DIAGNÓSTICO, corregido en T14): el receptor `0x435a0596` solo da por válido el «from Master» (etiqueta `0x80c001bd`) si el byte `[0x43e4a5a4]`==2; en el volcado real
+    ese byte vale 0 (cámara en reposo). Con `Backup_read_multi` el módulo 0 ya está en 0x105 sin Master, y forzarlo no mueve nada: el guion sigue en la barrera 12 por el bloque del módulo 3."""
     vm0, log0 = _master(0)
-    assert any("unknown message" in x for x in log0) and vm0.rd(0x43E991D8) == 0 and vm0.rd(0x43E9BD58, 2) == 0x100
+    assert any("unknown message" in x for x in log0) and vm0.rd(0x43E9BD58, 2) == 0x105
     vm, log = _master(2)
     assert any("Receive Message from Master src=0x80c001bd" in x for x in log)
-    assert vm.rd(0x43E991D8) == 1 and vm.rd(0x43E9BD58, 2) == 0x105
-    assert [vm.rd(a, 2) for a in (0x43EC7ADC, 0x43E9C7D8)] == [0x200, 0]
-    assert vm.rd(0x43EDE340 + 0x18) == 12 and vm.rd(0x43F68C92, 2) == 0x200
+    assert [vm.rd(a, 2) for a in (0x43E9BD58, 0x43EC7ADC, 0x43E9C7D8)] == [0x105, 0x285, 0]
+    assert vm.rd(0x43EDE340 + 0x18) == 12
+
+
+def test_idt_cam_de_nflasha3_es_el_de_la_ram_real_y_quita_init_ng() -> None:
+    """E2E-10 (T14, VERIFICADO): `SABIN/IDT_CAM.BIN` del `nflasha3` 3.21 está byte a byte en `0x83501000` del volcado real `ram-servicio-20261020` (u16 0x3d en la cabecera, lo que
+    exige `0x439fd508`); cargado ahí, av-cam deja de registrar «IDT : Init NG»."""
+    F = pytest.importorskip("avcam_fuente")
+    nf = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3"
+    if not nf.exists():
+        pytest.skip("falta nflasha3 de fábrica")
+    idt = F.idt_de(nf)
+    assert idt[:2] == b"\x3d\x00"
+    ram = ROOT / "analysis/camera-dumps/ram-servicio-20261020/ram_0x80000000.bin"
+    if ram.exists():
+        with ram.open("rb") as f:
+            f.seek(0x83501000 - 0x80000000)
+            assert f.read(len(idt)) == idt
+    vm = _corre()
+    assert not any("IDT : Init NG" in x for x in vm.log)

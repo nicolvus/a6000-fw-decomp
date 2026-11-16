@@ -17,6 +17,8 @@ for p in (ROOT / "scripts", ROOT / "scripts/gui/harness"):
         sys.path.insert(0, str(p))
 from e25_27 import build, fatimg, tarball, tpzl
 
+_u16 = lambda b, o: struct.unpack_from("<H", b, o)[0]
+
 TAM = 11_427_236  # AV-CAM.BIN de toda versión (los parches no cambian el tamaño)
 
 
@@ -28,8 +30,7 @@ def _tar_de_dat(dat: bytes) -> bytes:
     return fdat[h["firmware_offset"]:h["firmware_offset"] + h["firmware_size"]]
 
 
-def avcam_de(origen: Path) -> bytes:
-    """Bytes de AV-CAM.BIN de un `.dat`, un tar de firmware o un `nflasha3` (TPZL); valida tamaño, `LIRO` y versión 4."""
+def _fat(origen: Path) -> fatimg.Fat16:
     datos = Path(origen).read_bytes()
     if datos[:4] != b"TPZL" and datos[:5] != b"ustar" and datos[257:262] != b"ustar":  # ni TPZL ni tar: se intenta como .dat
         datos = _tar_de_dat(datos)
@@ -39,10 +40,38 @@ def avcam_de(origen: Path) -> bytes:
             raise ValueError(f"el tar no contiene {build.NFLASHA3}")
         datos = miembros[build.NFLASHA3]
     # workers=1: con el pool por defecto falla fuera de `if __name__ == "__main__"`
-    img = fatimg.Fat16.parse(tpzl.TpzlImage.parse(datos).decompressed(1)).read(build.AVCAM_NAME)
+    return fatimg.Fat16.parse(tpzl.TpzlImage.parse(datos).decompressed(1))
+
+
+def avcam_de(origen: Path) -> bytes:
+    """Bytes de AV-CAM.BIN de un `.dat`, un tar de firmware o un `nflasha3` (TPZL); valida tamaño, `LIRO` y versión 4."""
+    img = _fat(origen).read(build.AVCAM_NAME)
     if len(img) != TAM or img[4:8] != b"ORIL" or struct.unpack_from("<I", img, 8)[0] != 4:
         raise ValueError("AV-CAM.BIN con tamaño o cabecera LIRO inesperados")
     return img
+
+
+def idt_de(origen: Path) -> bytes:
+    """Bytes de `SABIN/IDT_CAM.BIN` (microcódigo del módulo IDT) del mismo nflasha3; `fatimg` solo lee la raíz, aquí se baja un nivel."""
+    fat = _fat(origen)
+    d = next(e for e in fat._entries() if fat._decode_name(e) == "SABIN" and e[11] & 0x10)
+    c, buf = _u16(d, 26), bytearray()
+    while 2 <= c < fat._eoc:
+        o = fat.cluster_offset(c)
+        buf += fat.data[o:o + fat.cluster_size]
+        c = fat._fat_entry(c)
+    for o in range(0, len(buf), 32):
+        e = bytes(buf[o:o + 32])
+        if e[0] == 0:
+            break
+        if e[0] != 0xE5 and fat._decode_name(e) == "IDT_CAM.BIN":
+            size, out, c = struct.unpack_from("<I", e, 28)[0], bytearray(), _u16(e, 26)
+            while 2 <= c < fat._eoc and len(out) < size:
+                q = fat.cluster_offset(c)
+                out += fat.data[q:q + fat.cluster_size]
+                c = fat._fat_entry(c)
+            return bytes(out[:size])
+    raise ValueError("SABIN/IDT_CAM.BIN no encontrado")
 
 
 def sha(datos: bytes) -> str:

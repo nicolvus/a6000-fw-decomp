@@ -313,3 +313,32 @@ Sin perfil en vivo ni capturas: no hay arreglo fiel que probar (T12 ya midió S1
 **Eslabón exacto.** (1) Nadie en el paquete sirve `0xc2019f`/el Master (servicio de otro subsistema, probablemente el de sincronía de reloj/VFC; no verificado cuál). (2) Detrás: por qué los módulos 1 y 2 no llegan a `0x320`/`0x285` (el 2 ni arranca: estado 0). (3) El modo de captura `[0x43f68c92]` sale de `0x437c1208()|0x200`, no del +4 de G. No se modeló nada.
 
 **Límites.** No se hizo prueba en vivo ni capturas. La inyección del Master es un diagnóstico (rol y valores inventados); no se probó con el guion S1/S2 completo tras el Master. No se resolvió el origen del byte de rol ni qué es `[GOT 0x44023000]+0x3c` (entrada de `0x437c1208`). `libBizFw*`/`dataflowInfraFramework` se miraron solo en los sitios de `0xc2019f`.
+
+## Tarea 14 — estado real de av-cam en el volcado de RAM: IDT cargado y `Backup_read_multi`; el bloqueo de EE_START se reduce al bloque del módulo 3 (E2E-10, 16-11-2026)
+
+Hecha por el orquestador (sin subagente), partiendo de lo que dejó la sesión cortada por el límite de uso. Todo en la LIRO VM (Capstone + ganchos Unicorn), sin arranque en vivo.
+
+**1. IDT (VERIFICADO).** `SABIN/IDT_CAM.BIN` del `nflasha3` 3.21 (214 496 B, cabecera u16 `0x3d`) está **byte a byte** en `0x83501000` del volcado real `analysis/camera-dumps/ram-servicio-20261020/ram_0x80000000.bin` (offset `0x3501000`). La VM lo carga ahí (`liro_vm.carga(…, idt)`; en el arnés `avcam_fuente.idt_de` lo saca del mismo `.dat`/`nflasha3` que el av-cam y entra en la huella del perfil). Con él desaparece «IDT : Init NG : address = 83501000». Test `test_idt_cam_de_nflasha3_es_el_de_la_ram_real_y_quita_init_ng`.
+
+**2. `Backup_read_multi` (INFERIDO de la forma del shim).** La API de liro.ko no estaba modelada; ahora copia el dato de cada id (lista acabada en 0) a su puntero. Efecto MEDIDO en la secuencia corta de EE_START: los módulos 0 y 1 llegan a su destino (0x105, 0x285) además de 6, 8 y 9; `[0x43e4a5c0]` (targetVfc de `[CLK_CTRL]`) queda en `0xffffffff`, **igual que en el volcado real**, y `[0x43e991d0]`=0. **Corrige T9 y T13**: el «Master» de `[CLK_CTRL]` no hace falta para el módulo 0; era un síntoma de Backup sin leer. Además los destinos por slot eran slot 1 → 0x285 y slot 2 → 0x320 (T8/T13 los tenían cruzados).
+
+**3. Valores del volcado real (cámara en reposo tras arrancar; pantalla exacta no anotada en su README)** frente a la VM tras EE_START:
+
+| Dato | Volcado real | VM (T14) |
+|---|---|---|
+| byte de rol `[0x43e4a5a4]` | 0 | 0 |
+| targetVfc `[0x43e4a5c0]` | `0xffffffff` | `0xffffffff` |
+| secuenciador `[0x43ede338]` | 1 | 0 (guion 0→2 en la barrera 12) |
+| slot 0 `0x43e9bd58` | `0x101` | `0x105` |
+| slot 1 `0x43ec7adc` | `0x201` | `0x285` |
+| slot 2 `0x43e9c7d8` | `0x301` | **0** |
+| slot 6 / 8 / 9 | `0x1000701` / `0x960` / `0xa00` | `0x780` / `0x910` / `0xa10` |
+| `[0x43e9c7d4]` | `0x4378fd9d` | `0x4378fd9d` |
+
+El rol 2 que exigía T13 tampoco está en la cámara real (en reposo). Los slots reales están en otro paso del secuenciador (1), así que solo el formato (`id<<8 | estado`) es comparable; lo que sí difiere es que el slot 2 de la VM está a **cero**: ni siquiera lleva el id del módulo.
+
+**4. El bloque del módulo 3 (MEDIDO + estático).** `0x43e9c7d8` = `G+0x1290`, primer campo del bloque que `0x4378fa70` (inicializador del módulo, llamado al arrancar desde `0x43788194`) prepara: guarda el callback `0x4378fd9d` en `G+0x128c` (presente en la VM y en la RAM real). Cada V corre `0x43793f0a → 0x437b4db8(0x43e99208, 0x43e9c7d8) → 0x437b5a30 → 0x4386b5a0`, que escribe en `+0x360`/`+0x414` del bloque pero nunca en su primer u16. El callback `0x4378fd9d` corre una sola vez. Quién escribe el estado (`0x3xx`) del módulo 3 queda **sin localizar**: ninguna escritura en la VM al rango `0x43e9c7a4…0x43e9c7ff` y ningún acceso estático directo (`pc`-relativo + `0x1290`).
+
+**Tests.** 5 tests de T8–T13 actualizados al comportamiento medido (módulos 0 y 1 llegan; ClkCtrl sin Master); `test_idt…` nuevo; el xfail de `0x3003` pasa a citar solo el slot 2. Suites con liro_vm/puente/bonobo + `test_gui_harness`: 144 passed, 6 skipped, 1 xfailed.
+
+**Siguiente paso.** Encontrar el escritor del estado del módulo 3: vigilar escrituras en `0x43e9c7d8` desde el **arranque** (no solo tras él) y buscar quién usa el callback `0x4378fd9d` y el puntero de bloque `G+0x1290` en `0x437b4db8`/`0x4386b5a0` (campos `+0x360`, `+0x414`); comparar con los campos del bloque en el volcado real (`0x43e9c7d8…+0x500`).

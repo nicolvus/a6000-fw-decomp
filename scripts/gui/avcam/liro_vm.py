@@ -48,6 +48,7 @@ from unicorn.arm_const import (
 
 REPO = Path(__file__).resolve().parents[3]
 AVCAM = REPO / "analysis/rea-independent/input/av-cam.bin"
+IDT = AVCAM.with_name("idt_cam.bin")  # `sabin/idt_cam.bin` del mismo nflasha3; la cámara lo tiene en 0x83501000 (VERIFICADO, g75 T14)
 LIRO_KO = REPO / "analysis/camera-extract/usr/kmod/liro.ko"
 BK = REPO / "analysis/gui/g22/harness/overlay/cam/usr/share/bk.tbl"
 REGLAS = Path(__file__).with_name("mmio_reglas.json")
@@ -171,7 +172,7 @@ class Vm:
         return self.next_id
 
 
-def carga(avcam: Path, bkp: Path) -> Vm:
+def carga(avcam: Path, bkp: Path, idt: Path | None = None) -> Vm:
     uc = Uc(UC_ARCH_ARM, UC_MODE_ARM)
     uc.ctl_set_cpu_model(UC_CPU_ARM_CORTEX_A15)  # BIONZ X: Cortex-A (NEON/VFPv4); la CPU por omisión de Unicorn no trae VFP
     uc.mem_map(IMG_LO, IMG_SZ)
@@ -183,6 +184,9 @@ def carga(avcam: Path, bkp: Path) -> Vm:
     uc.mem_map(HEAP, HEAP_SZ)
     uc.mem_map(STACKS, STACK_MAP)
     uc.mem_map(0x80000000, 0x04000000)  # shortcut: RAM física (gl_common/ISP, p. ej. 0x82d90000) como memoria llana; el mapa real está en DmmConfig.bin (ausente)
+    idt = IDT if idt is None else idt
+    if idt.exists():  # volcado real (ram-servicio-20261020): 0x83501000.. = idt_cam.bin byte a byte; `0x439fd508` exige u16==0x3d (IDT: Init NG)
+        uc.mem_write(0x83501000, idt.read_bytes())
     names = api_names()
     desc = struct.unpack_from("<I", img, 0x14)[0]
     uc.mem_write(desc + 0x24, b"".join(struct.pack("<I", TRAP_BASE + 4 * i if names[i] else 0) for i in range(NAPI)))
@@ -519,6 +523,12 @@ def api(vm: Vm, i: int) -> int | None:
     if n == "Backup_read_4Byte":
         d = vm.bk.get(a(0), b"\0" * 4)
         return int.from_bytes(d[:4].ljust(4, b"\0"), "little")
+    if n == "Backup_read_multi":  # (ids[] acabada en 0, destinos[]): el dato de cada id a su puntero; retorno = nº leídos. Forma del shim (sonyshim.c, INFERIDO: el recuento no viaja; corta en el primer id ausente)
+        k = 0
+        while (i := vm.rd(a(0) + 4 * k)) and i in vm.bk:
+            vm.uc.mem_write(vm.rd(a(1) + 4 * k), vm.bk[i])
+            k += 1
+        return k
     if n in ("Backup_get_datasize",):
         return len(vm.bk.get(a(0), b""))
     if n.startswith("Backup_write"):

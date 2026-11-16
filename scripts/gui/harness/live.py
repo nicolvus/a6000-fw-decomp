@@ -169,6 +169,10 @@ class Vm:
             self.avcam_ruta, avcam_sha = self.dir / "av-cam.bin", avcam_fuente.sha(img)
             if not self.avcam_ruta.exists() or self.avcam_ruta.read_bytes() != img:
                 escribe_atomico(self.avcam_ruta, img)
+            idt = avcam_fuente.idt_de(Path(avcam_de))
+            if not (self.dir / "idt_cam.bin").exists() or (self.dir / "idt_cam.bin").read_bytes() != idt:
+                escribe_atomico(self.dir / "idt_cam.bin", idt)
+            avcam_sha += avcam_fuente.sha(idt)
         self.puente = None
         if avcam:  # av-cam (LIRO VM, scripts/gui/avcam) atiende las colas de kernel que im.elf le envía; ver puente.py
             sys.path.insert(0, str(HERE.parent / "avcam"))
