@@ -387,3 +387,25 @@ def test_la_vm_tiene_el_objetivo_montado() -> None:
     vm = _corre(pre=pre)
     assert lee and set(lee) == {0}  # gpio_get = 0 → objetivo puesto
     assert vm.rd(0x43E81240) == 0xF0
+
+
+@pytest.mark.parametrize(("valor", "nombre"), [(1, "Fina"), (2, "Extrafina")])
+def test_av_cam_acepta_la_calidad_jpeg_de_la_orden_0x4036(valor: int, nombre: str) -> None:
+    """Objetivo Extra Fine (T19, MEDIDO en vivo + VM): el menú Calidad manda `0x4036` con el byte 10 = calidad (Fina 1, Extrafina 2, medido en `e2e41`); av-cam (`0x4380394c`)
+    la guarda en el espejo de ajustes `0x43edf684+0x4c` y contesta `0xf000`. `ConvertQualityForBKID` (`0x437f8204`) admite 0, 1 y 2 (2 → índice 0); otro valor daría «Invalid Jpeg Quality»."""
+    pytest.importorskip("unicorn")
+    M = pytest.importorskip("mensajes")
+    L = pytest.importorskip("liro_vm")
+    vm = _corre()
+    datos = bytes.fromhex("05003640770000800002") + bytes([valor])
+    p = vm.malloc(0x60) + 12
+    vm.uc.mem_write(p - 12, bytes.fromhex("000000000100000002000200"))
+    vm.uc.mem_write(p, datos)
+    vm.msz[p] = len(datos)
+    n0 = len(vm.salida_ext)
+    vm.limite += 300
+    L.entrega(vm, 0x30001, p)
+    L.planifica(vm, 20_000_000)
+    r = [M.decodifica(bytes.fromhex(x[4])) for x in vm.salida_ext[n0:] if x[3] == 0x20002 and bytes.fromhex(x[4])[:1] == b"\x01"]
+    assert any(x.id == 0x4036 and x.carga[:2] == b"\x00\xf0" for x in r), nombre
+    assert vm.rd(0x43EDF6D0) == valor

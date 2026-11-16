@@ -405,3 +405,19 @@ Decisión del usuario: la emulación lleva montado el objetivo de kit 16-50. Hec
 1. Averiguar qué dispara en la cámara el paso al acoplamiento: el emisor de `0x4377e3e4` (interno a av-cam) y las condiciones de los cuatro envíos de `0x40b9` en `libObj` (y qué valor lleva el byte de datos que llega a `0x436e96fc`).
 2. Emular el lado del objetivo en la VM: líneas CS/DATA del handshake (GPIO; los pines están en descriptores reubicados, sacarlos del volcado como el pin 9) y el canal UART de la montura (bloque MMIO, interrupciones y descriptor de canal `stride 0x31c`).
 3. Respuestas del objetivo: las de régimen permanente salen tal cual de los anillos del volcado (§3). Las de acoplamiento no están en el repo: o se reconstruyen a partir del código que las analiza y de los datos ya analizados que sí guarda la RAM real (marcando cada campo VERIFICADO/INFERIDO), o se capturan de la cámara con el 16-50 (volcado de RAM o del registro `Mount_ms_log` durante el acoplamiento), lo que exige autorización del usuario.
+
+## Tarea 19 — función objetivo «Calidad JPEG Extra Fine» de punta a punta hasta av-cam (16-11-2026)
+
+Hecha por el orquestador. Arnés en vivo (perfil `e2e41`, puerto 8761, Sony 3.21 + overlay solo con `CautionConfig.so` parcheado por `scripts/gui/quality_exfine_patch.py`, 4 bytes distintos; cerrado con `/salir`) y LIRO VM.
+
+| Eslabón | Resultado | Evidencia |
+|---|---|---|
+| Menú (cámara, pág. 1 → Calidad) | **5 filas: RAW, RAW & JPEG, Extrafina (icono X.FINE), Fina, Estándar** con el `/usr` de fábrica (G39 lo había probado sobre el overlay del CFW 3.81) | `docs/gui/img/g75/t19-calidad-lista-extrafina.png` |
+| Selección y persistencia | **Queda en «Extrafina»** al volver al menú (cierra G39-B: antes volvía a RAW) | `t19-calidad-extrafina-guardada.png` |
+| Backup | Extrafina escribe 2 y Fina 1 en los ids `0x1070014` y `0x1070aaa` (`nvram.json` del perfil, MEDIDO) | — |
+| Orden a av-cam | `0x4036` a `0x30001` con carga `00 02 02` (Extrafina) / `00 02 01` (Fina); además `0x40cb` y `0x401b` | `avcam.jsonl` del perfil |
+| av-cam la acepta | manejador `0x4380394c` (tabla de órdenes en `0x43fff564`): byte 10 → `[0x43edf684+0x4c]` (espejo de ajustes), responde `0xf000` | test `test_av_cam_acepta_la_calidad_jpeg_de_la_orden_0x4036` |
+| av-cam la reconoce | `ConvertQualityForBKID` (`0x437f8204`): 0 → 2, 1 → 1, **2 → 0**; solo otros valores registran «Invalid Jpeg Quality» | estático (Capstone) |
+| Datos de Backup que usa | `0x437f8244` lee por calidad los BKID de la tabla `0x43ffac44` (Extrafina `0x5008f`/`0x50192`…, Fina `0x50091`…, Estándar `0x50093`…): todos existen en el Backup real con valor 0, igual para las tres calidades (son tamaños objetivo; G39 §4) | `bk.tbl` del arnés (volcado real) |
+
+**Conclusión.** Extra Fine funciona en el arnés de punta a punta hasta av-cam con los binarios de fábrica más el parche de 4 bytes: la cámara de serie ya sabe tratar el valor 2 por el mismo camino que Fina y Estándar. **No verificado:** la codificación JPEG con la tabla de cuantización de Extra Fine (`ExecGetQTable`/`dgi_jpeg_qtable`), porque la captura sigue bloqueada en la VM (E2E-10: secuenciador en la posición 23, montura del objetivo sin emular, E2E-12).
