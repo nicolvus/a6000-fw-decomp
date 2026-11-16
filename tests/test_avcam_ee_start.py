@@ -371,18 +371,19 @@ def test_temporizador_0xf2403000_completa_el_trabajo_del_modulo_9() -> None:
     assert vm.rd(0x43EB3D20, 2) == 0xA82
 
 
-def test_la_vm_es_una_camara_sin_objetivo() -> None:
-    """E2E-10 (T17, VERIFICADO): la detección del objetivo es `!gpio_get(0, 9)` (`0x43a1c3e0`, registro de entrada `0xf2910010`); la regla de `mmio_reglas.json` pone el bit 9 a 1
-    (sin objetivo, estado real de la A6000) y el estado de la montura `[0x43e81240]` se queda en su valor inicial 0xf0 a la espera del evento de `im.elf` (ver g75 «Tarea 17»)."""
+def test_la_vm_tiene_el_objetivo_montado() -> None:
+    """E2E-10 (T17–T18, VERIFICADO): la detección del objetivo es `!gpio_get(0, 9)` (`0x43a1c3e0`, registro de entrada `0xf2910010`, activa a nivel bajo). Por decisión del usuario
+    la VM emula la cámara con su objetivo de kit (E PZ 16-50mm F3.5-5.6 OSS, el de los EXIF reales): el pin lee 0 y av-cam ve el objetivo puesto. El estado de la montura
+    `[0x43e81240]` sigue en 0xf0 hasta que se emule el objetivo (g75 «Tarea 18»)."""
     pytest.importorskip("unicorn")
     from unicorn import UC_HOOK_CODE
     from unicorn.arm_const import UC_ARM_REG_R0
 
-    hay = []
+    lee = []
 
     def pre(vm) -> None:
-        vm.uc.hook_add(UC_HOOK_CODE, lambda uc, *_: hay.append(uc.reg_read(UC_ARM_REG_R0)), None, 0x43A1C3F2, 0x43A1C3F2)
+        vm.uc.hook_add(UC_HOOK_CODE, lambda uc, *_: lee.append(uc.reg_read(UC_ARM_REG_R0)), None, 0x43A1C3F2, 0x43A1C3F2)
 
     vm = _corre(pre=pre)
-    assert hay and set(hay) == {1}  # gpio_get = 1 → antes de `eor #1`: sin objetivo
+    assert lee and set(lee) == {0}  # gpio_get = 0 → objetivo puesto
     assert vm.rd(0x43E81240) == 0xF0
