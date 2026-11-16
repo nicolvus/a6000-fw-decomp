@@ -73,8 +73,45 @@ def test_0x3003_se_contesta_si_el_secuenciador_esta_en_el_paso_que_la_espera(gru
     assert (0x3003, 15) in _respuestas(grupo)
 
 
+def test_paridad_de_v_hace_que_vd_pre_refresque_la_tabla_de_destinos_g() -> None:
+    """E2E-10 (T9, MEDIDO): VD_Pre (`0x43792a0c`) solo copia los destinos del secuenciador (`437fc54c(n)`) en `G=0x43e9b548` (`0x43792e8e…0x43792ef6`) si el bit 0 de `0xf3402028`
+    (leído por `0x43b4c2fc` a `[[0x43e99208+4]+0xc]`) vale 1 o el retardo `[G+0x5d0]` ≤ 1; con la paridad de V (`bonobo.REG_PARIDAD`) G recibe los destinos del guion 0→2 y los
+    módulos 6, 8 y 9 (`0x43e9cf04`, `0x43e9d018`, `0x43eb3d20`) llegan a 0x780/0x910/0xa10; los módulos 0, 1 y 2 siguen parados (ver el xfail)."""
+    vm = _corre()
+    G = 0x43E9B548
+    assert [vm.rd(G + 2 * k, 2) for k in (0, 1, 2, 6, 7, 8)] == [0x105, 0x320, 0x285, 0x780, 0x910, 0xA10]
+    assert [vm.rd(a, 2) for a in (0x43E9CF04, 0x43E9D018, 0x43EB3D20)] == [0x780, 0x910, 0xA10]
+    assert [vm.rd(a, 2) for a in (0x43E9BD58, 0x43EC7ADC, 0x43E9C7D8)] == [0x100, 0x200, 0]
+
+
+def test_eslabon_clkctrl_la_transicion_del_modulo_0_espera_el_vfc_del_maestro() -> None:
+    """E2E-10 (T9, MEDIDO): con G[0]=0x105 la máquina `0x43796954` solo avanza si `[0x43e991d8]`=`[G+0x778]` (=1); `0x43e991d8` se carga de `0x43e991dc` cuando `[0x43e991d0]`==0, pero `0x4378e0fc`
+    pone `[0x43e991d0]`=-1 porque `[0x43e4a5c0]` (targetVfc de `[CLK_CTRL]`, el que fija `0x435a0596` al recibir el mensaje `0x80c001bd` «from Master») sigue en su valor inicial 0xffff0000."""
+    vm = _corre()
+    assert vm.rd(0x43E991D0) == 0xFFFFFFFF and vm.rd(0x43E991D8) == 0 and vm.rd(0x43E991DC) == 1 and vm.rd(0x43E9B548 + 0x778) == 1
+    assert vm.rd(0x43E4A5C0) == 0xFFFF0000
+
+
+def test_puente_vigila_registra_escrituras_del_rango(tmp_path, monkeypatch) -> None:
+    """`AVCAM_VIGILA=dir:tam` (diagnóstico, desactivado por defecto) anota cada escritura con su pc y valor en el registro."""
+    P = pytest.importorskip("puente")
+    if not P.L.AVCAM.exists() or not P.L.LIRO_KO.exists():
+        pytest.skip("faltan av-cam.bin o liro.ko (no versionados)")
+    monkeypatch.setenv("AVCAM_VIGILA", "43e9b548:60")
+    reg = tmp_path / "avcam.jsonl"
+    pu = P.Puente(lambda _l: None, reg)
+    try:
+        with pu.cerrojo:  # el hilo del reloj usa la misma VM
+            pu.vm.limite = pu.vm.t + 200
+            P.L.planifica(pu.vm, 20_000_000)
+    finally:
+        pu.cierra()
+    filas = [json.loads(x) for x in reg.read_text().splitlines()]
+    assert any(f.get("vigila") and f["pc"].startswith("0x43792d") for f in filas)
+
+
 @pytest.mark.xfail(
-    reason="E2E-10 (T7): el secuenciador elige la transición 0→2 (guion de 0x2b palabras en 0x43bf2208) pero se queda en su primera barrera (0x8347) esperando que las palabras de estado de los módulos de imagen (slots 0,1,2,6,8,9) pasen de 0x100/0x200/0/0x700/0x900/0xa00 a 0x105/0x285/0x320/0x780/0x910/0xa10; esos módulos no arrancan en la VM (T8: cada uno depende de su máquina de estados propia y de eventos de hardware sin modelar; ver g75 «Tarea 8»)",
+    reason="E2E-10 (T9, g75 «Tarea 9»): el secuenciador elige 0→2 pero se queda en la barrera 0x8347: con la paridad de V los módulos 6, 8 y 9 llegan a su destino, pero el 0 espera `[0x43e991d8]`=1 (ClkCtrl: falta el mensaje `0x80c001bd` del «Master») y los 1 y 2 dependen de sus propias máquinas de estado",
     strict=True,
 )
 def test_av_cam_contesta_0x3003_ultimo_paso_de_ee_start() -> None:
@@ -97,7 +134,7 @@ def test_secuenciador_elige_la_transicion_0_a_2_y_espera_el_estado_de_los_modulo
     assert vm.rd(0x43F9ADE8, 1) == 1 and vm.rd(0x43EDE320) == 2 and vm.rd(lista + 0xC, 1) == 1 and vm.rd(lista + 0x10) == 0x43BF2208
     assert vm.rd(0x43EDE338) == 0 and vm.rd(lista + 0x18) == 12  # parado en la primera barrera
     estado = {0: 0x43E9BD58, 2: 0x43E9C7D8, 8: 0x43E9D018}
-    assert {j: vm.rd(a, 2) for j, a in estado.items()} == {0: 0x100, 2: 0, 8: 0x900}
+    assert {j: vm.rd(a, 2) for j, a in estado.items()} == {0: 0x100, 2: 0, 8: 0x910}  # T9: el 8 ya alcanza su destino con la paridad de V
     assert [vm.rd(lista + 0x1C + 2 * j, 2) for j in estado] == [0x105, 0x320, 0x910]
 
 

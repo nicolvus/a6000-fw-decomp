@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import sys
 import threading
 import time
@@ -57,8 +58,21 @@ class Puente:
         self.visto = len(self.vm.salida_ext)  # lo emitido durante el arranque se guarda aparte: solo se reenvía en un arranque en frío del invitado
         self.n_in = self.n_out = 0
         self.fin = threading.Event()
+        self._vigila(os.environ.get("AVCAM_VIGILA", ""))
         self.hilo = threading.Thread(target=self._reloj, daemon=True)
         self.hilo.start()
+
+    def _vigila(self, spec: str) -> None:
+        """Diagnóstico (desactivado por defecto): `AVCAM_VIGILA=dir:tam` (hex, p. ej. `43e9b548:60`) anota en el registro cada escritura del rango con su pc y valor."""
+        if not spec:
+            return
+        from unicorn import UC_HOOK_MEM_WRITE
+        from unicorn.arm_const import UC_ARM_REG_PC
+        d, t = (int(x, 16) for x in spec.split(":"))
+
+        def h(uc, acc, addr, size, val, _) -> None:  # noqa: ANN001
+            self._anota(vigila=f"{addr:#x}", pc=f"{uc.reg_read(UC_ARM_REG_PC):#x}", valor=f"{val & 0xFFFFFFFF:#x}", tam=size)
+        self.vm.uc.hook_add(UC_HOOK_MEM_WRITE, h, None, d, d + t - 1)
 
     def _envia_ae(self, linea: bytes) -> None:
         q, cab, datos = linea.decode().split()[1:]

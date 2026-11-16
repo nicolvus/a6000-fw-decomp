@@ -20,6 +20,10 @@ from unicorn import UC_HOOK_MEM_READ, UC_HOOK_MEM_WRITE
 BASE = 0xF3C30000
 INT_CANALES, INT_TEMPORIZADORES = 0x53, 0x54
 EVENTOS_V = (0x1C, 0x1D)
+# Registro de estado del reloj/temporizador (`0xf3402028`, lo lee `0x43b4c2fc` en cada V y guarda el bit 0 en `[[0x43e99208+4]+0xc]`): INFERENCIA, es la paridad de la V
+# (VD_Pre `0x43793826…0x43793844` compara `[G+0x78c]&1` con ese bit y reajusta el retardo de 2 V; y `0x43792e60…0x43792e80` solo refresca la tabla `G` de
+# destinos del secuenciador cuando el bit vale 1 o el retardo ≤ 1). NO_VERIFICADO: fase (el código se resincroniza con cualquiera) y los bits 1/2.
+REG_PARIDAD = 0xF3402028
 # `vd` = periodo del VD (µs) que av-cam fija para el modo activo: `[[0x43e9920c]+0x24]` (la lee `EC_VD_Post` en `0x43791f76`/`0x43791f8a`; 33 367 µs medidos con las 14 órdenes
 # de EE_START = 1001/30 ms, 29,97 Hz). INFERENCIA: la V del sensor es ese vd (EC_VD_Post compara un retardo de 18 000 µs con vd, y la V a 59,94 Hz lo contradiría);
 # hasta que av-cam lo fije se usa el mismo valor.
@@ -117,11 +121,19 @@ class SensorV:
         vd = vm.rd(o + 0x24) if o else 0
         return vd / 1000 if 1000 < vd < 200_000 else self.periodo
 
+    def _paridad(self, vm) -> None:  # noqa: ANN001
+        pg = REG_PARIDAD & ~0xFFF
+        if pg not in vm.mmio:
+            vm.uc.mem_map(pg, 0x1000)
+            vm.mmio[pg] = [0, 0, 0]
+        vm.wr(REG_PARIDAD, vm.rd(REG_PARIDAD) ^ 1)
+
     def avanza(self, vm) -> None:  # noqa: ANN001
         if self.v_prox is not None and self.v_prox <= vm.t:
             self.pend += [(self.v_prox + dt, e) for e, dt in EVENTOS_POST_V]
             self.v_prox += self.periodo_ms(vm)
             self.n += 1
+            self._paridad(vm)
             for e in EVENTOS_V:
                 self.bonobo.evento(e)
         for t, e in [x for x in self.pend if x[0] <= vm.t]:
