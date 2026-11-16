@@ -218,3 +218,55 @@ def test_s1_se_contesta_y_s2_avisa_de_lock_no_retenido() -> None:
     assert any("RelLock) You may forget to hold down the LOCK key" in x for x in log)
     log1, _ = _s1_s2(1)
     assert not any("RelLock)" in x for x in log1)
+
+
+def _s2_gate(forzar: bool) -> dict:
+    """T11: reproduce S1 completo + `0x4044` y mide la puerta de la petición de captura de RelMgr: cuántas veces corre el emisor de `0x3011` (`0x4379eba0`) y qué valen los factores de bloqueo. `forzar` fuerza (DIAGNÓSTICO, no es un arreglo fiel) `[RelMgr+0xbe8]=-1` y la ranura 1 del objeto de bloqueos."""
+    pytest.importorskip("unicorn")
+    L = pytest.importorskip("liro_vm")
+    from unicorn import UC_HOOK_CODE
+
+    vm = _corre(2)
+    ms = json.loads((ROOT / "tests/avcam_s1_s2.json").read_text())["mensajes"]
+    assert ms[16]["datos"][:8] == "05004440", "el 17º mensaje debe ser la 0x4044"
+    obj = 0x43EA03E8  # RelMgr+0xbe4: objeto de bloqueos (vtable 0x43fcd5f0)
+    cuenta = {"eba0": 0, "d088": 0, "warn": 0}
+
+    def h(_uc, a, _s, _u) -> None:
+        for k, v in (("eba0", 0x4379EBA0), ("d088", 0x4381D088), ("warn", 0x4381CFC0)):
+            if a == v:
+                cuenta[k] += 1
+
+    def entrega(m: dict) -> None:
+        cab, datos = bytes.fromhex(m["cab"]), bytes.fromhex(m["datos"])
+        vm.limite += 300
+        p = vm.malloc(max(len(datos), 0x40) + 12 + 0x20) + 12
+        vm.uc.mem_write(p - 12, cab)
+        vm.uc.mem_write(p, datos)
+        vm.msz[p] = len(datos)
+        L.entrega(vm, int(m["q"], 16), p)
+        L.planifica(vm, 20_000_000)
+
+    for m in ms[:16]:
+        entrega(m)
+    estado = {"mascara": vm.rd(obj + 4), "ranuras": [vm.rd(obj + o) for o in (0x48, 0x4C, 0x50)], "d1": vm.rd(0x43E95950 + 0xD1, 1)}
+    if forzar:
+        vm.wr(obj + 4, 0xFFFFFFFF)
+        vm.wr(obj + 0x4C, 1)
+    vm.uc.hook_add(UC_HOOK_CODE, h, begin=0x4379EBA0, end=0x4381D088 + 8)
+    n0 = len(vm.log)
+    entrega(ms[16])
+    vm.limite += 3000
+    L.planifica(vm, 50_000_000)
+    return {**estado, **cuenta, "setup_err": any("SetupTable" in x for x in vm.log[n0:])}
+
+
+def test_s2_la_peticion_de_captura_se_deniega_por_dos_factores_de_bloqueo() -> None:
+    """E2E-3/T11 (MEDIDO): con S1 hecho y `0x4044`, `0x4381d088` (RelLock) niega la petición: la máscara de factores `[RelMgr+0xbe8]` vale `0xfbffffbf` (factores 6 y 26 activos; permitir exige `==-1`), las ranuras 0..2 y el byte `[0x43e95950+0xd1]` valen 0 (de ahí el aviso) y `0x4379eba0` (emisor de `0x3011`) no corre. Forzando máscara y ranura la petición pasa (`0x3011` sale), pero el secuenciador sigue rechazando `SetupTable` (modo de captura, T9)."""
+    base = _s2_gate(False)
+    assert base["mascara"] == 0xFBFFFFBF and base["mascara"] & 0x04000040 == 0
+    assert base["ranuras"] == [0, 0, 0] and base["d1"] == 0
+    assert base["d088"] == 1 and base["warn"] == 1 and base["eba0"] == 0
+    forz = _s2_gate(True)
+    assert forz["eba0"] == 1 and forz["warn"] == 0
+    assert forz["setup_err"]
