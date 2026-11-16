@@ -182,3 +182,39 @@ def test_diagnostico_si_las_palabras_de_estado_alcanzan_el_guion_0_a_2_completa_
     M = pytest.importorskip("mensajes")
     ids = {M.decodifica(bytes.fromhex(x[4])).id for x in vm.salida_ext if x[3] == 0x20002 and bytes.fromhex(x[4])[:1] == b"\x01"}
     assert 0x3003 in ids
+
+
+def _s1_s2(lock: int | None) -> tuple[list[str], dict[tuple[int, int], bytes]]:
+    """T10: tras EE_START (+ `0x3003`), las 8 órdenes de S1 y la `0x4044` de S2 medidas en vivo; `lock` = `[0x43e94eec]` (bandera «LOCK» del módulo de disparo) antes de S2."""
+    M = pytest.importorskip("mensajes")
+    L = pytest.importorskip("liro_vm")
+    vm = _corre(2)
+    n0 = len(vm.log)
+    for m in json.loads((ROOT / "tests/avcam_s1_s2.json").read_text())["mensajes"]:
+        cab, datos = bytes.fromhex(m["cab"]), bytes.fromhex(m["datos"])
+        if lock is not None and datos[2:4] == b"\x44\x40":
+            vm.wr(0x43E94EEC, lock)
+        vm.limite += 300
+        p = vm.malloc(max(len(datos), 0x40) + 12 + 0x20) + 12
+        vm.uc.mem_write(p - 12, cab)
+        vm.uc.mem_write(p, datos)
+        vm.msz[p] = len(datos)
+        L.entrega(vm, int(m["q"], 16), p)
+        L.planifica(vm, 20_000_000)
+    vm.limite += 3000
+    L.planifica(vm, 50_000_000)
+    r = {}
+    for _t, _tarea, _api, q, d, _cab in vm.salida_ext:
+        if q == 0x20002 and bytes.fromhex(d)[:1] == b"\x01":
+            x = M.decodifica(bytes.fromhex(d))
+            r[(x.id, x.seq)] = x.carga
+    return vm.log[n0:], r
+
+
+def test_s1_se_contesta_y_s2_avisa_de_lock_no_retenido() -> None:
+    """E2E-3 (MEDIDO en vivo y aquí): las dos `0x4049` de S1 se contestan con `0xf000`; la `0x4044` de S2 solo dispara el aviso `RelLock) You may forget to hold down the LOCK key` porque `[0x43e94eec]` (leído solo en `0x4381d0ca`, nadie lo escribe en este flujo) vale 0; con 1 el aviso desaparece."""
+    log, r = _s1_s2(None)
+    assert sum(1 for (i, _s) in r if i == 0x4049) >= 2
+    assert any("RelLock) You may forget to hold down the LOCK key" in x for x in log)
+    log1, _ = _s1_s2(1)
+    assert not any("RelLock)" in x for x in log1)
