@@ -489,3 +489,7 @@ A petición del usuario, en lugar de emular una SDXC: el parche de 2 bytes `scri
 ## Tarea 28 — función objetivo «Salida HDMI 4K» (16-11-2026)
 
 Hecha por el orquestador. La A6000 de fábrica ya tiene «Repr. imagen fija 4K» en el menú de reproducción, que en el arnés sale en gris sin televisor 4K (`img/g75/t28-repr-imagen-fija-4k.png`). El vídeo 4K por HDMI se descarta por el sensor ([g80](g80-salida-hdmi-4k.md)).
+
+## Tarea 29 — función objetivo «Timecode / User Bit» (16-11-2026)
+
+Hecha por el orquestador ([g81](g81-timecode-user-bit.md)). El TC/UB de Sony está de fábrica sin menú: emisores de UI a Effect (`0x3016…0x301b`), motor TCUB en el codificador de av-cam y escritura en `libmpr`. En el arnés, con el comando `Z` ampliado a objeto y clase (`Z 9:3900:301a …`), el preset de TC llega a `ObjEffect`, que lo rechaza por el factor de inhibición `0x34b` («is Inhbited») en modo foto. Pendientes TCUB-F1…F3.

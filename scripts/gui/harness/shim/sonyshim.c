@@ -1785,16 +1785,17 @@ static void avq_flush(unsigned q) {  /* im.elf acaba de registrar/esperar en q: 
    despacha (MEDIDO, G75 T22): queda pendiente y se envía dentro de la siguiente IssueCommandAsync de la UI, en su hilo, como una cueva. */
 static void *msghot(void *a) { pthread_mutex_lock(&msg_pm); free(msg_pend); msg_pend = a; pthread_mutex_unlock(&msg_pm); LOG("Z pendiente: %s (sale con la próxima orden de la UI)", (char *)a); return 0; }
 static void msg_send(char *a) {
-    const char *e; char *ln = a; unsigned long msgid = hexv(ln, &e);
+    const char *e; char *ln = a; unsigned long msgid = hexv(ln, &e), ob = 8, cls = 0x3100;
+    if (*e == ':') { ob = msgid; cls = hexv(e + 1, &e); msgid = *e == ':' ? hexv(e + 1, &e) : 0; }  /* «Z obj:clase:msgid …» (p. ej. 9:3900:301a = Effect); sin prefijo, ObjCamera 8:3100 */
     Dl_info di; void *sym = lobj_h ? dlsym(lobj_h, "_ZN12ModelManager9pushEventEP5Event") : 0;
     if (!sym || !dladdr(sym, &di)) { LOG("Z: sin base de libObj"); free(a); return; }
     unsigned long b = (unsigned long)di.dli_fbase; static unsigned char msg[64] __attribute__((aligned(8))), par[64] __attribute__((aligned(8)));
     void (*mk)(void *, unsigned long, unsigned long) = (void *)(b + 0xDE540), (*pint)(void *, long) = (void *)(b + 0xDF00C);
     void (*add)(void *, unsigned long, void *) = (void *)(b + 0xE01A8), (*dp)(void *) = (void *)(b + 0xDD7A8), (*dm)(void *) = (void *)(b + 0xDDD94);
     void *(*obj)(int) = (void *)(b + 0x42067C + 1); void (*issue)(void *, void *) = (void *)(b + 0xDC144);  /* PLT en ARM; OBJ_DE en Thumb */
-    memset(msg, 0, sizeof msg); mk(msg, 0x3100, msgid); int np = 0;
+    memset(msg, 0, sizeof msg); mk(msg, cls, msgid); int np = 0;
     while (*e == ' ' || *e == ',') { unsigned long pid = hexv(e + 1, &e); long v = *e == '=' ? (long)hexv(e + 1, &e) : 0; memset(par, 0, sizeof par); pint(par, v); add(msg, pid, par); dp(par); np++; LOG("Z   %#lx = %#lx", pid, v); }
-    void *o = obj(8); LOG("Z msgid %#lx con %d parámetros → objeto 8 %p", msgid, np, o); if (o) issue(o, msg); dm(msg); free(a);
+    void *o = obj((int)ob); LOG("Z msgid %#lx (clase %#lx) con %d parámetros → objeto %lu %p", msgid, cls, np, ob, o); if (o) issue(o, msg); dm(msg); free(a);
 }
 static void *fnhot(void *a) {
     const char *e; char *ln = a; unsigned long off = hexv(ln, &e), v[4]; for (int k = 0; k < 4; k++) { v[k] = *e == ' ' ? hexv(e + 1, &e) : 0; }
