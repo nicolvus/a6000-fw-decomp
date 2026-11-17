@@ -35,3 +35,23 @@ El VFR de Panasonic graba a una frecuencia de captura distinta de la de reproduc
 - **Parche** (`scripts/g76/sq120_patch.py`, solo sobre una copia de `av-cam.bin`): el `bl 0x435d709c` de `0x43a5d2a0` pasa a una cueva de 0x60 B, con 5 filas de 8 B, en la cola libre de la zona B (`0x43c20ba0…`, detrás de las tablas LUT de g73; ceros verificados y `comprobar_zonas`). La cueva lee fR/sR con el mismo lector. Si el S&Q está activo y coincide una fila nueva, que son **(fR 2/4/6, 120 fps)** y **(fR 3/5, 100 fps)** por analogía con las filas NTSC/PAL de fábrica, devuelve 1. Si no, salta a la búsqueda de fábrica, que hace lo de siempre (registro y reinicio en caso de error).
 - **Prueba (Unicorn sobre el av-cam real):** sin parche 120/100 dan 0 («Config Err»); con parche dan 1. Las combinaciones de fábrica (60, 50 y 1 fps), las inválidas (7 fps, fR 7 con 120) y el S&Q apagado dan lo mismo con y sin parche. Es idempotente, y el diff se limita a gancho + cueva + filas (`test_parche_s_q_120_amplia_la_tabla_sin_cambiar_lo_de_fabrica`).
 - **Sin verificar:** que el codificador y el audio OuCrank acepten 120/100 (la A6000 solo tiene filas hasta 60) y la grabación misma, que depende de E2E-14. El parche no está cargado en el arnés: no cambia nada hasta que se graba.
+
+## 7. VFR-F2: ajuste «S&Q» en la carpeta CFW y cueva en libObj (G75 T24, 16-11-2026)
+- **Modelo de Sony (VERIFICADO por bytes):** `libObj` tiene el modelo de vídeo S&Q `model/MOVIE_REC_O_U_CRANK` (`[M_MRec_OUCrank]`). Al activarse avisa a tres objetos:
+  - `ObjCamera` (`0x60040c`, objeto 8, asíncrono): `ObjMsg(0x3100, 0x75e4)` + `0x971a` + `0x971b`.
+  - El grabador de vídeo (`0x604800`, objeto 0xa, síncrono): `ObjMsg(0x3300, 0x1005)` + `0xc001` (modo) + `0xc002` (código 0–7).
+  - Effect (`0x60051c`, objeto 9, asíncrono): `ObjMsg(0x3900, 0x3015)` + `0x1013` (bool).
+
+  Las conversiones de índice de UI son `0x5f7e2c` (0–6 → `0x207…0x20d`, 7 → `0x207`, **8 → `0x3e2`**) y `0x5f7f16` (0–7 → 0–7, 8 → 0). La A6000 no tiene forma de entrar en ese modelo: falta la posición S&Q del dial y su menú.
+- **Ajuste:** «S&Q» (`cfw_ajustes`, id de Backup **`0x1070208`**, pid `0xF3`). Opciones: Off, 120/100, 60/50, 30/25, 15/12, 8/6 y 1 fps (el valor guardado es el índice de UI de Sony + 1). El id es del mismo hueco de g56 (`ID_LIBRES_2`): no aparece en ningún fichero de `/usr` ni en av-cam, y vale 0 con 1 B en todos los volcados.
+- **Cueva** (`scripts/g76/sq_libobj_patch.py`, +0x900…+0xC00 de la función muerta `0x2648d8`, celda `.bss` `0x10e2c08`):
+  - El gancho es el `bl 0x67a340` de entrada de `0x683e60`, una función de ModelStillRec que la UI ejecuta al salir del menú (medido en el arnés). La cueva conserva r0–r3 y `[sp]`.
+  - Si el ajuste cambió respecto al último enviado, manda los tres mensajes de Sony con sus mismas conversiones. Off envía OFF una sola vez; sin cambio no envía nada, igual que de fábrica.
+  - Convive con las cuevas de g61 y g68.
+- **Unicorn** (`tests/test_g76_sq_libobj.py`, sobre el `libObj` real): para 120/100 la secuencia exacta es `0x75e4` {`0x971a`=`0x206`, `0x971b`=`0x3e2`} → objeto 8, `0x1005` {`0xc001`=1, `0xc002`=0} síncrono → objeto 0xa, `0x3015` {`0x1013`=1} → objeto 9. El mismo valor otra vez no envía nada; 8/6 envía `0x20a`/3, y Off tras ON envía `0x205` una vez. Sin ajuste no envía nada, y los registros llegan intactos al destino.
+- **Arnés (MEDIDO, perfil `e2e43`, overlay `pkg-e2e-sq` con el menú CFW y el `libObj` parcheado):**
+  1. Ajustes p. 4 → «CFW» → p. 2 muestra «S&Q: Off»; la lista tiene sus opciones (`docs/gui/img/g75/t24-*.png`).
+  2. Elegir 120/100 escribe `0x1070208` = 1.
+  3. Al salir del menú la cueva envía desde `libObj+0x26529f` y av-cam recibe **`05 00 8f 40 … 01 07`** (ON, 120/100).
+  4. Volver a Off escribe 0 y av-cam recibe `… 00 00` una sola vez; los ciclos de menú siguientes no envían nada.
+- **Sin verificar:** la grabación S&Q (E2E-14), la respuesta del grabador a `0x1005` en una cámara real, y si `ObjCamera` ejecuta `SeqSetOUCrankMode` (la EE `0x4000` con formato HFR) además del conversor cuando la cámara está en vídeo.

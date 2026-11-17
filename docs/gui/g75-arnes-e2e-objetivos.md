@@ -455,3 +455,16 @@ Hecha por el orquestador. Perfil `e2e42` (Sony 3.21 con el overlay de 120p, XAVC
 ## Tarea 23 — VFR-F4: S&Q a 120/100 fps en la tabla de av-cam (16-11-2026)
 
 Hecha por el orquestador, sin arnés en vivo: la tabla solo se consulta al grabar, y grabar sigue bloqueado (E2E-14). El parche `scripts/g76/sq120_patch.py` desvía el único llamador de la búsqueda O/U Crank a una cueva en la cola libre de la zona B. La cueva acepta (24/30/60p, 120 fps) y (25/50p, 100 fps) y deja el resto en la búsqueda de fábrica. Unicorn sobre el av-cam real: 120/100 pasan de «Config Err» a válidos, y lo de fábrica no cambia. Detalle en [g76 §6](g76-variable-frame-rate-sq.md).
+
+## Tarea 24 — VFR-F2: ajuste «S&Q» y cueva de libObj, de punta a punta hasta av-cam (16-11-2026)
+
+Hecha por el orquestador. Perfil `e2e43`, puerto 8763, Sony 3.21 con el overlay `pkg-e2e-sq` (menú CFW de `cfw_ajustes.construir` + `libObj.so` con la cueva de `scripts/g76/sq_libobj_patch.py`), cerrado con `/salir`.
+
+| Eslabón | Resultado | Evidencia |
+|---|---|---|
+| Menú | Carpeta «CFW» p. 2: «S&Q» con Off, 120/100, 60/50, 30/25, 15/12, 8/6 y 1 fps | `img/g75/t24-carpeta-cfw-sq.png`, `t24-lista-sq.png`, `t24-sq-120-guardado.png` |
+| Backup | 120/100 → `0x1070208` = 1; Off → 0 | `nvram.json` |
+| Cueva | Al salir del menú manda los mensajes del modelo S&Q de Sony a `ObjCamera`, al grabador y a Effect (`IssueCommandAsync ra=libObj+0x26529f/+0x265349`) | `shim.log` |
+| av-cam | `0x408f` con `01 07` (ON, 120/100); con Off, `00 00` una vez; sin cambio, nada | `avcam.jsonl` |
+
+Prueba en Unicorn de la secuencia exacta en `tests/test_g76_sq_libobj.py`. Detalle en [g76 §7](g76-variable-frame-rate-sq.md). Falta grabar (E2E-14).

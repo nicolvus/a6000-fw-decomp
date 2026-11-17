@@ -19,6 +19,8 @@ CARPETA = "CFW"
 PID_PRIMERO = 0xE9                # primer ProcessId nuevo (pid_space)
 # Ids 1 B sin ningún literal en libs/bin/av-cam del 3.21 (volcados de 4 fechas, valor 0, mismo tamaño): hueco 0x1070208…0x1070219 (g56 §2)
 ID_LIBRES = tuple(range(0x1070210, 0x107021A))
+# G76: 0x1070208/9, del mismo hueco de g56; sin literal (palabra de 32 bits) en ningún fichero de /usr ni en av-cam 3.21; 1 B y valor 0 en todos los volcados
+ID_LIBRES_2 = (0x1070208, 0x1070209)
 
 
 @dataclass(frozen=True)
@@ -51,6 +53,9 @@ AJUSTES = (
     # G69 Color Chrome / Film (av-cam): suma desplazamientos a Saturación y Color Depth del mensaje de colorimetría. El valor es el desplazamiento (8·fila) en la tabla de la cueva
     Ajuste("color_chrome", "Color Chrome", ID_LIBRES[9],
            (("Off", 0), ("Débil", 8), ("Fuerte", 16), ("Clásico", 24), ("Vivo", 32), ("Suave", 40)), PID_PRIMERO + 9),
+    # G76 S&Q (VFR): frecuencia de captura del vídeo a cámara lenta/rápida (libObj, como el modelo MOVIE_REC_O_U_CRANK de Sony). El valor es el índice de UI de Sony + 1
+    # (0 = Off): 9 = 120/100 fps (índice 8, el que pide el formato HFR), 1 = 60/50, 2 = 30/25, 3 = 15/12, 4 = 8/6, 7 = 1 fps
+    Ajuste("sq", "S&Q", ID_LIBRES_2[0], (("Off", 0), ("120/100", 9), ("60/50", 1), ("30/25", 2), ("15/12", 3), ("8/6", 4), ("1 fps", 7)), PID_PRIMERO + 10),
 )
 POR_ID = {a.id: a for a in AJUSTES}
 
