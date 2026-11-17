@@ -11,12 +11,12 @@
 #   Arma solo con el arranque terminado ([0x43ede338] == 2) y rearma si el SO borra los registros.
 #   ARMAR=ram arma desde la inicialización de la RAM ([0x43eaeecc] != 0) para trazar el arranque: RIESGO, con golpes
 #   ignorados largos dejó la cámara sin arrancar (S2); exige IGNORA y paradas cortas (los golpes ignorados solo leen WFAR).
-# Salida: «H <ms> core=<n> wfar=<pc+off> r0..r3 lr dscr=<v> <palabra>=<valor antes de la escritura> por dirección», «A <ms> armado», «E <ms> <motivo>», «S <ms> <motivo>».
+# Salida: «C <ms> core wfar par=<dest><-<origen>» (PARES=1, golpes ignorados con par nuevo), «H <ms> core=<n> wfar=<pc+off> r0..r3 lr dscr=<v> <palabra>=<valor antes de la escritura> por dirección», «A <ms> armado», «E <ms> <motivo>», «S <ms> <motivo>».
 # WFAR = dirección de la instrucción + 8 (ARM) o + 4 (Thumb).
 set -u
 OUT=${1:?uso: swd_wp_arranque.sh SALIDA.log DIR_VIRTUAL [segundos] [max_golpes]}
 DIR=${2:?dirección virtual a vigilar}; DUR=${3:-240}; MAX=${4:-40}
-STALL=${STALL:-5}; ARRANQUE=${ARRANQUE:-15}; IGNORA=${IGNORA:-0x0-0x0}; REARMA=${REARMA:-0}; ARMAR=${ARMAR:-fin}
+STALL=${STALL:-5}; ARRANQUE=${ARRANQUE:-15}; IGNORA=${IGNORA:-0x0-0x0}; REARMA=${REARMA:-0}; ARMAR=${ARMAR:-fin}; PARES=${PARES:-0}
 [[ $ARMAR == ram && $IGNORA == 0x0-0x0 ]] && { echo "ERROR: ARMAR=ram exige IGNORA" >&2; exit 1; }
 [[ -e $OUT ]] && { echo "ERROR: $OUT ya existe; no se sobrescribe" >&2; exit 1; }
 if pgrep -x openocd >/dev/null; then
@@ -25,8 +25,8 @@ if pgrep -x openocd >/dev/null; then
 fi
 
 TMP=$(mktemp -d); OCD=; LOG=$TMP/ocd.log; COP=0
-volcar() { local n; n=$(grep -acE '^[HAESI] ' "$LOG"); [[ ${1:-} == vivo ]] && ((n--))
-  ((n > COP)) && grep -aE '^[HAESI] ' "$LOG" | sed -n "$((COP + 1)),${n}p" >> "$OUT"; ((n > COP)) && COP=$n; }
+volcar() { local n; n=$(grep -acE '^[HAESIC] ' "$LOG"); [[ ${1:-} == vivo ]] && ((n--))
+  ((n > COP)) && grep -aE '^[HAESIC] ' "$LOG" | sed -n "$((COP + 1)),${n}p" >> "$OUT"; ((n > COP)) && COP=$n; }
 limpiar() {
   if [[ -n $OCD ]]; then kill -9 "$OCD" 2>/dev/null; wait "$OCD" 2>/dev/null; volcar; echo "S $(date +%s%3N) corte" >> "$OUT"
     # Un núcleo pudo quedar parado o con el watchpoint armado: desarmar y reanudar.
@@ -75,6 +75,11 @@ proc desarma_wp {b} { foreach k {0 1} { w1 [expr {$b + 0x1c0 + 4*$k}] 0 } }
 proc armado_ok {b} { set k 0; foreach p $::WP { if {[r1 [expr {$b + 0x1c0 + 4*$k}]] != [lindex $p 1]} { return 0 }; incr k }; return 1 }
 proc palabras {} { set o ""; foreach p $::WP { append o " [format %08x [lindex $p 0]]=[r0 [expr {[lindex $p 0] + 0x40000000}]]" }; return [string trim $o] }
 # Lee r0–r3 y lr del núcleo parado: ITRen y «MCR p14,0,Rt,c0,c5,0» (copia Rt al DTR); luego quita ITRen.
+proc lee {b rt} {
+  w1 [expr {$b + 0x084}] [expr {0xEE000E15 | ($rt << 12)}]
+  set k 0; while {!([r1 [expr {$b + 0x088}]] & (1 << 24)) && $k < 50} { incr k }
+  return [r1 [expr {$b + 0x08c}]]
+}
 proc lee_regs {b} {
   set d [r1 [expr {$b + 0x088}]]
   w1 [expr {$b + 0x088}] [expr {$d | (1 << 13)}]
@@ -120,8 +125,15 @@ while {[ms] < $fin && $golpes < $MAX} {
         set f [r1 [expr {$b + 0x018}]]
         desarma_wp $b
         if {$f >= [lindex $IG 0] && $f <= [lindex $IG 1]} {
-          # Golpe ignorado: reanudar ya, sin leer registros (parada mínima).
+          # Golpe ignorado: con PARES=1 lee solo r0/r1 (destino/origen del memcpy) y anota cada par nuevo («C»);
+          # sin PARES reanuda sin leer nada (parada mínima).
+          if {$PARES} {
+            w1 [expr {$b + 0x088}] [expr {[r1 [expr {$b + 0x088}]] | (1 << 13)}]
+            set par "[lee $b 0]<-[lee $b 1]"
+            w1 [expr {$b + 0x088}] [expr {[r1 [expr {$b + 0x088}]] & ~(1 << 13)}]
+          }
           w1 [expr {$b + 0x090}] 0x6; incr ignorados
+          if {$PARES && ![info exists pares($par)]} { set pares($par) 1; echo "C [ms] core=$i wfar=$f par=$par [palabras]" }
         } else {
           set regs [lee_regs $b]
           w1 [expr {$b + 0x090}] 0x6
@@ -145,16 +157,17 @@ EOF
 END=$((SECONDS + DUR))
 while ((SECONDS < END)); do
   : > "$LOG"; COP=0
-  openocd -c "set REM $((END - SECONDS)); set DIR $DIR; set MAX $MAX; set IG {${IGNORA/-/ }}; set REARMA $REARMA; set ARMAR $ARMAR" -f "$TMP/wp.cfg" > "$LOG" 2>&1 &
+  openocd -c "set REM $((END - SECONDS)); set DIR $DIR; set MAX $MAX; set IG {${IGNORA/-/ }}; set REARMA $REARMA; set ARMAR $ARMAR; set PARES $PARES" -f "$TMP/wp.cfg" > "$LOG" 2>&1 &
   OCD=$!; motivo=fin; t=0; quieto=0; s0=
   while kill -0 "$OCD" 2>/dev/null; do
     sleep 1; ((t++))
-    n=$(grep -acE '^[HAESI] ' "$LOG"); volcar vivo
+    n=$(grep -acE '^[HAESIC] ' "$LOG"); volcar vivo
     # Latido «K» cada segundo desde Tcl: si el log deja de crecer, la sesión está atascada.
     s=$(stat -c %s "$LOG"); if [[ $s0 == "$s" ]]; then ((quieto++)); else quieto=0; fi; s0=$s
     if ((quieto >= STALL && t > ARRANQUE)); then motivo=atasco; kill -9 "$OCD" 2>/dev/null; fi
   done
   wait "$OCD" 2>/dev/null; OCD=
+  [[ $motivo == fin ]] && ! grep -qaE '^[KHAEIC] ' "$LOG" && motivo=sin_datos
   volcar; echo "S $(date +%s%3N) $motivo" >> "$OUT"
   grep -q -E '^E [0-9]+ max_golpes' "$OUT" && break
   # ram: una sola sesión armada por ejecución (nunca seguir armando tras un reinicio o el fin del arranque).
