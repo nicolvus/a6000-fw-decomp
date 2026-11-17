@@ -40,3 +40,12 @@ Método: `elf_string_xrefs.py` sobre `libObj.so` para localizar cada `Seq…) SE
 - **Anamorphic Desqueeze:** solo `PARAMID_SQUEEZE_ASPECT_*` en `ObjEffect` (`NOT FOUND: …` si el parámetro no existe); av-cam 3.21 no tiene cadenas ni manejador evidente → sin base hasta localizar el consumidor.
 
 Pendiente actualizado: AF Adjust / AF Range / Auto Framing pasan a «orden aceptada por av-cam, consumidor sin localizar»; el siguiente paso útil es localizar los lectores de `0x43edf9c0` (AF Adjust) con REA/Unicorn cuando E2E-10 permita ejecutar el AF.
+
+### Misma comprobación para sensibilidad AF y Eye AF (17-11-2026, estático)
+| Función | Orden | Manejador av-cam | Qué hace |
+|---|---|---|---|
+| Sensibilidad AF vídeo (`SeqSetMovieAfSensibility`) | `0x40d1` | `0x438031e8` | 1 byte → espejo `+0x38c` |
+| Sensibilidad AF foto (`SeqSetStillAfSensibility`) | `0x40e5` | `0x438032fd` (Thumb `0x438032fc`) | copia al espejo |
+| Eye AF (`SeqSetEyeStartAF`) | `0x4054` | `0x43802895` | copia al espejo (inicio de Eye AF por botón) |
+
+Igual que arriba: manejador presente y copia al espejo (VERIFICADO), consumidor NO_VERIFICADO y sin nodo de menú. Conclusión del barrido: **ninguna de estas funciones queda cerrada sin ejecutar el AF de av-cam (E2E-10)**; con el AF ejecutándose, el método es escribir cada campo del espejo en la VM y comprobar qué rutina lo lee.
