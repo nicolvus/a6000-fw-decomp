@@ -92,3 +92,12 @@ Herramienta: `scripts/swd_wp_arranque.sh` (DBGWVR/WCR 0–1 por AP1 en los 4 Cor
 - **Durante el arranque** se vio que `0x439c5a6c` (lr `0x437b5635`) pone a cero `0x43eb2680` (`0x8ac` B): inicialización del bloque.
 - **Incidente:** armado desde la inicialización de la RAM, las ~20 paradas/s del núcleo 2 durante el arranque provocaron reinicios cada ≈ 24 s y después la cámara no arrancó (DP vivo, AP atascados). Se desarmó todo (WCR = 0, HDBGen = 0); tras quitar la batería ≥ 30 s arrancó normal (`[0x43ede338]` = `[0x43ede320]` = 2, `0x43eaeecc` = `0x00010107`). Sin escrituras en RAM/NAND/NVRAM. Desde entonces el script **solo arma con el arranque terminado** (`[0x43ede338]` == 2).
 - Pendiente: el escritor real del flag en el arranque. Vía sin parar la CPU en cada fotograma: S1 lo sitúa en un único intervalo ≈ 19 s tras la RAM; opciones: armar solo en esa ventana, o vigilar la orden del caso 22 (`0x4372a0c6`) con un breakpoint de un solo golpe.
+
+### S2b (breakpoints de un solo golpe) — 17-11-2026 (MEDIDO)
+
+`scripts/swd_bp_unico.sh` (BVR/BCR 0–2, ≤ 1 parada por dirección y núcleo; validado en reposo con ARM `0x439c534c`, BAS `0b1111`, y Thumb `0x4386b5da`, BAS `0b1100`). Bytes de las tres direcciones iguales en la RAM del 3.78 y en `av-cam.bin` 3.21. Log: `analysis/camera-dumps/20261117-traza-S2/bp_arranque.log`.
+
+- Armados en `0x4384fd06` (`strb.w r0,[r2,#0x49]`), `0x4384fd6e` (`strb.w r1,[r2,#0x49]`) y `0x4372a0c6` (`bl 0x439e2888`, caso 22) desde el encendido (rearmados al volver la alimentación de cada núcleo): **ninguno saltó** y la cámara llegó al estado 2 con `0x43eaeecc` = `0x00010107` (flag a 1). Arranque normal, sin incidencias.
+- Conclusión: en la cámara real el flag `+0x49` **no** lo escriben `0x4384fd06`/`0x4384fd6e` y el caso 22 del despachador no se ejecuta en el arranque; la cadena estática de E2E-12c no es la que actúa. S1 sugiere una escritura conjunta de `+0x48`/`+0x49` (`0x0104`, luego `+0x48` = 7).
+- En reposo prolongado la cámara pasa sola de 2 a 1 con el flag a 0 (estado del volcado `ram-servicio`).
+- Siguiente: watchpoint en el arranque con un manejo barato de los golpes del `memcpy` (solo WFAR, sin leer registros), previa autorización por el riesgo del incidente S2.
