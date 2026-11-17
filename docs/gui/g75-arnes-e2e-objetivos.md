@@ -451,3 +451,7 @@ Hecha por el orquestador. Perfil `e2e42` (Sony 3.21 con el overlay de 120p, XAVC
 - **Shim, comando nuevo `Z msgid pid=val,…`:** arma `ObjMsg(0x3100, msgid)` con parámetros int y lo emite a `ObjCamera` (objeto 8) con las mismas funciones de `libObj` que las cuevas g61/g68. MEDIDO: desde un hilo del shim `ObjCamera` no lo despacha (ni `0x75e4` ni `0x755a`), así que queda pendiente y sale dentro de la siguiente `IssueCommandAsync` de la UI, en su hilo, como lo haría una cueva.
 - **Resultado:** `0x75e4` (S&Q ON + frecuencia) llega a av-cam como orden `0x408f`, con código 3 para 8/6 fps y **7 para 120/100 fps**. av-cam guarda ambos bytes (test de la VM).
 - **Combinación con 120p:** el firmware la prevé. Con 120/100, `SeqSetOUCrankMode` manda además la orden EE `0x4000` con la clase de formato 4 (la de 120p, modo de sensor 0x12). Falta la tabla O/U Crank de av-cam con filas de 120/100 y la grabación (E2E-14). Detalle en [g76 §5](g76-variable-frame-rate-sq.md).
+
+## Tarea 23 — VFR-F4: S&Q a 120/100 fps en la tabla de av-cam (16-11-2026)
+
+Hecha por el orquestador, sin arnés en vivo: la tabla solo se consulta al grabar, y grabar sigue bloqueado (E2E-14). El parche `scripts/g76/sq120_patch.py` desvía el único llamador de la búsqueda O/U Crank a una cueva en la cola libre de la zona B. La cueva acepta (24/30/60p, 120 fps) y (25/50p, 100 fps) y deja el resto en la búsqueda de fábrica. Unicorn sobre el av-cam real: 120/100 pasan de «Config Err» a válidos, y lo de fábrica no cambia. Detalle en [g76 §6](g76-variable-frame-rate-sq.md).

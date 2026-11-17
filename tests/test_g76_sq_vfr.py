@@ -52,3 +52,54 @@ def test_s_q_a_120_pide_el_formato_hfr():
     assert txt[0] == "movw r0, #0x408f"
     assert txt[1:] == ["mov.w r0, #0x4000", "add.w r1, r7, #0x28", "adds r2, r7, #4", "ldr r3, [r4, #0x10]", "bl #0x9bbb5c",
                        "movw r3, #0x3e2", "cmp r8, r3", "bne #0xa1ad28", "movs r3, #4", "strb r3, [r7, #0xd]"]
+
+
+def _busca(d, entrada, fr, sr, activo=1):
+    """Ejecuta (Unicorn, av-cam real) la búsqueda O/U Crank desde `entrada` con el objeto de vídeo {+0xc+0x104 activo, +0x105 sR, +0x108 fR}."""
+    from unicorn import UC_ARCH_ARM, UC_HOOK_CODE, UC_MODE_THUMB, Uc
+    from unicorn.arm_const import (
+        UC_ARM_REG_LR,
+        UC_ARM_REG_PC,
+        UC_ARM_REG_R0,
+        UC_ARM_REG_SP,
+    )
+    mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
+    mu.mem_map(0x43000000, 0x1100000)
+    mu.mem_write(B, d)
+    mu.mem_map(0x10000000, 0x20000)
+    obj = 0x10000000
+    o = obj + 0xC
+    mu.mem_write(o + 0x104, bytes([activo, sr]))
+    mu.mem_write(o + 0x108, struct.pack("<I", fr))
+    fin = 0x10010000
+
+    def stub(uc, addr, size, _):  # registro de av-cam (0x435b3040 contexto, 0x43a4e4e8 printf): sin efecto en el resultado
+        if addr in (0x435B3040, 0x43A4E4E8):
+            uc.reg_write(UC_ARM_REG_R0, 0)
+            uc.reg_write(UC_ARM_REG_PC, uc.reg_read(UC_ARM_REG_LR))
+
+    mu.hook_add(UC_HOOK_CODE, stub)
+    mu.reg_write(UC_ARM_REG_SP, 0x1001F000)
+    mu.reg_write(UC_ARM_REG_LR, fin | 1)
+    mu.reg_write(UC_ARM_REG_R0, obj)
+    mu.emu_start(entrada | 1, fin, count=200_000)
+    return mu.reg_read(UC_ARM_REG_R0)
+
+
+@pytest.mark.skipif(not AVCAM.exists(), reason="av-cam.bin no disponible")
+def test_parche_s_q_120_amplia_la_tabla_sin_cambiar_lo_de_fabrica():
+    """VFR-F4: con el parche, (fR 24/30/60p, 120 fps) y (25/50p, 100 fps) son válidas; lo de fábrica (60 fps, 1 fps) y lo inválido (7 fps,
+    S&Q apagado) dan lo mismo que sin parche. Sin parche 120/100 caen en «OuCrank Config Err» (0)."""
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("sq120", ROOT / "scripts/g76/sq120_patch.py")
+    P = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(P)
+    d = AVCAM.read_bytes()
+    p = P.patch(d)
+    assert P.patch(p) == p
+    assert sum(a != b for a, b in zip(d, p, strict=True)) <= 4 + 0x60 + 8 * len(P.FILAS)
+    for fr, sr in P.FILAS:
+        assert _busca(d, P.BUSCA, fr, sr) == 0
+        assert _busca(p, P.CUEVA, fr, sr) == 1
+    for fr, sr, activo in ((4, 60, 1), (2, 1, 1), (5, 50, 1), (4, 7, 1), (4, 120, 0), (7, 120, 1)):
+        assert _busca(p, P.CUEVA, fr, sr, activo) == _busca(d, P.BUSCA, fr, sr, activo), (fr, sr, activo)
