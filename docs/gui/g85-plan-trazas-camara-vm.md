@@ -82,3 +82,13 @@ Conclusiones:
 - El estado 2 se mantiene en reposo con la pantalla de disparo; el `1/1` y `0x43eaeecd = 0` del volcado `ram-servicio` y de la primera lectura de hoy son otro estado posterior (NO_VERIFICADO cuál: ¿ahorro de energía?).
 - `0x10` es una secuencia periódica (primero cambia `[0x43ede320]`, después `[0x43ede338]`), NO_VERIFICADO qué es.
 - Resolución de 0,15 s: no distingue los pasos intermedios del guion (0→2→0x1b→1 del volcado). El escritor de `0x43eaeecd` sigue sin identificar: hace falta S2 (watchpoint).
+
+### S2 (watchpoint) — 17-11-2026 (MEDIDO)
+
+Herramienta: `scripts/swd_wp_arranque.sh` (DBGWVR/WCR 0–1 por AP1 en los 4 Cortex-A5, WFAR + r0–r3/lr por ITR). Logs en `analysis/camera-dumps/20261117-traza-S2/` (no versionados).
+
+- **En reposo** (cámara arrancada): los bloques `0x43eb2680` y `0x43eaee84` (`0x8cc` B) se copian **entre sí en ambos sentidos** cada fotograma con el `memcpy` de `0x439c535c` (WFAR; r0/r1 = destino/origen), unas 20 veces/s. No hay otro escritor de `0x43eb26c9`/`0x43eaeecd` en reposo (22 s vigilados).
+- El watchpoint del A5 es síncrono: si se reanuda armado, la misma instrucción vuelve a saltar sin fin (primer intento: núcleo 2 parado ≈ 300 ms). Corregido: desarmar el núcleo, reanudar y rearmar.
+- **Durante el arranque** se vio que `0x439c5a6c` (lr `0x437b5635`) pone a cero `0x43eb2680` (`0x8ac` B): inicialización del bloque.
+- **Incidente:** armado desde la inicialización de la RAM, las ~20 paradas/s del núcleo 2 durante el arranque provocaron reinicios cada ≈ 24 s y después la cámara no arrancó (DP vivo, AP atascados). Se desarmó todo (WCR = 0, HDBGen = 0); tras quitar la batería ≥ 30 s arrancó normal (`[0x43ede338]` = `[0x43ede320]` = 2, `0x43eaeecc` = `0x00010107`). Sin escrituras en RAM/NAND/NVRAM. Desde entonces el script **solo arma con el arranque terminado** (`[0x43ede338]` == 2).
+- Pendiente: el escritor real del flag en el arranque. Vía sin parar la CPU en cada fotograma: S1 lo sitúa en un único intervalo ≈ 19 s tras la RAM; opciones: armar solo en esa ventana, o vigilar la orden del caso 22 (`0x4372a0c6`) con un breakpoint de un solo golpe.

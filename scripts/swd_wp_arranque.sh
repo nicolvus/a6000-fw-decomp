@@ -8,7 +8,7 @@
 # Uso: swd_wp_arranque.sh SALIDA.log DIR_VIRTUAL[,DIR2] [segundos=240] [max_golpes=40]
 #   IGNORA=0xLO-0xHI: golpes con WFAR en ese rango no se registran ni cuentan (p. ej. el memcpy
 #   0x439c5320 que copia cada V los bloques 0x43eb2680<->0x43eaee84); salen como «I <ms> ignorados=n» cada 10 s.
-#   Arma cuando la RAM de av-cam está inicializada ([0x43eaeecc] != 0) y rearma si el SO borra los registros.
+#   Arma solo con el arranque terminado ([0x43ede338] == 2; NO sirve para trazar el arranque) y rearma si el SO borra los registros.
 # Salida: «H <ms> core=<n> wfar=<pc+off> r0..r3 lr dscr=<v> <palabra>=<valor antes de la escritura> por dirección», «A <ms> armado», «E <ms> <motivo>», «S <ms> <motivo>».
 # WFAR = dirección de la instrucción + 8 (ARM) o + 4 (Thumb).
 set -u
@@ -90,7 +90,9 @@ while {[ms] < $fin && $golpes < $MAX} {
   if {[catch {r0 0x0} v] || $v ne "0xe59ff0e8"} { incr bad } else { set bad 0 }
   if {$bad > 8} { echo "E [ms] sin_alimentacion"; break }
   if {!$armado} {
-    if {![catch {r0 0x83eaeecc} v] && $v ne "0x00000000"} {
+    # Solo con av-cam ya arrancado ([0x43ede338] == 2): armar antes, con ~20 paradas/s por el memcpy,
+    # dejó la cámara en bucle de reinicios y luego sin arrancar (MEDIDO 17-11-2026, g85 S2).
+    if {![catch {r0 0x83ede338} v] && $v eq "0x00000002"} {
       if {[catch {foreach b $CORES { arma $b }} e]} { echo "E [ms] arma:$e" } else { set armado 1; echo "A [ms] armado $WP" }
     }
     after 100; continue
