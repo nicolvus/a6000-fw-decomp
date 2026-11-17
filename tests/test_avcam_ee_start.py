@@ -409,3 +409,21 @@ def test_av_cam_acepta_la_calidad_jpeg_de_la_orden_0x4036(valor: int, nombre: st
     r = [M.decodifica(bytes.fromhex(x[4])) for x in vm.salida_ext[n0:] if x[3] == 0x20002 and bytes.fromhex(x[4])[:1] == b"\x01"]
     assert any(x.id == 0x4036 and x.carga[:2] == b"\x00\xf0" for x in r), nombre
     assert vm.rd(0x43EDF6D0) == valor
+
+
+@pytest.mark.parametrize(("codigo", "nombre"), [(3, "8/6 fps"), (7, "120/100 fps")])
+def test_av_cam_guarda_el_s_q_de_la_orden_0x408f(codigo: int, nombre: str) -> None:
+    """VFR/S&Q (T22, MEDIDO en vivo con «Z 75e4 971a=206,971b=…» en `e2e42`): libObj convierte MSGID_SET_O_U_CRANK_MODE_CMD en `0x408f`
+    con byte 8 = modo (ON 1) y byte 9 = frecuencia (FR_8_6 → 3, FR_120_100 → 7). El manejador `0x43802cfc` guarda ambos en `0x43edf684+0x208/+0x209` sin respuesta."""
+    pytest.importorskip("unicorn")
+    L = pytest.importorskip("liro_vm")
+    vm = _corre()
+    datos = bytes.fromhex("05008f405400008001") + bytes([codigo])
+    p = vm.malloc(0x60) + 12
+    vm.uc.mem_write(p - 12, bytes.fromhex("000000000100000002000200"))
+    vm.uc.mem_write(p, datos)
+    vm.msz[p] = len(datos)
+    vm.limite += 300
+    L.entrega(vm, 0x30001, p)
+    L.planifica(vm, 20_000_000)
+    assert (vm.rd(0x43EDF88C, 1), vm.rd(0x43EDF88D, 1)) == (1, codigo), nombre

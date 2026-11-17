@@ -1239,9 +1239,12 @@ static void *salvage_reply(void *a) {
 }
 /* MWF::ObjIf::IssueCommandAsync(objeto, ObjMsg*): la UI emite así los cambios de ajustes (p. ej. EFCS = ObjMsg(0x3100, 0x75fa) + param 0x9776); IMCMDLOG=1 registra destino, cabecera del mensaje y retorno */
 /* El envoltorio desnudo pasa r4/r5 del llamante (callee-saved): en pvt_SetFrontEShutterMode (libObj 0x6896ac) r4 = ModelStillRec, r5 = valor 1/2 */
+static char *msg_pend; static pthread_mutex_t msg_pm = PTHREAD_MUTEX_INITIALIZER; static void msg_send(char *);  /* «Z», ver msghot */
 __attribute__((used, noinline)) static int issue_cmd(void *h, void *msg, unsigned long r4, unsigned long r5) {
     static int (*real)(void *, void *); if (!real) real = nextsym("_ZN3MWF5ObjIf17IssueCommandAsyncEPvPNS_6ObjMsgE");
     void *ra = __builtin_return_address(0); int r = real(h, msg);
+    { static __thread int dentro; char *p = 0; if (!dentro && msg_pend) { pthread_mutex_lock(&msg_pm); p = msg_pend; msg_pend = 0; pthread_mutex_unlock(&msg_pm); }
+      if (p) { dentro = 1; msg_send(p); dentro = 0; } }  /* «Z» pendiente: en el hilo de la UI */
     if (efcs_ra && (unsigned long)ra == efcs_ra && !r && (r5 == 1 || r5 == 2)) {  /* efecto de CMP 0x75fb + EVT 0x85a6 (SET = ACT = pedido) y Backup 0x107086e */
         unsigned long base = efcs_ra - 0x689745; void (*set)(void *, unsigned, unsigned) = (void *)(base + 0x68e0ce + 1);  /* guarda la ranura y avisa a la vista (info 0x4f) */
         void *w = *(void **)(r4 + 0x534); set(w, 0, r5); set(w, 1, r5);
@@ -1777,6 +1780,22 @@ static void avq_flush(unsigned q) {  /* im.elf acaba de registrar/esperar en q: 
     pthread_mutex_unlock(&avq_pm);
 }
 /* «F desp_hex a0 a1 a2 a3» (live.py /linea): llama en caliente a libObj+desp(a0..a3) en un hilo propio (diagnóstico: p. ej. el despachador de acciones de ModelStillRec, 69c608(this, id)) */
+/* «Z msgid pid=val[,pid=val…]» (/linea): mensaje a ObjCamera con parámetros int, con las mismas funciones de libObj que el emisor 0x67b4b0
+   y las cuevas g61/g68 (ObjMsg(0x3100, msgid) + ParamStd<int> + AddParam → objeto 8 → issue). Desde un hilo propio del shim ObjCamera no lo
+   despacha (MEDIDO, G75 T22): queda pendiente y se envía dentro de la siguiente IssueCommandAsync de la UI, en su hilo, como una cueva. */
+static void *msghot(void *a) { pthread_mutex_lock(&msg_pm); free(msg_pend); msg_pend = a; pthread_mutex_unlock(&msg_pm); LOG("Z pendiente: %s (sale con la próxima orden de la UI)", (char *)a); return 0; }
+static void msg_send(char *a) {
+    const char *e; char *ln = a; unsigned long msgid = hexv(ln, &e);
+    Dl_info di; void *sym = lobj_h ? dlsym(lobj_h, "_ZN12ModelManager9pushEventEP5Event") : 0;
+    if (!sym || !dladdr(sym, &di)) { LOG("Z: sin base de libObj"); free(a); return; }
+    unsigned long b = (unsigned long)di.dli_fbase; static unsigned char msg[64] __attribute__((aligned(8))), par[64] __attribute__((aligned(8)));
+    void (*mk)(void *, unsigned long, unsigned long) = (void *)(b + 0xDE540), (*pint)(void *, long) = (void *)(b + 0xDF00C);
+    void (*add)(void *, unsigned long, void *) = (void *)(b + 0xE01A8), (*dp)(void *) = (void *)(b + 0xDD7A8), (*dm)(void *) = (void *)(b + 0xDDD94);
+    void *(*obj)(int) = (void *)(b + 0x42067C + 1); void (*issue)(void *, void *) = (void *)(b + 0xDC144);  /* PLT en ARM; OBJ_DE en Thumb */
+    memset(msg, 0, sizeof msg); mk(msg, 0x3100, msgid); int np = 0;
+    while (*e == ' ' || *e == ',') { unsigned long pid = hexv(e + 1, &e); long v = *e == '=' ? (long)hexv(e + 1, &e) : 0; memset(par, 0, sizeof par); pint(par, v); add(msg, pid, par); dp(par); np++; LOG("Z   %#lx = %#lx", pid, v); }
+    void *o = obj(8); LOG("Z msgid %#lx con %d parámetros → objeto 8 %p", msgid, np, o); if (o) issue(o, msg); dm(msg); free(a);
+}
 static void *fnhot(void *a) {
     const char *e; char *ln = a; unsigned long off = hexv(ln, &e), v[4]; for (int k = 0; k < 4; k++) { v[k] = *e == ' ' ? hexv(e + 1, &e) : 0; }
     Dl_info di; void *sym = lobj_h ? dlsym(lobj_h, "_ZN12ModelManager9pushEventEP5Event") : 0;
@@ -1832,6 +1851,7 @@ static void *live_keys(void *a) {
             if (ln[0] == 'X' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, rqhot, nm); pthread_detach(th); }
             if (ln[0] == 'P' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, peekhot, nm); pthread_detach(th); }
             if (ln[0] == 'F' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, fnhot, nm); pthread_detach(th); }
+            if (ln[0] == 'Z' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, msghot, nm); pthread_detach(th); }
             if (ln[0] == 'D' && !ln[1]) { pthread_t th; pthread_create(&th, 0, sddump, 0); pthread_detach(th); }
             if (ln[0] == 'R') live_force = 1;  /* el anfitrión se acaba de conectar (p. ej. tras restaurar el estado): reenviar el fotograma actual */
             if (ln[0] == 'K') { unsigned m[12] = {0}; static int swallow; m[0] = hexv(ln + 2, &e); m[2] = hexv(e + 1, &e); m[4] = hexv(e + 1, &e);

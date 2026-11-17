@@ -41,3 +41,14 @@ def test_sin_menu_s_q_en_la_a6000():
     """No hay nodos de menú de S&Q/cámara lenta en CautionConfig: la función existe por debajo pero no se puede pedir desde la UI."""
     d = (LIB / "CautionConfig.so").read_bytes().lower()
     assert all(k not in d for k in (b"slowquick", b"slow_quick", b"crank", b"s&q"))
+
+
+@pytest.mark.skipif(not (LIB / "libObj.so").exists(), reason="extracción no disponible")
+def test_s_q_a_120_pide_el_formato_hfr():
+    """SeqSetOUCrankMode (`0xa1aa90`) arma `0x408f` y una orden EE `0x4000` de 0x17 B; con VALUEID_O_U_CRANK_FR_120_100 (`0x3e2`) pone su byte 0xd = 4,
+    la misma clase de formato 4 de «120p» (G70: el selector de av-cam `0x4380e43c` elige con ella el modo de sensor 0x12 a 120 Hz)."""
+    d = (LIB / "libObj.so").read_bytes()
+    txt = [f"{m} {o}" for _, m, o in _ins(d, 0xA1AAD8, 0xA1AADC)] + [f"{m} {o}" for _, m, o in _ins(d, 0xA1AD0C, 0xA1AD28)]
+    assert txt[0] == "movw r0, #0x408f"
+    assert txt[1:] == ["mov.w r0, #0x4000", "add.w r1, r7, #0x28", "adds r2, r7, #4", "ldr r3, [r4, #0x10]", "bl #0x9bbb5c",
+                       "movw r3, #0x3e2", "cmp r8, r3", "bne #0xa1ad28", "movs r3, #4", "strb r3, [r7, #0xd]"]

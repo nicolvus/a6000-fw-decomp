@@ -444,3 +444,10 @@ Hecha por el orquestador. Retoma el último objetivo de la lista de wiki 16 que 
 ## Tarea 21 — función objetivo «Variable Frame Rate» (16-11-2026)
 
 Hecha por el orquestador, solo análisis estático: no hay nada que la UI pueda pedir todavía, así que en el arnés no hay qué probar. El VFR de Panasonic equivale al S&Q («O/U Crank») de Sony. La A6000 3.21 lo trae de fábrica en av-cam (tabla de 57 combinaciones de 1 a 60 fps y codificador OuCrank), en `libObj` (`SetOUCrankModeForLiro`, MSGID `0x75e4`/`0x75e6`, PARAMID `0x9724`/`0x971b`) y en `libmpr`. **Falta solo la entrada de menú.** Detalle en [g76](g76-variable-frame-rate-sq.md) y en `tests/test_g76_sq_vfr.py`. Siguiente paso en el arnés: VFR-F1, que consiste en inyectar `0x75e4` y ver la orden LIRO en av-cam.
+
+## Tarea 22 — S&Q (Variable Frame Rate) en el arnés y combinación con HD 120 (16-11-2026)
+
+Hecha por el orquestador. Perfil `e2e42` (Sony 3.21 con el overlay de 120p, XAVC S), cerrado con `/salir`.
+- **Shim, comando nuevo `Z msgid pid=val,…`:** arma `ObjMsg(0x3100, msgid)` con parámetros int y lo emite a `ObjCamera` (objeto 8) con las mismas funciones de `libObj` que las cuevas g61/g68. MEDIDO: desde un hilo del shim `ObjCamera` no lo despacha (ni `0x75e4` ni `0x755a`), así que queda pendiente y sale dentro de la siguiente `IssueCommandAsync` de la UI, en su hilo, como lo haría una cueva.
+- **Resultado:** `0x75e4` (S&Q ON + frecuencia) llega a av-cam como orden `0x408f`, con código 3 para 8/6 fps y **7 para 120/100 fps**. av-cam guarda ambos bytes (test de la VM).
+- **Combinación con 120p:** el firmware la prevé. Con 120/100, `SeqSetOUCrankMode` manda además la orden EE `0x4000` con la clase de formato 4 (la de 120p, modo de sensor 0x12). Falta la tabla O/U Crank de av-cam con filas de 120/100 y la grabación (E2E-14). Detalle en [g76 §5](g76-variable-frame-rate-sq.md).
