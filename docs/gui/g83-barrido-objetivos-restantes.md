@@ -17,3 +17,9 @@ Método: `strings` y referencias PC-relativas (`scripts/elf_string_xrefs.py`) so
 1. Zebra: probar en el arnés que cambiar la tabla mueve U/L (y que se ve en pantalla).
 2. AF Adjust / AF Range / Anamorphic: ver si el valor llega a `ObjCamera`/av-cam en el arnés al escribir el parámetro (como en G75 con Extra Fine).
 3. Todo lo demás: descartar o dejar con «sin base» hasta que haya motivo.
+
+## Zebra: prueba en el arnés (17-11-2026, perfil `e2e50`, puerto 8770, VM cerrada con `/salir`)
+Código: `scripts/gui/zebra_levels_patch.py` (1 byte por índice; test `tests/test_zebra_levels_patch.py`), overlay local `analysis/gui/g22/harness/pkg-e2e-zebra/cam/usr/lib/libObj.so` (solo ese fichero; índice 0 → centro 10 % en vez de 70 %). Para ver la petición se amplió el registro VDF del shim (`sonyshim.c`: vuelca 32 B del cuerpo; el `sonyshim.so` del arnés se recompiló, así que los perfiles existentes arrancan en frío una vez) y se arrancó con `SHIMEXTRA="WAITLOG=3000 WLALL=1"`.
+- **MEDIDO:** menú Ajustes personalizados pág. 1 → «Cebra» (lista Desactivar, 70, 75, 80, 85, 90, …). Con el índice 0 guardado, la orden VDF `0x203` (cat 2, `SetZebra`) sale con cuerpo `01 01 20 0f 05` = onoff 1, U = `0x0f` (15 %), L = `0x05` (5 %), es decir centro 10 ± 5: **el byte parcheado llega tal cual al servicio VDF**; con la tabla de fábrica el mismo camino da 75/65.
+- **NO_VERIFICADO:** (a) el cambio de nivel en caliente no produjo una 2.ª orden `0x203` durante el registro (3 cambios a 95/…); solo se vio la del arranque (restauración del ajuste), probable aplicación diferida al volver al visor; (b) que el VDF/hardware acepte U < 65 % y pinte la cebra (el arnés no emula el dibujado de cebra); (c) no se construyó CFW.
+- **Conclusión:** cambiar los niveles del Zebra es un parche de 1 byte por opción, probado hasta la petición al VDF. «0–109 %» libre exige además un ajuste de menú propio (cueva que calcule el centro) y probar en cámara el límite inferior del VDF.

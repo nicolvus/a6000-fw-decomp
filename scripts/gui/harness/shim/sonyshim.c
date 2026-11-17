@@ -323,6 +323,7 @@ static void vdf_reply(unsigned q, const unsigned char *req) {
     if (k < 16) { mbx[k].q = q; mbx[k].msg = body; } else { LOG("mbx lleno: VDF a %#x perdido", q); free(b); }
     pthread_cond_broadcast(&mbx_c); pthread_mutex_unlock(&mbx_m);
     LOG("snd_msg 0x59000e VDF orden %#x -> respuesta tipo 2 a %#x", ((const unsigned short *)body)[1], q);
+    { char hx[100]; const unsigned char *r = req + (off < 0x100 ? off : 0x14); int i; for (i = 0; i < 32; i++) sprintf(hx + 3 * i, "%02x ", r[i]); LOG("  cuerpo VDF: %s", hx); }
 }
 /* KEYINIT=key:estado:índice,… (hex): estados iniciales que el driver de entrada informa (mensaje de 0x7a0020, receptor libObj+0x806f88: w0 clave,
  * w2 valor, w4 índice físico = palabra 9 de la entrada de evento) para la lista de InfraInput (entradas de 0x44 B: +0 clave, +4 evento, +0x14 estado,
