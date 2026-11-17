@@ -592,3 +592,10 @@ Los bytes del volcado están en `scripts/gui/avcam/objetivo_16-50.json` (origen 
 **Tests (`tests/test_avcam_montura.py`).** `test_el_flanco_de_data_in_dispara_la_irq_0x7e_y_el_cierre_de_rx`, `test_el_objetivo_contesta_el_acoplamiento_y_la_montura_llega_a_5`, `test_modulo_11_sube_a_0xc01_y_no_vuelve`, `test_respuestas_del_objetivo_tienen_formato_bl_y_el_tamano_del_descriptor`; actualizados los de `tests/test_avcam_ee_start.py` que fijaban el comportamiento sin objetivo.
 
 **Siguiente paso (E2E-12 / E2E-15).** Con la montura en 5 y el módulo 11 en 0xC01/0xC02, ver qué barrera detiene ahora el guion del secuenciador (posición 28) y si av-cam contesta ya a `0x3000/0x3024/0x3003`; revisar los manejadores de CS_RESET/CS_CREDIT para sustituir los ceros inferidos.
+
+## Tarea 36 — E2E-12b: la barrera del guion es el byte `0x43eaeecd` (17-11-2026, MEDIDO)
+
+- «Posición 28» = índice de la lista `0x43ede340` (tabla `0x43bf2208`). Cada V (`0x43790730…`) vuelca estados de módulo a `+0x5c`; `0x437fc748` los compara con los pedidos `+0x1c` según la máscara de la entrada actual; `0x437fc580` copia `[0x43ede320]`→`[0x43ede338]` solo al terminar la lista.
+- La lista avanza 28→30 sola (módulo 3 `0x300→0x320→0x323→0x325`, escritor `0x43b09f6a` vía `0x43859b88`) y se detiene en idx 30 (máscara `0xe`): módulo 3 debe pasar a `0x326`, transición `0x43859d2a` que exige `[campo+7]==1` = `[0x43eaee84+0x49]` (0 en la VM).
+- Con ese byte a 1: idx 28→30→42 (fin), `[0x43ede338]`=2. Test: `test_barrera_del_guion_es_el_byte_0x43eaeecd`.
+- Siguiente: E2E-12c (productor del byte).

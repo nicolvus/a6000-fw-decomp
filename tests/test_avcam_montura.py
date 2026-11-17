@@ -137,3 +137,18 @@ def test_respuestas_del_objetivo_tienen_formato_bl_y_el_tamano_del_descriptor() 
         f = O.respuestas(O.trama(2, ident, bytes(extra - 1 if ident == 1 else {7: 1, 8: 8}[ident])), extra)[0]
         assert len(f) == extra + 8 and f[0] == 0xF0 and f[-1] == 0x55 and f[5] == ident
         assert int.from_bytes(f[-3:-1], "little") == sum(f[1:-3]) & 0xFFFF
+
+
+def test_barrera_del_guion_es_el_byte_0x43eaeecd() -> None:
+    """MEDIDO (E2E-12b): la lista `0x43ede340` (índice 28) espera que el estado del módulo 3 (`0x43e9c7d8`) pase de 0x325 a 0x326; esa transición (`0x43859d2a`) exige
+    `[0x43eaee84+0x49]`==1 (campo +7 del bloque de entrada de `0x43b09d10`). Con ese byte a 1 el guion llega al final y `[0x43ede338]` pasa a 2 (el paso que acepta `0x3003`).
+    Diagnóstico: el productor real del byte aún no está identificado (E2E-12c)."""
+    import liro_vm as L
+
+    vm = _vm()
+    assert vm.rd(0x43EAEECD, 1) == 0 and vm.rd(0x43E9C7D8, 2) == 0x325 and vm.rd(0x43EDE338) == 0
+    for _ in range(2):  # el índice del guion avanza 28→30→42 (una barrera por ronda de V)
+        vm.wr(0x43EAEECD, 1, 1)
+        vm.limite += 1000
+        L.planifica(vm, 100_000_000)
+    assert vm.rd(0x43EDE338) == 2
