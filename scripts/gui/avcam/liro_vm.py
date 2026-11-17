@@ -238,7 +238,7 @@ def carga(avcam: Path, bkp: Path, idt: Path | None = None) -> Vm:
         uc.hook_add(UC_HOOK_MEM_READ, h_patron, (desp, o, y), lo, hi - 1)
     import bonobo  # noqa: PLC0415 (bonobo no importa liro_vm: sin ciclo, pero carga de Unicorn ya hecha)
     bonobo.instala(vm)
-    import objetivo  # noqa: PLC0415
+    import objetivo
     objetivo.instala(vm)
     return vm
 
