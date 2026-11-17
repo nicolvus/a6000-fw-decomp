@@ -443,7 +443,7 @@ Hecha por el orquestador. Retoma el último objetivo de la lista de wiki 16 que 
 
 ## Tarea 21 — función objetivo «Variable Frame Rate» (16-11-2026)
 
-Hecha por el orquestador, solo análisis estático: no hay nada que la UI pueda pedir todavía, así que en el arnés no hay qué probar. El VFR de Panasonic equivale al S&Q («O/U Crank») de Sony. La A6000 3.21 lo trae de fábrica en av-cam (tabla de 57 combinaciones de 1 a 60 fps y codificador OuCrank), en `libObj` (`SetOUCrankModeForLiro`, MSGID `0x75e4`/`0x75e6`, PARAMID `0x9724`/`0x971b`) y en `libmpr`. **Falta solo la entrada de menú.** Detalle en [g76](g76-variable-frame-rate-sq.md) y en `tests/test_g76_sq_vfr.py`. Siguiente paso en el arnés: VFR-F1, que consiste en inyectar `0x75e4` y ver la orden LIRO en av-cam.
+Hecha por el orquestador, solo análisis estático: no hay nada que la UI pueda pedir todavía, así que en el arnés no hay qué probar. El VFR de Panasonic equivale al S&Q («O/U Crank») de Sony. La A6000 3.21 lo trae de fábrica en av-cam (tabla de 57 combinaciones de 1 a 60 fps y codificador OuCrank), en `libObj` (`SetOUCrankModeForLiro`, MSGID `0x75e4`/`0x75e6`, PARAMID `0x971a`/`0x971b`) y en `libmpr`. **Falta solo la entrada de menú.** Detalle en [g76](g76-variable-frame-rate-sq.md) y en `tests/test_g76_sq_vfr.py`. Siguiente paso en el arnés: VFR-F1, que consiste en inyectar `0x75e4` y ver la orden LIRO en av-cam.
 
 ## Tarea 22 — S&Q (Variable Frame Rate) en el arnés y combinación con HD 120 (16-11-2026)
 

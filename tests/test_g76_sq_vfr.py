@@ -29,7 +29,7 @@ def _ins(d, a, b):
 
 @pytest.mark.skipif(not (LIB / "libObj.so").exists(), reason="extracción no disponible")
 def test_libobj_convierte_s_q_para_av_cam():
-    """CamMsgConv::SetOUCrankModeForLiro: MSGID 0x75e4/0x75e6, PARAMID_O_U_CRANK_MODE 0x9724 y _FRAME_RATE 0x971b (0x207…0x20d, 0x3e2 → 0…7 en el byte 9)."""
+    """CamMsgConv::SetOUCrankModeForLiro: MSGID 0x75e4/0x75e6 → orden 0x408f con PARAMID_O_U_CRANK_MODE 0x971a (byte 8) y _FRAME_RATE 0x971b (0x207…0x20d, 0x3e2 → 0…7 en el byte 9); 0x9724 es de la orden 0x4087."""
     d = (LIB / "libObj.so").read_bytes()
     txt = {f"{m} {o}" for _, m, o in _ins(d, 0x99F140, 0x99F2A0)} | {f"{m} {o}" for _, m, o in _ins(d, 0x99F18C, 0x99F1C0)}
     for need in ("movw r3, #0x75e4", "movw r3, #0x75e6", "movw r1, #0x9724", "movw r1, #0x971b", "movw r3, #0x3e2", "strb r3, [r4, #9]"):
