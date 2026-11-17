@@ -101,3 +101,12 @@ Herramienta: `scripts/swd_wp_arranque.sh` (DBGWVR/WCR 0–1 por AP1 en los 4 Cor
 - Conclusión: en la cámara real el flag `+0x49` **no** lo escriben `0x4384fd06`/`0x4384fd6e` y el caso 22 del despachador no se ejecuta en el arranque; la cadena estática de E2E-12c no es la que actúa. S1 sugiere una escritura conjunta de `+0x48`/`+0x49` (`0x0104`, luego `+0x48` = 7).
 - En reposo prolongado la cámara pasa sola de 2 a 1 con el flag a 0 (estado del volcado `ram-servicio`).
 - Siguiente: watchpoint en el arranque con un manejo barato de los golpes del `memcpy` (solo WFAR, sin leer registros), previa autorización por el riesgo del incidente S2.
+
+### S2c (watchpoint solo en la ventana del arranque) — 17-11-2026 (MEDIDO)
+
+`swd_wp_arranque.sh` con `ARMAR=ram` (armado solo con la RAM inicializada y `[0x43ede338]` = 0, desarmado al llegar a 2, una sola sesión), golpes del `memcpy` reanudados sin leer registros (≈ 5 ms por parada, ≈ 30–50 golpes/s) y `PARES=1` (destino←origen de cada golpe ignorado). Logs `wp_arranque2.log`, `wp_arranque3.log`.
+
+- Dos arranques completos (20,8 s y 15,7 s de ventana armada, ≈ 760 y ≈ 280 golpes del `memcpy`): **ningún escritor fuera del `memcpy`** y solo los dos pares conocidos (`0x43eb26c0←0x43eaeed4`, `0x43eaeec4←0x43eb26d0`); aun así el flag llega a 1.
+- Hipótesis abiertas: (a) la escritura cae en los ms en que el núcleo está desarmado tras un golpe (≈ 15–25 % del tiempo; improbable dos veces seguidas), (b) la hace otro maestro del bus (DMA) o la CPU por **otra dirección virtual** (alias del mismo físico): el watchpoint compara direcciones virtuales.
+- **Interferencia con el encendido (MEDIDO):** con el sondeo SWD activo durante el encendido la cámara no arrancó en 5 ciclos de batería seguidos (sin watchpoint armado: solo lecturas de AP0 y reconexiones del DP cada ≈ 1,3 s); arrancó al desconectar el SWD. Regla nueva: lanzar los scripts SWD **con la cámara ya encendida** (la RAM de av-cam se inicializa segundos después; el flag ≈ 20 s más tarde).
+- Siguiente: muestreo sin paradas (`swd_poll_arranque.sh` con `PCS=1 PERIODO=0`, 5,6 ms por muestra: flag + PC de los 4 núcleos) para fechar el cambio del flag y ver qué ejecutaba cada núcleo en ese instante.

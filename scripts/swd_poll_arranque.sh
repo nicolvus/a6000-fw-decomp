@@ -3,6 +3,9 @@
 # Reabre la sesión cuando el DAP no responde, se corta la alimentación o OpenOCD se atasca,
 # y nunca deja un openocd huérfano ocupando la sonda.
 # Uso: swd_poll_arranque.sh SALIDA.log [segundos=240]
+#   PCS=1 añade a cada muestra el PC muestreado (DBGPCSR, sin parar) de los 4 núcleos; PERIODO=ms entre muestras (150).
+#   AVISO (17-11-2026): conectar/leer por SWD mientras la cámara enciende puede impedir el arranque; lanzar con la
+#   cámara ya encendida (la RAM de av-cam se inicializa unos segundos después y el flag ≈ 20 s más tarde).
 #   Variables: STALL (s sin líneas nuevas = sesión atascada, 5), ARRANQUE (s máximos sin
 #   ninguna lectura tras abrir, 15), SELFTEST=1 (sale tras la primera sesión con datos).
 # Salida: «P <ms_epoch> [0x43ede338] [0x43ede320] [0x43eaeecc]», «E <ms> <motivo>», «S <ms> <fin|atasco|sin_datos|corte>».
@@ -38,16 +41,19 @@ swd newdap chip tap -enable
 dap create chip.dap -chain-position chip.tap
 init
 proc rd {a} { chip.dap apreg 0 0x04 $a; return [string trim [chip.dap apreg 0 0x0c]] }
+proc pc {b} { if {[catch {chip.dap apreg 1 0x04 [expr {$b + 0x0a0}]; set v [string trim [chip.dap apreg 1 0x0c]]}]} { return ? }; return $v }
 set fin [expr {[clock milliseconds] + $REM * 1000}]
 set bad 0
 while {[clock milliseconds] < $fin} {
-  if {[catch {echo [format "P %d %s %s %s" [clock milliseconds] [rd 0x83ede338] [rd 0x83ede320] [rd 0x83eaeecc]]} e]} {
+  if {[catch {set l [format "P %d %s %s %s" [clock milliseconds] [rd 0x83ede338] [rd 0x83ede320] [rd 0x83eaeecc]]
+               if {$PCS} { foreach b {0x80110000 0x80112000 0x80114000 0x80116000} { append l " [pc $b]" } }
+               echo $l} e]} {
     echo "E [clock milliseconds] lectura:$e"
   }
   # Vector de reset: deja de leerse igual al cortar la alimentación; sin esto la sesión queda colgada.
   if {[catch {rd 0x0} v] || $v ne "0xe59ff0e8"} {incr bad} else {set bad 0}
   if {$bad > 8} {echo "E [clock milliseconds] sin_alimentacion"; break}
-  after 150
+  if {$PERIODO > 0} { after $PERIODO }
 }
 shutdown
 EOF
@@ -56,7 +62,7 @@ EOF
 END=$((SECONDS + DUR))
 while ((SECONDS < END)); do
   : > "$LOG"; COP=0
-  openocd -c "set REM $((END - SECONDS))" -f "$TMP/poll.cfg" > "$LOG" 2>&1 &
+  openocd -c "set REM $((END - SECONDS)); set PCS ${PCS:-0}; set PERIODO ${PERIODO:-150}" -f "$TMP/poll.cfg" > "$LOG" 2>&1 &
   OCD=$!; motivo=fin; n0=0; quieto=0; t=0
   while kill -0 "$OCD" 2>/dev/null; do
     sleep 1; ((t++))
