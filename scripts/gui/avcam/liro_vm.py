@@ -373,6 +373,11 @@ def api(vm: Vm, i: int) -> int | None:
     if n == "clr_flg":
         vm.flgs[a(0)] = vm.flgs.get(a(0), 0) & a(1)
         return E_OK
+    if n == "ref_sem":  # µITRON 4.0 T_RSEM {ID wtskid; UINT semcnt}: el cierre del DMAC (`0x4398f030`) exige semcnt == 0 (canal abierto); sin esto quedaba -1 y el canal no se cerraba nunca
+        w = [x.tid for x in vm.tasks.values() if x.estado == "espera" and x.espera == ("sem", a(0))]
+        vm.wr(a(1), w[0] if w else 0)
+        vm.wr(a(1) + 4, vm.sems.setdefault(a(0), [0, 1 << 30])[0])
+        return E_OK
     if n == "ref_flg":  # µITRON 4.0 T_RFLG {ID wtskid; FLGPTN flgptn}: av-cam lee flgptn en +4 (`0x4378ea1c`, `0x43792202`); sin esto quedaba basura de pila en `G+0x804`
         espera = [x.tid for x in vm.tasks.values() if x.estado == "espera" and x.espera[:2] == ("flg", a(0))]
         vm.wr(a(1), espera[0] if espera else 0)

@@ -11,6 +11,7 @@ chmod 666 /dev/ashmem /dev/binder 2>/dev/null  # como ueventd.rc del firmware (0
 echo "T6 binder: $(ls -l /dev/binder 2>&1 | cut -c1-60) | misc: $(grep -c binder /proc/misc)"
 [ -e /dev/ashmem ] && echo "T6 ashmem: presente" || echo "T6 ashmem: AUSENTE (ashmem_linux no existe en 6.12)"
 for d in proc sys dev; do mount --bind /$d /cam/and/$d; done
+[ -n "$FB" ] && for m in drm drm_kms_helper drm_shmem_helper virtio_dma_buf virtio-gpu; do insmod /cam/t6mod/$m.ko 2>&1 | tail -1; done   # FB=1 con run.py ... -device virtio-gpu-pci: /dev/fb0 por la emulación fbdev de DRM
 [ -n "$NODIADEM" ] && mv /cam/and/system/lib/hw/gralloc.diadem.so /cam/and/gralloc.diadem.so.off && echo "T6 gralloc: default"   # vía barata T6: libhardware cae a gralloc.default.so (/dev/graphics/fb0)
 echo "T6 fb: $(ls /sys/class/graphics /dev/fb* 2>&1 | tr "\n" " ")"
 mount -t tmpfs tmpfs /cam/and/data; mount -t tmpfs tmpfs /cam/and/cache; mount -t tmpfs tmpfs /cam/and/mnt

@@ -15,7 +15,8 @@ cp "$W/k/boot/vmlinuz-$KV" "$W/vmlinuz"; ln -sf "$B/base.cpio.gz" "$W/base.cpio.
 M=$W/k/usr/lib/modules/$KV/kernel; O=$W/overlay
 rm -rf "$O"; mkdir -p "$O/cam/t6mod" "$O/cam/and"
 for m in drivers/android/binder_linux drivers/usb/gadget/libcomposite drivers/usb/gadget/udc/udc-core drivers/usb/gadget/udc/dummy_hcd fs/configfs/configfs \
-         drivers/usb/gadget/function/usb_f_fs drivers/usb/gadget/function/usb_f_mass_storage drivers/usb/usbip/usbip-core drivers/usb/usbip/vhci-hcd drivers/usb/usbip/usbip-vudc; do
+         drivers/usb/gadget/function/usb_f_fs drivers/usb/gadget/function/usb_f_mass_storage drivers/usb/usbip/usbip-core drivers/usb/usbip/vhci-hcd drivers/usb/usbip/usbip-vudc \
+         drivers/gpu/drm/drm drivers/gpu/drm/drm_kms_helper drivers/gpu/drm/drm_shmem_helper drivers/virtio/virtio_dma_buf drivers/gpu/drm/virtio/virtio-gpu; do  # T6: fb0 por virtio-gpu-pci (fbdev de DRM)
   [ -f "$M/$m.ko.xz" ] && xz -dc "$M/$m.ko.xz" > "$O/cam/t6mod/$(basename $m).ko"
 done
 cp -a "$DEV/nflasha16_unpacked_unpacked" "$O/cam/and/system"          # /system de la cámara (Android 2.3.7 GWK74)

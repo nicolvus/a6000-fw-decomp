@@ -461,6 +461,6 @@ def test_objetivo_completa_el_handshake_cs_data_de_la_montura() -> None:
     txt = "\n".join(vm.log)
     for marca in ("MOUNT_CA_REQ_RECEIVE_1ST:1", "[HS]CS_HIGH", "[HS]DATA_HIGH", "[HS]CS_LOW", "[HS]COMPLETE", "[B->L]CS_CHECK_CMD"):
         assert marca in txt, marca
-    # T34: la trama CS_CHECK_CMD llega al objetivo por DMAC+PL011 y, sin respuesta, la montura agota el plazo: estado 0xf0 → 0 → 1 → 0xff (SYNC TIMEOUT) → 0xf1 (DETACH RETRY)
-    assert "[BL]SYNC TIMEOUT" in txt and "[BL]DETACH RETRY" in txt and vm.objetivo.tramas
-    assert vm.rd(0x43E81240) == 0xF1
+    # T34: la trama CS_CHECK_CMD llega al objetivo por DMAC+PL011; T35: el objetivo contesta (irq 0x7e = flanco de DATA_IN) y la montura llega a 5 sin agotar el plazo
+    assert "[BL]SYNC TIMEOUT" not in txt and vm.objetivo.tramas
+    assert vm.rd(0x43E81240) == 5
