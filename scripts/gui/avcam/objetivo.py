@@ -12,7 +12,8 @@ del objetivo (ATTACH_INFO, STARTUP_INFO…) NO están emuladas todavía (g75 T33
 from __future__ import annotations
 
 import liro_vm as L
-from unicorn import UC_HOOK_MEM_READ, UC_HOOK_MEM_WRITE
+import montura
+from unicorn import UC_HOOK_MEM_WRITE
 
 GPIO = 0xF2910000
 CS, DATA_OUT = (5, 4), (2, 0xB)           # salidas del cuerpo (puerto, pin)
@@ -27,14 +28,16 @@ class Objetivo:
         self.vm = vm
         self.t_ca: float | None = None
         self.hecho = 0   # 0 nada, 1 petición enviada, 2 sondeo enviado
-        for pg in (GPIO, UART):  # una página cubre los puertos 0-0xf del GPIO (0x100 cada uno)
-            if pg not in vm.mmio:
-                vm.uc.mem_map(pg, 0x1000)
-                vm.mmio[pg] = [0, 0, 0]
+        if GPIO not in vm.mmio:  # una página cubre los puertos 0-0xf del GPIO (0x100 cada uno)
+            vm.uc.mem_map(GPIO, 0x1000)
+            vm.mmio[GPIO] = [0, 0, 0]
         for p in (CS[0], DATA_OUT[0]):
             for off in (0x44, 0x48):
                 vm.uc.hook_add(UC_HOOK_MEM_WRITE, self._gpio, None, GPIO + 0x100 * p + off, GPIO + 0x100 * p + off)
-        vm.uc.hook_add(UC_HOOK_MEM_READ, self._fr, None, UART + 0x18, UART + 0x1B)
+        self.uart = montura.instala(vm)
+        self.uart.al_transmitir = self._tx
+        self.tx_buf = bytearray()
+        self.tramas: list[bytes] = []  # tramas BL completas enviadas por el cuerpo
         vm.fuentes.append(self)
 
     def _linea(self, ent: tuple[int, int], alto: bool) -> None:
@@ -50,8 +53,18 @@ class Objetivo:
         elif (puerto, 0xB) == DATA_OUT and val & 1 << DATA_OUT[1]:
             self._linea(LENS_IN, alto)
 
-    def _fr(self, uc, acc, addr, size, val, _) -> None:
-        uc.mem_write(UART + 0x18, (0x90).to_bytes(4, "little"))  # RXFE | TXFE: FIFO de recepción vacía
+    def _tx(self, datos: bytes) -> None:
+        self.tx_buf += datos
+        while (i := self.tx_buf.find(0xF0)) >= 0:
+            del self.tx_buf[:i]
+            n = self.tx_buf[1] if len(self.tx_buf) > 1 else 0
+            if n < 8 or len(self.tx_buf) < n:
+                break
+            f = bytes(self.tx_buf[:n])
+            del self.tx_buf[:n]
+            if f[-1] == 0x55 and sum(f[1:-3]) & 0xFFFF == int.from_bytes(f[-3:-1], "little"):
+                self.tramas.append(f)
+                self.vm.log.append(f"{self.vm.t:9.1f} [LENS] RX trama del cuerpo: {f.hex()}")
 
     # --- fuente de tiempo: la petición de CA y su sondeo
     @property

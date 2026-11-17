@@ -264,8 +264,9 @@ def _s2_gate(forzar: bool) -> dict:
 def test_s2_la_peticion_de_captura_se_deniega_por_dos_factores_de_bloqueo() -> None:
     """E2E-3/T11 (MEDIDO): con S1 hecho y `0x4044`, `0x4381d088` (RelLock) niega la petición: la máscara de factores `[RelMgr+0xbe8]` vale `0xfbffffbf` (factores 6 y 26 activos; permitir exige `==-1`), las ranuras 0..2 y el byte `[0x43e95950+0xd1]` valen 0 (de ahí el aviso) y `0x4379eba0` (emisor de `0x3011`) no corre. Forzando máscara y ranura la petición pasa (`0x3011` sale), pero el secuenciador sigue rechazando `SetupTable` (modo de captura, T9)."""
     base = _s2_gate(False)
-    # T33: con el objetivo emulado el factor 23 (0x800000) también queda activo (MEDIDO; su significado NO_VERIFICADO)
-    assert base["mascara"] == 0xFB7FFFBF and base["mascara"] & 0x04000040 == 0
+    # T34: el factor 23 (0x800000) se activa mientras av-cam intenta acoplar el objetivo (CLR a 5144,7 ms, al empezar el handshake) y se libera al abortar el
+    # acoplamiento por «SYNC TIMEOUT» + «DETACH RETRY» (SET a 6145,8 ms); sin respuesta del objetivo queda liberado (T33 lo medía activo con la UART muerta)
+    assert base["mascara"] == 0xFBFFFFBF and base["mascara"] & 0x04000040 == 0
     assert base["ranuras"] == [0, 0, 0] and base["d1"] == 0
     assert base["d088"] == 1 and base["warn"] == 1 and base["eba0"] == 0
     forz = _s2_gate(True)
@@ -460,4 +461,6 @@ def test_objetivo_completa_el_handshake_cs_data_de_la_montura() -> None:
     txt = "\n".join(vm.log)
     for marca in ("MOUNT_CA_REQ_RECEIVE_1ST:1", "[HS]CS_HIGH", "[HS]DATA_HIGH", "[HS]CS_LOW", "[HS]COMPLETE", "[B->L]CS_CHECK_CMD"):
         assert marca in txt, marca
-    assert vm.rd(0x43E81240) in (1, 3, 4, 5)  # ya no se queda en 0xf0
+    # T34: la trama CS_CHECK_CMD llega al objetivo por DMAC+PL011 y, sin respuesta, la montura agota el plazo: estado 0xf0 → 0 → 1 → 0xff (SYNC TIMEOUT) → 0xf1 (DETACH RETRY)
+    assert "[BL]SYNC TIMEOUT" in txt and "[BL]DETACH RETRY" in txt and vm.objetivo.tramas
+    assert vm.rd(0x43E81240) == 0xF1

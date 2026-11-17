@@ -56,6 +56,7 @@ REGLAS = Path(__file__).with_name("mmio_reglas.json")
 BASE, IMG_LO, IMG_SZ = 0x43541000, 0x43540000, 0x00D00000   # imagen + .data/.bss (hasta 0x44240000)
 STRICT_PRI = True
 TRAP_BASE, NAPI = 0xFFF00000, 209
+PAGINAS_PROPIAS = {0xF2001000}  # PL011 de la montura (objetivo.py): modelado por completo, sin patrón genérico
 TASK_EXIT = TRAP_BASE + 4 * NAPI                              # retorno de una tarea / entrada → fin
 HEAP, HEAP_SZ = 0x50000000, 0x0C000000
 STACKS, STACK_SZ = 0x60000000, 0x10000
@@ -235,8 +236,10 @@ def carga(avcam: Path, bkp: Path, idt: Path | None = None) -> Vm:
             if addr & 0xFFF == r[0]:
                 v = int.from_bytes(uc.mem_read(addr, 4), "little")
                 uc.mem_write(addr, ((v & ~r[2]) | r[1]).to_bytes(4, "little"))
-        uc.hook_add(UC_HOOK_MEM_READ, h_patron, (desp, o, y), lo, hi - 1)
-    import bonobo  # noqa: PLC0415 (bonobo no importa liro_vm: sin ciclo, pero carga de Unicorn ya hecha)
+        for pg in range(lo, hi, 0x1000):  # un gancho por registro, no uno por rango: un gancho Python sobre cada lectura de la zona rompe el ITSTATE de Unicorn (INSN_INVALID tras `ldrhne`)
+            if pg not in PAGINAS_PROPIAS:
+                uc.hook_add(UC_HOOK_MEM_READ, h_patron, (desp, o, y), pg + desp, pg + desp + 3)
+    import bonobo
     bonobo.instala(vm)
     import objetivo
     objetivo.instala(vm)

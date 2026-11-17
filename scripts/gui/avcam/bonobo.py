@@ -147,6 +147,8 @@ class Temporizadores:
             if t <= vm.t:
                 del self.venc[c]
                 self.alto.add(c)
+                a = TMR_BASE + 0x100 * c  # un disparo: el hardware baja «marcha» (bit 12); `0x4399116c` la lee y `0x4399106c` devuelve -3 (ocupado) si sigue puesta, y el callback rearma desde su propia interrupción
+                vm.wr(a, vm.rd(a) & ~0x1000)
 
 
 class SensorV:
