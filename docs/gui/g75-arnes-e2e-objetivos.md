@@ -472,3 +472,12 @@ Prueba en Unicorn de la secuencia exacta en `tests/test_g76_sq_libobj.py`. Detal
 ## Tarea 25 — función objetivo «4K interno» (16-11-2026)
 
 Hecha por el orquestador, solo estático: no hay nada que probar en el arnés. Descartado ([g77](g77-4k-interno.md)). El codificador de av-cam no tiene configuración 3840×2160, y la vía de 4K a 15 fps exigiría crear un codificador nuevo que el arnés no puede ejecutar (no emula el hardware de codificación). Prueba sobre bytes en `tests/test_g77_4k_interno.py`.
+
+## Tarea 26 — función objetivo «Dual Video Recording» (16-11-2026)
+
+Hecha por el orquestador. En una A6000 con una sola ranura equivale a la grabación proxy de Sony, que está de fábrica sin menú ([g78](g78-dual-video-proxy.md)):
+- La UI (`0x5ffb20`) manda proxy ON cuando el global `0x10ab200` ≠ 0.
+- `libObj` lo lleva a la orden EE `0x4000` (byte `0xe`).
+- av-cam lo guarda: probado en la VM, ON/OFF.
+
+El arnés no ejecuta la ruta de la UI porque MOVIE se detiene en la tarjeta (E2E-14). Pendientes DVR-F1…F3.

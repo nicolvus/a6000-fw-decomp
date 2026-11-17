@@ -427,3 +427,27 @@ def test_av_cam_guarda_el_s_q_de_la_orden_0x408f(codigo: int, nombre: str) -> No
     L.entrega(vm, 0x30001, p)
     L.planifica(vm, 20_000_000)
     assert (vm.rd(0x43EDF88C, 1), vm.rd(0x43EDF88D, 1)) == (1, codigo), nombre
+
+
+def test_av_cam_guarda_el_proxy_de_la_orden_0x4000() -> None:
+    """Dual Video / proxy (T26): libObj convierte MSGID_SET_MOVIE_FORMAT_CMD (0x750e) en la EE `0x4000` (0x17 B) con PARAMID_MOVIE_PROXY en el
+    byte 0xe (ON = 1) y tamaño/cadencia/aspecto/ancho del proxy en 0xf/0x10/0x11/0x14. El manejador `0x43804058` guarda el byte 0xe en
+    `0x43edf684+0x2c` (con 8→+0x1c, 9→+0x20, 0xa→+0x24, 0xd→+0x28, 0x15→+0x30, 0x16→+0x34)."""
+    pytest.importorskip("unicorn")
+    L = pytest.importorskip("liro_vm")
+    vm = _corre()
+    base = 0x43EDF684
+    for proxy in (1, 0):
+        datos = bytearray(0x17)
+        datos[0:8] = bytes.fromhex("0500004056000080")
+        datos[8], datos[9], datos[0xA], datos[0xD] = 0, 1, 2, 3
+        datos[0xE], datos[0xF], datos[0x10], datos[0x11], datos[0x14] = proxy, 2, 3, 0, 3
+        p = vm.malloc(0x60) + 12
+        vm.uc.mem_write(p - 12, bytes.fromhex("000000000100000002000200"))
+        vm.uc.mem_write(p, bytes(datos))
+        vm.msz[p] = len(datos)
+        vm.limite += 300
+        L.entrega(vm, 0x30001, p)
+        L.planifica(vm, 20_000_000)
+        assert vm.rd(base + 0x2C) == proxy
+        assert (vm.rd(base + 0x20), vm.rd(base + 0x24), vm.rd(base + 0x28)) == (1, 2, 3)
