@@ -49,7 +49,7 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 - ⬜ Loop Recording — _Origen: Panasonic GH5_. No existe de fábrica; diseño en [g82](../docs/gui/g82-loop-recording.md), bloqueado por E2E-15 (el arnés aún no graba), sin código.
 - ⬜ Movie Silent Control / Silent Multi Controller — _Origen: Fujifilm X-T3; Sony α99 II_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 - ⬜ Anamorphic Desqueeze — _Origen: Panasonic GH5_ Sin parámetro en av-cam (`NOT FOUND`): descartado por ahora. Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
-- ⬜ Synchro Scan — _Origen: Panasonic GH5_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Synchro Scan — _Origen: Panasonic GH5_ Sin cadenas en el firmware; la exposición se fija en líneas de 15,2 µs (e25-11 §8), granularidad suficiente para pasos finos, pero solo vía la ruta C2 de la app (RAM) para fotos; en vídeo no hay base. Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 - ⬜ Auto Object Framing — _Origen: ≈Sony ZV-E1_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 - ⬜ Voice Memo — _Origen: ≈Sony α9_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 
