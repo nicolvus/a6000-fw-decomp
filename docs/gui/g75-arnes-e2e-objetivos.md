@@ -485,3 +485,7 @@ El arnés no ejecuta la ruta de la UI porque MOVIE se detiene en la tarjeta (E2E
 ## Tarea 27 — quitar la restricción de tarjeta de XAVC S (16-11-2026)
 
 A petición del usuario, en lugar de emular una SDXC: el parche de 2 bytes `scripts/gui/xavcs_card_patch.py` evita el factor `0x20000` de `ObjMedia` que daba «Esta tarjeta de memoria no admite la grabación de películas XAVC S» ([g79](g79-xavcs-sin-restriccion-de-tarjeta.md)). Está probado en Unicorn (de fábrica y parcheado) y en el arnés: con la SD de 4 GB FAT32 MOVIE entra en «REC» y `libmpr` abre `M4ROOT`. Siguiente bloqueo: E2E-15, la grabación se queda en «REC» sin EE de vídeo.
+
+## Tarea 28 — función objetivo «Salida HDMI 4K» (16-11-2026)
+
+Hecha por el orquestador. La A6000 de fábrica ya tiene «Repr. imagen fija 4K» en el menú de reproducción, que en el arnés sale en gris sin televisor 4K (`img/g75/t28-repr-imagen-fija-4k.png`). El vídeo 4K por HDMI se descarta por el sensor ([g80](g80-salida-hdmi-4k.md)).
