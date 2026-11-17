@@ -19,7 +19,7 @@ Origen: petición del usuario («todo lo que hay que capturar en cámara para la
 
 ## GRUPO 1 — SWD (sonda RP2040 + OpenOCD 0.12, `cortex_a -ap-num 1 -dbgbase 0x80110000`)
 
-Sirve para lo que ocurre dentro del BIONZ/`av-cam` y no se ve desde Android: watchpoints, breakpoints «registrar y reanudar» y lectura de RAM sin parar la CPU. Guiones base: [R47](../capture/e26-r47-primer-contacto-swd-lectura-ram.md) y `analysis/camera-dumps/20261105-bionz-swd-disparos`. Un `halt` largo pierde el APB‑AP (R47 §9): leer sin parar por defecto.
+**Por AP0 se lee la dirección física = virtual de `av-cam` + `0x40000000`** (`0x43ede338` → `0x83ede338`); leer `0x43…` directamente deja los AP en «stalled AP operation» (MEDIDO 17-11-2026). Sondeo del arranque: `scripts/swd_poll_arranque.sh` (reconecta, detecta corte de alimentación por el vector `0x0`, mata sesiones atascadas y no deja openocd huérfano). Sirve para lo que ocurre dentro del BIONZ/`av-cam` y no se ve desde Android: watchpoints, breakpoints «registrar y reanudar» y lectura de RAM sin parar la CPU. Guiones base: [R47](../capture/e26-r47-primer-contacto-swd-lectura-ram.md) y `analysis/camera-dumps/20261105-bionz-swd-disparos`. Un `halt` largo pierde el APB‑AP (R47 §9): leer sin parar por defecto.
 
 | Traza | Qué se registra | Cómo | Acción del usuario |
 |---|---|---|---|
