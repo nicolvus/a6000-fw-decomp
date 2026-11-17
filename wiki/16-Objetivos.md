@@ -55,7 +55,7 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 
 ### Monitorización
 
-- ⬜ Zebra 0–109 % — _Origen: ≈Sony α6400_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ◐ Zebra 0–109 % — _Origen: ≈Sony α6400_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md). **Implementado sin cámara (G84):** ajuste CFW «Zebra Nivel» Off/10…60 % (centro de la banda ±5), probado en el arnés hasta la orden VDF; CFW sin construir.
 - ⬜ Waveform Monitor — _Origen: Panasonic GH5_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 - ⬜ Vectorscope — _Origen: Panasonic GH5_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 - ⬜ Gamma Display Assist — _Origen: ≈Sony α7R III_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).

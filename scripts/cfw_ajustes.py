@@ -60,6 +60,8 @@ AJUSTES = (
     Ajuste("sq", "S&Q", ID_LIBRES_2[0], (("Off", 0), ("120/100", 9), ("60/50", 1), ("30/25", 2), ("15/12", 3), ("8/6", 4), ("1 fps", 7)), PID_PRIMERO + 10),
     # G81 Timecode/User Bit: escribe el interruptor de fábrica de Sony (ObjEffect «Check Tcub» exige 1); sin código nuevo. Off = valor de fábrica
     Ajuste("timecode", "Timecode", ID_SONY[0], (("Off", 0), ("On", 1)), PID_PRIMERO + 11),
+    # G84 Zebra Nivel (libObj): centro de la banda en % (U = c+5, L = c−5) en lugar del de la opción Cebra; Off = el de fábrica (70–104, que ya llega a 109 %)
+    Ajuste("zebra_nivel", "Zebra Nivel", ID_LIBRES_2[1], (("Off", 0), ("10", 10), ("20", 20), ("30", 30), ("40", 40), ("50", 50), ("60", 60)), PID_PRIMERO + 12),
 )
 POR_ID = {a.id: a for a in AJUSTES}
 

@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[1]
-sys.path[:0] = [str(ROOT / "scripts"), str(ROOT / "scripts/gui"), *(str(ROOT / "scripts" / g) for g in ("g22", "g38", "g55", "g57", "g63", "g65", "g69", "g61", "g68"))]
+sys.path[:0] = [str(ROOT / "scripts"), str(ROOT / "scripts/gui"), *(str(ROOT / "scripts" / g) for g in ("g22", "g38", "g55", "g57", "g63", "g65", "g69", "g61", "g68", "g84"))]
 AV = ROOT / "analysis/rea-independent/input/av-cam.bin"
 DUMP = ROOT / "analysis/camera-dumps/ram-servicio-20261020/ram_0x80000000.bin"
 LIBOBJ = ROOT / "analysis/camera-extract/usr/lib/libObj.so"
@@ -84,8 +84,9 @@ def test_libobj_funcion_muerta_sin_referencias():
         pytest.skip("falta libObj.so")
     d = LIBOBJ.read_bytes()
     import drp_patch as g68
+    import zebra_patch as g84
     import intervalo_patch as g61
-    for a, b in ((g61.CAVE, g61.CAVE_FIN), (g68.CAVE, g68.CAVE_FIN)):
+    for a, b in ((g61.CAVE, g61.CAVE_FIN), (g68.CAVE, g68.CAVE_FIN), (g84.CAVE, g84.CAVE_FIN)):
         # cualquier palabra de 32 bits (en pasos de 2) que apunte dentro (con o sin bit Thumb): ninguna, salvo el original de la propia función
         assert [i for i in range(0, len(d) - 3, 2) if a - 1 <= struct.unpack_from("<I", d, i)[0] < b + 1 and not a <= i < b] == []
 

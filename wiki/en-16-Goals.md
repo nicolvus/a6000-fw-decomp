@@ -59,7 +59,7 @@ Features wanted on the A6000, inherited from other Sony models and other brands,
 
 ### Monitoring
 
-- ⬜ Zebra 0–109 % — _Origin: ≈Sony α6400_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ◐ Zebra 0–109 % — _Origin: ≈Sony α6400_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md). **Implemented without a camera (G84):** CFW setting "Zebra Nivel" Off/10…60 % (band centre ±5), tested in the harness up to the VDF order; CFW not built.
 - ⬜ Waveform Monitor — _Origin: Panasonic GH5_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 - ⬜ Vectorscope — _Origin: Panasonic GH5_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 - ⬜ Gamma Display Assist — _Origin: ≈Sony α7R III_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
