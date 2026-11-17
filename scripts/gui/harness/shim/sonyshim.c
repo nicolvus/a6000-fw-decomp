@@ -1063,6 +1063,11 @@ static void on_trace(int sig, siginfo_t *si, void *u) {
         efp("[shim] EFCS: ModelStillRec %#lx, ranuras SET/ACT = %u (Backup 0x107086e)\n", c->arm_r4, v); return;
     }
     if (gpu_pc && pc == gpu_pc) {  /* rm_reg_write: se hace el almacenamiento y se salta la instrucción; 0x1804 = timbre de la GPU (GPUEMU) */
+        if (c->arm_r0 >= 0x20000) {  /* fuera de la ventana mapeada (0x20000, ioctl 0x80048206): al grabar vídeo rm_reg_write llega a +0x95b00 y el almacenamiento caía aquí (SIGSEGV, G75 T32).
+                                        shortcut: se descarta la escritura (registros sin emular, tamaño real de la ventana sin verificar); con 1 MiB el arranque fallaba */
+            static unsigned nfuera; if (nfuera++ < 64) efp("[shim] GPUEMU: escritura fuera de la ventana off=%#lx val=%#lx (descartada)\n", c->arm_r0, c->arm_r1);
+            c->arm_pc += 2; return;
+        }
         *(volatile unsigned *)(c->arm_r3 + c->arm_r0) = c->arm_r1;
         if (c->arm_r0 == 0x1804) gpu_kick(c->arm_r1);
         gpu_exec(c->arm_r0, c->arm_r1);

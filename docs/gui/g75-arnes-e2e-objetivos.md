@@ -501,3 +501,17 @@ Hecha por el orquestador ([g81 §5](g81-timecode-user-bit.md)). La traza de `lib
 ## Tarea 31 — TCUB-F2: ajuste «Timecode» en la carpeta CFW (16-11-2026)
 
 Hecha por el orquestador ([g81 §6](g81-timecode-user-bit.md)). Es un ajuste CFW sin código cuyo id de Backup es el interruptor de Sony `0x3c03d9`. Probado en el arnés (perfil `e2e47`): Off deja el preset de TC rechazado; On escribe 1 y `ObjEffect` lo acepta; Off de nuevo escribe 0 y lo vuelve a rechazar. Capturas `img/g75/t31-*.png`.
+
+## Tarea 32 — E2E-15: por qué la grabación se queda en «REC» (16/17-11-2026, MEDIDO)
+
+Hecha por el orquestador. Perfil `e2e45` (XAVC S, overlay `pkg-e2e-xavcs`, SD de 4 GB), MOVIE pulsado tras el arranque.
+- **Cadena hasta av-cam (MEDIDO):**
+  1. El modelo de vídeo de la UI manda a Effect `0x3025`, `0x300a`, `0x3013` (barras de color), las órdenes TC/UB `0x3016…0x301b`/`0x301d` (rechazadas por `0x3c03d9` = 0, g81) y `0x3015` (S&Q), y a `ObjCamera` una con `PARAMID 0x98aa`.
+  2. `ObjMovieRecorder` se despierta y Effect crea `SequenceFactoryComponentMovieRec` y las secuencias DateRec.
+  3. A av-cam llegan los cambios de modo `0x4043` (0x15, 0x12, 0x0e, 0x0d) y **la EE de vídeo `0x4000`** (23 B: `00 02 00 02 06 01 00 01 02 00 02 00 03 00 00`, proxy OFF). av-cam la acepta (`0xf000`).
+- **Dónde se para:** después llegan las órdenes de tipo 0 **`0x3000` y `0x3024`** (inicio de EE y de grabación, INFERENCIA por el número) y **av-cam no contesta a ninguna**. Es el mismo bloqueo que E2E-10: el secuenciador de av-cam (`[0x43ede338]`) está detenido en la posición 23 a la espera de la montura del objetivo (E2E-12). Por eso la UI espera para siempre en «REC» (`SCALAR_MOVIE_REC`, `INFO_STS_REC_START_READY`).
+- **Fallo del arnés corregido (shim):** en dos de tres intentos, `im.elf` caía con SIGSEGV en `THREAD_INFRA0` durante la preparación de la grabación.
+  - Causa: `rm_reg_write` de `libObj` (`0x6c4c20`) escribe registros de la GPU en `+0x95b00`, fuera de la ventana de `0x20000` que el shim da a `/dev/dmpgles2` (ioctl `0x80048206`). El manejador del shim que emula esa instrucción hacía la escritura y caía.
+  - Ampliar la ventana a 1 MiB rompía el arranque (3 intentos sin primera pantalla), así que se dejó en `0x20000`.
+  - Ahora el manejador **descarta y registra** las escrituras fuera de la ventana («GPUEMU: escritura fuera de la ventana», como atajo comentado). El tamaño real de la ventana sigue NO_VERIFICADO: viene del recurso `udif` de `grm_gles.ko`, y el mensaje del kernel con ese tamaño ya no está en el volcado de RAM.
+- **Conclusión:** E2E-15 se reduce a E2E-10/E2E-12. Mientras av-cam no avance su secuenciador, ni la foto ni el vídeo se capturan en el arnés.
