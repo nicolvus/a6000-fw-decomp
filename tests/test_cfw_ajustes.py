@@ -30,7 +30,7 @@ necesita_fw = pytest.mark.skipif(not (DEV_A.exists() and DEV_B.exists() and AVCA
 
 def test_tabla_ajustes():
     ids = [a.backup for a in C.AJUSTES]
-    assert len(set(ids)) == len(ids) and set(ids) <= set(C.ID_LIBRES) | set(C.ID_LIBRES_2)
+    assert len(set(ids)) == len(ids) and set(ids) <= set(C.ID_LIBRES) | set(C.ID_LIBRES_2) | set(C.ID_SONY)
     assert len({a.pid for a in C.AJUSTES}) == len(C.AJUSTES)
     for a in C.AJUSTES:
         assert (a.opciones[0][1] == 0 or a.id in ("fb_paso", "n_disparos")) and len(a.opciones) < 256       # el índice 0 = Off/fábrica; el byte es el índice
@@ -40,7 +40,7 @@ def test_tabla_ajustes():
 def test_ids_libres_existen_en_nvram_1b():
     from pmca.backup import BackupFile
     props = {i: bytes(p.data) for i, p in BackupFile(io.BytesIO(DUMP.read_bytes())).listProperties()}
-    for i in C.ID_LIBRES + C.ID_LIBRES_2:
+    for i in C.ID_LIBRES + C.ID_LIBRES_2 + C.ID_SONY:
         assert props[i] == b"\0"            # registrado (se puede escribir), 1 B, valor de fábrica 0
 
 

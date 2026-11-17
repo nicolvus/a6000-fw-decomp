@@ -497,3 +497,7 @@ Hecha por el orquestador ([g81](g81-timecode-user-bit.md)). El TC/UB de Sony est
 ## Tarea 30 — TCUB-F1: origen de la inhibición de TC/UB (16-11-2026)
 
 Hecha por el orquestador ([g81 §5](g81-timecode-user-bit.md)). La traza de `libMWF` muestra que no la inhibe ningún factor: la bloquea el byte de Backup de fábrica `0x3c03d9`, que vale 0 en todos los volcados. Con `BKSET=3c03d9=1` el preset de TC deja de rechazarse. Ese byte también bloquea la orden Effect de S&Q (`0x3015`). Pulsar Fn con la grabación atascada en «REC» tiró el invitado (SIGSEGV), anotado.
+
+## Tarea 31 — TCUB-F2: ajuste «Timecode» en la carpeta CFW (16-11-2026)
+
+Hecha por el orquestador ([g81 §6](g81-timecode-user-bit.md)). Es un ajuste CFW sin código cuyo id de Backup es el interruptor de Sony `0x3c03d9`. Probado en el arnés (perfil `e2e47`): Off deja el preset de TC rechazado; On escribe 1 y `ObjEffect` lo acepta; Off de nuevo escribe 0 y lo vuelve a rechazar. Capturas `img/g75/t31-*.png`.

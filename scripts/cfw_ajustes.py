@@ -21,6 +21,8 @@ PID_PRIMERO = 0xE9                # primer ProcessId nuevo (pid_space)
 ID_LIBRES = tuple(range(0x1070210, 0x107021A))
 # G76: 0x1070208/9, del mismo hueco de g56; sin literal (palabra de 32 bits) en ningún fichero de /usr ni en av-cam 3.21; 1 B y valor 0 en todos los volcados
 ID_LIBRES_2 = (0x1070208, 0x1070209)
+# G81: ids de Sony que un ajuste CFW escribe a propósito (no libres): 0x3c03d9 = interruptor de fábrica de Timecode/User Bit (0 en todos los volcados; atributo 0, escribible)
+ID_SONY = (0x3C03D9,)
 
 
 @dataclass(frozen=True)
@@ -56,6 +58,8 @@ AJUSTES = (
     # G76 S&Q (VFR): frecuencia de captura del vídeo a cámara lenta/rápida (libObj, como el modelo MOVIE_REC_O_U_CRANK de Sony). El valor es el índice de UI de Sony + 1
     # (0 = Off): 9 = 120/100 fps (índice 8, el que pide el formato HFR), 1 = 60/50, 2 = 30/25, 3 = 15/12, 4 = 8/6, 7 = 1 fps
     Ajuste("sq", "S&Q", ID_LIBRES_2[0], (("Off", 0), ("120/100", 9), ("60/50", 1), ("30/25", 2), ("15/12", 3), ("8/6", 4), ("1 fps", 7)), PID_PRIMERO + 10),
+    # G81 Timecode/User Bit: escribe el interruptor de fábrica de Sony (ObjEffect «Check Tcub» exige 1); sin código nuevo. Off = valor de fábrica
+    Ajuste("timecode", "Timecode", ID_SONY[0], (("Off", 0), ("On", 1)), PID_PRIMERO + 11),
 )
 POR_ID = {a.id: a for a in AJUSTES}
 

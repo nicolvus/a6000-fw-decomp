@@ -35,3 +35,15 @@ Con el comando `Z 9:3900:301a 104a=1,104b=2,104c=3,104d=4`, que es el comando `Z
 - **Vía para un CFW (sin código):** poner `0x3c03d9 = 1`, por ejemplo con un ajuste «Timecode» de la carpeta CFW cuyo id de Backup sea directamente `0x3c03d9`. NO_VERIFICADO:
   - que el descriptor «solo respaldo» escriba en ese espacio de ids (`0x3cxxxx`, `AvbbcBackup`);
   - que el resto del flujo TC/UB (pin TCUB, VEF, codificador, `libmpr`) funcione en el hardware de la A6000. Es código común, pero con el interruptor de fábrica a 0 la A6000 nunca lo ha ejecutado.
+
+## 6. TCUB-F2: ajuste «Timecode» en la carpeta CFW (G75 T31, 16-11-2026, MEDIDO)
+- **Ajuste:** `cfw_ajustes` añade «Timecode» (Off/On, pid `0xF4`), cuyo id de Backup es directamente el interruptor de Sony **`0x3c03d9`** (`ID_SONY`). Sin código nuevo: la UI escribe el índice de la opción (0/1), que es el valor que espera `ObjEffect`. El id tiene atributo `0x0` en el Backup real (escribible, como los ids CFW `0x1070208`/`0x1070210`; `0x1070087` tiene `0x68`), y en todos los volcados vale 0, que es el Off.
+- **Arnés** (perfil `e2e47`, overlay `pkg-e2e-tc` = menú CFW + parche de XAVC S de G79, sin `BKSET`):
+  - «Timecode: Off» aparece en la p. 2 de la carpeta CFW (`docs/gui/img/g75/t31-carpeta-cfw-timecode.png`).
+  - Con Off, `Z 9:3900:301a` se rechaza («is Inhbited»).
+  - On escribe `0x3c03d9` = 1 (`nvram.json`); el mismo preset de TC pasa «Check Tcub» sin rechazo (`t31-timecode-on.png`).
+  - Volver a Off escribe 0 y el rechazo vuelve.
+- **Pendiente (TCUB-F3):**
+  - preset de TC, modo de avance y DF/NDF desde el menú: la UI de Sony ya manda sus órdenes; con el interruptor a 1 usan sus valores de fábrica, que no se han medido;
+  - comprobar el TC en un clip grabado (depende de E2E-15);
+  - el riesgo en cámara de §5 (la cadena TCUB nunca se ha ejecutado en la A6000).
