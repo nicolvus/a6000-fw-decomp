@@ -48,7 +48,7 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 - ⬜ Timecode / User Bit — _Origen: ≈Sony α7S II_. Parcial: el TC/UB de Sony está de fábrica sin menú (UI → Effect `0x3016…0x301b`, motor TCUB en av-cam, escritura en `libmpr`). Lo apaga el byte de configuración de fábrica `0x3c03d9` del Backup (0 en todos los volcados); con él a 1, en el arnés `ObjEffect` acepta el preset de TC. T31: ajuste «Timecode» (Off/On) en la carpeta CFW que escribe ese byte; en el arnés On hace que se acepte el preset de TC y Off lo vuelve a bloquear. Falta grabar para ver el TC en el clip (E2E-15) ([G81](../docs/gui/g81-timecode-user-bit.md), TCUB-F1…F3).
 - ⬜ Loop Recording — _Origen: Panasonic GH5_. No existe de fábrica; diseño en [g82](../docs/gui/g82-loop-recording.md), bloqueado por E2E-15 (el arnés aún no graba), sin código.
 - ⬜ Movie Silent Control / Silent Multi Controller — _Origen: Fujifilm X-T3; Sony α99 II_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
-- ⬜ Anamorphic Desqueeze — _Origen: Panasonic GH5_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Anamorphic Desqueeze — _Origen: Panasonic GH5_ Sin parámetro en av-cam (`NOT FOUND`): descartado por ahora. Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 - ⬜ Synchro Scan — _Origen: Panasonic GH5_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 - ⬜ Auto Object Framing — _Origen: ≈Sony ZV-E1_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 - ⬜ Voice Memo — _Origen: ≈Sony α9_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
