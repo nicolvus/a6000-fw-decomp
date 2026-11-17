@@ -8,13 +8,16 @@
 # Uso: swd_wp_arranque.sh SALIDA.log DIR_VIRTUAL[,DIR2] [segundos=240] [max_golpes=40]
 #   IGNORA=0xLO-0xHI: golpes con WFAR en ese rango no se registran ni cuentan (p. ej. el memcpy
 #   0x439c5320 que copia cada V los bloques 0x43eb2680<->0x43eaee84); salen como «I <ms> ignorados=n» cada 10 s.
-#   Arma solo con el arranque terminado ([0x43ede338] == 2; NO sirve para trazar el arranque) y rearma si el SO borra los registros.
+#   Arma solo con el arranque terminado ([0x43ede338] == 2) y rearma si el SO borra los registros.
+#   ARMAR=ram arma desde la inicialización de la RAM ([0x43eaeecc] != 0) para trazar el arranque: RIESGO, con golpes
+#   ignorados largos dejó la cámara sin arrancar (S2); exige IGNORA y paradas cortas (los golpes ignorados solo leen WFAR).
 # Salida: «H <ms> core=<n> wfar=<pc+off> r0..r3 lr dscr=<v> <palabra>=<valor antes de la escritura> por dirección», «A <ms> armado», «E <ms> <motivo>», «S <ms> <motivo>».
 # WFAR = dirección de la instrucción + 8 (ARM) o + 4 (Thumb).
 set -u
 OUT=${1:?uso: swd_wp_arranque.sh SALIDA.log DIR_VIRTUAL [segundos] [max_golpes]}
 DIR=${2:?dirección virtual a vigilar}; DUR=${3:-240}; MAX=${4:-40}
-STALL=${STALL:-5}; ARRANQUE=${ARRANQUE:-15}; IGNORA=${IGNORA:-0x0-0x0}; REARMA=${REARMA:-0}
+STALL=${STALL:-5}; ARRANQUE=${ARRANQUE:-15}; IGNORA=${IGNORA:-0x0-0x0}; REARMA=${REARMA:-0}; ARMAR=${ARMAR:-fin}
+[[ $ARMAR == ram && $IGNORA == 0x0-0x0 ]] && { echo "ERROR: ARMAR=ram exige IGNORA" >&2; exit 1; }
 [[ -e $OUT ]] && { echo "ERROR: $OUT ya existe; no se sobrescribe" >&2; exit 1; }
 if pgrep -x openocd >/dev/null; then
   echo "ERROR: otra sesión de openocd ocupa la sonda (mátala por PID, nunca con pkill -f):" >&2
@@ -84,15 +87,27 @@ proc lee_regs {b} {
   w1 [expr {$b + 0x088}] [expr {[r1 [expr {$b + 0x088}]] & ~(1 << 13)}]
   return [string trim $out]
 }
-set fin [expr {[ms] + $REM * 1000}]; set armado 0; set golpes 0; set bad 0; set latido 0; set ignorados 0; set kk 0
+set fin [expr {[ms] + $REM * 1000}]; set armado 0; set golpes 0; set bad 0; set latido 0; set ignorados 0; set kk 0; set vueltas 0; set ult 0; set t2 0
 while {[ms] < $fin && $golpes < $MAX} {
-  if {[ms] - $latido > 1000} { echo "K [ms]"; set latido [ms]; incr kk; if {$kk % 10 == 0} { echo "I [ms] ignorados=$ignorados" } }
-  if {[catch {r0 0x0} v] || $v ne "0xe59ff0e8"} { incr bad } else { set bad 0 }
-  if {$bad > 8} { echo "E [ms] sin_alimentacion"; break }
+  if {[ms] - $latido > 1000} { echo "K [ms]"; set latido [ms]; incr kk; if {$kk % 10 == 0} { echo "I [ms] ignorados=$ignorados vuelta_ms=[format %.1f [expr {10000.0 / ($vueltas > 0 ? $vueltas : 1)}]]"; set vueltas 0 } }
+  incr vueltas
+  # Comprobaciones lentas cada 100 ms: el bucle rápido solo lee DSCR, para que un núcleo parado espere poco.
+  set lento [expr {[ms] - $ult >= 100}]
+  if {$lento} {
+    set ult [ms]
+    if {[catch {r0 0x0} v] || $v ne "0xe59ff0e8"} { incr bad } else { set bad 0 }
+    if {$bad > 8} { echo "E [ms] sin_alimentacion"; break }
+    if {$ARMAR eq "ram" && $armado && ![catch {r0 0x83ede338} w] && $w ne "0x00000000"} {
+      if {$t2 == 0} { set t2 [ms]; echo "E [ms] estado=$w" } elseif {[ms] - $t2 > 1000} { echo "E [ms] fin_arranque"; break }
+    }
+  }
   if {!$armado} {
     # Solo con av-cam ya arrancado ([0x43ede338] == 2): armar antes, con ~20 paradas/s por el memcpy,
     # dejó la cámara en bucle de reinicios y luego sin arrancar (MEDIDO 17-11-2026, g85 S2).
-    if {![catch {r0 0x83ede338} v] && $v eq "0x00000002"} {
+    # ram: solo en la ventana del arranque (RAM inicializada y av-cam aún en 0); se desarma al llegar a 2.
+    if {$ARMAR eq "ram"} { set ok [expr {![catch {r0 0x83eaeecc} v] && $v ne "0x00000000" && ![catch {r0 0x83ede338} w] && $w eq "0x00000000"}] } else {
+      set ok [expr {![catch {r0 0x83ede338} v] && $v eq "0x00000002"}] }
+    if {$ok} {
       if {[catch {foreach b $CORES { arma $b }} e]} { echo "E [ms] arma:$e" } else { set armado 1; echo "A [ms] armado $WP" }
     }
     after 100; continue
@@ -104,16 +119,19 @@ while {[ms] < $fin && $golpes < $MAX} {
       if {$d & 1} {
         set f [r1 [expr {$b + 0x018}]]
         desarma_wp $b
-        set regs [lee_regs $b]
-        w1 [expr {$b + 0x090}] 0x6
-        set pend($i) [ms]
-        if {$f >= [lindex $IG 0] && $f <= [lindex $IG 1]} { incr ignorados } else {
+        if {$f >= [lindex $IG 0] && $f <= [lindex $IG 1]} {
+          # Golpe ignorado: reanudar ya, sin leer registros (parada mínima).
+          w1 [expr {$b + 0x090}] 0x6; incr ignorados
+        } else {
+          set regs [lee_regs $b]
+          w1 [expr {$b + 0x090}] 0x6
           incr golpes
           echo "H [ms] core=$i wfar=$f $regs dscr=$d [palabras]"
         }
+        set pend($i) [ms]
       } elseif {[info exists pend($i)]} {
         if {[ms] - $pend($i) >= $REARMA} { arma $b; unset pend($i) }
-      } elseif {![armado_ok $b]} { arma $b; echo "A [ms] rearmado core=$i" }
+      } elseif {$lento && ![armado_ok $b]} { arma $b; echo "A [ms] rearmado core=$i" }
     } e]} { echo "E [ms] core=$i $e" }
     incr i
   }
@@ -127,7 +145,7 @@ EOF
 END=$((SECONDS + DUR))
 while ((SECONDS < END)); do
   : > "$LOG"; COP=0
-  openocd -c "set REM $((END - SECONDS)); set DIR $DIR; set MAX $MAX; set IG {${IGNORA/-/ }}; set REARMA $REARMA" -f "$TMP/wp.cfg" > "$LOG" 2>&1 &
+  openocd -c "set REM $((END - SECONDS)); set DIR $DIR; set MAX $MAX; set IG {${IGNORA/-/ }}; set REARMA $REARMA; set ARMAR $ARMAR" -f "$TMP/wp.cfg" > "$LOG" 2>&1 &
   OCD=$!; motivo=fin; t=0; quieto=0; s0=
   while kill -0 "$OCD" 2>/dev/null; do
     sleep 1; ((t++))
@@ -139,5 +157,7 @@ while ((SECONDS < END)); do
   wait "$OCD" 2>/dev/null; OCD=
   volcar; echo "S $(date +%s%3N) $motivo" >> "$OUT"
   grep -q -E '^E [0-9]+ max_golpes' "$OUT" && break
+  # ram: una sola sesión armada por ejecución (nunca seguir armando tras un reinicio o el fin del arranque).
+  [[ $ARMAR == ram ]] && grep -q '^A ' "$OUT" && break
   sleep 0.3
 done
