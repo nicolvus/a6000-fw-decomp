@@ -69,7 +69,7 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 - ⬜ AF Acceleration/Deceleration Tracking — _Origen: Canon EOS 7D Mark II_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 - ⬜ AF Range Control — _Origen: ≈Sony α99 II_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 - ⬜ AF Micro Adjustment — _Origen: ≈Sony α99_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
-- ⬜ Pre-AF — _Origen: Fujifilm X-T3_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Pre-AF — _Origen: Fujifilm X-T3_ Ya existe de fábrica (`PARAMID_PRE_AF_MODE`, `SequenceSetPreAf`, `MSGID_SET_PRE_AF_CMD`, `NID_LENS_INFORMATION.uc_PreAF_Support`, xref `0x99ab56`): es el Pre-AF nativo de Sony, no hay función nueva que crear (solo activarlo por CFW si hiciera falta). Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 - ⬜ AF Point Auto Switching / Zone Area Switching — _Origen: Canon EOS 7D Mark II; Fujifilm X-T3_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 - ⬜ Starry Sky AF — _Origen: Olympus E-M1 II_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 - ⬜ Intelligent Subject Detection AF — _Origen: Olympus E-M1X_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
