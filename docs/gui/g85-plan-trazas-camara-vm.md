@@ -110,3 +110,11 @@ Herramienta: `scripts/swd_wp_arranque.sh` (DBGWVR/WCR 0–1 por AP1 en los 4 Cor
 - Hipótesis abiertas: (a) la escritura cae en los ms en que el núcleo está desarmado tras un golpe (≈ 15–25 % del tiempo; improbable dos veces seguidas), (b) la hace otro maestro del bus (DMA) o la CPU por **otra dirección virtual** (alias del mismo físico): el watchpoint compara direcciones virtuales.
 - **Interferencia con el encendido (MEDIDO):** con el sondeo SWD activo durante el encendido la cámara no arrancó en 5 ciclos de batería seguidos (sin watchpoint armado: solo lecturas de AP0 y reconexiones del DP cada ≈ 1,3 s); arrancó al desconectar el SWD. Regla nueva: lanzar los scripts SWD **con la cámara ya encendida** (la RAM de av-cam se inicializa segundos después; el flag ≈ 20 s más tarde).
 - Siguiente: muestreo sin paradas (`swd_poll_arranque.sh` con `PCS=1 PERIODO=0`, 5,6 ms por muestra: flag + PC de los 4 núcleos) para fechar el cambio del flag y ver qué ejecutaba cada núcleo en ese instante.
+
+### S2d (muestreo de PC sin paradas, 5,6 ms por muestra) — 17-11-2026 (MEDIDO)
+
+`swd_poll_arranque.sh` con `PCS=1 PERIODO=0`, lanzado con la cámara recién encendida (`pcs_arranque.log`, 21 962 muestras en 120 s, sin paradas de CPU).
+
+- Durante los 120 s el arranque **se quedó en la barrera**: `[0x43ede338]` = `[0x43ede320]` = 0 y `0x43eaeecc` = `0x00010000` (flag a 0); al acabar el muestreo, `[0x43ede320]` = 2 con `[0x43ede338]` = 0 (el mismo bloqueo que la VM), y **≈ 10–15 s después de cesar el tráfico SWD** el flag pasó a 1 y el guion siguió (6 → 2 → `0x3b` → 2).
+- Con el sondeo a 150 ms (S1) el flag se puso con normalidad ≈ 19 s tras la RAM. Conclusión: el suceso que pone el flag es sensible al tráfico intenso por el AHB-AP (≈ 7 accesos cada 5,6 ms), mientras la CPU sigue corriendo. Refuerza la hipótesis (b) de S2c: el flag llega por un **periférico/DMA** (encaja con `MOUNT_ERROR CAM_INFO2_RCV_WAIT_TIMEOUT_ERR` del volcado `ram-servicio`: comunicación con el objetivo), no por una escritura de CPU en esa dirección virtual. Es inferencia, NO_VERIFICADO.
+- Siguiente: muestreo de PC a ritmo moderado (≈ 50 ms) que no bloquee; y en la VM, buscar el periférico/DMA de la comunicación con el objetivo (`CAM_INFO2`) que escribe el bloque.
