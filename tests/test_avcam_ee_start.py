@@ -135,7 +135,7 @@ def test_secuenciador_elige_la_transicion_0_a_2_y_espera_el_estado_de_los_modulo
     # T15: con el contador de V y `ref_flg` pasa la barrera 12 (0x8347); T16: con los temporizadores 0xf2403000 pasa la 20 (`0x8a00`) y se detiene en la 23:
     # el módulo 11 sigue en 0xc00 (destino 0xc01) porque el subsistema `[0x43e81240]` está en 0xf0 (5 en la cámara real)
     assert vm.rd(0x43EDE338) == 0 and vm.rd(lista + 0x18) == 23
-    assert vm.rd(lista + 0x1C + 2 * 11, 2) == 0xC01 and vm.rd(0x43E81240) == 0xF0
+    assert vm.rd(lista + 0x1C + 2 * 11, 2) == 0xC01 and vm.rd(0x43E81240) != 0xF0  # T33: con el objetivo emulado la montura sale de 0xf0
 
 
 def test_eventos_1e_y_17_de_captura_llegan_a_sus_callbacks_y_el_modulo_1_escribe_su_estado() -> None:
@@ -264,7 +264,8 @@ def _s2_gate(forzar: bool) -> dict:
 def test_s2_la_peticion_de_captura_se_deniega_por_dos_factores_de_bloqueo() -> None:
     """E2E-3/T11 (MEDIDO): con S1 hecho y `0x4044`, `0x4381d088` (RelLock) niega la petición: la máscara de factores `[RelMgr+0xbe8]` vale `0xfbffffbf` (factores 6 y 26 activos; permitir exige `==-1`), las ranuras 0..2 y el byte `[0x43e95950+0xd1]` valen 0 (de ahí el aviso) y `0x4379eba0` (emisor de `0x3011`) no corre. Forzando máscara y ranura la petición pasa (`0x3011` sale), pero el secuenciador sigue rechazando `SetupTable` (modo de captura, T9)."""
     base = _s2_gate(False)
-    assert base["mascara"] == 0xFBFFFFBF and base["mascara"] & 0x04000040 == 0
+    # T33: con el objetivo emulado el factor 23 (0x800000) también queda activo (MEDIDO; su significado NO_VERIFICADO)
+    assert base["mascara"] == 0xFB7FFFBF and base["mascara"] & 0x04000040 == 0
     assert base["ranuras"] == [0, 0, 0] and base["d1"] == 0
     assert base["d088"] == 1 and base["warn"] == 1 and base["eba0"] == 0
     forz = _s2_gate(True)
@@ -384,9 +385,8 @@ def test_la_vm_tiene_el_objetivo_montado() -> None:
     def pre(vm) -> None:
         vm.uc.hook_add(UC_HOOK_CODE, lambda uc, *_: lee.append(uc.reg_read(UC_ARM_REG_R0)), None, 0x43A1C3F2, 0x43A1C3F2)
 
-    vm = _corre(pre=pre)
+    _corre(pre=pre)
     assert lee and set(lee) == {0}  # gpio_get = 0 → objetivo puesto
-    assert vm.rd(0x43E81240) == 0xF0
 
 
 @pytest.mark.parametrize(("valor", "nombre"), [(1, "Fina"), (2, "Extrafina")])
@@ -451,3 +451,13 @@ def test_av_cam_guarda_el_proxy_de_la_orden_0x4000() -> None:
         L.planifica(vm, 20_000_000)
         assert vm.rd(base + 0x2C) == proxy
         assert (vm.rd(base + 0x20), vm.rd(base + 0x24), vm.rd(base + 0x28)) == (1, 2, 3)
+
+
+def test_objetivo_completa_el_handshake_cs_data_de_la_montura() -> None:
+    """E2E-12 (T33, MEDIDO): con la petición de CA y el objetivo de kit respondiendo a CS/DATA, la montura pasa de 0xf0 a 1 y `[HS]` llega a COMPLETE
+    (CS_HIGH, DATA_HIGH, CS_LOW, COMPLETE) y envía `CS_CHECK_CMD` por la UART (PL011 `0xf2001000`)."""
+    vm = _corre()
+    txt = "\n".join(vm.log)
+    for marca in ("MOUNT_CA_REQ_RECEIVE_1ST:1", "[HS]CS_HIGH", "[HS]DATA_HIGH", "[HS]CS_LOW", "[HS]COMPLETE", "[B->L]CS_CHECK_CMD"):
+        assert marca in txt, marca
+    assert vm.rd(0x43E81240) in (1, 3, 4, 5)  # ya no se queda en 0xf0
