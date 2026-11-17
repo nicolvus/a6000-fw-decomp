@@ -1,42 +1,62 @@
 # G85 — Plan de trazas en cámara para completar la LIRO VM (17-11-2026)
 
-Origen: petición del usuario («todo lo que hay que capturar en cámara para la VM de principio a fin», incluidos batería, SD, USB y HDMI). Pendiente: [TRAZA-VM](../PENDIENTES.md). Etiquetas: VERIFICADO (documentado en el repo), NO_VERIFICADO (por comprobar antes de usar). **Plan, aún sin ejecutar ninguna traza.**
+Origen: petición del usuario («todo lo que hay que capturar en cámara para la VM de principio a fin», incluidos batería, SD, USB y HDMI). Pendiente: [TRAZA-VM](../PENDIENTES.md). Etiquetas: VERIFICADO, NO_VERIFICADO. **Plan, sin ninguna traza ejecutada.**
 
-## Canales (qué da cada uno)
+## Reglas de ejecución (decididas por el usuario, 17-11-2026)
 
-| Canal | Cómo | Sirve para | Límite |
+- **Versión: la instalada, CFW 3.78** (no el `.dat` más reciente, 3.81, que no está instalado). Todo se verifica contra lo instalado. Las direcciones de `libObj`/`av-cam` salen de REA/Ghidra sobre el firmware 3.21 y **cada breakpoint se comprueba antes**: se lee la memoria por SWD y se compara con los bytes de la imagen 3.78 (`analysis/gui/g22/pkg-378w/…`; `libObj.so` y `nflasha3` son idénticos al 3.77). Si no coinciden, no se pone el breakpoint.
+- **Reparto del trabajo:** el agente lanza los scripts, lee las salidas y decide el siguiente paso. El usuario solo **toca la cámara** (encender, enchufar, disparar a mano si hace falta, insertar tarjeta) cuando se lo pida, una instrucción cada vez.
+- Cada traza que toque el pipeline de captura o escriba algo necesita autorización expresa del usuario. Sin volcado NVRAM previo (preferencia del usuario); si hubiera que recuperar, usar uno existente. Disparo remoto por adb con `CameraEx`, nunca `CameraSequence`.
+- Cada traza guarda en `analysis/camera-dumps/<fecha>-traza-<Tn>/` los datos crudos, un informe breve y el sha256 de la imagen/versión instalada.
+
+## Prerrequisitos medidos hoy (17-11-2026)
+
+- `ping 192.168.1.29`: **sin respuesta**; la cámara no estaba en la red (apagada o sin Wi‑Fi/telnetd).
+- `lsusb`: **no aparece la sonda** `2e8a:000c` (RP2040 `debugprobe-zero`) ni la cámara.
+- Antes de empezar hay que comprobar `pmca-console info` (debe dar firmware 3.78).
+
+---
+
+## GRUPO 1 — SWD (sonda RP2040 + OpenOCD 0.12, `cortex_a -ap-num 1 -dbgbase 0x80110000`)
+
+Sirve para lo que ocurre dentro del BIONZ/`av-cam` y no se ve desde Android: watchpoints, breakpoints «registrar y reanudar» y lectura de RAM sin parar la CPU. Guiones base: [R47](../capture/e26-r47-primer-contacto-swd-lectura-ram.md) y `analysis/camera-dumps/20261105-bionz-swd-disparos`. Un `halt` largo pierde el APB‑AP (R47 §9): leer sin parar por defecto.
+
+| Traza | Qué se registra | Cómo | Acción del usuario |
 |---|---|---|---|
-| **telnet** (OpenMemories Tweak, root, sin login, `192.168.1.29`) | `scripts/camera_telnet.py 'cmd1' 'cmd2'` | `dmesg`, `/proc`, `/sys`, `getevent`, leer ficheros, volcar `/proc/PID/maps` y `/proc/PID/mem` (NO_VERIFICADO) | Por Wi‑Fi: se puede enchufar USB/HDMI sin perder la sesión |
-| **adb** | `adb logcat`, `adb shell`, `scripts/camera_pull.py`, `camera_push_file.py`; disparo remoto con app propia `CameraEx` | Registro de Android/`libObj`, disparo S1/S2 desde el PC, tomar ficheros | `/dev/input/event0` no vale para S1/S2; instalar APK escribe en `/data`. **No repetir `CameraSequence`** (dejó la cámara sin arrancar el 20‑10) |
-| **service mode (senser)** | `scripts/senser_ram_dump.py OUTDIR [ini] [fin]`, `senser_shell_dump.py`, `senser_regions_dump.py` | Volcar RAM física (solo lectura) tras una acción | Instantánea, no traza; el anillo de consola ya se envuelve |
-| **SWD** (RP2040 `debugprobe-zero`, OpenOCD 0.12, `cortex_a -ap-num 1 -dbgbase 0x80110000`; sonda aún soldada) | Guiones de [R47](../capture/e26-r47-primer-contacto-swd-lectura-ram.md); ejemplos con puntos de parada en `analysis/camera-dumps/20261105-bionz-swd-disparos` | Watchpoints/breakpoints hardware sobre direcciones de `av-cam`, lectura de RAM sin parar la CPU, arranque desde el reset | `halt` prolongado hace perder el APB‑AP (R47 §9); preferir leer sin parar y breakpoints que solo registran y reanudan |
+| **S1 — arranque en frío completo** | Búfer de consola `0x83400000` (`ExcConf` 17 ids, DIADEM, `DFECore`, `CAMERA_MAIN_SYNC`) con orden y tiempos | Halt al responder el DAP, reanudar y leer el anillo cada ~1 s para que no se envuelva; dos tomas: arranque normal y con estado restaurado | Quitar y poner batería; pulsar encendido |
+| **S2 — escritor de `0x43eaeecd`/`0x43eb26c9`** | PC, `lr` y r0–r3 de cada golpe | Watchpoint de escritura en ambas; breakpoints «registrar» en `0x439e2888`, `0x4384fb7c`, `0x43729a76` (caso 22) y `0x4372a0c6` | El mismo arranque que S1 (se hace a la vez) |
+| **S3 — tráfico ObjCamera↔av-cam (`0x20002`)** | Mensajes, incluidos `0x3003`, `0x3000`, `0x3024`, con el formato de `avcam.jsonl` | Breakpoints «registrar» en envío/recepción de la cola (direcciones por REA, verificadas) | Encender; S1/S2 (si el disparo remoto no puede, a mano); grabar vídeo |
+| **S4 — montura y módulos** | `[0x43ede338]`, `[0x43ede320]`, estados de módulo (`+0x5c`/`+0x1c`), `0x43eaee84+0x49` cada 100 ms | Lectura sin parar | Repetir con y sin objetivo |
+| **S5 — MMIO del sensor IMX210 y del ISP por disparo** | Escrituras a `r5`, ShutMode, VTS | Watchpoints en las ventanas MMIO; reutiliza `camera_imx210_timing.py`, `camera_r5_raw.py` | Disparo (remoto por adb si se puede); repetir en mecánico, EFCS y Silent |
+| **S6 — búferes de imagen tras el disparo** | LUT `0x654` B, HLG 3×4122 B, curva 2048 pt, colorimetría, cuantización JPEG, rejilla 11×11 | Lectura de RAM sin parar tras cada toma (alternativa: `senser_ram_dump.py`); repetir por configuración: PP, S‑Log, HLG, Color Chrome, LUT, DRO, ISO 51200, Extra Fine, Keystone, Live ND | Cambiar el ajuste en el menú y disparar |
+| **S7 — manejadores de batería y hot‑plug** | Mensajes de batería de av-cam hacia `ObjCamera`; manejadores de USB y HDMI | Breakpoints «registrar» (direcciones por REA, verificadas) | Descargar/cargar batería, enchufar y quitar USB y HDMI cuando se pida |
+| **S8 — llamadas de `Fsys`/`ObjMedia`** | `Fsys_Open/Stat` y respuestas (`0x8402`/`0x8400`) | Breakpoints «registrar» en `libInfraFsys` (base desde `/proc/PID/maps` de T1) | Insertar, extraer y llenar tarjeta |
 
-## Trazas a hacer
+---
 
-**Bloque A — arranque de av-cam (desbloquea E2E-10/12/15).**
-- **T1 Arranque completo en frío.** SWD desde el reset (halt al responder el DAP, luego reanudar) y leer el búfer de consola `0x83400000` cada ~1 s para que el anillo no se envuelva; telnet `dmesg` en paralelo. Registrar `CAMUSER ExcConf` (17 ids), `ExcBase DIADEM`, `DFECore DrvSGC0`, `CAMERA_MAIN_SYNC` y su orden con marca de tiempo. Hacer dos: arranque normal y con estado restaurado.
-- **T2 Escritor de `0x43eb26c9` / `0x43eaeecd`.** SWD: watchpoint de escritura en ambas; breakpoints «solo registrar» en `0x439e2888` (init del driver), `0x4384fb7c`, `0x43729a76` (caso 22 de la tabla `tbh`) y `0x4372a0c6`. Anotar PC, `lr` y r0–r3 de cada golpe.
-- **T3 Mensajes ObjCamera↔av-cam.** Breakpoints «solo registrar» en el envío/recepción de la cola `0x20002` (direcciones por REA) durante: encendido, S1, S2, `0x3003`, `0x3000`, `0x3024`. Salida con el mismo formato que `avcam.jsonl` para compararla con la VM.
-- **T4 Montura de objetivo y módulos.** Con y sin objetivo: leer `[0x43ede338]`, `[0x43ede320]`, estados de módulo (`+0x5c`/`+0x1c`) y `0x43eaee84+0x49` por SWD, en reposo y 1 s después del encendido, cada 100 ms.
+## GRUPO 2 — telnet / adb (por Wi‑Fi, `192.168.1.29`; `scripts/camera_telnet.py`, `adb`)
 
-**Bloque B — imagen y sensor/ISP (E2E-4/5).**
-- **T5 Escrituras MMIO del sensor IMX210 y del ISP por disparo** (`r5`, ShutMode, VTS): watchpoints sobre las ventanas MMIO; reutilizar `camera_imx210_timing.py` y `camera_r5_raw.py`. Disparo remoto por adb; repetir con mecánico, EFCS y Silent.
-- **T6 Volcados tras el disparo por configuración** (PP, gamma S‑Log2/3, HLG 1–3, Color Chrome, LUT 3D, DRO Lv3/Lv5, ISO 51200, Extra Fine, Keystone, Live ND): SWD (lectura sin parar) o `senser_ram_dump.py` justo tras la toma; buscar los búferes ya conocidos (LUT `0x654` B, HLG 3×4122 B, curva de 2048 pt, mensaje de colorimetría, tablas de cuantización, rejilla 11×11).
-- **T7 Pares ARW+JPG de la misma escena** con cada perfil, mismo disparo remoto.
-- **T8 `/proc/PID/maps` de `libObj` y `av-cam`** (LIBOBJ-MAP) por telnet.
+Sirve para el sistema Android/Linux: kernel, sysfs, procesos y disparo remoto. Por Wi‑Fi se pueden conectar USB y HDMI sin perder la sesión.
 
-**Bloque C — periféricos (sin cobertura hoy).**
-- **T9 Batería.** telnet: `cat /sys/class/power_supply/*/*`, `dmesg`; adb: `logcat` con batería llena, media, baja y con carga por USB. SWD: breakpoint «registrar» en el manejador de los mensajes de batería de av-cam (dirección por REA); capturar el evento hacia `ObjCamera` por `0x20002` y los de `InfraInput`.
-- **T10 SD.** adb/telnet: `dmesg` y `logcat` al insertar, extraer, formatear y llenar; `/proc/mounts`, `/proc/partitions`, `/sys/class/mmc_host/*`. Registrar respuestas de `Fsys`/`ObjMedia` (clase `0x8402` FAT32 vs `0x8400` exFAT), recuento STLREC, escritura de ARW/JPG, grabación XAVC S cruzando 4 GB en FAT32. Trazar `Fsys_Open/Stat` con breakpoints «registrar» (direcciones de `libInfraFsys` desde `/proc/PID/maps`).
-- **T11 USB.** telnet por Wi‑Fi: `dmesg`, `/sys/class/udc`, `getevent` y `logcat` al conectar/desconectar en cada modo (almacenamiento masivo, PC remote, carga); registrar el evento `0x15040010` de `InfraInput` y su orden de llegada.
-- **T12 HDMI.** telnet/adb: `dmesg`, `/sys/class/*hdmi*`/`drm` y EDID si existe (NO_VERIFICADO); conectar/desconectar con 1080p y 4K (g80); capturar `CmnViewNoHdmi` y la cola `0x9c015b`; SWD: breakpoint «registrar» en el manejador del hot‑plug.
-- **T13 Teclas, dial, zoom y objetivo.** `getevent -t` por telnet, para tiempos y códigos reales de los eventos de `InfraInput`.
+| Traza | Qué se registra | Cómo | Acción del usuario |
+|---|---|---|---|
+| **T1 — mapas y versión** | `/proc/PID/maps` de `libObj` y `av-cam`, `uname`, versión instalada (LIBOBJ-MAP) | `camera_telnet.py` | Ninguna (cámara encendida) |
+| **T2 — batería** | `/sys/class/power_supply/*`, `dmesg`, `logcat` | Muestreo cada 2 s | Batería llena, media y baja; con y sin carga por USB |
+| **T3 — SD** | `dmesg`/`logcat` al insertar, extraer, formatear y llenar; `/proc/mounts`, `/proc/partitions`, `/sys/class/mmc_host/*`; recuento STLREC; clip XAVC S cruzando 4 GB en FAT32 | `camera_telnet.py`, `camera_pull.py` | Insertar, extraer, formatear, llenar |
+| **T4 — USB** | `dmesg`, `/sys/class/udc`, `getevent` y `logcat` en cada modo (almacenamiento, PC remote, carga); evento `0x15040010` | `camera_telnet.py` | Enchufar y desenchufar el cable en cada modo |
+| **T5 — HDMI** | `dmesg`, sysfs/EDID, `CmnViewNoHdmi`, cola `0x9c015b` | `camera_telnet.py` | Conectar y desconectar HDMI a 1080p y 4K |
+| **T6 — teclas, dial, zoom** | `getevent -t` con tiempos reales | `camera_telnet.py` | Pulsar cada control cuando se pida |
+| **T7 — disparo remoto y pares ARW+JPG** | Foto con cada perfil/ajuste; ficheros de la tarjeta | App `CameraEx` por adb + `camera_pull.py` | Ajustar el menú y confirmar la escena |
+| **T8 — medidas de funciones construidas** | INTERVAL‑AE‑F3, DRP‑F2, CCH‑F2, HLG‑3b, VDF de Zebra (tal como están en `PENDIENTES.md`) | Disparo remoto + volcados | Según cada caso |
 
-**Bloque D — medidas de funciones ya construidas.** INTERVAL‑AE‑F3, DRP‑F2, CCH‑F2, HLG‑3b y el límite inferior del VDF de Zebra, tal como están en `PENDIENTES.md`; sin duplicar aquí.
+## Orden recomendado
 
-## Reglas
-- Cada traza que toque el pipeline de captura o escriba algo necesita autorización expresa del usuario para ese caso; esta lista solo planifica.
-- Nada de volcado NVRAM previo (preferencia del usuario); si hubiese que recuperar, usar un volcado existente.
-- Disparo siempre remoto por adb con la app `CameraEx`, nunca `CameraSequence`.
-- Lectura sin parar la CPU por defecto; breakpoints que registran y reanudan; evitar `halt` largos.
-- Direcciones de `libObj`/`av-cam` por REA y verificadas contra bytes antes de poner un breakpoint.
+1. Grupo 2 T1 (comprueba red, versión y mapas; no toca nada).
+2. Grupo 1 S1+S2 (la única que destraba E2E‑10/12/15) y S3–S4.
+3. Grupo 2 T2–T6 (batería, SD, USB, HDMI, teclas).
+4. Grupo 1 S5–S8 y Grupo 2 T7–T8 (imagen; las más delicadas, con autorización expresa).
+
+## Límites
+- Que `getevent`, EDID o sysfs de HDMI/UDC existan en la cámara no está verificado (NO_VERIFICADO).
+- `/proc/PID/mem` por telnet no está probado.
+- Los breakpoints sobre código parcheado (cuevas g55/g65, ganchos G33) dependen de las direcciones del 3.78 instalado; hay que verificarlas.
