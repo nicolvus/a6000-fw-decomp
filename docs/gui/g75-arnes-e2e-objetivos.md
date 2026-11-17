@@ -468,3 +468,7 @@ Hecha por el orquestador. Perfil `e2e43`, puerto 8763, Sony 3.21 con el overlay 
 | av-cam | `0x408f` con `01 07` (ON, 120/100); con Off, `00 00` una vez; sin cambio, nada | `avcam.jsonl` |
 
 Prueba en Unicorn de la secuencia exacta en `tests/test_g76_sq_libobj.py`. Detalle en [g76 §7](g76-variable-frame-rate-sq.md). Falta grabar (E2E-14).
+
+## Tarea 25 — función objetivo «4K interno» (16-11-2026)
+
+Hecha por el orquestador, solo estático: no hay nada que probar en el arnés. Descartado ([g77](g77-4k-interno.md)). El codificador de av-cam no tiene configuración 3840×2160, y la vía de 4K a 15 fps exigiría crear un codificador nuevo que el arnés no puede ejecutar (no emula el hardware de codificación). Prueba sobre bytes en `tests/test_g77_4k_interno.py`.
