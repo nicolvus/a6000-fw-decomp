@@ -51,37 +51,37 @@ Features wanted on the A6000, inherited from other Sony models and other brands,
 - ⬜ 4K HDMI output — _Origin: Sony α7S_
 - ⬜ Timecode / User Bit — _Origin: ≈Sony α7S II_
 - ⬜ Loop Recording — _Origin: Panasonic GH5_. Not in the factory firmware; design in [g82](../docs/gui/g82-loop-recording.md), blocked by E2E-15 (harness cannot record yet), no code.
-- ⬜ Movie Silent Control / Silent Multi Controller — _Origin: Fujifilm X-T3; Sony α99 II_
-- ⬜ Anamorphic Desqueeze — _Origin: Panasonic GH5_
-- ⬜ Synchro Scan — _Origin: Panasonic GH5_
-- ⬜ Auto Object Framing — _Origin: ≈Sony ZV-E1_
-- ⬜ Voice Memo — _Origin: ≈Sony α9_
+- ⬜ Movie Silent Control / Silent Multi Controller — _Origin: Fujifilm X-T3; Sony α99 II_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Anamorphic Desqueeze — _Origin: Panasonic GH5_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Synchro Scan — _Origin: Panasonic GH5_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Auto Object Framing — _Origin: ≈Sony ZV-E1_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Voice Memo — _Origin: ≈Sony α9_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 
 ### Monitoring
 
-- ⬜ Zebra 0–109 % — _Origin: ≈Sony α6400_
-- ⬜ Waveform Monitor — _Origin: Panasonic GH5_
-- ⬜ Vectorscope — _Origin: Panasonic GH5_
-- ⬜ Gamma Display Assist — _Origin: ≈Sony α7R III_
-- ⬜ Sports Finder Mode — _Origin: Fujifilm X-T3_
+- ⬜ Zebra 0–109 % — _Origin: ≈Sony α6400_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Waveform Monitor — _Origin: Panasonic GH5_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Vectorscope — _Origin: Panasonic GH5_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Gamma Display Assist — _Origin: ≈Sony α7R III_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Sports Finder Mode — _Origin: Fujifilm X-T3_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 
 ### Focus
 
-- ⬜ Real-time Eye AF — _Origin: ≈Sony α9_
+- ⬜ Real-time Eye AF — _Origin: ≈Sony α9_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 - ⬜ Real-time AF tracking (3D Tracking / EOS iTR AF) — _Origin: ≈Sony α6400; Nikon D500, D850; Canon EOS 7D Mark II_
 - ⬜ AF tracking sensitivity settings (AF-C Custom Settings / AF-C Cases) — _Origin: Sony α99 II; Fujifilm X-T3; Panasonic GH5; Olympus E-M1 II; Canon EOS 7D Mark II_
-- ⬜ AF Acceleration/Deceleration Tracking — _Origin: Canon EOS 7D Mark II_
-- ⬜ AF Range Control — _Origin: ≈Sony α99 II_
-- ⬜ AF Micro Adjustment — _Origin: ≈Sony α99_
-- ⬜ Pre-AF — _Origin: Fujifilm X-T3_
-- ⬜ AF Point Auto Switching / Zone Area Switching — _Origin: Canon EOS 7D Mark II; Fujifilm X-T3_
-- ⬜ Starry Sky AF — _Origin: Olympus E-M1 II_
-- ⬜ Intelligent Subject Detection AF — _Origin: Olympus E-M1X_
+- ⬜ AF Acceleration/Deceleration Tracking — _Origin: Canon EOS 7D Mark II_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ AF Range Control — _Origin: ≈Sony α99 II_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ AF Micro Adjustment — _Origin: ≈Sony α99_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Pre-AF — _Origin: Fujifilm X-T3_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ AF Point Auto Switching / Zone Area Switching — _Origin: Canon EOS 7D Mark II; Fujifilm X-T3_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Starry Sky AF — _Origin: Olympus E-M1 II_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Intelligent Subject Detection AF — _Origin: Olympus E-M1X_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 
 ### System and connectivity
 
-- ⬜ USB charging while powered on — _Origin: ≈Sony α7 II_
-- ⬜ FTP Background Transfer — _Origin: Sony α9_
+- ⬜ USB charging while powered on — _Origin: ≈Sony α7 II_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ FTP Background Transfer — _Origin: Sony α9_ Static sweep in [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 
 ## Discarded
 

@@ -47,37 +47,37 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 - ⬜ Dual Video Recording — _Origen: ≈Sony α7R III_. Parcial (estático + VM de av-cam): con una sola ranura equivale a la **grabación proxy** de Sony, que la A6000 trae de fábrica sin menú. La UI pone proxy ON si el global `0x10ab200` ≠ 0; `libObj` lo lleva a la orden EE `0x4000`; av-cam lo guarda y tiene salida PROXY y segundo codificador; `libmpr` escribe el proxy. Faltan el ajuste, la cueva y grabar; el proxy solo cabría con el vídeo principal a ≤ 30p ([g78](../docs/gui/g78-dual-video-proxy.md), DVR-F1…F3).
 - ⬜ Timecode / User Bit — _Origen: ≈Sony α7S II_. Parcial: el TC/UB de Sony está de fábrica sin menú (UI → Effect `0x3016…0x301b`, motor TCUB en av-cam, escritura en `libmpr`). Lo apaga el byte de configuración de fábrica `0x3c03d9` del Backup (0 en todos los volcados); con él a 1, en el arnés `ObjEffect` acepta el preset de TC. T31: ajuste «Timecode» (Off/On) en la carpeta CFW que escribe ese byte; en el arnés On hace que se acepte el preset de TC y Off lo vuelve a bloquear. Falta grabar para ver el TC en el clip (E2E-15) ([G81](../docs/gui/g81-timecode-user-bit.md), TCUB-F1…F3).
 - ⬜ Loop Recording — _Origen: Panasonic GH5_. No existe de fábrica; diseño en [g82](../docs/gui/g82-loop-recording.md), bloqueado por E2E-15 (el arnés aún no graba), sin código.
-- ⬜ Movie Silent Control / Silent Multi Controller — _Origen: Fujifilm X-T3; Sony α99 II_
-- ⬜ Anamorphic Desqueeze — _Origen: Panasonic GH5_
-- ⬜ Synchro Scan — _Origen: Panasonic GH5_
-- ⬜ Auto Object Framing — _Origen: ≈Sony ZV-E1_
-- ⬜ Voice Memo — _Origen: ≈Sony α9_
+- ⬜ Movie Silent Control / Silent Multi Controller — _Origen: Fujifilm X-T3; Sony α99 II_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Anamorphic Desqueeze — _Origen: Panasonic GH5_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Synchro Scan — _Origen: Panasonic GH5_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Auto Object Framing — _Origen: ≈Sony ZV-E1_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Voice Memo — _Origen: ≈Sony α9_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 
 ### Monitorización
 
-- ⬜ Zebra 0–109 % — _Origen: ≈Sony α6400_
-- ⬜ Waveform Monitor — _Origen: Panasonic GH5_
-- ⬜ Vectorscope — _Origen: Panasonic GH5_
-- ⬜ Gamma Display Assist — _Origen: ≈Sony α7R III_
-- ⬜ Sports Finder Mode — _Origen: Fujifilm X-T3_
+- ⬜ Zebra 0–109 % — _Origen: ≈Sony α6400_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Waveform Monitor — _Origen: Panasonic GH5_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Vectorscope — _Origen: Panasonic GH5_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Gamma Display Assist — _Origen: ≈Sony α7R III_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Sports Finder Mode — _Origen: Fujifilm X-T3_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 
 ### Enfoque
 
-- ⬜ Eye AF en tiempo real — _Origen: ≈Sony α9_
-- ⬜ Seguimiento AF en tiempo real (3D Tracking / EOS iTR AF) — _Origen: ≈Sony α6400; Nikon D500, D850; Canon EOS 7D Mark II_
-- ⬜ Ajustes de sensibilidad del seguimiento AF (AF-C Custom Settings / AF-C Cases) — _Origen: Sony α99 II; Fujifilm X-T3; Panasonic GH5; Olympus E-M1 II; Canon EOS 7D Mark II_
-- ⬜ AF Acceleration/Deceleration Tracking — _Origen: Canon EOS 7D Mark II_
-- ⬜ AF Range Control — _Origen: ≈Sony α99 II_
-- ⬜ AF Micro Adjustment — _Origen: ≈Sony α99_
-- ⬜ Pre-AF — _Origen: Fujifilm X-T3_
-- ⬜ AF Point Auto Switching / Zone Area Switching — _Origen: Canon EOS 7D Mark II; Fujifilm X-T3_
-- ⬜ Starry Sky AF — _Origen: Olympus E-M1 II_
-- ⬜ Intelligent Subject Detection AF — _Origen: Olympus E-M1X_
+- ⬜ Eye AF en tiempo real — _Origen: ≈Sony α9_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Seguimiento AF en tiempo real (3D Tracking / EOS iTR AF) — _Origen: ≈Sony α6400; Nikon D500, D850; Canon EOS 7D Mark II_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Ajustes de sensibilidad del seguimiento AF (AF-C Custom Settings / AF-C Cases) — _Origen: Sony α99 II; Fujifilm X-T3; Panasonic GH5; Olympus E-M1 II; Canon EOS 7D Mark II_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ AF Acceleration/Deceleration Tracking — _Origen: Canon EOS 7D Mark II_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ AF Range Control — _Origen: ≈Sony α99 II_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ AF Micro Adjustment — _Origen: ≈Sony α99_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Pre-AF — _Origen: Fujifilm X-T3_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ AF Point Auto Switching / Zone Area Switching — _Origen: Canon EOS 7D Mark II; Fujifilm X-T3_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Starry Sky AF — _Origen: Olympus E-M1 II_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ Intelligent Subject Detection AF — _Origen: Olympus E-M1X_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 
 ### Sistema y conectividad
 
-- ⬜ Carga USB con la cámara encendida — _Origen: ≈Sony α7 II_
-- ⬜ FTP Background Transfer — _Origen: Sony α9_
+- ⬜ Carga USB con la cámara encendida — _Origen: ≈Sony α7 II_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
+- ⬜ FTP Background Transfer — _Origen: Sony α9_ Barrido estático en [g83](../docs/gui/g83-barrido-objetivos-restantes.md).
 
 ## Descartadas
 
