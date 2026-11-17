@@ -30,3 +30,6 @@ Sí hay modo ≥ 100 fps y ya está en la tabla de 13: **0x12 (120,0 / 100 Hz)**
 
 ## 4. Ids de Backup
 Si la opción exige un ajuste persistente nuevo (p. ej. frecuencia HFR), no se crea: queda para la tarea de infraestructura de ids de Backup (g69: solo 1 libre).
+
+## 5. Prueba en el arnés (G75 T20, 16-11-2026)
+El parche de lista (`scripts/gui/hd120_list_patch.py`, test `tests/test_g70_hd120.py`) se probó en vivo con el `/usr` de fábrica. Con XAVC S y NTSC, 120p 50M aparece en «Grabar ajuste», se elige y escribe en el Backup la clase de formato 4 (`0x1070c9a`). Está en gris («Función desactivada actualmente») en los modos automáticos y de escena por la regla de fábrica `isGrayedOutWithReason`, y habilitado en P/A/S/M. La lógica que corre es la copia de `viewUnified2.so`, no `cmn_view_processDataMgr.so`. Falta la grabación: la SD emulada no es SDXC. Detalle en [g75 Tarea 20](g75-arnes-e2e-objetivos.md).

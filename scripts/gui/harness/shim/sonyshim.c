@@ -1816,7 +1816,13 @@ static void *live_keys(void *a) {
             *nl = 0; const char *e;
             if (ln[0] == 'T') { LOG("hora del anfitrión %s", ln + 2); date_base = (long long)hexv(ln + 2, &e); date_mono0 = mono_s(); date_have = 1; }  /* «T epoch_local_hex»: hora local del anfitrión (+ desfase del usuario); se avanza con el reloj monotónico */
             if (ln[0] == 'E') { char *eq = strchr(ln + 2, '='); if (eq) { *eq = 0; hotenv_set(ln + 2, eq + 1); LOG("env %s=%s", ln + 2, eq + 1);
-                if (!strcmp(ln + 2, "TRACEFN") && trc_base) { trace_fns(trc_base); LOG("TRACEFN armadas en caliente (%d)", ntrc); } } }  /* «E NOMBRE=valor»: diagnóstico en caliente (VERB, GPUDRAWLOG…) sin arranque en frío; «E TRACEFN=…» arma trampas de un disparo (exige TRACEFN en el arranque, que fija la base de libObj) */
+                if (!strcmp(ln + 2, "TRACEFN") && trc_base) { trace_fns(trc_base); LOG("TRACEFN armadas en caliente (%d)", ntrc); }
+                if (!strcmp(ln + 2, "TRACEFN2") && getenv("TRACELIB")) {  /* «E TRACEFN2=…» con TRACELIB: arma las trampas en la biblioteca ya mapeada (la carga por dlopen puede no pasar por el gancho) */
+                    char ml[300]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");
+                    while (m && fgets(ml, sizeof ml, m)) if (strstr(ml, getenv("TRACELIB"))) { base = hexv(ml, 0); break; }
+                    if (m) fclose(m);
+                    if (base) { trc_env = "TRACEFN2"; trc_lib_done = 1; trace_fns(base); LOG("TRACELIB %s base %#lx: TRACEFN2 armadas en caliente (%d)", getenv("TRACELIB"), base, ntrc); }
+                    else LOG("TRACELIB %s no está mapeada", getenv("TRACELIB")); } } }  /* «E NOMBRE=valor»: diagnóstico en caliente (VERB, GPUDRAWLOG…) sin arranque en frío; «E TRACEFN=…» arma trampas de un disparo (exige TRACEFN en el arranque, que fija la base de libObj) */
             if (ln[0] == 'S' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, startevhot, nm); pthread_detach(th); }  /* «S id[:modelo]»: publica un evento del ModelManager en caliente */
             if (ln[0] == 'A' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, acqhot, nm); pthread_detach(th); }  /* «A i»: acquireStatus(i) en caliente */
             if (ln[0] == 'M' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, modelhot, nm); pthread_detach(th); }  /* «M @Mxxx»: crea el modelo en caliente */
