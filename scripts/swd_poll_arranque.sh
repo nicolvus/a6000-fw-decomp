@@ -18,7 +18,10 @@ fi
 command -v openocd >/dev/null || { echo "ERROR: falta openocd" >&2; exit 1; }
 
 TMP=$(mktemp -d); OCD=; LOG=$TMP/ocd.log
-volcar() { [[ -s $LOG ]] && grep -aE '^[PE] ' "$LOG" >> "$OUT"; : > "$LOG"; }
+# Copia al log de salida las líneas nuevas (en vivo: hasta la penúltima, que puede estar a medias; al cerrar: todas).
+COP=0
+volcar() { local n; n=$(grep -acE '^[PE] ' "$LOG"); [[ ${1:-} == vivo ]] && ((n--))
+  ((n > COP)) && grep -aE '^[PE] ' "$LOG" | sed -n "$((COP + 1)),${n}p" >> "$OUT"; ((n > COP)) && COP=$n; }
 limpiar() {
   if [[ -n $OCD ]]; then kill -9 "$OCD" 2>/dev/null; wait "$OCD" 2>/dev/null; volcar; echo "S $(date +%s%3N) corte" >> "$OUT"; fi
   rm -rf "$TMP"
@@ -52,12 +55,12 @@ EOF
 : > "$OUT"
 END=$((SECONDS + DUR))
 while ((SECONDS < END)); do
-  : > "$LOG"
+  : > "$LOG"; COP=0
   openocd -c "set REM $((END - SECONDS))" -f "$TMP/poll.cfg" > "$LOG" 2>&1 &
   OCD=$!; motivo=fin; n0=0; quieto=0; t=0
   while kill -0 "$OCD" 2>/dev/null; do
     sleep 1; ((t++))
-    n=$(grep -acE '^[PE] ' "$LOG")
+    n=$(grep -acE '^[PE] ' "$LOG"); volcar vivo
     if ((n > 0 && n == n0)); then ((quieto++)); else quieto=0; fi; n0=$n
     if ((quieto >= STALL)); then motivo=atasco; kill -9 "$OCD" 2>/dev/null; fi
     if ((n == 0 && t >= ARRANQUE)); then motivo=sin_datos; kill -9 "$OCD" 2>/dev/null; fi

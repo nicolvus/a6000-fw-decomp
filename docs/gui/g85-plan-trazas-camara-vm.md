@@ -60,3 +60,25 @@ Sirve para el sistema Android/Linux: kernel, sysfs, procesos y disparo remoto. P
 - Que `getevent`, EDID o sysfs de HDMI/UDC existan en la cámara no está verificado (NO_VERIFICADO).
 - `/proc/PID/mem` por telnet no está probado.
 - Los breakpoints sobre código parcheado (cuevas g55/g65, ganchos G33) dependen de las direcciones del 3.78 instalado; hay que verificarlas.
+
+## Resultados
+
+### S1 (sondeo) — arranque en frío real, CFW 3.78 instalado (17-11-2026, MEDIDO)
+
+`analysis/camera-dumps/20261117-traza-S1/poll_arranque4.log` (no versionado; 1954 muestras, ~0,15 s, 300 s). Palabras leídas por AP0 en físico (`virtual + 0x40000000`). Tiempos relativos al inicio del sondeo; la batería se quitó en ≈ 15,9 s.
+
+| t (s) | `[0x43ede338]` | `[0x43ede320]` | palabra `0x43eaeecc` | Lectura |
+|---|---|---|---|---|
+| 0–15,9 | 0 | 0 | `0x00010000` | resto del arranque anterior |
+| 15,9 | 0 | 0 | 0 | sin alimentación / RAM a cero |
+| 20,5 | 0 | 0 | `0x00010000` | RAM inicializada (`0x43eaeece` = 1) |
+| 39,27 | 0 | **2** | `0x00010000` | lo deseado pasa a 2 |
+| 39,42 | 0 | 2 | `0x00010104` | **`0x43eaeecd` = 1** (`0x43eaeecc` = 4) |
+| 39,57 | **2** | 2 | `0x00010107` | actual = 2 (`0x43eaeecc` = 7): el paso que acepta `0x3003` |
+| 40–292 | 2 ↔ `0x10` | 2 ↔ `0x10` | `0x00010107` | estable en 2 (1496/1571 muestras tras 60 s) con excursiones breves a `0x10` (primero cada ≈ 3 s, luego cada ≈ 60 s) |
+
+Conclusiones:
+- **La barrera de E2E-12b ocurre en la cámara real**: `0x43eaeecd` pasa de 0 a 1 en un único intervalo de muestreo justo antes de que `[0x43ede338]` llegue a 2, ≈ 19 s después de que la RAM se inicialice. Confirma el mecanismo de la VM (con ese byte a 1 el guion llega a 2).
+- El estado 2 se mantiene en reposo con la pantalla de disparo; el `1/1` y `0x43eaeecd = 0` del volcado `ram-servicio` y de la primera lectura de hoy son otro estado posterior (NO_VERIFICADO cuál: ¿ahorro de energía?).
+- `0x10` es una secuencia periódica (primero cambia `[0x43ede320]`, después `[0x43ede338]`), NO_VERIFICADO qué es.
+- Resolución de 0,15 s: no distingue los pasos intermedios del guion (0→2→0x1b→1 del volcado). El escritor de `0x43eaeecd` sigue sin identificar: hace falta S2 (watchpoint).
