@@ -599,3 +599,10 @@ Los bytes del volcado están en `scripts/gui/avcam/objetivo_16-50.json` (origen 
 - La lista avanza 28→30 sola (módulo 3 `0x300→0x320→0x323→0x325`, escritor `0x43b09f6a` vía `0x43859b88`) y se detiene en idx 30 (máscara `0xe`): módulo 3 debe pasar a `0x326`, transición `0x43859d2a` que exige `[campo+7]==1` = `[0x43eaee84+0x49]` (0 en la VM).
 - Con ese byte a 1: idx 28→30→42 (fin), `[0x43ede338]`=2. Test: `test_barrera_del_guion_es_el_byte_0x43eaeecd`.
 - Siguiente: E2E-12c (productor del byte).
+
+
+## Tarea 37 — E2E-12c: quién activa `0x43549e48` y el arranque `0x3006` (17-11-2026, MEDIDO + estático)
+
+- `0x43549e48` (sensor/LV, hace `Get` de recursos por `0x43799a94`) no lo despacha una orden: lo registra `0x4380ea14` (`ldr r1,[r5,GOT+0x60f8]` → `0x43afb46a`) en `0x4380e43c`, que corre cada V (72–100 veces en la VM) y elige el caso con `(tabla 0x43bc5090[ [0x43e9b548]&0xff ].w0 >> 15) & 0x1f`. Solo la clase 5 (estado del módulo 0 `0x0c`/`0x11`) llega a `0x4380ea14`; en la VM salen clases 18 (`0x105`) y 1 (`0x118`/`0x102`). El guion 0→2 no pide `0x0c/0x11`; sí las filas 2→0x11, 0x29→0x11/0x1c, 0xf→0x11 (pasos tras el 2). Conclusión: el handler no puede ser lo que abre la barrera de idx 30.
+- El paso lo fija la petición: `437fc3da` arma `[0x43ede33c]`=id, `43b00772` elige lista según el paso actual (`0x3003`: `0x43bf377e` desde 0, `0x43bf360e` desde 1) y `437fc404` toma `lista[idx]` como destino. RAM real: paso 1, lista `0x43bf3648`, última id `0x3006`. La captura EE_START empieza en seq 2: falta la `0x3006` (seq 0/1). Entregada (formato INFERIDO de la 0x3024) la VM hace 0→0x1b→1 y contesta `{0x3006,128}`; el módulo 3 pasa por `0x301`, que es el único estado con el que `0x43844e80` llama `0x43b09b4e`→`0x43b098c0` (reinicio de parámetros). Test `test_orden_de_arranque_0x3006…`.
+- Sigue abierto: tras ese arranque, 1→2 se detiene en la misma barrera (`0x43eaeecd`=0). `0x43853460` (que escribe `+0xbdd`=3) ya corre pero sobre otro objeto. `0x3000` (lista `0x43bf37b4`) deja la VM en el paso 0 sin contestar. Objetivo final (`[0x43ede338]`=2 sin escribir bytes, `0x3000/0x3003/0x3024`, módulo 11 `0xC02`) NO alcanzado.

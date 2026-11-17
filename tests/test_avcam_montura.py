@@ -152,3 +152,42 @@ def test_barrera_del_guion_es_el_byte_0x43eaeecd() -> None:
         vm.limite += 1000
         L.planifica(vm, 100_000_000)
     assert vm.rd(0x43EDE338) == 2
+
+
+def test_orden_de_arranque_0x3006_lleva_av_cam_al_paso_1_y_el_modulo_3_pasa_por_0x301() -> None:
+    """MEDIDO (E2E-12c): la RAM real en reposo tiene `[0x43ede338]`=1, última petición `0x3006` y lista `0x43bf3648` ([2,0x1b,1]); la captura EE_START (seq 2..15) no trae
+    esa orden (seq 0/1). Entregada antes (formato INFERIDO de la `0x3024`: `00 00 id_lo id_hi seq 00 00 80 00`), av-cam recorre 0→0x1b→1, la contesta y el módulo 3 pasa por `0x301`
+    (`0x43844f e0`→`0x43b09b4e`→`0x43b098c0`, reinicio de parámetros que la VM sin esa orden nunca ejecutaba). La barrera del guion 1→2 (byte `0x43eaeecd`) sigue abierta."""
+    pytest.importorskip("unicorn")
+    from unicorn import UC_HOOK_CODE
+
+    import liro_vm as L
+    import puente as P
+    from test_avcam_ee_start import _secuencia
+
+    if not L.AVCAM.exists() or not L.LIRO_KO.exists():
+        pytest.skip("faltan av-cam.bin o liro.ko (no versionados)")
+    vm, t0 = P.arranca()
+    vm.limite = t0
+    hits: dict[int, int] = {}
+    for a in (0x43B098C0,):
+        vm.uc.hook_add(UC_HOOK_CODE, lambda uc, ad, sz, u: hits.__setitem__(ad, hits.get(ad, 0) + 1), None, a, a + 2)
+    cab = bytes.fromhex("000000000100000002000200")
+
+    def envia(q: int, c: bytes, d: bytes) -> None:
+        vm.limite += 400
+        L.planifica(vm, 20_000_000)
+        m = vm.malloc(max(len(d), 0x40) + 12 + 0x20) + 12
+        vm.uc.mem_write(m - 12, c)
+        vm.uc.mem_write(m, d)
+        vm.msz[m] = len(d)
+        L.entrega(vm, q, m)
+
+    envia(0x30001, cab, bytes([0, 0, 0x06, 0x30, 0x80, 0, 0, 0x80, 0]))
+    for q, c, d in _secuencia():
+        envia(q, c, d)
+    vm.limite += 3000
+    L.planifica(vm, 50_000_000)
+    assert vm.rd(0x43EDE338) == 1  # paso de reposo, como la RAM real
+    assert hits.get(0x43B098C0, 0) >= 1
+    assert vm.rd(0x43EAEECD, 1) == 0  # barrera 1→2 (E2E-12c) todavía sin productor
