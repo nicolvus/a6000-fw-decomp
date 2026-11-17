@@ -481,3 +481,7 @@ Hecha por el orquestador. En una A6000 con una sola ranura equivale a la grabaci
 - av-cam lo guarda: probado en la VM, ON/OFF.
 
 El arnés no ejecuta la ruta de la UI porque MOVIE se detiene en la tarjeta (E2E-14). Pendientes DVR-F1…F3.
+
+## Tarea 27 — quitar la restricción de tarjeta de XAVC S (16-11-2026)
+
+A petición del usuario, en lugar de emular una SDXC: el parche de 2 bytes `scripts/gui/xavcs_card_patch.py` evita el factor `0x20000` de `ObjMedia` que daba «Esta tarjeta de memoria no admite la grabación de películas XAVC S» ([g79](g79-xavcs-sin-restriccion-de-tarjeta.md)). Está probado en Unicorn (de fábrica y parcheado) y en el arnés: con la SD de 4 GB FAT32 MOVIE entra en «REC» y `libmpr` abre `M4ROOT`. Siguiente bloqueo: E2E-15, la grabación se queda en «REC» sin EE de vídeo.
