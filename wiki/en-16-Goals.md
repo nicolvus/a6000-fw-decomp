@@ -50,7 +50,7 @@ Features wanted on the A6000, inherited from other Sony models and other brands,
 - ⬜ Dual Video Recording — _Origin: ≈Sony α7R III_
 - ⬜ 4K HDMI output — _Origin: Sony α7S_
 - ⬜ Timecode / User Bit — _Origin: ≈Sony α7S II_
-- ⬜ Loop Recording — _Origin: Panasonic GH5_
+- ⬜ Loop Recording — _Origin: Panasonic GH5_. Not in the factory firmware; design in [g82](../docs/gui/g82-loop-recording.md), blocked by E2E-15 (harness cannot record yet), no code.
 - ⬜ Movie Silent Control / Silent Multi Controller — _Origin: Fujifilm X-T3; Sony α99 II_
 - ⬜ Anamorphic Desqueeze — _Origin: Panasonic GH5_
 - ⬜ Synchro Scan — _Origin: Panasonic GH5_
