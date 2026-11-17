@@ -493,3 +493,7 @@ Hecha por el orquestador. La A6000 de fábrica ya tiene «Repr. imagen fija 4K»
 ## Tarea 29 — función objetivo «Timecode / User Bit» (16-11-2026)
 
 Hecha por el orquestador ([g81](g81-timecode-user-bit.md)). El TC/UB de Sony está de fábrica sin menú: emisores de UI a Effect (`0x3016…0x301b`), motor TCUB en el codificador de av-cam y escritura en `libmpr`. En el arnés, con el comando `Z` ampliado a objeto y clase (`Z 9:3900:301a …`), el preset de TC llega a `ObjEffect`, que lo rechaza por el factor de inhibición `0x34b` («is Inhbited») en modo foto. Pendientes TCUB-F1…F3.
+
+## Tarea 30 — TCUB-F1: origen de la inhibición de TC/UB (16-11-2026)
+
+Hecha por el orquestador ([g81 §5](g81-timecode-user-bit.md)). La traza de `libMWF` muestra que no la inhibe ningún factor: la bloquea el byte de Backup de fábrica `0x3c03d9`, que vale 0 en todos los volcados. Con `BKSET=3c03d9=1` el preset de TC deja de rechazarse. Ese byte también bloquea la orden Effect de S&Q (`0x3015`). Pulsar Fn con la grabación atascada en «REC» tiró el invitado (SIGSEGV), anotado.
