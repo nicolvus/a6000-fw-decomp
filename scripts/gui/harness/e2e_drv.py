@@ -11,6 +11,7 @@ import json
 import os
 import sys
 import time
+from pathlib import Path
 
 
 def post(puerto: int, ruta: str, cuerpo: bytes) -> None:
@@ -35,7 +36,7 @@ def captura(puerto: int, destino: str, espera: float = 1.5) -> None:
                 break
     c.close()
     if ultimo:
-        open(destino, "wb").write(ultimo)
+        Path(destino).write_bytes(ultimo)
     else:
         print("sin fotograma:", destino)
 
