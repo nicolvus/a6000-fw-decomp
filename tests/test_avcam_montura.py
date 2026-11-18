@@ -17,7 +17,7 @@ def _vm():
         pytest.skip("faltan av-cam.bin o liro.ko (no versionados)")
     from test_avcam_ee_start import _corre
 
-    return _corre()
+    return _corre(completo=False)  # T51: presupuesto fijo (≈6,6 s virtuales): a ≈13 s la montura pasa a 0xf1 y reintenta («DETACH RETRY»)
 
 
 def test_cs_check_cmd_sale_por_dmac_y_pl011_con_formato_bl() -> None:

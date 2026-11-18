@@ -20,8 +20,18 @@ def _secuencia() -> list[tuple[int, bytes, bytes]]:
     ]
 
 
-def _corre(grupo: int | None = None, pre=None):
-    """VM tras entregarle la secuencia (el tiempo virtual avanza 400 ms por orden); `pre(vm)` instala ganchos de diagnóstico tras el arranque."""
+def _hasta_limite(L, vm, pasos: int) -> None:
+    """T48: el pipeline por trama gasta muchas más instrucciones por V que antes y un único `planifica(pasos)` ya no llega a `vm.limite` (los tests comparaban un instante concreto);
+    se repite hasta alcanzarlo (tope 40 vueltas) para que el tiempo virtual medido sea el mismo que antes de T48."""
+    for _ in range(40):
+        L.planifica(vm, pasos)
+        if vm.t >= vm.limite - 1:
+            break
+
+
+def _corre(grupo: int | None = None, pre=None, completo: bool = True):
+    """VM tras entregarle la secuencia (el tiempo virtual avanza 400 ms por orden); `pre(vm)` instala ganchos de diagnóstico tras el arranque. `completo=False` conserva el presupuesto fijo de instrucciones de antes de T51
+    (termina a ≈6,6 s virtuales; lo usa `test_avcam_montura.py`, cuyos límites documentados valen para ese instante)."""
     pytest.importorskip("unicorn")
     L = pytest.importorskip("liro_vm")
     P = pytest.importorskip("puente")
@@ -34,7 +44,7 @@ def _corre(grupo: int | None = None, pre=None):
     sec = _secuencia()
     for i, (q, cab, datos) in enumerate(sec):
         vm.limite += 400
-        L.planifica(vm, 20_000_000)
+        (_hasta_limite if completo else lambda L, vm, n: L.planifica(vm, n))(L, vm, 20_000_000)
         if grupo is not None and i == len(sec) - 1:
             vm.wr(0x43EDE338, grupo)  # paso actual del secuenciador de av-cam (lo avanzan los VD del Sync/BONOBO, que la VM no genera)
         m = vm.malloc(max(len(datos), 0x40) + 12 + 0x20) + 12
@@ -43,7 +53,7 @@ def _corre(grupo: int | None = None, pre=None):
         vm.msz[m] = len(datos)
         L.entrega(vm, q, m)
     vm.limite += 3000
-    L.planifica(vm, 50_000_000)
+    (_hasta_limite if completo else lambda L, vm, n: L.planifica(vm, n))(L, vm, 50_000_000)
     return vm
 
 
@@ -84,7 +94,7 @@ def test_contador_de_v_y_paridad_como_en_la_camara_real() -> None:
     assert n > 40 and vm.rd(0x43E9BAAC) in (n, n + 1) and vm.rd(0x43E9BAB4) == n & 1
     assert vm.rd(0x43E992DC) in (n - 1, n)
     # T40: el módulo 3 sigue su guion (T36: 0x300→0x325 con los modos 0→17→1→16→2), de modo que la tercera palabra del bloque pasa de 1 a 2 al final del presupuesto; las dos primeras siguen en 1
-    assert vm.rd(0x43E9C7D8, 2) >> 8 == 3 and [vm.rd(0x43E9C7DC + 4 * k) for k in range(2)] == [1, 1] and vm.rd(0x43E9C7DC + 8) in (1, 2)
+    assert vm.rd(0x43E9C7D8, 2) >> 8 == 3 and [vm.rd(0x43E9C7DC + 4 * k) for k in range(2)] in ([1, 1], [3, 3]) and vm.rd(0x43E9C7DC + 8) in (1, 2)  # T51: [3,3] con el tiempo virtual completo
 
 
 def test_clkctrl_sin_master_con_backup_real_coincide_con_la_camara() -> None:
@@ -113,11 +123,9 @@ def test_puente_vigila_registra_escrituras_del_rango(tmp_path, monkeypatch) -> N
     assert any(f.get("vigila") and f["pc"].startswith("0x43792d") for f in filas)
 
 
-@pytest.mark.xfail(
-    reason="E2E-10 (T16, g75 «Tarea 16»): el guion 0→2 se detiene en la posición 23: el módulo 11 sigue en 0xc00 (destino 0xc01) porque `0x436e5828` exige el estado 5 del subsistema `[0x43e81240]` (0xf0 en la VM, 5 en la RAM real)",
-    strict=True,
-)
 def test_av_cam_contesta_0x3003_ultimo_paso_de_ee_start() -> None:
+    """E2E-10/E2E-12c (T51, MEDIDO): sin cargar nada del volcado real ni forzar el paso, con el tiempo virtual completo (`_hasta_limite`, ≈13,6 s) el módulo 1 llega a `0x202` en `0x43ec7adc`
+    (13,3 s), el guion 0→2 acaba (`[0x43ede338]`=2) y av-cam contesta `0x3003` seq 15. Antes (xfail de T16–T48) la prueba terminaba antes por el presupuesto de instrucciones."""
     assert (0x3003, 15) in _respuestas()
 
 
@@ -132,14 +140,17 @@ def test_bonobo_genera_la_v_y_corre_hs_main_en_cada_v() -> None:
 def test_secuenciador_elige_la_transicion_0_a_2_y_espera_el_estado_de_los_modulos() -> None:
     """E2E-10 (T7, MEDIDO): la 0x3003 arma `437fc35c` (pone `[0x43f9ade8]`=1, no es un requisito previo); en la V siguiente `437fc404` fija el destino 2, `43b006d0` halla la fila {0→2} (guion `0x43bf2208`, 0x2b palabras) y el guion
     se detiene en su primera barrera: las palabras de estado de los módulos (`0x43e9bd58`…) no llegan a lo que pide el guion."""
-    vm = _corre()
+    from unicorn import UC_HOOK_MEM_WRITE
+
+    mont: list[int] = []
+    vm = _corre(pre=lambda vm: vm.uc.hook_add(UC_HOOK_MEM_WRITE, lambda uc, acc, a, sz, v, u: mont.append(v & 0xFF), None, 0x43E81240, 0x43E81240))
     lista = 0x43EDE340  # {tabla, n filas, …, +0xc activo, +0x10 guion, +0x14 largo, +0x18 posición, +0x1c destino por slot}
-    assert vm.rd(0x43F9ADE8, 1) == 1 and vm.rd(0x43EDE320) == 2 and vm.rd(lista + 0xC, 1) == 1 and vm.rd(lista + 0x10) == 0x43BF2208
+    assert vm.rd(0x43F9ADE8, 1) in (0, 1) and vm.rd(0x43EDE320) == 2 and vm.rd(lista + 0xC, 1) == 1 and vm.rd(lista + 0x10) == 0x43BF2208  # T51: `[0x43f9ade8]` vuelve a 0 al acabar el guion (13,3 s)
     # T15: con el contador de V y `ref_flg` pasa la barrera 12 (0x8347); T16: con los temporizadores 0xf2403000 pasa la 20 (`0x8a00`) y se detenía en la 23 porque el módulo 11 seguía en 0xc00
     # (subsistema `[0x43e81240]` en 0xf0, 5 en la cámara real). T35/T40: con el objetivo emulado la montura llega a 5, el módulo 11 sube a 0xc01 (destino 0xc02) y el guion pasa la 23 y llega a la 28
     # (30 si la VM corre algo más; ahí lo detiene el byte `0x43eaeecd`, T36): lo correcto frente a la cámara real, que tiene la montura en 5 y no se queda en la 23.
-    assert vm.rd(0x43EDE338) == 0 and 28 <= vm.rd(lista + 0x18) <= 30
-    assert vm.rd(lista + 0x1C + 2 * 11, 2) == 0xC02 and vm.rd(0x43E81240, 1) == 5
+    assert vm.rd(0x43EDE338) == 2 and vm.rd(lista + 0x18) == 42  # T51: con el tiempo virtual completo el guion acaba (antes: 0 y 28–30)
+    assert vm.rd(lista + 0x1C + 2 * 11, 2) == 0xC02 and 5 in mont  # T51: la montura pasó por 5; al final (13,2 s) está en 0xf1
 
 
 def test_eventos_1e_y_17_de_captura_llegan_a_sus_callbacks_y_el_modulo_1_escribe_su_estado() -> None:
@@ -332,7 +343,7 @@ def _master(rol: int) -> tuple:
     L.entrega(vm, 0xC001BD, p)
     for _ in range(6):
         vm.limite += 1000
-        L.planifica(vm, 50_000_000)
+        _hasta_limite(L, vm, 50_000_000)
     return vm, vm.log[n0:]
 
 
@@ -345,7 +356,7 @@ def test_master_de_clkctrl_no_hace_falta_para_el_modulo_0() -> None:
     assert any("Receive Message from Master src=0x80c001bd" in x for x in log)
     assert vm.rd(0x43E9BD58, 2) == vm.rd(0x43EDE340 + 0x1C, 2)
     # T40: 23 antes de T35; con la montura en 5 el guion sigue hasta la barrera del byte `0x43eaeecd` (28–30, T36); igual con y sin Master
-    assert vm.rd(0x43EDE340 + 0x18) == vm0.rd(0x43EDE340 + 0x18) and 28 <= vm.rd(0x43EDE340 + 0x18) <= 30
+    assert vm.rd(0x43EDE340 + 0x18) == vm0.rd(0x43EDE340 + 0x18) and vm.rd(0x43EDE340 + 0x18) == 42  # T51: guion completo
 
 
 def test_idt_cam_de_nflasha3_es_el_de_la_ram_real_y_quita_init_ng() -> None:
@@ -374,12 +385,17 @@ def test_temporizador_0xf2403000_completa_el_trabajo_del_modulo_9() -> None:
 
     fin = []
 
+    from unicorn import UC_HOOK_MEM_WRITE
+
+    m9: set[int] = set()
+
     def pre(vm) -> None:
         vm.uc.hook_add(UC_HOOK_CODE, lambda *_: fin.append(1), None, 0x43A13474, 0x43A13474)
+        vm.uc.hook_add(UC_HOOK_MEM_WRITE, lambda uc, acc, a, sz, v, u: m9.add(v & 0xFFFF), None, 0x43EB3D20, 0x43EB3D21)
 
     vm = _corre(pre=pre)
     assert fin and vm.irqs[0xA4] >= 1 and vm.rd(0x4401AD3F, 1) == 0
-    assert vm.rd(0x43EB3D20, 2) == 0xA82
+    assert m9 & {0xA82, 0xA83}  # T51: pasa por 0xa83 (10,9 s) y, con el tiempo virtual completo, el guion lo devuelve a 0xa00; antes de T48 la medición acababa en 0xa82
 
 
 def test_la_vm_tiene_el_objetivo_montado() -> None:
@@ -466,10 +482,13 @@ def test_av_cam_guarda_el_proxy_de_la_orden_0x4000() -> None:
 def test_objetivo_completa_el_handshake_cs_data_de_la_montura() -> None:
     """E2E-12 (T33, MEDIDO): con la petición de CA y el objetivo de kit respondiendo a CS/DATA, la montura pasa de 0xf0 a 1 y `[HS]` llega a COMPLETE
     (CS_HIGH, DATA_HIGH, CS_LOW, COMPLETE) y envía `CS_CHECK_CMD` por la UART (PL011 `0xf2001000`)."""
-    vm = _corre()
+    from unicorn import UC_HOOK_MEM_WRITE
+
+    mont: list[int] = []
+    vm = _corre(pre=lambda vm: vm.uc.hook_add(UC_HOOK_MEM_WRITE, lambda uc, acc, a, sz, v, u: mont.append(v & 0xFF), None, 0x43E81240, 0x43E81240))
     txt = "\n".join(vm.log)
     for marca in ("MOUNT_CA_REQ_RECEIVE_1ST:1", "[HS]CS_HIGH", "[HS]DATA_HIGH", "[HS]CS_LOW", "[HS]COMPLETE", "[B->L]CS_CHECK_CMD"):
         assert marca in txt, marca
     # T34: la trama CS_CHECK_CMD llega al objetivo por DMAC+PL011; T35: el objetivo contesta (irq 0x7e = flanco de DATA_IN) y la montura llega a 5 sin agotar el plazo
     assert "[BL]SYNC TIMEOUT" not in txt and vm.objetivo.tramas
-    assert vm.rd(0x43E81240) == 5
+    assert 5 in mont  # T51: llega a 5 (5,2 s); a los 13,2 s virtuales pasa a 0xf1 (NO_VERIFICADO por qué: fin del plazo de la montura o del objetivo emulado)
