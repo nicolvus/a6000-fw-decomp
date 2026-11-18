@@ -191,3 +191,39 @@ def test_orden_de_arranque_0x3006_lleva_av_cam_al_paso_1_y_el_modulo_3_pasa_por_
     assert vm.rd(0x43EDE338) == 1  # paso de reposo, como la RAM real
     assert hits.get(0x43B098C0, 0) >= 1
     assert vm.rd(0x43EAEECD, 1) == 0  # barrera 1→2 (E2E-12c) todavía sin productor
+
+
+def test_el_byte_0x43eaeecd_lo_pone_av_cam_con_las_entradas_del_pipeline_y_se_alcanza_el_estado_2() -> None:
+    """MEDIDO (E2E-12c, T38): `0x4384fb7c` pone `[0x43eaee84+0x49]`=1 (strb en `0x4384fd06/0x4384fd6e`, sin escribir el byte a mano) y `[0x43ede338]`=2 con av-cam contestando la
+    `0x3003`, si se le dan las cuatro entradas que en la RAM real vienen del pipeline sensor/ISP (volcado `ram_43e00000_tras_montar.bin`, no versionado): (1) tabla `0x43ef230c`
+    (volcada de la real, con `[+0x74]`=1: bit 0 de la máscara `[obj+0xbe8]`), (2) OPD `0x43fa4ba3`=1 (`[obj+0xc34]`), (3) modo `[bloque+8]`=3 y (4) `[bloque+0xb]`=1 en la entrada de
+    `0x4384fb7c`. (3) y (4) se imponen aquí solo como diagnóstico: son lo que la VM no produce (modo del estado 0x325 = 0x10/2 ∈ máscara 0x18005; `[bloque+0xb]` = «`[obj+0xbdd]` cambió»,
+    real `0x3a`). Sin (1) o (2) el byte no sube."""
+    pytest.importorskip("unicorn")
+    import liro_vm as L
+    from unicorn import UC_HOOK_CODE
+
+    ram = ROOT / "analysis/camera-dumps/20261117-traza-montura/ram_43e00000_tras_montar.bin"
+    if not ram.exists():
+        pytest.skip("falta el volcado real (no versionado)")
+    real = ram.read_bytes()
+    tabla = 0x43EF230C
+    vm = _vm()
+    vm.uc.mem_write(tabla, real[tabla - 0x43E00000:][:0xC0])
+    vm.wr(tabla + 0x74, 1, 1)
+    vm.wr(0x43FA4BA3, 1, 1)
+
+    def entrada(uc, a, sz, u):
+        vm.wr(0x43EB2680 + 8, 3, 1)
+        vm.wr(0x43EB2680 + 0xB, 1, 1)
+
+    vm.uc.hook_add(UC_HOOK_CODE, entrada, None, 0x4384FB7C, 0x4384FB7E)
+    for _ in range(3):
+        vm.limite += 1000
+        L.planifica(vm, 100_000_000)
+    assert vm.rd(0x43EAEECD, 1) == 1 and vm.rd(0x43EDE338) == 2 and vm.rd(0x43E9C7D8, 2) == 0x302  # módulo 3 como la RAM real (A[0]=0x0302)
+    import mensajes as M
+
+    resp = {(r.id, r.seq) for _t, _ta, _api, q, d, _c in vm.salida_ext if q == 0x20002 and bytes.fromhex(d)[:1] == b"\x01" for r in [M.decodifica(bytes.fromhex(d))]}
+    print("RESP3003", (0x3003, 15) in resp, sorted(resp)[:20])
+    assert (0x3003, 15) in resp  # E2E-10 con el paso 2 alcanzado por la ruta del flag
