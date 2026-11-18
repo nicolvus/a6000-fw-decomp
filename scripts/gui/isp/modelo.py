@@ -48,10 +48,15 @@ class Tablas:
         self.matrices = np.array(self.meta["matrices_color"]["matrices"], float).reshape(-1, 3, 3) / 1024.0
         sr = dir_ / "sr2_standard.json"
         if sr.is_file():                                                         # curva SR2 de 512 puntos remuestreada a 2048 (la LUT interpola linealmente igual)
-            c = np.array(json.loads(sr.read_text())["curva_0x7802"], float)
-            self.curvas["sr2_std"] = np.round(np.interp(np.arange(N_LUT) * 511 / (N_LUT - 1), np.arange(512), c)).astype(np.uint16)
+            self.con_sr2(json.loads(sr.read_text())["curva_0x7802"])
         p = dir_ / "pp_ids.json"
         self.pp_ids = json.loads(p.read_text())["ids"] if p.is_file() else []
+
+    def con_sr2(self, c512) -> Tablas:
+        """Fija la curva de foto Still/Standard con la SR2 `0x7802` (512 pt, 10 bit) de un ARW. Depende del ISO (T42: ISO 100 = `sr2_standard.json`; ISO 1000 difiere), así que
+        para revelar un ARW concreto se usa la suya."""
+        self.curvas["sr2_std"] = np.round(np.interp(np.arange(N_LUT) * 511 / (N_LUT - 1), np.arange(512), np.asarray(c512, float))).astype(np.uint16)
+        return self
 
     def curva(self, gamma_app: int, foto: bool = False) -> tuple[str, np.ndarray]:
         k = CURVA_FOTO.get(gamma_app) if foto else None

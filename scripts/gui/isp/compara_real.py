@@ -117,15 +117,15 @@ def main() -> int:
     casos = []
     for f in a.fotos:
         lin, prev, meta = lee_arw(f)
-        casos.append((f.name, lin, prev, meta, True))
+        casos.append((f.name, lin, prev, meta, True, M.Tablas().con_sr2(R.sr2(f.read_bytes())[0x7802])))   # curva SR2 de cada ARW (depende del ISO)
     if a.entrada and a.foto:
         fo = Image.open(a.foto).convert("RGB")
         ent = np.asarray(Image.open(a.entrada).convert("RGB").resize(fo.size, Image.BOX), np.float32) / 255
-        casos.append((a.foto.name, ent, np.asarray(fo, np.float32) / 255, {"entrada": a.entrada.name}, False))
+        casos.append((a.foto.name, ent, np.asarray(fo, np.float32) / 255, {"entrada": a.entrada.name}, False, t))
     if not casos:
         ap.error("indica ARW o --entrada/--foto")
     res = {}
-    for nombre, lin, prev, meta, es_lineal in casos:
+    for nombre, lin, prev, meta, es_lineal, t in casos:
         r = {"meta": meta, "curva_tonal_real": curva_tonal(lin if es_lineal else M.srgb_a_lineal(lin), prev)}
         gammas = [a.gamma] if not a.barrido else sorted(M.CURVA_VIDEO)
         r["modelo"] = {}
