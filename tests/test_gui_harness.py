@@ -487,3 +487,18 @@ def test_escritura_de_ui_al_backup_llega_al_backup_de_la_liro_vm(tmp_path: Path)
     v.puente = SimpleNamespace(cerrojo=threading.RLock(), vm=vm)
     v.nv("1070217 02")
     assert vm.bk[0x1070217] == b"\x02" and v.nvram[0x1070217] == b"\x02"
+
+
+def test_issue_cmd_registra_categoria_id_y_retorno_bruto() -> None:
+    """E2E-17 (G75 T49): IMCMDLOG distingue las órdenes por categoría/id y guarda el retorno de ObjCamera antes del efecto EFCS del shim."""
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    cuerpo = src[src.index("static int issue_cmd("):src.index("_ZN3MWF5ObjIf17IssueCommandAsyncEPvPNS_6ObjMsgE(void *h, void *msg) {")]
+    assert "r_raw = r" in cuerpo and "GetCategoryId" in cuerpo and "GetMessageId" in cuerpo and "IssueCommandAsync cat=%#x id=%#x raw=%d" in cuerpo
+
+
+def test_e2e_drv_interpreta_pasos() -> None:
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("e2e_drv", HARNESS / "e2e_drv.py")
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    assert callable(mod.captura) and callable(mod.post)

@@ -1250,7 +1250,11 @@ static void *salvage_reply(void *a) {
 static char *msg_pend; static pthread_mutex_t msg_pm = PTHREAD_MUTEX_INITIALIZER; static void msg_send(char *);  /* «Z», ver msghot */
 __attribute__((used, noinline)) static int issue_cmd(void *h, void *msg, unsigned long r4, unsigned long r5) {
     static int (*real)(void *, void *); if (!real) real = nextsym("_ZN3MWF5ObjIf17IssueCommandAsyncEPvPNS_6ObjMsgE");
-    void *ra = __builtin_return_address(0); int r = real(h, msg);
+    void *ra = __builtin_return_address(0); int r = real(h, msg), r_raw = r;  /* r_raw: retorno de ObjCamera antes del efecto emulado de EFCS (E2E-17) */
+    unsigned cat = 0, mid = 0;
+    if (getenv("IMCMDLOG") && readable(msg)) {  /* categoría/id del ObjMsg (libMWF GetCategoryId/GetMessageId): identifica la orden en el registro */
+        static unsigned (*gc)(void *), (*gm)(void *); if (!gc) { gc = nextsym("_ZNK3MWF6ObjMsg13GetCategoryIdEv"); gm = nextsym("_ZNK3MWF6ObjMsg12GetMessageIdEv"); }
+        if (gc && gm) { cat = gc(msg); mid = gm(msg); } }
     { static __thread int dentro; char *p = 0; if (!dentro && msg_pend) { pthread_mutex_lock(&msg_pm); p = msg_pend; msg_pend = 0; pthread_mutex_unlock(&msg_pm); }
       if (p) { dentro = 1; msg_send(p); dentro = 0; } }  /* «Z» pendiente: en el hilo de la UI */
     if (efcs_ra && (unsigned long)ra == efcs_ra && (!r || r == 65535) && (r5 == 1 || r5 == 2)) {  /* efecto de CMP 0x75fb + EVT 0x85a6 (SET = ACT = pedido) y Backup 0x107086e. E2E-6: ObjCamera::IssueCommandAsync (libObj+0x98dad8) acepta (0) la primera orden y rechaza con 0xffff las siguientes (causa NO_VERIFICADA); la cámara real las acepta, así que se devuelve 0 */
@@ -1262,7 +1266,7 @@ __attribute__((used, noinline)) static int issue_cmd(void *h, void *msg, unsigne
     }
     if (getenv("IMCMDLOG")) { char t[400]; int o = 0; if (readable(msg)) for (int q = 0; q < 24; q++) o += snprintf(t + o, sizeof t - o, "%08x ", ((unsigned *)msg)[q]); t[o] = 0;
         Dl_info di = {0}; dladdr(ra, &di);  /* llamante como biblioteca+desplazamiento: identifica la rutina emisora (p. ej. libObj+0x6896ac = EFCS 0x75fa) */
-        LOG("IssueCommandAsync obj=%p msg=%p -> %d r4=%#lx r5=%#lx ra=%s+%#lx : %s", h, msg, r, r4, r5, di.dli_fname ? strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname : "?", (unsigned long)ra - (unsigned long)di.dli_fbase, t); }
+        LOG("IssueCommandAsync cat=%#x id=%#x raw=%d obj=%p msg=%p -> %d r4=%#lx r5=%#lx ra=%s+%#lx : %s", cat, mid, r_raw, h, msg, r, r4, r5, di.dli_fname ? strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname : "?", (unsigned long)ra - (unsigned long)di.dli_fbase, t); }
     return r;
 }
 __attribute__((naked)) int _ZN3MWF5ObjIf17IssueCommandAsyncEPvPNS_6ObjMsgE(void *h, void *msg) {
