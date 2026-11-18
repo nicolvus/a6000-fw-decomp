@@ -156,3 +156,21 @@ def test_diagnostico_5_46_es_opt_in(sym):
     cuerpo = src[i:src.index("\n}\n", i) if "\n}\n" in src[i:i + 3000] else i + 1500]
     cuerpo = cuerpo[:cuerpo.index("return") + 60] if "return" in cuerpo else cuerpo
     assert "mwf_quiet()" in src[i:i + 900] and "nextsym(" in cuerpo
+
+
+def test_calma_espera_al_silencio_del_registro_con_el_plazo_fijo_como_tope(tmp_path):
+    """Arranque rápido: las esperas fijas de OPENVIEWAT/STARTGAP/OPENVIEWGAP terminan cuando el registro de etapas (LOG) lleva `quieto` s en silencio
+    (medido: cada evento de arranque deja de registrar en ≤ 1 s salvo el primero, 10,6 s); el plazo fijo sigue siendo el máximo y quieto ≤ 0 lo deja como antes."""
+    cc = shutil.which("cc") or shutil.which("gcc") or shutil.which("clang")
+    if not cc:
+        pytest.skip("sin compilador de C")
+    (tmp_path / "t.c").write_text(r'''#include <stdio.h>
+#include "shimlogic.h"
+int main(void) {
+    printf("%d %d %d %d %d %d", calma_lista(103.9, 100, 0, 4, 15), calma_lista(104, 100, 0, 4, 15),  /* sin LOG desde el inicio: cuenta desde t0 */
+        calma_lista(110, 100, 107, 4, 15), calma_lista(111, 100, 107, 4, 15),                          /* LOG reciente: espera a 4 s de silencio */
+        calma_lista(115, 100, 114.9, 4, 15), calma_lista(114, 100, 0, 0, 15));                          /* tope fijo; quieto 0 = solo el tope */
+    return 0; }
+''')
+    subprocess.run([cc, "-I", str(SHIM), str(tmp_path / "t.c"), "-o", str(tmp_path / "t")], check=True)
+    assert subprocess.run([str(tmp_path / "t")], capture_output=True, text=True, check=True).stdout == "0 1 0 1 1 0"

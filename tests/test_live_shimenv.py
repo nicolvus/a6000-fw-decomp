@@ -101,3 +101,10 @@ def test_nflasha4_es_opt_in(monkeypatch, tmp_path):
     monkeypatch.setenv("LIVE_NFLASH4", str(img))
     v = variables(live.construye_shimenv(True, ""))
     assert len(v["NFLASH4"]) == 12 and v["NFLASH4"] != "1"
+
+
+def test_shimenv_arranca_por_calma_del_registro():
+    """Las esperas fijas del arranque (OPENVIEWAT, STARTGAP, OPENVIEWGAP) terminan al callar el registro de etapas; los plazos siguen como tope."""
+    v = variables(live.construye_shimenv(True, ""))
+    assert v["CALMA"] == "4" and v["CALMA0"] == "10"
+    assert v["OPENVIEWAT"] == "40" and v["STARTGAP"] == "f" and v["OPENVIEWGAP"] == "14"

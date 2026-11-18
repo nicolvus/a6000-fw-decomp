@@ -120,7 +120,7 @@ fieldset{border:0;padding:0;margin:0}fieldset[disabled]{opacity:.55}footer{posit
 <div class="row"><input type="file" id="fdat" accept=".dat"> <span class="mut">o ruta</span> <input type="text" id="rdat" size="38" placeholder="/ruta/FirmwareData.dat">
 <button id="imp">Importar</button></div>
 <p class="mut">El <code>.dat</code> se descifra y valida (paquete A6000 íntegro) y se reduce a un overlay de ficheros distintos de Sony; no se instala nada.
-Un perfil nuevo arranca en frío (≈ 2,5 min) y después se restaura en segundos.</p><div id="impmsg"></div></section>
+Un perfil nuevo arranca en frío (≈ 2 min) y después se restaura en segundos.</p><div id="impmsg"></div></section>
 <section><h2>Mapa de teclas</h2><p class="mut">Pulsa «Capturar» y luego la tecla del teclado. Un botón puede tener varias teclas; una tecla, un solo botón.
 Solo figuran los botones con código de cámara medido; Fn, reproducción, rueda y dial se añadirán cuando se verifiquen.</p>
 <table id="tt"></table><div class="row"><button id="rst">Restablecer valores por defecto</button></div></section>
@@ -133,7 +133,7 @@ Solo figuran los botones con código de cámara medido; Fn, reproducción, rueda
 <p class="mut">Disparo (botón «disparador») y MOVIE los guarda el anfitrión en esa carpeta con la estructura de la A6000 (<code>DCIM/100MSDCF/DSC00001.JPG</code>, <code>PRIVATE/M4ROOT/CLIP/C0001.MP4</code>); no se escribe si se supera el tamaño.</p></section>
 <section><h2>Red</h2><fieldset><div class="row"><label><input type="checkbox" id="rte"> Telnet</label>
 <label><input type="checkbox" id="rwi"> Wi-Fi por red local</label> &nbsp; Puerto telnet <input type="number" id="rpu" min="1024" max="65535" style="width:80px"></div></fieldset>
-<p class="mut">La A6000 solo ofrece telnet (OpenMemories Tweak, puerto 23, root) por Wi-Fi; aquí el invitado tiene una interfaz <code>ath0</code> en la red del ordenador (slirp) y <code>telnetd</code> del busybox de la cámara llega por <code>127.0.0.1:puerto</code>. Cambiar la red reinicia en frío (≈ 2,5 min). Sin adb: el firmware no trae <code>adbd</code>. El menú Inalámbrico no se activa (ver la guía).</p></section>
+<p class="mut">La A6000 solo ofrece telnet (OpenMemories Tweak, puerto 23, root) por Wi-Fi; aquí el invitado tiene una interfaz <code>ath0</code> en la red del ordenador (slirp) y <code>telnetd</code> del busybox de la cámara llega por <code>127.0.0.1:puerto</code>. Cambiar la red reinicia en frío (≈ 2 min). Sin adb: el firmware no trae <code>adbd</code>. El menú Inalámbrico no se activa (ver la guía).</p></section>
 </main><footer><button class="p" id="go">Iniciar</button><span id="msg" class="mut"></span><span style="flex:1"></span>
 <span id="vm" class="mut"></span><button id="stop" hidden>Parar VM</button><button id="quit">Cerrar emulador</button></footer>
 <script>
@@ -163,7 +163,7 @@ $('imp').onclick=async()=>{const f=$('fdat').files[0],r=$('rdat').value.trim();i
 $('impmsg').textContent='descifrando y extrayendo (hasta ~30 s)…';try{const j=f?await api('/api/dat',{method:'POST',headers:{'X-Nombre':encodeURIComponent(f.name)},body:f}):
 await api('/api/dat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ruta:r})});cfg=j.config;await carga();
 $('impmsg').innerHTML=`<span class="okc">Importado: firmware ${j.version} (región ${j.region}), ${j.ficheros} ficheros distintos de Sony → ${j.overlay}</span>`}catch(e){$('impmsg').innerHTML='<span class="err"></span>';$('impmsg').firstChild.textContent=e.message}};
-$('go').onclick=async()=>{lee();$('go').disabled=true;msg('arrancando… (un perfil nuevo tarda ≈ 2,5 min en frío)');try{const j=await api('/api/iniciar',{method:'POST',body:JSON.stringify(cfg)});location.href=j.url}catch(e){msg(e.message,'err');$('go').disabled=false}};
+$('go').onclick=async()=>{lee();$('go').disabled=true;msg('arrancando… (un perfil nuevo tarda ≈ 2 min en frío)');try{const j=await api('/api/iniciar',{method:'POST',body:JSON.stringify(cfg)});location.href=j.url}catch(e){msg(e.message,'err');$('go').disabled=false}};
 $('stop').onclick=async()=>{msg('guardando estado y parando…');await api('/api/parar',{method:'POST'});msg('VM detenida','okc');carga()};
 $('quit').onclick=async()=>{await fetch('/api/cerrar',{method:'POST'}).catch(()=>{});document.body.innerHTML='<p style="padding:30px">Emulador cerrado. Puedes cerrar esta pestaña.</p>'};
 carga().catch(e=>msg(e.message,'err'));setInterval(()=>api('/api/config').then(r=>vm(r.vm)).catch(()=>{}),4000);

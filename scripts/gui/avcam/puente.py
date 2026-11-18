@@ -24,11 +24,39 @@ import liro_vm as L
 NO_REENVIAR = {0x7A0020, 0x910040, 0x910041, 0x910042, 0x924127, 0x8F0139, 0x8F013A, 0x920021}
 
 
-def colas_avcam(avcam: Path | None = None) -> list[int]:
-    """Colas de recepción de av-cam (registradas con callback o con tarea en espera): los mensajes del invitado a ellas son para la LIRO VM."""
+CACHE_COLAS = Path(os.environ.get("XDG_CACHE_HOME") or Path.home() / ".cache") / "a6000-avcam-colas.json"
+
+
+def _clave_colas(avcam: Path | None) -> str:
+    """Todo lo que fija las colas: av-cam, su idt, bk.tbl, liro.ko y el código/reglas de la LIRO VM (los ficheros de esta carpeta)."""
+    av = avcam or L.AVCAM
+    h = hashlib.sha256()
+    for f in [av, av.with_name("idt_cam.bin"), L.BK, L.LIRO_KO, *sorted(Path(__file__).resolve().parent.glob("*.py")), L.REGLAS]:
+        h.update(f.name.encode() + b"\0" + (f.read_bytes() if f.is_file() else b"-") + b"\0")
+    return h.hexdigest()
+
+
+def colas_avcam(avcam: Path | None = None, cache: Path | None = CACHE_COLAS) -> list[int]:
+    """Colas de recepción de av-cam (registradas con callback o con tarea en espera): los mensajes del invitado a ellas son para la LIRO VM.
+    Calcularlas arranca la LIRO VM entera (5–6 s, y el Puente la arranca otra vez): se guardan en `cache` por contenido de las entradas."""
+    clave = _clave_colas(avcam) if cache else ""
+    try:
+        datos = json.loads(cache.read_text()) if cache else {}
+    except (OSError, ValueError):
+        datos = {}
+    if clave in datos:
+        return datos[clave]
     vm = arranca(avcam)[0]
-    q = set(vm.qcb) | {x.espera[1] for x in vm.tasks.values() if x.estado == "espera" and x.espera[:1] == ("rcv",)}
-    return sorted(q)
+    q = sorted(set(vm.qcb) | {x.espera[1] for x in vm.tasks.values() if x.estado == "espera" and x.espera[:1] == ("rcv",)})
+    if cache:
+        try:
+            cache.parent.mkdir(parents=True, exist_ok=True)
+            tmp = cache.with_name(f"{cache.name}.{os.getpid()}.tmp")  # varias VM a la vez: escritura atómica
+            tmp.write_text(json.dumps({**datos, clave: q}))
+            tmp.replace(cache)
+        except OSError:
+            pass  # sin caché escribible solo se pierde el atajo
+    return q
 
 
 def arranca(avcam: Path | None = None) -> tuple[L.Vm, float]:

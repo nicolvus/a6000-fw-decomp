@@ -60,6 +60,7 @@ static void live_msg(const char *, const char *, int);
 static void avq_flush(unsigned q); static void avq_rec(void *p, unsigned sz); static int avq_q(unsigned q); static void avq_forward(unsigned q, const unsigned char *m);
 static void menu_track(const char *); static void logmark(const char *); static int wl_all(void); static void wl_logfwd(const char *, ...); static void wl_live(const char *, int); static void wl_key(unsigned); static int wl_on(void); static double wl_ts(void); static const char *tname(int, char *, size_t);
 static int wl_begin(const char *k, unsigned a, int tmo, void *ra); static void wl_end(int slot);  /* WAITLOG=ms: registro de esperas largas (ver abajo) */
+static volatile double log_ultimo;  /* hora (CLOCK_MONOTONIC) de la última línea del registro de etapas: ver espera_calma */
 static pthread_mutex_t semlock = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t semcond = PTHREAD_COND_INITIALIZER;
 static struct { unsigned id; int cnt; } sems[16384];
@@ -625,7 +626,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
                   if (getenv("MSGBODY") && readable(m)) { char h[400]; int o = 0; for (int q = 0; q < 24; q++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[q]); LOG("MSGBODY sync %#x cab=%08x %08x %08x %s", w[0], ((unsigned *)m)[-3], ((unsigned *)m)[-2], ((unsigned *)m)[-1], h); }
                   return 0; } }
             if (w[0] == 0x8f013a) { if (m[2] && keyiniton() && strstr((char *)m + 2, keyiniton())) keyinit_send();
-              if (m[2] && tron_base && strstr((char *)m + 2, getenv("TRACEON"))) { unsigned long b = tron_base; tron_base = 0; trace_fns(b); LOG("TRACEON: trazas armadas"); } if (m[2]) { menu_track((char *)m + 2); LOG("LOG %s", (char *)m + 2); logmark((char *)m + 2); } else if (getenv("VERB")) { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
+              if (m[2] && tron_base && strstr((char *)m + 2, getenv("TRACEON"))) { unsigned long b = tron_base; tron_base = 0; trace_fns(b); LOG("TRACEON: trazas armadas"); } if (m[2]) { log_ultimo = wl_ts(); menu_track((char *)m + 2); LOG("LOG %s", (char *)m + 2); logmark((char *)m + 2); } else if (getenv("VERB")) { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
             else if (w[0] == 0x3e014d) backup_service((unsigned *)m);
             else if (w[0] == 0x924127 && ((unsigned *)m)[0] == 0x920111 && getenv("BOOTINFO")) {  /* BOOTINFO=a,b,c,d,e (hex): respuesta de arranque (ObjHandover, libObj+0x41b158) → palabras 1–5 */
                 const char *e = getenv("BOOTINFO"); for (int k = 1; k <= 5 && *e; k++) { ((unsigned *)m)[k] = hexv(e, &e); if (*e == ',') e++; }
@@ -969,6 +970,15 @@ static void menu_track(const char *t) {
     menu_open = p[2] == 'n';
 }
 
+/* CALMA=s (CALMA0=s para la primera espera, OPENVIEWAT): las esperas fijas del arranque terminan cuando el registro de etapas (LOG de 0x8f013a) lleva s segundos
+ * callado, con el plazo fijo como tope; sin la variable, el plazo fijo (anterior). Medido: cada evento de arranque deja de registrar en ≤ 1 s salvo el primero, que
+ * conserva su plazo fijo: ObjCamera envía 0x40ec a av-cam ≈ 10 s después con silencios de > 4 s en el registro, y adelantar los siguientes eventos quitaba el 2.º 0x40ec. */
+static void espera_calma(unsigned max_s, const char *var) {  /* var = NULL: siempre el plazo fijo */
+    const char *e = var ? getenv(var) : 0; int q = e ? num(e) : 0;
+    if (q <= 0) { sleep(max_s); return; }
+    double t0 = wl_ts(); while (!calma_lista(wl_ts(), t0, log_ultimo, q, max_s)) usleep(100000);
+    efp("[shim] CALMA %.1f s de %u\n", wl_ts() - t0, max_s);
+}
 /* PRECREATE=modelo o «M modelo» en caliente: publica el evento «solicitar modelo» (libObj+0x7eb9e8: mm, {?,?,id}) para que Appframework cree el modelo (p. ej. @M00F = ModelStillRec, el que atiende los ajustes de disparo) */
 /* PREACQST=i,j,… o «A i» en caliente: ModelManager::acquireStatus(i) (índice de estado; libObj+0x7eb0a2) */
 static void acquire_status(int i) {
@@ -996,11 +1006,11 @@ static void startev(const char *spec) {
                 ector(ev, id, 2, 0);
                 while (*e == ':' || *e == ';') { int mid = (int)hexv(e + 1, &e); unsigned long pk = 0x18; if (*e == ':') pk = hexv(e + 1, &e);  /* id:valor[:clave][;valor:clave…] */ void *pr = calloc(1, 0x10); ((void (*)(void *, int))(base + 0xf0fb0 + 1))(pr, mid);  /* STARTEV=id:modelo → parámetro 0x18 = Param<int>(modelo), como 0x7f2618 */
                     void (*addp)(void *, unsigned long, void *) = dlsym(RTLD_DEFAULT, "_ZN5Event12addParameterEmP9ParamBase"); if (addp) addp(ev, pk, pr); }
-                int rr = push(mm, ev); efp("[shim] STARTEV %#lx -> %d\n", id, rr); sleep(getenv("STARTGAP") ? (unsigned)hexv(getenv("STARTGAP"), 0) : 2); while (*e && *e != ',') e++; while (*e == ',') e++; }  /* avanza siempre: hexv no acepta mayúsculas */
+                int rr = push(mm, ev); efp("[shim] STARTEV %#lx -> %d\n", id, rr); { static int nev; espera_calma(getenv("STARTGAP") ? (unsigned)hexv(getenv("STARTGAP"), 0) : 2, nev++ ? "CALMA" : 0); } while (*e && *e != ',') e++; while (*e == ',') e++; }  /* avanza siempre: hexv no acepta mayúsculas */
         } else efp("[shim] STARTEV: faltan pViewManager/Event::Event/ModelManager::pushEvent\n");
 }
 static void *openviewer(void *a) {
-    (void)a; sleep(num(getenv("OPENVIEWAT") ? getenv("OPENVIEWAT") : "40"));
+    (void)a; espera_calma((unsigned)num(getenv("OPENVIEWAT") ? getenv("OPENVIEWAT") : "40"), "CALMA0");
     int (*ov)(const char *, int) = lobj_h ? dlsym(lobj_h, "_ZN13viewManagerIf8openViewEPKci") : 0;
     if (!ov) { efp("[shim] OPENVIEW: sin viewManagerIf::openView\n"); return 0; }
     if (getenv("PREACQ") && lobj_h) {  /* PREACQ=modelo: pide un «execute» al modelo antes de abrir vistas (¿fuerza su creación?) */
@@ -1015,7 +1025,7 @@ static void *openviewer(void *a) {
     if (getenv("STARTEV") && lobj_h) startev(getenv("STARTEV"));
     { void **pv = dlsym(lobj_h, "pViewManager"); for (int k = 0; pv && !*pv && k < 600; k++) usleep(100000); }  /* openView con ViewManager aún NULL = SIGSEGV (arranque lento) */
     char *spec = strdup(getenv("OPENVIEW")), *sv = 0;
-    for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) { efp("[shim] OPENVIEW %s ...\n", it); int r = ov(it, !strcmp(it, "view/STLREC") && getenv("OPENVIEWARG") ? (int)hexv(getenv("OPENVIEWARG"), 0) : 0); efp("[shim] OPENVIEW %s -> %d\n", it, r); if (getenv("POSTROOTEV") && !strcmp(it, "view/ROOT")) { sleep(8); startev(getenv("POSTROOTEV")); }  /* POSTROOTEV: tras abrir view/ROOT (su @T100 termina antes) la vista raíz pide @T0E3 (viewUnified2+0x16c58c) */ sleep(getenv("OPENVIEWGAP") ? (unsigned)hexv(getenv("OPENVIEWGAP"), 0) : 2); }
+    for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) { efp("[shim] OPENVIEW %s ...\n", it); int r = ov(it, !strcmp(it, "view/STLREC") && getenv("OPENVIEWARG") ? (int)hexv(getenv("OPENVIEWARG"), 0) : 0); efp("[shim] OPENVIEW %s -> %d\n", it, r); if (getenv("POSTROOTEV") && !strcmp(it, "view/ROOT")) { espera_calma(8, "CALMA"); startev(getenv("POSTROOTEV")); }  /* POSTROOTEV: tras abrir view/ROOT (su @T100 termina antes) la vista raíz pide @T0E3 (viewUnified2+0x16c58c) */ espera_calma(getenv("OPENVIEWGAP") ? (unsigned)hexv(getenv("OPENVIEWGAP"), 0) : 2, "CALMA"); }
     return 0;
 }
 static void *injector(void *a) {

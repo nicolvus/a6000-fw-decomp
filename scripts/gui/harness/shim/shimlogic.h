@@ -58,3 +58,10 @@ static inline void sync_nest_leave(sync_nest *s, unsigned qid) { if (s->n && s->
 #include <stdio.h>
 static inline void nflash_lblkinfo_fill(unsigned *a, unsigned nbytes) { memset(a, 0, 0x10); a[1] = 0x20000; a[2] = nbytes / 0x20000; a[3] = 0x200; }
 static inline void nflash_start_text(char *s, unsigned n) { snprintf(s, n, "%u\n", 0x3140000u / 512); }
+
+/* Arranque por calma: una espera fija del arranque (OPENVIEWAT, STARTGAP, OPENVIEWGAP) termina cuando el registro de etapas lleva `quieto` s sin líneas
+ * (contando desde t0 si la última es anterior) o al llegar a `max` s; quieto ≤ 0 = solo el plazo fijo (comportamiento anterior). */
+static inline int calma_lista(double now, double t0, double ultimo, double quieto, double max) {
+    double desde = ultimo > t0 ? ultimo : t0;
+    return now - t0 >= max || (quieto > 0 && now - desde >= quieto);
+}

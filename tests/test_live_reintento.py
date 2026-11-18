@@ -17,3 +17,10 @@ def test_sin_pantalla_pasado_el_limite_es_arranque_fallido():
 def test_con_pantalla_nunca_es_fallido():
     assert not live.arranque_fallido("LIVE=/dev/vport0p1\n", 900, 3, 240)
     assert not live.arranque_fallido("IMEXIT im_s 0\n", 900, 3, 240)
+
+
+def test_autoguardado_no_antes_del_instante_del_arranque_lento():
+    """Con CALMA la primera pantalla llega ≈ 60 s antes, pero guardar el estado entonces deja la restauración sin pantalla (medido 2 de 2;
+    sin CALMA restaura en 7 s): el guardado sigue 20 s después de la primera pantalla y nunca antes de GUARDA_MIN s desde que arrancó QEMU."""
+    assert live.plazo_guardado(1000.0, 1107.0) == 1000.0 + live.GUARDA_MIN  # primera pantalla temprana: espera al mínimo
+    assert live.plazo_guardado(1000.0, 1200.0) == 1220.0  # primera pantalla tardía: 20 s después, como antes

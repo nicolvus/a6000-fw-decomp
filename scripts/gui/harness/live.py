@@ -2,8 +2,8 @@
 """Ventana en vivo del arnés de la UI (G22-D): la pantalla de im.elf en el navegador, con teclado y una imagen de «sensor» debajo.
 
 uso: live.py DIR_TRABAJO [--pkg OVERLAY2] [--puerto 8600]
-  Abre http://127.0.0.1:8600. La primera vez arranca en frío (≈ 2,5 min hasta el menú) y, 20 s después de la primera pantalla, guarda el
-  estado de la VM en DIR/live/<sony|paquete>/estado.zst; las siguientes lo restauran (segundos). Se guarda también al salir (Ctrl+C, SIGTERM,
+  Abre http://127.0.0.1:8600. La primera vez arranca en frío (≈ 2 min hasta el menú) y, 20 s después de la primera pantalla (no antes de GUARDA_MIN s), guarda el
+  estado de la VM en DIR/live/<sony|paquete>/estado.zst; las siguientes lo restauran (≈ 7 s). Se guarda también al salir (Ctrl+C, SIGTERM,
   POST /salir) y con «Guardar estado»; el guardado es atómico. El estado se invalida solo si cambia el shim, im.sh, run.py, SHIMENV o el overlay.
   Persistencia: la hora local del anfitrión se envía al invitado («T») al conectar y cada 30 s (sobrevive a restaurar un estado viejo);
   las escrituras de la UI a la NVRAM («NV») van a nvram.json del perfil y se aplican sobre la copia de bk.tbl en cada arranque en frío.
@@ -55,7 +55,7 @@ MODO_TRAS_ARRANQUE = int(os.environ["LIVE_MODO_TRAS"]) if os.environ.get("LIVE_M
 # getRecViewFromDial devuelve el estado del dial con conversión identidad (0x2441f4), así que la vista se abre con el mismo número que el dial (VERIFICADO, E2E-13).
 VISTA_REC = DIAL_INICIAL
 # escenario sin volcados: ciclo de modelos, pantalla de disparo (view/STLREC, §5.18z¹²), cola de teclas 0x7a0020
-SHIMENV_BASE = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/STLREC OPENVIEWAT=40 OPENVIEWGAP=14 "
+SHIMENV_BASE = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/STLREC OPENVIEWAT=40 OPENVIEWGAP=14 CALMA=4 CALMA0=10 "
            "STARTEV=11004002:100,11004012,11004013 POSTROOTEV=11004002:e3 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f "
            f"KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177,7025:{DIAL_INICIAL:x}:27 KEYINITON= KEYINITAFTER=not_user_operation OPENVIEWARG={VISTA_REC:x} LIVE=auto NO4015E=1 ")  # NO4015E: libObj habla con el CapIdTblMgr real de av-cam (cola 0x4015e); el atajo del shim lo contestaba él y av-cam nunca recibía InitEnd (G75 T12)
 
@@ -148,6 +148,16 @@ def escribe_atomico(destino: Path, datos: bytes) -> None:
     tmp = destino.with_name(destino.name + ".tmp")
     tmp.write_bytes(datos)
     tmp.replace(destino)
+
+
+# shortcut: con CALMA la primera pantalla llega ≈ 60 s antes y un estado guardado entonces no vuelve a pintar al restaurar (medido 2 de 2; la causa, algo del
+# arranque que sigue en curso, no está localizada): se guarda como muy pronto cuando lo hacía el arranque lento (≈ 190 s); quitarlo al localizarla.
+GUARDA_MIN = 190.0
+
+
+def plazo_guardado(t0: float, t_primera: float) -> float:
+    """Instante del autoguardado: 20 s después de la primera pantalla y no antes de GUARDA_MIN s desde que arrancó QEMU (t0)."""
+    return max(t_primera + 20, t0 + GUARDA_MIN)
 
 
 def msg_hora(ahora: float) -> bytes:
@@ -259,7 +269,7 @@ class Vm:
         """Arranque en frío: guarda el estado 20 s después de la primera pantalla (el menú ya pintado) para que el siguiente arranque sea inmediato."""
         with self.cv:
             self.cv.wait_for(lambda: self.seq > 0)
-        time.sleep(20)
+        time.sleep(max(0.0, plazo_guardado(self.t0, time.time()) - time.time()))
         print(self.guardar(), flush=True)
 
     def lector(self) -> None:
@@ -615,7 +625,7 @@ def main() -> None:
     red = carga_config(Path(a.config))["red"] if a.config else None
     vm = Vm(a.work.resolve(), str(Path(a.pkg).resolve()) if a.pkg else "", a.perfil_dir, red, a.avcam, not a.sin_sd, not a.sin_ae, str(Path(a.avcam_de).resolve()) if a.avcam_de else "")
     srv = servidor(vm, a.puerto)
-    print(f"http://127.0.0.1:{a.puerto}  ({'restaurando estado' if vm.restaurado else 'arranque en frío, ≈ 2,5 min hasta el menú'})", flush=True)
+    print(f"http://127.0.0.1:{a.puerto}  ({'restaurando estado' if vm.restaurado else 'arranque en frío, ≈ 2 min hasta el menú'})", flush=True)
     for sig in (signal.SIGINT, signal.SIGTERM):  # salir = guardar el estado y cerrar QEMU
         signal.signal(sig, lambda *_: threading.Thread(target=srv.shutdown, daemon=True).start())
     try:
