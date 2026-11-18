@@ -248,3 +248,9 @@ originales siguen en [docs/capture/](capture/); acceso por tema en [INDEX](INDEX
 Dos fotos normales y RAW de una nueva escena: durante la toma larga `cap` mostró shd=1/svd=0 y los bytes de sombras ID3–ID6 fueron compatibles (`00 00 01 00`), en lecturas no simultáneas. No se midió el plan nativo de cada foto ni la transferencia eléctrica; no se demostró inicio o fin de integración electrónica. Detalles, datos y límites: [E25-22](capture/e25-22-protocolo-transporte-fisico.md).
 
 - **Publicación (01-11-2026):** el autor no tiene licencia de Sony sobre el firmware; los `.dat` del release se rigen por el «Copyright y uso» del README y el código propio por MIT. La réplica de principio a fin está en `wiki/`. Sin cambio técnico.
+
+## Cambio de conclusión esta sesión (18-11-2026)
+
+- **E2E-10 CERRADO:** av-cam contesta `0x3003` (seq 15) en la LIRO VM. La VM llega sola al estado 2 del secuenciador (`[0x43ede338]=2`, guion 0→2, posición 42) sin forzar el paso ni cargar volcado real; `tests/test_avcam_ee_start.py` en verde (`test_av_cam_contesta_0x3003_ultimo_paso_de_ee_start`, `test_secuenciador_elige_la_transicion_0_a_2…`). El bloqueo del secuenciador que retenía E2E-12c/E2E-15 queda eliminado.
+- **E2E-12c CERRADO:** mismo resultado, sin forzar nada (T51, MEDIDO).
+- **E2E-15 desbloqueada (PARCIAL):** la UI prepara la grabación (av-cam acepta `0x4000` EE vídeo, `0xf000`) y llega a «REC», pero `0x3000`/`0x3024` no responden ni hay clip en `PRIVATE/M4ROOT/CLIP`: requieren el pipeline de codificación de vídeo (encoder/muxer/fs) no emulado en la LIRO VM, y no se fabrica (regla: lo no verificable no se inventa). Desbloquea VFR-F3, DVR-F3, TCUB-F3, G70-HD120 y Loop Recording. Criterio de cierre: av-cam contesta `0x3000`/`0x3024` y aparece el clip.
