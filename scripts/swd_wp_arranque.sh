@@ -135,7 +135,7 @@ while {[ms] < $fin && $golpes < $MAX} {
           w1 [expr {$b + 0x090}] 0x6; incr ignorados
           if {$PARES && ![info exists pares($par)]} { set pares($par) 1; echo "C [ms] core=$i wfar=$f par=$par [palabras]" }
         } else {
-          set regs [lee_regs $b]
+          if {[catch {set regs [lee_regs $b]} e]} { set regs "lectura:$e" ; catch { w1 [expr {$b + 0x088}] [expr {[r1 [expr {$b + 0x088}]] & ~(1 << 13)}] } }
           w1 [expr {$b + 0x090}] 0x6
           incr golpes
           echo "H [ms] core=$i wfar=$f $regs dscr=$d [palabras]"

@@ -87,7 +87,10 @@ proc lee_regs {b} {
   # VOLCAR: «rN:len» vuelca len bytes desde el valor de rN; «*sp+OFF:len» desde la palabra en sp+OFF (núcleo aún parado).
   foreach e $::VOLCAR {
     lassign [split $e :] q n
-    if {[string index $q 0] eq "*"} { lassign [split [string range $q 1 end] +] rg off; set a [r0 [va2pa [expr {$v($rg) + $off}]]] } else { set a $v($q) }
+    if {[string index $q 0] eq "*"} { lassign [split [string range $q 1 end] +] rg off } else { set rg $q; set off "" }
+    # Registro no leído aún (r4–r12): leerlo ahora con el núcleo parado.
+    if {![info exists v($rg)]} { set v($rg) [lee $b [string range $rg 1 end]] }
+    if {$off ne ""} { set a [r0 [va2pa [expr {$v($rg) + $off}]]] } else { set a $v($rg) }
     set h ""; for {set k 0} {$k < $n} {incr k 4} { append h [format %08x [r0 [va2pa [expr {$a + $k}]]]] }
     append out " mem($e)@[format 0x%08x $a]=$h"
   }
@@ -116,7 +119,8 @@ while {[ms] < $fin && [array size hecho] < [llength $BP]} {
         # Primero desarmar en los 4 núcleos (antes de leer registros, que tarda ~20 ms): si no, los demás núcleos
         # pasan por la misma dirección y paran también (MEDIDO 17-11-2026: 4 paradas en vez de 1).
         foreach c $CORES { foreach k {0 1 2} { w1 [expr {$c + 0x140 + 4*$k}] 0 } }
-        lassign [lee_regs $b] pcraw regs
+        # Pase lo que pase al leer, el núcleo se reanuda: un error aquí lo dejaba parado (MEDIDO 17-11-2026: núcleo 2 parado ≈ 3 s).
+        if {[catch {lassign [lee_regs $b] pcraw regs} e]} { set pcraw 0; set regs "lectura:$e" ; catch { w1 [expr {$b + 0x088}] [expr {[r1 [expr {$b + 0x088}]] & ~(1 << 13)}] } }
         # Qué BRP saltó: el pc leído menos 4 (Thumb) o 8 (ARM) coincide con su dirección.
         set k 0; set cual -1
         foreach p $BP { set a [lindex $p 0]; if {$pcraw - 4 == $a || $pcraw - 8 == $a} { set cual $k }; incr k }
