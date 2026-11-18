@@ -1,6 +1,283 @@
 {
  "_doc": "Registros de hardware que av-cam espera (bucles de sondeo). Cada lectura devuelve (valor guardado & ~y) | o. Cada regla cita el bucle de av-cam.bin que la exige; el significado del bit es INFERENCIA salvo que diga otra cosa.",
- "reglas": [],
+ "reglas": [
+  {
+   "dir": "0xf3002200",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 0 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3002280",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 1 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3002300",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 2 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3002380",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 3 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3002400",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 4 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3002480",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 5 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3102200",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 6 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3102280",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 7 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3102300",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 8 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3102380",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 9 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3102400",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 10 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3102480",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 11 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3131200",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 12 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3020200",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 17 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3020280",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 18 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3020300",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 19 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3020380",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 20 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3041200",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 21 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3041280",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 22 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3881200",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 23 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3881300",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 24 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3881280",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 25 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3881380",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 26 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3891200",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 27 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3891300",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 28 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3891280",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 29 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3891380",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 30 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3981200",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 31 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3981300",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 32 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3981280",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 33 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf3981380",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 34 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xf30a1200",
+   "y": "0x1",
+   "pc": "0x4390b8d8, 0x4390b878",
+   "evidencia": "canal AIF 35 (tabla 0x43bcc104): start pone el bit 0 y pbl_aif_set_func devuelve -3 si sigue puesto; el hardware lo borra al terminar (INFERENCIA)"
+  },
+  {
+   "dir": "0xfc099110",
+   "y": "0x1",
+   "pc": "0x436d11a8, 0x436d23c0, 0x436d3284\u2026",
+   "evidencia": "SGC (DrvSGC/OutSGC/\u2026): el accesor lee el bit 0 y, si est\u00e1 puesto, registra \u00abLast frame is not started\u00bb; si no, lo pone a 1 (arranque de trama); el hardware lo borra al terminar la trama (INFERENCIA de flujo)"
+  },
+  {
+   "dir": "0xfc0a1110",
+   "y": "0x1",
+   "pc": "0x436d11a8, 0x436d23c0, 0x436d3284\u2026",
+   "evidencia": "SGC (DrvSGC/OutSGC/\u2026): el accesor lee el bit 0 y, si est\u00e1 puesto, registra \u00abLast frame is not started\u00bb; si no, lo pone a 1 (arranque de trama); el hardware lo borra al terminar la trama (INFERENCIA de flujo)"
+  },
+  {
+   "dir": "0xfc0a1210",
+   "y": "0x1",
+   "pc": "0x436d11a8, 0x436d23c0, 0x436d3284\u2026",
+   "evidencia": "SGC (DrvSGC/OutSGC/\u2026): el accesor lee el bit 0 y, si est\u00e1 puesto, registra \u00abLast frame is not started\u00bb; si no, lo pone a 1 (arranque de trama); el hardware lo borra al terminar la trama (INFERENCIA de flujo)"
+  },
+  {
+   "dir": "0xfc0a1310",
+   "y": "0x1",
+   "pc": "0x436d11a8, 0x436d23c0, 0x436d3284\u2026",
+   "evidencia": "SGC (DrvSGC/OutSGC/\u2026): el accesor lee el bit 0 y, si est\u00e1 puesto, registra \u00abLast frame is not started\u00bb; si no, lo pone a 1 (arranque de trama); el hardware lo borra al terminar la trama (INFERENCIA de flujo)"
+  },
+  {
+   "dir": "0xfc0a1410",
+   "y": "0x1",
+   "pc": "0x436d11a8, 0x436d23c0, 0x436d3284\u2026",
+   "evidencia": "SGC (DrvSGC/OutSGC/\u2026): el accesor lee el bit 0 y, si est\u00e1 puesto, registra \u00abLast frame is not started\u00bb; si no, lo pone a 1 (arranque de trama); el hardware lo borra al terminar la trama (INFERENCIA de flujo)"
+  },
+  {
+   "dir": "0xfc0a1610",
+   "y": "0x1",
+   "pc": "0x436d11a8, 0x436d23c0, 0x436d3284\u2026",
+   "evidencia": "SGC (DrvSGC/OutSGC/\u2026): el accesor lee el bit 0 y, si est\u00e1 puesto, registra \u00abLast frame is not started\u00bb; si no, lo pone a 1 (arranque de trama); el hardware lo borra al terminar la trama (INFERENCIA de flujo)"
+  },
+  {
+   "dir": "0xfc0a1710",
+   "y": "0x1",
+   "pc": "0x436d11a8, 0x436d23c0, 0x436d3284\u2026",
+   "evidencia": "SGC (DrvSGC/OutSGC/\u2026): el accesor lee el bit 0 y, si est\u00e1 puesto, registra \u00abLast frame is not started\u00bb; si no, lo pone a 1 (arranque de trama); el hardware lo borra al terminar la trama (INFERENCIA de flujo)"
+  },
+  {
+   "dir": "0xfc0a2210",
+   "y": "0x1",
+   "pc": "0x436d11a8, 0x436d23c0, 0x436d3284\u2026",
+   "evidencia": "SGC (DrvSGC/OutSGC/\u2026): el accesor lee el bit 0 y, si est\u00e1 puesto, registra \u00abLast frame is not started\u00bb; si no, lo pone a 1 (arranque de trama); el hardware lo borra al terminar la trama (INFERENCIA de flujo)"
+  },
+  {
+   "dir": "0xfc0a2310",
+   "y": "0x1",
+   "pc": "0x436d11a8, 0x436d23c0, 0x436d3284\u2026",
+   "evidencia": "SGC (DrvSGC/OutSGC/\u2026): el accesor lee el bit 0 y, si est\u00e1 puesto, registra \u00abLast frame is not started\u00bb; si no, lo pone a 1 (arranque de trama); el hardware lo borra al terminar la trama (INFERENCIA de flujo)"
+  },
+  {
+   "dir": "0xfc0a2610",
+   "y": "0x1",
+   "pc": "0x436d11a8, 0x436d23c0, 0x436d3284\u2026",
+   "evidencia": "SGC (DrvSGC/OutSGC/\u2026): el accesor lee el bit 0 y, si est\u00e1 puesto, registra \u00abLast frame is not started\u00bb; si no, lo pone a 1 (arranque de trama); el hardware lo borra al terminar la trama (INFERENCIA de flujo)"
+  },
+  {
+   "dir": "0xfc0a2710",
+   "y": "0x1",
+   "pc": "0x436d11a8, 0x436d23c0, 0x436d3284\u2026",
+   "evidencia": "SGC (DrvSGC/OutSGC/\u2026): el accesor lee el bit 0 y, si est\u00e1 puesto, registra \u00abLast frame is not started\u00bb; si no, lo pone a 1 (arranque de trama); el hardware lo borra al terminar la trama (INFERENCIA de flujo)"
+  },
+  {
+   "dir": "0xfc0a1d4c",
+   "y": "0x1",
+   "pc": "0x436d11a8, 0x436d23c0, 0x436d3284\u2026",
+   "evidencia": "SGC (DrvSGC/OutSGC/\u2026): el accesor lee el bit 0 y, si est\u00e1 puesto, registra \u00abLast frame is not started\u00bb; si no, lo pone a 1 (arranque de trama); el hardware lo borra al terminar la trama (INFERENCIA de flujo)"
+  },
+  {
+   "dir": "0xfc0a1d7c",
+   "y": "0x1",
+   "pc": "0x436d11a8, 0x436d23c0, 0x436d3284\u2026",
+   "evidencia": "SGC (DrvSGC/OutSGC/\u2026): el accesor lee el bit 0 y, si est\u00e1 puesto, registra \u00abLast frame is not started\u00bb; si no, lo pone a 1 (arranque de trama); el hardware lo borra al terminar la trama (INFERENCIA de flujo)"
+  },
+  {
+   "dir": "0xf3120410",
+   "y": "0x1",
+   "pc": "0x43ad2c70",
+   "evidencia": "n\u00facleo DFE `0xf3120000`: la parada de `0x43accfdc` llama a `[vt+0x14]` (`0x43ad2d1a`\u2192`0x43ad2c70`, bit 0 de +0x410) y devuelve \u00abCamCore Start Error 0x208\u00bb si sigue puesto; el hardware lo borra al terminar la trama (INFERENCIA de flujo)"
+  }
+ ],
  "patrones": [
   {
    "rango": [
@@ -10,7 +287,7 @@
    "desp": "0x004",
    "o": "0x1",
    "pc": "0x43932778, 0x439328b0, 0x43932914",
-   "evidencia": "bloques 0xf2aXY000 (0xf2a01000, 0xf2a11000, 0xf2a12000…): tras programar, while !(r[+4] & 1); INFERENCIA: listo/bloqueo del PLL"
+   "evidencia": "bloques 0xf2aXY000 (0xf2a01000, 0xf2a11000, 0xf2a12000\u2026): tras programar, while !(r[+4] & 1); INFERENCIA: listo/bloqueo del PLL"
   },
   {
    "rango": [
@@ -30,7 +307,7 @@
    "desp": "0x018",
    "o": "0x80",
    "pc": "0x43b5e770, 0x43b5e776",
-   "evidencia": "bloques 0xf200X000: tsk 0x38 vacía la FIFO (lee +0x8c) hasta que +0x18 bit 7 sube; INFERENCIA: FIFO vacía (UART/SPI de 'Senser')"
+   "evidencia": "bloques 0xf200X000: tsk 0x38 vac\u00eda la FIFO (lee +0x8c) hasta que +0x18 bit 7 sube; INFERENCIA: FIFO vac\u00eda (UART/SPI de 'Senser')"
   }
  ]
 }

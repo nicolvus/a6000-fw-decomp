@@ -58,7 +58,7 @@ STRICT_PRI = True
 TRAP_BASE, NAPI = 0xFFF00000, 209
 PAGINAS_PROPIAS = {0xF2001000}  # PL011 de la montura (objetivo.py): modelado por completo, sin patrón genérico
 TASK_EXIT = TRAP_BASE + 4 * NAPI                              # retorno de una tarea / entrada → fin
-HEAP, HEAP_SZ = 0x50000000, 0x0C000000
+HEAP, HEAP_SZ = 0x50000000, 0x0F000000
 STACKS, STACK_SZ = 0x60000000, 0x10000
 STACK_MAP = 0x04000000                                        # 1024 pilas de 64 KiB
 E_OK, E_TMOUT, E_NOEXS, E_PAR = 0, -50, -42, -17
@@ -133,6 +133,7 @@ class Vm:
     ultimas: collections.deque = field(default_factory=lambda: collections.deque(maxlen=40))  # últimas llamadas a la API
     next_id: int = 0x100
     dmm_n: int = 0
+    dmm_bases: list = field(default_factory=list)                         # bases de las unidades DMM del anillo
     dyn_n: int = 0
     pendientes_cb: list = field(default_factory=list)  # callbacks de cola por ejecutar (tareas efímeras)
     trampa: int | None = None
@@ -243,6 +244,8 @@ def carga(avcam: Path, bkp: Path, idt: Path | None = None) -> Vm:
     bonobo.instala(vm)
     import objetivo
     objetivo.instala(vm)
+    import p2s
+    p2s.instala(vm)
     return vm
 
 
@@ -560,6 +563,7 @@ def api(vm: Vm, i: int) -> int | None:
     return E_OK
 
 
+DMM_ANILLO = 48  # shortcut: tras 48 unidades se reutilizan en anillo (la orden de liberación 4/6 no identifica la unidad, NO_VERIFICADO); con 1 unidad por trama el montón de 240 MiB duraba <4 s virtuales
 DMM_UNIDAD = 0x00200000  # shortcut: 2 MiB por unidad; el tamaño real sale de DmmConfig.bin (no está en el firmware extraído)
 
 
@@ -571,7 +575,9 @@ def servicio_kernel(vm: Vm, q: int, m: int, t: Task) -> bool:
         vm.wr(m, orden | 0x8000, 2)  # la respuesta lleva el id de la orden con 0x8000 (av-cam: «ERR_DMM_DIFFERENT_COMP msg_id 5, my_id 0x8001»)
         if orden in (1, 5):
             vm.dmm_n += 1
-            base = vm.malloc(DMM_UNIDAD)
+            if vm.dmm_n <= DMM_ANILLO:
+                vm.dmm_bases.append(vm.malloc(DMM_UNIDAD))
+            base = vm.dmm_bases[(vm.dmm_n - 1) % DMM_ANILLO]
             vm.wr(m + 2, 0, 2)
             vm.wr(m + 4, vm.dmm_n, 2)
             vm.wr(m + 0x10, base)
