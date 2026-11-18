@@ -130,3 +130,18 @@ Herramientas: `scripts/camera_get.py` (trae ficheros por el adbd del Tweak, puer
 - **T4 USB** (almacenamiento masivo): al conectar, `ISV: ERROR: Unknown keycode:0x15040010` (1695,9 s; el mismo evento de jack USB que el arnés inyecta con `KEYINIT`, confirmado en la cámara), `CAMUSER ExcBase DIADEM` + **`ExcConf` con los 17 valores reales** (`Bin 256, Read 160, Ver 20130903, Type 1`; id 0–16 = `1,2,4,1,0,0,1,1,0,3,1,0,1,0,1,1,0`), `M_USBMASS onGetInfo`, `udtr_ufp_init`; al desconectar (1712,8 s) vuelta a `CmnViewNoHdmi`/`ViewStlRec`, `udtr_ufp_exit` y otra vez `ExcConf`. `dumpsys battery` tras desconectar: 40 %, «USB powered: false». Ni dmesg ni logcat registran el USB.
 - **T5 HDMI:** el búfer del firmware solo registra `[ACTIONSETLCDHDMI] execAction` (1828,77 s) y 6 eventos `EV PIN_NOTIFY` de `im.elf`; nada en dmesg ni logcat. El nivel de registro de serie no basta: el detalle (hot-plug, EDID, cola `0x9c015b`) requiere SWD (S7) o subir el nivel de log (`appdbglv.sh`, NO_VERIFICADO).
 - Batería al final: 38 %.
+
+### S4 (montura del objetivo) — 17-11-2026 (MEDIDO)
+
+Sondeo SWD de 150 ms (`analysis/camera-dumps/20261117-traza-S4/poll_objetivo.log`) + ventana `camera_evento.py` (`…/20261117-traza-T2T6/objetivo/`). El objetivo estaba desmontado al empezar; el usuario lo montó, desmontó y volvió a montar.
+
+| t (s) | `[0x43ede338]` | `[0x43ede320]` | `0x43eaeecc` | Lectura |
+|---|---|---|---|---|
+| 0–36,4 | 1 | 1 | `0x00010000` | **sin objetivo**: estado 1, flag `+0x49` = 0 |
+| 36,37 | 1 | **2** | `0x00010000` | objetivo montado: lo deseado pasa a 2 |
+| 39,88 | 1 | 2 | `0x00010109` | **flag = 1** (`+0x48` = 9) |
+| 40,03 | **2** | 2 | `0x0001010a` | estado 2 |
+
+- **El flag `0x43eaeecd` es «objetivo comunicado»**: 0 sin objetivo (estado 1), 1 ≈ 3,5 s después de montarlo (estado 2). El «paso de 2 a 1 en reposo» visto antes era el usuario desmontando el objetivo.
+- El búfer del firmware registra en el desmontaje/montaje `[MOUNT_ERROR]: [BL]CAM_INFO2_RCV_WAIT_TIMEOUT_ERR[Timer=6(ms)]` junto a `[DMAC1]`/`[DMAC8] pbl_dmac_open/close`: la comunicación cuerpo-objetivo (BL) va por **DMA** (DMAC8). Encaja con S2c/S2d: ningún escritor de CPU en el watchpoint y bloqueo con tráfico SWD intenso (la respuesta `CAM_INFO2` llega por DMA con plazo de 6 ms).
+- **Consecuencia para la VM** (E2E-10/12/15): la barrera es la ausencia de objetivo. Opciones: emular la comunicación BL (respuesta `CAM_INFO2` por DMAC8) o arrancar la VM en el estado «sin objetivo» que la cámara real acepta (estado 1; verificar si av-cam contesta `0x3003` en él, como *Release w/o Lens*).
