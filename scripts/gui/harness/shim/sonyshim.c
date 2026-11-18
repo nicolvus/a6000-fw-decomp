@@ -187,6 +187,10 @@ static void backup_service(unsigned *m) {
     m[1] = 0;
     switch (op) {
     case 0: m[1] = d ? len : 0; break;                                          /* get_datasize */
+    case 1: {  /* get_datasize_multi: suma de len de los ids en m[6..] hasta el primer ausente */
+        unsigned total = 0, k;
+        for (k = 0; k < n && id[k]; k++) { unsigned l = 0, *dd = bk_find(id[k], &l); if (!dd) break; total += l; }
+        m[1] = total; break; }
     case 3: if (d && n >= 2 && id[1]) memcpy((void *)id[1], d, len); m[1] = d ? len : 0; break;     /* read(id, buf) */
     case 30: {  /* nread(id, buf, tamaño): copia min(len, tamaño) a buf y devuelve los bytes copiados (SystemImpl::initialize_setting exige == sizeof(setting)) */
         unsigned c = d ? (len < id[2] ? len : id[2]) : 0;
@@ -205,13 +209,13 @@ static void backup_service(unsigned *m) {
     case 5: {  /* read_multi(tabla, nº): diagnóstico (BKMULTI=1 vuelca la tabla) */
         if (getenv("BKMULTI") && readable((void *)id[0])) { char h[400]; int o = 0; for (int k = 0; k < 24; k++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)id[0])[k]); LOG("backup read_multi tabla=%#x arg1=%#x: %s", id[0], id[1], h); }
         /* read_multi(ids, buf): los datos de cada id, en orden y sin relleno, a buf (INFERENCIA: el recuento no viaja; la lista acaba en el primer id que no está en la tabla). NOBKMULTI=1 lo desactiva */
-        if (!getenv("NOBKMULTI") && readable((void *)id[0]) && readable((void *)id[1])) {
+        if (readable((void *)id[0]) && readable((void *)id[1])) {
             const unsigned *ids = (const unsigned *)id[0]; unsigned char *out = (unsigned char *)id[1]; unsigned o = 0, k, l2, *dd;
-            /* Backup_read_multi(ids[], destinos[]) (libObj+0x13cf18, InfraMediaConfig, 64 ids de 1 B): arg1 es una tabla de punteros de destino, uno por id (la tabla `ids` y la de punteros van aparte: medido en el desensamblado); el otro llamador (SetInit) pasa un búfer contiguo. Se distingue por si arg1[0] es un puntero legible. */
-            const unsigned *pp = (const unsigned *)out; int porptr = getenv("BKMULTIPTR") && pp[0] > 0x10000 && readable((void *)pp[0]);  /* BKMULTIPTR=1: opt-in; con él InfraMediaConfig ve los soportes y ObjMedia arranca, pero luego ObjCmdMgr cae en libObj+0x8456b4 (§5.8) y el arranque se congela */
+            const unsigned *pp = (const unsigned *)out; int porptr = pp[0] > 0x10000 && readable((void *)pp[0]);  /* tabla de punteros de destino vs búfer contiguo */
             for (k = 0; k < 0x110 && (dd = bk_find(ids[k], &l2)); k++) { if (porptr) memcpy((void *)pp[k], dd, l2); else memcpy(out + o, dd, l2); o += l2; }
-            m[1] = k; LOG("backup read_multi: %u ids, %u B", k, o); return; }  /* retorno = nº de ids leídos (IMCfg: «Backup_read_multi() NG!!! readNum = 0» con 0) */
-        LOG("backup op=5 n=%u id0=%#x id1=%#x (sin modelar)", n, id[0], id[1]); return; }
+            m[1] = k; LOG("backup read_multi: %u ids, %u B", k, o); return; }  /* retorno = nº de ids leídos */
+        m[1] = 0; return;  /* sin ids legibles: devuelve 0 sin error */
+    }
     default: LOG("backup op=%u n=%u id0=%#x (sin modelar)", op, n, id[0]);
     }
     if (getenv("BKV") || !d) LOG("backup op=%u n=%u id=%#x len=%u r=%#x %s", op, n, id[0], len, m[1], d ? "" : "ausente");
@@ -257,6 +261,11 @@ static int direct_service(unsigned qid, unsigned *m) {
         char b[100]; int o = 0; for (int i = 4; i < 10; i++) o += sprintf(b + o, "%08x ", m[i]);
         LOG("direct %#x fecha cmd=%u datos=%s", qid, ((unsigned short *)m)[8], b);
     }
+    else if (m[0] == 0x28 && qid == 0x90013e) {  /* osal_reg_datechg_notify_cb: aviso de cambio de fecha (cola 0x90013e) */
+        unsigned short *h = (unsigned short *)m;
+        h[9] = 0;  /* resultado 0 en +0x12 */
+        LOG("direct 0x90013e datechg_notify orden=%u", h[8]);
+    }
     return 0;
 }
 
@@ -287,7 +296,7 @@ static void mbx_post(unsigned q, const unsigned *req, int req_id0) {  /* req_id0
 /* SYNCMBX=qid_hex[,…]: colas con callback síncrono (reg_sync_msg_queue_cb) a las que el propio proceso envía con snd_msg: en la cámara esos envíos
  * los lee un hilo con rcv_msg (im.elf reenvía a 0x94016a lo que recibe de upm.ko); aquí se entregaban otra vez al callback (bucle). Van a un buzón sin tocar el cuerpo. */
 /* Colas de servicio de kernel que el shim atiende con acuse genérico (ACKQ, por defecto d9016e,7a0029,61003c): el receptor existe. */
-static int ackq_q(unsigned q) { const char *e = getenv("ACKQ"); if (!e) e = "d9016e,7a0029,61003c"; while (*e) { const char *n; unsigned v = hexv(e, &n); if (n == e) break; if (v == q) return 1; e = *n == ',' ? n + 1 : n; } return 0; }
+static int ackq_q(unsigned q) { const char *e = getenv("ACKQ"); if (!e) e = "d9016e,7a0029,61003c,7a0020,5700f9,5a0048,16f4010"; while (*e) { const char *n; unsigned v = hexv(e, &n); if (n == e) break; if (v == q) return 1; e = *n == ',' ? n + 1 : n; } return 0; }
 static int syncmbx_q(unsigned q) { const char *e = getenv("SYNCMBX"); while (e && *e) { const char *n; unsigned v = hexv(e, &n); if (n == e) break; if (v == q) return 1; e = *n == ',' ? n + 1 : n; } return 0; }
 static void mbx_post_raw(unsigned q, const unsigned *req) {
     unsigned char *b = calloc(1, 0x300); unsigned *body = (unsigned *)(b + 0x20); int k;
