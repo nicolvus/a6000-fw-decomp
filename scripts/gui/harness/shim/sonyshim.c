@@ -1251,7 +1251,8 @@ __attribute__((used, noinline)) static int issue_cmd(void *h, void *msg, unsigne
     void *ra = __builtin_return_address(0); int r = real(h, msg);
     { static __thread int dentro; char *p = 0; if (!dentro && msg_pend) { pthread_mutex_lock(&msg_pm); p = msg_pend; msg_pend = 0; pthread_mutex_unlock(&msg_pm); }
       if (p) { dentro = 1; msg_send(p); dentro = 0; } }  /* «Z» pendiente: en el hilo de la UI */
-    if (efcs_ra && (unsigned long)ra == efcs_ra && !r && (r5 == 1 || r5 == 2)) {  /* efecto de CMP 0x75fb + EVT 0x85a6 (SET = ACT = pedido) y Backup 0x107086e */
+    if (efcs_ra && (unsigned long)ra == efcs_ra && (!r || r == 65535) && (r5 == 1 || r5 == 2)) {  /* efecto de CMP 0x75fb + EVT 0x85a6 (SET = ACT = pedido) y Backup 0x107086e. E2E-6: ObjCamera::IssueCommandAsync (libObj+0x98dad8) acepta (0) la primera orden y rechaza con 0xffff las siguientes (causa NO_VERIFICADA); la cámara real las acepta, así que se devuelve 0 */
+        r = 0;
         unsigned long base = efcs_ra - 0x689745; void (*set)(void *, unsigned, unsigned) = (void *)(base + 0x68e0ce + 1);  /* guarda la ranura y avisa a la vista (info 0x4f) */
         void *w = *(void **)(r4 + 0x534); set(w, 0, r5); set(w, 1, r5);
         unsigned char b = r5; unsigned bm[16] = {8, 0, 3, 0, 0, 0, 0x107, 0x107086e, (unsigned)&b}; backup_service(bm);

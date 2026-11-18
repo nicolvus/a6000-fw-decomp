@@ -140,6 +140,13 @@ def test_efcs_emula_respuesta_objcamera_y_backup_107086e() -> None:
     assert "0x107086e" in src and "base + 0x68e0ce + 1" in src and 'getenv("NOEFCS")' in src
 
 
+def test_efcs_acepta_ordenes_repetidas_aunque_objcamera_devuelva_65535() -> None:
+    """E2E-6 (G75 T43): ObjCamera::IssueCommandAsync (libObj+0x98dad8) devuelve 0xffff desde la 2.ª orden 0x75fa; la emulación aplica
+    el efecto igualmente y devuelve 0 (Activar -> Desactivar -> Activar persiste en 0x107086e)."""
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    assert "(!r || r == 65535) && (r5 == 1 || r5 == 2)" in src and "        r = 0;\n" in src
+
+
 def test_50004_pinget_responde_con_eco_de_pin() -> None:
     """g22-respuesta-efcs-objcamera §10: CAMUSER (libObj 0xaeebee → 0xa14f88) pide por dataflow a 0x50004 {cate 0x1000, msg} con
     pinType/pinDir/pinNo en carga+8..+0x13 y compara la respuesta tipo 1 (0x20 B) con lo pedido (0x97ecd4); con ceros queda en error."""
