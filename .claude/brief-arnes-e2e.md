@@ -19,6 +19,7 @@ Probar cada función objetivo (wiki/16-Objetivos.md) en el arnés GUI de punta a
 - Git: nunca `stash`/`reset`/`checkout --`/`clean`/`add -A`/`add .`; `git add` solo de tus rutas. Commit Conventional Commits terminado en `Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>`. NO hagas push (lo hace el orquestador).
 - Documenta en `docs/gui/g75-arnes-e2e-objetivos.md` (sección por tarea, con MEDIDO/VERIFICADO/NO_VERIFICADO) y añade/actualiza IDs `E2E-*` en `docs/PENDIENTES.md` (estado, origen, criterio de cierre). Corre `scripts/knowledge/build_subsystem_index.py` tras editar `.md`.
 - No te detengas en dudas: decide con criterio, prueba otra vía si algo falla.
+- Contexto máximo 300k tokens: hacia ≈280k para, commit local y entrega un resumen de traspaso (hallazgos con direcciones, estado, siguiente paso exacto); el orquestador sigue con un subagente nuevo.
 
 ## Entrega (≤ 15 líneas)
 Qué funciona/falla con evidencia (rutas de capturas, líneas de log, tests), hash del commit, pendientes nuevos.
