@@ -227,3 +227,72 @@ def test_el_byte_0x43eaeecd_lo_pone_av_cam_con_las_entradas_del_pipeline_y_se_al
     resp = {(r.id, r.seq) for _t, _ta, _api, q, d, _c in vm.salida_ext if q == 0x20002 and bytes.fromhex(d)[:1] == b"\x01" for r in [M.decodifica(bytes.fromhex(d))]}
     print("RESP3003", (0x3003, 15) in resp, sorted(resp)[:20])
     assert (0x3003, 15) in resp  # E2E-10 con el paso 2 alcanzado por la ruta del flag
+
+
+def _corre_3006(pre=None, rondas: int = 4):
+    """Arranque + orden `0x3006` + secuencia EE_START (como el test de la `0x3006`), con `pre(vm)` tras el arranque."""
+    pytest.importorskip("unicorn")
+    import liro_vm as L
+    import puente as P
+    from test_avcam_ee_start import _secuencia
+
+    if not L.AVCAM.exists() or not L.LIRO_KO.exists():
+        pytest.skip("faltan av-cam.bin o liro.ko (no versionados)")
+    vm, t0 = P.arranca()
+    vm.limite = t0
+    if pre:
+        pre(vm)
+    cab = bytes.fromhex("000000000100000002000200")
+
+    def envia(q: int, c: bytes, d: bytes) -> None:
+        vm.limite += 400
+        L.planifica(vm, 20_000_000)
+        m = vm.malloc(max(len(d), 0x40) + 12 + 0x20) + 12
+        vm.uc.mem_write(m - 12, c)
+        vm.uc.mem_write(m, d)
+        vm.msz[m] = len(d)
+        L.entrega(vm, q, m)
+
+    envia(0x30001, cab, bytes([0, 0, 0x06, 0x30, 0x80, 0, 0, 0x80, 0]))
+    for q, c, d in _secuencia():
+        envia(q, c, d)
+    vm.limite += 3000
+    L.planifica(vm, 50_000_000)
+    for _ in range(rondas):
+        vm.limite += 1000
+        L.planifica(vm, 100_000_000)
+    return vm
+
+
+def test_las_entradas_2_3_4_del_flag_salen_de_la_estructura_de_modo_del_pipeline_sin_escribirlas() -> None:
+    """MEDIDO (E2E-12c, T39): con SOLO los datos que en la RAM real produce el pipeline (OPD `0x43fa4ba3`=1, tabla `0x43ef230c` y la estructura de modo `0x43ef1228+0x840..0x870`,
+    todo del volcado `ram_43e00000_tras_montar.bin`; `[+0x74]` de la tabla=1) av-cam deriva por su cuenta, sin forzar nada en la entrada de `0x4384fb7c`: `[obj+0xc34]`=1
+    (`0x438556dc`←`0x439e2988`), `[obj+0xbdd]`=0x3a (palabra `[0x43ef1228+0x84c]`=0x13a00 copiada por `0x438556dc`), `[A+0xb]`=1 (`0x4386b4b4`: bdd ≠ `[A+0x638]`) y
+    `[obj+0xbe8]`=1. Aun así el flag `0x43eaeecd` NO sube: `[A+0xb]` es un pulso de un solo paso y el modo `[A+8]` está en la máscara {0,2,15,16} (NO_VERIFICADO el momento
+    real en que llegan los datos; ver g75 Tarea 39)."""
+    pytest.importorskip("unicorn")
+    from unicorn import UC_HOOK_CODE
+    from unicorn.arm_const import UC_ARM_REG_R0, UC_ARM_REG_R1
+
+    ram = ROOT / "analysis/camera-dumps/20261117-traza-montura/ram_43e00000_tras_montar.bin"
+    if not ram.exists():
+        pytest.skip("falta el volcado real (no versionado)")
+    real = ram.read_bytes()
+    tabla, modo = 0x43EF230C, 0x43EF1228 + 0x840
+    filas: list[tuple[int, int, int, int, int]] = []
+
+    def pre(vm) -> None:
+        vm.uc.mem_write(tabla, real[tabla - 0x43E00000:][:0xC0])
+        vm.wr(tabla + 0x74, 1, 1)
+        vm.uc.mem_write(modo, real[modo - 0x43E00000:][:0x30])
+        vm.wr(0x43FA4BA3, 1, 1)
+
+        def entrada(uc, a, sz, u):  # solo observa
+            o, b = uc.reg_read(UC_ARM_REG_R0), uc.reg_read(UC_ARM_REG_R1)
+            filas.append((vm.rd(o + 0xC34, 1), vm.rd(o + 0xBDD, 1), vm.rd(o + 0xBE8, 2), vm.rd(b + 0xB, 1), vm.rd(b + 8, 1)))
+
+        vm.uc.hook_add(UC_HOOK_CODE, entrada, None, 0x4384FB7C, 0x4384FB7E)
+
+    vm = _corre_3006(pre)
+    assert (1, 0x3A, 1, 1) in {f[:4] for f in filas}  # c34, bdd, be8 y A+b derivados por av-cam
+    assert vm.rd(0x43EAEECD, 1) == 0 and vm.rd(0x43EDE338) == 1  # el flag sigue sin subir sin forzar
