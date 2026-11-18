@@ -118,3 +118,13 @@ Herramienta: `scripts/swd_wp_arranque.sh` (DBGWVR/WCR 0–1 por AP1 en los 4 Cor
 - Durante los 120 s el arranque **se quedó en la barrera**: `[0x43ede338]` = `[0x43ede320]` = 0 y `0x43eaeecc` = `0x00010000` (flag a 0); al acabar el muestreo, `[0x43ede320]` = 2 con `[0x43ede338]` = 0 (el mismo bloqueo que la VM), y **≈ 10–15 s después de cesar el tráfico SWD** el flag pasó a 1 y el guion siguió (6 → 2 → `0x3b` → 2).
 - Con el sondeo a 150 ms (S1) el flag se puso con normalidad ≈ 19 s tras la RAM. Conclusión: el suceso que pone el flag es sensible al tráfico intenso por el AHB-AP (≈ 7 accesos cada 5,6 ms), mientras la CPU sigue corriendo. Refuerza la hipótesis (b) de S2c: el flag llega por un **periférico/DMA** (encaja con `MOUNT_ERROR CAM_INFO2_RCV_WAIT_TIMEOUT_ERR` del volcado `ram-servicio`: comunicación con el objetivo), no por una escritura de CPU en esa dirección virtual. Es inferencia, NO_VERIFICADO.
 - Siguiente: muestreo de PC a ritmo moderado (≈ 50 ms) que no bloquee; y en la VM, buscar el periférico/DMA de la comunicación con el objetivo (`CAM_INFO2`) que escribe el bloque.
+
+### Grupo 2 — avance (17-11-2026, MEDIDO)
+
+Herramientas: `scripts/camera_get.py` (trae ficheros por el adbd del Tweak, puerto 5555 sin claves, vía tmpfs `/android/mnt/obb`; el FTP de `camera_pull.py` no llega al PC) y `scripts/camera_evento.py inicio|fin` (ventana por acción física: búfer de log del firmware `0x83400000`, logcat, dmesg, `dumpsys battery`, montajes, getevent). Datos en `analysis/camera-dumps/20261117-traza-T2T6/` (no versionado).
+
+- **T1:** cámara en `192.168.1.30`; busybox sin `head/cut/tr/wc` pero con `busybox md5sum`; `logcat`, `getevent`, `dumpsys` funcionan en el chroot `/android`.
+- **T2 batería:** no hay `/sys/class/power_supply`; la fuente es `dumpsys battery` (BatteryService recibe avisos de las colas `0x9241c2`/`0x924126` de `im.elf`): 56 % → 48 % en la sesión, 4,0 V, sin carga.
+- **T6 teclas:** `getevent` no ve nada (solo el teclado ficticio `D keyboard`): teclas y diales no pasan por la entrada de Linux. El búfer del firmware no registra códigos de tecla y C1/C2 (ampliación de enfoque) lo llenan en ≈ 15 s (`ViewFocusMagnification`). Límite: capturar teclas reales exigiría leer la cola de `InfraInput` (`0x7a0020`) por SWD; el mapa estático `KEY_TACT_*` de g22 sigue siendo la referencia.
+- **T3 SD:** `dmesg` registra la extracción (`mmc_hwip_system_off`, 1061,4 s) y la inserción (`mmca10: p1`, 1072,9 s; tarjeta de 32 GB). Ni el búfer del firmware ni logcat anotan nada. Las respuestas de `Fsys`/`ObjMedia` necesarias para la VM requieren breakpoints en `libInfraFsys` (SWD, pendiente).
+- **T4 USB, T5 HDMI:** pendientes (pausado por el usuario).
