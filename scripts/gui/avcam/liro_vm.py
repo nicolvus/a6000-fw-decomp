@@ -482,6 +482,13 @@ def api(vm: Vm, i: int) -> int | None:
         vm.msz[m] = min(a(2), 0x800)
         vm.wr(m - 8, -(-(vm.msz[m] + 12) // 32), 1)  # bloques de 32 B (osal_msg_size)
         return E_OK
+    if n == "dmm_direct_call":  # dmm.ko:0x7e18 llama dmm_ctrl_SyncMsg([msg], msg+4, u16 [msg+0x74]): mismo cuerpo DMM que la cola 0x61003C, respuesta en el mismo búfer
+        m = a(0) + 4
+        servicio_kernel(vm, 0x61003C, m, t)
+        if vm.rd(m, 2) == 0x8001:  # el lector 0x43902a34→0x436c397a espera {u16 unidad @+4, u16 nº de extensiones @+8, extensiones (dir,tam) desde +0x10}; no la dirección en +8 de la ruta osal
+            vm.wr(m + 8, 1)  # shortcut: una sola extensión de DMM_UNIDAD; la real sale de DmmConfig.bin (no extraído)
+            vm.wr(m + 0x14, DMM_UNIDAD)
+        return E_OK
     if n in ("osal_snd_msg", "osal_snd_sync_msg", "osal_snd_sync_direct"):
         q, m = a(0), a(1)
         if q == 0x910041 and m:  # sleep(ms) del núcleo (0x43591e20: ms en m+0x18); sin esto la tarea gira sobre el reloj

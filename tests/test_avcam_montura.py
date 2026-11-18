@@ -296,3 +296,51 @@ def test_las_entradas_2_3_4_del_flag_salen_de_la_estructura_de_modo_del_pipeline
     vm = _corre_3006(pre)
     assert (1, 0x3A, 1, 1) in {f[:4] for f in filas}  # c34, bdd, be8 y A+b derivados por av-cam
     assert vm.rd(0x43EAEECD, 1) == 0 and vm.rd(0x43EDE338) == 1  # el flag sigue sin subir sin forzar
+
+
+def test_dmm_direct_call_hace_avanzar_el_automata_0x435503b0_y_av_cam_adquiere_el_opd_solo() -> None:
+    """MEDIDO (E2E-12c, T41): la fase 1 de `0x435503b0` pedía el recurso id 0 (`0x437298e8` caso 0 → `0x43acc844`→`0x436c243c`→...→`0x436c397a`: `0x43902a34` manda por `0x43561524`
+    la API `dmm_direct_call` {u32 id, cuerpo DMM @+4: orden 1 AllocUnitNew, comp 0x55, tipo `0x80170417`, u16 tamaño @+0x74}). La VM no la atendía (cuerpo sin respuesta → error `0xa09`,
+    fase 1 → 5 y de nuevo a fase 0, ≈46 ciclos). `dmm.ko:0x7e18` solo llama a `dmm_ctrl_SyncMsg([msg], msg+4, [msg+0x74])`, el mismo servicio DMM que la cola `0x61003C`; con él la
+    fase llega a 2, se adquieren ids 0/6/22/23/27/8/4 y av-cam pone **por sí mismo** el byte OPD `0x43fa4ba3`=1 (caso 22, `0x4372a0c6`→`0x439e2888`), sin cargar nada del volcado real."""
+    pytest.importorskip("unicorn")
+    from unicorn import UC_HOOK_CODE
+    from unicorn.arm_const import UC_ARM_REG_R0
+
+    ids: set[int] = set()
+    fases: set[int] = set()
+
+    def pre(vm) -> None:
+        vm.uc.hook_add(UC_HOOK_CODE, lambda uc, a, s, u: ids.add(uc.reg_read(UC_ARM_REG_R0)), None, 0x437298E8, 0x437298EA)
+        vm.uc.hook_add(UC_HOOK_CODE, lambda uc, a, s, u: fases.add(vm.rd(uc.reg_read(UC_ARM_REG_R0) + 0x23, 1)), None, 0x435503B0, 0x435503B2)
+
+    vm = _corre_3006(pre, rondas=3)
+    assert {0, 6, 22, 23, 27} <= ids and max(fases) >= 2
+    assert vm.rd(0x43FA4BA3, 1) == 1  # OPD (`[obj+0xc34]`, entrada 2 del flag) lo escribe av-cam
+    assert not [ln for ln in vm.log if "UC_ERR" in ln or "Invalid memory" in ln]  # sin accesos inválidos (la extensión DMM debe traer n.º de extensiones en +8, no la dirección)
+    assert vm.rd(0x43EDE338) == 1  # el flag aún no sube (ver el test siguiente)
+
+
+def test_flag_0x43eaeecd_con_solo_modo_y_pulso_forzados_sobre_los_datos_naturales_del_pipeline() -> None:
+    """MEDIDO (E2E-12c, T41; diagnóstico, no es emulación): con el OPD, la tabla `0x43ef230c`/`0x43ef23c0` y la estructura de modo producidos por av-cam, basta forzar en la
+    entrada de `0x4384fb7c` solo (1) modo `[A+8]`=3 y (3') `[A+0xb]`=1 para que el byte lo ponga av-cam, `[0x43ede338]`=2, el módulo 3 quede en `0x302` y se conteste la `0x3003`.
+    (4) (`[tabla+0x74]`) NO hace falta. Por qué no ocurre solo: modo 2 ∈ máscara 0x18005 (el OPD llega tras el módulo 3 en 0x325) y `0x4386b55c` borra `[A+0xb]` en el mismo paso porque
+    `[obj+0xbb8]`/`[obj+0xbd0]`=1 (VM: `[0x43ef1228+0x858]`=4; real 0 y `bdd`=0x3a)."""
+    pytest.importorskip("unicorn")
+    from unicorn import UC_HOOK_CODE
+    from unicorn.arm_const import UC_ARM_REG_R1
+
+    import mensajes as M
+
+    def pre(vm) -> None:
+        def entrada(uc, a, s, u):
+            blk = uc.reg_read(UC_ARM_REG_R1)
+            vm.wr(blk + 8, 3, 1)
+            vm.wr(blk + 0xB, 1, 1)
+
+        vm.uc.hook_add(UC_HOOK_CODE, entrada, None, 0x4384FB7C, 0x4384FB7E)
+
+    vm = _corre_3006(pre, rondas=3)
+    assert vm.rd(0x43EAEECD, 1) == 1 and vm.rd(0x43EDE338) == 2 and vm.rd(0x43E9C7D8, 2) == 0x302
+    resp = {(r.id, r.seq) for _t, _ta, _api, q, d, _c in vm.salida_ext if q == 0x20002 and bytes.fromhex(d)[:1] == b"\x01" for r in [M.decodifica(bytes.fromhex(d))]}
+    assert (0x3003, 15) in resp
