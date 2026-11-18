@@ -460,6 +460,13 @@ def test_shim_entrega_a_los_lectores_propios_de_cola_estatica() -> None:
     assert "memcpy(ol - 3, (unsigned *)m - 3, 12)" in src  # conserva la cola de respuesta que ObjCamera pone en la cabecera (−1)
 
 
+def test_shim_solo_entrega_a_los_lectores_verificados_y_registra_quien_lee_y_envia() -> None:
+    """E2E-11: entregar además 0x2a0116/0x290119/0x260185 deja EE_START sin cerrar (medido); la lista verificada sigue siendo 630130,102021f. El registro de rcv_msg/(descartado) lleva el llamador (ra=)."""
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    assert 'if (!e) e = "630130,102021f"' in src and "uipc_ra = __builtin_return_address(0)" in src
+    assert 'LOG("uipc rcv_msg qid=%#x tmo=%d ra=%s"' in src and "(descartado) cab=%02x%02x%02x%02x datos=%08x %08x ra=%s" in src
+
+
 def test_shimenv_deja_pasar_la_cola_0x4015e_a_av_cam() -> None:
     """E2E-3/T12: sin atajo del shim, libObj habla con el CapIdTblMgr real de av-cam (si no, av-cam no recibe InitEnd y el factor 26 de RelMgr no se libera)."""
     sys.path.insert(0, str(ROOT / "scripts/gui/harness"))
