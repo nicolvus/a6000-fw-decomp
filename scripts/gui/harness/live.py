@@ -43,17 +43,17 @@ import run
 import sensor_web
 
 # Posición inicial del dial de modo (KEY_POS_MODE_DIAL 0x7025, índice físico 0x27) que el driver informa a InputService al activarse (se envía con el toActive: antes se perdía).
-# MEDIDO (§5.23, enviado con el toActive): estado 2 → vista rica iAUTO+ («i📷+», ISO AUTO, Fn completo); 0, 1, 3, 4, 5 y 6 → la vista mínima de película («Cebra»); sin estado, 0x7fffffff.
-# Con /modo p=3 desde la vista iAUTO+ la vista pasa a «P» (±0,0). El número inicial de P no se encontró.
-# shortcut: solo el 2 está verificado como valor inicial; el resto de posiciones (POSICIONES_MODO) sigue sin verificar, mejorar cuando se derive la tabla del código de InputService.
-DIAL_INICIAL = 2
+# VERIFICADO (E2E-13): getExposureMode (viewUnified2+0x18e454) convierte el estado 2 → auto (0), 3 → P (0x15), 4 → A (0x17), 5 → S (0x16), 6 → M (0x18); MEDIDO (§5.31 e icono): el mismo número es el modo de la vista (2 = iAUTO+, 3 = P, 4 = A, 5 = S, 6 = M).
+# Arrancar en P (3) deja coherentes el icono de la pantalla y lo que consultan las funciones vía getExposureMode (antes: dial 2 = auto con la vista forzada a P).
+# La vista rica iAUTO+ de §5.23–§5.24 no depende del dial sino de pasar antes por la pantalla gráfica (DISP, §5.26), así que el estado 3 no la pierde.
+DIAL_INICIAL = 3
 # Giro a P tras el arranque (/modo p=3, MEDIDO en §5.24: desde la vista iAUTO+ la vista pasa a «P»; como estado inicial 3 da la vista de película).
 # shortcut: es un giro automático del dial, no la posición real de arranque; mejorar cuando se encuentre el estado inicial de P (0–15 probados: solo 2 da vista rica).
 MODO_TRAS_ARRANQUE = int(os.environ["LIVE_MODO_TRAS"]) if os.environ.get("LIVE_MODO_TRAS") else None  # LIVE_MODO_TRAS=3: giro automático a P tras la primera pantalla (opt-in; §5.29)
 # Modo de grabación con el que se abre view/STLREC (segundo argumento de viewManagerIf::openView = parámetro de vista; la cámara pasa el que devuelve getRecViewFromDial).
 # MEDIDO (§5.31, icono de modo en pantalla): 2 = iAUTO+, 3 = P, 4 = A, 5 = S, 6 = M (1: sin icono; 0 = antes, setInitForRec recibía int=0 y el modelo nunca recibía modo).
-# shortcut: valor fijo medido, no derivado del dial real (el dial sigue sin efecto en getRecViewFromDial); mejorar cuando getRecViewFromDial devuelva el modo.
-VISTA_REC = 3
+# getRecViewFromDial devuelve el estado del dial con conversión identidad (0x2441f4), así que la vista se abre con el mismo número que el dial (VERIFICADO, E2E-13).
+VISTA_REC = DIAL_INICIAL
 # escenario sin volcados: ciclo de modelos, pantalla de disparo (view/STLREC, §5.18z¹²), cola de teclas 0x7a0020
 SHIMENV_BASE = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/STLREC OPENVIEWAT=40 OPENVIEWGAP=14 "
            "STARTEV=11004002:100,11004012,11004013 POSTROOTEV=11004002:e3 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f "
@@ -98,8 +98,9 @@ TECLAS = {"arriba": (0x3, 0x1), "abajo": (0x30, 0x5), "izquierda": (0x15, 0x3), 
           "borrar": (0x1F8, 0x20), "rueda_izq": (0x10000015, 0x1E5, -1), "rueda_der": (0x10000015, 0x1E5, 1),
           "dial_izq": (0x10000014, 0x1E4, -1), "dial_der": (0x10000014, 0x1E4, 1)}
 DIAL_MODO = (0x7025, 0x27)  # KEY_POS_MODE_DIAL → evento 0x15070050 → InputService::callback_mode_dial (valor = posición)
-# shortcut: el número de cada posición es NO_VERIFICADO (orden físico del dial); fijarlo con la NVRAM o el registro de una cámara real
-POSICIONES_MODO = ("Auto inteligente", "Auto superior", "P", "A", "S", "M", "Película", "Panorama", "SCN")
+# (nombre, estado del dial): solo los cinco con estado verificado (getExposureMode e icono de la vista, ver DIAL_INICIAL). 1 = MR, 8 = película, 0xb = SCN y 0x10 = panorámica
+# salen de getExposureMode pero no se probaron con la vista. shortcut: sin ellos hasta medirlos.
+POSICIONES_MODO = (("Auto", 2), ("P", 3), ("A", 4), ("S", 5), ("M", 6))
 
 
 def pulsa(vm: "Vm", nombre: str, v: int) -> None:
@@ -208,6 +209,7 @@ class Vm:
         self.png, self.seq, self.cv = b"", 0, threading.Condition()
         self.sock: socket.socket | None = None
         self.cerrojo = threading.Lock()  # un solo guardado a la vez
+        self.cerrojo_dial = threading.Lock()  # un giro del dial a la vez
         self.fps, self.coste = 0.0, ""
         if avcam:
             self.puente = puente.Puente(self.envia, self.dir / "avcam.jsonl", puente.A.Emisor(None) if ae else None, self.avcam_ruta)
@@ -340,6 +342,19 @@ class Vm:
         self.nvram[int(i, 16)] = bytes.fromhex(datos)
         escribe_atomico(self.nvram_f, json.dumps({f"{k:x}": v.hex() for k, v in self.nvram.items()}).encode())
 
+    def gira(self, estado: int) -> None:
+        """Gira el dial: el driver informa la posición (key 0x7025) y la vista de disparo se reabre con ese modo (getRecViewFromDial).
+        shortcut: no se halló qué evento de libObj/viewUnified reabre la vista al girar el dial (callback_mode_dial no corre, §5.24–§5.26); ROOT→STLREC con el modo nuevo reproduce el efecto medido."""
+        self.tecla(DIAL_MODO[0], estado, DIAL_MODO[1])
+        threading.Thread(target=self.reabre_vista, args=(estado,), daemon=True).start()
+
+    def reabre_vista(self, estado: int) -> None:
+        with self.cerrojo_dial:
+            self.envia(b"O view/ROOT 0\n")
+            time.sleep(4)
+            self.envia(f"O view/STLREC {estado:x}\n".encode())
+            time.sleep(4)
+
     def tecla(self, k: int, v: int, i: int) -> None:
         if self.sock:
             self.sock.sendall(f"K {k:x} {v:x} {i:x}\n".encode())
@@ -419,8 +434,8 @@ pinta=function(){pinta0();ex.fillStyle='#000';ex.fillRect(0,0,320,240);if(!ojo)r
 x.fillStyle='#555';x.font='18px system-ui';x.textAlign='center';x.fillText('Monitor apagado: ojo en el visor',320,240);x.textAlign='start'};
 const ponOjo=v=>{ojo=v;ojoB.setAttribute('aria-pressed',v);pinta()};ojoB.onclick=()=>ponOjo(!ojo);
 addEventListener('keydown',e=>{if(e.code=='KeyV'&&!e.repeat&&e.target.tagName!='INPUT'){e.preventDefault();ponOjo(!ojo)}});
-const MODOS=__MODOS__;let modo=0;const pm=d=>{modo=(modo+d+MODOS.length)%MODOS.length;document.getElementById('modo').textContent=MODOS[modo];
-return fetch('/modo',{method:'POST',body:JSON.stringify({p:modo})})};document.getElementById('modo').textContent=MODOS[0];
+const MODOS=__MODOS__;let modo=__MODO0__;const pm=d=>{modo=(modo+d+MODOS.length)%MODOS.length;document.getElementById('modo').textContent=MODOS[modo];
+return fetch('/modo',{method:'POST',body:JSON.stringify({p:modo})})};document.getElementById('modo').textContent=MODOS[modo];
 document.getElementById('modo_izq').onclick=()=>pm(-1);document.getElementById('modo_der').onclick=()=>pm(1);
 document.getElementById('ver').onchange=pinta;document.getElementById('esc').onchange=e=>c.style.width=640*e.target.value+'px';
 document.getElementById('guardar').onclick=async()=>{st.textContent='guardando…';alert(await (await fetch('/guardar',{method:'POST'})).text())};
@@ -456,7 +471,7 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
             if isp_web.maneja(self, "GET", self.path, b"", vm):  # ISP emulado (T9)
                 return
             if self.path == "/":
-                self.responde(PAGINA.replace("<!--SENSOR-->", sensor_web.HTML).replace("/*SENSORJS*/", sensor_web.JS).replace("__MODOS__", json.dumps(POSICIONES_MODO, ensure_ascii=False)).encode(), "text/html; charset=utf-8")
+                self.responde(PAGINA.replace("<!--SENSOR-->", sensor_web.HTML).replace("/*SENSORJS*/", sensor_web.JS).replace("__MODOS__", json.dumps([n for n, _ in POSICIONES_MODO], ensure_ascii=False)).replace("__MODO0__", str([e for _, e in POSICIONES_MODO].index(DIAL_INICIAL))).encode(), "text/html; charset=utf-8")
             elif self.path == "/estado":
                 t = time.time() - vm.t0
                 fase = ("restaurado" if vm.restaurado else "arranque en frío") + f", {t:.0f} s"
@@ -497,12 +512,12 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
                 d = json.loads(cuerpo)
                 pulsa(vm, d["k"], int(d["v"]))
                 self.responde(b"ok", "text/plain")
-            elif self.path == "/modo":  # dial de modos: posición 0..8 de POSICIONES_MODO
+            elif self.path == "/modo":  # dial de modos: índice de POSICIONES_MODO
                 p = int(json.loads(cuerpo)["p"])
                 if not 0 <= p < len(POSICIONES_MODO):
                     self.send_error(400)
                     return
-                vm.tecla(DIAL_MODO[0], p, DIAL_MODO[1])
+                vm.gira(POSICIONES_MODO[p][1])
                 self.responde(b"ok", "text/plain")
             elif self.path == "/refrescar":  # pide al invitado el fotograma actual (aunque no haya cambiado): sirve para comprobar si una tecla cambió la pantalla
                 if vm.sock:

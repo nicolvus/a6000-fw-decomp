@@ -553,6 +553,8 @@ int poll(struct pollfd *f, nfds_t n, int tmo) {
     for (nfds_t i = 0; i < n; i++) if (f[i].fd >= 0 && f[i].fd < MAXFD && kind[f[i].fd] == D_GENERIC) { if (getenv("SYSTAT")) systat_add(f[i].fd, 0x100001, 0); break; }
     return WL_CALL("poll", n ? (unsigned)f[0].fd : 0, tmo, real(f, n, tmo));
 }
+static __thread void *uipc_ra;  /* llamador del ioctl UIPC en curso (diagnóstico: lector/emisor de cada cola) */
+static void wl_desc(void *ra, char *o, int n);
 static int ioctl_in(int fd, unsigned long req, ...) {
     static int (*r)(int, unsigned long, ...);
     va_list a; va_start(a, req); void *arg = va_arg(a, void *); va_end(a);
@@ -577,7 +579,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
         case 0: LOG("uipc stat_sem %#x", w[0]); return 0;
         case 1: { LOG("uipc wai_sem? %#x tmo=%d", w[0], (int)w[1]); int r = uipc_sem_wait(w[0], (int)w[1]); LOG("uipc wai_sem %#x tmo=%d -> %d", w[0], (int)w[1], r); return r; }
         case 2: sem_sig(w[0]); LOG("uipc sig_sem %#x", w[0]); return 0;
-        case 7: { unsigned *t = (unsigned *)w[1]; LOG("uipc rcv_msg qid=%#x tmo=%d", w[0], (int)t[1]); avq_flush(w[0]);
+        case 7: { unsigned *t = (unsigned *)w[1]; { char rd[96]; wl_desc(uipc_ra, rd, sizeof rd); LOG("uipc rcv_msg qid=%#x tmo=%d ra=%s", w[0], (int)t[1], rd); } avq_flush(w[0]);
             if ((int)t[1] < 0 && getenv("RCVSTACK")) { static unsigned vq[64]; static int nq; int k, ya = 0; for (k = 0; k < nq; k++) if (vq[k] == w[0]) ya = 1; if (!ya && nq < 64) { vq[nq++] = w[0]; raise(SIGUSR1); } }
             { void *mm; int rr = mbx_take(w[0], (int)t[1], &mm); if (rr == 0) { *(void **)t[0] = mm; LOG("rcv_msg qid=%#x <- respuesta", w[0]); return 0; } if (rr != 1) return rr; }
             if ((int)t[1] < 0) {  /* espera indefinida en una cola estática: se le da buzón para que una respuesta posterior (ACKQ0) la despierte */
@@ -709,8 +711,8 @@ static int ioctl_in(int fd, unsigned long req, ...) {
               if (own) { unsigned char *ob = calloc(1, 0x300); unsigned *ol = (unsigned *)(ob + 0x20); int ok;  /* la cabecera del emisor se conserva (ObjCamera pone en −1 la cola de respuesta de su espera síncrona); si viene a 0, el kernel pone la cola de destino: OsalIf::OsalRcvMsg la lee como OSAL_ID y con 0 rechaza el mensaje */
                   memcpy(ol - 3, (unsigned *)m - 3, 12); memcpy(ol, m, 0x30); if (!ol[-1]) ol[-1] = w[0]; pthread_mutex_lock(&mbx_m); for (ok = 0; ok < 16 && mbx[ok].msg; ok++); if (ok < 16) { mbx[ok].q = w[0]; mbx[ok].msg = ol; } else free(ob); pthread_cond_broadcast(&mbx_c); pthread_mutex_unlock(&mbx_m);
                   LOG("snd_msg %#x -> buzón del lector propio w0=%#x w1=%#x", w[0], ((unsigned *)m)[0], ((unsigned *)m)[1]); return 0; } }
-            LOG("uipc snd_msg a la cola de kernel %#x (descartado) cab=%02x%02x%02x%02x datos=%08x %08x", w[0], m[-12], m[-11], m[-10], m[-9],
-                ((unsigned *)m)[0], ((unsigned *)m)[1]); return 0; }
+            { char rd[96]; wl_desc(uipc_ra, rd, sizeof rd); LOG("uipc snd_msg a la cola de kernel %#x (descartado) cab=%02x%02x%02x%02x datos=%08x %08x ra=%s", w[0], m[-12], m[-11], m[-10], m[-9],
+                ((unsigned *)m)[0], ((unsigned *)m)[1], rd); } return 0; }
         case 6: { unsigned char *m = (unsigned char *)w[1]; char h[200]; int k, o = 0;
             for (k = 0; k < 64; k++) o += snprintf(h + o, sizeof h - o, "%02x", m[k]);
             if (getenv("VERB") || (getenv("MSGBODY") && w[0] != 0x910041 && w[0] != 0x910042)) LOG("uipc snd_sync_direct qid=%#x msg=%s", w[0], h); return direct_service(w[0], (unsigned *)m); }
@@ -767,7 +769,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
 }
 int ioctl(int fd, unsigned long req, ...) {  /* envoltorio: con WAITLOG registra las esperas UIPC largas (sem 1: w[0]=id,w[1]=tmo; rcv_msg 7: w[0]=qid,t[1]=tmo) */
     va_list a; va_start(a, req); void *arg = va_arg(a, void *); va_end(a);
-    unsigned idx = req & 0x7fffffff;
+    unsigned idx = req & 0x7fffffff; uipc_ra = __builtin_return_address(0);
     if (!wl_on() || fd < 0 || fd >= MAXFD || kind[fd] != D_UIPC || (idx != 1 && idx != 7 && idx != 5 && idx != 6)) return ioctl_in(fd, req, arg);
     unsigned *w = arg; char k[16]; snprintf(k, sizeof k, "uipc%u", idx);
     int ws = wl_begin(k, w[0], idx == 1 ? (int)w[1] : idx == 7 ? (int)((unsigned *)w[1])[1] : -2, __builtin_return_address(0));
@@ -1831,7 +1833,8 @@ static void *acqhot(void *a) { acquire_status((int)hexv(a, 0)); free(a); return 
 static void *modelhot(void *a) { model_create(a); free(a); return 0; }
 static void *openhot(void *a) {
     int (*ov)(const char *, int) = lobj_h ? dlsym(lobj_h, "_ZN13viewManagerIf8openViewEPKci") : 0;
-    char *nm = a; int r = ov ? ov(nm, 0) : -99; LOG("OPENHOT %s -> %d", nm, r); free(nm); return 0;
+    char *nm = a, *sp = strchr(nm, ' '); int arg = 0; if (sp) { *sp = 0; arg = (int)hexv(sp + 1, 0); }  /* «O vista [modo_hex]»: el modo es el parámetro de apertura (getRecViewFromDial) */
+    int r = ov ? ov(nm, arg) : -99; LOG("OPENHOT %s %#x -> %d", nm, arg, r); free(a); return 0;
 }
 static void *sddump(void *a);
 static void *live_keys(void *a) {
@@ -1853,7 +1856,7 @@ static void *live_keys(void *a) {
             if (ln[0] == 'S' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, startevhot, nm); pthread_detach(th); }  /* «S id[:modelo]»: publica un evento del ModelManager en caliente */
             if (ln[0] == 'A' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, acqhot, nm); pthread_detach(th); }  /* «A i»: acquireStatus(i) en caliente */
             if (ln[0] == 'M' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, modelhot, nm); pthread_detach(th); }  /* «M @Mxxx»: crea el modelo en caliente */
-            if (ln[0] == 'O') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, openhot, nm); pthread_detach(th); }  /* «O vista»: viewManagerIf::openView(vista, 0) en caliente */
+            if (ln[0] == 'O') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, openhot, nm); pthread_detach(th); }  /* «O vista [modo]»: viewManagerIf::openView(vista, modo) en caliente */
             if (ln[0] == 'Y') date_type = (int)hexv(ln + 2, &e);
             if (ln[0] == 'Q' && ln[1] == ' ') avq_inject(ln + 2);
             if (ln[0] == 'X' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, rqhot, nm); pthread_detach(th); }

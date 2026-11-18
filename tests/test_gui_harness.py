@@ -101,7 +101,7 @@ def test_botones_y_diales_de_la_a6000_con_indices_del_driver() -> None:
     assert t["semipulsacion"] == (0x1F1, 0x1B) and t["c1"] == (0x66, 0xD) and t["reproduccion"] == (0x1F7, 0x1F)
     assert t["rueda_der"] == (0x10000015, 0x1E5, 1) and t["rueda_izq"] == (0x10000015, 0x1E5, -1)
     assert t["dial_der"] == (0x10000014, 0x1E4, 1) and t["dial_izq"] == (0x10000014, 0x1E4, -1)
-    assert live.DIAL_MODO == (0x7025, 0x27) and len(live.POSICIONES_MODO) == 9
+    assert live.DIAL_MODO == (0x7025, 0x27) and len(live.POSICIONES_MODO) == 5  # E2E-13: solo los estados verificados
     sent = []
     vm = type("V", (), {"tecla": lambda self, k, v, i: sent.append((k, v, i))})()
     live.pulsa(vm, "rueda_izq", 1); live.pulsa(vm, "rueda_izq", 0); live.pulsa(vm, "fn", 1); live.pulsa(vm, "fn", 0)
