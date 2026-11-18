@@ -1,0 +1,48 @@
+# T50 (perfil e2e50, overlay de objetivos, shim con IMCMDLOG): ordenes EFCS y trazas en caliente (TRACEREP=1). libObj base 0xade34000
+# a) ordenes 0x75fa (hora_log hora_vm cat id raw r5)
+935.70 388.07 cat=0x3100 id=0x75fa raw=0 r5=0x2
+62.30 514.16 cat=0x3100 id=0x75fa raw=65535 r5=0x1
+136.11 589.85 cat=0x3100 id=0x75fa raw=0 r5=0x1
+427.14 880.70 cat=0x3100 id=0x75fa raw=0 r5=0x2
+549.83 1003.85 cat=0x3100 id=0x75fa raw=0 r5=0x1
+630.29 1084.47 cat=0x3100 id=0x75fa raw=0 r5=0x2
+722.40 1175.95 cat=0x3100 id=0x75fa raw=0 r5=0x1
+803.19 1256.51 cat=0x3100 id=0x75fa raw=0 r5=0x2
+890.35 1343.22 cat=0x3100 id=0x75fa raw=0 r5=0x1
+966.04 1419.71 cat=0x3100 id=0x75fa raw=0 r5=0x2
+42.13 1495.72 cat=0x3100 id=0x75fa raw=0 r5=0x1
+202.93 1657.19 cat=0x3100 id=0x75fa raw=0 r5=0x2
+207.42 1659.74 cat=0x3100 id=0x75fa raw=65535 r5=0x2
+218.72 1663.19 cat=0x3100 id=0x75fa raw=0 r5=0x1
+331.51 1784.83 cat=0x3100 id=0x75fa raw=0 r5=0x1
+# b) rechazo (burst): 98dad8=entrada, 98dbcc=ret de a3a7ac, 98de46=ret de 98c908 (ausente en el rechazo), 98de50=salida (r0 = retorno)
+40.74 98dad8 n=5 r0=5c4ab7a0
+40.74 98dbcc n=5 r0=0
+40.75 98de46 n=5 r0=0
+40.75 98de50 n=5 r0=0
+202.21 98dad8 n=6 r0=5c4ab7a0
+202.21 98dbcc n=6 r0=0
+202.22 98de46 n=6 r0=0
+202.22 98de50 n=6 r0=0
+204.77 98dad8 n=7 r0=5c4ab7a0
+204.77 98dbcc n=7 r0=0
+204.78 98de50 n=7 r0=ffff
+216.32 98dad8 n=8 r0=5c4ab7a0
+216.32 98dbcc n=8 r0=0
+216.32 98de46 n=7 r0=0
+216.32 98de50 n=8 r0=0
+329.83 98dad8 n=9 r0=5c4ab7a0
+329.83 98dbcc n=9 r0=0
+329.85 98de46 n=8 r0=0
+329.85 98de50 n=9 r0=0
+# c) via del manejador por id: 98dd92 (estado ocupado), 98ddc4 (manejador), 98deac (vtable[2]=libObj+0xac8ede), 98ddfa (vtable[3]=libObj+0xac8cfc)
+329.83 [shim] TRACE 98dd92 n=1 r0=0 r1=0 r2=2fcfffd0 r3=7608 lr=b6e28d3d
+329.84 [shim] TRACE 98ddc4 n=1 r0=4ea00f58 r1=aad676a4 r2=5c4f7a30 r3=1 lr=ae7c1dc5
+329.84 [shim] TRACE 98deac n=1 r0=4ea00f58 r1=aad67974 r2=5c4e6598 r3=ae8fcedf lr=ae7c1dd1
+329.84 [shim] TRACE 98deae n=1 r0=1 r1=aad67684 r2=5c4f7a30 r3=5c4f79e0 lr=ae7c08ff
+329.84 [shim] TRACE 98ddfa n=1 r0=4ea00f58 r1=aad67974 r2=5c4f7a30 r3=ae8fccfd lr=ae7c08ff
+329.85 [shim] TRACE 98ddfc n=1 r0=0 r1=0 r2=4ea00f8c r3=1 lr=b6e28d3d
+# d) libMWF+0x2479e (blx vtable[9]): r3 = libObj+0x98dad9
+425.72 [shim] TRACE 2479e n=1 r0=5c4ab7a0 r1=aad67974 r2=0 r3=ae7c1ad9 lr=b6ea0784
+548.87 [shim] TRACE 2479e n=2 r0=5c4ab7a0 r1=aad67974 r2=0 r3=ae7c1ad9 lr=b6ea0784
+629.50 [shim] TRACE 2479e n=3 r0=5c4ab7a0 r1=aad67974 r2=0 r3=ae7c1ad9 lr=b6ea0784
