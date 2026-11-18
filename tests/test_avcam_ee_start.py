@@ -76,12 +76,15 @@ def test_0x3003_se_contesta_si_el_secuenciador_esta_en_el_paso_que_la_espera(gru
 def test_contador_de_v_y_paridad_como_en_la_camara_real() -> None:
     """E2E-10 (T15, VERIFICADO con el volcado real): `0x43b4c2fc` lee el contador de V `0xf3402098` y la paridad (bit 0 de `0xf3402028`); `0x4378e1d0` los guarda en
     `[0x43e9baa8]`/`+4`/`+0xc`. En la cámara `[0x43e9baa8]`=0x2812 con marca de tiempo 342 270 108 µs (= 10 257,7 V de 33 367 µs) y paridad 0 = contador & 1. Con el contador,
-    `0x4378f848` atiende cada V (último atendido `[0x43e992dc]` = contador − 1, como en la cámara: 0x2811) y escribe el bloque del módulo 3 (`0x43e9c7d8`: 0x3xx y luego 1,1,1)."""
+    `0x4378f848` atiende cada V (último atendido `[0x43e992dc]` = contador − 1, como en la cámara: 0x2811) y escribe el bloque del módulo 3 (`0x43e9c7d8`: 0x3xx y luego 1,1,1).
+    T40: el umbral de V bajó de 50 a 40: desde T35 la VM emula la montura (más instrucciones por ms virtual) y el presupuesto de instrucciones de `_corre` termina a 6,65 s virtuales (48 V) en vez de 7,04 s
+    (59 V); el ritmo (33,4 ms por V) y la relación contador/paridad/último atendido no cambian, solo cuántas V caben en el presupuesto."""
     vm = _corre()
     n = vm.rd(0x43E9BAA8)
-    assert n > 50 and vm.rd(0x43E9BAAC) in (n, n + 1) and vm.rd(0x43E9BAB4) == n & 1
+    assert n > 40 and vm.rd(0x43E9BAAC) in (n, n + 1) and vm.rd(0x43E9BAB4) == n & 1
     assert vm.rd(0x43E992DC) in (n - 1, n)
-    assert vm.rd(0x43E9C7D8, 2) >> 8 == 3 and [vm.rd(0x43E9C7DC + 4 * k) for k in range(3)] == [1, 1, 1]
+    # T40: el módulo 3 sigue su guion (T36: 0x300→0x325 con los modos 0→17→1→16→2), de modo que la tercera palabra del bloque pasa de 1 a 2 al final del presupuesto; las dos primeras siguen en 1
+    assert vm.rd(0x43E9C7D8, 2) >> 8 == 3 and [vm.rd(0x43E9C7DC + 4 * k) for k in range(2)] == [1, 1] and vm.rd(0x43E9C7DC + 8) in (1, 2)
 
 
 def test_clkctrl_sin_master_con_backup_real_coincide_con_la_camara() -> None:
@@ -119,9 +122,9 @@ def test_av_cam_contesta_0x3003_ultimo_paso_de_ee_start() -> None:
 
 
 def test_bonobo_genera_la_v_y_corre_hs_main_en_cada_v() -> None:
-    """E2E-10: la V del sensor (eventos 0x1c/0x1d del BONOBO, INT 0x53) llega a los callbacks de av-cam y SyncTask ejecuta HS_Main (0x4378fef4) en cada V."""
+    """E2E-10: la V del sensor (eventos 0x1c/0x1d del BONOBO, INT 0x53) llega a los callbacks de av-cam y SyncTask ejecuta HS_Main (0x4378fef4) en cada V. T40: >40 y no >50 (presupuesto de instrucciones con la montura emulada de T35, ver `test_contador_de_v…`)."""
     vm = _corre()
-    assert vm.sensor_v.n > 50 and vm.irqs[0x53] >= vm.sensor_v.n
+    assert vm.sensor_v.n > 40 and vm.irqs[0x53] >= vm.sensor_v.n
     assert vm.irqs[0x54] > 0  # temporizadores de un disparo armados por av-cam
     assert vm.calls["tsnd_mbf"] > vm.sensor_v.n
 
@@ -132,10 +135,11 @@ def test_secuenciador_elige_la_transicion_0_a_2_y_espera_el_estado_de_los_modulo
     vm = _corre()
     lista = 0x43EDE340  # {tabla, n filas, …, +0xc activo, +0x10 guion, +0x14 largo, +0x18 posición, +0x1c destino por slot}
     assert vm.rd(0x43F9ADE8, 1) == 1 and vm.rd(0x43EDE320) == 2 and vm.rd(lista + 0xC, 1) == 1 and vm.rd(lista + 0x10) == 0x43BF2208
-    # T15: con el contador de V y `ref_flg` pasa la barrera 12 (0x8347); T16: con los temporizadores 0xf2403000 pasa la 20 (`0x8a00`) y se detiene en la 23:
-    # el módulo 11 sigue en 0xc00 (destino 0xc01) porque el subsistema `[0x43e81240]` está en 0xf0 (5 en la cámara real)
-    assert vm.rd(0x43EDE338) == 0 and vm.rd(lista + 0x18) == 23
-    assert vm.rd(lista + 0x1C + 2 * 11, 2) == 0xC01 and vm.rd(0x43E81240) != 0xF0  # T33: con el objetivo emulado la montura sale de 0xf0
+    # T15: con el contador de V y `ref_flg` pasa la barrera 12 (0x8347); T16: con los temporizadores 0xf2403000 pasa la 20 (`0x8a00`) y se detenía en la 23 porque el módulo 11 seguía en 0xc00
+    # (subsistema `[0x43e81240]` en 0xf0, 5 en la cámara real). T35/T40: con el objetivo emulado la montura llega a 5, el módulo 11 sube a 0xc01 (destino 0xc02) y el guion pasa la 23 y llega a la 28
+    # (30 si la VM corre algo más; ahí lo detiene el byte `0x43eaeecd`, T36): lo correcto frente a la cámara real, que tiene la montura en 5 y no se queda en la 23.
+    assert vm.rd(0x43EDE338) == 0 and 28 <= vm.rd(lista + 0x18) <= 30
+    assert vm.rd(lista + 0x1C + 2 * 11, 2) == 0xC02 and vm.rd(0x43E81240, 1) == 5
 
 
 def test_eventos_1e_y_17_de_captura_llegan_a_sus_callbacks_y_el_modulo_1_escribe_su_estado() -> None:
@@ -178,6 +182,10 @@ def test_diagnostico_si_las_palabras_de_estado_alcanzan_el_guion_0_a_2_completa_
         vm.uc.hook_add(UC_HOOK_CODE, h, None, 0x437FC56C, 0x437FC56C)
 
     vm = _corre(pre=pre)
+    # T40: con la montura emulada (T35) el guion llega a la posición 42 al final del presupuesto de `_corre` y la copia final a `[0x43ede338]` (`0x437fc580`) necesita unas V más
+    L = pytest.importorskip("liro_vm")
+    vm.limite += 1000
+    L.planifica(vm, 50_000_000)
     assert vm.rd(lista + 0x18) == 42 and vm.rd(0x43EDE338) == 2
     M = pytest.importorskip("mensajes")
     ids = {M.decodifica(bytes.fromhex(x[4])).id for x in vm.salida_ext if x[3] == 0x20002 and bytes.fromhex(x[4])[:1] == b"\x01"}
@@ -336,7 +344,8 @@ def test_master_de_clkctrl_no_hace_falta_para_el_modulo_0() -> None:
     vm, log = _master(2)
     assert any("Receive Message from Master src=0x80c001bd" in x for x in log)
     assert vm.rd(0x43E9BD58, 2) == vm.rd(0x43EDE340 + 0x1C, 2)
-    assert vm.rd(0x43EDE340 + 0x18) == vm0.rd(0x43EDE340 + 0x18) == 23
+    # T40: 23 antes de T35; con la montura en 5 el guion sigue hasta la barrera del byte `0x43eaeecd` (28–30, T36); igual con y sin Master
+    assert vm.rd(0x43EDE340 + 0x18) == vm0.rd(0x43EDE340 + 0x18) and 28 <= vm.rd(0x43EDE340 + 0x18) <= 30
 
 
 def test_idt_cam_de_nflasha3_es_el_de_la_ram_real_y_quita_init_ng() -> None:
