@@ -31,6 +31,9 @@ import uxc_strings
 RES = 0x0204_0000
 
 
+EXTRA_TREES: list = []   # carpetas adicionales (p. ej. «CFW» de build_cfw_objetivos): sus ajustes ya están en M.SETTINGS/M.PIDS; cada una entra como entrada propia del menú
+
+
 def textos(tree=M.TREE, settings=M.SETTINGS):
     out = []
 
@@ -51,6 +54,8 @@ def textos(tree=M.TREE, settings=M.SETTINGS):
                     walk(c)
 
     walk(tree)
+    for extra in EXTRA_TREES:
+        walk(extra)
     return out
 
 
@@ -90,10 +95,10 @@ def patch_caution(data: bytes, ids: dict):
 
     def run(base):
         seg = G.Segmento(base)
-        return seg, build_nodes(seg, vt, ids, M.TREE, M.SETTINGS, M.PIDS)
+        return seg, [build_nodes(seg, vt, ids, t, M.SETTINGS, M.PIDS) for t in (M.TREE, *EXTRA_TREES)]
 
     n_rel = len(run(new_va)[0].rels)                      # el nº de relocaciones no depende de la base
-    seg, carpeta = run(new_va + (rel_sz + 8 * n_rel + 15) // 16 * 16)
+    seg, carpetas = run(new_va + (rel_sz + 8 * n_rel + 15) // 16 * 16)
     rel_new = bytearray(rel)
     for va, r in seg.rels:
         rel_new += struct.pack("<II", va, 0x17)
@@ -113,7 +118,8 @@ def patch_caution(data: bytes, ids: dict):
             struct.pack_into("<I", res, doff + 8 * i + 4, new_va)
         if t == 0x12:
             struct.pack_into("<I", res, doff + 8 * i + 4, len(rel_new))
-    return bytes(res), carpeta - ref
+    deltas = [c - ref for c in carpetas]
+    return bytes(res), deltas[0] if len(deltas) == 1 else deltas
 
 
 def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gamut=False, acciones=False, entradas_previas=(), silent=False, hlg=False):
@@ -142,7 +148,7 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
     emit("lib/CautionConfig.so", caution)
     # G28: la UI usa la copia del gestor de procesos que lleva viewUnified2.so (cmn_view_processDataMgr.so no se carga) y los pids originales los usa casi todos algún nodo:
     # los ajustes de PP van en pids nuevos (espacio ampliado en pid_space.py); Silent conserva el 0x12 (descriptor propio sobre la tabla original, antes de copiarla).
-    vu2 = A.patch((a / "lib/viewUnified2.so").read_bytes(), [*entradas_previas, delta])   # entradas_previas: p. ej. Silent (0xEB0) en el CFW completo
+    vu2 = A.patch((a / "lib/viewUnified2.so").read_bytes(), [*entradas_previas, *([delta] if isinstance(delta, int) else delta)])   # entradas_previas: p. ej. Silent (0xEB0) en el CFW completo
     if silent:
         vu2 = silent_descriptor.patch(vu2, silent_descriptor.TABLA_D_VU2, silent_descriptor.DESC_EFCS_VU2)
     emit("lib/viewUnified2.so", pid_space.patch(vu2, ajustes, gris_efcs=silent))   # G30: con Silent, EFCS en gris cuando Silent está On

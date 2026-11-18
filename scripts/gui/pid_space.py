@@ -22,7 +22,7 @@ import add_menu_entry as A
 import pp_descriptors as P
 
 N_ORIG = 0xE9                                   # entradas de las tablas originales
-PID_MAX = 0x110                                 # último pid admitido; 0x110 = 0x88 << 1 cabe en el inmediato modificado de `cmp.w`
+PID_MAX = 0x120                                 # último pid admitido (0x110 hasta el 3.81; 0x120 para PP 35 + CFW 13); 0x120 = 0x90 << 1 cabe en el inmediato modificado de `cmp.w`
 PID_PRIMERO = N_ORIG                            # primer pid nuevo
 ELEM, D = 0x3A5E1C, 0x4457D4                    # tablas originales (VA)
 REF_NORMAL, PID_M00B = 0x12, 0x3F               # pid de clase Normal · pid con descriptor «@M00B» (nombre del modelo)

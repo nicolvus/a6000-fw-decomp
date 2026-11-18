@@ -126,6 +126,10 @@ def bionz_g22_checks(bz_base: bytes, bz_new: bytes) -> dict:
     from g22 import patch_tristate as P
     tri = P.apply_bytes(bz_base)[0]
     cfw = build_base_pp.bionz_cfw(tri)
+    if bz_new not in (tri, cfw):   # CFW de objetivos (3.82+): 3.81 sin Silent r5 + parches sueltos de `build_overlay_objetivos` con las cuevas fuera del bloque 0
+        import build_cfw_objetivos
+        obj = build_cfw_objetivos.bionz_objetivos(tri)
+        cfw = obj if bz_new == obj else cfw
     diff = {P.BASE + i for i, (a, b) in enumerate(zip(bz_base, bz_new)) if a != b}
     extra = {P.BASE + i for i, (a, b) in enumerate(zip(tri, cfw)) if a != b} if bz_new == cfw else set()
     return {"g22.bionz_es_3.38_mas_patch_tristate": bz_new in (tri, cfw) and len(bz_new) == len(bz_base),
