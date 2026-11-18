@@ -5,11 +5,13 @@
 # Seguro en el arranque, al contrario que un watchpoint que salta en cada fotograma (incidente S2, 17-11-2026).
 # Solo registros de depuración (AP1) y lectura de RAM (AP0); r0 se restaura tras leer el pc. Sin escrituras de memoria.
 # Uso: swd_bp_unico.sh SALIDA.log DIR[,DIR2[,DIR3]] [segundos=300]   (direcciones virtuales de av-cam; Thumb = par)
+#   VOLCAR="r1:32,*sp+4:32": en cada golpe vuelca memoria desde un registro o desde el puntero guardado en sp+OFF
+#   (palabras de 32 bit en hexadecimal tal cual se leen, little-endian).
 # Arma cuando la RAM de av-cam está inicializada ([0x43eaeecc] != 0) y rearma las no disparadas si el SO las borra.
 # Salida: «H <ms> core=<n> pc=<v> r0..r3 lr est=[0x43ede338]/[0x43ede320] flag=[0x43eaeecc]», «A», «E», «S».
 set -u
 OUT=${1:?uso: swd_bp_unico.sh SALIDA.log DIR[,DIR2[,DIR3]] [segundos]}
-DIR=${2:?direcciones}; DUR=${3:-300}; STALL=${STALL:-5}; ARRANQUE=${ARRANQUE:-15}
+DIR=${2:?direcciones}; DUR=${3:-300}; STALL=${STALL:-5}; ARRANQUE=${ARRANQUE:-15}; VOLCAR=${VOLCAR:-}
 [[ -e $OUT ]] && { echo "ERROR: $OUT ya existe; no se sobrescribe" >&2; exit 1; }
 if pgrep -x openocd >/dev/null; then
   echo "ERROR: otra sesión de openocd ocupa la sonda (mátala por PID, nunca con pkill -f):" >&2
@@ -77,9 +79,18 @@ proc armado_ok {b} {
 # ITR (siempre ARM en estado de depuración): MCR p14,0,Rt,c0,c5,0 = Rt -> DTRTX; MRC p14,0,r0,c0,c5,0 = DTRRX -> r0.
 proc itr {b ins} { w1 [expr {$b + 0x084}] $ins; set k 0; while {!([r1 [expr {$b + 0x088}]] & (1 << 24)) && $k < 50} { incr k } }
 proc lee {b rt} { itr $b [expr {0xEE000E15 | ($rt << 12)}]; return [r1 [expr {$b + 0x08c}]] }
+# RAM del núcleo: virtual 0x40000000–0x7fffffff = física + 0x40000000 (MEDIDO); el resto se lee tal cual.
+proc va2pa {a} { return [expr {($a >= 0x40000000 && $a < 0x80000000) ? $a + 0x40000000 : $a}] }
 proc lee_regs {b} {
   w1 [expr {$b + 0x088}] [expr {[r1 [expr {$b + 0x088}]] | (1 << 13)}]
-  set out ""; foreach {n rt} {r0 0 r1 1 r2 2 r3 3 lr 14} { set v($n) [lee $b $rt]; append out " $n=$v($n)" }
+  set out ""; foreach {n rt} {r0 0 r1 1 r2 2 r3 3 sp 13 lr 14} { set v($n) [lee $b $rt]; append out " $n=$v($n)" }
+  # VOLCAR: «rN:len» vuelca len bytes desde el valor de rN; «*sp+OFF:len» desde la palabra en sp+OFF (núcleo aún parado).
+  foreach e $::VOLCAR {
+    lassign [split $e :] q n
+    if {[string index $q 0] eq "*"} { lassign [split [string range $q 1 end] +] rg off; set a [r0 [va2pa [expr {$v($rg) + $off}]]] } else { set a $v($q) }
+    set h ""; for {set k 0} {$k < $n} {incr k 4} { append h [format %08x [r0 [va2pa [expr {$a + $k}]]]] }
+    append out " mem($e)@[format 0x%08x $a]=$h"
+  }
   # pc: «mov r0, pc» (pc + 8 en ARM, + 4 en Thumb) y restaurar r0 desde el DTR.
   itr $b 0xE1A0000F; set pc [lee $b 0]
   w1 [expr {$b + 0x080}] $v(r0); itr $b 0xEE100E15
@@ -129,7 +140,7 @@ EOF
 END=$((SECONDS + DUR))
 while ((SECONDS < END)); do
   : > "$LOG"; COP=0
-  openocd -c "set REM $((END - SECONDS)); set DIR $DIR" -f "$TMP/bp.cfg" > "$LOG" 2>&1 &
+  openocd -c "set REM $((END - SECONDS)); set DIR $DIR; set VOLCAR {${VOLCAR//,/ }}" -f "$TMP/bp.cfg" > "$LOG" 2>&1 &
   OCD=$!; motivo=fin; t=0; quieto=0; s0=
   while kill -0 "$OCD" 2>/dev/null; do
     sleep 1; ((t++)); volcar vivo

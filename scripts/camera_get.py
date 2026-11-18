@@ -48,11 +48,11 @@ def main() -> None:
     if sys.argv[2] == "--mem":
         base, size, nombre = int(sys.argv[3], 16), int(sys.argv[4], 16), sys.argv[5]
         assert base % 4096 == 0 and size % 4096 == 0, "base y tamaño múltiplos de 4096"
-        run(HOST, [f"dd if=/dev/mem of=/tmp/{nombre} bs=4096 skip={base // 4096} count={size // 4096} 2>/dev/null"], timeout=120)
-        try:
-            traer(dest, f"/tmp/{nombre}")
-        finally:
-            run(HOST, [f"rm -f /tmp/{nombre}"])
+        # Directo al tmpfs de destino: /tmp se llena a ≈ 2,6 MiB y dd corta sin avisar (MEDIDO 17-11-2026).
+        run(HOST, [f"dd if=/dev/mem of={TMP_ROOT}/{nombre} bs=4096 skip={base // 4096} count={size // 4096} 2>/dev/null"], timeout=120)
+        f = traer(dest, f"{TMP_ROOT}/{nombre}")
+        if f.stat().st_size != size:
+            raise SystemExit(f"ERROR: {nombre} tiene {f.stat().st_size} B, se pidieron {size}")
         return
     for ruta in sys.argv[2:]:
         traer(dest, ruta)
