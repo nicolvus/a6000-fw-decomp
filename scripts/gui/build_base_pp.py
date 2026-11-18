@@ -37,7 +37,8 @@ def bionz_cfw(bionz: bytes, color: bool = True, tone: bool = True, silent_r5: bo
     return bytes(nuevo)
 
 
-def main(base_tar: Path, out_tar: Path, color: bool = True, tone: bool = True, silent_r5: bool = True) -> dict:
+def main(base_tar: Path, out_tar: Path, color: bool = True, tone: bool = True, silent_r5: bool = True, post=None) -> dict:
+    """`post(bytes) -> bytes` (opcional): parches sueltos sobre el av-cam del CFW (p. ej. `build_overlay_objetivos`)."""
     tar = base_tar.read_bytes()
     entries, _ = tarball.parse(tar)
     members = {e.name: e.data for e in entries}
@@ -45,6 +46,7 @@ def main(base_tar: Path, out_tar: Path, color: bool = True, tone: bool = True, s
     fat = fatimg.Fat16.parse(part.decompressed())
     bionz = fat.read(build.AVCAM_NAME)
     nuevo = bionz_cfw(bionz, color, tone, silent_r5)
+    nuevo = post(nuevo) if post else nuevo
     assert len(nuevo) == len(bionz) and nuevo != bionz
     fat2, _ = fat.patch(build.AVCAM_NAME, nuevo)
     part2, info = tpzl.patch_decompressed(part, fat2)

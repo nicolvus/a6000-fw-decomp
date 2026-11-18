@@ -734,3 +734,36 @@ Perfil `e2e44`, puerto 8744, arranque en frío (≈ 160 s hasta el primer fotogr
 **Estado: NO integrado.** Con las 49 reglas el flag no sube y rompe `test_barrera_del_guion_es_el_byte_0x43eaeecd` (cambia el orden de arranque), así que se revirtió `mmio_reglas.json` (sin cambios de código en el commit). `[+0x858]`=4 sigue NO_VERIFICADO (se copia en `0x439eb998` dentro de la ruta de `0x439f8a0a`, que solo corre si el ParamSet pasa).
 
 **Siguiente paso exacto:** (1) reintroducir las reglas AIF+SGC; (2) modelar el IRQ de fin P2S (set_flg `0x18` bit `0x10` antes de la siguiente espera); (3) localizar el error de `0x43acc65e` (`0x438112b2`) y `Start Error 0x208`; (4) con `0x438100d4` completo por trama, medir `[obj+0xbdd]` y `[+0x858]`; (5) ajustar el test de la barrera. Forzados no eliminados: `[A+8]`=3 y `[A+0xb]`=1.
+
+## Tarea 47 — E2E-2: overlay local con todos los parches sueltos y barrido de menú/persistencia (18-11-2026, MEDIDO)
+
+Código: `scripts/gui/build_overlay_objetivos.py DESTINO` (sin lógica propia; encadena los generadores existentes). Crea `DESTINO/cam/usr/…` y `DESTINO.nflasha3` (se usa con `live.py --pkg DESTINO --avcam-de DESTINO.nflasha3`; nunca se instala). Contenido:
+- `/usr`: menú «CFW» de `cfw_ajustes.construir` (13 ajustes), `CautionConfig.so` + Extra Fine (G39), lista ISO 51200 (G43) y HD120 (G70); `libObj.so` + ISO MAX (G42), XAVC S sin tarjeta (G79), Intervalo (G61), DR Prioridad (G68), Zebra Nivel (G84) y S&Q (G76).
+- av-cam (`build_base_pp` con el nuevo parámetro `post`): base CFW (PP, tres estados) + Flicker Scan (sustituye al Silent r5 estándar, que ya incluye), Bulb Timer, Color Chrome, LUT 3D, S&Q 120/100, contador Live ND. Fuera: Focus Bracket (gancho sin localizar), HLG, Keystone.
+- Tests `tests/test_overlay_objetivos.py` (5): construcción, entradas de menú y opciones en `string_english.uxc`, av-cam cargable por `avcam_fuente`, ningún parche pisa a otro y las cuevas S&Q y DR siguen funcionando sobre el `libObj` conjunto (Unicorn).
+- Arnés: `live.py` ahora copia las escrituras de la UI al Backup de la LIRO VM (antes solo existía el volcado estático `bk.tbl`, así que av-cam nunca veía los ajustes); test `test_escritura_de_ui_al_backup_llega_al_backup_de_la_liro_vm`.
+
+Arnés en vivo: perfil `e2e47`, puerto 8790, av-cam sha `de244e0b…` (el del overlay), cerrado con `/salir`. Capturas `img/g75/t47-*.png`.
+
+| Función | Menú | Persistencia (`nvram.json`) | Consumidor | Estado |
+|---|---|---|---|---|
+| Bulb Timer | sí (`t47-3b`) | `1070210` = 04 (2 min) | Unicorn sobre el av-cam del overlay con ese valor: 3636 tramos = 120 s | PARCIAL (captura BULB en VM bloqueada, E2E-10) |
+| LUT | sí | `1070211` = 01 | cueva: devuelve la tabla propia (0x30001000 en el emulador) y Off deja el original | PARCIAL |
+| Focus Bracket / paso | sí | `1070212`/`13` = 01 | sin gancho de fin de captura | PARCIAL (parche inexistente) |
+| Intervalo / N. disparos | sí | `1070214` = 03 (10 s), `1070215` = 01 | cueva en libObj presente; no se disparó (E2E-3) | PARCIAL |
+| Seguim. AE | sí | `1070216` = 01 | solo con serie | PARCIAL |
+| Flicker Scan | sí (`t47-4-flicker-*`) | `1070217` = 01 (50 Hz) | Unicorn: con tv 0x1400 r5 pasa de 3647 a 3504 líneas = 6×584 | PARCIAL |
+| DR Prioridad | sí | `1070218` = 02 | Unicorn sobre el libObj conjunto: DRO Lv5; falta S1 en vivo | PARCIAL |
+| Color Chrome | sí | `1070219` = 02 | Unicorn: Color Depth +4 en los 6 canales y flag 1, Off = 0 | PARCIAL |
+| S&Q | sí | `1070208` = 01 | la cueva envía a ObjCamera (`ra=libObj+0x26529f`, `shim.log`) pero ver abajo | PARCIAL |
+| Timecode | sí | `3c03d9` = 01 | ya cerrado en T31 | PARCIAL |
+| Zebra Nivel | sí (`t47-4-zebra-elegido.png`) | `1070209` = 03 | VDF `0x203` visto en G83, no repetido | PARCIAL |
+| Extra Fine | lista de 5 filas con el `CautionConfig` conjunto (`t47-7-calidad-lista.png`) | `1070aaa` = 02 al elegir | T19 llegó a av-cam; aquí no repetido | PARCIAL: tras reiniciar con estado restaurado la fila siguió en RAW (NO_VERIFICADO) |
+| ISO 51200 / HD120 / XAVC S | no abiertos en esta sesión | — | — | NO_VERIFICADO (menús ya vistos en G48/T20/T27 con overlays individuales) |
+
+Los 13 ajustes CFW conservan su valor tras reiniciar la VM desde el estado guardado (`t47-6-pagina2-tras-reinicio.png`). Navegación: en la carpeta, `dial_der`/`dial_izq` cambian de página y `abajo` envuelve dentro de la página.
+
+**Hallazgos (pendientes nuevos).**
+- **E2E-16:** el puente de av-cam muere con `MemoryError: montón agotado` (`liro_vm.malloc`, `osal_valloc_msg_wait` sin liberar) unos 7 min reales tras el arranque, con el AE sintético activo; `avcam.jsonl` se queda parado en t≈18676. `scripts/gui/avcam/` es del otro subagente: no se tocó. Criterio: el tráfico de mensajes no agota el montón (o `free` real).
+- **E2E-17:** con ObjCamera, solo la primera orden tras el arranque en frío llega a av-cam; la cueva S&Q recibe 0xffff en las siguientes (misma causa que E2E-6, `libObj+0x98dad8`), y con estado restaurado ya la primera falla. Impide cerrar S&Q, DR e Intervalo de punta a punta. Criterio: localizar el rechazo y corregir el arnés o confirmar en cámara.
+- Extra Fine tras reinicio (arriba): repetir en frío.

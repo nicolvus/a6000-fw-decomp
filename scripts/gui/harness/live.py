@@ -213,6 +213,7 @@ class Vm:
         self.fps, self.coste = 0.0, ""
         if avcam:
             self.puente = puente.Puente(self.envia, self.dir / "avcam.jsonl", puente.A.Emisor(None) if ae else None, self.avcam_ruta)
+            self.puente.vm.bk.update(self.nvram)  # E2E-2: el av-cam lee el mismo Backup que escribe la UI (la VM solo tenía el volcado estático bk.tbl)
             threading.Thread(target=self.avq_hilo, daemon=True).start()
         threading.Thread(target=self.lector, daemon=True).start()
         threading.Thread(target=self.gira_dial, daemon=True).start()
@@ -340,6 +341,9 @@ class Vm:
     def nv(self, texto: str) -> None:
         i, _, datos = texto.partition(" ")
         self.nvram[int(i, 16)] = bytes.fromhex(datos)
+        if self.puente:
+            with self.puente.cerrojo:
+                self.puente.vm.bk[int(i, 16)] = self.nvram[int(i, 16)]
         escribe_atomico(self.nvram_f, json.dumps({f"{k:x}": v.hex() for k, v in self.nvram.items()}).encode())
 
     def gira(self, estado: int) -> None:

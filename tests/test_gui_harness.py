@@ -473,3 +473,17 @@ def test_shimenv_deja_pasar_la_cola_0x4015e_a_av_cam() -> None:
     import live
 
     assert "NO4015E=1" in live.construye_shimenv()
+
+
+def test_escritura_de_ui_al_backup_llega_al_backup_de_la_liro_vm(tmp_path: Path) -> None:
+    """E2E-2: av-cam lee el mismo Backup que la UI escribe (NV), no solo el volcado estático."""
+    import threading
+    from types import SimpleNamespace
+    sys.path.insert(0, str(ROOT / "scripts/gui/harness"))
+    import live
+    vm = SimpleNamespace(bk={0x1070217: b"\0"})
+    v = live.Vm.__new__(live.Vm)
+    v.nvram, v.nvram_f = {}, tmp_path / "nvram.json"
+    v.puente = SimpleNamespace(cerrojo=threading.RLock(), vm=vm)
+    v.nv("1070217 02")
+    assert vm.bk[0x1070217] == b"\x02" and v.nvram[0x1070217] == b"\x02"
