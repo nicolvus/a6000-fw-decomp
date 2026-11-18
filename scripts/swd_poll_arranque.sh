@@ -3,6 +3,7 @@
 # Reabre la sesión cuando el DAP no responde, se corta la alimentación o OpenOCD se atasca,
 # y nunca deja un openocd huérfano ocupando la sonda.
 # Uso: swd_poll_arranque.sh SALIDA.log [segundos=240]
+#   PALABRAS="0x83e7f820,0x83e7f824" lee esas direcciones FÍSICAS en lugar de las tres de la barrera.
 #   PCS=1 añade a cada muestra el PC muestreado (DBGPCSR, sin parar) de los 4 núcleos; PERIODO=ms entre muestras (150).
 #   AVISO (17-11-2026): conectar/leer por SWD mientras la cámara enciende puede impedir el arranque; lanzar con la
 #   cámara ya encendida (la RAM de av-cam se inicializa unos segundos después y el flag ≈ 20 s más tarde).
@@ -12,7 +13,7 @@
 # RAM física = dirección virtual de av-cam + 0x40000000 (leer 0x43… directamente atasca los AP).
 set -u
 OUT=${1:?uso: swd_poll_arranque.sh SALIDA.log [segundos=240]}; DUR=${2:-240}
-STALL=${STALL:-5}; ARRANQUE=${ARRANQUE:-15}; SELFTEST=${SELFTEST:-0}
+STALL=${STALL:-5}; PALABRAS=${PALABRAS:-0x83ede338,0x83ede320,0x83eaeecc}; ARRANQUE=${ARRANQUE:-15}; SELFTEST=${SELFTEST:-0}
 [[ -e $OUT ]] && { echo "ERROR: $OUT ya existe; no se sobrescribe" >&2; exit 1; }
 if pgrep -x openocd >/dev/null; then
   echo "ERROR: otra sesión de openocd ocupa la sonda (mátala por PID, nunca con pkill -f):" >&2
@@ -45,7 +46,7 @@ proc pc {b} { if {[catch {chip.dap apreg 1 0x04 [expr {$b + 0x0a0}]; set v [stri
 set fin [expr {[clock milliseconds] + $REM * 1000}]
 set bad 0
 while {[clock milliseconds] < $fin} {
-  if {[catch {set l [format "P %d %s %s %s" [clock milliseconds] [rd 0x83ede338] [rd 0x83ede320] [rd 0x83eaeecc]]
+  if {[catch {set l "P [clock milliseconds]"; foreach a $PALABRAS { append l " [rd $a]" }
                if {$PCS} { foreach b {0x80110000 0x80112000 0x80114000 0x80116000} { append l " [pc $b]" } }
                echo $l} e]} {
     echo "E [clock milliseconds] lectura:$e"
@@ -62,7 +63,7 @@ EOF
 END=$((SECONDS + DUR))
 while ((SECONDS < END)); do
   : > "$LOG"; COP=0
-  openocd -c "set REM $((END - SECONDS)); set PCS ${PCS:-0}; set PERIODO ${PERIODO:-150}" -f "$TMP/poll.cfg" > "$LOG" 2>&1 &
+  openocd -c "set REM $((END - SECONDS)); set PCS ${PCS:-0}; set PERIODO ${PERIODO:-150}; set PALABRAS {${PALABRAS//,/ }}" -f "$TMP/poll.cfg" > "$LOG" 2>&1 &
   OCD=$!; motivo=fin; n0=0; quieto=0; t=0
   while kill -0 "$OCD" 2>/dev/null; do
     sleep 1; ((t++))
