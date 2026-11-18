@@ -502,3 +502,10 @@ def test_e2e_drv_interpreta_pasos() -> None:
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
     assert callable(mod.captura) and callable(mod.post)
+
+
+def test_t52_cadena_sq_menu_orden_confirmacion_avcam() -> None:
+    """E2E-17 (G75 T52): S&Q 120/100 en el menú -> orden 0x75e4 con retorno 0 -> confirmación nativa 0x75e5 (libObj+0x98d27e/0x98d2a2, ranura 0x75e4) -> 0x408f valor 0x0107 en av-cam."""
+    t = (HARNESS.parents[2] / "docs/gui/img/g75/t52-ordenes-y-confirmaciones.txt").read_text()
+    assert "id=0x75e4 raw=0 " in t and "TRACE 98d27e" in t and "r0=75e5" in t and "r3=75e4" in t
+    assert '"datos": "05008f40' in t and t.rstrip().splitlines()[-1].endswith('0107"}')
