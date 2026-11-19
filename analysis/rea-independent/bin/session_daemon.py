@@ -4,7 +4,7 @@ Uso: session_daemon.py SOCK BINARIO_JSON_ARGS  |  cliente: q.py SOCK guion.json"
 import sys, os, json, socket, time, threading, signal
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from mcpc import Mcp
-sock_path, open_args, idle_max = sys.argv[1], json.loads(sys.argv[2]), 3600
+sock_path, open_args, idle_max = sys.argv[1], json.loads(sys.argv[2]), int(os.environ.get("REA_DAEMON_IDLE_S", "3600"))  # 0 = sin caducidad
 rss_max = int(os.environ.get("REA_DAEMON_RSS_MAX_MB", "2600"))  # salvaguarda anti-OOM; ampliable por entorno
 os.environ.setdefault("REA_GHIDRA_STARTUP_TIMEOUT_MS", "900000"); os.environ.setdefault("GHIDRA_MAXMEM", "2G")
 m = Mcp(); last = [time.time()]; lock = threading.Lock()
@@ -21,7 +21,7 @@ def rss_tree(root):
 def watchdog():
     while True:
         time.sleep(10)
-        if time.time() - last[0] > idle_max or rss_tree(os.getpid()) > rss_max:
+        if (idle_max and time.time() - last[0] > idle_max) or rss_tree(os.getpid()) > rss_max:
             LOG.write(json.dumps({"event": "watchdog_exit"}) + "\n"); LOG.flush(); os.kill(os.getpid(), signal.SIGTERM)
 threading.Thread(target=watchdog, daemon=True).start()
 t0 = time.time(); r = m.call("open_binary", open_args); print("open", r["_elapsed_s"], flush=True)
