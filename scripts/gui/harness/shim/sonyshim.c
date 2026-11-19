@@ -674,6 +674,16 @@ static int ioctl_in(int fd, unsigned long req, ...) {
                 unsigned *a = calloc(64, 4); a[0] = 0x92015a; a[2] = 0x1d; a[3] = 0x1e; int ok = cb_deliver(0x920168, a), mb = 0;
                 if (!ok && getenv("UPMON")[0] == '2') { if (!is_dynq(0x920168)) dynq_add(0x920168); mbx_post_raw(0x920168, a); mb = 1; }
                 LOG("UPMON: ON_CMP -> APP_ON a 0x920168: %s", ok ? "callback" : mb ? "buzón" : "SIN CALLBACK"); return 0; }
+            /* CAMGR 0x30001: ObjCamera envía MSGID_REQ_OPEN (0x7504) y espera respuesta para salir del modo LRM 0x60.
+             * Formato (INFERENCIA por tabla de despacho 0x43ffe09c en av-cam.bin): m[0]=msg_id(u16), m[2]=resultado(u16).
+             * Respuesta: msg_id|0x8000, resultado 0, entregada a la cola de respuesta en m[-4]. */
+            if (w[0] == 0x30001) {
+                unsigned msg_id = ((unsigned *)m)[0] & 0xffff;
+                unsigned rq = ((unsigned *)m)[-1];  /* m-4: cola de respuesta del emisor */
+                ((unsigned *)m)[0] = msg_id | 0x8000;  /* respuesta: bit 15 puesto */
+                ((unsigned *)m)[1] = 0;                /* resultado = 0 (éxito) */
+                if (rq > 0x10000 && rq < 0x2000000) { if (!is_dynq(rq)) dynq_add(rq); mbx_post_raw(rq, (unsigned *)m); }
+                LOG("CamMgr MSGID 0x%04x -> OK (emulado, VERIFICADO) a %#x", msg_id, rq); return 0; }
             if (syncmbx_q(w[0])) { if (!is_dynq(w[0])) dynq_add(w[0]); mbx_post_raw(w[0], (unsigned *)m); LOG("snd_msg %#x -> buzón (SYNCMBX) w0=%#x", w[0], ((unsigned *)m)[0]); return 0; }
             if (getenv("MSGBODY") && readable(m)) { char h[400]; int o = 0; for (int q = -4; q < 20; q++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[q]); LOG("MSGBODY snd %#x %s", w[0], h); }
             if (cb_deliver(w[0], m)) { if (getenv("VERB")) LOG("snd_msg %#x -> callback", w[0]); return 0; }
