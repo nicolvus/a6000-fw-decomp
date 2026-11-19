@@ -1276,12 +1276,34 @@ __attribute__((used, noinline)) static int issue_cmd(void *h, void *msg, unsigne
         if (gc && gm) { cat = gc(msg); mid = gm(msg); } }
     { static __thread int dentro; char *p = 0; if (!dentro && msg_pend) { pthread_mutex_lock(&msg_pm); p = msg_pend; msg_pend = 0; pthread_mutex_unlock(&msg_pm); }
       if (p) { dentro = 1; msg_send(p); dentro = 0; } }  /* «Z» pendiente: en el hilo de la UI */
-    if (efcs_ra && (unsigned long)ra == efcs_ra && (!r || r == 65535) && (r5 == 1 || r5 == 2)) {  /* efecto de CMP 0x75fb + EVT 0x85a6 (SET = ACT = pedido) y Backup 0x107086e. E2E-6: ObjCamera::IssueCommandAsync (libObj+0x98dad8) acepta (0) la primera orden y rechaza con 0xffff las siguientes (causa NO_VERIFICADA); la cámara real las acepta, así que se devuelve 0 */
+    if (efcs_ra && (unsigned long)ra == efcs_ra && (!r || r == 65535) && (r5 == 1 || r5 == 2)) {  /* cadena LRM→SetInit→EE_START (docs/gui/g22-respuesta-efcs-objcamera.md): ObjCamera::IssueCommandAsync (libObj+0x98dad8) acepta (0) la primera orden y rechaza con 0xffff las siguientes (causa NO_VERIFICADA); la cámara real las acepta, así que se devuelve 0 */
         r = 0;
-        unsigned long base = efcs_ra - 0x689745; void (*set)(void *, unsigned, unsigned) = (void *)(base + 0x68e0ce + 1);  /* guarda la ranura y avisa a la vista (info 0x4f) */
-        void *w = *(void **)(r4 + 0x534); set(w, 0, r5); set(w, 1, r5);
-        unsigned char b = r5; unsigned bm[16] = {8, 0, 3, 0, 0, 0, 0x107, 0x107086e, (unsigned)&b}; backup_service(bm);
-        LOG("EFCS emulado: modelo %#lx valor %lu (1 = Activar, 2 = Desactivar)", r4, r5);
+        unsigned long base = efcs_ra - 0x689745;
+        /* 1. Cambiar LRM 0x60 → 0x61: mensaje 0x7504 (cat 0x3100) a ExcMgr (desbloquea la cola de ejecución) */
+        void (*send_event)(void *, unsigned, unsigned) = (void *)(base + 0x995c58 + 1);  /* SendEvent gestor=ExcMgr, cat=0x3100, msg=0x7504 */
+        /* ExcMgr: buscar el objeto gestor. En libObj el gestor de cámara está en [obj+0x50] de ObjCamera; simplificamos enviando a la cola del kernel 0x2015d (CAMUSER_OBJCAME) con el mensaje 0x7504. */
+        unsigned msg_lrm[6] = {0x3100, 0x7504, 0, 0, 0, 0};
+        cb_deliver(0x2015d, msg_lrm);   /* CAMUSER_OBJCAME lee esta cola con rcv_msg */
+        /* 2. SetInit de ModelStillRec (0x68b4bc): guarda slots SET/ACT, avisa a la vista (info 0x4f) */
+        void (*setinit)(void *) = (void *)(base + 0x68b4bc + 1);
+        setinit((void *)r4);
+        /* 3. Emitir EE_START: pvt_ExeEEStartForSetInit (0x67ccd0) → pvt_ExeEEStartCmd (0x67c568) → ObjMsg(0x3100,0x7500) param 0x9503=3 → LRM 0x61→0x62 */
+        void (*eestart)(void *, void *) = (void *)(base + 0x67ccd0 + 1);
+        eestart((void *)r4, (void *)3);  /* r1 = 3 → [gestor+0] = 0x62 */
+        /* 4. Emitir CMP 0x75fb y EVT 0x85a6 al emisor (0x9777=v, 0x9502=0xf000; 0x9778=v) */
+        /* CMP: ObjMsg(0x3100, 0x75fb) */
+        unsigned cmp_msg[24] = {0x3100, 0x75fb, 0, 0, 0x9777, r5, 0x9502, 0xf000};
+        cb_deliver(0x2015d, cmp_msg);
+        /* EVT: ObjMsg(0x3100, 0x85a6) */
+        unsigned evt_msg[24] = {0x3100, 0x85a6, 0, 0, 0x9777, r5, 0x9778, r5};
+        cb_deliver(0x2015d, evt_msg);
+        /* 5. Escribir Backup 0x107086e = r5 (1 byte: 01=Activar, 02=Desactivar) */
+        void (*set)(void *, unsigned, unsigned) = (void *)(base + 0x68e0ce + 1);
+        void *w = *(void **)(r4 + 0x534);
+        set(w, 0, r5);
+        set(w, 1, r5);
+        unsigned char bb = r5; unsigned bm[16] = {8, 0, 3, 0, 0, 0, 0x107, 0x107086e, (unsigned)&bb}; backup_service(bm);
+        LOG("EFCS nativo: LRM 0x60→0x61 (0x7504), SetInit (0x68b4bc), EE_START 0x7500 (0x61→0x62), CMP/EVT 0x75fb/0x85a6, Backup 0x107086e=%lu", r5);
     }
     if (getenv("IMCMDLOG")) { char t[400]; int o = 0; if (readable(msg)) for (int q = 0; q < 24; q++) o += snprintf(t + o, sizeof t - o, "%08x ", ((unsigned *)msg)[q]); t[o] = 0;
         Dl_info di = {0}; dladdr(ra, &di);  /* llamante como biblioteca+desplazamiento: identifica la rutina emisora (p. ej. libObj+0x6896ac = EFCS 0x75fa) */
