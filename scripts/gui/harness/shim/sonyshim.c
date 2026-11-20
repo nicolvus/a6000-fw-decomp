@@ -674,16 +674,30 @@ static int ioctl_in(int fd, unsigned long req, ...) {
                 unsigned *a = calloc(64, 4); a[0] = 0x92015a; a[2] = 0x1d; a[3] = 0x1e; int ok = cb_deliver(0x920168, a), mb = 0;
                 if (!ok && getenv("UPMON")[0] == '2') { if (!is_dynq(0x920168)) dynq_add(0x920168); mbx_post_raw(0x920168, a); mb = 1; }
                 LOG("UPMON: ON_CMP -> APP_ON a 0x920168: %s", ok ? "callback" : mb ? "buzón" : "SIN CALLBACK"); return 0; }
-            /* CAMGR 0x30001: ObjCamera envía MSGID_REQ_OPEN (0x7504) y espera respuesta para salir del modo LRM 0x60.
-             * Formato (INFERENCIA por tabla de despacho 0x43ffe09c en av-cam.bin): m[0]=msg_id(u16), m[2]=resultado(u16).
-             * Respuesta: msg_id|0x8000, resultado 0, entregada a la cola de respuesta en m[-4]. */
+            /* CAMGR 0x30001: CamMgr de av-cam. ObjCamera envía peticiones y espera respuesta para salir del modo LRM 0x60 y para
+             * leer el estado de cámara (modo, batería, fotos restantes, exposición). Tabla de despacho VERIFICADA en av-cam.bin
+             * 0x43ffe09c (13 entradas: 0x3001, 0x3006, 0x3007, 0x300a, 0x300c, 0x300e, 0x3010, 0x3012, 0x3016, 0x301e, 0x3020,
+             * 0x3027, 0x302d → handlers en 0x437fce85/5d/51/c1/8fd/15d/0d5/9b5/549/5f1/5fd/609/3f9).
+             * Formato (INFERENCIA por la tabla y el handler actual): m[0]=msg_id(u16), m[-1]=cola de respuesta.
+             * Respuesta: m[0]=msg_id|0x8000, m[1]=resultado, m[2..]=datos de estado (INFERENCIA de campos/valores). */
             if (w[0] == 0x30001) {
                 unsigned msg_id = ((unsigned *)m)[0] & 0xffff;
                 unsigned rq = ((unsigned *)m)[-1];  /* m-4: cola de respuesta del emisor */
                 ((unsigned *)m)[0] = msg_id | 0x8000;  /* respuesta: bit 15 puesto */
                 ((unsigned *)m)[1] = 0;                /* resultado = 0 (éxito) */
+                /* Datos de estado de cámara (valores de ejemplo verificables: baterías, modo P, fotos restantes, exposición).
+                 * NO_VERIFICADO: el layout real de cada respuesta y los valores dependen de av-cam.bin (pendiente de REA/ejecución). */
+                if (msg_id == 0x3001) {           /* probablemente estado general / modo */
+                    ((unsigned *)m)[2] = 0x0003;   /* modo P (ver DIAL_INICIAL=3 en live.py) */
+                    ((unsigned *)m)[3] = 0x0064;   /* batería 100 % */
+                } else if (msg_id == 0x3006) {     /* posiblemente fotos restantes */
+                    ((unsigned *)m)[2] = 0x03e7;   /* 999 fotos restantes */
+                } else if (msg_id == 0x3007) {     /* posiblemente exposición / velocidad */
+                    ((unsigned *)m)[2] = 0x00fa;   /* 250 -> 1/250 s */
+                    ((unsigned *)m)[3] = 0x0000;
+                }
                 if (rq > 0x10000 && rq < 0x2000000) { if (!is_dynq(rq)) dynq_add(rq); mbx_post_raw(rq, (unsigned *)m); }
-                LOG("CamMgr MSGID 0x%04x -> OK (emulado, VERIFICADO) a %#x", msg_id, rq); return 0; }
+                LOG("CamMgr MSGID 0x%04x -> OK datos estado (emulado, INFERENCIA) a %#x", msg_id, rq); return 0; }
             if (syncmbx_q(w[0])) { if (!is_dynq(w[0])) dynq_add(w[0]); mbx_post_raw(w[0], (unsigned *)m); LOG("snd_msg %#x -> buzón (SYNCMBX) w0=%#x", w[0], ((unsigned *)m)[0]); return 0; }
             if (getenv("MSGBODY") && readable(m)) { char h[400]; int o = 0; for (int q = -4; q < 20; q++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[q]); LOG("MSGBODY snd %#x %s", w[0], h); }
             if (cb_deliver(w[0], m)) { if (getenv("VERB")) LOG("snd_msg %#x -> callback", w[0]); return 0; }
@@ -1081,6 +1095,8 @@ static unsigned long hexv(const char *s, const char **end) { unsigned long v = 0
    se ejecutan), así que no hay CMP 0x75fb / EVT 0x85a6. efcs_pc: UDF de un disparo en ModelStillRec tras crear el envoltorio +0x534 (r4 = modelo);
    carga las ranuras SET/ACT (+0x20/+0x24 de la propiedad FRONT_E_SHUTTER_MODE, [modelo+0x428]) desde Backup 0x107086e. efcs_ra: llamante de la orden. */
 static unsigned long efcs_ra, efcs_pc; static unsigned short efcs_orig;
+static int lrm_arranque_hecho = 0;
+static void lrm_arranque(void);  /* desbloquea ExcMgr del modo LRM 0x60 al arranque */
 static unsigned long gpu_pc;  /* libObj+0x6c4c46: «str r1,[r3,r0]» de rm_reg_write (off=r0, valor=r1, base=r3); se sustituye por UDF para ver cada escritura */
 /* GPUEMU: timbres (0x1804) y lista de cada uno */
 /* Experimento (TRACEFN=716800,6cd1e0,...): traza de una sola vez (UDF + restauración) de la entrada de esas funciones de libObj: r0-r3 y lr. */
@@ -1217,13 +1233,29 @@ static void efcs_patch(void) {  /* NOEFCS=1 la desactiva; exige los bytes de 3.2
     mprotect((void *)((unsigned long)p & ~4095UL), 8192, PROT_READ | PROT_WRITE | PROT_EXEC); *p = 0xde00; __builtin___clear_cache((char *)p, (char *)p + 2);
     struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_trace; sa.sa_flags = SA_SIGINFO | SA_NODEFER; sigaction(SIGILL, &sa, 0);
 }
+/* Fuerza a ExcMgr fuera del modo LRM 0x60 al arranque. En modo 0x60, SendEvent (libObj 0x995c58) encaja las órdenes de ObjCamera en
+ * pendientes sin enviarlas a CamMgr (0x30001), así que ObjCamera nunca recibe estado de cámara y los iconos (modo, batería, fotos
+ * restantes, exposición) se quedan en 0. docs/gui/g22-respuesta-efcs-objcamera.md §11 (VERIFICADO): 0x7504 con modo 0x60 → 0x61;
+ * 0x7500 EE_START con PARAMID_EE_TYPE 0x9503=3 → 0x61→0x62. La entrega a 0x2015d (CAMUSER_OBJCAME → ExcMgr) ya se usa para EFCS
+ * (issue_cmd, VERIFICADO); aquí se ejecuta una vez en la primera IssueCommandAsync, cuando CAMUSER_OBJCAME ya espera. */
+static unsigned msg_lrm_arranque[2][6] = {
+    {0x3100, 0x7504, 0, 0, 0, 0},   /* ExcMgr 0x60 -> 0x61 (MSGID 0x7504, sin parámetro, ver docs §11) */
+    {0x3100, 0x7500, 0x9503, 3, 0, 0}, /* ExcMgr 0x61 -> 0x62 (EE_START 0x7500, PARAMID_EE_TYPE 0x9503 = 3; INFERENCIA de posición del parámetro) */
+};
+static void lrm_arranque(void) {  /* fuerza a ExcMgr fuera del modo LRM 0x60 al cargar libObj: entrega 0x7504 y EE_START al buzón de 0x2015d; CAMUSER_OBJCAME lo lee con rcv_msg y avanza el modo, desbloqueando las órdenes de ObjCamera hacia CamMgr (0x30001) */
+    if (lrm_arranque_hecho || getenv("NOLRM")) return;
+    lrm_arranque_hecho = 1;
+    mbx_post_raw(0x2015d, msg_lrm_arranque[0]);   /* 0x60 -> 0x61 */
+    mbx_post_raw(0x2015d, msg_lrm_arranque[1]);   /* 0x61 -> 0x62 */
+    LOG("LRM arranque: 0x7504 (0x60->0x61), EE_START 0x7500 p=3 (0x61->0x62) a 0x2015d (buzón)");
+}
 void *dlopen(const char *f, int fl) {
     static void *(*d)(const char *, int);
     if (!d) d = nextsym("dlopen");
     if (f && strstr(f, "viewUnified")) gpu_live = 1;
     LOG("dlopen(%s) ...", f ? f : "(null)");
     void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
-    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lobj_h = h; mwf_nullsafe(); }
+    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lrm_arranque(); lobj_h = h; mwf_nullsafe(); }
     if (h && f && getenv("TRACELIB") && (strstr(f, getenv("TRACELIB")) || strstr(f, "viewUnified")) && !trc_lib_done) {  /* la biblioteca puede entrar como dependencia de viewUnified*: se busca en /proc/self/maps tras cada dlopen hasta hallarla */
         char ln[256]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");
         while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, getenv("TRACELIB"))) { base = hexv(ln, 0); break; }
