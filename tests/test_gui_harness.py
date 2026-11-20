@@ -475,6 +475,13 @@ def test_shimenv_deja_pasar_la_cola_0x4015e_a_av_cam() -> None:
     assert "NO4015E=1" in live.construye_shimenv()
 
 
+def test_camgr_0x30001_no_lo_atiende_ningun_atajo_por_omision() -> None:
+    """OSD-ICONOS-1: los iconos de la pantalla de disparo los puebla el CamMgr real de av-cam (puente AVQ); ni el shim ni la LIRO VM inventan respuestas."""
+    shim = (HARNESS / "shim/sonyshim.c").read_text()
+    assert 'w[0] == 0x30001 && getenv("CAMGREMU")' in shim
+    assert "0x30001" not in (ROOT / "scripts/gui/avcam/liro_vm.py").read_text().split("def servicio_kernel")[1].split("def entrega")[0]
+
+
 def test_escritura_de_ui_al_backup_llega_al_backup_de_la_liro_vm(tmp_path: Path) -> None:
     """E2E-2: av-cam lee el mismo Backup que la UI escribe (NV), no solo el volcado estático."""
     import threading

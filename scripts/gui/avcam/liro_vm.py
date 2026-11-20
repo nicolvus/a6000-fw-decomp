@@ -601,22 +601,6 @@ def servicio_kernel(vm: Vm, q: int, m: int, t: Task) -> bool:
         if txt and all(32 <= c < 127 or c in (9, 10) for c in txt):
             vm.log.append(f"{vm.t:9.1f} {t.name}: LOG {txt.decode('latin-1').strip()}")
         return True
-    if q == 0x30001 and m:  # CamMgr de av-cam: ObjCamera envía MSGID_REQ_OPEN (0x7504) y espera
-        # respuesta para salir del modo LRM 0x60 y empezar a emitir notificaciones (iconos).
-        # Formato (INFERENCIA por la tabla de despacho 0x43ffe09c y el analisis de camuser_send):
-        #   m[0] = msg_id (u16), m[2] = resultado (u16). Respuesta: msg_id|0x8000, resultado 0.
-        orden = vm.rd(m, 2)
-        vm.wr(m, orden | 0x8000, 2)   # respuesta: bit 15 puesto (eco del id de orden)
-        vm.wr(m + 2, 0, 2)            # resultado = 0 (éxito)
-        if n == "osal_snd_msg":
-            rq = vm.rd(m - 4)
-            if rq:
-                vm.wr(m - 4, q)       # el kernel cambia el origen a la cola destino
-                entrega(vm, rq, m)
-            vm.log.append(f"{vm.t:9.1f} {t.name}: CamMgr 0x{orden:04x} -> OK (emulado, VERIFICADO)")
-        else:
-            vm.log.append(f"{vm.t:9.1f} {t.name}: CamMgr 0x{orden:04x} (sync, emulado, VERIFICADO)")
-        return True
     return False
 
 

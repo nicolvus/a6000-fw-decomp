@@ -680,7 +680,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
              * 0x3027, 0x302d → handlers en 0x437fce85/5d/51/c1/8fd/15d/0d5/9b5/549/5f1/5fd/609/3f9).
              * Formato (INFERENCIA por la tabla y el handler actual): m[0]=msg_id(u16), m[-1]=cola de respuesta.
              * Respuesta: m[0]=msg_id|0x8000, m[1]=resultado, m[2..]=datos de estado (INFERENCIA de campos/valores). */
-            if (w[0] == 0x30001) {
+            if (w[0] == 0x30001 && getenv("CAMGREMU")) {  /* opt-in: valores inventados; por omisión 0x30001 va a av-cam real por AVQ */
                 unsigned msg_id = ((unsigned *)m)[0] & 0xffff;
                 unsigned rq = ((unsigned *)m)[-1];  /* m-4: cola de respuesta del emisor */
                 ((unsigned *)m)[0] = msg_id | 0x8000;  /* respuesta: bit 15 puesto */
