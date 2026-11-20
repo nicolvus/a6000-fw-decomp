@@ -58,3 +58,27 @@ def test_monton_reutiliza_los_bloques_liberados() -> None:
         vm.free(vm.malloc(0x800 + 12))
     assert vm.heap - h <= 0x1000
     vm.free(0x1234)  # puntero ajeno: se ignora
+
+
+def test_patron_se_aplica_por_pagina_sin_ganchos_masivos() -> None:
+    """LIRO-VEL-1: Unicorn recorre todos los ganchos de lectura en cada carga; el patrón (+4 → bit 0 puesto) se instala solo en las páginas mapeadas."""
+    m = _vm()
+    vm = m.carga(m.AVCAM, m.BK)
+    vm.uc.mem_map(0xF2A07000, 0x1000)
+    vm.patron_pagina(0xF2A07000)
+    assert int.from_bytes(vm.uc.mem_read(0xF2A07004, 4), "little") == 1
+    assert int.from_bytes(vm.uc.mem_read(0xF2A07030, 4), "little") == 0
+
+
+def test_la_vm_no_va_mas_lenta_que_3_veces_el_tiempo_real() -> None:
+    """LIRO-VEL-1: antes ≈ 5,6× más lenta que el tiempo real (reposo tras el arranque); ahora ≈ 1×. Cota floja para no fallar con la máquina cargada."""
+    import time
+
+    import puente as P
+
+    _vm()
+    vm, _ = P.arranca()
+    vm.limite = vm.t + 1500
+    t0, v0 = time.time(), vm.t
+    P.L.planifica(vm, 2_000_000_000)
+    assert (time.time() - t0) / ((vm.t - v0) / 1000) < 3.0

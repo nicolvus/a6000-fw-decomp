@@ -63,6 +63,7 @@ STACKS, STACK_SZ = 0x60000000, 0x10000
 STACK_MAP = 0x04000000                                        # 1024 pilas de 64 KiB
 E_OK, E_TMOUT, E_NOEXS, E_PAR = 0, -50, -42, -17
 TMO_POL, TMO_FEVR = 0, -1
+REGS_API = [UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R2, UC_ARM_REG_R3, UC_ARM_REG_LR]
 QUANTUM = 200_000                                             # instrucciones por turno antes de ceder
 
 
@@ -140,9 +141,12 @@ class Vm:
     pendientes_cb: list = field(default_factory=list)  # callbacks de cola por ejecutar (tareas efímeras)
     trampa: int | None = None
     fallo: str = ""
+    areg: list | None = None
 
     # --- memoria y registros
     def r(self, n: int) -> int:
+        if self.areg is not None:  # dentro de una llamada a la API: r0–r3 ya leídos en bloque (los manejadores no escriben registros hasta devolver)
+            return self.areg[n]
         return self.uc.reg_read([UC_ARM_REG_R0, UC_ARM_REG_R1, UC_ARM_REG_R2, UC_ARM_REG_R3][n])
 
     def arg(self, n: int) -> int:
@@ -229,6 +233,7 @@ def carga(avcam: Path, bkp: Path, idt: Path | None = None) -> Vm:
         pg = addr & ~0xFFF
         uc.mem_map(pg, 0x1000)
         vm.mmio[pg] = [0, 0, pc]
+        patron_pagina(pg)
         return True
     uc.hook_add(UC_HOOK_MEM_READ_UNMAPPED | UC_HOOK_MEM_WRITE_UNMAPPED | UC_HOOK_MEM_FETCH_UNMAPPED, h_unmapped)
     # registros con regla: la página se mapea ya y cada lectura aplica (valor & ~y) | o antes de leerse
@@ -243,24 +248,36 @@ def carga(avcam: Path, bkp: Path, idt: Path | None = None) -> Vm:
             v = int.from_bytes(uc.mem_read(r[0], 4), "little")
             uc.mem_write(r[0], ((v & ~r[2]) | r[1]).to_bytes(4, "little"))
         uc.hook_add(UC_HOOK_MEM_READ, h_regla, (dr, o, y), dr, dr + 3)
-    # patrones: mismo registro (desplazamiento dentro de la página) en todos los bloques de un rango
-    for pt in json.loads(REGLAS.read_text()).get("patrones", []):
-        lo, hi, desp = int(pt["rango"][0], 16), int(pt["rango"][1], 16), int(pt["desp"], 16)
-        o, y = int(pt.get("o", "0"), 16), int(pt.get("y", "0"), 16)
+    # patrones: mismo registro (desplazamiento dentro de la página) en todos los bloques de un rango. Unicorn recorre TODOS los ganchos de lectura en cada carga:
+    # 768 ganchos por página (uno por bloque posible) frenaban la VM ≈ 10× (LIRO-VEL-1), así que el gancho solo se pone en las páginas que existen (al mapearse).
+    patrones = [(int(pt["rango"][0], 16), int(pt["rango"][1], 16), int(pt["desp"], 16), int(pt.get("o", "0"), 16), int(pt.get("y", "0"), 16))
+                for pt in json.loads(REGLAS.read_text()).get("patrones", [])]
+    hechas: set[tuple[int, int]] = set()
 
-        def h_patron(uc: Uc, acc: int, addr: int, size: int, val: int, r: tuple) -> None:
-            if addr & 0xFFF == r[0]:
-                v = int.from_bytes(uc.mem_read(addr, 4), "little")
-                uc.mem_write(addr, ((v & ~r[2]) | r[1]).to_bytes(4, "little"))
-        for pg in range(lo, hi, 0x1000):  # un gancho por registro, no uno por rango: un gancho Python sobre cada lectura de la zona rompe el ITSTATE de Unicorn (INSN_INVALID tras `ldrhne`)
-            if pg not in PAGINAS_PROPIAS:
-                uc.hook_add(UC_HOOK_MEM_READ, h_patron, (desp, o, y), pg + desp, pg + desp + 3)
+    def h_patron(uc: Uc, acc: int, addr: int, size: int, val: int, r: tuple) -> None:
+        if addr & 0xFFF == r[0]:
+            v = int.from_bytes(uc.mem_read(addr, 4), "little")
+            uc.mem_write(addr, ((v & ~r[2]) | r[1]).to_bytes(4, "little"))
+
+    def patron_pagina(pg: int) -> None:
+        for lo, hi, desp, o, y in patrones:
+            if lo <= pg < hi and (pg, desp) not in hechas and pg not in PAGINAS_PROPIAS:
+                hechas.add((pg, desp))
+                v = int.from_bytes(uc.mem_read(pg + desp, 4), "little")
+                uc.mem_write(pg + desp, ((v & ~y) | o).to_bytes(4, "little"))  # la lectura que provocó el mapeo ya ve el valor del patrón
+                uc.hook_add(UC_HOOK_MEM_READ, h_patron, (desp, o, y), pg + desp, pg + desp + 3)  # un gancho por registro, no por rango: uno por rango rompe el ITSTATE de Unicorn (INSN_INVALID tras `ldrhne`)
+    vm.patron_pagina = patron_pagina
     import bonobo
     bonobo.instala(vm)
     import objetivo
     objetivo.instala(vm)
     import p2s
     p2s.instala(vm)
+    regiones = list(uc.mem_regions())
+    for lo, hi, *_ in patrones:  # páginas que los módulos anteriores ya mapearon
+        for pg in range(lo, hi, 0x1000):
+            if any(r[0] <= pg <= r[1] for r in regiones):
+                patron_pagina(pg)
     return vm
 
 
@@ -286,11 +303,19 @@ def crea_tarea(vm: Vm, tid: int, name: str, entry: int, pri: int, r0: int = 0) -
 
 # --- API: cada función devuelve el r0 o None si la tarea queda bloqueada (el valor llega al despertar)
 def api(vm: Vm, i: int) -> int | None:
+    try:
+        return _api(vm, i)
+    finally:
+        vm.areg = None
+
+
+def _api(vm: Vm, i: int) -> int | None:
     n, a = vm.names[i], vm.arg
     vm.calls[n] += 1
     t = vm.cur
     assert t is not None
-    vm.ultimas.append(f"{t.name if t else '?'} {n}({', '.join(hex(vm.r(k)) for k in range(4))}) lr={vm.uc.reg_read(UC_ARM_REG_LR):#x}")
+    vm.areg = vm.uc.reg_read_batch(REGS_API)
+    vm.ultimas.append((t.name if t else "?", n, vm.areg))  # se formatea solo al volcar (ultimas_llamadas): un f-string por llamada costaba ≈ 20 % (LIRO-VEL-1)
     if n in ("CRE_TSK", "cre_tsk", "acre_tsk", "CRE_CYC", "cre_cyc", "acre_cyc", "CRE_SEM", "CRE_FLG", "CRE_MBX") and vm.calls[n] <= 3:
         crudo = [vm.r(k) for k in range(4)]
         pk = crudo[1] if n.isupper() or n.startswith("cre") else crudo[0]
@@ -812,7 +837,7 @@ def main() -> None:
         "mmio_paginas": {f"{p:#x}": f"pc={v[2]:#x}" for p, v in sorted(vm.mmio.items())},
         "interrupciones": {f"{k:#x}": hex(v) for k, v in vm.inh.items()},
         "giros": [f"{n} pc={pc:#x} ×{c}" for (n, pc), c in vm.pcs.most_common(20)],
-        "ultimas_llamadas": list(vm.ultimas),
+        "ultimas_llamadas": [f"{tn} {n}({', '.join(hex(x) for x in rg[:4])}) lr={rg[4]:#x}" for tn, n, rg in vm.ultimas],
         "registro": vm.log[-400:],
     }
     txt = json.dumps(inf, indent=1, ensure_ascii=False)
