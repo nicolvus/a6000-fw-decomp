@@ -124,6 +124,8 @@ class Vm:
     irqs: collections.Counter = field(default_factory=collections.Counter)  # interrupción → veces que se sirvió
     t: float = 0.0
     heap: int = HEAP
+    bloques: dict[int, int] = field(default_factory=dict)  # dirección → talla de los bloques en uso
+    bloques_libres: dict[int, list[int]] = field(default_factory=dict)  # talla → direcciones libres
     cur: Task | None = None
     calls: collections.Counter = field(default_factory=collections.Counter)
     mmio: dict[int, list] = field(default_factory=dict)                   # página → [lecturas, escrituras, primer pc]
@@ -163,11 +165,24 @@ class Vm:
         return b.split(b"\0")[0].decode("latin-1")
 
     def malloc(self, n: int) -> int:
-        a = self.heap
-        self.heap = (self.heap + n + 15) & ~15
-        if self.heap > HEAP + HEAP_SZ:
-            raise MemoryError("montón agotado")
+        """Asignador por tallas de 16 B con listas de libres (E2E-16: sin `free` el montón de 240 MiB se agotaba a los ≈7 min)."""
+        n = (n + 15) & ~15
+        libres = self.bloques_libres.get(n)
+        if libres:
+            a = libres.pop()
+        else:
+            a = self.heap
+            self.heap += n
+            if self.heap > HEAP + HEAP_SZ:
+                raise MemoryError("montón agotado")
+        self.bloques[a] = n
         return a
+
+    def free(self, a: int) -> None:
+        """Devuelve un bloque; un puntero desconocido o ya liberado se ignora (el av-cam real libera bloques que este montón no asignó)."""
+        n = self.bloques.pop(a, None)
+        if n:
+            self.bloques_libres.setdefault(n, []).append(a)
 
     def nuevo_id(self) -> int:
         self.next_id += 1
@@ -430,7 +445,8 @@ def api(vm: Vm, i: int) -> int | None:
             vm.uc.mem_write(a(1), dato)
             return len(dato)
         return bloquea(("mbf", a(0), a(1)), sgn(a(2)))
-    if n == "rel_mpf":
+    if n in ("rel_mpf", "rel_mpl"):  # (id, bloque)
+        vm.free(a(1))
         return E_OK
     if n in ("tget_mpf", "tget_mpl"):
         sz = 0x1000 if n == "tget_mpf" else a(1)
@@ -461,7 +477,14 @@ def api(vm: Vm, i: int) -> int | None:
         return E_OK
     if n in ("liro_malloc",):
         return vm.malloc(a(0))
-    if n in ("liro_free", "malloc_reset", "osal_free_stack"):
+    if n == "liro_free":
+        vm.free(a(0))
+        return E_OK
+    if n == "osal_free_msg":  # (qid, msg): el bloque empieza en la cabecera de 12 B
+        if a(1):
+            vm.free(a(1) - 12)
+        return E_OK
+    if n in ("malloc_reset", "osal_free_stack"):
         return E_OK
     if n == "memcpy":
         vm.uc.mem_write(a(0), bytes(vm.uc.mem_read(a(1), a(2))))

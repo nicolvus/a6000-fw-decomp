@@ -86,6 +86,7 @@ class Puente:
         self.vm.limite, self.t_real0, self.t_virt0 = t0, time.monotonic(), t0
         self.visto = len(self.vm.salida_ext)  # lo emitido durante el arranque se guarda aparte: solo se reenvía en un arranque en frío del invitado
         self.n_in = self.n_out = 0
+        self.t_heap = 0.0
         self.fin = threading.Event()
         self._vigila(os.environ.get("AVCAM_VIGILA", ""))
         self.hilo = threading.Thread(target=self._reloj, daemon=True)
@@ -133,6 +134,9 @@ class Puente:
                 self._avanza()
 
     def _avanza(self) -> None:
+        if time.monotonic() >= self.t_heap:  # E2E-16: evidencia de sesión larga (MiB asignados y en uso del montón de 240 MiB), cada 30 s reales
+            self.t_heap = time.monotonic() + 30
+            self._anota(heap_mib=round((self.vm.heap - L.HEAP) / 2**20, 1), en_uso_mib=round(sum(self.vm.bloques.values()) / 2**20, 1))
         self.vm.limite = self.t_virt0 + (time.monotonic() - self.t_real0) * 1000
         L.planifica(self.vm, 20_000_000)
         self._saca()
