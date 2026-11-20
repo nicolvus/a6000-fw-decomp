@@ -701,3 +701,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 20-11-2026 OSD-ICONOS-1 cerrado: retirados CamMgr inventado (shim y liro_vm.py, que rompía arranque); iconos poblados por av-cam real vía AVQ (g22-arnes-ui-qemu §5.18z¹⁴).
 - 20-11-2026 E2E-16 cerrado: asignador con free en liro_vm.py (osal_free_msg/liro_free/rel_mpf); sesión 30 min sin caída; Puente anota heap_mib cada 30 s (G75 T54).
 - 20-11-2026 LIRO-VEL-1 cerrado: LIRO VM de 5,6x a ~1x tiempo real (ganchos MEM_READ por pagina mapeada + reg_read_batch); G75 T55.
+- 20-11-2026 E2E-17 cerrado: orden EFCS nativa hasta av-cam (0x4099); atajo EFCS opt-in (EFCSEMU); G75 T56.

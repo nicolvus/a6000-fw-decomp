@@ -136,8 +136,9 @@ def test_efcs_emula_respuesta_objcamera_y_backup_107086e() -> None:
     el efecto de CMP 0x75fb/EVT 0x85a6 (ranuras SET/ACT del modelo) y escribe Backup 0x107086e (1 = Activar, 2 = Desactivar);
     al crear ModelStillRec (libObj+0x681eb2) carga las ranuras desde ese registro para que el ajuste sobreviva al arranque en frío."""
     src = (HARNESS / "shim/sonyshim.c").read_text()
-    assert "efcs_ra = base + 0x689745" in src and "efcs_pc = base + 0x681eb2" in src
+    assert "base + 0x689745" in src and "efcs_pc = base + 0x681eb2" in src
     assert "0x107086e" in src and "base + 0x68e0ce + 1" in src and 'getenv("NOEFCS")' in src
+    assert 'efcs_ra = getenv("EFCSEMU") ? base + 0x689745 : 0' in src, "E2E-17: el atajo EFCS es opt-in; por omisión la orden 0x75fa la atiende ObjCamera y llega a av-cam"
 
 
 def test_efcs_acepta_ordenes_repetidas_aunque_objcamera_devuelva_65535() -> None:

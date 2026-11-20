@@ -1222,14 +1222,15 @@ static void gpu_patch(void) {  /* GPUEMU: ver arriba (gpu_thread); libObj 3.21: 
     struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_trace; sa.sa_flags = SA_SIGINFO | SA_NODEFER; sigaction(SIGILL, &sa, 0);
     LOG("GPUEMU: timbre de la GPU en libObj+0x6c4c46 (%p)", (void *)p);
 }
-static void efcs_patch(void) {  /* NOEFCS=1 la desactiva; exige los bytes de 3.21 («movs r0,#0xc» en 0x681eb2) */
-    if (efcs_ra || getenv("NOEFCS")) return;
+static void efcs_patch(void) {  /* la carga de ranuras al crear ModelStillRec (efcs_pc) sigue por omisión; la emulación de la orden 0x75fa (efcs_ra) es opt-in con EFCSEMU=1: por omisión ObjCamera la atiende y av-cam recibe 0x4099 (E2E-17, G75 T56); exige los bytes de 3.21 («movs r0,#0xc» en 0x681eb2) */
+    static int hecho; if (hecho || getenv("NOEFCS")) return;
+    hecho = 1;
     unsigned long base = 0; char ln[256]; FILE *m = fopen("/proc/self/maps", "r");
     while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, "libObj.so")) { base = hexv(ln, 0); break; }
     if (m) fclose(m);
     unsigned short *p = (unsigned short *)(base + 0x681eb2);
     if (!base || *p != 0x200c) { LOG("EFCS: libObj distinta (%#x): sin emulación", base ? *p : 0); return; }
-    efcs_ra = base + 0x689745; efcs_pc = base + 0x681eb2; efcs_orig = *p; LOG("EFCS: emulación armada (libObj %#lx)", base);
+    efcs_ra = getenv("EFCSEMU") ? base + 0x689745 : 0; efcs_pc = base + 0x681eb2; efcs_orig = *p; LOG("EFCS: emulación armada (libObj %#lx)", base);
     mprotect((void *)((unsigned long)p & ~4095UL), 8192, PROT_READ | PROT_WRITE | PROT_EXEC); *p = 0xde00; __builtin___clear_cache((char *)p, (char *)p + 2);
     struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_trace; sa.sa_flags = SA_SIGINFO | SA_NODEFER; sigaction(SIGILL, &sa, 0);
 }
