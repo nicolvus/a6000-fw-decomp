@@ -333,9 +333,9 @@ def test_dmm_direct_call_hace_avanzar_el_automata_0x435503b0_y_av_cam_adquiere_e
     assert vm.rd(0x43EDE338) == 1  # el flag aún no sube (ver el test siguiente)
 
 
-@XF
 def test_flag_0x43eaeecd_con_solo_modo_y_pulso_forzados_sobre_los_datos_naturales_del_pipeline() -> None:
-    """MEDIDO (E2E-12c, T41; diagnóstico, no es emulación): con el OPD, la tabla `0x43ef230c`/`0x43ef23c0` y la estructura de modo producidos por av-cam, basta forzar en la
+    """T66: ya no es xfail; pasa tras responder Free/Close/FreeRdv/AsyncAllocRule/AllocShare/AllocNewRdv de DMM como espera av-cam (liro_vm.servicio_kernel).
+    MEDIDO (E2E-12c, T41; diagnóstico, no es emulación): con el OPD, la tabla `0x43ef230c`/`0x43ef23c0` y la estructura de modo producidos por av-cam, basta forzar en la
     entrada de `0x4384fb7c` solo (1) modo `[A+8]`=3 y (3') `[A+0xb]`=1 para que el byte lo ponga av-cam, `[0x43ede338]`=2, el módulo 3 quede en `0x302` y se conteste la `0x3003`.
     (4) (`[tabla+0x74]`) NO hace falta. Por qué no ocurre solo: modo 2 ∈ máscara 0x18005 (el OPD llega tras el módulo 3 en 0x325) y `0x4386b55c` borra `[A+0xb]` en el mismo paso porque
     `[obj+0xbb8]`/`[obj+0xbd0]`=1 (VM: `[0x43ef1228+0x858]`=4; real 0 y `bdd`=0x3a)."""

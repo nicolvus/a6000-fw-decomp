@@ -273,6 +273,8 @@ def carga(avcam: Path, bkp: Path, idt: Path | None = None) -> Vm:
     objetivo.instala(vm)
     import p2s
     p2s.instala(vm)
+    import reloj
+    reloj.instala(vm)
     regiones = list(uc.mem_regions())
     for lo, hi, *_ in patrones:  # páginas que los módulos anteriores ya mapearon
         for pg in range(lo, hi, 0x1000):
@@ -536,7 +538,7 @@ def _api(vm: Vm, i: int) -> int | None:
     if n == "dmm_direct_call":  # dmm.ko:0x7e18 llama dmm_ctrl_SyncMsg([msg], msg+4, u16 [msg+0x74]): mismo cuerpo DMM que la cola 0x61003C, respuesta en el mismo búfer
         m = a(0) + 4
         servicio_kernel(vm, 0x61003C, m, t)
-        if vm.rd(m, 2) == 0x8001:  # el lector 0x43902a34→0x436c397a espera {u16 unidad @+4, u16 nº de extensiones @+8, extensiones (dir,tam) desde +0x10}; no la dirección en +8 de la ruta osal
+        if vm.rd(m, 2) in (0x8001, 0x8002, 0x800C):  # el lector 0x43902a34→0x436c397a espera {u16 unidad @+4, u16 nº de extensiones @+8, extensiones (dir,tam) desde +0x10}; no la dirección en +8 de la ruta osal
             vm.wr(m + 8, 1)  # shortcut: una sola extensión de DMM_UNIDAD; la real sale de DmmConfig.bin (no extraído)
             vm.wr(m + 0x14, DMM_UNIDAD)
         return E_OK
@@ -612,7 +614,8 @@ def _api(vm: Vm, i: int) -> int | None:
 
 
 DMM_ANILLO = 48  # shortcut: tras 48 unidades se reutilizan en anillo (la orden de liberación 4/6 no identifica la unidad, NO_VERIFICADO); con 1 unidad por trama el montón de 240 MiB duraba <4 s virtuales
-DMM_UNIDAD = 0x00200000  # shortcut: 2 MiB por unidad; el tamaño real sale de DmmConfig.bin (no está en el firmware extraído)
+DMM_NOMBRES = {1: "AllocUnitNew", 2: "AllocShare", 5: "OpenUnit", 0xC: "AllocNewRdv"}
+DMM_UNIDAD = 0x00280000  # shortcut: 2,5 MiB por unidad; el tamaño real sale de DmmConfig.bin (no está en el firmware extraído). Cota VERIFICADA: av-cam exige ≥ 2 445 824 B en `job_RCH_dataset_main` («memory size error! [2097152] < [2445824]» con 2 MiB)
 
 
 def servicio_kernel(vm: Vm, q: int, m: int, t: Task) -> bool:
@@ -621,7 +624,7 @@ def servicio_kernel(vm: Vm, q: int, m: int, t: Task) -> bool:
         orden = vm.rd(m, 2)
         comp = vm.rd(m + 0x14, 2)
         vm.wr(m, orden | 0x8000, 2)  # la respuesta lleva el id de la orden con 0x8000 (av-cam: «ERR_DMM_DIFFERENT_COMP msg_id 5, my_id 0x8001»)
-        if orden in (1, 5):
+        if orden in (1, 2, 5, 0xC):  # 2 = AllocShare (0x43902ee0…0x43902f50) y 0xC = AllocNewRdv: misma forma de respuesta (VERIFICADO 0x43902cec…0x43902d90: [+0]==0x800c, [+2]==0, [+6]==comp, [+4]≠0xffff, [+8]≠0 y [+0x10]≠0 con r5==1)
             vm.dmm_n += 1
             if vm.dmm_n <= DMM_ANILLO:
                 vm.dmm_bases.append(vm.malloc(DMM_UNIDAD))
@@ -632,7 +635,11 @@ def servicio_kernel(vm: Vm, q: int, m: int, t: Task) -> bool:
             vm.wr(m + 8, base)  # INFERENCIA: el envoltorio 0x43a833fa lee dirección en +8 y tamaño en +0xc (→ *r1, *r2), 0x435c5126 los usa para su reserva lineal
             vm.wr(m + 0xC, DMM_UNIDAD)
             vm.wr(m + 6, comp, 2)  # INFERENCIA: la respuesta repite el u16 de la petición en +0x14 (0x1111 en la ruta síncrona de 0x43620a90, 0x55 en AsyncAllocNew); av-cam lo compara («DIFFERENT_COMP»)
-            vm.log.append(f"{vm.t:9.1f} {t.name}: DMM orden {orden} ({'AllocUnitNew' if orden == 1 else 'OpenUnit'}) → {base:#x} (unidad {vm.dmm_n})")
+            vm.log.append(f"{vm.t:9.1f} {t.name}: DMM orden {orden} ({DMM_NOMBRES[orden]}) → {base:#x} (unidad {vm.dmm_n})")
+        elif orden in (4, 6, 0xD, 0x14):  # Free/Close/FreeRdv/AsyncAllocRule (0x43903cb0: [+0]==0x8014, [+2]==0, [+6]==0x55): éxito = [+0]==0x8000|orden, [+2]==0 y [+6]==comp (VERIFICADO en bytes: av-cam 0x43903088 Free, 0x439034ea Close; comp 0x55 en [+0x14])
+            vm.wr(m + 2, 0, 2)
+            vm.wr(m + 6, comp, 2)
+            vm.log.append(f"{vm.t:9.1f} {t.name}: DMM orden {orden} ({ {4: 'Free', 6: 'Close', 0xD: 'FreeRdv', 0x14: 'AsyncAllocRule'}[orden] }) → ok")
         else:
             vm.wr(m + 2, 0, 2)
             vm.log.append(f"{vm.t:9.1f} {t.name}: DMM orden {orden} sin modelar (responde 0)")
