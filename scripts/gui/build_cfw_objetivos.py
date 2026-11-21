@@ -22,7 +22,9 @@ import build_pp_menu
 import bulb_timer_patch
 import cfw_ajustes
 import jpeg_hook_patch
+import lut_patch
 import pp_menu_spec as M
+import sd_lut
 
 _configurar = build_pp_menu.configurar
 
@@ -45,7 +47,7 @@ def _configurar_con_cfw(*a, **k):
     """Tras configurar el menú PP, añade los 13 ajustes CFW como segunda carpeta (pids a continuación de los de PP)."""
     r = _configurar(*a, **k)
     ids = []
-    for aj in cfw_ajustes.AJUSTES:
+    for aj in (sd_lut.ajustes_sd() if lut_patch.MODO_SD else cfw_ajustes.AJUSTES):
         M.SETTINGS[aj.id] = M.S(aj.id, aj.label, 0, tuple((t, i) for i, (t, _) in enumerate(aj.opciones)), "g56", backup=aj.backup)
         ids.append(aj.id)
     M.PIDS[:] = range(M.PIDS[0], M.PIDS[0] + len(M.SETTINGS))
@@ -67,7 +69,16 @@ def aplicar_objetivos(files: Path) -> None:
     (files / "SHA256SUMS").write_text("".join(f"{h}  {r}\n" for r, h in man["parcheados"].items()))
 
 
-def main(out: Path, version: str) -> dict:
+def main(out: Path, version: str, sd_lut_cubes: bool = False) -> dict:
+    """`sd_lut_cubes` (G89): «LUT» con 6 ranuras que la cámara lee de la SD (userland en viewUnified2.so + Backup en av-cam)."""
+    lut_patch.MODO_SD = build_pp_menu.SD_USERLAND = sd_lut_cubes
+    try:
+        return _main(out, version)
+    finally:
+        lut_patch.MODO_SD = build_pp_menu.SD_USERLAND = False
+
+
+def _main(out: Path, version: str) -> dict:
     out.mkdir(parents=True, exist_ok=True)
     _cuevas_fuera_del_bloque_0()
     build_pp_menu.configurar = _configurar_con_cfw
@@ -86,5 +97,6 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("salida", type=Path)
     ap.add_argument("--version", default="3.82")
+    ap.add_argument("--sd-lut", action="store_true", help="LUT con 6 ranuras leídas de LUT/LUT<n>.cube en la SD (G89)")
     a = ap.parse_args()
-    print(json.dumps(main(a.salida, a.version), indent=1))
+    print(json.dumps(main(a.salida, a.version, a.sd_lut), indent=1))

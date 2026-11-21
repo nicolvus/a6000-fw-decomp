@@ -6,6 +6,7 @@ shortcut: solo la etapa LUT 3D está integrada; matriz y curva del `cube_a6000` 
 """
 from __future__ import annotations
 
+import dataclasses
 import struct
 import sys
 from pathlib import Path
@@ -20,6 +21,8 @@ from e25_24.thumb import bl
 BASE = 0x43541000
 SIZE = 11_427_236
 AJ = cfw.POR_ID["lut"]
+SD_RANURAS = 6                                                             # G89: Off + 6 ranuras = 7 opciones (tope medido de la fila, G36)
+AJ_SD = dataclasses.replace(AJ, opciones=(("Off", 0),) + tuple((f"LUT {i}", i) for i in range(1, SD_RANURAS + 1)))
 HOOKS = ((0x4381D2FE, bytes.fromhex("d5f8c430"), "r3", "r0, r1, r2"),     # ldr.w r3,[r5,#0xc4]
          (0x4381D372, bytes.fromhex("d5f8c410"), "r1", "r0, r2, r3"))     # ldr.w r1,[r5,#0xc4]
 HOOK_MAQ = (0x437A2502, bytes.fromhex("87680368"))                         # ldr r7,[r0,#8]; ldr r3,[r0] al entrar la máquina «[LUT] Write Cnt» 0x437a24fc (FN-LUT-2)
@@ -36,20 +39,24 @@ def tablas_por_defecto() -> list[bytes]:
     return out
 
 
-def entradas() -> list[int]:
+MODO_SD = False                                                            # G89: los builds (build_fn_lut/build_cfw_objetivos) lo activan con sd=True; `apply_bytes` lo usa por defecto
+
+
+def entradas(sd: bool = False) -> list[int]:
     """Direcciones de f0/f1 (SA/r3, MOV/r1)."""
-    return D.lut_codigo(AJ, HOOKS)[1]
+    return D.lut_codigo(AJ_SD if sd else AJ, HOOKS, sd)[1]
 
 
-def cueva_maquina() -> tuple[int, list[tuple[int, bytes]]]:
+def cueva_maquina(sd: bool = False) -> tuple[int, list[tuple[int, bytes]]]:
     """(entrada, escrituras) de la cueva del gancho de la máquina; va tras el código de la LUT en la zona A."""
-    cueva, _ = D.lut_codigo(AJ, HOOKS)
+    cueva, _ = D.lut_codigo(AJ_SD if sd else AJ, HOOKS, sd)
     fin = max(a + len(b) for a, b in cueva)
-    esc, entrada = D.lut_maquina_codigo(AJ, (fin + 3) & ~3)
+    esc, entrada = D.lut_maquina_codigo(AJ_SD if sd else AJ, (fin + 3) & ~3)
     return entrada, esc
 
 
-def apply_bytes(data: bytes, tablas: list[bytes] | None = None) -> bytes:
+def apply_bytes(data: bytes, tablas: list[bytes] | None = None, sd: bool | None = None) -> bytes:
+    sd = MODO_SD if sd is None else sd
     if len(data) != SIZE:
         raise ValueError("tamaño inesperado")
     tablas = tablas or tablas_por_defecto()
@@ -58,10 +65,10 @@ def apply_bytes(data: bytes, tablas: list[bytes] | None = None) -> bytes:
         if data[va - BASE:va - BASE + 4] != old:
             raise ValueError(f"gancho {va:#x} distinto del original")
     perm = list(struct.unpack_from("<405H", data, D.PERM - BASE))
-    cueva, ent = D.lut_codigo(AJ, HOOKS)
-    esc = list(cueva) + [(D.LUT_TABLAS, b"".join(D.empaqueta_21(t, perm) for t in tablas)), (D.LUT_CELDA, bytes(4))]
+    cueva, ent = D.lut_codigo(AJ_SD if sd else AJ, HOOKS, sd)
+    esc = list(cueva) + [(D.LUT_TABLAS, b"".join(D.empaqueta_21(t, perm) for t in tablas)), (D.LUT_CELDA, bytes(8 if sd else 4))]
     D.comprobar_zonas([(a, a + len(b)) for a, b in esc])
-    entrada, maq = cueva_maquina()
+    entrada, maq = cueva_maquina(sd)
     if data[HOOK_MAQ[0] - BASE:HOOK_MAQ[0] - BASE + 4] != HOOK_MAQ[1]:
         raise ValueError(f"gancho {HOOK_MAQ[0]:#x} distinto del original")
     esc += maq

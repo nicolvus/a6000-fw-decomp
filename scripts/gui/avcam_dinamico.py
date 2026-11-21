@@ -244,6 +244,104 @@ fallo:
     pop {{r4-r8, pc}}
 """
 
+BK_ID, BK_TAM, BK_MAGIC, SD_RANURAS = 0x150005, 16384, 0x5354554C, 6
+
+
+def lut_unpack_sd_asm(celda: int, tablas: int) -> str:
+    """Como `lut_unpack_asm` pero la tabla k sale del blob de Backup (id `BK_ID`, escrito por el userland desde la SD, G89) si su ranura es válida; si no, de las 3 tablas del `.dat` (k ≤ 3) o 0 (fábrica).
+    Celda de 8 B: [+0] búfer del ISP (0x654 B), [+4] búfer de lectura del blob (16 KB, una sola reserva); si falta memoria para el blob se usa el `.dat`."""
+    c = lambda r, v: f"movw {r}, #{v & 0xFFFF:#x}\n movt {r}, #{v >> 16:#x}\n"
+    return f"""
+    push {{r4-r8, lr}}
+    mov r4, r0
+    {c('r5', celda)}
+    ldr r6, [r5]
+    cmp r6, #0
+    bne.w tengo
+    movw r0, #{TAM:#x}
+    {c('r1', MALLOC | 1)}
+    blx r1
+    cmp r0, #0
+    beq.w fallo
+    str r0, [r5]
+    mov r6, r0
+tengo:
+    ldr r8, [r5, #4]
+    cmp r8, #0
+    bne.w leer
+    movw r0, #{BK_TAM}
+    {c('r1', MALLOC | 1)}
+    blx r1
+    cmp r0, #0
+    beq.w sin_blob
+    str r0, [r5, #4]
+    mov r8, r0
+leer:
+    {c('r0', BK_ID)}
+    mov r1, r8
+    bl #{cfw.BACKUP_READ:#x}
+    ldr r0, [r8]
+    {c('r1', BK_MAGIC)}
+    cmp r0, r1
+    bne.w sin_blob
+    subs r2, r4, #1
+    cmp r2, #{SD_RANURAS}
+    bhs.w sin_blob
+    add r0, r8, r2
+    ldrb r0, [r0, #8]
+    cmp r0, #1
+    bne.w sin_blob
+    movw r1, #{LUT_BYTES}
+    mul r4, r2, r1
+    add r4, r8
+    adds r4, #16
+    b.w convierte
+sin_blob:
+    subs r4, r4, #1
+    cmp r4, #3
+    bhs.w fallo
+    movw r1, #{LUT_BYTES}
+    mul r4, r4, r1
+    {c('r1', tablas)}
+    adds r4, r4, r1
+convierte:
+    {c('r7', PERM)}
+    movs r5, #0
+    movs r3, #0
+""" + _LUT_BUCLE
+
+
+_LUT_BUCLE = """bucle:
+    lsrs r0, r5, #3
+    adds r0, r4, r0
+    ldrb r1, [r0]
+    ldrb r2, [r0, #1]
+    orr.w r1, r1, r2, lsl #8
+    ldrb r2, [r0, #2]
+    orr.w r1, r1, r2, lsl #16
+    ldrb r2, [r0, #3]
+    orr.w r1, r1, r2, lsl #24
+    and r2, r5, #7
+    lsrs r1, r1, r2
+    and r2, r1, #0x7f
+    ubfx r0, r1, #7, #7
+    orr.w r2, r2, r0, lsl #8
+    ubfx r0, r1, #14, #7
+    orr.w r2, r2, r0, lsl #16
+    ldrh.w r0, [r7, r3, lsl #1]
+    str.w r2, [r6, r0, lsl #2]
+    adds r5, #21
+    adds r3, #1
+    movw r1, #405
+    cmp r3, r1
+    blo.w bucle
+    mov r0, r6
+    pop {r4-r8, pc}
+fallo:
+    movs r0, #0
+    pop {r4-r8, pc}
+"""
+
 
 # ---------- construcción ----------
 def _ens(src: str, va: int) -> bytes:
@@ -268,10 +366,11 @@ def hlg_parches(a6300: bytes, tab_a6300: int, slog3: int) -> list[tuple[int, byt
     return [(a, bytes(datos) + cueva, "dato cueva HLG (zona A)"), (HOOK_HLG[0], bl(HOOK_HLG[0], code), "gancho HLG init")]
 
 
-def lut_codigo(ajuste, hooks) -> tuple[list[tuple[int, bytes]], list[int]]:
-    """(escrituras (va, bytes) de la cueva de la LUT, entradas f0/f1). `hooks` = (va, original, registro destino, registros a guardar) de `lut_patch`."""
-    a, out = LUT_CODE + 4, []
-    unp = _ens(lut_unpack_asm(LUT_CELDA, LUT_TABLAS), a)
+def lut_codigo(ajuste, hooks, sd: bool = False) -> tuple[list[tuple[int, bytes]], list[int]]:
+    """(escrituras (va, bytes) de la cueva de la LUT, entradas f0/f1). `hooks` = (va, original, registro destino, registros a guardar) de `lut_patch`. `sd`: tablas desde el Backup (G89, celda de 8 B)."""
+    ini = LUT_CODE + (8 if sd else 4)
+    a, out = ini, []
+    unp = _ens((lut_unpack_sd_asm if sd else lut_unpack_asm)(LUT_CELDA, LUT_TABLAS), a)
     out.append((a, unp))
     a = (a + len(unp) + 3) & ~3
     entradas = []
@@ -281,7 +380,7 @@ def lut_codigo(ajuste, hooks) -> tuple[list[tuple[int, bytes]], list[int]]:
     {cfw.leer_asm(ajuste, f"t{k}")}
     cmp r0, #0
     beq.w o{k}
-    bl #{LUT_CODE + 4:#x}
+    bl #{ini:#x}
     cmp r0, #0
     beq.w o{k}
     mov {dst}, r0

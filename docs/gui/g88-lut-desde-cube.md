@@ -1,5 +1,7 @@
 # G88 — LUTs propios desde `.cube` (17³, 32³, 33³, 64³) y por qué la cámara no los lee de la SD (20-11-2026)
 
+> **Superado en la lectura de SD por [G89](g89-lut-sd-en-camara.md)** (20-11-2026): el userland (`Fsys_*` + Backup) sí permite leer los `.cube` en la cámara; §1 vale solo para `av-cam`.
+
 Petición: `.cube` en la SD, nombre en la lista de «LUT» (G86) y cambio en vivo. Resultado: **ruta PC completa y verificada; lectura en cámara NO implementada** (§1). Código `scripts/lut/sd_lut.py`, `build_fn_lut.py --cubes CARPETA`; tests `tests/test_g88_sd_lut.py` (11). Sin CFW construido, sin cámara.
 
 ## 1. Lectura de la SD desde la cámara: descartada con evidencia

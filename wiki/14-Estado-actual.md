@@ -13,7 +13,7 @@
 
 **Menú Fn «LUT» (G86, 20-11-2026):** hecho offline: franja Fn (hijo 39 de la raíz Fn, valor `0x26`, 4 looks, mismo pid/Backup que el ajuste CFW), «LUT» en las 12 listas de asignación (`…CustomFunctionNType08`, 27 nodos; valor guardado = `tabla[0xf]` en `viewUnified2.so`) y encadenado en `build_cfw_objetivos` (solo ficheros, sin CFW). FN-LUT-2 cerrado offline: gancho en la máquina de estados `0x437a24fc` que rearma la escritura de la LUT en la misma pasada al girar la rueda (Unicorn con la máquina real, secuencia 1,2,3,1,Off). Abiertos en cámara: FN-LUT-1/5/6. Sin cámara ni arnés.
 
-**LUT desde `.cube` (G88, 20-11-2026):** conversión en el PC (17³/32³/33³/64³ → tablas ISP 5×9×9, ≤3, nombres del fichero, ΔE 0,4–0,7); la cámara no lee la SD (LUT-SD-1).
+**LUT desde `.cube` (G88/G89, 20-11-2026):** G88 convierte en el PC (17³/32³/33³/64³ → 5×9×9, ≤3, ΔE 0,4–0,7); G89 (LUT-SD-1 hecho offline) lee `LUT/LUT1…6.cube` de la SD en la cámara (hilo del userland en `viewUnified2.so` → Backup `0x150005` → `av-cam`), ranuras fijas «LUT 1…6», verificado en Unicorn; falta cámara (LUT-SD-2).
 
 **Último cierre:** E26 R82 (07-11-2026) — parche EFCS v3: la tabla de compensación `c(T)` de Darwin se integra reescribiendo en sitio el prefijo `0x18d6e..0x18e0f` (mismo tamaño, sin hueco; equivalencia verificada con tres métodos en emulación), con volcados NVRAM `B+0x86`/`G+0x42` listos sin escribir; nada se instaló ni se tocó la cámara ([R82](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r82-parche-efcs-v3.md)). Detalle por informe en [knowledge/CURRENT.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/knowledge/CURRENT.md).
 

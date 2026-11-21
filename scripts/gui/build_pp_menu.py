@@ -18,6 +18,7 @@ from dataclasses import replace
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lut"))
 import add_menu_entry as A
 import build_pp_gamma_menu as G
 import fn_lut_listas
@@ -35,6 +36,7 @@ RES = 0x0204_0000
 
 FN_TREES: list = []      # ajustes que solo se cuelgan del menú Fn (nodo suelto, sin entrada en las páginas del menú): sus VA relativas quedan en FN_DELTAS (fn_lut_menu.py)
 FN_DELTAS: list = []
+SD_USERLAND = False      # G89: añade el userland de lectura de `.cube` de la SD a viewUnified2.so (lut_sd_vu2.py)
 EXTRA_TREES: list = []   # carpetas adicionales (p. ej. «CFW» de build_cfw_objetivos): sus ajustes ya están en M.SETTINGS/M.PIDS; cada una entra como entrada propia del menú
 
 
@@ -161,7 +163,11 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
     if silent:
         vu2 = silent_descriptor.patch(vu2, silent_descriptor.TABLA_D_VU2, silent_descriptor.DESC_EFCS_VU2)
     vu2 = pid_space.patch(vu2, ajustes, gris_efcs=silent)
-    emit("lib/viewUnified2.so", fn_lut_listas.patch_vu2(vu2) if FN_TREES else vu2)
+    vu2 = fn_lut_listas.patch_vu2(vu2) if FN_TREES else vu2
+    if SD_USERLAND:                                  # G89: hilo del userland que lee los .cube de la SD (DT_INIT → lutsd_hilo), independiente de los demás parches
+        import lut_sd_vu2
+        vu2 = lut_sd_vu2.patch(vu2)
+    emit("lib/viewUnified2.so", vu2)
     if FN_TREES:                                     # G86: hijo 39 de la raíz Fn + valor 0x26 (el nodo LUT está en FN_DELTAS[0], relativo a RootAelWShutter)
         orig = (a / "lib/CautionConfig.so").read_bytes()
         emit("lib/viewUnified4.so", fn_lut_menu.patch_vu4((a / "lib/viewUnified4.so").read_bytes(), fn_lut_menu.delta_respecto_memoryrecall(orig, FN_DELTAS[0])))   # G30: con Silent, EFCS en gris cuando Silent está On

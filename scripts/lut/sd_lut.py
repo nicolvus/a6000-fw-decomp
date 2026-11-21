@@ -59,3 +59,9 @@ if __name__ == "__main__":
     tabs, nom, de = convierte(lee_cubes(Path(sys.argv[1])))
     for n, (m, p) in zip(nom, de):
         print(f"{n:12s} ΔE2000 medio {m:.2f} p95 {p:.2f}")
+
+
+def ajustes_sd() -> tuple:
+    """G89: `AJUSTES` con «LUT» = Off + 6 ranuras (`LUT 1…6`): el contenido sale de `X:/LUT/LUT<n>.cube` en la SD (userland), no del `.dat`."""
+    import lut_patch
+    return tuple(lut_patch.AJ_SD if a.id == "lut" else a for a in cfw_ajustes.AJUSTES)
