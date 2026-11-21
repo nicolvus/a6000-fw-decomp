@@ -273,6 +273,10 @@ def carga(avcam: Path, bkp: Path, idt: Path | None = None) -> Vm:
     objetivo.instala(vm)
     import p2s
     p2s.instala(vm)
+    import rc
+    rc.instala(vm)
+    import spica
+    spica.instala(vm)
     import reloj
     reloj.instala(vm)
     regiones = list(uc.mem_regions())

@@ -13,13 +13,13 @@ import time
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-import liro_vm as L  # noqa: E402
-import puente  # noqa: E402
+import liro_vm as L
+import puente
 
 RELOJ = sys.argv[2] == "reloj"  # con AVCAM_RELOJ=1 el modelo de reloj (reloj.py) pone el Master; aquí no se inyecta nada
 frames, t_master, t_fin = 0 if RELOJ else int(sys.argv[2]), float(sys.argv[3]), float(sys.argv[4])
 vm, _ = puente.arranca(None)
-rd = lambda a, n=4: int.from_bytes(bytes(vm.uc.mem_read(a, n)), "little")  # noqa: E731
+rd = lambda a, n=4: int.from_bytes(bytes(vm.uc.mem_read(a, n)), "little")
 
 
 def entrega(q: int, cab: bytes, datos: bytes) -> None:
@@ -63,3 +63,4 @@ print("t", round(vm.t), "[0x43ede338]", hex(rd(0x43EDE338)), "mod0", hex(rd(0x43
 c = collections.Counter(hex(int.from_bytes(bytes.fromhex(x[4][4:8]), "little")) for x in vm.salida_ext if x[0] > t_master and x[3] == 0x20002)
 print("respuestas a ObjCamera tras el Master:", sorted(c.items()))
 print("\n".join([x for x in vm.log if "reloj" in x or "Master" in x or "targetVfc" in x][:6]))
+print("SpicaApiExpandParam error:", sum("SpicaApiExpandParam" in x for x in vm.log), "Execute error:", sum("SpicaApiExecute" in x for x in vm.log))
