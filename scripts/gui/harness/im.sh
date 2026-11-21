@@ -34,7 +34,9 @@ fi
 imexit_diag() {  # busybox grep no tiene -A: awk imprime la línea que casa y las N siguientes
   ctx() { awk -v n="$2" -v pre="$3" 'c>0{print pre $0; c--} $0~p{print pre $0; c=n}' p="$1" ; }
   ctx "SIGLOG" 1 "IMSIGLOG " < /tmp/$1.log | head -30 | cut -c1-150
-  ctx "pila .sig (11|7|4|6) " ${IMSEGVN:-45} "IMSEGV " < /tmp/$1.log | head -${IMSEGVN:-45} | cut -c1-150
+  ctx "pila .sig (11|7|4|6|10) " ${IMSEGVN:-45} "IMSEGV " < /tmp/$1.log | head -${IMSEGVN:-45} | cut -c1-150
+  [ -n "$IMPILAS" ] && grep -a "pila (sig 10\|\[shim\]   [0-9a-f]\{8\} " /tmp/$1.log | tail -$IMPILAS | cut -c1-120 | sed "s/^/IMPILA /"  # STACKALL: solo las pilas (sig 10) y sus marcos
+  [ -n "$IMGREP" ] && grep -aE "${IMGREPRE:-act_cmp|ON_CMP|APP_ON|Root Draw|ObjHandover|00F_ObjCntMgr|FlashLib|DVDFlash|go active|RSRC tipo|IsAllowed|ObjMsg}" /tmp/$1.log | tail -${IMGREPN:-80} | cut -c1-140 | sed "s/^/IMGREP /"  # IMGREP=1: patrón por omisión (el | no cabe en SHIMENV); con STACKEXIT vuelca el log del guest sin WLALL
   grep -a "pthread_create" /tmp/$1.log | head -${IMTHRN:-30} | cut -c1-150 | sed "s/^/IMTHR /"
   grep -av "sync5\|SYNCTRACE\|mpTextHeap\|sin callback" /tmp/$1.log | grep -a "glibc\|ABORT\|umount\|system(\|LOG  *155\|ERROR\|rror\|assert" | tail -${IMLASTN:-20} | cut -c1-170 | sed "s/^/IMLAST /"; tail -6 /tmp/$1.log | cut -c1-150 | sed "s/^/IMTAIL /"; dmesg | ctx "potentially" 16 "IMDMESG " | tail -${IMDMN:-18} | cut -c1-150; }
 run_im() { ( LD_PRELOAD=/usr/lib/sonyshim.so chroot /cam /usr/bin/im.elf $1 > /tmp/$2.log 2>&1; r=$?; echo "EXIT=$r" >> /tmp/$2.log; [ -n "$LIVE" ] && { [ "$r" != 0 ] && imexit_diag $2; echo "IMEXIT $2 $r"; } ) & }

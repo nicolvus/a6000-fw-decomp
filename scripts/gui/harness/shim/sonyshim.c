@@ -110,11 +110,12 @@ static unsigned sd_sectors(void) { const char *e = getenv("SDSECT"); unsigned v 
 /* NFLASH4 (§5.43, opt-in): /dev/nflasha4 (y su variante char /dev/cnflasha4) = copia escribible de /usr/share/nflasha4.img (volcado real de la partición MPR); fd real, no inerte. */
 static int nf_name(const char *p) { return getenv("NFLASH4") && (!strcmp(p, "/dev/nflasha4") || !strcmp(p, "/dev/cnflasha4")); }
 static int nf_fd(int fd) { return fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && nf_name(devname[fd]); }
+static void stack_all_start(void);
 static int fake_open(const char *p, int fl, mode_t m, int is64) {
     if (getenv("NFLASH4") && !strcmp(p, "/sys/block/nflasha0/nflasha0p4/start")) {  /* inicio de la partición en sectores (DFA::GetDeviceInfo) */
         char t[16]; nflash_start_text(t, sizeof t); int w = real_open_call("/tmp/nf4start", O_RDWR | O_CREAT | O_TRUNC, 0666, is64);
         if (w >= 0) { if (write(w, t, strlen(t)) < 0) { /* sin sitio: se devuelve el fichero vacío */ } close(w); }
-        int r = real_open_call("/tmp/nf4start", O_RDONLY, 0, is64); LOG("NFLASH4 open(%s) -> %d (%s)", p, r, t); return r;
+        int r = real_open_call("/tmp/nf4start", O_RDONLY, 0, is64); LOG("NFLASH4 open(%s) -> %d (%s)", p, r, t); stack_all_start(); return r;
     }
     if (strncmp(p, "/dev/", 5) != 0 && strncmp(p, "/proc/self", 10) != 0 && strncmp(p, "/tmp/", 5) != 0) {
         int r = real_open_call(p, fl, m, is64); LOG("open(%s) -> %d", p, r); return r;
@@ -909,6 +910,15 @@ static void *cpu_watch(void *x) {
         closedir(d); }
     return 0;
 }
+/* STACKALL=N: N s después de abrir el inicio de nflasha4 manda SIGUSR1 a todos los hilos (pila de cada uno; diagnóstico de bloqueos, T103) */
+static void *stack_all(void *x) {
+    (void)x; struct timespec t = { (time_t)num(getenv("STACKALL")), 0 }; syscall(SYS_nanosleep, &t, 0);
+    DIR *d = opendir("/proc/self/task"); if (!d) return 0; struct dirent *e;
+    while ((e = readdir(d))) { long tid = num(e->d_name); if (tid > 0) { syscall(SYS_tgkill, getpid(), (int)tid, SIGUSR1); struct timespec w = { 0, 300000000 }; syscall(SYS_nanosleep, &w, 0); } }
+    closedir(d); { struct timespec w = { 3, 0 }; syscall(SYS_nanosleep, &w, 0); } if (getenv("STACKEXIT")) syscall(SYS_exit_group, 77);  /* STACKEXIT=1: al terminar mata im.elf para que im.sh vuelque las pilas a consola.log (el canal de log puede estar bloqueado) */
+    return 0;
+}
+static void stack_all_start(void) { static int ya; if (getenv("STACKALL") && !ya) { ya = 1; pthread_t th; pthread_create(&th, 0, stack_all, 0); } }
 static void *wl_watch(void *x) {
     (void)x; for (;;) { usleep(250000);
         for (int i = 0; i < 128; i++) {
