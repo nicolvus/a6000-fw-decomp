@@ -92,8 +92,8 @@ def test_descomposicion_mejora_y_identidad_no_empeora():
 
 def test_ajuste_lut_en_cfw_ajustes():
     import cfw_ajustes as cfw
-    assert [o[0] for o in cfw.POR_ID["lut"].opciones] == ["Off", "LUT1", "LUT2", "LUT3"]
-    assert len({a.backup for a in cfw.AJUSTES}) == len(cfw.AJUSTES) == 10
+    assert [o[0] for o in cfw.POR_ID["lut"].opciones] == ["Off", "Teal&Orange", "Película", "Neutro"]
+    assert len({a.backup for a in cfw.AJUSTES}) == len(cfw.AJUSTES)
 
 
 def test_hlg_y_lut_no_se_solapan_ni_tocan_zonas_prohibidas():

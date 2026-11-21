@@ -31,6 +31,8 @@ import uxc_strings
 RES = 0x0204_0000
 
 
+FN_TREES: list = []      # ajustes que solo se cuelgan del menú Fn (nodo suelto, sin entrada en las páginas del menú): sus VA relativas quedan en FN_DELTAS (fn_lut_menu.py)
+FN_DELTAS: list = []
 EXTRA_TREES: list = []   # carpetas adicionales (p. ej. «CFW» de build_cfw_objetivos): sus ajustes ya están en M.SETTINGS/M.PIDS; cada una entra como entrada propia del menú
 
 
@@ -54,7 +56,7 @@ def textos(tree=M.TREE, settings=M.SETTINGS):
                     walk(c)
 
     walk(tree)
-    for extra in EXTRA_TREES:
+    for extra in (*EXTRA_TREES, *FN_TREES):
         walk(extra)
     return out
 
@@ -95,7 +97,7 @@ def patch_caution(data: bytes, ids: dict):
 
     def run(base):
         seg = G.Segmento(base)
-        return seg, [build_nodes(seg, vt, ids, t, M.SETTINGS, M.PIDS) for t in (M.TREE, *EXTRA_TREES)]
+        return seg, [build_nodes(seg, vt, ids, t, M.SETTINGS, M.PIDS) for t in (M.TREE, *EXTRA_TREES, *FN_TREES)]
 
     n_rel = len(run(new_va)[0].rels)                      # el nº de relocaciones no depende de la base
     seg, carpetas = run(new_va + (rel_sz + 8 * n_rel + 15) // 16 * 16)
@@ -118,7 +120,8 @@ def patch_caution(data: bytes, ids: dict):
             struct.pack_into("<I", res, doff + 8 * i + 4, new_va)
         if t == 0x12:
             struct.pack_into("<I", res, doff + 8 * i + 4, len(rel_new))
-    deltas = [c - ref for c in carpetas]
+    deltas = [c - ref for c in carpetas[:1 + len(EXTRA_TREES)]]
+    FN_DELTAS[:] = [c - ref for c in carpetas[1 + len(EXTRA_TREES):]]
     return bytes(res), deltas[0] if len(deltas) == 1 else deltas
 
 

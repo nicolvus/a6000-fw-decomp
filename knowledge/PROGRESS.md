@@ -706,3 +706,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 20-11-2026 G75 T58: DRP llega a av-cam (0x4016 DRO, 0x4055 sesgo; tabla libObj→CamMgr decodificada); sesgo en pasos de 1/2 EV en arnés (DRP-F3); S2/RelLock sin avance.
 - 20-11-2026 G75 T59: LRM arranque sí estaba (artefacto de grep sin -a); 2.ª S1 funciona (8/8); 0x755b/0x759f = CMP; paso de EV: sin cambio de cueva (DRP-F3 hecho, DRP-F4 abierto); S2 sin id de CamMgr (E2E-3 sigue en T13).
 - 20-11-2026 G75 T60: DRP-F4 (paso de EV 1/2 por NVRAM 0x107076c, cueva -2/-4 con test); E2E-15 REC >=20 s virtuales sin respuesta a 0x3000/0x3024 (falta V/VD de modo video).
+- 20-11-2026 G86 menú Fn «LUT»: franja Fn = raíz de 38 hijos + `tbh` valor→SRNum (viewUnified4 `0xdd078`); hijo 39 + valor `0x26` parcheados (fn_lut_menu.py, 5 tests); lista de asignación (CautionConfig ×12) y disparo en caliente pendientes (G12-A2, FN-LUT-2).
