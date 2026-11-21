@@ -28,7 +28,7 @@ solo cuando el secuenciador pide el cambio (≈13 s) y un objetivo pasado deja X
         self.vm, self.tramas, self.visto, self.registrado, self.ultimo = vm, tramas, 0, False, None
         vm.fuentes.append(self)
 
-    def avanza(self, vm) -> None:  # noqa: ANN001
+    def avanza(self, vm) -> None:
         import liro_vm as L
         ext = vm.salida_ext
         for _t, _tarea, _api, q, datos, _cab in ext[self.visto:]:
@@ -50,7 +50,7 @@ solo cuando el secuenciador pide el cambio (≈13 s) y un objetivo pasado deja X
         vm.log.append(f"{vm.t:9.1f} reloj (NO_VERIFICADO): Master targetVfc={objetivo:#x} (VFC {vfc})")
 
 
-def instala(vm) -> Reloj | None:  # noqa: ANN001
+def instala(vm) -> Reloj | None:
     if os.environ.get("AVCAM_RELOJ", "0") in ("", "0"):
         return None
     r = Reloj(vm, int(os.environ.get("AVCAM_RELOJ_TRAMAS", "4")))
