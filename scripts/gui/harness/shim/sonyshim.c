@@ -1617,6 +1617,16 @@ int umount(const char *t) {
     LOG("umount(%s) -> %d", t ? t : "(null)", r); return r;
 }
 int umount2(const char *t, int f) { (void)f; return umount(t); }
+/* ANDROIDFS=1: res_load_backup de libSyncAndroid monta /dev/ram8 y /dev/ram9 en data/data y data/system; si mount falla (-1) la biblioteca llama a abort() (T101, MEDIDO: «mount_fs: ERROR: Mount data/data(-1)» y ABORT).
+ * shortcut: mount «bueno» sin montar nada; mejorar si se emula el almacén de Android. */
+int mount(const char *src, const char *t, const char *fs, unsigned long fl, const void *d) {
+    static int (*mt)(const char *, const char *, const char *, unsigned long, const void *);
+    if (!mt) mt = nextsym("mount");
+    int r;
+    if (getenv("ANDROIDFS") && t && (strstr(t, "/android") || strstr(t, "data/data") || strstr(t, "data/system"))) r = 0;
+    else r = mt(src, t, fs, fl, d);
+    LOG("mount(%s, %s, %s) -> %d", src ? src : "(null)", t ? t : "(null)", fs ? fs : "(null)", r); return r;
+}
 int system(const char *c) {
     static int (*sy)(const char *);
     if (!sy) sy = nextsym("system");

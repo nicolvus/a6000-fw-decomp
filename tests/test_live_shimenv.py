@@ -114,5 +114,5 @@ def test_androidfs_es_opt_in_y_cubre_umount_y_arbol_android():
     """T98: sin ANDROIDFS el umount de libSyncAndroid (fase inact de 155) falla y aborta im.elf; el atajo es opt-in y el arnés por omisión no lo trae."""
     assert "ANDROIDFS" not in variables(live.construye_shimenv())
     h = Path(live.__file__).parent
-    assert 'getenv("ANDROIDFS")' in (h / "shim/sonyshim.c").read_text() and "int umount(" in (h / "shim/sonyshim.c").read_text()
+    assert 'getenv("ANDROIDFS")' in (h / "shim/sonyshim.c").read_text() and "int umount(" in (h / "shim/sonyshim.c").read_text() and "int mount(" in (h / "shim/sonyshim.c").read_text()
     assert "/cam/android/data/backup/bk1.bak" in (h / "im.sh").read_text()
