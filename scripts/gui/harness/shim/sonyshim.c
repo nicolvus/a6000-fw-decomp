@@ -57,7 +57,7 @@ static char devname[MAXFD][32];
 
 #define E_TMOUT (-1022)
 static void live_msg(const char *, const char *, int);
-static void avq_flush(unsigned q); static void avq_rec(void *p, unsigned sz); static int avq_q(unsigned q); static void avq_forward(unsigned q, const unsigned char *m);
+static void hdr_start(void); static void *avhdr; static void avq_flush(unsigned q); static void avq_rec(void *p, unsigned sz); static int avq_q(unsigned q); static void avq_forward(unsigned q, const unsigned char *m);
 static void menu_track(const char *); static void logmark(const char *); static int wl_all(void); static void wl_logfwd(const char *, ...); static void wl_live(const char *, int); static void wl_key(unsigned); static int wl_on(void); static double wl_ts(void); static const char *tname(int, char *, size_t);
 static int wl_begin(const char *k, unsigned a, int tmo, void *ra); static void wl_end(int slot);  /* WAITLOG=ms: registro de esperas largas (ver abajo) */
 static volatile double log_ultimo;  /* hora (CLOCK_MONOTONIC) de la última línea del registro de etapas: ver espera_calma */
@@ -1877,6 +1877,25 @@ static void avq_inject(const char *ln) {  /* «Q qid cabecera_hex(12 B) cuerpo_h
     if (avq_np < 128) { avq_pend[avq_np].q = q; avq_pend[avq_np++].txt = c; LOG("AVQ ← %#x sin receptor todavía (pendiente, %u B)", q, n); } else { LOG("AVQ pendientes llenos: %#x perdido", q); free(c); }
     pthread_mutex_unlock(&avq_pm);
 }
+/* T85 (E2E-3): encabezado de 0x40 B del anillo de av-cam (phys 0x82d90000), que libObj mapea de /dev/mem; en la cámara es RAM compartida con av-cam. Aquí cada lado
+ * tiene su copia: libObj escribe [4],[8],[c],[0x3c] (índices) → «AVH» al anfitrión (LIRO VM); av-cam escribe el resto ([0]=0x100…) → línea «H» → aquí.
+ * shortcut: sondeo cada 20 ms (no hay trampa de escritura) y solo el encabezado, no las entradas del anillo; subir a trampa/compartición si av-cam lee entradas. */
+static const int hdr_lo[4] = {1, 2, 3, 15};
+static unsigned *hdr_p(void) { return (unsigned *)avhdr; }  /* no phys2p: el área de /dev/stream 0x80000000 cubre esa dirección y se encuentra antes */
+static void *hdr_sync(void *a) {
+    unsigned last[4] = {0, 0, 0, 0}; int first = 1; (void)a;
+    for (;;) {
+        usleep(20000); unsigned *h = hdr_p(); if (!h) continue;
+        static unsigned prev[16]; if (memcmp(prev, h, sizeof prev)) { char d[200]; int q = 0; for (int w = 0; w < 16; w++) q += snprintf(d + q, sizeof d - q, "%x ", h[w]); memcpy(prev, h, sizeof prev); LOG("AVH encabezado %s", d); }  /* diagnóstico: todo el encabezado al cambiar */
+        unsigned cur[4]; int i, ch = first; for (i = 0; i < 4; i++) { cur[i] = h[hdr_lo[i]]; if (cur[i] != last[i]) ch = 1; }
+        if (ch) { char t[80]; int o = snprintf(t, sizeof t, "%x %x %x %x", cur[0], cur[1], cur[2], cur[3]); memcpy(last, cur, sizeof last); first = 0; live_msg("AVH", t, o); LOG("AVH → anfitrión %s", t); }
+    }
+}
+static void hdr_start(void) { static int ya; if (ya++) return; pthread_t th; pthread_create(&th, 0, hdr_sync, 0); pthread_detach(th); }
+static void hdr_inject(const char *hx) {  /* «H hex(0x40 B)»: los campos de av-cam; los de libObj se conservan */
+    unsigned *h = hdr_p(); if (!h || strlen(hx) < 128) return;
+    for (int i = 0; i < 16; i++) { if (i == 1 || i == 2 || i == 3 || i == 15) continue; unsigned v = 0; for (int k = 3; k >= 0; k--) v = v << 8 | avq_hex2(hx + 8 * i + 2 * k); h[i] = v; }
+}
 static void avq_flush(unsigned q) {  /* im.elf acaba de registrar/esperar en q: entrega lo que av-cam envió antes */
     if (!avq_np) return;
     pthread_mutex_lock(&avq_pm);
@@ -1957,6 +1976,7 @@ static void *live_keys(void *a) {
             if (ln[0] == 'O') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, openhot, nm); pthread_detach(th); }  /* «O vista [modo]»: viewManagerIf::openView(vista, modo) en caliente */
             if (ln[0] == 'Y') date_type = (int)hexv(ln + 2, &e);
             if (ln[0] == 'Q' && ln[1] == ' ') avq_inject(ln + 2);
+            if (ln[0] == 'H' && ln[1] == ' ') hdr_inject(ln + 2);
             if (ln[0] == 'X' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, rqhot, nm); pthread_detach(th); }
             if (ln[0] == 'P' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, peekhot, nm); pthread_detach(th); }
             if (ln[0] == 'F' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, fnhot, nm); pthread_detach(th); }
@@ -2060,7 +2080,11 @@ void *mmap(void *a, size_t l, int pr, int fl, int fd, off_t o) {
     if (!m) m = nextsym("mmap");
     if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC) {
         if (!l) l = 0x1000;  /* shortcut: len 0 no es válido; el monitor de MWF lo pide sin argumentos */
-        void *r = m(a, l, pr, (fl & ~MAP_SHARED) | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+        void *r;
+        if (o == 0x82d90000 && l == 0xc40 && !strcmp(devname[fd], "/dev/mem") && getenv("AVQ")) {  /* encabezado del anillo de av-cam (T85): libObj lo mapea varias veces y en la cámara todas las vistas son la misma RAM → un solo respaldo compartido y vistas alias (mremap con tamaño 0 duplica la página) */
+            if (!avhdr) { avhdr = m(0, 0x1000, PROT_READ | PROT_WRITE, MAP_SHARED | MAP_ANONYMOUS, -1, 0); r = avhdr; hdr_start(); }
+            else r = (void *)syscall(163, avhdr, 0, 0x1000, 1);  /* SYS_mremap, MREMAP_MAYMOVE */
+        } else r = m(a, l, pr, (fl & ~MAP_SHARED) | MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
         if (r != MAP_FAILED && nam < 64) { amaps[nam].p = r; amaps[nam].len = l; amaps[nam].off = o; strncpy(amaps[nam].dev, devname[fd], 31); nam++; }
         if (r != MAP_FAILED && !strcmp(devname[fd], "/dev/dmpgles2") && l == 0x20000) { ((unsigned *)r)[1] = 0xffffffffu; ((unsigned *)r)[5] = 2; }  /* reg +4 = cabeza de la cola de ejecución (libObj+0x6c60e0/0x6c61b0); 0xffffffff = vacía; reg +0x14 = estado de la GPU (el bucle del hilo GL, libObj+0x6c35a0/0x6c66c4, gira hasta que vale 2 = inactiva). A 0 el planificador sacaría una y otra vez el trabajo 0 de la cola */
         if (r != MAP_FAILED) gpuemu_add(devname[fd], o, r, l);

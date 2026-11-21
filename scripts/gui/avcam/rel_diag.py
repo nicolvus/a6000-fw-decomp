@@ -74,6 +74,28 @@ def registros():
     return todos
 
 
+ESC = os.environ.get("REL_ESCRIBE")  # «T_MS:dir:valor,...» (hex dir/valor): escribe 4 B en la VM al llegar a T_MS (prueba del encabezado del anillo, T85)
+pend = sorted((float(a), int(b, 16), int(c, 16)) for a, b, c in (x.split(":") for x in ESC.split(","))) if ESC else []
+
+
+def escribe_hasta():  # el tiempo es el virtual de la VM (vm.t), no el `t` del jsonl
+    while pend and pend[0][0] <= vm.t:
+        _, a, v = pend.pop(0)
+        vm.uc.mem_write(a, v.to_bytes(4, "little"))
+        eventos.append((round(vm.t, 1), "escribe!", f"[{a:#x}]={v:#x} (hdr0={rd(0x82D90000):#x})", 0))
+
+
+
+
+def f1(uc, addr, size, _):  # entrada de 0x43b04bac (factor 1): anillo, encabezado compartido y contador
+    r0, r1 = uc.reg_read(UC_ARM_REG_R0), uc.reg_read(UC_ARM_REG_R1)
+    ctl = rd(r0)
+    eventos.append((round(vm.t, 1), "factor1", f"ring={r0:#x} ctl={ctl:#x} [ctl]={[hex(rd(ctl + 4 * i)) for i in range(4)]} ring+4={rd(r0 + 4):#x} +8={rd(r0 + 8):#x} +c={rd(r0 + 0xC, 1):#x} +d={rd(r0 + 0xD, 1):#x} n={r1}", uc.reg_read(UC_ARM_REG_LR)))
+
+
+vm.uc.hook_add(UC_HOOK_CODE, f1, None, 0x43B04BAC, 0x43B04BAD)
+for _a in filter(None, os.environ.get("REL_PCS", "").split(",")):  # direcciones Thumb (hex) cuya ejecución se anota
+    vm.uc.hook_add(UC_HOOK_CODE, lambda uc, a, sz, _: eventos.append((round(vm.t, 1), "pc", f"{a:#x} r0={uc.reg_read(UC_ARM_REG_R0):#x}", uc.reg_read(UC_ARM_REG_LR))), None, int(_a, 16) & ~1, int(_a, 16) | 1)
 for r in registros():
     if "entra" not in r:
         continue
@@ -81,6 +103,7 @@ for r in registros():
         break
     vm.limite = r["t"]
     L.planifica(vm, int(os.environ.get("REL_PASO", 20_000_000)))
+    escribe_hasta()
     d = bytes.fromhex(r["datos"])
     m = vm.malloc(max(len(d), 0x40) + 12 + 0x20) + 12
     vm.uc.mem_write(m - 12, bytes.fromhex(r["cab"]))
@@ -95,6 +118,9 @@ for t, k, txt, lr in eventos:
         print(f"{t:9.1f} {k:9s} {txt} lr={lr:#x}")
     ult[(k, txt)] = t
 print("salidas a 0x30001 tras 17400:", [(round(x[0]), x[4][:12]) for x in vm.salida_ext if x[3] == 0x30001 and x[0] > 17400][:8])
+print("últimas salidas:", [(round(x[0]), hex(x[3]), str(x[4])[:24]) for x in vm.salida_ext][-12:])
+print("a 0x30001/0x3011:", [(round(x[0]), hex(x[3]), str(x[4])[:24]) for x in vm.salida_ext if x[3] in (0x30001, 0x3009) or "1130" in str(x[4])[:8]][-10:])
+print("vm.t final", round(vm.t), "salidas no-AE tras el último IsAllowed:", [(round(x[0]), hex(x[3]), str(x[4])[:20]) for x in vm.salida_ext if x[3] != 0x20002 and x[0] > 23000][:20])
 print("máscara final", hex(rd(0x43EA03EC)), "modo", hex(rd(0x43F68C92, 2)), "[0x43ede338]", hex(rd(0x43EDE338)))
 for a, t in entradas.items():
     print(f"entrada {a:#x} t={t}")

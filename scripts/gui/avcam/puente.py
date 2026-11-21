@@ -70,6 +70,10 @@ def arranca(avcam: Path | None = None) -> tuple[L.Vm, float]:
     return vm, vm.t
 
 
+HDR = 0x82D90000  # encabezado (0x40 B) del anillo de av-cam: libObj lo mapea de /dev/mem (T83/T84) y es el productor de los índices
+HDR_LIBOBJ = (1, 2, 3, 15)  # palabras que escribe libObj ([4],[8],[c],[0x3c]); el resto (p. ej. [0]=0x100) lo escribe av-cam
+
+
 class Puente:
     def __init__(self, enviar, registro: Path | None = None, ae: A.Emisor | None = None, avcam: Path | None = None, escala: float | None = None) -> None:
         """enviar(línea: bytes): manda una línea al invitado. registro: JSONL con todo lo que entra y sale (evidencia).
@@ -88,6 +92,7 @@ class Puente:
         self.vm.limite, self.t_real0, self.t_virt0 = t0, time.monotonic(), t0
         self.visto = len(self.vm.salida_ext)  # lo emitido durante el arranque se guarda aparte: solo se reenvía en un arranque en frío del invitado
         self.n_in = self.n_out = 0
+        self.hdr_env: bytes | None = None  # última copia (sin los campos de libObj) enviada al invitado
         self.t_heap = 0.0
         self.fin = threading.Event()
         self._vigila(os.environ.get("AVCAM_VIGILA", ""))
@@ -145,6 +150,12 @@ class Puente:
 
     def _saca(self) -> None:
         vm = self.vm
+        h = bytearray(vm.uc.mem_read(HDR, 0x40))
+        for i in HDR_LIBOBJ:
+            h[4 * i:4 * i + 4] = bytes(4)
+        if bytes(h) != self.hdr_env:  # av-cam → invitado: sus campos del encabezado compartido
+            self.hdr_env = bytes(h)
+            self.enviar(b"H " + h.hex().encode() + b"\n")
         nuevos, self.visto = vm.salida_ext[self.visto:], len(vm.salida_ext)
         for t, tarea, _api, q, datos, cab in nuevos:
             self._anota(sale=f"{q:#x}", tarea=tarea, cab=cab, datos=datos)
@@ -164,6 +175,15 @@ class Puente:
                 except Exception:  # noqa: BLE001 - dirección no mapeada o mal escrita: se informa, no se tumba la sesión
                     out[d] = "error"
             return {"t": round(self.vm.t, 2), "mem": out}
+
+    def cabecera_desde_invitado(self, linea: str) -> None:
+        """«w1 w2 w3 wf» (hex): los campos [4],[8],[c],[0x3c] que libObj escribió en su mapa del encabezado → memoria de la LIRO VM (los lee av-cam).
+        Pide además reenviar el encabezado entero (el shim acaba de crear su área)."""
+        with self.cerrojo:
+            for i, w in zip(HDR_LIBOBJ, linea.split()):
+                self.vm.uc.mem_write(HDR + 4 * i, int(w, 16).to_bytes(4, "little"))
+            self.hdr_env = None
+            self._anota(cabecera=linea)
 
     def desde_invitado(self, linea: str) -> None:
         """«qid tam cabecera cuerpo» → mensaje a una cola de av-cam."""

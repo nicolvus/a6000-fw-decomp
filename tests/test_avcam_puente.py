@@ -29,10 +29,11 @@ def test_av_cam_responde_peticion_dataflow(request: pytest.FixtureRequest) -> No
     pu = _puente(salida, request)
     pu.desde_invitado(" ".join(REQ))
     t0 = time.time()
-    while not salida and time.time() - t0 < 3:
+    while not any(x.startswith(b"Q ") for x in salida) and time.time() - t0 < 3:
         time.sleep(0.05)
-    assert salida, "av-cam no respondió"
-    q, cab, cuerpo = salida[0].decode().split()[1:]
+    qs = [x for x in salida if x.startswith(b"Q ")]  # (las líneas «H» llevan el encabezado del anillo)
+    assert qs, "av-cam no respondió"
+    q, cab, cuerpo = qs[0].decode().split()[1:]
     assert int(q, 16) == 0x550120                    # la cola de respuesta viaja en la petición (+0)
     assert cab.endswith("f9005700")                  # cabecera −1 = cola destino original: el receptor casa el remitente con ella
     assert cuerpo[8:16] == "a0a0a0a0" and cuerpo[40:48] == "00100080"   # dataflow: cate 0x1000, msg 0 ^ 0x8000
@@ -88,3 +89,23 @@ def test_escala_de_tiempo_ralentiza_la_vm_frente_al_reloj_real(request: pytest.F
     t0 = pu.vm.limite
     time.sleep(1.0)
     assert 150 < pu.vm.limite - t0 < 400  # ≈250 ms virtuales por s real (sin escala: ≈1000)
+
+
+def test_encabezado_del_anillo_se_comparte_con_el_invitado(request: pytest.FixtureRequest) -> None:
+    """E2E-3 (T85): libObj mapea de /dev/mem el encabezado de 0x40 B del anillo de av-cam (0x82d90000) y escribe en él los índices ([4],[8],[c],[0x3c]);
+    av-cam escribe el resto ([0]=0x100). Sin compartirlo, av-cam leía [hdr+8]=0, el factor 1 de RelLock seguía activo y S2 se rechazaba."""
+    salida: list[bytes] = []
+    pu = _puente(salida, request)
+    hdr = 0x82D90000
+    rd = lambda a: int.from_bytes(bytes(pu.vm.uc.mem_read(a, 4)), "little")  # noqa: E731
+    with pu.cerrojo:
+        pu.vm.uc.mem_write(hdr, (0x100).to_bytes(4, "little"))  # lo que av-cam escribe al abrir el anillo (≈7 s virtuales)
+        pu._avanza()
+    h = [s for s in salida if s.startswith(b"H ")]
+    assert h and int.from_bytes(bytes.fromhex(h[-1][2:].decode())[:4], "little") == 0x100  # av-cam → invitado
+    pu.cabecera_desde_invitado("ff ff ff 0")  # libObj → LIRO VM: reinicia los índices a 0xff
+    assert (rd(hdr + 4), rd(hdr + 8), rd(hdr + 0xC), rd(hdr)) == (0xFF, 0xFF, 0xFF, 0x100)
+    with pu.cerrojo:
+        salida.clear()
+        pu._avanza()
+    assert all(not s.startswith(b"H ") or bytes.fromhex(s[2:].decode())[4:16] == bytes(12) for s in salida)  # los campos de libObj no vuelven al invitado

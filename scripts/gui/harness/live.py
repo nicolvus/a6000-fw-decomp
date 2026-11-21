@@ -296,6 +296,14 @@ class Vm:
                     self.nv(buf[4:j].decode())
                     buf = buf[j + 1:]
                     continue
+                if buf.startswith(b"\x01AVH "):  # AVH w1 w2 w3 wf: campos de libObj del encabezado del anillo de av-cam (shim: hdr_sync)
+                    j = buf.find(b"\n")
+                    if j < 0:
+                        break
+                    if self.puente:
+                        self.puente.cabecera_desde_invitado(buf[5:j].decode())
+                    buf = buf[j + 1:]
+                    continue
                 if buf.startswith(b"\x01AVQ "):  # AVQ qid tam cabecera cuerpo: mensaje de im.elf a una cola de av-cam
                     j = buf.find(b"\n")
                     if j < 0:
