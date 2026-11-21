@@ -20,6 +20,8 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 import add_menu_entry as A
 import build_pp_gamma_menu as G
+import fn_lut_listas
+import fn_lut_menu
 import patch_libobj_pp
 import pid_space
 import pp_descriptors
@@ -58,6 +60,8 @@ def textos(tree=M.TREE, settings=M.SETTINGS):
     walk(tree)
     for extra in (*EXTRA_TREES, *FN_TREES):
         walk(extra)
+    if FN_TREES:
+        add(fn_lut_listas.AYUDA)
     return out
 
 
@@ -148,13 +152,19 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
         lo = patch_libobj_pp.patch_actions(lo) if acciones else lo
         emit("lib/libObj.so", patch_libobj_pp.patch_color(lo) if color_gamut else lo)   # G33-B §10: sin patch_bw, el núcleo trata B&W (pp_bw_mono_patch)
     caution, delta = patch_caution((a / "lib/CautionConfig.so").read_bytes(), ids)
+    if FN_TREES:                                     # G86-B: «LUT» elegible en las 12 ranuras Fn
+        caution = fn_lut_listas.patch_caution(caution, ids[M.SETTINGS[FN_TREES[0]].label] & 0xFFFF, ids[fn_lut_listas.AYUDA] & 0xFFFF)
     emit("lib/CautionConfig.so", caution)
     # G28: la UI usa la copia del gestor de procesos que lleva viewUnified2.so (cmn_view_processDataMgr.so no se carga) y los pids originales los usa casi todos algún nodo:
     # los ajustes de PP van en pids nuevos (espacio ampliado en pid_space.py); Silent conserva el 0x12 (descriptor propio sobre la tabla original, antes de copiarla).
     vu2 = A.patch((a / "lib/viewUnified2.so").read_bytes(), [*entradas_previas, *([delta] if isinstance(delta, int) else delta)])   # entradas_previas: p. ej. Silent (0xEB0) en el CFW completo
     if silent:
         vu2 = silent_descriptor.patch(vu2, silent_descriptor.TABLA_D_VU2, silent_descriptor.DESC_EFCS_VU2)
-    emit("lib/viewUnified2.so", pid_space.patch(vu2, ajustes, gris_efcs=silent))   # G30: con Silent, EFCS en gris cuando Silent está On
+    vu2 = pid_space.patch(vu2, ajustes, gris_efcs=silent)
+    emit("lib/viewUnified2.so", fn_lut_listas.patch_vu2(vu2) if FN_TREES else vu2)
+    if FN_TREES:                                     # G86: hijo 39 de la raíz Fn + valor 0x26 (el nodo LUT está en FN_DELTAS[0], relativo a RootAelWShutter)
+        orig = (a / "lib/CautionConfig.so").read_bytes()
+        emit("lib/viewUnified4.so", fn_lut_menu.patch_vu4((a / "lib/viewUnified4.so").read_bytes(), fn_lut_menu.delta_respecto_memoryrecall(orig, FN_DELTAS[0])))   # G30: con Silent, EFCS en gris cuando Silent está On
     en_b = uxc_strings.parse((b / "share/app/string_english.uxc").read_bytes())[2]
     inv = {}
     for rid, t in sorted(en_b.items()):

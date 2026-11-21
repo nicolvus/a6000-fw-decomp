@@ -58,7 +58,7 @@ def build_files(work: Path) -> Path:
     silent = work / "silent"
     build_silent_menu_test.main(DEV_A, DEV_B, silent, pid_silent=PID_SILENT)
     stage = work / "stage"
-    for rel in ("lib/libObj.so", "lib/CautionConfig.so", "lib/viewUnified2.so"):
+    for rel in ("lib/libObj.so", "lib/CautionConfig.so", "lib/viewUnified2.so", "lib/viewUnified4.so"):
         (stage / USR / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(orig / rel, stage / USR / rel)
     (stage / USR / "share/app").mkdir(parents=True, exist_ok=True)

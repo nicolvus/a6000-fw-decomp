@@ -7,7 +7,7 @@ Mecanismo (VERIFICADO en bytes del 3.21, ver docs/gui/g86-menu-fn-lut.md):
     (`CmnViewSettingNode` de 38 hijos, `0x1bb940`, hijos en `0x1b0d28`); el paso valor→SRNum es un `tbh` de 0x30 casos en `0xdd078`.
   * Se añade un hijo 39 (SRNum 39 = `0x27`) con el nodo «LUT» y el valor de asignación `0x26` (hasta ahora «por defecto», sin efecto) → SRNum `0x27`.
   * Sin hueco de código en alcance del `tbh`, 3 bloques contiguos de 8 B se recompactan a 4 B + un cuerpo común, lo que libera los 8 B del bloque nuevo.
-Fuera de este módulo (G12-A2): la lista de asignación de cada ranura Fn (`CautionConfig.so`, 12 nodos × 37 opciones) debe ofrecer una opción con `0xf/0x10 = 0x26`.
+Lista de asignación de las 12 ranuras y tabla opción→valor (que lleva a `0x26`): `fn_lut_listas.py` (G86-B); el valor guardado NO es el `0xf` de la opción sino `tabla[0xf]`.
 shortcut: el nodo es una copia de datos del de la carpeta CFW (mismo pid), no el mismo objeto; ambos leen/escriben el mismo Backup.
 """
 from __future__ import annotations

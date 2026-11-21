@@ -50,6 +50,7 @@ def _configurar_con_cfw(*a, **k):
         ids.append(aj.id)
     M.PIDS[:] = range(M.PIDS[0], M.PIDS[0] + len(M.SETTINGS))
     build_pp_menu.EXTRA_TREES[:] = [("folder", cfw_ajustes.CARPETA, M.paginar(ids))]
+    build_pp_menu.FN_TREES[:] = ["lut"]       # G86/G86-B: «LUT» también en el menú Fn (hijo 39 de la raíz Fn, listas de las 12 ranuras, tabla de valores)
     return r
 
 
