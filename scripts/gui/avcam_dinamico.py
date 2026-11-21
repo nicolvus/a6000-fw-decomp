@@ -301,6 +301,44 @@ o{k}:
     return out, entradas
 
 
+def lut_maquina_codigo(ajuste, inicio: int) -> tuple[list[tuple[int, bytes]], int]:
+    """FN-LUT-2: cueva del gancho de la máquina `0x437a24fc` (G86 §3): celda de 1 B (último look visto) en `inicio` y código a continuación. Al entrar la máquina (r0 = this) compara el Backup con la celda;
+    si cambió, hace lo mismo que el estado 0 de la máquina al detectar un cambio (`[obj de trabajo+0x8a0] = 1`, `[cfg+0x94] = 1`), de modo que esa misma pasada ejecuta el estado 1 (Copy3DLUT) y deja
+    `cfg[0x8c/0x90]` para el aplicador. Reproduce las dos cargas originales del gancho (`ldr r7,[r0,#8]; ldr r3,[r0]`). Devuelve (escrituras, entrada)."""
+    celda, a = inicio, inicio + 4
+    src = f"""
+    push {{r0, r1, lr}}
+    {cfw.leer_asm(ajuste, "tm")}
+    movw r1, #{celda & 0xFFFF:#x}
+    movt r1, #{celda >> 16:#x}
+    ldrb r2, [r1]
+    cmp r0, r2
+    beq.w sal
+    strb r0, [r1]
+    ldr r3, [sp]
+    cmp r3, #0
+    beq.w sal
+    ldr r2, [r3, #0xc]
+    ldr r3, [r3, #8]
+    cmp r2, #0
+    beq.w sal
+    cmp r3, #0
+    beq.w sal
+    movs r1, #1
+    strb.w r1, [r2, #0x8a0]
+    strb.w r1, [r3, #0x94]
+sal:
+    pop {{r0, r1, lr}}
+    ldr r7, [r0, #8]
+    ldr r3, [r0]
+    bx lr
+    .align 2
+"""
+    c = _ens(src, a)
+    assert a + len(c) <= ZONA_A[1], hex(a + len(c))
+    return [(celda, bytes(4)), (a, c)], a
+
+
 def comprobar_zonas(escrituras: list[tuple[int, int]]) -> None:
     """Ninguna escritura (inicio, fin) sale de las zonas verificadas ni toca las prohibidas ni se solapa con otra."""
     for lo, hi in escrituras:

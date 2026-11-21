@@ -72,7 +72,7 @@ def test_empaquetado_21_bits_sin_perdida():
 
 def test_parche_solo_toca_ganchos_y_zonas_verificadas(parcheada):
     dif = [i + P.BASE for i in range(len(IMG)) if IMG[i] != parcheada[i]]
-    assert all(D.ZONA_A[0] <= a < D.ZONA_A[1] or D.ZONA_B[0] <= a < D.ZONA_B[1] or any(h[0] <= a < h[0] + 4 for h in P.HOOKS) for a in dif)
+    assert all(D.ZONA_A[0] <= a < D.ZONA_A[1] or D.ZONA_B[0] <= a < D.ZONA_B[1] or any(h[0] <= a < h[0] + 4 for h in (*P.HOOKS, P.HOOK_MAQ)) for a in dif)
     assert not any(0x43D620D9 <= a < 0x43FA8F00 for a in dif)   # nada en la zona viva de G72
 
 

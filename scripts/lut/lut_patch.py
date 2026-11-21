@@ -22,6 +22,7 @@ SIZE = 11_427_236
 AJ = cfw.POR_ID["lut"]
 HOOKS = ((0x4381D2FE, bytes.fromhex("d5f8c430"), "r3", "r0, r1, r2"),     # ldr.w r3,[r5,#0xc4]
          (0x4381D372, bytes.fromhex("d5f8c410"), "r1", "r0, r2, r3"))     # ldr.w r1,[r5,#0xc4]
+HOOK_MAQ = (0x437A2502, bytes.fromhex("87680368"))                         # ldr r7,[r0,#8]; ldr r3,[r0] al entrar la máquina «[LUT] Write Cnt» 0x437a24fc (FN-LUT-2)
 TAM = 0x654
 FUENTES = ("teal_orange", "pelicula", "identidad")                         # LUT1…3 por defecto; `--cube` de cube_a6000 las sustituye
 
@@ -40,6 +41,14 @@ def entradas() -> list[int]:
     return D.lut_codigo(AJ, HOOKS)[1]
 
 
+def cueva_maquina() -> tuple[int, list[tuple[int, bytes]]]:
+    """(entrada, escrituras) de la cueva del gancho de la máquina; va tras el código de la LUT en la zona A."""
+    cueva, _ = D.lut_codigo(AJ, HOOKS)
+    fin = max(a + len(b) for a, b in cueva)
+    esc, entrada = D.lut_maquina_codigo(AJ, (fin + 3) & ~3)
+    return entrada, esc
+
+
 def apply_bytes(data: bytes, tablas: list[bytes] | None = None) -> bytes:
     if len(data) != SIZE:
         raise ValueError("tamaño inesperado")
@@ -52,6 +61,11 @@ def apply_bytes(data: bytes, tablas: list[bytes] | None = None) -> bytes:
     cueva, ent = D.lut_codigo(AJ, HOOKS)
     esc = list(cueva) + [(D.LUT_TABLAS, b"".join(D.empaqueta_21(t, perm) for t in tablas)), (D.LUT_CELDA, bytes(4))]
     D.comprobar_zonas([(a, a + len(b)) for a, b in esc])
+    entrada, maq = cueva_maquina()
+    if data[HOOK_MAQ[0] - BASE:HOOK_MAQ[0] - BASE + 4] != HOOK_MAQ[1]:
+        raise ValueError(f"gancho {HOOK_MAQ[0]:#x} distinto del original")
+    esc += maq
+    D.comprobar_zonas([(a, a + len(b)) for a, b in esc])
     out = bytearray(data)
     for a, b in esc:
         if any(data[a - BASE:a + len(b) - BASE]):
@@ -59,6 +73,7 @@ def apply_bytes(data: bytes, tablas: list[bytes] | None = None) -> bytes:
         out[a - BASE:a - BASE + len(b)] = b
     for (va, _, _, _), e in zip(HOOKS, ent):
         out[va - BASE:va - BASE + 4] = bl(va, e)
+    out[HOOK_MAQ[0] - BASE:HOOK_MAQ[0] - BASE + 4] = bl(HOOK_MAQ[0], entrada)
     return bytes(out)
 
 
