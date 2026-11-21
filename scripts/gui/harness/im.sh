@@ -36,7 +36,7 @@ imexit_diag() {  # busybox grep no tiene -A: awk imprime la línea que casa y la
   ctx "SIGLOG" 1 "IMSIGLOG " < /tmp/$1.log | head -30 | cut -c1-150
   ctx "pila .sig (11|7|4|6) " ${IMSEGVN:-45} "IMSEGV " < /tmp/$1.log | head -${IMSEGVN:-45} | cut -c1-150
   grep -a "pthread_create" /tmp/$1.log | head -${IMTHRN:-30} | cut -c1-150 | sed "s/^/IMTHR /"
-  tail -6 /tmp/$1.log | cut -c1-150 | sed "s/^/IMTAIL /"; dmesg | ctx "potentially" 16 "IMDMESG " | tail -${IMDMN:-18} | cut -c1-150; }
+  grep -av "sync5\|SYNCTRACE\|mpTextHeap\|sin callback" /tmp/$1.log | grep -a "glibc\|ABORT\|umount\|system(\|LOG  *155\|ERROR\|rror\|assert" | tail -${IMLASTN:-20} | cut -c1-170 | sed "s/^/IMLAST /"; tail -6 /tmp/$1.log | cut -c1-150 | sed "s/^/IMTAIL /"; dmesg | ctx "potentially" 16 "IMDMESG " | tail -${IMDMN:-18} | cut -c1-150; }
 run_im() { ( LD_PRELOAD=/usr/lib/sonyshim.so chroot /cam /usr/bin/im.elf $1 > /tmp/$2.log 2>&1; r=$?; echo "EXIT=$r" >> /tmp/$2.log; [ -n "$LIVE" ] && { [ "$r" != 0 ] && imexit_diag $2; echo "IMEXIT $2 $r"; } ) & }
 # ANDROIDFS=1 (T98, opt-in; ver el umount de sonyshim.c): árbol mínimo de /android/data que libSyncAndroid abre en inact (copias bk1/bk2 vacías)
 if [ -n "$ANDROIDFS" ]; then
