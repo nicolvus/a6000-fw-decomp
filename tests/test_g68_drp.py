@@ -75,3 +75,13 @@ def test_el_sesgo_va_como_parametro_signed_char():
     img = P.apply_bytes(P.SRC.read_bytes())
     r = P.emular(img, {C.POR_ID["dr_prior"].backup: 2})
     assert r["ctores"] == [G61.PLT_INT, 0xE1668]  # ParamStd<int>(DRO) y ParamStd<signed char>(sesgo)
+
+
+def test_el_sesgo_esta_en_pasos_de_medio_ev():
+    """G75 T60 (DRP-F4): el firmware con la NVRAM real (`0x107076c`=2 en 26 de 27 volcados) convierte el valor del sesgo con paso 1/2 EV (-5 -> -2,5 en la UI):
+    Débil = -1 EV = -2 y Fuerte = -2 EV = -4."""
+    img = P.apply_bytes(P.SRC.read_bytes())
+    B = C.POR_ID["dr_prior"].backup
+    for nivel, esperado in ((1, -2), (2, -4)):
+        m = [x for x in P.emular(img, {B: nivel}, r4=0)["msgs"] if x[0] == P.MSG_BIAS]
+        assert m and m[0][2] == esperado & 0xFFFFFFFF, m

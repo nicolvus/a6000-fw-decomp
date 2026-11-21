@@ -10,7 +10,7 @@ Objetivo «D Range Priority» (wiki 16). Solo ficheros del `.dat` (`libObj.so`, 
 ## 2. Sesgo de medición del AE (VERIFICADO estático / NO_VERIFICADO el valor)
 - **No existe** un desplazamiento interno distinto de la compensación del usuario: `libObj` solo conoce `MSGID_SET_EXPOSURE_BIAS_CMD` `0x759e` + `PARAMID_EXPOSURE_BIAS` `0x9652` (`_STEP` `0x9653`, `_SW` `0x9654`, `_NUMER/_DENOM` `0x9803/4`); el reenvío a `ObjCamera` está en `0x4c1e98` (UI → modelo) y la emisión en `0x9738b8`. Los candidatos `PARAMID_EV_ERROR` `0x95b2` y `RECOMMENDED_EXPOSURE_INDEX` `0x993e` son lecturas, no desplazamientos.
 - Por tanto el sesgo se impone **por la compensación de exposición**: el modelo/`av-cam` aplican −1/−2 EV, y la pantalla de la UI muestra el valor guardado por la UI (que este mensaje no modifica; si la UI sí lo refleja por `0x772e`, se vería «−1,0/−2,0»: no medido).
-- Codificación del valor: se emite `ParamStd<int>` = −3 / −6 (pasos de 1/3 EV con `EXPOSURE_BIAS_STEP` 1/3). **NO_VERIFICADO** (la UI usa otro tipo de parámetro, `0xe1668`, al emitirlo en `0x9738d6`): ver DRP-F2.
+- Codificación del valor: se emite `ParamStd<signed char>` = −2 / −4 (pasos de 1/2 EV: ajuste `0x107076c`=2 en 26 de 27 volcados; G75 T60, antes −3/−6 con 1/3). Verificado el paso, NO la identidad del id (sin prueba de cambio) (la UI usa otro tipo de parámetro, `0xe1668`, al emitirlo en `0x9738d6`): ver DRP-F2.
 
 ## 3. Diseño e implementación
 - Ajuste «DR Prioridad» en la carpeta «CFW» (`cfw_ajustes`, `Ajuste("dr_prior", …)`: Off 0 / Débil 1 / Fuerte 2; la carpeta pasa a 9 ajustes en 2 páginas).

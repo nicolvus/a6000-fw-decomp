@@ -705,3 +705,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 20-11-2026 G75 T57: tipo 0x4e = ajuste «AF c/obturador» (ActionSetS1AF), no S1; gancho DRP movido a 0x67c148 (pulsar S1) y sesgo 0x759e como ParamStd<signed char> (con int: PreTypeCheck ERROR); DRP-F1 PARCIAL.
 - 20-11-2026 G75 T58: DRP llega a av-cam (0x4016 DRO, 0x4055 sesgo; tabla libObj→CamMgr decodificada); sesgo en pasos de 1/2 EV en arnés (DRP-F3); S2/RelLock sin avance.
 - 20-11-2026 G75 T59: LRM arranque sí estaba (artefacto de grep sin -a); 2.ª S1 funciona (8/8); 0x755b/0x759f = CMP; paso de EV: sin cambio de cueva (DRP-F3 hecho, DRP-F4 abierto); S2 sin id de CamMgr (E2E-3 sigue en T13).
+- 20-11-2026 G75 T60: DRP-F4 (paso de EV 1/2 por NVRAM 0x107076c, cueva -2/-4 con test); E2E-15 REC >=20 s virtuales sin respuesta a 0x3000/0x3024 (falta V/VD de modo video).

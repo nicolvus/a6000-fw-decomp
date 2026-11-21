@@ -2,7 +2,7 @@
 Solo bytes de `libObj.so` del `.dat`; sin construir CFW. Gancho único: el `bl 0x67a340` de 0x67c148, al inicio del emisor de `MSGID_STILL_LOCK 0x7506` (0x67c130; r4 = 0 al pulsar a medias, 1 al soltar). G75 T57: el manejador `0x689520` (`0x75c2`, «S1 AF») NO es la semipulsación sino el ajuste «AF c/obturador» del menú.
 Con Off la cueva sale sin emitir nada y reejecuta el `bl` original (idéntico a fábrica). Con Débil/Fuerte emite, antes del AF/AE, dos mensajes a ObjCamera (objeto 8) como el AEL de g62:
   - `MSGID_SET_DRO_LEVEL_CMD 0x755a` + `PARAMID_DRO_LEVEL 0x95cb` = `VALUEID_DRO_LV3 0x117` (Débil) / `VALUEID_DRO_LV5 0x119` (Fuerte), mismos ids que `0x60dc8a`/`0x683ff0`;
-  - `MSGID_SET_EXPOSURE_BIAS_CMD 0x759e` + `PARAMID_EXPOSURE_BIAS 0x9652` = −3 / −6 (pasos de 1/3 EV: −1 / −2 EV). NO_VERIFICADO: la codificación del valor (g62 §4).
+  - `MSGID_SET_EXPOSURE_BIAS_CMD 0x759e` + `PARAMID_EXPOSURE_BIAS 0x9652` = −2 / −4 (pasos de 1/2 EV: −1 / −2 EV; G75 T60, antes −3/−6 suponiendo 1/3).
 Cueva: +0x600…+0x800 del cuerpo de la función muerta 0x2648d8 (la de g61 acaba en +0x500).
 """
 from __future__ import annotations
@@ -22,7 +22,7 @@ HOOK = (0x67C148, bytes.fromhex("fef7faf8"))                  # bl 0x67a340 (ant
 DESTINO = 0x67A340
 MSG_DRO, PARAM_DRO, DRO_LV3, DRO_LV5 = 0x755A, 0x95CB, 0x117, 0x119
 MSG_BIAS, PARAM_BIAS = 0x759E, 0x9652
-BIAS_DEBIL, BIAS_FUERTE = -3, -6
+BIAS_DEBIL, BIAS_FUERTE = -2, -4   # pasos de 1/2 EV (G75 T60): -1 / -2 EV
 PLT_CHAR = 0xE1668                                              # ParamStd<signed char>(signed char): el tipo que exige ObjCamera para 0x759e (T57)
 EXT = (*g61.EXT_AEL, PLT_CHAR)
 
@@ -180,9 +180,9 @@ def comprobar() -> None:
         r = emular(im, bk)
         assert r["msgs"] == [] and r["llego"] is not None, r
     r = emular(img, {B: 1})
-    assert r["msgs"] == [(MSG_DRO, PARAM_DRO, DRO_LV3), (MSG_BIAS, PARAM_BIAS, (-3) & 0xFFFFFFFF)], r
+    assert r["msgs"] == [(MSG_DRO, PARAM_DRO, DRO_LV3), (MSG_BIAS, PARAM_BIAS, BIAS_DEBIL & 0xFFFFFFFF)], r
     r2 = emular(img, {B: 2})
-    assert r2["msgs"] == [(MSG_DRO, PARAM_DRO, DRO_LV5), (MSG_BIAS, PARAM_BIAS, (-6) & 0xFFFFFFFF)], r2
+    assert r2["msgs"] == [(MSG_DRO, PARAM_DRO, DRO_LV5), (MSG_BIAS, PARAM_BIAS, BIAS_FUERTE & 0xFFFFFFFF)], r2
     for x in (r, r2):                                                                      # r0-r3, r4, r5, r7 y sp intactos al llegar al destino original
         assert x["llego"] == (0x111, 0x222, 0x333, 0x444) and x["regs"] == (0, 0xAAA5, 0xAAA7) and x["sp"] == x["sp0"], x
 
