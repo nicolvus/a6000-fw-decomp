@@ -171,6 +171,9 @@ static void bk_load(void) {
     bklen = sz; syscall(SYS_close, fd); LOG("bk.tbl %ld B", bklen);
 }
 static unsigned long hexv(const char *s, const char **end);
+/* T93: BOOTINFO=real usa el g_bf de upm.ko (palabras 1–5 = 0,8,2,0x170001,1; VERIFICADO en 46 volcados RAM de la cámara ya arrancada/reanudada,
+ * NO_VERIFICADO para el arranque en frío). Opt-in: contestarlo por omisión recorta el arranque (libObj→av-cam 0x30001: 44→0–14 órdenes, E2E-3 T93). */
+static const char *bootinfo_env(void) { const char *e = getenv("BOOTINFO"); return e && !strcmp(e, "real") ? "0,8,2,170001,1" : e; }
 static unsigned *bk_find(unsigned id, unsigned *len) {
     bk_load();
     { const char *e = getenv("BKSET");  /* BKSET=id_hex=valor_hex[,…]: fuerza un registro de 1–4 bytes (p. ej. 1070140=1: reloj «asentado» para ModelRoot) */
@@ -637,9 +640,9 @@ static int ioctl_in(int fd, unsigned long req, ...) {
             if (w[0] == 0x8f013a) { if (m[2] && keyiniton() && strstr((char *)m + 2, keyiniton())) keyinit_send();
               if (m[2] && tron_base && strstr((char *)m + 2, getenv("TRACEON"))) { unsigned long b = tron_base; tron_base = 0; trace_fns(b); LOG("TRACEON: trazas armadas"); } if (m[2]) { log_ultimo = wl_ts(); menu_track((char *)m + 2); LOG("LOG %s", (char *)m + 2); logmark((char *)m + 2); } else if (getenv("VERB")) { char t[200]; int k, o = 0; for (k = 0; k < 40; k++) o += snprintf(t + o, sizeof t - o, "%02x", m[k]); LOG("LOGRAW %s", t); } }
             else if (w[0] == 0x3e014d) backup_service((unsigned *)m);
-            else if (w[0] == 0x924127 && ((unsigned *)m)[0] == 0x920111 && getenv("BOOTINFO")) {  /* BOOTINFO=a,b,c,d,e (hex): respuesta de arranque (ObjHandover, libObj+0x41b158) → palabras 1–5 */
-                const char *e = getenv("BOOTINFO"); for (int k = 1; k <= 5 && *e; k++) { ((unsigned *)m)[k] = hexv(e, &e); if (*e == ',') e++; }
-                static int nb; if (nb++ < 2) LOG("BOOTINFO responde %s", getenv("BOOTINFO")); }
+            else if (w[0] == 0x924127 && ((unsigned *)m)[0] == 0x920111 && bootinfo_env()) {  /* BOOTINFO=a,b,c,d,e (hex): respuesta de arranque (ObjHandover, libObj+0x41b158) → palabras 1–5 */
+                const char *e = bootinfo_env(); for (int k = 1; k <= 5 && *e; k++) { ((unsigned *)m)[k] = hexv(e, &e); if (*e == ',') e++; }
+                static int nb; if (nb++ < 2) LOG("BOOTINFO responde %s", bootinfo_env()); }
             else if (w[0] == 0x14c0424) { ma_service((unsigned *)m); return 0; }
             else { char h[200]; int k, o = 0; for (k = 0; k < 16; k++) o += snprintf(h + o, sizeof h - o, "%08x ", ((unsigned *)m)[k]);
                 LOG("uipc snd_sync_msg qid=%#x datos=%s", w[0], h); }

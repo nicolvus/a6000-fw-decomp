@@ -517,3 +517,11 @@ def test_t52_cadena_sq_menu_orden_confirmacion_avcam() -> None:
     t = (HARNESS.parents[2] / "docs/gui/img/g75/t52-ordenes-y-confirmaciones.txt").read_text()
     assert "id=0x75e4 raw=0 " in t and "TRACE 98d27e" in t and "r0=75e5" in t and "r3=75e4" in t
     assert '"datos": "05008f40' in t and t.rstrip().splitlines()[-1].endswith('0107"}')
+
+
+def test_t93_bootinfo_real_es_opt_in_con_valores_verificados() -> None:
+    """E2E-3 (G75 T93): BOOTINFO=real contesta a 0x920111 (cola 0x924127) con el g_bf real de upm.ko (0,8,2,0x170001,1; 46 volcados);
+    por omisión NO se contesta (con la respuesta el arranque en frío recorta las órdenes libObj→av-cam 0x30001: 44→0–14)."""
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    assert 'strcmp(e, "real") ? "0,8,2,170001,1" : e' in src
+    assert 'getenv("NOBOOTINFO")' not in src and 'upmon_env' not in src
