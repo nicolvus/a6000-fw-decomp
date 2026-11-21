@@ -15,9 +15,11 @@ no genera interrupción propia (el driver sondea CONFIG).
 from __future__ import annotations
 
 import collections
+import contextlib
+import struct
 from collections.abc import Callable
 
-from unicorn import UC_HOOK_MEM_READ, UC_HOOK_MEM_WRITE
+from unicorn import UC_HOOK_MEM_READ, UC_HOOK_MEM_WRITE, UcError
 
 UART, IRQ_UART, IRQ_DMAC = 0xF2001000, 0x97, 0xAD
 DMAC = 0xF0102000
@@ -67,7 +69,9 @@ class Dmac:
                     continue
                 n, sw = ctl & 0xFFF, 1 << (ctl >> 18 & 7)
                 b = ctrl + 0x100 + 0x20 * c
-                if dst == UART and u.dmacr & 2 and u.cr & 0x100:  # memoria → UART (TXDMAE y TXE)
+                if UART not in (src, dst):
+                    self._cadena(ctrl, c, b)
+                elif dst == UART and u.dmacr & 2 and u.cr & 0x100:  # memoria → UART (TXDMAE y TXE)
                     u.transmite(bytes(vm.uc.mem_read(src, n * sw)))
                     vm.wr(b + 0xC, ctl & ~0xFFF)
                     self._fin(ctrl, c, b)
@@ -80,6 +84,30 @@ class Dmac:
                     u.sincroniza()
                     if not n:
                         self._fin(ctrl, c, b)
+
+    def _cadena(self, ctrl: int, c: int, b: int) -> None:
+        """Memoria → memoria/ventana de registros con cadena LLI (PL080: elemento = `{src, dst, lli, control}`; SI bit 26, DI bit 27; TC solo si el control del elemento lleva I, bit 31).
+        VERIFICADO en bytes: el driver RC (`0x4398f454`) programa así el canal 8 (`src`=RAM, `dst`=`0xf3886018`, `lli`=elemento en RAM). NO_VERIFICADO: efecto de la escritura en la ventana RC (aquí solo se copia a memoria) y que acabe de golpe."""
+        vm = self.vm
+        src, dst, ctl, _ = self._regs(ctrl, c)
+        lli, irq = vm.rd(b + 8), 0
+        for _i in range(64):
+            n, sw, dw = ctl & 0xFFF, 1 << (ctl >> 18 & 7), 1 << (ctl >> 21 & 7)
+            for _j in range(n):
+                with contextlib.suppress(UcError):  # extremo sin mapear: el dato se pierde, la transferencia sigue
+                    vm.uc.mem_write(dst, bytes(vm.uc.mem_read(src, sw)).ljust(dw, b"\0")[:dw])
+                src, dst = src + sw * (ctl >> 26 & 1), dst + dw * (ctl >> 27 & 1)
+            irq |= ctl >> 31
+            if not lli & ~3:
+                break
+            try:
+                src, dst, lli, ctl = struct.unpack("<4I", bytes(vm.uc.mem_read(lli & ~3, 16)))
+            except UcError:
+                break
+        if getattr(vm, "rc", None):
+            vm.rc.fin_dmac(c + 8 * (ctrl != DMAC), dst)
+        vm.wr(b, src), vm.wr(b + 4, dst), vm.wr(b + 8, 0), vm.wr(b + 0xC, ctl & ~0xFFF & 0x7FFFFFFF | irq << 31)
+        self._fin(ctrl, c, b)
 
     def _fin(self, ctrl: int, c: int, b: int) -> None:
         self.vm.wr(b + 0x10, self.vm.rd(b + 0x10) & ~1)

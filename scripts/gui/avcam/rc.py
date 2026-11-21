@@ -27,8 +27,8 @@ LATENCIA_MS = float(os.environ.get("AVCAM_RC_LATENCIA_MS", "1"))
 IRQ_ID = {0: 0x2E, 1: 0x2F, 2: 0x30, 3: 0x31, 4: 0x32, 5: 0x2A, 6: 0x2B, 8: 0x28, 9: 0x29, 11: 0x2C, 12: 0x2D}
 
 
-def drivers(vm) -> list[tuple[int, int, int]]:
-    """(id, canal de entrada, canal de salida) de cada driver RC en la RAM de av-cam: objeto con `[+0xfc]` → canal DMA cuyo registro base `[+0x14]` es el bloque RC y id `[+0x6c]` < 11."""
+def drivers(vm) -> list[tuple[int, int, int, int]]:
+    """(id, canal de entrada, canal de salida, canal del DMAC PL080 `[chobj+0x4c]`) de cada driver RC en la RAM de av-cam: objeto con `[+0xfc]` → canal DMA cuyo registro base `[+0x14]` es el bloque RC y id `[+0x6c]` < 11."""
     ram = bytes(vm.uc.mem_read(0x43F00000, 0x100000))
     w = struct.unpack(f"<{len(ram) // 4}I", ram)
     res = []
@@ -37,7 +37,7 @@ def drivers(vm) -> list[tuple[int, int, int]]:
         if 0x43F00000 <= p < 0x44000000 and (p - 0x43F00000) // 4 + 0x11 < len(w):
             j = (p - 0x43F00000) // 4
             if w[j + 5] & 0xFFFFF000 in (BASE, BASE & ~0xFFFFF) and w[i] in IRQ_ID and w[j + 0x10] < CANALES and w[j + 0xF] < CANALES:
-                res.append((w[i], w[j + 0xF], w[j + 0x10]))
+                res.append((w[i], w[j + 0xF], w[j + 0x10], w[j + 0x13]))
     return res
 
 
@@ -84,8 +84,16 @@ class Rc:
                     cand = [d for d in drivers(vm) if d[2] == c]
                     if len(cand) > 1:  # canal de salida compartido: el driver cuyo canal de entrada arrancó con él (mismo disparo)
                         cand = [d for d in cand if abs(self.ini.get(d[1], -9.0) - self.ini.get(c, 9.0)) <= 0.5] or cand
-                    self.pend.update(irq_id for irq_id, _e, _s in cand)
+                    self.pend.update(d[0] for d in cand)
         self.prox = min(self.fin.values(), default=None)
+
+
+    def fin_dmac(self, canal: int, dst: int) -> None:
+        """Fin de una cadena del DMAC PL080 cuyo destino es el bloque RC (`0xf388xxxx`). Peticiones «directas» ([req+0x114]==1, p. ej. el driver vertical id 9): VERIFICADO en bytes que la ruta (`0x43b513b6`, `0x43b50688` → `0x4398f454`) no arranca los canales `0xf3881xxx`: solo carga por DMAC la secuencia
+        (tablas y un `0xc` a `0xf3880044` por línea) y espera la IRQ del driver. NO_VERIFICADO: que el RC la levante al terminar la secuencia y la latencia (pulso inmediato)."""
+        if os.environ.get("AVCAM_RC_DIRECTO", "1") == "0" or dst >> 16 != 0xF388:
+            return
+        self.pend.update(d[0] for d in drivers(self.vm) if d[3] == canal)
 
 
 def instala(vm) -> Rc | None:
