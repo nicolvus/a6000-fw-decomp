@@ -498,6 +498,9 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
                 self.responde(json.dumps({"texto": texto, "fotogramas": vm.seq}).encode(), "application/json")
             elif self.path.startswith("/avmem") and vm.puente:  # E2E-15: /avmem?a=43ede338:4,43e81240:8 → memoria de la LIRO VM en vivo
                 self.responde(json.dumps(vm.puente.vuelca(parse_qs(urlparse(self.path).query).get("a", [""])[0])).encode(), "application/json")
+            elif self.path.startswith("/avinyecta") and vm.puente:  # DIAGNÓSTICO E2E-3: /avinyecta?l=«qid tam cab cuerpo» (hex) entrega un mensaje a av-cam como si viniera del invitado (queda en avcam.jsonl)
+                vm.puente.desde_invitado(parse_qs(urlparse(self.path).query).get("l", [""])[0])
+                self.responde(b"ok", "text/plain")
             elif self.path == "/config":  # mapa de teclado {KeyboardEvent.code: botón} y enlace al configurador (lanzador.py)
                 self.responde(json.dumps(configuracion()).encode(), "application/json")
             elif self.path == "/eventos":
