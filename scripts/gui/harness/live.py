@@ -30,6 +30,7 @@ import threading
 import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import parse_qs, urlparse
 
 import numpy as np
 from PIL import Image
@@ -495,6 +496,8 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
                 if vm.p.poll() is not None:
                     texto = f"QEMU terminó (código {vm.p.returncode})"
                 self.responde(json.dumps({"texto": texto, "fotogramas": vm.seq}).encode(), "application/json")
+            elif self.path.startswith("/avmem") and vm.puente:  # E2E-15: /avmem?a=43ede338:4,43e81240:8 → memoria de la LIRO VM en vivo
+                self.responde(json.dumps(vm.puente.vuelca(parse_qs(urlparse(self.path).query).get("a", [""])[0])).encode(), "application/json")
             elif self.path == "/config":  # mapa de teclado {KeyboardEvent.code: botón} y enlace al configurador (lanzador.py)
                 self.responde(json.dumps(configuracion()).encode(), "application/json")
             elif self.path == "/eventos":

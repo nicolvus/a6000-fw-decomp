@@ -1672,11 +1672,17 @@ static unsigned tile_off(unsigned x, unsigned y, unsigned w) {  /* mosaico 8×8 
 static volatile unsigned live_da, live_w, live_h, live_seq;
 static void gpu_exec1(unsigned off, unsigned val);
 static void gpu_exec(unsigned off, unsigned val) { if (gw0 && (val & 1) && !getenv("NOGPUSYNC")) gpu_sync(); unsigned t0 = now_us(); gpu_exec1(off, val); st_gpu += now_us() - t0; }
+/* 1 si las páginas de [p, p+n) están mapeadas: las áreas anónimas de /dev/stream no son contiguas en el anfitrión y un relleno o copia que las cruce caía con SIGSEGV (G75 T61) */
+static int mapeado(const void *p, unsigned n) {
+    unsigned char v; unsigned long a = (unsigned long)p & ~0xfffUL, e = (unsigned long)p + n;
+    for (; a < e; a += 0x1000) if (mincore((void *)a, 1, &v)) return 0;
+    return 1;
+}
 static void gpu_exec1(unsigned off, unsigned val) {
     volatile unsigned *r = gw0; if (!r || !(val & 1)) return;
     if (off == 0x1c) {
         unsigned a = r[0x10 / 4] << 3, n = (r[0x14 / 4] << 3) - a, v = r[0x18 / 4], wd = (val >> 8) & 3; unsigned char *p = phys2pn(a, n);
-        if (!p || n > 0x4000000) { efp("[shim] GPUEMU relleno %#x+%#x fuera de área\n", a, n); return; }
+        if (!p || n > 0x4000000 || !mapeado(p, n)) { efp("[shim] GPUEMU relleno %#x+%#x fuera de área\n", a, n); return; }
         if (wd == 0 && !((unsigned long)p & 1)) for (unsigned i = 0; i < n / 2; i++) ((unsigned short *)p)[i] = v;  /* 16 y 32 bits por palabras (TCG) */
         else if (wd == 2 && !((unsigned long)p & 3)) for (unsigned i = 0; i < n / 4; i++) ((unsigned *)p)[i] = v;
         else for (unsigned i = 0; i < n; i += wd + 2) for (unsigned b = 0; b < wd + 2 && i + b < n; b++) p[i + b] = v >> (8 * b);
@@ -1686,6 +1692,7 @@ static void gpu_exec1(unsigned off, unsigned val) {
             unsigned n = r[0xc20 / 4], iw = (r[0xc24 / 4] & 0xffff) * 16, ig = (r[0xc24 / 4] >> 16) * 16, ow = (r[0xc28 / 4] & 0xffff) * 16, og = (r[0xc28 / 4] >> 16) * 16;
             if (!iw) iw = n; if (!ow) ow = n;
             unsigned char *s = phys2pn(sa, n / iw * (iw + ig)), *d = phys2pn(da, n / ow * (ow + og));
+            if (s && d && n / iw * (iw + ig) && !(mapeado(s, n / iw * (iw + ig)) && mapeado(d, n / ow * (ow + og)))) { efp("[shim] GPUEMU TextureCopy %#x→%#x fuera de lo mapeado\n", sa, da); return; }
             if (!s || !d) { efp("[shim] GPUEMU TextureCopy %#x→%#x (%#x B) fuera de área\n", sa, da, n); return; }
             if (getenv("GPUTRACE")) { unsigned nz = 0; for (unsigned i = 0; i < n; i++) nz += s[i] != 0; efp("[shim] GPUEMU TextureCopy %#x→%#x %#x B (origen no nulo %u B)\n", sa, da, n, nz); }
             if (iw == ow) { for (unsigned k = 0; k < n; k += iw, s += iw + ig, d += ow + og) memcpy(d, s, n - k < iw ? n - k : iw); }  /* mismo ancho de línea: una copia por línea */
@@ -1694,7 +1701,10 @@ static void gpu_exec1(unsigned off, unsigned val) {
         }
         static const unsigned char bpp[8] = {4, 3, 2, 2, 2, 2, 2, 2};
         unsigned iw = r[0xc0c / 4] & 0xffff, ih = r[0xc0c / 4] >> 16, ow = r[0xc08 / 4] & 0xffff, oh = r[0xc08 / 4] >> 16, b = bpp[(fl >> 8) & 7];
-        unsigned char *s = phys2pn(sa, iw * ih * b), *d = phys2pn(da, ow * oh * b);
+        /* el lado en mosaico ocupa tiles de 8x8 completos: con medidas no múltiplo de 8 el bucle escribía hasta el relleno y caía (G75 T61, MOVIE en frío) */
+        unsigned isz = (fl & 2 ? iw * ih : ((iw + 7) & ~7u) * ((ih + 7) & ~7u)) * b, osz = (fl & 2 ? ((ow + 7) & ~7u) * ((oh + 7) & ~7u) : ow * oh) * b;
+        unsigned char *s = phys2pn(sa, isz), *d = phys2pn(da, osz);
+        if (s && d && !(mapeado(s, isz) && mapeado(d, osz))) { efp("[shim] GPUEMU transferencia %#x→%#x fuera de lo mapeado: fl=%#x %ux%u→%ux%u (descartada)\n", sa, da, fl, iw, ih, ow, oh); return; }
         if (!s || !d || b != bpp[(fl >> 12) & 7]) { efp("[shim] GPUEMU transferencia %#x→%#x fl=%#x sin modelar\n", sa, da, fl); return; }  /* shortcut: sin conversión de formato ni escalado */
         if (getenv("GPUTRACE")) { unsigned nz = 0; for (unsigned i = 0; i < iw * ih * b; i++) nz += s[i] != 0; efp("[shim] GPUEMU DT %#x→%#x %ux%u→%ux%u fl=%#x origen no nulo=%u B\n", sa, da, iw, ih, ow, oh, fl, nz); }
         unsigned w = iw < ow ? iw : ow, h = ih < oh ? ih : oh;

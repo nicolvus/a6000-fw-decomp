@@ -66,3 +66,25 @@ def test_colas_avcam_se_guardan_en_cache_por_contenido(tmp_path: Path, monkeypat
     av.write_bytes(b"dos")
     assert p.colas_avcam(av, cache) == primera and len(llamadas) == 2  # otro av-cam: se recalcula
     assert p.colas_avcam(av, None) == primera and len(llamadas) == 3  # sin caché: siempre se arranca
+
+
+def test_vuelca_memoria_de_la_vm_bajo_demanda(request: pytest.FixtureRequest) -> None:
+    """E2E-15: `/avmem?a=43ede338:4,...` (live.py) lee la memoria de la LIRO VM en vivo; sin esto no se ve en qué paso está el secuenciador."""
+    pu = _puente([], request)
+    r = pu.vuelca("43ede338:4,43e81240:8")
+    assert set(r["mem"]) == {"43ede338", "43e81240"} and len(r["mem"]["43ede338"]) == 8 and len(r["mem"]["43e81240"]) == 16
+    assert r["mem"]["43ede338"] == bytes(pu.vm.uc.mem_read(0x43EDE338, 4)).hex()
+    assert pu.vuelca("10:4")["mem"]["10"] == "error"  # dirección no mapeada: no tumba el hilo
+
+
+def test_escala_de_tiempo_ralentiza_la_vm_frente_al_reloj_real(request: pytest.FixtureRequest) -> None:
+    """E2E-15: el invitado del arnés (TCG) tarda ≈20 s en mandar lo que la cámara manda en ≈2 s; sin escala la VM pasaba por sus plazos de arranque
+    (módulo 1 `0x281` a 17 s) antes de la 1.ª orden y el secuenciador `[0x43ede338]` nunca salía de 0. Con `escala` el tiempo virtual avanza `escala` ms por ms real."""
+    p = pytest.importorskip("puente")
+    if not p.L.AVCAM.exists() or not p.L.LIRO_KO.exists():
+        pytest.skip("faltan av-cam.bin o liro.ko (no versionados)")
+    pu = p.Puente(lambda _l: None, escala=0.25)
+    request.addfinalizer(pu.cierra)
+    t0 = pu.vm.limite
+    time.sleep(1.0)
+    assert 150 < pu.vm.limite - t0 < 400  # ≈250 ms virtuales por s real (sin escala: ≈1000)

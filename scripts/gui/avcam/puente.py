@@ -71,12 +71,14 @@ def arranca(avcam: Path | None = None) -> tuple[L.Vm, float]:
 
 
 class Puente:
-    def __init__(self, enviar, registro: Path | None = None, ae: A.Emisor | None = None, avcam: Path | None = None) -> None:
+    def __init__(self, enviar, registro: Path | None = None, ae: A.Emisor | None = None, avcam: Path | None = None, escala: float | None = None) -> None:
         """enviar(línea: bytes): manda una línea al invitado. registro: JSONL con todo lo que entra y sale (evidencia).
         ae: emisor opcional del AE (ae.py, atajo: av-cam no lo genera); arranca con la primera orden de ObjCamera a CamMgr (0x30001).
         avcam: fichero de av-cam a cargar (por defecto el de fábrica 3.21); su sha256 queda en la primera línea del registro (`arranque`).
+        escala: ms virtuales por ms real (por defecto `AVCAM_ESCALA` o 1): el invitado del arnés es mucho más lento que la cámara y la VM pasaría sus plazos de arranque antes de su 1.ª orden.
         Cada línea lleva `origen`: «av-cam» (tráfico real de la LIRO VM) o «ae.py» (salida sintética)."""
         self.enviar, self.registro, self.ae = enviar, registro, ae
+        self.escala = escala if escala is not None else float(os.environ.get("AVCAM_ESCALA", "1"))
         if ae:
             ae.enviar = self._envia_ae
         self.cerrojo = threading.RLock()
@@ -137,7 +139,7 @@ class Puente:
         if time.monotonic() >= self.t_heap:  # E2E-16: evidencia de sesión larga (MiB asignados y en uso del montón de 240 MiB), cada 30 s reales
             self.t_heap = time.monotonic() + 30
             self._anota(heap_mib=round((self.vm.heap - L.HEAP) / 2**20, 1), en_uso_mib=round(sum(self.vm.bloques.values()) / 2**20, 1))
-        self.vm.limite = self.t_virt0 + (time.monotonic() - self.t_real0) * 1000
+        self.vm.limite = self.t_virt0 + (time.monotonic() - self.t_real0) * 1000 * self.escala
         L.planifica(self.vm, 20_000_000)
         self._saca()
 
@@ -150,6 +152,18 @@ class Puente:
                 continue
             self.n_out += 1
             self.enviar(f"Q {q:x} {cab} {datos}\n".encode())
+
+    def vuelca(self, spec: str) -> dict:
+        """Diagnóstico `/avmem`: «dir:tam,dir:tam» (hex) → bytes de la memoria de la LIRO VM en vivo (hex tal cual, LE) y su tiempo virtual."""
+        out: dict[str, str] = {}
+        with self.cerrojo:
+            for it in filter(None, spec.split(",")):
+                d, _, t = it.partition(":")
+                try:
+                    out[d] = bytes(self.vm.uc.mem_read(int(d, 16), min(int(t or "4", 16), 0x1000))).hex()
+                except Exception:  # noqa: BLE001 - dirección no mapeada o mal escrita: se informa, no se tumba la sesión
+                    out[d] = "error"
+            return {"t": round(self.vm.t, 2), "mem": out}
 
     def desde_invitado(self, linea: str) -> None:
         """«qid tam cabecera cuerpo» → mensaje a una cola de av-cam."""
