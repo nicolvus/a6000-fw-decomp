@@ -2,7 +2,8 @@
 """Build reproducible de la opción «LUT» del menú Fn (G86 y G86-B): escribe SOLO ficheros (`lib/CautionConfig.so`, `lib/viewUnified2.so`, `lib/viewUnified4.so`, `share/app/string_*.uxc`);
 no construye ni instala ningún CFW. Patrón de `build_cfw_objetivos.py` (los ajustes CFW van a la carpeta «CFW»; aquí además el nodo «LUT» como hijo de la raíz Fn).
 FN-LUT-2: el cambio en tiempo real vive en `av-cam` (gancho de la máquina `0x437a24fc`, `lut_patch`); `avcam()` genera esa imagen parcheada (el CFW de objetivos la obtiene por `build_overlay_objetivos.AVCAM`).
-Uso: build_fn_lut.py DIR_DEV_A6000 DIR_DEV_A6300 SALIDA [--avcam AVCAM_ORIGINAL AVCAM_SALIDA]
+Uso: build_fn_lut.py DIR_DEV_A6000 DIR_DEV_A6300 SALIDA [--cubes CARPETA] [--avcam AVCAM_ORIGINAL AVCAM_SALIDA]
+`--cubes`: LUTs propios (G88): los `.cube` de la carpeta (≤3, cualquier tamaño) dan nombre y tabla a los looks 1…3.
 """
 import sys
 from pathlib import Path
@@ -11,11 +12,12 @@ sys.path[:0] = [str(Path(__file__).resolve().parents[1]), str(Path(__file__).par
 import build_pp_menu
 import cfw_ajustes
 import lut_patch
+import sd_lut
 
 
-def main(dev_a, dev_b, dest) -> Path:
+def main(dev_a, dev_b, dest, ajustes=cfw_ajustes.AJUSTES) -> Path:
     dest = Path(dest)
-    cfw_ajustes.configurar_menu()
+    cfw_ajustes.configurar_menu(ajustes)
     build_pp_menu.FN_TREES[:] = ["lut"]
     try:
         build_pp_menu.main(dev_a, dev_b, dest)
@@ -24,14 +26,21 @@ def main(dev_a, dev_b, dest) -> Path:
     return dest
 
 
-def avcam(src, dest) -> Path:
+def avcam(src, dest, tablas=None) -> Path:
     """`av-cam` con el ajuste «LUT» aplicado en caliente (cuevas de escritura + gancho de la máquina de estados)."""
     dest = Path(dest)
-    dest.write_bytes(lut_patch.apply_bytes(Path(src).read_bytes()))
+    dest.write_bytes(lut_patch.apply_bytes(Path(src).read_bytes(), tablas))
     return dest
 
 
 if __name__ == "__main__":
-    print(main(*sys.argv[1:4]))
-    if len(sys.argv) == 7 and sys.argv[4] == "--avcam":
-        print(avcam(*sys.argv[5:7]))
+    a = sys.argv[1:]
+    tablas = ajustes = None
+    if "--cubes" in a:
+        k = a.index("--cubes")
+        tablas, nombres, _ = sd_lut.convierte(sd_lut.lee_cubes(Path(a[k + 1])))
+        ajustes = sd_lut.ajustes_con_nombres(nombres)
+        del a[k:k + 2]
+    print(main(*a[:3], *([ajustes] if ajustes else [])))
+    if len(a) == 6 and a[3] == "--avcam":
+        print(avcam(*a[4:6], tablas))
