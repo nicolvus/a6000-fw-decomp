@@ -703,3 +703,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 20-11-2026 LIRO-VEL-1 cerrado: LIRO VM de 5,6x a ~1x tiempo real (ganchos MEM_READ por pagina mapeada + reg_read_batch); G75 T55.
 - 20-11-2026 E2E-17 cerrado: orden EFCS nativa hasta av-cam (0x4099); atajo EFCS opt-in (EFCSEMU); G75 T56.
 - 20-11-2026 G75 T57: tipo 0x4e = ajuste «AF c/obturador» (ActionSetS1AF), no S1; gancho DRP movido a 0x67c148 (pulsar S1) y sesgo 0x759e como ParamStd<signed char> (con int: PreTypeCheck ERROR); DRP-F1 PARCIAL.
+- 20-11-2026 G75 T58: DRP llega a av-cam (0x4016 DRO, 0x4055 sesgo; tabla libObj→CamMgr decodificada); sesgo en pasos de 1/2 EV en arnés (DRP-F3); S2/RelLock sin avance.
