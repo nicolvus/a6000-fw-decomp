@@ -1131,6 +1131,8 @@ static void on_trace(int sig, siginfo_t *si, void *u) {
     }
     for (i = 0; i < ntrc; i++) if (trc[i].pc == pc) {  /* efp, no LOG: fprintf en un manejador de señal puede bloquearse con el cerrojo de stderr de otro hilo */
         if (pc == trc_base + 0x7eed0c) app_sys = c->arm_r0;
+        if (pc == trc_base + 0x81b0ec) { static unsigned rs[32]; unsigned t = c->arm_r1 & 31; rs[t]++;  /* T95: ReqRsrc (libObj+0x81b0ec) contada por tipo; solo se imprimen los tipos 20–23 (pin de captura) y la 1.ª de cada tipo */
+            if (t >= 20 && t <= 23 || rs[t] == 1) efp("[shim] RSRC tipo=%u n=%u dueno=%lx lr=%lx\n", t, rs[t], c->arm_r2, c->arm_lr); }
         unsigned h = ++trc[i].hits, mx = getenv("TRACEMAX") ? (unsigned)hexv(getenv("TRACEMAX"), 0) : 4;
         int show = h <= mx || !(h & (h - 1));  /* TRACEREP: las mx primeras y luego en potencias de 2 */
         if (show) efp("[shim] TRACE %lx n=%u r0=%lx r1=%lx r2=%lx r3=%lx lr=%lx\n", pc - trc_base, h, c->arm_r0, c->arm_r1, c->arm_r2, c->arm_r3, c->arm_lr);

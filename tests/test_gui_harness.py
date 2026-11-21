@@ -525,3 +525,9 @@ def test_t93_bootinfo_real_es_opt_in_con_valores_verificados() -> None:
     src = (HARNESS / "shim/sonyshim.c").read_text()
     assert 'strcmp(e, "real") ? "0,8,2,170001,1" : e' in src
     assert 'getenv("NOBOOTINFO")' not in src and 'upmon_env' not in src
+
+
+def test_t95_reqrsrc_contada_por_tipo() -> None:
+    """E2E-3 (G75 T95): con TRACEFN2=81b0ec el shim cuenta ReqRsrc por tipo y solo imprime los tipos 20-23 (pin de captura) y la 1.ª de cada tipo."""
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    assert "trc_base + 0x81b0ec" in src and "t >= 20 && t <= 23" in src
