@@ -146,7 +146,7 @@ def referencia(texto: str) -> bytes | None:
     n, lo, hi, cub = c
     sat = lambda q: max(-64, min(63, q))
     cl = lambda v: max(0, min(65536, v))
-    bits = 0
+    z = []
     for i in range(405):
         j, a, b = i // 81, i // 9 % 9, i % 9
         y, cb, cr = j * 16384, a * 8192 - 32768, b * 8192 - 32768
@@ -156,10 +156,18 @@ def referencia(texto: str) -> bytes | None:
         g = cl((n16 * 111642) >> 16)
         rgb = [r, g, bl]
         u, t = _ycc(rgb), _ycc(_tri(n, lo, hi, cub, rgb))
-        q0 = sat((t[0] - u[0] + 128) >> 8)
-        q1 = sat(((t[1] - u[1]) * 341 + 32768) >> 16)
-        q2 = sat(((t[2] - u[2]) * 341 + 32768) >> 16)
-        bits |= (((q0 & 127) << 14) | ((q1 & 127) << 7) | (q2 & 127)) << (21 * i)
+        z.append([(t[0] - u[0] + 8) >> 4, ((t[1] - u[1]) * 5456 + 32768) >> 16, ((t[2] - u[2]) * 5456 + 32768) >> 16])
+    bits = 0
+    for i in range(405):                      # G90: v = z − Σ Δ²z/12 (21/256), Δ² solo con ambos vecinos
+        j, a, b = i // 81, i // 9 % 9, i % 9
+        q = []
+        for k in range(3):
+            l = 0
+            for ok, paso in ((0 < j < 4, 81), (0 < a < 8, 9), (0 < b < 8, 1)):
+                if ok:
+                    l += z[i + paso][k] - 2 * z[i][k] + z[i - paso][k]
+            q.append(sat((z[i][k] - ((21 * l) >> 8) + 8) >> 4))
+        bits |= (((q[0] & 127) << 14) | ((q[1] & 127) << 7) | (q[2] & 127)) << (21 * i)
     return bits.to_bytes(TAM_TABLA, "little")
 
 

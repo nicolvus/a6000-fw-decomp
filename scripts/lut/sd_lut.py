@@ -2,6 +2,7 @@
 Ruta PC (la cámara NO lee la SD: g88 §1). Uso: `sd_lut.py CARPETA_CUBE [--medir]` imprime nombres y ΔE; `build_fn_lut.py --cubes CARPETA` los integra en el build.
 """
 import dataclasses
+import hashlib
 import sys
 from pathlib import Path
 
@@ -29,6 +30,16 @@ def lee_cubes(carpeta: Path) -> list[tuple[str, np.ndarray, np.ndarray, np.ndarr
     return out
 
 
+_MEMO: dict = {}                       # G90: el ajuste en ΔE2000 tarda ~15 s; mismo `.cube` ⇒ misma cadena dentro del proceso
+
+
+def _cadena(tab, lo, hi, f):
+    k = (hashlib.md5(np.ascontiguousarray(tab).tobytes()).hexdigest(), tuple(lo), tuple(hi))
+    if k not in _MEMO:
+        _MEMO[k] = C.descompone(f, False, False, True)
+    return _MEMO[k]
+
+
 def convierte(cubes, img: bytes | None = None) -> tuple[list[bytes], list[str], list[tuple[float, float]]]:
     """→ (3 tablas de 0x654 B, 3 nombres, ΔE2000 (medio, p95) del .cube exacto frente a lo que aplica el ISP). Faltantes = identidad «Neutro»."""
     img = img if img is not None else C.BIN.read_bytes()
@@ -36,12 +47,12 @@ def convierte(cubes, img: bytes | None = None) -> tuple[list[bytes], list[str], 
     tablas, nombres, de = [], [], []
     for nombre, tab, lo, hi in cubes:
         f = lambda v, tab=tab, lo=lo, hi=hi: C.aplica_cube(tab, lo, hi, v)
-        ch = C.descompone(f, False, False, True)
+        ch = _cadena(tab, lo, hi, f)
         tablas.append(C.empaqueta_hw(ch.q, img))
         nombres.append(nombre)
         e = C.de2000(f(x), ch(x))
         de.append((float(e.mean()), float(np.percentile(e, 95))))
-    ident = C.empaqueta_hw(C.descompone(C.SINT["identidad"], False, False, True).q, img)
+    ident = C.empaqueta_hw(_cadena(np.zeros(1), (0,), (1,), C.SINT["identidad"]).q, img)
     while len(tablas) < MAX_LUTS:
         tablas.append(ident)
         nombres.append("Neutro")

@@ -1,6 +1,6 @@
 /* G89 (LUT-SD-1) — carga de `.cube` desde la SD EN LA CÁMARA, userland (se inyecta en `viewUnified2.so`, proceso de `libObj`).
  * Sin libc ni datos globales (clang -fropi): todo el estado va en `struct ctx` (malloc); las funciones del sistema llegan por `dlsym` en `struct api`.
- * Por cada ranura 1…SLOTS lee `X:/LUT/LUT<n>.cube`, lo remuestrea a la LUT 5×9×9 del ISP por muestreo directo de cada nodo (punto fijo Q16, igual que
+ * Por cada ranura 1…SLOTS lee `X:/LUT/LUT<n>.cube`, lo remuestrea a la LUT 5×9×9 del ISP por muestreo directo de cada nodo con corrección de 2.ª diferencia (G90; punto fijo Q16, igual que
  * `lut_sd_userland.referencia`) y lo guarda empaquetado a 21 bits (1064 B) en el id de Backup `BK_ID` (16 KB): av-cam lo lee con `Backup_read`.
  * Contratos (leídos del código real, g89 §2): Fsys_Open(path, int *h, modo=1) · Fsys_Read(h, buf, n) → bytes · Fsys_Close(h) · Fsys_GetDriveLetter(dispositivo) → letra
  * · Backup_read(id, buf) · Backup_write(id>>16, id, buf). */
@@ -170,13 +170,13 @@ static void ycc(const i32 *rgb, i32 *o) {
 
 static i32 satura(i32 q) { return q < -64 ? -64 : q > 63 ? 63 : q; }
 
-/* 405 nodos j·81+a·9+b (Y, Cb, Cr) → 21 bits por nodo: (ΔY&127)<<14 | (ΔCb&127)<<7 | (ΔCr&127) */
-static void nodos(const struct ctx *c, u8 *dst) {
-    u64 acc = 0;
-    i32 nb = 0, pos = 0;
-    i32 j = 0, a = 0, b = 0;
+/* 405 nodos j·81+a·9+b (Y, Cb, Cr) → 21 bits por nodo: (ΔY&127)<<14 | (ΔCb&127)<<7 | (ΔCr&127).
+ * G90: muestreo directo de cada nodo (z en 1/16 de unidad s7, en `tmp`, libre hasta el final del barrido) y corrección de la proyección de mínimos cuadrados sobre
+ * la base trilineal: v = z − Σ_ejes Δ²z/12 (Δ² solo con ambos vecinos; 21/256 ≈ 1/12), luego redondeo y saturación a s7. */
+static void nodos(struct ctx *c, u8 *dst) {
+    i32 *z = (i32 *)c->tmp;
     for (i32 i = 0; i < 405; i++) {
-        if (i) { if (++b == 9) { b = 0; if (++a == 9) { a = 0; j++; } } }
+        i32 j = i / 81, a = (i / 9) % 9, b = i % 9;
         i32 y = j * 16384, cb = a * 8192 - 32768, cr = b * 8192 - 32768;
         i32 rgb[3], v[3], u[3], t[3];
         rgb[0] = clamp16(y + (i32)(((i64)91882 * cr) >> 16));
@@ -186,10 +186,22 @@ static void nodos(const struct ctx *c, u8 *dst) {
         trilineal(c, rgb, v);
         ycc(rgb, u);
         ycc(v, t);
-        i32 q0 = satura((t[0] - u[0] + 128) >> 8);
-        i32 q1 = satura((i32)(((i64)(t[1] - u[1]) * 341 + 32768) >> 16));
-        i32 q2 = satura((i32)(((i64)(t[2] - u[2]) * 341 + 32768) >> 16));
-        acc |= (u64)(((q0 & 127) << 14) | ((q1 & 127) << 7) | (q2 & 127)) << nb;
+        z[3 * i] = (t[0] - u[0] + 8) >> 4;
+        z[3 * i + 1] = (i32)(((i64)(t[1] - u[1]) * 5456 + 32768) >> 16);
+        z[3 * i + 2] = (i32)(((i64)(t[2] - u[2]) * 5456 + 32768) >> 16);
+    }
+    u64 acc = 0;
+    i32 nb = 0, pos = 0;
+    for (i32 i = 0; i < 405; i++) {
+        i32 j = i / 81, a = (i / 9) % 9, b = i % 9, q[3];
+        for (i32 k = 0; k < 3; k++) {
+            i32 *p = z + 3 * i + k, l = 0;
+            if (j > 0 && j < 4) l += p[243] - 2 * *p + p[-243];
+            if (a > 0 && a < 8) l += p[27] - 2 * *p + p[-27];
+            if (b > 0 && b < 8) l += p[3] - 2 * *p + p[-3];
+            q[k] = satura((*p - ((21 * l) >> 8) + 8) >> 4);
+        }
+        acc |= (u64)(((q[0] & 127) << 14) | ((q[1] & 127) << 7) | (q[2] & 127)) << nb;
         nb += 21;
         while (nb >= 8) { dst[pos++] = (u8)acc; acc >>= 8; nb -= 8; }
     }

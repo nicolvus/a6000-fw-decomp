@@ -30,13 +30,14 @@ TAM = 0x654
 FUENTES = ("teal_orange", "pelicula", "identidad")                         # LUT1…3 por defecto; `--cube` de cube_a6000 las sustituye
 
 
+_DEFECTO: list[bytes] = []                                                 # G90: el ajuste en ΔE2000 tarda ~15 s por tabla; se calcula una vez por proceso
+
+
 def tablas_por_defecto() -> list[bytes]:
-    img = C.BIN.read_bytes()
-    out = []
-    for n in FUENTES:
-        ch = C.descompone(C.SINT[n], False, False, True)
-        out.append(C.empaqueta_hw(ch.q, img))
-    return out
+    if not _DEFECTO:
+        img = C.BIN.read_bytes()
+        _DEFECTO.extend(C.empaqueta_hw(C.descompone(C.SINT[n], False, False, True).q, img) for n in FUENTES)
+    return list(_DEFECTO)
 
 
 MODO_SD = False                                                            # G89: los builds (build_fn_lut/build_cfw_objetivos) lo activan con sd=True; `apply_bytes` lo usa por defecto

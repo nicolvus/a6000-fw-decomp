@@ -15,6 +15,8 @@
 
 **LUT desde `.cube` (G88/G89, 20-11-2026):** G88 convierte en el PC (17³/32³/33³/64³ → 5×9×9, ≤3, ΔE 0,4–0,7); G89 (LUT-SD-1 hecho offline) lee `LUT/LUT1…6.cube` de la SD en la cámara (hilo del userland en `viewUnified2.so` → Backup `0x150005` → `av-cam`), ranuras fijas «LUT 1…6», verificado en Unicorn; falta cámara (LUT-SD-2).
 
+**LUT: interpolación, optimización y geometría (G90, 21-11-2026):** el bloque LUT son 8 bancos SRAM por paridad de nodo (5×9×9 = máximo físico, geometría fija); la interpolación (trilineal/tetraédrica) NO se decide offline y queda un experimento de cámara listo (`scripts/lut/exp_interp.py`, LUT-INT-1); el conversor ajusta ahora en ΔE2000 (ΔE medio 17³/32³: suave 0,36→0,28, película 0,77→0,61, teal&orange 0,41→0,24, agresiva 3,87→2,45; T+LUT película 0,28) y `lutsd.c` corrige la proyección con Δ²/12 (película 1,44→1,09, ARM = referencia). Informe [g90](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/gui/g90-lut-interpolacion-optimizacion-geometria.md).
+
 **Último cierre:** E26 R82 (07-11-2026) — parche EFCS v3: la tabla de compensación `c(T)` de Darwin se integra reescribiendo en sitio el prefijo `0x18d6e..0x18e0f` (mismo tamaño, sin hueco; equivalencia verificada con tres métodos en emulación), con volcados NVRAM `B+0x86`/`G+0x42` listos sin escribir; nada se instaló ni se tocó la cámara ([R82](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r82-parche-efcs-v3.md)). Detalle por informe en [knowledge/CURRENT.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/knowledge/CURRENT.md).
 
 

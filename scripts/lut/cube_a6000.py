@@ -4,7 +4,7 @@ Cadena modelada (la de la cámara, g71 §2): RGB de pantalla x → lineal (EOTF 
 → YCbCr (BT.601, rango completo) → LUT 3D 5×9×9 de deltas s7 (`0x437a198c`) → salida.
 shortcut: la gamma de la cámara es UNA tabla para los 3 canales (no por canal): las diferencias por canal van al residuo de la LUT 3D; rango de la LUT ±63 uds (ΔY ±24,6 %, ΔC ±36,9 % de medio rango), lo que se salga se recorta y se informa.
 El orden respecto a gamma/matriz es el de la lógica del generador (la LUT trabaja en YCbCr, tras gamma); no medido en cámara.
-uso: cube_a6000.py [--demo DIR] [--arw RAW] [fichero.cube …]
+uso: cube_a6000.py [--demo DIR] [--arw RAW] [--de] [fichero.cube …]  (--de: ajuste G90 en ΔE2000; por defecto el de G71)
 """
 from __future__ import annotations
 
@@ -15,6 +15,7 @@ from pathlib import Path
 import numpy as np
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(Path(__file__).parent))   # lut_opt (G90) está al lado
 BIN = ROOT / "analysis/rea-independent/input/av-cam.bin"
 BASE, PERM, N = 0x43541000, 0x43BEF2AC, 405
 NY, NC = 5, 9
@@ -211,6 +212,7 @@ class Cadena:
         self.M = np.eye(3) if M is None else M
         self.T = curva_tabla(lambda l: de_lineal(l)) if T is None else T
         self.q = q
+        self.rec = 0
 
     def pre_lut(self, x):
         return curva_aplica(self.T, a_lineal(x) @ self.M.T)
@@ -225,8 +227,9 @@ def rejilla(n=21):
     return np.stack(np.meshgrid(g, g, g, indexing="ij"), -1).reshape(-1, 3)
 
 
-def descompone(f, usa_M=True, usa_T=True, usa_L=True, n=21) -> Cadena:
-    """f: x[M,3] → RGB objetivo."""
+def descompone(f, usa_M=True, usa_T=True, usa_L=True, n=21, metodo="de", modelo=None, foto=None) -> Cadena:
+    """f: x[M,3] → RGB objetivo. `metodo`: "de" (G90: ajuste directo en ΔE2000 con muestras ponderadas, `lut_opt`) o "mc" (mínimos cuadrados en RGB, G71);
+    `modelo` de interpolación para "de" (None = `lut_opt.MODELO_DEFECTO`); `foto` = píxeles reales opcionales [M,3] para ponderar."""
     x = rejilla(n)
     y = f(x)
     lin = a_lineal(x)
@@ -246,7 +249,12 @@ def descompone(f, usa_M=True, usa_T=True, usa_L=True, n=21) -> Cadena:
         T = curva_tabla(lambda i: np.interp(i, np.r_[0, cen[ok], 1], np.r_[med[0] if ok[0] else 0, med, med[-1]]))
     ch = Cadena(M, T)
     q = None
-    if usa_L:
+    if usa_L and metodo == "de":
+        import lut_opt
+        xt, w = lut_opt.muestras(foto=foto)
+        q = lut_opt.ajusta_de(ch.pre_lut(xt), f(xt), w, modelo or lut_opt.MODELO_DEFECTO)
+        ch.rec = int(np.sum((q == -64) | (q == 63)))
+    elif usa_L:
         u = rgb2ycc(ch.pre_lut(x))
         q, rec = a_unidades(ajusta_lut3d(u, rgb2ycc(y) - u))
         ch.rec = rec
@@ -297,17 +305,17 @@ def foto(arw: Path, ancho=480) -> np.ndarray:
 COMBOS = {"nada": (0, 0, 0), "M": (1, 0, 0), "T": (0, 1, 0), "M+T": (1, 1, 0), "LUT": (0, 0, 1), "M+LUT": (1, 0, 1), "T+LUT": (0, 1, 1), "M+T+LUT": (1, 1, 1)}
 
 
-def informe(f, x_den, x_img) -> dict:
+def informe(f, x_den, x_img, metodo="mc") -> dict:
     """Error de las 8 combinaciones de etapas ("nada" = cadena neutra de fábrica); la mejor por ΔE medio denso es la que usa `elige`."""
     res = {}
     for modo, fl in COMBOS.items():
-        ch = Cadena() if not any(fl) else descompone(f, *map(bool, fl))
+        ch = Cadena() if not any(fl) else descompone(f, bool(fl[0]), bool(fl[1]), bool(fl[2]), metodo=metodo)
         res[modo] = (error(f, ch, x_den), error(f, ch, x_img) if x_img is not None else None, getattr(ch, "rec", 0), ch)
     return res
 
 
-def elige(f, x_den) -> tuple[str, Cadena]:
-    r = informe(f, x_den, None)
+def elige(f, x_den, metodo="mc") -> tuple[str, Cadena]:
+    r = informe(f, x_den, None, metodo)
     m = min(r, key=lambda k: r[k][0][0])
     return m, r[m][3]
 
@@ -348,7 +356,7 @@ def main(args: list[str]) -> None:
             tab, lo, hi = lee_cube(destino / f"{nombre}_33.cube")
             f = lambda x, tab=tab, lo=lo, hi=hi: aplica_cube(tab, lo, hi, x)     # la cadena se ajusta al .cube leído, no a la fórmula
         print(f"== {nombre}")
-        res = informe(f, x_den, x_img)
+        res = informe(f, x_den, x_img, "de" if "--de" in args else "mc")
         mejor = min(res, key=lambda k: res[k][0][0])
         for modo, (den, img, rec, _) in res.items():
             print(("* " if modo == mejor else "  ") + f"{modo:8s} denso ΔE medio {den[0]:.2f} p95 {den[1]:.2f} máx {den[2]:.2f}" + (f" | foto medio {img[0]:.2f} p95 {img[1]:.2f}" if img else "") + (f" | nodos recortados {rec}" if rec else ""))
