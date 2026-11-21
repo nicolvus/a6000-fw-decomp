@@ -1,5 +1,5 @@
 """G68 — «DR Prioridad» (origen Fujifilm DR-P) en `libObj` 3.21: ajuste CFW Off/Débil/Fuerte (`cfw_ajustes`, id de Backup 1 B).
-Solo bytes de `libObj.so` del `.dat`; sin construir CFW. Gancho único: el `bl 0x67a340` de 0x689538 en el manejador de «S1 AF» (`MSGID_SET_S1_AF_CMD 0x75c2`, pulsar a medias).
+Solo bytes de `libObj.so` del `.dat`; sin construir CFW. Gancho único: el `bl 0x67a340` de 0x67c148, al inicio del emisor de `MSGID_STILL_LOCK 0x7506` (0x67c130; r4 = 0 al pulsar a medias, 1 al soltar). G75 T57: el manejador `0x689520` (`0x75c2`, «S1 AF») NO es la semipulsación sino el ajuste «AF c/obturador» del menú.
 Con Off la cueva sale sin emitir nada y reejecuta el `bl` original (idéntico a fábrica). Con Débil/Fuerte emite, antes del AF/AE, dos mensajes a ObjCamera (objeto 8) como el AEL de g62:
   - `MSGID_SET_DRO_LEVEL_CMD 0x755a` + `PARAMID_DRO_LEVEL 0x95cb` = `VALUEID_DRO_LV3 0x117` (Débil) / `VALUEID_DRO_LV5 0x119` (Fuerte), mismos ids que `0x60dc8a`/`0x683ff0`;
   - `MSGID_SET_EXPOSURE_BIAS_CMD 0x759e` + `PARAMID_EXPOSURE_BIAS 0x9652` = −3 / −6 (pasos de 1/3 EV: −1 / −2 EV). NO_VERIFICADO: la codificación del valor (g62 §4).
@@ -18,17 +18,18 @@ from e25_24.thumb import bl
 
 SRC = g61.SRC
 CAVE, CAVE_FIN = 0x2648D8 + 0x600, 0x2648D8 + 0x800
-HOOK = (0x689538, bytes.fromhex("f0f702ff"))                  # bl 0x67a340 (justo tras armar el ObjMsg de S1 AF)
+HOOK = (0x67C148, bytes.fromhex("fef7faf8"))                  # bl 0x67a340 (antes de armar el ObjMsg 0x7506 de STILL_LOCK)
 DESTINO = 0x67A340
 MSG_DRO, PARAM_DRO, DRO_LV3, DRO_LV5 = 0x755A, 0x95CB, 0x117, 0x119
 MSG_BIAS, PARAM_BIAS = 0x759E, 0x9652
 BIAS_DEBIL, BIAS_FUERTE = -3, -6
-EXT = g61.EXT_AEL
+PLT_CHAR = 0xE1668                                              # ParamStd<signed char>(signed char): el tipo que exige ObjCamera para 0x759e (T57)
+EXT = (*g61.EXT_AEL, PLT_CHAR)
 
 
 def piezas() -> dict[str, tuple[int, bytes]]:
     a = cfw.POR_ID["dr_prior"]
-    emite = f"""
+    emite = lambda ctor: f"""
         push {{r4, r5, r6, r7, lr}}
         sub sp, #0x24
         mov r5, r0
@@ -41,7 +42,7 @@ def piezas() -> dict[str, tuple[int, bytes]]:
         @@blx {g61.PLT_MSG:#x}
         add.w r0, r7, #8
         mov r1, r5
-        @@blx {g61.PLT_INT:#x}
+        @@blx {ctor:#x}
         mov r0, r7
         mov r1, r4
         add.w r2, r7, #8
@@ -59,6 +60,8 @@ def piezas() -> dict[str, tuple[int, bytes]]:
     """
     drp = f"""
         push.w {{r0, r1, r2, r3, r4, r5, r6, r7, r8, lr}}
+        cmp r4, #0
+        bne.w sal
         {cfw.leer_asm(a, "td", g61.BLX_BACKUP)}
         cmp r0, #0
         beq.w sal
@@ -78,14 +81,15 @@ def piezas() -> dict[str, tuple[int, bytes]]:
         mov r0, r7
         movw r1, #{MSG_BIAS:#x}
         movw r2, #{PARAM_BIAS:#x}
-        @@bl {{EMITE}}
+        @@bl {{EMITE_C}}
     sal:
         pop.w {{r0, r1, r2, r3, r4, r5, r6, r7, r8, lr}}
         @@b.w {DESTINO:#x}
     """
     out, va = {}, CAVE
-    for nombre, asm in (("emite", emite), ("drp", drp)):
-        code = g61._ens(asm.replace("{EMITE}", f"{CAVE:#x}"), va)
+    ec = CAVE + len(g61._ens(emite(g61.PLT_INT), CAVE)) + 3 & ~3                 # la 2.ª pieza empieza tras la 1.ª, alineada
+    for nombre, asm in (("emite", emite(g61.PLT_INT)), ("emite_c", emite(PLT_CHAR)), ("drp", drp)):
+        code = g61._ens(asm.replace("{EMITE}", f"{CAVE:#x}").replace("{EMITE_C}", f"{ec:#x}"), va)
         out[nombre] = (va, code)
         va = (va + len(code) + 3) & ~3
     assert va <= CAVE_FIN, hex(va)
@@ -104,8 +108,8 @@ def apply_bytes(data: bytes) -> bytes:
     return bytes(out)
 
 
-def emular(img: bytes, backup: dict[int, int]):
-    """Unicorn: ejecuta desde 0x689538 (con r4/r5/r7 de marcador) y devuelve los mensajes emitidos [(msg, param, valor)], si se llegó a 0x67a340 y los registros conservados."""
+def emular(img: bytes, backup: dict[int, int], r4: int = 0):
+    """Unicorn: ejecuta desde el gancho (r4 = 0 pulsar / 1 soltar; r5/r7 de marcador) y devuelve los mensajes emitidos [(msg, param, valor)], si se llegó a 0x67a340 y los registros conservados."""
     from unicorn import UC_ARCH_ARM, UC_HOOK_CODE, UC_MODE_THUMB, Uc
     from unicorn.arm_const import (
         UC_ARM_REG_LR,
@@ -125,7 +129,7 @@ def emular(img: bytes, backup: dict[int, int]):
     stack = 0x30000000
     mu.mem_map(stack - 0x1000, 0x4000)
     rd = mu.reg_read
-    msgs, estado = [], {"llego": None, "regs": None, "sp": None}
+    msgs, ctores, estado = [], [], {"llego": None, "regs": None, "sp": None}
     cur = {}
 
     def code(uc, addr, size, _):
@@ -144,10 +148,12 @@ def emular(img: bytes, backup: dict[int, int]):
             return
         if addr == g61.PLT_MSG:
             cur["msg"] = rd(UC_ARM_REG_R2)
-        elif addr == g61.PLT_INT:
+        elif addr in (g61.PLT_INT, PLT_CHAR):
             cur["val"] = rd(UC_ARM_REG_R1)
+            cur["ctor"] = addr
         elif addr == g61.PLT_ADD:
             msgs.append((cur["msg"], rd(UC_ARM_REG_R1), cur["val"]))
+            ctores.append(cur["ctor"])
         elif addr in EXT:
             pass
         else:
@@ -157,12 +163,12 @@ def emular(img: bytes, backup: dict[int, int]):
 
     mu.hook_add(UC_HOOK_CODE, code)
     mu.reg_write(UC_ARM_REG_R0, 0x111); mu.reg_write(UC_ARM_REG_R1, 0x222); mu.reg_write(UC_ARM_REG_R2, 0x333); mu.reg_write(UC_ARM_REG_R3, 0x444)
-    mu.reg_write(UC_ARM_REG_R4, 0xAAA4); mu.reg_write(UC_ARM_REG_R5, 0xAAA5); mu.reg_write(UC_ARM_REG_R7, 0xAAA7)
+    mu.reg_write(UC_ARM_REG_R4, r4); mu.reg_write(UC_ARM_REG_R5, 0xAAA5); mu.reg_write(UC_ARM_REG_R7, 0xAAA7)
     sp0 = stack - 0x40
     mu.reg_write(UC_ARM_REG_SP, sp0)
     mu.reg_write(UC_ARM_REG_LR, 0x7FFF0001)
-    mu.emu_start(0x689538 | 1, 0x689600, count=20000)
-    return {"msgs": msgs, **estado, "sp0": sp0}
+    mu.emu_start(HOOK[0] | 1, 0x67C200, count=20000)
+    return {"msgs": msgs, "ctores": ctores, **estado, "sp0": sp0}
 
 
 def comprobar() -> None:
@@ -178,7 +184,7 @@ def comprobar() -> None:
     r2 = emular(img, {B: 2})
     assert r2["msgs"] == [(MSG_DRO, PARAM_DRO, DRO_LV5), (MSG_BIAS, PARAM_BIAS, (-6) & 0xFFFFFFFF)], r2
     for x in (r, r2):                                                                      # r0-r3, r4, r5, r7 y sp intactos al llegar al destino original
-        assert x["llego"] == (0x111, 0x222, 0x333, 0x444) and x["regs"] == (0xAAA4, 0xAAA5, 0xAAA7) and x["sp"] == x["sp0"], x
+        assert x["llego"] == (0x111, 0x222, 0x333, 0x444) and x["regs"] == (0, 0xAAA5, 0xAAA7) and x["sp"] == x["sp0"], x
 
 
 if __name__ == "__main__":
