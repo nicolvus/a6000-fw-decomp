@@ -537,16 +537,19 @@ static void *systat_thread(void *a) {
 }
 /* read/poll/select sobre dispositivos «genéricos» (= /dev/null): sin esto devuelven al instante (EOF/listo) y el hilo del driver (UsbControl, I-InputRepeat…) gira al 100 % */
 static int sd_fd(int fd); static void sd_log(const char *op, int fd, long a, long b, long r);
+static void nf_log(const char *op, int fd, long a, long b, long r);
 ssize_t read(int fd, void *b, size_t n) {
     static ssize_t (*real)(int, void *, size_t); if (!real) real = nextsym("read");
-    if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && !nf_fd(fd) && !(getenv("SDIMG") && !strcmp(devname[fd], "/dev/mmca"))) { if (getenv("SYSTAT")) systat_add(fd, 0x100000, 0); if (!getenv("NOBLOCKDEV")) for (;;) sleep(3600); }
-    { ssize_t r = real(fd, b, n); if (sd_fd(fd)) sd_log("read", fd, 0, (long)n, (long)r); return r; }
+    if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && !nf_fd(fd) && !(getenv("SDIMG") && !strcmp(devname[fd], "/dev/mmca"))) { if (getenv("SYSTAT")) systat_add(fd, 0x100000, 0); if (!getenv("NOBLOCKDEV")) { LOG("read(fd=%d %s) sobre dispositivo no modelado: el hilo se duerme", fd, devname[fd]); for (;;) sleep(3600); } }
+    { ssize_t r = real(fd, b, n); if (sd_fd(fd)) sd_log("read", fd, 0, (long)n, (long)r); if (nf_fd(fd)) nf_log("read", fd, 0, (long)n, (long)r); return r; }
 }
 /* SDIMG: traza de E/S sobre la imagen (primeras 80 llamadas) para ver qué lee libInfraFsys */
 static int sd_fd(int fd) { return fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && !strcmp(devname[fd], "/dev/mmca") && getenv("SDIMG"); }
 static void sd_log(const char *op, int fd, long a, long b, long r) { static int n; if (n++ < 80) LOG("SDIO %s fd=%d a=%ld b=%ld -> %ld", op, fd, a, b, r); }
-off64_t lseek64(int fd, off64_t o, int w) { static off64_t (*real)(int, off64_t, int); if (!real) real = nextsym("lseek64"); off64_t r = real(fd, o, w); if (sd_fd(fd)) sd_log("lseek64", fd, (long)(o / 512), w, (long)(r / 512)); return r; }
-ssize_t pread64(int fd, void *b, size_t n, off64_t o) { static ssize_t (*real)(int, void *, size_t, off64_t); if (!real) real = nextsym("pread64"); ssize_t r = real(fd, b, n, o); if (sd_fd(fd)) sd_log("pread64", fd, (long)(o / 512), (long)n, (long)r); return r; }
+/* NFTRACE=1: primeras 60 operaciones de E/S sobre /dev/nflasha4 (diagnóstico de FlashLib/DFA) */
+static void nf_log(const char *op, int fd, long a, long b, long r) { static int n; if (getenv("NFTRACE") && n++ < 60) LOG("NFIO %s fd=%d a=%ld b=%ld -> %ld", op, fd, a, b, r); }
+off64_t lseek64(int fd, off64_t o, int w) { static off64_t (*real)(int, off64_t, int); if (!real) real = nextsym("lseek64"); off64_t r = real(fd, o, w); if (nf_fd(fd)) nf_log("lseek64", fd, (long)o, w, (long)r); if (sd_fd(fd)) sd_log("lseek64", fd, (long)(o / 512), w, (long)(r / 512)); return r; }
+ssize_t pread64(int fd, void *b, size_t n, off64_t o) { static ssize_t (*real)(int, void *, size_t, off64_t); if (!real) real = nextsym("pread64"); ssize_t r = real(fd, b, n, o); if (nf_fd(fd)) nf_log("pread64", fd, (long)o, (long)n, (long)r); if (sd_fd(fd)) sd_log("pread64", fd, (long)(o / 512), (long)n, (long)r); return r; }
 ssize_t pwrite64(int fd, const void *b, size_t n, off64_t o) { static ssize_t (*real)(int, const void *, size_t, off64_t); if (!real) real = nextsym("pwrite64"); ssize_t r = real(fd, b, n, o); if (sd_fd(fd)) sd_log("pwrite64", fd, (long)(o / 512), (long)n, (long)r); return r; }
 long syscall(long n, ...) {  /* SDIMG: libInfraMediaCommon importa syscall(); se registra lo que haga sobre la imagen (fd en el primer argumento) */
     static long (*real)(long, long, long, long, long, long, long); if (!real) real = nextsym("syscall");

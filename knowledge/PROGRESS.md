@@ -756,3 +756,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 21-11-2026 G75 T99 E2E-3 (parcial): via fiel = inact_all previo (mem-20261020-log), MprIf sleep descartado; sus_android de 155 aborta im.elf desde ioctl uipc del shim (sonyshim+0x274b0); siguiente T100
 - 21-11-2026 G75 T100 E2E-3 (parcial): sonyshim+0x274b0 era fopen (falso positivo de pila, T99 corregido); IMLAST en consola.log al morir im.elf; aborto de sus_android sin causa; siguiente T101
 - 21-11-2026 G75 T101 E2E-3 (parcial): abort de sus_android era mount_fs (ANDROIDFS mount interpuesto); ahora inact_cmp f8/ON/act_cmp 102,155 llegan; corte: SEGV nulo libmpr+0x2a7254 (DVDFlashBackup); siguiente T102
+- 21-11-2026 G75 T102 E2E-3 (parcial): SEGV de DVDFlashBackup = tabla de FlashLib nula (FlashLib_Open falla con nflasha4 inerte); LIVE_NFLASH4 la sirve pero cuelga el demonio tras open(start) y ObjCntMgr cae en libmpr+0x71e00e; NFTRACE=1; siguiente T103
