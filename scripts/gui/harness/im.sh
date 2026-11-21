@@ -38,6 +38,11 @@ imexit_diag() {  # busybox grep no tiene -A: awk imprime la línea que casa y la
   grep -a "pthread_create" /tmp/$1.log | head -${IMTHRN:-30} | cut -c1-150 | sed "s/^/IMTHR /"
   tail -6 /tmp/$1.log | cut -c1-150 | sed "s/^/IMTAIL /"; dmesg | ctx "potentially" 16 "IMDMESG " | tail -${IMDMN:-18} | cut -c1-150; }
 run_im() { ( LD_PRELOAD=/usr/lib/sonyshim.so chroot /cam /usr/bin/im.elf $1 > /tmp/$2.log 2>&1; r=$?; echo "EXIT=$r" >> /tmp/$2.log; [ -n "$LIVE" ] && { [ "$r" != 0 ] && imexit_diag $2; echo "IMEXIT $2 $r"; } ) & }
+# ANDROIDFS=1 (T98, opt-in; ver el umount de sonyshim.c): árbol mínimo de /android/data que libSyncAndroid abre en inact (copias bk1/bk2 vacías)
+if [ -n "$ANDROIDFS" ]; then
+  mkdir -p /cam/android/data/data /cam/android/data/system /cam/android/data/backup /cam/setting
+  : > /cam/android/data/backup/bk1.bak; : > /cam/android/data/backup/bk2.bak
+fi
 if [ -n "$IMSPLIT" ]; then
   for a in ${IMLETTERS:-s g r u l i a}; do run_im $a imp_$a; done
   [ -n "$IMNOARG" ] && run_im "" imp_n

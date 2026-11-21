@@ -1605,6 +1605,18 @@ void *dlsym(void *h, const char *n) {  /* DLSYMLOG=1: símbolos que pide la UI (
     { const char *e = getenv("DLSYMSTACK"); if (e && n && strstr(n, e)) raise(SIGUSR1); }  /* pila del que pide ese símbolo */
     return r;
 }
+/* ANDROIDFS=1 (T98, opt-in): en la cámara /android/data/{data,system} están montados y libSyncAndroid los desmonta en su fase inact («In 155_SyncAndroid_inact»); el arnés no tiene el almacén de Android,
+ * el umount falla («error umount data/data») y sus_android aborta im.elf. Dato verificado que cambia: ahí el umount funciona.
+ * shortcut: no hay montaje real; solo se da por buen el umount de /android/*, mejorar si algún día se emula el almacén de Android. */
+int umount(const char *t) {
+    static int (*um)(const char *);
+    if (!um) um = nextsym("umount");
+    int r = -1;
+    if (getenv("ANDROIDFS") && t && (strstr(t, "/android") || strstr(t, "data/data") || strstr(t, "data/system"))) r = 0;  /* ruta relativa o absoluta */
+    else r = um(t);
+    LOG("umount(%s) -> %d", t ? t : "(null)", r); return r;
+}
+int umount2(const char *t, int f) { (void)f; return umount(t); }
 int system(const char *c) {
     static int (*sy)(const char *);
     if (!sy) sy = nextsym("system");
