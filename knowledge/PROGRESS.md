@@ -767,3 +767,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 23-11-2026 G95 §4 CFW 3.84 (build_cfw_objetivos --sd-lut, sin instalar): .dat c6cbcceb…; incluye el arreglo G89 DLSYM_PLT 0xe72e4 (la 3.83 daba pc=0 en DT_INIT) y el diagnóstico de rutas en el blob 0x2000; imagen nflasha15 descomprimida = files/ byte a byte; DT_INIT emulado arranca lutsd_hilo; av-cam frente a la 3.83 solo cambia en ZONA_B (tablas de fábrica, LUT-DE-1).
 - 23-11-2026 CFW 3.86 (= 3.84 renumerado, 3.85 previo en la cámara) instalado por USB con pmca-console; arranca; LUT-SD-2 pendiente de prueba con .LUT en la SD.
 - 23-11-2026 G96: 6 películas icónicas (peliculas.py, modelo paramétrico en YCbCr + curva S por canal) ajustadas a 5×9×9 (0,23–0,67 ΔE), LUT1…6.LUT en la SD; Tri-X descartado por ΔC ±18 %.
+- 23-11-2026 CFW 3.87 Film flasheado por USB desde 3.86 (2.º intento); arranque sin confirmar: la cámara no reaparece por USB.
