@@ -43,6 +43,53 @@ FILAS = (
 )
 CARPETA = "Film"
 
+# G99 — receta nativa por look: valores de RecipeLab 1.13.1 (`Recipes.java`, voxivoid; mismas codificaciones que `Params.writes`).
+# (estilo 1…14, sat, con, nitidez, modo WB (1 = AWB, 14 = K), kelvin, A-B, G-M, EV en 1/3, DRO (0 Off, 1…5 Lv, 6 Auto)).
+RECIPELAB = {
+    "Kodak Ektachrome E100": (7, 3, 1, 0, 1, 0, -1, 0, -1, 6), "Kodak Ektar 100": (1, 3, 1, 1, 1, 0, 0, 0, -1, 6),
+    "Kodak Gold 200": (1, 2, 1, 0, 1, 0, 3, 1, 1, 6), "Kodachrome 64": (8, 3, 2, 1, 1, 0, -1, 0, -1, 6),
+    "Kodak Portra 160": (4, -3, -2, 0, 1, 0, 1, -1, 2, 6), "Kodak Portra 400": (4, -1, -1, 0, 1, 0, 3, 1, 2, 6),
+    "Kodak Portra 800": (4, -2, -2, 0, 1, 0, 1, 1, 1, 6), "Kodak Ultra Max 400": (1, 0, 0, 0, 1, 0, 0, 1, 1, 6),
+    "Kodak Vision3 500T (daylight)": (3, -1, 0, 0, 14, 3200, 0, 0, 1, 3), "Kodak Vision 200T (Asteroid City)": (3, -2, -3, 0, 14, 5000, 2, 3, 1, 3),
+    "Cinestill 50D (Blue Velvet)": (1, -2, -1, 0, 14, 5500, -1, -1, 0, 6), "Classic Cinema": (1, 0, -1, 0, 14, 6000, 2, 0, 0, 3),
+    "Fuji C200": (1, 0, 0, 0, 1, 0, -1, 1, 0, 6), "Fuji Pro 400H": (9, -2, -2, 0, 1, 0, -1, 1, 2, 6),
+    "Fuji Superia 400": (1, 1, 1, 0, 1, 0, 1, 1, 1, 6), "Provia": (1, 1, 0, 0, 1, 0, 0, 0, 0, 6), "Velvia": (2, 3, 2, 0, 1, 0, 0, 0, 0, 6),
+    "Astia": (4, 0, -1, 0, 1, 0, 1, 0, 1, 6), "Classic Chrome": (1, -1, 2, 0, 1, 0, 3, 1, -1, 6),
+    "Classic Negative": (1, -3, 3, 1, 1, 0, -1, 1, 0, 6), "Reala Ace": (1, 0, 1, 0, 1, 0, 0, 0, 0, 6),
+    "Pro Neg Std": (4, -2, -1, 0, 1, 0, 0, 0, 0, 6), "Eterna": (3, -3, -2, -1, 1, 0, 0, 0, -1, 3),
+    "Eterna Bleach Bypass": (3, -3, 3, 0, 1, 0, 0, 0, -1, 0),
+}
+# Look del catálogo → receta de RecipeLab de la misma película (o la de cine más cercana si RecipeLab no la tiene).
+RECETA_DE = {
+    "kodak_ektachrome_100": "Kodak Ektachrome E100", "kodak_ektar_100": "Kodak Ektar 100", "kodak_gold_200": "Kodak Gold 200",
+    "kodak_kodachrome_64": "Kodachrome 64", "kodak_portra_160": "Kodak Portra 160", "kodak_portra_400": "Kodak Portra 400",
+    "kodak_portra_800": "Kodak Portra 800", "kodak_portra_800_push1": "Kodak Portra 800", "kodak_portra_800_push2": "Kodak Portra 800",
+    "kodak_ultramax_400": "Kodak Ultra Max 400", "kodak_verita_200d": "Classic Cinema", "kodak_vision3_200t": "Kodak Vision 200T (Asteroid City)",
+    "kodak_vision3_250d": "Classic Cinema", "kodak_vision3_500t": "Kodak Vision3 500T (daylight)", "kodak_vision3_50d": "Cinestill 50D (Blue Velvet)",
+    "fujifilm_c200": "Fuji C200", "fujifilm_pro_400h": "Fuji Pro 400H", "fujifilm_provia_100f": "Provia", "fujifilm_velvia_100": "Velvia",
+    "fujifilm_xtra_400": "Fuji Superia 400", "fujifilm_eterna_250": "Eterna", "fujifilm_eterna_250d": "Eterna", "fujifilm_eterna_400": "Eterna",
+    "fujifilm_eterna_500": "Eterna", "fujifilm_eterna_vivid_160": "Classic Cinema", "fujifilm_eterna_vivid_250d": "Classic Cinema",
+    "fujifilm_eterna_vivid_500": "Classic Cinema", "fujifilm_f64d": "Classic Cinema", "fujifilm_reala_500d": "Reala Ace",
+    "fuji_sim_astia": "Astia", "fuji_sim_classic_chrome": "Classic Chrome", "fuji_sim_classic_neg": "Classic Negative", "fuji_sim_eterna": "Eterna",
+    "fuji_sim_eterna_bleach_bypass": "Eterna Bleach Bypass", "fuji_sim_pro_neg": "Pro Neg Std", "fuji_sim_provia": "Provia",
+    "fuji_sim_reala_ace": "Reala Ace", "fuji_sim_velvia": "Velvia",
+}
+# Ids de Backup que toca una receta (RecipeLab `Params.ROW_ID` + ranuras dobles de `writes`): estilo, sat, con, nitidez, modo WB, kelvin, A-B (+AWB, +K),
+# G-M (+AWB, +K), EV (+copia), DRO (+nivel). El hilo guarda su valor al salir de Off y lo devuelve al volver a Off.
+REC_ID = (0x1070175, 0x1070187, 0x1070178, 0x107018A, 0x1070019, 0x1070018, 0x1070017, 0x107067F, 0x1070683,
+          0x1070016, 0x107067E, 0x1070682, 0x10700B8, 0x1070C7F, 0x1070104, 0x1070775)
+NO_TOCA = 999
+OFF_REC = 0x1800                                 # blob: [OFF_REC] = 1 si hay ajustes del usuario guardados, después un byte por REC_ID
+
+
+def receta_bytes(nombre: str) -> list[int]:
+    """Valor de cada REC_ID para una receta (codificación de `Params.writes`; NO_TOCA = no se escribe)."""
+    est, sat, con, nit, wb, k, ab, gm, ev, dro = RECIPELAB[nombre]
+    kel = wb == 14
+    dro_main = 0 if dro == 0 else 1 if dro == 6 else dro + 1
+    return [est, sat, con, nit, wb, k // 100 if kel else NO_TOCA, ab, NO_TOCA if kel else ab, ab if kel else NO_TOCA,
+            -gm, NO_TOCA if kel else -gm, -gm if kel else NO_TOCA, ev, ev, dro_main, dro + 1 if 1 <= dro <= 5 else 1]
+
 
 def orden() -> list[str]:
     """Ids del catálogo en el orden de los números de look (1…N)."""
@@ -86,6 +133,9 @@ def datos_h(npz: Path) -> str:
         "static const i32 FILA_BASE[NFILAS] = {" + ",".join(map(str, bases())) + "};",
         "static const i32 FILA_N[NFILAS] = {" + ",".join(str(len(x.opciones)) for x in a) + "};",
         "static const u8 LOOK_USA_T[NLOOKS] = {" + ",".join(map(str, usa)) + "};",
+        f"#define NREC {len(REC_ID)}", f"#define NO_TOCA {NO_TOCA}", f"#define OFF_REC {OFF_REC:#x}",
+        "static const u32 REC_ID[NREC] = {" + ",".join(f"{x:#x}u" for x in REC_ID) + "};",
+        "static const i16 RECETA[NLOOKS][NREC] = {" + ",".join("{" + ",".join(map(str, receta_bytes(RECETA_DE[i]))) + "}" for i in ids) + "};",
         "static const u8 LOOK_LUT[NLOOKS][1064] = {" + ",".join("{" + hx(t) + "}" for t in luts) + "};",
         "static const u16 LOOK_T[NLOOKS][1024] = {" + ",".join("{" + ",".join(map(str, c.tolist())) + "}" for c in curvas) + "};", ""])
 
@@ -109,13 +159,16 @@ def patch_vu2(vu2: bytes, compilado: tuple[bytes, dict[str, int]]) -> bytes:
     return lut_sd_vu2.patch(vu2, compilado, entrada="films_hilo")
 
 
-def blob_esperado(look: int, npz: Path) -> bytes:
-    """Blob que debe dejar el hilo para el look `look` (0 = Off)."""
+def blob_esperado(look: int, npz: Path, guardado: bytes | None = None) -> bytes:
+    """Blob que debe dejar el hilo para el look `look` (0 = Off); `guardado` = ajustes del usuario guardados (por defecto ceros si hay look)."""
     import avcam_dinamico as D
     import cube_a6000 as C
     b = bytearray(BK_TAM)
     struct.pack_into("<I", b, 0, MAGIC)
-    b[4], b[5], b[6] = 1, look, len(orden())
+    b[4], b[5], b[6], b[10] = 1, look, len(orden()), look
+    if look or guardado is not None:
+        b[OFF_REC] = 1
+        b[OFF_REC + 1:OFF_REC + 1 + len(REC_ID)] = guardado or bytes(len(REC_ID))
     if look:
         z = np.load(npz)
         k = [str(i) for i in z["ids"]].index(orden()[look - 1])

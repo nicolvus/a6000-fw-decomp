@@ -5,13 +5,16 @@
  * `BK_ID` (16 KB) el blob «FILM» con su tabla y su curva, y después el id de 1 B `ACK_ID` = nº del look (0 = Off): `av-cam` solo vigila ese byte.
  * La primera vez (blob sin magia «FILM», p. ej. tras otro CFW) pone a 0 las filas y el ACK: esos ids pueden traer valores de ajustes anteriores.
  * Sin libc ni datos globales escribibles (clang -fropi): el estado va en `struct ctx` (malloc); las funciones llegan por `dlsym`.
+ * G99: cada look lleva además su receta nativa (RecipeLab: estilo, saturación, contraste, nitidez, balance, EV, DRO; `RECETA`, `REC_ID`). Al salir de Off
+ * se guardan los valores del usuario en el blob (`OFF_REC`) y al volver a Off se devuelven; el blob anota en +10 el look cuya receta está puesta.
  * Contratos (g89 §2): Backup_read(id, buf) · Backup_write(id>>16, id, buf). */
 typedef unsigned int u32;
 typedef int i32;
 typedef unsigned short u16;
+typedef short i16;
 typedef unsigned char u8;
 
-#include "films_datos.h" /* NLOOKS, NFILAS, FILA_ID[], FILA_BASE[], FILA_N[], ACK_ID, LOOK_LUT[][1064], LOOK_T[][1024], LOOK_USA_T[] */
+#include "films_datos.h" /* NLOOKS, NFILAS, FILA_ID[], FILA_BASE[], FILA_N[], ACK_ID, LOOK_LUT[][1064], LOOK_T[][1024], LOOK_USA_T[], NREC, REC_ID[], RECETA[][] */
 
 #define BK_TAM 16384
 #define BK_ID 0x150005u
@@ -33,7 +36,8 @@ struct ctx {
     u8 blob[BK_TAM];
     u8 tmp[BK_TAM];
     u8 celda[NFILAS];
-    i32 activo, escrito, vueltas;
+    u8 guardado[NREC];
+    i32 activo, escrito, vueltas, rec, hay;
 };
 
 void *memset(void *p, int v, u32 n) {
@@ -76,6 +80,31 @@ static i32 blob_igual(struct ctx *c) {
     return 1;
 }
 
+/* Un ajuste nativo de 1 B: se lee entero (tamaño propio del id) y se reescribe solo el primer byte; si el id no existe no se toca. */
+static u8 lee_val(struct ctx *c, u32 id) {
+    return c->a.b_read(id, c->tmp) < 0 ? 0 : c->tmp[0];
+}
+
+static void pon_val(struct ctx *c, u32 id, i32 v) {
+    if (c->a.b_read(id, c->tmp) < 0) return;
+    c->tmp[0] = (u8)v;
+    c->a.b_write(id >> 16, id, c->tmp);
+}
+
+/* Receta del look `n`; con n = 0 devuelve los ajustes que tenía el usuario antes del primer look. */
+static void receta(struct ctx *c, i32 n) {
+    if (n && !c->hay) {
+        for (i32 k = 0; k < NREC; k++) c->guardado[k] = lee_val(c, REC_ID[k]);
+        c->hay = 1;
+    }
+    for (i32 k = 0; k < NREC; k++) {
+        if (n && RECETA[n - 1][k] != NO_TOCA) pon_val(c, REC_ID[k], RECETA[n - 1][k]);
+        else if (!n && c->hay) pon_val(c, REC_ID[k], c->guardado[k]);
+    }
+    if (!n) c->hay = 0;
+    c->rec = n;
+}
+
 /* Fila y opción de un look (1…NLOOKS) → fila r con FILA_BASE[r] < look ≤ FILA_BASE[r] + FILA_N[r] − 1. */
 static i32 fila_de(i32 look) {
     for (i32 r = 0; r < NFILAS; r++)
@@ -86,11 +115,17 @@ static i32 fila_de(i32 look) {
 /* Blob del look `n` (0 = Off): cabecera + tabla en la ranura 0 + curva. Escribe el Backup solo si cambia y lo relee: el ACK (lo único que vigila
  * `av-cam`) solo se escribe cuando el blob ya está entero en el Backup; si no, `escrito` queda sin cambiar y el siguiente sondeo lo reintenta. */
 i32 films_escribe(struct ctx *c, i32 n) {
+    if (c->rec != n) receta(c, n);
     memset(c->blob, 0, BK_TAM);
     *(u32 *)c->blob = MAGIC;
     c->blob[4] = 1;
     c->blob[5] = (u8)n;
     c->blob[6] = NLOOKS;
+    c->blob[10] = (u8)c->rec;
+    if (c->hay) {
+        c->blob[OFF_REC] = 1;
+        memcpy(c->blob + OFF_REC + 1, c->guardado, NREC);
+    }
     if (n > 0) {
         memcpy(c->blob + 16, LOOK_LUT[n - 1], TAM_TABLA);
         c->blob[8] = 1;
@@ -114,6 +149,11 @@ i32 films_escribe(struct ctx *c, i32 n) {
 void films_inicio(struct ctx *c) {
     i32 primera = c->a.b_read(BK_ID, c->tmp) < 0 || *(u32 *)c->tmp != MAGIC;
     c->activo = 0;
+    if (!primera) {
+        c->rec = c->tmp[10];
+        c->hay = c->tmp[OFF_REC] == 1;
+        memcpy(c->guardado, c->tmp + OFF_REC + 1, NREC);
+    }
     for (i32 r = 0; r < NFILAS; r++) {
         if (primera && fila(c, r)) escribe_byte(c, FILA_ID[r], 0);
         c->celda[r] = (u8)(primera ? 0 : fila(c, r));
