@@ -110,7 +110,7 @@ def de2000(a, b):
     a1p, a2p = (1 + G) * a1, (1 + G) * a2
     C1p, C2p = np.hypot(a1p, b1), np.hypot(a2p, b2)
     h1, h2 = np.degrees(np.arctan2(b1, a1p)) % 360, np.degrees(np.arctan2(b2, a2p)) % 360
-    dL, dC = L2 - L1, C2 - C1p
+    dL, dC = L2 - L1, C2p - C1p
     dh = h2 - h1
     dh = np.where(dh > 180, dh - 360, np.where(dh < -180, dh + 360, dh))
     dh = np.where(C1p * C2p == 0, 0, dh)
