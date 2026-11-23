@@ -37,17 +37,18 @@ def bionz_cfw(bionz: bytes, color: bool = True, tone: bool = True, silent_r5: bo
     return bytes(nuevo)
 
 
-def main(base_tar: Path, out_tar: Path, color: bool = True, tone: bool = True, silent_r5: bool = True, post=None) -> dict:
-    """`post(bytes) -> bytes` (opcional): parches sueltos sobre el av-cam del CFW (p. ej. `build_overlay_objetivos`)."""
+def main(base_tar: Path, out_tar: Path, color: bool = True, tone: bool = True, silent_r5: bool = True, post=None, bionz=None) -> dict:
+    """`post(bytes) -> bytes` (opcional): parches sueltos sobre el av-cam del CFW (p. ej. `build_overlay_objetivos`).
+    `bionz(bytes) -> bytes` (opcional): sustituye a `bionz_cfw` (G97: CFW limpio sin el parche PP del núcleo)."""
     tar = base_tar.read_bytes()
     entries, _ = tarball.parse(tar)
     members = {e.name: e.data for e in entries}
     part = tpzl.TpzlImage.parse(members[build.NFLASHA3])
     fat = fatimg.Fat16.parse(part.decompressed())
-    bionz = fat.read(build.AVCAM_NAME)
-    nuevo = bionz_cfw(bionz, color, tone, silent_r5)
+    original = fat.read(build.AVCAM_NAME)
+    nuevo = bionz(original) if bionz else bionz_cfw(original, color, tone, silent_r5)
     nuevo = post(nuevo) if post else nuevo
-    assert len(nuevo) == len(bionz) and nuevo != bionz
+    assert len(nuevo) == len(original) and nuevo != original
     fat2, _ = fat.patch(build.AVCAM_NAME, nuevo)
     part2, info = tpzl.patch_decompressed(part, fat2)
     assert fatimg.Fat16.parse(tpzl.TpzlImage.parse(part2).decompressed()).read(build.AVCAM_NAME) == nuevo
@@ -55,7 +56,7 @@ def main(base_tar: Path, out_tar: Path, color: bool = True, tone: bool = True, s
     assert sums.verify(part_sum, build.PART_ENTRY, part2)
     out, _ = tarball.rebuild(tar, {build.NFLASHA3: part2, build.PART_SUM: part_sum.encode("ascii")})
     out_tar.write_bytes(out)
-    return {"bloques_tpzl": len(info), "partition_igual_tamano": len(part2) == len(members[build.NFLASHA3]), "bytes_cambiados": sum(a != b for a, b in zip(bionz, nuevo))}
+    return {"bloques_tpzl": len(info), "partition_igual_tamano": len(part2) == len(members[build.NFLASHA3]), "bytes_cambiados": sum(a != b for a, b in zip(original, nuevo))}
 
 
 if __name__ == "__main__":

@@ -60,7 +60,8 @@ def _stub(va: int, init: int, dlsym: int, hilo: int) -> bytes:
     return out
 
 
-def patch(d: bytes, blob_sim: tuple[bytes, dict[str, int]] | None = None) -> bytes:
+def patch(d: bytes, blob_sim: tuple[bytes, dict[str, int]] | None = None, entrada: str = "lutsd_hilo") -> bytes:
+    """`entrada`: función del hilo (G97 usa `films_hilo` del userland de películas)."""
     blob, sim = blob_sim or U.compila()
     segs = A._segments(d)
     dyn_off, dyn = A._dynamic(d, segs)
@@ -70,7 +71,7 @@ def patch(d: bytes, blob_sim: tuple[bytes, dict[str, int]] | None = None) -> byt
     new_va = (top + A.ALIGN - 1) // A.ALIGN * A.ALIGN
     new_off = (len(d) + A.ALIGN - 1) // A.ALIGN * A.ALIGN
     code_va = new_va + STUB_TAM
-    stub = _stub(new_va, INIT_ORIG, DLSYM_PLT, code_va + sim["lutsd_hilo"])
+    stub = _stub(new_va, INIT_ORIG, DLSYM_PLT, code_va + sim[entrada])
     seg = bytearray(stub.ljust(STUB_TAM, b"\0") + blob)
     seg += b"\0" * (-len(seg) % 16)
     phdr_off = new_off + len(seg)
