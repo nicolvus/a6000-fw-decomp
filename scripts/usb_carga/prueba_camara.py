@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""Prueba en la cámara de la carga USB con la A6000 encendida (USB-CARGA). Telnet del Tweak (root).
+"""Prueba en la cámara de la alimentación USB con la A6000 encendida (USB-CARGA-1). Telnet del Tweak (root).
 
   prueba_camara.py subir                 sube analysis/usb-carga/build/*.ko a /tmp (tmpfs; desaparece al apagar)
   prueba_camara.py cargar [--buspwr]     insmod usb_darwin.ko (y usb_buspwr.ko con --buspwr)
   prueba_camara.py orden CMD...          escribe en /proc/udm/usb_darwin y muestra el dmesg nuevo.
                                          3 = tipo de adaptador, 4 = límite actual, '5 02' = límite 500 mA
-                                         ('5 03' 900, '5 04' 1500, '5 05' 2000), E = activar carga, F = desactivar
+                                         ('5 03' 900, '5 04' 1500, '5 05' 2000), E/F solo trazan (no cargan: la carga la corta Darwin)
   prueba_camara.py vigilar MIN [ETIQ]    nivel de batería (dumpsys) cada 60 s → analysis/camera-dumps/<fecha>-usb-carga/ETIQ.csv
   prueba_camara.py descargar             rmmod de ambos (apagar la cámara también lo deshace todo)
 Nada se escribe en NAND ni en NVRAM. A6000_HOST=ip.

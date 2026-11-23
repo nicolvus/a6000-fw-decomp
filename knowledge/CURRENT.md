@@ -118,7 +118,7 @@ Trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE § Conclus
 | R1 / R7 | PARCIAL / BLOQUEADO | Copia externa del respaldo; commits antiguos en `refs/pull/*` de GitHub (requiere al soporte de GitHub) |
 | DOC-SITIO-EN | ABIERTO (decisión del usuario) | Sitio de Pages solo en español y con el hito 3.23; traducir/actualizar o dejarlo así |
 | G2–G8 | ABIERTO | Carril de interfaz, independiente del obturador |
-| USB-CARGA-1 | ABIERTO (cámara, 23-11-2026) | Carga USB encendida: faltan solo `usb_darwin.ko`/`usb_buspwr.ko` (A6300) y NVRAM `0x1210001=6`; kit `scripts/usb_carga/` listo, probar §4 de [usb-carga-encendida](../docs/capture/usb-carga-encendida.md) |
+| USB-CARGA-1/3 | ABIERTO (23-11-2026) | Ni la A6300 carga encendida. Los 2 `.ko` de la A6300 darían solo alimentación USB (kit `scripts/usb_carga/`); la carga real exige parchear Darwin (`0xc4e8`, corte en «Off exit» `0x8c64`), ver [usb-carga-encendida](../docs/capture/usb-carga-encendida.md) |
 
 ## Bloqueos y límites de evidencia
 

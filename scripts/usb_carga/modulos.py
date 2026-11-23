@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Prepara los módulos de carga USB de la A6300 para la A6000 (USB-CARGA).
+"""Prepara los módulos de alimentación USB de la A6300 para la A6000 (USB-CARGA-1; no cargan la batería).
 
 La A6000 trae `libUsbBusPower.so` (sabe cargar `/usr/kmod/usb_darwin.ko`, tipo 6 de la NVRAM
 `0x1210001`) y el servicio `0x2804d3` en av-cam, pero no los módulos. Se toman de la A6300 2.01
