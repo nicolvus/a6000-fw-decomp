@@ -43,3 +43,5 @@ CCH-F3 (cerrado en formato), CCH-F5, LUT-A, LUT-B, LUT-C en [PENDIENTES](../PEND
 **Nota G72 (15-11-2026):** `0x43FA4000` NO está libre (402 B no nulos en vivo; `completed` en `0x43FA4B1E`). `lut_patch.apply_bytes` queda bloqueado hasta reubicar; ver [g72](g72-zona-cero-av-cam.md) y LUT-C.
 
 **Nota G73 (15-11-2026):** supera la nota G72 y la ubicación de §3: las 3 tablas van empaquetadas a 21 bits (1064 B) en `0x43C1FF24`, la cueva en `0x43BE3F28` y se desempaquetan a un búfer de `malloc(0x654)`; el puntero original se entrega si `malloc` falla. [g73](g73-memoria-dinamica-hlg-lut.md).
+
+**Nota G94 (23-11-2026):** corrige §1(a): `ConvSD` convierte la salida de la LUT de **BT.709 a BT.601** (croma medida en Unicorn: Cb' = 0,986·Cb − 0,111·Cr), no de 601 a 709; solo se activa en MOV/MON. El ajuste «LUT» de §3 entrega la misma tabla a todos los modos y, con ConvSD activo, la vista en vivo se desvía unos 3 ΔE de la foto: [g94](g94-lut-resolucion-entrega-fidelidad.md) · LUT-MODO-1.
