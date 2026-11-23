@@ -36,7 +36,10 @@ def cubo(tmp_path, n, f=None):
 
 def corre(compilado, cam, pasos=(None,)):
     cam.pasos = list(pasos)
-    return U.emula(cam, *compilado)
+    cam = U.emula(cam, *compilado)
+    cam.paquetes = [p for p in cam.aperturas if p.endswith(".LUT")]           # G95: cada ranura prueba antes el `.LUT` precalculado (test_g95)
+    cam.aperturas = [p for p in cam.aperturas if not p.endswith(".LUT")]
+    return cam
 
 
 # ---------- userland ARM ----------
@@ -46,6 +49,7 @@ def test_arm_igual_a_la_referencia(compilado, tmp_path, n):
     cam = corre(compilado, U.Camara({1: txt[1].encode()}))
     assert cam.backup == U.blob_esperado(txt) and cam.escrituras == 1
     assert list(cam.backup[8:14]) == [1, 0, 0, 0, 0, 0] and cam.aperturas[0] == "E:/LUT/LUT1.cube"
+    assert cam.paquetes == [f"E:/LUT/LUT{s}.LUT" for s in range(1, 7)]
 
 
 def test_arm_64_cubed_igual_a_la_referencia(compilado, tmp_path):

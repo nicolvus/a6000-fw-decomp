@@ -236,6 +236,42 @@ static i32 letra_sd(struct ctx *c) {
     return l >= 'A' && l <= 'z' ? l : 0;
 }
 
+/* G95 (LUT-PKG-1): `X:/LUT/LUT<n>.LUT` precalculado en el PC (`lut_pkg.py`): cabecera de 16 B + tabla de 1064 B ya en el formato de la ranura.
+ * La cámara no remuestrea nada: valida firma, versión, longitud y CRC32 y copia. */
+#define PKG_MAGIC 0x544C3641u /* "A6LT" */
+#define PKG_TAM (16 + TAM_TABLA)
+
+static u32 le32(const u8 *p) { return p[0] | p[1] << 8 | p[2] << 16 | (u32)p[3] << 24; }
+
+static u32 crc32(const u8 *p, i32 n) {
+    u32 c = 0xFFFFFFFFu;
+    for (i32 i = 0; i < n; i++) {
+        c ^= p[i];
+        for (i32 k = 0; k < 8; k++) c = (c >> 1) ^ (0xEDB88320u & (0u - (c & 1)));
+    }
+    return ~c;
+}
+
+i32 lutsd_paquete(const u8 *p, i32 n, u8 *dst) {
+    if (n != PKG_TAM || le32(p) != PKG_MAGIC || p[4] != 1 || (p[6] | p[7] << 8) != TAM_TABLA || le32(p + 8) != crc32(p + 16, TAM_TABLA)) return 0;
+    memcpy(dst, p + 16, TAM_TABLA);
+    return 1;
+}
+
+static i32 lee_paquete(struct ctx *c, i32 slot, u8 *dst) {
+    char path[24] = "X:/LUT/LUT1.LUT";
+    i32 h = -1, r, n = 0;
+    path[0] = (char)c->drive;
+    path[10] = (char)('1' + slot);
+    if (c->a.f_open(path, &h, 1) < 0 || h < 0) return 0;
+    do {                                   /* lee hasta PKG_TAM + 1 en tmp (libre durante el barrido): un byte de más delata un fichero largo */
+        r = c->a.f_read(h, c->tmp + n, PKG_TAM + 1 - n);
+        if (r > 0) n += r;
+    } while (r > 0 && n <= PKG_TAM);
+    c->a.f_close(h);
+    return lutsd_paquete(c->tmp, n, dst);
+}
+
 /* Un barrido: lee las ranuras, arma el blob y lo escribe en el Backup solo si cambia. Devuelve nº de ranuras válidas (-1: sin tarjeta). */
 i32 lutsd_barrido(struct ctx *c) {
     i32 nv = 0, letra = letra_sd(c);
@@ -246,7 +282,7 @@ i32 lutsd_barrido(struct ctx *c) {
     c->blob[4] = 1;
     c->blob[6] = SLOTS;
     for (i32 s = 0; s < SLOTS; s++)
-        if (lee_ranura(c, s, c->blob + 16 + s * TAM_TABLA)) { c->blob[8 + s] = 1; nv++; }
+        if (lee_paquete(c, s, c->blob + 16 + s * TAM_TABLA) || lee_ranura(c, s, c->blob + 16 + s * TAM_TABLA)) { c->blob[8 + s] = 1; nv++; }
     if (c->a.b_read(BK_ID, c->tmp) >= 0) {
         i32 igual = 1;
         for (i32 i = 0; i < BK_TAM && igual; i++) igual = c->blob[i] == c->tmp[i];
