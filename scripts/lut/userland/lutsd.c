@@ -34,6 +34,7 @@ struct ctx {
     u8 blob[BK_TAM];
     u8 tmp[BK_TAM];
     u8 chunk[CHUNK];
+    i32 diag[6 * 4], rd[6];
     char line[96];
     i32 *cube;     /* n³·3 en Q16, índice ((b·n+g)·n+r)·3+canal */
     i32 n, lo[3], hi[3], filled, ll, drive, err;
@@ -209,16 +210,34 @@ static void nodos(struct ctx *c, u8 *dst) {
     while (pos < TAM_TABLA) dst[pos++] = 0;
 }
 
+#define DIAG_OFF 0x2000 /* diagnóstico en el blob (lo ignora av-cam): 6×4 i32 de Fsys_Open por variante de ruta + 6 i32 del primer Fsys_Read ≤ 0; cabecera[14] = letra */
+#define VARIANTES 4
+
+/* Prueba `X:/LUT/LUTn.cube`, `X:\LUT\LUTn.cube` y las mismas con `.CUB` (8.3): no se sabe cuál acepta Fsys (g89 §4.3). */
+static i32 abre(struct ctx *c, i32 slot, i32 *h) {
+    for (i32 v = 0; v < VARIANTES; v++) {
+        char path[24] = "X:/LUT/LUT1.cube";
+        i32 r;
+        path[0] = (char)c->drive;
+        path[2] = path[6] = (v & 1) ? '\\' : '/';
+        path[10] = (char)('1' + slot);
+        if (v & 2) { path[12] = 'C'; path[13] = 'U'; path[14] = 'B'; path[15] = 0; }
+        *h = -1;
+        r = c->a.f_open(path, h, 1);
+        c->diag[slot * VARIANTES + v] = (r >= 0 && *h < 0) ? -2 : r;
+        if (r >= 0 && *h >= 0) return 1;
+    }
+    return 0;
+}
+
 static i32 lee_ranura(struct ctx *c, i32 slot, u8 *dst) {
-    char path[24] = "X:/LUT/LUT1.cube";
-    i32 h = -1, r;
-    path[0] = (char)c->drive;
-    path[10] = (char)('1' + slot);
+    i32 h = -1, r, primera = 1;
     c->cube = 0; c->n = 0; c->filled = 0; c->ll = 0; c->err = 0;
     for (i32 k = 0; k < 3; k++) { c->lo[k] = 0; c->hi[k] = 65536; }
-    if (c->a.f_open(path, &h, 1) < 0 || h < 0) return 0;
+    if (!abre(c, slot, &h)) return 0;
     do {
         r = c->a.f_read(h, c->chunk, CHUNK);
+        if (primera) { c->rd[slot] = r > 0 ? 0 : r; primera = 0; }
         if (r > 0) alimenta(c, c->chunk, r > CHUNK ? CHUNK : r);
     } while (r > 0 && !c->err);
     c->a.f_close(h);
@@ -281,8 +300,12 @@ i32 lutsd_barrido(struct ctx *c) {
     *(u32 *)c->blob = MAGIC;
     c->blob[4] = 1;
     c->blob[6] = SLOTS;
+    c->blob[14] = (u8)letra;
+    zero(c->diag, sizeof c->diag); zero(c->rd, sizeof c->rd);
     for (i32 s = 0; s < SLOTS; s++)
         if (lee_paquete(c, s, c->blob + 16 + s * TAM_TABLA) || lee_ranura(c, s, c->blob + 16 + s * TAM_TABLA)) { c->blob[8 + s] = 1; nv++; }
+    for (i32 i = 0; i < 24; i++) *(i32 *)(c->blob + DIAG_OFF + 4 * i) = c->diag[i];
+    for (i32 i = 0; i < 6; i++) *(i32 *)(c->blob + DIAG_OFF + 96 + 4 * i) = c->rd[i];
     if (c->a.b_read(BK_ID, c->tmp) >= 0) {
         i32 igual = 1;
         for (i32 i = 0; i < BK_TAM && igual; i++) igual = c->blob[i] == c->tmp[i];

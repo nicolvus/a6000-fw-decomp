@@ -1,7 +1,7 @@
 """G89 — inyecta el userland de `lut_sd_userland` (hilo que lee los `.cube` de la SD) en `viewUnified2.so` (A6000 3.21).
 
 Un único cambio de comportamiento: `DT_INIT` (`0xe596d`) pasa a un tramo nuevo que llama al `_init` original, resuelve `pthread_create` con `dlsym(RTLD_DEFAULT, …)` (el PLT
-`dlsym` `0xe6f94` ya existe en la biblioteca) y arranca `lutsd_hilo(dlsym)` en un hilo. Código nuevo en un segmento LOAD R+X añadido al final del fichero (misma técnica que `pid_space`,
+`dlsym` `0xe72e4` ya existe en la biblioteca) y arranca `lutsd_hilo(dlsym)` en un hilo. Código nuevo en un segmento LOAD R+X añadido al final del fichero (misma técnica que `pid_space`,
 `fn_lut_menu`: tabla de cabeceras reubicada dentro del segmento); no se toca ningún byte de código original ni ninguna relocación, así que se puede aplicar antes o después de `pid_space.patch`.
 """
 from __future__ import annotations
@@ -16,7 +16,7 @@ import cfw_ajustes
 import lut_sd_userland as U
 
 DT_INIT = 12
-DLSYM_PLT = 0xE6F94          # viewUnified2.so 3.21: stub PLT (ARM) de `dlsym@plt`
+DLSYM_PLT = 0xE72E4          # viewUnified2.so 3.21: stub PLT (ARM) de `dlsym@plt`
 INIT_ORIG = 0xE596D          # DT_INIT original (Thumb, bit 0 = 1)
 STUB_TAM = 0x80
 

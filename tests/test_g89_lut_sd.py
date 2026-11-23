@@ -52,6 +52,18 @@ def test_arm_igual_a_la_referencia(compilado, tmp_path, n):
     assert cam.paquetes == [f"E:/LUT/LUT{s}.LUT" for s in range(1, 7)]
 
 
+def test_ruta_alternativa_y_diagnostico_en_el_blob(compilado, tmp_path):
+    """La cámara quizá solo abre `X:\\LUT\\LUTn.CUB` (8.3, `\\`): el hilo prueba 4 variantes y deja el resultado de cada una en el blob (lo ignora av-cam)."""
+    txt = {2: cubo(tmp_path, 17)}
+    cam = U.Camara({2: txt[2].encode()})
+    cam.acepta = lambda p, letra: p == letra + ":\\LUT\\LUT" + p[10] + ".CUB"
+    cam = corre(compilado, cam)
+    assert list(cam.backup[8:14]) == [0, 1, 0, 0, 0, 0] and cam.backup[14] == ord("E")
+    assert cam.aperturas[4:8] == ["E:/LUT/LUT2.cube", "E:\\LUT\\LUT2.cube", "E:/LUT/LUT2.CUB", "E:\\LUT\\LUT2.CUB"]
+    d = struct.unpack_from("<30i", cam.backup, U.DIAG_OFF)
+    assert d[4:8] == (-1, -1, -1, 0) and d[0:4] == (-1,) * 4         # ranura 2: tres variantes fallan y la cuarta abre; ranura 1 (ausente): las 4 fallan
+
+
 def test_arm_64_cubed_igual_a_la_referencia(compilado, tmp_path):
     txt = {6: cubo(tmp_path, 64, C.SINT["pelicula"])}
     cam = corre(compilado, U.Camara({6: txt[6].encode()}))
@@ -63,7 +75,7 @@ def test_seis_ranuras_y_no_validos(compilado, tmp_path):
     cam = corre(compilado, U.Camara({k: v.encode() for k, v in txt.items()}))
     assert list(cam.backup[8:14]) == [1, 0, 1, 0, 0, 0]            # filas incompletas, 1D y vacío → ranura inválida (el av-cam usa el .dat/fábrica)
     assert cam.backup == U.blob_esperado(txt)
-    assert len(cam.aperturas) == 6
+    assert len(cam.aperturas) == 5 + 4                              # 5 ficheros abren a la primera; la ranura 2 (ausente) prueba las 4 variantes de ruta
 
 
 def test_sin_tarjeta_no_escribe_y_al_insertar_barre_una_vez(compilado, tmp_path):
@@ -72,7 +84,7 @@ def test_sin_tarjeta_no_escribe_y_al_insertar_barre_una_vez(compilado, tmp_path)
     inserta = lambda c: setattr(c, "letra", "F")
     corre(compilado, cam, [None, inserta, None, None])
     assert cam.escrituras == 1 and cam.aperturas[0] == "F:/LUT/LUT1.cube"      # la letra sale de Fsys_GetDriveLetter
-    assert all(p.startswith("F:") for p in cam.aperturas) and len(cam.aperturas) == 6   # un solo barrido aunque haya varios sondeos
+    assert all(p.startswith("F:") for p in cam.aperturas) and len(cam.aperturas) == 1 + 5 * 4   # un solo barrido aunque haya varios sondeos (ranura 1 abre; las 5 ausentes prueban 4 rutas)
 
 
 def test_blob_igual_no_reescribe_la_nvram(compilado, tmp_path):
@@ -115,6 +127,25 @@ def test_error_de_ΔE_frente_al_cube_exacto(compilado, tmp_path):
 
 
 # ---------- viewUnified2.so ----------
+@needs_vu2
+def test_vu2_dlsym_plt_apunta_a_la_ranura_jump_slot_de_dlsym():
+    """Regresión (arnés 3.83: pc=0 en DT_INIT): `DLSYM_PLT` debe ser el stub PLT cuya ranura GOT es la R_ARM_JUMP_SLOT de `dlsym`."""
+    import re
+    import shutil
+    import subprocess
+    if not shutil.which("readelf"):
+        pytest.skip("readelf ausente")
+    d = VU2.read_bytes()
+    rel = subprocess.run(["readelf", "-r", str(VU2)], capture_output=True, text=True, check=True).stdout
+    got = next(int(m.group(1), 16) for m in re.finditer(r"^([0-9a-f]{8})\s+\S+\s+R_ARM_JUMP_SLOT\s+\S+\s+dlsym$", rel, re.MULTILINE))
+    def rot(w):
+        r = 2 * ((w >> 8) & 0xF)
+        return ((w & 0xFF) >> r | (w & 0xFF) << (32 - r)) & 0xFFFFFFFF if r else w & 0xFF
+    a, b, c = struct.unpack_from("<III", d, V.DLSYM_PLT)   # add ip,pc,#; add ip,ip,#; ldr pc,[ip,#]!
+    assert (a >> 12, b >> 12, c >> 12) == (0xE28FC, 0xE28CC, 0xE5BCF)
+    assert V.DLSYM_PLT + 8 + rot(a) + rot(b) + (c & 0xFFF) == got
+
+
 @needs_vu2
 def test_vu2_segmento_dt_init_y_arranque_del_hilo(compilado):
     from unicorn import UC_ARCH_ARM, UC_HOOK_CODE, UC_MODE_THUMB, Uc

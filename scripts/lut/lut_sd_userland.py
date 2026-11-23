@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / "scripts"), str(ROOT / "scripts/gui"), str(Path(__file__).parent)]
 SRC = Path(__file__).parent / "userland/lutsd.c"
 SLOTS, TAM_TABLA, BK_TAM, BK_ID, MAGIC = 6, 1064, 16384, 0x150005, 0x5354554C
+DIAG_OFF = 0x2000          # diagnóstico del hilo (ignorado por av-cam): 6×4 i32 de Fsys_Open por variante de ruta, 6 i32 del primer Fsys_Read ≤ 0; cabecera[14] = letra de unidad
 BASE_COMPILADO = 0x10000
 
 
@@ -171,12 +172,14 @@ def referencia(texto: str) -> bytes | None:
     return bits.to_bytes(TAM_TABLA, "little")
 
 
-def blob_esperado(cubes: dict[int, str]) -> bytes:
+def blob_esperado(cubes: dict[int, str], letra: str = "E") -> bytes:
     """Blob de Backup que escribe el userland para `{ranura 1…6: texto .cube}` (las no válidas quedan a 0)."""
     b = bytearray(BK_TAM)
     struct.pack_into("<I", b, 0, MAGIC)
-    b[4], b[6] = 1, SLOTS
+    b[4], b[6], b[14] = 1, SLOTS, ord(letra)
     for s in range(SLOTS):
+        if (s + 1) not in cubes:                                   # diagnóstico: el arnés solo abre la variante 0, las 4 fallan (-1)
+            struct.pack_into("<4i", b, DIAG_OFF + 16 * s, -1, -1, -1, -1)
         t = referencia(cubes[s + 1]) if (s + 1) in cubes else None
         if t:
             b[8 + s] = 1
@@ -193,6 +196,7 @@ class Camara:
         self.escrituras = 0
         self.aperturas: list[str] = []
         self.log: list = []
+        self.acepta = lambda p, letra: p.startswith(letra + ":/LUT/LUT") and p.endswith(".cube")   # rutas que "abre" el Fsys simulado
         self.pasos: list = []            # un evento por cada `sleep`: callable(cam) o None; al agotarse se detiene la emulación
 
 
@@ -248,7 +252,7 @@ def emula(cam: Camara, blob: bytes | None = None, sim: dict | None = None, max_i
         elif n == "Fsys_Open":
             p = leer_c(r(0))
             cam.aperturas.append(p)
-            ok = cam.letra and p.startswith(cam.letra + ":/LUT/LUT") and p.endswith(".cube") and r(2) == 1
+            ok = cam.letra and cam.acepta(p, cam.letra) and r(2) == 1
             k = int(p[10]) if ok else 0
             if ok and k in cam.ficheros:
                 estado["pos"] = 0

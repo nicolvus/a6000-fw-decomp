@@ -38,3 +38,13 @@ La curva T (LUT-T-1) entrará como versión 2 cuando `av-cam` tenga su consumido
 - `lee_paquete` abre solo `X:/LUT/LUTn.LUT` (barra `/`; el nombre ya es 8.3). Si la cámara solo aceptara `\` como separador (diagnóstico pendiente de G89 §4.3), habría que probar también esa variante para el `.LUT`.
 - Fin de fichero: el bucle termina con `Fsys_Read` ≤ 0, igual que el `.cube`; la semántica del 0 sigue sin confirmar.
 - La vista en vivo y la foto reciben la misma tabla (G94 §3 bis), así que el paquete no cambia la fidelidad entre ambas: solo mejora el ajuste y quita trabajo a la cámara.
+
+## 4. CFW 3.84 (23-11-2026)
+Construido a petición del usuario, **sin instalar**: `python3 scripts/gui/build_cfw_objetivos.py build/cfw_lut_pkg --version 3.84 --sd-lut` (3 min). Es el CFW de objetivos con la LUT por SD de G89 más el paquete `.LUT` de este informe.
+- Paquete: `build/cfw_lut_pkg/pkg-3.84/package-3.84/firmware_packed.dat`, SHA-256 `c6cbcceb7f9f749df1ce858885845c7396522645fb40e1c6f246701951a3bd8b`. `.fdat`: `39e4ecc27f9aebfde0c3ced9220c7cb1039616063db994608a7854a77af80183`. El directorio `build/` no se versiona.
+- Lleva dos arreglos de G89 que la 3.83 (`build/cfw_lut_sd`, 21-11) no tenía. El primero es `DLSYM_PLT` = `0xe72e4`: con `0xe6f94` el arnés daba `pc=0` en `DT_INIT`; ahora lo cubre un test de regresión contra la relocalización `R_ARM_JUMP_SLOT` de `dlsym`. El segundo prueba 4 rutas por `.cube` (`/` o `\`, `.cube` o `.CUB`) y deja un diagnóstico en el blob, en `0x2000` y en la cabecera `[14]`, que `av-cam` ignora.
+- **Verificado sobre la imagen construida:**
+  - Se descomprimió `nflasha15-384.bin` (TPZL → ext2). Las cuatro bibliotecas parcheadas son idénticas byte a byte a las de `files/`. `e2fsck` solo avisa de los contadores de libres, como en las versiones anteriores.
+  - `viewUnified2.so` contiene el userland completo (4216 B, con `lutsd_paquete`). En Unicorn, `DT_INIT` del fichero construido llama al `_init` original, pide `dlsym("pthread_create")` por `0xe72e4` y arranca `lutsd_hilo`.
+  - Frente a la 3.83, `av-cam` solo difiere en `ZONA_B` (`0x43C1FF58…0x43C20B65`): son las tres tablas de fábrica, recalculadas con el ΔE2000 corregido de LUT-DE-1. Las cuevas no cambian.
+- **Uso:** `python3 scripts/lut/lut_pkg.py mi.cube LUT1.LUT` y copiar el resultado a `LUT/` en la SD, como `LUT1.LUT`…`LUT6.LUT`. Sin `.LUT`, el `.cube` sigue funcionando.
