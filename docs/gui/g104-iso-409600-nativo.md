@@ -86,7 +86,12 @@ Continúa G41–G48 (51200). Fuentes: bytes de `av-cam.bin` (3.21/3.38 iguales e
 - Filas = elementos fijos del diseño. Tabla valor→fila en `0x16c3d8` (función `0xbc138`, ≤ `0x4c`, si no fila `0x31`): `ISO_50…ISO_32000` (`0x30…0x4c`) → filas `0x2f…0x13`. Tabla fila→valor en `0x16c2c4` (`0xbd190`, filas 5…`0x3f`): **filas `0x6…0x12` libres (`0x4f`)**: 13 huecos encima de 32000 = 40000…640000. La A7S tiene la misma tabla.
 - Enum `WRAPPER_ISO` (nombres en vu4 `0x1778e3`): MFNR `0…0xe`, AUTO `0xf`, AUTO_MIN `0x10–0x1f`, AUTO_MAX `0x20–0x2f`, `ISO_50…ISO_51200` = `0x30…0x4e`, `ISO_INVALID` `0x4f`. `getIso` modo 0 lee `getModelInfo("@M00B", 0x48)` claves `0x1f4/5/6`; mín./máx. son los límites del ISO AUTO, no los de la lista.
 - Disponibilidad por fila: `WrapperIso::isInhOn` → `processDataMgr` elemento `0x15` → `isValueGrayedOut(id de proceso)` (`+0x67ea8`, `tbh` ≤ `0x4a`) → `WrapperSettingUtil::isInhOn(clave)`: `0x1e`→`0x13b` (32000), `0x1f`→`0x13c`, `0x20`→`0x38f`; esas claves las resuelve el motor de inhibiciones de `libObj` (`0xa76540`: campo de 105 palabras por factor, servicio externo), no el MAX.
-- Arnés (perfil `x1`, `libObj` con el MAX forzado a `0x26` en `0x4db86e` **y** `0x4db954`): la lista sigue acabando en 25600 → el tope visible no es el MAX de `0x4db7c4`. `SKIPFN=a76540` impide arrancar.
+- Pruebas en el arnés (fábrica 3.21 + overlay; botón ISO = `derecha`), todas con la lista acabando en 25600 (sin ▼ debajo):
+  - `x1`: `libObj` con el MAX forzado a `0x26` en `0x4db86e` **y** `0x4db954`;
+  - `x3`: + `isValueGrayedOut` de `processDataMgr` sin inhibición para los ids `0x1e–0x20` (32000–51200);
+  - `x4`: + `CautionConfig` con la lista `Default` (`iso_list_patch`).
+  Así que el tope visible no sale del MAX, ni de la atenuación de `processDataMgr`, ni de los nodos. `x5` (`viewUnified4` con 25600 llevado a la fila libre `0x12`) dejó la pantalla en negro tras restaurar el estado: no concluyente. `SKIPFN=a76540` impide arrancar.
+- **Lo que decide el tope visible sigue sin localizar.** Siguiente paso: arreglar `TRACELIB` del shim (no arma trampas en `viewUnified4`) y trazar `ViewManualControlDial_D`/`ViewIsoSensitivity` al abrir la lista.
 ### 8.3 Envío del ISO manual a av-cam (parte de ISO-409-C)
 - `0x4e7c30` (libObj) arma la orden de ajustes: lee `PARAMID_ISO_SPEED_RATE_SET` `0x9700` (y `MIN/MAX_SET` `0x9701/2`, `ACT` `0x9703–5`) y la convierte con `0x4e10b8` (VALUEID → código); `MENU_STD_RANGE_*_SET/ACT` (`0x989f/0x98a2/0x98a0/0x98a3`) con `0x4e42b4`. El código va al mensaje con `0x4a5836`. Nombres de PARAMID verificados en la tabla `0xfdc940 − 4·0x96ff`.
 ### 8.4 Arnés
