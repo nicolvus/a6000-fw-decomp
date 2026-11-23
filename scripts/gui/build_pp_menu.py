@@ -28,6 +28,7 @@ import pid_space
 import pp_descriptors
 import pp_factory
 import pp_menu_spec as M
+import rueda_film
 import silent_descriptor
 import uxc_strings
 
@@ -36,6 +37,7 @@ RES = 0x0204_0000
 
 FN_TREES: list = []      # ajustes que solo se cuelgan del menú Fn (nodo suelto, sin entrada en las páginas del menú): sus VA relativas quedan en FN_DELTAS (fn_lut_menu.py)
 FN_DELTAS: list = []
+RUEDA_FILM = False        # G101: el nodo de FN_TREES[0] también asignable a la rueda de control (valor 9; rueda_film.py)
 SD_USERLAND = False      # G89: añade el userland de lectura de `.cube` de la SD a viewUnified2.so (lut_sd_vu2.py)
 EXTRA_TREES: list = []   # carpetas adicionales (p. ej. «CFW» de build_cfw_objetivos): sus ajustes ya están en M.SETTINGS/M.PIDS; cada una entra como entrada propia del menú
 
@@ -131,6 +133,11 @@ def patch_caution(data: bytes, ids: dict):
     return bytes(res), deltas[0] if len(deltas) == 1 else deltas
 
 
+def _va(lib: bytes, nombre: str) -> int:
+    segs = A._segments(lib)
+    return G.sym(lib, segs, A._dynamic(lib, segs)[1], nombre)[2][0]
+
+
 def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gamut=False, acciones=False, entradas_previas=(), silent=False, hlg=False):
     a, b, dest = Path(dev_a) / "nflasha15_unpacked_unpacked", Path(dev_b) / "nflasha15_unpacked_unpacked", Path(dest)
     (dest / "lib").mkdir(parents=True, exist_ok=True)
@@ -156,6 +163,8 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
     caution, delta = patch_caution((a / "lib/CautionConfig.so").read_bytes(), ids)
     if FN_TREES:                                     # G86-B: «LUT» elegible en las 12 ranuras Fn
         caution = fn_lut_listas.patch_caution(caution, ids[M.SETTINGS[FN_TREES[0]].label] & 0xFFFF, ids[fn_lut_listas.AYUDA] & 0xFFFF)
+    if RUEDA_FILM and FN_TREES:                      # G101: «Film» en la lista de asignación de la rueda de control
+        caution = rueda_film.patch_caution(caution, ids[M.SETTINGS[FN_TREES[0]].label] & 0xFFFF, ids[fn_lut_listas.AYUDA] & 0xFFFF)
     emit("lib/CautionConfig.so", caution)
     # G28: la UI usa la copia del gestor de procesos que lleva viewUnified2.so (cmn_view_processDataMgr.so no se carga) y los pids originales los usa casi todos algún nodo:
     # los ajustes de PP van en pids nuevos (espacio ampliado en pid_space.py); Silent conserva el 0x12 (descriptor propio sobre la tabla original, antes de copiarla).
@@ -164,6 +173,11 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
         vu2 = silent_descriptor.patch(vu2, silent_descriptor.TABLA_D_VU2, silent_descriptor.DESC_EFCS_VU2)
     vu2 = pid_space.patch(vu2, ajustes, gris_efcs=silent)
     vu2 = fn_lut_listas.patch_vu2(vu2) if FN_TREES else vu2
+    if RUEDA_FILM and FN_TREES:                      # G101: pid 0xdc a 6 opciones (valor 9) y nodo «Film» con 9 en ViewStlrec/ViewMovieRecPatch (y ViewTriDial de vu7)
+        orig_c = (a / "lib/CautionConfig.so").read_bytes()
+        d_iso = FN_DELTAS[0] + _va(orig_c, "cmnViewSettingNodeRootAelWShutter") - _va(orig_c, rueda_film.SIMBOLO)   # nodo «Film» respecto al símbolo que importan vu2/vu7
+        vu2 = rueda_film.patch_vistas(rueda_film.patch_descriptor(vu2), rueda_film.SITIOS_VU2, d_iso)
+        emit("lib/viewUnified7.so", rueda_film.patch_vistas((a / "lib/viewUnified7.so").read_bytes(), (rueda_film.SITIO_VU7,), d_iso))
     if SD_USERLAND:                                  # G89: hilo del userland que lee los .cube de la SD (DT_INIT → lutsd_hilo), independiente de los demás parches
         import lut_sd_vu2
         vu2 = lut_sd_vu2.patch(vu2)

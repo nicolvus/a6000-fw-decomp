@@ -773,3 +773,4 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 23-11-2026 G100: 3.89 confirmado en cámara. CFW 3.90: «Film» con Off + 38 en una sola lista del menú Fn (franja horizontal, infraestructura G86) y en las 12 ranuras; filas sincronizadas, un solo look activo. Sin instalar; tecla personalizada pendiente (FILM-8).
 - 23-11-2026 G101: «Film» en una tecla, estático: C1/AEL abren pantallas fijas por función; la rueda de control abre la franja Wheel en ViewTriDial con el nodo elegido por valor (9/10/12 libres). Plan de parche en FILM-8; sin implementar.
 - 23-11-2026 STOCK-391: firmware oficial 3.21 reinstalado como 3.91 (`build_326.py 0x91`, 8/8) por USB desde el CFW 3.89; `pmca-console info` = 3.91. Próximo CFW debe ser > 3.91.
+- 23-11-2026 G101: CFW 3.91 = 3.90 + «Film» en la rueda de control (valor 9; lista, descriptor 0xdc y cueva en las tres vistas que abren la franja Wheel). Unicorn y cadena sobre ficheros reales; sin instalar.

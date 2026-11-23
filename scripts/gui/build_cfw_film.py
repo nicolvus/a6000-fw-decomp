@@ -49,6 +49,7 @@ def menu_film() -> None:
     M.TREE = ("folder", FU.CARPETA, M.paginar([a.id for a in aj]))
     M.PIDS[:] = range(M.PIDS[0], M.PIDS[0] + len(aj) + 1)
     build_pp_menu.EXTRA_TREES[:] = []
+    build_pp_menu.RUEDA_FILM = True              # G101: «Film» también en la rueda de control (al girarla, la franja horizontal de los 39)
     build_pp_menu.FN_TREES[:] = [todas.id]       # G100: «Film» con Off + los 38 en el menú Fn (franja horizontal) y en las listas de las 12 ranuras
     build_pp_menu.SD_USERLAND = False
 
@@ -58,7 +59,7 @@ def build_files(work: Path, looks: Path) -> Path:
     silent = work / "silent"
     build_silent_menu_test.main(C.DEV_A, C.DEV_B, silent, pid_silent=C.PID_SILENT)
     stage = work / "stage"
-    for rel in ("lib/libObj.so", "lib/CautionConfig.so", "lib/viewUnified2.so", "lib/viewUnified4.so"):
+    for rel in ("lib/libObj.so", "lib/CautionConfig.so", "lib/viewUnified2.so", "lib/viewUnified4.so", "lib/viewUnified7.so"):
         (stage / C.USR / rel).parent.mkdir(parents=True, exist_ok=True)
         shutil.copy(orig / rel, stage / C.USR / rel)
     (stage / C.USR / "share/app").mkdir(parents=True, exist_ok=True)
