@@ -563,6 +563,7 @@ Carril separado: no reutiliza ni modifica conclusiones de captura/sensor. Índic
 | 31-10-2026 | README: secciones «Cómo replicar el obturador electrónico completo» y «Qué falló en el 3.25 y cómo se podría solucionar (sin probar)», a petición del usuario. |
 | 22-11-2026 | G91: LUT-SW-1 hecho offline (`.cube` completo por software sobre el JPEG en la cámara); nuevos LUT-SW-2 (cámara) y LUT-DE-1 (ΔE2000 corregido, re-medir G71/G88/G90). |
 | 23-11-2026 | G92: auditoría de la cadena de color; nuevos LUT-T-1, LUT-T-2 y LUT-2C-1 (curva 1D tras la gamma en ranura libre, verificada en Unicorn). |
+| 23-11-2026 | G93: ampliar la LUT 3D del ISP a 17³ descartado con prueba (SRAM sin sitio, geometría fija, IP idéntico en A7S/A6300); sin pendientes nuevos: las vías reales siguen en LUT-SW-2 y LUT-T-1. |
 
 | 31-10-2026 | README y E25-23: 30 s funciona con el 3.23 según la prueba del usuario y T053; el cuelgue de E25-23 queda como incidente de esa sesión. |
 | 31-10-2026 | **E26-R36 cerrado (offline):** causa del fallo del 3.25 identificada en el formato TPZL de `nflasha3` (residuo no transmitido al LDEC; bloques de 1 registro); 3.23 vs 3.25 = Darwin + `nflasha3`; `tpzl.py` corregido con regresión; README, STATE, CURRENT y E25-27 actualizados. Informe [R36](capture/e26-r36-causa-fallo-325.md). |
