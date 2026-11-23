@@ -1,7 +1,7 @@
 /* G97 — simulaciones de película en la cámara, userland (se inyecta en `viewUnified2.so`, proceso de `libObj`; mismo arranque por `DT_INIT` que G89).
  * Los 38 looks (LUT 5×9×9 empaquetada a 21 bits + curva 1D de 1024 u16 tras la gamma) van como datos de solo lectura en este mismo segmento (`films_datos.h`,
  * generado por `film_userland.py`). El menú «Film» tiene NFILAS filas (ajustes CFW de 1 B en el Backup, ≤ 7 opciones: Off + looks). Cada SONDEO_US el hilo lee las
- * filas; manda la última fila que cambió a un look (si se pone en Off, la primera fila que siga con look). Al cambiar el look activo escribe en el id de Backup
+ * filas (+ la lista única del menú Fn, G100); manda la última fila que cambió y las demás se sincronizan con ese look (Off en ella = Off). Al cambiar el look activo escribe en el id de Backup
  * `BK_ID` (16 KB) el blob «FILM» con su tabla y su curva, y después el id de 1 B `ACK_ID` = nº del look (0 = Off): `av-cam` solo vigila ese byte.
  * La primera vez (blob sin magia «FILM», p. ej. tras otro CFW) pone a 0 las filas y el ACK: esos ids pueden traer valores de ajustes anteriores.
  * Sin libc ni datos globales escribibles (clang -fropi): el estado va en `struct ctx` (malloc); las funciones llegan por `dlsym`.
@@ -23,6 +23,7 @@ typedef unsigned char u8;
 #define OFF_T 0x1000
 #define SONDEO_US 300000u
 #define VERIFICA 10
+#define NCAT (NFILAS - 1) /* G100: la última fila es la lista única del menú Fn (Off + los 38, base 0) */
 
 struct api {
     i32 (*b_read)(u32, void *);
@@ -107,7 +108,7 @@ static void receta(struct ctx *c, i32 n) {
 
 /* Fila y opción de un look (1…NLOOKS) → fila r con FILA_BASE[r] < look ≤ FILA_BASE[r] + FILA_N[r] − 1. */
 static i32 fila_de(i32 look) {
-    for (i32 r = 0; r < NFILAS; r++)
+    for (i32 r = 0; r < NCAT; r++)
         if (look > FILA_BASE[r] && look < FILA_BASE[r] + FILA_N[r]) return r;
     return -1;
 }
@@ -145,6 +146,16 @@ i32 films_escribe(struct ctx *c, i32 n) {
     return !igual;
 }
 
+/* Un solo look activo: lo muestran su fila de categoría y la lista única; las demás filas quedan en Off. */
+static void sincroniza(struct ctx *c) {
+    i32 rc = fila_de(c->activo);
+    for (i32 r = 0; r < NFILAS; r++) {
+        i32 v = r == NCAT ? c->activo : r == rc ? c->activo - FILA_BASE[r] : 0;
+        if (fila(c, r) != v) escribe_byte(c, FILA_ID[r], v);
+        c->celda[r] = (u8)v;
+    }
+}
+
 /* Arranque: primera vez sin blob «FILM» → filas y ACK a 0; si no, el look activo es el ACK si su fila lo sigue mostrando (si no, la primera fila con look). */
 void films_inicio(struct ctx *c) {
     i32 primera = c->a.b_read(BK_ID, c->tmp) < 0 || *(u32 *)c->tmp != MAGIC;
@@ -161,25 +172,24 @@ void films_inicio(struct ctx *c) {
     if (!primera) {
         i32 k = lee_ack(c), r = fila_de(k);
         if (k && r >= 0 && c->celda[r] == k - FILA_BASE[r]) c->activo = k;
-        for (r = 0; r < NFILAS && !c->activo; r++)
+        for (r = 0; r < NCAT && !c->activo; r++)
             if (c->celda[r]) c->activo = FILA_BASE[r] + c->celda[r];
     }
+    sincroniza(c);
     films_escribe(c, c->activo);
 }
 
-/* Un sondeo: devuelve 1 si cambió el look activo (y se escribió). */
+/* Un sondeo: manda la última fila que cambió (Off en ella = Off) y las demás se sincronizan; devuelve 1 si se escribió el look. */
 i32 films_paso(struct ctx *c) {
+    i32 cambio = 0;
     for (i32 r = 0; r < NFILAS; r++) {
         i32 v = fila(c, r);
         if (v == c->celda[r]) continue;
         c->celda[r] = (u8)v;
-        if (v) c->activo = FILA_BASE[r] + v;
-        else if (fila_de(c->activo) == r) {
-            c->activo = 0;
-            for (i32 s = 0; s < NFILAS && !c->activo; s++)
-                if (c->celda[s]) c->activo = FILA_BASE[s] + c->celda[s];
-        }
+        c->activo = v ? FILA_BASE[r] + v : 0;
+        cambio = 1;
     }
+    if (cambio) sincroniza(c);
     if (++c->vueltas >= VERIFICA) {             /* cada ~3 s: el Backup sigue con el blob y el ACK del look activo (si no, se reescriben) */
         c->vueltas = 0;
         c->escrito = -1;

@@ -103,6 +103,12 @@ def ajustes() -> list[cfw.Ajuste]:
             for k, (et, looks) in enumerate(FILAS)]
 
 
+def ajuste_todas() -> cfw.Ajuste:
+    """G100: lista única Off + los 38 (no entra en las páginas del menú, cuyo tope es 7; va al menú Fn, cuya franja horizontal desplaza). Id libre 9 de g56."""
+    return cfw.Ajuste("film_todas", CARPETA, cfw.ID_LIBRES[9], (("Off", 0),) + tuple((n, k) for k, n in enumerate((n for _, looks in FILAS for _, n in looks), 1)),
+                      cfw.PID_PRIMERO + len(FILAS))
+
+
 def bases() -> list[int]:
     b, out = 0, []
     for _, looks in FILAS:
@@ -126,11 +132,11 @@ def datos_h(npz: Path) -> str:
     curvas = [z["T"][pos[i]].astype("<u2") for i in ids]
     usa = [int(str(z["curva"][pos[i]]) != "sin_T") for i in ids]
     hx = lambda b: ",".join(f"0x{x:02x}" for x in b)
-    a = ajustes()
+    a = [*ajustes(), ajuste_todas()]                # la lista única va la última: base 0, Off + 38
     return "\n".join([
         f"#define NLOOKS {len(ids)}", f"#define NFILAS {len(a)}", f"#define ACK_ID {ACK_ID:#x}u",
         "static const u32 FILA_ID[NFILAS] = {" + ",".join(f"{x.backup:#x}u" for x in a) + "};",
-        "static const i32 FILA_BASE[NFILAS] = {" + ",".join(map(str, bases())) + "};",
+        "static const i32 FILA_BASE[NFILAS] = {" + ",".join(map(str, [*bases(), 0])) + "};",
         "static const i32 FILA_N[NFILAS] = {" + ",".join(str(len(x.opciones)) for x in a) + "};",
         "static const u8 LOOK_USA_T[NLOOKS] = {" + ",".join(map(str, usa)) + "};",
         f"#define NREC {len(REC_ID)}", f"#define NO_TOCA {NO_TOCA}", f"#define OFF_REC {OFF_REC:#x}",

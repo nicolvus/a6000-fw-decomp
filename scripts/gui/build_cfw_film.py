@@ -42,13 +42,14 @@ def bionz(original: bytes) -> bytes:
 def menu_film() -> None:
     """La especificación del menú pasa a ser solo la carpeta «Film» (los ajustes guardan 1 B en el Backup; sin Picture Profile)."""
     aj = FU.ajustes()
+    todas = FU.ajuste_todas()
     M.SETTINGS.clear()
-    for a in aj:
+    for a in (*aj, todas):
         M.SETTINGS[a.id] = M.S(a.id, a.label, 0, tuple((t, i) for i, (t, _) in enumerate(a.opciones)), "g97", backup=a.backup)
     M.TREE = ("folder", FU.CARPETA, M.paginar([a.id for a in aj]))
-    M.PIDS[:] = range(M.PIDS[0], M.PIDS[0] + len(aj))
+    M.PIDS[:] = range(M.PIDS[0], M.PIDS[0] + len(aj) + 1)
     build_pp_menu.EXTRA_TREES[:] = []
-    build_pp_menu.FN_TREES[:] = []
+    build_pp_menu.FN_TREES[:] = [todas.id]       # G100: «Film» con Off + los 38 en el menú Fn (franja horizontal) y en las listas de las 12 ranuras
     build_pp_menu.SD_USERLAND = False
 
 

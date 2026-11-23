@@ -30,6 +30,14 @@ def _fila(bk, r, v):
     bk.ids[FU.ajustes()[r].backup] = bytes([v]) + bytes(7)
 
 
+def _todas(bk, v):
+    bk.ids[FU.ajuste_todas().backup] = bytes([v]) + bytes(7)
+
+
+def _filas(bk):
+    return [bk.lee(a.backup)[0] for a in (*FU.ajustes(), FU.ajuste_todas())]
+
+
 def test_menu_cabe_y_numera_los_38():
     a = FU.ajustes()
     assert len(FU.orden()) == 38 == len(set(FU.orden()))
@@ -41,7 +49,7 @@ def test_userland_primera_vez_limpia_y_elige_la_ultima_fila(compilado):
     bk = FU.Backup()
     for r in range(len(FU.FILAS)):
         _fila(bk, r, 3 % len(FU.ajustes()[r].opciones))           # restos de otro CFW en los ids libres
-    pasos = [None, lambda b: _fila(b, 1, 3), None, lambda b: _fila(b, 0, 2), None, lambda b: _fila(b, 0, 0), None, lambda b: _fila(b, 1, 0), None]
+    pasos = [None, lambda b: _fila(b, 1, 3), None, lambda b: _fila(b, 0, 2), None, lambda b: _fila(b, 0, 0), None, lambda b: _todas(b, 1), None]
     vistos = []
 
     def mira(b):
@@ -50,9 +58,9 @@ def test_userland_primera_vez_limpia_y_elige_la_ultima_fila(compilado):
     bk = FU.emula(bk, compilado, pasos)
     assert all(bk.lee(FU.ajustes()[r].backup)[0] == 0 for r in range(2, len(FU.FILAS)))   # primera vez: filas a 0
     b1 = FU.bases()[1]
-    esperado = [(0, 0), (b1 + 3, b1 + 3), (b1 + 3, b1 + 3), (2, 2), (2, 2), (b1 + 3, b1 + 3), (b1 + 3, b1 + 3), (0, 0), (0, 0)]
+    esperado = [(0, 0), (b1 + 3, b1 + 3), (b1 + 3, b1 + 3), (2, 2), (2, 2), (0, 0), (0, 0), (1, 1), (1, 1)]   # un solo look activo: Off en su fila = Off
     assert vistos == esperado
-    assert bk.lee(FU.BK_ID) == FU.blob_esperado(0, NPZ)
+    assert bk.lee(FU.BK_ID) == FU.blob_esperado(1, NPZ)
 
 
 def test_userland_blob_de_un_look_y_sin_reescrituras(compilado):
@@ -171,3 +179,83 @@ def test_userland_arranque_con_receta_puesta_no_la_reescribe(compilado):
     _fila(bk, 6, 2)
     bk = FU.emula(bk, compilado, [None, None])
     assert not set(bk.escrituras) & set(FU.REC_ID) and bk.lee(FU.BK_ID) == FU.blob_esperado(look, NPZ, bytes(range(len(FU.REC_ID))))
+
+
+def test_fila_todas_tiene_off_y_los_38_en_orden_y_un_id_propio():
+    t = FU.ajuste_todas()
+    assert [x for x, _ in t.opciones] == ["Off"] + [n for _, looks in FU.FILAS for _, n in looks]
+    assert t.backup not in {a.backup for a in FU.ajustes()} | {FU.ACK_ID} and t.pid not in {a.pid for a in FU.ajustes()}
+
+
+def test_userland_lista_unica_y_filas_sincronizadas(compilado):
+    bk = FU.Backup()
+    bk.ids[FU.BK_ID] = FU.blob_esperado(0, NPZ)
+    look = FU.bases()[6] + 2                                        # Classic Chrome, elegido desde la lista única (Fn)
+    vistos = []
+    pasos = [lambda b: _todas(b, look), lambda b: vistos.append(_filas(b)), lambda b: _fila(b, 2, 2), lambda b: vistos.append(_filas(b)),
+             lambda b: _todas(b, 0), lambda b: vistos.append(_filas(b))]
+    bk = FU.emula(bk, compilado, pasos)
+    filas = [0] * len(FU.FILAS)
+    filas[6] = 2
+    assert vistos[0] == filas + [look]                              # la fila de su categoría lo muestra; las demás en Off
+    v5 = FU.bases()[2] + 2
+    filas = [0] * len(FU.FILAS)
+    filas[2] = 2
+    assert vistos[1] == filas + [v5]                                # elegido por categoría: la lista única lo sigue
+    assert vistos[2] == [0] * (len(FU.FILAS) + 1) and bk.lee(FU.ACK_ID)[0] == 0
+
+
+def test_userland_arranque_ignora_restos_en_la_lista_unica(compilado):
+    bk = FU.Backup()
+    bk.ids[FU.BK_ID] = FU.blob_esperado(4, NPZ)
+    bk.ids[FU.ACK_ID] = bytes([4]) + bytes(7)
+    _fila(bk, 0, 4)
+    _todas(bk, 24)                                                  # valor de otro CFW (Color Chrome) en el mismo id
+    bk = FU.emula(bk, compilado, [None, None])
+    assert bk.lee(FU.ACK_ID)[0] == 4 and _filas(bk)[-1] == 4
+
+
+
+def test_cfw_film_390_lleva_film_con_los_39_en_el_menu_fn_y_las_12_ranuras():
+    """Ficheros del 3.90 construido: ranura Fn → valor 0x26 → hijo 39 → nodo «Film» con pid/Backup de la lista única y Off + los 38 en orden."""
+    import add_menu_entry as A
+    import build_pp_gamma_menu as G
+    import fn_lut_menu as F
+    import test_g86_fn_lut as T
+    import test_g87_fn_asignacion as T87
+    import uxc_strings
+    d = ROOT / "build/cfw_film390/files"
+    if not (d / "lib/viewUnified4.so").is_file():
+        pytest.skip("CFW 3.90 sin construir (build_cfw_film.py build/cfw_film390 --version 3.90)")
+    cau_b, vu4, vu2 = ((d / f"lib/{n}.so").read_bytes() for n in ("CautionConfig", "viewUnified4", "viewUnified2"))
+    en = uxc_strings.parse((d / "share/app/string_english.uxc").read_bytes())[2]
+    segs = A._segments(cau_b)
+    _, dyn = A._dynamic(cau_b, segs)
+    ref = G.sym(cau_b, segs, dyn, "cmnViewSettingNodeRootMemoryRecallFn")[2][0]
+    lit = ((F.LIT_LDR + 4) & ~3) + 0xBC
+    arr = (struct.unpack_from("<I", vu4, lit)[0] + F.LIT_ADD + 4) & 0xFFFFFFFF
+    nodo = ref + struct.unpack_from("<i", vu4, A._off(A._segments(vu4), arr + 4 * 38))[0]
+    rd = lambda va, n: struct.unpack_from(f"<{n}I", cau_b, A._off(segs, va))
+    _, kids, n, props = rd(nodo, 4)
+    tri = [rd(rd(props, 2)[0] + 12 * i, 3) for i in range(rd(props, 2)[1])]
+    t = FU.ajuste_todas()
+    assert n == 39 and (0xE, 1, t.pid) in tri and en[tri[0][2] & 0xFFFF] == "Film"
+    ops = []
+    for k in rd(kids, n):
+        lst, nt = rd(rd(k, 4)[3], 2)
+        m = {a: v for a, _, v in (rd(lst + 12 * i, 3) for i in range(nt))}
+        ops.append((en[m[0] & 0xFFFF], m[0xF]))
+    assert ops == [(x, i) for i, (x, _) in enumerate(t.opciones)]
+    cau = T87.Lib(cau_b)
+    pat = lambda tab: b"".join(struct.pack("<I", x) for x in tab)
+    t1 = struct.unpack_from("<37I", vu2, vu2.index(pat([*T87.TABLA_1[:-1], F.VALOR_LUT])))
+    tn = struct.unpack_from("<37I", vu2, vu2.index(pat([F.VALOR_LUT, *T87.TABLA_N[1:]])))
+    orig = T87.Lib((T.LIB / "CautionConfig.so").read_bytes())
+    for r in range(1, 13):
+        i = orig.sym[f"cmnViewSettingNodesCustomFunction{r}Type08"][0]
+        got = next(o for o, inf in orig.rel.items() if inf >> 8 == i and inf & 0xFF == 21)   # misma palabra del GOT, ahora RELATIVE a la matriz nueva
+        assert cau.rel[got] == 23
+        fila = cau.u(cau.u(got)[0], 27)[25]
+        m = {a: v for a, _, v in (cau.u(cau.u(cau.u(fila + 12)[0])[0] + 12 * j, 3) for j in range(6))}
+        assert en[m[0] & 0xFFFF] == "Film" and (t1 if r == 1 else tn)[m[0xF]] == F.VALOR_LUT
+    assert T._srnum(vu4, F.VALOR_LUT) == F.SRNUM_LUT
