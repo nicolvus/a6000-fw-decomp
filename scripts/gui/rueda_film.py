@@ -35,6 +35,7 @@ A_STORE = 0x26                              # del `subs r3,#8` al `str.w r3,[obj
 SIMBOLO = "cmnViewSettingNodeRootISOSensitivity"   # importado de CautionConfig por vu2 y vu7: el nodo «Film» = SIMBOLO + distancia
 ORIG = bytes.fromhex("083b062b")            # subs r3,#8; cmp r3,#6
 TBB_DEFECTO = 1                             # índice valor−8 del 9 en el `tbb`
+VALORES = (9, 10, 12)                       # valores libres del `tbb` (8…14): 9 = «Film», 10 = «Picture Profile» (G102), 12 libre
 
 
 def _asm(src: str, va: int) -> bytes:
@@ -101,8 +102,10 @@ def _rel_de(data: bytes, rel: bytearray, va: int) -> tuple[int, int]:
     raise ValueError(f"sin relocación en {va:#x}")
 
 
-def patch_vistas(data: bytes, sitios, delta: int) -> bytes:
-    """Cueva común + `bl cueva` en cada sitio; `delta` = VA del nodo «Film» en CautionConfig − VA de `SIMBOLO`."""
+def patch_vistas(data: bytes, sitios, deltas) -> bytes:
+    """Cueva común + `bl cueva` en cada sitio. `deltas` = {valor: VA del nodo en CautionConfig − VA de `SIMBOLO`} (un entero = solo el 9, «Film»)."""
+    deltas = {VALOR_FILM: deltas} if isinstance(deltas, int) else dict(deltas)
+    assert deltas and set(deltas) <= set(VALORES), deltas
     segs = A._segments(data)
     _, dyn = A._dynamic(data, segs)
     for s in sitios:
@@ -110,36 +113,39 @@ def patch_vistas(data: bytes, sitios, delta: int) -> bytes:
         if data[o:o + 4] != ORIG:
             raise ValueError(f"{s:#x}: no es `subs r3,#8; cmp r3,#6` (¿ya parcheado?)")
         tbb = data[o + 10:o + 17]                        # tabla tras `tbb [pc, r3]` (o + 6)
-        assert data[o + 6:o + 8] == b"\xdf\xe8" and o + 10 + 2 * tbb[TBB_DEFECTO] == o + A_STORE - 2, (hex(s), tbb.hex())   # el 9 iba al `movs r3,#0` (defecto)
+        assert data[o + 6:o + 8] == b"\xdf\xe8", hex(s)
+        assert all(o + 10 + 2 * tbb[v - 8] == o + A_STORE - 2 for v in deltas), (hex(s), tbb.hex())   # los valores nuevos iban al `movs r3,#0` (defecto)
         assert data[o + A_STORE + 1] in (0xF8,) and data[o + A_STORE] in (0xC4, 0xC5), hex(s)                     # str.w r3,[r4|r5,#…]
     idx = G.sym(data, segs, dyn, SIMBOLO)[0]
+    vals = sorted(deltas)
+    n = len(vals)
 
     def codigo(pal_va, rx_va):
-        # +0 cmp · +2 bne · +4 ldr r3,[pc,#16] (literal en +24) · +6 add r3,pc · +8 ldr r3,[r3] · +10 add.w lr · +14 bx lr · +16 subs · +18 cmp · +20 bx lr
-        src = f"""cmp r3, #{VALOR_FILM}
-            bne normal
-            ldr r3, [pc, #16]
-            add r3, pc
-            ldr r3, [r3]
-            add.w lr, lr, #{A_STORE - 4}
-            bx lr
-            normal: subs r3, #8
-            cmp r3, #6
-            bx lr"""
-        c = _asm(src, rx_va)
-        assert len(c) == 22, len(c)
-        return c + b"\0\0" + struct.pack("<I", (pal_va - (rx_va + 6 + 4)) & 0xFFFFFFFF)
+        # n × (cmp r3,#v; beq eK) · subs r3,#8; cmp r3,#6; bx lr · n × (eK: ldr r3,[pc,#…]; add r3,pc; b carga) · carga: ldr r3,[r3]; add.w lr,…; bx lr · literales
+        e0 = rx_va + 4 * n + 6
+        carga = e0 + 6 * n
+        lit0 = (carga + 8 + 3) & ~3
+        c = b"".join(_asm(f"cmp r3, #{v}; beq {e0 + 6 * k:#x}", rx_va + 4 * k) for k, v in enumerate(vals))
+        c += _asm("subs r3, #8; cmp r3, #6; bx lr", rx_va + 4 * n)
+        lits = []
+        for k in range(n):
+            a = e0 + 6 * k
+            c += struct.pack("<H", 0x4B00 | (lit0 + 4 * k - ((a + 4) & ~3)) // 4) + _asm(f"add r3, pc; b {carga:#x}", a + 2)   # ldr r3,[pc,#imm]
+            lits.append((pal_va + 4 * k - (a + 2 + 4)) & 0xFFFFFFFF)
+        c += _asm(f"ldr r3, [r3]; add.w lr, lr, #{A_STORE - 4}; bx lr", carga)
+        assert len(c) == carga + 8 - rx_va, len(c)
+        return c.ljust(lit0 - rx_va, b"\0") + b"".join(struct.pack("<I", x) for x in lits)
 
     def parches(out, pal_va, rx_va, rel):
         for s in sitios:
             out[A._off(segs, s):A._off(segs, s) + 4] = _asm(f"bl {rx_va:#x}", s)
         return {}
 
-    return _anade(data, lambda va: ([delta], [(0, idx << 8 | 2)]), codigo, parches)
+    return _anade(data, lambda va: ([deltas[v] for v in vals], [(k, idx << 8 | 2) for k in range(n)]), codigo, parches)
 
 
-def patch_descriptor(data: bytes) -> bytes:
-    """pid 0xdc: 6 opciones, tabla opción→valor y precauciones nuevas en un segmento RW."""
+def patch_descriptor(data: bytes, valores=(VALOR_FILM,)) -> bytes:
+    """pid 0xdc: 5 + len(valores) opciones, tabla opción→valor `[8, 0xb, 0xd, 0xe, 0, *valores]` y precauciones nuevas en un segmento RW."""
     segs = A._segments(data)
     w = lambda va, n=1: struct.unpack_from(f"<{n}I", data, A._off(segs, va))
     o = A._off(segs, DESC_RUEDA)
@@ -149,22 +155,25 @@ def patch_descriptor(data: bytes) -> bytes:
         raise ValueError("el descriptor de la rueda no es el del 3.21 (¿ya parcheado?)")
     caut = w(DESC_RUEDA + 4)[0]
     precs = list(w(caut, 5))
+    n = len(TABLA_RUEDA) + len(valores)
 
     def parches(out, pal_va, rx_va, rel):
-        out[o + 0x15] = len(TABLA_RUEDA) + 1
+        out[o + 0x15] = n
         cambios = {}
-        for va, nuevo in ((modelo + 4, pal_va), (DESC_RUEDA + 4, pal_va + 4 * 6)):
+        for va, nuevo in ((modelo + 4, pal_va), (DESC_RUEDA + 4, pal_va + 4 * n)):
             p, info = _rel_de(data, rel, va)
             assert info == 23, (hex(va), info)
             struct.pack_into("<I", out, A._off(segs, va), nuevo)
             cambios[p] = (va, 23)
         return cambios
 
-    return _anade(data, lambda va: ([*TABLA_RUEDA, VALOR_FILM, *precs, precs[-1]], []), None, parches)
+    return _anade(data, lambda va: ([*TABLA_RUEDA, *valores, *precs, *[precs[-1]] * len(valores)], []), None, parches)
 
 
-def patch_caution(data: bytes, texto: int, ayuda: int) -> bytes:
-    """Lista de la rueda 5 → 6 nodos: «Film» (`0xf = 0x10 = 5`) antes de «No definido»; GLOB_DAT de la matriz → RELATIVE a la nueva."""
+def patch_caution(data: bytes, texto, ayuda=None) -> bytes:
+    """Lista de la rueda 5 → 5 + n nodos: los nuevos (`0xf = 0x10 = 5 + k`, el orden de `valores` en `patch_descriptor`) antes de «No definido»;
+    GLOB_DAT de la matriz → RELATIVE a la nueva. `texto` = [(id texto, id ayuda), …] o, compatibilidad, `texto, ayuda` de «Film»."""
+    nodos = [(texto, ayuda)] if ayuda is not None else list(texto)
     segs = A._segments(data)
     _, dyn = A._dynamic(data, segs)
     tg = {t: v for t, v in dyn if t}
@@ -177,15 +186,21 @@ def patch_caution(data: bytes, texto: int, ayuda: int) -> bytes:
         raise ValueError("la lista de la rueda no es la del 3.21 (¿ya parcheada?)")
     orig = [(struct.unpack_from("<I", data, A._off(segs, arr + 4 * k))[0], por[arr + 4 * k]) for k in range(5)]
     assert all(i & 0xFF == A.R_ARM_ABS32 for _, i in orig)
-    tri = [(0, 0, RES | texto), (6, 0, RES | ayuda), (0xB, 1, 0), (0xC, 1, 2), (0xF, 1, 5), (0x10, 1, 5)]
-    LST, KIDS, PROPS, NODO, MAT = 0, 18, 19, 21, 31             # índices de palabra en el segmento
+    n = len(nodos)
+    TAM = 18 + 1 + 2 + 10                                         # por nodo: 6 tripletas, hijos (0), props {lista, 6}, nodo de 10 palabras
+    MAT = TAM * n                                                 # matriz al final
 
     def palabras(base):
         va = lambda k: base + 4 * k
-        mat = [w for w, _ in orig[:POS_NOTSET]] + [va(NODO), orig[POS_NOTSET][0]]
-        ws = [x for t in tri for x in t] + [0] + [va(LST), len(tri)] + [vt, va(KIDS), 0, va(PROPS)] + [0] * 6 + mat
-        rels = [(PROPS, 23), (NODO, 23), (NODO + 1, 23), (NODO + 3, 23)]
-        rels += [(MAT + k, orig[k][1]) for k in range(POS_NOTSET)] + [(MAT + POS_NOTSET, 23), (MAT + 5, orig[POS_NOTSET][1])]
+        ws, rels, ptr = [], [], []
+        for k, (t, a) in enumerate(nodos):
+            b = TAM * k
+            tri = [(0, 0, RES | t), (6, 0, RES | a), (0xB, 1, 0), (0xC, 1, 2), (0xF, 1, 5 + k), (0x10, 1, 5 + k)]
+            ws += [x for tr in tri for x in tr] + [0] + [va(b), len(tri)] + [vt, va(b + 18), 0, va(b + 19)] + [0] * 6
+            rels += [(b + 19, 23), (b + 21, 23), (b + 22, 23), (b + 24, 23)]
+            ptr.append(va(b + 21))
+        ws += [w for w, _ in orig[:POS_NOTSET]] + ptr + [orig[POS_NOTSET][0]]
+        rels += [(MAT + k, orig[k][1]) for k in range(POS_NOTSET)] + [(MAT + POS_NOTSET + k, 23) for k in range(n)] + [(MAT + POS_NOTSET + n, orig[POS_NOTSET][1])]
         return ws, rels
 
     def parches(out, pal_va, rx_va, rel):
@@ -193,7 +208,7 @@ def patch_caution(data: bytes, texto: int, ayuda: int) -> bytes:
         assert len(got) == 1, got
         p, o = got[0]
         struct.pack_into("<I", out, A._off(segs, o), pal_va + 4 * MAT)
-        struct.pack_into("<I", out, A._off(segs, cnt), 6)
+        struct.pack_into("<I", out, A._off(segs, cnt), 5 + n)
         return {p: (o, 23)}
 
     return _anade(data, palabras, None, parches)

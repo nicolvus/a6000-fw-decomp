@@ -9,7 +9,9 @@ Encadena lo existente:
   3. `libObj.so` = 3.21 + eco de Silent (`patch_libobj_eco`), sin el parche PP;
   4. BIONZ = el de `base-380.tar` (3.38 + tres estados con Silent manda sobre EFCS) + `patch_silent_r5` (R87) + `film_patch` (LUT + curva tras la gamma);
   5. `build_nflasha15` + `build_package_nflasha15` (Darwin v3, sin `nflasha5`).
-Uso: build_cfw_film.py SALIDA [--version 3.87] [--looks analysis/lut/g97/looks.npz]
+Con `--pp` (G102, 3.92+): además el Picture Profile del CFW completo (menú PP con cada ajuste en una sola fila y todas sus opciones, las mismas listas completas de PP/Gamma/Color Mode/valores en el menú Fn y PP en la
+rueda, `libObj` con S-Log/S-Gamut y eco PP, núcleo con `build_base_pp.bionz_cfw` debajo de las películas).
+Uso: build_cfw_film.py SALIDA [--version 3.87] [--looks analysis/lut/g97/looks.npz] [--pp]
 """
 import argparse
 import json
@@ -28,10 +30,14 @@ import build_pp_menu
 import build_silent_menu_test
 import film_patch
 import film_userland as FU
+import patch_libobj_ppeco
 import patch_silent_r5
 import pp_menu_spec as M
 
 LOOKS = ROOT / "analysis/lut/g97/looks.npz"
+
+
+AYUDA_PP = "Picture Profile: choose from the full list of values."
 
 
 def bionz(original: bytes) -> bytes:
@@ -39,22 +45,44 @@ def bionz(original: bytes) -> bytes:
     return film_patch.apply_bytes(patch_silent_r5.apply_bytes(original))
 
 
-def menu_film() -> None:
-    """La especificación del menú pasa a ser solo la carpeta «Film» (los ajustes guardan 1 B en el Backup; sin Picture Profile)."""
+def bionz_pp(original: bytes) -> bytes:
+    """G102: 3.38 + tres estados → parche PP del núcleo del 3.81 (curvas, S-Log3, B&W, Hi-Light, tono) + Silent calibrado → + películas (sin bytes en común)."""
+    return film_patch.apply_bytes(build_base_pp.bionz_cfw(original))
+
+
+def menu_film(pp: bool = False, maximo: int = 99) -> dict:
+    """Sin `pp`: la especificación del menú pasa a ser solo la carpeta «Film» (los ajustes guardan 1 B en el Backup; sin Picture Profile).
+    Con `pp` (G102): carpeta «Picture Profile» (configurar del 3.81; cada ajuste en UNA fila con todas sus opciones salvo `maximo` < 99) + carpeta «Film»;
+    en el menú Fn «Film» y las listas completas de PP;
+    en la rueda «Film» (9) y «Picture Profile» (10). Devuelve los argumentos con nombre de `build_pp_menu.main`."""
     aj = FU.ajustes()
     todas = FU.ajuste_todas()
+    if pp:
+        kw = build_pp_menu.configurar(gam=True, col=True, acc=False, fn_pp=True, maximo=maximo)
+        fn_pp = list(build_pp_menu.FN_TREES)
+        for a in (*aj, todas):
+            M.SETTINGS[a.id] = M.S(a.id, a.label, 0, tuple((t, i) for i, (t, _) in enumerate(a.opciones)), "g97", backup=a.backup)
+        M.PIDS[:] = range(M.PIDS[0], M.PIDS[0] + len(M.SETTINGS))
+        build_pp_menu.EXTRA_TREES[:] = [("folder", FU.CARPETA, M.paginar([a.id for a in aj]))]
+        build_pp_menu.FN_TREES[:] = [todas.id, *fn_pp]
+        build_pp_menu.FN_AYUDA.clear()
+        build_pp_menu.FN_AYUDA.update(dict.fromkeys(fn_pp, AYUDA_PP))
+        build_pp_menu.RUEDA[:] = [todas.id, fn_pp[0]]                  # el selector de perfil
+        build_pp_menu.SD_USERLAND = False
+        return kw
     M.SETTINGS.clear()
     for a in (*aj, todas):
         M.SETTINGS[a.id] = M.S(a.id, a.label, 0, tuple((t, i) for i, (t, _) in enumerate(a.opciones)), "g97", backup=a.backup)
     M.TREE = ("folder", FU.CARPETA, M.paginar([a.id for a in aj]))
     M.PIDS[:] = range(M.PIDS[0], M.PIDS[0] + len(aj) + 1)
     build_pp_menu.EXTRA_TREES[:] = []
-    build_pp_menu.RUEDA_FILM = True              # G101: «Film» también en la rueda de control (al girarla, la franja horizontal de los 39)
+    build_pp_menu.RUEDA[:] = [todas.id]          # G101: «Film» también en la rueda de control (al girarla, la franja horizontal de los 39)
     build_pp_menu.FN_TREES[:] = [todas.id]       # G100: «Film» con Off + los 38 en el menú Fn (franja horizontal) y en las listas de las 12 ranuras
     build_pp_menu.SD_USERLAND = False
+    return {}
 
 
-def build_files(work: Path, looks: Path) -> Path:
+def build_files(work: Path, looks: Path, pp: bool = False, maximo: int = 99) -> Path:
     orig = C.DEV_A / C.USR
     silent = work / "silent"
     build_silent_menu_test.main(C.DEV_A, C.DEV_B, silent, pid_silent=C.PID_SILENT)
@@ -68,16 +96,18 @@ def build_files(work: Path, looks: Path) -> Path:
     shutil.copy(silent / "lib/CautionConfig.so", stage / C.USR / "lib/CautionConfig.so")
     for f in (silent / "share/app").glob("*.uxc"):
         shutil.copy(f, stage / C.USR / "share/app" / f.name)
-    menu_film()
-    pp = work / "pp"
-    build_pp_menu.main(stage, C.DEV_B, pp, entradas_previas=[C.SILENT_DELTA], silent=True)
+    kw = menu_film(pp, maximo)
+    pp_dir = work / "pp"
+    build_pp_menu.main(stage, C.DEV_B, pp_dir, entradas_previas=[C.SILENT_DELTA], silent=True, **kw)
+    lib_obj = patch_libobj_ppeco.patch(C.eco((pp_dir / "lib/libObj.so").read_bytes())) if pp else C.eco((orig / "lib/libObj.so").read_bytes())
+    pp = pp_dir
     files = work / "files"
     parcheados = sorted(json.loads((pp / "MANIFEST.json").read_text())["parcheados"]) + ["lib/libObj.so"]
     for rel in parcheados:
         (files / rel).parent.mkdir(parents=True, exist_ok=True)
         if rel != "lib/libObj.so":
             shutil.copy(pp / rel, files / rel)
-    (files / "lib/libObj.so").write_bytes(C.eco((orig / "lib/libObj.so").read_bytes()))
+    (files / "lib/libObj.so").write_bytes(lib_obj)
     (files / "lib/viewUnified2.so").write_bytes(FU.patch_vu2((files / "lib/viewUnified2.so").read_bytes(), FU.compila(looks)))
     man = {"idiomas": json.loads((pp / "MANIFEST.json").read_text())["idiomas"], "nuevos": {}, "originales": {}, "parcheados": {}, "md5": {}}
     for rel in sorted(set(parcheados)):
@@ -89,13 +119,13 @@ def build_files(work: Path, looks: Path) -> Path:
     return files
 
 
-def main(out: Path, version: str, looks: Path = LOOKS) -> dict:
+def main(out: Path, version: str, looks: Path = LOOKS, pp: bool = False, maximo: int = 99) -> dict:
     out.mkdir(parents=True, exist_ok=True)
-    files = build_files(out, looks)
+    files = build_files(out, looks, pp, maximo)
     nf15 = out / f"nflasha15-{version.replace('.', '')}.bin"
     rep15 = build_nflasha15.main(C.DEV_A / "nflasha15", files, nf15)
     base = out / "base-film.tar"
-    rep_base = build_base_pp.main(C.BASE_TAR, base, bionz=bionz)
+    rep_base = build_base_pp.main(C.BASE_TAR, base, bionz=bionz_pp if pp else bionz)
     res = build_package_nflasha15.main(nf15, out / f"pkg-{version}", base, version, darwin_v3=True, sin_wbi=True)
     (out / "build-nflasha15.json").write_text(json.dumps(rep15, indent=1))
     (out / "build-base.json").write_text(json.dumps(rep_base, indent=1))
@@ -107,5 +137,7 @@ if __name__ == "__main__":
     ap.add_argument("salida", type=Path)
     ap.add_argument("--version", default="3.87")
     ap.add_argument("--looks", type=Path, default=LOOKS)
+    ap.add_argument("--pp", action="store_true", help="G102: con Picture Profile (menú, Fn, rueda, libObj y núcleo)")
+    ap.add_argument("--max-opciones", type=int, default=99, help="opciones por fila del menú PP antes de partirla (99 = filas enteras, G102; 7 = como el 3.79)")
     a = ap.parse_args()
-    print(json.dumps(main(a.salida, a.version, a.looks), indent=1))
+    print(json.dumps(main(a.salida, a.version, a.looks, a.pp, a.max_opciones), indent=1))

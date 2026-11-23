@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """G97 — userland de las simulaciones de película (`userland/films.c`): datos, menú, compilación, inyección en `viewUnified2.so` y emulación.
 
-`FILAS` define el menú «Film» (filas de ≤ 7 opciones: tope medido de la lista, G36): Off + hasta 6 looks por fila, numerados en ese orden (1…38).
+`FILAS` define el menú «Film Simulation»: una fila por marca (Kodak, Fujifilm, Fujifilm Sim) con Off + todos sus looks, numerados en ese orden (1…38).
 `datos_h(looks.npz)` genera `films_datos.h` (tablas empaquetadas a 21 bits y curvas de 1024 u16); `compila()` deja el binario Thumb independiente de posición
 y `patch_vu2()` lo cuelga de `DT_INIT` con el mismo tramo que G89 (`lut_sd_vu2`), entrando en `films_hilo`.
 """
@@ -25,23 +25,24 @@ BK_ID, BK_TAM, MAGIC, OFF_T, TAM_TABLA = 0x150005, 16384, 0x4D4C4946, 0x1000, 10
 ACK_ID = cfw.ID_LIBRES[8]
 BASE_COMPILADO = 0x10000
 
-# (etiqueta de la fila, ((id del catálogo, nombre en el menú), …)); ≤ 6 looks por fila (+ Off = 7 opciones)
+# (etiqueta de la fila, ((id del catálogo, nombre en el menú), …)): una fila por marca con todos sus estilos (G102: la lista vertical no tiene tope de 7,
+# medido en el arnés; antes «Kodak 1/2/3»…). Numeración de los looks = este orden (1…38).
 FILAS = (
-    ("Kodak 1", (("kodak_ektachrome_100", "Ektachrome"), ("kodak_ektar_100", "Ektar 100"), ("kodak_gold_200", "Gold 200"),
-                 ("kodak_kodachrome_64", "Kodachrome"), ("kodak_portra_160", "Portra 160"), ("kodak_portra_400", "Portra 400"))),
-    ("Kodak 2", (("kodak_portra_800", "Portra 800"), ("kodak_portra_800_push1", "Portra800 +1"), ("kodak_portra_800_push2", "Portra800 +2"),
-                 ("kodak_ultramax_400", "Ultramax 400"), ("kodak_verita_200d", "Verita 200D"), ("kodak_vision3_200t", "Vision3 200T"))),
-    ("Kodak 3", (("kodak_vision3_250d", "Vision3 250D"), ("kodak_vision3_500t", "Vision3 500T"), ("kodak_vision3_50d", "Vision3 50D"))),
-    ("Fuji 1", (("fujifilm_c200", "C200"), ("fujifilm_pro_400h", "Pro 400H"), ("fujifilm_provia_100f", "Provia 100F"),
-                ("fujifilm_velvia_100", "Velvia 100"), ("fujifilm_xtra_400", "X-Tra 400"), ("fujifilm_eterna_250", "Eterna 250"))),
-    ("Fuji 2", (("fujifilm_eterna_250d", "Eterna 250D"), ("fujifilm_eterna_400", "Eterna 400"), ("fujifilm_eterna_500", "Eterna 500"),
-                ("fujifilm_eterna_vivid_160", "Eterna V160"), ("fujifilm_eterna_vivid_250d", "Eterna V250D"), ("fujifilm_eterna_vivid_500", "Eterna V500"))),
-    ("Fuji 3", (("fujifilm_f64d", "F-64D"), ("fujifilm_reala_500d", "Reala 500D"))),
-    ("Fuji Sim 1", (("fuji_sim_astia", "Astia"), ("fuji_sim_classic_chrome", "Classic Chr."), ("fuji_sim_classic_neg", "Classic Neg"),
-                    ("fuji_sim_eterna", "Eterna"), ("fuji_sim_eterna_bleach_bypass", "Eterna BB"), ("fuji_sim_pro_neg", "Pro Neg"))),
-    ("Fuji Sim 2", (("fuji_sim_provia", "Provia"), ("fuji_sim_reala_ace", "Reala Ace"), ("fuji_sim_velvia", "Velvia"))),
+    ("Kodak", (("kodak_ektachrome_100", "Ektachrome"), ("kodak_ektar_100", "Ektar 100"), ("kodak_gold_200", "Gold 200"),
+               ("kodak_kodachrome_64", "Kodachrome"), ("kodak_portra_160", "Portra 160"), ("kodak_portra_400", "Portra 400"),
+               ("kodak_portra_800", "Portra 800"), ("kodak_portra_800_push1", "Portra800 +1"), ("kodak_portra_800_push2", "Portra800 +2"),
+               ("kodak_ultramax_400", "Ultramax 400"), ("kodak_verita_200d", "Verita 200D"), ("kodak_vision3_200t", "Vision3 200T"),
+               ("kodak_vision3_250d", "Vision3 250D"), ("kodak_vision3_500t", "Vision3 500T"), ("kodak_vision3_50d", "Vision3 50D"))),
+    ("Fujifilm", (("fujifilm_c200", "C200"), ("fujifilm_pro_400h", "Pro 400H"), ("fujifilm_provia_100f", "Provia 100F"),
+                  ("fujifilm_velvia_100", "Velvia 100"), ("fujifilm_xtra_400", "X-Tra 400"), ("fujifilm_eterna_250", "Eterna 250"),
+                  ("fujifilm_eterna_250d", "Eterna 250D"), ("fujifilm_eterna_400", "Eterna 400"), ("fujifilm_eterna_500", "Eterna 500"),
+                  ("fujifilm_eterna_vivid_160", "Eterna V160"), ("fujifilm_eterna_vivid_250d", "Eterna V250D"), ("fujifilm_eterna_vivid_500", "Eterna V500"),
+                  ("fujifilm_f64d", "F-64D"), ("fujifilm_reala_500d", "Reala 500D"))),
+    ("Fujifilm Sim", (("fuji_sim_astia", "Astia"), ("fuji_sim_classic_chrome", "Classic Chr."), ("fuji_sim_classic_neg", "Classic Neg"),
+                      ("fuji_sim_eterna", "Eterna"), ("fuji_sim_eterna_bleach_bypass", "Eterna BB"), ("fuji_sim_pro_neg", "Pro Neg"),
+                      ("fuji_sim_provia", "Provia"), ("fuji_sim_reala_ace", "Reala Ace"), ("fuji_sim_velvia", "Velvia"))),
 )
-CARPETA = "Film"
+CARPETA = "Film Simulation"
 
 # G99 — receta nativa por look: valores de RecipeLab 1.13.1 (`Recipes.java`, voxivoid; mismas codificaciones que `Params.writes`).
 # (estilo 1…14, sat, con, nitidez, modo WB (1 = AWB, 14 = K), kelvin, A-B, G-M, EV en 1/3, DRO (0 Off, 1…5 Lv, 6 Auto)).
@@ -201,7 +202,12 @@ class Backup:
 def emula(bk: Backup, compilado, pasos: list, entrada: str = "films_hilo", max_instr: int = 2_000_000_000) -> Backup:
     """Ejecuta el hilo: `pasos` = un evento por cada `usleep` (callable(bk) o None); al agotarse se detiene."""
     from unicorn import UC_ARCH_ARM, UC_HOOK_CODE, UC_MODE_THUMB, Uc
-    from unicorn.arm_const import UC_ARM_REG_LR, UC_ARM_REG_PC, UC_ARM_REG_R0, UC_ARM_REG_SP
+    from unicorn.arm_const import (
+        UC_ARM_REG_LR,
+        UC_ARM_REG_PC,
+        UC_ARM_REG_R0,
+        UC_ARM_REG_SP,
+    )
     blob, sim = compilado
     code, stubs, heap, stack = 0x10000000, 0x20000000, 0x30000000, 0x40000000
     mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB)

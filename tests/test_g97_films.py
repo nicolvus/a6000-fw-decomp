@@ -38,10 +38,12 @@ def _filas(bk):
     return [bk.lee(a.backup)[0] for a in (*FU.ajustes(), FU.ajuste_todas())]
 
 
-def test_menu_cabe_y_numera_los_38():
+def test_menu_una_fila_por_marca_y_numera_los_38():
+    """G102: carpeta «Film Simulation» con una fila por marca y todos sus estilos (la lista vertical no tiene tope de 7, medido en el arnés)."""
     a = FU.ajustes()
-    assert len(FU.orden()) == 38 == len(set(FU.orden()))
-    assert all(len(x.opciones) <= 7 for x in a) and len({x.backup for x in a} | {FU.ACK_ID}) == len(a) + 1
+    assert len(FU.orden()) == 38 == len(set(FU.orden())) and FU.CARPETA == "Film Simulation"
+    assert [x.label for x in a] == ["Kodak", "Fujifilm", "Fujifilm Sim"] and [len(x.opciones) for x in a] == [16, 15, 10]
+    assert len({x.backup for x in a} | {FU.ACK_ID}) == len(a) + 1
     assert all(len(t) <= 12 for x in a for t, _ in x.opciones)
 
 
@@ -66,9 +68,9 @@ def test_userland_primera_vez_limpia_y_elige_la_ultima_fila(compilado):
 def test_userland_blob_de_un_look_y_sin_reescrituras(compilado):
     bk = FU.Backup()
     bk.ids[FU.BK_ID] = FU.blob_esperado(0, NPZ)                     # ya hay blob FILM: no es la primera vez
-    _fila(bk, 6, 2)                                                 # Fuji Sim 1 → Classic Chr.
+    _fila(bk, 2, 2)                                                 # Fujifilm Sim → Classic Chr.
     bk = FU.emula(bk, compilado, [None, None, None])
-    look = FU.bases()[6] + 2
+    look = FU.bases()[2] + 2
     assert FU.orden()[look - 1] == "fuji_sim_classic_chrome"
     assert bk.lee(FU.BK_ID) == FU.blob_esperado(look, NPZ) and bk.lee(FU.ACK_ID)[0] == look
     assert bk.escrituras.count(FU.BK_ID) == 1                       # sondeos sin cambios no escriben la NVRAM
@@ -126,7 +128,7 @@ def test_avcam_lut_reintenta_si_el_blob_llega_tarde(parcheado):
 def test_userland_no_da_el_ack_hasta_que_el_blob_esta_escrito(compilado):
     bk = FU.Backup(pierde=2)
     bk.ids[FU.BK_ID] = FU.blob_esperado(0, NPZ)
-    _fila(bk, 0, 4)                                                 # Kodak 1 → Kodachrome (look 4)
+    _fila(bk, 0, 4)                                                 # Kodak → Kodachrome (look 4)
     vistos = []
     bk = FU.emula(bk, compilado, [lambda b: vistos.append(b.lee(FU.ACK_ID)[0])] * 4)
     assert vistos[0] == 0 and vistos[-1] == 4                      # primer sondeo: blob perdido → sin ACK; después se reintenta
@@ -161,8 +163,8 @@ def test_userland_receta_al_elegir_look_y_devuelve_los_ajustes_del_usuario_en_of
     for i, v in zip(FU.REC_ID, usuario):
         bk.ids[i] = bytes([v]) + bytes(7)
     fotos = []
-    pasos = [lambda b: _fila(b, 0, 6), lambda b: fotos.append(_rec(b)), lambda b: _fila(b, 2, 2), lambda b: fotos.append(_rec(b)),
-             lambda b: _fila(b, 2, 0), None, lambda b: _fila(b, 0, 0), None]
+    pasos = [lambda b: _fila(b, 0, 6), lambda b: fotos.append(_rec(b)), lambda b: _fila(b, 0, 14), lambda b: fotos.append(_rec(b)),
+             lambda b: _fila(b, 0, 0), None, None, None]
     bk = FU.emula(bk, compilado, pasos)
     p4 = FU.receta_bytes("Kodak Portra 400")
     assert fotos[0] == [u if v == FU.NO_TOCA else v & 0xFF for u, v in zip(usuario, p4)]          # Portra 400 puesta; lo que no toca, intacto
@@ -172,11 +174,11 @@ def test_userland_receta_al_elegir_look_y_devuelve_los_ajustes_del_usuario_en_of
 
 
 def test_userland_arranque_con_receta_puesta_no_la_reescribe(compilado):
-    look = FU.bases()[6] + 2
+    look = FU.bases()[2] + 2
     bk = FU.Backup()
     bk.ids[FU.BK_ID] = FU.blob_esperado(look, NPZ, bytes(range(len(FU.REC_ID))))
     bk.ids[FU.ACK_ID] = bytes([look]) + bytes(7)
-    _fila(bk, 6, 2)
+    _fila(bk, 2, 2)
     bk = FU.emula(bk, compilado, [None, None])
     assert not set(bk.escrituras) & set(FU.REC_ID) and bk.lee(FU.BK_ID) == FU.blob_esperado(look, NPZ, bytes(range(len(FU.REC_ID))))
 
@@ -190,17 +192,17 @@ def test_fila_todas_tiene_off_y_los_38_en_orden_y_un_id_propio():
 def test_userland_lista_unica_y_filas_sincronizadas(compilado):
     bk = FU.Backup()
     bk.ids[FU.BK_ID] = FU.blob_esperado(0, NPZ)
-    look = FU.bases()[6] + 2                                        # Classic Chrome, elegido desde la lista única (Fn)
+    look = FU.bases()[2] + 2                                        # Classic Chrome, elegido desde la lista única (Fn)
     vistos = []
-    pasos = [lambda b: _todas(b, look), lambda b: vistos.append(_filas(b)), lambda b: _fila(b, 2, 2), lambda b: vistos.append(_filas(b)),
+    pasos = [lambda b: _todas(b, look), lambda b: vistos.append(_filas(b)), lambda b: _fila(b, 0, 14), lambda b: vistos.append(_filas(b)),
              lambda b: _todas(b, 0), lambda b: vistos.append(_filas(b))]
     bk = FU.emula(bk, compilado, pasos)
     filas = [0] * len(FU.FILAS)
-    filas[6] = 2
-    assert vistos[0] == filas + [look]                              # la fila de su categoría lo muestra; las demás en Off
-    v5 = FU.bases()[2] + 2
-    filas = [0] * len(FU.FILAS)
     filas[2] = 2
+    assert vistos[0] == filas + [look]                              # la fila de su marca lo muestra; las demás en Off
+    v5 = FU.bases()[0] + 14                                         # Vision3 500T
+    filas = [0] * len(FU.FILAS)
+    filas[0] = 14
     assert vistos[1] == filas + [v5]                                # elegido por categoría: la lista única lo sigue
     assert vistos[2] == [0] * (len(FU.FILAS) + 1) and bk.lee(FU.ACK_ID)[0] == 0
 
@@ -239,7 +241,7 @@ def test_cfw_film_390_lleva_film_con_los_39_en_el_menu_fn_y_las_12_ranuras():
     _, kids, n, props = rd(nodo, 4)
     tri = [rd(rd(props, 2)[0] + 12 * i, 3) for i in range(rd(props, 2)[1])]
     t = FU.ajuste_todas()
-    assert n == 39 and (0xE, 1, t.pid) in tri and en[tri[0][2] & 0xFFFF] == "Film"
+    assert n == 39 and (0xE, 1, 0xF1) in tri and en[tri[0][2] & 0xFFFF] == "Film"   # 3.90: pid 0xF1 (8 filas por categoría + la lista única) y carpeta «Film»
     ops = []
     for k in rd(kids, n):
         lst, nt = rd(rd(k, 4)[3], 2)

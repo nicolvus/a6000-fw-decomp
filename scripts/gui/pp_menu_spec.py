@@ -72,6 +72,14 @@ OPCIONES_POR_LISTA = 7   # G36: la lista de opciones de la clase Normal no pasa 
 ORDEN = ["sel", "copy", "reset", "gamma", "black_level", "bg_range", "bg_level", "knee_mode", "knee_max", "knee_sens", "knee_point", "knee_slope",
          "color_mode", "color_level", "saturation", "phase", *(f"cd_{c}" for c in "rgbcmy"), "wb_filter", "wb_lb", "wb_cc", "wb_r", "wb_b",
          "det_level", "det_mode", "det_vh", "det_bw", "det_limit", "det_crisp", "det_hilight"]
+# G102: enumerados de más de OPCIONES_POR_LISTA partidos por grupos con nombre (etiqueta, nº de opciones; None = el resto) en vez de «Off/PP4»…
+PARTES = {
+    "sel": (("Picture Profile", 7), ("Picture Profile 7-10", None)),        # Off, PP1–PP6 · PP7–PP10
+    "gamma": (("Gamma", 7), ("Gamma Log", None)),                         # Movie, Still, Cine1–4, ITU709 · ITU709(800%), S-Log2, S-Log3 (+ HLG1–3)
+    "color_mode": (("Color Mode", 6), ("Color Mode S-Gamut", None)),      # Movie, Still, Cinema, Pro, ITU709 Matrix, B&W · S-Gamut, S-Gamut3.Cine, S-Gamut3
+}
+# G102: ajustes con la lista COMPLETA en el menú Fn / rueda (franja horizontal, sin el tope de 7): `build_pp_menu.configurar(fn_pp=True)`.
+FN_COMPLETOS = ("sel", "gamma", "color_mode", "black_level", "bg_level", "saturation", "phase", "det_level", "knee_point")
 paginar = lambda orden: [orden[i:i + FILAS_POR_PAGINA] for i in range(0, len(orden), FILAS_POR_PAGINA)]
 TREE = ("folder", "Picture Profile", paginar(ORDEN))   # las páginas son una lista: `sin_acciones` las repagina en el sitio
 # G28: pids NUEVOS (fuera de los 233 originales, que casi todos usa algún nodo): el espacio se amplía en pid_space.py. PIDS_PRESTADOS es la lista del 3.57–3.62

@@ -134,6 +134,10 @@ def bionz_g22_checks(bz_base: bytes, bz_new: bytes) -> dict:
         import build_cfw_film
         film = build_cfw_film.bionz(tri)
         cfw = film if bz_new == film else cfw
+    if bz_new not in (tri, cfw):   # CFW Film + PP (G102, 3.92+): parche PP del núcleo del 3.81 + Silent calibrado + películas
+        import build_cfw_film
+        film_pp = build_cfw_film.bionz_pp(tri)
+        cfw = film_pp if bz_new == film_pp else cfw
     diff = {P.BASE + i for i, (a, b) in enumerate(zip(bz_base, bz_new)) if a != b}
     extra = {P.BASE + i for i, (a, b) in enumerate(zip(tri, cfw)) if a != b} if bz_new == cfw else set()
     return {"g22.bionz_es_3.38_mas_patch_tristate": bz_new in (tri, cfw) and len(bz_new) == len(bz_base),
