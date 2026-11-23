@@ -390,7 +390,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-201 informes.
+202 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -593,6 +593,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [T052-A — Parámetros reales de exposición y preparación segura de C3](capture/t052-a-parametros-reales.md)
 - **—** [T052-B0 — VTS, predicado de cuadro extra y viabilidad de C3](capture/t052-b0-vts-predicado-fotografia.md)
 - **—** [Seguimiento estático de `G+0x784` (tipo de obturador) en `av-cam.bin` — 26-10-2026](capture/tipo2-analisis-estatico-2026-10-26.md)
+- **—** [USB-CARGA — Carga por USB con la A6000 encendida (23-11-2026)](capture/usb-carga-encendida.md)
 
 ### 7. Comparaciones A6000 / A7S / A6300 y controles positivos
 

@@ -118,6 +118,7 @@ Trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE § Conclus
 | R1 / R7 | PARCIAL / BLOQUEADO | Copia externa del respaldo; commits antiguos en `refs/pull/*` de GitHub (requiere al soporte de GitHub) |
 | DOC-SITIO-EN | ABIERTO (decisión del usuario) | Sitio de Pages solo en español y con el hito 3.23; traducir/actualizar o dejarlo así |
 | G2–G8 | ABIERTO | Carril de interfaz, independiente del obturador |
+| USB-CARGA-1 | ABIERTO (cámara, 23-11-2026) | Carga USB encendida: faltan solo `usb_darwin.ko`/`usb_buspwr.ko` (A6300) y NVRAM `0x1210001=6`; kit `scripts/usb_carga/` listo, probar §4 de [usb-carga-encendida](../docs/capture/usb-carga-encendida.md) |
 
 ## Bloqueos y límites de evidencia
 
