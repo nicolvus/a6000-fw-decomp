@@ -5,6 +5,7 @@ Petición: auditar (1) cómo obtener LUT de más resolución, (2) cómo entregá
 ## 1. Conclusión
 - **Resolución y fidelidad están en conflicto si se usa software sobre la foto.** La única LUT de más de 5×9×9 es el `.cube` aplicado por software al JPEG (G91), y la vista en vivo nunca lo muestra. Para que la vista en vivo sea fiel, la foto tiene que salir de la misma cadena de hardware. La «resolución» se gana entonces ajustando mejor esa cadena, no añadiendo un paso posterior.
 - **Hallazgo nuevo:** en vídeo y vista en vivo, el generador de la LUT añade una conversión de BT.709 a BT.601 (ConvSD) que en la foto no existe (§3). El ajuste «LUT» actual (G71/G89) entrega la misma tabla a todos los modos. Si ConvSD está activo, la vista en vivo se desvía de la foto unos 3 ΔE de media (hasta 9–12). Con una tabla precalculada por modo, la desviación baja a 0,09–0,43.
+- **Pero en esta A6000 ConvSD no se activa (VERIFICADO en la RAM viva, §3 bis).** Todos los ids de color valen `00`, `01` o `ff` y el bit de capacidad está a 0. Con eso, entregar la misma tabla a todos los modos, como ya hace el ajuste «LUT», da una etapa LUT **idéntica** en vista en vivo y foto. La tabla por modo queda como herramienta por si la cámara mostrara otro estado (LV-FIEL-1); no hace falta cueva nueva.
 - **Mínimo proceso:** todo se calcula en el PC (curva T, tabla para foto y tabla para ConvSD, ya en el formato del hardware). La cámara solo carga el bloque y elige un puntero; no hace ninguna cuenta por fotograma ni por cambio de ajuste (§4).
 
 ## 2. Más resolución (todas mantienen la vista en vivo igual que la foto)
@@ -36,6 +37,11 @@ El rango de ±64 pasos de 7 bits recorta las LUT fuertes; T lo compensa (G90). L
 | película | 2,94 / 6,48 / 11,8 | 2,09 / 4,89 / 11,7 | **0,43 / 1,10 / 3,1** |
 
 `lut_modos.tabla_convsd(q)` ajusta por mínimos cuadrados, sobre la rejilla 5×9×9 con entrada 709, la salida 601 que da CAP. Muestrear nodo a nodo deja la película en 0,88. La propia conversión de Sony también se desvía (1,56 con la identidad) porque recorta la Y. **Sin ConvSD** (CAP, SA y MOV/MON con la bandera a 0), entregar la misma tabla hace que la etapa LUT sea **idéntica** en la vista en vivo y en la foto.
+
+**§3 bis — ¿Se activa ConvSD en esta cámara? (VERIFICADO en la RAM viva, test).** En el volcado del sistema en marcha (`analysis/camera-dumps/ram-servicio-20261020/ram_0x80000000.bin`, fw 3.21), los GOT de `FUN_437a4358` (`0x4402555c`) y de `FUN_437a1d14` (`0x44021084`) apuntan a `0x43f78dd2` y `0x43e964a4`, como en el fichero.
+- Los 16 B de ids de color (`0x43f78dd2 + 0x2e8…0x2f7`), de donde salen todos los valores de `cfg+0x7e`, son `00 00 01 01 00 00 01 01 00 00 ff ff 00 00 ff ff`: ninguno tiene el bit 4.
+- El byte de capacidades (`0x43e964a4 + 7`) vale `0x40`: el bit 1, que activaría ConvSD por la vía de Color Depth, está a 0.
+- **Conclusión:** `FUN_437a1d14` devuelve 0 en todos los modos (`lut_modos.convsd_activable`). Límite: es un solo estado (modo de arranque tras restaurar la NVRAM); si esa tabla cambiara con el modo, lo vería LV-FIEL-1 leyendo esas dos direcciones por `/dev/mem`.
 
 **Otras fuentes de diferencia (NO verificadas; las comprueba LV-FIEL-1):**
 1. **Gamma por modo.** La tabla de curvas `0x44001404` tiene una curva para foto (modo 0) y otra para vídeo (modo 1); en las curvas estándar difieren entre 134 y 437 niveles de 1023 (medido en la imagen). `FUN_43854a28` toma el modo (`bd6`) de `param_1+0x51` y la gamma de `+0x52` (o de `+0x53` con `param_3+8 = 0x11`). Si la vista en vivo del modo foto usa la curva de vídeo, ninguna LUT la iguala a la foto. Además, `FUN_43854a28` recalcula la curva para salidas secundarias (hasta 13 papeles, `FUN_4381b26c`) con su propio índice de gamma. La curva T se aplica en todas, pero tiene que diseñarse para la gamma de cada una.

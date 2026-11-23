@@ -5,6 +5,7 @@ convierte la salida de la LUT de BT.709 a BT.601 (matriz de croma 709→601, med
 En esos modos la entrada de la LUT es YCbCr 709 y la salida se lee como 601 (INFERIDO de la conversión).
 Entregar la misma tabla a todos los modos (gancho G71) deja la vista en vivo con el desajuste 709/601;
 `tabla_convsd(q)` da la tabla para ConvSD = 1, compuesta en el PC, y la cámara solo elige puntero por `cfg+0xd9`.
+Pero en la RAM viva de la A6000 (`convsd_activable`) ningún id de color activa ConvSD: la misma tabla ya es exacta allí.
 """
 from __future__ import annotations
 
@@ -15,6 +16,13 @@ import numpy as np
 K = {"601": (0.299, 0.114), "709": (0.2126, 0.0722)}
 U = np.array([C.UY, C.UC, C.UC])
 NODOS = np.array([(C.EJE_Y[j], C.EJE_C[a], C.EJE_C[b]) for j in range(5) for a in range(9) for b in range(9)])
+IDS_COLOR = 0x43F78DD2 + 0x2E8      # 16 B: ids que dan `FUN_437a4358`/`FUN_437a43a4` y lecturas directas (`+0x2f2…0x2f7`) a cfg+0x7e
+CAPS = 0x43E964A4 + 7               # byte cuyo bit 1 activa ConvSD con Color Depth (`FUN_437a1d14`, rama `pkt+0x29 = 1`)
+
+
+def convsd_activable(ids: bytes, caps: int) -> bool:
+    """¿Puede `FUN_437a1d14` dar ConvSD = 1 con estos ids y este byte de capacidades? (bit 4 del id con bits 5–6 a 0, o bit 1 de caps)."""
+    return any(i != 0xFF and i & 0x10 and not i & 0x60 for i in ids) or bool(caps >> 1 & 1)
 
 
 def enc(rgb: np.ndarray, k: str) -> np.ndarray:

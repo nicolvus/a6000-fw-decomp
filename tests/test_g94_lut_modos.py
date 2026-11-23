@@ -21,6 +21,25 @@ def test_convsd_de_fabrica_es_croma_709_a_601():
     assert np.allclose(A[1:, 1:], M[1:, 1:], atol=0.006)                   # bloque Cb/Cr; Y lo deforma el recorte a 0…256 del generador
 
 
+RAM = ROOT / "analysis/camera-dumps/ram-servicio-20261020/ram_0x80000000.bin"     # no versionado (1 GiB)
+
+
+def test_convsd_activable():
+    assert not LM.convsd_activable(bytes([0, 1, 0xFF]), 0x40)
+    assert LM.convsd_activable(bytes([0x12]), 0) and not LM.convsd_activable(bytes([0x32]), 0)
+    assert LM.convsd_activable(b"", 0x02)
+
+
+@pytest.mark.skipif(not RAM.exists(), reason="falta el volcado de RAM viva")
+def test_convsd_inactivo_en_la_ram_viva():
+    with RAM.open("rb") as f:
+        lee = lambda va, n: (f.seek(va - 0x43541000 + 0x03541000), f.read(n))[1]     # virtual 0x43… = físico 0x83…
+        assert lee(0x44021084, 4) == (0x43E964A4).to_bytes(4, "little")              # GOT vivo de `FUN_437a1d14`
+        assert lee(0x4402555C, 4) == (0x43F78DD2).to_bytes(4, "little")              # GOT vivo de `FUN_437a4358`
+        ids, caps = lee(LM.IDS_COLOR, 16), lee(LM.CAPS, 1)[0]
+    assert set(ids) <= {0, 1, 0xFF} and not LM.convsd_activable(ids, caps)
+
+
 def test_tabla_precalculada_iguala_vista_en_vivo_y_foto():
     x = C.rejilla(13)
     for nom, tope in (("identidad", 0.15), ("pelicula", 0.6)):
