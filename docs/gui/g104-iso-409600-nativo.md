@@ -1,4 +1,4 @@
-# G104 — ISO nativo hasta 409600: mapa de la cadena y viabilidad (23-11-2026; EN CURSO, sin parche, sin CFW)
+# G104 — ISO nativo hasta 409600: mapa de la cadena, parche de av-cam hecho y UI/libObj pendientes (23-11-2026; EN CURSO, sin CFW)
 
 Petición: añadir el ISO aumentado hasta 409600 al CFW Film 3.92. El usuario eligió el camino **nativo**: valores en la lista ISO real y EXIF correcto, no un empuje digital.
 Continúa G41–G48 (51200). Fuentes: bytes de `av-cam.bin` (3.21/3.38 iguales en estas zonas) y de `libObj.so`/`viewUnified2.so`/`viewUnified4.so` del 3.21, REA sobre av-cam y el arnés G22.
@@ -57,5 +57,24 @@ Continúa G41–G48 (51200). Fuentes: bytes de `av-cam.bin` (3.21/3.38 iguales e
    - la pantalla de disparo.
 4. **Pruebas teóricas:** Unicorn sobre cada conversor y tope, VM de av-cam con la orden del ISO, y el arnés para la lista.
 
-## 5. Estado
-Sin parches todavía. Abierto en PENDIENTES como **ISO-409**.
+## 5. Parche de av-cam (HECHO, 23-11-2026)
+- `scripts/gui/iso_avcam_patch.py` (integrado al final de `bionz` y `bionz_pp` de `build_cfw_film`): topes `0x2c` → `0x2f` en `0x43b074f2/f6` y `0x437b403e`; tabla de EXIF de 48 entradas (… 204800, **256000, 320000, 409600**) en `ZONA_B[0]` (`0x43C1FF24`, 3432 B libres en el av-cam Film+PP) y literal `0x437b4124` repuntado. Único acceso a la tabla (barrido de literales PC-relativos: los otros dos accesos cercanos apuntan a tablas distintas).
+- `tests/test_g104_iso_avcam.py` (4 verdes, Unicorn sobre el av-cam real): los 48 códigos → ISO de EXIF; código `0x2f` → Sv `0x400`, `0x2c` → `0x500`, sin cambios de `0` a `0x2c`; Sv `0x400` → `0x2f`; idempotente; cadena real de las dos funciones del CFW (3.38 base). g102/g103 siguen en verde.
+- Seguro por sí solo: ningún código ≥ `0x2d` llega a av-cam mientras la UI y `libObj` no los emitan.
+
+## 6. Hallazgos nuevos (mismo día)
+### 6.1 Ganancia: ¿hay otro amplificador? (pregunta del usuario: doble ISO base)
+- Cadena en av-cam: **un solo PGA analógico** + ganancia digital. Analógico: `FUN_436d7e08` (módulo `CAM_IMAGER`, sensor `IMX21019C_ImagerCtrl_IMX210E`) convierte la ganancia pedida con una tabla exp de 256 entradas (`0x43bdbe9a`, `FUN_436d8a90`) a un código de registro (`AGainCont`, `AGainCont_EC`, `AGainDrv` por modo de captura, 13 modos); lo que no cabe lo toma la digital de `FUN_437b061c` (rango `0x801…0x1800` = ±8 EV, G104 §3).
+- **No hay ninguna cadena ni ruta de conversión dual** (sin `DCG/HCG/LCG/ConvGain/GainSw` en av-cam; los `Dual*` son DualRec y `itp_*dcgain` es el DC del demosaico, no un amplificador). `PGACont/PGAContLinear` son tablas de OB. Conclusión: con este firmware no hay un segundo amplificador conmutable que dé un segundo ISO base; solo se podría emular cambiando el reparto analógico/digital (p. ej. `+0x5a`), sin ganancia de ruido real. NO_VERIFICADO: los registros que escribe el controlador del sensor (`ImagerCtrl`, vtable) no se han leído; ahí estaría una conmutación de ganancia de conversión si existiera.
+- El máximo analógico real (`[cfg+0x3a]`, `+0x5a`) es de ejecución (cero en el fichero): sigue sin leer; la cabida de 409600 (12 EV = analógico + 8 EV digitales) es INFERENCIA.
+- `FUN_4381a3f4` (ISO numérico → código, usado por `SetGainBI`, mensaje `0x4032`) también topa: comprobar su cola antes de dar el av-cam por completo.
+
+### 6.2 `libObj`: dominios de código (VERIFICADO en bytes)
+- Directos (código → id), todos por tabla, parcheables en sitio: `0x9aa134` (actual, ya mapea `0x2a…0x2c` a `0x3fd…0x3ff` y `0x2d…` a ids DB `0x1e5…`), `0x4e0ea8` (valor/mín/máx: `0x2a` inválido, `0x2b…0x38` = DB, ids `0x1e5…0x1f2`), `0x4e41c4` (rango estándar, `tbb` ≤ `0x2a`, y **`0x2a` = AUTO `0x21`**).
+- Inversos (id → código): `0x4e42b4` y `0x4e10b8` son árboles de `cmp` sobre ids `0x21…0x49` y `0x274…0x277`; todo lo demás devuelve el **centinela `0x2a`**. Añadir 128000…409600 exige cuevas (segmento R+X añadido, como `lut_sd_vu2`).
+- Los códigos `0x2a/0x2d…` significan cosas distintas según la función, así que reutilizar el índice de av-cam como código único no vale: hay que fijar códigos libres (≥ `0x4b`) con traducción en av-cam, o recolocar los centinelas. Sitios del MAX: `0x4db86e` (`0x1f0` → `0x96ff`, G42) **y** `0x4db954` (`0x377` → `0x98a1`, rango estándar, el que manda en la lista normal): mismo patrón de 14 B con `[r7+0x38]`/`[r7+0x28]`, variante `sub.w r2,r1,#0x23; cmp r2,#0xd; movlo r1,#0x2f`.
+- `libObj` no tiene hueco en `.text`: cuevas en segmento nuevo (`b.w` desde el sitio; alcance ±16 MB, `libObj` 16 MB).
+- Un parche parcial de `libObj`/UI rompería la pantalla ISO (G42: `getIso` cae a error con códigos > `0x26`): **no se integra nada de eso hasta tener la cadena completa**.
+
+## 7. Estado y lo que falta
+Hecho: av-cam. Pendiente (en PENDIENTES ISO-409-A…D): códigos/ids definitivos y conversores de `libObj` (6 funciones + MAX en 2 sitios), `cmn_view_processDataMgr` (`getValue/setValue/convertProcValToModelVal`, tabla `mappingValIsoSensitivity`), `WrapperIso` en `viewUnified2` (`getIso` 3 cadenas, `setIso`, `convertValueToProcessValueId`), nodos y lista en `CautionConfig` + textos, camino real del ajuste manual hasta av-cam (en el arnés no sale ninguna orden) y prueba en el arnés (el directorio de trabajo del arnés ya no existe: rehacer con `setup.sh`).

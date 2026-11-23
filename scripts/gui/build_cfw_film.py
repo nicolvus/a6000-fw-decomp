@@ -9,6 +9,7 @@ Encadena lo existente:
   3. `libObj.so` = 3.21 + eco de Silent (`patch_libobj_eco`), sin el parche PP;
   4. BIONZ = el de `base-380.tar` (3.38 + tres estados con Silent manda sobre EFCS) + `patch_silent_r5` (R87) + `film_patch` (LUT + curva tras la gamma);
   5. `build_nflasha15` + `build_package_nflasha15` (Darwin v3, sin `nflasha5`).
+Desde el 3.92 (G104) el av-cam acepta el código ISO 0x2f (409600: topes y tabla de EXIF, `iso_avcam_patch`; la cadena de interfaz/`libObj` sigue sin hacer).
 Desde el 3.92 (G103) `CautionConfig.so` lleva además «Extra fine» en Calidad (`quality_exfine_patch`, G39: 8 B).
 Con `--pp` (G102, 3.92+): además el Picture Profile del CFW completo (menú PP con cada ajuste en una sola fila y todas sus opciones, las mismas listas completas de PP/Gamma/Color Mode/valores en el menú Fn y PP en la
 rueda, `libObj` con S-Log/S-Gamut y eco PP, núcleo con `build_base_pp.bionz_cfw` debajo de las películas).
@@ -31,6 +32,7 @@ import build_pp_menu
 import build_silent_menu_test
 import film_patch
 import film_userland as FU
+import iso_avcam_patch
 import patch_libobj_ppeco
 import patch_silent_r5
 import pp_menu_spec as M
@@ -44,12 +46,12 @@ AYUDA_PP = "Picture Profile: choose from the full list of values."
 
 def bionz(original: bytes) -> bytes:
     """3.38 + tres estados (base-380) → + Silent calibrado (R87) → + películas."""
-    return film_patch.apply_bytes(patch_silent_r5.apply_bytes(original))
+    return iso_avcam_patch.apply_bytes(film_patch.apply_bytes(patch_silent_r5.apply_bytes(original)))
 
 
 def bionz_pp(original: bytes) -> bytes:
     """G102: 3.38 + tres estados → parche PP del núcleo del 3.81 (curvas, S-Log3, B&W, Hi-Light, tono) + Silent calibrado → + películas (sin bytes en común)."""
-    return film_patch.apply_bytes(build_base_pp.bionz_cfw(original))
+    return iso_avcam_patch.apply_bytes(film_patch.apply_bytes(build_base_pp.bionz_cfw(original)))
 
 
 def menu_film(pp: bool = False, maximo: int = 99) -> dict:
