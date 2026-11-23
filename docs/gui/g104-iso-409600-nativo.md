@@ -76,5 +76,21 @@ Continúa G41–G48 (51200). Fuentes: bytes de `av-cam.bin` (3.21/3.38 iguales e
 - `libObj` no tiene hueco en `.text`: cuevas en segmento nuevo (`b.w` desde el sitio; alcance ±16 MB, `libObj` 16 MB).
 - Un parche parcial de `libObj`/UI rompería la pantalla ISO (G42: `getIso` cae a error con códigos > `0x26`): **no se integra nada de eso hasta tener la cadena completa**.
 
+## 8. Interfaz: mapa medido y referencia A7S (23-11-2026, segunda sesión)
+### 8.1 La A7S 3.20 ya lo hace (mismas bibliotecas, con símbolos)
+- `libObj`: `VALUEID_ISO_256000/320000/409600` = `0x50e/0x50f/0x510` (128000–204800 = `0x3fd–0x3ff`, como la A6000). Sus listas de valores válidos (tramos de 16 B desde `0xd06cd8`) incluyen `…0x277, 0x3fd, 0x3fe, 0x3ff, 0x50e…0x513`; las de la A6000 (`0xe383b8`, `0xe384e8`… 16 listas) acaban en `0x277` + ids dB.
+- `WrapperIso::getIso` (vu2 A7S `0x19847d`): códigos de modelo **`0x4b…0x50` = 128000…409600** (además de `0x27–0x29`). Es la opción «códigos ≥ `0x4b`» de §2: av-cam tendría que traducirlos a sus índices `0x2a–0x2f`.
+- `CautionConfig` A7S: nodos `ISOSensitivity64000…409600` con id de proceso `0x23…0x2b` (su numeración, 2 por encima de la A6000) y textos (`0xf819` 128000, `0xf838` 256000, `0xf834` 409600; no existen en el `.uxc` de la A6000).
+### 8.2 La pantalla ISO de la A6000 (VERIFICADO en bytes + arnés)
+- La pantalla que abre el botón ISO (y el menú) es `ViewManualControlDial_D` de `viewUnified4` (tipo 3 = ISO, `WrapperIso` en `+0x1cc`), **no** el árbol de nodos de `CautionConfig` (cuadra con G46: `_getSubNode` no influye). Captura de fábrica: lista vertical …10000–25600 y panel «ISO 25600».
+- Filas = elementos fijos del diseño. Tabla valor→fila en `0x16c3d8` (función `0xbc138`, ≤ `0x4c`, si no fila `0x31`): `ISO_50…ISO_32000` (`0x30…0x4c`) → filas `0x2f…0x13`. Tabla fila→valor en `0x16c2c4` (`0xbd190`, filas 5…`0x3f`): **filas `0x6…0x12` libres (`0x4f`)**: 13 huecos encima de 32000 = 40000…640000. La A7S tiene la misma tabla.
+- Enum `WRAPPER_ISO` (nombres en vu4 `0x1778e3`): MFNR `0…0xe`, AUTO `0xf`, AUTO_MIN `0x10–0x1f`, AUTO_MAX `0x20–0x2f`, `ISO_50…ISO_51200` = `0x30…0x4e`, `ISO_INVALID` `0x4f`. `getIso` modo 0 lee `getModelInfo("@M00B", 0x48)` claves `0x1f4/5/6`; mín./máx. son los límites del ISO AUTO, no los de la lista.
+- Disponibilidad por fila: `WrapperIso::isInhOn` → `processDataMgr` elemento `0x15` → `isValueGrayedOut(id de proceso)` (`+0x67ea8`, `tbh` ≤ `0x4a`) → `WrapperSettingUtil::isInhOn(clave)`: `0x1e`→`0x13b` (32000), `0x1f`→`0x13c`, `0x20`→`0x38f`; esas claves las resuelve el motor de inhibiciones de `libObj` (`0xa76540`: campo de 105 palabras por factor, servicio externo), no el MAX.
+- Arnés (perfil `x1`, `libObj` con el MAX forzado a `0x26` en `0x4db86e` **y** `0x4db954`): la lista sigue acabando en 25600 → el tope visible no es el MAX de `0x4db7c4`. `SKIPFN=a76540` impide arrancar.
+### 8.3 Envío del ISO manual a av-cam (parte de ISO-409-C)
+- `0x4e7c30` (libObj) arma la orden de ajustes: lee `PARAMID_ISO_SPEED_RATE_SET` `0x9700` (y `MIN/MAX_SET` `0x9701/2`, `ACT` `0x9703–5`) y la convierte con `0x4e10b8` (VALUEID → código); `MENU_STD_RANGE_*_SET/ACT` (`0x989f/0x98a2/0x98a0/0x98a3`) con `0x4e42b4`. El código va al mensaje con `0x4a5836`. Nombres de PARAMID verificados en la tabla `0xfdc940 − 4·0x96ff`.
+### 8.4 Arnés
+- `setup.sh` necesitaba `linux-libc-dev_7.3.5-1` (la 7.3.3 ya no está en Debian). El directorio de trabajo debe ir en una ruta corta (socket de qemu < 108 B); se usó `/tmp/claude-1000/a6k`. `TRACELIB` sigue sin armarse en `viewUnified4` (como G47).
+
 ## 7. Estado y lo que falta
 Hecho: av-cam. Pendiente (en PENDIENTES ISO-409-A…D): códigos/ids definitivos y conversores de `libObj` (6 funciones + MAX en 2 sitios), `cmn_view_processDataMgr` (`getValue/setValue/convertProcValToModelVal`, tabla `mappingValIsoSensitivity`), `WrapperIso` en `viewUnified2` (`getIso` 3 cadenas, `setIso`, `convertValueToProcessValueId`), nodos y lista en `CautionConfig` + textos, camino real del ajuste manual hasta av-cam (en el arnés no sale ninguna orden) y prueba en el arnés (el directorio de trabajo del arnés ya no existe: rehacer con `setup.sh`).

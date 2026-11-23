@@ -14,7 +14,7 @@ get() { [ -s "$W/dl/$1" ] || curl -fL --retry 3 -o "$W/dl/$1" "$2"; }
 get vmlinuz "$D/dists/trixie/main/installer-armhf/current/images/netboot/vmlinuz"      # 6.12 armmp; «current» cambia con cada punto de trixie
 get initrd.gz "$D/dists/trixie/main/installer-armhf/current/images/netboot/initrd.gz"
 get libc6-dev_2.44-3_armhf.deb "$D/pool/main/g/glibc/libc6-dev_2.44-3_armhf.deb"
-get linux-libc-dev_7.3.3-1_all.deb "$D/pool/main/l/linux/linux-libc-dev_7.3.3-1_all.deb"
+get linux-libc-dev_7.3.5-1_all.deb "$D/pool/main/l/linux/linux-libc-dev_7.3.5-1_all.deb"
 (cd "$W/dl" && sha256sum vmlinuz initrd.gz ./*.deb > SHA256SUMS && cat SHA256SUMS)
 cp "$W/dl/vmlinuz" "$W/vmlinuz"
 rm -rf "$W/ird"; mkdir "$W/ird"
