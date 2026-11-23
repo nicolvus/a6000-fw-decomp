@@ -48,3 +48,5 @@ Construido a petición del usuario, **sin instalar**: `python3 scripts/gui/build
   - `viewUnified2.so` contiene el userland completo (4216 B, con `lutsd_paquete`). En Unicorn, `DT_INIT` del fichero construido llama al `_init` original, pide `dlsym("pthread_create")` por `0xe72e4` y arranca `lutsd_hilo`.
   - Frente a la 3.83, `av-cam` solo difiere en `ZONA_B` (`0x43C1FF58…0x43C20B65`): son las tres tablas de fábrica, recalculadas con el ΔE2000 corregido de LUT-DE-1. Las cuevas no cambian.
 - **Uso:** `python3 scripts/lut/lut_pkg.py mi.cube LUT1.LUT` y copiar el resultado a `LUT/` en la SD, como `LUT1.LUT`…`LUT6.LUT`. Sin `.LUT`, el `.cube` sigue funcionando.
+
+**Instalado el 23-11-2026 (orden del usuario) como 3.86**, porque la cámara tenía 3.85 y la 3.84 habría sido una bajada. `.dat` `cd93c0de947e040d8307c790c7975b13a2f18fdd1562e9d31194bece1173e9b7`; log `analysis/gui/g22/install-3.86.log`. La cámara arrancó y `pmca-console info` da 3.86. El 3.85 anterior no es de este repo y se sobrescribió. Falta LUT-SD-2: `.LUT` en la SD y leer el blob.
