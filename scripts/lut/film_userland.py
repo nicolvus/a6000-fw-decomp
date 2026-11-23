@@ -133,6 +133,7 @@ def blob_esperado(look: int, npz: Path) -> bytes:
 class Backup:
     ids: dict = field(default_factory=dict)       # id → bytes
     escrituras: list = field(default_factory=list)
+    pierde: int = 0                               # nº de escrituras del blob que se pierden (Backup que aún no las ha asentado)
 
     def lee(self, i: int) -> bytes:
         return self.ids.get(i, bytes(BK_TAM if i == BK_ID else 8))
@@ -183,8 +184,11 @@ def emula(bk: Backup, compilado, pasos: list, entrada: str = "films_hilo", max_i
         elif n == "Backup_write":
             i = r(1)
             assert r(0) == i >> 16
-            bk.ids[i] = bytes(mu.mem_read(r(2), BK_TAM if i == BK_ID else 8))
             bk.escrituras.append(i)
+            if i == BK_ID and bk.pierde > 0:
+                bk.pierde -= 1
+            else:
+                bk.ids[i] = bytes(mu.mem_read(r(2), BK_TAM if i == BK_ID else 8))
         mu.reg_write(UC_ARM_REG_R0, ret & 0xFFFFFFFF)
         mu.reg_write(UC_ARM_REG_PC, mu.reg_read(UC_ARM_REG_LR) | 1)
 

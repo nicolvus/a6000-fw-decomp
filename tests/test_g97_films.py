@@ -83,20 +83,46 @@ def test_avcam_lut_del_blob_y_fabrica_si_no(parcheado):
         assert FP.emula_lut(parcheado, g, look, bytes(malo))[0] == 0x11223344       # sin magia
 
 
-def test_avcam_curva_tras_la_gamma(parcheado):
+def test_avcam_curva_por_gamma_extendida_llega_a_la_rejilla_del_hw(parcheado):
+    """G98: la curva del look la aplican la rejilla de 96 nodos (FUN_43853200, la que va al HW) y la curva de 512 (FUN_438538e4), por c68[8] + bd5/be1."""
     import film_patch as FP
     import tono_post
     img = C.BIN.read_bytes()
-    base = list(tono_post.emula(img, 0, bd5=0))
-    assert FP.emula_curva(parcheado, 0, None) == base                               # Off: la función original
     z = np.load(NPZ)
     look = next(n for n, i in enumerate(FU.orden(), 1) if str(z["curva"][[str(x) for x in z["ids"]].index(i)]) != "sin_T")
     blob = FU.blob_esperado(look, NPZ)
     T = struct.unpack_from("<1024H", blob, FU.OFF_T)
-    assert FP.emula_curva(parcheado, look, blob) == [T[min(v, 1023)] for v in base]
+    fab = FP.emula_tono(img, 0, None, entrada=None)
+    assert fab["ok"] and FP.emula_tono(parcheado, 0, blob) == fab                      # Off: idéntico a fábrica (Black Gamma incluida)
+    sin_bg = FP.emula_tono(img, 0, None, entrada=None, bd1=0)
+    on = FP.emula_tono(parcheado, look, blob)
+    assert on["ok"] and on["rejilla"] == [T[min(v, 1023)] for v in sin_bg["rejilla"]]
+    assert on["curva"] == tono_post.emula(img, 0, tabla=np.array(T), bd5=1, be1=8).tolist()
     sin_t = bytearray(blob)
     sin_t[9] = 0
-    assert FP.emula_curva(parcheado, look, bytes(sin_t)) == base
+    assert FP.emula_tono(parcheado, look, bytes(sin_t)) == fab                              # look sin curva: tono de fábrica
+    assert FP.emula_tono(parcheado, look + 1, blob) == fab                               # blob de otro look: fábrica
+
+
+def test_avcam_lut_reintenta_si_el_blob_llega_tarde(parcheado):
+    """G98: si el ACK llega antes que el blob, la máquina sigue forzando la recarga (cada 32 pasadas) hasta aplicar el look; luego se queda quieta."""
+    import film_patch as FP
+    b7, b0 = FU.blob_esperado(7, NPZ), FU.blob_esperado(0, NPZ)
+    pasos = [(0, b0)] * 3 + [(7, b0)] * 40 + [(7, b7)] * 45 + [(0, b0)] * 3
+    forzadas = [i for i, f in enumerate(FP.emula_maquina(parcheado, pasos)) if f]
+    assert forzadas[0] == 3 and any(43 <= i < 43 + 32 for i in forzadas)
+    llegada = next(i for i in forzadas if i >= 43)
+    assert [i for i in forzadas if llegada < i < 88] == [] and forzadas[-1] == 88
+
+
+def test_userland_no_da_el_ack_hasta_que_el_blob_esta_escrito(compilado):
+    bk = FU.Backup(pierde=2)
+    bk.ids[FU.BK_ID] = FU.blob_esperado(0, NPZ)
+    _fila(bk, 0, 4)                                                 # Kodak 1 → Kodachrome (look 4)
+    vistos = []
+    bk = FU.emula(bk, compilado, [lambda b: vistos.append(b.lee(FU.ACK_ID)[0])] * 4)
+    assert vistos[0] == 0 and vistos[-1] == 4                      # primer sondeo: blob perdido → sin ACK; después se reintenta
+    assert bk.lee(FU.BK_ID) == FU.blob_esperado(4, NPZ)
 
 
 def test_avcam_solo_ganchos_y_zona_a(parcheado):
@@ -104,5 +130,5 @@ def test_avcam_solo_ganchos_y_zona_a(parcheado):
     import film_patch as FP
     img = C.BIN.read_bytes()
     dif = [i + FP.BASE for i, (a, b) in enumerate(zip(img, parcheado)) if a != b]
-    ganchos = [h[0] for h in FP.L.HOOKS] + [FP.L.HOOK_MAQ[0], *FP.HOOKS_T]
+    ganchos = [h[0] for h in FP.L.HOOKS] + [FP.L.HOOK_MAQ[0], *FP.SITIOS_T]
     assert all(D.ZONA_A[0] <= a < D.ZONA_A[1] or any(g <= a < g + 4 for g in ganchos) for a in dif)

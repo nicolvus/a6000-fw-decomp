@@ -19,6 +19,7 @@ typedef unsigned char u8;
 #define TAM_TABLA 1064
 #define OFF_T 0x1000
 #define SONDEO_US 300000u
+#define VERIFICA 10
 
 struct api {
     i32 (*b_read)(u32, void *);
@@ -32,7 +33,7 @@ struct ctx {
     u8 blob[BK_TAM];
     u8 tmp[BK_TAM];
     u8 celda[NFILAS];
-    i32 activo, escrito;
+    i32 activo, escrito, vueltas;
 };
 
 void *memset(void *p, int v, u32 n) {
@@ -67,6 +68,14 @@ static void escribe_byte(struct ctx *c, u32 id, i32 v) {
     c->a.b_write(id >> 16, id, b);
 }
 
+/* 1 si el Backup ya guarda exactamente c->blob. */
+static i32 blob_igual(struct ctx *c) {
+    if (c->a.b_read(BK_ID, c->tmp) < 0) return 0;
+    for (i32 i = 0; i < BK_TAM; i++)
+        if (c->blob[i] != c->tmp[i]) return 0;
+    return 1;
+}
+
 /* Fila y opción de un look (1…NLOOKS) → fila r con FILA_BASE[r] < look ≤ FILA_BASE[r] + FILA_N[r] − 1. */
 static i32 fila_de(i32 look) {
     for (i32 r = 0; r < NFILAS; r++)
@@ -74,7 +83,8 @@ static i32 fila_de(i32 look) {
     return -1;
 }
 
-/* Blob del look `n` (0 = Off): cabecera + tabla en la ranura 0 + curva. Escribe el Backup solo si cambia; luego el ACK. */
+/* Blob del look `n` (0 = Off): cabecera + tabla en la ranura 0 + curva. Escribe el Backup solo si cambia y lo relee: el ACK (lo único que vigila
+ * `av-cam`) solo se escribe cuando el blob ya está entero en el Backup; si no, `escrito` queda sin cambiar y el siguiente sondeo lo reintenta. */
 i32 films_escribe(struct ctx *c, i32 n) {
     memset(c->blob, 0, BK_TAM);
     *(u32 *)c->blob = MAGIC;
@@ -89,10 +99,13 @@ i32 films_escribe(struct ctx *c, i32 n) {
             c->blob[9] = 1;
         }
     }
-    i32 igual = c->a.b_read(BK_ID, c->tmp) >= 0;
-    for (i32 i = 0; i < BK_TAM && igual; i++) igual = c->blob[i] == c->tmp[i];
-    if (!igual) c->a.b_write(BK_ID >> 16, BK_ID, c->blob);
+    i32 igual = blob_igual(c);
+    if (!igual) {
+        c->a.b_write(BK_ID >> 16, BK_ID, c->blob);
+        if (!blob_igual(c)) return 0;
+    }
     if (lee_ack(c) != n) escribe_byte(c, ACK_ID, n);
+    if (lee_ack(c) != n) return 0;
     c->escrito = n;
     return !igual;
 }
@@ -126,6 +139,10 @@ i32 films_paso(struct ctx *c) {
             for (i32 s = 0; s < NFILAS && !c->activo; s++)
                 if (c->celda[s]) c->activo = FILA_BASE[s] + c->celda[s];
         }
+    }
+    if (++c->vueltas >= VERIFICA) {             /* cada ~3 s: el Backup sigue con el blob y el ACK del look activo (si no, se reescriben) */
+        c->vueltas = 0;
+        c->escrito = -1;
     }
     if (c->activo == c->escrito) return 0;
     films_escribe(c, c->activo);
