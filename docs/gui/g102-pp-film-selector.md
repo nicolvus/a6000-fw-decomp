@@ -47,6 +47,8 @@ Cada nodo Fn usa el mismo ajuste (pid) que su fila del menú.
 
 **Rueda de control:** ISO, Balance, Estilo creativo, Efecto, **Film Simulation** (9), **Picture Profile** (10), No definido.
 
+**Calidad «Extra fine» (G39, desde el 3.92):** el menú Calidad pasa a RAW, RAW & JPEG, **Extrafina**, Fina, Estándar (§5).
+
 **Núcleo y `libObj`:** los del 3.81 debajo de Film y del Silent calibrado:
 - curvas S-Log2, S-Log3 e ITU709(800%);
 - S-Gamut3 y S-Gamut3.Cine, B&W y Hi-Light;
@@ -92,3 +94,14 @@ PP y Film no comparten ningún byte del núcleo (0 bytes en común entre sus dif
   - Elegir un perfil no se queda: vuelve a Off y no sale ninguna orden hacia `av-cam`. Las órdenes de modelo repetidas fallan en el arnés (G75 T1/T38), así que no se ha podido medir allí la escritura.
   - En la cámara (3.73–3.77) el selector sí escribía.
   - No se ha navegado en el arnés la asignación de la rueda ni la de las casillas Fn. Solo está comprobada en Unicorn.
+
+## 5. Extra fine en el 3.92 (comprobación teórica, sin cámara ni paquete)
+`build_cfw_film.build_files` aplica `quality_exfine_patch` (G39: 8 B, los dos literales de `CmnViewSettingNodeStlImageQuality::_getSubNode` pasan de la lista `Type01` a `Default`) sobre el `CautionConfig.so` del CFW, en los dos modos (con y sin `--pp`).
+Tests `tests/test_g103_extra_fine_film.py` (generan el `/usr` del 3.92 en un directorio temporal; no construyen el paquete):
+- **Menú:** en el `CautionConfig.so` del 3.92 los literales apuntan a las ranuras GOT reubicadas a `cmnViewSettingNodesStlImageQualityDefault` y a su cuenta; la lista tiene 5 nodos (RAW, RAW_JPEG, ExtraFine, Fine, Standard) y ExtraFine lleva el id de proceso 2 (`0xf`/`0x10`). Nada más del CFW toca `_getSubNode`: solo cambian esos 4 bytes.
+- **Menú Fn y vu7:** hay una sola clase de nodo de Calidad y un solo nodo raíz (`cmnViewSettingNodeRootStlImageQuality`), importado por `viewUnified2`, `viewUnified4` (Fn) y `viewUnified7`: el parche cubre también la lista del menú Fn (límite de G39 §5, ahora deducido).
+- **`libObj`:** sus 20 tramos distintos son solo PP (validador, `CamMsgConv`, eco PP) y el eco de Silent; ninguno junto al constructor de la orden `0x4036` (`movw #0x4036` en `0x97f49c`).
+- **Núcleo:** `bionz_pp` no cambia ningún byte del camino de calidad de av-cam (`ConvertQualityForBKID` `0x437f8204`, manejador `0x4380394c`, tablas `0x43ffac44` y `0x43fff564`). En la LIRO VM con el av-cam del 3.92, la orden real del menú (`0x4036`, byte 10 = 2, medida en G75 T19) se guarda en el espejo de ajustes y se contesta con `0xf000`, igual que Fina.
+- **Regresión:** con `CFW_FILM392=<dir>` los 4 tests de ficheros de G102 corren sobre ese `/usr` y pasan con Extra fine incluido.
+
+**No verificado:** la codificación JPEG con la tabla de Extra fine (la captura sigue bloqueada en la VM, E2E-10) y el tamaño del fichero; el paquete 3.92 sigue sin construir.

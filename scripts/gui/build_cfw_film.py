@@ -9,6 +9,7 @@ Encadena lo existente:
   3. `libObj.so` = 3.21 + eco de Silent (`patch_libobj_eco`), sin el parche PP;
   4. BIONZ = el de `base-380.tar` (3.38 + tres estados con Silent manda sobre EFCS) + `patch_silent_r5` (R87) + `film_patch` (LUT + curva tras la gamma);
   5. `build_nflasha15` + `build_package_nflasha15` (Darwin v3, sin `nflasha5`).
+Desde el 3.92 (G103) `CautionConfig.so` lleva además «Extra fine» en Calidad (`quality_exfine_patch`, G39: 8 B).
 Con `--pp` (G102, 3.92+): además el Picture Profile del CFW completo (menú PP con cada ajuste en una sola fila y todas sus opciones, las mismas listas completas de PP/Gamma/Color Mode/valores en el menú Fn y PP en la
 rueda, `libObj` con S-Log/S-Gamut y eco PP, núcleo con `build_base_pp.bionz_cfw` debajo de las películas).
 Uso: build_cfw_film.py SALIDA [--version 3.87] [--looks analysis/lut/g97/looks.npz] [--pp]
@@ -33,6 +34,7 @@ import film_userland as FU
 import patch_libobj_ppeco
 import patch_silent_r5
 import pp_menu_spec as M
+import quality_exfine_patch
 
 LOOKS = ROOT / "analysis/lut/g97/looks.npz"
 
@@ -109,6 +111,8 @@ def build_files(work: Path, looks: Path, pp: bool = False, maximo: int = 99) -> 
             shutil.copy(pp / rel, files / rel)
     (files / "lib/libObj.so").write_bytes(lib_obj)
     (files / "lib/viewUnified2.so").write_bytes(FU.patch_vu2((files / "lib/viewUnified2.so").read_bytes(), FU.compila(looks)))
+    cau = files / "lib/CautionConfig.so"
+    cau.write_bytes(quality_exfine_patch.patch(cau.read_bytes()))   # G39/G103: «Extra fine» en Calidad (menú y Fn usan la misma clase)
     man = {"idiomas": json.loads((pp / "MANIFEST.json").read_text())["idiomas"], "nuevos": {}, "originales": {}, "parcheados": {}, "md5": {}}
     for rel in sorted(set(parcheados)):
         o, n = (orig / rel).read_bytes(), (files / rel).read_bytes()

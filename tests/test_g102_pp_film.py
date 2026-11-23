@@ -1,6 +1,7 @@
 """G102 — CFW Film + Picture Profile (3.92): menú PP con cada ajuste en una sola fila (todas sus opciones), las mismas listas en el menú Fn y PP en la rueda;
 comprobaciones en Unicorn y sobre los ficheros reales del paquete (`build_cfw_film.py build/cfw_film392 --version 3.92 --pp`)."""
 import json
+import os
 import struct
 import subprocess
 import sys
@@ -22,7 +23,7 @@ import test_g101_rueda_film as T101
 
 LIB = T.LIB
 needs = T.needs
-OUT = ROOT / "build/cfw_film392"
+OUT = Path(os.environ.get("CFW_FILM392", ROOT / "build/cfw_film392"))   # p. ej. un build_files en un directorio temporal
 construido = pytest.mark.skipif(not (OUT / "files/lib/viewUnified4.so").is_file(), reason="CFW 3.92 sin construir (build_cfw_film.py build/cfw_film392 --version 3.92 --pp)")
 FN = ["film_todas", "sel", "gamma", "color_mode", "black_level", "bg_level", "saturation", "phase", "det_level", "knee_point"]
 VALORES_FN = {   # valores de modelo de cada lista completa (= la fila entera del menú)
