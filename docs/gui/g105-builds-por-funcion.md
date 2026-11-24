@@ -89,3 +89,12 @@ pmca-console firmware build/cfw_func393/film/pkg-3.93/package-3.93/firmware_pack
 - `--reflash` no se ha usado todavía en esta cámara.
 - Si el paso 2 se corta, la cámara queda informando la versión subida hasta que se ejecute `--restore-version`.
 - Nada de esto sirve mientras la cámara no encienda (§1).
+
+## 4. Recuperación e instalación de la build `film` (24-11-2026, MEDIDO)
+
+- **La cámara volvió a encender sola** (09:29, modo normal `07c4`, `pmca-console info` = 3.92), tras estar cargando apagada (`054c:0994`), sin SWD ni escritura alguna. El «no enciende» del incidente fue transitorio; su causa sigue NO_VERIFICADA (batería baja o bloqueo hasta corte de energía).
+- **Actualización normal 3.92 → 3.93 (`film`) desde el sistema en marcha: no entra al actualizador.** Dos intentos: la cámara se reinicia y vuelve a modo normal (`07c4`), `pmca-console` agota la espera.
+- **Actualizador forzado por SWD** (`analysis/e26-recovery/r48_updater_swd.cfg`, como R49 §7): `chk updater` dos veces con `r0` → 0, BootMode 3, entrada al actualizador en 405 ms; enumeró `054c:03e2`. Registro `analysis/camera-dumps/20261124-inc392-swd/p1.log`.
+- **Instalación:** primer intento `device returned more data than requested`; el segundo, `updater response error`, y el canal quedó trabado (como R49 §8). Ciclo de energía con el interruptor → volvió sola al actualizador (`03e2`) → `Done`.
+- **Verificado:** arranque normal (`07c4`), `pmca-console info` = **3.93**. Registro `install-3.93-film.log`.
+- **Falta (cámara):** probar Film Simulation y la tecla izquierda «Brillo de monitor» con esta build.
