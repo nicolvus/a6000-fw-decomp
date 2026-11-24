@@ -98,3 +98,11 @@ pmca-console firmware build/cfw_func393/film/pkg-3.93/package-3.93/firmware_pack
 - **Instalación:** primer intento `device returned more data than requested`; el segundo, `updater response error`, y el canal quedó trabado (como R49 §8). Ciclo de energía con el interruptor → volvió sola al actualizador (`03e2`) → `Done`.
 - **Verificado:** arranque normal (`07c4`), `pmca-console info` = **3.93**. Registro `install-3.93-film.log`.
 - **Falta (cámara):** probar Film Simulation y la tecla izquierda «Brillo de monitor» con esta build.
+
+## 5. Botones «pegados» con `film` e instalación de `exfine` por USB (24-11-2026, MEDIDO)
+
+- **Con `film` 3.93** el usuario observó que los botones quedan «pegados» (p. ej. el obturador). Sin reproducir ni aislar: NO_VERIFICADO si viene de la capa Film o de la base Silent.
+- **Claves de `pmca-console`:** `--reflash` falló con «key material … not set up». `keys import` solo acepta URL https o **ficheros** locales (no carpetas); se importaron desde los `.py` de `references/fwtool`, `references/pmca` y `~/.local/share/Sony-PMCA-RE` → las cuatro clases presentes.
+- **Instalación `exfine` por USB, sin SWD:** `firmware … --flash --confirm --reflash` desde el CFW `film` en marcha → 3.93 → 3.94 declarada, entró al actualizador, `Done`. La restauración de versión agotó la espera del modo servicio; `firmware --restore-version` aparte la completó («real version again: 3.93»).
+- **Verificado:** arranque normal (`07c4`), `pmca-console info` = **3.93**. Registro `analysis/camera-dumps/20261124-inc392-swd/install-3.93-exfine.log`.
+- **Falta (cámara):** comprobar si los botones siguen pegados con `exfine` (base + Extra fine, sin Film): si no, el fallo es de Film.
