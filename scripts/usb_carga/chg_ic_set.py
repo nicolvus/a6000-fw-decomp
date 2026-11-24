@@ -27,6 +27,18 @@ LIMITE = {100: 0, 500: 1, 1500: 2, 900: 3, 2000: 4}  # mA → código de reg4 (0
 PREAJUSTE = {'carga': (0xC9, 4), 'normal': (0x0A, 0)}  # (reg5, reg6)
 
 
+# adjstctl.elf (fw 3.21) pone siempre secuencia 1 en el paquete (0x8d20 `strh r3, [r4, #2]`, r3 = 1) y Darwin
+# descarta la orden cuya secuencia repite la anterior (0x1b916): av-cam agota la espera y responde res 0x88.
+ADJ_SEQ_OFF, ADJ_SEQ_ORIG, ADJ_SEQ_BLOQUE = 0xD20, b'\x63\x80', b'\x66\x80'  # strh r3 → strh r6 (r6 = bloque)
+
+
+def adjstctl_seq_bloque(d: bytes) -> bytes:
+    """Copia de adjstctl.elf que usa el bloque (0x0d20) como secuencia; alternándola con la original no se repite."""
+    if d[ADJ_SEQ_OFF:ADJ_SEQ_OFF + 2] != ADJ_SEQ_ORIG:
+        raise ValueError('adjstctl.elf no es el del firmware 3.21')
+    return d[:ADJ_SEQ_OFF] + ADJ_SEQ_BLOQUE + d[ADJ_SEQ_OFF + 2:]
+
+
 def carga_util(modo: str, ma: int) -> bytes:
     """8 B que Darwin copia al búfer de la orden (0x1b8f8); solo se usan los 3 primeros."""
     if ma not in LIMITE or modo not in PREAJUSTE:

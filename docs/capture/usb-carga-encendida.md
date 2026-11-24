@@ -48,7 +48,7 @@ Darwin conserva cadenas de depuración y hace él mismo la detección BC1.2 (`SD
 | `0xc50a` | Quita la alimentación USB: reg5 bit 3 = 0 y reg4 límite = 0 |
 | `0xc4e8(a, b, c)` | reg5 = `(reg5 & 0x38) | a | b`; reg6[2:0] = `c`. **Es la única que toca los bits de carga** |
 | `0xc660` | «BGL ON»: aplica reg4/reg5/reg6 desde `0x20002af9..afb` |
-| `0xc8bc(buf)` | Guarda 3 B en `0x20002af9..afb` y los aplica con `0xc660` si el indicador `[0x20000029]` vale 0 (`0xcf14(9)`); si no, los aplica la tarea `0x7a36` del modo encendido en cada ciclo (`0xc6dc`). La llama el despachador de órdenes de BIONZ (`0x243a4`, caso `0xa0`, desde `0x245dc`) |
+| `0xc8bc(buf)` | Guarda 3 B en `0x20002af9..afb` y los aplica con `0xc660` si el indicador `[0x20000029]` vale 0 (`0xcf14(9)`); si no, los aplica la tarea `0x7a36` del modo encendido cuando recibe su evento (bit 2, `0x7aa6`→`0xc6dc`). La llama el despachador de órdenes de BIONZ (`0x243a4`, caso `0xa0`, desde `0x245dc`), que **ignora su retorno** y responde siempre 1 (`0x245e0`→`0x246ca`). `[0x20000029]` es un byte de la estructura de ajustes `0x20000000` (0x200 B; valores de fábrica copiados de `0x26d7c` por `0x6d10`; ahí vale 0) |
 | `0xc6f0` | Informa a BIONZ del límite: código de reg4 → 0 = 100, 1 = 500, 2 = 1500, 3 = 900, 4 = 2000 mA (la enumeración de `usb_darwin.ko`) |
 
 Llamadas a `0xc4e8` (barrido de todo `darwin_core.bin`):
@@ -58,6 +58,19 @@ Llamadas a `0xc4e8` (barrido de todo `darwin_core.bin`):
 | `0x8792` (máquina `0x8744..`) | `(1,0xc0,4)`, `(1,0x80,4)`, `(1,0xc0,0)`, `(2,0x80,0)` | modo apagado: carga |
 | `0x85cc` | `(2,0,0)` | modo apagado: corte |
 | `0x8c64` («`Off exit`», `0x8c42`) | `(2,0,?)` | **al encender la cámara: carga cortada** |
+
+Decisión del modo apagado (`0x8692`, tabla `tbb` en `0x86fa` sobre `cmode` = `[0x20002ac4]`, que calcula
+`0xbb2e`; `a` = 2 si el 2.º argumento es ≠ 0, si no 1):
+
+| `cmode` | Llamada |
+|---|---|
+| 1, 4, 8 | `0xc4e8(a, 0xc0, 4)` |
+| 2, 5 | `0xc4e8(a, 0x80, a == 2 ? 0 : 4)` |
+| 13 | como 1 durante 40 s (`0x9c40` ms) desde que entra; después, como 2 |
+| resto | `0xc4e8(1, 0xc0, 0)` |
+
+En los casos 1, 2, 4, 5, 8 y 13 llama además a `0x1c0cc` y a `0x118b2(0)` (la primera vez: `0x6c0c(1, 0xe0)` y
+puerto `0x1a8` = 0).
 
 Semántica (los nombres salen de los mensajes de error de `0xc660`): reg4[2:0] = **límite de entrada** («`CUR LIMIT`»,
 VERIFICADO por la traducción de `0xc6f0`); reg5 = «`BST_EN`» y bits de modo; reg6[2:0] = «`Wakeup Charge`».
@@ -98,7 +111,7 @@ Límites de la vía sin parche:
 3. Que el bit 0 de reg5 con la cámara encendida no provoque un apagón no está verificado. Si lo provocara, la cámara
    se apagaría y el modo apagado reescribiría los registros: no es destructivo.
 
-### 3.2 Vía permanente: parche de Darwin (sin construir)
+### 3.2 Vía permanente: parche de Darwin (sin construir; después de repetir la prueba, §6)
 
 Con la cadena de parcheo ya probada en cámara ([R84](e26-r84-darwin-v3-en-camara.md)), en la tarea `0x7a36` del
 modo encendido se cambiaría la llamada `bl 0xc6dc` (`0x7aa6`) por una rutina en una cueva de código. La rutina,
@@ -149,13 +162,37 @@ Datos en `analysis/camera-dumps/20261123-usb-carga-telnet/` (no versionados).
 - **Resultado: no carga.** El nivel nunca sube. La caída un poco más lenta cabe en la no linealidad del porcentaje y
   en la resolución del 1 %.
 - Con el cargador de pared, `adjstctl … 0xa0` responde `res 0x88` y 1 B (antes, conectada al PC: `res 0x01` y el eco
-  de 8 B). Las lecturas (`BATT_V` = `0xc8`, `IB_SYSINF`) siguen dando `res 0x01`. `0xc8bc` guarda los 3 B antes de
-  mirar `[0x20000029]` y devuelve ≠ 0 si está activo. INFERENCIA: con el cargador de pared ese indicador está
-  activo y la orden no llega a aplicar la carga por esta vía. El ciclo de `0xc6dc` en la tarea `0x7a36` tampoco
-  produjo carga medible.
+  de 8 B). Las lecturas (`BATT_V` = `0xc8`, `IB_SYSINF`) siguen dando `res 0x01`. ~~INFERENCIA: el indicador
+  `[0x20000029]` está activo y la orden no aplica la carga~~ **CORREGIDO en §6:** `res 0x88` es el tiempo agotado de
+  av-cam; Darwin descartó las órdenes porque `adjstctl` repite siempre la secuencia 1. **La orden no llegó a
+  aplicarse: esta prueba fue control contra control y no dice nada de los bits de carga.**
 - La cámara no se calentó (observación del usuario).
 
-Conclusión de USB-CARGA-3 por ahora: la orden `USB_CHG_IC_SET` no basta para cargar con la cámara encendida. Faltan
-(a) saber qué es `[0x20000029]` y qué hace Darwin con los valores cuando está activo, y (b) si los bits elegidos para
-reg5/reg6 son los de carga (inferidos del modo apagado, sin hoja de datos). La vía que queda es el parche de Darwin
-(§3.2).
+~~Conclusión: la orden `USB_CHG_IC_SET` no basta para cargar~~ (superada por §6: la orden no llegó a Darwin).
+
+## 6. Por qué la prueba con cargador de pared no aplicó la orden (23-11-2026, VERIFICADO en estático)
+
+| Eslabón | Evidencia |
+|---|---|
+| `adjstctl` siempre manda la secuencia 1 | `adjstctl.elf` (fw 3.21) arma el paquete senser en `0x8d00`: `[0]` = `[1]` = 1, **`[2..3]` = 1 fijo** (`0x8d20` `strh r3, [r4, #2]`, r3 = 1), `[8]` = `0x40`, `[0x18]` = bloque, `[0x1a]` = código. pmca, en cambio, numera cada paquete en su cabecera USB (`_sequence += 1`); que ese número llegue a `[2..3]` es INFERENCIA, coherente con que sus órdenes se aceptaran |
+| av-cam pasa esa secuencia a Darwin | Reenvío `0x4398886c` → `0x4398b718`: marco `+0x92` = `[8]` (`0x0040`), `+0x94` = `[2..3]` (secuencia), `+0x96` = byte bajo del bloque (`0x20`), `+0x97` = código, `+0x99` = 8 B de datos |
+| Darwin descarta la secuencia repetida | `0x1b8cc`: si la secuencia es igual a la última (`[0x20002e92]`, `0x1b91a`) sale sin despachar y deja la respuesta a 0; el `0x20`/`0x21` que comprueba es el byte bajo del bloque (`0x0d20`/`0x0d21`) |
+| `res 0x88` = tiempo agotado | av-cam espera la respuesta (`0x4398b818`) más de 10 ciclos y rellena `res` = `0x88`, 1 B a 0 (`0x43b5d4fe`); `0x80` y `0x81` son sus otros errores (`0x43b5d4ea`, `0x43b5d512`) |
+| `[0x20000029]` no interviene | El despachador responde 1 tras `0xc8bc` sin mirar su retorno; el indicador solo elige entre aplicar al momento o con el evento de la tarea `0x7a36` |
+
+Encaja con lo medido: tras la sesión con pmca, la primera orden de `adjstctl` (`normal`, secuencia 1) se aceptó; desde
+entonces todas las de `adjstctl` repiten la secuencia 1 y Darwin las descarta. **La prueba de §5.1 no envió nada: la
+cámara siguió en `normal`.** Las lecturas de `BATT_V`/`IB_SYSINF` no usan este canal (bloque `0x0d01`, no
+`0x0d20/0x0d21`).
+
+Corrección (`chg_ic_set.adjstctl_seq_bloque`, test `tests/test_usb_chg_ic_set.py`): una copia de `adjstctl.elf` con
+`strh r6, [r4, #2]` (`0x8063` → `0x8066`, desplazamiento `0xd20`) usa el bloque (`0x0d20`) como secuencia.
+`prueba_telnet.py` crea la copia en `/tmp/adjseq.elf` (comprueba el md5 del original, `5cf81ede…`, y del parcheado,
+`29f0962d…`), manda cada orden con la copia y luego con la original (secuencias `0x0d20` y 1, nunca repetidas) y
+exige `res 0x01` en ambas. Es un binario de usuario en RAM: no toca el firmware.
+
+Estado real de USB-CARGA-3: **sin medir** con la orden aplicada y cargador de pared. Lo único medido con la orden
+aplicada (pmca, PC con USB 2.0, 900 mA) es la meseta de 60 % durante 17 min, sin control. Siguiente: repetir §5.1 con
+`prueba_telnet.py` corregido. El parche de Darwin (§3.2) queda para después: si los bits cargan, haría la carga
+permanente con las comprobaciones del modo apagado; si no cargan, el parche tampoco sabría qué bits poner.
+

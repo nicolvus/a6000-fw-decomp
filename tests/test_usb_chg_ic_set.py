@@ -20,3 +20,17 @@ def test_limites_siguen_la_tabla_de_0xc6f0():
 def test_rechaza_valores_fuera_de_tabla(modo, ma):
     with pytest.raises(ValueError):
         c.carga_util(modo, ma)
+
+
+ADJSTCTL = pathlib.Path(__file__).parents[1] / ('firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/'
+                                                'nflasha15_unpacked_unpacked/bin/adjstctl.elf')
+
+
+@pytest.mark.skipif(not ADJSTCTL.exists(), reason='sin firmware 3.21 extraído')
+def test_adjstctl_con_secuencia_del_bloque():
+    d = ADJSTCTL.read_bytes()
+    p = c.adjstctl_seq_bloque(d)
+    assert [i for i in range(len(d)) if d[i] != p[i]] == [c.ADJ_SEQ_OFF]  # solo el registro fuente de strh
+    assert p[c.ADJ_SEQ_OFF:c.ADJ_SEQ_OFF + 2] == b'\x66\x80'  # strh r6, [r4, #2]: secuencia = bloque (0x0d20)
+    with pytest.raises(ValueError):
+        c.adjstctl_seq_bloque(p)
