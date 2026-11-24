@@ -114,3 +114,14 @@ pmca-console firmware build/cfw_func393/film/pkg-3.93/package-3.93/firmware_pack
 - **Instalación `iso` por USB con `--reflash`:** el primer intento dio `device returned more data than requested`, con la cámara ya en el actualizador (`03e2`). El reintento terminó en `Done`, y la versión se restauró sola a 3.93.
 - **Verificado:** arranque normal (`07c4`), `pmca-console info` = **3.93**. Registro `analysis/camera-dumps/20261124-inc392-swd/install-3.93-iso.log`.
 - **Falta (cámara):** probar ISO hasta 204800 y la tecla izquierda «Brillo de monitor».
+
+## 7. `iso` reinicia en bucle; instalación de `pp` por SWD (24-11-2026, MEDIDO)
+
+- **`iso` en la cámara** (dicho por el usuario): se queda reiniciando al arrancar. Es la única build que no llega a la interfaz.
+  - Sospecha: la capa ISO del núcleo (`iso_avcam_patch`: cueva `0x43be4310`, tabla EXIF en `ZONA_B`, 3 ganchos), que nunca había corrido en hardware. Concuerda con el reinicio del 3.92 (INC-392), que la incluía. NO_VERIFICADO.
+- **Instalación de `pp`:**
+  - Por USB normal no se pudo: el intento de flasheo se interrumpió esperando el modo actualizador, con `iso` en bucle.
+  - Se forzó el actualizador por SWD (R48): `chk updater` → 0, entrada en 410 ms, `03e2`.
+  - El primer envío dio `more data than requested` y el segundo `updater response error`. Tras el ciclo de energía, otra vez `more data` y luego `Done`. La versión se restauró sola a 3.93.
+  - Registro: `install-3.93-pp.log`.
+- **Sin verificar:** el arranque normal posterior. La cámara no estaba en USB al comprobarlo.
