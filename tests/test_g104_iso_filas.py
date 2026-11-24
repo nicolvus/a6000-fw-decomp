@@ -213,12 +213,12 @@ def test_vu2_indicador(vu2):
     assert (numero(0x26), numero(0x0B)) == (51200, 100)
 
 
-def test_cfw_hasta_204800():
-    """El CFW lleva `N_CFW` filas (hasta 204800): las siguientes no existen ni se convierten."""
+def test_cfw_hasta_n_cfw():
+    """El CFW lleva `N_CFW` filas (G109: hasta 128000): las siguientes no existen ni se convierten."""
     n = P.N_CFW
     v4 = P.patch_filas((USR / "lib/viewUnified4.so").read_bytes(), TEXTOS, ICONOS, n)
     v2 = P.patch_vu2((USR / "lib/viewUnified2.so").read_bytes(), n)
-    assert P.VALORES[n - 1] == 204800
+    assert P.VALORES[n - 1] == 128000
     assert _llama(v4, 0xEF90C, MEM, P.FILA0 + n - 1) == P.ENUM0 + n - 1 and _llama(v4, 0xEF90C, MEM, P.FILA0 + n) == 0x4F
     assert _llama(v4, 0xEF894, MEM, P.ENUM0 + n) == 0x3F
     segs = A._segments(v4)

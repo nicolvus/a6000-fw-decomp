@@ -77,7 +77,7 @@ def test_sv_a_codigo_y_idempotencia(img):
 
 def test_cadena_cfw_film():
     """El parche entra al final de la cadena del CFW Film sin PP (3.38 base), con cueva y tabla en el hueco G18 (G108: no en las tablas vivas
-    ZONA_A/ZONA_B). Con PP, G18 está ocupado y la cadena se rechaza."""
+    ZONA_A/ZONA_B). G109: con PP también entra (la cola de G18 queda libre)."""
     import build_cfw_completo as C
     import build_cfw_film as F
     from e25_27 import build, fatimg, tarball, tpzl
@@ -92,5 +92,5 @@ def test_cadena_cfw_film():
     assert struct.unpack_from("<4I", nuevo, P.TABLA_NUEVA - P.BASE)[:4] == (10, 10, 12, 16)
     assert struct.unpack_from("<3I", nuevo, P.TABLA_NUEVA - P.BASE + 4 * 45) == P.EXTRA
     assert P.apply_bytes(nuevo) == nuevo
-    with pytest.raises((ValueError, AssertionError)):
-        F.bionz_pp(orig)
+    pp = F.bionz_pp(orig)                       # G109: Film e ISO caben con PP (cola del hueco G18, fuera de las curvas de PP)
+    assert P.apply_bytes(pp) == pp and pp[P.TABLA_NUEVA - P.BASE:][:16] == nuevo[P.TABLA_NUEVA - P.BASE:][:16]

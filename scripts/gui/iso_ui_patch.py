@@ -30,8 +30,8 @@ SITIOS = ((0xF0B26, 0x21), (0xF0B32, 0x20), (0xF0B3E, 0x1F))
 VALORES = (64000, 80000, 102400, 128000, 160000, 204800, 256000, 320000, 409600)
 CODIGOS = (0x27, 0x28, 0x29, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50)
 ENUM0, FILA0, PID_NUEVO = 0x50, 0x40, 0x20   # G108: pid de proceso de 51200 (enum 0x4e), no el 0x2f del enum 0x10 (bloqueaba el arranque)
-# filas que lleva el CFW: hasta 204800. 256000…409600 se eligen y llegan a `libObj`, pero `libObj` devuelve el código 0x4d (G104 §8.7)
-N_CFW = 6
+# filas que lleva el CFW: hasta 128000 (G109: a petición del usuario; 160000…409600 están hechas pero el valor 128000+ guardado fue el desencadenante del bucle, G108)
+N_CFW = 4
 MENU_CAB, MENU_TABLA, MENU_N = 0x1B113C, 0x1B1164, 0x22
 GUIA_51200, FLAGS_FILA = 0x0204E686, 0x200            # +0x14 y +0x1c de la fila 51200 (y de las de la A7S)
 # viewUnified4: defectos de fila→enum y enum→fila (`movs r0,#0x4f|#0x3f; pop {r7,pc}`)

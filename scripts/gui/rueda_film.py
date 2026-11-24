@@ -48,20 +48,28 @@ def got_de(img: bytes) -> int:
     return {t: v for t, v in A._dynamic(img, segs)[1] if t}[3]          # DT_PLTGOT: base de los desplazamientos `ldr r3,[rGOT,r3]`
 
 
+MARCA, HOLGURA = b"ANADE-LZ", 256     # G109: tras la tabla copiada quedan HOLGURA entradas libres y la marca; las pasadas siguientes la amplían en el sitio
+
+
 def _anade(data: bytes, palabras_de, codigo_de=None, parches=None) -> bytes:
     """Añade un segmento RW (tabla de relocaciones reubicada + `palabras`) y, si hay `codigo_de`, uno R+X; reubica la tabla de cabeceras al final.
     `palabras_de(va_palabras)` → (palabras, [(índice, info de relocación)]); `codigo_de(va_palabras, va_codigo)` → bytes; `parches(out, va_palabras, va_codigo, rel)`
-    modifica el fichero y devuelve las relocaciones existentes a cambiar {offset en la tabla: (va, info)}."""
+    modifica el fichero y devuelve las relocaciones existentes a cambiar {offset en la tabla: (va, info)}.
+    G109: la primera pasada copia la tabla (≈ 0,7 MB en `libObj`/`viewUnified2`) y deja holgura; las siguientes la amplían en el sitio y solo añaden las palabras
+    y el código (cada copia de más gastaba ≈ 0,7 MB de la partición `nflasha15`, que en Sony tiene 7 MB libres)."""
     segs = A._segments(data)
     doff, dyn = A._dynamic(data, segs)
     tags = {t: v for t, v in dyn if t}
     rel_va, rel_sz = tags[0x11], tags[0x12]
-    rel = bytearray(data[A._off(segs, rel_va):A._off(segs, rel_va) + rel_sz])
+    rel_off = A._off(segs, rel_va)
+    rel = bytearray(data[rel_off:rel_off + rel_sz])
     al = lambda x: (x + A.ALIGN - 1) // A.ALIGN * A.ALIGN
     top = max(v + ms for t, _, v, _, _, ms, _, _ in segs if t == 1)
     rw_va, rw_off = al(top), al(len(data))
     n_rel = len(palabras_de(0)[1])
-    pal_va = rw_va + (rel_sz + 8 * n_rel + 15) // 16 * 16
+    marca = data.find(MARCA, rel_off + rel_sz, rel_off + rel_sz + 8 * HOLGURA + 32)
+    sitio = marca >= 0 and (marca - rel_off - rel_sz) % 8 == 0 and (marca - rel_off - rel_sz) // 8 >= n_rel
+    pal_va = rw_va if sitio else rw_va + (rel_sz + 8 * (n_rel + HOLGURA) + 8 + 15) // 16 * 16
     palabras, rels = palabras_de(pal_va)
     rx_va = al(pal_va + 4 * len(palabras))
     rx_off = rw_off + (rx_va - rw_va)
@@ -69,11 +77,19 @@ def _anade(data: bytes, palabras_de, codigo_de=None, parches=None) -> bytes:
     for off, (va, info) in (parches(out, pal_va, rx_va, rel) if parches else {}).items():
         struct.pack_into("<II", rel, off, va, info)
     rel += b"".join(struct.pack("<II", pal_va + 4 * k, info) for k, info in rels)
-    rw = bytes(rel).ljust(pal_va - rw_va, b"\0") + b"".join(struct.pack("<I", w & 0xFFFFFFFF) for w in palabras)
+    pal = b"".join(struct.pack("<I", w & 0xFFFFFFFF) for w in palabras)
+    if sitio:
+        out[rel_off:rel_off + len(rel)] = rel
+        rw = pal
+    else:
+        rw = bytes(rel).ljust(pal_va - rw_va - 8, b"\0") + MARCA + pal
     codigo = codigo_de(pal_va, rx_va) if codigo_de else b""
     codigo += b"\0" * (-len(codigo) % 16)
     rw += b"\0" * (-len(rw) % 16)
-    ph = [list(x) for x in segs] + [[1, rw_off, rw_va, rw_va, len(rw), len(rw), 6, A.ALIGN]]
+    assert rw or codigo, "pasada sin palabras ni código"
+    ph = [list(x) for x in segs]
+    if rw:
+        ph.append([1, rw_off, rw_va, rw_va, len(rw), len(rw), 6, A.ALIGN])
     if codigo_de:                                        # la tabla de cabeceras va al final del segmento R+X
         ph.append([1, rx_off, rx_va, rx_va, 0, 0, 5, A.ALIGN])
         cola_off, cola = rx_off, codigo
@@ -86,7 +102,7 @@ def _anade(data: bytes, palabras_de, codigo_de=None, parches=None) -> bytes:
     struct.pack_into("<I", res, 28, phdr_off)
     struct.pack_into("<H", res, 44, len(ph))
     for i, (t, _) in enumerate(dyn):
-        if t == 0x11:
+        if t == 0x11 and not sitio:
             struct.pack_into("<I", res, doff + 8 * i + 4, rw_va)
         if t == 0x12:
             struct.pack_into("<I", res, doff + 8 * i + 4, len(rel))

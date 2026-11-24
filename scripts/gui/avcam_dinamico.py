@@ -24,8 +24,9 @@ ZONA_A = (0x43BE3B28, 0x43BE4330)        # 2056 B, ceros idénticos fichero/vivo
 ZONA_B = (0x43C1FF24, 0x43C20C8C)        # 3432 B (el hueco G72 empieza en ...21)
 PROHIBIDAS = ((0x43D620D9, 0x43FA8F00), (0x43FAF28C, 0x43FB9000))   # zona viva de G72 y hueco G18 (Color Chrome, pp_tone, Silent, curvas)
 # G108: ZONA_A/ZONA_B NO están libres (G107: tablas T1 y BOKS a cero que el núcleo lee; con el código de Film en T1, av-cam se atasca al arrancar en el
-# arnés). Film e ISO van a las ranuras de curvas de PP del hueco G18 (PP ejecuta ahí en la cámara): libres solo en builds sin PP.
-ZONA_G18 = (0x43FAF300, 0x43FB7400)
+# arnés). Film e ISO van a la cola del hueco G18 (G109): PP llena 0x43faf290…0x43fb7981 y Silent usa 0x43fb7e00…+0x6a; de 0x43fb7e80 a 0x43fb8ee0
+# no hay referencias (huecos.py) ni bytes vivos distintos de cero → caben junto con PP.
+ZONA_G18 = (0x43FB7E80, 0x43FB8EE0)
 CURVE, STRIDE_BUF = 0x101A, 0x101A
 TAB_PTR, SEL, SLOG3_COLA = 0x44001404, 0x43CB56E6, None
 HOOK_HLG = (0x43853ECE, bytes.fromhex("93f8ca37"))   # ldrb.w r3,[r3,#0x7ca] en la selección de gamma 0x43853ec0 (primer uso de la gamma de PP)

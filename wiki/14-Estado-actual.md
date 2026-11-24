@@ -21,7 +21,7 @@
 
 **Firmware oficial reinstalado (23-11-2026):** a petición del usuario la cámara vuelve al contenido oficial de Sony 3.21, numerado **3.91** para que el actualizador lo acepte sobre el CFW 3.89; sin Film, Silent ni parches EFCS. Un CFW posterior necesita versión > 3.91. **24-11-2026: instalado el CFW Film 3.92** (Picture Profile completo, Film Simulation, Extra fine, Silent e ISO hasta 204800; G102/G104), `pmca-console info` = 3.92; falta probarlo en la cámara.
 
-**Último cierre:** G108 (24-11-2026) — causa del bucle de arranque de `iso` medida en el arnés: con un ISO 128000+ guardado, el gancho `isInhOn` de la pantalla ISO dejaba la app sin mandar órdenes al núcleo; corregido, igual que el validador ISO de `libObj` (256000+ volvía a 204800). Film e ISO salen de las tablas vivas `ZONA_A`/`ZONA_B`. Los botones pegados de Film siguen sin causa ([G108](../docs/gui/g108-bucle-iso-y-zonas.md)).
+**Último cierre:** G109 (24-11-2026) — mezcla pp+film+exfine+iso≤128000 construida y auditada (`todo` `fd4d853c0527a41fd782010b281808f190464899b1dfed8bce8512297c52c14e`, sin instalar): Film/ISO a la cola de G18 y `_anade` amplía las relocaciones en el sitio (no cabía en `nflasha15`). Antes: G108 (24-11-2026) — causa del bucle de arranque de `iso` medida en el arnés: con un ISO 128000+ guardado, el gancho `isInhOn` de la pantalla ISO dejaba la app sin mandar órdenes al núcleo; corregido, igual que el validador ISO de `libObj` (256000+ volvía a 204800). Film e ISO salen de las tablas vivas `ZONA_A`/`ZONA_B`. Los botones pegados de Film siguen sin causa ([G108](../docs/gui/g108-bucle-iso-y-zonas.md)).
 
 
 ## Límites y riesgos
