@@ -21,3 +21,7 @@ Continúa [G108](g108-bucle-iso-y-zonas.md). Petición del usuario: mezclar las 
 **Efecto lateral:** el cambio de `_anade` altera el diseño de `libObj`, `viewUnified2/4/7` y `CautionConfig` de **todas** las builds. Las de G107/G108 (`pp`, `iso`, `film`…) y la `pp` instalada conservan el diseño anterior; si se quieren iguales hay que reconstruirlas.
 
 **Sin verificar:** arranque en el arnés de la mezcla, el hueco G18 con PP en cámara, ISO con la NVRAM real, Film (botones pegados, sin causa), LUT/HLG/S&Q.
+
+## 4. Resultado en cámara de `todo` y build `sin_iso` (24-11-2026)
+- `todo` (`fd4d853c…`) instalada por USB (`--reflash`, «Done», versión 3.93): **la cámara se reinicia en bucle**. Causa sin aislar; sospechosos: Film/ISO en la cola de G18 junto a PP, o el nuevo `_anade` (cambia el diseño de todas las librerías).
+- `sin_iso` = pp + film + exfine (`build/cfw_func393/sin_iso`, `.dat` sha256 `a99578e7d17d6fc96cb2b74fdbdbe5ab1a1ae240935f03a41b7fae600ec86243`), a petición del usuario. Auditoría `todo_ok` tras reconocer en `audit_package_nflasha15` cualquier mezcla de pp/film/iso. Sin instalar: la cámara sigue en bucle y falta recuperarla por SWD (R48).

@@ -143,7 +143,7 @@ def bionz_g22_checks(bz_base: bytes, bz_new: bytes) -> dict:
         cfw = film_pp if bz_new == film_pp else cfw
     if bz_new not in (tri, cfw):   # G105: una build por función sobre la base Silent (`build_cfw_film --funciones`)
         import build_cfw_film
-        for fun in (set(), {"film"}, {"pp"}, {"iso"}):
+        for fun in ({f for f, k in zip(("pp", "film", "iso"), (m & 1, m & 2, m & 4)) if k} for m in range(8)):   # G109: cualquier mezcla de pp, film e iso
             cand = build_cfw_film.bionz_de(fun)(tri)
             if bz_new == cand:
                 cfw = cand
