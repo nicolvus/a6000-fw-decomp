@@ -126,7 +126,9 @@ def patch_gamma(d: bytes, hlg: bool = False) -> bytes:
 # La A6300 convierte el valor de app 0–11 del Color Mode (caso 0 de `pvt_ChangePictureProfileParamApp2Obj`, `tbb` de 12 casos en 0x425378 de su libObj) en VALUEID:
 # 0–4 STD/TONE1/TONE2/PRO/ITU709, 5–7 STD_MOV/STD_STL/CINEMA, 8 → 0x505 (SGAMUT), 9 → 0x504 (BW), 10 → 0x583 (SGAMUT3), 11 → 0x584 (SGAMUT3_CINE). Se usa el orden de la A7S (8 → BW 0x504, 9 → SGAMUT 0x505; `libObj` A7S 0x3d20fe), más cercana al núcleo de la A6000.
 # La A6000 solo tiene 0–7. Igual que en Gamma, los tres sitios (App2Obj caso 0, Obj2App caso 0 y `CamMsgConv` byte 8) pasan a buscar en la misma tabla.
-COLOR = (0x1AD, 0x1AE, 0x1AF, 0x1B0, 0x1B1, 0x399, 0x39A, 0x39B, 0x504, 0x505, 0x583, 0x584)
+# G107: en la A6000 0x504 = VALUEID_NO_SET y 0x505 = VALUEID_COMP_RESULT_OK (centinelas de `libObj`): B&W y S-Gamut usan ids libres 0x589/0x58A (tras HLG 0x586–0x588).
+BW, SGAMUT = 0x589, 0x58A
+COLOR = (0x1AD, 0x1AE, 0x1AF, 0x1B0, 0x1B1, 0x399, 0x39A, 0x39B, BW, SGAMUT, 0x583, 0x584)
 C_APP2OBJ, C_APP2OBJ_FIN = 0x4B471C, 0x4B475E
 C_OBJ2APP, C_OBJ2APP_FIN = 0x4B42FA, 0x4B433A
 C_CAMCONV, C_CAMCONV_FIN, C_CAMCONV_ERR, C_CAMCONV_STORE = 0x9B325E, 0x9B32C0, 0x9B32C4, 0x9B32C0
@@ -178,7 +180,7 @@ BW_CAVE = 0x9B328C                                              # nops que deja 
 def patch_bw(d: bytes) -> bytes:
     segs = A._segments(d)
     os_, oc = A._off(segs, SAT_SITE), A._off(segs, BW_CAVE)
-    bw, movie = COLOR.index(0x504), COLOR.index(0x399)
+    bw, movie = COLOR.index(BW), COLOR.index(0x399)
     # ldrb r3,[r4,#8]; cmp r3,#bw; bne fin; movs r3,#movie; strb r3,[r4,#8]; mvn r0,#7; fin: strb r0,[r4,#0x15]; b.w SAT_SIGUE
     c = _hw(0x7A23, 0x2B00 | bw) + bcc(BW_CAVE + 4, BW_CAVE + 14, 1) + _hw(0x2300 | movie, 0x7223, 0xF06F, 0x0007, 0x7560)
     c += b_w(BW_CAVE + len(c), SAT_SIGUE)

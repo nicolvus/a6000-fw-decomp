@@ -18,8 +18,10 @@ BACKUP_READ = 0x435613B0          # av-cam 3.21: Backup_read(r0 = id, r1 = búfe
 CARPETA = "CFW"
 PID_PRIMERO = 0xE9                # primer ProcessId nuevo (pid_space)
 # Ids 1 B sin ningún literal en libs/bin/av-cam del 3.21 (volcados de 4 fechas, valor 0, mismo tamaño): hueco 0x1070208…0x1070219 (g56 §2)
-ID_LIBRES = tuple(range(0x1070210, 0x107021A))
-# G76: 0x1070208/9, del mismo hueco de g56; sin literal (palabra de 32 bits) en ningún fichero de /usr ni en av-cam 3.21; 1 B y valor 0 en todos los volcados
+# G107: 0x1070212…0x1070215 son el parámetro 24 de PP1–PP4 (ids calculados por `libObj` 0x4a9a56, sin literal): se sustituyen por 0x107020C…0x107020F,
+# del mismo hueco y fuera de los 341 ids de PP (`analysis/gui/isp/pp_ids.json`)
+ID_LIBRES = (0x1070210, 0x1070211, 0x107020C, 0x107020D, 0x107020E, 0x107020F, 0x1070216, 0x1070217, 0x1070218, 0x1070219)
+# G76: 0x1070208/9, del mismo hueco de g56 (OJO G107: son el parámetro 21 de PP1/PP2; chocan si S&Q va con Picture Profile); sin literal (palabra de 32 bits) en ningún fichero de /usr ni en av-cam 3.21; 1 B y valor 0 en todos los volcados
 ID_LIBRES_2 = (0x1070208, 0x1070209)
 # G81: ids de Sony que un ajuste CFW escribe a propósito (no libres): 0x3c03d9 = interruptor de fábrica de Timecode/User Bit (0 en todos los volcados; atributo 0, escribible)
 ID_SONY = (0x3C03D9,)

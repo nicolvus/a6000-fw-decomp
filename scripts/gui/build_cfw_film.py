@@ -209,7 +209,7 @@ if __name__ == "__main__":
     ap.add_argument("--version", default="3.87")
     ap.add_argument("--looks", type=Path, default=LOOKS)
     ap.add_argument("--pp", action="store_true", help="G102: con Picture Profile (menú, Fn, rueda, libObj y núcleo)")
-    ap.add_argument("--max-opciones", type=int, default=M.OPCIONES_POR_LISTA, help="opciones por fila del menú PP antes de partirla (G106: 7, tope de la lista en la cámara; 99 = filas enteras de G102, solo para el arnés)")
+    ap.add_argument("--max-opciones", type=int, default=M.OPCIONES_POR_LISTA, help="opciones por fila del menú PP antes de partirla (por defecto filas enteras: la lista no tiene tope, G106)")
     ap.add_argument("--funciones", help="G105: lista separada por comas de " + ",".join(sorted(FUNCIONES | BISECCION)) + " sobre la base Silent ('' = solo Silent); sin ella, el CFW Film")
     a = ap.parse_args()
     fun = None if a.funciones is None else {x for x in a.funciones.split(",") if x}

@@ -62,13 +62,13 @@ SETTINGS = {s.id: s for s in (
 GAMMA_COMPLETA = ((("Movie", 4), ("Still", 5)) + tuple((f"Cine{k}", 5 + k) for k in range(1, 5)) + (("ITU709", 3), ("ITU709(800%)", 10), ("S-Log2", 11), ("S-Log3", 2)))
 # G67: HLG1–3 = app 12–14 (VALUEID 0x586–0x588, INFERENCIA); con ellas Gamma tiene 16 opciones → 3 filas de ≤ 7 (partir)
 GAMMA_HLG = GAMMA_COMPLETA + (("HLG1", 12), ("HLG2", 13), ("HLG3", 14))
-# Color Mode con el orden y las opciones de la A6300 (G26): app 8 = B&W (0x504), 9 = S-Gamut (0x505) como la A7S, 10 = S-Gamut3 (0x583), 11 = S-Gamut3.Cine (0x584) en la `libObj` parcheada
+# Color Mode con el orden y las opciones de la A6300 (G26): app 8 = B&W, 9 = S-Gamut como la A7S (VALUEID 0x589/0x58A, G107), 10 = S-Gamut3 (0x583), 11 = S-Gamut3.Cine (0x584) en la `libObj` parcheada
 COLOR_MODE_COMPLETO = (("Movie", 5), ("Still", 6), ("Cinema", 7), ("Pro", 3), ("ITU709 Matrix", 4), ("Black & White", 8), ("S-Gamut", 9), ("S-Gamut3.Cine", 11), ("S-Gamut3", 10))
 # Menú PLANO (11-11-2026, medido en cámara): la interfaz de la A6000 muestra 6 filas por página (la 7.ª no aparece) y las carpetas anidadas no abren, así que cada ajuste
 # es una fila de la carpeta «Picture Profile», en páginas de 6 con la etiqueta desambiguada. `F` solo queda para la raíz.
 F = lambda label, *pages: ("folder", label, pages)
 FILAS_POR_PAGINA = 6
-OPCIONES_POR_LISTA = 7   # G36: la lista de opciones de la clase Normal no pasa de la 7.ª (cámara, 3.77); build_pp_menu.partir parte los ajustes más largos
+OPCIONES_POR_LISTA = 99  # G106: la lista vertical no tiene tope (Black Level recorre sus 31 valores en la cámara; refuta el «tope de 7» de G36): filas enteras
 ORDEN = ["sel", "copy", "reset", "gamma", "black_level", "bg_range", "bg_level", "knee_mode", "knee_max", "knee_sens", "knee_point", "knee_slope",
          "color_mode", "color_level", "saturation", "phase", *(f"cd_{c}" for c in "rgbcmy"), "wb_filter", "wb_lb", "wb_cc", "wb_r", "wb_b",
          "det_level", "det_mode", "det_vh", "det_bw", "det_limit", "det_crisp", "det_hilight"]

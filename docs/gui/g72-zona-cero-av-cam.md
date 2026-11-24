@@ -1,5 +1,7 @@
 # G72 — Auditoría de la «zona a cero de 2,3 MB» de `av-cam.bin` (15-11-2026)
 
+**Corrección G107 (24-11-2026):** `0x43be3b28` y `0x43c1ff21` tampoco son huecos: son tablas a cero referenciadas con desplazamientos relativos al PC (EIS T1 y BOKS), que este barrido no miraba. Ver [G107 §3](g107-causas-pp-ids-zonas.md).
+
 **Veredicto: (B) INSEGURA para HLG (`0x43F9C000`) y LUT (`0x43FA4000`); Color Chrome (`0x43FB7C00`) es SEGURA.** HLG y LUT quedan bloqueados (`ZONA_VERIFICADA = False`) hasta reubicarlos.
 
 ## 1. Mapa de carga (VERIFICADO)

@@ -118,10 +118,10 @@ def test_menu_plano_6_filas_por_pagina_sin_carpetas_anidadas():
 
 
 def test_g36_ninguna_fila_pasa_de_7_opciones_y_caben_en_6_paginas():
-    """G36: la lista de la clase Normal no pasa de la 7.ª opción (3.77) y el 3.78 (13 páginas) se colgaba al entrar: configurar() deja ≤ 7 opciones por fila
+    """Partición opcional (`maximo=7`; G106 refutó el tope de 7 y por defecto las filas van enteras). G36: la lista de la clase Normal no pasa de la 7.ª opción (3.77) y el 3.78 (13 páginas) se colgaba al entrar: configurar() deja ≤ 7 opciones por fila
     y ≤ 6 páginas (como el 3.77): enumerados partidos con la misma clave, numéricos con 7 valores repartidos (incluido el neutro), sin Copy/Reset (subproceso)."""
     code = ("import sys; sys.path.insert(0, 'scripts/gui'); import build_pp_menu as B, pp_menu_spec as M, pid_space as S, pp_factory as F; "
-            "B.configurar(gam=True, col=True, acc=True); "
+            "B.configurar(gam=True, col=True, acc=True, maximo=7); "
             "assert all(len(s.opciones) <= 7 for s in M.SETTINGS.values()) and len(M.TREE[2]) <= 6; "
             "assert len(M.SETTINGS) == len(M.PIDS) == len(set(M.PIDS)) and min(M.PIDS) == 0xE9 and max(M.PIDS) <= S.PID_MAX; "
             "assert len({s.label for s in M.SETTINGS.values()}) == len(M.SETTINGS); "

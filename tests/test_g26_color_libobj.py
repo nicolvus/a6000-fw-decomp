@@ -25,7 +25,7 @@ def test_app2obj_color_acepta_12_valores_y_rechaza_el_13():
     for v in range(8):
         assert call(old, APP2OBJ_FN, 0, v) == (1, P.COLOR[v]) == call(new, APP2OBJ_FN, 0, v)   # 0–7 como antes
     assert call(old, APP2OBJ_FN, 0, 8)[0] == 0
-    assert [call(new, APP2OBJ_FN, 0, v) for v in range(8, 12)] == [(1, 0x504), (1, 0x505), (1, 0x583), (1, 0x584)]
+    assert [call(new, APP2OBJ_FN, 0, v) for v in range(8, 12)] == [(1, P.BW), (1, P.SGAMUT), (1, 0x583), (1, 0x584)]
     assert call(new, APP2OBJ_FN, 0, 12)[0] == 0
 
 
@@ -43,7 +43,7 @@ def test_obj2app_color_es_la_inversa_y_gamma_sigue_igual():
 
 @needs
 def test_camconv_color_valueid_a_byte_8():
-    from unicorn import UC_HOOK_CODE, Uc, UC_ARCH_ARM, UC_MODE_THUMB
+    from unicorn import UC_ARCH_ARM, UC_HOOK_CODE, UC_MODE_THUMB, Uc
     from unicorn.arm_const import UC_ARM_REG_PC, UC_ARM_REG_R0, UC_ARM_REG_R4
 
     def run(img, vid):
@@ -67,7 +67,7 @@ def test_menu_color_mode_sigue_a_la_a6300():
     import pp_menu_spec as M
     d = dict(M.COLOR_MODE_COMPLETO)
     assert [t for t, _ in M.COLOR_MODE_COMPLETO] == ["Movie", "Still", "Cinema", "Pro", "ITU709 Matrix", "Black & White", "S-Gamut", "S-Gamut3.Cine", "S-Gamut3"]
-    assert (P.COLOR[d["Black & White"]], P.COLOR[d["S-Gamut"]], P.COLOR[d["S-Gamut3"]], P.COLOR[d["S-Gamut3.Cine"]]) == (0x504, 0x505, 0x583, 0x584)
+    assert (P.COLOR[d["Black & White"]], P.COLOR[d["S-Gamut"]], P.COLOR[d["S-Gamut3"]], P.COLOR[d["S-Gamut3.Cine"]]) == (P.BW, P.SGAMUT, 0x583, 0x584)
     assert [d[k] for k in ("Movie", "Still", "Cinema", "Pro", "ITU709 Matrix")] == [dict(M.SETTINGS["color_mode"].opciones)[k] for k in ("Movie", "Still", "Cinema", "Pro", "ITU709 Matrix")]
 
 

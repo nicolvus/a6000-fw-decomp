@@ -28,6 +28,7 @@ import pid_space
 import pp_descriptors
 import pp_factory
 import pp_menu_spec as M
+import pp_valuecheck_patch
 import rueda_film
 import silent_descriptor
 import uxc_strings
@@ -160,7 +161,9 @@ def main(dev_a, dev_b, dest, saturacion_a6300=False, gamma_slog=False, color_gam
         lo = patch_libobj_pp.patch(lo) if saturacion_a6300 else lo
         lo = patch_libobj_pp.patch_gamma(lo, hlg=hlg) if gamma_slog or acciones else lo
         lo = patch_libobj_pp.patch_actions(lo) if acciones else lo
-        emit("lib/libObj.so", patch_libobj_pp.patch_color(lo) if color_gamut else lo)   # G33-B §10: sin patch_bw, el núcleo trata B&W (pp_bw_mono_patch)
+        lo = patch_libobj_pp.patch_color(lo) if color_gamut else lo                # G33-B §10: sin patch_bw, el núcleo trata B&W (pp_bw_mono_patch)
+        # G107: el validador de órdenes (`EnumValueCheck`) debe admitir los Color Mode/Gamma nuevos o la orden no sale (PP7–PP10, S-Gamut)
+        emit("lib/libObj.so", pp_valuecheck_patch.patch(lo, hlg=hlg) if color_gamut or gamma_slog else lo)
     caution, delta = patch_caution((a / "lib/CautionConfig.so").read_bytes(), ids)
     textos_fn = {f: (ids[M.SETTINGS[f].label] & 0xFFFF, ids[FN_AYUDA.get(f, fn_lut_listas.AYUDA)] & 0xFFFF) for f in FN_TREES}
     if FN_TREES:                                     # G86-B/G102: los nodos de FN_TREES elegibles en las 12 ranuras Fn

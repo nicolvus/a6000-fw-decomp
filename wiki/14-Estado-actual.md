@@ -21,7 +21,7 @@
 
 **Firmware oficial reinstalado (23-11-2026):** a petición del usuario la cámara vuelve al contenido oficial de Sony 3.21, numerado **3.91** para que el actualizador lo acepte sobre el CFW 3.89; sin Film, Silent ni parches EFCS. Un CFW posterior necesita versión > 3.91. **24-11-2026: instalado el CFW Film 3.92** (Picture Profile completo, Film Simulation, Extra fine, Silent e ISO hasta 204800; G102/G104), `pmca-console info` = 3.92; falta probarlo en la cámara.
 
-**Último cierre:** G106 (24-11-2026) — auditoría estática de las builds 3.93: la lista PP no tiene tope (PP7–PP10/S-Gamut abierto), Extra fine arreglado (tamaños EXFINE de la NVRAM a 0) y builds de bisección para Film e ISO ([G106](../docs/gui/g106-auditoria-estatica-393.md)).
+**Último cierre:** G107 (24-11-2026) — causa de PP7–PP10/S-Gamut (el validador de órdenes de `libObj` solo admitía los valores nativos) arreglada; ids libres que pisaban PP corregidos; `ZONA_A`/`ZONA_B` resultan ser tablas vivas del núcleo; ISO arranca en el arnés con la NVRAM del usuario ([G107](../docs/gui/g107-causas-pp-ids-zonas.md)).
 
 
 ## Límites y riesgos

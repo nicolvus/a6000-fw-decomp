@@ -36,6 +36,13 @@ def test_tabla_ajustes():
         assert (a.opciones[0][1] == 0 or a.id in ("fb_paso", "n_disparos")) and len(a.opciones) < 256       # el índice 0 = Off/fábrica; el byte es el índice
 
 
+def test_ids_libres_no_son_de_picture_profile():
+    """G107: los ids de PP se calculan en `libObj` (sin literal); ninguno de ID_LIBRES puede ser uno de los 341 (11 perfiles × 31 parámetros)."""
+    import json
+    pp = {i for fila in json.loads((ROOT / "analysis/gui/isp/pp_ids.json").read_text())["ids"] for i in fila}
+    assert len(pp) == 341 and not pp & set(C.ID_LIBRES)
+
+
 @pytest.mark.skipif(not DUMP.exists(), reason="sin volcado")
 def test_ids_libres_existen_en_nvram_1b():
     from pmca.backup import BackupFile
@@ -109,7 +116,7 @@ def test_carpeta_cfw_con_todos_los_ajustes():
 def _carpeta(M):
     assert M.TREE[0] == "folder" and M.TREE[1] == C.CARPETA
     assert [i for pg in M.TREE[2] for i in pg] == [a.id for a in C.AJUSTES]
-    assert max(len(a.opciones) for a in C.AJUSTES) <= M.OPCIONES_POR_LISTA   # tope G36
+    assert max(len(a.opciones) for a in C.AJUSTES) <= M.OPCIONES_POR_LISTA
 
 
 @necesita_fw

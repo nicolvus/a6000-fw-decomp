@@ -41,6 +41,8 @@ Por orden del usuario, todo el análisis es estático: no se usó la cámara sal
 - El desempaquetador 0x4066 del núcleo (`0x43802a28`) copia el número de perfil sin comprobarlo.
 - El núcleo PP ya admite tipos de color hasta 11 (`0x437aa816`: `cmp #0xa`).
 
+**Resuelto en [G107 §1](g107-causas-pp-ids-zonas.md):** el validador de órdenes de `libObj` (`EnumValueCheck`) solo admite los Color Mode y Gamma nativos. Lo que sigue es el texto original.
+
 **NO_VERIFICADO (no se cierra en estático):**
 - Qué rechaza el envío o la respuesta cuando el perfil o el valor lleva S-Gamut.
 - Candidatos:
@@ -68,7 +70,7 @@ Por orden del usuario, todo el análisis es estático: no se usó la cámara sal
 - `cfw_ajustes.ID_LIBRES[2..5]` (`0x1070212…0x1070215`) son el parámetro 24 (Color Depth G) de PP1–PP4 en el modelo de la A6000 (`modelo.Tablas().pp_ids`).
 - En una build con Film y PP a la vez (como el 3.92), la fila «Fujifilm Sim» (`ID_LIBRES[2]` = `0x1070212`) comparte NVRAM con Color Depth G de PP1.
 - El ACK (`[8]`) y la lista única (`[9]`) no coinciden con ningún parámetro PP.
-- No afecta a las builds de una sola función. Queda en PENDIENTES.
+- No afecta a las builds de una sola función. Corregido en [G107 §2](g107-causas-pp-ids-zonas.md).
 
 ## 3. Extra fine: tamaños EXFINE a 0 en la NVRAM (VERIFICADO) y arreglo
 
