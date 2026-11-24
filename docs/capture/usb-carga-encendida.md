@@ -213,5 +213,12 @@ todas las órdenes (`res 0x01`, eco `02 0a 00` para `normal` y `02 c9 04` para `
 - Lo que dejó de responder fue el Linux de la cámara (no se sabe si por la carga). Darwin funciona aparte, así que
   `carga` puede seguir puesta: hay que apagar la cámara o desenchufar el USB (el modo apagado reescribe reg5/reg6).
 - `prueba_telnet.py` corregido para el `dd` de busybox 1.13 (sin `conv=notrunc`; con `bs=1` sigue escribiendo en
-  segundo plano tras cerrar el telnet): la copia se arma con tres trozos y `cat`, con md5 comprobado.
+  segundo plano tras cerrar el telnet): la copia se arma con tres trozos y `cat`, con md5 comprobado.- Tras reiniciarla el usuario (fría, «casi tibia»), en `normal`: 51 → 50 → 49 % en ~3 min (≈ −0,5 %/min, como el
+  control de §5.1). En `dumpsys battery`, `voltage` (4000) y `temperature` (234) son valores fijos: no sirven. El
+  script registra ahora también `BATT_V` de Darwin (`0x0d01/0x10`, 1 B; `0xc8`).
+- Lectura (INFERENCIA): con `normal` (reg5 = `0x0a`) la batería se descarga al ritmo de siempre; con `carga`
+  (reg5 = `0xc9`, reg6 = 4) deja de descargarse pero no sube. Es lo esperable si el USB alimenta la cámara y la
+  batería queda en reposo (como la alimentación USB de la A6300), o si carga justo lo que consume la cámara. Con
+  1500 mA de entrada (7,5 W) frente a ~3 W de consumo, una carga real debería subir el nivel; en 12 min y con
+  resolución del 1 % no se descarta una carga lenta (< 0,08 %/min).
 

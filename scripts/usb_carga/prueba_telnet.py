@@ -69,6 +69,12 @@ def nivel() -> int:
     return int(m.group(1))
 
 
+def batt_v() -> str:
+    """AD de la batería que da Darwin (BATT_V 0x0d01/0x10, 1 B). El voltaje y la temperatura de dumpsys son fijos."""
+    m = re.search(r'datasz: 0x01\s+(0x[0-9a-f]{2})', run(cg.HOST, [f'{ADJ} 0xd01 0x10 2>&1'])[0])
+    return m.group(1) if m else ''
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument('--ma', type=int, default=900)
@@ -83,7 +89,7 @@ def main() -> None:
     def fase(f, modo: str, minutos: int) -> None:
         print(modo, '→', orden(modo, a.ma), flush=True)
         for _ in range(minutos + 1):
-            fila = f'{time.time() - t0:.0f},{modo},{nivel()}'
+            fila = f'{time.time() - t0:.0f},{modo},{nivel()},{batt_v()}'
             print(fila, flush=True)
             f.write(fila + '\n')
             f.flush()
