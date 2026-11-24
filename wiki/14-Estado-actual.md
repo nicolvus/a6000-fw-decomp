@@ -21,7 +21,7 @@
 
 **Firmware oficial reinstalado (23-11-2026):** a petición del usuario la cámara vuelve al contenido oficial de Sony 3.21, numerado **3.91** para que el actualizador lo acepte sobre el CFW 3.89; sin Film, Silent ni parches EFCS. Un CFW posterior necesita versión > 3.91. **24-11-2026: instalado el CFW Film 3.92** (Picture Profile completo, Film Simulation, Extra fine, Silent e ISO hasta 204800; G102/G104), `pmca-console info` = 3.92; falta probarlo en la cámara.
 
-**Último cierre:** E26 R82 (07-11-2026) — parche EFCS v3: la tabla de compensación `c(T)` de Darwin se integra reescribiendo en sitio el prefijo `0x18d6e..0x18e0f` (mismo tamaño, sin hueco; equivalencia verificada con tres métodos en emulación), con volcados NVRAM `B+0x86`/`G+0x42` listos sin escribir; nada se instaló ni se tocó la cámara ([R82](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r82-parche-efcs-v3.md)). Detalle por informe en [knowledge/CURRENT.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/knowledge/CURRENT.md).
+**Último cierre:** G105 (24-11-2026) — la cámara no enciende tras pulsar la tecla izquierda («Brillo de monitor») con el CFW 3.92 (INC-392); la auditoría no encontró defecto en esa vía y se construyeron 5 builds 3.93 por función sobre la base Silent (base, film, pp, exfine, iso; auditoría 31/31) para aislarlo alternándolas con `pmca-console firmware --reflash` ([G105](../docs/gui/g105-builds-por-funcion.md)).
 
 
 ## Límites y riesgos

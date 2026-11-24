@@ -138,6 +138,13 @@ def bionz_g22_checks(bz_base: bytes, bz_new: bytes) -> dict:
         import build_cfw_film
         film_pp = build_cfw_film.bionz_pp(tri)
         cfw = film_pp if bz_new == film_pp else cfw
+    if bz_new not in (tri, cfw):   # G105: una build por función sobre la base Silent (`build_cfw_film --funciones`)
+        import build_cfw_film
+        for fun in (set(), {"film"}, {"pp"}, {"iso"}):
+            cand = build_cfw_film.bionz_de(fun)(tri)
+            if bz_new == cand:
+                cfw = cand
+                break
     diff = {P.BASE + i for i, (a, b) in enumerate(zip(bz_base, bz_new)) if a != b}
     extra = {P.BASE + i for i, (a, b) in enumerate(zip(tri, cfw)) if a != b} if bz_new == cfw else set()
     return {"g22.bionz_es_3.38_mas_patch_tristate": bz_new in (tri, cfw) and len(bz_new) == len(bz_base),

@@ -48,17 +48,47 @@ LOOKS = ROOT / "analysis/lut/g97/looks.npz"
 AYUDA_PP = "Picture Profile: choose from the full list of values."
 
 
-def bionz(original: bytes) -> bytes:
-    """3.38 + tres estados (base-380) → + Silent calibrado (R87) → + películas."""
-    return iso_avcam_patch.apply_bytes(film_patch.apply_bytes(patch_silent_r5.apply_bytes(original)))
+FUNCIONES = frozenset({"film", "pp", "exfine", "iso"})   # G105: base = Silent (tres estados + Silent calibrado + Darwin v3); cada función se suma aparte
+POR_DEFECTO = frozenset({"film", "exfine", "iso"})     # el CFW Film 3.92 (con `--pp` además «pp»)
 
 
-def bionz_pp(original: bytes) -> bytes:
-    """G102: 3.38 + tres estados → parche PP del núcleo del 3.81 (curvas, S-Log3, B&W, Hi-Light, tono) + Silent calibrado → + películas (sin bytes en común)."""
-    return iso_avcam_patch.apply_bytes(film_patch.apply_bytes(build_base_pp.bionz_cfw(original)))
+def bionz_de(funciones=POR_DEFECTO):
+    """Núcleo: 3.38 + tres estados (base-380) → PP del 3.81 con Silent calibrado (`pp`) o solo Silent calibrado (R87) → + películas (`film`) → + ISO (`iso`)."""
+    def f(original: bytes) -> bytes:
+        d = build_base_pp.bionz_cfw(original) if "pp" in funciones else patch_silent_r5.apply_bytes(original)
+        d = film_patch.apply_bytes(d) if "film" in funciones else d
+        return iso_avcam_patch.apply_bytes(d) if "iso" in funciones else d
+    return f
 
 
-def menu_film(pp: bool = False, maximo: int = 99) -> dict:
+bionz = bionz_de(POR_DEFECTO)
+bionz_pp = bionz_de(POR_DEFECTO | {"pp"})
+
+
+def menu_silent(stage: Path, dest: Path) -> None:
+    """Solo Silent (sin carpetas nuevas): el `CautionConfig.so` y los textos de `build_silent_menu_test` (ya en `stage`) y el `viewUnified2.so` que hace
+    `build_pp_menu.main(..., silent=True)` sin ajustes: entrada Silent antes del EFCS, descriptor de tres estados y EFCS en gris con Silent."""
+    import add_menu_entry
+    import pid_space
+    import silent_descriptor
+    orig = C.DEV_A / C.USR
+    (dest / "lib").mkdir(parents=True, exist_ok=True)
+    (dest / "share/app").mkdir(parents=True, exist_ok=True)
+    vu2 = add_menu_entry.patch((orig / "lib/viewUnified2.so").read_bytes(), [C.SILENT_DELTA])
+    vu2 = silent_descriptor.patch(vu2, silent_descriptor.TABLA_D_VU2, silent_descriptor.DESC_EFCS_VU2)
+    (dest / "lib/viewUnified2.so").write_bytes(pid_space.patch(vu2, [], gris_efcs=True))
+    shutil.copy(stage / C.USR / "lib/CautionConfig.so", dest / "lib/CautionConfig.so")
+    parcheados = ["lib/CautionConfig.so", "lib/viewUnified2.so"]
+    for f in (stage / C.USR / "share/app").glob("string_*.uxc"):
+        if f.read_bytes() != (orig / "share/app" / f.name).read_bytes():
+            shutil.copy(f, dest / "share/app" / f.name)
+            parcheados.append(f"share/app/{f.name}")
+    man = {"idiomas": sorted(p.rsplit("/", 1)[1] for p in parcheados if p.startswith("share/")),
+           "parcheados": {p: C.sha((dest / p).read_bytes()) for p in parcheados}}
+    (dest / "MANIFEST.json").write_text(json.dumps(man, indent=1, sort_keys=True))
+
+
+def menu_film(pp: bool = False, maximo: int = 99, film: bool = True) -> dict:
     """Sin `pp`: la especificación del menú pasa a ser solo la carpeta «Film» (los ajustes guardan 1 B en el Backup; sin Picture Profile).
     Con `pp` (G102): carpeta «Picture Profile» (configurar del 3.81; cada ajuste en UNA fila con todas sus opciones salvo `maximo` < 99) + carpeta «Film»;
     en el menú Fn «Film» y las listas completas de PP;
@@ -68,15 +98,19 @@ def menu_film(pp: bool = False, maximo: int = 99) -> dict:
     if pp:
         kw = build_pp_menu.configurar(gam=True, col=True, acc=False, fn_pp=True, maximo=maximo)
         fn_pp = list(build_pp_menu.FN_TREES)
+        build_pp_menu.FN_AYUDA.clear()
+        build_pp_menu.FN_AYUDA.update(dict.fromkeys(fn_pp, AYUDA_PP))
+        build_pp_menu.SD_USERLAND = False
+        if not film:                                                   # G105: solo PP (menú, Fn y el selector en la rueda, valor 9)
+            build_pp_menu.EXTRA_TREES[:] = []
+            build_pp_menu.RUEDA[:] = [fn_pp[0]]
+            return kw
         for a in (*aj, todas):
             M.SETTINGS[a.id] = M.S(a.id, a.label, 0, tuple((t, i) for i, (t, _) in enumerate(a.opciones)), "g97", backup=a.backup)
         M.PIDS[:] = range(M.PIDS[0], M.PIDS[0] + len(M.SETTINGS))
         build_pp_menu.EXTRA_TREES[:] = [("folder", FU.CARPETA, M.paginar([a.id for a in aj]))]
         build_pp_menu.FN_TREES[:] = [todas.id, *fn_pp]
-        build_pp_menu.FN_AYUDA.clear()
-        build_pp_menu.FN_AYUDA.update(dict.fromkeys(fn_pp, AYUDA_PP))
         build_pp_menu.RUEDA[:] = [todas.id, fn_pp[0]]                  # el selector de perfil
-        build_pp_menu.SD_USERLAND = False
         return kw
     M.SETTINGS.clear()
     for a in (*aj, todas):
@@ -90,7 +124,11 @@ def menu_film(pp: bool = False, maximo: int = 99) -> dict:
     return {}
 
 
-def build_files(work: Path, looks: Path, pp: bool = False, maximo: int = 99) -> Path:
+def build_files(work: Path, looks: Path, pp: bool = False, maximo: int = 99, funciones=None) -> Path:
+    """`funciones` (G105) ⊆ FUNCIONES sobre la base Silent; None = el CFW Film (POR_DEFECTO, más «pp» si `pp`)."""
+    funciones = frozenset(funciones if funciones is not None else POR_DEFECTO | ({"pp"} if pp else set()))
+    assert funciones <= FUNCIONES, funciones - FUNCIONES
+    pp, film = "pp" in funciones, "film" in funciones
     orig = C.DEV_A / C.USR
     silent = work / "silent"
     build_silent_menu_test.main(C.DEV_A, C.DEV_B, silent, pid_silent=C.PID_SILENT)
@@ -104,9 +142,12 @@ def build_files(work: Path, looks: Path, pp: bool = False, maximo: int = 99) -> 
     shutil.copy(silent / "lib/CautionConfig.so", stage / C.USR / "lib/CautionConfig.so")
     for f in (silent / "share/app").glob("*.uxc"):
         shutil.copy(f, stage / C.USR / "share/app" / f.name)
-    kw = menu_film(pp, maximo)
     pp_dir = work / "pp"
-    build_pp_menu.main(stage, C.DEV_B, pp_dir, entradas_previas=[C.SILENT_DELTA], silent=True, **kw)
+    if pp or film:
+        kw = menu_film(pp, maximo, film)
+        build_pp_menu.main(stage, C.DEV_B, pp_dir, entradas_previas=[C.SILENT_DELTA], silent=True, **kw)
+    else:
+        menu_silent(stage, pp_dir)
     lib_obj = patch_libobj_ppeco.patch(C.eco((pp_dir / "lib/libObj.so").read_bytes())) if pp else C.eco((orig / "lib/libObj.so").read_bytes())
     pp = pp_dir
     files = work / "files"
@@ -116,20 +157,23 @@ def build_files(work: Path, looks: Path, pp: bool = False, maximo: int = 99) -> 
         if rel != "lib/libObj.so":
             shutil.copy(pp / rel, files / rel)
     (files / "lib/libObj.so").write_bytes(lib_obj)
-    (files / "lib/viewUnified2.so").write_bytes(FU.patch_vu2((files / "lib/viewUnified2.so").read_bytes(), FU.compila(looks)))
-    cau = files / "lib/CautionConfig.so"
-    cau.write_bytes(quality_exfine_patch.patch(cau.read_bytes()))   # G39/G103: «Extra fine» en Calidad (menú y Fn usan la misma clase)
-    vu4 = files / "lib/viewUnified4.so"
-    if not vu4.exists():
-        shutil.copy(orig / "lib/viewUnified4.so", vu4)
-        parcheados.append("lib/viewUnified4.so")
-    # G104 §8.5–8.7: pantalla ISO hasta 409600 (filas de vu4, WrapperIso de vu2, códigos 0x4b…0x50 en libObj, textos e iconos de la A7S)
-    textos, iconos, recursos = iso_ui_recursos.aplicar(files, orig)
-    parcheados += recursos
-    vu4.write_bytes(iso_ui_patch.patch_filas(vu4.read_bytes(), textos, iconos, iso_ui_patch.N_CFW))
-    vu2 = files / "lib/viewUnified2.so"
-    vu2.write_bytes(iso_ui_patch.patch_vu2(vu2.read_bytes(), iso_ui_patch.N_CFW))
-    (files / "lib/libObj.so").write_bytes(iso_libobj_patch.patch((files / "lib/libObj.so").read_bytes()))
+    if film:
+        (files / "lib/viewUnified2.so").write_bytes(FU.patch_vu2((files / "lib/viewUnified2.so").read_bytes(), FU.compila(looks)))
+    if "exfine" in funciones:
+        cau = files / "lib/CautionConfig.so"
+        cau.write_bytes(quality_exfine_patch.patch(cau.read_bytes()))   # G39/G103: «Extra fine» en Calidad (menú y Fn usan la misma clase)
+    if "iso" in funciones:
+        vu4 = files / "lib/viewUnified4.so"
+        if not vu4.exists():
+            shutil.copy(orig / "lib/viewUnified4.so", vu4)
+            parcheados.append("lib/viewUnified4.so")
+        # G104 §8.5–8.7: pantalla ISO hasta 409600 (filas de vu4, WrapperIso de vu2, códigos 0x4b…0x50 en libObj, textos e iconos de la A7S)
+        textos, iconos, recursos = iso_ui_recursos.aplicar(files, orig)
+        parcheados += recursos
+        vu4.write_bytes(iso_ui_patch.patch_filas(vu4.read_bytes(), textos, iconos, iso_ui_patch.N_CFW))
+        vu2 = files / "lib/viewUnified2.so"
+        vu2.write_bytes(iso_ui_patch.patch_vu2(vu2.read_bytes(), iso_ui_patch.N_CFW))
+        (files / "lib/libObj.so").write_bytes(iso_libobj_patch.patch((files / "lib/libObj.so").read_bytes()))
     man = {"idiomas": json.loads((pp / "MANIFEST.json").read_text())["idiomas"], "nuevos": {}, "originales": {}, "parcheados": {}, "md5": {}}
     for rel in sorted(set(parcheados)):
         o, n = (orig / rel).read_bytes(), (files / rel).read_bytes()
@@ -140,13 +184,14 @@ def build_files(work: Path, looks: Path, pp: bool = False, maximo: int = 99) -> 
     return files
 
 
-def main(out: Path, version: str, looks: Path = LOOKS, pp: bool = False, maximo: int = 99) -> dict:
+def main(out: Path, version: str, looks: Path = LOOKS, pp: bool = False, maximo: int = 99, funciones=None) -> dict:
+    funciones = frozenset(funciones if funciones is not None else POR_DEFECTO | ({"pp"} if pp else set()))
     out.mkdir(parents=True, exist_ok=True)
-    files = build_files(out, looks, pp, maximo)
+    files = build_files(out, looks, pp, maximo, funciones)
     nf15 = out / f"nflasha15-{version.replace('.', '')}.bin"
     rep15 = build_nflasha15.main(C.DEV_A / "nflasha15", files, nf15)
     base = out / "base-film.tar"
-    rep_base = build_base_pp.main(C.BASE_TAR, base, bionz=bionz_pp if pp else bionz)
+    rep_base = build_base_pp.main(C.BASE_TAR, base, bionz=bionz_de(funciones))
     res = build_package_nflasha15.main(nf15, out / f"pkg-{version}", base, version, darwin_v3=True, sin_wbi=True)
     (out / "build-nflasha15.json").write_text(json.dumps(rep15, indent=1))
     (out / "build-base.json").write_text(json.dumps(rep_base, indent=1))
@@ -160,5 +205,7 @@ if __name__ == "__main__":
     ap.add_argument("--looks", type=Path, default=LOOKS)
     ap.add_argument("--pp", action="store_true", help="G102: con Picture Profile (menú, Fn, rueda, libObj y núcleo)")
     ap.add_argument("--max-opciones", type=int, default=99, help="opciones por fila del menú PP antes de partirla (99 = filas enteras, G102; 7 = como el 3.79)")
+    ap.add_argument("--funciones", help="G105: lista separada por comas de " + ",".join(sorted(FUNCIONES)) + " sobre la base Silent ('' = solo Silent); sin ella, el CFW Film")
     a = ap.parse_args()
-    print(json.dumps(main(a.salida, a.version, a.looks, a.pp, a.max_opciones), indent=1))
+    fun = None if a.funciones is None else {x for x in a.funciones.split(",") if x}
+    print(json.dumps(main(a.salida, a.version, a.looks, a.pp, a.max_opciones, fun), indent=1))
