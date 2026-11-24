@@ -31,12 +31,21 @@ ADJ_LOCAL = RAIZ / 'firmware/extracted/fw321/firmware.tar_unpacked/0700_part_ima
 
 
 def preparar() -> None:
-    """Crea en la cámara la copia de adjstctl con secuencia = bloque y comprueba ambos md5 contra el firmware 3.21."""
+    """Crea en la cámara la copia de adjstctl con secuencia = bloque y comprueba ambos md5 contra el firmware 3.21.
+
+    Órdenes cortas (una línea larga por telnet llega alterada) y dd por bloques: el de busybox 1.13 no tiene
+    conv=notrunc, y con bs=1 tarda más que el telnet y sigue escribiendo en segundo plano.
+    """
     d = ADJ_LOCAL.read_bytes()
     md5 = [hashlib.md5(x).hexdigest() for x in (d, c.adjstctl_seq_bloque(d))]
     parche = ''.join(f'\\0{b:03o}' for b in c.ADJ_SEQ_BLOQUE)
-    out = run(cg.HOST, [(f"cp {ADJ} {ADJ_SEQ}; echo -ne '{parche}' | dd of={ADJ_SEQ} bs=1 seek={c.ADJ_SEQ_OFF} "
-                        f"conv=notrunc 2>/dev/null; chmod 755 {ADJ_SEQ}; busybox md5sum {ADJ} {ADJ_SEQ}")])[0]
+    fin = c.ADJ_SEQ_OFF + len(c.ADJ_SEQ_BLOQUE)
+    out = run(cg.HOST, [f'dd if={ADJ} bs={c.ADJ_SEQ_OFF} count=1 > /tmp/h.bin 2>/dev/null',
+                        f"echo -ne '{parche}' > /tmp/p.bin",
+                        f'dd if={ADJ} bs={fin} skip=1 > /tmp/t.bin 2>/dev/null',
+                        f'rm -f {ADJ_SEQ}', f'cat /tmp/h.bin /tmp/p.bin /tmp/t.bin > {ADJ_SEQ}',
+                        'rm /tmp/h.bin /tmp/p.bin /tmp/t.bin',
+                        f'chmod 755 {ADJ_SEQ}; busybox md5sum {ADJ} {ADJ_SEQ}'])[-1]
     if not all(m in out for m in md5):
         raise RuntimeError(f'md5 inesperado (¿firmware distinto de 3.21?):\n{out}')
 

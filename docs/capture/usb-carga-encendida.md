@@ -196,3 +196,22 @@ aplicada (pmca, PC con USB 2.0, 900 mA) es la meseta de 60 % durante 17 min, sin
 `prueba_telnet.py` corregido. El parche de Darwin (§3.2) queda para después: si los bits cargan, haría la carga
 permanente con las comprobaciones del modo apagado; si no cargan, el parche tampoco sabría qué bits poner.
 
+### 6.1 Prueba repetida con la orden aplicada (23-11-2026, MEDIDO)
+
+Cargador de pared, telnet, `prueba_telnet.py --ma 1500` (a petición del usuario, sin fase de control). Darwin aceptó
+todas las órdenes (`res 0x01`, eco `02 0a 00` para `normal` y `02 c9 04` para `carga`).
+
+| Tramo | Nivel |
+|---|---|
+| Control interrumpido (`normal`) | 48 % |
+| ~4 min después, aún en `normal` | 53 % (subida sin explicar; posible reestimación del indicador) |
+| `carga` 1500 mA, 0–742 s | **53 % fijo** (13 lecturas) |
+| ~800 s | `dumpsys battery` deja de responder; telnet acepta la conexión pero no da intérprete, adb agota el tiempo; el ping responde. No se pudo enviar `normal` |
+
+- Frente al control de §5.1 (−0,54 %/min, que habría bajado ~7 % en 13 min), la meseta indica que, al menos, la
+  batería deja de descargarse; **no se ha visto subir el nivel**. Coincide con la meseta de 60 % por pmca (§5).
+- Lo que dejó de responder fue el Linux de la cámara (no se sabe si por la carga). Darwin funciona aparte, así que
+  `carga` puede seguir puesta: hay que apagar la cámara o desenchufar el USB (el modo apagado reescribe reg5/reg6).
+- `prueba_telnet.py` corregido para el `dd` de busybox 1.13 (sin `conv=notrunc`; con `bs=1` sigue escribiendo en
+  segundo plano tras cerrar el telnet): la copia se arma con tres trozos y `cat`, con md5 comprobado.
+
