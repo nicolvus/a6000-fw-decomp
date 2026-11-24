@@ -99,6 +99,36 @@ Continúa G41–G48 (51200). Fuentes: bytes de `av-cam.bin` (3.21/3.38 iguales e
 - Arnés (perfil `x6`, fábrica + solo ese `viewUnified4`): la lista baja hasta 32000/40000/51200 con su icono, al elegir 51200 la pantalla de disparo muestra «ISO 51200» y al reabrir la lista sigue marcada. `libObj`, `getIso` y `processDataMgr` ya llegaban a `0x26`. Con el `/usr` completo del CFW Film (`build_files`, más el av-cam del `.dat` 3.91 con `--avcam-de`) el arnés arrancó 5 veces seguidas en un estado inhibido (pantalla solo «P», menú Fn atenuado, ISO «Función desactivada actualmente»; con fábrica pasa ~1 de cada 2 arranques): la prueba con la cadena completa queda pendiente; se comprobó por bytes que `build_files` aplica el parche sobre el `viewUnified4` del menú Fn (idempotente, en el manifiesto).
 - Ids de fila → `WRAPPER_ISO`: `0xef90c` (`tbh` ≤ `0x3e`: 1 → AUTO `0xf`, 2… → `0x30…0x4e`, `0x22–0x30` → MFNR `2–0xe`, `0x31–0x3e` → AUTO mín./máx.); `0xefb16` llama a `setIso` con ese valor.
 - **Para 64000…409600** (siguiente tramo): ítems nuevos en la tabla (reubicarla: va seguida de la subtabla AUTO) con ids ≥ `0x3f`, ampliar `0xef90c` y su inversa, enums `WRAPPER_ISO` nuevos en `getIso/setIso/convertValueToProcessValueId` (vu2), ids de proceso nuevos en `processDataMgr` y, desde 128000, `libObj` y la traducción de códigos en av-cam (§6.2/§8.1). Textos: 64000/80000/102400/204800 existen; 128000/160000/256000/320000/409600 no.
+### 8.6 Filas 64000…409600 en la interfaz (HECHO hasta 204800, medido en el arnés; 256000+ bloqueado en `libObj`, §8.7)
+- **Diseño, copiado de la A7S 3.20:** su vista ISO tiene las filas 64000…409600 (ids `0x23…0x2b`, sus textos e iconos). Sus códigos de modelo son `0x27…0x29` y `0x4b…0x50` (getIso A7S `0x19847d`, conversor `libObj` `0x409830`/`0x409ab8`).
+- **`viewUnified4`** (`iso_ui_patch.patch_filas`):
+  - la tabla de menú se copia a un segmento nuevo con 9 filas más (ids `0x40…0x48`; `0x3f` es el centinela «sin fila» de `0xef894`);
+  - las cuevas en los casos por defecto de fila → enum (`0xef996`) y enum → fila (`0xef8a8`) usan los enums nuevos `0x50…0x58` (`0x4f` sigue siendo ISO_INVALID);
+  - `0xf0ae0` marcaba válidas las filas con ids 0…`getCountAll`−1 y dejaba fuera 256000–409600 (medido): ahora el tope es fijo, `movs r6,#0x49`.
+- **`viewUnified2`** (`WrapperIso`, `patch_vu2`):
+  - `getIso` (`0x1c14d8`): código → enum;
+  - `setIso` (`0x1c1dda`): enum → código, con el mismo objeto y la misma cola (`0x1c27d2`) que los casos originales;
+  - `isInhOn` (`0x1c1a20`): los enums nuevos usan el id de proceso `0x2f`, que `isValueGrayedOut` nunca atenúa;
+  - **indicador de la pantalla de disparo** (`ACT_ISOSensitivity`, `0x2d7940`): solo pintaba el número con código ≤ `0x26`. Ahora pasan también los códigos nuevos (`0x2d7a2c`), con los iconos normales, y el número sale de la tabla original `0x3ceeec` (hasta `0x29`) o de una propia (`0x2d7b62`).
+- **Textos** (`iso_ui_recursos`): 64000/80000/102400/204800 ya existen (`0xef9b`, `0xef30`, `0xef8b`, `0xeff4`). «ISO 128000…409600» se escriben en ranuras libres de los 25 idiomas latinos (`free_ids`).
+- **Iconos: NO resueltos.**
+  - La A6000 no tiene los de 64000+.
+  - Se copiaron los de la A7S (`image_cmn_43.uxc`, mismos tamaños 116×100 y 70×60) a ranuras libres de `image_cmn_169.uxc`. El formato del índice se describe en el módulo; los desplazamientos son relativos a `base+4`.
+  - En el arnés esas filas salen sin icono, o con el anterior sin borrar, tanto con el formato `0xe0…` de la A7S como con `0xc0…`. El códec de esas imágenes no es LZPT y no está descifrado.
+  - El panel inferior sí muestra el texto («ISO 409600»).
+- **Arnés** (fábrica 3.21 + vu2/vu4/`libObj`/textos/imágenes):
+  - la lista baja de 51200 a 64000…409600;
+  - elegir 204800 deja «ISO 204800» en la pantalla de disparo y al reabrir la lista;
+  - 256000/320000/409600 llegan a `libObj` (traza: receptor `0x4db7c4` con código `0x4e`, conversiones correctas, código guardado), pero el ISO vuelve a 204800 (§8.7). Lo mismo ocurre con el av-cam del CFW (`--avcam-de`).
+### 8.7 `libObj` y av-cam para 128000…409600
+- `iso_libobj_patch`: en los casos por defecto de `0x4e0ea8` (código → VALUEID) y `0x4e10b8` (VALUEID → código), los códigos `0x4b…0x50` se convierten en los VALUEID de la A7S (`0x3fd…0x3ff`, `0x50e…0x510`) y a la inversa; probado con Unicorn sobre la función real. 128000–204800 funcionan en el arnés.
+- `iso_avcam_patch`: la entrada código → Sv (`0x43b074f2`) salta a una cueva al final de `ZONA_A` que traduce `0x4b…0x50` → índices `0x2a…0x2f` y mantiene el tope `0x2f`. Sin ella, cualquier código ≥ `0x2f` quedaba en 409600. Unicorn: `0x4b…0x50` dan el mismo Sv que `0x2a…0x2f`.
+- **Pendiente: 256000…409600 vuelven a 204800 dentro de `libObj`** (medido en el arnés, trazas en caliente con `TRACELIB`):
+  - el receptor `0x4db7c4` recibe el código (`0x4e`), las tres conversiones dan resultado, guarda el código con `0x4a5836(…, 2, 0x4e)` y llama a `0x49fc94(PARAMID 0x951e)`;
+  - aun así, `getIso` lee `0x4d` (traza en vu2 `0x1c14d8`, r0 = `0x4d`);
+  - ocurre igual con el av-cam de fábrica que con el del CFW (`--avcam-de` con `base-film.tar`), y con VALUEID fuera (`0x50e`) o dentro (`0x3f8`) de la tabla: no es el rango de VALUEID ni av-cam;
+  - INFERENCIA: la propiedad del código (`set` virtual, vtable `+0x14`) o la lectura del modelo recortan al máximo que ahora da la inversa (`0x3ff` → `0x4d`). Sin localizar.
+- **Por eso el CFW lleva las filas hasta 204800** (`iso_ui_patch.N_CFW = 6`; las 9 siguen disponibles con `n=9`). Textos e iconos de las 9 se añaden igualmente.
 ### 8.3 Envío del ISO manual a av-cam (parte de ISO-409-C)
 - `0x4e7c30` (libObj) arma la orden de ajustes: lee `PARAMID_ISO_SPEED_RATE_SET` `0x9700` (y `MIN/MAX_SET` `0x9701/2`, `ACT` `0x9703–5`) y la convierte con `0x4e10b8` (VALUEID → código); `MENU_STD_RANGE_*_SET/ACT` (`0x989f/0x98a2/0x98a0/0x98a3`) con `0x4e42b4`. El código va al mensaje con `0x4a5836`. Nombres de PARAMID verificados en la tabla `0xfdc940 − 4·0x96ff`.
 ### 8.4 Arnés

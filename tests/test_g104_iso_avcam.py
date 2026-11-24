@@ -61,6 +61,9 @@ def test_codigo_a_sv(img):
     assert sv(orig, 0x2f) == sv(orig, 0x2c) == 0x500          # el original topaba en 0x2c
     assert all(sv(nuevo, c) == sv(orig, c) for c in range(0x2d) if c)   # sin cambios hasta 204800
     assert sv(nuevo, 0x30) == sv(nuevo, 0x2f) == 0x400
+    # §8.7: códigos de modelo 0x4b…0x50 (128000…409600, `iso_libobj_patch`) = índices 0x2a…0x2f; fuera de ese tramo, tope 0x2f
+    assert [sv(nuevo, 0x4B + k) for k in range(6)] == [sv(nuevo, 0x2A + k) for k in range(6)]
+    assert sv(nuevo, 0x4A) == sv(nuevo, 0x51) == 0x400
 
 
 def test_sv_a_codigo_y_idempotencia(img):
