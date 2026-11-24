@@ -136,3 +136,26 @@ Uso medido de `adjstctl.elf`: `adjstctl.elf <opciones> [bloque] [código] [tama�
 Siguiente paso (`scripts/usb_carga/prueba_telnet.py`, todo por telnet y sin modo servicio): con la cámara en USB
 (mejor un cargador de pared), 20 min de `normal` como control y 40 min de `carga` con el mismo límite. Hay carga
 real si con `carga` el nivel **sube** o cae claramente menos que en el control.
+
+### 5.1 Cargador de pared, todo por telnet (23-11-2026, MEDIDO)
+
+Datos en `analysis/camera-dumps/20261123-usb-carga-telnet/` (no versionados).
+
+| Fase | Nivel | Ritmo |
+|---|---|---|
+| Control `normal` (13 min) | 56 → 49 % | −0,54 %/min |
+| `carga` 1500 mA (15 min) | 48 → 42 % | −0,40 %/min |
+
+- **Resultado: no carga.** El nivel nunca sube. La caída un poco más lenta cabe en la no linealidad del porcentaje y
+  en la resolución del 1 %.
+- Con el cargador de pared, `adjstctl … 0xa0` responde `res 0x88` y 1 B (antes, conectada al PC: `res 0x01` y el eco
+  de 8 B). Las lecturas (`BATT_V` = `0xc8`, `IB_SYSINF`) siguen dando `res 0x01`. `0xc8bc` guarda los 3 B antes de
+  mirar `[0x20000029]` y devuelve ≠ 0 si está activo. INFERENCIA: con el cargador de pared ese indicador está
+  activo y la orden no llega a aplicar la carga por esta vía. El ciclo de `0xc6dc` en la tarea `0x7a36` tampoco
+  produjo carga medible.
+- La cámara no se calentó (observación del usuario).
+
+Conclusión de USB-CARGA-3 por ahora: la orden `USB_CHG_IC_SET` no basta para cargar con la cámara encendida. Faltan
+(a) saber qué es `[0x20000029]` y qué hace Darwin con los valores cuando está activo, y (b) si los bits elegidos para
+reg5/reg6 son los de carga (inferidos del modo apagado, sin hoja de datos). La vía que queda es el parche de Darwin
+(§3.2).
