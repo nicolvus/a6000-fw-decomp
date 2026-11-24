@@ -1,4 +1,5 @@
 # G36 — El selector PP del 3.77 no pasa de PP6: tope de 7 opciones por lista (auditoría, 11-11-2026)
+> **Refutado por [G106](g106-auditoria-estatica-393.md) §1 (24-11-2026):** en la cámara, Black Level recorre sus 31 valores; la lista no tiene tope. PP7–PP10 fallan por otra causa (perfiles con S-Gamut).
 
 Síntoma (usuario, CFW 3.77 en cámara): en la fila «Picture Profile» el cursor no pasa de PP6: al pulsar hacia PP7–PP10 se queda en PP6. La lista tiene 11 opciones (Off, PP1–PP10) y PP6 es la **7.ª**.
 

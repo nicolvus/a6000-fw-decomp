@@ -31,6 +31,7 @@ import build_nflasha15
 import build_package_nflasha15
 import build_pp_menu
 import build_silent_menu_test
+import exfine_size_patch
 import film_patch
 import film_userland as FU
 import iso_avcam_patch
@@ -49,6 +50,8 @@ AYUDA_PP = "Picture Profile: choose from the full list of values."
 
 
 FUNCIONES = frozenset({"film", "pp", "exfine", "iso"})   # G105: base = Silent (tres estados + Silent calibrado + Darwin v3); cada función se suma aparte
+BISECCION = frozenset({"film_ui", "film_nucleo", "iso_ui", "iso_nucleo"})   # G106: solo la parte userland o solo la capa del núcleo de film/iso (aislar fallos en cámara)
+NUCLEO_FILM, NUCLEO_ISO, UI_FILM, UI_ISO = {"film", "film_nucleo"}, {"iso", "iso_nucleo"}, {"film", "film_ui"}, {"iso", "iso_ui"}
 POR_DEFECTO = frozenset({"film", "exfine", "iso"})     # el CFW Film 3.92 (con `--pp` además «pp»)
 
 
@@ -56,8 +59,8 @@ def bionz_de(funciones=POR_DEFECTO):
     """Núcleo: 3.38 + tres estados (base-380) → PP del 3.81 con Silent calibrado (`pp`) o solo Silent calibrado (R87) → + películas (`film`) → + ISO (`iso`)."""
     def f(original: bytes) -> bytes:
         d = build_base_pp.bionz_cfw(original) if "pp" in funciones else patch_silent_r5.apply_bytes(original)
-        d = film_patch.apply_bytes(d) if "film" in funciones else d
-        return iso_avcam_patch.apply_bytes(d) if "iso" in funciones else d
+        d = film_patch.apply_bytes(d) if NUCLEO_FILM & set(funciones) else d
+        return iso_avcam_patch.apply_bytes(d) if NUCLEO_ISO & set(funciones) else d
     return f
 
 
@@ -127,8 +130,8 @@ def menu_film(pp: bool = False, maximo: int = 99, film: bool = True) -> dict:
 def build_files(work: Path, looks: Path, pp: bool = False, maximo: int = 99, funciones=None) -> Path:
     """`funciones` (G105) ⊆ FUNCIONES sobre la base Silent; None = el CFW Film (POR_DEFECTO, más «pp» si `pp`)."""
     funciones = frozenset(funciones if funciones is not None else POR_DEFECTO | ({"pp"} if pp else set()))
-    assert funciones <= FUNCIONES, funciones - FUNCIONES
-    pp, film = "pp" in funciones, "film" in funciones
+    assert funciones <= FUNCIONES | BISECCION, funciones - FUNCIONES - BISECCION
+    pp, film = "pp" in funciones, bool(UI_FILM & funciones)
     orig = C.DEV_A / C.USR
     silent = work / "silent"
     build_silent_menu_test.main(C.DEV_A, C.DEV_B, silent, pid_silent=C.PID_SILENT)
@@ -162,7 +165,9 @@ def build_files(work: Path, looks: Path, pp: bool = False, maximo: int = 99, fun
     if "exfine" in funciones:
         cau = files / "lib/CautionConfig.so"
         cau.write_bytes(quality_exfine_patch.patch(cau.read_bytes()))   # G39/G103: «Extra fine» en Calidad (menú y Fn usan la misma clase)
-    if "iso" in funciones:
+        (files / "lib/libmprctrl.so").write_bytes(exfine_size_patch.patch((orig / "lib/libmprctrl.so").read_bytes()))   # G106: tamaños EXFINE a 0 en la A6000
+        parcheados.append("lib/libmprctrl.so")
+    if UI_ISO & funciones:
         vu4 = files / "lib/viewUnified4.so"
         if not vu4.exists():
             shutil.copy(orig / "lib/viewUnified4.so", vu4)
@@ -204,8 +209,8 @@ if __name__ == "__main__":
     ap.add_argument("--version", default="3.87")
     ap.add_argument("--looks", type=Path, default=LOOKS)
     ap.add_argument("--pp", action="store_true", help="G102: con Picture Profile (menú, Fn, rueda, libObj y núcleo)")
-    ap.add_argument("--max-opciones", type=int, default=99, help="opciones por fila del menú PP antes de partirla (99 = filas enteras, G102; 7 = como el 3.79)")
-    ap.add_argument("--funciones", help="G105: lista separada por comas de " + ",".join(sorted(FUNCIONES)) + " sobre la base Silent ('' = solo Silent); sin ella, el CFW Film")
+    ap.add_argument("--max-opciones", type=int, default=M.OPCIONES_POR_LISTA, help="opciones por fila del menú PP antes de partirla (G106: 7, tope de la lista en la cámara; 99 = filas enteras de G102, solo para el arnés)")
+    ap.add_argument("--funciones", help="G105: lista separada por comas de " + ",".join(sorted(FUNCIONES | BISECCION)) + " sobre la base Silent ('' = solo Silent); sin ella, el CFW Film")
     a = ap.parse_args()
     fun = None if a.funciones is None else {x for x in a.funciones.split(",") if x}
     print(json.dumps(main(a.salida, a.version, a.looks, a.pp, a.max_opciones, fun), indent=1))

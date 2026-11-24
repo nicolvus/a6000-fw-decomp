@@ -34,7 +34,7 @@ def test_base_solo_silent(usr):
 
 def test_exfine_solo_cambia_cautionconfig(usr):
     distintos = {p for p in usr["base"] | usr["exfine"] if usr["base"].get(p) != usr["exfine"].get(p)}
-    assert distintos == {"lib/CautionConfig.so"}
+    assert distintos == {"lib/CautionConfig.so", "lib/libmprctrl.so"}       # G106: + tamaños EXFINE
 
 
 def test_iso_no_toca_menu_ni_film(usr):
@@ -60,7 +60,8 @@ def test_nucleo_por_capas():
         F.film_patch.apply_bytes = lambda d: capas.append("film") or d
         F.iso_avcam_patch.apply_bytes = lambda d: capas.append("iso") or d
         for fun, esperado in ((set(), ["silent"]), ({"film"}, ["silent", "film"]), ({"pp"}, ["pp"]), ({"iso"}, ["silent", "iso"]),
-                              ({"exfine"}, ["silent"]), (F.POR_DEFECTO | {"pp"}, ["pp", "film", "iso"])):
+                              ({"exfine"}, ["silent"]), (F.POR_DEFECTO | {"pp"}, ["pp", "film", "iso"]),
+                              ({"film_ui"}, ["silent"]), ({"film_nucleo"}, ["silent", "film"]), ({"iso_ui"}, ["silent"]), ({"iso_nucleo"}, ["silent", "iso"])):   # G106: bisección
             capas.clear()
             F.bionz_de(fun)(b"")
             assert capas == esperado, fun
