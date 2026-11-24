@@ -106,3 +106,11 @@ pmca-console firmware build/cfw_func393/film/pkg-3.93/package-3.93/firmware_pack
 - **Instalación `exfine` por USB, sin SWD:** `firmware … --flash --confirm --reflash` desde el CFW `film` en marcha → 3.93 → 3.94 declarada, entró al actualizador, `Done`. La restauración de versión agotó la espera del modo servicio; `firmware --restore-version` aparte la completó («real version again: 3.93»).
 - **Verificado:** arranque normal (`07c4`), `pmca-console info` = **3.93**. Registro `analysis/camera-dumps/20261124-inc392-swd/install-3.93-exfine.log`.
 - **Falta (cámara):** comprobar si los botones siguen pegados con `exfine` (base + Extra fine, sin Film): si no, el fallo es de Film.
+
+## 6. Resultado de `exfine` e instalación de `iso` (24-11-2026, MEDIDO)
+
+- **`exfine` en la cámara** (dicho por el usuario): con Calidad = «Extra fine», la cámara dice que no hay espacio en la tarjeta y se queda pegada. Tras reiniciar y pasar a «Fine», funciona bien y los botones no se pegan.
+  - Lectura: la base Silent no deja los botones pegados. El bloqueo aparece con Film (§5) y con Extra fine. Para Extra fine, probablemente el núcleo no tiene el tamaño de buffer/archivo del nivel nuevo y calcula 0 disparos restantes. NO_VERIFICADO.
+- **Instalación `iso` por USB con `--reflash`:** el primer intento dio `device returned more data than requested`, con la cámara ya en el actualizador (`03e2`). El reintento terminó en `Done`, y la versión se restauró sola a 3.93.
+- **Verificado:** arranque normal (`07c4`), `pmca-console info` = **3.93**. Registro `analysis/camera-dumps/20261124-inc392-swd/install-3.93-iso.log`.
+- **Falta (cámara):** probar ISO hasta 204800 y la tecla izquierda «Brillo de monitor».
