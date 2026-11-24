@@ -25,3 +25,9 @@ Continúa [G108](g108-bucle-iso-y-zonas.md). Petición del usuario: mezclar las 
 ## 4. Resultado en cámara de `todo` y build `sin_iso` (24-11-2026)
 - `todo` (`fd4d853c…`) instalada por USB (`--reflash`, «Done», versión 3.93): **la cámara se reinicia en bucle**. Causa sin aislar; sospechosos: Film/ISO en la cola de G18 junto a PP, o el nuevo `_anade` (cambia el diseño de todas las librerías).
 - `sin_iso` = pp + film + exfine (`build/cfw_func393/sin_iso`, `.dat` sha256 `a99578e7d17d6fc96cb2b74fdbdbe5ab1a1ae240935f03a41b7fae600ec86243`), a petición del usuario. Auditoría `todo_ok` tras reconocer en `audit_package_nflasha15` cualquier mezcla de pp/film/iso. Sin instalar: la cámara sigue en bucle y falta recuperarla por SWD (R48).
+
+## 5. `sin_iso` en la cámara (24-11-2026, dicho por el usuario)
+- Instalada por USB tras recuperar por SWD (R48: el actualizador entró con la batería puesta; la primera escritura dio «updater response error» y tras un ciclo de energía terminó con «Done»). **Arranca** (el bucle de `todo` no era de PP/Film/Extra fine; queda entre ISO y su interacción con el resto).
+- **Funciona todo menos el menú Fn:** con PP guardado, pasar de PP1 a PP2 en la franja Fn **reinicia** la cámara. El menú normal va bien.
+- Sin causa. En el arnés no se puede reproducir (G102 §4: elegir un perfil no se queda y no sale orden a `av-cam`). Hipótesis por comprobar: nodos Fn de PP (SRNum `0x27+k`, raíz Fn de 38 a 48 hijos) combinados con el nodo Film de la franja.
+
