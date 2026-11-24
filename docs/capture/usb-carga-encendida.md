@@ -221,4 +221,20 @@ todas las órdenes (`res 0x01`, eco `02 0a 00` para `normal` y `02 c9 04` para `
   batería queda en reposo (como la alimentación USB de la A6300), o si carga justo lo que consume la cámara. Con
   1500 mA de entrada (7,5 W) frente a ~3 W de consumo, una carga real debería subir el nivel; en 12 min y con
   resolución del 1 % no se descarta una carga lenta (< 0,08 %/min).
+### 6.2 Carga de 10 min con `BATT_V` (23-11-2026, MEDIDO)
+
+Cargador de pared, `prueba_telnet.py --ma 1500 --control 0 --carga 10`, órdenes aceptadas (`res 0x01`), `normal`
+restaurado al final y la cámara siguió respondiendo.
+
+| Segundos | Modo | Nivel | `BATT_V` |
+|---|---|---|---|
+| 1 | `normal` | 48 % | `0xc8` |
+| 65–313 | `carga` | 49 % | `0xc9` |
+| 375–685 | `carga` | **50 %** | `0xc9` |
+
+- **El nivel sube: 48 → 50 % en ~11 min (≈ +0,18 %/min)**, frente a ≈ −0,5 %/min en `normal` (§5.1 y tras el
+  reinicio). `BATT_V` sube un escalón al aplicar la carga y se mantiene.
+- Es la primera subida medida con la cámara encendida y la orden aplicada. Es pequeña (2 escalones del 1 %, 1 de
+  `BATT_V`), así que es indicio claro, no medida de corriente. Encaja con §5 (58 → 60 % por pmca).
+- Sin corte por temperatura; la cámara no se calentó en las pruebas anteriores (observación del usuario).
 

@@ -118,7 +118,7 @@ Trazabilidad completa: [CORRECTIONS](../docs/CORRECTIONS.md) y [STATE § Conclus
 | R1 / R7 | PARCIAL / BLOQUEADO | Copia externa del respaldo; commits antiguos en `refs/pull/*` de GitHub (requiere al soporte de GitHub) |
 | DOC-SITIO-EN | ABIERTO (decisión del usuario) | Sitio de Pages solo en español y con el hito 3.23; traducir/actualizar o dejarlo así |
 | G2–G8 | ABIERTO | Carril de interfaz, independiente del obturador |
-| USB-CARGA-1/3 | ABIERTO (23-11-2026) | Ni la A6300 carga encendida. `USB_CHG_IC_SET` (0x0d20/0xa0) llega a Darwin; la prueba con cargador de pared **no aplicó la orden** (`adjstctl` repite la secuencia 1 y Darwin la descarta, `res 0x88`). Repetida bien aplicada: nivel fijo 12 min (no sube); después el Linux de la cámara dejó de responder. Ver [usb-carga-encendida](../docs/capture/usb-carga-encendida.md) |
+| USB-CARGA-1/3 | ABIERTO (23-11-2026) | Ni la A6300 carga encendida. `USB_CHG_IC_SET` (0x0d20/0xa0) llega a Darwin; la prueba con cargador de pared **no aplicó la orden** (`adjstctl` repite la secuencia 1 y Darwin la descarta, `res 0x88`). Bien aplicada: 10 min 48 → 50 % (≈ +0,18 %/min; `normal` ≈ −0,5 %/min): primer indicio de carga real encendida. Una prueba anterior colgó el Linux a los ~13 min. Ver [usb-carga-encendida](../docs/capture/usb-carga-encendida.md) |
 
 ## Bloqueos y límites de evidencia
 
