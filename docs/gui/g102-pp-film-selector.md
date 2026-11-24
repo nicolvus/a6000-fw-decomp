@@ -1,4 +1,4 @@
-# G102 — Picture Profile en el CFW Film: cada ajuste en una sola fila con todas sus opciones, Film Simulation por marca y listas en el menú Fn y la rueda (23-11-2026; código y tests, CFW sin construir)
+# G102 — Picture Profile en el CFW Film: cada ajuste en una sola fila con todas sus opciones, Film Simulation por marca y listas en el menú Fn y la rueda (23-11-2026; código y tests; CFW 3.92 construido e instalado el 24-11-2026)
 
 Petición: activar el menú PP en el CFW Film y mejorar la selección de perfiles, modos y valores. La del 3.77/3.78 era mala.
 El usuario lo concretó: **sin filas partidas**, «Picture Profile» de Off a PP10 en una sola categoría.
@@ -21,7 +21,7 @@ Tests: `tests/test_g102_pp_film.py`. Sin cámara.
   - Lo visto en la cámara con el 3.77 queda **sin explicar**: NO_VERIFICADO, quizá un lado del modelo que el arnés no reproduce.
   - Si la cámara volviera a pararse en la 7.ª, las mismas listas completas están también en el menú Fn y en la rueda (§2).
 
-## 2. Qué llevará el 3.92 (`build_cfw_film.py SALIDA --version 3.92 --pp`, sin construir)
+## 2. Qué llevará el 3.92 (`build_cfw_film.py SALIDA --version 3.92 --pp`, construido el 24-11-2026)
 **Menú «Picture Profile»:** 32 filas en 6 páginas de 6, una por ajuste, cada una con todas sus opciones; sin Copy/Reset.
 - **Picture Profile:** Off, PP1–PP10.
 - **Gamma:** Movie, Still, Cine1–Cine4, ITU709, ITU709(800%), S-Log2, S-Log3.
@@ -84,7 +84,7 @@ PP y Film no comparten ningún byte del núcleo (0 bytes en común entre sus dif
 - **Paquete:**
   - el primer 3.92 (menú partido) pasó la auditoría `--darwin-v3 --sin-wbi --bionz-g22` 29/29;
   - `audit_package_nflasha15` reconoce el núcleo `build_cfw_film.bionz_pp`.
-- **Pendiente:** el 3.92 definitivo no está construido, a petición del usuario. Las pruebas sobre ficheros del paquete se saltan hasta construirlo.
+- **3.92 definitivo (24-11-2026; instalado 24-11-2026 por orden del usuario: 3.91→3.92 (primer intento sin pasar a modo actualizador; con la cámara ya en `054c:03e2`, `Done`), `pmca-console info` = 3.92, log `analysis/gui/g22/install-3.92.log`):** `build/cfw_film392/pkg-3.92/package-3.92/firmware_packed.dat`, sha256 `d6291386a34c67d78ed1f94046cc7cdd024c0663e873cac367e809234cdcd344`. Lleva PP, Film Simulation, Extra fine e ISO hasta 204800 (G104 §8.6–8.7). Auditoría `--darwin-v3 --sin-wbi --bionz-g22` `todo_ok` (29 comprobaciones; 65 líneas de sumas; el fsck solo avisa de contadores de libres, admitido por la auditoría). Los 11 tests de G102 sobre los ficheros del paquete pasan, y los de Unicorn de G104 pasan sobre el `viewUnified2`/`viewUnified4` del paquete.
 - **Arnés (3.92 con filas enteras y la carpeta Film anterior):**
   - la carpeta «Picture Profile» abre sin cuelgue, con 6 páginas;
   - las listas largas se recorren (§1);
@@ -104,4 +104,4 @@ Tests `tests/test_g103_extra_fine_film.py` (generan el `/usr` del 3.92 en un dir
 - **Núcleo:** `bionz_pp` no cambia ningún byte del camino de calidad de av-cam (`ConvertQualityForBKID` `0x437f8204`, manejador `0x4380394c`, tablas `0x43ffac44` y `0x43fff564`). En la LIRO VM con el av-cam del 3.92, la orden real del menú (`0x4036`, byte 10 = 2, medida en G75 T19) se guarda en el espejo de ajustes y se contesta con `0xf000`, igual que Fina.
 - **Regresión:** con `CFW_FILM392=<dir>` los 4 tests de ficheros de G102 corren sobre ese `/usr` y pasan con Extra fine incluido.
 
-**No verificado:** la codificación JPEG con la tabla de Extra fine (la captura sigue bloqueada en la VM, E2E-10) y el tamaño del fichero; el paquete 3.92 sigue sin construir.
+**No verificado:** la codificación JPEG con la tabla de Extra fine (la captura sigue bloqueada en la VM, E2E-10) y el tamaño del fichero; el 3.92 está instalado (24-11-2026) y falta probarlo en la cámara.
