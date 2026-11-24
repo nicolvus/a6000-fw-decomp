@@ -118,3 +118,21 @@ y la batería apenas baja.
 - Criterio: con el límite activo, el nivel baja claramente menos que en la línea base. No se probó porque la
   cámara no estaba en red. Aunque es INFERENCIA, Darwin ya pone «`USB PWR`» al encender si detecta USB (`0x71c4`):
   queda por medir si la A6000 de serie ya se alimenta del USB encendida y solo le falta un límite de entrada mayor.
+
+## 5. Prueba en cámara (23-11-2026, autorizada por el usuario; MEDIDO)
+
+Cámara encendida con el firmware 3.21 de serie, unida al PC por un concentrador USB 2.0 (480M), con telnet en
+`192.168.1.30`. Datos en `analysis/camera-dumps/20261123-usb-carga-senser/` (no versionados).
+
+| Paso | Resultado |
+|---|---|
+| Canal senser, solo lectura | `BATT_V` (`0x0d01/0x10`) devuelve 1 B (AD de la batería, `0xca`); `IB_SYSINF` 0, `ACV_V` 0, `IBCHECK` 1. `IB_TEMPERATURE`, `GeneralAD`, `SystemAD`, `DD_BATCHG_GET` y `BattInfoSW` dan error 128/136: **no hay temperatura por este canal** |
+| `USB_CHG_IC_SET carga` 500 mA en modo servicio (8 min) | Darwin acepta (eco `01 c9 04 …`) y la cámara sigue estable. `BATT_V` `0xc9` → `0xcb` y luego oscila `c9–cb`; nivel real 60 → 58 % en ~12 min (base + carga): **sin carga neta** |
+| `carga` 900 mA y salida del modo servicio (20 min, nivel por telnet) | 58 → **60 %** a los 3 min y **60 % fijo** 17 min. No basta: con el bit 3 de reg5 el USB también alimenta la cámara, y la meseta puede ser solo alimentación USB. Falta el control con `normal` |
+| Final | El último cambio a modo servicio dejó la cámara sin USB (no vuelve a enumerarse; telnet sigue). `normal` se restauró por telnet con `adjstctl.elf 0xd20 0xa0 b:0x00 b:0x0a b:0x00 b:0 …` (eco y `rc=0`): **la vía por telnet funciona** |
+
+Uso medido de `adjstctl.elf`: `adjstctl.elf <opciones> [bloque] [código] [tamaño]:[dato] …` (tamaño `b|w|d|n`).
+
+Siguiente paso (`scripts/usb_carga/prueba_telnet.py`, todo por telnet y sin modo servicio): con la cámara en USB
+(mejor un cargador de pared), 20 min de `normal` como control y 40 min de `carga` con el mismo límite. Hay carga
+real si con `carga` el nivel **sube** o cae claramente menos que en el control.
