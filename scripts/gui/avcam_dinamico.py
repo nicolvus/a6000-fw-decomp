@@ -23,6 +23,9 @@ MALLOC = 0x43561164
 ZONA_A = (0x43BE3B28, 0x43BE4330)        # 2056 B, ceros idénticos fichero/vivo (G72)
 ZONA_B = (0x43C1FF24, 0x43C20C8C)        # 3432 B (el hueco G72 empieza en ...21)
 PROHIBIDAS = ((0x43D620D9, 0x43FA8F00), (0x43FAF28C, 0x43FB9000))   # zona viva de G72 y hueco G18 (Color Chrome, pp_tone, Silent, curvas)
+# G108: ZONA_A/ZONA_B NO están libres (G107: tablas T1 y BOKS a cero que el núcleo lee; con el código de Film en T1, av-cam se atasca al arrancar en el
+# arnés). Film e ISO van a las ranuras de curvas de PP del hueco G18 (PP ejecuta ahí en la cámara): libres solo en builds sin PP.
+ZONA_G18 = (0x43FAF300, 0x43FB7400)
 CURVE, STRIDE_BUF = 0x101A, 0x101A
 TAB_PTR, SEL, SLOG3_COLA = 0x44001404, 0x43CB56E6, None
 HOOK_HLG = (0x43853ECE, bytes.fromhex("93f8ca37"))   # ldrb.w r3,[r3,#0x7ca] en la selección de gamma 0x43853ec0 (primer uso de la gamma de PP)
@@ -438,11 +441,12 @@ sal:
     return [(celda, bytes(4)), (a, c)], a
 
 
-def comprobar_zonas(escrituras: list[tuple[int, int]]) -> None:
-    """Ninguna escritura (inicio, fin) sale de las zonas verificadas ni toca las prohibidas ni se solapa con otra."""
+def comprobar_zonas(escrituras: list[tuple[int, int]], zonas=(ZONA_A, ZONA_B)) -> None:
+    """Ninguna escritura (inicio, fin) sale de `zonas` ni toca las prohibidas (salvo la que contiene a una zona pedida) ni se solapa con otra."""
+    prohibidas = [p for p in PROHIBIDAS if not any(p[0] <= z[0] and z[1] <= p[1] for z in zonas)]
     for lo, hi in escrituras:
-        assert any(z[0] <= lo and hi <= z[1] for z in (ZONA_A, ZONA_B)), (hex(lo), hex(hi))
-        assert not any(lo < p[1] and p[0] < hi for p in PROHIBIDAS), (hex(lo), hex(hi))
+        assert any(z[0] <= lo and hi <= z[1] for z in zonas), (hex(lo), hex(hi))
+        assert not any(lo < p[1] and p[0] < hi for p in prohibidas), (hex(lo), hex(hi))
     s = sorted(escrituras)
     assert all(a[1] <= b[0] for a, b in itertools.pairwise(s)), "solape"
 

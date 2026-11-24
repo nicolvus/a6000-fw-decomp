@@ -72,7 +72,7 @@ G72 las dio por libres porque estaban a cero en el fichero y en vivo, sin litera
 
 **El hueco G18 sí está libre:** 0 referencias relativas al PC ni `adr`. Libre en todas las builds: `0x43fb7990…0x43fb7c00`.
 
-**Arreglo pendiente (ZONA-1):** reubicar ISO, Film, LUT, HLG y S&Q. En G18 no cabe todo con PP; hace falta un rediseño (datos con `malloc` y solo código en G18).
+**Actualización [G108 §3](g108-bucle-iso-y-zonas.md):** Film e ISO ya van a `ZONA_G18` (sin PP). **Arreglo pendiente (ZONA-1), resto:** reubicar ISO, Film, LUT, HLG y S&Q. En G18 no cabe todo con PP; hace falta un rediseño (datos con `malloc` y solo código en G18).
 
 ## 4. ISO: el arnés con la NVRAM del usuario arranca (MEDIDO)
 
@@ -86,7 +86,7 @@ G72 las dio por libres porque estaban a cero en el fichero y en vivo, sin litera
 - `image_cmn_169.uxc`: las 5947 imágenes originales conservan sus datos y es el mismo fichero que el 3.92.
 - El bloque 0 restaurado de `nflasha15` solo cambia contadores (`build_nflasha15` lo comprueba con `assert`).
 
-**Sigue abierto:** la causa del bucle. Lo que falta por ejercitar es lo que solo hace el hardware: la exposición automática real con la cueva ISO, y la NVRAM actual, que no es la del 22-11.
+**Resuelto en [G108 §1](g108-bucle-iso-y-zonas.md):** con un ISO 128000+ guardado la app no arranca (gancho `isInhOn`). **Antes:** la causa del bucle seguía abierta. Lo que falta por ejercitar es lo que solo hace el hardware: la exposición automática real con la cueva ISO, y la NVRAM actual, que no es la del 22-11.
 
 ## 5. Builds reconstruidas (3.93; `audit_package_nflasha15 --darwin-v3 --sin-wbi --bionz-g22` = `todo_ok`)
 

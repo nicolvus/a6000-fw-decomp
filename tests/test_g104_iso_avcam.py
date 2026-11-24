@@ -76,7 +76,8 @@ def test_sv_a_codigo_y_idempotencia(img):
 
 
 def test_cadena_cfw_film():
-    """El parche entra al final de las dos cadenas del CFW Film (3.38 base): sin solapes con película/PP y con la tabla en ZONA_B."""
+    """El parche entra al final de la cadena del CFW Film sin PP (3.38 base), con cueva y tabla en el hueco G18 (G108: no en las tablas vivas
+    ZONA_A/ZONA_B). Con PP, G18 está ocupado y la cadena se rechaza."""
     import build_cfw_completo as C
     import build_cfw_film as F
     from e25_27 import build, fatimg, tarball, tpzl
@@ -85,8 +86,11 @@ def test_cadena_cfw_film():
     entries, _ = tarball.parse(C.BASE_TAR.read_bytes())
     part = tpzl.TpzlImage.parse({e.name: e.data for e in entries}[build.NFLASHA3])
     orig = fatimg.Fat16.parse(part.decompressed()).read(build.AVCAM_NAME)
-    for fn in (F.bionz, F.bionz_pp):
-        nuevo = fn(orig)
-        assert struct.unpack_from("<4I", nuevo, P.TABLA_NUEVA - P.BASE)[:4] == (10, 10, 12, 16)
-        assert struct.unpack_from("<3I", nuevo, P.TABLA_NUEVA - P.BASE + 4 * 45) == P.EXTRA
-        assert P.apply_bytes(nuevo) == nuevo
+    import avcam_dinamico as D
+    assert all(D.ZONA_G18[0] <= a and b <= D.ZONA_G18[1] for a, b in ((P.CUEVA, P.CUEVA + 18), (P.TABLA_NUEVA, P.TABLA_NUEVA + 4 * 48)))
+    nuevo = F.bionz(orig)
+    assert struct.unpack_from("<4I", nuevo, P.TABLA_NUEVA - P.BASE)[:4] == (10, 10, 12, 16)
+    assert struct.unpack_from("<3I", nuevo, P.TABLA_NUEVA - P.BASE + 4 * 45) == P.EXTRA
+    assert P.apply_bytes(nuevo) == nuevo
+    with pytest.raises((ValueError, AssertionError)):
+        F.bionz_pp(orig)

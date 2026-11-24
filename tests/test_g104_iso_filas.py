@@ -91,7 +91,9 @@ def test_vu4_tabla(vu4):
 
 
 def test_vu2_isinhon(vu2):
-    """`0x1c1a20(this, enum, &pid)`: los nuevos dan el pid 0x2f (sin atenuar); los demás, como el original."""
+    """`0x1c1a20(this, enum, &pid)`: los nuevos dan el pid de 51200 (enum 0x4e → 0x20, G108); los demás, como el original.
+
+    G108: con el pid 0x2f (el del enum nativo 0x10) y un ISO 128000+ guardado, la app no mandaba ninguna orden a av-cam al arrancar (bucle de la build `iso`)."""
     def pid(e):
         mu = _uc(vu2)
         mu.reg_write(UC_ARM_REG_R1, e)
@@ -99,8 +101,8 @@ def test_vu2_isinhon(vu2):
         mu.mem_write(MEM, b"\xff" * 4)
         mu.emu_start(0x1C1A20 | 1, FIN, count=200)
         return mu.reg_read(UC_ARM_REG_R0), struct.unpack("<I", mu.mem_read(MEM, 4))[0]
-    assert all(pid(P.ENUM0 + k) == (1, P.PID_NUEVO) for k in NUEVAS)
-    assert pid(0x4E) == (1, 0x20) and pid(P.ENUM0 + len(P.VALORES))[0] == 0 and pid(0x11)[0] == 0
+    assert all(pid(P.ENUM0 + k) == (1, pid(0x4E)[1]) for k in NUEVAS)
+    assert pid(0x4E) == (1, 0x20) and pid(0x10) == (1, 0x2F) and pid(P.ENUM0 + len(P.VALORES))[0] == 0 and pid(0x11)[0] == 0
 
 
 def test_vu2_getiso(vu2):

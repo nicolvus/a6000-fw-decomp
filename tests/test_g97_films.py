@@ -135,13 +135,14 @@ def test_userland_no_da_el_ack_hasta_que_el_blob_esta_escrito(compilado):
     assert bk.lee(FU.BK_ID) == FU.blob_esperado(4, NPZ)
 
 
-def test_avcam_solo_ganchos_y_zona_a(parcheado):
+def test_avcam_solo_ganchos_y_zona_g18(parcheado):
+    """G108: `ZONA_A` es la tabla T1 que el núcleo lee al arrancar (con el código de Film dentro, av-cam se atasca en el arnés): todo va al hueco G18."""
     import avcam_dinamico as D
     import film_patch as FP
     img = C.BIN.read_bytes()
     dif = [i + FP.BASE for i, (a, b) in enumerate(zip(img, parcheado)) if a != b]
     ganchos = [h[0] for h in FP.L.HOOKS] + [FP.L.HOOK_MAQ[0], *FP.SITIOS_T]
-    assert all(D.ZONA_A[0] <= a < D.ZONA_A[1] or any(g <= a < g + 4 for g in ganchos) for a in dif)
+    assert all(D.ZONA_G18[0] <= a < D.ZONA_G18[1] or any(g <= a < g + 4 for g in ganchos) for a in dif)
 
 
 def _rec(bk):

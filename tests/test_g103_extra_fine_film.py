@@ -86,7 +86,7 @@ def nucleo(tmp_path_factory) -> tuple[Path, bytes]:
     from g22 import patch_tristate as P
     tri = P.apply_bytes(AVCAM_338.read_bytes())[0]
     f = tmp_path_factory.mktemp("nucleo") / "av-cam.392.bin"
-    f.write_bytes(build_cfw_film.bionz_pp(tri))
+    f.write_bytes(build_cfw_film.bionz(tri))                                 # G108: Film/ISO ya no caben con PP (G18); núcleo film+exfine+iso
     return f, tri
 
 

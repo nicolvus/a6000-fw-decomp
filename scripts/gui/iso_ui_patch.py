@@ -10,8 +10,8 @@ que ya existen en su tabla de menú (`CmnViewMenuItemStruct`, `0x1b113c`): `0xf0
     fila → enum (`0xef90c`, defecto `0xef996`) y enum → fila (`0xef894`, defecto `0xef8a8`) con cuevas para los enums nuevos `0x50…0x58`
     (`0x4f` sigue siendo ISO_INVALID).
   * vu2 (`WrapperIso`): `getIso` código de modelo → enum (`0x1c14d8`), `setIso` enum → código (`0x1c1dda`, mismo objeto que los casos
-    originales y la cola `0x1c27d2`) y `isInhOn` enum → id de proceso (`0x1c1a20`, defecto `0x1c1bf6`): los nuevos usan el id `0x2f`,
-    que `isValueGrayedOut` nunca atenúa.
+    originales y la cola `0x1c27d2`) y `isInhOn` enum → id de proceso (`0x1c1a20`, defecto `0x1c1bf6`): los nuevos usan el id `0x20`,
+    el de 51200 (G108: el `0x2f` anterior es el del enum nativo `0x10`; con un ISO 128000+ guardado la app no arrancaba).
 Códigos de modelo (`getModelInfo("@M00B")`): 64000/80000/102400 = `0x27…0x29` (ya en `libObj`), 128000…409600 = `0x4b…0x50` (los de la A7S; `libObj`
 del A6000 aún no los acepta, ISO-409-A).
 Uso: iso_ui_patch.py ENTRADA.so SALIDA.so   (solo los 3 B de §8.5; valida los bytes originales; idempotente)
@@ -29,7 +29,7 @@ SITIOS = ((0xF0B26, 0x21), (0xF0B32, 0x20), (0xF0B3E, 0x1F))
 
 VALORES = (64000, 80000, 102400, 128000, 160000, 204800, 256000, 320000, 409600)
 CODIGOS = (0x27, 0x28, 0x29, 0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50)
-ENUM0, FILA0, PID_NUEVO = 0x50, 0x40, 0x2F
+ENUM0, FILA0, PID_NUEVO = 0x50, 0x40, 0x20   # G108: pid de proceso de 51200 (enum 0x4e), no el 0x2f del enum 0x10 (bloqueaba el arranque)
 # filas que lleva el CFW: hasta 204800. 256000…409600 se eligen y llegan a `libObj`, pero `libObj` devuelve el código 0x4d (G104 §8.7)
 N_CFW = 6
 MENU_CAB, MENU_TABLA, MENU_N = 0x1B113C, 0x1B1164, 0x22

@@ -128,6 +128,7 @@ Continúa G41–G48 (51200). Fuentes: bytes de `av-cam.bin` (3.21/3.38 iguales e
   - aun así, `getIso` lee `0x4d` (traza en vu2 `0x1c14d8`, r0 = `0x4d`);
   - ocurre igual con el av-cam de fábrica que con el del CFW (`--avcam-de` con `base-film.tar`), y con VALUEID fuera (`0x50e`) o dentro (`0x3f8`) de la tabla: no es el rango de VALUEID ni av-cam;
   - INFERENCIA: la propiedad del código (`set` virtual, vtable `+0x14`) o la lectura del modelo recortan al máximo que ahora da la inversa (`0x3ff` → `0x4d`). Sin localizar.
+  - **Causa ([G108 §2](g108-bucle-iso-y-zonas.md), VERIFICADO):** la lista del validador de órdenes de `PARAMID_ISO_SPEED_RATE` no tiene `0x50e…0x510`; ampliada.
 - **Por eso el CFW lleva las filas hasta 204800** (`iso_ui_patch.N_CFW = 6`; las 9 siguen disponibles con `n=9`). Textos e iconos de las 9 se añaden igualmente.
 ### 8.3 Envío del ISO manual a av-cam (parte de ISO-409-C)
 - `0x4e7c30` (libObj) arma la orden de ajustes: lee `PARAMID_ISO_SPEED_RATE_SET` `0x9700` (y `MIN/MAX_SET` `0x9701/2`, `ACT` `0x9703–5`) y la convierte con `0x4e10b8` (VALUEID → código); `MENU_STD_RANGE_*_SET/ACT` (`0x989f/0x98a2/0x98a0/0x98a3`) con `0x4e42b4`. El código va al mensaje con `0x4a5836`. Nombres de PARAMID verificados en la tabla `0xfdc940 − 4·0x96ff`.

@@ -2,7 +2,8 @@
 """G97/G98 — lado `av-cam` de las simulaciones de película: LUT 5×9×9 + curva 1D tras la gamma desde el blob «FILM» del Backup.
 
 El userland (`film_userland`, hilo en `viewUnified2.so`) deja en el id `0x150005` el look activo (tabla empaquetada a 21 bits en la ranura 0 y curva de 1024 u16
-en +0x1000) y en el id de 1 B `ACK_ID` su número (0 = Off). Aquí, todo en la zona A verificada (G72):
+en +0x1000) y en el id de 1 B `ACK_ID` su número (0 = Off). Aquí, todo en `ZONA_G18` (G108: la zona A de G72 es la tabla T1 que el núcleo lee al
+arrancar; con este código dentro, av-cam se atasca en el arnés). G18 lo ocupa PP: con PP, `apply_bytes` lo rechaza (la zona no está a cero).
 - **LUT**: los dos ganchos de `lut_patch` (`0x4381d2fe` SA, `0x4381d372` MOV/MON/CAP): con ACK ≠ 0 y blob válido del mismo look entregan su tabla desempaquetada
   (búfer de `malloc` de 0x654 B) y anotan el look aplicado; si no, el puntero de fábrica.
 - **Máquina** (`0x437a2502`, FN-LUT-2): fuerza el Copy3DLUT al cambiar el ACK y, mientras el look aplicado no sea el del ACK (blob aún sin llegar), lo
@@ -30,7 +31,7 @@ import lut_patch as L
 from e25_24.thumb import bl
 
 BASE, SIZE = L.BASE, L.SIZE
-CELDA = D.ZONA_A[0]          # +0 búfer del ISP (0x654) · +4 búfer del blob (16 KB) · +8 último ACK visto · +9 look aplicado · +0xa contador · +0xc búfer de la curva
+CELDA = D.ZONA_G18[0]        # +0 búfer del ISP (0x654) · +4 búfer del blob (16 KB) · +8 último ACK visto · +9 look aplicado · +0xa contador · +0xc búfer de la curva
 CODIGO = CELDA + 0x10
 F_PREP = 0x43852F7C          # FUN_43852f7c(obj de tono): primer paso de la curva, tras copiar los indicadores bd1/bd3/bd5/be1 de la config
 SITIOS_T = (0x438548B0, 0x43854C46, 0x43854FF6, 0x43B098CC)
@@ -239,7 +240,7 @@ c_fin:
 """
     sim = _simbolos(src)
     c = cfw.ensamblar(src, CODIGO)
-    assert CODIGO + len(c) <= D.ZONA_A[1], hex(CODIGO + len(c))
+    assert CODIGO + len(c) <= D.ZONA_G18[1], hex(CODIGO + len(c))
     return c, {k: CODIGO + v for k, v in sim.items()}
 
 
@@ -268,7 +269,7 @@ def apply_bytes(data: bytes) -> bytes:
     if struct.unpack_from("<I", data, C68_8 - BASE)[0] != IDENTIDAD:
         raise ValueError("c68[8] no es la identidad")
     esc = [(CELDA, bytes(0x10)), (CODIGO, c)]
-    D.comprobar_zonas([(a, a + len(b)) for a, b in esc])
+    D.comprobar_zonas([(a, a + len(b)) for a, b in esc], (D.ZONA_G18,))
     out = bytearray(data)
     for a, b in esc:
         if any(data[a - BASE:a - BASE + len(b)]):

@@ -36,9 +36,20 @@ def _registros(d: bytes):
 
 def patch(d: bytes, hlg: bool = False) -> bytes:
     gamma = GAMMA_FABRICA + tuple(v for v in (P.VALUEID_HLG if hlg else P.VALUEID) if v not in GAMMA_FABRICA)
-    nuevas = {COLOR_FABRICA: P.COLOR, GAMMA_FABRICA: gamma}
+    return amplia(d, {COLOR_FABRICA: P.COLOR, GAMMA_FABRICA: gamma}, 4)
+
+
+def amplia_pids(d: bytes, pids, extra) -> bytes:
+    """G108: añade `extra` (sin repetir) a la lista de cada PARAMID de `pids`; idempotente."""
+    viejas = {tuple(lista) for va, _, _, lista in _registros(d) if PID0 + (va - REG_BASE) // 12 in pids}
+    nuevas = {v: v + tuple(x for x in extra if x not in v) for v in viejas}
+    return amplia(d, {k: v for k, v in nuevas.items() if k != v}, 0)
+
+
+def amplia(d: bytes, nuevas: dict, minimo: int) -> bytes:
+    """Cada registro de enumerado cuya lista sea una clave de `nuevas` pasa a apuntar a su valor (lista nueva en un segmento RW añadido)."""
     sitios = [(va, b, tuple(lista)) for va, b, _, lista in _registros(d) if tuple(lista) in nuevas or tuple(lista) in nuevas.values()]
-    assert len(sitios) >= 4, "definiciones de Color Mode/Gamma no encontradas (¿otra libObj?)"
+    assert len(sitios) >= minimo, "definiciones de tipo no encontradas (¿otra libObj?)"
     if all(lista in nuevas.values() for _, _, lista in sitios):
         return d
     assert all(lista in nuevas for _, _, lista in sitios), "listas a medio parchear"

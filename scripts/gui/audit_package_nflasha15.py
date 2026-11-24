@@ -136,7 +136,10 @@ def bionz_g22_checks(bz_base: bytes, bz_new: bytes) -> dict:
         cfw = film if bz_new == film else cfw
     if bz_new not in (tri, cfw):   # CFW Film + PP (G102, 3.92+): parche PP del núcleo del 3.81 + Silent calibrado + películas
         import build_cfw_film
-        film_pp = build_cfw_film.bionz_pp(tri)
+        try:
+            film_pp = build_cfw_film.bionz_pp(tri)
+        except (ValueError, AssertionError):   # G108: Film/ISO van a ZONA_G18, que PP ocupa; esa combinación ya no se construye
+            film_pp = None
         cfw = film_pp if bz_new == film_pp else cfw
     if bz_new not in (tri, cfw):   # G105: una build por función sobre la base Silent (`build_cfw_film --funciones`)
         import build_cfw_film

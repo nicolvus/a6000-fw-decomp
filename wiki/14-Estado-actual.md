@@ -21,7 +21,7 @@
 
 **Firmware oficial reinstalado (23-11-2026):** a petición del usuario la cámara vuelve al contenido oficial de Sony 3.21, numerado **3.91** para que el actualizador lo acepte sobre el CFW 3.89; sin Film, Silent ni parches EFCS. Un CFW posterior necesita versión > 3.91. **24-11-2026: instalado el CFW Film 3.92** (Picture Profile completo, Film Simulation, Extra fine, Silent e ISO hasta 204800; G102/G104), `pmca-console info` = 3.92; falta probarlo en la cámara.
 
-**Último cierre:** G107 (24-11-2026) — causa de PP7–PP10/S-Gamut (el validador de órdenes de `libObj` solo admitía los valores nativos) arreglada; ids libres que pisaban PP corregidos; `ZONA_A`/`ZONA_B` resultan ser tablas vivas del núcleo; ISO arranca en el arnés con la NVRAM del usuario ([G107](../docs/gui/g107-causas-pp-ids-zonas.md)).
+**Último cierre:** G108 (24-11-2026) — causa del bucle de arranque de `iso` medida en el arnés: con un ISO 128000+ guardado, el gancho `isInhOn` de la pantalla ISO dejaba la app sin mandar órdenes al núcleo; corregido, igual que el validador ISO de `libObj` (256000+ volvía a 204800). Film e ISO salen de las tablas vivas `ZONA_A`/`ZONA_B`. Los botones pegados de Film siguen sin causa ([G108](../docs/gui/g108-bucle-iso-y-zonas.md)).
 
 
 ## Límites y riesgos

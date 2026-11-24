@@ -7,6 +7,7 @@ La A7S amplía los mismos dos conversores (VERIFICADO en sus bytes):
   * VALUEID → código (A6000 `0x4e10b8`, árbol de `cmp`, desconocido = `0x2a`; A7S `0x409ab8`): esos VALUEID → `0x4b…0x50`.
     Lo usa `0x4e7c30` al armar la orden de ajustes (`PARAMID_ISO_SPEED_RATE_SET`/`MIN`/`MAX`/`ACT`).
 Cuevas en los casos por defecto (`movs r0,#0|#0x2a; pop {r7,pc}` → `b.w`), en un segmento R+X añadido; el resto de códigos no cambia.
+G108: además, las listas del validador de órdenes de los PARAMID ISO (`ISO_PIDS`) admiten esos VALUEID (`pp_valuecheck_patch.amplia_pids`).
 INFERENCIA: los VALUEID `0x50e…0x510` (256000…409600) no tienen nombre en el A6000 (su tabla de nombres acaba en `0x507`); solo se usan como valores.
 Uso: iso_libobj_patch.py ENTRADA SALIDA
 """
@@ -15,12 +16,16 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
 import add_menu_entry as A
+import pp_valuecheck_patch as V
 import rueda_film as R
 
 CODIGOS = (0x4B, 0x4C, 0x4D, 0x4E, 0x4F, 0x50)
 VALUEIDS = (0x3FD, 0x3FE, 0x3FF, 0x50E, 0x50F, 0x510)
 A_VALUEID, DEF_VALUEID = 0x4E0EA8, 0x4E10B4      # código → VALUEID (r1 código, r2 salida); por defecto `movs r0,#0; pop {r7,pc}`
 A_CODIGO, DEF_CODIGO = 0x4E10B8, 0x4E13CE        # VALUEID → código (r1 VALUEID); por defecto `movs r0,#0x2a; pop {r7,pc}`
+# G108: listas del validador de órdenes (G107) de PARAMID_ISO_SPEED_RATE, _MIN, _MAX, _SET, _MIN/_MAX_SET y _ACT…: sin estos VALUEID, un ISO 128000+
+# guardado dejaba la app sin mandar ninguna orden a av-cam al arrancar (bucle de reinicios de la build `iso`)
+ISO_PIDS = (0x951E, 0x96FE, 0x96FF, 0x9700, 0x9701, 0x9702, 0x9703, 0x9704, 0x9705)
 
 
 def patch(d: bytes) -> bytes:
@@ -42,7 +47,7 @@ def patch(d: bytes) -> bytes:
             out[A._off(segs, sitio):A._off(segs, sitio) + 4] = R._asm(f"b.w {destino:#x}", sitio)
         return {}
 
-    return R._anade(d, lambda _: ([], []), lambda _, rx: cuevas(rx)[0], parches)
+    return V.amplia_pids(R._anade(d, lambda _: ([], []), lambda _, rx: cuevas(rx)[0], parches), ISO_PIDS, VALUEIDS)
 
 
 if __name__ == "__main__":
