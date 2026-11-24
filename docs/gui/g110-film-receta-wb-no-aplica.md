@@ -1,4 +1,4 @@
-# G110 — Film 3.93: por qué la receta no cambia el balance de blancos ni A-B/G-M, y cómo lo hace RecipeLab (24-11-2026)
+# G110 — Film 3.93: por qué la receta no cambia el balance ni A-B/G-M; RecipeLab, JPEGCAM y el PP activo (24-11-2026)
 
 Petición: en el 3.93 los looks no mueven el balance de blancos ni el A-B/G-M, y deberían para parecerse más al look real.
 Auditar la vía del CFW, comprobar cómo lo hace RecipeLab y proponer la mejora. Solo estático: nada construido ni instalado.
@@ -27,11 +27,60 @@ Auditar la vía del CFW, comprobar cómo lo hace RecipeLab y proponer la mejora.
   así que el balance, el estilo y el resto entran por la vía normal del §2. RecipeLab nunca escribe con la app de cámara viva.
 - Además su receta incluye la fila PP (`0x107031C`) y pide apagar el Picture Profile (`asksPictureProfileOff`), porque con un PP activo el estilo, el contraste y la saturación no cuentan.
 
+## 3 bis. Cómo lo hace JPEGCAM 2.08 (VERIFICADO en el APK, `HardwareRecipeApplier.apply`)
+- **Aplica en vivo, no por el Backup:** `Camera.getParameters()` → `set(...)` → `Camera.setParameters()`. Esto pasa por el servicio de cámara,
+  que llama a `libObj` igual que el menú: el balance cambia al momento, con la app abierta. Es la vía que le falta al CFW.
+- **Orden de la receta:**
+  1. `picture-profile` = `off` (si existe), `drive-mode` = `single`;
+  2. `creative-style` o `pro-color-mode`; `color-mode` = `standard`;
+  3. `picture-effect` = `off` (o el efecto que pida la receta);
+  4. balance: `setWhiteBalance` (AWB, daylight, shade, cloudy, incandescent, fluorescent o kelvin por `color-temperture-white-balance`);
+     `white-balance-shift-mode` = `true`, `white-balance-shift-lb` / `-cc`;
+  5. `contrast`, `saturation`, `sharpness` (+ `sharpness-gain`), `dro-mode`/`dro-level`;
+  6. `color-depth-{red,green,blue,cyan,magenta,yellow}`, `rgb-matrix-mode` + `rgb-matrix` (3×3), `lens-correction-shading-color-*`;
+  7. curva por `setExtendedGammaTable` (G98 §3).
+- **Al salir** (`ExitBehaviorManager`) restaura o conserva los ajustes de balance según la opción del usuario.
+- **Conclusión:** JPEGCAM y RecipeLab **apagan los dos el Picture Profile** antes de aplicar un look, y los dos parten de un estilo neutro.
+
 ## 4. Otros límites del diseño actual (VERIFICADO en `film_userland.RECIPELAB`)
 - 14 de los 38 looks no mueven el balance aunque la vía funcionara: su receta es AWB con A-B = G-M = 0
   (Ektar 100, Provia 100F, Velvia 100, Eterna 250/250D/400/500, Reala 500D y los Fuji Sim Eterna, Eterna BB, Pro Neg, Provia, Reala Ace, Velvia).
   9 usan kelvin fijo (Vision3, 50D, Classic Cinema…).
 - La receta no toca el PP. Con la build `pp`/`sin_iso` y un PP activo, estilo, contraste y saturación de la receta no se aplicarían aunque llegaran.
+
+## 4 bis. En qué influye un PP activo sobre un look (VERIFICADO en estático salvo lo marcado)
+Las tablas de cada look (LUT 5×9×9 + curva 1D) se ajustaron sobre el **JPEG Estándar**: matriz y gamma de fábrica, sin Color Depth (G98 §6).
+Cada ajuste del PP del CFW (`scripts/gui/pp_menu_spec.py`) cambia una etapa de esa cadena:
+
+| Ajuste del PP | Etapa | Efecto con un look activo |
+|---|---|---|
+| Gamma (Movie, Still, Cine1–4, ITU709, S-Log2/3) | gamma por número (G92 §2) | La curva del look sale `T[gamma_PP[x]]`: cambia todo el tono; con S-Log el look queda irreconocible. |
+| Black Gamma Range/Level | `bd1` de la cadena de tono | **Anula la curva del look**: `bd1`/`bd3` excluyen a `bd5` (G92 §3, test Unicorn). |
+| Black Level, Knee (los 5) | tono | Se suman a la curva del look y la desplazan. |
+| Color Mode (+ Level) | matriz 3×3 (G27) y elección de la tabla de referencia de la LUT (`cfg+0x7e`, G71 §1c) | La LUT corrige una base que ya no es la del ajuste; con B/N o S-Gamut, colores fuera de rango. |
+| Color Depth R/G/B/C/M/Y | mismo búfer que la LUT 3D (G71 §1) | **Se pierde**: con un look la LUT sustituye el búfer entero. |
+| Saturation, Color Phase | paquete de colorimetría (G69), aplicado en otro procesador | Se suman al look sin modelo (G99 §1). Saturation −8 = B/N. |
+| WB Filter Type, WB LB/CC/R/B | desplazamiento de balance por perfil | Se suman al A-B/G-M de la receta. |
+| Detail (los 7), Hi-Light Detail | nitidez | No cambian el color; se suman a la nitidez de la receta. |
+
+Además, con un PP activo el estilo creativo, el contraste y la saturación de la receta no cuentan (por eso las dos apps apagan el PP).
+Que el estilo quede anulado con PP en la A6000 + CFW: INFERIDO del comportamiento de Sony y de RecipeLab, sin medir.
+
+## 4 ter. Qué debe mandar y qué ponerse en gris
+**Regla: Film y PP se excluyen. Con un look activo manda Film.** Es lo que hacen JPEGCAM y RecipeLab, y es lo único que deja el look como se ajustó.
+- **Al elegir un look:** la receta pone `Picture Profile = Off` (fila `0x107031C`, como RecipeLab), y al volver a Off lo devuelve con el resto de la copia del usuario.
+- **En gris mientras Film ≠ Off** (el look lo fija o lo anula):
+  - Picture Profile: selector y todas sus filas, y sus entradas del menú Fn y de la rueda;
+  - Estilo creativo: estilo, contraste, saturación y nitidez;
+  - DRO / Auto HDR;
+  - Efecto de imagen;
+  - Color Chrome (G69), si la build lo lleva: escribe en el mismo búfer que la LUT y no tendría efecto;
+  - Desplazamiento de balance A-B/G-M (forma parte del look); en los looks con kelvin fijo (Vision3, 50D, Classic Cinema…), también el modo de balance.
+- **Libres:** modo de balance en los looks AWB (para la luz de la escena), exposición, EV, ISO, enfoque, calidad. El RAW no lleva el look.
+- **Al revés:** con un PP ≠ Off, Film en gris; para usar un look hay que poner el PP en Off.
+- **Cómo:** con el mecanismo nativo de inhibición, `isInhOn`, que el CFW ya usa (gancho de `isInhOn` del pid ISO en G108; EFCS en gris con Silent).
+  Los wrappers de estilo, balance y ajustes lo exportan: `WrapperCreativeStyle::isInhOn`, `WrapperWhiteBalance::isInhOn`, `WrapperSettingUtil::isInhOn`.
+  Basta con devolver «inhibido» cuando el look (`0x1070219`/ACK) ≠ 0. Falta localizar los pids de PP, DRO y Efecto, y probarlo en el arnés.
 
 ## 5. Cómo mejorarlo (por orden de preferencia)
 1. **Aplicar por la vía de la GUI (recomendada).** El nodo «Film» del menú Fn vive en `viewUnified4.so`, y la rueda en `viewUnified7.so`; las dos ya importan
