@@ -6,6 +6,7 @@
 [![sessions](https://img.shields.io/endpoint?url=https://nicolvus.github.io/a6000-fw-decomp/badge-sesiones.json)](https://nicolvus.github.io/a6000-fw-decomp/progress/)
 [![tests](https://img.shields.io/endpoint?url=https://nicolvus.github.io/a6000-fw-decomp/badge-pruebas.json)](https://nicolvus.github.io/a6000-fw-decomp/progress/)
 [![CI](https://github.com/nicolvus/a6000-fw-decomp/actions/workflows/tests.yml/badge.svg)](https://github.com/nicolvus/a6000-fw-decomp/actions/workflows/tests.yml)
+[![Featured in Awesome REA](https://img.shields.io/badge/Featured%20in-Awesome%20REA-f0b429)](https://github.com/AIshihzong/awesome-reverse-engineer-anything)
 
 Reverse engineering of the Sony A6000 firmware 3.21 (ILCE-6000: BIONZ + Darwin microcontroller) to shoot with a fully
 electronic shutter. **Milestone:** with the modified firmware **3.23** (a 2-byte patch to Darwin) the real camera shot
