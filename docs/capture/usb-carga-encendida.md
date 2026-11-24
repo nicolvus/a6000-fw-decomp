@@ -238,3 +238,10 @@ restaurado al final y la cámara siguió respondiendo.
   `BATT_V`), así que es indicio claro, no medida de corriente. Encaja con §5 (58 → 60 % por pmca).
 - Sin corte por temperatura; la cámara no se calentó en las pruebas anteriores (observación del usuario).
 
+### 6.3 Carga de 10 min a 2000 mA (23-11-2026, MEDIDO)
+
+`prueba_telnet.py --ma 2000 --control 0 --carga 10` (reg4 = 4), órdenes con `res 0x01`, `normal` restaurado, sin
+cuelgue. Nivel: 48 % (1 s), 48 % (65–127 s), **49 %** (189–686 s); `BATT_V` `0xc8`/`0xc9` alternando al inicio y
+`0xc9` fijo desde 376 s. Sube **1 punto en ~11 min**, no más que a 1500 mA (§6.2: 2 puntos): a 1 % de resolución
+no se distingue un efecto del límite de entrada; la corriente real sigue sin medirse.
+

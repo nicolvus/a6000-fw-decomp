@@ -568,6 +568,7 @@ Carril separado: no reutiliza ni modifica conclusiones de captura/sensor. Índic
 | 23-11-2026 | G94 §3 bis: la RAM viva muestra ConvSD inactivo (ids de color sin bit 4, capacidad bit 1 = 0); LUT-MODO-1 pasa a EN ESPERA. |
 | 23-11-2026 | G95: LUT-PKG-1 hecho offline (paquete `.LUT` precalculado; la cámara solo valida y copia). |
 | 23-11-2026 | USB-CARGA-1/2/3 nuevos: carga USB con la cámara encendida; cadena verificada offline y kit de prueba sin flasheo ([informe](capture/usb-carga-encendida.md)). |
+| 23-11-2026 | USB-CARGA-3 10 min a 2000 mA: 48 → 49 % (BATT_V 0xc9); no mejora a 1500 mA a esta resolución (§6.3). |
 | 23-11-2026 | USB-CARGA-3 10 min: 48 → 50 % con `carga` 1500 mA (≈ +0,18 %/min; `normal` ≈ −0,5 %/min). Primer indicio claro de carga encendida. |
 | 23-11-2026 | USB-CARGA-3 repetida con la orden aplicada: 53 % fijo 12 min con `carga` 1500 mA; luego el Linux de la cámara dejó de responder. |
 | 23-11-2026 | USB-CARGA-3 estático: la prueba con cargador de pared no aplicó la orden (`adjstctl` repite la secuencia 1; Darwin la descarta; `res 0x88` = tiempo agotado de av-cam). `prueba_telnet.py` corregido; falta repetirla. |
