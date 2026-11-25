@@ -19,6 +19,17 @@ El MP4 no contiene ningún campo de ~2 s (ffprobe y parser propio). No hay prueb
 históricos contienen los cinco tipos AVC (conservar [G111 §14.5](gui/g111-film-receta-gui-iconos.md#145-mapa-externo-recuperado-y-selector-de-tipo-avc)).
 [Informe de cierre estático](../reports/film-pb-1-productor-mpr-20261126.md) · [traspaso físico](../reports/film-pb-1-traspaso-20261125.md).
 
+**Auditoría del CFW instalado (27-11-2026): la causa no es un parche de código.** El paquete 3.93 `pp` no incluye
+`libmpr.so` (el productor del `0x1A` es de fábrica) y sus 32 ficheros distintos de Sony 3.21 son 5 bibliotecas con
+parches de Picture Profile/Silent y 22 tablas de textos. En `libObj` cambian 506 B en 41 rangos: 26 en `.text` en los
+puntos de `patch_libobj_pp*.py`/`patch_libobj_eco.py`, y fuera de `.text` solo la cabecera ELF, cinco entradas de la
+tabla de descriptores PP en `.data.rel.ro` y `DT_REL`. **Ninguna** de las doce direcciones conocidas de la ruta de
+reproducción cae en un rango modificado y el mapa de errores `0xFD9248` (97 × 16 B, con `0x1A → 7`) es idéntico.
+Quedan dos hipótesis: estado de arranque (el paquete quita `nflasha5`/WBI ⇒ arranque en frío) y contenido/catálogo
+(el firmware documenta que la base de datos de imágenes gobierna la reproducción de películas). Discriminación:
+breakpoints en `0x437C0A`/`0x437C3C`/`0x437CFC`, «Recuperar BD imág.» y, si no, restaurar el 3.21 oficial.
+[Informe de auditoría](../reports/film-pb-1-auditoria-cfw-20261127.md).
+
 ## Estado global (actualizado 03-11-2026)
 
 - **Cámara recuperada (03-11-2026):** con autorización física expresa, se accedió por SWD al BIONZ (R46/R47), se confirmó en la propia

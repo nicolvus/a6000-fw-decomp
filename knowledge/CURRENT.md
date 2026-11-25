@@ -2,6 +2,8 @@
 
 **FILM-PB-1 (26-11), mecanismo cerrado:** `PlayMovieCmp: MPR::ER_FAILED(0x1A)` sale del manejador de la orden `0x4000001D`, `FUN_00437BC0` (despachador `FUN_00429C38`), por tres caminos: guarda de capacidades (`0x437C0A`, «Pb Disable … dsm get»), contenido no soportado (`0x437C3C`) o traducción del error de `MoviePlayerIf::PbStart` (`FUN_007211B0`). No es timeout, RAM ni demux. Falta discriminar (log de MPR o breakpoints de un solo uso) y cerrar el `0:02` (`m_durationOfContent` en modelo+0x108; catálogo `contentsDuration` sin demostrar). [Informe](../reports/film-pb-1-productor-mpr-20261126.md) · [traspaso](../reports/film-pb-1-traspaso-20261125.md).
 
+**FILM-PB-1 (27-11), auditoría del CFW:** el paquete 3.93 `pp` no incluye `libmpr.so` y los 506 B distintos de `libObj` son Picture Profile/Silent (26 rangos en `.text` en los puntos de `patch_libobj_pp*.py`/`patch_libobj_eco.py`, cabecera ELF, cinco entradas de descriptores PP en `.data.rel.ro` y `DT_REL`). Ninguna de las doce direcciones de la ruta de reproducción cambia y el mapa de errores `0xFD9248` (`0x1A→7`) es idéntico ⇒ **la causa no es un parche de código**. Quedan estado de arranque (sin `nflasha5`/WBI) y contenido/catálogo. [Informe](../reports/film-pb-1-auditoria-cfw-20261127.md).
+
 
 Contexto operativo mínimo para agentes. Última revisión: **07-11-2026** (E26 R65–R68: rama EFCS de Darwin y auditoría).
 No es historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
