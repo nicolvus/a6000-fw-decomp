@@ -14,7 +14,9 @@ Réplica integrada posterior: 12 ejecuciones sobre Sony y los binarios extraído
 
 Auditoría del protocolo: comando 1 = AllocNew, comando 5 = Open. Corregidos G111 §14.2–14.3. El mapa integrado carece de los cinco tipos auxiliares AVC; el asignador ARM original devuelve −3 para todos (6 tests). Se desconoce la tabla externa efectiva en el fallo. G111 §14.4.
 
-**Próximo paso exacto:** comparar el mismo clip y SD con Sony en BootMode 11 y con 4.04 en frío; capturar la primera reserva tras Play y las tablas `/proc/udm/dmm_*` antes y después. Pendiente de autorización física.
+Recuperados mapas externos de dos volcados FAT históricos, idénticos y con los cinco tipos AVC presentes. La rama 0 usa otros tipos (0x92043/0x92044), con tamaños declarados suficientes; la réplica forzaba rama 1. G111 §14.5 corrige el límite anterior y retira la ausencia de tipos del mapa histórico como explicación.
+
+**Próximo paso exacto:** seguir estáticamente las reglas y solapamientos de 0x92043/0x92044, y los campos del analizador que seleccionan el tipo AVC. La causa del incidente sigue abierta.
 
 ## E26-RECOVERY — 29-10-2026: incidente abierto
 

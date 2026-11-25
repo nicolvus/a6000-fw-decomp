@@ -1,5 +1,6 @@
 """DMM command dispatch and missing AVC types in Sony's embedded default map."""
 
+import hashlib
 import json
 import struct
 from pathlib import Path
@@ -75,3 +76,43 @@ def test_native_allocator_rejects_avc_types_absent_from_embedded_map(unit):
     assert vm.reg_read(UC_ARM_REG_PC) == stop
     assert vm.reg_read(UC_ARM_REG_R0) == 0xFFFFFFFD
     assert vm.mem_read(memory + 0x18000, 2) == b"\xff\xff"
+
+
+@pytest.mark.parametrize("snapshot", ["nand-20261020", "nand-20261105"])
+def test_archived_external_map_contains_avc_types(snapshot):
+    import sys
+
+    sys.path.insert(0, str(ROOT / "scripts"))
+    from e25_27.fatimg import Fat16
+
+    image = ROOT / "analysis/camera-dumps" / snapshot / "dev_nflasha2.bin"
+    if not image.exists():
+        pytest.skip("archived NAND image unavailable")
+    config = Fat16.parse(image.read_bytes()).read("DMMCON~1.BIN")
+    assert hashlib.sha256(config).hexdigest() == (
+        "1f9275747212f2eed7b5aa41ce4af8348c18e2a4b7201a71e5665b195dee8715"
+    )
+    cursor = config.index(struct.pack("<II", 0x1D3A63, 0))
+    units = {}
+    while cursor + 8 <= len(config):
+        key, _flags = struct.unpack_from("<II", config, cursor)
+        cursor += 8
+        if key == 0xFFFFFFFF:
+            break
+        extents = []
+        while struct.unpack_from("<I", config, cursor)[0] != 0xFFFFFFFF:
+            extents.append(struct.unpack_from("<I", config, cursor)[0])
+            cursor += 4
+        cursor += 4
+        units[key] = extents
+    assert len(units) == 625
+    assert {key: units[key] for key in range(0x29F, 0x2A4)} == {
+        0x29F: [0x39A],
+        0x2A0: [0x39B],
+        0x2A1: [0x39C],
+        0x2A2: [0x39D],
+        0x2A3: [0x39E],
+    }
+    assert units[0x92041] == [0x106]
+    assert units[0x92043] == [0x109]
+    assert units[0x92044] == [0x108]

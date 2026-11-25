@@ -1,5 +1,9 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+## Reproducción de vídeo — FILM-PB-1 (25-11-2026)
+
+Causa abierta. Los DmmConfig.bin recuperados de nflasha2 del 20-10 y 05-11 son idénticos e incluyen 0x29F–0x2A3. La ausencia de esos tipos en el mapa integrado del módulo no se puede trasladar al mapa externo histórico. La réplica anterior forzaba tipo AVC 1; el tipo 0 solicita 0x92043/0x92044 con tamaños declarados suficientes en el archivo externo. Queda por identificar la rama del clip, las reglas y la disponibilidad efectiva de sus reservas. [G111 §14.5](gui/g111-film-receta-gui-iconos.md#145-mapa-externo-recuperado-y-selector-de-tipo-avc).
+
 ## Estado global (actualizado 03-11-2026)
 
 - **Cámara recuperada (03-11-2026):** con autorización física expresa, se accedió por SWD al BIONZ (R46/R47), se confirmó en la propia

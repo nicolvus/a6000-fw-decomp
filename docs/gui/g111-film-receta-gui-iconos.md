@@ -275,6 +275,18 @@ La misma ConfigData sí contiene `0x92041 → extent 0x106`, cuyo registro asign
 
 **Dato pendiente que decide esta vía:** identificar los tipos de la tabla efectiva de DMM en la sesión que falla y su primera respuesta AllocNew de vídeo. Si incluye los tipos solicitados y los reserva correctamente, se descarta esta explicación para esa sesión. En la búsqueda efectuada sobre las secciones WBI archivadas no se recuperó una tabla externa identificable que permita sustituir ese dato real.
 
+### 14.5 Mapa externo recuperado y selector de tipo AVC
+
+**CORRECCIÓN del límite de §14.4:** el mapa externo histórico sí estaba disponible dentro de los volcados FAT de `nflasha2`. Se extrajo en lectura de `nand-20261020/dev_nflasha2.bin` y `nand-20261105/dev_nflasha2.bin` con mtools y se contrastó con el lector FAT del proyecto. Ambos contienen el mismo `DmmConfig.bin`, 97 544 bytes, SHA-256 `1f9275747212f2eed7b5aa41ce4af8348c18e2a4b7201a71e5665b195dee8715`. No son lecturas de la sesión actual.
+
+El formato se contrastó con `dmm_unit_tbl_Init` (`.text+0xC2A8`): cabeceras de 8 bytes y listas de palabras terminadas en `0xFFFFFFFF`. Desde `0x15374` se recuperan 625 tipos. Están presentes `0x29F → [0x39A]`, `0x2A0 → [0x39B]`, `0x2A1 → [0x39C]`, `0x2A2 → [0x39D]` y `0x2A3 → [0x39E]`. Los cinco registros comienzan en `0x179E0` y avanzan 16 bytes. Su ausencia en la ConfigData integrada no permite atribuirla al mapa externo de esta cámara. Ocho pruebas cubren el despacho, el mapa integrado y ambos archivos históricos; evidencia de rutas, hashes y campos en `analysis/gui/film-pb-external-map.json`.
+
+**Selector recuperado por REA y contraste de instrucciones.** `0x4391569C` llama a `0x439161FC → 0x43916168` para obtener el tipo antes de `AllocWorkMemory`. Cuando el analizador devuelve el campo `+0x1C == 2`, el tipo es 1 si `+0x20 == 0` y 0 en otro caso. La ruta `0x4391B4D4 → 0x43B34764 → 0x43B3D9AA` obtiene ese campo de `0x43B417B2 → 0x43B4136A`. Este último devuelve true con byte `+0x23C == 0`; si es distinto de cero, devuelve false para `+0x23D == 1` o `0x11`, y true en los demás casos. Se conserva el significado numérico de esos campos; su semántica y sus valores para el clip que falla siguen abiertos. La réplica §14.3 forzaba el tipo 1 y por ello cubría solo una de las rutas.
+
+**Reservas alternativas del tipo 0.** El backend `0x4392117C` pide `0x92043` y `0x92044`, con mínimos `0x39F800` y `0x14FA000` bytes. El mapa externo histórico contiene `0x92043 → [0x109]` y `0x92044 → [0x108]`. Sus registros de extent asignan `0x73F000` (`0xEAEC`) y `0x14FA000` (`0xEAD8`) respectivamente, suficientes por tamaño declarado. Los tipos `0x29F–0x2A3` no se solicitan en esa rama. El tamaño declarado no acredita que una reserva esté disponible durante Play.
+
+**Consecuencia:** se retira la ausencia de tipos AVC del mapa histórico como explicación del incidente. El inicio en frío tiene una ruta explícita para cargar el archivo que sí los contiene. Falta demostrar un fallo de carga, una tabla efectiva distinta o un conflicto de reservas; el modo de arranque por sí solo no establece ninguno. El siguiente trabajo estático es seguir las reglas/solapamientos de los buffers y determinar qué campos seleccionan la rama para los formatos de la A6000.
+
 ## 15. Iconos centrados y estado de los iconos para la futura build (25-11-2026)
 **Petición:** el icono no queda centrado; corregirlo y dejar aquí cómo quedan los iconos para una build futura. Nada instalado.
 

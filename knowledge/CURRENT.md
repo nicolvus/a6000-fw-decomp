@@ -1,5 +1,8 @@
 # Estado actual — léeme primero
 
+**FILM-PB-1 (25-11):** mapa externo recuperado de dos volcados NAND históricos idénticos; los cinco tipos AVC están presentes. La causa de reproducción sigue abierta. La réplica controlaba el tipo 1; seguir selector y reglas del tipo 0. [G111 §14.5](../docs/gui/g111-film-receta-gui-iconos.md#145-mapa-externo-recuperado-y-selector-de-tipo-avc).
+
+
 Contexto operativo mínimo para agentes. Última revisión: **07-11-2026** (E26 R65–R68: rama EFCS de Darwin y auditoría).
 No es historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
 Versiones íntegras anteriores (nada se borró): [CURRENT-historial-2026-10-31](history/CURRENT-historial-2026-10-31.md)

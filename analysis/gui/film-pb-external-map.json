@@ -1,0 +1,83 @@
+{
+  "scope": "Historical external DmmConfig.bin from offline FAT images; current camera map unknown",
+  "snapshots": [
+    "analysis/camera-dumps/nand-20261020/dev_nflasha2.bin",
+    "analysis/camera-dumps/nand-20261105/dev_nflasha2.bin"
+  ],
+  "config_size": 97544,
+  "config_sha256": "1f9275747212f2eed7b5aa41ce4af8348c18e2a4b7201a71e5665b195dee8715",
+  "unit_table_offset": "0x15374",
+  "unit_count": 625,
+  "avc_types": {
+    "0x29f": {
+      "record_offset": "0x179e0",
+      "extent_list": [
+        "0x39a"
+      ]
+    },
+    "0x2a0": {
+      "record_offset": "0x179f0",
+      "extent_list": [
+        "0x39b"
+      ]
+    },
+    "0x2a1": {
+      "record_offset": "0x17a00",
+      "extent_list": [
+        "0x39c"
+      ]
+    },
+    "0x2a2": {
+      "record_offset": "0x17a10",
+      "extent_list": [
+        "0x39d"
+      ]
+    },
+    "0x2a3": {
+      "record_offset": "0x17a20",
+      "extent_list": [
+        "0x39e"
+      ]
+    }
+  },
+  "large_types": {
+    "0x92041": {
+      "extent_list": [
+        "0x106"
+      ],
+      "record_offset": "0x15f64"
+    },
+    "0x92043": {
+      "extent_list": [
+        "0x109"
+      ],
+      "record_offset": "0x15f94"
+    },
+    "0x92044": {
+      "extent_list": [
+        "0x108"
+      ],
+      "record_offset": "0x15f84"
+    }
+  },
+  "selection": {
+    "0x43916168": "type 1 if parser field +0x20 == 0, else type 0, when +0x1c == 2",
+    "0x43b3d9aa": "field +0x20 receives result of 0x43b417b2",
+    "0x43b4136a": "returns true if byte +0x23c == 0; otherwise true unless byte +0x23d is 1 or 0x11"
+  },
+  "unverified": [
+    "Selected type for the failing clip",
+    "Current camera external map",
+    "Active DMM rule and extent availability"
+  ],
+  "type_zero_buffers": {
+    "0x92043": {
+      "minimum_bytes": "0x39f800",
+      "historical_record_size": "0x73f000"
+    },
+    "0x92044": {
+      "minimum_bytes": "0x14fa000",
+      "historical_record_size": "0x14fa000"
+    }
+  }
+}
