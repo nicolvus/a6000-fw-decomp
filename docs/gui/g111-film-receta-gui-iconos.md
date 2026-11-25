@@ -62,3 +62,26 @@ personalizados, página 4, «Film Simulation» (3 filas: Kodak, Fujifilm, Fujifi
 - Que los setters lleguen al ISP (y que el look final se parezca a la película) solo se puede ver en la cámara.
 - Orden contraste/saturación/nitidez de `setCreativeStyle`: INFERIDO del orden de Sony; ver §5.
 - La LUT de cada look se ajustó sobre JPEG Estándar sin desplazamiento de balance: con la receta encima puede pasarse (G110 §5).
+
+## 7. Incidente 3.94 en cámara: Fn → reinicio en bucle (24-11-2026, dicho por el usuario; auditoría estática)
+- **Hechos:** instalada por USB (`pmca-console firmware … --flash --confirm`, 3.93 → 3.94, «Done», `analysis/gui/g22/install-3.94.log`). Arrancó; al pulsar Fn
+  se reinició y quedó en bucle. Después no aparece por USB (ni `07c4` ni `03e2`).
+- **Factor común (VERIFICADO en `build/`):** todas las builds que reescriben `share/app/image_cmn_169.uxc` han fallado en la cámara y ninguna de las que lo dejan de fábrica:
+
+| Build | `image_cmn_169.uxc` | Resultado en cámara |
+|---|---|---|
+| 3.92 `cfw_film392` | modificado (iconos ISO, G104) | reinicio con «Brillo de monitor» y no enciende (INC-392) |
+| 3.93 `iso` | modificado | bucle al arrancar (G105 §7) |
+| 3.93 `todo` | modificado | bucle al arrancar (G109 §4) |
+| 3.93 `film`, `exfine`, `pp`, `sin_iso` | de fábrica | arrancan |
+| 3.94 `sin_iso` | modificado (50 iconos, §3) | Fn (que pinta los iconos nuevos) → bucle |
+
+  Esto debilita la atribución del bucle de `iso`/`todo` solo al gancho `isInhOn` (G108 §1, medida en el arnés).
+- **El códec no reproduce a Sony (VERIFICADO):** recodificar con `uxc_imagenes.codifica` 400 iconos nativos de `image_cmn_169` del 3.21 da 0/400 iguales
+  (p. ej. `0xc000`: 511 B de Sony frente a 424 B; cambian los campos de cabecera del registro LZPT). El arnés descomprime por software (`tpzl._inflate_segment`)
+  y acepta los dos; el LDEC por hardware nunca había recibido un flujo de `encode_lz` dentro de un `.uxc`.
+- **Causa probable (INFERENCIA, sin medir):** el LDEC por hardware cuelga o corrompe al decodificar un registro del `.uxc` modificado → cuelgue y reinicio
+  por vigilancia. Por qué sigue en bucle tras el primer arranque bueno: NO_VERIFICADO.
+- **Recuperación:** batería fuera ≥ 30 s y encender sin tocar Fn; si no aparece por USB, actualizador forzado por SWD (R48, como G105 §4/§7) e instalar
+  una build con `image_cmn_169.uxc` de fábrica (`sin_iso` 3.93 con `--reflash`, o una 3.95 = 3.94 sin `iconos_fn`).
+- **Regla nueva:** no volver a instalar un `.uxc` modificado hasta que `codifica` reproduzca los bytes de Sony (o use registros `0x0F` almacenados sin LZ).
