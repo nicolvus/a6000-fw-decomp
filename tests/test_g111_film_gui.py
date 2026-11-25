@@ -19,6 +19,7 @@ VA = 0x7C8080
 PP = (0x100, 0x100, 0x11F)                     # selector PP (primer ajuste PP) y rango de pids PP de una build con PP
 TODAS = FU.ajuste_todas().pid
 USUARIO_WB, USUARIO_DRO, USUARIO_PP = (8, 4800, -2, 5), 3, 4
+MARCA_WB = (0x4D4C4946, 0x4E495742)
 USUARIO_CS = {0x1070175: 2, 0x1070178: 1, 0x1070187: -2, 0x107018A: 3}
 pytestmark = pytest.mark.skipif(not NPZ.exists(), reason="falta looks.npz")
 
@@ -104,12 +105,16 @@ class VM:
             for k, v in enumerate(USUARIO_WB):
                 w(r(2) if k == 0 else r(3) if k == 1 else self.pila(k - 2), v)
             return self._vuelve(0)
-        if n == "V_WB_SET":
+        if n == "V_WB_SET":                            # el objeto llega marcado para `films_tramo_wbinh`
+            assert struct.unpack("<II", mu.mem_read(r(0) + 8, 8)) == MARCA_WB
             self.llamadas.append(("wb", self.s32(r(2)), self.s32(r(3)), self.pila(0), self.pila(1)))
             return self._vuelve(0)
         if n == "V_CS_SET":
             self.llamadas.append(("cs", r(2), self.s32(r(3)), self.pila(0), self.pila(1), self.pila(2)))
             return self._vuelve(0)
+        if n == "V_WBINH_CONT":                        # resto del isInhOn original
+            self.llamadas.append(("inh", r(2)))
+            return self._vuelve(1, pop=4)
         if n == "V_DRO_GET":
             w(r(2), USUARIO_DRO)
             return self._vuelve(0)
@@ -182,6 +187,15 @@ def test_fila_de_marca_y_pid_ajeno(compilado):
     assert vm.llamadas == [("orig", 0x17, 3)]
 
 
+def test_wbinh_salta_la_inhibicion_solo_al_objeto_marcado(compilado):
+    vm = VM(compilado, {})
+    obj = vm.BUF + 0x100
+    vm.mu.mem_write(obj, struct.pack("<4I", 0x1234, 0, *MARCA_WB))
+    assert vm.llama("films_tramo_wbinh", obj, vm.VBP, 1) == 0 and vm.llamadas == []
+    vm.mu.mem_write(obj + 8, struct.pack("<2I", 0, 0))
+    assert vm.llama("films_tramo_wbinh", obj, vm.VBP, 1) == 1 and vm.llamadas == [("inh", 1)]
+
+
 def test_grises(compilado):
     p4, v5 = FU.orden().index("kodak_portra_400") + 1, FU.orden().index("kodak_vision3_500t") + 1
     gris = lambda vals, pid: VM(compilado, vals).llama("films_tramo_gris", VM.MGR, pid)
@@ -189,8 +203,8 @@ def test_grises(compilado):
     for pid in (0x18, 0x19, 0x1A, PP[0], PP[1], PP[2]):
         assert gris({TODAS: p4, PP[0]: 0}, pid) == 1
         assert gris({TODAS: 0, PP[0]: 0}, pid) == sigue
-    assert gris({TODAS: p4, PP[0]: 0}, 0x17) == 1 and gris({TODAS: v5, PP[0]: 0}, 0x17) == 1   # CAM-394: balance en gris con cualquier look
-    assert gris({TODAS: 0, PP[0]: 0}, 0x17) == sigue
+    assert gris({TODAS: p4, PP[0]: 0}, 0x17) == 1                             # AWB: en gris con cualquier look
+    assert gris({TODAS: v5, PP[0]: 0}, 0x17) == 1                              # kelvin fijo del look
     assert gris({TODAS: p4, PP[0]: 0}, 0x46) == sigue                          # EFCS y demás: la cadena de siempre
     for pid in (TODAS, FU.ajustes()[1].pid):
         assert gris({TODAS: 0, PP[0]: 3}, pid) == 1                            # con un PP puesto, Film en gris

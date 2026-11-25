@@ -167,3 +167,10 @@ Lo único distinto entre 3.95 (bien) y 3.96 (cuelga) son los iconos: `image_cmn_
 - **Por orden del usuario, sin más arreglos:** build **4.00** = 3.95 (que funcionaba) + balance en gris con cualquier look; sin iconos, sin gancho de
   `isInhOn` (la receta llama a `setWhiteBalance` como en la 3.95: si el modelo lo inhibe, el balance no cambia). Único fichero distinto de la 3.95:
   `lib/viewUnified2.so`. `.dat` sha256 `102cd2f9…`, auditoría `todo_ok`.
+
+## 13. Build 4.01 = 3.98 + balance en gris con cualquier look (25-11-2026)
+- **Aclaración del usuario:** la base buena es la **3.98** (el gancho funcionaba: la receta fuerza el balance); solo faltaba que el balance no se pueda
+  cambiar a mano mientras haya un Film Sim activo (libre con Film en Off), y que los looks sigan aplicando su balance.
+- **4.01** = fuentes de la 3.98 (`films.c`/`film_userland.py` de `3a2ca282`, gancho `isInhOn` con marca sin comprobación de pila) + `--iconos-nativos`
+  (`.uxc` intacto) + `films_gris`: balance (pid `0x17`) en gris con cualquier look. El cuelgue de la 3.98 era al **entrar** en AWB; en gris ya no se entra.
+  La 3.99 (que no arrancó) además llevaba el `.uxc` con iconos propios y la comprobación de pila; ninguno de los dos va en la 4.01.

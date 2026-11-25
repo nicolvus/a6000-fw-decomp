@@ -228,6 +228,10 @@ typedef i32 (*droconv_t)(void *, i32, i32 *);
 #define PID_CS 0x19
 #define PID_EFECTO 0x1A
 #define WB_KELVIN 0xC
+/* CAM-394/G111 §9: setWhiteBalance sale sin escribir si `WrapperWhiteBalance::isInhOn(modo)` (factor del modelo) dice inhibido; la receta lo salta solo
+ * para su propio objeto, marcado con estas dos palabras. */
+#define WB_MARCA0 0x4D4C4946u
+#define WB_MARCA1 0x4E495742u
 
 /* Código de estilo del Backup (1 Estándar … 13 Sepia, orden de RecipeLab) → WRAPPER_CREATIVE_STYLE (tablas por estilo de CustomCreativeStyle::setValue). */
 static const u8 CS_ENUM[14] = {0, 1, 2, 11, 12, 13, 3, 4, 5, 6, 7, 8, 9, 10};
@@ -252,7 +256,10 @@ static void pon(void *mgr, void *vbp, const i32 *wb, i32 cs_code, const i32 *cs,
     u32 o[4];
     if (PID_PP_SEL != 0 && pp >= 0) F(setv_t, V_SETVALUE)(mgr, PID_PP_SEL, pp);         /* PP primero: el resto se aplica ya sin perfil */
     F(ctor_t, V_WB_CTOR)(o);
+    o[2] = WB_MARCA0;                                    /* el objeto del wrapper es solo la vtable: la marca va detrás y `films_tramo_wbinh` la reconoce */
+    o[3] = WB_MARCA1;
     F(wbset_t, V_WB_SET)(o, vbp, wb[0], wb[1], wb[2], wb[3]);
+    o[2] = o[3] = 0;
     if (cs_code > 0 && cs_code < 14) {
         F(ctor_t, V_CS_CTOR)(o);
         F(csset_t, V_CS_SET)(o, vbp, CS_ENUM[cs_code], 0, cs[0], cs[1], cs[2]);
@@ -311,7 +318,7 @@ i32 films_gris(void *mgr, i32 pid) {
     i32 wb = pid == PID_WB, fila = look_de(pid, 0) >= 0;
     if (!film && !pp && !wb && !fila) return -1;
     i32 n = lee(mgr, FILA_PID[NFILAS - 1]);
-    if (n > 0 && n <= NLOOKS && (film || pp || wb)) return 1;
+    if (n > 0 && n <= NLOOKS && (film || pp || wb)) return 1;   /* balance en gris con cualquier look; libre con Film en Off */
     if (fila && PID_PP_SEL != 0 && lee(mgr, PID_PP_SEL) > 0) return 1;
     return -1;
 }
@@ -352,4 +359,22 @@ __asm__(".text\n.syntax unified\n.thumb\n"
         "  ldr r12, 6f\n"
         "7: add r12, pc\n"
         "  bx r12\n"
-        ".p2align 2\n6: .word V_GRIS_CONT - (7b + 4)\n");
+        ".p2align 2\n6: .word V_GRIS_CONT - (7b + 4)\n"
+        /* `films_tramo_wbinh` sustituye el prólogo de WrapperWhiteBalance::isInhOn (`push {r4,r5,r7,lr}; mov r5,r0`): objeto marcado → 0 (no inhibido). */
+        ".global films_tramo_wbinh\n.type films_tramo_wbinh,%function\n.thumb_func\nfilms_tramo_wbinh:\n"
+        "  ldr r3, [r0, #8]\n"
+        "  ldr r12, 8f\n"
+        "  cmp r3, r12\n"
+        "  bne 9f\n"
+        "  ldr r3, [r0, #12]\n"
+        "  ldr r12, 10f\n"
+        "  cmp r3, r12\n"
+        "  bne 9f\n"
+        "  movs r0, #0\n"
+        "  bx lr\n"
+        "9: push {r4, r5, r7, lr}\n"
+        "  mov r5, r0\n"
+        "  ldr r12, 11f\n"
+        "12: add r12, pc\n"
+        "  bx r12\n"
+        ".p2align 2\n8: .word 0x4D4C4946\n10: .word 0x4E495742\n11: .word V_WBINH_CONT - (12b + 4)\n");
