@@ -77,6 +77,8 @@ personalizados, página 4, «Film Simulation» (3 filas: Kodak, Fujifilm, Fujifi
 | 3.94 `sin_iso` | modificado (50 iconos, §3) | Fn (que pinta los iconos nuevos) → bucle |
 
   Esto debilita la atribución del bucle de `iso`/`todo` solo al gancho `isInhOn` (G108 §1, medida en el arnés).
+- **Corrección (§9):** el códec no es la causa probable: su repertorio LZ coincide con el de Sony (distancias 1–2, copias solapadas, grupos de 8 literales,
+  mismo terminador). Lo que sí violaba era el orden del fichero (§9). Texto original:
 - **El códec no reproduce a Sony (VERIFICADO):** recodificar con `uxc_imagenes.codifica` 400 iconos nativos de `image_cmn_169` del 3.21 da 0/400 iguales
   (p. ej. `0xc000`: 511 B de Sony frente a 424 B; cambian los campos de cabecera del registro LZPT). El arnés descomprime por software (`tpzl._inflate_segment`)
   y acepta los dos; el LDEC por hardware nunca había recibido un flujo de `encode_lz` dentro de un `.uxc`.
@@ -93,3 +95,32 @@ personalizados, página 4, «Film Simulation» (3 filas: Kodak, Fujifilm, Fujifi
   Dos `updater response error`; ciclo de energía → volvió sola al actualizador (`03e2`) → `Done` (`install-3.95.log`).
 - **Verificado:** arranque normal (`07c4`), `pmca-console info` = **3.95**.
 - **Falta (cámara):** pulsar Fn (sin iconos nuevos no debería reiniciar si §7 es la causa) y probar Film ▸ Portra 400: estilo, balance, DRO y grises.
+
+## 9. Auditoría tras la 3.95 en cámara y correcciones (24-11-2026)
+**Dicho por el usuario (3.95):** Fn ya no reinicia; la receta pone estilo y DRO y los grises funcionan; **el balance no cambia**; sigue FN-PP-1 (PP1→PP2 en Fn reinicia);
+faltan los iconos.
+
+### 9.1 Balance: `isInhOn` corta la receta (MEDIDO en el arnés)
+- Firma real (símbolos de `wrapperWhiteBalance.so`): `setWhiteBalance(ViewBaseProduct*, modo, K, A-B, G-M)`; enum 1 = AWB (el 0 es inválido en sus tablas), `0xc` = K
+  (valida 2500–9900), A-B y G-M en −7…7. La receta pasaba bien los argumentos.
+- Traza en el arnés (perfil `g111b`, build 3.95, `TRACELIB=viewUnified2.so`): al elegir un look llega `setWhiteBalance(1, 5500, …)`, pasa la validación y
+  `WrapperWhiteBalance::isInhOn(1)` devuelve **1**: el setter sale sin escribir (en la NVRAM no aparecen los ids de desplazamiento `0x107027e/f`).
+  `isInhOn` pregunta al modelo (`getModelInfo`, factor `0x18c+modo`) y devuelve 1 si la llamada falla o si el factor dice inhibido.
+- En el arnés todo el panel Fn sale en gris (inhibición general, ruido conocido), así que la causa exacta en la cámara no está medida; el síntoma coincide.
+- **Arreglo:** gancho en el prólogo de `WrapperWhiteBalance::isInhOn` de vu2 (`0x1bfa90`, `films_tramo_wbinh`). El objeto del wrapper es solo la vtable
+  (constructor verificado), así que la receta marca el suyo con dos palabras detrás y el gancho devuelve 0 solo para él; el resto de llamadas siguen por el
+  prólogo original. Además el selector PP pasa a Off **antes** del balance, el estilo y el DRO.
+- Test: `test_wbinh_salta_la_inhibicion_solo_al_objeto_marcado` y el orden nuevo en `test_look_guarda_la_copia…` (Unicorn).
+- Comprobación en cámara: con la pantalla de información, el indicador de balance muestra el desplazamiento (p. ej. «AWB A3 G1» con Portra 400).
+
+### 9.2 Iconos: el `.uxc` violaba el orden de Sony (VERIFICADO; que sea la causa del cuelgue: INFERENCIA)
+- En `image_cmn_169.uxc` de fábrica, los 6037 registros van **contiguos y en orden de id** desde `base`, y los datos van contiguos tras ellos en el mismo
+  orden, cada bloque alineado a 4 con ceros. Sin inversiones.
+- El `anade` de G110 (y el de G104, usado en 3.92/`iso`/`todo`) dejaba los registros nuevos al final y en orden **descendente** (50 inversiones), con los datos
+  fuera de orden. Un lector que busque por id en la lista ordenada, o que calcule tamaños con el registro siguiente, lee basura → LDEC/GPU colgados.
+- **Arreglo:** `uxc_imagenes.anade` reconstruye el fichero con esos invariantes: sin imágenes nuevas devuelve el de fábrica **byte a byte**; con los 50 iconos,
+  0 inversiones, datos en orden y alineados, nativos y nuevos se decodifican igual (test `test_imagenes_uxc_ida_y_vuelta`).
+- Los iconos solo entran con `build_cfw_film.py --iconos`.
+
+### 9.3 FN-PP-1 (PP1→PP2 en Fn)
+Sin cambios: ya estaba en 3.93, sin iconos ni receta, y solo en la franja Fn. No se ha aislado; sigue el plan de G109 §7 (build `pp`+`exfine` sin Film).

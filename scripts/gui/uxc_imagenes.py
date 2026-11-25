@@ -89,31 +89,33 @@ def codifica(rgba: np.ndarray) -> bytes:
 def anade(d: bytes, imagenes: list[np.ndarray], ocupadas=frozenset()) -> tuple[bytes, list[int]]:
     """Añade `imagenes` (RGBA) en ranuras libres (de la última hacia atrás, fuera de `ocupadas`). Devuelve (fichero, [id de cada imagen]).
 
-    Los registros nuevos van tras el último registro y los datos se desplazan `hueco` B: cada registro con datos suma `hueco` a su desplazamiento
-    (es relativo a su propia posición). Los datos nuevos van al final, alineados a 16 B."""
+    CAM-394 (G111 §9): reconstruye el fichero con los invariantes de Sony (VERIFICADOS en las 6037 de `image_cmn_169`): registros contiguos desde
+    `base` en orden de id, datos contiguos tras ellos en el mismo orden, cada bloque alineado a 4 con ceros. Los bytes entre el inicio de unos datos y
+    el siguiente (relleno o restos sin registro) viajan con su registro. Sin imágenes nuevas devuelve el original byte a byte."""
     n, base, primero, tab = _indice(d)
     libres = [primero + i for i in range(n - 1, -1, -1) if tab[i] == VACIA and primero + i not in ocupadas]
     assert len(libres) >= len(imagenes), "no hay ranuras libres"
-    regs = [(t, struct.unpack_from("<HHIHHII", d, base + 4 * t)) for t in tab if t != VACIA]
-    fin_regs = max(4 * t + (2 * REG if r[2] >> 24 == 0xC8 else REG) for t, r in regs)
-    inicio_datos = min(4 * t + 4 + r[6] for t, r in regs if r[2] >> 24 in (0xC0, 0xE0))
-    assert inicio_datos == fin_regs, (hex(inicio_datos), hex(fin_regs))
-    hueco = (REG * len(imagenes) + 15) // 16 * 16
-    assert (fin_regs + hueco) // 4 <= 0xFFFF
-    out = bytearray(d[:base + fin_regs])
-    for t, r in regs:
-        if r[2] >> 24 in (0xC0, 0xE0):
-            struct.pack_into("<I", out, base + 4 * t + 16, r[6] + hueco)
-    cola = bytearray(d[base + fin_regs:])
-    cola += b"\0" * (-len(cola) % 16)
-    extra, ids = bytearray(), []
-    for k, (img, rid) in enumerate(zip(imagenes, libres)):
+    regs = sorted((primero + i, base + 4 * t) for i, t in enumerate(tab) if t != VACIA)
+    largo = {rid: 2 * REG if d[p + 7] == 0xC8 else REG for rid, p in regs}
+    inicio = {rid: p + 4 + struct.unpack_from("<I", d, p + 16)[0] for rid, p in regs if d[p + 7] in (0xC0, 0xE0)}
+    orden = sorted(inicio, key=inicio.get)
+    assert orden == sorted(inicio), "los datos de origen no van en orden de id"
+    trozo = {a: d[inicio[a]:inicio[b] if b else len(d)] for a, b in zip(orden, [*orden[1:], None])}
+    entradas = {rid: [bytearray(d[p:p + largo[rid]]), trozo.get(rid)] for rid, p in regs}
+    ids = []
+    for img, rid in zip(imagenes, libres):
         datos = codifica(img)
-        t = (fin_regs + REG * k) // 4
-        pos = fin_regs + hueco + len(cola) + len(extra)          # relativa a `base`
-        out += struct.pack("<HHIHHII", rid, SELLO, FORMATO, img.shape[1], img.shape[0], len(datos), pos - 4 * t - 4)
-        struct.pack_into("<H", out, 0x10 + 2 * (rid - primero), t)
-        extra += datos + b"\0" * (-len(datos) % 16)
+        entradas[rid] = [bytearray(struct.pack("<HHIHHII", rid, SELLO, FORMATO, img.shape[1], img.shape[0], len(datos), 0)),
+                         datos + b"\0" * (-len(datos) % 4)]
         ids.append(rid)
-    out += b"\0" * (hueco - REG * len(imagenes))
-    return bytes(out + cola + extra), ids
+    fin_regs = sum(len(r) for r, _ in entradas.values())
+    assert fin_regs // 4 <= 0xFFFF and (base + fin_regs) % 4 == 0
+    tabla, zona_r, zona_d = bytearray(d[:base]), bytearray(), bytearray()
+    for rid in sorted(entradas):
+        reg, datos = entradas[rid]
+        struct.pack_into("<H", tabla, 0x10 + 2 * (rid - primero), len(zona_r) // 4)
+        if datos is not None:
+            struct.pack_into("<I", reg, 16, fin_regs + len(zona_d) - len(zona_r) - 4)
+            zona_d += datos
+        zona_r += reg
+    return bytes(tabla + zona_r + zona_d), ids

@@ -130,7 +130,7 @@ def menu_film(pp: bool = False, maximo: int = 99, film: bool = True) -> dict:
 
 
 ICONOS_UXC = "share/app/image_cmn_169.uxc"
-CON_ICONOS = False  # CAM-394 (G111 §7): un image_cmn_169.uxc reescrito cuelga la cámara; volver a True solo si `uxc_imagenes.codifica` reproduce a Sony
+CON_ICONOS = False  # CAM-394 (G111 §7/§9): iconos en image_cmn_169.uxc solo con --iconos (3.94 los añadía fuera del orden de Sony y la cámara se colgaba)
 
 
 def pids_film(pp: bool) -> tuple[dict, tuple[int, int, int]]:
@@ -249,7 +249,9 @@ if __name__ == "__main__":
     ap.add_argument("--looks", type=Path, default=LOOKS)
     ap.add_argument("--pp", action="store_true", help="G102: con Picture Profile (menú, Fn, rueda, libObj y núcleo)")
     ap.add_argument("--max-opciones", type=int, default=M.OPCIONES_POR_LISTA, help="opciones por fila del menú PP antes de partirla (por defecto filas enteras: la lista no tiene tope, G106)")
+    ap.add_argument("--iconos", action="store_true", help="G111: iconos propios de Film y del selector PP en image_cmn_169.uxc (CAM-394)")
     ap.add_argument("--funciones", help="G105: lista separada por comas de " + ",".join(sorted(FUNCIONES | BISECCION)) + " sobre la base Silent ('' = solo Silent); sin ella, el CFW Film")
     a = ap.parse_args()
     fun = None if a.funciones is None else {x for x in a.funciones.split(",") if x}
+    CON_ICONOS = a.iconos
     print(json.dumps(main(a.salida, a.version, a.looks, a.pp, a.max_opciones, fun), indent=1))
