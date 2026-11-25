@@ -124,3 +124,25 @@ faltan los iconos.
 
 ### 9.3 FN-PP-1 (PP1→PP2 en Fn)
 Sin cambios: ya estaba en 3.93, sin iconos ni receta, y solo en la franja Fn. No se ha aislado; sigue el plan de G109 §7 (build `pp`+`exfine` sin Film).
+
+## 10. 3.96 en cámara: Fn sigue colgando — auditoría (24-11-2026)
+**Dicho por el usuario:** con la 3.96 (iconos en el orden de Sony + arreglo del balance), Fn vuelve a colgar la cámara indefinidamente. El orden del `.uxc`
+no era la causa (o no la única).
+
+**Descartado (VERIFICADO):**
+- Formato del `.uxc`: con la reconstrucción de §9.2, campos de registro (`0x1a05`, formato `0xc0000000`, tamaño 70×35, desplazamiento), alineación a 4,
+  orden, inicio de registros LZPT dentro de los datos, salida por registro (4096 + resto) y bytes tras el terminador son idénticos en forma a los de Sony.
+- Códec: el mismo `tpzl.encode_lz` comprime las páginas cambiadas del TPZL de `nflasha15` que el hardware descomprime en cada arranque de cualquier CFW;
+  histogramas de longitudes/distancias del mismo repertorio. Los ids nuevos no se solapan con ninguna otra biblioteca `image_*.uxc`.
+- Enlace: las opciones nativas del Estilo creativo llevan exactamente las propiedades `1` y `4` con el mismo id (`CautionConfig` `0x1575d4`).
+- **Arnés (perfil `g111d`, build 3.96, `LDECLOG`):** con «Film Simulation» asignado al panel Fn, el panel **dibuja el icono propio** (marco de película
+  «OFF», `img/g111-fn-icono-film-arnes.png`) sin cuelgue; la GUI pide al LDEC `{longitud, destino, capacidad = 160·35, registros = 2, canal 3, paso 0xa0}`,
+  los mismos parámetros que para «Std.».
+
+**Conclusión:** el fallo depende del hardware (LDEC/GPU reales, memoria de texturas o algo que el arnés no emula) y no se puede aislar en estático.
+Lo único distinto entre 3.95 (bien) y 3.96 (cuelga) son los iconos: `image_cmn_169.uxc` y las propiedades `1`/`4` en `CautionConfig`, vu2, vu4 y vu7.
+
+**Para aislarlo (necesita la cámara):**
+1. Captura por SWD durante el cuelgue (detener la CPU y leer PC/LR); con la cámara apagada el DP no responde (probado).
+2. Bisección: build con las propiedades apuntando a imágenes **nativas** (sin tocar el `.uxc`): si cuelga, el problema es el enlace en nuestros nodos;
+   si no, son nuestros datos de imagen en el hardware.
