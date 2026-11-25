@@ -34,6 +34,7 @@ import build_silent_menu_test
 import exfine_size_patch
 import film_patch
 import film_userland as FU
+import iconos_film
 import iso_avcam_patch
 import iso_libobj_patch
 import iso_ui_patch
@@ -42,6 +43,7 @@ import patch_libobj_ppeco
 import patch_silent_r5
 import pp_menu_spec as M
 import quality_exfine_patch
+import uxc_imagenes
 
 LOOKS = ROOT / "analysis/lut/g97/looks.npz"
 
@@ -127,6 +129,36 @@ def menu_film(pp: bool = False, maximo: int = 99, film: bool = True) -> dict:
     return {}
 
 
+ICONOS_UXC = "share/app/image_cmn_169.uxc"
+
+
+def pids_film(pp: bool) -> tuple[dict, tuple[int, int, int]]:
+    """G110: ProcessIds reales de esta build ({ajuste de Film: pid}, (selector PP, primer pid PP, último pid PP)) tras `menu_film`."""
+    pid = dict(zip(M.SETTINGS, M.PIDS))
+    film = {a.id for a in (*FU.ajustes(), FU.ajuste_todas())}
+    pps = [v for k, v in pid.items() if k not in film]
+    return {k: pid[k] for k in film}, ((pid["sel"], min(pps), max(pps)) if pp else (0, 1, 0))
+
+
+def iconos_fn(orig: Path, pp: bool, film: bool) -> bytes:
+    """G110: añade a `image_cmn_169.uxc` los iconos de `iconos_film` (Film Off + 38, PP Off + PP1…PP10) en ranuras que ninguna biblioteca referencia, y
+    rellena `build_pp_menu.ICONOS` para las filas de Film, la lista única y el selector PP. Devuelve el fichero nuevo."""
+    ico_film, ico_pp = iconos_film.carga()
+    imgs = (ico_film if film else []) + (ico_pp if pp else [])
+    ocupadas = iso_ui_recursos.refs_recurso([orig], 0x205)
+    nuevo, ids = uxc_imagenes.anade((orig / ICONOS_UXC).read_bytes(), imgs, ocupadas)
+    build_pp_menu.ICONOS.clear()
+    if film:
+        f = ids[:len(ico_film)]
+        for a, b in zip(FU.ajustes(), FU.bases()):
+            build_pp_menu.ICONOS[a.id] = [f[0]] + f[b + 1:b + len(a.opciones)]
+        build_pp_menu.ICONOS[FU.ajuste_todas().id] = f
+        ids = ids[len(ico_film):]
+    if pp:
+        build_pp_menu.ICONOS["sel"] = ids
+    return nuevo
+
+
 def build_files(work: Path, looks: Path, pp: bool = False, maximo: int = 99, funciones=None) -> Path:
     """`funciones` (G105) ⊆ FUNCIONES sobre la base Silent; None = el CFW Film (POR_DEFECTO, más «pp» si `pp`)."""
     funciones = frozenset(funciones if funciones is not None else POR_DEFECTO | ({"pp"} if pp else set()))
@@ -146,8 +178,10 @@ def build_files(work: Path, looks: Path, pp: bool = False, maximo: int = 99, fun
     for f in (silent / "share/app").glob("*.uxc"):
         shutil.copy(f, stage / C.USR / "share/app" / f.name)
     pp_dir = work / "pp"
+    img_fn = None
     if pp or film:
         kw = menu_film(pp, maximo, film)
+        img_fn = iconos_fn(orig, pp, film)
         build_pp_menu.main(stage, C.DEV_B, pp_dir, entradas_previas=[C.SILENT_DELTA], silent=True, **kw)
     else:
         menu_silent(stage, pp_dir)
@@ -160,8 +194,12 @@ def build_files(work: Path, looks: Path, pp: bool = False, maximo: int = 99, fun
         if rel != "lib/libObj.so":
             shutil.copy(pp / rel, files / rel)
     (files / "lib/libObj.so").write_bytes(lib_obj)
+    if img_fn:                                                         # G110: iconos de Film y del selector PP en el menú Fn
+        (files / ICONOS_UXC).parent.mkdir(parents=True, exist_ok=True)
+        (files / ICONOS_UXC).write_bytes(img_fn)
+        parcheados.append(ICONOS_UXC)
     if film:
-        (files / "lib/viewUnified2.so").write_bytes(FU.patch_vu2((files / "lib/viewUnified2.so").read_bytes(), FU.compila(looks)))
+        (files / "lib/viewUnified2.so").write_bytes(FU.patch_vu2((files / "lib/viewUnified2.so").read_bytes(), looks, *pids_film(pp)))
     if "exfine" in funciones:
         cau = files / "lib/CautionConfig.so"
         cau.write_bytes(quality_exfine_patch.patch(cau.read_bytes()))   # G39/G103: «Extra fine» en Calidad (menú y Fn usan la misma clase)

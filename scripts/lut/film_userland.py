@@ -75,21 +75,18 @@ RECETA_DE = {
     "fuji_sim_eterna_bleach_bypass": "Eterna Bleach Bypass", "fuji_sim_pro_neg": "Pro Neg Std", "fuji_sim_provia": "Provia",
     "fuji_sim_reala_ace": "Reala Ace", "fuji_sim_velvia": "Velvia",
 }
-# Ids de Backup que toca una receta (RecipeLab `Params.ROW_ID` + ranuras dobles de `writes`): estilo, sat, con, nitidez, modo WB, kelvin, A-B (+AWB, +K),
-# G-M (+AWB, +K), EV (+copia), DRO (+nivel). El hilo guarda su valor al salir de Off y lo devuelve al volver a Off.
-REC_ID = (0x1070175, 0x1070187, 0x1070178, 0x107018A, 0x1070019, 0x1070018, 0x1070017, 0x107067F, 0x1070683,
-          0x1070016, 0x107067E, 0x1070682, 0x10700B8, 0x1070C7F, 0x1070104, 0x1070775)
-NO_TOCA = 999
-OFF_REC = 0x1800                                 # blob: [OFF_REC] = 1 si hay ajustes del usuario guardados, después un byte por REC_ID
+OFF_REC = 0x1800                                 # blob: copia de los ajustes del usuario (`struct copia` de films.c), la escribe la GUI
+COPIA_TAM = 44
+# G110: WRAPPER_* de vu2 (verificado en sus tablas): balance 1 = AWB, 0xc = temperatura de color; DRO 0 Off, 1 Auto, k + 1 = nivel k.
+WB_AWB, WB_KELVIN, K_AWB = 1, 0xC, 5500
 
 
-def receta_bytes(nombre: str) -> list[int]:
-    """Valor de cada REC_ID para una receta (codificación de `Params.writes`; NO_TOCA = no se escribe)."""
-    est, sat, con, nit, wb, k, ab, gm, ev, dro = RECIPELAB[nombre]
+def receta_gui(nombre: str) -> list[int]:
+    """Receta de RecipeLab en los parámetros de los setters de la GUI: modo WB, K, A-B, G-M, código de estilo, contraste, saturación, nitidez, DRO.
+    (EV no: es de la exposición, queda libre.)"""
+    est, sat, con, nit, wb, k, ab, gm, _ev, dro = RECIPELAB[nombre]
     kel = wb == 14
-    dro_main = 0 if dro == 0 else 1 if dro == 6 else dro + 1
-    return [est, sat, con, nit, wb, k // 100 if kel else NO_TOCA, ab, NO_TOCA if kel else ab, ab if kel else NO_TOCA,
-            -gm, NO_TOCA if kel else -gm, -gm if kel else NO_TOCA, ev, ev, dro_main, dro + 1 if 1 <= dro <= 5 else 1]
+    return [WB_KELVIN if kel else WB_AWB, k if kel else K_AWB, ab, gm, est, con, sat, nit, 0 if dro == 0 else 1 if dro == 6 else dro + 1]
 
 
 def orden() -> list[str]:
@@ -118,8 +115,9 @@ def bases() -> list[int]:
     return out
 
 
-def datos_h(npz: Path) -> str:
-    """Cabecera C con las tablas (21 bits, orden lógico como el blob de G89) y las curvas en el orden de `orden()`."""
+def datos_h(npz: Path, pids: dict | None = None, pp_pids: tuple[int, int, int] = (0, 1, 0)) -> str:
+    """Cabecera C con las tablas (21 bits, orden lógico como el blob de G89) y las curvas en el orden de `orden()`.
+    `pids` = {id de ajuste: ProcessId real de la build} (por defecto el de `ajustes()`); `pp_pids` = (pid del selector PP, primer pid PP, último pid PP), 0 sin PP."""
     import avcam_dinamico as D
     import cube_a6000 as C
     z = np.load(npz)
@@ -134,48 +132,84 @@ def datos_h(npz: Path) -> str:
     usa = [int(str(z["curva"][pos[i]]) != "sin_T") for i in ids]
     hx = lambda b: ",".join(f"0x{x:02x}" for x in b)
     a = [*ajustes(), ajuste_todas()]                # la lista única va la última: base 0, Off + 38
+    pids = pids or {x.id: x.pid for x in a}
     return "\n".join([
         f"#define NLOOKS {len(ids)}", f"#define NFILAS {len(a)}", f"#define ACK_ID {ACK_ID:#x}u",
         "static const u32 FILA_ID[NFILAS] = {" + ",".join(f"{x.backup:#x}u" for x in a) + "};",
+        "static const i32 FILA_PID[NFILAS] = {" + ",".join(str(pids[x.id]) for x in a) + "};",
         "static const i32 FILA_BASE[NFILAS] = {" + ",".join(map(str, [*bases(), 0])) + "};",
         "static const i32 FILA_N[NFILAS] = {" + ",".join(str(len(x.opciones)) for x in a) + "};",
         "static const u8 LOOK_USA_T[NLOOKS] = {" + ",".join(map(str, usa)) + "};",
-        f"#define NREC {len(REC_ID)}", f"#define NO_TOCA {NO_TOCA}", f"#define OFF_REC {OFF_REC:#x}",
-        "static const u32 REC_ID[NREC] = {" + ",".join(f"{x:#x}u" for x in REC_ID) + "};",
-        "static const i16 RECETA[NLOOKS][NREC] = {" + ",".join("{" + ",".join(map(str, receta_bytes(RECETA_DE[i]))) + "}" for i in ids) + "};",
+        f"#define OFF_REC {OFF_REC:#x}",
+        f"#define PID_PP_SEL {pp_pids[0]}", f"#define PID_PP_PRIMERO {pp_pids[1]}", f"#define PID_PP_ULTIMO {pp_pids[2]}",
+        "static const i16 RECETA_GUI[NLOOKS][9] = {" + ",".join("{" + ",".join(map(str, receta_gui(RECETA_DE[i]))) + "}" for i in ids) + "};",
         "static const u8 LOOK_LUT[NLOOKS][1064] = {" + ",".join("{" + hx(t) + "}" for t in luts) + "};",
         "static const u16 LOOK_T[NLOOKS][1024] = {" + ",".join("{" + ",".join(map(str, c.tolist())) + "}" for c in curvas) + "};", ""])
 
 
-def compila(npz: Path) -> tuple[bytes, dict[str, int]]:
-    """C + datos → (binario plano Thumb independiente de posición, {símbolo: desplazamiento})."""
+# G110: funciones de viewUnified2.so (3.21) que usan los ganchos de la GUI (Thumb con bit 0; PLT ARM sin él). Verificadas en el gestor con símbolos
+# `cmn_view_processDataMgr.so` (vtable de CmnViewProcessDataMgr) y en los wrappers exportados de vu2 (docs/gui/g111-film-receta-gui-iconos.md).
+VU2 = {"V_GETVALUE": 0x1B475B, "V_SETVALUE": 0x1B460F, "V_SET_CONT": 0x1B4613, "V_GRIS_CONT": 0x1B469B,
+       "V_WB_CTOR": 0x1BF1B1, "V_WB_GET": 0x1BF1D5, "V_WB_SET": 0x1BFB61, "V_CS_CTOR": 0x1C0C55, "V_CS_SET": 0x1C0E35,
+       "V_DRO_CTOR": 0x191759, "V_DRO_GET": 0x191999, "V_DRO_CONV": 0x19177D,
+       "P_DLOPEN": 0xE8D20, "P_DLSYM": 0xE72E4, "P_MALLOC": 0xE9398, "P_FREE": 0xE8204}
+SITIO_SET, SITIO_GRIS = (0x1B460E, bytes.fromhex("98b500af")), (0x1B4696, bytes.fromhex("80b500af"))
+
+
+def compila(npz: Path, base: int = BASE_COMPILADO, gris_sigue: int | None = None, pids: dict | None = None,
+            pp_pids: tuple[int, int, int] = (0, 1, 0)) -> tuple[bytes, dict[str, int]]:
+    """C + datos → (binario plano Thumb, {símbolo: desplazamiento}). Enlazado en `base` (la VA real del segmento en vu2: las llamadas a `VU2` son relativas al PC).
+    `gris_sigue`: destino de `films_tramo_gris` si no decide (por defecto el prólogo original replicado en `films_orig_gris`)."""
     with tempfile.TemporaryDirectory() as d:
-        (Path(d) / "films_datos.h").write_text(datos_h(npz))
+        (Path(d) / "films_datos.h").write_text(datos_h(npz, pids, pp_pids))
         o, e, b = f"{d}/f.o", f"{d}/f.elf", f"{d}/f.bin"
         subprocess.run(["clang", "--target=thumbv7a-none-eabi", "-mthumb", "-mfloat-abi=soft", "-Os", "-ffreestanding", "-fno-builtin", "-fno-stack-protector", "-fropi",
                         "-fno-exceptions", "-fno-asynchronous-unwind-tables", "-nostdlib", "-Wall", "-Wextra", "-Werror", "-I", d, "-c", str(SRC), "-o", o], check=True)
-        subprocess.run(["ld.lld", "-m", "armelf", "--omagic", f"-Ttext={BASE_COMPILADO:#x}", f"--entry={BASE_COMPILADO:#x}", "-o", e, o], check=True)
+        sym = [f"--defsym={k}={v:#x}" for k, v in VU2.items()]
+        sym.append(f"--defsym=V_GRIS_SIGUE={gris_sigue:#x}" if gris_sigue else "--defsym=V_GRIS_SIGUE=films_orig_gris")
+        subprocess.run(["ld.lld", "-m", "armelf", "--omagic", f"-Ttext={base:#x}", f"--entry={base:#x}", *sym, "-o", e, o], check=True)
         subprocess.run(["llvm-objcopy", "-O", "binary", e, b], check=True)
         nm = subprocess.run(["llvm-nm", e], check=True, capture_output=True, text=True).stdout
-        sim = {p[2]: int(p[0], 16) - BASE_COMPILADO for p in (ln.split() for ln in nm.splitlines()) if len(p) == 3 and p[1] in "TtRr"}
+        sim = {p[2]: int(p[0], 16) - base for p in (ln.split() for ln in nm.splitlines()) if len(p) == 3 and p[1] in "TtRr"}
         return Path(b).read_bytes(), sim
 
 
-def patch_vu2(vu2: bytes, compilado: tuple[bytes, dict[str, int]]) -> bytes:
+def _bw(origen: int, destino: int) -> bytes:
+    import cfw_ajustes
+    return cfw_ajustes.ensamblar(f"b.w #{destino:#x}", origen)
+
+
+def _destino_bw(d: bytes, va: int) -> int | None:
+    """Destino de un `b.w` Thumb en `va` (None si no lo es)."""
+    from capstone import CS_ARCH_ARM, CS_MODE_THUMB, Cs
+    i = next(Cs(CS_ARCH_ARM, CS_MODE_THUMB).disasm(d[va:va + 4], va), None)
+    return int(i.op_str.lstrip("#"), 16) if i and i.mnemonic in ("b.w", "b") and i.size == 4 else None
+
+
+def patch_vu2(vu2: bytes, npz: Path, pids: dict | None = None, pp_pids: tuple[int, int, int] = (0, 1, 0)) -> bytes:
+    """Hilo por DT_INIT (G97) + G110: ganchos de setValue (receta) e isGrayedOut (grises) en el gestor de procesos de vu2."""
     import lut_sd_vu2
-    return lut_sd_vu2.patch(vu2, compilado, entrada="films_hilo")
+    va = lut_sd_vu2.va_blob(vu2)
+    s_set, s_gris = SITIO_SET[0], SITIO_GRIS[0]
+    assert vu2[s_set:s_set + 4] == SITIO_SET[1], "setValue de vu2 no es el esperado"
+    sigue = None if vu2[s_gris:s_gris + 4] == SITIO_GRIS[1] else _destino_bw(vu2, s_gris)
+    assert vu2[s_gris:s_gris + 4] == SITIO_GRIS[1] or sigue, "isGrayedOut de vu2 no es el esperado"
+    blob, sim = compila(npz, va, sigue | 1 if sigue else None, pids, pp_pids)
+    out = bytearray(lut_sd_vu2.patch(vu2, (blob, sim), entrada="films_hilo"))
+    out[s_set:s_set + 4] = _bw(s_set, va + sim["films_tramo_set"])
+    out[s_gris:s_gris + 4] = _bw(s_gris, va + sim["films_tramo_gris"])
+    return bytes(out)
 
 
 def blob_esperado(look: int, npz: Path, guardado: bytes | None = None) -> bytes:
-    """Blob que debe dejar el hilo para el look `look` (0 = Off); `guardado` = ajustes del usuario guardados (por defecto ceros si hay look)."""
+    """Blob que debe dejar el hilo para el look `look` (0 = Off); `guardado` = copia del usuario que la GUI dejó en el blob (se conserva)."""
     import avcam_dinamico as D
     import cube_a6000 as C
     b = bytearray(BK_TAM)
     struct.pack_into("<I", b, 0, MAGIC)
-    b[4], b[5], b[6], b[10] = 1, look, len(orden()), look
-    if look or guardado is not None:
-        b[OFF_REC] = 1
-        b[OFF_REC + 1:OFF_REC + 1 + len(REC_ID)] = guardado or bytes(len(REC_ID))
+    b[4], b[5], b[6] = 1, look, len(orden())
+    if guardado is not None:
+        b[OFF_REC:OFF_REC + len(guardado)] = guardado
     if look:
         z = np.load(npz)
         k = [str(i) for i in z["ids"]].index(orden()[look - 1])

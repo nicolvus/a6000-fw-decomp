@@ -34,6 +34,7 @@ import silent_descriptor
 import uxc_strings
 
 RES = 0x0204_0000
+RES_IMAGEN = 0x0205_0000
 
 
 FN_TREES: list = []      # ajustes que solo se cuelgan del menú Fn (nodo suelto, sin entrada en las páginas del menú): sus VA relativas quedan en FN_DELTAS (fn_lut_menu.py)
@@ -41,6 +42,7 @@ FN_DELTAS: list = []
 RUEDA: list = []         # G101/G102: nodos de FN_TREES también asignables a la rueda de control, con los valores `rueda_film.VALORES` en orden (9 «Film», 10 …)
 FN_AYUDA: dict = {}      # G102: texto de ayuda de cada nodo de FN_TREES en la lista de asignación (por defecto el de «LUT»/«Film»)
 SD_USERLAND = False      # G89: añade el userland de lectura de `.cube` de la SD a viewUnified2.so (lut_sd_vu2.py)
+ICONOS: dict = {}        # G110: {ajuste: [id de imagen (16 bits) por opción]} → propiedades 1 y 4 de cada opción (icono de la lista y del panel Fn, como el Estilo creativo)
 EXTRA_TREES: list = []   # carpetas adicionales (p. ej. «CFW» de build_cfw_objetivos): sus ajustes ya están en M.SETTINGS/M.PIDS; cada una entra como entrada propia del menú
 
 
@@ -85,7 +87,10 @@ def build_nodes(seg, vt, ids, tree=M.TREE, settings=M.SETTINGS, pids=M.PIDS):
     def build(n):
         if isinstance(n, str):
             s = settings[n]
-            ops = [nodo([(0, 0, lt(t)), (6, 0, lt(t)), (0xB, 1, 0), (0xC, 1, 1), (0xF, 1, k), (0x10, 1, k)], []) for k, (t, _) in enumerate(s.opciones)]
+            ico = ICONOS.get(n)
+            assert not ico or len(ico) == len(s.opciones), (n, len(ico), len(s.opciones))
+            img = lambda k: [(1, 0, RES_IMAGEN | ico[k]), (4, 0, RES_IMAGEN | ico[k])] if ico else []
+            ops = [nodo([(0, 0, lt(t)), *img(k), (6, 0, lt(t)), (0xB, 1, 0), (0xC, 1, 1), (0xF, 1, k), (0x10, 1, k)], []) for k, (t, _) in enumerate(s.opciones)]
             return nodo([(0, 0, lt(s.label)), (6, 0, lt(s.label)), (0xB, 1, 2), (0xC, 1, 0), (0xE, 1, pid_de[n])], ops)
         pages = [nodo([(0xB, 1, 0)], [build(c) for c in pg]) for pg in n[2]]
         return nodo([(0, 0, lt(n[1])), (6, 0, lt(n[1])), (0xB, 1, 0), (0xC, 1, 3)], pages)

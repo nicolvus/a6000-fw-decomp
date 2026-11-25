@@ -60,6 +60,13 @@ def _stub(va: int, init: int, dlsym: int, hilo: int) -> bytes:
     return out
 
 
+def va_blob(d: bytes) -> int:
+    """VA en que `patch` deja el código de `blob_sim` (para enlazarlo allí)."""
+    segs = A._segments(d)
+    top = max(v + ms for t, _, v, _, _, ms, _, _ in segs if t == 1)
+    return (top + A.ALIGN - 1) // A.ALIGN * A.ALIGN + STUB_TAM
+
+
 def patch(d: bytes, blob_sim: tuple[bytes, dict[str, int]] | None = None, entrada: str = "lutsd_hilo") -> bytes:
     """`entrada`: función del hilo (G97 usa `films_hilo` del userland de películas)."""
     blob, sim = blob_sim or U.compila()

@@ -145,43 +145,22 @@ def test_avcam_solo_ganchos_y_zona_g18(parcheado):
     assert all(D.ZONA_G18[0] <= a < D.ZONA_G18[1] or any(g <= a < g + 4 for g in ganchos) for a in dif)
 
 
-def _rec(bk):
-    return [bk.lee(i)[0] for i in FU.REC_ID]
-
-
-def test_recetas_nativas_cubren_los_38_y_se_codifican_como_recipelab():
+def test_recetas_nativas_cubren_los_38_y_van_en_los_parametros_de_la_gui():
+    """G110: la receta va en los parámetros de los setters de vu2 (modo WB 1 = AWB / 0xc = K, K, A-B, G-M, estilo, con, sat, nitidez, DRO); sin EV."""
     assert set(FU.orden()) == set(FU.RECETA_DE) and set(FU.RECETA_DE.values()) <= set(FU.RECIPELAB)
-    p4 = FU.receta_bytes("Kodak Portra 400")                         # Retrato, sat −1, con −1, AWB, A-B +3, G-M +1 (guardado con signo cambiado), EV +2/3, DRO Auto
-    assert p4 == [4, -1, -1, 0, 1, FU.NO_TOCA, 3, 3, FU.NO_TOCA, -1, -1, FU.NO_TOCA, 2, 2, 1, 1]
-    v5 = FU.receta_bytes("Kodak Vision3 500T (daylight)")            # 3200 K: ranuras K de A-B/G-M y DRO Lv3
-    assert v5[4:6] == [14, 32] and v5[7:9] == [FU.NO_TOCA, 0] and v5[14:] == [4, 4]
+    assert FU.receta_gui("Kodak Portra 400") == [1, 5500, 3, 1, 4, -1, -1, 0, 1]       # Retrato, con −1, sat −1, AWB, A-B +3, G-M +1, DRO Auto
+    assert FU.receta_gui("Kodak Vision3 500T (daylight)") == [0xC, 3200, 0, 0, 3, 0, -1, 0, 4]   # 3200 K, DRO Lv3
+    assert FU.receta_gui("Eterna Bleach Bypass")[8] == 0                                 # DRO Off
 
 
-def test_userland_receta_al_elegir_look_y_devuelve_los_ajustes_del_usuario_en_off(compilado):
+def test_userland_no_escribe_la_receta_y_conserva_la_copia_del_usuario(compilado):
+    """G110: el hilo ya no toca ajustes nativos (eso lo hace la GUI); al reescribir el blob conserva la copia que dejó la GUI en OFF_REC."""
     bk = FU.Backup()
-    bk.ids[FU.BK_ID] = FU.blob_esperado(0, NPZ)
-    usuario = [(k * 7 + 3) & 0xFF for k in range(len(FU.REC_ID))]
-    for i, v in zip(FU.REC_ID, usuario):
-        bk.ids[i] = bytes([v]) + bytes(7)
-    fotos = []
-    pasos = [lambda b: _fila(b, 0, 6), lambda b: fotos.append(_rec(b)), lambda b: _fila(b, 0, 14), lambda b: fotos.append(_rec(b)),
-             lambda b: _fila(b, 0, 0), None, None, None]
-    bk = FU.emula(bk, compilado, pasos)
-    p4 = FU.receta_bytes("Kodak Portra 400")
-    assert fotos[0] == [u if v == FU.NO_TOCA else v & 0xFF for u, v in zip(usuario, p4)]          # Portra 400 puesta; lo que no toca, intacto
-    v5 = FU.receta_bytes("Kodak Vision3 500T (daylight)")
-    assert fotos[1] == [a if v == FU.NO_TOCA else v & 0xFF for a, v in zip(fotos[0], v5)]         # 500T encima (kelvin y ranuras K)
-    assert _rec(bk) == usuario and bk.lee(FU.BK_ID) == FU.blob_esperado(0, NPZ)                  # Off: ajustes del usuario de vuelta
-
-
-def test_userland_arranque_con_receta_puesta_no_la_reescribe(compilado):
-    look = FU.bases()[2] + 2
-    bk = FU.Backup()
-    bk.ids[FU.BK_ID] = FU.blob_esperado(look, NPZ, bytes(range(len(FU.REC_ID))))
-    bk.ids[FU.ACK_ID] = bytes([look]) + bytes(7)
-    _fila(bk, 2, 2)
-    bk = FU.emula(bk, compilado, [None, None])
-    assert not set(bk.escrituras) & set(FU.REC_ID) and bk.lee(FU.BK_ID) == FU.blob_esperado(look, NPZ, bytes(range(len(FU.REC_ID))))
+    copia = bytes(range(1, FU.COPIA_TAM + 1))
+    bk.ids[FU.BK_ID] = FU.blob_esperado(0, NPZ, copia)
+    bk = FU.emula(bk, compilado, [lambda b: _fila(b, 0, 6), None, lambda b: _fila(b, 0, 0), None, None])
+    assert set(bk.escrituras) <= {FU.BK_ID, FU.ACK_ID, *(a.backup for a in (*FU.ajustes(), FU.ajuste_todas()))}
+    assert bk.lee(FU.BK_ID) == FU.blob_esperado(0, NPZ, copia) and bk.escrituras.count(FU.BK_ID) == 2
 
 
 def test_fila_todas_tiene_off_y_los_38_en_orden_y_un_id_propio():
