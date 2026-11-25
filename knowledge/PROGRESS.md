@@ -4,6 +4,9 @@
 
 **R6 fase 1, checkpoint:** [BLDR](../docs/capture/e26-r6-recuperacion-bionz.md). PMCA payload local byte a byte igual a upstream 0ce3c7e8, gitlink plataforma 85bcb545. ELF extraído y REA: un safe/cuatro normales, normales die0/plane0, metadatos descartados, error => trama vacía; wrapper rechaza estado 1 de ECC tolerado por Loader2. Mapa condicional de 480 KiB con una trama normal perdida; ID/error desconocidos. Cola INFO6 die0/plane1/block2/pages0–20 sin correspondencia adquirida. Regresión inicial falló por inspector inexistente; implementado, 3 pruebas, ruff/mypy pasan. Sin cámara. Próximo paso exacto: verificar límites del selector en los primeros 43 folios y localizar orientación CN4906 en SIDE A.
 
+## FILM-PB-1 — traspaso de traza física (25-11-2026)
+La captura enlazó retornos inmediatos 0 de EnterMoviePb/PlayMovie con una finalización asíncrona `PlayMovieCmp: MPR::ER_FAILED=0x1A`, traducción a ObjPlayer 7 y caution 0x135. Causa raíz abierta. El usuario aportó MAH04198: 9,5095 s, 285 cuadros, vídeo decodificado completo sin errores; pantalla 0:02. Se archivaron las trazas válidas y se señalaron como inválidas las direcciones mal sumadas, el watchpoint derivado y los dos intentos repetitivos del callback MPR. Al entregar no quedan trazas físicas activas. [Informe y siguiente tarea concreta](../reports/film-pb-1-traspaso-20261125.md).
+
 ## FILM-PB-1 — control de arranque y descriptores (25-11-2026)
 
 Verificados el tar/DAT 4.04, las tablas ELEM/D de 4.02 y las cadenas de configuración DMM del WBI de Sony. La 4.02 no tiene descriptores nuevos activos. El WBI contiene ambas rutas del mapa principal, sin demostrar qué mapa queda activo ni una reserva fallida. [G111 §14.1](../docs/gui/g111-film-receta-gui-iconos.md#141-verificación-de-los-dos-pendientes-offline).

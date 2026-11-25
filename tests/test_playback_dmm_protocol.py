@@ -92,7 +92,38 @@ def test_archived_external_map_contains_avc_types(snapshot):
     assert hashlib.sha256(config).hexdigest() == (
         "1f9275747212f2eed7b5aa41ce4af8348c18e2a4b7201a71e5665b195dee8715"
     )
-    cursor = config.index(struct.pack("<II", 0x1D3A63, 0))
+    cursor = 0
+    groups = []
+    for phase in ("root", "sub"):
+        while True:
+            header = struct.unpack_from("<20I", config, cursor)
+            cursor += 80
+            if header[2] == 0xFFFFFFFF:
+                break
+            rows = []
+            while True:
+                row = struct.unpack_from("<5I", config, cursor)
+                cursor += 20
+                if row[2] == 0xFFFFFFFF:
+                    break
+                rows.append(row)
+            groups.append((phase, header, rows))
+    assert len(groups) == 511
+    assert sum(phase == "root" for phase, _, _ in groups) == 1
+    assert cursor == 0x15374
+    playback = next((header, rows) for phase, header, rows in groups
+                    if phase == "sub" and header[3] == 0x140)
+    header, rows = playback
+    assert header[2] == 0x1F4
+    assert struct.pack("<16I", *header[4:]) == b"\x01" + bytes(63)
+    assert [(row[2], row[3]) for row in rows] == [
+        (0x108, 0x14FA000), (0x109, 0x73F000),
+    ]
+    assert sum(row[3] for row in rows) == 0x1C39000
+    parents = [row[3] for _, _, records in groups
+               for row in records if row[2] == 0x1F4]
+    assert parents and min(parents) == 0x2000000
+    assert sum(row[3] for row in rows) < min(parents)
     units = {}
     while cursor + 8 <= len(config):
         key, _flags = struct.unpack_from("<II", config, cursor)

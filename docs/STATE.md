@@ -2,7 +2,7 @@
 
 ## Reproducción de vídeo — FILM-PB-1 (25-11-2026)
 
-Causa abierta. Los DmmConfig.bin recuperados de nflasha2 del 20-10 y 05-11 son idénticos e incluyen 0x29F–0x2A3. La ausencia de esos tipos en el mapa integrado del módulo no se puede trasladar al mapa externo histórico. La réplica anterior forzaba tipo AVC 1; el tipo 0 solicita 0x92043/0x92044 con tamaños declarados suficientes en el archivo externo. Queda por identificar la rama del clip, las reglas y la disponibilidad efectiva de sus reservas. [G111 §14.5](gui/g111-film-receta-gui-iconos.md#145-mapa-externo-recuperado-y-selector-de-tipo-avc).
+Causa abierta. La traza física enlaza `PlayMovieCmp` (`MPR::ER_FAILED=0x1A`) → `DefObjPlayer::ER_FAILED=7` → bloqueo → caution `0x135` → «No se puede visualizar». `EnterMoviePb` y `PlayMovie` aceptan la solicitud con retorno 0; el fallo es posterior y asíncrono. El vídeo MAH04198 aportado dura 9,5095 s (285 cuadros) y decodifica sin errores en PC; el usuario ve `0:02` en cámara. Falta el productor interno de 0x1A y el significado del contador. No hay prueba de causa DMM. Dos capturas del callback genérico quedaron invalidadas por paradas repetidas; no reutilizarlas. [Informe de traspaso](../reports/film-pb-1-traspaso-20261125.md). Los mapas DMM externos históricos contienen los cinco tipos AVC: conservar [G111 §14.5](gui/g111-film-receta-gui-iconos.md#145-mapa-externo-recuperado-y-selector-de-tipo-avc).
 
 ## Estado global (actualizado 03-11-2026)
 

@@ -1,0 +1,59 @@
+{
+  "scope": "static archived userland; camera values not measured",
+  "text": "No se puede visualizar.",
+  "resource": "0x0204e4a6",
+  "trigger_descriptor": 8,
+  "caution": "0x135",
+  "emitter": "viewUnified3.so ELF VA 0x44658; setCautionTrigger at 0x44662",
+  "condition": "event 3, predicate 1: @M0E9 info 0xd10 param 0x11fffe4a equals -4 or -2, OR info 0xd20 param 0x11fffe49 is true",
+  "model": "@M0E9 = modelScrollSinglePb / ModelScrollSinglePbToInstance",
+  "hashes": {
+    "string_spanish.uxc": "09ea369fd40192d2b4cb510c8bccfd96cb444de30bc0b88b42b2e57b35af5296",
+    "CautionRsrcConfig.so": "7b601e809baf5e5ee8cea9b1f1b6204ba2cdf177e9e13fc2118683713326b34b",
+    "viewUnified3.so": "80ae3b94db5413dc15a00a845ffb0fd82558f1d946d04a37839061e8a8612127"
+  },
+  "live_verified": {
+    "ui_base": "0x0f35c000",
+    "libobj_base": "0x05ab2000",
+    "model_object": "0x1db54168",
+    "native_error": 7,
+    "callback": "0x05ee17ec",
+    "callback_args": {
+      "r1": 1,
+      "r2": 7,
+      "r3": 1
+    },
+    "caller_lr_usr": "0x05ee30bd",
+    "caller_elf": "0x4310bc",
+    "status_origin": "signed integer GetValue from ObjPlayer message category 0x3600 via parser 0x41c964; not a locally generated UI code",
+    "handler": "0x05edf5dc",
+    "observed_control_followup": "callback result 0 later; meaning pending",
+    "logs": [
+      "model-correct-live.log",
+      "code7-origin-live.log"
+    ],
+    "cleanup": "all four cores RUNNING; OpenOCD shutdown",
+    "enter_movie_return": 0,
+    "play_movie_return": 0,
+    "raw_mpr_error": "0x1a MPR::ER_FAILED",
+    "producer": "ObjPlayerCore.cpp::PlayMovieCmp line 2530",
+    "producer_lr": "0x0639b5b5",
+    "log_raw": "raw-mpr-live.log",
+    "conversion": "MPR::ER_FAILED -> DefObjPlayer::ER_FAILED (7)"
+  },
+  "invalidated": [
+    "model-error-live.log / model-error2-live.log: wrong arithmetic for libObj offsets",
+    "flag-writer-live.log: wrong model pointer derived from invalidated trace",
+    "mpr-callback-live: repeated stop on successful event 0x40000084, not failure",
+    "mpr-callback2-live: step entered IRQ, repeated same instruction; not valid"
+  ],
+  "remaining": "trace producer of asynchronous MPR::ER_FAILED inside movie playback engine; no DMM root cause established",
+  "provided_clip": {
+    "path": "/home/nicolas/Documents/a6000/MAH04198.MP4",
+    "sha256": "148c204cdea843ebafee0ffc9123b1614a493c083a931e5e499489ce27b7dba6",
+    "duration_s": 9.5095,
+    "video_frames": 285,
+    "camera_display": "1-1-2014 11/87 30p 1080 MP4 0:02",
+    "full_video_decode_exit": 0
+  }
+}

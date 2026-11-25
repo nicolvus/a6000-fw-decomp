@@ -1,0 +1,82 @@
+adapter driver cmsis-dap
+transport select swd
+adapter speed 250
+swd newdap chip tap -enable
+dap create chip.dap -chain-position chip.tap
+foreach {n b} {0 0x80110000 1 0x80112000 2 0x80114000 3 0x80116000} {
+ target create c$n cortex_a -dap chip.dap -ap-num 1 -dbgbase $b -defer-examine
+}
+init
+set points {0x637ede0 0x637e958 0x637bbae}
+array set names {0x637ede0 raw_mpr_error 0x637e958 enter_movie_return 0x637bbae play_movie_return}
+proc say {s} {set f [open /tmp/a6000-playback-live/raw-mpr-live.log a]; puts $f "[clock milliseconds] $s"; close $f}
+proc regs {c} {return [$c get_reg {pc cpsr sp lr r0 r1 r2 r3 r4 r5 r6 r7 r8 r9 r10 r11 r12}]}
+set armed {}
+set hits 0
+set result [catch {
+ foreach n {0 1 2 3} {
+  set c c$n
+  $c arp_examine
+  targets $c
+  halt 1000
+  # Include this core in cleanup even if validation or arming fails.
+  lappend armed $c
+  set r [regs $c]
+  say "BASELINE $c $r"
+  foreach a $points {
+   bp $a 2 hw
+  }
+  resume
+  $c arp_poll
+  if {[$c curstate] ne "running"} {error "$c not running after arm"}
+  say "ARMED $c"
+ }
+ set t0 [clock milliseconds]
+ set ready 0
+ while {[clock milliseconds]-$t0 < 180000 && ![file exists /tmp/a6000-playback-live/STOP_RAW_MPR]} {
+  foreach c $armed {
+   $c arp_poll
+   if {[$c curstate] eq "halted"} {
+    targets $c
+    set r [regs $c]
+    set pc [expr {[dict get $r pc] & ~1}]
+    set name other
+    foreach a $points {if {$pc == $a} {set name $names($a); rbp $a}}
+    set bank ""
+    catch {set bank [$c get_reg -force {sp_usr lr_usr}]}
+    set stack ""
+    if {[dict exists $bank sp_usr] && [dict get $bank sp_usr] != 0} {
+     catch {set stack [$c read_memory [dict get $bank sp_usr] 32 16]}
+    } else {
+     catch {set stack [$c read_memory [dict get $r r7] 32 16]}
+    }
+    set source ""
+    set method ""
+    if {$name eq "raw_mpr_error"} {
+     catch {set source [$c read_memory [dict get $r r2] 8 96]}
+     catch {set method [$c read_memory [dict get $r r3] 8 96]}
+    }
+    say "HIT $c $name $r banks=$bank stack=$stack source=$source method=$method"
+
+    incr hits
+    resume
+   }
+  }
+  if {!$ready && [clock milliseconds]-$t0 >= 1500} {say "READY all four cores polled"; set ready 1}
+  sleep 50
+ }
+} why]
+if {$result} {say "ERROR $why"}
+foreach c $armed {
+ if {[catch {
+  targets $c
+  $c arp_poll
+  if {[$c curstate] ne "halted"} {halt 1000}
+  foreach a $points {rbp $a}
+ } e]} {say "CLEANUP_ERROR $c $e"}
+ if {[catch {resume; $c arp_poll; if {[$c curstate] ne "running"} {error "not running"}} e]} {
+  say "RESUME_ERROR $c $e"
+ } else {say "RUNNING $c"}
+}
+say "FINISHED hits=$hits"
+shutdown

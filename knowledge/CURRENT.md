@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-**FILM-PB-1 (25-11):** mapa externo recuperado de dos volcados NAND históricos idénticos; los cinco tipos AVC están presentes. La causa de reproducción sigue abierta. La réplica controlaba el tipo 1; seguir selector y reglas del tipo 0. [G111 §14.5](../docs/gui/g111-film-receta-gui-iconos.md#145-mapa-externo-recuperado-y-selector-de-tipo-avc).
+**FILM-PB-1 (25-11), traspaso:** capturado `PlayMovieCmp: MPR::ER_FAILED(0x1A)` → ObjPlayer `ER_FAILED(7)` → caution `0x135`. MAH04198 dura 9,5095 s y decodifica bien; cámara marca `0:02`. Causa abierta. Siguiente agente: localizar productor de 0x1A y semántica del contador; no repetir las capturas genéricas MPR invalidadas. [Informe y evidencias](../reports/film-pb-1-traspaso-20261125.md).
 
 
 Contexto operativo mínimo para agentes. Última revisión: **07-11-2026** (E26 R65–R68: rama EFCS de Darwin y auditoría).
