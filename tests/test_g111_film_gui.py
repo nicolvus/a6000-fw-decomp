@@ -19,7 +19,6 @@ VA = 0x7C8080
 PP = (0x100, 0x100, 0x11F)                     # selector PP (primer ajuste PP) y rango de pids PP de una build con PP
 TODAS = FU.ajuste_todas().pid
 USUARIO_WB, USUARIO_DRO, USUARIO_PP = (8, 4800, -2, 5), 3, 4
-MARCA_WB = (0x4D4C4946, 0x4E495742)
 USUARIO_CS = {0x1070175: 2, 0x1070178: 1, 0x1070187: -2, 0x107018A: 3}
 pytestmark = pytest.mark.skipif(not NPZ.exists(), reason="falta looks.npz")
 
@@ -105,16 +104,12 @@ class VM:
             for k, v in enumerate(USUARIO_WB):
                 w(r(2) if k == 0 else r(3) if k == 1 else self.pila(k - 2), v)
             return self._vuelve(0)
-        if n == "V_WB_SET":                            # el objeto llega marcado para `films_tramo_wbinh`
-            assert struct.unpack("<II", mu.mem_read(r(0) + 8, 8)) == MARCA_WB
+        if n == "V_WB_SET":
             self.llamadas.append(("wb", self.s32(r(2)), self.s32(r(3)), self.pila(0), self.pila(1)))
             return self._vuelve(0)
         if n == "V_CS_SET":
             self.llamadas.append(("cs", r(2), self.s32(r(3)), self.pila(0), self.pila(1), self.pila(2)))
             return self._vuelve(0)
-        if n == "V_WBINH_CONT":                        # resto del isInhOn original
-            self.llamadas.append(("inh", r(2)))
-            return self._vuelve(1, pop=4)
         if n == "V_DRO_GET":
             w(r(2), USUARIO_DRO)
             return self._vuelve(0)
@@ -185,18 +180,6 @@ def test_fila_de_marca_y_pid_ajeno(compilado):
     assert vm.llamadas[1:-1] == _receta("Kodak Portra 400")
     vm.llama("films_tramo_set", vm.MGR, 0x17, 3)                               # otro ajuste: solo el setValue original
     assert vm.llamadas == [("orig", 0x17, 3)]
-
-
-def test_wbinh_salta_la_inhibicion_solo_al_objeto_marcado(compilado):
-    vm = VM(compilado, {})
-    obj = vm.PILA + 0xF000 + 0x200                                            # en la pila, sobre sp (como el de `pon`)
-    vm.mu.mem_write(obj, struct.pack("<4I", 0x1234, 0, *MARCA_WB))
-    assert vm.llama("films_tramo_wbinh", obj, vm.VBP, 1) == 0 and vm.llamadas == []
-    vm.mu.mem_write(obj + 8, struct.pack("<2I", 0, 0))
-    assert vm.llama("films_tramo_wbinh", obj, vm.VBP, 1) == 1 and vm.llamadas == [("inh", 1)]
-    for this in (0, 0x10, vm.BUF + 0x100):                                    # CAM-394: nulo o fuera de la pila → no se lee, sigue el original
-        vm.mu.mem_write(vm.BUF + 0x100, struct.pack("<4I", 0x1234, 0, *MARCA_WB))
-        assert vm.llama("films_tramo_wbinh", this, vm.VBP, 1) == 1 and vm.llamadas == [("inh", 1)]
 
 
 def test_grises(compilado):

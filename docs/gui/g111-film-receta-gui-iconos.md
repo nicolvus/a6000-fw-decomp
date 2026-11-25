@@ -160,3 +160,10 @@ Lo único distinto entre 3.95 (bien) y 3.96 (cuelga) son los iconos: `image_cmn_
 - **Decisión del usuario:** la receta **fuerza** el balance (looks lo más reales posible) y con cualquier look activo el balance queda **en gris** (no se
   cambia a mano en ningún look; antes solo en los de kelvin fijo).
 - Build 3.99: `--iconos` (orden de Sony) + receta con balance forzado (gancho corregido) + balance en gris con cualquier look.
+
+## 12. 3.99 no arranca; build 4.00 = 3.95 + balance en gris (24-11-2026)
+- **3.99** (iconos propios ordenados + gancho `isInhOn` con comprobación de pila): instalada por USB («Done»); **se cuelga y no arranca** (dicho por el usuario).
+  Causa sin aislar: los dos cambios respecto a la 3.98 (que arrancaba) son el `.uxc` con iconos propios y la comprobación de pila del gancho.
+- **Por orden del usuario, sin más arreglos:** build **4.00** = 3.95 (que funcionaba) + balance en gris con cualquier look; sin iconos, sin gancho de
+  `isInhOn` (la receta llama a `setWhiteBalance` como en la 3.95: si el modelo lo inhibe, el balance no cambia). Único fichero distinto de la 3.95:
+  `lib/viewUnified2.so`. `.dat` sha256 `102cd2f9…`, auditoría `todo_ok`.

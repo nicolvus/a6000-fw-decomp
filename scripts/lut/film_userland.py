@@ -149,12 +149,11 @@ def datos_h(npz: Path, pids: dict | None = None, pp_pids: tuple[int, int, int] =
 
 # G110: funciones de viewUnified2.so (3.21) que usan los ganchos de la GUI (Thumb con bit 0; PLT ARM sin él). Verificadas en el gestor con símbolos
 # `cmn_view_processDataMgr.so` (vtable de CmnViewProcessDataMgr) y en los wrappers exportados de vu2 (docs/gui/g111-film-receta-gui-iconos.md).
-VU2 = {"V_GETVALUE": 0x1B475B, "V_SETVALUE": 0x1B460F, "V_SET_CONT": 0x1B4613, "V_GRIS_CONT": 0x1B469B, "V_WBINH_CONT": 0x1BFA95,
+VU2 = {"V_GETVALUE": 0x1B475B, "V_SETVALUE": 0x1B460F, "V_SET_CONT": 0x1B4613, "V_GRIS_CONT": 0x1B469B,
        "V_WB_CTOR": 0x1BF1B1, "V_WB_GET": 0x1BF1D5, "V_WB_SET": 0x1BFB61, "V_CS_CTOR": 0x1C0C55, "V_CS_SET": 0x1C0E35,
        "V_DRO_CTOR": 0x191759, "V_DRO_GET": 0x191999, "V_DRO_CONV": 0x19177D,
        "P_DLOPEN": 0xE8D20, "P_DLSYM": 0xE72E4, "P_MALLOC": 0xE9398, "P_FREE": 0xE8204}
 SITIO_SET, SITIO_GRIS = (0x1B460E, bytes.fromhex("98b500af")), (0x1B4696, bytes.fromhex("80b500af"))
-SITIO_WBINH = (0x1BFA90, bytes.fromhex("b0b50546"))   # WrapperWhiteBalance::isInhOn de vu2 (G111 §9)
 
 
 def compila(npz: Path, base: int = BASE_COMPILADO, gris_sigue: int | None = None, pids: dict | None = None,
@@ -199,9 +198,6 @@ def patch_vu2(vu2: bytes, npz: Path, pids: dict | None = None, pp_pids: tuple[in
     out = bytearray(lut_sd_vu2.patch(vu2, (blob, sim), entrada="films_hilo"))
     out[s_set:s_set + 4] = _bw(s_set, va + sim["films_tramo_set"])
     out[s_gris:s_gris + 4] = _bw(s_gris, va + sim["films_tramo_gris"])
-    s_wb = SITIO_WBINH[0]
-    assert vu2[s_wb:s_wb + 4] == SITIO_WBINH[1], "WrapperWhiteBalance::isInhOn de vu2 no es el esperado"
-    out[s_wb:s_wb + 4] = _bw(s_wb, va + sim["films_tramo_wbinh"])
     return bytes(out)
 
 
