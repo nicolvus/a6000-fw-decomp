@@ -10,6 +10,8 @@ Verificados el tar/DAT 4.04, las tablas ELEM/D de 4.02 y las cadenas de configur
 
 La auditoría posterior trazó Play AVC → `AllocWorkMemory` → Open DMM y contrastó el init del módulo con la reanudación de los extents. Se validó la salida de error en Unicorn con los bytes originales y respuestas sintéticas. [G111 §14.2](../docs/gui/g111-film-receta-gui-iconos.md#142-conexión-entre-arranque-dmm-y-decodificación-avc).
 
+Réplica integrada posterior: 12 ejecuciones sobre Sony y los binarios extraídos de los tar 4.01/4.02. Las respuestas controladas suficientes llegan a la apertura y las tres clases de error devuelven 0xffff0001 en las tres builds. El fallo físico aún requiere sus entradas reales. Script y trazas en G111 §14.3.
+
 **Próximo paso exacto:** comparar el mismo clip y SD con Sony en BootMode 11 y con 4.04 en frío; capturar la primera reserva tras Play y las tablas `/proc/udm/dmm_*` antes y después. Pendiente de autorización física.
 
 ## E26-RECOVERY — 29-10-2026: incidente abierto

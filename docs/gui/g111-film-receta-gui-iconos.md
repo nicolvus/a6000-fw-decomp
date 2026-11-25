@@ -246,6 +246,23 @@ El volcado de la cámara del 20-10 registra un `DmmConfig.bin` de 97 544 bytes. 
 
 **Captura discriminante, solo lectura y con autorización física.** Con el mismo clip AVC en ambos arranques, comparar el primer Open tras Play y su respuesta (tipo, estado, handle, tamaño). El driver publica `/proc/udm/dmm_info`, `dmm_units`, `dmm_extents`, `dmm_reserve` y `dmm_log`. Capturar las tablas antes y después, junto con el error del decodificador. Un Open o tamaño inválido solo en frío, seguido por `0xffff0001`, confirmaría el mecanismo para esa sesión. Si el decodificador supera esa fase, seguir demultiplexado, audio y presentación.
 
+### 14.3 Cadena integrada sobre los paquetes 4.01 y 4.02
+
+Se extrajo AV-CAM.BIN de los tar de ambas builds con `avcam_fuente.avcam_de` y se ejecutó el mismo recorrido de instrucciones que Sony desde `0x4391569c`. La réplica conserva las llamadas nativas a `AllocWorkMemory`, su backend, la construcción de Open, la validación de la respuesta y la propagación del retorno. El límite simulado se desplazó desde el backend al transporte OSAL de mensajes. El parser del flujo, los objetos iniciales, las respuestas DMM, la limpieza de las dependencias externas y la apertura posterior se controlan. El código `0x43915c8c` se marca como alcanzado y devuelve cero en el arnés; no se ejecuta el decodificado del archivo ni el controlador del kernel.
+
+Evidencia reproducible: `scripts/gui/avcam/replay_playback_dmm.py AV_CAM_BIN CASO`; las 12 ejecuciones y hashes están en `analysis/gui/film-pb-replay.json`. El script valida el resultado y la llegada a la apertura mediante asserts. Las trazas de cada caso coinciden entre Sony, 4.01 y 4.02.
+
+| Respuesta OSAL/DMM controlada | Unidades abiertas por la cadena | Retorno al llamador | Apertura posterior alcanzada |
+|---|---|---|---|
+| Correcta, tamaños suficientes | 0x2A0, 0x29F, 0x92041 | 0 | Sí |
+| Tamaño 0x657FF en la primera unidad | 0x2A0 | 0xFFFF0001 | No |
+| Estado DMM negativo | 0x2A0 | 0xFFFF0001 | No |
+| Error de transporte | 0x2A0 | 0xFFFF0001 | No |
+
+En el caso de tamaño insuficiente, el chequeo es `0x439212ea`, el backend pasa por `0x43921230`, se ejecuta la limpieza y `0x43915e94` devuelve el error superior. Los otros dos casos también propagan el fallo hasta el mismo llamador.
+
+**Resultado respecto al incidente:** el fallo físico sigue sin reproducirse con sus entradas reales. El ensayo anterior de §14.2 inyectaba respuestas en funciones aisladas; este ensayo las integra hasta el transporte OSAL y compara el CFW afectado con Sony. Los tres binarios avanzan con las mismas respuestas suficientes y fallan con las mismas respuestas insuficientes. Esto verifica la dependencia y el punto de propagación, sin atribuir todavía el fallo de la cámara al arranque. Faltan su estado DMM al pulsar Play y el tipo de decodificador elegido por el clip real. El arnés no deduce que el arranque en frío genere esas respuestas.
+
 ## 15. Iconos centrados y estado de los iconos para la futura build (25-11-2026)
 **Petición:** el icono no queda centrado; corregirlo y dejar aquí cómo quedan los iconos para una build futura. Nada instalado.
 
