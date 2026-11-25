@@ -1,8 +1,23 @@
 # Estado vigente — Sony A6000 reverse engineering
 
-## Reproducción de vídeo — FILM-PB-1 (25-11-2026)
+## Reproducción de vídeo — FILM-PB-1 (26-11-2026)
 
-Causa abierta. La traza física enlaza `PlayMovieCmp` (`MPR::ER_FAILED=0x1A`) → `DefObjPlayer::ER_FAILED=7` → bloqueo → caution `0x135` → «No se puede visualizar». `EnterMoviePb` y `PlayMovie` aceptan la solicitud con retorno 0; el fallo es posterior y asíncrono. El vídeo MAH04198 aportado dura 9,5095 s (285 cuadros) y decodifica sin errores en PC; el usuario ve `0:02` en cámara. Falta el productor interno de 0x1A y el significado del contador. No hay prueba de causa DMM. Dos capturas del callback genérico quedaron invalidadas por paradas repetidas; no reutilizarlas. [Informe de traspaso](../reports/film-pb-1-traspaso-20261125.md). Los mapas DMM externos históricos contienen los cinco tipos AVC: conservar [G111 §14.5](gui/g111-film-receta-gui-iconos.md#145-mapa-externo-recuperado-y-selector-de-tipo-avc).
+Mecanismo de la finalización fallida **cerrado estáticamente**; causa raíz física, abierta. La traza enlaza
+`PlayMovieCmp` (`MPR::ER_FAILED=0x1A`) → `DefObjPlayer::ER_FAILED=7` → bloqueo → caution `0x135` → «No se puede
+visualizar». Cadena completa: `MprIf::PlayMovie` (`0x7229E0`, solo log) → `FeaIf::PlayMovie` (`0x44EE9C`, encola la
+orden `0x4000001D` con 0x8C bytes) → despachador FeaCore `FUN_00429C38` (`0x429C38`) → manejador **`FUN_00437BC0`**
+(`0x437BC0`) → `MoviePlayerIf::PbStart` (`0x307F54`) o finalización `vtable+0x1C(0x4000001D, status)`.
+El 0x1A tiene **tres productores** en ese manejador: guarda de capacidades («Pb Disable!! ref) dsm get», `0x437C0A`),
+guarda de contenido no soportado («Detect UnSupported Content », `0x437C3C`) y fallo del motor traducido por
+`FUN_007211B0` (seis sitios devuelven 0x1A; p. ej. `0x1C00001A`). **No es timeout, RAM ni demux**: si falla una guarda
+no se llama al motor. Estado del core obligado: `[core+0x1F0]==5` (si no, el código habría sido `0x0A`).
+Falta discriminar el camino (log de MPR o breakpoints de un solo uso en `0x437C0A`/`0x437C3C`/`0x437CFC`).
+`0:02`: el modelo `M_SinglePbBase_Utils` (modelo+0x90) lleva `m_durationOfContent` en modelo+0x108 y
+`m_pbTimeInContent` en modelo+0xF0 (h/m/s); el catálogo expone `contentsDuration` por
+`MprIf::GetMovieContentProperty` (API `0x41000067`), pero **no se ha demostrado** que el texto salga de ahí.
+El MP4 no contiene ningún campo de ~2 s (ffprobe y parser propio). No hay prueba de causa DMM; los mapas externos
+históricos contienen los cinco tipos AVC (conservar [G111 §14.5](gui/g111-film-receta-gui-iconos.md#145-mapa-externo-recuperado-y-selector-de-tipo-avc)).
+[Informe de cierre estático](../reports/film-pb-1-productor-mpr-20261126.md) · [traspaso físico](../reports/film-pb-1-traspaso-20261125.md).
 
 ## Estado global (actualizado 03-11-2026)
 

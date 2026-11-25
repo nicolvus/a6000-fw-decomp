@@ -1,6 +1,6 @@
 # Estado actual — léeme primero
 
-**FILM-PB-1 (25-11), traspaso:** capturado `PlayMovieCmp: MPR::ER_FAILED(0x1A)` → ObjPlayer `ER_FAILED(7)` → caution `0x135`. MAH04198 dura 9,5095 s y decodifica bien; cámara marca `0:02`. Causa abierta. Siguiente agente: localizar productor de 0x1A y semántica del contador; no repetir las capturas genéricas MPR invalidadas. [Informe y evidencias](../reports/film-pb-1-traspaso-20261125.md).
+**FILM-PB-1 (26-11), mecanismo cerrado:** `PlayMovieCmp: MPR::ER_FAILED(0x1A)` sale del manejador de la orden `0x4000001D`, `FUN_00437BC0` (despachador `FUN_00429C38`), por tres caminos: guarda de capacidades (`0x437C0A`, «Pb Disable … dsm get»), contenido no soportado (`0x437C3C`) o traducción del error de `MoviePlayerIf::PbStart` (`FUN_007211B0`). No es timeout, RAM ni demux. Falta discriminar (log de MPR o breakpoints de un solo uso) y cerrar el `0:02` (`m_durationOfContent` en modelo+0x108; catálogo `contentsDuration` sin demostrar). [Informe](../reports/film-pb-1-productor-mpr-20261126.md) · [traspaso](../reports/film-pb-1-traspaso-20261125.md).
 
 
 Contexto operativo mínimo para agentes. Última revisión: **07-11-2026** (E26 R65–R68: rama EFCS de Darwin y auditoría).

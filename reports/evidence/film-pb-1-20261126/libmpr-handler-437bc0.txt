@@ -1,0 +1,142 @@
+# libmpr.so fw3.21 SHA-256 9a74a3bb...4c30
+# FUN_00437BC0 (VA ELF 0x437BC0) = manejador de la orden 0x4000001D en el hilo FeaCore.
+# REA lo muestra como FUN_00447BC0 (importa libmpr con +0x10000).
+# Puntos que producen el estado 0x1A: 0x437C0A (guarda A, 'Pb Disable') y 0x437C3C (guarda B,
+# 'Detect UnSupported Content'); fallo del motor en 0x437CFC (status = FUN_007211B0()).
+# Finalizacion: vtable+0x1C(0x4000001D, &status, 4) en 0x437D2A.
+
+00437bc0: 82b0       sub      sp, #8                      
+00437bc2: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}
+00437bc6: a5b0       sub      sp, #0x94                   
+00437bc8: 14af       add      r7, sp, #0x50               
+00437bca: 0446       mov      r4, r0                      
+00437bcc: 07f16000   add.w    r0, r7, #0x60               
+00437bd0: 8946       mov      sb, r1                      
+00437bd2: d7f87880   ldr.w    r8, [r7, #0x78]             
+00437bd6: 80e80c00   stm.w    r0, {r2, r3}                
+00437bda: 0023       movs     r3, #0                      
+00437bdc: fb63       str      r3, [r7, #0x3c]             
+00437bde: d4f8f031   ldr.w    r3, [r4, #0x1f0]            
+00437be2: fd6f       ldr      r5, [r7, #0x7c]             
+00437be4: 052b       cmp      r3, #5                      
+00437be6: 01d0       beq      #0x437bec                   
+00437be8: 0a23       movs     r3, #0xa                    
+00437bea: 0fe0       b        #0x437c0c                   
+00437bec: 75b1       cbz      r5, #0x437c0c               
+00437bee: d4f8ec01   ldr.w    r0, [r4, #0x1ec]            
+00437bf2: d4f8c01d   ldr.w    r1, [r4, #0xdc0]            
+00437bf6: d4f8b82d   ldr.w    r2, [r4, #0xdb8]            
+00437bfa: 0ff010ff   bl       #0x447a1e                   
+00437bfe: 38b9       cbnz     r0, #0x437c10               
+00437c00: a068       ldr      r0, [r4, #8]                
+00437c02: 0122       movs     r2, #1                      
+00437c04: 4d49       ldr      r1, [pc, #0x134]              ; [00437d3c]=0085a51c
+00437c06: daf297fe   bl       #0x712938                   
+00437c0a: 1a23       movs     r3, #0x1a                   
+00437c0c: fb63       str      r3, [r7, #0x3c]             
+00437c0e: 7ee0       b        #0x437d0e                   
+00437c10: 07f16806   add.w    r6, r7, #0x68               
+00437c14: 96e80f00   ldm.w    r6, {r0, r1, r2, r3}        
+00437c18: 8de80f00   stm.w    sp, {r0, r1, r2, r3}        
+00437c1c: 07f16001   add.w    r1, r7, #0x60               
+00437c20: d4f8ec01   ldr.w    r0, [r4, #0x1ec]            
+00437c24: 91e80c00   ldm.w    r1, {r2, r3}                
+00437c28: d4f8c01d   ldr.w    r1, [r4, #0xdc0]            
+00437c2c: 10f07bf9   bl       #0x447f26                   
+00437c30: f0b9       cbnz     r0, #0x437c70               
+00437c32: a068       ldr      r0, [r4, #8]                
+00437c34: 0122       movs     r2, #1                      
+00437c36: 4249       ldr      r1, [pc, #0x108]              ; [00437d40]=0085a7d8
+00437c38: daf27efe   bl       #0x712938                   
+00437c3c: 1a23       movs     r3, #0x1a                   
+00437c3e: fb63       str      r3, [r7, #0x3c]             
+00437c40: 95f82430   ldrb.w   r3, [r5, #0x24]             
+00437c44: 002b       cmp      r3, #0                      
+00437c46: 62d0       beq      #0x437d0e                   
+00437c48: 96e80f00   ldm.w    r6, {r0, r1, r2, r3}        
+00437c4c: 8de80f00   stm.w    sp, {r0, r1, r2, r3}        
+00437c50: 07f16000   add.w    r0, r7, #0x60               
+00437c54: d4f8c01d   ldr.w    r1, [r4, #0xdc0]            
+00437c58: 90e80c00   ldm.w    r0, {r2, r3}                
+00437c5c: d4f8ec01   ldr.w    r0, [r4, #0x1ec]            
+00437c60: 10f03ff9   bl       #0x447ee2                   
+00437c64: a068       ldr      r0, [r4, #8]                
+00437c66: 3749       ldr      r1, [pc, #0xdc]               ; [00437d44]=0085a7f5
+00437c68: 0122       movs     r2, #1                      
+00437c6a: daf265fe   bl       #0x712938                   
+00437c6e: 4ee0       b        #0x437d0e                   
+00437c70: d4f8ec01   ldr.w    r0, [r4, #0x1ec]            
+00437c74: d4f8c01d   ldr.w    r1, [r4, #0xdc0]            
+00437c78: 10f096f8   bl       #0x447da8                   
+00437c7c: 18b1       cbz      r0, #0x437c86               
+00437c7e: d9f297fa   bl       #0x7111b0                   
+00437c82: f863       str      r0, [r7, #0x3c]             
+00437c84: 43e0       b        #0x437d0e                   
+00437c86: b8f1000f   cmp.w    r8, #0                      
+00437c8a: 06d0       beq      #0x437c9a                   
+00437c8c: 3846       mov      r0, r7                      
+00437c8e: 4146       mov      r1, r8                      
+00437c90: 3c22       movs     r2, #0x3c                   
+00437c92: e9f443fa   bl       #0x12111c                   
+00437c96: 3b46       mov      r3, r7                      
+00437c98: 00e0       b        #0x437c9c                   
+00437c9a: 4346       mov      r3, r8                      
+00437c9c: 0393       str      r3, [sp, #0xc]              
+00437c9e: 05f10c0e   add.w    lr, r5, #0xc                
+00437ca2: 6b68       ldr      r3, [r5, #4]                
+00437ca4: 09ae       add      r6, sp, #0x24               
+00437ca6: cdf81490   str.w    sb, [sp, #0x14]             
+00437caa: 0493       str      r3, [sp, #0x10]             
+00437cac: 2b78       ldrb     r3, [r5]                    
+00437cae: 0693       str      r3, [sp, #0x18]             
+00437cb0: 2b7a       ldrb     r3, [r5, #8]                
+00437cb2: 0793       str      r3, [sp, #0x1c]             
+00437cb4: 6b7a       ldrb     r3, [r5, #9]                
+00437cb6: 0893       str      r3, [sp, #0x20]             
+00437cb8: bee80f00   ldm.w    lr!, {r0, r1, r2, r3}       
+00437cbc: 0fc6       stm      r6!, {r0, r1, r2, r3}       
+00437cbe: 0023       movs     r3, #0                      
+00437cc0: 9ee80300   ldm.w    lr, {r0, r1}                
+00437cc4: 86e80300   stm.w    r6, {r0, r1}                
+00437cc8: 0f93       str      r3, [sp, #0x3c]             
+00437cca: 1093       str      r3, [sp, #0x40]             
+00437ccc: 95f82430   ldrb.w   r3, [r5, #0x24]             
+00437cd0: 1193       str      r3, [sp, #0x44]             
+00437cd2: 95f82530   ldrb.w   r3, [r5, #0x25]             
+00437cd6: 1293       str      r3, [sp, #0x48]             
+00437cd8: 95f82630   ldrb.w   r3, [r5, #0x26]             
+00437cdc: 1393       str      r3, [sp, #0x4c]             
+00437cde: 07f16c03   add.w    r3, r7, #0x6c               
+00437ce2: 93e80700   ldm.w    r3, {r0, r1, r2}            
+00437ce6: 8de80700   stm.w    sp, {r0, r1, r2}            
+00437cea: 07f16000   add.w    r0, r7, #0x60               
+00437cee: 90e80e00   ldm.w    r0, {r1, r2, r3}            
+00437cf2: d4f8940d   ldr.w    r0, [r4, #0xd94]            
+00437cf6: d0f62df9   bl       #0x307f54                   
+00437cfa: b8b1       cbz      r0, #0x437d2c               
+00437cfc: d9f258fa   bl       #0x7111b0                   
+00437d00: d4f8c01d   ldr.w    r1, [r4, #0xdc0]            
+00437d04: f863       str      r0, [r7, #0x3c]             
+00437d06: d4f8ec01   ldr.w    r0, [r4, #0x1ec]            
+00437d0a: 10f05df8   bl       #0x447dc8                   
+00437d0e: 07f14006   add.w    r6, r7, #0x40               
+00437d12: a068       ldr      r0, [r4, #8]                
+00437d14: 0c49       ldr      r1, [pc, #0x30]               ; [00437d48]=0085e965
+00437d16: 56f8042d   ldr      r2, [r6, #-0x4]!            
+00437d1a: daf221fe   bl       #0x712960                   
+00437d1e: 2368       ldr      r3, [r4]                    
+00437d20: 2046       mov      r0, r4                      
+00437d22: 0a49       ldr      r1, [pc, #0x28]               ; [00437d4c]=4000001d
+00437d24: 3246       mov      r2, r6                      
+00437d26: dd69       ldr      r5, [r3, #0x1c]             
+00437d28: 0423       movs     r3, #4                      
+00437d2a: a847       blx      r5                          
+00437d2c: 07f14407   add.w    r7, r7, #0x44               
+00437d30: bd46       mov      sp, r7                      
+00437d32: bde8f043   pop.w    {r4, r5, r6, r7, r8, sb, lr}
+00437d36: 02b0       add      sp, #8                      
+00437d38: 7047       bx       lr                          
+00437d3a: 00bf       nop                                  
+00437d3c: 1ca5       adr      r5, #0x70                   
+00437d3e: 8500       lsls     r5, r0, #2                  
+

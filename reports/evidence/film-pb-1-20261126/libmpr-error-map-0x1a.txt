@@ -1,0 +1,33 @@
+# libmpr.so fw3.21 - FUN_007211B0 (VA ELF 0x7211B0), 'ultimo error interno' -> codigo MPR.
+# La usa FUN_00437BC0 cuando falla MoviePlayerIf::PbStart. Traduce varios codigos internos a 0x1A:
+#   sitios 'movs r0,#0x1a; pop': 0x711314, 0x711350, 0x71153C, 0x7116D2, 0x711716, 0x7118F4
+# Uno de ellos es el caso literal 0x1C00001A (pool 0x711380) comparado en 0x711234 y saltado a 0x711314.
+# Consecuencia: el 0x1A observado en PlayMovieCmp no distingue guarda A / guarda B / fallo del motor.
+
+00711232: 534b       ldr      r3, [pc, #0x14c]              ; [00711380]=1c00001a
+00711234: 9842       cmp      r0, r3                      
+00711236: 6dd0       beq      #0x711314                   
+00711238: 06d8       bhi      #0x711248                   
+0071123a: 043b       subs     r3, #4                      
+0071123c: 9842       cmp      r0, r3                      
+0071123e: 65d0       beq      #0x71130c                   
+00711240: 0133       adds     r3, #1                      
+
+00711314: 1a20       movs     r0, #0x1a                   
+00711316: 80bd       pop      {r7, pc}                    
+
+00711350: 1a20       movs     r0, #0x1a                   
+00711352: 80bd       pop      {r7, pc}                    
+
+0071153c: 1a20       movs     r0, #0x1a                   
+0071153e: 80bd       pop      {r7, pc}                    
+
+007116d2: 1a20       movs     r0, #0x1a                   
+007116d4: 80bd       pop      {r7, pc}                    
+
+00711716: 1a20       movs     r0, #0x1a                   
+00711718: 80bd       pop      {r7, pc}                    
+
+007118f4: 1a20       movs     r0, #0x1a                   
+007118f6: 80bd       pop      {r7, pc}                    
+

@@ -1,0 +1,47 @@
+# libObj.so fw3.21 SHA-256 8e8a937a...5b6a - M_SinglePbBase_Utils dentro del modelo (modelo+0x90).
+# 0x432240: constructor de M_SinglePbBase; en 0x432290 llama al dump de utils con r0 = modelo+0x90.
+# 0x40E85C: dump de los campos; imprime m_pbTimeInContent (0x60/64/68), m_pbTimeInTotal (0x6C/70/74),
+#           m_durationOfContent (0x78/7C/80), m_durationOfTotal (0x84/88/8C), m_currentFrameInContent (0x90)
+#           con el formato '... : %02d:%02d:%02d'.
+# Offsets en el modelo = utils + offset: duracion de contenido en modelo+0x108.
+
+0043228c: def84400   ldr.w    r0, [lr, #0x44]             
+00432290: 95e80e00   ldm.w    r5, {r1, r2, r3}            
+00432294: ebf4fcec   blx      #0x11dc90                     ; _ZN12FeaHighlight16PlayHighlightBgmEN11pub_EntryId7EntryIdEPN5MprIf20PlayHighlightBgmCtrlE
+00432298: 2046       mov      r0, r4                      
+0043229a: fff7bbfc   bl       #0x431c14                   
+0043229e: 07f10c07   add.w    r7, r7, #0xc                
+004322a2: bd46       mov      sp, r7                      
+
+0040e9a8: 9a42       cmp      r2, r3                      
+0040e9aa: 3ad1       bne      #0x40ea22                   
+0040e9ac: 6a6d       ldr      r2, [r5, #0x54]             
+0040e9ae: 636d       ldr      r3, [r4, #0x54]             
+0040e9b0: 9a42       cmp      r2, r3                      
+0040e9b2: 36d1       bne      #0x40ea22                   
+0040e9b4: aa6d       ldr      r2, [r5, #0x58]             
+0040e9b6: a36d       ldr      r3, [r4, #0x58]             
+0040e9b8: 9a42       cmp      r2, r3                      
+0040e9ba: 32d1       bne      #0x40ea22                   
+0040e9bc: ea6d       ldr      r2, [r5, #0x5c]             
+0040e9be: e36d       ldr      r3, [r4, #0x5c]             
+0040e9c0: 9a42       cmp      r2, r3                      
+0040e9c2: 2ed1       bne      #0x40ea22                   
+0040e9c4: 2a6e       ldr      r2, [r5, #0x60]             
+0040e9c6: 236e       ldr      r3, [r4, #0x60]             
+0040e9c8: 9a42       cmp      r2, r3                      
+0040e9ca: 2ad1       bne      #0x40ea22                   
+0040e9cc: 6a6e       ldr      r2, [r5, #0x64]             
+0040e9ce: 636e       ldr      r3, [r4, #0x64]             
+0040e9d0: 9a42       cmp      r2, r3                      
+0040e9d2: 26d1       bne      #0x40ea22                   
+0040e9d4: aa6e       ldr      r2, [r5, #0x68]             
+0040e9d6: a36e       ldr      r3, [r4, #0x68]             
+0040e9d8: 9a42       cmp      r2, r3                      
+0040e9da: 22d1       bne      #0x40ea22                   
+0040e9dc: ea6e       ldr      r2, [r5, #0x6c]             
+0040e9de: e36e       ldr      r3, [r4, #0x6c]             
+0040e9e0: 9a42       cmp      r2, r3                      
+0040e9e2: 1ed1       bne      #0x40ea22                   
+0040e9e4: 95f87020   ldrb.w   r2, [r5, #0x70]             
+

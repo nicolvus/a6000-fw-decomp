@@ -1,0 +1,40 @@
+# libmpr.so fw3.21 - despachador del hilo FeaCore FUN_00429C38 (VA ELF).
+# 0x429D10: carga de la constante 0x4000001D desde el pool 0x429F60 y salto al 'case' (0x42A346).
+# 0x42A346: extraccion del payload (flags +0x1C y +0x60) y llamada a FUN_00437BC0 en 0x42A37A.
+
+00429d0c: d187       strh     r1, [r2, #0x3e]             
+00429d0e: 83e2       b        #0x42a218                   
+00429d10: 934b       ldr      r3, [pc, #0x24c]              ; [00429f60]=4000001d
+00429d12: 9842       cmp      r0, r3                      
+00429d14: 00f01783   beq.w    #0x42a346                   
+00429d18: 16d8       bhi      #0x429d48                   
+00429d1a: 043b       subs     r3, #4                      
+00429d1c: 9842       cmp      r0, r3                      
+00429d1e: 00f0f682   beq.w    #0x42a30e                   
+00429d22: 0ad8       bhi      #0x429d3a                   
+
+0042a346: 2046       mov      r0, r4                      
+0042a348: fff72bfa   bl       #0x4297a2                   
+0042a34c: 027f       ldrb     r2, [r0, #0x1c]             
+0042a34e: 0546       mov      r5, r0                      
+0042a350: 0668       ldr      r6, [r0]                    
+0042a352: 0ab1       cbz      r2, #0x42a358               
+0042a354: 00f12002   add.w    r2, r0, #0x20               
+0042a358: 95f86030   ldrb.w   r3, [r5, #0x60]             
+0042a35c: 0bb1       cbz      r3, #0x42a362               
+0042a35e: 05f16403   add.w    r3, r5, #0x64               
+0042a362: 0593       str      r3, [sp, #0x14]             
+0042a364: 05f10c03   add.w    r3, r5, #0xc                
+0042a368: 0492       str      r2, [sp, #0x10]             
+0042a36a: 0435       adds     r5, #4                      
+0042a36c: 0fcb       ldm      r3, {r0, r1, r2, r3}        
+0042a36e: 8de80f00   stm.w    sp, {r0, r1, r2, r3}        
+0042a372: 2046       mov      r0, r4                      
+0042a374: 95e80c00   ldm.w    r5, {r2, r3}                
+0042a378: 3146       mov      r1, r6                      
+0042a37a: 0df021fc   bl       #0x437bc0                   
+0042a37e: 00f097bc   b.w      #0x42acb0                   
+0042a382: 2046       mov      r0, r4                      
+0042a384: fff70dfa   bl       #0x4297a2                   
+0042a388: 0279       ldrb     r2, [r0, #4]                
+
