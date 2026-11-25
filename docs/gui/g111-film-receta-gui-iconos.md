@@ -202,3 +202,54 @@ Lo único distinto entre 3.95 (bien) y 3.96 (cuelga) son los iconos: `image_cmn_
 - **Bisección 2:** build **4.03 = núcleo de la 4.02 + `/usr` de Sony** (`nflasha15` original: sin menú Silent ni parches de userland), Darwin v3, sin
   `nflasha5`. `.dat` `3d16faf5…`. Auditoría: todo OK salvo «solo cambian los miembros previstos», que es lo esperado (la `nflasha15` es la de Sony).
   Si reproduce → el fallo está en el userland de Silent; si no → en el núcleo (`av-cam`/Darwin) o en la falta de `nflasha5`.
+
+## 15. Iconos centrados y estado de los iconos para la futura build (25-11-2026)
+**Petición:** el icono no queda centrado; corregirlo y dejar aquí cómo quedan los iconos para una build futura. Nada instalado.
+
+### 15.1 Causa del descentrado (MEDIDO en el arnés)
+- El panel Fn dibuja la imagen de la opción **arriba de la casilla y centrada en horizontal**. Medido en el arnés: casilla de 105×61 px; el icono de 70×35
+  quedaba con el centro en y = 324 frente a 336,5 de la casilla (13 px alto).
+- Los ajustes nativos de **icono simple** (Modo de medición `0xc45b`, Efecto `0xc52b`) llevan **solo la propiedad `1`** con una imagen de **70×60** y el
+  dibujo centrado (filas 11…48). Es el tamaño más común de `image_cmn_169.uxc` (1 095 imágenes).
+- El patrón que copiamos en G110 (propiedades `1` y `4` con 70×35) es el del **Estilo creativo**, que deja el icono arriba porque debajo la cámara pinta
+  «±0 ±0 ±0».
+
+### 15.2 Arreglo
+- `iconos_film.py`: dibujo de 70×35 dentro de una imagen de **70×60 transparente, centrado** (centro del dibujo en (34,5; 30), el nativo en (34; 29,5)).
+  Los 50 PNG de `scripts/gui/iconos/` regenerados.
+- `build_pp_menu.build_nodes`: cada opción con icono lleva **solo la propiedad `1`** (sin la `4`).
+- Test `test_iconos_70x60_centrados_y_solo_propiedad_1` (los 50 iconos y los nodos generados).
+- **Arnés** (perfil `g111e`, build de prueba `build/g111_iconos_centrados`, 4.90, **solo para el arnés: no instalar**; `.dat` `810c1fe7…`):
+  la casilla «Film Simulation» del panel Fn muestra el marco «OFF» centrado como los iconos nativos ([captura](img/g111-fn-icono-centrado.png): arriba
+  70×35, abajo 70×60). En ese perfil había un PP activo, así que Film sale en gris y no se pudo girar la franja (regla de FILM-10).
+
+### 15.3 Cómo funcionan los iconos (resumen para la futura build)
+1. **Formato de `image_cmn_169.uxc`** (`uxc_imagenes.py`, §3):
+   - registros de 20 B en orden de id;
+   - datos en `base + 4·t + 4 + desplazamiento`;
+   - LZPT (`tpzl.encode_lz`, registros de 4096 B, el formato del LDEC);
+   - salida RGBA4444 en filas de ancho redondeado a 16 (formato `0xc0`).
+2. **Orden de Sony** (§9.2): `uxc_imagenes.anade` reconstruye el fichero con registros y datos en orden de id, alineados a 4. Sin imágenes nuevas devuelve
+   el de fábrica byte a byte.
+3. **Imágenes:** `scripts/gui/iconos/film_00…38.png` (Off + 38 looks) y `pp_00…10.png` (PP OFF, PP1…PP10), 70×60, generadas con `iconos_film.py`
+   (la build solo lee los PNG).
+4. **Enlace:** propiedad `1` = `0x0205xxxx` con el id de imagen en cada opción de las filas de Film, la lista única y el selector PP
+   (`build_pp_menu.ICONOS`, rellenado por `build_cfw_film.iconos_fn`).
+5. **Opciones de build:**
+   - `--iconos`: iconos propios (añade las 50 imágenes);
+   - `--iconos-nativos`: bisección, los nodos apuntan a imágenes de Sony con el `.uxc` intacto;
+   - sin opción: sin iconos (como la 4.01 instalada).
+
+### 15.4 Estado en la cámara y qué falta
+| Build | Iconos | Resultado |
+|---|---|---|
+| 3.94 | propios, `.uxc` fuera de orden | Fn → bucle |
+| 3.96 | propios en orden + gancho `isInhOn` | Fn cuelga (por el gancho en la casilla AWB, §11) |
+| 3.98 | nativos (`--iconos-nativos`) | Fn bien; cuelga al entrar en AWB (gancho) |
+| 3.99 | propios en orden + gancho con comprobación de pila | no arranca, sin aislar |
+| 4.01 (instalada) | ninguno | funciona |
+
+- **Nunca se ha probado en la cámara una build cuyo único cambio sean los iconos propios.** La 3.99 mezclaba los iconos con otro cambio del gancho.
+- **Siguiente paso para la build futura:** 4.01 + `--iconos` (nada más) y, sin la 3.99 aislada, con la recuperación por SWD a mano (R48). Si arranca y el
+  Fn abre: iconos propios centrados resueltos. Si no: probar `--iconos-nativos` sobre la 4.01 para separar los datos de imagen del enlace.
+- Arnés: sin cuelgues con iconos propios en 3.94, 3.96 ni en esta prueba, porque no emula el LDEC/GPU reales (§10).

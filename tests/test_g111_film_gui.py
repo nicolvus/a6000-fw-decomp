@@ -231,3 +231,29 @@ def test_imagenes_uxc_ida_y_vuelta():
     assert ids_reg == sorted(ids_reg)                                          # registros en orden de id, como Sony
     R = U.registros(nuevo)
     assert sorted(R) == sorted(R, key=lambda k: R[k][1]) and all(q % 4 == 0 for _, q in R.values())   # datos en orden de id, alineados a 4
+
+
+def test_iconos_70x60_centrados_y_solo_propiedad_1():
+    """G111 §15: como los ajustes nativos de icono simple (Modo de medición `0xc45b`: 70×60, dibujo en filas 11…48), no como el Estilo creativo
+    (70×35 + propiedad 4, que deja el icono arriba para los valores de debajo)."""
+    import build_pp_gamma_menu as G
+    import build_pp_menu as B
+    import iconos_film as I
+    import pp_menu_spec as M
+    film, pp = I.carga()
+    for img in film + pp:
+        ys, xs = np.nonzero(img[..., 3] > 40)
+        assert img.shape == (60, 70, 4) and abs((ys.min() + ys.max()) / 2 - 29.5) <= 1 and abs((xs.min() + xs.max()) / 2 - 34.5) <= 1
+    a = FU.ajuste_todas()
+    s = {a.id: M.S(a.id, a.label, 0, tuple((t, i) for i, (t, _) in enumerate(a.opciones)), "g97", backup=a.backup)}
+    seg = G.Segmento(0x100000)
+    ids = {t: 0x100 + k for k, t in enumerate({a.label, *(t for t, _ in a.opciones)})}
+    B.ICONOS.clear()
+    B.ICONOS[a.id] = list(range(0xD000, 0xD000 + len(a.opciones)))
+    try:
+        B.build_nodes(seg, 0, ids, a.id, s, [0x200])
+    finally:
+        B.ICONOS.clear()
+    w = seg.words
+    tri = {(w[i], w[i + 2]) for i in range(len(w) - 2) if w[i + 1] == 0 and w[i + 2] >> 16 == 0x205}
+    assert {k for k, _ in tri} == {1} and {v & 0xFFFF for _, v in tri} == set(range(0xD000, 0xD000 + len(a.opciones)))

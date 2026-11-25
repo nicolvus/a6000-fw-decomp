@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
-"""G110 — Iconos propios del menú Fn para Film Simulation y Picture Profile (70×35, blancos con contorno oscuro, como los del Estilo creativo `0xc7a6`).
+"""G110/G111 — Iconos propios del menú Fn para Film Simulation y Picture Profile: 70×60 con el dibujo (70×35) centrado, blancos con contorno oscuro.
+
+G111 §15: el panel Fn dibuja la imagen de la propiedad 1 arriba de la casilla y centrada en horizontal; los ajustes nativos de icono simple
+(Modo de medición, Efecto) usan 70×60 con el dibujo centrado (filas 11…48). El 70×35 del Estilo creativo deja hueco para «±0 ±0 ±0» y quedaba alto.
 
 `python3 iconos_film.py` genera los PNG en `iconos/` (fuente Fira Sans Condensed Bold del sistema); la build solo lee los PNG, así que no depende de la fuente.
 Film: marco de película (perforaciones arriba y abajo) con la abreviatura del look. PP: recuadro con «PP» y el número, u «OFF».
@@ -13,7 +16,8 @@ import numpy as np
 from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 DIR = Path(__file__).parent / "iconos"
-W, H = 70, 35
+W, H = 70, 35          # dibujo
+ALTO = 60              # imagen final (casilla del panel Fn)
 FUENTE = "/usr/share/fonts/TTF/FiraSansCondensed-Bold.ttf"
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "lut"))
 
@@ -47,6 +51,14 @@ def _rgba(mascara: Image.Image) -> np.ndarray:
     return np.dstack([rgb, a * 255]).round().astype(np.uint8)
 
 
+def _centra(dib: np.ndarray) -> np.ndarray:
+    """Dibujo de 70×35 en una imagen de 70×60 transparente, centrado en vertical (como los iconos nativos de 70×60)."""
+    out = np.zeros((ALTO, W, 4), np.uint8)
+    y = (ALTO - H + 1) // 2
+    out[y:y + H] = dib
+    return out
+
+
 def film(txt: str) -> np.ndarray:
     m = Image.new("L", (W, H), 0)
     dr = ImageDraw.Draw(m)
@@ -55,7 +67,7 @@ def film(txt: str) -> np.ndarray:
         dr.rectangle((x, 5, x + 3, 7), fill=255)
         dr.rectangle((x, H - 8, x + 3, H - 6), fill=255)
     _texto(dr, (6, 10, W - 6, H - 11), txt, 17)
-    return _rgba(m)
+    return _centra(_rgba(m))
 
 
 def pp(txt: str) -> np.ndarray:
@@ -63,7 +75,7 @@ def pp(txt: str) -> np.ndarray:
     dr = ImageDraw.Draw(m)
     dr.rounded_rectangle((6, 3, W - 7, H - 4), radius=4, outline=255, width=2)
     _texto(dr, (11, 7, W - 11, H - 8), txt if txt != "OFF" else "PP OFF", 20)
-    return _rgba(m)
+    return _centra(_rgba(m))
 
 
 def carga() -> tuple[list[np.ndarray], list[np.ndarray]]:
