@@ -8,7 +8,9 @@
 
 Verificados el tar/DAT 4.04, las tablas ELEM/D de 4.02 y las cadenas de configuración DMM del WBI de Sony. La 4.02 no tiene descriptores nuevos activos. El WBI contiene ambas rutas del mapa principal, sin demostrar qué mapa queda activo ni una reserva fallida. [G111 §14.1](../docs/gui/g111-film-receta-gui-iconos.md#141-verificación-de-los-dos-pendientes-offline).
 
-**Próximo paso exacto:** comparar el mismo clip y SD con Sony en BootMode 11 y con 4.04 en frío, anotando miniatura, audio y primer error tras pulsar Play. Pendiente de autorización física.
+La auditoría posterior trazó Play AVC → `AllocWorkMemory` → Open DMM y contrastó el init del módulo con la reanudación de los extents. Se validó la salida de error en Unicorn con los bytes originales y respuestas sintéticas. [G111 §14.2](../docs/gui/g111-film-receta-gui-iconos.md#142-conexión-entre-arranque-dmm-y-decodificación-avc).
+
+**Próximo paso exacto:** comparar el mismo clip y SD con Sony en BootMode 11 y con 4.04 en frío; capturar la primera reserva tras Play y las tablas `/proc/udm/dmm_*` antes y después. Pendiente de autorización física.
 
 ## E26-RECOVERY — 29-10-2026: incidente abierto
 
