@@ -22,7 +22,7 @@ históricos contienen los cinco tipos AVC (conservar [G111 §14.5](gui/g111-film
 **Auditoría del CFW instalado (27-11-2026): la causa no es un parche de código.** El paquete 3.93 `pp` no incluye
 `libmpr.so` (el productor del `0x1A` es de fábrica) y sus 32 ficheros distintos de Sony 3.21 son 5 bibliotecas con
 parches de Picture Profile/Silent y 22 tablas de textos. En `libObj` cambian 506 B en 41 rangos: 26 en `.text` en los
-puntos de `patch_libobj_pp*.py`/`patch_libobj_eco.py`, y fuera de `.text` solo la cabecera ELF, cinco entradas de la
+puntos de `patch_libobj_pp*.py`/`patch_libobj_eco.py`, y fuera de `.text` solo la cabecera ELF, seis entradas de la
 tabla de descriptores PP en `.data.rel.ro` y `DT_REL`. **Ninguna** de las doce direcciones conocidas de la ruta de
 reproducción cae en un rango modificado y el mapa de errores `0xFD9248` (97 × 16 B, con `0x1A → 7`) es idéntico.
 Quedan dos hipótesis: estado de arranque (el paquete quita `nflasha5`/WBI ⇒ arranque en frío) y contenido/catálogo
