@@ -141,13 +141,19 @@ def pids_film(pp: bool) -> tuple[dict, tuple[int, int, int]]:
     return {k: pid[k] for k in film}, ((pid["sel"], min(pps), max(pps)) if pp else (0, 1, 0))
 
 
-def iconos_fn(orig: Path, pp: bool, film: bool) -> bytes:
+NATIVOS = range(0xC7A6, 0xC7B3)   # «Std.»…«Sepia» del Estilo creativo, 70×35, ya en image_cmn_169 (bisección de CAM-394)
+
+
+def iconos_fn(orig: Path, pp: bool, film: bool, nativos: bool = False) -> bytes | None:
     """G110: añade a `image_cmn_169.uxc` los iconos de `iconos_film` (Film Off + 38, PP Off + PP1…PP10) en ranuras que ninguna biblioteca referencia, y
     rellena `build_pp_menu.ICONOS` para las filas de Film, la lista única y el selector PP. Devuelve el fichero nuevo."""
     ico_film, ico_pp = iconos_film.carga()
     imgs = (ico_film if film else []) + (ico_pp if pp else [])
-    ocupadas = iso_ui_recursos.refs_recurso([orig], 0x205)
-    nuevo, ids = uxc_imagenes.anade((orig / ICONOS_UXC).read_bytes(), imgs, ocupadas)
+    if nativos:                                                        # CAM-394 B: mismos nodos con icono, imágenes de Sony, .uxc intacto
+        nuevo, ids = None, [NATIVOS[k % len(NATIVOS)] for k in range(len(imgs))]
+    else:
+        ocupadas = iso_ui_recursos.refs_recurso([orig], 0x205)
+        nuevo, ids = uxc_imagenes.anade((orig / ICONOS_UXC).read_bytes(), imgs, ocupadas)
     build_pp_menu.ICONOS.clear()
     if film:
         f = ids[:len(ico_film)]
@@ -182,7 +188,7 @@ def build_files(work: Path, looks: Path, pp: bool = False, maximo: int = 99, fun
     img_fn = None
     if pp or film:
         kw = menu_film(pp, maximo, film)
-        img_fn = iconos_fn(orig, pp, film) if CON_ICONOS else None
+        img_fn = iconos_fn(orig, pp, film, CON_ICONOS == "nativos") if CON_ICONOS else None
         build_pp_menu.main(stage, C.DEV_B, pp_dir, entradas_previas=[C.SILENT_DELTA], silent=True, **kw)
     else:
         menu_silent(stage, pp_dir)
@@ -250,8 +256,9 @@ if __name__ == "__main__":
     ap.add_argument("--pp", action="store_true", help="G102: con Picture Profile (menú, Fn, rueda, libObj y núcleo)")
     ap.add_argument("--max-opciones", type=int, default=M.OPCIONES_POR_LISTA, help="opciones por fila del menú PP antes de partirla (por defecto filas enteras: la lista no tiene tope, G106)")
     ap.add_argument("--iconos", action="store_true", help="G111: iconos propios de Film y del selector PP en image_cmn_169.uxc (CAM-394)")
+    ap.add_argument("--iconos-nativos", action="store_true", help="CAM-394 bisección: los nodos llevan icono pero apuntan a imágenes de Sony; .uxc intacto")
     ap.add_argument("--funciones", help="G105: lista separada por comas de " + ",".join(sorted(FUNCIONES | BISECCION)) + " sobre la base Silent ('' = solo Silent); sin ella, el CFW Film")
     a = ap.parse_args()
     fun = None if a.funciones is None else {x for x in a.funciones.split(",") if x}
-    CON_ICONOS = a.iconos
+    CON_ICONOS = "nativos" if a.iconos_nativos else a.iconos
     print(json.dumps(main(a.salida, a.version, a.looks, a.pp, a.max_opciones, fun), indent=1))

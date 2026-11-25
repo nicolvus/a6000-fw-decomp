@@ -189,11 +189,14 @@ def test_fila_de_marca_y_pid_ajeno(compilado):
 
 def test_wbinh_salta_la_inhibicion_solo_al_objeto_marcado(compilado):
     vm = VM(compilado, {})
-    obj = vm.BUF + 0x100
+    obj = vm.PILA + 0xF000 + 0x200                                            # en la pila, sobre sp (como el de `pon`)
     vm.mu.mem_write(obj, struct.pack("<4I", 0x1234, 0, *MARCA_WB))
     assert vm.llama("films_tramo_wbinh", obj, vm.VBP, 1) == 0 and vm.llamadas == []
     vm.mu.mem_write(obj + 8, struct.pack("<2I", 0, 0))
     assert vm.llama("films_tramo_wbinh", obj, vm.VBP, 1) == 1 and vm.llamadas == [("inh", 1)]
+    for this in (0, 0x10, vm.BUF + 0x100):                                    # CAM-394: nulo o fuera de la pila → no se lee, sigue el original
+        vm.mu.mem_write(vm.BUF + 0x100, struct.pack("<4I", 0x1234, 0, *MARCA_WB))
+        assert vm.llama("films_tramo_wbinh", this, vm.VBP, 1) == 1 and vm.llamadas == [("inh", 1)]
 
 
 def test_grises(compilado):
@@ -203,8 +206,8 @@ def test_grises(compilado):
     for pid in (0x18, 0x19, 0x1A, PP[0], PP[1], PP[2]):
         assert gris({TODAS: p4, PP[0]: 0}, pid) == 1
         assert gris({TODAS: 0, PP[0]: 0}, pid) == sigue
-    assert gris({TODAS: p4, PP[0]: 0}, 0x17) == sigue                         # AWB: el modo de balance queda libre
-    assert gris({TODAS: v5, PP[0]: 0}, 0x17) == 1                              # kelvin fijo del look
+    assert gris({TODAS: p4, PP[0]: 0}, 0x17) == 1 and gris({TODAS: v5, PP[0]: 0}, 0x17) == 1   # CAM-394: balance en gris con cualquier look
+    assert gris({TODAS: 0, PP[0]: 0}, 0x17) == sigue
     assert gris({TODAS: p4, PP[0]: 0}, 0x46) == sigue                          # EFCS y demás: la cadena de siempre
     for pid in (TODAS, FU.ajustes()[1].pid):
         assert gris({TODAS: 0, PP[0]: 3}, pid) == 1                            # con un PP puesto, Film en gris

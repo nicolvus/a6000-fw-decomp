@@ -146,3 +146,17 @@ Lo único distinto entre 3.95 (bien) y 3.96 (cuelga) son los iconos: `image_cmn_
 1. Captura por SWD durante el cuelgue (detener la CPU y leer PC/LR); con la cámara apagada el DP no responde (probado).
 2. Bisección: build con las propiedades apuntando a imágenes **nativas** (sin tocar el `.uxc`): si cuelga, el problema es el enlace en nuestros nodos;
    si no, son nuestros datos de imagen en el hardware.
+
+## 11. Cuelgues 3.96/3.98 por el gancho de `isInhOn`; balance en gris (24-11-2026)
+- **Registro del kernel en vivo por AHB-AP** (sin detener la CPU; `analysis/camera-dumps/20261124-cam394-swd/klog_mon.py`, base `bz_mon.py` de R59):
+  `log_buf_len`/`log_buf` en VA `0x4037c760`, `log_end` en `0x40395290` (kallsyms del kernel 3.21 + `emit_log_char`); PA = VA + `0x40000000`.
+  Detener la CPU por SWD cada 250 ms produce «Error de cámara» (no repetir); un acceso de 8 bits por `mem_ap` bloquea el AHB-AP hasta apagar la cámara.
+- **3.98 (iconos nativos, MEDIDO):** Fn abre bien; **cuelga al entrar en AWB**. El kernel no registra nada antes del reinicio (cuelgue de espacio de usuario + vigilancia).
+- **Causa (VERIFICADO en estático):** el gancho `films_tramo_wbinh` (§9.1) leía `[this+8]`; los llamadores de Sony de `WrapperWhiteBalance::isInhOn` pasan
+  `this` sacado de campos de objetos (`[r9+0x2c]` en vu4, `[r4+0x124]` en vu7), que pueden ser nulos porque el original no usa `this`.
+  Es también la causa probable del cuelgue de la 3.96 al pulsar Fn (la casilla AWB del panel). La 3.94 (sin este gancho) colgaba por el `.uxc` desordenado (§9.2).
+- **Arreglo:** el gancho solo lee la marca si `this` está en la pila del hilo (`0 ≤ this − sp < 4 KB`, donde vive el objeto de `pon`); nulos y punteros
+  de campos siguen por el `isInhOn` original sin tocarlos (test con `this` = 0, 0x10 y fuera de la pila).
+- **Decisión del usuario:** la receta **fuerza** el balance (looks lo más reales posible) y con cualquier look activo el balance queda **en gris** (no se
+  cambia a mano en ningún look; antes solo en los de kelvin fijo).
+- Build 3.99: `--iconos` (orden de Sony) + receta con balance forzado (gancho corregido) + balance en gris con cualquier look.

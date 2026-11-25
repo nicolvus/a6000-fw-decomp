@@ -318,7 +318,7 @@ i32 films_gris(void *mgr, i32 pid) {
     i32 wb = pid == PID_WB, fila = look_de(pid, 0) >= 0;
     if (!film && !pp && !wb && !fila) return -1;
     i32 n = lee(mgr, FILA_PID[NFILAS - 1]);
-    if (n > 0 && n <= NLOOKS && (film || pp || (wb && RECETA_GUI[n - 1][0] == WB_KELVIN))) return 1;
+    if (n > 0 && n <= NLOOKS && (film || pp || wb)) return 1;
     if (fila && PID_PP_SEL != 0 && lee(mgr, PID_PP_SEL) > 0) return 1;
     return -1;
 }
@@ -362,6 +362,10 @@ __asm__(".text\n.syntax unified\n.thumb\n"
         ".p2align 2\n6: .word V_GRIS_CONT - (7b + 4)\n"
         /* `films_tramo_wbinh` sustituye el prólogo de WrapperWhiteBalance::isInhOn (`push {r4,r5,r7,lr}; mov r5,r0`): objeto marcado → 0 (no inhibido). */
         ".global films_tramo_wbinh\n.type films_tramo_wbinh,%function\n.thumb_func\nfilms_tramo_wbinh:\n"
+        "  mov r3, sp\n"
+        "  subs r3, r0, r3\n"                    /* solo un `this` en la pila del hilo (≤ 4 KB sobre sp): los llamadores de Sony pasan punteros de campos, a veces nulos */
+        "  cmp.w r3, #4096\n"
+        "  bhs 9f\n"
         "  ldr r3, [r0, #8]\n"
         "  ldr r12, 8f\n"
         "  cmp r3, r12\n"
