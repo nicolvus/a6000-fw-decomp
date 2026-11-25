@@ -190,3 +190,15 @@ Lo único distinto entre 3.95 (bien) y 3.96 (cuelga) son los iconos: `image_cmn_
   (`0x291` → LIRO `0x40e3` → `+0x238`). Sin causa estática; quedan también Darwin v3 y el paquete sin `nflasha5` (arranque en frío).
 - **Bisección:** build **4.02 = solo Silent** (`--funciones ''`, sin Film/PP/EXFINE), `.dat` `c2a60f55…`, auditoría `todo_ok`. Si en la 4.02 los vídeos
   no se reproducen, el fallo está en Silent o en la base (Darwin v3 / sin WBI); si se reproducen, en las capas Film/PP/EXFINE aunque estén en Off.
+- **4.02 (solo Silent) instalada:** los vídeos **tampoco** se reproducen (usuario). El fallo está en Silent o en la base, no en Film/PP/EXFINE.
+- **Inventario de la 4.02 frente a Sony 3.21:**
+  - `av-cam` (8 zonas): paquete de la foto `0x43841472`, lectores `0x4384219e`/`0x43842270`, copiador `0x43845f34` (+`0x43845f9f`), r5 `0x438c82fe`,
+    envío a Darwin `0x438d01a2`, cueva `0x43fb7e00`. Todo en rutas de captura.
+  - `darwin_core.bin` (5 zonas): cueva en los vectores 70/76 (`0x4318`/`0x4330`, a cero en Sony), R82 `0x18d7a` (146 B), compuertas `bl` en `0x1fe6c`
+    (motor) y `0x20c78` (bobina), que leen `S+0x3e` = `pkt[0x0e]`.
+  - Paquete sin `nflasha5` (WBI, arranque en frío).
+  - Userland: nodo Silent en `CautionConfig.so`; `viewUnified2.so` con `add_menu_entry`, descriptor de Silent (pid `0x12`) y `pid_space` (tablas ELEM/D
+    reubicadas, EFCS en gris); `libObj.so` con el eco del setter de Silent (`0x686de6`/`0x686dfa`); textos.
+- **Bisección 2:** build **4.03 = núcleo de la 4.02 + `/usr` de Sony** (`nflasha15` original: sin menú Silent ni parches de userland), Darwin v3, sin
+  `nflasha5`. `.dat` `3d16faf5…`. Auditoría: todo OK salvo «solo cambian los miembros previstos», que es lo esperado (la `nflasha15` es la de Sony).
+  Si reproduce → el fallo está en el userland de Silent; si no → en el núcleo (`av-cam`/Darwin) o en la falta de `nflasha5`.
