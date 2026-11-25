@@ -174,3 +174,13 @@ Lo único distinto entre 3.95 (bien) y 3.96 (cuelga) son los iconos: `image_cmn_
 - **4.01** = fuentes de la 3.98 (`films.c`/`film_userland.py` de `3a2ca282`, gancho `isInhOn` con marca sin comprobación de pila) + `--iconos-nativos`
   (`.uxc` intacto) + `films_gris`: balance (pid `0x17`) en gris con cualquier look. El cuelgue de la 3.98 era al **entrar** en AWB; en gris ya no se entra.
   La 3.99 (que no arrancó) además llevaba el `.uxc` con iconos propios y la comprobación de pila; ninguno de los dos va en la 4.01.
+
+## 14. 4.01 en cámara; los vídeos no se reproducen en la cámara (25-11-2026)
+- **4.01 instalada** por SWD + USB («Done» al segundo intento); el usuario confirma que **funciona**.
+- **FILM-PB-1 (usuario):** los vídeos se graban y se ven en el PC, pero la cámara no los reproduce.
+- **Auditoría estática (sin causa todavía):**
+  - `libmprctrl.so` (EXFINE): sus dos ganchos están en la ruta de fotos (`CalcStillData_JPG`, `GetStillDataInfo`). El ELF solo amplía el primer `PT_LOAD`
+    (`0x31bd0` → `0x31d28`), sin solaparse con el segundo (`0x32000`).
+  - `av-cam` Film: la LUT (`FUN_4381d294`) solo cambia la tabla si Sony ya tiene una 3D-LUT activa. La curva (`FUN_43854718`/`a28`/`fec`, `FUN_43b098c0`)
+    y la máquina (`FUN_437a24fc`) solo actúan con un look activo (ACK ≠ 0).
+  - Quedan sin descartar: el núcleo Silent/PP de `av-cam` y los parches de la GUI (`vu2`/`vu4`/`vu7`, `libObj`, `CautionConfig`).
