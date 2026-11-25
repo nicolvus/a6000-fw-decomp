@@ -213,9 +213,7 @@ Lo único distinto entre 3.95 (bien) y 3.96 (cuelga) son los iconos: `image_cmn_
     lo separa: las dos van sin `nflasha5`. «Es Silent» sigue sin demostrar.
 - **Build de control 4.04 = Sony 3.21 intacto salvo `nflasha5`** (`build_package_nflasha15.py` sobre `fw321/firmware.tar` y la `nflasha15` de Sony,
   `--sin-wbi`, sin Darwin v3). Comparado con el tar de Sony: falta solo `dev/nflasha5` y su línea de `part_image.sum`. `.dat` `9c7b4f46…0872`
-  (`build/sony_puro_sin_wbi_404/`, no versionado). Lectura: **si en la 4.04 los vídeos no se reproducen, la causa es el arranque en frío y Silent queda
-  descartado**; la solución pasa entonces por volver a tener WBI (regenerarlo con el `/usr` del CFW o hacer que la cámara cree la instantánea). Si se
-  reproducen, la 4.03 separa núcleo y userland de Silent. Recuperación tras la prueba: reinstalar la 4.01 con versión mayor (4.05).
+  (`build/sony_puro_sin_wbi_404/`, no versionado). La comparación y el criterio de cierre se detallan en §14.1.
 - **Auditoría estática exhaustiva (25-11-2026, 8 tareas de un subagente; notas fuera del repo):**
   - Inventario 4.02 vs Sony por bytes: 6 miembros del tar; `av-cam` 233 B en 8 zonas (único fichero cambiado de `nflasha3`); Darwin 5 rangos;
     `nflasha15` solo `libObj`, `CautionConfig`, `viewUnified2` y 25 `string_*.uxc`; falta `nflasha5`.
@@ -226,6 +224,13 @@ Lo único distinto entre 3.95 (bien) y 3.96 (cuelga) son los iconos: `image_cmn_
   - WBI de Sony: 37 módulos con los mismos parámetros que inserta el frío (solo `wlanMemoryAllocator` extra, Wi-Fi). Sin módulo ni proceso solo-WBI.
   - **Sin causa estática.** Quedan: arranque en frío (lo que la instantánea trae hecho: mapa `DmmConfig*.bin`, RAM) y, en teoría, pids `0xE9–0x120`
     de `pid_space` (ningún pid de reproducción recuperado). Lo decide la cámara: 4.04 y, si reproduce, 4.03.
+
+### 14.1 Verificación de los dos pendientes (offline)
+
+- **PID 0xE9–0x120:** lectura del ELF de 4.02 siguiendo los literales PC-relativos de `getElement` e `initProcessDataElement`: ELEM = `0x6f3c50`, D = `0x6f40d4`. En las 233 entradas originales, ELEM coincide íntegramente con Sony y en D cambia solo `0x12` (Silent). Las 56 entradas nuevas de D son nulas y las 56 de ELEM usan la clase Normal. Esto descarta un descriptor nuevo de vídeo en 4.02. Sigue abierta una regresión del gestor si algún llamador antes rechazado entrega un ID de ese intervalo, o si falla el acceso a las tablas reubicadas. No hay una traza de reproducción que lo señale.
+- **DMM y arranque:** REA sobre `dmm.ko` de Sony identifica los parámetros `DmmConfig` y `DmmConfigExtra`, y la ruta por defecto del extra `/setting/DmmConfigExtra.bin` (`0x307f2`). En las secciones 0082/0099 del WBI se lee `DmmConfig=/usr/share/dmm/DmmConfig.bin` y en 1032 también se lee `DmmConfig=/setting/DmmConfig.bin`. Son cadenas presentes en RAM archivada y por sí solas no identifican la configuración efectiva, las reservas ni la RAM disponible. `libmpr.so` contiene diagnósticos diferenciables de reserva (`[MemInfo]DMM Alloc failed...`), demultiplexado (`ER_MOVIE_DECODER_DEMUX_ERROR_STREAM`) y decodificador (`ER_MOVIE_DECODER_HW_ERROR`).
+- **Control 4.04 verificado:** comparación por SHA-256 del contenido de todos los miembros regulares de ambos tar. Se omite únicamente `dev/nflasha5` y se elimina su línea de `part_image.sum`. SHA-256 del DAT: `9c7b4f46491dcb030a69c3810d21429afcffdc9867b840969d914808fe510872`.
+- **Criterio de cierre:** comparar en la misma cámara el mismo clip de la misma SD con Sony 3.21 reanudando WBI (confirmar BootMode 11) y con 4.04 en frío (confirmar modo de arranque). Solo si Sony con WBI reproduce y 4.04 falla se aísla el modo de arranque. Eso todavía no identifica DMM, el estado de su pool ni la RAM Linux. Si ambas reproducen, 4.03 distingue núcleo de userland al compararla con 4.02. Si ambas fallan, revisar visibilidad por formato e indexación, y distinguir clip ausente de fallo al pulsar Play. Registrar si hay miniatura, audio, pantalla negra, aviso o cuelgue, y la primera línea de error de DMM/MPR tras pulsar Play. Comparar los parámetros DMM efectivos y `/proc/meminfo` entre arranques si hay acceso de lectura. G11 §11 explica por qué restaurar directamente el WBI de Sony sobre el `/usr` modificado arrastra su TOC y caché antiguos.
 
 ## 15. Iconos centrados y estado de los iconos para la futura build (25-11-2026)
 **Petición:** el icono no queda centrado; corregirlo y dejar aquí cómo quedan los iconos para una build futura. Nada instalado.

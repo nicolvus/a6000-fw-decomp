@@ -4,6 +4,12 @@
 
 **R6 fase 1, checkpoint:** [BLDR](../docs/capture/e26-r6-recuperacion-bionz.md). PMCA payload local byte a byte igual a upstream 0ce3c7e8, gitlink plataforma 85bcb545. ELF extraído y REA: un safe/cuatro normales, normales die0/plane0, metadatos descartados, error => trama vacía; wrapper rechaza estado 1 de ECC tolerado por Loader2. Mapa condicional de 480 KiB con una trama normal perdida; ID/error desconocidos. Cola INFO6 die0/plane1/block2/pages0–20 sin correspondencia adquirida. Regresión inicial falló por inspector inexistente; implementado, 3 pruebas, ruff/mypy pasan. Sin cámara. Próximo paso exacto: verificar límites del selector en los primeros 43 folios y localizar orientación CN4906 en SIDE A.
 
+## FILM-PB-1 — control de arranque y descriptores (25-11-2026)
+
+Verificados el tar/DAT 4.04, las tablas ELEM/D de 4.02 y las cadenas de configuración DMM del WBI de Sony. La 4.02 no tiene descriptores nuevos activos. El WBI contiene ambas rutas del mapa principal, sin demostrar qué mapa queda activo ni una reserva fallida. [G111 §14.1](../docs/gui/g111-film-receta-gui-iconos.md#141-verificación-de-los-dos-pendientes-offline).
+
+**Próximo paso exacto:** comparar el mismo clip y SD con Sony en BootMode 11 y con 4.04 en frío, anotando miniatura, audio y primer error tras pulsar Play. Pendiente de autorización física.
+
 ## E26-RECOVERY — 29-10-2026: incidente abierto
 
 **R8 completo offline:** [informe](../docs/capture/e26-r8-bootrom-uart-boss.md). Receptor serie BootROM reconstruido: `FUN_ffff1062` → `FUN_ffff0fa0` → `FUN_ffff0876` → `FUN_ffff0634`; MMIO `0xf2915010` bit 1; tipos 0/0xFFFF; checksum XOR+CRC8; parser offline `r8-uart-parser.py` (6/6 tests). Pines físicos UART no identificados (candidato GPIO(4,RDATA)=`0xf2910410`, CN4906 pin 9 vía R4003 XX sin continuidad verificada). No hay lectura de NAND vía protocolo. Escrituras NAND solo en Linux. INFO6 sin cambios desde R7. Seis preguntas de cierre: 1=SÍ, 2=NO DEMOSTRADO, 3=NO DEMOSTRADO, 4=NO DEMOSTRADO, 5=NO DEMOSTRADO, 6=NO. No existe ruta de recuperación sin Linux.
