@@ -202,6 +202,20 @@ Lo único distinto entre 3.95 (bien) y 3.96 (cuelga) son los iconos: `image_cmn_
 - **Bisección 2:** build **4.03 = núcleo de la 4.02 + `/usr` de Sony** (`nflasha15` original: sin menú Silent ni parches de userland), Darwin v3, sin
   `nflasha5`. `.dat` `3d16faf5…`. Auditoría: todo OK salvo «solo cambian los miembros previstos», que es lo esperado (la `nflasha15` es la de Sony).
   Si reproduce → el fallo está en el userland de Silent; si no → en el núcleo (`av-cam`/Darwin) o en la falta de `nflasha5`.
+- **Auditoría completa de Silent frente a la reproducción (25-11-2026, estático):** ningún parche de Silent está en la ruta de reproducción.
+  - `av-cam`: el envío `0x438d0064` reescribe `pkt[0x0e]` en todo paquete `0x0c` a Darwin, pero Darwin de Sony no tiene lectores de `S+0x3e`
+    (E25-25); solo lo leen nuestras compuertas (motor `0x1fe6c`, bobina `0x20c78`), que con Silent en Off (0) siguen la ruta de Sony. La cueva r5
+    (`0x43fb7e00`) cuelga de la secuencia de foto `0x438c828c` y sale sin tocar nada si el byte vivo `0x43EDF684+0x238` ≠ 1.
+  - `libObj`: el setter parcheado `0x686d10` tiene un solo llamador (`0x689f08`), que solo atiende la clave `0x291` de Silent.
+  - `viewUnified2`: `D[0x12]` de Sony es el descriptor sin modelo de AfTrackingSpeed (G28, inerte); `pid_space` solo amplía el rango y copia tablas.
+  - **El único cambio global de todas las builds desde la 3.52 es el arranque en frío (sin `nflasha5`)**: Sony siempre reanuda el WBI (modo 11) y la
+    capa de medios tiene modo propio para él (`MprIf::SnapShotBootInit`, «Snapshotboot mode», `createSnapshot` en `libmpr.so`). La bisección 4.02/4.03 no
+    lo separa: las dos van sin `nflasha5`. «Es Silent» sigue sin demostrar.
+- **Build de control 4.04 = Sony 3.21 intacto salvo `nflasha5`** (`build_package_nflasha15.py` sobre `fw321/firmware.tar` y la `nflasha15` de Sony,
+  `--sin-wbi`, sin Darwin v3). Comparado con el tar de Sony: falta solo `dev/nflasha5` y su línea de `part_image.sum`. `.dat` `9c7b4f46…0872`
+  (`build/sony_puro_sin_wbi_404/`, no versionado). Lectura: **si en la 4.04 los vídeos no se reproducen, la causa es el arranque en frío y Silent queda
+  descartado**; la solución pasa entonces por volver a tener WBI (regenerarlo con el `/usr` del CFW o hacer que la cámara cree la instantánea). Si se
+  reproducen, la 4.03 separa núcleo y userland de Silent. Recuperación tras la prueba: reinstalar la 4.01 con versión mayor (4.05).
 
 ## 15. Iconos centrados y estado de los iconos para la futura build (25-11-2026)
 **Petición:** el icono no queda centrado; corregirlo y dejar aquí cómo quedan los iconos para una build futura. Nada instalado.
