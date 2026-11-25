@@ -216,6 +216,16 @@ Lo único distinto entre 3.95 (bien) y 3.96 (cuelga) son los iconos: `image_cmn_
   (`build/sony_puro_sin_wbi_404/`, no versionado). Lectura: **si en la 4.04 los vídeos no se reproducen, la causa es el arranque en frío y Silent queda
   descartado**; la solución pasa entonces por volver a tener WBI (regenerarlo con el `/usr` del CFW o hacer que la cámara cree la instantánea). Si se
   reproducen, la 4.03 separa núcleo y userland de Silent. Recuperación tras la prueba: reinstalar la 4.01 con versión mayor (4.05).
+- **Auditoría estática exhaustiva (25-11-2026, 8 tareas de un subagente; notas fuera del repo):**
+  - Inventario 4.02 vs Sony por bytes: 6 miembros del tar; `av-cam` 233 B en 8 zonas (único fichero cambiado de `nflasha3`); Darwin 5 rangos;
+    `nflasha15` solo `libObj`, `CautionConfig`, `viewUnified2` y 25 `string_*.uxc`; falta `nflasha5`.
+  - Descartados: globales de MPR en frío (`MprCtrl::Init` → `MprIf::Create` `0x712530` fija lo mismo que `SnapShotBootInit`); `0x438d0064` es
+    `[EN->CA] CAP_SETTING` (solo captura); Darwin: la cueva `0x4318`/`0x4330` ocupa vectores 70–73/76 a cero y solo se habilitan IRQ 0–31; compuertas
+    solo con llamadores del obturador; R82 solo desde `0x190fc` (captura); `viewUnified2`: 5 páginas de Custom Settings +1 entrada cada una,
+    `.rel.dyn` con las 91 744 relocaciones de Sony intactas, PT_LOAD sin solapes; `CautionConfig` solo listas de Silent; `.uxc`: 109 000 textos iguales.
+  - WBI de Sony: 37 módulos con los mismos parámetros que inserta el frío (solo `wlanMemoryAllocator` extra, Wi-Fi). Sin módulo ni proceso solo-WBI.
+  - **Sin causa estática.** Quedan: arranque en frío (lo que la instantánea trae hecho: mapa `DmmConfig*.bin`, RAM) y, en teoría, pids `0xE9–0x120`
+    de `pid_space` (ningún pid de reproducción recuperado). Lo decide la cámara: 4.04 y, si reproduce, 4.03.
 
 ## 15. Iconos centrados y estado de los iconos para la futura build (25-11-2026)
 **Petición:** el icono no queda centrado; corregirlo y dejar aquí cómo quedan los iconos para una build futura. Nada instalado.
