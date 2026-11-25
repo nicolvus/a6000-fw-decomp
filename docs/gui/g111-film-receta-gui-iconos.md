@@ -184,3 +184,9 @@ Lo único distinto entre 3.95 (bien) y 3.96 (cuelga) son los iconos: `image_cmn_
   - `av-cam` Film: la LUT (`FUN_4381d294`) solo cambia la tabla si Sony ya tiene una 3D-LUT activa. La curva (`FUN_43854718`/`a28`/`fec`, `FUN_43b098c0`)
     y la máquina (`FUN_437a24fc`) solo actúan con un look activo (ACK ≠ 0).
   - Quedan sin descartar: el núcleo Silent/PP de `av-cam` y los parches de la GUI (`vu2`/`vu4`/`vu7`, `libObj`, `CautionConfig`).
+- **Usuario:** con Film y PP en Off tampoco se reproducen (las fotos sí); sospecha de Silent.
+- Revisado contra Sony (`av-cam`, 42 zonas cambiadas): los parches de Silent (`0x438d01ae` envío a Darwin, `0x43841472` paquete de la foto, copiador
+  `0x43845f2e`, lectores `0x4384219e`/`0x43842270`, cueva r5 `0x438c82fe`) están en rutas de captura; el ajuste usa la cadena nativa y dormida de Sony
+  (`0x291` → LIRO `0x40e3` → `+0x238`). Sin causa estática; quedan también Darwin v3 y el paquete sin `nflasha5` (arranque en frío).
+- **Bisección:** build **4.02 = solo Silent** (`--funciones ''`, sin Film/PP/EXFINE), `.dat` `c2a60f55…`, auditoría `todo_ok`. Si en la 4.02 los vídeos
+  no se reproducen, el fallo está en Silent o en la base (Darwin v3 / sin WBI); si se reproducen, en las capas Film/PP/EXFINE aunque estén en Off.
