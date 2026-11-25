@@ -130,6 +130,7 @@ def menu_film(pp: bool = False, maximo: int = 99, film: bool = True) -> dict:
 
 
 ICONOS_UXC = "share/app/image_cmn_169.uxc"
+CON_ICONOS = False  # CAM-394 (G111 §7): un image_cmn_169.uxc reescrito cuelga la cámara; volver a True solo si `uxc_imagenes.codifica` reproduce a Sony
 
 
 def pids_film(pp: bool) -> tuple[dict, tuple[int, int, int]]:
@@ -181,7 +182,7 @@ def build_files(work: Path, looks: Path, pp: bool = False, maximo: int = 99, fun
     img_fn = None
     if pp or film:
         kw = menu_film(pp, maximo, film)
-        img_fn = iconos_fn(orig, pp, film)
+        img_fn = iconos_fn(orig, pp, film) if CON_ICONOS else None
         build_pp_menu.main(stage, C.DEV_B, pp_dir, entradas_previas=[C.SILENT_DELTA], silent=True, **kw)
     else:
         menu_silent(stage, pp_dir)

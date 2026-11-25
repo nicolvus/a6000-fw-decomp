@@ -85,3 +85,11 @@ personalizados, página 4, «Film Simulation» (3 filas: Kodak, Fujifilm, Fujifi
 - **Recuperación:** batería fuera ≥ 30 s y encender sin tocar Fn; si no aparece por USB, actualizador forzado por SWD (R48, como G105 §4/§7) e instalar
   una build con `image_cmn_169.uxc` de fábrica (`sin_iso` 3.93 con `--reflash`, o una 3.95 = 3.94 sin `iconos_fn`).
 - **Regla nueva:** no volver a instalar un `.uxc` modificado hasta que `codifica` reproduzca los bytes de Sony (o use registros `0x0F` almacenados sin LZ).
+
+## 8. Build 3.95 sin iconos: recuperación por SWD e instalación (24-11-2026, MEDIDO)
+- `build_cfw_film.CON_ICONOS = False`: `image_cmn_169.uxc` queda de fábrica (no va en `files/`); el resto igual que la 3.94 (receta por la GUI, grises, Extra fine).
+  `build/cfw_func395/sin_iso`, `.dat` sha256 `fcf58a3046964d06e2d03a15154e3e372286bc2f0379617777b2250cbacf5b80`; auditoría `todo_ok` (0 violaciones LDEC, sumas bien).
+- Recuperación: actualizador forzado por SWD (R48, `analysis/camera-dumps/20261124-cam394-swd/p1.log`, dos veces: se reinició sin querer la primera).
+  Dos `updater response error`; ciclo de energía → volvió sola al actualizador (`03e2`) → `Done` (`install-3.95.log`).
+- **Verificado:** arranque normal (`07c4`), `pmca-console info` = **3.95**.
+- **Falta (cámara):** pulsar Fn (sin iconos nuevos no debería reiniciar si §7 es la causa) y probar Film ▸ Portra 400: estilo, balance, DRO y grises.
