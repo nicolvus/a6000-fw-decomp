@@ -1,15 +1,18 @@
 # G22-REPRO — La cámara emulada y las fotos de la SD: árbol `AVF_INFO` y reproducción
 
-**Estado (26-11-2026): PARCIAL.** Con `SD_ESTRUCTURA=1` la SD emulada trae ya la estructura que el firmware nombra (`AVF_INFO` con sus ficheros,
+**Estado (26-11-2026, sesión G22-REPRO-2): PARCIAL.** Con `SD_ESTRUCTURA=1` la SD emulada trae ya la estructura que el firmware nombra (`AVF_INFO` con sus ficheros,
 `MP_ROOT/100ANV01`) y **el volumen deja de fallar por «no hay `AVF_INFO`»**: medido, `libmpr` consulta `ms:/AVF_INFO` y sigue con los ficheros del índice,
 el manejador del recuento (`libmpr+0x620028`) se ejecuta y el montaje del sistema de ficheros termina `OK`.
-**No se ha conseguido** que la tecla Reproducción abra la vista ni que el recuento de fotos salga numérico: lo que falta es el **contenido del índice AV**
-(no hay ningún volcado real en el repo y no se ha inventado) y, por otro lado, el camino tecla → vista, que sigue sin abrir nada. Diagnóstico exacto en §4.
+**No se ha conseguido** que la tecla Reproducción abra la vista ni que el recuento de fotos salga numérico. La sesión G22-REPRO-2 cierra el **grafo estático del camino de la tecla**
+(§7): la clave que manda el arnés es la del firmware (`0x1f7` = `KEY_TACT_PLAY`), la vista la registra con el evento `0x150100f0` y una tabla estática lo manda a la **acción `4`**;
+medido en el invitado, la pulsación llega a la cola del driver y **`viewManagerIf::openView` no se llama ni una vez**, así que el corte está entre la acción y la apertura.
+Lo que falta sigue siendo el **contenido del índice AV** (no hay ningún volcado real en el repo y no se ha inventado) y la vista de reproducción en sí (§7.3).
 
-Sesión: **26-11-2026** (reloj del anfitrión 00:30–01:30, −03). Cámara física: **no usada** (todo en `qemu-system-arm`, perfiles `repro`/`repro2`).
-Espacio de direcciones: **VA del ELF** de `libmpr.so` 3.21 (el primero `PT_LOAD` tiene vaddr 0, así que offset de fichero = dirección); `TRACELIB`/`TRACEFN2`
-del shim usan el desplazamiento respecto a la base de la biblioteca, que es el mismo número.
-Capturas: [disparo](img/g22-repro-disparo.png) · [tras pulsar Reproducción](img/g22-repro-tras-reproduccion.png).
+Sesión: **26-11-2026** (reloj del anfitrión 02:30–03:30, −03). Cámara física: **no usada** (todo en `qemu-system-arm`, perfiles `repro`, `repro2` y `repro3`, puertos 8660/8661).
+Espacio de direcciones: **VA del ELF** de `libmpr.so`/`libObj.so`/`viewUnified2.so` 3.21 (el primer `PT_LOAD` tiene vaddr 0; el segundo de `viewUnified2.so` lleva +0x8000,
+por eso `.data` se cita por VA y no por desplazamiento de fichero); `TRACELIB`/`TRACEFN2` del shim usan el desplazamiento respecto a la base de la biblioteca.
+Capturas: [disparo](img/g22-repro-disparo.png) · [tras pulsar Reproducción](img/g22-repro-tras-reproduccion.png) · [G22-REPRO-2 sin av-cam](img/g22-repro2-disparo.png) ·
+[tras `O view/SINGLEPB`](img/g22-repro2-singlepb.png).
 
 ---
 
@@ -161,12 +164,20 @@ Con la estructura, el manejador `libmpr+0x620028` corre, pero la OSD **no muestr
 | 10 | Formato y contenido reales de `AVIN0001.INP/.BNP/.INT`, `PRV00001.BIN` y `STAT0000.BIN` | **NO VERIFICADO** | no hay ni un byte real en el repo ([film-pb-1-sub-bd-tarjeta §1](../reports/film-pb-1-sub-bd-tarjeta-20261128.md)) |
 | 11 | Qué índice/acción sale de la tecla `0x1f7` y por qué no abre `view/INDEX_PLAYBACK` | **NO VERIFICADO** | traza pendiente (§4.1) |
 
+| 12 | La clave que manda el arnés (`0x1f7`, índice `0x1f`) es la del firmware y se llama `KEY_TACT_PLAY` | **VERIFICADO** | `libObj` VA `0x10a6054`: `{0x1f7, puntero a "KEY_TACT_PLAY"}` (§7.1) |
+| 13 | La vista registra `0x1f7` con el evento `0x150100f0` (y `0x1f0`→`0x15010050`, `0x3`→`0x15010070`) | **VERIFICADO** | tripletes `{0x7ffffffe, clave, evento}` en `viewUnified2.so` VA `0x4aa844` (§7.1) |
+| 14 | Una tabla estática de `viewUnified2.so` manda el evento `0x150100f0` a la **acción `4`** (19 entradas) | **VERIFICADO** | tabla `.rodata` `0x3a03d4` + búsqueda `viewUnified2+0x1906a8` (desensamblado, §7.1) |
+| 15 | `view/INDEX_PLAYBACK` se resuelve como `viewIndexPb.so` + `ViewIndexPbToInstance`; ese nombre de biblioteca no existe como fichero, y el símbolo solo lo exporta `viewUnified3.so` | **VERIFICADO** (triplete y símbolo) / **NO_VERIFICADO** (cómo resuelve el cargador: ningún nombre lógico de la tabla existe como fichero) | `viewUnified2.so` `.rodata` `0x3a14c1`/`0x3a14d5`/`0x3a14e4`; `dynsym` de las 157 bibliotecas (§7.1) |
+| 16 | Al pulsar Reproducción, `viewManagerIf::openView` **no se llama** (el contador de la traza no sube) | **VERIFICADO** | `TRACEFN=1251fc` + `TRACEDEREF`: 2 pulsaciones, contador 3→3 (§7.2) |
+| 17 | `openView("view/SINGLEPB")` y `openView("view/INDEX_PLAYBACK")` en caliente **entran** pero no vuelven en ≥5 s, y la pantalla queda en blanco (`0 listas`) | **VERIFICADO** | `TRACE 1251fc n=3/n=4` con la cadena en `r0`; sin línea `OPENHOT`; [captura](img/g22-repro2-singlepb.png) (§7.2) |
+| 18 | El modelo, la indexación y la miniatura de la reproducción existen en el firmware (`ModelIndexPbToInstance`, `ModelSinglePbToInstance`…) | **VERIFICADO** | `dynsym` de `libObj.so` (§7.1) |
+
 ---
 
 ## 6. Reproducir
 
 ```sh
-mkdir -p ~/A6000-SD/DCIM/100MSDCF   # + una foto DSC00001.JPG (p. ej. 1536x1024 con PIL)
+mkdir -p ~/A6000-SD/DCIM/100MSDCF   # + una foto DSC00001.JPG (p. ej. 1536x1024 con PIL; en G22-REPRO-2: 222 164 B)
 echo '{"sd":{"carpeta":"'$HOME'/A6000-SD"}}' > /tmp/cfg.json
 SD_ESTRUCTURA=1 .venv/bin/python scripts/gui/harness/live.py analysis/gui/g22/harness \
   --perfil-dir repro --puerto 8650 --config /tmp/cfg.json
@@ -179,8 +190,118 @@ y otro se quedó en 2 fotogramas sin av-cam — **INFERENCIA**: sin `--avcam` el
 
 ---
 
+## 7. G22-REPRO-2: el camino de la tecla, estático y medido
+
+Segunda sesión del pendiente (perfiles `repro2`/`repro3`, puertos 8660/8661). Objetivo: seguir `0x1f7` desde `InputService` hasta la acción que abre la vista de
+reproducción y medir en el invitado dónde se corta. **Resultado**: el grafo estático queda cerrado hasta la **acción `4`** y el corte medido está **entre esa acción y
+`viewManagerIf::openView`**, que no se llama. La vista en sí tampoco pinta en este arnés (§7.3).
+
+### 7.1 Estático (VA del ELF; instrucciones leídas de los binarios, no de decompilador)
+
+**(a) La clave.** `libObj.so`, tabla `{clave, nombre}`: en VA `0x10a6054` hay `{0x000001f7, puntero}` y el puntero apunta a la cadena `KEY_TACT_PLAY` (VA `0xd93851`).
+Es la misma clave que `live.py` manda para el botón Reproducción (`TECLAS["reproduccion"] = (0x1F7, 0x1F)`), así que **el mapa de teclas del arnés no se toca**.
+
+**(b) La clave → evento.** `viewUnified2.so`, `.data` (VA): la tabla de registro de `InfraInput` es una lista de tripletes `{0x7ffffffe, clave, evento}`; en `0x4aa844`
+está `{0x7ffffffe, 0x000001f7, 0x150100f0}`. Los vecinos cuadran con las teclas ya medidas: `{0x7ffffffe, 0x1f0, 0x15010050}` (MOVIE) y `{0x7ffffffe, 0x3, 0x15010070}` (arriba).
+Otra entrada compuesta, `{0x7ffffffe, 0x0a000022, 0x150100f0}`, manda al mismo evento.
+
+**(c) El evento → acción.** `viewUnified2.so` tiene una tabla de 19 pares `{evento, acción}` en `.rodata` VA `0x3a03d4`, y la primera entrada es
+`{0x150100f0, 4}`. La consume una búsqueda lineal en `viewUnified2+0x1906a8`:
+
+```
+1906a8  push {r4,r5,r7,lr}
+1906ae  ldr  r2,[pc,#0x20]
+1906b2  add  r2,pc                 ; r2 = 0x3a03d4 (tabla)
+1906b4  ldr.w r5,[r2,r3,lsl #3]    ; evento de la entrada i
+1906b8  cmp  r5,r0                 ; ¿es el evento pedido (r0)?
+1906ba  bne  0x1906c6
+1906bc  adds r2,r2,r4              ; entrada i
+1906be  movs r0,#1
+1906c0  ldr  r3,[r2,#4]            ; acción
+1906c2  str  r3,[r1]               ; *out = acción
+1906c4  pop  {r4,r5,r7,pc}         ; return 1
+1906c6  adds r3,#1
+1906c8  cmp  r3,#0x13              ; 19 entradas
+1906ca  bne  0x1906ae
+1906cc  movs r0,#0                 ; no encontrado
+```
+
+Las otras entradas de la tabla son las teclas de disparo (`0x15010020` semipulsación→1, `0x150102b0` S1→2, `0x15010030` S2→3, `0x15010050` MOVIE→6, `0x15010110` MENU→7,
+`0x15040010`→8, diales `0x15070050`→5, cruceta `0x15020030/80/90/c0`→0x9d/0x9b/0x9e/0x9c, `0x15050040/50`→12). Que la reproducción sea la **acción 4** es el dato que
+faltaba en §4.1.
+
+**(d) La acción → vista.** El `ViewManager` guarda su mapa como tripletes de cadenas contiguas en `.rodata` de `viewUnified2.so` (102 tripletes):
+`0x3a14c1 "view/INDEX_PLAYBACK"` → `0x3a14d5 "viewIndexPb.so"` → `0x3a14e4 "ViewIndexPbToInstance"`. Dos hechos que corrigen la hipótesis de §4.1:
+
+- **Ninguno** de los nombres de biblioteca de los 102 tripletes existe como fichero en `/usr/lib` (157 ficheros, ninguno `view*Pb*.so` ni `viewFormat.so`…), y sin embargo
+  `view/STLREC` sí abre en el invitado (§7.2). Es decir, **el nombre lógico no es el fichero**: la resolución real (¿`dlopen` con otro nombre?, ¿`dlsym(RTLD_DEFAULT)`
+  sobre lo ya cargado?) **queda NO_VERIFICADA** y no se puede afirmar que la biblioteca «falte».
+- Los **símbolos** sí están: `ViewIndexPbToInstance` lo exporta solo `viewUnified3.so` (398 464 B) y `ViewSinglePbToInstance` / `ViewSinglePb4KToInstance` los exporta
+  el propio `viewUnified2.so`. Los modelos, en `libObj.so`: `ModelIndexPbToInstance`, `ModelSinglePbToInstance`, `ModelScrollSinglePbToInstance`, `ModelDlnaSinglePbToInstance`.
+  Es decir, **no falta código del firmware**: falta saber quién llama a `openView` con esos nombres y con qué condición.
+
+**(e) Quién debería abrirla.** El candidato estático es el consumidor de la acción 4 en la vista activa (`ViewStlrec`/`DefRootView`, la que registra el evento), que tendría
+que llamar a `openView("view/INDEX_PLAYBACK")` (o `@V0xx`). **No se ha localizado el llamador**: no hay referencia literal (ni `ldr` de pool, ni `movw/movt`, ni `add pc`)
+desde `.text` a las cadenas del `ViewManager`, así que la tabla se consume por índice/estructura (probablemente a través de `initializeViewConfig`), y la función `0x1906a8`
+no recibe ningún `bl` directo. Ese tramo queda **NO_VERIFICADO** (§7.4, siguiente medición).
+
+### 7.2 Medido en el invitado (perfil `repro2`, puerto 8660, arranque en frío 155 s)
+
+```sh
+HOME=/tmp/g22r/home SD_ESTRUCTURA=1 \
+SHIMEXTRA="WAITLOG=5000 TRACEFN=1251fc,114104 TRACEDEREF=d0:0:18 TRACEREP=1 TRACEMAX=8 \
+TRACELIB=libmpr.so TRACEFN2=620028,620262,62059c GMILOG=1 SETLOG=1" \
+  .venv/bin/python scripts/gui/harness/live.py analysis/gui/g22/harness --perfil-dir repro2 --puerto 8660 --config /tmp/g22r/config-repro2.json
+```
+
+`libObj+0x1251fc` es `viewManagerIf::openView(const char*, int)`; `TRACEDEREF=d0:0:18` vuelca 18 palabras desde `r0`, que es la cadena del nombre:
+
+```
+570.48  TRACE 1251fc n=1  r0=13752f0  r1=0    -> DEREF "view/ROOT"        (arranque, OPENVIEW)  OPENVIEW view/ROOT -> 0
+586.76  TRACE 1251fc n=2  r0=13752fa  r1=3    -> DEREF "view/STLREC"      (arranque)            OPENVIEW view/STLREC -> 20502056
+643.10  WAITLOG 173.60 tecla 0x1f7            (pulsación Reproducción)
+644.24  WAITLOG 174.74 tecla 0x1f7            (suelta)
+697.04  WAITLOG 225.28 tecla 0x1f7            (segunda pulsación)
+698.15  WAITLOG 226.39 tecla 0x1f7
+626.44  TRACE 1251fc n=3  r0=13e0b18  r1=0    -> DEREF "view/SINGLEPB"    (orden «O» en caliente)
+671.93  TRACE 1251fc n=4  r0=13e2430  r1=0    -> DEREF "view/INDEX_PLAYBACK" (orden «O» en caliente)
+```
+
+- **La tecla llega**: dos líneas `tecla 0x1f7` por pulsación (bajada y suelta) en la cola del driver `0x7a0020`.
+- **Y no abre nada**: el contador de `openView` se queda en 3 entre las dos pulsaciones (líneas 143 y 155, antes y después de las teclas de 643/697). **Medido**: la
+  cadena se corta **antes** de `viewManagerIf::openView`, no en el `ViewManager`.
+- **En caliente sí se llama**: `O view/SINGLEPB` y `O view/INDEX_PLAYBACK` entran en `openView` con la cadena correcta (arriba). Pero **no hay línea `OPENHOT`** (el shim la
+  escribe al volver de la llamada) ni 5 s después, y la pantalla pasa a **`0 listas` / PNG en blanco** ([captura](img/g22-repro2-singlepb.png)) mientras el invitado sigue
+  pintando a 1,5 fps: es decir, `openView` **no vuelve** en esas condiciones (INFERENCIA: espera a que la vista se construya y algo no llega).
+- **Aviso de comparabilidad**: en este worktree **no está `analysis/rea-independent/input/av-cam.bin` ni `liro.ko`**, así que `avcam_disponible()` es falso y `live.py`
+  arrancó **sin av-cam**. El OSD sale casi vacío ([captura](img/g22-repro2-disparo.png): solo el icono `P` y un icono, **2 listas**) frente a las 33–35 listas del registro
+  de §3; por eso el efecto colateral `AF-S`→`MF` de [film-pb-1-sub-arnes-galeria](../reports/film-pb-1-sub-arnes-galeria-20261126.md) **no se ha reproducido aquí** y
+  queda NO_VERIFICADO en esta sesión. La conclusión de (c) no depende de eso: el corte está antes de `openView` en ambos casos.
+
+### 7.3 La vista de reproducción: qué haría falta (medido + estático)
+
+- `openView("view/INDEX_PLAYBACK")` y `openView("view/SINGLEPB")` **se aceptan** (la llamada entra con el nombre correcto) y la pantalla queda en blanco: la vista no
+  llega a pintar ni una lista. Con `GMILOG=1` **no aparece ni una sola petición `getModelInfo`** de esa vista, así que se descarta que se quede esperando un modelo por
+  nombre: sale antes de pedirlo.
+- El índice AV sigue siendo el candidato para el contenido: `AVF_INFO/AVIN0001.INP`, `.BNP`, `.INT`, `PRV00001.BIN` y `STAT0000.BIN` los crea hoy el arnés **de 0 B** y la
+  cámara no los rellena (§4.2, volcado del disco del invitado). Sin un índice real no hay «contenidos» que listar; **no se ha inventado formato**.
+- Lo que **no** falta: los símbolos de las vistas y los modelos están en el firmware (§7.1d).
+
+### 7.4 Lo que queda por medir (siguiente paso exacto)
+
+1. **¿Se genera el evento?** Arranque en frío con `TRACELIB=viewUnified2.so TRACEFN2=1906a8 TRACEDEREF=d0:0:18 TRACEREP=1` y pulsar Reproducción: si `1906a8` recibe
+   `r0=0x150100f0`, el evento se genera y el corte está en el consumidor de la acción 4; si no se dispara, el corte está en `InfraInput`/`InputService`
+   (`libObj+0x114104`, `+0x113d2c` `activate`, `+0x113c1c` `UpdateInputTable`). En esta sesión se intentó **en caliente** (`E TRACELIB`/`E TRACEFN2`) y no hubo
+   confirmación de armado (el `LOG` del rearme no se reenvía sin `WLALL`), así que el intento **no cuenta como medición**.
+2. **Contenido del índice AV**: hace falta un `AVIN0001.INP` de una tarjeta real de A6000 (no hay ni un byte en el repo) o que el propio MPR lo genere
+   (`FormatCmd`/«Formatear», §5.46/§5.50). Con eso se repite `O view/INDEX_PLAYBACK` y se compara.
+3. **`openView` que no vuelve**: repetir `O view/SINGLEPB` con `WATCH=1251fc`/`DUMPAT` y `RCVSTACK=1` para ver en qué cola se queda (la orden «O» se lanza en su propio
+   hilo, así que el bloqueo no rompe la UI).
+
+---
+
 ## PARA PENDIENTES.md
 
 | ID | Estado | Resumen | Criterio de cierre |
 |---|---|---|---|
-| G22-REPRO | EN CURSO (abierto 26-11-2026, tarea G22-REPRO) | **Árbol de la SD con `AVF_INFO` (opt-in `SD_ESTRUCTURA=1`)**: `sd_image.py` crea `AVF_INFO/{AVIN0001.INP,AVIN0001.BNP,AVIN0001.INT,PRV00001.BIN,STAT0000.BIN}` (0 B, contenido no inventado) y `MP_ROOT/100ANV01`; tests en `tests/test_gui_sd_image.py`. **MEDIDO**: `libmpr` consulta `ms:/AVF_INFO` (24 disparos de `FindFirst`, con `STAT0000.BIN` no documentado antes) y el manejador del recuento `libmpr+0x620028` se ejecuta con la UI sana (`Fsys_MountAsync OK`). **Sigue fallando**: (a) la tecla Reproducción no abre ninguna vista (solo cambia AF-S→MF; `INDEX_PLAYBACK`/`SINGLEPB` ya se cerraban solas, film-pb-1-sub-arnes-galeria §0) — falta medir acción/índice de `0x1f7` en InputService→`viewManagerIf::openView`; (b) el recuento de fotos sigue sin número y el aviso `ERROR` de tarjeta persiste; la cámara **no** crea ni repara el índice (volcado del disco del invitado idéntico, cinco ficheros a 0 B); falta medir si `0x620028` llega a la fórmula (`0x620262`/`0x62059c`) con trazas armadas en el arranque. **NO VERIFICADO**: contenido real de los cinco ficheros del índice (no hay volcado de tarjeta en el repo). | PNG de `view/INDEX_PLAYBACK` (o `SINGLEPB`) con la miniatura de `DSC00001.JPG` de la SD emulada **y** OSD de disparo con recuento numérico (sin `ERROR`); si el índice es imprescindible, con un `AVIN0001.INP` cuyo contenido venga de una tarjeta real (o generado por el propio MPR, p. ej. arreglando «Formatear»/`FormatCmd`, §5.46/§5.50) y no inventado |
+| G22-REPRO | EN CURSO (abierto 26-11-2026; **2.ª sesión G22-REPRO-2, 26-11-2026**) | **Árbol de la SD con `AVF_INFO` (opt-in `SD_ESTRUCTURA=1`)**: `sd_image.py` crea `AVF_INFO/{AVIN0001.INP,AVIN0001.BNP,AVIN0001.INT,PRV00001.BIN,STAT0000.BIN}` (0 B, contenido no inventado) y `MP_ROOT/100ANV01`; tests en `tests/test_gui_sd_image.py`. **MEDIDO (1.ª sesión)**: `libmpr` consulta `ms:/AVF_INFO` y el manejador del recuento `libmpr+0x620028` se ejecuta con la UI sana (`Fsys_MountAsync OK`). **NUEVO (2.ª sesión, estático VERIFICADO)**: el camino de la tecla queda cerrado hasta la acción: `0x1f7` = `KEY_TACT_PLAY` (`libObj` VA `0x10a6054`) → evento `0x150100f0` (`viewUnified2.so` `.data` VA `0x4aa844`) → **acción 4** (tabla `.rodata` `0x3a03d4`, búsqueda `viewUnified2+0x1906a8`); el `ViewManager` da `view/INDEX_PLAYBACK` → `viewIndexPb.so` + `ViewIndexPbToInstance` (símbolo exportado solo por `viewUnified3.so`; los 102 nombres de biblioteca de la tabla **no** son ficheros de `/usr/lib`, resolución NO_VERIFICADA) y los modelos están en `libObj` (`ModelIndexPbToInstance`, `ModelSinglePbToInstance`). **MEDIDO (2.ª sesión, invitado)**: la tecla llega a la cola `0x7a0020` (2 líneas `tecla 0x1f7`) y **`viewManagerIf::openView` no se llama** (contador `TRACE 1251fc` 3→3); `O view/SINGLEPB` y `O view/INDEX_PLAYBACK` **entran** en `openView` con la cadena correcta pero **no vuelven** en ≥5 s (sin línea `OPENHOT`) y la pantalla queda en blanco (`0 listas`). En este worktree no hay `av-cam.bin`/`liro.ko`: el OSD sale con 2 listas y el efecto `AF-S`→`MF` no se ha reproducido (no comparable con §3). **Sigue fallando**: (a) el tramo acción 4 → `openView` (no localizado el llamador; no hay referencia literal a las cadenas del `ViewManager` desde `.text`); (b) el recuento de fotos sin número y el aviso `ERROR` de tarjeta; falta medir si `0x620028` llega a la fórmula (`0x620262`/`0x62059c`) con `TRACEFN2` armado en el arranque; (c) el contenido real del índice AV. Tests nuevos sin QEMU: `tests/test_g22_repro.py` (8 casos). | PNG de `view/INDEX_PLAYBACK` (o `SINGLEPB`) con la miniatura de `DSC00001.JPG` de la SD emulada **y** OSD de disparo con recuento numérico (sin `ERROR`); si el índice es imprescindible, con un `AVIN0001.INP` cuyo contenido venga de una tarjeta real (o generado por el propio MPR, p. ej. arreglando «Formatear»/`FormatCmd`, §5.46/§5.50) y no inventado |
