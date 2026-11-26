@@ -113,7 +113,8 @@ def pulsa(vm: "Vm", nombre: str, v: int) -> None:
         vm.tecla(k, v, i)
     elif v:
         vm.tecla(k, paso[0] & 0xFFFFFFFF, i)
-    vm.captura.tecla(nombre, v)  # la foto/clip los dispara la tecla de la cámara igual que el botón de la página (T4b)
+    if (cap := getattr(vm, "captura", None)):  # la foto/clip los dispara la tecla de la cámara igual que el botón (T4b)
+        cap.tecla(nombre, v)
 
 
 def rgba4444_png(w: int, h: int, raw: bytes) -> bytes:
@@ -191,11 +192,17 @@ class Vm:
                 escribe_atomico(self.dir / "idt_cam.bin", idt)
             avcam_sha += avcam_fuente.sha(idt)
         self.puente = None
+        self.puente_error: BaseException | None = None
+        self.puente_listo = threading.Event()  # la LIRO VM arranca en un hilo: al restaurar iba en el camino crítico (el lector esperaba al Puente)
+        if not avcam:
+            self.puente_listo.set()  # sin LIRO VM no hay nada que esperar al cerrar
+        self.avq_cola: queue.Queue | None = queue.Queue() if avcam else None  # invitado → av-cam; se encola hasta que la LIRO VM está lista
+        mod_puente = None
         if avcam:  # av-cam (LIRO VM, scripts/gui/avcam) atiende las colas de kernel que im.elf le envía; ver puente.py
             sys.path.insert(0, str(HERE.parent / "avcam"))
             import puente
+            mod_puente = puente
             shimenv += " AVQ=" + ",".join(f"{q:x}" for q in puente.colas_avcam(self.avcam_ruta) if q > 0x100)
-            self.avq_cola: queue.Queue = queue.Queue()
         self.estado, self.ui, self.mon = self.dir / "estado.zst", self.dir / "ui.sock", self.dir / "mon.sock"
         initrd, sello = self.dir / "initrd.gz", self.dir / "huella.txt"
         self.nvram_f = self.dir / "nvram.json"
@@ -230,14 +237,33 @@ class Vm:
         self.cerrojo_dial = threading.Lock()  # un giro del dial a la vez
         self.fps, self.coste = 0.0, ""
         if avcam:
-            self.puente = puente.Puente(self.envia, self.dir / "avcam.jsonl", puente.A.Emisor(None) if ae else None, self.avcam_ruta)
-            self.puente.vm.bk.update(self.nvram)  # E2E-2: el av-cam lee el mismo Backup que escribe la UI (la VM solo tenía el volcado estático bk.tbl)
-            threading.Thread(target=self.avq_hilo, daemon=True).start()
+            # G22-ARR2: en un hilo, para que el lector conecte con QEMU mientras la LIRO VM arranca (≈3 s que al restaurar eran el 70 % del tiempo).
+            threading.Thread(target=self.arranca_puente, args=(mod_puente, ae), daemon=True).start()
+            if not restaurar:  # en frío no cuesta nada (≈3 s frente a 111 s) y el arranque queda igual: los avisos de arranque salen antes de la «R»
+                self.puente_listo.wait()
+                if self.puente_error:
+                    raise self.puente_error
         threading.Thread(target=self.lector, daemon=True).start()
         threading.Thread(target=self.gira_dial, daemon=True).start()
         threading.Thread(target=self.reloj, daemon=True).start()
         if not restaurar:
             threading.Thread(target=self.autoguardado, daemon=True).start()
+
+    def arranca_puente(self, puente, ae: bool) -> None:  # `puente` = módulo (import diferido: necesita unicorn)
+        """Arranca la LIRO VM y sigue en este mismo hilo entregando, en orden, lo que el invitado manda a av-cam.
+        G22-ARR2: antes bloqueaba `__init__` (5–6 s en la máquina de la doc) y el lector no conectaba con QEMU hasta terminar, así que al
+        restaurar sumaba al tiempo hasta el primer fotograma."""
+        try:
+            p = puente.Puente(self.envia, self.dir / "avcam.jsonl", puente.A.Emisor(None) if ae else None, self.avcam_ruta)
+            p.vm.bk.update(self.nvram)  # E2E-2: el av-cam lee el mismo Backup que escribe la UI (la VM solo tenía el volcado estático bk.tbl)
+        except BaseException as e:  # noqa: BLE001 - en frío se relanza en __init__ (como antes); al restaurar se informa y el invitado sigue sin av-cam
+            print(f"puente: no arrancó la LIRO VM: {e!r}", flush=True)
+            self.puente_error, self.puente = e, None
+            self.puente_listo.set()
+            return
+        self.puente = p
+        self.puente_listo.set()
+        self.avq_hilo(self.avq_cola, p)
 
     @staticmethod
     def carga(f: Path) -> dict:
@@ -261,10 +287,14 @@ class Vm:
         if MODO_TRAS_ARRANQUE is not None and not self.restaurado:
             self.tecla(DIAL_MODO[0], MODO_TRAS_ARRANQUE, DIAL_MODO[1])
 
-    def avq_hilo(self) -> None:
-        """Mensajes del invitado a av-cam, en orden y fuera del hilo lector."""
+    def avq_hilo(self, cola, puente) -> None:
+        """Mensajes del invitado a av-cam, en orden y fuera del hilo lector (se encolan hasta que la LIRO VM está lista: G22-ARR2)."""
         while True:
-            self.puente.desde_invitado(self.avq_cola.get())
+            clase, linea = cola.get()
+            if clase == "AVH":  # AVH w1 w2 w3 wf: campos de libObj del encabezado del anillo de av-cam
+                puente.cabecera_desde_invitado(linea)
+            else:  # AVQ qid tam cabecera cuerpo
+                puente.desde_invitado(linea)
 
     def reloj(self) -> None:
         """Pone la hora real en el invitado al conectar (también tras restaurar un estado de hace días) y la reajusta cada 30 s."""
@@ -307,16 +337,16 @@ class Vm:
                     j = buf.find(b"\n")
                     if j < 0:
                         break
-                    if self.puente:
-                        self.puente.cabecera_desde_invitado(buf[5:j].decode())
+                    if self.avq_cola:  # se aplica cuando la LIRO VM esté lista, en orden con los AVQ (antes se perdía si llegaba antes)
+                        self.avq_cola.put(("AVH", buf[5:j].decode()))
                     buf = buf[j + 1:]
                     continue
                 if buf.startswith(b"\x01AVQ "):  # AVQ qid tam cabecera cuerpo: mensaje de im.elf a una cola de av-cam
                     j = buf.find(b"\n")
                     if j < 0:
                         break
-                    if self.puente:
-                        self.avq_cola.put(buf[5:j].decode())
+                    if self.avq_cola:
+                        self.avq_cola.put(("AVQ", buf[5:j].decode()))
                     buf = buf[j + 1:]
                     continue
                 if buf.startswith((b"\x01SDI ", b"\x01SDE")):  # volcado de /sd.img (orden «D» de /sd-volcado): trozos con datos → sd-volcado.img (disperso)
@@ -473,12 +503,29 @@ document.getElementById('guardar').onclick=async()=>{st.textContent='guardando�
 
 
 CONFIG: dict = {"ruta": "", "lanzador": ""}  # lo fija main (--config, --lanzador)
+_CFG: dict[str, tuple[float, int, dict]] = {}  # config.json validada por (ruta) → (mtime, tamaño, config)
 
 
 def configuracion() -> dict:
-    """Mapa de teclas del config.json del configurador (se relee en cada carga de la página); sin config, la página usa su mapa fijo."""
+    """Mapa de teclas del config.json del configurador (se relee en cada carga de la página; sin config, la página usa su mapa fijo).
+    Validarla cuesta ≈15 ms (`emu_config.valida_config` analiza `live.py` para conocer los botones), así que se cachea por mtime y tamaño:
+    el configurador puede cambiarla y la siguiente carga de página la ve."""
     from emu_config import carga_config, mapa_inverso
-    cfg = carga_config(Path(CONFIG["ruta"])) if CONFIG["ruta"] else None
+    cfg = None
+    if CONFIG["ruta"]:
+        f, clave = Path(CONFIG["ruta"]), None
+        try:
+            st = f.stat()
+            clave = (st.st_mtime, st.st_size)
+        except OSError:
+            pass  # sin fichero: `carga_config` da los valores por defecto y no se cachea
+        guardada = _CFG.get(CONFIG["ruta"])
+        if clave and guardada and guardada[:2] == clave:
+            cfg = guardada[2]
+        else:
+            cfg = carga_config(f)
+            if clave:
+                _CFG[CONFIG["ruta"]] = (clave[0], clave[1], cfg)
     return {"mapa": mapa_inverso(cfg["teclas"]) if cfg else None, "lanzador": CONFIG["lanzador"], "sensor": cfg["sensor"] if cfg else None}
 
 
@@ -671,7 +718,7 @@ def main() -> None:
                 print(vm.guardar(), flush=True)
             vm.p.terminate()
             vm.p.wait()
-        if vm.puente:
+        if vm.puente_listo.wait(60) and vm.puente:  # el Puente arranca en un hilo (G22-ARR2): se espera si aún no está
             vm.puente.cierra()
 
 

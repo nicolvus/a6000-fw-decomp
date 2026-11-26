@@ -36,9 +36,22 @@ def _clave_colas(avcam: Path | None) -> str:
     return h.hexdigest()
 
 
+_VM_COLAS: tuple[str, L.Vm] | None = None  # VM que arrancó `colas_avcam`, para que el Puente no la arranque otra vez (G22-ARR2)
+
+
+def vm_de_colas(avcam: Path | None = None) -> L.Vm | None:
+    """La LIRO VM que arrancó `colas_avcam` para esta misma imagen, si sigue sin usar (se entrega una sola vez)."""
+    global _VM_COLAS
+    if _VM_COLAS and _VM_COLAS[0] == str(avcam or L.AVCAM):
+        vm, _VM_COLAS = _VM_COLAS[1], None
+        return vm
+    return None
+
+
 def colas_avcam(avcam: Path | None = None, cache: Path | None = CACHE_COLAS) -> list[int]:
     """Colas de recepción de av-cam (registradas con callback o con tarea en espera): los mensajes del invitado a ellas son para la LIRO VM.
-    Calcularlas arranca la LIRO VM entera (5–6 s, y el Puente la arranca otra vez): se guardan en `cache` por contenido de las entradas."""
+    Calcularlas arranca la LIRO VM entera (5–6 s, y el Puente la arrancaba otra vez): se guardan en `cache` por contenido de las entradas y la
+    VM queda disponible en `vm_de_colas` para que el Puente la reutilice."""
     clave = _clave_colas(avcam) if cache else ""
     try:
         datos = json.loads(cache.read_text()) if cache else {}
@@ -46,7 +59,9 @@ def colas_avcam(avcam: Path | None = None, cache: Path | None = CACHE_COLAS) -> 
         datos = {}
     if clave in datos:
         return datos[clave]
+    global _VM_COLAS
     vm = arranca(avcam)[0]
+    _VM_COLAS = (str(avcam or L.AVCAM), vm)
     q = sorted(set(vm.qcb) | {x.espera[1] for x in vm.tasks.values() if x.estado == "espera" and x.espera[:1] == ("rcv",)})
     if cache:
         try:
@@ -59,7 +74,11 @@ def colas_avcam(avcam: Path | None = None, cache: Path | None = CACHE_COLAS) -> 
     return q
 
 
-def arranca(avcam: Path | None = None) -> tuple[L.Vm, float]:
+def arranca(avcam: Path | None = None, vm=None) -> tuple[L.Vm, float]:
+    """LIRO VM arrancada (tiempo virtual, ms). Con `vm` (p. ej. `vm_de_colas`) se reutiliza la que ya arrancó `colas_avcam`: mismo estado
+    y un arranque menos (200 M de instrucciones, 3–6 s)."""
+    if vm is not None:
+        return vm, vm.t
     idt = avcam.with_name("idt_cam.bin") if avcam else None  # perfil del arnés: junto al av-cam que se cargó
     vm = L.carga(avcam or L.AVCAM, L.BK, idt if idt and idt.exists() else None)
     L.crea_tarea(vm, 1, "entry_pre", 0x43541044, 0, 0).estado = "lista"
@@ -87,7 +106,7 @@ class Puente:
             ae.enviar = self._envia_ae
         self.cerrojo = threading.RLock()
         self.avcam = avcam or L.AVCAM
-        self.vm, t0 = arranca(avcam)
+        self.vm, t0 = arranca(avcam, vm_de_colas(avcam))  # reutiliza la VM de `colas_avcam` si está sin usar
         self._anota(arranque="carga", sha256=hashlib.sha256(self.avcam.read_bytes()).hexdigest(), ruta=str(self.avcam))
         self.vm.limite, self.t_real0, self.t_virt0 = t0, time.monotonic(), t0
         self.visto = len(self.vm.salida_ext)  # lo emitido durante el arranque se guarda aparte: solo se reenvía en un arranque en frío del invitado

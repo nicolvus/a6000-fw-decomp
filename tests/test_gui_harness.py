@@ -650,3 +650,181 @@ def test_live_engancha_camara_web_en_get_y_post() -> None:
     src = (HARNESS / "live.py").read_text()
     assert src.count('camara_web.maneja(self, "GET"') == 1 and src.count('camara_web.maneja(self, "POST"') == 1
     assert "import camara_web" in src
+def test_al_restaurar_vm_no_espera_al_puente(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """G22-ARR2: la LIRO VM arranca en un hilo, así que `Vm.__init__` vuelve (QEMU ya restaurando y el lector puede conectar) sin
+    esperar sus ≈3 s. Antes, al restaurar, ese arranque era el 70 % del tiempo hasta el primer fotograma."""
+    import queue
+    import threading
+    import time
+    from types import SimpleNamespace
+
+    live, _ = _live()
+    work = tmp_path / "work"
+    (work / "live/optA").mkdir(parents=True)
+
+    entro = threading.Event()
+
+    class PuenteLento:  # lo que tarda la LIRO VM, sin unicorn
+        def __init__(self, enviar, registro, ae, avcam) -> None:
+            time.sleep(1.0)
+            self.vm = SimpleNamespace(bk={})
+            entro.set()
+
+        def desde_invitado(self, linea: str) -> None:  # los usa `avq_hilo` tras arrancar
+            pass
+
+        def cabecera_desde_invitado(self, linea: str) -> None:
+            pass
+
+    mod = SimpleNamespace(Puente=PuenteLento, colas_avcam=lambda _r: [0x30001], A=SimpleNamespace(Emisor=lambda _x: None))
+    monkeypatch.setitem(sys.modules, "puente", mod)
+    monkeypatch.setattr(live.run, "qemu_cmd", lambda *a, **k: ["qemu-falso"])  # no se arranca QEMU
+    monkeypatch.setattr(live.subprocess, "Popen", lambda *a, **k: SimpleNamespace(poll=lambda: None, terminate=lambda: None, wait=lambda: None))
+
+    d = work / "live/optA"  # estado y initrd presentes y huella que casa: es una restauración
+    shimenv = live.construye_shimenv(True) + " AVQ=30001"
+    for f in ("estado.zst", "initrd.gz"):
+        (d / f).write_bytes(b"x")
+    (d / "huella.txt").write_text(live.huella(work, "", shimenv, ""))
+
+    t = time.monotonic()
+    vm = live.Vm(work, "", "optA", None, True, True, False, "")
+    dt = time.monotonic() - t
+    assert vm.restaurado and vm.puente is None and dt < 0.5  # no bloquea: el Puente sigue arrancando
+    assert not entro.is_set()
+    assert vm.puente_listo.wait(5) and vm.puente is not None and entro.is_set()  # y queda listo para /avmem y los AVQ
+    assert vm.avq_cola is not None and isinstance(vm.avq_cola, queue.Queue)
+
+
+def test_lo_que_el_invitado_manda_antes_del_puente_se_entrega_despues_y_en_orden(tmp_path: Path) -> None:
+    """G22-ARR2: al restaurar, el invitado puede mandar AVH/AVQ mientras la LIRO VM aún arranca; antes ese AVH se perdía
+    (`if self.puente:` era falso). Ahora se encola y se entrega en orden cuando el Puente está listo."""
+    import queue
+    import threading
+    import time
+    from types import SimpleNamespace
+
+    live, _ = _live()
+    visto: list[tuple[str, str]] = []
+
+    class PuenteFalso:
+        def __init__(self, *_a) -> None:
+            self.vm = SimpleNamespace(bk={})
+            time.sleep(0.4)
+
+        def cabecera_desde_invitado(self, linea: str) -> None:
+            visto.append(("AVH", linea))
+
+        def desde_invitado(self, linea: str) -> None:
+            visto.append(("AVQ", linea))
+
+    mod = SimpleNamespace(Puente=PuenteFalso, A=SimpleNamespace(Emisor=lambda _x: None))
+    v = live.Vm.__new__(live.Vm)
+    v.envia, v.dir, v.nvram, v.avcam_ruta = (lambda _d: None), tmp_path, {}, None
+    v.puente, v.puente_error, v.puente_listo, v.avq_cola = None, None, threading.Event(), queue.Queue()
+    threading.Thread(target=v.arranca_puente, args=(mod, False), daemon=True).start()
+    assert not v.puente_listo.is_set() and v.puente is None  # aún arrancando: no bloquea al llamante
+    for m in (("AVH", "0 0 0 0"), ("AVQ", "56000f 8 cab cuerpo"), ("AVQ", "30001 4 cab cuerpo")):
+        v.avq_cola.put(m)
+    assert v.puente_listo.wait(5)
+    for _ in range(60):
+        if len(visto) == 3:
+            break
+        time.sleep(0.05)
+    assert visto == [("AVH", "0 0 0 0"), ("AVQ", "56000f 8 cab cuerpo"), ("AVQ", "30001 4 cab cuerpo")]
+
+
+def test_puente_que_no_arranca_deja_el_error_para_relanzarlo_en_frio(tmp_path: Path) -> None:
+    """G22-ARR2: si la LIRO VM no arranca, en frío el error se relanza en `__init__` (como antes) y al restaurar queda anotado
+    (`puente_error`) en vez de perderse en un hilo."""
+    import queue
+    import threading
+    from types import SimpleNamespace
+
+    live, _ = _live()
+
+    class PuenteRoto:
+        def __init__(self, *_a) -> None:
+            raise RuntimeError("sin unicorn")
+
+    v = live.Vm.__new__(live.Vm)
+    v.envia, v.dir, v.nvram, v.avcam_ruta = (lambda _d: None), tmp_path, {}, None
+    v.puente, v.puente_error, v.puente_listo, v.avq_cola = None, None, threading.Event(), queue.Queue()
+    v.arranca_puente(SimpleNamespace(Puente=PuenteRoto, A=SimpleNamespace(Emisor=lambda _x: None)), False)  # en el hilo actual
+    assert v.puente is None and v.puente_error is not None and isinstance(v.puente_error, RuntimeError) and v.puente_listo.is_set()
+
+
+def test_configuracion_se_cachea_por_mtime(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """G22-ARR2: `/config` (una vez por carga de página) validaba el JSON en cada petición (≈15 ms, `valida_config` analiza `live.py`);
+    se cachea por mtime y tamaño, así que el configurador puede cambiarla y la página siguiente la ve."""
+    import json
+
+    live, _ = _live()
+    from emu_config import CONFIG_DEFECTO
+
+    f = tmp_path / "config.json"
+    f.write_text(json.dumps(CONFIG_DEFECTO))
+    monkeypatch.setitem(live.CONFIG, "ruta", str(f))
+    monkeypatch.setitem(live.CONFIG, "lanzador", "")
+    live._CFG.clear()
+    primera = live.configuracion()
+    segunda = live.configuracion()
+    assert primera == segunda and primera["mapa"]["KeyM"] == "menu" and primera["sensor"] == CONFIG_DEFECTO["sensor"]
+    assert len(live._CFG) == 1  # una sola validación para las dos peticiones
+    otro = {**CONFIG_DEFECTO, "sensor": {"fuente": "video", "ruta": "/tmp/x.png"}}
+    f.write_text(json.dumps(otro))
+    assert live.configuracion()["sensor"]["fuente"] == "video"  # mtime nuevo: se relee
+
+
+def test_arranca_puente_con_la_vm_real_entrega_el_primer_mensaje(tmp_path: Path) -> None:
+    """G22-ARR2, cadena completa: `Vm.arranca_puente` en un hilo con el `puente` real (LIRO VM con av-cam.bin) deja el Puente
+    listo y `avq_hilo` entrega en orden lo que el invitado mandó antes, recibiendo la respuesta real de av-cam (petición capturada
+    en el arnés el 13-11-2026). Sin QEMU."""
+    import queue
+    import sys as _sys
+    import threading
+    import time
+
+    live, _ = _live()
+    _sys.path.insert(0, str(ROOT / "scripts/gui/avcam"))
+    puente = pytest.importorskip("puente")
+    if not puente.L.AVCAM.exists() or not puente.L.LIRO_KO.exists():
+        pytest.skip("faltan av-cam.bin o liro.ko (no versionados)")
+    salida: list[bytes] = []
+    v = live.Vm.__new__(live.Vm)
+    v.envia, v.dir, v.nvram, v.avcam_ruta = salida.append, tmp_path, {}, None
+    v.puente, v.puente_error, v.puente_listo, v.avq_cola = None, None, threading.Event(), queue.Queue()
+    threading.Thread(target=v.arranca_puente, args=(puente, False), daemon=True).start()
+    assert v.puente_listo.wait(90) and v.puente is not None and v.puente_error is None
+    v.avq_cola.put(("AVQ", ("5700f9 28 000000000000000020015500 "  # petición dataflow capturada en el arnés
+                            "20015500a0a0a0a0010028001400000028000000001000001400020000000000020000000000000000000000")))
+    t0 = time.time()
+    while not any(x.startswith(b"Q ") for x in salida) and time.time() - t0 < 5:
+        time.sleep(0.05)
+    v.puente.cierra()
+    qs = [x for x in salida if x.startswith(b"Q ")]
+    _, cola, cab, cuerpo = qs[0].decode().split()
+    assert int(cola, 16) == 0x550120 and cab.endswith("f9005700")  # la cola de respuesta viaja en la petición (+0)
+    assert cuerpo[8:16] == "a0a0a0a0" and cuerpo[40:48] == "00100080"  # dataflow: cate 0x1000, msg 0 ^ 0x8000
+
+
+def test_sin_avcam_el_cierre_no_espera_al_puente(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """G22-ARR2: el cierre espera a que el Puente esté listo antes de parar su hilo, pero sin LIRO VM (`--no-avcam`) no hay nada
+    que esperar: el evento nace puesto y `POST /salir` no se queda 60 s."""
+    import time
+    from types import SimpleNamespace
+
+    live, _ = _live()
+    work = tmp_path / "work"
+    d = work / "live/optA"
+    d.mkdir(parents=True)
+    monkeypatch.setattr(live.run, "qemu_cmd", lambda *a, **k: ["qemu-falso"])
+    monkeypatch.setattr(live.subprocess, "Popen", lambda *a, **k: SimpleNamespace(poll=lambda: None, terminate=lambda: None, wait=lambda: None))
+    shimenv = live.construye_shimenv(True)
+    for f in ("estado.zst", "initrd.gz"):
+        (d / f).write_bytes(b"x")
+    (d / "huella.txt").write_text(live.huella(work, "", shimenv, ""))
+    t = time.monotonic()
+    vm = live.Vm(work, "", "optA", None, False, True, False, "")
+    assert vm.puente is None and vm.avq_cola is None
+    assert vm.puente_listo.is_set() and vm.puente_listo.wait(5) and time.monotonic() - t < 0.5
