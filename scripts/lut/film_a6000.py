@@ -85,7 +85,7 @@ def main(carpeta: Path, salida: Path, nombres: list[str]) -> dict:
     salida.mkdir(parents=True, exist_ok=True)
     x, w = O.muestras()
     informe = {}
-    de = lambda a, b: float(np.sum(w * C.de2000(C.a_lab(a), C.a_lab(b))))
+    de = lambda a, b: float(np.sum(w * C.de2000(a, b)))   # de2000 ya convierte RGB→Lab
     for n in nombres:
         f = objetivo(carpeta / f"Applelog_{n}.cube")
         y = f(x)

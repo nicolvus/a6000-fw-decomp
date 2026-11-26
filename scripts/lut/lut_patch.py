@@ -1,8 +1,14 @@
 """G71 — ajuste CFW «LUT» (Off/LUT1/LUT2/LUT3): sustituye el búfer de 0x654 B de la LUT 3D 5×9×9 que `av-cam` entrega al hardware por una tabla propia del `.dat`.
 
 Dos ganchos de 4 B (`ldr.w rX,[r5,#0xc4]` → `bl cueva`) en la escritura de `0x4381d2a0…0x4381d386`: SA (`0x4381d2fe`, rX = r3, hacia `0x43b67a68`) y MOV/MON/CAP (`0x4381d372`, rX = r1, hacia `memcpy`).
-Off = ningún byte cambia en la ruta (la cueva devuelve el puntero original). G73: la cueva va en el fragmento libre verificado `0x43BE3B28` y las 3 tablas, empaquetadas a 21 bits por nodo (1064 B), en `0x43C1FF24`; se desempaquetan al búfer de `malloc` (una sola reserva, celda `LUT_CELDA`); si `malloc` falla se entrega el puntero original (fábrica).
-shortcut: solo la etapa LUT 3D está integrada; matriz y curva del `cube_a6000` no (la matriz vive en el preset de Backup y la curva no tiene hueco: LUT-A). `python3 scripts/lut/lut_patch.py` = autocomprobación con Unicorn.
+Off = ningún byte cambia en la ruta (la cueva devuelve el puntero original). G73 puso la cueva en `ZONA_A` (`0x43BE3B28`) y las 3 tablas
+empaquetadas a 21 bits por nodo (1064 B) en `ZONA_B` (`0x43C1FF24`); se desempaquetan al búfer de `malloc` (una sola reserva, celda
+`LUT_CELDA`); si `malloc` falla se entrega el puntero original (fábrica).
+**G107 §3 corrige a G72/G73: esas dos zonas NO son huecos** (`ZONA_A` es la tabla T1 de estabilización y `ZONA_B` las tablas BOKS del
+YC de captura), así que el parche histórico escribe en memoria viva. Es la deuda **ZONA-1**: hay que reubicar cueva y tablas antes de
+instalar. Lo que añade G113 va fuera de esas zonas (`lut_t.ZONA_T18`, hueco G18).
+G113 (LUT-T-1): además de la tabla, el ajuste lleva la **curva 1D tras la gamma** (`lut_t`): cuatro ganchos en las llamadas a `FUN_43852f7c` y una cueva que, con el ajuste activo *y* curva para esa LUT, pone `bd5 = 1`, `be1 = 8`, `bd1 = bd3 = 0` y `c68[8]` = la curva expandida desde 33 nodos. Con Off no escribe nada (ni el objeto ni `c68[8]`). El mecanismo es el mismo de `film_patch` (G98), que ocupa esos mismos ganchos y el mismo id de Backup: **un build lleva Film o LUT, no los dos** (aquí se comprueba y se rechaza si ya están puestos).
+shortcut: la matriz del `cube_a6000` no (vive en el preset de Backup: LUT-A); transición por LUT: solo las que se eligen con curva la llevan. `python3 scripts/lut/lut_patch.py` = autocomprobación con Unicorn.
 """
 from __future__ import annotations
 
@@ -16,6 +22,7 @@ sys.path[:0] = [str(ROOT / "scripts"), str(ROOT / "scripts/gui"), str(ROOT / "sc
 import avcam_dinamico as D
 import cfw_ajustes as cfw
 import cube_a6000 as C
+import lut_t as TT
 from e25_24.thumb import bl
 
 BASE = 0x43541000
@@ -31,6 +38,11 @@ FUENTES = ("teal_orange", "pelicula", "identidad")                         # LUT
 
 
 _DEFECTO: list[bytes] = []                                                 # G90: el ajuste en ΔE2000 tarda ~15 s por tabla; se calcula una vez por proceso
+
+
+def curvas_por_defecto() -> list[bytes]:
+    """Registros de 68 B de la curva T de cada tabla del `.dat` (0 nodos = sin curva); `lut_t` elige solo la película."""
+    return TT.t_por_defecto()
 
 
 def tablas_por_defecto() -> list[bytes]:
@@ -56,24 +68,36 @@ def cueva_maquina(sd: bool = False) -> tuple[int, list[tuple[int, bytes]]]:
     return entrada, esc
 
 
-def apply_bytes(data: bytes, tablas: list[bytes] | None = None, sd: bool | None = None) -> bytes:
+def entrada_t(sd: bool = False) -> int:
+    """Entrada de la cueva de la curva (`lut_t`) en la disposición que monta `apply_bytes` (los tamaños de las escrituras son los del parche)."""
+    return TT.escrituras(sd, None, AJ_SD if sd else AJ)[1]
+
+
+def apply_bytes(data: bytes, tablas: list[bytes] | None = None, sd: bool | None = None,
+                curvas: list[bytes] | None = None) -> bytes:
     sd = MODO_SD if sd is None else sd
     if len(data) != SIZE:
         raise ValueError("tamaño inesperado")
     tablas = tablas or tablas_por_defecto()
+    curvas = curvas if curvas is not None else curvas_por_defecto()
     assert len(tablas) == 3 and all(len(t) == TAM for t in tablas)
+    assert len(curvas) == 3 and all(len(c) == TT.REC for c in curvas)
     for va, old, _, _ in HOOKS:
         if data[va - BASE:va - BASE + 4] != old:
             raise ValueError(f"gancho {va:#x} distinto del original")
     perm = list(struct.unpack_from("<405H", data, D.PERM - BASE))
     cueva, ent = D.lut_codigo(AJ_SD if sd else AJ, HOOKS, sd)
     esc = list(cueva) + [(D.LUT_TABLAS, b"".join(D.empaqueta_21(t, perm) for t in tablas)), (D.LUT_CELDA, bytes(8 if sd else 4))]
-    D.comprobar_zonas([(a, a + len(b)) for a, b in esc])
     entrada, maq = cueva_maquina(sd)
     if data[HOOK_MAQ[0] - BASE:HOOK_MAQ[0] - BASE + 4] != HOOK_MAQ[1]:
         raise ValueError(f"gancho {HOOK_MAQ[0]:#x} distinto del original")
     esc += maq
-    D.comprobar_zonas([(a, a + len(b)) for a, b in esc])
+    t_esc, t_ent = TT.escrituras(sd, curvas, AJ_SD if sd else AJ)     # la curva va a G18, no a ZONA_A/ZONA_B (G107)
+    esc += t_esc
+    for h in TT.SITIOS_T:
+        if data[h - BASE:h - BASE + 4] != bl(h, TT.F_PREP):
+            raise ValueError(f"gancho de curva {h:#x} distinto del original (¿build con la curva de Film?)")
+    D.comprobar_zonas([(a, a + len(b)) for a, b in esc], (D.ZONA_A, D.ZONA_B, TT.ZONA_T18))
     out = bytearray(data)
     for a, b in esc:
         if any(data[a - BASE:a + len(b) - BASE]):
@@ -82,6 +106,8 @@ def apply_bytes(data: bytes, tablas: list[bytes] | None = None, sd: bool | None 
     for (va, _, _, _), e in zip(HOOKS, ent):
         out[va - BASE:va - BASE + 4] = bl(va, e)
     out[HOOK_MAQ[0] - BASE:HOOK_MAQ[0] - BASE + 4] = bl(HOOK_MAQ[0], entrada)
+    for h in TT.SITIOS_T:
+        out[h - BASE:h - BASE + 4] = bl(h, t_ent)
     return bytes(out)
 
 
@@ -119,6 +145,8 @@ def emular(img: bytes, k: int, opcion: int, orig: int = 0x11223344, malloc: int 
 if __name__ == "__main__":
     img = C.BIN.read_bytes()
     p = apply_bytes(img)
-    print("código", [hex(e) for e in entradas()], "diff", sum(a != b for a, b in zip(img, p)), "B")
+    fin = max(a + len(b) for a, b in cueva_maquina()[1])
+    print("código", [hex(e) for e in entradas()], "curva", hex(TT.cueva((fin + 3) & ~3)[1]),
+          "diff", sum(a != b for a, b in zip(img, p)), "B")
     for k in (0, 1):
         print(k, [hex(emular(p, k, o)) for o in range(5)])

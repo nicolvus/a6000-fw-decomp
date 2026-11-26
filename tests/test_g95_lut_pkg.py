@@ -21,23 +21,26 @@ def arm():
 
 
 def llama(arm, datos: bytes) -> bytes | None:
-    """Ejecuta `lutsd_paquete(p, n, dst)` del ARM compilado en Unicorn → carga copiada o None."""
+    """Ejecuta `lutsd_paquete(p, n, dst, dst_t)` del ARM compilado en Unicorn → carga copiada o None (G113: 4.º argumento, registro de la curva)."""
     from unicorn import UC_ARCH_ARM, UC_MODE_THUMB, Uc
     from unicorn.arm_const import (
         UC_ARM_REG_LR,
         UC_ARM_REG_R0,
         UC_ARM_REG_R1,
         UC_ARM_REG_R2,
+        UC_ARM_REG_R3,
         UC_ARM_REG_SP,
     )
     blob, sim = arm
     code, buf, dst, pila, fin = 0x10000000, 0x20000000, 0x21000000, 0x30000000, 0x31000000
+    dst_t = 0x22000000
     mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
-    for a in (code, buf, dst, pila, fin):
+    for a in (code, buf, dst, dst_t, pila, fin):
         mu.mem_map(a, 0x10000)
     mu.mem_write(code, blob)
     mu.mem_write(buf, datos)
-    for r, v in ((UC_ARM_REG_R0, buf), (UC_ARM_REG_R1, len(datos)), (UC_ARM_REG_R2, dst), (UC_ARM_REG_SP, pila + 0x8000), (UC_ARM_REG_LR, fin | 1)):
+    for r, v in ((UC_ARM_REG_R0, buf), (UC_ARM_REG_R1, len(datos)), (UC_ARM_REG_R2, dst), (UC_ARM_REG_R3, dst_t),
+                 (UC_ARM_REG_SP, pila + 0x8000), (UC_ARM_REG_LR, fin | 1)):
         mu.reg_write(r, v)
     mu.emu_start((code + sim["lutsd_paquete"]) | 1, fin, count=2_000_000)
     return bytes(mu.mem_read(dst, P.CARGA)) if mu.reg_read(UC_ARM_REG_R0) == 1 else None
@@ -59,7 +62,7 @@ def test_paquete_ida_y_vuelta_y_arm_igual_a_referencia(arm):
 def test_paquete_de_cube_es_la_tabla_ajustada_en_el_pc(tmp_path):
     ruta = tmp_path / "pelicula.cube"
     C.escribe_cube(ruta, C.lut_pelicula, 17, "pelicula")
-    carga = P.valida(P.desde_cube(ruta))
+    carga = P.valida(P.desde_cube(ruta, usa_t=False))      # G113: sin curva, la tabla del ajuste en ΔE de G90 (como G95)
     img = C.BIN.read_bytes()
     perm = list(struct.unpack_from("<405H", img, P.D.PERM - P.D.BASE))
     tab, lo, hi = C.lee_cube(ruta)

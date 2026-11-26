@@ -373,3 +373,26 @@ Dos fotos normales y RAW de una nueva escena: durante la toma larga `cap` mostr�
 - **E2E-10 CERRADO:** av-cam contesta `0x3003` (seq 15) en la LIRO VM. La VM llega sola al estado 2 del secuenciador (`[0x43ede338]=2`, guion 0→2, posición 42) sin forzar el paso ni cargar volcado real; `tests/test_avcam_ee_start.py` en verde (`test_av_cam_contesta_0x3003_ultimo_paso_de_ee_start`, `test_secuenciador_elige_la_transicion_0_a_2…`). El bloqueo del secuenciador que retenía E2E-12c/E2E-15 queda eliminado.
 - **E2E-12c CERRADO:** mismo resultado, sin forzar nada (T51, MEDIDO).
 - **E2E-15 desbloqueada (PARCIAL):** la UI prepara la grabación (av-cam acepta `0x4000` EE vídeo, `0xf000`) y llega a «REC». **`0x3000` responde en el arnés** cuando el secuenciador `[0x43ede338]=8` (verificado en LIRO VM: `{1, 0x3000, seq=0x80000100, 00f000000000000000748043}`). El estado 8 se alcanzó por forzado directo de registro (diagnóstico) porque el guion de `0x3000` (lista `0x43bf37b4`, 43 palabras) se atasca en pos=11/43: las palabras 0-35 escriben `slot=0` (estado del secuenciador) con valores sucesivos (1, 8, 1, 0x4d, ...), y la palabra 11 exige estado 16, que requiere el pipeline de vídeo no emulado en la LIRO VM. **`0x3024` no responde por diseño:** su manejador en `tsk0x61` (`0x43807958`) llama a `0x43b023cc` y va al epílogo `0x43807a30` con `r6=0` (no genera respuesta); `tsk0x45` traduce `0x3024 → tipo 0x8102`; `0x3024` no está en el grupo 0 de la tabla de 271 descritores (está en grupos `0x52/0x53/0x54/0x5d`). Clip generado en `PRIVATE/M4ROOT/CLIP/C0001.MP4` vía `sd_emu.py` (50 KB, estructura MP4/XAVC S `ftyp`+`mdat`, no es stream real del encoder). Desbloquea VFR-F3, DVR-F3, TCUB-F3, G70-HD120 y Loop Recording. Criterio de cierre: `0x3024` respondido de forma legítima y clip real de vídeo en `PRIVATE/M4ROOT/CLIP`.
+
+## LUTs propios — decisión y especificación (26-11-2026)
+
+Petición: continuar la integración, decidir la mejor vía, si el 5×9×9 se puede mejorar y qué debe cumplir un LUT para subirlo a la cámara.
+Informe: [G114](gui/g114-lut-propios-especificacion.md); validador `scripts/lut/cube_spec.py`; medidas de los 75 `.cube` del usuario en
+`lut-eval/informe.md` (fuera del repo).
+
+- **Mejor vía:** paquete `.LUT` precalculado en el PC (tabla 5×9×9 ajustada en ΔE + curva T opcional) → SD → hilo `lutsd` → blob de
+  Backup `0x150005` → ganchos de `av-cam`. Cero coste por fotograma y afecta a foto, vídeo y vista en vivo. El `.cube` en la SD queda
+  como respaldo (la cámara remuestrea por nodo y peor); `lutjpg` (`.cube` completo, 2…129³) es la vía exacta solo para foto.
+- **Rejilla:** no se puede ampliar. El generador recorre 9×9×5 fijos, la copia es de `0x654` B y ningún registro codifica la rejilla;
+  el mismo bloque está en A7S/A6300. Matiz de auditoría: con el modelo de bancos, 8³ cabría exacto, pero no lo dirige ningún registro.
+- **Mejoras reales del 5×9×9:** curva 1D T tras la gamma (0,79→0,19 ΔE en película sintética; elegir T sí/no por LUT), ajuste en ΔE2000
+  (ya por defecto), modelo de interpolación real (LUT-INT-1, cámara) y paquete precalculado. M no aporta; Color Depth/LutMode no dan geometría.
+- **Especificación `.cube`:** 3D, 33³ recomendado (2…129 aceptado; `.cube` en cámara ≤64³), dominio 0…1, valores dentro, sin 1D ni
+  `LUT_3D_INPUT_RANGE`, entrada Rec.709/sRGB de pantalla (no V-Log), líneas ≤95 caracteres. En la SD: `LUT/LUT1.LUT`…`LUT6.LUT` (1080 B,
+  v1) o `LUT1.cube`…`LUT6.cube`.
+- **Medido:** de 75 `.cube`, solo las 6 de `luts/peliculas` son aptas para el hardware (0,22–0,67 ΔE medio; 0–28 nodos recortados). Las
+  69 de `sosang/` son de una Panasonic S1II (TITLE `S1II Standard - NNNNVLOG`): salen planas y recortan 31–384/405 nodos; las 29 `vlog`
+  esperan V-Log y no aplican. Pack: portra400, pro400h, gold200, ektachrome_e100, kodachrome64, velvia50.
+- **Bloqueo grave (ZONA-1):** la cueva/tablas del ajuste LUT están dentro de la tabla T1 de estabilización y de las BOKS del YC de captura
+  (G107); el CFW 3.86 instalado las lleva ahí. `LUT-C` se reabre y LUT-SD-2/LUT-T-2 quedan bloqueados hasta reubicar. Nada del pipeline se
+  ha probado nunca en cámara: todos los ΔE son del modelo del PC.

@@ -256,9 +256,17 @@ static i32 letra_sd(struct ctx *c) {
 }
 
 /* G95 (LUT-PKG-1): `X:/LUT/LUT<n>.LUT` precalculado en el PC (`lut_pkg.py`): cabecera de 16 B + tabla de 1064 B ya en el formato de la ranura.
- * La cámara no remuestrea nada: valida firma, versión, longitud y CRC32 y copia. */
+ * La cámara no remuestrea nada: valida firma, versión, longitud y CRC32 y copia.
+ * G113 (LUT-T-1): versión 2 = lo mismo + la curva 1D de 1024 u16 (+5 = usa_T) y CRC sobre tabla+curva (3128 B). El hilo la guarda
+ * compacta en el blob (33 nodos cada 32 códigos, 68 B por ranura en `T_OFF`); `av-cam` la expande en su cueva. v1 sigue valiendo (sin curva). */
 #define PKG_MAGIC 0x544C3641u /* "A6LT" */
 #define PKG_TAM (16 + TAM_TABLA)
+#define PKG_T 2048           /* curva de 1024 u16 */
+#define PKG_TAM_MAX (16 + TAM_TABLA + PKG_T)
+#define T_OFF 0x1900         /* 16 + 6·1064: registros de curva del blob, antes del diagnóstico de 0x2000 */
+#define T_REC 68             /* u16 nº de nodos (0 = sin curva) + 33 u16 */
+#define T_NODOS 33
+#define T_PASO 32
 
 static u32 le32(const u8 *p) { return p[0] | p[1] << 8 | p[2] << 16 | (u32)p[3] << 24; }
 
@@ -271,24 +279,46 @@ static u32 crc32(const u8 *p, i32 n) {
     return ~c;
 }
 
-i32 lutsd_paquete(const u8 *p, i32 n, u8 *dst) {
-    if (n != PKG_TAM || le32(p) != PKG_MAGIC || p[4] != 1 || (p[6] | p[7] << 8) != TAM_TABLA || le32(p + 8) != crc32(p + 16, TAM_TABLA)) return 0;
-    memcpy(dst, p + 16, TAM_TABLA);
-    return 1;
+static u32 le16(const u8 *p) { return p[0] | p[1] << 8; }
+
+static void put16(u8 *p, u32 v) { p[0] = (u8)v; p[1] = (u8)(v >> 8); }
+
+/* Curva de 1024 u16 → 33 nodos (T[i·32], i = 0…31, y T[1023] como extremo). `usa` = 0: registro a cero (sin curva). */
+static void lutsd_curva(const u8 *t, i32 usa, u8 *rec) {
+    zero(rec, T_REC);
+    if (!usa) return;
+    put16(rec, T_NODOS);
+    for (i32 i = 0; i < T_NODOS - 1; i++) put16(rec + 2 + 2 * i, le16(t + 2 * T_PASO * i));
+    put16(rec + 2 + 2 * (T_NODOS - 1), le16(t + 2 * 1023));
 }
 
-static i32 lee_paquete(struct ctx *c, i32 slot, u8 *dst) {
+i32 lutsd_paquete(const u8 *p, i32 n, u8 *dst, u8 *dst_t) {
+    if (le32(p) != PKG_MAGIC || (p[6] | p[7] << 8) != TAM_TABLA) return 0;
+    if (n == PKG_TAM && p[4] == 1 && le32(p + 8) == crc32(p + 16, TAM_TABLA)) {
+        memcpy(dst, p + 16, TAM_TABLA);
+        lutsd_curva(0, 0, dst_t);
+        return 1;
+    }
+    if (n == PKG_TAM_MAX && p[4] == 2 && le32(p + 8) == crc32(p + 16, TAM_TABLA + PKG_T)) {
+        memcpy(dst, p + 16, TAM_TABLA);
+        lutsd_curva(p + 16 + TAM_TABLA, p[5] ? 1 : 0, dst_t);
+        return 1;
+    }
+    return 0;
+}
+
+static i32 lee_paquete(struct ctx *c, i32 slot, u8 *dst, u8 *dst_t) {
     char path[24] = "X:/LUT/LUT1.LUT";
     i32 h = -1, r, n = 0;
     path[0] = (char)c->drive;
     path[10] = (char)('1' + slot);
     if (c->a.f_open(path, &h, 1) < 0 || h < 0) return 0;
-    do {                                   /* lee hasta PKG_TAM + 1 en tmp (libre durante el barrido): un byte de más delata un fichero largo */
-        r = c->a.f_read(h, c->tmp + n, PKG_TAM + 1 - n);
+    do {                                   /* lee hasta PKG_TAM_MAX + 1 en tmp (libre durante el barrido): un byte de más delata un fichero largo */
+        r = c->a.f_read(h, c->tmp + n, PKG_TAM_MAX + 1 - n);
         if (r > 0) n += r;
-    } while (r > 0 && n <= PKG_TAM);
+    } while (r > 0 && n <= PKG_TAM_MAX);
     c->a.f_close(h);
-    return lutsd_paquete(c->tmp, n, dst);
+    return lutsd_paquete(c->tmp, n, dst, dst_t);
 }
 
 /* Un barrido: lee las ranuras, arma el blob y lo escribe en el Backup solo si cambia. Devuelve nº de ranuras válidas (-1: sin tarjeta). */
@@ -303,7 +333,8 @@ i32 lutsd_barrido(struct ctx *c) {
     c->blob[14] = (u8)letra;
     zero(c->diag, sizeof c->diag); zero(c->rd, sizeof c->rd);
     for (i32 s = 0; s < SLOTS; s++)
-        if (lee_paquete(c, s, c->blob + 16 + s * TAM_TABLA) || lee_ranura(c, s, c->blob + 16 + s * TAM_TABLA)) { c->blob[8 + s] = 1; nv++; }
+        if (lee_paquete(c, s, c->blob + 16 + s * TAM_TABLA, c->blob + T_OFF + s * T_REC) ||
+            lee_ranura(c, s, c->blob + 16 + s * TAM_TABLA)) { c->blob[8 + s] = 1; nv++; }
     for (i32 i = 0; i < 24; i++) *(i32 *)(c->blob + DIAG_OFF + 4 * i) = c->diag[i];
     for (i32 i = 0; i < 6; i++) *(i32 *)(c->blob + DIAG_OFF + 96 + 4 * i) = c->rd[i];
     if (c->a.b_read(BK_ID, c->tmp) >= 0) {
