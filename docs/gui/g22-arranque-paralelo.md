@@ -94,8 +94,10 @@ cp /tmp/estado-base.zst analysis/gui/g22/harness/live/optA/estado.zst
 # lanzar y cronometrar GET /estado hasta "fotogramas" > 0, y el cierre con POST /salir
 ```
 
-Pruebas del cambio: `tests/test_gui_harness.py -k "al_restaurar_vm or antes_del_puente or no_arranca or configuracion"` (4) y
-`tests/test_avcam_puente.py` (8, incluye la reutilización de la VM y la petición dataflow real).
+Pruebas del cambio: `tests/test_gui_harness.py -k "al_restaurar_vm or antes_del_puente or no_arranca or configuracion or
+arranca_puente_con_la_vm_real or sin_avcam"` (6: no bloquea al restaurar, entrega en orden lo que llega antes, error relanzable en
+frío, sin `--no-avcam` no se espera al cerrar, caché de la config y la cadena real `arranca_puente`+`avq_hilo` contra av-cam) y
+`tests/test_avcam_puente.py` (8, con la reutilización de la VM de colas y la petición dataflow real).
 
 ## 7. Límites
 
@@ -104,5 +106,11 @@ Pruebas del cambio: `tests/test_gui_harness.py -k "al_restaurar_vm or antes_del_
 - El arranque en frío se midió con `nvram.json` distinto en cada tanda (el perfil `optA` se creó en la primera), así que sus
   secuencias de `avcam.jsonl` no son comparables línea a línea (175 vs 270 líneas); el camino en frío no cambia por construcción.
 - No se probó el *snapshot* de la LIRO VM (§5.1): no está implementado.
+- Con el código final no se pudo repetir la tanda de restauraciones: los otros agentes mantuvieron los dos huecos de
+  `qemu-system-arm` ocupados y no se arranca un tercero (política del arnés). Un intento a las 00:50 cayó en arranque en frío
+  porque otro agente recompiló `sonyshim.so` (cambia la huella y borra el estado): sirvió de todos modos para ver la reutilización
+  de la VM en vivo (`puente_listo dt=0,012 s` en vez de 3,4 s), y esa ejecución terminó con **SIGSEGV al cerrar** (código −11)
+  *después* de guardar el estado — la clase de aborto de Unicorn durante el cierre del intérprete que ya documenta `Puente.cierra`;
+  no se reprodujo en las otras tres y no afecta al invitado ni al estado guardado.
 - El `k` de la caché de colas depende del contenido de `scripts/gui/avcam/*.py`: cualquier cambio ahí hace un arranque en frío
   (ya documentado en [G22-ARR](g22-emulador-uso.md#arranque-más-rápido-18-11-2026)).
