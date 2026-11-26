@@ -15,6 +15,14 @@
 > o trazar con el kit. **Ensayo listo:** `prueba-MAH04198-25p.mp4` copiado a la tarjeta distingue PAL de NTSC en
 > un solo clip.
 > [Informe](../reports/film-pb-1-causa-sistema-tv-20261127.md).
+>
+> **NVRAM verificada (27-11-2026): no hay ningún cambio de PAL/NTSC.** Leídas las 16 102 propiedades de los 64
+> volcados (`pmca.backup.BackupFile`, 32 parejas flash/mem del 20-10 al 22-11): los cuatro únicos valores con forma
+> de sistema de TV (`0x115002b`='N', `0x10706b1`='P\x01', `0x3c0412`='P', `0x69007c`='P') son **idénticos en todos**.
+> Entre el primer y el último volcado cambian 176 propiedades (ajustes de pruebas) y ninguna es un selector N/P. El
+> elemento de menú `CustomNTSCPALSelection` no tiene id de respaldo en el mapa de la A6000. El sistema de TV es fijo
+> por firmware/región: o la cámara es PAL y los clips de 30p nunca se han podido reproducir en ella, o es NTSC y la
+> guarda de cadencia no es la causa. [Informe](../reports/film-pb-1-nvram-pal-ntsc-20261127.md).
 
 Mecanismo de la finalización fallida **cerrado estáticamente**; causa raíz física, abierta. La traza enlaza
 `PlayMovieCmp` (`MPR::ER_FAILED=0x1A`) → `DefObjPlayer::ER_FAILED=7` → bloqueo → caution `0x135` → «No se puede

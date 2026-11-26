@@ -8,6 +8,8 @@
 
 **FILM-PB-1 (27-11), causa probable:** el ajuste «Selector PAL/NTSC» no casa con la cadencia de los clips. `AviMMgr::isSupportContent` (`0x61A8F0`) compara `TvSystem()` (`0x1EEFDC`) con `frameRate` (`[msg+0x124]`): con `TvSystem==1` acepta 24p y pares, con `!=1` acepta 24p e impares; el resto devuelve 0 → «Invalid TvSystem detect» → `0x437C3C` → `0x1A`. Los clips son 30p y la cámara muestra `1-1-2014` (ajustes reseteados). El ajuste no se expone en el menú de esta cámara (el firmware trae `viewNtscPalSEL_D.uxc` y `global.xdb`, pero el modelo no lo muestra) y el remux con `ffmpeg -r 25 -c copy` borra las cajas `uuid`/`MSNV`: pero `scripts/mp4_set_framerate.py` cambia solo el `mdhd.timescale` conservando las cajas; el clip de prueba `prueba-MAH04198-25p.mp4` (25p, 2 bytes distintos) copiado a la tarjeta distingue PAL de NTSC en un solo clip. [Informe](../reports/film-pb-1-causa-sistema-tv-20261127.md).
 
+**FILM-PB-1 (27-11), NVRAM:** 16 102 propiedades en 64 volcados (20-10 a 22-11); los cuatro valores con forma N/P (`0x115002b`='N', `0x10706b1`='P\x01', `0x3c0412`='P', `0x69007c`='P') son **idénticos en todos**, y ninguna de las 176 propiedades que cambian entre el primer y el último volcado es un selector N/P; `CustomNTSCPALSelection` no tiene id de respaldo. No hay rastro de cambio de sistema de TV: es fijo por firmware/región. [Informe](../reports/film-pb-1-nvram-pal-ntsc-20261127.md).
+
 
 Contexto operativo mínimo para agentes. Última revisión: **07-11-2026** (E26 R65–R68: rama EFCS de Darwin y auditoría).
 No es historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).

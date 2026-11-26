@@ -109,6 +109,17 @@ mismo clip con la cadencia declarada a 25 y todas sus cajas de Sony. Se copia a 
 | **Ninguno** se reproduce (tampoco el de 25p) | La cadencia no es la causa: toca la traza (A frente a B) y la otra rama de la guarda |
 | Los dos se reproducen | Imposible con el síntoma actual: revisar que el fichero copiado es el de 25p |
 
+Comprobado sobre el fichero de prueba: los **dos únicos bytes distintos** (offsets `0xDDE20C` y `0xDDE20D`)
+caen dentro de `moov > trak > mdia > mdhd`; el `ftyp` sigue en `MSNV` con minor `0x015A0070`, la caja `uuid`
+del offset `0x20` conserva su *usertype* y las cabeceras de las 48 cajas son idénticas
+(`cmp -l` = 2 bytes). Para los siete clips:
+
+```bash
+for f in MAH0411*.MP4 MAH0416*.MP4 MAH0419*.MP4; do
+  python3 scripts/mp4_set_framerate.py "$f" "conv-$f" --fps 25
+done
+```
+
 ## 7. Límites
 
 - **NO_VERIFICADO** el valor actual del ajuste en la cámara y el mapeo exacto `frameRate`→cadencia
