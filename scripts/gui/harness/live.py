@@ -54,14 +54,15 @@ DIAL_INICIAL = 3
 # Giro a P tras el arranque (/modo p=3, MEDIDO en §5.24: desde la vista iAUTO+ la vista pasa a «P»; como estado inicial 3 da la vista de película).
 # shortcut: es un giro automático del dial, no la posición real de arranque; mejorar cuando se encuentre el estado inicial de P (0–15 probados: solo 2 da vista rica).
 MODO_TRAS_ARRANQUE = int(os.environ["LIVE_MODO_TRAS"]) if os.environ.get("LIVE_MODO_TRAS") else None  # LIVE_MODO_TRAS=3: giro automático a P tras la primera pantalla (opt-in; §5.29)
-# Modo de grabación con el que se abre view/STLREC (segundo argumento de viewManagerIf::openView = parámetro de vista; la cámara pasa el que devuelve getRecViewFromDial).
+# Modo de grabación con el que se abre view/STLREC EN EL ARRANQUE (segundo argumento de viewManagerIf::openView = parámetro de vista).
 # MEDIDO (§5.31, icono de modo en pantalla): 2 = iAUTO+, 3 = P, 4 = A, 5 = S, 6 = M (1: sin icono; 0 = antes, setInitForRec recibía int=0 y el modelo nunca recibía modo).
-# getRecViewFromDial devuelve el estado del dial con conversión identidad (0x2441f4), así que la vista se abre con el mismo número que el dial (VERIFICADO, E2E-13).
+# En el arranque el dial aún no tiene estado (OPENVIEWAT=40 s, el toActive lo informa ≈ 118 s), así que el valor es el medido; en caliente
+# (/modo) el modo lo da el firmware con OPENVIEWDIAL (getRecViewFromDial), que sí lee el estado del dial (G22-DIAL-FN).
 VISTA_REC = DIAL_INICIAL
 # escenario sin volcados: ciclo de modelos, pantalla de disparo (view/STLREC, §5.18z¹²), cola de teclas 0x7a0020
 SHIMENV_BASE = ("WAIT=999999 CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/STLREC OPENVIEWAT=40 OPENVIEWGAP=14 CALMA=4 CALMA0=10 "
            "STARTEV=11004002:100,11004012,11004013 POSTROOTEV=11004002:e3 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f "
-           f"KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177,7025:{DIAL_INICIAL:x}:27 KEYINITON= KEYINITAFTER=not_user_operation OPENVIEWARG={VISTA_REC:x} LIVE=auto NO4015E=1 ")  # NO4015E: libObj habla con el CapIdTblMgr real de av-cam (cola 0x4015e); el atajo del shim lo contestaba él y av-cam nunca recibía InitEnd (G75 T12)
+           f"KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177,7025:{DIAL_INICIAL:x}:27 KEYINITON= KEYINITAFTER=not_user_operation OPENVIEWARG={VISTA_REC:x} OPENVIEWDIAL=1 LIVE=auto NO4015E=1 ")  # NO4015E: libObj habla con el CapIdTblMgr real de av-cam (cola 0x4015e); el atajo del shim lo contestaba él y av-cam nunca recibía InitEnd (G75 T12)
 
 SHIMEXTRA = os.environ.get("SHIMEXTRA", "")  # SHIMEXTRA="WAITLOG=3000": variables de diagnóstico del shim
 # Tarjeta SD emulada (G22-E §5.5–§5.15): conjunto mínimo para que ModelMedia vea una SD montada, salga EEStart sin PATCHFN y la pantalla de grabación se dibuje (--sin-sd lo apaga).
@@ -403,16 +404,18 @@ class Vm:
         escribe_atomico(self.nvram_f, json.dumps({f"{k:x}": v.hex() for k, v in self.nvram.items()}).encode())
 
     def gira(self, estado: int) -> None:
-        """Gira el dial: el driver informa la posición (key 0x7025) y la vista de disparo se reabre con ese modo (getRecViewFromDial).
-        shortcut: no se halló qué evento de libObj/viewUnified reabre la vista al girar el dial (callback_mode_dial no corre, §5.24–§5.26); ROOT→STLREC con el modo nuevo reproduce el efecto medido."""
+        """Gira el dial de modo: el driver informa la posición (KEY_POS_MODE_DIAL 0x7025) y la vista de disparo se reabre.
+        El evento llega a InputService::callback_mode_dial (MEDIDO: libObj+0x112040) pero no repinta el icono de modo, así que la
+        reapertura sigue siendo del arnés (G22-DIAL-FN, §5.26). El MODO ya no lo pone el anfitrión: «O view/STLREC» va sin argumento
+        y el shim pide el modo al firmware (CmnViewBigModelUtil::getRecViewFromDial, OPENVIEWDIAL), que lo lee del estado del dial."""
         self.tecla(DIAL_MODO[0], estado, DIAL_MODO[1])
-        threading.Thread(target=self.reabre_vista, args=(estado,), daemon=True).start()
+        threading.Thread(target=self.reabre_vista, daemon=True).start()
 
-    def reabre_vista(self, estado: int) -> None:
+    def reabre_vista(self) -> None:
         with self.cerrojo_dial:
             self.envia(b"O view/ROOT 0\n")
             time.sleep(4)
-            self.envia(f"O view/STLREC {estado:x}\n".encode())
+            self.envia(b"O view/STLREC\n")
             time.sleep(4)
 
     def tecla(self, k: int, v: int, i: int) -> None:

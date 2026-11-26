@@ -55,8 +55,8 @@ def test_giro_automatico_del_dial_desactivado_por_defecto():
     assert live.MODO_TRAS_ARRANQUE is None  # solo con LIVE_MODO_TRAS=n en el entorno
 
 
-def test_giro_del_dial_informa_la_posicion_y_reabre_la_vista_con_el_modo(monkeypatch):
-    """E2E-13: /modo → tecla 0x7025 con el estado y vista ROOT→STLREC con ese modo (el icono de modo sigue al dial)."""
+def test_giro_del_dial_informa_la_posicion_y_reabre_la_vista(monkeypatch):
+    """G22-DIAL-FN: /modo → tecla 0x7025 con el estado y reapertura ROOT→STLREC SIN modo: el modo lo da el firmware (OPENVIEWDIAL)."""
     vm = object.__new__(live.Vm)
     vm.cerrojo_dial, vm.sock, enviados = live.threading.Lock(), None, []
     vm.tecla = lambda k, v, i: enviados.append(("K", k, v, i))
@@ -66,7 +66,7 @@ def test_giro_del_dial_informa_la_posicion_y_reabre_la_vista_con_el_modo(monkeyp
     for nombre, estado in live.POSICIONES_MODO:
         enviados.clear()
         vm.gira(estado)
-        assert enviados == [("K", 0x7025, estado, 0x27), b"O view/ROOT 0\n", f"O view/STLREC {estado:x}\n".encode()], nombre
+        assert enviados == [("K", 0x7025, estado, 0x27), b"O view/ROOT 0\n", b"O view/STLREC\n"], nombre
     assert dict(live.POSICIONES_MODO) == {"Auto": 2, "P": 3, "A": 4, "S": 5, "M": 6}
 
 
