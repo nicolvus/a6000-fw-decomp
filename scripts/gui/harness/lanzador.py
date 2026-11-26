@@ -17,7 +17,9 @@ import sys
 import threading
 import time
 import urllib.error
+import urllib.parse
 import urllib.request
+from datetime import datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
@@ -27,10 +29,222 @@ import emu_config as E
 
 WORK = HERE.parents[2] / "analysis/gui/g22/harness"
 PREFIJOS_VM = ("/sd/", "/camara/", "/estado")  # rutas de live.py que usa el configurador (pestañas SD y Cámara, y el estado en vivo)
+AUDITA = HERE / "audita_cfw.py"  # auditor de CFW instalables: el configurador solo lo lanza, no reimplementa sus etapas
+AUDIT_UI = "audit-ui"  # AUDIT_UI/<fecha>-<artefacto>/ = carpeta de salida (--salida) de cada auditoría lanzada desde la página
 
 
 class VmApagada(ValueError):
     """La VM no está en marcha o no contesta: el mensaje va tal cual a la página."""
+
+
+class Ocupado(ValueError):
+    """Ya hay una auditoría en marcha: el configurador solo admite una a la vez (HTTP 409)."""
+
+
+def ahora() -> str:
+    return datetime.now().astimezone().strftime("%Y-%m-%dT%H:%M:%S%z")
+
+
+def qemu_en_marcha() -> int:
+    """Cuántos `qemu-system-arm` hay en el sistema (el auditor solo arranca con menos de 2: lo avisa la página)."""
+    try:
+        import audita_cfw
+        return len(audita_cfw.qemu_activos())
+    except (OSError, ImportError):
+        return 0
+
+
+def comando_auditoria(ruta: Path, destino: Path, *, completo: bool, arranque: bool) -> list[str]:
+    """CLI equivalente de `audita_cfw.py`: por defecto `--rapido --sin-arranque`, informes en `--salida` (la carpeta del trabajo).
+
+    `-u` = sin búfer: la consola de la auditoría llega línea a línea a la página en vez de aparecer al terminar.
+    """
+    return [sys.executable, "-u", str(AUDITA), str(ruta), "--completo" if completo else "--rapido",
+            "--arranque" if arranque else "--sin-arranque", "--salida", str(destino)]
+
+
+def valida_ruta_auditable(work: Path, ruta: str) -> tuple[Path, str]:
+    """(ruta absoluta, tipo) de lo que se puede auditar; `ValueError` con el motivo si no.
+
+    Acepta exactamente lo que acepta `audita_cfw.detecta_tipo` —`.dat`, directorio de paquete con
+    `nflasha15`/`nflasha15.bin`, esa imagen suelta u overlay con `cam/usr`— y no inventa un segundo criterio: la
+    ruta relativa se resuelve contra el directorio de trabajo del arnés, así vale tal cual lo que guarda `importa_dat`.
+    """
+    texto = (ruta or "").strip()
+    if not texto:
+        raise ValueError("falta la ruta a auditar (.dat, paquete con nflasha15, nflasha15.bin u overlay)")
+    r = Path(texto).expanduser()
+    if not r.is_absolute():
+        r = work / r
+    r = r.resolve()
+    tipo = _auditor().detecta_tipo(r)  # EntradaError (ValueError) si no existe o no es un CFW reconocible
+    if tipo == "dat" and r.suffix.lower() != ".dat":
+        raise ValueError(f"{r.name}: un paquete de Sony debe llamarse .dat")
+    if tipo == "nflasha15" and not r.name.startswith("nflasha15"):
+        raise ValueError(f"{r.name}: la imagen suelta debe llamarse nflasha15 o nflasha15.bin")
+    if tipo == "overlay" and (work / "pkgdat").resolve() in r.parents and not any(
+            (r / n).is_file() for n in ("audit-cfw.json", "MANIFEST.json")):
+        # `importa_dat` deja en pkgdat/ un overlay PARCIAL (solo lo distinto de Sony): como /usr completo marcaría
+        # como «quitados» todos los ficheros de Sony, un FALLO falso. Se audita el .dat original.
+        raise ValueError(f"{r.name}: overlay parcial de un .dat importado (solo lo distinto de Sony: se audita el "
+                         ".dat original por su ruta, o el paquete con su audit-cfw.json)")
+    return r, tipo
+
+
+def _auditor():
+    """Módulo `audita_cfw` (import perezoso: el configurador no carga criptografía ni fwtool si no se audita)."""
+    import audita_cfw
+    return audita_cfw
+
+
+class Auditor:
+    """Un trabajo de `audita_cfw.py` como subproceso: consola, código de salida, informe JSON/Markdown y estado en vivo."""
+
+    def __init__(self, work: Path) -> None:
+        self.work = work
+        self.arch = work.parent  # analysis/gui/g22: donde el CLI deja `audit-<AAAAMMDD>-<sha8>.json` (historial)
+        self.p: subprocess.Popen | None = None
+        self.ruta, self.tipo, self.comando = "", "", ""
+        self.destino: Path | None = None
+        self.codigo: int | None = None
+        self.salida: list[str] = []
+        self.inicio, self.fin = "", ""
+        self.informe: dict | None = None
+        self.completo = self.arranque = False
+        self.lock = threading.Lock()
+
+    def corriendo(self) -> bool:
+        return self.p is not None and self.p.poll() is None
+
+    def estado(self) -> dict:
+        """Lo que enseña la página: {corriendo, ruta, codigo, salida, informe, inicio, fin} y el detalle del trabajo."""
+        return {"corriendo": self.corriendo(), "ruta": self.ruta or None, "codigo": self.codigo,
+                "salida": "".join(self.salida), "informe": self.informe, "inicio": self.inicio or None,
+                "fin": self.fin or None, "tipo": self.tipo or None, "completo": self.completo,
+                "arranque": self.arranque, "destino": str(self.destino) if self.destino else None,
+                "comando": self.comando, "qemu": qemu_en_marcha()}
+
+    def lanzar(self, ruta: str, *, completo: bool = False, arranque: bool = False) -> dict:
+        """Arranca la auditoría (una a la vez). 409 → `Ocupado`; ruta inválida → `ValueError`."""
+        with self.lock:
+            destino_ruta, tipo = valida_ruta_auditable(self.work, ruta)  # primero el motivo exacto (400), luego el turno
+            if self.corriendo():
+                raise Ocupado(f"ya hay una auditoría en marcha ({self.ruta}); espera a que acabe")
+            self.completo, self.arranque = bool(completo or arranque), bool(arranque)
+            destino = self.work / AUDIT_UI / f"{datetime.now().strftime('%Y%m%d-%H%M%S')}-{_slug(destino_ruta)}"
+            destino.mkdir(parents=True, exist_ok=True)
+            cmd = comando_auditoria(destino_ruta, destino, completo=self.completo, arranque=self.arranque)
+            self.ruta, self.tipo, self.destino, self.comando = str(destino_ruta), tipo, destino, " ".join(cmd)
+            self.codigo, self.informe, self.salida = None, None, []
+            self.inicio, self.fin = ahora(), ""
+            self.p = subprocess.Popen(cmd, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                                      stderr=subprocess.STDOUT, text=True, bufsize=1)
+            threading.Thread(target=self._bombea, daemon=True).start()
+            avisos = ["tarda ≈50 s con --rapido (etapas 1–2) y ≈3 min con --completo"] if self.completo else \
+                     ["--rapido: solo contenedor y /USR (≈50 s); ni estructura ni arranque"]
+            if self.arranque:
+                avisos.append(f"arranque real en QEMU: necesita un hueco (hay {qemu_en_marcha()} qemu-system-arm; "
+                              "el auditor solo arranca con menos de 2 y espera hasta 15 min)")
+            return {**self.estado(), "avisos": avisos}
+
+    def _bombea(self) -> None:
+        p = self.p
+        assert p is not None and p.stdout is not None
+        try:
+            for linea in p.stdout:
+                self.salida.append(linea)
+                if len(self.salida) > 4000:  # una auditoría escribe ~200 líneas; el tope solo evita crecer sin fin
+                    del self.salida[:1000]
+        finally:
+            self.codigo = p.wait()
+            self.fin = ahora()
+            self.informe = self._localiza()
+
+    def _localiza(self) -> dict | None:
+        """Informe JSON que dejó el auditor en la carpeta del trabajo, reducido a lo que pinta la página."""
+        if self.destino is None or not self.destino.is_dir():
+            return None
+        jsons = sorted((p for p in self.destino.glob("audit-*.json") if p.is_file()),
+                       key=lambda p: p.stat().st_mtime)
+        if not jsons:
+            return None
+        fichero = jsons[-1]
+        try:
+            r = json.loads(fichero.read_text())
+        except (OSError, ValueError):
+            return None
+        if not isinstance(r, dict):
+            return None
+        md = Path(str(r.get("markdown") or ""))
+        usr = r.get("usr") or {}
+        return {"f": self.rel(fichero), "json": str(fichero),
+                "markdown": str(md) if md.is_file() else "",
+                "markdown_f": self.rel(md) if md.is_file() else "",
+                "veredicto": r.get("veredicto", ""), "version": r.get("version", ""), "sha256": r.get("sha256", ""),
+                "fecha": r.get("fecha", ""), "coste_s": r.get("coste_s"),
+                "checks": [{k: c.get(k) for k in ("id", "etapa", "ok", "aviso", "evidencia", "detalle")}
+                           for c in r.get("checks") or [] if isinstance(c, dict)],
+                "usr": {k: len(usr.get(k) or []) for k in ("anadidos", "cambiados", "quitados")},
+                "arranque": bool(r.get("arranque"))}
+
+    def rel(self, ruta: Path) -> str:
+        """Ruta del informe relativa a la raíz de auditorías (es lo que viaja en `?f=`); '' si está fuera."""
+        try:
+            return ruta.resolve().relative_to(self.arch.resolve()).as_posix()
+        except (ValueError, OSError):
+            return ""
+
+    def informe_fichero(self, f: str) -> tuple[str, bytes]:
+        """Contenido de un informe del trabajo o del historial: solo `.json`/`.md` dentro de las carpetas de auditoría."""
+        if not (f or "").strip():
+            raise ValueError("falta el fichero del informe (?f=…)")
+        r = Path(f).expanduser()
+        r = (r if r.is_absolute() else self.arch / r).resolve()
+        if r.suffix.lower() not in (".json", ".md"):
+            raise ValueError(f"{f}: solo se sirven informes .json o .md")
+        en_raiz = r.parent == self.arch.resolve() and r.name.startswith("audit-") and r.suffix == ".json"
+        if not (en_raiz or r.parent.parent == (self.work / AUDIT_UI).resolve()):
+            raise ValueError(f"{f}: fuera de las carpetas de auditoría del configurador")
+        if not r.is_file():
+            raise ValueError(f"{f}: no existe")
+        tipo = "application/json; charset=utf-8" if r.suffix == ".json" else "text/markdown; charset=utf-8"
+        return tipo, r.read_bytes()
+
+    def historial(self) -> dict:
+        """Auditorías ya hechas: `audit-*.json` de la raíz de G22 (CLI) y de cada carpeta `audit-ui/` (configurador)."""
+        fichas = [*sorted(self.arch.glob("audit-*.json")), *sorted((self.work / AUDIT_UI).glob("*/audit-*.json"))]
+        items = []
+        for p in fichas:
+            if not p.is_file():
+                continue
+            item = {"f": self.rel(p), "nombre": p.name, "fecha": "", "fecha_fuente": "informe", "veredicto": "",
+                    "version": "", "sha256": "", "ruta": "", "coste_s": None, "markdown": "", "error": ""}
+            try:
+                j = json.loads(p.read_text())
+            except (OSError, ValueError) as e:
+                item["error"] = f"{type(e).__name__}: {e}"
+            else:
+                if not isinstance(j, dict):
+                    item["error"] = "el informe no es un objeto JSON"
+                else:
+                    md = Path(str(j.get("markdown") or ""))
+                    item.update({"fecha": j.get("fecha", ""), "veredicto": j.get("veredicto", ""),
+                                 "version": j.get("version", ""), "sha256": j.get("sha256") or j.get("dat_sha256", ""),
+                                 "ruta": j.get("ruta", ""), "coste_s": j.get("coste_s"),
+                                 "markdown": self.rel(md) if md.is_file() else ""})
+            if not item["fecha"]:  # informe antiguo o ilegible: la fecha del fichero, y se dice de dónde sale
+                item["fecha"] = datetime.fromtimestamp(p.stat().st_mtime).astimezone().strftime("%Y-%m-%dT%H:%M:%S%z")
+                item["fecha_fuente"] = "fichero"
+            items.append(item)
+        items.sort(key=lambda it: str(it["fecha"]), reverse=True)
+        return {"auditorias": items, "vacio": not items, "raiz": str(self.arch),
+                "carpetas": [str(self.arch), str(self.work / AUDIT_UI)]}
+
+
+def _slug(ruta: Path) -> str:
+    base = ruta.name or "cfw"
+    limpio = "".join(c if (c.isalnum() or c in "-_") else "-" for c in base)[:40].strip("-")
+    return limpio or "cfw"
 
 
 class Emulador:
@@ -39,6 +253,8 @@ class Emulador:
         self.p: subprocess.Popen | None = None
         self.t0: float | None = None  # arranque del proceso de la VM, para el uptime que enseña la página
         self.lock = threading.Lock()
+        self.auditor = Auditor(work)  # auditoría de CFW como subproceso (pestaña Firmware)
+        self.importado: dict | None = None  # último .dat importado: se ofrece para auditar sin volver a subirlo
 
     @property
     def url_vm(self) -> str:
@@ -185,6 +401,10 @@ th{font-size:12px;color:var(--mut);text-transform:uppercase}
 .mini button.x{font-size:11px;padding:3px 6px}
 footer{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--line);padding:10px 24px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}
 footer #msg{flex:1;min-width:180px;margin:0}
+#audlog{max-height:240px;overflow:auto;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:8px;margin:8px 0 0;font:12px/1.35 ui-monospace,monospace;white-space:pre-wrap}
+#audtab td:first-child{font-family:ui-monospace,monospace;font-size:12px;white-space:nowrap}
+#audtab td:nth-child(2){white-space:nowrap}
+.vok{color:var(--ok)}.vbad{color:var(--bad)}.vavo{color:var(--acc)}
 </style></head><body>
 <header><div class="cab"><div><h1>Emulador Sony A6000</h1><p>Configura firmware, teclas, sensor, SD, red y cámara antes de arrancar la UI en QEMU.</p></div>
 <div class="estado" role="status" aria-live="polite"><span class="luz" id="luz" aria-hidden="true"></span><b id="estado-txt">VM parada</b>
@@ -210,7 +430,29 @@ footer #msg{flex:1;min-width:180px;margin:0}
 <button id="imp">Importar</button></div>
 <p class="aviso" id="impmsg" role="status" aria-live="polite"></p>
 <p class="mut">El <code>.dat</code> se descifra y valida (paquete A6000 íntegro) y se reduce a un overlay de ficheros distintos de Sony; no se instala nada.
-Un perfil nuevo arranca en frío (≈ 2 min) y después se restaura en segundos.</p></section>
+Un perfil nuevo arranca en frío (≈ 2 min) y después se restaura en segundos.</p>
+<h3>Auditoría del CFW en el arnés</h3>
+<div class="row"><label for="audruta">Artefacto</label>
+<input type="text" id="audruta" size="44" placeholder=".dat, paquete con nflasha15, nflasha15.bin u overlay cam/usr">
+<button id="audusa">Usar el importado</button></div>
+<div class="row"><label class="op"><input type="checkbox" id="audcomp"> incluir estructura (etapa 3, más lenta)</label>
+<button id="aud1" class="p">Auditar el .dat</button><button id="aud2" class="cap">Auditar con arranque</button>
+<button id="audref">Refrescar historial</button></div>
+<p class="aviso" id="audmsg" role="status" aria-live="polite"></p>
+<div id="audres" hidden>
+<p class="row"><b id="audver">—</b><span class="mut" id="auddet"></span></p>
+<p class="mut" id="audlinks"></p>
+<table id="audtab"></table>
+<pre id="audlog" tabindex="0" aria-label="consola de la auditoría"></pre>
+<p class="mut" id="audlim">Un fallo (✗) de esta tabla es del <b>CFW</b>, no de la cámara: se detecta en el arnés antes de instalar nada.
+Un ✓ tampoco demuestra que funcione en la cámara —el arnés emula la UI con un kernel ajeno, un shim y una imagen de sensor sintética;
+el LDEC real, Darwin, el flasheo, la NVRAM no declarada, el hardware y los layouts <code>.uxc</code> quedan fuera—. Límites:
+<code>docs/gui/g22-auditoria-cfw.md</code> §5. ? = no demostrable (nunca se presenta como OK).</p>
+</div>
+<h3>Auditorías anteriores</h3>
+<table id="audhist"></table><p class="mut" id="audhmsg" role="status" aria-live="polite"></p>
+<p class="mut">La auditoría la hace <code>scripts/gui/harness/audita_cfw.py</code> como subproceso (misma herramienta que por CLI):
+una sola a la vez, sin flashear ni escribir firmware, y con el <code>.dat</code> o el paquete tal cual están en disco.</p></section>
 <section role="tabpanel" id="p-teclas" aria-labelledby="tab-teclas" tabindex="0" hidden><h2>Mapa de teclas</h2>
 <p class="mut">Pulsa «Capturar» y luego la tecla del teclado. Un botón puede tener varias teclas; una tecla, un solo botón.
 Solo figuran los botones con código de cámara medido; se añaden al ampliar <code>TECLAS</code> de <code>live.py</code>.</p>
@@ -257,7 +499,7 @@ return h?h+':'+String(m).padStart(2,'0')+':'+String(x).padStart(2,'0'):m+':'+Str
 /* --- pestañas: clic y teclado (flechas, Inicio, Fin) --- */
 const TABS=[...document.querySelectorAll('[role=tab]')];
 function activa(tab,foco){for(const t of TABS){const on=t===tab;t.setAttribute('aria-selected',on);t.tabIndex=on?0:-1;$(t.getAttribute('aria-controls')).hidden=!on}
-if(foco)tab.focus();if(tab.id=='tab-sd')sdLista();if(tab.id=='tab-camara')camLee()}
+if(foco)tab.focus();if(tab.id=='tab-sd')sdLista();if(tab.id=='tab-camara')camLee();if(tab.id=='tab-firmware')audHistorial()}
 TABS.forEach((t,i)=>{t.onclick=()=>activa(t);t.onkeydown=e=>{if(cap)return;let j=null;
 if(e.key=='ArrowRight')j=(i+1)%TABS.length;else if(e.key=='ArrowLeft')j=(i-1+TABS.length)%TABS.length;
 else if(e.key=='Home')j=0;else if(e.key=='End')j=TABS.length-1;
@@ -294,10 +536,12 @@ const bt=document.createElement('button');bt.textContent=cap==b?'Pulsa una tecla
 if(cap==b)bt.className='cap';bt.onclick=()=>{cap=cap==b?null:b;pintaTeclas()};tr.insertCell().append(bt)}}
 async function guarda(){lee();try{cfg=(await api('/api/config',{method:'POST',body:JSON.stringify(cfg)})).config;msg('guardado','okc')}
 catch(e){msg(e.message,'err');await carga()}pinta()}
-async function carga(){const r=await api('/api/config');cfg=r.config;botones=r.botones;
+async function carga(){const r=await api('/api/config');cfg=r.config;botones=r.botones;importado=r.importado||null;
 $('ov').innerHTML=r.overlays.map(o=>'<option>'+o+'</option>').join('');
 if(!cfg.firmware.overlay&&r.overlays.length)cfg.firmware.overlay=r.overlays[0];
-pinta();pintaEstado(r.vm);$('sdconf').textContent='Cuota '+cfg.sd.tamano_gb+' GB · carpeta '+(cfg.sd.carpeta||'~/A6000-SD')}
+if(!$('audruta').value&&importado&&importado.ruta_dat)$('audruta').value=importado.ruta_dat
+pinta();pintaEstado(r.vm);$('sdconf').textContent='Cuota '+cfg.sd.tamano_gb+' GB · carpeta '+(cfg.sd.carpeta||'~/A6000-SD');
+audSondea();audHistorial()}
 /* --- SD --- */
 const ES_IMG=/\.(jpe?g|png|webp|gif|bmp)$/i;
 const humano=n=>n==null?'':n>=1048576?(n/1048576).toFixed(1)+' MB':n>=1024?Math.round(n/1024)+' kB':n+' B';
@@ -362,8 +606,72 @@ if(!f&&!r){aviso('impmsg','Elige un fichero o escribe una ruta.','err');return}
 aviso('impmsg','descifrando y extrayendo (hasta ~30 s)…');
 try{const j=f?await api('/api/dat',{method:'POST',headers:{'X-Nombre':encodeURIComponent(f.name)},body:f})
 :await api('/api/dat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ruta:r})});
-cfg=j.config;await carga();aviso('impmsg','Importado: firmware '+j.version+' (región '+j.region+'), '+j.ficheros+
-' ficheros distintos de Sony → '+j.overlay,'okc')}catch(e){aviso('impmsg',e.message,'err')}};
+cfg=j.config;await carga();importado=j.importado||null;
+if(importado&&importado.ruta_dat)$('audruta').value=importado.ruta_dat;
+aviso('impmsg','Importado: firmware '+j.version+' (región '+j.region+'), '+j.ficheros+
+' ficheros distintos de Sony → '+j.overlay+' · ya puedes auditarlo aquí mismo','okc')}catch(e){aviso('impmsg',e.message,'err')}};
+/* --- auditoría del CFW: subproceso de scripts/gui/harness/audita_cfw.py, estado cada 2 s --- */
+let audT=null,importado=null;
+const VCLASE={OK:'vok',AVISO:'vavo',PARCIAL:'vavo',FALLO:'vbad'};
+const marca=c=>c.ok===true?'✓':(c.ok===false?'✗':'?');
+function audEnlace(caja,txt,f){if(!f)return;const a=document.createElement('a');
+a.href='/api/auditar/informe?f='+encodeURIComponent(f);a.target='_blank';a.rel='noopener';a.textContent=txt;caja.append(a)}
+function audTabla(checks){const t=$('audtab');t.innerHTML='<tr><th>Comprobación</th><th>Resultado</th><th>Detalle</th></tr>';
+for(const c of checks){const tr=t.insertRow(),a=tr.insertCell(),b=tr.insertCell(),d=tr.insertCell();
+a.textContent=c.id;b.textContent=marca(c)+(c.aviso?' (aviso)':'');
+b.className=c.ok===false?'vbad':(c.aviso?'vavo':(c.ok===null?'mut':'vok'));d.textContent=c.detalle;d.title=c.evidencia||''}}
+function audPinta(j){
+const on=!!j.corriendo;$('aud1').disabled=on;$('aud2').disabled=on;$('audlog').textContent=j.salida||'';
+if(on){aviso('audmsg','auditando '+(j.ruta||'')+' — '+(j.arranque?'arranque real en QEMU (≈3 min)':'solo estática (≈50 s)')+'…');
+if(!audT)audT=setInterval(audSondea,2000);return}
+if(audT){clearInterval(audT);audT=null}
+const inf=j.informe;
+if(!inf){if(j.codigo!=null){$('audres').hidden=false;aviso('audmsg','sin informe: el auditor salió con código '+j.codigo+
+(j.codigo===2?' (no se pudo auditar: mira la consola)':' (revisa la consola)'),'err')}return}
+$('audres').hidden=false;
+$('audver').textContent='Veredicto '+inf.veredicto;$('audver').className=VCLASE[inf.veredicto]||'mut';
+$('auddet').textContent=' · versión '+(inf.version||'?')+' · sha256 '+(inf.sha256||'').slice(0,12)+' · '+inf.coste_s+' s · '+
+inf.checks.filter(c=>c.ok===false).length+' ✗ y '+inf.checks.filter(c=>c.ok===null).length+' ? de '+inf.checks.length+' comprobaciones'+
+(inf.arranque?' · con arranque real':' · sin arranque (no probado)');
+const caja=$('audlinks');caja.innerHTML='';
+audEnlace(caja,'informe JSON',inf.f);if(inf.markdown_f){caja.append(' · ');audEnlace(caja,'resumen Markdown',inf.markdown_f)}
+if(j.destino){caja.append(' · carpeta ');const k=document.createElement('code');k.textContent=j.destino;caja.append(k)}
+audTabla(inf.checks);
+aviso('audmsg',j.codigo===0?'terminada sin fallos demostrables (código 0)':'encontró fallos (código '+j.codigo+')',
+j.codigo===0?'okc':'err');
+audHistorial()}
+async function audSondea(){try{audPinta(await api('/api/auditar/estado'))}catch(e){aviso('audmsg',e.message,'err')}}
+async function audInicia(arranque){const ruta=$('audruta').value.trim();
+if(!ruta){aviso('audmsg','escribe la ruta del .dat o del paquete a auditar, o pulsa «Usar el importado»','err');return}
+if(arranque&&!confirm('El arranque real tarda ≈3 min, necesita un hueco de QEMU (máximo 2 en el sistema) y no sustituye a la cámara. ¿Seguir?'))return;
+aviso('audmsg','lanzando la auditoría…');
+try{audPinta(await api('/api/auditar',{method:'POST',headers:{'Content-Type':'application/json'},
+body:JSON.stringify({ruta:ruta,arranque:!!arranque,completo:$('audcomp').checked||!!arranque})}))}
+catch(e){aviso('audmsg',e.message,'err')}}
+$('aud1').onclick=()=>audInicia(false);
+$('aud2').onclick=()=>audInicia(true);
+$('audusa').onclick=()=>{const f=(importado&&importado.ruta_dat)||'';
+if(!importado){aviso('audmsg','todavía no hay ningún .dat importado','err');return}
+if(!f){aviso('audmsg','el .dat se subió desde el navegador y solo queda el paquete parcial ('+importado.overlay+
+'): escribe la ruta del .dat original —sigue en tu disco— para auditarlo entero','err');$('audruta').value='';return}
+$('audruta').value=f;aviso('audmsg','se auditará '+f,'okc')};
+async function audHistorial(){const t=$('audhist');
+try{const j=await api('/api/auditar/historial');t.innerHTML='';
+if(j.vacio){const tr=t.insertRow().insertCell();tr.className='mut';
+tr.textContent='Todavía no hay ninguna auditoría hecha: lanza la primera con «Auditar el .dat».';
+$('audhmsg').textContent='se buscan audit-*.json en '+j.raiz;return}
+const h=t.insertRow();for(const x of ['Fecha','Veredicto','Versión','Artefacto','Informe']){
+const th=document.createElement('th');th.textContent=x;h.append(th)}
+for(const a of j.auditorias){const tr=t.insertRow();
+tr.insertCell().textContent=(a.fecha||'').slice(0,19).replace('T',' ');
+const v=tr.insertCell();v.textContent=a.veredicto||(a.error?'ilegible':'—');v.className=VCLASE[a.veredicto]||'mut';
+tr.insertCell().textContent=a.version||'—';
+tr.insertCell().textContent=(a.ruta||a.nombre)+((a.sha256||'').length>8?' ('+a.sha256.slice(0,8)+')':'');
+const c=tr.insertCell();audEnlace(c,'JSON',a.f);if(a.markdown){c.append(' · ');audEnlace(c,'MD',a.markdown)}
+if(!a.f)c.textContent='—'}
+$('audhmsg').textContent=j.auditorias.length+' auditorías (fecha del informe o, si no la trae, del fichero);'}
+catch(e){$('audhmsg').textContent='historial no disponible: '+e.message}}
+$('audref').onclick=()=>audHistorial();
 document.querySelectorAll('#ov,#sfu,#sru,#sgb,#sca,#rte,#rwi,#rpu,#cbt,#cusb,#chdmi').forEach(e=>e.onchange=async()=>{
 await guarda();if(e.id=='sca'||e.id=='sgb')sdLista()});
 $('go').onclick=async()=>{lee();$('go').disabled=true;msg('arrancando… (un perfil nuevo tarda ≈ 2 min en frío)');
@@ -430,9 +738,21 @@ def servidor(emu: Emulador) -> ThreadingHTTPServer:
                 self.envia(200, "text/html; charset=utf-8", PAGINA.encode())
             elif ruta == "/api/config":
                 cfg = E.valida_config({}) if q == "defecto=1" else E.carga_config(emu.config)
-                self.json({"config": cfg, "botones": E.botones_conocidos(), "overlays": E.overlays(emu.work), "vm": emu.estado()})
+                self.json({"config": cfg, "botones": E.botones_conocidos(), "overlays": E.overlays(emu.work),
+                           "vm": emu.estado(), "importado": emu.importado})
             elif ruta == "/api/estado":
                 self.json(emu.estado())
+            elif ruta == "/api/auditar/estado":
+                self.json(emu.auditor.estado())
+            elif ruta == "/api/auditar/historial":
+                self.json(emu.auditor.historial())
+            elif ruta == "/api/auditar/informe":
+                try:
+                    tipo, datos = emu.auditor.informe_fichero(urllib.parse.parse_qs(q).get("f", [""])[0])
+                except (ValueError, OSError) as e:
+                    self.json({"error": str(e)}, 400)
+                    return
+                self.envia(200, tipo, datos)
             elif ruta.startswith("/api/vm/"):
                 self.a_la_vm("GET", b"")
             else:
@@ -450,6 +770,12 @@ def servidor(emu: Emulador) -> ThreadingHTTPServer:
                 cuerpo = self.lee(n)
                 if self.path == "/api/config":
                     self.json({"config": E.guarda_config(json.loads(cuerpo), emu.config)})
+                elif self.path == "/api/auditar":
+                    d = json.loads(cuerpo or b"{}")
+                    if not isinstance(d, dict):
+                        raise ValueError("cuerpo JSON inválido: se espera {\"ruta\": …, \"arranque\": bool, \"completo\": bool}")
+                    self.json(emu.auditor.lanzar(str(d.get("ruta") or ""), completo=bool(d.get("completo")),
+                                                 arranque=bool(d.get("arranque"))), 202)
                 elif self.path == "/api/iniciar":
                     self.json(emu.iniciar(json.loads(cuerpo)))
                 elif self.path == "/api/parar":
@@ -459,23 +785,30 @@ def servidor(emu: Emulador) -> ThreadingHTTPServer:
                     threading.Thread(target=lambda: (emu.parar(), srv.shutdown()), daemon=True).start()
                 else:
                     self.send_error(404)
+            except Ocupado as e:  # una sola auditoría a la vez
+                self.json({"error": str(e)}, 409)
             except (ValueError, E.DatError, OSError) as e:  # json.JSONDecodeError es ValueError
                 self.json({"error": str(e)}, 400)
 
         def importa(self, n: int) -> dict:
+            ruta_dat = ""
             if self.headers.get("Content-Type", "").startswith("application/json"):
                 ruta = Path(json.loads(self.lee(n))["ruta"]).expanduser()
                 if not ruta.is_file():
                     raise E.DatError(f"No existe el fichero {ruta}")
                 dat = ruta.read_bytes()
-                origen = str(ruta)
+                origen = ruta_dat = str(ruta)
             else:
                 dat = self.lee(n)
                 origen = self.headers.get("X-Nombre", "subido.dat")
             res = E.importa_dat(dat, emu.work)
             cfg = E.carga_config(emu.config)
             cfg["firmware"] = {"origen": "dat", "overlay": cfg["firmware"]["overlay"], "dat": res["overlay"]}
-            return {**res, "origen": origen, "config": E.guarda_config(cfg, emu.config)}
+            # el .dat de origen se ofrece tal cual para auditarlo sin volver a subirlo; si vino del navegador solo
+            # queda el paquete parcial (overlay), que no se puede auditar como /usr completo (la página lo avisa)
+            emu.importado = {"origen": origen, "version": res["version"], "overlay": res["overlay"],
+                             "ruta_dat": ruta_dat, "parcial": not ruta_dat}
+            return {**res, "origen": origen, "config": E.guarda_config(cfg, emu.config), "importado": emu.importado}
 
     srv = ThreadingHTTPServer(("127.0.0.1", emu.puerto), H)
     return srv
