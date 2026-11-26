@@ -162,7 +162,7 @@ acepta tal cual.
 
 | Caso | Tiempo | Nota |
 |---|---|---|
-| `.dat` oficial 3.21, `--rapido` | ≈ 46 s | descifrar 200 MB (≈ 8 s) + extraer CFW y Sony (≈ 2 × 10 s) + sumas |
+| `.dat` oficial 3.21, `--rapido` | 48 s | descifrar 200 MB (≈ 8 s) + extraer CFW y Sony (≈ 2 × 10 s) + sumas |
 | CFW sintético sobre el `/usr` real, `--completo --sin-arranque` | ≈ 2,8 s | `/usr` ya extraído; diff de `libObj.so` (17 MB) incluido |
 | arranque en frío del Sony de serie (medido 26-11-2026) | 145 s de sesión; primera pantalla ≈ 2 min | 3 PNG de 640×480, MENÚ abre, sin IMEXIT; el perfil guarda estado para la siguiente (≈ 7 s) |
 | auditoría completa con la base Sony cacheada (paquete sintético idéntico a Sony) | 209 s | incluye la espera de hueco de QEMU; 9 comprobaciones de arranque OK y comparación de menú 0,0 |
