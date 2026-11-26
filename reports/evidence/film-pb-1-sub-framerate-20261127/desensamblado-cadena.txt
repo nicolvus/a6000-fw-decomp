@@ -1,0 +1,75 @@
+### B) conversion AviIf -> struct 0x13C (tbb de 11 vias)
+006e0cd6: d7f80031   ldr.w      r3, [r7, #0x100]                  
+006e0cda: 013b       subs       r3, #1                            
+006e0cdc: 0a2b       cmp        r3, #0xa                          
+006e0cde: 36d8       bhi        #0x6e0d4e                         
+006e0ce0: dfe803f0   tbb        [pc, r3]                          
+006e0ce4: 080a       lsrs       r0, r1, #8                        
+006e0ce6: 0c06       lsls       r4, r1, #0x18                     
+006e0ce8: 0e10       asrs       r6, r1, #0x20                     
+006e0cea: 1214       asrs       r2, r2, #0x10                     
+006e0cec: 1618       adds       r6, r2, r0                        
+006e0cee: 1a00       movs       r2, r3                            
+006e0cf0: 0323       movs       r3, #3                            
+006e0cf2: 12e0       b          #0x6e0d1a                         
+006e0cf4: 0023       movs       r3, #0                            
+006e0cf6: 10e0       b          #0x6e0d1a                         
+006e0cf8: 0123       movs       r3, #1                            
+006e0cfa: 0ee0       b          #0x6e0d1a                         
+006e0cfc: 0223       movs       r3, #2                            
+006e0cfe: 0ce0       b          #0x6e0d1a                         
+006e0d00: 0423       movs       r3, #4                            
+006e0d02: 0ae0       b          #0x6e0d1a                         
+006e0d04: 0523       movs       r3, #5                            
+006e0d06: 08e0       b          #0x6e0d1a                         
+006e0d08: 0623       movs       r3, #6                            
+006e0d0a: 06e0       b          #0x6e0d1a                         
+006e0d0c: 0723       movs       r3, #7                            
+006e0d0e: 04e0       b          #0x6e0d1a                         
+006e0d10: 0823       movs       r3, #8                            
+006e0d12: 02e0       b          #0x6e0d1a                         
+006e0d14: 0923       movs       r3, #9                            
+006e0d16: 00e0       b          #0x6e0d1a                         
+006e0d18: ff23       movs       r3, #0xff                         
+006e0d1a: c4f82431   str.w      r3, [r4, #0x124]                  
+006e0d1e: 0422       movs       r2, #4                            
+006e0d20: 97f8   .hword
+
+### C) productor de thumb desde el perfil grande (0x340 -> 0x124)
+0077b000: 1831       adds       r1, #0x18                         
+0077b002: 0123       movs       r3, #1                            
+0077b004: 84f81c31   strb.w     r3, [r4, #0x11c]                  
+0077b008: 95f84423   ldrb.w     r2, [r5, #0x344]                  
+0077b00c: 02b1       cbz        r2, #0x77b010                     
+0077b00e: 013b       subs       r3, #1                            
+0077b010: d5f84023   ldr.w      r2, [r5, #0x340]                  
+0077b014: c4f82031   str.w      r3, [r4, #0x120]                  
+0077b018: 0023       movs       r3, #0                            
+0077b01a: 092a       cmp        r2, #9                            
+0077b01c: 84f82831   strb.w     r3, [r4, #0x128]                  
+0077b020: c4f82421   str.w      r2, [r4, #0x124]                  
+0077b024: 0dd8       bhi        #0x77b042                         
+0077b026: 0121       movs       r1, #1                            
+0077b028: 40f2a923   movw       r3, #0x2a9                        
+0077b02c: 11fa02f2   lsls.w     r2, r1, r2                        
+0077b030: 02ea0303   and.w      r3, r2, r3                        
+0077b034: 1bb9       cbnz       r3, #0x77b03e                     
+0077b036: 12f4ab7f   tst.w      r2, #0x156                        
+0077b03a: 09d1       bne        #0x77b050                         
+0077b03c: 01e0       b          #0x77b042                         
+0077b03e: 0b46       mov        r3, r1                            
+
+### D) el perfil grande toma la cadencia de [r5+0x94]
+0077acfc: d5f88030   ldr.w      r3, [r5, #0x80]                   
+0077ad00: 0022       movs       r2, #0                            
+0077ad02: c4f83433   str.w      r3, [r4, #0x334]                  
+0077ad06: d5f89430   ldr.w      r3, [r5, #0x94]                   
+0077ad0a: c4f84033   str.w      r3, [r4, #0x340]                  
+0077ad0e: 95f89830   ldrb.w     r3, [r5, #0x98]                   
+0077ad12: 84f84433   strb.w     r3, [r4, #0x344]                  
+0077ad16: d5f8a030   ldr.w      r3, [r5, #0xa0]                   
+0077ad1a: c4f84833   str.w      r3, [r4, #0x348]                  
+0077ad1e: b5f89030   ldrh.w     r3, [r5, #0x90]                   
+0077ad22: a4f84c33   strh.w     r3, [r4, #0x34c]                  
+0077ad26: d5f88830   ldr.w      r3, [r5, #0x88]                   
+0077ad2a: c4f8   .hword

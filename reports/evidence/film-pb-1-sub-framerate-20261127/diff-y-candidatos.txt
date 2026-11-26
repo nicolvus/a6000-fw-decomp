@@ -1,0 +1,35 @@
+orig198.mp4  14545696 B  sha256? no
+conv198-25p  14545696 B
+bytes distintos: 2 ['0xdde20c', '0xdde20d']
+
+orig198.mp4  track#0 vide
+  mvhd.timescale=90000  mvhd.duration=855855
+  mdhd.timescale=30000  mdhd.duration=285285
+  stts: entries=1 delta=1001
+  elst: segment_duration=855855 (movie ts)  media_time=1001
+  [a] mdhd.timescale/stts.delta      = 30000/1001 = 29.970030 fps
+  [b] muestras/(mdhd.dur/timescale)  = 285/9.509500s = 29.970030 fps
+  [c] mvhd.duration/mvhd.timescale   = 9.509500 s  (no da fps sin nº de muestras)
+  [d] muestras/(mvhd.dur/mvhd.ts)    = 285/9.509500s = 29.970030 fps
+  [e] elst.segment_duration/mvhd.ts  = 9.509500 s
+
+orig198.mp4  track#1 soun
+  mvhd.timescale=90000  mvhd.duration=855855
+  mdhd.timescale=48000  mdhd.duration=455680
+  stts: entries=1 delta=1024
+
+conv198-25p.mp4  track#0 vide
+  mvhd.timescale=90000  mvhd.duration=855855
+  mdhd.timescale=25025  mdhd.duration=285285
+  stts: entries=1 delta=1001
+  elst: segment_duration=855855 (movie ts)  media_time=1001
+  [a] mdhd.timescale/stts.delta      = 25025/1001 = 25.000000 fps
+  [b] muestras/(mdhd.dur/timescale)  = 285/11.400000s = 25.000000 fps
+  [c] mvhd.duration/mvhd.timescale   = 9.509500 s  (no da fps sin nº de muestras)
+  [d] muestras/(mvhd.dur/mvhd.ts)    = 285/9.509500s = 29.970030 fps
+  [e] elst.segment_duration/mvhd.ts  = 9.509500 s
+
+conv198-25p.mp4  track#1 soun
+  mvhd.timescale=90000  mvhd.duration=855855
+  mdhd.timescale=48000  mdhd.duration=455680
+  stts: entries=1 delta=1024

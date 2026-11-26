@@ -1,0 +1,43 @@
+### E) tabla de nombres del enum (VA 0x686A34, 11 punteros)
+  idx  0  008687f2  FPS_23_976
+  idx  1  008687fd  FPS_24
+  idx  2  00868804  FPS_25
+  idx  3  0086880b  FPS_29_97
+  idx  4  00868815  FPS_50
+  idx  5  0086881c  FPS_59_94
+  idx  6  0090fb67  FPS_100
+  idx  7  0090fb6f  FPS_119_88
+  idx  8  0090fb7a  FPS_200
+  idx  9  0090fb82  FPS_239_76
+  idx 10  0090fb8d  FPS_UNKNOWN
+
+### F) tabla numerica enum->cadencia (tbb 0x77AF2C y constantes)
+0077af28: 092a       cmp        r2, #9                            
+0077af2a: 43d8       bhi        #0x77afb4                         
+0077af2c: dfe802f0   tbb        [pc, r2]                          
+0077af30: 0508       lsrs       r5, r0, #0x20                     
+0077af32: 1218       adds       r2, r2, r0                        
+0077af34: 1e24       movs       r4, #0x1e                         
+0077af36: 2a30       adds       r0, #0x2a                         
+0077af38: 363c       subs       r4, #0x36                         
+0077af3a: 40f2e930   movw       r0, #0x3e9                        
+0077af3e: 01e0       b          #0x77af44                         
+0077af40: 4ff47a70   mov.w      r0, #0x3e8                        
+0077af44: a3fb0001   umull      r0, r1, r3, r0                    
+0077af48: 1822       movs       r2, #0x18                         
+0077af4a: 0023       movs       r3, #0                            
+0077af4c: a2f52ee5   blx        #0x11d9ac                           ; __aeabi_uldivmod
+0077af50: 0246       mov        r2, r0                            
+0077af52: 36e0       b          #0x77afc2                         
+0077af54: 4ff47a70   mov.w      r0, #0x3e8                        
+0077af58: 1922       movs       r2, #0x19                         
+0077af5a: a3fb0001   umull      r0, r1, r3, r0                    
+0077af5e: f4e7       b          #0x77af4a                         
+0077af60: 40f2e930   movw       r0, #0x3e9                        
+0077af64: 1e22       movs       r2, #0x1e                         
+0077af66: a3fb0001   umull      r0, r1, r3, r0                    
+0077af6a: eee7       b          #0x77af4a                         
+0077af6c: 4ff47a70   mov.w      r0, #0x3e8                        
+0077af70: 3222       movs       r2, #0x32                         
+0077af72: a3fb0001   umull      r0, r1, r3, r0                    
+0077af76: e8e7       b          #0x77af4a                         

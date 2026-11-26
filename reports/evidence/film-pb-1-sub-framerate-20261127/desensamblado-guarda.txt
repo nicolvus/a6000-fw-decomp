@@ -1,0 +1,85 @@
+### libmpr.so fw3.21  sha256:
+9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30  firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+
+### A) isSupportContent: el 8o out (r7+0) y la lectura [r7+0x124]
+0061a902: c068       ldr        r0, [r0, #0xc]                    
+0061a904: 07f59e76   add.w      r6, r7, #0x13c                    
+0061a908: 88e80e00   stm.w      r8, {r1, r2, r3}                  
+0061a90c: 2978       ldrb       r1, [r5]                          
+0061a90e: 5c4a       ldr        r2, [pc, #0x170]                  
+0061a910: 35f08cfe   bl         #0x65062c                         
+0061a914: 07f5e873   add.w      r3, r7, #0x1d0                    
+0061a918: 0022       movs       r2, #0                            
+0061a91a: d4f86807   ldr.w      r0, [r4, #0x768]                  
+0061a91e: 03f8012d   strb       r2, [r3, #-0x1]!                  
+0061a922: d7f8f411   ldr.w      r1, [r7, #0x1f4]                  
+0061a926: d7f8f821   ldr.w      r2, [r7, #0x1f8]                  
+0061a92a: 0096       str        r6, [sp]                          
+0061a92c: dff5a6f9   bl         #0x3f9c7c                         
+...
+0061a9b4: 0093       str        r3, [sp]                          
+0061a9b6: 07f5e073   add.w      r3, r7, #0x1c0                    
+0061a9ba: d4f83407   ldr.w      r0, [r4, #0x734]                  
+0061a9be: 0193       str        r3, [sp, #4]                      
+0061a9c0: 07f5ba73   add.w      r3, r7, #0x174                    
+0061a9c4: 0293       str        r3, [sp, #8]                      
+0061a9c6: 07f5d673   add.w      r3, r7, #0x1ac                    
+0061a9ca: 0393       str        r3, [sp, #0xc]                    
+0061a9cc: 07f5de73   add.w      r3, r7, #0x1bc                    
+0061a9d0: 0493       str        r3, [sp, #0x10]                   
+0061a9d2: 07f5dc73   add.w      r3, r7, #0x1b8                    
+0061a9d6: 0593       str        r3, [sp, #0x14]                   
+0061a9d8: 07f5da73   add.w      r3, r7, #0x1b4                    
+0061a9dc: 0693       str        r3, [sp, #0x18]                   
+0061a9de: 3b1c       adds       r3, r7, #0                        
+0061a9e0: 0793       str        r3, [sp, #0x1c]                   
+0061a9e2: 1f23       movs       r3, #0x1f                         
+0061a9e4: cdf024fd   bl         #0x6e8430                         
+0061a9e8: 0346       mov        r3, r0                            
+0061a9ea: 0028       cmp        r0, #0                            
+0061a9ec: 36d1       bne        #0x61aa5c                         
+0061a9ee: d4f7f5f2   bl         #0x1eefdc                         
+0061a9f2: d7f82431   ldr.w      r3, [r7, #0x124]                  
+0061a9f6: 0128       cmp        r0, #1                            
+0061a9f8: 11d1       bne        #0x61aa1e                         
+0061a9fa: 092b       cmp        r3, #9                            
+0061a9fc: 29d8       bhi        #0x61aa52                         
+0061a9fe: 9840       lsls       r0, r3                            
+0061aa00: 10f42a7f   tst.w      r0, #0x2a8                        
+0061aa04: 19d1       bne        #0x61aa3a                         
+0061aa06: 10f4aa7f   tst.w      r0, #0x154                        
+0061aa0a: 1ed1       bne        #0x61aa4a                         
+0061aa0c: 10f0030f   tst.w      r0, #3                            
+0061aa10: 11e0       b          #0x61aa36                         
+0061aa12: e068       ldr        r0, [r4, #0xc]                    
+0061aa14: 2978       ldrb       r1, [r5]                          
+0061aa16: 1e4a       ldr        r2, [pc, #0x78]                   
+0061aa18: 35f008fe   bl         #0x65062c                         
+0061aa1c: 26e0       b          #0x61aa6c                         
+0061aa1e: 092b       cmp        r3, #9                            
+0061aa20: 17d8       bhi        #0x61aa52                         
+0061aa22: 0122       movs       r2, #1                            
+0061aa24: 9a40       lsls       r2, r3                            
+0061aa26: 12f42a7f   tst.w      r2, #0x2a8                        
+0061aa2a: 0ed1       bne        #0x61aa4a                         
+0061aa2c: 12f4aa7f   tst.w      r2, #0x154                        
+0061aa30: 03d1       bne        #0x61aa3a                         
+0061aa32: 12f0030f   tst.w      r2, #3                            
+0061aa36: ecd1       bne        #0x61aa12                         
+0061aa38: 0be0       b          #0x61aa52                         
+0061aa3a: 124a       ldr        r2, [pc, #0x48]                   
+0061aa3c: e068       ldr        r0, [r4, #0xc]                    
+0061aa3e: 1178       ldrb       r1, [r2]                          
+0061aa40: 144a       ldr        r2, [pc, #0x50]                   
+0061aa42: 35f0f3fd   bl         #0x65062c                         
+0061aa46: 0020       movs       r0, #0                            
+0061aa48: 11e0       b          #0x61aa6e                         
+0061aa4a: e068       ldr        r0, [r4, #0xc]                    
+0061aa4c: 2978       ldrb       r1, [r5]                          
+0061aa4e: 124a       ldr        r2, [pc, #0x48]                   
+0061aa50: e2e7       b          #0x61aa18                         
+0061aa52: 0c4a       ldr        r2, [pc, #0x30]                   
+0061aa54: e068       ldr        r0, [r4, #0xc]                    
+0061aa56: 1178       ldrb       r1, [r2]                          
+0061aa58: 104a       ldr        r2, [pc, #0x40]                   
+0061aa5a: dde7       b          #0x61aa18                         

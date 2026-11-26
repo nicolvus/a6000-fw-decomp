@@ -1,0 +1,117 @@
+# Barrido de llamadores de AviMMgr::isSupportContent (0x61A8F0) - libmpr.so 3.21
+# sha256 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30 ; VA == offset de fichero (.text addr == .text off == 0x120228)
+
+## 1. bl/blx inmediatos a 0x61A8F0 / 0x61A8F1 en TODAS las .so del rootfs 3.21
+total llamadas directas: 0
+
+## 2. Referencias literales (u32) a la entrada y a la vtable
+libmpr.so              entrada|1        0x8e6eb0
+libmpr.so              vtable AviMMgr   0x10052c 0x60ac6c 0x61909c
+
+## 3. Sitios 'ldr rX,[rY,#0x58] + blx rX' en libmpr (.text)
+002de418  ldr r3,[r7,#0x58]  blx@002de428
+002def4e  ldr r3,[r7,#0x58]  blx@002def5e
+002ebf8c  ldr r3,[r4,#0x58]  blx@002ebf9a
+00319460  ldr r3,[r3,#0x58]  blx@00319462
+00343aaa  ldr r6,[r3,#0x58]  blx@00343ab6
+003508c0  ldr r3,[r3,#0x58]  blx@003508c2
+00354d1e  ldr r3,[r3,#0x58]  blx@00354d20
+0035c2ea  ldr r3,[r3,#0x58]  blx@0035c2ec
+0035c528  ldr r3,[r3,#0x58]  blx@0035c52a
+003a30fe  ldr r3,[r3,#0x58]  blx@003a3100
+003b9630  ldr r3,[r3,#0x58]  blx@003b9632
+003cfb4a  ldr r3,[r3,#0x58]  blx@003cfb4c
+003d021c  ldr r3,[r3,#0x58]  blx@003d021e
+003d059e  ldr r3,[r3,#0x58]  blx@003d05a0
+003d0c06  ldr r3,[r3,#0x58]  blx@003d0c08
+003d0d18  ldr r3,[r3,#0x58]  blx@003d0d1a
+003e5e5c  ldr r3,[r3,#0x58]  blx@003e5e5e
+0040247e  ldr r5,[r4,#0x58]  blx@00402486
+0041cb86  ldr r3,[r4,#0x58]  blx@0041cb90
+00447f52  ldr r4,[r4,#0x58]  blx@00447f5a
+00455a46  ldr r4,[r8,#0x58]  blx@00455a4a
+004f06a0  ldr r3,[r3,#0x58]  blx@004f06a2
+004f1a02  ldr r3,[r3,#0x58]  blx@004f1a08
+005ace2c  ldr r3,[r3,#0x58]  blx@005ace2e
+005b75b8  ldr r3,[r3,#0x58]  blx@005b75ba
+005b9f2a  ldr r3,[r3,#0x58]  blx@005b9f2c
+005ce60e  ldr r3,[r3,#0x58]  blx@005ce610
+0060425a  ldr r3,[r3,#0x58]  blx@00604262
+006055d4  ldr r3,[r7,#0x58]  blx@006055e4
+0060581c  ldr r3,[r7,#0x58]  blx@0060582c
+00625cc0  ldr r3,[r3,#0x58]  blx@00625cc2
+00625d94  ldr r3,[r3,#0x58]  blx@00625d96
+00625dfa  ldr r3,[r3,#0x58]  blx@00625dfc
+00625ea2  ldr r3,[r3,#0x58]  blx@00625ea4
+00625edc  ldr r3,[r3,#0x58]  blx@00625ede
+00625f34  ldr r3,[r3,#0x58]  blx@00625f36
+00625f42  ldr r3,[r3,#0x58]  blx@00625f44
+00625f58  ldr r3,[r3,#0x58]  blx@00625f5a
+00626f9c  ldr r3,[r3,#0x58]  blx@00626fa4
+00627296  ldr r3,[r3,#0x58]  blx@0062729e
+0062d142  ldr r3,[r3,#0x58]  blx@0062d14a
+0062dc9a  ldr r3,[r3,#0x58]  blx@0062dca2
+006770e6  ldr r3,[r3,#0x58]  blx@006770ee
+006e8ce4  ldr r5,[r3,#0x58]  blx@006e8ce8
+00750ed6  ldr r4,[r3,#0x58]  blx@00750eda
+0079daae  ldr r3,[r3,#0x58]  blx@0079dab0
+total 46
+
+## 4. Unico sitio con objeto AviMMgr probado: 0x447F52 en el envoltorio 0x447F26
+00447f26: 82b0       sub      sp, #8                        
+00447f28: b0b5       push     {r4, r5, r7, lr}              
+00447f2a: 86b0       sub      sp, #0x18                     
+00447f2c: 04af       add      r7, sp, #0x10                 
+00447f2e: 07f11804   add.w    r4, r7, #0x18                 
+00447f32: 84e80c00   stm.w    r4, {r2, r3}                  
+00447f36: 3a1d       adds     r2, r7, #4                    
+00447f38: fff76afc   bl       #0x447810                     
+00447f3c: 78b9       cbnz     r0, #0x447f5e                 
+00447f3e: 07f12403   add.w    r3, r7, #0x24                 
+00447f42: 7d68       ldr      r5, [r7, #4]                  
+00447f44: 93e80700   ldm.w    r3, {r0, r1, r2}              
+00447f48: 2c68       ldr      r4, [r5]                      
+00447f4a: 8de80700   stm.w    sp, {r0, r1, r2}              
+00447f4e: 07f11800   add.w    r0, r7, #0x18                 
+00447f52: a46d       ldr      r4, [r4, #0x58]               
+00447f54: 90e80e00   ldm.w    r0, {r1, r2, r3}              
+00447f58: 2846       mov      r0, r5                        
+00447f5a: a047       blx      r4                            
+00447f5c: 00e0       b        #0x447f60                     
+00447f5e: 0120       movs     r0, #1                        
+00447f60: 07f10807   add.w    r7, r7, #8                    
+00447f64: bd46       mov      sp, r7                        
+00447f66: bde8b040   pop.w    {r4, r5, r7, lr}              
+00447f6a: 02b0       add      sp, #8                        
+00447f6c: 7047       bx       lr                            
+
+## 5. Llamadores del envoltorio 0x447F26
+0x437c2c None
+
+## 6. Orden de las dos guardas en el manejador PlayMovie 0x437BC0
+00437bee: d4f8ec01   ldr.w    r0, [r4, #0x1ec]              
+00437bf2: d4f8c01d   ldr.w    r1, [r4, #0xdc0]              
+00437bf6: d4f8b82d   ldr.w    r2, [r4, #0xdb8]              
+00437bfa: 0ff010ff   bl       #0x447a1e                     
+00437bfe: 38b9       cbnz     r0, #0x437c10                 
+00437c00: a068       ldr      r0, [r4, #8]                  
+00437c02: 0122       movs     r2, #1                        
+00437c04: 4d49       ldr      r1, [pc, #0x134]                ; [00437d3c]=0085a51c " Pb Disable!! ref) dsm get"
+00437c06: daf297fe   bl       #0x712938                     
+00437c0a: 1a23       movs     r3, #0x1a                     
+00437c0c: fb63       str      r3, [r7, #0x3c]               
+00437c0e: 7ee0       b        #0x437d0e                     
+00437c10: 07f16806   add.w    r6, r7, #0x68                 
+00437c14: 96e80f00   ldm.w    r6, {r0, r1, r2, r3}          
+00437c18: 8de80f00   stm.w    sp, {r0, r1, r2, r3}          
+00437c1c: 07f16001   add.w    r1, r7, #0x60                 
+00437c20: d4f8ec01   ldr.w    r0, [r4, #0x1ec]              
+00437c24: 91e80c00   ldm.w    r1, {r2, r3}                  
+00437c28: d4f8c01d   ldr.w    r1, [r4, #0xdc0]              
+00437c2c: 10f07bf9   bl       #0x447f26                     
+00437c30: f0b9       cbnz     r0, #0x437c70                 
+00437c32: a068       ldr      r0, [r4, #8]                  
+00437c34: 0122       movs     r2, #1                        
+00437c36: 4249       ldr      r1, [pc, #0x108]                ; [00437d40]=0085a7d8 " Detect UnSupported Content "
+00437c38: daf27efe   bl       #0x712938                     
+00437c3c: 1a23       movs     r3, #0x1a                     

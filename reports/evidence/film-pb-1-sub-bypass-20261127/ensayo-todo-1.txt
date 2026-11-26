@@ -1,0 +1,41 @@
+entrada : /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+sha256  : 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+variante: todo-1
+  0061a8f0  84 b0 2d e9          -> 01 20 70 47           movs r0,#1 ; bx lr
+bytes distintos: 4  ->  0061a8f0:84>01 0061a8f1:b0>20 0061a8f2:2d>70 0061a8f3:e9>47
+ELF     : valido (ELF32 LE, ET_DYN, EM_ARM, 5 phdrs, 25 shdrs)
+desasm 0x0061a8f0 (entrada):
+   0061a8f0: movs       r0, #1
+   0061a8f2: bx         lr
+   0061a8f4: mvns       r0, r6
+   0061a8f6: sub        sp, #0x1f4
+desasm 0x0061a9ee (comparacion de TvSystem):
+   0061a9ee: bl         #0x1eefdc
+   0061a9f2: ldr.w      r3, [r7, #0x124]
+   0061a9f6: cmp        r0, #1
+   0061a9f8: bne        #0x61aa1e
+   0061a9fa: cmp        r3, #9
+   0061a9fc: bhi        #0x61aa52
+   0061a9fe: lsls       r0, r3
+   0061aa00: tst.w      r0, #0x2a8
+   0061aa04: bne        #0x61aa3a
+   0061aa06: tst.w      r0, #0x154
+   0061aa0a: bne        #0x61aa4a
+   0061aa0c: tst.w      r0, #3
+   0061aa10: b          #0x61aa36
+   0061aa12: ldr        r0, [r4, #0xc]
+   0061aa14: ldrb       r1, [r5]
+   0061aa16: ldr        r2, [pc, #0x78]
+   0061aa18: bl         #0x65062c
+   0061aa1c: b          #0x61aa6c
+   0061aa1e: cmp        r3, #9
+   0061aa20: bhi        #0x61aa52
+   0061aa22: movs       r2, #1
+   0061aa24: lsls       r2, r3
+   0061aa26: tst.w      r2, #0x2a8
+   0061aa2a: bne        #0x61aa4a
+   0061aa2c: tst.w      r2, #0x154
+   0061aa30: bne        #0x61aa3a
+   0061aa32: tst.w      r2, #3
+salida  : /tmp/libmpr-parche-todo-1.so  sha256=6fa1e23ea7baf633540e2ca1e3733bbff3b78fe4d260a43a8ee8402876148ae8
+Nada aplicado en el repo: la libreria de fabrica sigue intacta (sha256 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30).

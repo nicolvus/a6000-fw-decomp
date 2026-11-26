@@ -34,20 +34,42 @@ Desensamblado verificado (`libmpr.so` 3.21, VA del ELF):
 Además hay un segundo `return 0` si `GetPlayThumbnailInfo` (`0x6E8430`, selector `0x1F`) falla
 («isSupportContent : GetPlayThumbnailInfo »).
 
-| TvSystem | Cadencias aceptadas | Cadencias rechazadas |
+El enum `frameRate` está **verificado** por dos tablas del propio firmware (nombres en `0x686A34`,
+numérica en el `tbb` de `0x77AF2C`) y por el mapeo `1..10 → 0..9` de `0x6E0CD6`:
+
+| enum | cadencia | familia |
+|---:|---|---|
+| 0 | 24000/1001 | 24p |
+| 1 | 24 | 24p |
+| 2 | 25 | **PAL** |
+| 3 | 30000/1001 | **NTSC** |
+| 4 | 50 | **PAL** |
+| 5 | 60000/1001 | **NTSC** |
+| 6 | 100 | **PAL** |
+| 7 | 120000/1001 | **NTSC** |
+| 8 | 200 | **PAL** |
+| 9 | 240000/1001 | **NTSC** |
+
+| TvSystem | Acepta | Rechaza |
 |---|---|---|
-| `== 1` | bits 0,1 (24p/23,976p) y bits **pares** 2,4,6,8 | bits **impares** 3,5,7,9 y >9 |
-| `!= 1` | bits 0,1 y bits **impares** 3,5,7,9 | bits **pares** 2,4,6,8 y >9 |
+| `== 1` = **PAL** | 24p (0,1) y **25/50/100/200** (2,4,6,8) | **29,97/59,94/119,88/239,76** (3,5,7,9) |
+| `!= 1` = **NTSC** | 24p (0,1) y **29,97/59,94/119,88/239,76** (3,5,7,9) | 25/50/100/200 (2,4,6,8) |
+
+`frameRate > 9` **devuelve 1** (acepta), no 0: descartado como causa.
 
 24p se acepta en **ambos** sistemas, que es justo lo que hace la cámara de verdad: señal de que
 la lectura es correcta. La partición par/impar es la de NTSC (60 Hz) frente a PAL (50 Hz).
 
 ## 2. Por qué esto explica el síntoma completo
 
-- Los clips de la tarjeta son **30000/1001 (30p, NTSC)**: 1440×1080, 285 cuadros, 9,5095 s. Si el
-  ajuste de la cámara está hoy en **PAL**, `isSupportContent` devuelve 0 para **todos** ellos y la
-  reproducción falla siempre con el mismo mensaje, sin tocar el fichero (que es conforme al
-  grabador, [verificado](film-pb-1-sub-clip-20261127.md)).
+- Los siete clips de la tarjeta son **30000/1001 = enum 3 (NTSC)**: 1440×1080, 285 cuadros, 9,5095 s.
+  Si la cámara está en **PAL**, `isSupportContent` devuelve 0 para **todos** y la reproducción falla
+  siempre con el mismo mensaje, sin tocar el fichero (que es conforme al grabador,
+  [verificado](film-pb-1-sub-clip-20261127.md)).
+- **Y la cámara está en PAL**: con el enum verificado, los siete clips son de la familia NTSC y
+  **ninguno** se reproduce; una cámara en NTSC los aceptaría todos. Es la única combinación que
+  explica que falle el 100 % de los clips. Corolario: una cámara PAL no puede haber grabado esos
+  ficheros (no ofrece 30p), así que vienen de otra fuente.
 - La cámara muestra **`1-1-2014`**: los ajustes se han reseteado. El **«Selector PAL/NTSC»** es
   justo uno de los que vuelven a su valor por defecto (PAL en Europa), y no tiene nada que ver
   con el CFW: la [auditoría](film-pb-1-auditoria-cfw-20261127.md) descartó cualquier parche en
@@ -105,9 +127,17 @@ mismo clip con la cadencia declarada a 25 y todas sus cajas de Sony. Se copia a 
 
 | Resultado | Conclusión |
 |---|---|
-| El clip de 25p **se reproduce** y los de 30p no | La cámara está en PAL y la causa es la cadencia: confirmado. Para ver los vídeos viejos, este mismo reescritor sirve para todos (a 20 % más lento) o se reencodean a 25p |
+| El clip de 25p **se reproduce** y los de 30p no | La cámara está en PAL y la causa es la cadencia: **cerrado**. Basta pasar el reescritor a los siete clips (20 % más lentos) |
 | **Ninguno** se reproduce (tampoco el de 25p) | La cadencia no es la causa: toca la traza (A frente a B) y la otra rama de la guarda |
 | Los dos se reproducen | Imposible con el síntoma actual: revisar que el fichero copiado es el de 25p |
+
+Cadena del dato (verificada por el [subagente de cadencia](film-pb-1-sub-framerate-20261127.md)):
+`isSupportContent` llama a `GetPlayThumbnailInfo` (`0x6E8430`) pasándole un struct de 0x13C B como octavo
+argumento; el valor sale de `mp4Ifo_AVISequence` (`0x6E0AB8` → `0x1D7022` → `0x21F1F4`) y se escribe en
+`+0x124` desde `+0x100` (1..10) con el `tbb` de `0x6E0CE0` (`0x6E0D1A`). **No está en las cajas `uuid`,
+ni en `avc1`, ni en `AVIN0001.INP`**; la fuente que queda es `mdhd.timescale`/`stts`, que es lo que cambia
+el reescritor. Sobre los dos ficheros, `muestras/(mdhd.duration/timescale)` da **25,000000** en el convertido
+y 29,970030 en el original.
 
 Comprobado sobre el fichero de prueba: los **dos únicos bytes distintos** (offsets `0xDDE20C` y `0xDDE20D`)
 caen dentro de `moov > trak > mdia > mdhd`; el `ftyp` sigue en `MSNV` con minor `0x015A0070`, la caja `uuid`

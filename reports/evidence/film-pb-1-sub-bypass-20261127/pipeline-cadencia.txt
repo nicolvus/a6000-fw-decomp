@@ -1,0 +1,196 @@
+# Comprobaciones de cadencia/sistema aguas abajo y aguas arriba de isSupportContent (libmpr.so 3.21, VA == offset)
+
+## A. Guarda A: AviMMgr::GetPlayMovieStatus(6) = 0x60945C, rama ct=6 y cierre comun
+0060964a: 062d       cmp      r5, #6                        
+0060964c: 1dd1       bne      #0x60968a                     
+0060964e: a068       ldr      r0, [r4, #8]                  
+00609650: 2821       movs     r1, #0x28                     
+00609652: 0368       ldr      r3, [r0]                      
+00609654: d3f8e031   ldr.w    r3, [r3, #0x1e0]              
+00609658: 9847       blx      r3                            
+0060965a: 0021       movs     r1, #0                        
+0060965c: 3c22       movs     r2, #0x3c                     
+0060965e: 0646       mov      r6, r0                        
+00609660: 07f58070   add.w    r0, r7, #0x100                
+00609664: 16f73df6   bl       #0x1202e2                     
+00609668: d4f88007   ldr.w    r0, [r4, #0x780]              
+0060966c: d4f8b017   ldr.w    r1, [r4, #0x7b0]              
+00609670: 07f58072   add.w    r2, r7, #0x100                
+00609674: 72f034f8   bl       #0x67b6e0                     
+00609678: 0028       cmp      r0, #0                        
+0060967a: 74d1       bne      #0x609766                     
+0060967c: d7f80451   ldr.w    r5, [r7, #0x104]              
+00609680: 25f08045   bic      r5, r5, #0x40000000           
+00609684: 46ea0505   orr.w    r5, r6, r5                    
+00609688: 59e0       b        #0x60973e                     
+0060968a: 802d       cmp      r5, #0x80                     
+0060968c: 17d1       bne      #0x6096be                     
+0060968e: a068       ldr      r0, [r4, #8]                  
+
+## B. GetInhInfo (0x67B6E0): compara TvSystem() con la bandera PAL/NTSC del clip (slot +0x124) y pone bit 0x4
+0067b768: 73f738f4   bl       #0x1eefdc                     
+0067b76c: 10b1       cbz      r0, #0x67b774                 
+0067b76e: 0128       cmp      r0, #1                        
+0067b770: 14d1       bne      #0x67b79c                     
+0067b772: 07e0       b        #0x67b784                     
+0067b774: e068       ldr      r0, [r4, #0xc]                
+0067b776: 0368       ldr      r3, [r0]                      
+0067b778: d3f82431   ldr.w    r3, [r3, #0x124]              
+0067b77c: 9847       blx      r3                            
+0067b77e: 0128       cmp      r0, #1                        
+0067b780: 0cd1       bne      #0x67b79c                     
+0067b782: 05e0       b        #0x67b790                     
+0067b784: e068       ldr      r0, [r4, #0xc]                
+0067b786: 0368       ldr      r3, [r0]                      
+0067b788: d3f82431   ldr.w    r3, [r3, #0x124]              
+0067b78c: 9847       blx      r3                            
+0067b78e: 28b9       cbnz     r0, #0x67b79c                 
+0067b790: d8f80030   ldr.w    r3, [r8]                      
+0067b794: 43f00403   orr      r3, r3, #4                    
+
+## C. MMgrMp4IfoAcsr::SetLoadInfo (0x67B4B8): fija esa bandera a partir del frameRate del clip (0x2A9 -> NTSC 0 ; 0x154 -> PAL 1)
+0067b5a4: d7f82431   ldr.w    r3, [r7, #0x124]              
+0067b5a8: 092b       cmp      r3, #9                        
+0067b5aa: 3cd8       bhi      #0x67b626                     
+0067b5ac: 16fa03f3   lsls.w   r3, r6, r3                    
+0067b5b0: 40f2a922   movw     r2, #0x2a9                    
+0067b5b4: 03ea0202   and.w    r2, r3, r2                    
+0067b5b8: d4f80c90   ldr.w    sb, [r4, #0xc]                
+0067b5bc: 8ab9       cbnz     r2, #0x67b5e2                 
+0067b5be: 13f4aa7f   tst.w    r3, #0x154                    
+0067b5c2: 03d1       bne      #0x67b5cc                     
+0067b5c4: 13f0020f   tst.w    r3, #2                        
+0067b5c8: 1ad1       bne      #0x67b600                     
+0067b5ca: 2ce0       b        #0x67b626                     
+0067b5cc: d9f80030   ldr.w    r3, [sb]                      
+0067b5d0: 4846       mov      r0, sb                        
+0067b5d2: 3146       mov      r1, r6                        
+0067b5d4: 5b6c       ldr      r3, [r3, #0x44]               
+0067b5d6: 9847       blx      r3                            
+0067b5d8: 394b       ldr      r3, [pc, #0xe4]                 ; [0067b6c0]=009df25c
+0067b5da: 2069       ldr      r0, [r4, #0x10]               
+0067b5dc: 394a       ldr      r2, [pc, #0xe4]                 ; [0067b6c4]=0090d1c7 "SetLoadInfo : TvSystem is PAL, frameRate"
+0067b5de: 1978       ldrb     r1, [r3]                      
+0067b5e0: 09e0       b        #0x67b5f6                     
+0067b5e2: d9f80030   ldr.w    r3, [sb]                      
+0067b5e6: 4846       mov      r0, sb                        
+0067b5e8: 4146       mov      r1, r8                        
+0067b5ea: 5b6c       ldr      r3, [r3, #0x44]               
+0067b5ec: 9847       blx      r3                            
+0067b5ee: 304b       ldr      r3, [pc, #0xc0]                 ; [0067b6b0]=009df25a
+0067b5f0: 2069       ldr      r0, [r4, #0x10]               
+0067b5f2: 354a       ldr      r2, [pc, #0xd4]                 ; [0067b6c8]=0090d1f4 "SetLoadInfo : TvSystem is NTSC, frameRat"
+0067b5f4: 1978       ldrb     r1, [r3]                      
+0067b5f6: d7f82431   ldr.w    r3, [r7, #0x124]              
+0067b5fa: d5f717f8   bl       #0x65062c                     
+0067b5fe: 2fe0       b        #0x67b660                     
+0067b600: 73f7ecf4   bl       #0x1eefdc                     
+
+## D. MprIf::SetRecTvScanMode (0x723350): modo -> codigo de frameRate; TvSystem!=1 impares {3,5,7,9}, TvSystem==1 pares {2,4,6,8}
+00723350: 0a3b       subs     r3, #0xa                      
+00723352: 032b       cmp      r3, #3                        
+00723354: 2ed8       bhi      #0x7233b4                     
+00723356: dfe803f0   tbb      [pc, r3]                      
+0072335a: 020c       lsrs     r2, r0, #0x10                 
+0072335c: 1620       movs     r0, #0x16                     
+0072335e: cbf63df6   bl       #0x1eefdc                     
+00723362: 10b1       cbz      r0, #0x72336a                 
+00723364: 0128       cmp      r0, #1                        
+00723366: 22d1       bne      #0x7233ae                     
+00723368: 01e0       b        #0x72336e                     
+0072336a: 0323       movs     r3, #3                        
+0072336c: 20e0       b        #0x7233b0                     
+0072336e: 0223       movs     r3, #2                        
+00723370: 1ee0       b        #0x7233b0                     
+00723372: cbf633f6   bl       #0x1eefdc                     
+00723376: 10b1       cbz      r0, #0x72337e                 
+00723378: 0128       cmp      r0, #1                        
+0072337a: 18d1       bne      #0x7233ae                     
+0072337c: 01e0       b        #0x723382                     
+0072337e: 0523       movs     r3, #5                        
+00723380: 16e0       b        #0x7233b0                     
+00723382: 0423       movs     r3, #4                        
+00723384: 14e0       b        #0x7233b0                     
+00723386: cbf629f6   bl       #0x1eefdc                     
+0072338a: 10b1       cbz      r0, #0x723392                 
+0072338c: 0128       cmp      r0, #1                        
+0072338e: 0ed1       bne      #0x7233ae                     
+00723390: 01e0       b        #0x723396                     
+00723392: 0723       movs     r3, #7                        
+00723394: 0ce0       b        #0x7233b0                     
+00723396: 0623       movs     r3, #6                        
+00723398: 0ae0       b        #0x7233b0                     
+0072339a: cbf61ff6   bl       #0x1eefdc                     
+0072339e: 10b1       cbz      r0, #0x7233a6                 
+007233a0: 0128       cmp      r0, #1                        
+007233a2: 04d1       bne      #0x7233ae                     
+007233a4: 01e0       b        #0x7233aa                     
+007233a6: 0923       movs     r3, #9                        
+007233a8: 02e0       b        #0x7233b0                     
+007233aa: 0823       movs     r3, #8                        
+007233ac: 00e0       b        #0x7233b0                     
+007233ae: ff23       movs     r3, #0xff                     
+007233b0: c8f80430   str.w    r3, [r8, #4]                  
+
+## E. MovieReadStart (0x608698, vtable AviMMgr +0xB4): solo estado, ninguna comprobacion de cadencia
+00608698: f0b5       push     {r4, r5, r6, r7, lr}          
+0060869a: 85b0       sub      sp, #0x14                     
+0060869c: 0446       mov      r4, r0                        
+0060869e: dc21       movs     r1, #0xdc                     
+006086a0: 04af       add      r7, sp, #0x10                 
+006086a2: 4068       ldr      r0, [r0, #4]                  
+006086a4: 42f6e522   movw     r2, #0x2ae5                   
+006086a8: 47f076f9   bl       #0x64f998                     
+006086ac: 2046       mov      r0, r4                        
+006086ae: 2421       movs     r1, #0x24                     
+006086b0: 43f0f2fd   bl       #0x64c298                     
+006086b4: 60b1       cbz      r0, #0x6086d0                 
+006086b6: 04f5fc60   add.w    r0, r4, #0x7e0                
+006086ba: 0430       adds     r0, #4                        
+006086bc: e1f542fe   bl       #0x3ea344                     
+006086c0: 0128       cmp      r0, #1                        
+006086c2: 05d0       beq      #0x6086d0                     
+006086c4: 2046       mov      r0, r4                        
+006086c6: 43f0affd   bl       #0x64c228                     
+006086ca: 0546       mov      r5, r0                        
+006086cc: 0028       cmp      r0, #0                        
+006086ce: 20d0       beq      #0x608712                     
+006086d0: 184b       ldr      r3, [pc, #0x60]                 ; [00608734]=009df25a
+006086d2: e068       ldr      r0, [r4, #0xc]                
+006086d4: 1849       ldr      r1, [pc, #0x60]                 ; [00608738]=008decd3 "MovieReadStart : ER_SEQUENCE"
+006086d6: 1a78       ldrb     r2, [r3]                      
+006086d8: 48f033f8   bl       #0x650742                     
+006086dc: 174d       ldr      r5, [pc, #0x5c]                 ; [0060873c]=31000007
+006086de: 6068       ldr      r0, [r4, #4]                  
+006086e0: dc21       movs     r1, #0xdc                     
+006086e2: 2a46       mov      r2, r5                        
+006086e4: 42f60b33   movw     r3, #0x2b0b                   
+
+## F. Usos de TvSystem() en la zona del reproductor (0x2D..0x2E): solo tablas de constantes [0]=NTSC [1]=PAL
+002e2dbc: 0cf70ef9   bl       #0x1eefdc                     
+002e2dc0: 0128       cmp      r0, #1                        
+002e2dc2: 06d8       bhi      #0x2e2dd2                     
+002e2dc4: 534b       ldr      r3, [pc, #0x14c]                ; [002e2f14]=007f9fc8
+002e2dc6: 53f820c0   ldr.w    ip, [r3, r0, lsl #2]          
+002e2dca: 534b       ldr      r3, [pc, #0x14c]                ; [002e2f18]=007f9fd0
+002e2dcc: 53f82030   ldr.w    r3, [r3, r0, lsl #2]          
+002e2dd0: 02e0       b        #0x2e2dd8                     
+002e2dd2: 0323       movs     r3, #3                        
+002e2dd4: 4ff0000c   mov.w    ip, #0                        
+002e2dd8: d7f80027   ldr.w    r2, [r7, #0x700]              
+
+## G. Destino tras pasar las dos guardas: 0x447DA8 -> AviMMgr+0xB4 (MovieReadStart)
+00437c70: d4f8ec01   ldr.w    r0, [r4, #0x1ec]              
+00437c74: d4f8c01d   ldr.w    r1, [r4, #0xdc0]              
+00437c78: 10f096f8   bl       #0x447da8                     
+00437c7c: 18b1       cbz      r0, #0x437c86                 
+
+## H. Tablas por TvSystem (0=NTSC, 1=PAL)
+0x7f9464 ['0x0', '0x1', '0x8', '0x7f9478']
+0x7f9fc8 ['0x0', '0x1', '0x3', '0x2']
+0x7f9fd0 ['0x3', '0x2', '0x50627544', '0x5279616c']
+0x7fc10c ['0x0', '0x1', '0x6e694638', '0x48637641']
+0x7f74b8 ['0x0', '0x1', '0x0', '0x1']
+
+## I. Cadena de VEF (docs/capture/s505-vef.md:17)
+  - **Downconversion:** `DOWNCON: NTSC 60i60p/30p24p`, `PAL 50i50p/25p`.

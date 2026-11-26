@@ -4,10 +4,13 @@
 
 > **Causa probable localizada el 27-11-2026: el ajuste «Selector PAL/NTSC» de la cámara no coincide con la
 > cadencia de los clips.** `AviMMgr::isSupportContent` (ELF `0x61A8F0`) compara `TvSystem()` (`0x1EEFDC`) con el
-> `frameRate` del contenido (`[msg+0x124]`, 0..9): con `TvSystem == 1` acepta 24p y las cadencias **pares**;
-> con `TvSystem != 1` acepta 24p y las **impares**; en el resto devuelve 0 «Invalid TvSystem detect» → `0x437C3C`
+> `frameRate` del contenido (`[msg+0x124]`, 0..9). **Enum verificado** (`0x686A34`, `tbb` de `0x77AF2C`):
+> 0=24000/1001, 1=24, **2=25**, **3=30000/1001**, **4=50**, **5=60000/1001**, **6=100**, **7=120000/1001**,
+> **8=200**, **9=240000/1001**. Con `TvSystem==1` (**PAL**) acepta 24p y 25/50/100/200; con `!=1` (**NTSC**) acepta
+> 24p y 29,97/59,94/119,88/239,76; el resto devuelve 0 «Invalid TvSystem detect» → `0x437C3C`
 > → `0x1A` → caution `0x135` → «No se puede visualizar.». Los clips son 30p (par, NTSC) y la cámara muestra
-> `1-1-2014`, señal de ajustes reseteados. **El ajuste no está expuesto en el menú de esta cámara** (verificado:
+> `1-1-2014`, señal de ajustes reseteados. Los siete clips son **enum 3 (29,97)**: que fallen todos encaja con una
+> cámara **PAL**, que no puede grabarlos (no ofrece 30p). **El ajuste no está expuesto en el menú de esta cámara** (verificado:
 > `viewNtscPalSEL_D.uxc`, `global.xdb` y `SettingSetupNtscPalSEL` existen en el firmware, pero la configuración del
 > modelo no lo muestra), así que el arreglo por menú no está disponible. Vías: convertir los clips a la cadencia de
 > la cámara (ya existe `scripts/mp4_set_framerate.py`, que cambia solo el `mdhd.timescale` y conserva las cajas
