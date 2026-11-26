@@ -889,3 +889,23 @@ def test_oyd_pone_un_udf_repetible_en_10e914_y_emula_la_carga() -> None:
     assert "c->arm_r3 = vt; c->arm_pc = pc + 2" in bloque
     assert "dladdr" in bloque and "strncpy(rt, nm" in bloque  # nombre RTTI del oyente
     assert "oyentes=%u" in bloque and "arm_r5 + 0x14" in bloque  # cuenta del mapa en this+0x28
+
+
+def test_autoprueba_cuenta_las_filas_que_cambian_entre_dos_fotogramas(tmp_path: Path) -> None:
+    """G22-PLAYVIEW se mide en la autoprueba con `_distintas`: 0 filas = la tecla no hizo nada; cientos = la vista cambió.
+
+    Se prueba con PNG reales de 4x3 para no depender de QEMU: idénticos → 0; una sola fila distinta → 1.
+    """
+    sys.path.insert(0, str(HARNESS))
+    import autoprueba
+    from PIL import Image
+
+    a, b, c = tmp_path / "a.png", tmp_path / "b.png", tmp_path / "c.png"
+    Image.new("RGBA", (4, 3), (10, 20, 30, 255)).save(a)
+    Image.new("RGBA", (4, 3), (10, 20, 30, 255)).save(b)
+    im = Image.new("RGBA", (4, 3), (10, 20, 30, 255))
+    im.putpixel((0, 1), (200, 0, 0, 255))
+    im.save(c)
+    assert autoprueba._distintas(a, b) == 0
+    assert autoprueba._distintas(a, c) == 1
+    assert autoprueba._distintas(a, tmp_path / "no-existe.png") == 0  # sin fichero no revienta: cuenta 0

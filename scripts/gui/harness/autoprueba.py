@@ -153,6 +153,22 @@ def _opaco(png: Path) -> float:
     return sum(1 for v in a if v > 8) / len(a) if a else 0.0
 
 
+def _distintas(a: Path, b: Path) -> int:
+    """Filas del fotograma que cambian entre dos PNG (RGB). Un cambio de vista cambia cientos de filas; una tecla que no hace nada, ninguna.
+
+    Sirve para la reproducción: durante semanas pulsar Reproducción dejó el fotograma idéntico (0 filas) y hoy cambia la vista entera.
+    """
+    try:
+        from PIL import Image
+        ia, ib = Image.open(a).convert("RGB"), Image.open(b).convert("RGB")
+        w = ia.width
+        da, db = ia.tobytes(), ib.tobytes()
+    except (OSError, ValueError):
+        return 0
+    paso = w * 3
+    return sum(1 for y in range(0, len(da), paso) if da[y:y + paso] != db[y:y + paso])
+
+
 class Prueba:
     """Un paso de la autoprueba: nombre, si pasó, evidencia legible y PNG opcional."""
 
@@ -365,6 +381,23 @@ def main() -> int:
         p.paso("camara-bateria", cod == 200 and "B 5" in orden, f"modelo {e.get('modelo', {}).get('bateria')} % → enviado {orden}")
         cod, cuerpo = _post(f"{base}/camara/usb", b'{"on":true}')
         p.paso("camara-usb", cod == 200 and "U 1" in _js(cuerpo).get("enviado", []), f"HTTP {cod} → {_js(cuerpo).get('enviado')}")
+
+        # reproducción (G22-PLAYVIEW): con PLAYVIEW=1 en el shim, una pulsación abre view/INDEX_PLAYBACK; sin él la pantalla no cambia.
+        # Se mide lo que distingue las dos cosas sin depender de la traza: el fotograma cambia de arriba abajo (cientos de filas).
+        if "PLAYVIEW=1" in os.environ.get("SHIMEXTRA", ""):
+            antes = p.dir / "05-antes-repro.png"
+            _asienta(f"{base}/eventos", antes, 3.0)
+            _post(f"{base}/tecla", b'{"k":"reproduccion","v":1}')
+            time.sleep(0.8)
+            _post(f"{base}/tecla", b'{"k":"reproduccion","v":0}')
+            despues = p.dir / "05b-reproduccion.png"
+            _opacos = _asienta(f"{base}/eventos", despues, 8.0)
+            filas = _distintas(antes, despues)
+            p.paso("reproduccion-abre", filas >= 100,
+                   f"{filas} filas distintas de {480} y opacos {_opacos:.4f} tras pulsar Reproducción "
+                   f"(≥ 100 filas = la vista cambió; 0 = la tecla no hizo nada)", "05b-reproduccion.png")
+        else:
+            print("(reproducción: sin PLAYVIEW=1 en SHIMEXTRA, no se pulsa)", flush=True)
     finally:
         try:
             _post(f"{base}/salir", timeout=60)
