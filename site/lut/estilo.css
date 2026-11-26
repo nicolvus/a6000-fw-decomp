@@ -1,0 +1,30 @@
+:root { color-scheme: dark; --fondo: #101216; --tarjeta: #191d24; --borde: #2b3240; --texto: #e8ecf4; --tenue: #9aa6bb; --acento: #7cc4ff; --error: #ff8a8a; }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--fondo); color: var(--texto); font: 16px/1.5 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+header, main, footer { max-width: 1080px; margin: 0 auto; padding: 0 1.2rem; }
+header { padding-top: 2.5rem; }
+h1 { font-size: clamp(1.6rem, 4vw, 2.3rem); margin: 0 0 .4rem; }
+h2 { font-size: 1.1rem; margin: 0 0 .6rem; }
+.sub { color: var(--tenue); margin: 0 0 1.5rem; }
+code { background: #0b0d11; padding: .1rem .3rem; border-radius: 4px; font-size: .92em; }
+.tarjeta { background: var(--tarjeta); border: 1px solid var(--borde); border-radius: 12px; padding: 1rem 1.2rem; margin-bottom: 1rem; }
+.nota { color: var(--tenue); font-size: .9rem; }
+.error { color: var(--error); font-weight: 600; }
+input[type=file] { margin: .3rem 0 .8rem; }
+ol { padding-left: 1.4rem; }
+#lista li { margin: .7rem 0; padding: .6rem .8rem; background: #12161c; border: 1px solid var(--borde); border-radius: 10px; }
+#lista .fila { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; }
+#lista .nombre { font-weight: 650; }
+#lista .meta { color: var(--tenue); font-size: .85rem; }
+#lista button, #lista select { font: inherit; border-radius: 8px; border: 1px solid var(--borde); background: #202733; color: var(--texto); padding: .25rem .6rem; }
+#lista button { cursor: pointer; }
+#lista button:hover { border-color: var(--acento); }
+#lienzos { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: .8rem; margin-top: .8rem; }
+figure { margin: 0; }
+canvas { width: 100%; height: auto; display: block; border-radius: 10px; background: #000; }
+figcaption { color: var(--tenue); font-size: .85rem; margin-top: .3rem; }
+.pasos li { margin: .35rem 0; }
+.aviso { border-color: #3b4a63; }
+.aviso p { margin: .4rem 0; }
+footer { color: var(--tenue); font-size: .85rem; padding: 1.5rem 1.2rem 3rem; }
+a { color: var(--acento); }

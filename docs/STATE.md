@@ -423,6 +423,21 @@ Informe: [G114](gui/g114-lut-propios-especificacion.md); validador `scripts/lut/
 - **Medido:** de 75 `.cube`, solo las 6 de `luts/peliculas` son aptas para el hardware (0,22–0,67 ΔE medio; 0–28 nodos recortados). Las
   69 de `sosang/` son de una Panasonic S1II (TITLE `S1II Standard - NNNNVLOG`): salen planas y recortan 31–384/405 nodos; las 29 `vlog`
   esperan V-Log y no aplican. Pack: portra400, pro400h, gold200, ektachrome_e100, kodachrome64, velvia50.
-- **Bloqueo grave (ZONA-1):** la cueva/tablas del ajuste LUT están dentro de la tabla T1 de estabilización y de las BOKS del YC de captura
-  (G107); el CFW 3.86 instalado las lleva ahí. `LUT-C` se reabre y LUT-SD-2/LUT-T-2 quedan bloqueados hasta reubicar. Nada del pipeline se
-  ha probado nunca en cámara: todos los ΔE son del modelo del PC.
+- **Bloqueo grave (ZONA-1), resuelto offline en G116:** la cueva/tablas históricas estaban dentro de la tabla T1 de estabilización y de las
+  BOKS del YC de captura (G107); el CFW 3.86 instalado las lleva ahí. `LUT-C` se cierra en estático: cueva, máquina de estados y curva viven
+  ahora en la cola libre del hueco G18 (`ZONA_L18` `0x43FB8800…0x43FB8EE0`, `ZONA_T18` desde `0x43FB8360`) y **las tablas ya no van en el
+  `.dat`**: salen del blob de la SD (`.cube` o `.LUT`). `scripts/lut/zonas.py` verifica que esas zonas no tienen referencias (y encuentra las
+  de T1/BOKS como control positivo). Sin tarjeta el ajuste queda en fábrica. LUT-SD-2/LUT-T-2 quedan como pruebas de cámara con un build
+  nuevo: **no usar LUT con el CFW 3.86 instalado**. Nada del pipeline se ha probado en cámara: todos los ΔE son del modelo del PC.
+
+## App web y cierre estático de la LUT (G116, 26-11-2026)
+
+Informe: [G116](gui/g116-lut-solo-sd-y-app-web.md).
+
+- **App**: `site/lut/` (GitHub Pages). Importa `.cube` 2³…64³, replica el muestreo del firmware (`lutsd.c`), descarga `LUT1.LUT`…`LUT6.LUT`
+  (paquete v1 `A6LT` + CRC32) y previsualiza la foto del usuario con la cadena del proyecto. El `.LUT` que genera es **byte a byte** el del
+  ARM (comprobado con Node frente a `lut_sd_userland.referencia` en 2³, 5³ y 33³).
+- **Qué no es**: demosaico, NR y gamma propia del JPEG no se modelan; la previsualización es el modelo del PC, no una medida en cámara.
+- **Cierre**: `LUT-C` cerrado en estático; `LUT-T-1` ya no está bloqueado (curva por ranura desde el blob); `LUT-INT-2` cerrado con el modelo
+  conservador «ambos»; siguen abiertos `LUT-A` (M), `LUT-OPT-1` (necesita fotos), `LUT-DE-1` (métrica de ΔE, no cambia bytes), `LUT-2C-1`
+  (segunda curva de 512 puntos) y las pruebas de cámara `LUT-SD-2`/`LUT-T-2`.

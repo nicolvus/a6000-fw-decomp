@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LUT propios · Sony A6000</title>
+<link rel="stylesheet" href="estilo.css">
+</head>
+<body>
+<header>
+  <h1>LUT propios para la Sony A6000</h1>
+  <p class="sub">Convierte tus <code>.cube</code> al fichero que lee la cámara desde la tarjeta (<code>LUT/LUT&lt;n&gt;.LUT</code>)
+  y mira la foto que subas como la verá la cámara: tabla 5×9×9 de 405 nodos, la misma que calcula el firmware.</p>
+</header>
+
+<main>
+  <section class="tarjeta">
+    <h2>1 · Tus LUT (.cube 3D)</h2>
+    <p class="nota">Se admiten 2³…64³. Los 6 primeros van a las ranuras 1…6 de la tarjeta.</p>
+    <input id="cubes" type="file" accept=".cube,text/plain" multiple>
+    <p id="error" class="error" hidden></p>
+    <ol id="lista"></ol>
+  </section>
+
+  <section class="tarjeta">
+    <h2>2 · Tu foto</h2>
+    <p class="nota">Se procesa en tu navegador; no se sube nada.</p>
+    <input id="foto" type="file" accept="image/*">
+    <p class="nota" id="sin-foto">Sube una foto y elige una LUT de la lista.</p>
+    <div id="lienzos" hidden>
+      <figure><canvas id="antes"></canvas><figcaption>Original</figcaption></figure>
+      <figure><canvas id="despues"></canvas><figcaption id="titulo-despues">Cámara · tabla 5×9×9</figcaption></figure>
+    </div>
+    <label id="opcion-exacta" hidden><input id="exacto" type="checkbox"> comparar con el <code>.cube</code> exacto (sin la tabla de la cámara)</label>
+    <p class="nota" id="detalle"></p>
+  </section>
+
+  <section class="tarjeta">
+    <h2>3 · A la tarjeta</h2>
+    <ol class="pasos">
+      <li>Descarga el fichero de la ranura (botón de la lista).</li>
+      <li>En la tarjeta, crea la carpeta <code>LUT</code> en la raíz y copia dentro <code>LUT1.LUT</code> … <code>LUT6.LUT</code>.</li>
+      <li>En la cámara: menú Fn → <strong>LUT</strong> → <code>LUT n</code>. Con <code>Off</code> (o sin tarjeta) no se aplica nada.</li>
+    </ol>
+    <p class="nota">El formato es el paquete v1 <code>A6LT</code> (16 B de cabecera + 405 nodos × 21 bits + CRC32), el que valida el
+    hilo de la cámara antes de copiarlo. Sin curva 1D: la curva es la de fábrica.</p>
+  </section>
+
+  <section class="tarjeta aviso">
+    <h2>Qué es idéntico y qué no</h2>
+    <p>La tabla y el paquete son <strong>byte a byte</strong> los del firmware (mismo redondeo entero y misma corrección Δ² que
+    <code>lutsd.c</code>), y la previsualización aplica la cadena modelada de la cámara: sRGB → YCbCr BT.601 → LUT 5×9×9 de deltas s7 → RGB.</p>
+    <p>No se modelan demosaico, reducción de ruido ni la gamma propia del JPEG de la cámara: son ajustes de imagen que la LUT no toca
+    y que pueden cambiar el aspecto del original. El resultado es el del modelo del proyecto, no una medida en la cámara.</p>
+  </section>
+</main>
+
+<footer><a href="../">Estado del proyecto</a> · <a href="https://github.com/nicolvus/a6000-fw-decomp">Código</a></footer>
+<script type="module" src="app.js"></script>
+</body>
+</html>

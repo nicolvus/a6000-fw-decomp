@@ -14,6 +14,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / "scripts"), str(ROOT / "scripts/gui"), str(ROOT / "scripts/lut")]
 import lut_patch as L
+import lut_sd_userland as U
 
 BASE, MAQ, END = L.BASE, 0x437A24FC, 0x30000000
 THIS, PKT, CFG, WORK, AUX, STACK = 0x20000000, 0x20001000, 0x20002000, 0x20004000, 0x20008000, 0x10000000
@@ -90,7 +91,7 @@ def test_gancho_de_la_maquina_es_un_bl_a_la_cueva_en_zona_libre(imagenes):
     off = L.HOOK_MAQ[0] - BASE
     assert orig[off:off + 4] == L.HOOK_MAQ[1] == bytes.fromhex("87680368")      # ldr r7,[r0,#8]; ldr r3,[r0]
     assert p[off:off + 4] != orig[off:off + 4]
-    assert L.D.ZONA_A[0] <= L.cueva_maquina()[0] < L.D.ZONA_A[1]
+    assert L.D.ZONA_L18[0] <= L.cueva_maquina()[0] < L.D.ZONA_L18[1]
 
 
 def test_rueda_sin_el_gancho_no_rearma(imagenes):
@@ -106,7 +107,8 @@ def test_rueda_sin_el_gancho_no_rearma(imagenes):
 def test_secuencia_1_2_3_1_off_rearma_cada_vez_y_entrega_la_tabla(imagenes):
     """Cada giro de la rueda: esa misma pasada de la máquina (código real) re-arma el estado 1, `Copy3DLUT` se ejecuta una vez y deja `cfg[0x8c/0x90]` listos; el gancho de escritura entrega la tabla del look."""
     p = imagenes[1]
-    tablas = L.tablas_por_defecto()
+    tablas = [bytes((i * 37 + k) % 256 for i in range(L.D.LUT_BYTES)) for k in (1, 2, 3)]
+    blob = U.blob_tablas({k: t for k, t in zip((1, 2, 3), tablas)})
     m = Maquina(p)
     m.reposo()                                                  # arranque en Off, máquina en reposo
     orig_ptr, entregado = 0x11223344, []
@@ -120,9 +122,10 @@ def test_secuencia_1_2_3_1_off_rearma_cada_vez_y_entrega_la_tabla(imagenes):
         m.ejecuta()
         cnt, flag, ptr, valido = m.estado()
         assert (cnt, flag, valido) == (2, 1, 1) and ptr == WORK + 0x8C8 and m.visitas == [COPY3D], (opcion, m.estado())
-        r = L.emular(p, 0, opcion, orig=orig_ptr)
-        entregado.append(r if opcion == 0 else L.emular.mem)
-    assert entregado[:4] == [tablas[0], tablas[1], tablas[2], tablas[0]] and entregado[4] == orig_ptr
+        r, hw, _ = L.emular(p, 0, opcion, blob, orig=orig_ptr)
+        entregado.append(r if opcion == 0 else hw)
+    perm = list(struct.unpack_from("<405H", p, L.D.PERM - L.BASE))
+    assert entregado[:4] == [L.D.desempaqueta_21(t, perm) for t in (tablas[0], tablas[1], tablas[2], tablas[0])] and entregado[4] == orig_ptr
 
 
 @pytest.mark.parametrize("estado", [0, 1, 2, 3])

@@ -2,7 +2,7 @@
 
 La cueva pone `bd5 = 1`, `be1 = 8`, `bd1 = bd3 = 0` y `c68[8]` (`0x440013ec`) = la curva de 33 nodos expandida, en los cuatro ganchos
 de `FUN_43852f7c` (los mismos que la curva de Film, G98). Con Off, o con una LUT que no lleva curva, no escribe nada.
-Zona de la curva: `lut_t.ZONA_T18` (tramo del hueco G18); ZONA_A/ZONA_B son la tabla T1 y las tablas BOKS (G107 §3) y NO se tocan.
+Zona de la curva: `lut_t.ZONA_T18` (tramo del hueco G18); ZONA_A/ZONA_B son la tabla T1 y las tablas BOKS (G107 §3) y NO se tocan. G116: la cueva y la máquina van a `ZONA_L18`, no a ZONA_A/ZONA_B.
 """
 import struct
 import sys
@@ -31,18 +31,21 @@ def img():
 
 
 @pytest.fixture(scope="module")
-def curvas():
-    return T.t_por_defecto()
+def curva():
+    """Registro de 68 B de la curva T de la película (calculado, como lo empaqueta el PC)."""
+    ch = C.descompone(C.lut_pelicula, usa_M=False, usa_T=True, usa_L=True)
+    return T.registro(T.nodos(P.curva_post(ch)))
 
 
 @pytest.fixture(scope="module")
-def parche(img, curvas):
-    return L.apply_bytes(img, curvas=curvas)
+def blob(curva):
+    """Blob como el que escribe el userland: ranuras 1…4 válidas (tabla cualquiera) y curva solo en la 4."""
+    return U.blob_tablas({1: bytes(1064), 2: bytes(1064), 3: bytes(1064), 4: bytes(1064)}, curvas={4: curva})
 
 
 @pytest.fixture(scope="module")
-def parche_sd(img, curvas):
-    return L.apply_bytes(img, curvas=curvas, sd=True)
+def parche(img):
+    return L.apply_bytes(img)
 
 
 @pytest.fixture(scope="module")
@@ -58,31 +61,31 @@ def test_ganchos_de_curva_son_los_de_film_y_no_se_pisan():
         assert h & 1 == 0 and F.F_PREP == T.F_PREP          # `bl` de 32 bits: solo hace falta media palabra
 
 
-def test_off_y_lut_sin_curva_no_cambian_la_curva(img, parche, fabrica):
-    """Off (0), Teal&Orange (1) y Neutro (3) no llevan curva: los dos consumidores quedan como de fábrica, sin tocar indicadores ni `c68[8]`."""
-    ent = L.entrada_t(False)
+def test_off_y_lut_sin_curva_no_cambian_la_curva(img, parche, blob, fabrica):
+    """Off (0) y las ranuras sin curva en el blob (1, 3) dejan los dos consumidores como de fábrica, sin tocar indicadores ni `c68[8]`."""
+    ent = L.entrada_t()
     for opcion in (0, 1, 3):
-        r = T.emula_tono(parche, opcion, None, entrada=ent)
+        r = T.emula_tono(parche, opcion, blob, entrada=ent)
         assert r["curva"] == fabrica["curva"] and r["rejilla"] == fabrica["rejilla"]
         assert r["ind"] == fabrica["ind"] and r["c68_8"] == fabrica["c68_8"] == T.IDENTIDAD
         assert r["rejilla_ok"] and r["paleta"] is None
 
 
-def test_off_con_la_curva_puesta_restaura_la_identidad(parche):
-    """Película → Off → Película → Neutro sobre el mismo emulador: `c68[8]` vuelve a la identidad de fábrica al salir de la curva."""
-    ent = L.entrada_t(False)
-    pasos = T.emula_secuencia(parche, [2, 0, 2, 3], None, entrada=ent)
+def test_off_con_la_curva_puesta_restaura_la_identidad(parche, blob):
+    """Ranura con curva → Off → ranura con curva → ranura sin curva: `c68[8]` vuelve a la identidad de fábrica al salir de la curva."""
+    ent = L.entrada_t()
+    pasos = T.emula_secuencia(parche, [4, 0, 4, 2], blob, entrada=ent)
     con = pasos[0]["c68_8"]
     assert con != T.IDENTIDAD and pasos[0]["ind"]["bd5"] == 1
     assert [p["c68_8"] for p in pasos] == [con, T.IDENTIDAD, con, T.IDENTIDAD]
 
 
 # ---------- la curva que se aplica ----------
-def test_pelicula_aplica_tono_post_en_los_dos_consumidores(img, parche, curvas):
-    ent = L.entrada_t(False)
-    r = T.emula_tono(parche, 2, None, entrada=ent)
+def test_la_curva_de_la_ranura_se_aplica_en_los_dos_consumidores(img, parche, blob, curva):
+    ent = L.entrada_t()
+    r = T.emula_tono(parche, 4, blob, entrada=ent)
     assert r["ind"] == {"bd1": 0, "bd3": 0, "bd5": 1, "be1": 8}
-    assert r["c68_8"] != T.IDENTIDAD and r["paleta"] == T.expande(T.lee_registro(curvas[1]))
+    assert r["c68_8"] != T.IDENTIDAD and r["paleta"] == T.expande(T.lee_registro(curva))
     g = P.gamma(img, 1)                                   # gamma 1 (bd9 = 1) sobre la rampa obj+0x66e (x = 4·i)
     x = np.arange(512) * 4
     assert list(P.emula(parche, 1, np.array(r["paleta"]), bd5=1, be1=8)) == r["curva"]     # la tabla entra por c68[8], exacta
@@ -91,40 +94,42 @@ def test_pelicula_aplica_tono_post_en_los_dos_consumidores(img, parche, curvas):
     simple = [r["paleta"][min(int(v), 1023)] for v in g[x]]
     d = [b - a for a, b in zip(simple, r["curva"])]
     assert min(d) >= 0 and max(d) <= 16 and all(v == 0 for v in d[:131])
-    assert r["rejilla"] != T.emula_tono(parche, 1, None, entrada=ent)["rejilla"]      # la rejilla de 96 nodos también la aplica
+    assert r["rejilla"] != T.emula_tono(parche, 1, blob, entrada=ent)["rejilla"]      # la rejilla de 96 nodos también la aplica
 
 
-def test_la_curva_del_dat_es_la_de_tono_post(curvas):
-    """El registro del `.dat` es la curva T de la cadena de la película (33 nodos, desviación ≤ 3 códigos de 1023 frente a los 1024)."""
+def test_la_curva_del_blob_es_la_de_tono_post(curva, blob):
+    """El registro de 68 B de la ranura lleva la curva T de la cadena (33 nodos, desviación ≤ 3 códigos de 1023 frente a los 1024)."""
     ch = C.descompone(C.lut_pelicula, usa_M=False, usa_T=True, usa_L=True)
     exacta = [int(v) for v in P.curva_post(ch)]
-    compacta = T.expande(T.lee_registro(curvas[1]))
-    assert T.lee_registro(curvas[1]) == T.nodos(exacta)
+    compacta = T.expande(T.lee_registro(curva))
+    assert len(curva) == T.REC and T.lee_registro(curva) == T.nodos(exacta)
     assert max(abs(a - b) for a, b in zip(exacta, compacta)) <= 3
     assert compacta[1023] == exacta[1023]                            # el extremo se copia tal cual
-    assert T.lee_registro(curvas[0]) is None and T.lee_registro(curvas[2]) is None   # teal&orange e identidad, sin curva (medido)
+    off = T.BK_T_OFF
+    assert T.lee_registro(blob[off + 3 * T.REC:off + 4 * T.REC]) == T.lee_registro(curva)
+    assert T.lee_registro(blob[off:off + T.REC]) is None             # ranura 1: sin curva
 
 
-def test_malloc_cero_no_aplica_la_curva(img, parche):
+def test_malloc_cero_no_aplica_la_curva(img, parche, blob):
     from unicorn import UcError
     try:                                                             # sin memoria: la cueva cae a fábrica (no revienta)
-        r = T.emula_tono(parche, 2, None, entrada=L.entrada_t(False), malloc_ok=False)
+        r = T.emula_tono(parche, 4, blob, entrada=L.entrada_t(), malloc_ok=False)
     except UcError:                                                  # `malloc` = 0 hace `beq` y no escribe: nunca se llega a tocar memoria
         pytest.fail("la cueva no debe tocar memoria sin `malloc`")
     assert r["ind"] == {"bd1": 1, "bd3": 0, "bd5": 0, "be1": 0} and r["c68_8"] == T.IDENTIDAD
 
 
 # ---------- blob de la SD ----------
-def test_sd_curva_solo_de_la_ranura_que_la_lleva(parche_sd, curvas):
-    b = T.blob(tablas={1: bytes(1064), 4: bytes(1064)}, curvas={4: curvas[1]}, letra="E")
-    ent = L.entrada_t(True)
-    con = T.emula_tono(parche_sd, 4, b, entrada=ent)
-    sin = T.emula_tono(parche_sd, 5, b, entrada=ent)
-    assert con["ind"]["bd5"] == 1 and con["paleta"] == T.expande(T.lee_registro(curvas[1]))
+def test_curva_solo_de_la_ranura_que_la_lleva(parche, blob, curva):
+    ent = L.entrada_t()
+    con = T.emula_tono(parche, 4, blob, entrada=ent)
+    sin = T.emula_tono(parche, 1, blob, entrada=ent)
+    vacia = T.emula_tono(parche, 5, blob, entrada=ent)
+    assert con["ind"]["bd5"] == 1 and con["paleta"] == T.expande(T.lee_registro(curva))
     assert sin["ind"]["bd5"] == 0 and sin["c68_8"] == T.IDENTIDAD    # ranura válida sin curva: no se aplica
-    # sin tarjeta (blob a cero) la ranura 2 cae al registro del `.dat` (película, con curva)
-    dat = T.emula_tono(parche_sd, 2, None, entrada=ent)
-    assert dat["ind"]["bd5"] == 1 and dat["paleta"] == T.expande(T.lee_registro(curvas[1]))
+    assert vacia["ind"]["bd5"] == 0 and vacia["c68_8"] == T.IDENTIDAD  # ranura inexistente: tampoco
+    # sin tarjeta (blob a cero) NO hay curva por defecto: sin tabla tampoco hay curva (G116)
+    assert T.emula_tono(parche, 2, None, entrada=ent)["ind"]["bd5"] == 0
 
 
 # ---------- zona de la curva ----------
@@ -137,7 +142,7 @@ def test_zona_de_la_curva_no_pisa_a_los_demas_parches(img):
     for nombre, (a, b) in otros.items():
         assert b <= lo or hi <= a, nombre
     assert not any(img[lo - D.BASE:hi - D.BASE])                     # a cero en el fichero (lo comprueba `apply_bytes`)
-    esc, _ = T.escrituras(True, T.t_por_defecto(), L.AJ_SD)
+    esc, _ = T.escrituras(L.AJ_SD)
     assert all(lo <= a and a + len(x) <= hi for a, x in esc) and sum(len(x) for _, x in esc) <= hi - lo
 
 
@@ -145,8 +150,8 @@ def test_parche_no_escribe_en_zonas_vivas(img, parche):
     dif = [i + D.BASE for i in range(len(img)) if img[i] != parche[i]]
     assert dif
     assert not any(0x43D620D9 <= a < 0x43FA8F00 for a in dif)
-    # la cueva histórica de la LUT sigue en ZONA_A/ZONA_B (deuda ZONA-1); lo único que añade la curva es `ZONA_T18`
-    assert any(T.ZONA_T18[0] <= a < T.ZONA_T18[1] for a in dif)
+    assert any(T.ZONA_T18[0] <= a < T.ZONA_T18[1] for a in dif)          # y la cueva/máquina, en `ZONA_L18` (G116)
+    assert not any(any(z[0] <= a < z[1] for z in (D.ZONA_A, D.ZONA_B)) for a in dif)
 
 
 # ---------- paquete `.LUT` v1/v2 ----------
