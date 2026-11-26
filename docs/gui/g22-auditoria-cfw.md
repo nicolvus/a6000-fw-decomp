@@ -3,7 +3,8 @@
 **Estado (26-11-2026): IMPLEMENTADO Y PROBADO con el `.dat` oficial de Sony 3.21 y con paquetes
 sintéticos sobre el `/usr` real.** No había ningún `.dat` de CFW en este equipo, así que **ningún CFW
 instalable se ha auditado todavía** (ver §7). El CLI es `scripts/gui/harness/audita_cfw.py`; las pruebas
-están en `tests/test_gui_audita_cfw.py`.
+están en `tests/test_gui_audita_cfw.py`. Se lanza también **desde el configurador** (`lanzador.py`, pestaña
+Firmware: botones, tabla de comprobaciones, informe enlazado e historial) — ver §8.
 
 Sustituye al auditor específico `scripts/gui/audit_package_nflasha15.py` (atado al CFW Silent y a la base
 3.38) por una auditoría general de cualquier CFW instalable de la A6000: `.dat`, directorio de paquete con
@@ -235,9 +236,131 @@ auditoría).
   arranca con menos de 2). **No es un CFW**: sirve para probar la etapa 4 de punta a punta.
 - El marcador `test_arranque_real_del_arnes` sigue disponible (`AUDITA_CFW_ARRANQUE=1`); no se ejecutó en
   pytest para no dejar QEMU colgados en la suite, pero el mismo código se ejecutó a mano con el Sony real.
+- **Lanzada desde el configurador** (misma sesión, §8): el `.dat` oficial 3.21 auditado con «Auditar el
+  .dat» dos veces → `POST /api/auditar` **202**, `GET /api/auditar/estado` **código 0** y **veredicto OK**
+  con **33 comprobaciones, 0 ✗, 0 ? y 0 avisos** en **48,8 s** y **45,5 s**; el segundo `POST` mientras
+  corría dio **409**, una ruta inexistente **400**, `GET /api/auditar/informe?f=…` sirvió el JSON
+  (`application/json`) y el Markdown (`text/markdown`) del propio trabajo, y `..%2F..%2F..%2Fetc%2Fpasswd` →
+  **400**. Informes en
+  `analysis/gui/g22/harness/audit-ui/20261126-012200-FirmwareData_ILCE6000V321-dat/` y
+  `…/20261126-012422-FirmwareData_ILCE6000V321-dat/` (ignorados por git). El historial listó las dos
+  auditorías nuevas (OK, 3.21) y los cuatro `analysis/gui/g22/audit-3.7{6,7,8,9}.json` antiguos con `—` de
+  veredicto y la fecha del fichero.
+
+## 8. Desde el configurador (`lanzador.py`, pestaña Firmware)
+
+El configurador **no reimplementa la auditoría**: lanza `audita_cfw.py` como subproceso con las mismas
+banderas y enlaza los informes que ese proceso escribe. Así un CFW se puede auditar sin terminal, pero el
+veredicto sigue siendo el del CLI (una sola fuente de verdad).
+
+### Botones y banderas
+
+| Botón de la página | Órdenes que se ejecutan |
+|---|---|
+| «Auditar el .dat» | `audita_cfw.py RUTA --rapido --sin-arranque --salida <carpeta del trabajo>` |
+| «Auditar el .dat» + «incluir estructura» | `… --completo --sin-arranque --salida …` |
+| «Auditar con arranque» | `… --completo --arranque --salida …` (pide confirmación: ≈3 min y hueco de QEMU) |
+
+Por defecto `--rapido --sin-arranque`: solo contenedor y `/USR` (≈46–49 s con el `.dat` de 200 MB). El
+arranque real es **opt-in** y la página avisa antes de lanzarlo de que tarda ≈3 min, de que el auditor solo
+arranca con menos de 2 `qemu-system-arm` en el sistema (espera hasta 15 min) y de que no sustituye a la
+cámara. Un solo trabajo a la vez.
+
+### API (servidor propio del configurador, `127.0.0.1:<puerto>`)
+
+- `GET /api/auditar/estado` → `{corriendo, ruta, codigo, salida, informe, inicio, fin}` (más `tipo`,
+  `completo`, `arranque`, `destino`, `comando`, `qemu`). `salida` es stdout+stderr del auditor tal cual;
+  `informe` es el JSON del trabajo reducido a `{veredicto, version, sha256, fecha, coste_s, checks[],
+  usr{}, f, markdown_f, json, markdown, arranque}` y `null` si aún no hay informe.
+- `POST /api/auditar {"ruta", "arranque", "completo"}` → **202** con el estado del trabajo recién lanzado
+  (y `avisos`), **400** si la ruta no es auditable (con el motivo), **409** si ya hay una auditoría en
+  marcha. La ruta relativa se resuelve contra `analysis/gui/g22/harness` (así vale lo que guarda
+  `importa_dat`); la absoluta, tal cual. Se valida que exista y sea `.dat`, directorio de paquete,
+  `nflasha15`/`nflasha15.bin` u overlay `cam/usr` — lo decide `audita_cfw.detecta_tipo`, no una copia de la regla.
+- `GET /api/auditar/informe?f=…` → el informe (`.json` o `.md`) servido con su `Content-Type`. `f` es
+  relativo a `analysis/gui/g22` (o absoluto) y **solo** se sirven ficheros de la carpeta del trabajo
+  (`harness/audit-ui/<fecha>-<artefacto>/`) o `audit-*.json` de la raíz de G22: `config.json`, `nota.txt`,
+  `../../etc/passwd` y cualquier ruta fuera de esas carpetas dan **400**.
+- `GET /api/auditar/historial` → `{auditorias: [{f, fecha, fecha_fuente, veredicto, version, sha256, ruta,
+  coste_s, markdown, error}], vacio, raiz, carpetas}`. Lista `analysis/gui/g22/audit-*.json` (lo que deja
+  el CLI) **y** cada `harness/audit-ui/*/audit-*.json` (lo que lanza la página). `fecha_fuente` = `informe`
+  o `fichero` (los informes del auditor anterior a esta herramienta no traen fecha ni veredicto: se listan
+  con la fecha del fichero y `—` de veredicto, sin inventarlo); un JSON ilegible sale con `error` y no
+  rompe la lista. Si no hay ninguna, `vacio: true` y la página lo dice.
+
+### Panel de resultado
+
+Veredicto con color (`OK`/`AVISO`/`PARCIAL`/`FALLO`), tabla de comprobaciones (`id`, ✓/✗/?, aviso y
+detalle con la evidencia en el `title`), enlaces al JSON y al Markdown del propio trabajo, y la consola en
+un `<pre>` con scroll. Estado en vivo cada 2 s (`setInterval`), que se para al terminar. El pie del panel
+recuerda **por qué un ✗ es del CFW y no de la cámara** (emulación con kernel ajeno y shim, LDEC real,
+Darwin, flasheo, NVRAM no declarada, hardware y layouts `.uxc` fuera: §5).
+
+### Importar y auditar sin volver a subir nada
+
+«Importar .dat» por **ruta** guarda esa ruta en `emu.importado.ruta_dat`, y «Usar el importado» la pone en
+el campo de auditoría: no se sube ni se copia nada otra vez. Si el `.dat` llegó **desde el navegador**, el
+fichero del anfitrión no queda en disco y solo existe el overlay **parcial** de `pkgdat/` (solo lo distinto
+de Sony); auditarlo como `/usr` completo marcaría todo Sony como «quitado» → **FALLO falso**, así que el
+servidor lo **rechaza** con ese motivo y la página pide la ruta del `.dat` original (que sigue en el disco
+del usuario). Con `audit-cfw.json` (o `MANIFEST.json`) en el paquete, el overlay parcial sí se acepta: la
+declaración es la que convierte los ausentes en `NO_VERIFICADO` en vez de FALLO.
+
+### Dónde quedan los informes
+
+Cada trabajo usa su propia carpeta `analysis/gui/g22/harness/audit-ui/<AAAAMMDD-HHMMSS>-<artefacto>/`
+(ignorada por git) y ahí van el JSON `audit-<AAAAMMDD>-<sha8>.json`, el resumen `<sha8>.md`, las capturas
+del arranque si se pidió y los temporales. El auditor **escribe en el informe sus propias rutas** `json` y
+`markdown` (cambio de esta entrega, antes quedaban vacías en el fichero), así que la página enlaza
+exactamente lo que escribió el proceso: no hay una segunda copia de la regla de nombres.
+
+### Cómo se audita un CFW real (no hay ninguno en este equipo)
+
+```sh
+# 1) configuración del arnés levantada (una vez; escucha en 127.0.0.1:8799)
+/home/nicolas/a6000-arnes/.venv/bin/python scripts/gui/harness/lanzador.py --puerto 8799
+
+# 2a) desde la página: pestaña Firmware → «Artefacto» = /ruta/al/cfw.dat → «Auditar el .dat»
+#     (para un CFW: marcar «incluir estructura»; el arranque, solo con hueco de QEMU)
+
+# 2b) o por HTTP, igual que hace la página
+curl -X POST http://127.0.0.1:8799/api/auditar -H 'Content-Type: application/json' \
+     -d '{"ruta":"/ruta/al/cfw.dat","completo":true,"arranque":false}'
+curl http://127.0.0.1:8799/api/auditar/estado          # sondeo cada 2 s; codigo!=null al terminar
+curl http://127.0.0.1:8799/api/auditar/historial       # veredicto y fecha de cada auditoría
+```
+
+Con un CFW real se espera: `--rapido` ≈46–49 s y veredicto `AVISO`/`FALLO` mientras la declaración
+(`audit-cfw.json`: nuevos/parcheados/quitados/parches/recursos/nvram) no esté completa; `--completo` añade
+la etapa 3; `--arranque` añade la etapa 4 (≈3 min, 1 QEMU, puede quedar `PARCIAL` si no hay hueco).
+
+### Límites de esta integración
+
+- La consola del auditor **aparece de golpe al terminar**: `imprime_consola` se ejecuta después de las
+  cuatro etapas (el subproceso va con `-u`, pero no hay salida de progreso). El estado en vivo es el del
+  trabajo (`corriendo`, `inicio`, `fin`), no el de cada etapa.
+- El configurador no pasa `--declara`, `--usr-sony`, `--perfil-dir`, `--puerto` ni `--teclas`: usa los
+  valores por defecto del CLI (base Sony 3.21 y perfil propio `audit-<sha8>`), y `AUDITA_SONY_NFLASHA15` si
+  está en el entorno del servidor. Para esos ajustes, CLI.
+- Sigue valiendo todo lo de §5: un OK de la página es tan limitado como un OK del CLI.
+- Los informes de la página **no se versionan** (caen en `harness/`, ignorado). Para adjuntarlos a un
+  informe del repo, cópialos o lanza el CLI con su `--salida` por defecto.
+- La página se validó por su API (peticiones reales, más abajo) y su JavaScript con `node --check`, pero
+  **no se abrió en un navegador** en esta sesión: el pintado de la tabla y del `<pre>` no está verificado
+  visualmente.
+
+### Pruebas de esta parte
+
+`tests/test_gui_lanzador.py` cubre la API con servidores reales en hilos y sin QEMU: 400 con ruta
+inexistente / fichero cualquiera / directorio sin paquete / overlay parcial, 409 con un trabajo en curso,
+`/api/auditar/estado` antes de nada, un `.dat` sintético de 72 B auditado **con el subproceso real**
+(código 1, JSON de FALLO y enlaces servibles), un paquete con `nflasha15` y comando falso (stdout+stderr,
+código 0, informe OK), `?f=` que no permite salir de las carpetas y el historial vacío / con informes
+(incluido uno ilegible). Medido en esta entrega: `23 passed, 1 skipped` (el marcador de arranque real).
 
 ## PARA PENDIENTES.md
 
 | ID | Estado | Descripción | Origen |
 |---|---|---|---|
 | G22-AUDIT-CFW | ABIERTO | Auditar los `.dat` de CFW reales (3.79 y siguientes) con `scripts/gui/harness/audita_cfw.py --completo` y adjuntar su JSON/Markdown; completar la declaración de parches/recursos/NVRAM de cada build para bajar los AVISOS, y ejecutar el arranque en frío con hueco de QEMU. Cierre: al menos un CFW real con veredicto OK/AVISO justificado y capturas comparadas con Sony. | G22 (26-11-2026) |
+| G22-AUDIT-CFW-UI | ABIERTO (implementado; falta la prueba con un CFW real) | Auditoría de CFW desde el configurador: `GET /api/auditar/estado`, `POST /api/auditar` (202/400/409, un trabajo a la vez), `GET /api/auditar/informe?f=` (solo dentro de las carpetas del trabajo) y `GET /api/auditar/historial`; pestaña Firmware con los botones «Auditar el .dat» / «Auditar con arranque», tabla de comprobaciones ✓/✗/?, enlaces al JSON/Markdown, consola en `<pre>`, sondeo cada 2 s y aviso de que el fallo es del CFW y no de la cámara (§8). Probado con el `.dat` oficial 3.21 desde la página (OK, 33 comprobaciones, 45,5 s y 48,8 s) y con `tests/test_gui_lanzador.py` (23 passed, 1 skipped). Cierre: falta el CFW real con su JSON adjunto, que depende de G22-AUDIT-CFW. | G22 (26-11-2026) |

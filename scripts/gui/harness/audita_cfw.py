@@ -1293,9 +1293,10 @@ def escribe_informes(r: dict[str, Any], salida: Path, explicita: bool) -> tuple[
         destino_md = ARCH_DOCS / f"{s8}.md"
     destino_json.parent.mkdir(parents=True, exist_ok=True)
     destino_md.parent.mkdir(parents=True, exist_ok=True)
+    r["json"], r["markdown"] = str(destino_json), str(destino_md)  # el informe dice dónde está (lo enlaza el configurador)
     destino_json.write_text(json.dumps(r, indent=1, ensure_ascii=False))
     destino_md.write_text(informe_markdown(r))
-    return str(destino_json), str(destino_md)
+    return r["json"], r["markdown"]
 
 
 def informe_markdown(r: dict[str, Any]) -> str:
