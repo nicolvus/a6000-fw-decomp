@@ -45,6 +45,24 @@ puede crear (exige handle de origen, `0x10100006`). Bloqueado: falta la cámara.
 `FBM LTC 1` + `FBM InitB 6 3` en el monitor EX-PC, reiniciar MPR y leer `base+0xA3699C` y `BkRead(0x04,3)`.
 
 
+### FILM-PB-1 — parche C: el sector `0x31` se crea **por la vía de consola** y persiste (26-11-2026)
+
+`build/cfw_fbm_sector31_c/libmpr.so` (sha256 `831142ae…378e`, 88 B previstos: gancho `0x7126E6`→`0x93B000`
++ cueva de 82 B) hace, tras `FBM::Init` y sólo si `0xA3699C[10].handle==0`, lo que la consola:
+`EntryWriteBaseDataFunction` `0x2B1DEC` para `(4,3)` y `(0x21,3)` + `InitBackupData(6,3)` `0x2B43F0`
+(→ `WriteBaseData` → `CreateSector32` → `TermSectorData` → `Sync`). Medido en el arnés (`NFLASH4=1`, D1):
+1.er arranque 1 300 B e **imagen byte a byte igual a la de la consola** (`6d2ab43a…`, página de control
+`0x9D400` = `56c0b96d…`); **2.º arranque con el `libmpr` de fábrica** → idx 10 `0x31/h1/+8=1/om6`,
+`CheckExistSector=0x45`, `BkRead(0x04,3)=0x10100003` y **0 B** escritos ⇒ **persiste**; con el parche
+cargado y el sector ya presente, **0 B** (guarda antes de toda llamada: 0 escrituras por arranque).
+Corrección de código: `0x2B3F7C` (llamada por `WriteBaseData` en `0x2B4130`) **sí** ejecuta el `fn`
+registrado (`blx r3` en `0x2B3FC8`, `r0=arg`) ⇒ con el dummy de fábrica `0x2B5185` el arranque se cae
+(control negativo `runX-control-fn-dummy/`) y el parche registra un stub propio `movs r0,#0; bx lr`.
+[Informe](../reports/fbm-sector31-c-persistente-20261126.md) ·
+[evidencia](../reports/evidence/fbm-sector31-c-20261126/README.md). Próximo paso exacto: empaquetar ese
+`libmpr` en el `.dat` (otro agente; comprobar que el `libmpr` de base del paquete es `9a74a3bb…`) y, con
+autorización, probar en cámara que un clip de vídeo se reproduce tras el arranque parcheado.
+
 > **E26 R9 parcial:** [revisión](../docs/capture/e26-r9-bootrom-ram-execution.md) corrige R8: CRC-32, copia por tipos distintos de 0 y 0xffff; parser R8 no válido. Falta emular la ruta, demostrar RAM ejecutable y señal física.
 
 **R6 fase 1, checkpoint:** [BLDR](../docs/capture/e26-r6-recuperacion-bionz.md). PMCA payload local byte a byte igual a upstream 0ce3c7e8, gitlink plataforma 85bcb545. ELF extraído y REA: un safe/cuatro normales, normales die0/plane0, metadatos descartados, error => trama vacía; wrapper rechaza estado 1 de ECC tolerado por Loader2. Mapa condicional de 480 KiB con una trama normal perdida; ID/error desconocidos. Cola INFO6 die0/plane1/block2/pages0–20 sin correspondencia adquirida. Regresión inicial falló por inspector inexistente; implementado, 3 pruebas, ruff/mypy pasan. Sin cámara. Próximo paso exacto: verificar límites del selector en los primeros 43 folios y localizar orientación CN4906 en SIDE A.
@@ -1105,6 +1123,19 @@ disparos** en los cinco puntos tras tecla/menú/vista forzada/cursores/Intro; co
 las contiene. Trampa en desplazamiento **impar** (`openView` `0x1251fd`) corrompe una instrucción y deja al invitado
 sin procesar líneas: sólo entradas pares. Informe:
 [film-pb-1-arnes-repro-video-20261126](../reports/film-pb-1-arnes-repro-video-20261126.md).
+
+**Checkpoint 26-11-2026 (madrugada) — un comando para aplicar y verificar el sector `0x31` en la cámara.** Hecho:
+`scripts/film_pb1_sector31.py` (en seco por defecto; `--verifica` sólo lectura, `--aplica --escribe` aplica,
+`--restaurar FICHERO --escribe` deshace) y runbook [film-pb-1-sector31-runbook-20261126](../reports/film-pb-1-sector31-runbook-20261126.md)
+con precondiciones, paso a paso, comprobación a mano por telnet, rollback y **plan de prueba posterior** (clip nuevo de 5 s →
+reproducirlo → antiguos → menú de recuperación), con criterio de éxito por paso. La primera línea es `FBM EWBDFD 4 3 0`
+(**no** `FBM LTC 1`, que escribe texto de prueba en la página de datos base: el escritor real de (4,3) es `0x5CA354`,
+`0x5C9B06` de `m2psIfo_Backup`, y hoy nadie lo registra; el dummy `0x2B5184` no impide el registro porque la grabación decide
+por `fileType`). Verificado **en seco** en el invitado del arnés (perfil `nf4`, `NFLASH4=1`, telnet `127.0.0.1:2323`, sin
+`nf4inject`): secuencia de lectura completa (PID por `/proc`, base por `maps`, peek del descriptor, del anillo y de las 30
+entradas) y las dos líneas consumidas por el monitor (A 0→17→31) → idx 10 `0x31 h0 v0` → **`0x31 h3 v1 om6`**, veredicto OK.
+Evidencia: `reports/evidence/film-pb-1-sector31-runbook-20261126/` (`2-aplica-escribe.out`). Bloqueado: la cámara no está en
+red (192.168.1.29/30/18 no responden) ⇒ el arreglo y el plan de prueba siguen sin ejecutarse en ella.
 
 **Próximo paso exacto:** no volver a pedirle al arnés que discrimine la guarda A/B: para eso hace falta P1–P4
 (`MprFileIf`/`FindFirst` con el volumen, `AVF_INFO\AVIN0001.INP` legible por libmpr, `@M015` con lista, capa de la

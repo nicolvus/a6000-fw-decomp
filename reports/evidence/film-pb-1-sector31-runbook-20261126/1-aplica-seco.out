@@ -1,0 +1,17 @@
+$ python3 scripts/film_pb1_sector31.py --host 127.0.0.1 --port 2323 --aplica --origen-volcado /nflasha4.img --destino /tmp
+== 1. alcance y proceso (127.0.0.1:2323) ==
+  telnet ok, uid=0  herramientas: pidof=pidof is /.net/bin/pidof  awk=awk: not found  sed=sed is /.net/bin/sed  df=df: not found  dd=dd is /.net/bin/dd  chmod=chmod is /.net/bin/chmod  md5sum=md5sum is /.net/bin/md5sum  grep=grep is /.net/bin/grep  cat=cat is /.net/bin/cat  sync=sync is /.net/bin/sync
+  PID im.elf=289  libmpr base=0xaeba5000
+  /tmp/ptcall: no está (se subiría en la fase de escritura)
+== 4. comprobaciones de escritura ==
+  origen del volcado: -rw-r--r--    1 0        0        10485760 Nov 26 05:35 /nflasha4.img
+  AVISO: no puedo leer el espacio libre con df; --destino /tmp se da por bueno
+  tarjeta: /tmp (espacio sin comprobar) (necesito 20480 KiB)
+
+== PLAN (en seco: NO se ha escrito nada) ==
+  1. subir ptcall (10092 B) -> /tmp/ptcall  [pendiente]
+  2. dd if=/nflasha4.img of=/tmp/nflasha4-20261126-023627.bin bs=1024      # rollback, 10485760 B
+  3. depositar en el anillo «FBM EWBDFD 4 3 0» (espera 3 s)
+  4. depositar en el anillo «FBM InitB 6 3» (espera 3 s)
+  5. releer el idx 10 y dictar veredicto
+  Añade --escribe para hacerlo de verdad.

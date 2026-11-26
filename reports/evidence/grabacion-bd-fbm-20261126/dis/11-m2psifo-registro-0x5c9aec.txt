@@ -1,0 +1,26 @@
+# analysis/camera-extract/usr/lib/libmpr.so: syms=1412 plt=930  rodata=0x7a3e90..0x956750
+
+===== 0x5c9aec .. 0x5c9b1c =====
+005c9aec: 385b       ldrh     r0, [r7, r4]
+005c9aee: 8c00       lsls     r4, r1, #2
+005c9af0: 0246       mov      r2, r0
+005c9af2: 0749       ldr      r1, [pc, #0x1c]   ; =0x5ca355
+005c9af4: 98b5       push     {r3, r4, r7, lr}
+005c9af6: 0024       movs     r4, #0
+005c9af8: 00af       add      r7, sp, #0
+005c9afa: 0471       strb     r4, [r0, #4]
+005c9afc: 8460       str      r4, [r0, #8]
+005c9afe: 0474       strb     r4, [r0, #0x10]
+005c9b00: 4461       str      r4, [r0, #0x14]
+005c9b02: 0420       movs     r0, #4
+005c9b04: d368       ldr      r3, [r2, #0xc]
+005c9b06: e8f471f9   bl       #0x2b1dec
+005c9b0a: 2046       mov      r0, r4
+005c9b0c: 98bd       pop      {r3, r4, r7, pc}
+005c9b0e: 00bf       nop      
+005c9b10: 55a3       adr      r3, #0x154
+005c9b12: 5c00       lsls     r4, r3, #1
+005c9b14: 80b5       push     {r7, lr}
+005c9b16: 00af       add      r7, sp, #0
+005c9b18: 0529       cmp      r1, #5
+005c9b1a: 12d8       bhi      #0x5c9b42

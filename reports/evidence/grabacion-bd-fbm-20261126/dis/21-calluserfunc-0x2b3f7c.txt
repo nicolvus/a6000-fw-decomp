@@ -1,0 +1,44 @@
+# analysis/camera-extract/usr/lib/libmpr.so: syms=1412 plt=930  rodata=0x7a3e90..0x956750
+
+===== 0x2b3f7c .. 0x2b3fdc =====
+002b3f7c: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}
+002b3f80: 83b0       sub      sp, #0xc
+002b3f82: 8046       mov      r8, r0
+002b3f84: 02af       add      r7, sp, #8
+002b3f86: 2648       ldr      r0, [pc, #0x98]   ; =0x7e7976 "CallUserFuncWriteBaseDataRequest"
+002b3f88: 0e46       mov      r6, r1
+002b3f8a: fdf76dff   bl       #0x2b1e68
+002b3f8e: 4046       mov      r0, r8
+002b3f90: fdf71cff   bl       #0x2b1dcc
+002b3f94: 00b1       cbz      r0, #0x2b3f98
+002b3f96: 0120       movs     r0, #1
+002b3f98: 4146       mov      r1, r8
+002b3f9a: 3246       mov      r2, r6
+002b3f9c: fff7acff   bl       #0x2b3ef8
+002b3fa0: 4ff00009   mov.w    sb, #0
+002b3fa4: 27e0       b        #0x2b3ff6
+002b3fa6: e268       ldr      r2, [r4, #0xc]
+002b3fa8: 4245       cmp      r2, r8
+002b3faa: 20d1       bne      #0x2b3fee
+002b3fac: 6268       ldr      r2, [r4, #4]
+002b3fae: b242       cmp      r2, r6
+002b3fb0: 1dd1       bne      #0x2b3fee
+002b3fb2: 2269       ldr      r2, [r4, #0x10]
+002b3fb4: dab1       cbz      r2, #0x2b3fee
+002b3fb6: 0096       str      r6, [sp]
+002b3fb8: 1a48       ldr      r0, [pc, #0x68]   ; =0x7e7997 "  UserID:0x%02x : FunctionPointer:0x%08x : void*:0x%08x : MediaID:0x%08x"
+002b3fba: c958       ldr      r1, [r1, r3]
+002b3fbc: 6369       ldr      r3, [r4, #0x14]
+002b3fbe: 01f05ff8   bl       #0x2b5080
+002b3fc2: 2369       ldr      r3, [r4, #0x10]
+002b3fc4: 9bb1       cbz      r3, #0x2b3fee
+002b3fc6: 6069       ldr      r0, [r4, #0x14]
+002b3fc8: 9847       blx      r3
+002b3fca: 0546       mov      r5, r0
+002b3fcc: 1648       ldr      r0, [pc, #0x58]   ; =0x7e79e0 "Call Function Result:0x%08x"
+002b3fce: 2946       mov      r1, r5
+002b3fd0: 01f056f8   bl       #0x2b5080
+002b3fd4: 5db1       cbz      r5, #0x2b3fee
+002b3fd6: 2388       ldrh     r3, [r4]
+002b3fd8: 2a0c       lsrs     r2, r5, #0x10
+002b3fda: 1020       movs     r0, #0x10

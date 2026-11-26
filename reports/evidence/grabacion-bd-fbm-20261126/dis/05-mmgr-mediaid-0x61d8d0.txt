@@ -1,0 +1,44 @@
+# analysis/camera-extract/usr/lib/libmpr.so: syms=1412 plt=930  rodata=0x7a3e90..0x956750
+
+===== 0x61d8d0 .. 0x61d930 =====
+0061d8d0: 98b5       push     {r3, r4, r7, lr}
+0061d8d2: 0446       mov      r4, r0
+0061d8d4: 8068       ldr      r0, [r0, #8]
+0061d8d6: 00af       add      r7, sp, #0
+0061d8d8: 0368       ldr      r3, [r0]
+0061d8da: d3f8f430   ldr.w    r3, [r3, #0xf4]
+0061d8de: 9847       blx      r3
+0061d8e0: 0138       subs     r0, #1
+0061d8e2: 0828       cmp      r0, #8
+0061d8e4: 15d8       bhi      #0x61d912
+0061d8e6: dfe800f0   tbb      [pc, r0]
+0061d8ea: 051c       adds     r5, r0, #0
+0061d8ec: 070e       lsrs     r7, r0, #0x18
+0061d8ee: 1410       asrs     r4, r2, #0x20
+0061d8f0: 0514       asrs     r5, r0, #0x10
+0061d8f2: 1200       movs     r2, r2
+0061d8f4: 0120       movs     r0, #1
+0061d8f6: 98bd       pop      {r3, r4, r7, pc}
+0061d8f8: d4f82001   ldr.w    r0, [r4, #0x120]
+0061d8fc: 0128       cmp      r0, #1
+0061d8fe: 14bf       ite      ne
+0061d900: 0420       movne    r0, #4
+0061d902: 0320       moveq    r0, #3
+0061d904: 98bd       pop      {r3, r4, r7, pc}
+0061d906: 0620       movs     r0, #6
+0061d908: 98bd       pop      {r3, r4, r7, pc}
+0061d90a: 0520       movs     r0, #5
+0061d90c: 98bd       pop      {r3, r4, r7, pc}
+0061d90e: 0720       movs     r0, #7
+0061d910: 98bd       pop      {r3, r4, r7, pc}
+0061d912: 054b       ldr      r3, [pc, #0x14]   ; =0x9df25c
+0061d914: e068       ldr      r0, [r4, #0xc]
+0061d916: 0549       ldr      r1, [pc, #0x14]   ; =0x8e63ca "MEDIAID : [MEDIA_ID_UNKNOWN]
+"
+0061d918: 1a78       ldrb     r2, [r3]
+0061d91a: 32f012ff   bl       #0x650742
+0061d91e: 0020       movs     r0, #0
+0061d920: 98bd       pop      {r3, r4, r7, pc}
+0061d922: 0220       movs     r0, #2
+0061d924: 98bd       pop      {r3, r4, r7, pc}
+0061d926: 00bf       nop      

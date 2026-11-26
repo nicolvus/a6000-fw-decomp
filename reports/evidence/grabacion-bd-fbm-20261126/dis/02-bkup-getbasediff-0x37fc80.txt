@@ -1,0 +1,207 @@
+# analysis/camera-extract/usr/lib/libmpr.so: syms=1412 plt=930  rodata=0x7a3e90..0x956750
+
+===== 0x37fc80 .. 0x37fe80 =====
+0037fc80: 2de9f047   push.w   {r4, r5, r6, r7, r8, sb, sl, lr}
+0037fc84: 0026       movs     r6, #0
+0037fc86: 92b0       sub      sp, #0x48
+0037fc88: 0446       mov      r4, r0
+0037fc8a: 3546       mov      r5, r6
+0037fc8c: 04af       add      r7, sp, #0x10
+0037fc8e: 87f83760   strb.w   r6, [r7, #0x37]
+0037fc92: fe62       str      r6, [r7, #0x2c]
+0037fc94: dff80ca2   ldr.w    sl, [pc, #0x20c]
+0037fc98: 3020       movs     r0, #0x30
+0037fc9a: 0021       movs     r1, #0
+0037fc9c: 2822       movs     r2, #0x28
+0037fc9e: 00fb05a0   mla      r0, r0, r5, sl
+0037fca2: 4af80650   str.w    r5, [sl, r6]
+0037fca6: 0135       adds     r5, #1
+0037fca8: 3036       adds     r6, #0x30
+0037fcaa: 0830       adds     r0, #8
+0037fcac: a0f519fb   bl       #0x1202e2
+0037fcb0: 062d       cmp      r5, #6
+0037fcb2: efd1       bne      #0x37fc94
+0037fcb4: 07f12c03   add.w    r3, r7, #0x2c
+0037fcb8: 2220       movs     r0, #0x22
+0037fcba: 0093       str      r3, [sp]
+0037fcbc: 0821       movs     r1, #8
+0037fcbe: 3b1d       adds     r3, r7, #4
+0037fcc0: 07f13702   add.w    r2, r7, #0x37
+0037fcc4: 0193       str      r3, [sp, #4]
+0037fcc6: 07f13003   add.w    r3, r7, #0x30
+0037fcca: 33f775fe   bl       #0x2b39b8
+0037fcce: 0546       mov      r5, r0
+0037fcd0: 32e0       b        #0x37fd38
+0037fcd2: 97f83730   ldrb.w   r3, [r7, #0x37]
+0037fcd6: 1a2b       cmp      r3, #0x1a
+0037fcd8: 12d1       bne      #0x37fd00
+0037fcda: fb6a       ldr      r3, [r7, #0x2c]
+0037fcdc: 302b       cmp      r3, #0x30
+0037fcde: 0fd1       bne      #0x37fd00
+0037fce0: 0025       movs     r5, #0
+0037fce2: 396b       ldr      r1, [r7, #0x30]
+0037fce4: 0b68       ldr      r3, [r1]
+0037fce6: ab42       cmp      r3, r5
+0037fce8: 07d1       bne      #0x37fcfa
+0037fcea: 3020       movs     r0, #0x30
+0037fcec: 0831       adds     r1, #8
+0037fcee: 2822       movs     r2, #0x28
+0037fcf0: 00fb05a0   mla      r0, r0, r5, sl
+0037fcf4: 0830       adds     r0, #8
+0037fcf6: a1f511fa   bl       #0x12111c
+0037fcfa: 0135       adds     r5, #1
+0037fcfc: 062d       cmp      r5, #6
+0037fcfe: f0d1       bne      #0x37fce2
+0037fd00: 381d       adds     r0, r7, #4
+0037fd02: 34f73ffc   bl       #0x2b4584
+0037fd06: 381d       adds     r0, r7, #4
+0037fd08: 07f13701   add.w    r1, r7, #0x37
+0037fd0c: 07f13002   add.w    r2, r7, #0x30
+0037fd10: 07f12c03   add.w    r3, r7, #0x2c
+0037fd14: 33f718fe   bl       #0x2b3948
+0037fd18: 0546       mov      r5, r0
+0037fd1a: 0028       cmp      r0, #0
+0037fd1c: d9d0       beq      #0x37fcd2
+0037fd1e: 5b4b       ldr      r3, [pc, #0x16c]   ; =0x10100003
+0037fd20: 9842       cmp      r0, r3
+0037fd22: 09d0       beq      #0x37fd38
+0037fd24: 0123       movs     r3, #1
+0037fd26: 0090       str      r0, [sp]
+0037fd28: 0193       str      r3, [sp, #4]
+0037fd2a: 0222       movs     r2, #2
+0037fd2c: 0293       str      r3, [sp, #8]
+0037fd2e: 013b       subs     r3, #1
+0037fd30: a06b       ldr      r0, [r4, #0x38]
+0037fd32: 5749       ldr      r1, [pc, #0x15c]   ; =0x81c8f8 "BKUP Err ReadNextPackData ec"
+0037fd34: d3f7e8fc   bl       #0x353708
+0037fd38: 002d       cmp      r5, #0
+0037fd3a: cad0       beq      #0x37fcd2
+0037fd3c: 381d       adds     r0, r7, #4
+0037fd3e: 34f721fc   bl       #0x2b4584
+0037fd42: 544b       ldr      r3, [pc, #0x150]   ; =0x10100001
+0037fd44: 9d42       cmp      r5, r3
+0037fd46: 0fd1       bne      #0x37fd68
+0037fd48: 0920       movs     r0, #9
+0037fd4a: 0821       movs     r1, #8
+0037fd4c: 34f750fb   bl       #0x2b43f0
+0037fd50: 00b3       cbz      r0, #0x37fd94
+0037fd52: 0123       movs     r3, #1
+0037fd54: 0090       str      r0, [sp]
+0037fd56: 0193       str      r3, [sp, #4]
+0037fd58: 0222       movs     r2, #2
+0037fd5a: 0293       str      r3, [sp, #8]
+0037fd5c: 013b       subs     r3, #1
+0037fd5e: a06b       ldr      r0, [r4, #0x38]
+0037fd60: 4d49       ldr      r1, [pc, #0x134]   ; =0x82502d "BKUP Err InitBackupData ec"
+0037fd62: d3f7d1fc   bl       #0x353708
+0037fd66: 15e0       b        #0x37fd94
+0037fd68: 484b       ldr      r3, [pc, #0x120]   ; =0x10100003
+0037fd6a: 9d42       cmp      r5, r3
+0037fd6c: 12d0       beq      #0x37fd94
+0037fd6e: 2220       movs     r0, #0x22
+0037fd70: 0821       movs     r1, #8
+0037fd72: 33f7b1fb   bl       #0x2b34d8
+0037fd76: 48b1       cbz      r0, #0x37fd8c
+0037fd78: 0123       movs     r3, #1
+0037fd7a: 0090       str      r0, [sp]
+0037fd7c: 0193       str      r3, [sp, #4]
+0037fd7e: 0222       movs     r2, #2
+0037fd80: 0293       str      r3, [sp, #8]
+0037fd82: 013b       subs     r3, #1
+0037fd84: a06b       ldr      r0, [r4, #0x38]
+0037fd86: 4549       ldr      r1, [pc, #0x114]   ; =0x81c6fd "BKUP Err Destroy ec"
+0037fd88: d3f7befc   bl       #0x353708
+0037fd8c: 2220       movs     r0, #0x22
+0037fd8e: 0821       movs     r1, #8
+0037fd90: cef746fd   bl       #0x34e820
+0037fd94: 0025       movs     r5, #0
+0037fd96: 0123       movs     r3, #1
+0037fd98: a06b       ldr      r0, [r4, #0x38]
+0037fd9a: 2a46       mov      r2, r5
+0037fd9c: 0193       str      r3, [sp, #4]
+0037fd9e: a946       mov      sb, r5
+0037fda0: 0293       str      r3, [sp, #8]
+0037fda2: 2b46       mov      r3, r5
+0037fda4: 3e49       ldr      r1, [pc, #0xf8]   ; =0x825048 "GetBaseDifferenceDubbedInfo Info--------"
+0037fda6: 0095       str      r5, [sp]
+0037fda8: d3f7aefc   bl       #0x353708
+0037fdac: 3d4e       ldr      r6, [pc, #0xf4]   ; =0xa4baa0
+0037fdae: 0025       movs     r5, #0
+0037fdb0: a06b       ldr      r0, [r4, #0x38]
+0037fdb2: 0422       movs     r2, #4
+0037fdb4: 0023       movs     r3, #0
+0037fdb6: 3c49       ldr      r1, [pc, #0xf0]   ; =0x825064 "Info--------"
+0037fdb8: 4ff00108   mov.w    r8, #1
+0037fdbc: cdf80090   str.w    sb, [sp]
+0037fdc0: cdf80480   str.w    r8, [sp, #4]
+0037fdc4: cdf80880   str.w    r8, [sp, #8]
+0037fdc8: d3f79efc   bl       #0x353708
+0037fdcc: a06b       ldr      r0, [r4, #0x38]
+0037fdce: 2a46       mov      r2, r5
+0037fdd0: 3649       ldr      r1, [pc, #0xd8]   ; =0x825071 "srcMediaId    "
+0037fdd2: 2b46       mov      r3, r5
+0037fdd4: 8de82001   stm.w    sp, {r5, r8}
+0037fdd8: 0295       str      r5, [sp, #8]
+0037fdda: d3f795fc   bl       #0x353708
+0037fdde: 0fe0       b        #0x37fe00
+0037fde0: 3023       movs     r3, #0x30
+0037fde2: a06b       ldr      r0, [r4, #0x38]
+0037fde4: 3249       ldr      r1, [pc, #0xc8]   ; =0x90f1e1
+0037fde6: 0222       movs     r2, #2
+0037fde8: 03fb0955   mla      r5, r3, sb, r5
+0037fdec: 0835       adds     r5, #8
+0037fdee: 5af80530   ldr.w    r3, [sl, r5]
+0037fdf2: 4546       mov      r5, r8
+0037fdf4: 0093       str      r3, [sp]
+0037fdf6: 0023       movs     r3, #0
+0037fdf8: 0193       str      r3, [sp, #4]
+0037fdfa: 0293       str      r3, [sp, #8]
+0037fdfc: d3f784fc   bl       #0x353708
+0037fe00: 05f10408   add.w    r8, r5, #4
+0037fe04: b8f11c0f   cmp.w    r8, #0x1c
+0037fe08: ead1       bne      #0x37fde0
+0037fe0a: 0025       movs     r5, #0
+0037fe0c: a06b       ldr      r0, [r4, #0x38]
+0037fe0e: 2849       ldr      r1, [pc, #0xa0]   ; =0x90f1e1
+0037fe10: 2a46       mov      r2, r5
+0037fe12: 2b46       mov      r3, r5
+0037fe14: a8f11b08   sub.w    r8, r8, #0x1b
+0037fe18: 0095       str      r5, [sp]
+0037fe1a: c144       add      sb, r8
+0037fe1c: 0195       str      r5, [sp, #4]
+0037fe1e: cdf80880   str.w    r8, [sp, #8]
+0037fe22: d3f771fc   bl       #0x353708
+0037fe26: 336a       ldr      r3, [r6, #0x20]
+0037fe28: 0422       movs     r2, #4
+0037fe2a: a06b       ldr      r0, [r4, #0x38]
+0037fe2c: 2149       ldr      r1, [pc, #0x84]   ; =0x825080 "dirNumber     "
+0037fe2e: 8de80801   stm.w    sp, {r3, r8}
+0037fe32: 2b46       mov      r3, r5
+0037fe34: cdf80880   str.w    r8, [sp, #8]
+0037fe38: d3f766fc   bl       #0x353708
+0037fe3c: 736a       ldr      r3, [r6, #0x24]
+0037fe3e: 0422       movs     r2, #4
+0037fe40: a06b       ldr      r0, [r4, #0x38]
+0037fe42: 1d49       ldr      r1, [pc, #0x74]   ; =0x82508f "fileNumber    "
+0037fe44: 8de80801   stm.w    sp, {r3, r8}
+0037fe48: 2b46       mov      r3, r5
+0037fe4a: cdf80880   str.w    r8, [sp, #8]
+0037fe4e: d3f75bfc   bl       #0x353708
+0037fe52: f36a       ldr      r3, [r6, #0x2c]
+0037fe54: 0222       movs     r2, #2
+0037fe56: a06b       ldr      r0, [r4, #0x38]
+0037fe58: 1849       ldr      r1, [pc, #0x60]   ; =0x82509e "LocalTimeValue"
+0037fe5a: 8de80801   stm.w    sp, {r3, r8}
+0037fe5e: 2b46       mov      r3, r5
+0037fe60: 0295       str      r5, [sp, #8]
+0037fe62: d3f751fc   bl       #0x353708
+0037fe66: b36a       ldr      r3, [r6, #0x28]
+0037fe68: 0222       movs     r2, #2
+0037fe6a: a06b       ldr      r0, [r4, #0x38]
+0037fe6c: 3036       adds     r6, #0x30
+0037fe6e: 1049       ldr      r1, [pc, #0x40]   ; =0x90f1e1
+0037fe70: 8de82801   stm.w    sp, {r3, r5, r8}
+0037fe74: 2b46       mov      r3, r5
+0037fe76: d3f747fc   bl       #0x353708
+0037fe7a: b9f1060f   cmp.w    sb, #6
+0037fe7e: 96d1       bne      #0x37fdae

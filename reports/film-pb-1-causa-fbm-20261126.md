@@ -180,6 +180,38 @@ tabla no se rellena porque el shim no emula `/dev/nflasha4` (`CreateSector32` de
 Después de crearlo: **reiniciar MPR** (la tabla `0xA3699C` es un snapshot de `FBM::Init`) — aunque
 `fbm-crear` documenta que el alta ya queda en la SMT viva y `FBM::Init` la reabre al arrancar.
 
+### 6.2 La consola sola no basta: hay que registrar antes el escritor
+
+`BackupMgr::InitBackupData(6, 3)` aborta con **`0x10800010`** porque `0x2B3000` (`0x2B301A cbz r2`) salta
+las filas de `0x9D23FC` con `fn == 0`, y **las 37 lo están**. El único escritor de ese campo es
+`BackupMgr::EntryWriteBaseDataFunction` (`0x2B1DEC`), que la consola expone como **`EWBDFD`** y como el
+test de fábrica **`LTC`**.
+
+Secuencia medida en el arnés con la imagen real de `nflasha4` (`NFLASH4=1`):
+
+| línea | efecto | flash |
+|---|---|---|
+| `FBM EWBDFD 4 3 0` | `0x2B3000(6,3)`: `0x10800010` → `0` | 0 B |
+| `FBM InitB 6 3` | idx 10 = `0x31 / h3 / +8 = 1 / om6`; `BkRead(0x04,3)` = `0x10100003` (tolerado) | **1 300 B** |
+| reinicio | `FBM::Init` la registra sola desde el flash | 0 B |
+
+`LTC 1` también funciona (`BkRead` = `0`) pero **no debe usarse en la cámara**: sus escritores
+`0x2B5724`/`0x2B5658` son de fábrica y escriben en la página de datos base un texto de prueba
+(`"MS "/"HDD "+"packData"`). El escritor real de `(4,3)` es `0x5CA354`, registrado en `0x5C9B06` por
+`m2psIfo_Backup`, y hoy no lo registra nadie; el dummy `0x2B5184` de `EWBDFD` no estorba porque el camino
+de grabación decide por `fileType` (`0x2B2F48`) y no por `fn`.
+
+### 6.3 Qué se arregla y qué no
+
+- **Clip nuevo: sí.** Con handle en idx 10 al arrancar, la grabación registra el clip en la BD
+  (`m2psIfo_Backup` → `OpenRecFile` `0x5E7B8C`, `CloseRecFile` `0x5E7E50`) y ese clip tiene IFO.
+- **Clips viejos: no quedan registrados.** El sector se crea vacío y nadie rellena registros antiguos;
+  su lectura degrada a `0x10100003`, que los llamantes toleran, pero el contenido no está.
+- **La grabación llevaba fallando en silencio**: `CloseRecFile` (`0x5E7E50`) descarta el `r0` del backup y
+  `0x61D950` ni mira el retorno del gestor de medios. Por eso grababa clips sin registrarlos.
+- **«Recuperar BD imág.» no podía ayudar**: `BeginRepair` reescribe `AVF_INFO/AVIN0001.INP` pero no llama
+  a `0x2B43F0` ni a `CreateSector32`; su re-registro choca en `0x5C9F7E` / `0x2B3D24` (`0x10100001`).
+
 ## 7. Cómo verificarlo sin cámara y cómo comprobarlo en cámara
 
 - **Arnés**: `InitB` sobre el MPR real y lectura de `base+0xA3699C`; el sector debe quedar con `+4 != 0`

@@ -1,0 +1,101 @@
+# analysis/camera-extract/usr/lib/libmpr.so: syms=1412 plt=930  rodata=0x7a3e90..0x956750
+
+===== 0x2b3d24 .. 0x2b3e24 =====
+002b3d24: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+002b3d28: 93b0       sub      sp, #0x4c
+002b3d2a: 02af       add      r7, sp, #8
+002b3d2c: 9246       mov      sl, r2
+002b3d2e: 8946       mov      sb, r1
+002b3d30: 3d6f       ldr      r5, [r7, #0x70]
+002b3d32: 8046       mov      r8, r0
+002b3d34: bc6e       ldr      r4, [r7, #0x68]
+002b3d36: 1e46       mov      r6, r3
+002b3d38: 6348       ldr      r0, [pc, #0x18c]   ; =0x889a78 "WritePackBegin"
+002b3d3a: fef795f8   bl       #0x2b1e68
+002b3d3e: 69f6f2ed   blx      #0x11d924   ; PLT:_ZN8FlashLib14InvalidateSyncEv
+002b3d42: 6248       ldr      r0, [pc, #0x188]   ; =0x7e7879 "[FBM]<RWB>WritePackBegin userID[0x%x]mediaID[0x%x]dataID[0x%x]operationMode[0x%x]"
+002b3d44: 4146       mov      r1, r8
+002b3d46: 4a46       mov      r2, sb
+002b3d48: 5346       mov      r3, sl
+002b3d4a: 0095       str      r5, [sp]
+002b3d4c: 01f082f9   bl       #0x2b5054
+002b3d50: 2046       mov      r0, r4
+002b3d52: fff7affd   bl       #0x2b38b4
+002b3d56: baf1ff0f   cmp.w    sl, #0xff
+002b3d5a: 1fd0       beq      #0x2b3d9c
+002b3d5c: b8f1800f   cmp.w    r8, #0x80
+002b3d60: 5ed1       bne      #0x2b3e20
+002b3d62: 5b48       ldr      r0, [pc, #0x16c]   ; =0x7e78cb "  userID:UID_BACKUP_MANAGER"
+002b3d64: 01f08cf9   bl       #0x2b5080
+002b3d68: 2846       mov      r0, r5
+002b3d6a: 4946       mov      r1, sb
+002b3d6c: 07f13402   add.w    r2, r7, #0x34
+002b3d70: fff774fd   bl       #0x2b385c
+002b3d74: 0028       cmp      r0, #0
+002b3d76: 6ad1       bne      #0x2b3e4e
+002b3d78: 7d6b       ldr      r5, [r7, #0x34]
+002b3d7a: 52e0       b        #0x2b3e22
+002b3d7c: 554b       ldr      r3, [pc, #0x154]   ; =0xa3699c
+002b3d7e: 1421       movs     r1, #0x14
+002b3d80: 97f83f20   ldrb.w   r2, [r7, #0x3f]
+002b3d84: 01fb0232   mla      r2, r1, r2, r3
+002b3d88: 5268       ldr      r2, [r2, #4]
+002b3d8a: 7a60       str      r2, [r7, #4]
+002b3d8c: 002a       cmp      r2, #0
+002b3d8e: 51d1       bne      #0x2b3e34
+002b3d90: 514d       ldr      r5, [pc, #0x144]   ; =0x10100001
+002b3d92: 21e0       b        #0x2b3dd8
+002b3d94: 5148       ldr      r0, [pc, #0x144]   ; =0x7e78e7 "  dataSize is not even!!:0x%xbytes"
+002b3d96: 3146       mov      r1, r6
+002b3d98: 01f030f9   bl       #0x2b4ffc
+002b3d9c: 0125       movs     r5, #1
+002b3d9e: 1be0       b        #0x2b3dd8
+002b3da0: bb6b       ldr      r3, [r7, #0x38]
+002b3da2: 06f1080b   add.w    fp, r6, #8
+002b3da6: 5b45       cmp      r3, fp
+002b3da8: 03d2       bhs      #0x2b3db2
+002b3daa: 4d48       ldr      r0, [pc, #0x134]   ; =0x7e790a "  Insufficient Sector spase"
+002b3dac: 01f026f9   bl       #0x2b4ffc
+002b3db0: 11e0       b        #0x2b3dd6
+002b3db2: 7868       ldr      r0, [r7, #4]
+002b3db4: 07f10c01   add.w    r1, r7, #0xc
+002b3db8: fef762fb   bl       #0x2b2480
+002b3dbc: 0546       mov      r5, r0
+002b3dbe: 58b9       cbnz     r0, #0x2b3dd8
+002b3dc0: b8f1800f   cmp.w    r8, #0x80
+002b3dc4: 7b69       ldr      r3, [r7, #0x14]
+002b3dc6: 18bf       it       ne
+002b3dc8: 0bf1080b   addne.w  fp, fp, #8
+002b3dcc: 9b45       cmp      fp, r3
+002b3dce: 40d9       bls      #0x2b3e52
+002b3dd0: 4448       ldr      r0, [pc, #0x110]   ; =0x7e7926 "  Need extend sector"
+002b3dd2: 01f055f9   bl       #0x2b5080
+002b3dd6: 444d       ldr      r5, [pc, #0x110]   ; =0x10100004
+002b3dd8: 1020       movs     r0, #0x10
+002b3dda: 1f21       movs     r1, #0x1f
+002b3ddc: 45f20202   movw     r2, #0x5002
+002b3de0: 1ffa88f3   uxth.w   r3, r8
+002b3de4: cdf800a0   str.w    sl, [sp]
+002b3de8: b6b2       uxth     r6, r6
+002b3dea: 0196       str      r6, [sp, #4]
+002b3dec: 07f326fd   bl       #0x5bb83c
+002b3df0: 2b0c       lsrs     r3, r5, #0x10
+002b3df2: 1020       movs     r0, #0x10
+002b3df4: 0093       str      r3, [sp]
+002b3df6: 1f21       movs     r1, #0x1f
+002b3df8: abb2       uxth     r3, r5
+002b3dfa: 45f20302   movw     r2, #0x5003
+002b3dfe: 0193       str      r3, [sp, #4]
+002b3e00: 0023       movs     r3, #0
+002b3e02: 07f31bfd   bl       #0x5bb83c
+002b3e06: 2046       mov      r0, r4
+002b3e08: fff726fe   bl       #0x2b3a58
+002b3e0c: 2e48       ldr      r0, [pc, #0xb8]   ; =0x889a78 "WritePackBegin"
+002b3e0e: 2946       mov      r1, r5
+002b3e10: fef7a2f8   bl       #0x2b1f58
+002b3e14: 2846       mov      r0, r5
+002b3e16: 07f14407   add.w    r7, r7, #0x44
+002b3e1a: bd46       mov      sp, r7
+002b3e1c: bde8f08f   pop.w    {r4, r5, r6, r7, r8, sb, sl, fp, pc}
+002b3e20: 4546       mov      r5, r8
+002b3e22: 2846       mov      r0, r5

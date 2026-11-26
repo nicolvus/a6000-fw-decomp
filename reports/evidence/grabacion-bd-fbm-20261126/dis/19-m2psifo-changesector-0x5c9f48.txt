@@ -1,0 +1,46 @@
+# analysis/camera-extract/usr/lib/libmpr.so: syms=1412 plt=930  rodata=0x7a3e90..0x956750
+
+===== 0x5c9f48 .. 0x5c9fc8 =====
+005c9f48: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}
+005c9f4c: 82b0       sub      sp, #8
+005c9f4e: 1c4d       ldr      r5, [pc, #0x70]   ; =0x90f1e1
+005c9f50: 02af       add      r7, sp, #8
+005c9f52: 0446       mov      r4, r0
+005c9f54: 8069       ldr      r0, [r0, #0x18]
+005c9f56: 4ff00008   mov.w    r8, #0
+005c9f5a: 04f04af8   bl       #0x5cdff2
+005c9f5e: 194a       ldr      r2, [pc, #0x64]   ; =0x8c5c49 "@@@ Flash Backup SECTOR CHANGE EXEC @@@"
+005c9f60: 2b46       mov      r3, r5
+005c9f62: 1949       ldr      r1, [pc, #0x64]   ; =0x8cbf14 "[IFO]"
+005c9f64: 0095       str      r5, [sp]
+005c9f66: cdf80480   str.w    r8, [sp, #4]
+005c9f6a: 21f08bfc   bl       #0x5eb884
+005c9f6e: a069       ldr      r0, [r4, #0x18]
+005c9f70: 04f03ff8   bl       #0x5cdff2
+005c9f74: 4146       mov      r1, r8
+005c9f76: 21f056fc   bl       #0x5eb826
+005c9f7a: e168       ldr      r1, [r4, #0xc]
+005c9f7c: 0420       movs     r0, #4
+005c9f7e: eaf419f9   bl       #0x2b41b4
+005c9f82: 0646       mov      r6, r0
+005c9f84: a069       ldr      r0, [r4, #0x18]
+005c9f86: 04f034f8   bl       #0x5cdff2
+005c9f8a: 1049       ldr      r1, [pc, #0x40]   ; =0x8c5b54 "m2psIfo_Backup.cpp"
+005c9f8c: 40f2ea32   movw     r2, #0x3ea
+005c9f90: 3346       mov      r3, r6
+005c9f92: 21f0fbfe   bl       #0x5ebd8c
+005c9f96: 7eb1       cbz      r6, #0x5c9fb8
+005c9f98: a069       ldr      r0, [r4, #0x18]
+005c9f9a: 04f02af8   bl       #0x5cdff2
+005c9f9e: 0a49       ldr      r1, [pc, #0x28]   ; =0x8cbf14 "[IFO]"
+005c9fa0: 0b4a       ldr      r2, [pc, #0x2c]   ; =0x8c5c71 "Flash Backup SECTOR CHANGE ERROR!!"
+005c9fa2: 2b46       mov      r3, r5
+005c9fa4: 8de82001   stm.w    sp, {r5, r8}
+005c9fa8: 21f06cfc   bl       #0x5eb884
+005c9fac: a069       ldr      r0, [r4, #0x18]
+005c9fae: 04f020f8   bl       #0x5cdff2
+005c9fb2: 4146       mov      r1, r8
+005c9fb4: 21f037fc   bl       #0x5eb826
+005c9fb8: 3046       mov      r0, r6
+005c9fba: bd46       mov      sp, r7
+005c9fbc: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}

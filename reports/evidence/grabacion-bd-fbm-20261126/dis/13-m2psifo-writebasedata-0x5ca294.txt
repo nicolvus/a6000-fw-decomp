@@ -1,0 +1,47 @@
+# analysis/camera-extract/usr/lib/libmpr.so: syms=1412 plt=930  rodata=0x7a3e90..0x956750
+
+===== 0x5ca294 .. 0x5ca314 =====
+005ca294: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}
+005ca298: adf5247d   sub.w    sp, sp, #0x290
+005ca29c: 0446       mov      r4, r0
+005ca29e: 02af       add      r7, sp, #8
+005ca2a0: 0025       movs     r5, #0
+005ca2a2: 8069       ldr      r0, [r0, #0x18]
+005ca2a4: 03f0a5fe   bl       #0x5cdff2
+005ca2a8: 274b       ldr      r3, [pc, #0x9c]   ; =0x90f1e1
+005ca2aa: 284a       ldr      r2, [pc, #0xa0]   ; =0x8c5cbf "@@@ Flash Backup BaseData Write EXEC @@@"
+005ca2ac: 2849       ldr      r1, [pc, #0xa0]   ; =0x8cbf14 "[IFO]"
+005ca2ae: 0093       str      r3, [sp]
+005ca2b0: 0195       str      r5, [sp, #4]
+005ca2b2: 21f0e7fa   bl       #0x5eb884
+005ca2b6: a069       ldr      r0, [r4, #0x18]
+005ca2b8: 03f09bfe   bl       #0x5cdff2
+005ca2bc: 2946       mov      r1, r5
+005ca2be: 21f0b2fa   bl       #0x5eb826
+005ca2c2: a069       ldr      r0, [r4, #0x18]
+005ca2c4: 03f095fe   bl       #0x5cdff2
+005ca2c8: 21f0a7f9   bl       #0x5eb61a
+005ca2cc: c7f88402   str.w    r0, [r7, #0x284]
+005ca2d0: a069       ldr      r0, [r4, #0x18]
+005ca2d2: 03f08afe   bl       #0x5cdfea
+005ca2d6: 1df08bff   bl       #0x5e81f0
+005ca2da: 8046       mov      r8, r0
+005ca2dc: a069       ldr      r0, [r4, #0x18]
+005ca2de: 03f084fe   bl       #0x5cdfea
+005ca2e2: 1df08aff   bl       #0x5e81fa
+005ca2e6: a022       movs     r2, #0xa0
+005ca2e8: 0646       mov      r6, r0
+005ca2ea: 3846       mov      r0, r7
+005ca2ec: 3146       mov      r1, r6
+005ca2ee: 56f715f7   bl       #0x12111c
+005ca2f2: 7b19       adds     r3, r7, r5
+005ca2f4: 03f1a000   add.w    r0, r3, #0xa0
+005ca2f8: 06f1a001   add.w    r1, r6, #0xa0
+005ca2fc: a022       movs     r2, #0xa0
+005ca2fe: 56f70df7   bl       #0x12111c
+005ca302: 06f5a071   add.w    r1, r6, #0x140
+005ca306: a022       movs     r2, #0xa0
+005ca308: 07f5a070   add.w    r0, r7, #0x140
+005ca30c: 56f706f7   bl       #0x12111c
+005ca310: 4146       mov      r1, r8
+005ca312: a022       movs     r2, #0xa0

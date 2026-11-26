@@ -1,0 +1,41 @@
+[FBMC] base libmpr=0xae375000 tabla sectores=0xaedab99c
+[FBMC] registro del monitor 0xaedc6ee4: lookup("FBM") -> 0xae62a0d9 (esperado 0xae62a0d9)
+[FBMC] PBSKIP: sin consola ni anillo, sólo la prueba de ptrace
+[FBMP] hilo victima tid=298 (pid=207)  ptcall=/usr/bin/ptcall (chroot /cam; /cam/tmp es tmpfs)
+[FBMP]   ? probe
+[FBMP]   ? -rwxr-xr-x    1 0        0          233448 Nov 26 05:04 /bin/sh
+[FBMP]   ? crw-------    1 0        0          5,   1 Nov 26 05:25 /dev/console
+[FBMP]   ? -rwxr-xr-x    1 0        0           10092 Nov 26 05:25 /usr/bin/ptcall
+[FBMP]   ? rc=0
+(dry) pc=0x002b50d9 r0=0x00000001 r1=0x00000000 r2=0x00000000 r3=0x00000000 lr=0xdead0000
+(dry) no se engancha
+[FBMP] $ ptcall --dry 207 298 call 1 0x2b50d9 1   (system -> 0)
+(dry) 0x00a3699c 32 B
+(dry) no se engancha
+[FBMP] $ ptcall --dry 207 298 peek 0xa3699c 0x20   (system -> 0)
+sig=19 fault=0x00000000
+0xb6eb1b68: 11 11 11 11 01 00 00 00 80 02 00 00 e0 01 00 00 
+[FBMP] $ ptcall 207 298 peek 0xb6eb1b68 0x10   (system -> 0)
+sig=19 fault=0x00000000
+0xae375000: 7f 45 4c 46 01 01 01 00 00 00 00 00 00 00 00 00 
+[FBMP] $ ptcall 207 298 peek 0xae375000 0x10   (system -> 0)
+sig=19 fault=0x00000000
+0xaedab99c: 10 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 11 00 00 00 00 00 00 00 00 00 00 00 
+[FBMP] $ ptcall 207 298 peek 0xaedab99c 0x20   (system -> 0)
+poke ok
+[FBMP] $ ptcall 207 298 poke 0xb6eb1b68 78 56 34 12   (system -> 0)
+[FBMP] pb_scratch tras el poke = 0x12345678 (esperado 0x12345678)
+[FBMP] ahora la llamada real (si se cuelga, la ultima linea es esta)
+sig=11 code=0x00000001 fault=0xdead0000 ret=0xaeb5e322 centinela=1
+text=FBS_INVALID_PROCESS
+[FBMP] $ ptcall 207 298 call 1 0xae62b115 7   (system -> 0)
+[FBMP] --- fbm_ring.sh en el invitado: depositar "FBM SetSMI 21 91 7 1 10" en el anillo ---
+[FBMP] $ BASE=0xae375000 PID=207 TID=298 PT=/usr/bin/ptcall /bin/sh /usr/bin/fbm_ring.sh 'FBM SetSMI 21 91 7 1 10' >>/dev/console 2>&1
+X=0x8fa84000 A=0 B=0 libres=1023
+ok B: 0 -> 24 (24 B)
+[FBMP] tabla tras fbm_ring.sh:
+[FBMP]   idx 20: name=0x90 handle=0 status=0 OM=0
+[FBMP]   idx 21: name=0x91 handle=7 status=1 OM=0xa
+[FBMP]   idx 22: name=0x92 handle=0 status=0 OM=0
+[FBMP] fin de la prueba de ptrace
+[FBMC] FIN

@@ -1,0 +1,80 @@
+# analysis/camera-extract/usr/lib/libmpr.so: syms=1412 plt=930  rodata=0x7a3e90..0x956750
+
+===== 0x2b5598 .. 0x2b5648 =====
+002b5598: b0b5       push     {r4, r5, r7, lr}
+002b559a: 0324       movs     r4, #3
+002b559c: 204d       ldr      r5, [pc, #0x80]   ; =0xa36c4c
+002b559e: 00af       add      r7, sp, #0
+002b55a0: 2048       ldr      r0, [pc, #0x80]   ; =0x7e842f "[FBM]LocalTestCall::LTC_01"
+002b55a2: fff7abfd   bl       #0x2b50fc
+002b55a6: 0420       movs     r0, #4
+002b55a8: 2c60       str      r4, [r5]
+002b55aa: 2a46       mov      r2, r5
+002b55ac: 1e49       ldr      r1, [pc, #0x78]   ; =0x2b5725
+002b55ae: 2346       mov      r3, r4
+002b55b0: fcf71cfc   bl       #0x2b1dec
+002b55b4: 50b9       cbnz     r0, #0x2b55cc
+002b55b6: 1d48       ldr      r0, [pc, #0x74]   ; =0x7e844a "Dummy EntryWriteBaseDataFunction for [M2PS Application ::Media MS] Success "
+002b55b8: fff7a0fd   bl       #0x2b50fc
+002b55bc: 2120       movs     r0, #0x21
+002b55be: 1c49       ldr      r1, [pc, #0x70]   ; =0x2b5659
+002b55c0: 2a46       mov      r2, r5
+002b55c2: 2346       mov      r3, r4
+002b55c4: fcf712fc   bl       #0x2b1dec
+002b55c8: 10b1       cbz      r0, #0x2b55d0
+002b55ca: 03e0       b        #0x2b55d4
+002b55cc: 1948       ldr      r0, [pc, #0x64]   ; =0x7e8496 "Err Dummy EntryWriteBaseDataFunction for [M2PS Application ::Media MS] "
+002b55ce: 02e0       b        #0x2b55d6
+002b55d0: 1948       ldr      r0, [pc, #0x64]   ; =0x7e84de "Dummy EntryWriteBaseDataFunction for [M2PS DB ::Media MS] Success "
+002b55d2: 00e0       b        #0x2b55d6
+002b55d4: 1948       ldr      r0, [pc, #0x64]   ; =0x7e8521 "Err Dummy EntryWriteBaseDataFunction for [M2PS DB ::Media MS] "
+002b55d6: 0224       movs     r4, #2
+002b55d8: fff790fd   bl       #0x2b50fc
+002b55dc: 6c60       str      r4, [r5, #4]
+002b55de: 0420       movs     r0, #4
+002b55e0: 1149       ldr      r1, [pc, #0x44]   ; =0x2b5725
+002b55e2: 2346       mov      r3, r4
+002b55e4: 164a       ldr      r2, [pc, #0x58]   ; =0xa36c50
+002b55e6: fcf701fc   bl       #0x2b1dec
+002b55ea: 0546       mov      r5, r0
+002b55ec: 58b9       cbnz     r0, #0x2b5606
+002b55ee: 1548       ldr      r0, [pc, #0x54]   ; =0x7e8560 "Dummy EntryWriteBaseDataFunction for [M2PS Application ::Media HDD] Success "
+002b55f0: fff784fd   bl       #0x2b50fc
+002b55f4: 2120       movs     r0, #0x21
+002b55f6: 0e49       ldr      r1, [pc, #0x38]   ; =0x2b5659
+002b55f8: 2346       mov      r3, r4
+002b55fa: 114a       ldr      r2, [pc, #0x44]   ; =0xa36c50
+002b55fc: fcf7f6fb   bl       #0x2b1dec
+002b5600: 0546       mov      r5, r0
+002b5602: 20b9       cbnz     r0, #0x2b560e
+002b5604: 01e0       b        #0x2b560a
+002b5606: 1048       ldr      r0, [pc, #0x40]   ; =0x7e85ad "Err Dummy EntryWriteBaseDataFunction for [M2PS Application ::Media HDD] "
+002b5608: 02e0       b        #0x2b5610
+002b560a: 1048       ldr      r0, [pc, #0x40]   ; =0x7e85f6 "Dummy EntryWriteBaseDataFunction for [M2PS DB ::Media HDD] Success "
+002b560c: 00e0       b        #0x2b5610
+002b560e: 1048       ldr      r0, [pc, #0x40]   ; =0x7e863a "Err Dummy EntryWriteBaseDataFunction for [M2PS DB ::Media HDD] "
+002b5610: fff774fd   bl       #0x2b50fc
+002b5614: 0f48       ldr      r0, [pc, #0x3c]   ; =0x7e867a "[FBM]LocalTestCall::LTC_01[%d]"
+002b5616: 2946       mov      r1, r5
+002b5618: bde8b040   pop.w    {r4, r5, r7, lr}
+002b561c: fff76ebd   b.w      #0x2b50fc
+002b5620: 4c6c       ldr      r4, [r1, #0x44]
+002b5622: a300       lsls     r3, r4, #2
+002b5624: 2f84       strh     r7, [r5, #0x20]
+002b5626: 7e00       lsls     r6, r7, #1
+002b5628: 2557       ldrsb    r5, [r4, r4]
+002b562a: 2b00       movs     r3, r5
+002b562c: 4a84       strh     r2, [r1, #0x22]
+002b562e: 7e00       lsls     r6, r7, #1
+002b5630: 5956       ldrsb    r1, [r3, r1]
+002b5632: 2b00       movs     r3, r5
+002b5634: 9684       strh     r6, [r2, #0x24]
+002b5636: 7e00       lsls     r6, r7, #1
+002b5638: de84       strh     r6, [r3, #0x26]
+002b563a: 7e00       lsls     r6, r7, #1
+002b563c: 2185       strh     r1, [r4, #0x28]
+002b563e: 7e00       lsls     r6, r7, #1
+002b5640: 506c       ldr      r0, [r2, #0x44]
+002b5642: a300       lsls     r3, r4, #2
+002b5644: 6085       strh     r0, [r4, #0x2a]
+002b5646: 7e00       lsls     r6, r7, #1

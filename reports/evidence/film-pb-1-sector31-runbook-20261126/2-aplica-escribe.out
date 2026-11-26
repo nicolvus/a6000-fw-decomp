@@ -1,0 +1,35 @@
+$ python3 scripts/film_pb1_sector31.py --host 127.0.0.1 --port 2323 --aplica --escribe --origen-volcado /nflasha4.img --destino /tmp
+== 1. alcance y proceso (127.0.0.1:2323) ==
+  telnet ok, uid=0  herramientas: pidof=pidof is /.net/bin/pidof  awk=awk: not found  sed=sed is /.net/bin/sed  df=df: not found  dd=dd is /.net/bin/dd  chmod=chmod is /.net/bin/chmod  md5sum=md5sum is /.net/bin/md5sum  grep=grep is /.net/bin/grep  cat=cat is /.net/bin/cat  sync=sync is /.net/bin/sync
+  PID im.elf=289  libmpr base=0xaeba5000
+  /tmp/ptcall: no está (se subiría en la fase de escritura)
+== 4. comprobaciones de escritura ==
+  origen del volcado: -rw-r--r--    1 0        0        10485760 Nov 26 05:35 /nflasha4.img
+  AVISO: no puedo leer el espacio libre con df; --destino /tmp se da por bueno
+  tarjeta: /tmp (espacio sin comprobar) (necesito 20480 KiB)
+== 5. volcado de rollback -> /tmp/nflasha4-20261126-023703.bin ==
+  10240+0 records in
+  10240+0 records out
+  -rw-r--r--    1 0        0        10485760 Nov 26 05:37 /tmp/nflasha4-20261126-023703.bin
+  md5: b41428274b9ded649e63eb969d2551f9  /tmp/nflasha4-20261126-023703.bin
+  vuelta atrás: dd if=/tmp/nflasha4-20261126-023703.bin of=/nflasha4.img bs=1024   (y reiniciar el MPR)
+== 6. subida de ptcall -> /tmp/ptcall ==
+  ptcall subido: /tmp/ptcall (10092 B, md5 6e20b3a6ca4cd00fa4affe4ae0b24332)
+  anillo: X=0x904e2000 A=0 B=0 libres=1023
+== tabla de sectores: antes ==
+  antes: idx 10: sector=0x31 handle=0 valido=0 OM=0
+  antes: con handle != 0: 1/30 -> idx 23(0xa0 h1)
+== 7. línea 1: «FBM EWBDFD 4 3 0» (dar función a (userID 4, mediaID 3) con el dummy 0x2B5184) ==
+  consumida por el monitor (A 0 -> 17)
+== 8. línea 2: «FBM InitB 6 3» (crear el sector 0x31: OM 6 = M2PS, media 3 = MS1) ==
+  consumida por el monitor (A 17 -> 31)
+== 9. nueva lectura de la tabla ==
+  después: idx 10: sector=0x31 handle=3 valido=1 OM=6
+  después: con handle != 0: 2/30 -> idx 10(0x31 h3), idx 23(0xa0 h1)
+
+  ANTES  : sector=0x31 handle=0 valido=0 OM=0  -> NO existe   (1/30 con handle)
+  DESPUÉS: sector=0x31 handle=3 valido=1 OM=6  -> EXISTE   (2/30 con handle)
+
+  VEREDICTO: OK — sector 0x31 en el idx 10 con handle=3 y valido=1
+
+  Siguiente: plan de prueba (reports/film-pb-1-sector31-runbook-20261126.md §5).

@@ -1,0 +1,115 @@
+[fbm_run] SD /home/nicolas/A6000-SD -> /tmp/tmpbnj7bniq/sd.head (8388608 sectores)
+[fbm_run] overlay /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/reports/evidence/fbm-sector31-c-20261126/runX-control-fn-dummy/overlay · nflasha4 dev_nflasha4.bin · SHIMENV CVWAIT=0 POKE=fef348 OPENVIEW=view/ROOT,view/STLREC OPENVIEWAT=40 OPENVIEWGAP=14 CALMA=4 CALMA0=10 STARTEV=11004002:100,11004012,11004013 POSTROOTEV=11004002:e3 STARTGAP=f SALVAGE=0 SKIPFN=7fa3d4=0 ACKQ0=58003f KEYQ=7a0020 KEYONACTIVE=0 KEYINIT=7000001:1:177,7025:3:27 KEYINITON= KEYINITAFTER=not_user_operation OPENVIEWARG=3 NO4015E=1 BKMULTIPTR=1 FRONTRM=3 FRONTARG2=1 FRONTRMDELAY=3 INSHORT=1 SDIMG=1 SDSECT=8388608 NULLMWF=1 SYNCWAIT=37807c:300 WAIT=120 FBMTAB=1 NFLASH4=a5ab15ca7439 FBMPROBE=1 NF4DUMP=1
+[fbm_run] qemu-system-arm -M virt -cpu cortex-a15 -smp 8 -accel tcg,thread=multi,tb-size=512 -m 1536 -kernel /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/analysis/gui/g22/harness/vmlinuz -initrd /tmp/tmpbnj7bniq/initrd.gz -append console=ttyAMA0 quiet loglevel=3 -serial file:/home/nicolas/Docum
+[fbm_run] marcador final '--- IMEXIT' a los 135 s de pared
+[fbm_run] qemu terminó a los 140 s (rc=0)
+[fbm_run] consola.log: 10879 B en /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/reports/evidence/fbm-sector31-c-20261126/runX-control-fn-dummy/consola.log
+[shim] FBMTAB libmpr base=0xae35f000 tabla=0xaed9599c gancho@7126e6=28 f2 8b fc cueva@93b000=30 b5 79 f5 0d f4 7c 21
+[shim] FBMTAB t=0s llena=0 nh=0 lst:
+[shim] FBMTAB t=0s idx= 0 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 1 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 2 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 3 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 4 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 5 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 6 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 7 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 8 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 9 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=10 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=11 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=12 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=13 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=14 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=15 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=16 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=17 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=18 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=19 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=20 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=21 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=22 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=23 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=24 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=25 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=26 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=27 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=28 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=29 sector=000000 handle=0000000000 valido=0 om=0
+alive= threads=0 lineas=1915 modulos=48
+[shim] NFLASH4: 10485760 B de /usr/share/nflasha4.img
+[shim] NFLASH4 ioctl 0x6e07 -> lblk 0x20000 x 80
+[shim] NFLASH4 open(/sys/block/nflasha0/nflasha0p4/start) -> 35 (100864
+NF4IMG -rw-r--r--    1 root     root      10485760 Nov 26 05:35 /cam/nflasha4.img
+NF4IMG -rw-r--r--    1 root     root      10485760 Nov 26 05:34 /cam/usr/share/nflasha4.img
+NF4DIFF bytes_distintos=394
+NF4DIFF sectores=1258 1259 
+NF4DIFF sector=1258 off=644096 
+NF4DIFF sector=1259 off=644608 
+--- FBMTAB (sub-arnes FBM)
+[shim] FBMTAB libmpr base=0xae35f000 tabla=0xaed9599c gancho@7126e6=28 f2 8b fc cueva@93b000=30 b5 79 f5 0d f4 7c 21
+[shim] FBMTAB t=0s llena=0 nh=0 lst:[shim] GPUEMU: timbre de la GPU en libObj+0x6c4c46 (0xaf5e6c46)
+[shim] FBMTAB t=0s idx= 0 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 1 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 2 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 3 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 4 sector=000000 handle=0000000000 valido=0 om=0
+[shim] EFCS: emulación armada (libObj 0xaef22000)[shim] FBMTAB t=0s idx= 5 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 6 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 7 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 8 sector=000000 handle=0000000000 valido=0 om=0
+[shim] [shim] FBMTAB t=0s idx= 9 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=10 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=11 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=12 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=13 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=14 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=15 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=16 sector=000000 handle=0000000000 valido=0 om=0
+[shim] NULLMWF: +0x2f850 protegida (this NULL = regreso inmediato)[shim] FBMTAB t=0s idx=17 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=18 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=19 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=20 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=21 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=22 sector=000000 handle=0000000000 valido=0 om=0
+[shim] [shim] FBMTAB t=0s idx=23 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=24 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=25 sector=000000 handle=0000000000 valido=0 om=0
+[shim] [shim] FBMTAB t=0s idx=26 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=27 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=28 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=29 sector=000000 handle=0000000000 valido=0 om=0
+--- FBM / FlashLib (log del invitado)
+[shim] FBMTAB libmpr base=0xae35f000 tabla=0xaed9599c gancho@7126e6=28 f2 8b fc cueva@93b000=30 b5 79 f5 0d f4 7c 21
+[shim] FBMTAB t=0s llena=0 nh=0 lst:[shim] GPUEMU: timbre de la GPU en libObj+0x6c4c46 (0xaf5e6c46)
+[shim] FBMTAB t=0s idx= 0 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 1 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 2 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 3 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 4 sector=000000 handle=0000000000 valido=0 om=0
+[shim] EFCS: emulación armada (libObj 0xaef22000)[shim] FBMTAB t=0s idx= 5 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 6 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 7 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 8 sector=000000 handle=0000000000 valido=0 om=0
+[shim] [shim] FBMTAB t=0s idx= 9 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=10 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=11 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=12 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=13 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=14 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=15 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=16 sector=000000 handle=0000000000 valido=0 om=0
+[shim] NULLMWF: +0x2f850 protegida (this NULL = regreso inmediato)[shim] FBMTAB t=0s idx=17 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=18 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=19 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=20 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=21 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=22 sector=000000 handle=0000000000 valido=0 om=0
+[shim] [shim] FBMTAB t=0s idx=23 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=24 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=25 sector=000000 handle=0000000000 valido=0 om=0
+[shim] [shim] FBMTAB t=0s idx=26 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=27 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=28 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=29 sector=000000 handle=0000000000 valido=0 om=0
+--- IMEXIT/estado

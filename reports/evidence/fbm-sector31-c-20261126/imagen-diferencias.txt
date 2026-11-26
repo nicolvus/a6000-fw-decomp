@@ -1,0 +1,18 @@
+origen  : analysis/camera-dumps/nand-20261020/dev_nflasha4.bin  sha256 a5ab15ca743950d6a8c64c17a8ed024cddc6d5c94a24a08cf60ca5d4e9ac7247  (10485760 B)
+
+== reports/evidence/fbm-sector31-c-20261126/runC1/nflash4.img
+   sha256 6d2ab43aa2fe386dc4c4df0e3ed3c8633328f74d24112ef2e87770b57a5dca51  (10485760 B)
+   bytes distintos frente al origen: 1300 en 3 página(s) de 1 KiB
+   0x09d400..0x09d7ff sha256 56c0b96d516d1570f5ccd6de8f8bf0ccc10fac8c5bf7de7b6582e043bb069507
+      seq=706 cks=0xac06d58f
+      fileType 0x81 status=1 bloquesBase=1 bloquesMax=3 cola=0xff
+      fileType 0xa0 status=0 bloquesBase=1 bloquesMax=1 cola=0xff
+      fileType 0x31 status=0 bloquesBase=5 bloquesMax=7 cola=0xff
+   0x0bd400..0x0bd7ff sha256 5fcfc28d58ce7a7cd7db9f775273d921c410a3f9bba3fde71e5330dd2abbc82a
+      seq=707 cks=0xad06d599
+      fileType 0x81 status=1 bloquesBase=1 bloquesMax=3 cola=0xff
+      fileType 0xa0 status=0 bloquesBase=1 bloquesMax=1 cola=0xff
+      fileType 0x31 status=0 bloquesBase=5 bloquesMax=7 cola=0xff
+   0x380000..0x3803ff sha256 6a7121c0d5ef4258020a93b6d119a11a4fbe74e8437184340aa1067bd5abffaf
+      página de datos base: primeros 32 B 80 00 00 00 02 00 06 03 84 03 f0 fa 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+   página de control 0x9D400 == la de la vía de consola (run3): True

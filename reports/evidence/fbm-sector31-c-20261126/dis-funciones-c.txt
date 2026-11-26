@@ -1,0 +1,443 @@
+binario: analysis/camera-extract/usr/lib/libmpr.so (10321204 B)
+
+==== EntryWriteBaseDataFunction 0x2B1DEC  (userID, fn, arg, mediaID)
+  002b1dec: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}
+  002b1df0: 0446       mov      r4, r0
+  002b1df2: 00af       add      r7, sp, #0
+  002b1df4: 0e46       mov      r6, r1
+  002b1df6: 1546       mov      r5, r2
+  002b1df8: 0c48       ldr      r0, [pc, #0x30]
+  002b1dfa: 1a46       mov      r2, r3
+  002b1dfc: 2146       mov      r1, r4
+  002b1dfe: 9846       mov      r8, r3
+  002b1e00: 03f03ef9   bl       #0x2b5080
+  002b1e04: 0023       movs     r3, #0
+  002b1e06: 08e0       b        #0x2b1e1a
+  002b1e08: a042       cmp      r0, r4
+  002b1e0a: 04d1       bne      #0x2b1e16
+  002b1e0c: 5168       ldr      r1, [r2, #4]
+  002b1e0e: 4145       cmp      r1, r8
+  002b1e10: 04bf       itt      eq
+  002b1e12: 1661       streq    r6, [r2, #0x10]
+  002b1e14: 5561       streq    r5, [r2, #0x14]
+  002b1e16: 0133       adds     r3, #1
+  002b1e18: dbb2       uxtb     r3, r3
+  002b1e1a: 0548       ldr      r0, [pc, #0x14]
+  002b1e1c: 1821       movs     r1, #0x18
+  002b1e1e: 5943       muls     r1, r3, r1
+  002b1e20: 4218       adds     r2, r0, r1
+  002b1e22: 4058       ldr      r0, [r0, r1]
+  002b1e24: 0028       cmp      r0, #0
+  002b1e26: efd1       bne      #0x2b1e08
+  002b1e28: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}
+  002b1e2c: 8066       str      r0, [r0, #0x68]
+  002b1e2e: 7e00       lsls     r6, r7, #1
+  002b1e30: fc23       movs     r3, #0xfc
+  002b1e32: 9d00       lsls     r5, r3, #2
+  002b1e34: b0b5       push     {r4, r5, r7, lr}
+
+==== EWBDFD handler 0x2B5198
+  002b5198: 0328       cmp      r0, #3
+  002b519a: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}
+  002b519e: 82b0       sub      sp, #8
+  002b51a0: 0c46       mov      r4, r1
+  002b51a2: 02af       add      r7, sp, #8
+  002b51a4: 25dd       ble      #0x2b51f2
+  002b51a6: cb68       ldr      r3, [r1, #0xc]
+  002b51a8: 0d1d       adds     r5, r1, #4
+  002b51aa: 1548       ldr      r0, [pc, #0x54]
+  002b51ac: 05f10408   add.w    r8, r5, #4
+  002b51b0: 0093       str      r3, [sp]
+  002b51b2: 0ec9       ldm      r1, {r1, r2, r3}
+  002b51b4: fff7a2ff   bl       #0x2b50fc
+  002b51b8: 6068       ldr      r0, [r4, #4]
+  002b51ba: 4af32efe   bl       #0x5ffe1a
+  002b51be: 0646       mov      r6, r0
+  002b51c0: 6868       ldr      r0, [r5, #4]
+  002b51c2: 4af32afe   bl       #0x5ffe1a
+  002b51c6: 0446       mov      r4, r0
+  002b51c8: d8f80400   ldr.w    r0, [r8, #4]
+  002b51cc: 4af325fe   bl       #0x5ffe1a
+  002b51d0: 0c49       ldr      r1, [pc, #0x30]
+  002b51d2: 2346       mov      r3, r4
+  002b51d4: 0246       mov      r2, r0
+
+==== dummy de fabrica 0x2B5184 (el que usa EWBDFD)
+  002b5184: 80b5       push     {r7, lr}
+  002b5186: 0146       mov      r1, r0
+  002b5188: 00af       add      r7, sp, #0
+  002b518a: 0248       ldr      r0, [pc, #8]
+  002b518c: fff7b6ff   bl       #0x2b50fc
+  002b5190: 0020       movs     r0, #0
+  002b5192: 80bd       pop      {r7, pc}
+  002b5194: 6781       strh     r7, [r4, #0xa]
+
+==== GetSectorHandleFromOperatioModeAndMediaID 0x2B3000 (guarda fn!=0 en 0x2B301A)
+  002b3000: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}
+  002b3004: 85b0       sub      sp, #0x14
+  002b3006: 8046       mov      r8, r0
+  002b3008: 02af       add      r7, sp, #8
+  002b300a: 1d48       ldr      r0, [pc, #0x74]
+  002b300c: 0e46       mov      r6, r1
+  002b300e: 9146       mov      sb, r2
+  002b3010: fef72aff   bl       #0x2b1e68
+  002b3014: 1b4b       ldr      r3, [pc, #0x6c]
+  002b3016: 09e0       b        #0x2b302c
+  002b3018: 5a68       ldr      r2, [r3, #4]
+  002b301a: 32b1       cbz      r2, #0x2b302a
+  002b301c: 1a68       ldr      r2, [r3]
+  002b301e: 4245       cmp      r2, r8
+  002b3020: 03d1       bne      #0x2b302a
+  002b3022: 53f8082c   ldr      r2, [r3, #-0x8]
+  002b3026: b242       cmp      r2, r6
+  002b3028: 21d0       beq      #0x2b306e
+  002b302a: 1833       adds     r3, #0x18
+  002b302c: 53f80c5c   ldr      r5, [r3, #-0xc]
+  002b3030: 002d       cmp      r5, #0
+  002b3032: f1d1       bne      #0x2b3018
+  002b3034: 144c       ldr      r4, [pc, #0x50]
+  002b3036: 07e0       b        #0x2b3048
+  002b3038: fb79       ldrb     r3, [r7, #7]
+  002b303a: 1421       movs     r1, #0x14
+  002b303c: 134a       ldr      r2, [pc, #0x4c]
+  002b303e: 01fb0323   mla      r3, r1, r3, r2
+  002b3042: 5b68       ldr      r3, [r3, #4]
+  002b3044: c9f80030   str.w    r3, [sb]
+  002b3048: d9f80030   ldr.w    r3, [sb]
+  002b304c: 4146       mov      r1, r8
+  002b304e: 3246       mov      r2, r6
+  002b3050: 0f48       ldr      r0, [pc, #0x3c]
+  002b3052: 0093       str      r3, [sp]
+  002b3054: 2b46       mov      r3, r5
+  002b3056: 02f013f8   bl       #0x2b5080
+  002b305a: 0948       ldr      r0, [pc, #0x24]
+  002b305c: 2146       mov      r1, r4
+  002b305e: fef77bff   bl       #0x2b1f58
+  002b3062: 2046       mov      r0, r4
+  002b3064: 07f10c07   add.w    r7, r7, #0xc
+  002b3068: bd46       mov      sp, r7
+  002b306a: bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}
+  002b306e: 2846       mov      r0, r5
+
+==== GetSectorManagerInfoIdx 0x2B2F48 (NO llama a fn)
+  002b2f48: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}
+  002b2f4c: 82b0       sub      sp, #8
+  002b2f4e: 00af       add      r7, sp, #0
+  002b2f50: 9046       mov      r8, r2
+  002b2f52: 3a1d       adds     r2, r7, #4
+  002b2f54: 0d46       mov      r5, r1
+  002b2f56: 0646       mov      r6, r0
+  002b2f58: fff74cff   bl       #0x2b2df4
+  002b2f5c: 2048       ldr      r0, [pc, #0x80]
+  002b2f5e: fef783ff   bl       #0x2b1e68
+  002b2f62: 2b46       mov      r3, r5
+  002b2f64: 1f48       ldr      r0, [pc, #0x7c]
+  002b2f66: 3246       mov      r2, r6
+  002b2f68: 7968       ldr      r1, [r7, #4]
+  002b2f6a: 02f089f8   bl       #0x2b5080
+  002b2f6e: 2946       mov      r1, r5
+  002b2f70: 3a46       mov      r2, r7
+  002b2f72: 3046       mov      r0, r6
+  002b2f74: fff7d0fd   bl       #0x2b2b18
+  002b2f78: 3968       ldr      r1, [r7]
+  002b2f7a: 3246       mov      r2, r6
+  002b2f7c: 2b46       mov      r3, r5
+  002b2f7e: 0446       mov      r4, r0
+  002b2f80: 1948       ldr      r0, [pc, #0x64]
+  002b2f82: 02f07df8   bl       #0x2b5080
+  002b2f86: 0cbb       cbnz     r4, #0x2b2fcc
+  002b2f88: 3968       ldr      r1, [r7]
+  002b2f8a: 2546       mov      r5, r4
+  002b2f8c: 0fe0       b        #0x2b2fae
+  002b2f8e: 174a       ldr      r2, [pc, #0x5c]
+  002b2f90: 1423       movs     r3, #0x14
+  002b2f92: 6b43       muls     r3, r5, r3
+  002b2f94: d618       adds     r6, r2, r3
+  002b2f96: d358       ldr      r3, [r2, r3]
+
+==== 0x2B2B18 (userID+mediaID -> fileType; NO llama a fn)
+  002b2b18: f8b5       push     {r3, r4, r5, r6, r7, lr}
+  002b2b1a: 0446       mov      r4, r0
+  002b2b1c: 00af       add      r7, sp, #0
+  002b2b1e: 1148       ldr      r0, [pc, #0x44]
+  002b2b20: 0d46       mov      r5, r1
+  002b2b22: 1646       mov      r6, r2
+  002b2b24: fff7a0f9   bl       #0x2b1e68
+  002b2b28: 0023       movs     r3, #0
+  002b2b2a: 1946       mov      r1, r3
+  002b2b2c: 0ee0       b        #0x2b2b4c
+  002b2b2e: a042       cmp      r0, r4
+  002b2b30: 0ad1       bne      #0x2b2b48
+  002b2b32: d018       adds     r0, r2, r3
+  002b2b34: 4068       ldr      r0, [r0, #4]
+  002b2b36: a842       cmp      r0, r5
+  002b2b38: 06d1       bne      #0x2b2b48
+  002b2b3a: 1823       movs     r3, #0x18
+  002b2b3c: 0024       movs     r4, #0
+  002b2b3e: 03fb0122   mla      r2, r3, r1, r2
+  002b2b42: 9368       ldr      r3, [r2, #8]
+  002b2b44: 3360       str      r3, [r6]
+  002b2b46: 06e0       b        #0x2b2b56
+  002b2b48: 0131       adds     r1, #1
+  002b2b4a: 1833       adds     r3, #0x18
+  002b2b4c: 064a       ldr      r2, [pc, #0x18]
+  002b2b4e: d058       ldr      r0, [r2, r3]
+  002b2b50: 0028       cmp      r0, #0
+  002b2b52: ecd1       bne      #0x2b2b2e
+  002b2b54: 054c       ldr      r4, [pc, #0x14]
+  002b2b56: 0348       ldr      r0, [pc, #0xc]
+  002b2b58: 2146       mov      r1, r4
+  002b2b5a: fff7fdf9   bl       #0x2b1f58
+  002b2b5e: 2046       mov      r0, r4
+  002b2b60: f8bd       pop      {r3, r4, r5, r6, r7, pc}
+  002b2b62: 00bf       nop      
+  002b2b64: de6e       ldr      r6, [r3, #0x6c]
+  002b2b66: 7e00       lsls     r6, r7, #1
+
+==== 0x2B3F7C (SI llama a fn: blx r3 en 0x2B3FC8, r0 = arg)
+  002b3f7c: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}
+  002b3f80: 83b0       sub      sp, #0xc
+  002b3f82: 8046       mov      r8, r0
+  002b3f84: 02af       add      r7, sp, #8
+  002b3f86: 2648       ldr      r0, [pc, #0x98]
+  002b3f88: 0e46       mov      r6, r1
+  002b3f8a: fdf76dff   bl       #0x2b1e68
+  002b3f8e: 4046       mov      r0, r8
+  002b3f90: fdf71cff   bl       #0x2b1dcc
+  002b3f94: 00b1       cbz      r0, #0x2b3f98
+  002b3f96: 0120       movs     r0, #1
+  002b3f98: 4146       mov      r1, r8
+  002b3f9a: 3246       mov      r2, r6
+  002b3f9c: fff7acff   bl       #0x2b3ef8
+  002b3fa0: 4ff00009   mov.w    sb, #0
+  002b3fa4: 27e0       b        #0x2b3ff6
+  002b3fa6: e268       ldr      r2, [r4, #0xc]
+  002b3fa8: 4245       cmp      r2, r8
+  002b3faa: 20d1       bne      #0x2b3fee
+  002b3fac: 6268       ldr      r2, [r4, #4]
+  002b3fae: b242       cmp      r2, r6
+  002b3fb0: 1dd1       bne      #0x2b3fee
+  002b3fb2: 2269       ldr      r2, [r4, #0x10]
+  002b3fb4: dab1       cbz      r2, #0x2b3fee
+  002b3fb6: 0096       str      r6, [sp]
+  002b3fb8: 1a48       ldr      r0, [pc, #0x68]
+  002b3fba: c958       ldr      r1, [r1, r3]
+  002b3fbc: 6369       ldr      r3, [r4, #0x14]
+  002b3fbe: 01f05ff8   bl       #0x2b5080
+  002b3fc2: 2369       ldr      r3, [r4, #0x10]
+  002b3fc4: 9bb1       cbz      r3, #0x2b3fee
+  002b3fc6: 6069       ldr      r0, [r4, #0x14]
+  002b3fc8: 9847       blx      r3
+  002b3fca: 0546       mov      r5, r0
+  002b3fcc: 1648       ldr      r0, [pc, #0x58]
+  002b3fce: 2946       mov      r1, r5
+  002b3fd0: 01f056f8   bl       #0x2b5080
+  002b3fd4: 5db1       cbz      r5, #0x2b3fee
+  002b3fd6: 2388       ldrh     r3, [r4]
+  002b3fd8: 2a0c       lsrs     r2, r5, #0x10
+  002b3fda: 1020       movs     r0, #0x10
+
+==== BackupMgr::InitBackupData 0x2B43F0 (OM, mediaID)
+  002b43f0: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}
+  002b43f4: 9ab0       sub      sp, #0x68
+  002b43f6: 02af       add      r7, sp, #8
+  002b43f8: 0646       mov      r6, r0
+  002b43fa: 0d46       mov      r5, r1
+  002b43fc: fdf7defc   bl       #0x2b1dbc
+  002b4400: 18b1       cbz      r0, #0x2b440a
+  002b4402: 07f15000   add.w    r0, r7, #0x50
+  002b4406: 4bf377fa   bl       #0x5ff8f8
+  002b440a: 3146       mov      r1, r6
+  002b440c: 2a46       mov      r2, r5
+  002b440e: 5448       ldr      r0, [pc, #0x150]
+  002b4410: 00f036fe   bl       #0x2b5080
+  002b4414: 5348       ldr      r0, [pc, #0x14c]
+  002b4416: fdf727fd   bl       #0x2b1e68
+  002b441a: 69f684ea   blx      #0x11d924
+  002b441e: 3046       mov      r0, r6
+  002b4420: fdf7d4fc   bl       #0x2b1dcc
+  002b4424: 0128       cmp      r0, #1
+  002b4426: 8046       mov      r8, r0
+  002b4428: 08d0       beq      #0x2b443c
+  002b442a: 4f4b       ldr      r3, [pc, #0x13c]
+  002b442c: 012d       cmp      r5, #1
+  002b442e: 1e60       str      r6, [r3]
+  002b4430: 4e4b       ldr      r3, [pc, #0x138]
+  002b4432: 1d60       str      r5, [r3]
+  002b4434: 06d1       bne      #0x2b4444
+  002b4436: 4e4b       ldr      r3, [pc, #0x138]
+  002b4438: 1e60       str      r6, [r3]
+  002b443a: 03e0       b        #0x2b4444
+  002b443c: 4d4b       ldr      r3, [pc, #0x134]
+  002b443e: 1e60       str      r6, [r3]
+  002b4440: 4d4b       ldr      r3, [pc, #0x134]
+  002b4442: 1d60       str      r5, [r3]
+  002b4444: 3046       mov      r0, r6
+  002b4446: 2946       mov      r1, r5
+  002b4448: fff7f2fd   bl       #0x2b4030
+  002b444c: 0446       mov      r4, r0
+  002b444e: 60b1       cbz      r0, #0x2b446a
+  002b4450: b8f1010f   cmp.w    r8, #1
+  002b4454: 4ff00003   mov.w    r3, #0
+  002b4458: 05d0       beq      #0x2b4466
+  002b445a: 434a       ldr      r2, [pc, #0x10c]
+  002b445c: 012d       cmp      r5, #1
+  002b445e: 1360       str      r3, [r2]
+  002b4460: 03d1       bne      #0x2b446a
+  002b4462: 434a       ldr      r2, [pc, #0x10c]
+  002b4464: 00e0       b        #0x2b4468
+  002b4466: 434a       ldr      r2, [pc, #0x10c]
+  002b4468: 1360       str      r3, [r2]
+  002b446a: fdf7a7fc   bl       #0x2b1dbc
+  002b446e: 78b1       cbz      r0, #0x2b4490
+  002b4470: 07f15000   add.w    r0, r7, #0x50
+  002b4474: 4ff00108   mov.w    r8, #1
+  002b4478: 4bf360fa   bl       #0x5ff93c
+  002b447c: 07f15000   add.w    r0, r7, #0x50
+  002b4480: 0221       movs     r1, #2
+  002b4482: 4bf371fa   bl       #0x5ff968
+  002b4486: 40f23933   movw     r3, #0x339
+  002b448a: 7b60       str      r3, [r7, #4]
+  002b448c: 3860       str      r0, [r7]
+  002b448e: 00e0       b        #0x2b4492
+  002b4490: 8046       mov      r8, r0
+  002b4492: 6bf6a6ee   blx      #0x1201e0
+  002b4496: 6af6b8ec   blx      #0x11ee08
+  002b449a: fdf78ffc   bl       #0x2b1dbc
+  002b449e: a0b1       cbz      r0, #0x2b44ca
+  002b44a0: 07f15000   add.w    r0, r7, #0x50
+  002b44a4: 4bf34afa   bl       #0x5ff93c
+  002b44a8: 07f15000   add.w    r0, r7, #0x50
+  002b44ac: 0221       movs     r1, #2
+
+==== BackupMgr::WriteBaseData 0x2B4030
+  002b4030: 2de9f047   push.w   {r4, r5, r6, r7, r8, sb, sl, lr}
+  002b4034: 84b0       sub      sp, #0x10
+  002b4036: 00af       add      r7, sp, #0
+  002b4038: 0546       mov      r5, r0
+  002b403a: 07f11009   add.w    sb, r7, #0x10
+  002b403e: 5448       ldr      r0, [pc, #0x150]
+  002b4040: 0e46       mov      r6, r1
+  002b4042: 4ff00008   mov.w    r8, #0
+  002b4046: c7f80480   str.w    r8, [r7, #4]
+  002b404a: c7f80080   str.w    r8, [r7]
+  002b404e: fdf70bff   bl       #0x2b1e68
+  002b4052: 2946       mov      r1, r5
+  002b4054: 4f48       ldr      r0, [pc, #0x13c]
+  002b4056: 01f013f8   bl       #0x2b5080
+  002b405a: 4f48       ldr      r0, [pc, #0x13c]
+  002b405c: 49f8108d   str      r8, [sb, #-0x10]!
+  002b4060: 22f7eef9   bl       #0x1d6440
+  002b4064: 2846       mov      r0, r5
+  002b4066: 3146       mov      r1, r6
+  002b4068: 3a46       mov      r2, r7
+  002b406a: fef7c9ff   bl       #0x2b3000
+  002b406e: 0446       mov      r4, r0
+  002b4070: 0028       cmp      r0, #0
+  002b4072: 43d1       bne      #0x2b40fc
+  002b4074: d7f80080   ldr.w    r8, [r7]
+  002b4078: b8f1000f   cmp.w    r8, #0
+  002b407c: 37d1       bne      #0x2b40ee
+  002b407e: 3146       mov      r1, r6
+  002b4080: 2846       mov      r0, r5
+  002b4082: 07f10802   add.w    r2, r7, #8
+  002b4086: fff7e9fb   bl       #0x2b385c
+  002b408a: b968       ldr      r1, [r7, #8]
+  002b408c: 0446       mov      r4, r0
+  002b408e: 4348       ldr      r0, [pc, #0x10c]
+  002b4090: 00f0f6ff   bl       #0x2b5080
+  002b4094: 002c       cmp      r4, #0
+  002b4096: 35d1       bne      #0x2b4104
+  002b4098: 3146       mov      r1, r6
+  002b409a: b868       ldr      r0, [r7, #8]
+  002b409c: 07f10f02   add.w    r2, r7, #0xf
+  002b40a0: fef7d8fe   bl       #0x2b2e54
+  002b40a4: f97b       ldrb     r1, [r7, #0xf]
+  002b40a6: 0446       mov      r4, r0
+  002b40a8: 3d48       ldr      r0, [pc, #0xf4]
+  002b40aa: 00f0e9ff   bl       #0x2b5080
+  002b40ae: 64bb       cbnz     r4, #0x2b410a
+  002b40b0: fb7b       ldrb     r3, [r7, #0xf]
+  002b40b2: 4ff0140a   mov.w    sl, #0x14
+  002b40b6: dff8f880   ldr.w    r8, [pc, #0xf8]
+  002b40ba: 2146       mov      r1, r4
+  002b40bc: 3a46       mov      r2, r7
+  002b40be: 0afb03f3   mul      r3, sl, r3
+  002b40c2: 58f80300   ldr.w    r0, [r8, r3]
+  002b40c6: 3b1d       adds     r3, r7, #4
+  002b40c8: 6bf6c8ec   blx      #0x11fa5c
+  002b40cc: 00bb       cbnz     r0, #0x2b4110
+  002b40ce: fb7b       ldrb     r3, [r7, #0xf]
+  002b40d0: 7a68       ldr      r2, [r7, #4]
+  002b40d2: 0afb03fa   mul      sl, sl, r3
+  002b40d6: 08eb0a03   add.w    r3, r8, sl
+  002b40da: 48f80a20   str.w    r2, [r8, sl]
+
+==== WriteBaseData: cola TermSectorData 0x2B4164
+  002b4150: 1548       ldr      r0, [pc, #0x54]
+  002b4152: 3968       ldr      r1, [r7]
+  002b4154: 00f094ff   bl       #0x2b5080
+  002b4158: 04e0       b        #0x2b4164
+  002b415a: fef767f9   bl       #0x2b242c
+  002b415e: 40f68a79   movw     sb, #0xf8a
+  002b4162: 0446       mov      r4, r0
+  002b4164: 3868       ldr      r0, [r7]
+
+==== DvdFlashBackupLib::CreateSector 0x2A8750 (rechazos)
+  002a8750: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+  002a8754: 89b0       sub      sp, #0x24
+  002a8756: 02af       add      r7, sp, #8
+  002a8758: a54e       ldr      r6, [pc, #0x294]
+  002a875a: 0546       mov      r5, r0
+  002a875c: d7f84090   ldr.w    sb, [r7, #0x40]
+  002a8760: 8846       mov      r8, r1
+  002a8762: fa60       str      r2, [r7, #0xc]
+  002a8764: 0022       movs     r2, #0
+  002a8766: bb60       str      r3, [r7, #8]
+  002a8768: 83b2       uxth     r3, r0
+  002a876a: 7a61       str      r2, [r7, #0x14]
+  002a876c: 1946       mov      r1, r3
+  002a876e: 3a61       str      r2, [r7, #0x10]
+  002a8770: 4ff48060   mov.w    r0, #0x400
+  002a8774: c9f80020   str.w    r2, [sb]
+  002a8778: 3270       strb     r2, [r6]
+  002a877a: 7270       strb     r2, [r6, #1]
+  002a877c: 7b60       str      r3, [r7, #4]
+  002a877e: 1346       mov      r3, r2
+  002a8780: 07f074fd   bl       #0x2b026c
+  002a8784: ba68       ldr      r2, [r7, #8]
+  002a8786: fb68       ldr      r3, [r7, #0xc]
+  002a8788: 2946       mov      r1, r5
+  002a878a: 9a48       ldr      r0, [pc, #0x268]
+  002a878c: 0092       str      r2, [sp]
+  002a878e: 4246       mov      r2, r8
+  002a8790: 02f092fd   bl       #0x2ab2b8
+  002a8794: 984b       ldr      r3, [pc, #0x260]
+  002a8796: 1b78       ldrb     r3, [r3]
+  002a8798: 33b9       cbnz     r3, #0x2a87a8
+  002a879a: 9848       ldr      r0, [pc, #0x260]
+  002a879c: 4f24       movs     r4, #0x4f
+  002a879e: 02f007fe   bl       #0x2ab3b0
+  002a87a2: 40f63f33   movw     r3, #0xb3f
+  002a87a6: 3de1       b        #0x2a8a24
+  002a87a8: 954b       ldr      r3, [pc, #0x254]
+  002a87aa: 1b78       ldrb     r3, [r3]
+  002a87ac: 002b       cmp      r3, #0
+  002a87ae: 40f01181   bne.w    #0x2a89d4
+  002a87b2: 9448       ldr      r0, [pc, #0x250]
+  002a87b4: fdf7c8f9   bl       #0x2a5b48
+  002a87b8: 9348       ldr      r0, [pc, #0x24c]
+  002a87ba: 9249       ldr      r1, [pc, #0x248]
+  002a87bc: 07f0f4fe   bl       #0x2b05a8
+  002a87c0: b8f1010f   cmp.w    r8, #1
+  002a87c4: 44d1       bne      #0x2a8850
+  002a87c6: 9048       ldr      r0, [pc, #0x240]
+  002a87c8: 2946       mov      r1, r5
+  002a87ca: 07f11402   add.w    r2, r7, #0x14
+  002a87ce: 08f03ef8   bl       #0x2b084e
+  002a87d2: 0028       cmp      r0, #0
+  002a87d4: 53d1       bne      #0x2a887e
+  002a87d6: 8c48       ldr      r0, [pc, #0x230]
+  002a87d8: 7969       ldr      r1, [r7, #0x14]
+  002a87da: 08f015f8   bl       #0x2b0808
+  002a87de: ff28       cmp      r0, #0xff

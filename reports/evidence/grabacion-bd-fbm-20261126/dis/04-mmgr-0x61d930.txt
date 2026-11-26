@@ -1,0 +1,48 @@
+# analysis/camera-extract/usr/lib/libmpr.so: syms=1412 plt=930  rodata=0x7a3e90..0x956750
+
+===== 0x61d930 .. 0x61d990 =====
+0061d930: b0b5       push     {r4, r5, r7, lr}
+0061d932: 00af       add      r7, sp, #0
+0061d934: 0d46       mov      r5, r1
+0061d936: 0446       mov      r4, r0
+0061d938: fff7caff   bl       #0x61d8d0
+0061d93c: 082d       cmp      r5, #8
+0061d93e: 0146       mov      r1, r0
+0061d940: 01d1       bne      #0x61d946
+0061d942: 0420       movs     r0, #4
+0061d944: 02e0       b        #0x61d94c
+0061d946: 102d       cmp      r5, #0x10
+0061d948: 03d1       bne      #0x61d952
+0061d94a: 0620       movs     r0, #6
+0061d94c: 96f450fd   bl       #0x2b43f0
+0061d950: 18e0       b        #0x61d984
+0061d952: 062d       cmp      r5, #6
+0061d954: 01d1       bne      #0x61d95a
+0061d956: 0a20       movs     r0, #0xa
+0061d958: f8e7       b        #0x61d94c
+0061d95a: 012d       cmp      r5, #1
+0061d95c: 01d1       bne      #0x61d962
+0061d95e: 0720       movs     r0, #7
+0061d960: f4e7       b        #0x61d94c
+0061d962: 802d       cmp      r5, #0x80
+0061d964: 0ed0       beq      #0x61d984
+0061d966: b5f5807f   cmp.w    r5, #0x100
+0061d96a: 02d1       bne      #0x61d972
+0061d96c: e068       ldr      r0, [r4, #0xc]
+0061d96e: 0649       ldr      r1, [pc, #0x18]   ; =0x8e63e8 "InitBackupData : [XAVC] nothing to do
+"
+0061d970: 04e0       b        #0x61d97c
+0061d972: b5f5007f   cmp.w    r5, #0x200
+0061d976: 05d0       beq      #0x61d984
+0061d978: e068       ldr      r0, [r4, #0xc]
+0061d97a: 0449       ldr      r1, [pc, #0x10]   ; =0x8e640f "InitBackupData : [UNKNOWN]
+"
+0061d97c: 044b       ldr      r3, [pc, #0x10]   ; =0x9df25c
+0061d97e: 1a78       ldrb     r2, [r3]
+0061d980: 32f0dffe   bl       #0x650742
+0061d984: 0020       movs     r0, #0
+0061d986: b0bd       pop      {r4, r5, r7, pc}
+0061d988: e863       str      r0, [r5, #0x3c]
+0061d98a: 8e00       lsls     r6, r1, #2
+0061d98c: 0f64       str      r7, [r1, #0x40]
+0061d98e: 8e00       lsls     r6, r1, #2

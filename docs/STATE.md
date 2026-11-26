@@ -48,10 +48,18 @@
 > (`0x2B1DEC`), que la consola expone como `EWBDFD`/`CWBDF` — y como el test de fábrica **`LTC 1`**.
 > Secuencia que funciona en el arnés (`NFLASH4=1`): `FBM LTC 1` (o `FBM EWBDFD 4 3 0`) + `FBM InitB 6 3`
 > ⇒ idx 10 de `0xA3699C` = `0x31`/handle válido/`+8=1`, `BkRead(0x04,3)` = `0` (`0x10100003` con el dummy)
-> y **persiste** al reiniciar (1 300 B en `nflasha4`: páginas `0x9D400`, `0xBD780` y `0x380000`).
+> y **persiste** al reiniciar (1 300 B en `nflasha4`: páginas `0x9D400`, `0xBD400` y `0x380000`).
 > No escribir `nflasha4` a mano sin rollback.
+> **Parche C (26-11-2026, medido):** un `libmpr` que en cada arranque hace eso mismo — tras `FBM::Init`,
+> si `0xA3699C[10].handle==0` llama a `0x2B1DEC` para `(4,3)` y `(0x21,3)` con un stub propio y a
+> `InitBackupData(6,3)` — **crea y persiste**: la imagen que escribe es byte a byte la de la consola
+> (`6d2ab43a…`) y un segundo arranque con el `libmpr` de fábrica ya registra idx 10 (`CheckExistSector=0x45`,
+> `BkRead(0x04,3)=0x10100003`) **sin escribir un byte**; cuando el sector ya existe el parche tampoco escribe
+> (0 B). Dato nuevo de código: `0x2B3F7C` **sí llama** al `fn` registrado (`blx r3`, `r0=arg`) ⇒ el dummy de
+> fábrica `0x2B5185` aborta el arranque y hay que registrar un stub inocuo.
 > [Informe causa](../reports/film-pb-1-causa-fbm-20261126.md) ·
-> [informe consola/0x31](../reports/film-pb-1-sub-consola-sector31-20261126.md).
+> [informe consola/0x31](../reports/film-pb-1-sub-consola-sector31-20261126.md) ·
+> [informe parche C](../reports/fbm-sector31-c-persistente-20261126.md).
 
 
 ## Reproducción de vídeo — FILM-PB-1 (26-11-2026)

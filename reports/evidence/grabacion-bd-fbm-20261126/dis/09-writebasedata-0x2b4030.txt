@@ -1,0 +1,107 @@
+# analysis/camera-extract/usr/lib/libmpr.so: syms=1412 plt=930  rodata=0x7a3e90..0x956750
+
+===== 0x2b4030 .. 0x2b4150 =====
+002b4030: 2de9f047   push.w   {r4, r5, r6, r7, r8, sb, sl, lr}
+002b4034: 84b0       sub      sp, #0x10
+002b4036: 00af       add      r7, sp, #0
+002b4038: 0546       mov      r5, r0
+002b403a: 07f11009   add.w    sb, r7, #0x10
+002b403e: 5448       ldr      r0, [pc, #0x150]   ; =0x889af5 "WriteBaseData"
+002b4040: 0e46       mov      r6, r1
+002b4042: 4ff00008   mov.w    r8, #0
+002b4046: c7f80480   str.w    r8, [r7, #4]
+002b404a: c7f80080   str.w    r8, [r7]
+002b404e: fdf70bff   bl       #0x2b1e68
+002b4052: 2946       mov      r1, r5
+002b4054: 4f48       ldr      r0, [pc, #0x13c]   ; =0x7e79fc "  operationMode:%d"
+002b4056: 01f013f8   bl       #0x2b5080
+002b405a: 4f48       ldr      r0, [pc, #0x13c]   ; =0x9e6954
+002b405c: 49f8108d   str      r8, [sb, #-0x10]!
+002b4060: 22f7eef9   bl       #0x1d6440
+002b4064: 2846       mov      r0, r5
+002b4066: 3146       mov      r1, r6
+002b4068: 3a46       mov      r2, r7
+002b406a: fef7c9ff   bl       #0x2b3000
+002b406e: 0446       mov      r4, r0
+002b4070: 0028       cmp      r0, #0
+002b4072: 43d1       bne      #0x2b40fc
+002b4074: d7f80080   ldr.w    r8, [r7]
+002b4078: b8f1000f   cmp.w    r8, #0
+002b407c: 37d1       bne      #0x2b40ee
+002b407e: 3146       mov      r1, r6
+002b4080: 2846       mov      r0, r5
+002b4082: 07f10802   add.w    r2, r7, #8
+002b4086: fff7e9fb   bl       #0x2b385c
+002b408a: b968       ldr      r1, [r7, #8]
+002b408c: 0446       mov      r4, r0
+002b408e: 4348       ldr      r0, [pc, #0x10c]   ; =0x7e7a0f "[FBM]:WriteBaseData::::GetUserIDFromOperationModeAndMediaID   userID[%d]"
+002b4090: 00f0f6ff   bl       #0x2b5080
+002b4094: 002c       cmp      r4, #0
+002b4096: 35d1       bne      #0x2b4104
+002b4098: 3146       mov      r1, r6
+002b409a: b868       ldr      r0, [r7, #8]
+002b409c: 07f10f02   add.w    r2, r7, #0xf
+002b40a0: fef7d8fe   bl       #0x2b2e54
+002b40a4: f97b       ldrb     r1, [r7, #0xf]
+002b40a6: 0446       mov      r4, r0
+002b40a8: 3d48       ldr      r0, [pc, #0xf4]   ; =0x7e7a58 "[FBM]:WriteBaseData::::GetNewSectorManagerInfoTableIndexFromUserID   newTableIndex[%d]"
+002b40aa: 00f0e9ff   bl       #0x2b5080
+002b40ae: 64bb       cbnz     r4, #0x2b410a
+002b40b0: fb7b       ldrb     r3, [r7, #0xf]
+002b40b2: 4ff0140a   mov.w    sl, #0x14
+002b40b6: dff8f880   ldr.w    r8, [pc, #0xf8]
+002b40ba: 2146       mov      r1, r4
+002b40bc: 3a46       mov      r2, r7
+002b40be: 0afb03f3   mul      r3, sl, r3
+002b40c2: 58f80300   ldr.w    r0, [r8, r3]
+002b40c6: 3b1d       adds     r3, r7, #4
+002b40c8: 6bf6c8ec   blx      #0x11fa5c   ; PLT:_ZN8FlashLib14CreateSector32Em12FBS_MOVEFLAGPmS1_
+002b40cc: 00bb       cbnz     r0, #0x2b4110
+002b40ce: fb7b       ldrb     r3, [r7, #0xf]
+002b40d0: 7a68       ldr      r2, [r7, #4]
+002b40d2: 0afb03fa   mul      sl, sl, r3
+002b40d6: 08eb0a03   add.w    r3, r8, sl
+002b40da: 48f80a20   str.w    r2, [r8, sl]
+002b40de: 4ff00108   mov.w    r8, #1
+002b40e2: 3a68       ldr      r2, [r7]
+002b40e4: c3f80880   str.w    r8, [r3, #8]
+002b40e8: dd60       str      r5, [r3, #0xc]
+002b40ea: 5a60       str      r2, [r3, #4]
+002b40ec: 04e0       b        #0x2b40f8
+002b40ee: 4046       mov      r0, r8
+002b40f0: 6bf658e9   blx      #0x11f3a4   ; PLT:_ZN8FlashLib25ChangeSectorRelocateReadyEm
+002b40f4: 90b9       cbnz     r0, #0x2b411c
+002b40f6: a046       mov      r8, r4
+002b40f8: a146       mov      sb, r4
+002b40fa: 13e0       b        #0x2b4124
+002b40fc: 294c       ldr      r4, [pc, #0xa4]   ; =0x10800010
+002b40fe: 40f64779   movw     sb, #0xf47
+002b4102: 0fe0       b        #0x2b4124
+002b4104: 40f64f79   movw     sb, #0xf4f
+002b4108: 0ce0       b        #0x2b4124
+002b410a: 40f65679   movw     sb, #0xf56
+002b410e: 09e0       b        #0x2b4124
+002b4110: 4ff00108   mov.w    r8, #1
+002b4114: 234c       ldr      r4, [pc, #0x8c]   ; =0x10800010
+002b4116: 40f65d79   movw     sb, #0xf5d
+002b411a: 03e0       b        #0x2b4124
+002b411c: a046       mov      r8, r4
+002b411e: 214c       ldr      r4, [pc, #0x84]   ; =0x10800010
+002b4120: 40f66d79   movw     sb, #0xf6d
+002b4124: 1c48       ldr      r0, [pc, #0x70]   ; =0x9e6954
+002b4126: 22f792f9   bl       #0x1d644e
+002b412a: dcb9       cbnz     r4, #0x2b4164
+002b412c: 2846       mov      r0, r5
+002b412e: 3146       mov      r1, r6
+002b4130: fff724ff   bl       #0x2b3f7c
+002b4134: 0446       mov      r4, r0
+002b4136: 0028       cmp      r0, #0
+002b4138: 26d0       beq      #0x2b4188
+002b413a: 40f67979   movw     sb, #0xf79
+002b413e: 11e0       b        #0x2b4164
+002b4140: 3868       ldr      r0, [r7]
+002b4142: 6bf6a2e9   blx      #0x11f488   ; PLT:_ZN8FlashLib19ChangeSectorToValidEm
+002b4146: 02e0       b        #0x2b414e
+002b4148: 3868       ldr      r0, [r7]
+002b414a: 6af636e8   blx      #0x11e1b8   ; PLT:_ZN8FlashLib24ChangeSectorRelocateCompEm
+002b414e: 20b9       cbnz     r0, #0x2b415a

@@ -1,0 +1,36 @@
+gancho 0x7126E6 (4 B): 28f28bfc  (fábrica: a2f79bf0)
+vecino 0x7126EA (no se toca): 96f5bbf8
+
+0093b000  30b5     push     {r4, r5, lr}
+0093b002  79f50df4 bl       #0x2b4820
+0093b006  7c46     mov      r4, pc
+0093b008  24f00304 bic      r4, r4, #3
+0093b00c  4bf65c21 movw     r1, #0xba5c
+0093b010  c0f20f01 movt     r1, #0xf
+0093b014  0c44     add      r4, r1
+0093b016  6068     ldr      r0, [r4, #4]
+0093b018  b0b9     cbnz     r0, #0x93b048
+0093b01a  4bf61621 movw     r1, #0xba16
+0093b01e  c0f20f01 movt     r1, #0xf
+0093b022  a4eb0105 sub.w    r5, r4, r1
+0093b026  0135     adds     r5, #1
+0093b028  0420     movs     r0, #4
+0093b02a  2946     mov      r1, r5
+0093b02c  0022     movs     r2, #0
+0093b02e  0323     movs     r3, #3
+0093b030  76f5dcf6 bl       #0x2b1dec
+0093b034  2120     movs     r0, #0x21
+0093b036  2946     mov      r1, r5
+0093b038  0022     movs     r2, #0
+0093b03a  0323     movs     r3, #3
+0093b03c  76f5d6f6 bl       #0x2b1dec
+0093b040  0620     movs     r0, #6
+0093b042  0321     movs     r1, #3
+0093b044  79f5d4f1 bl       #0x2b43f0
+0093b048  30bd     pop      {r4, r5, pc}
+0093b04a  00bf     nop      
+0093b04c  00bf     nop      
+0093b04e  0020     movs     r0, #0
+0093b050  7047     bx       lr
+
+sha256 del binario empaquetado: 831142ae9a0c1598c179c684200d86d57a1209f4ab0349e357d7e25b016e378e

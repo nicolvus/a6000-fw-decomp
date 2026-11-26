@@ -2070,6 +2070,34 @@ static void fbm_ptrace_selftest(void) {
     pbcon("[FBMP] ahora la llamada real (si se cuelga, la ultima linea es esta)\n");
     snprintf(a, sizeof a, "%ld %ld call 1 0x%lx 7", (long)getpid(), victim_tid, fbm_base + 0x2b6114 + 1);
     ptcall_run(a);                                    /* llamada real inocua: GetErrorString(7) -> "FBS_INVALID_PROCESS" */
+
+    /* ---- la vía que se usaría desde el PC por telnet: depositar la línea en el anillo con ptrace ---------- */
+    pbcon("[FBMP] --- fbm_ring.sh en el invitado: depositar \"FBM SetSMI 21 91 7 1 10\" en el anillo ---\n");
+    {   char cmd2[700];
+        /* /cam/proc no está montado dentro del chroot: se crea un /proc/<pid>/maps sintético con la base
+         * real de libmpr para que fbm_ring.sh ejercite también su parser de maps (la ruta normal). */
+        {   char dir[64], fpath[80];
+            snprintf(dir, sizeof dir, "/proc/%ld", (long)getpid());
+            mkdir(dir, 0755);
+            snprintf(fpath, sizeof fpath, "%s/maps", dir);
+            FILE *fm = fopen(fpath, "w");
+            if (fm) { fprintf(fm, "%08lx-%08lx r-xp 00000000 1f:00 1234 /usr/lib/libmpr.so\n",
+                              fbm_base, fbm_base + 0x400000); fclose(fm); }
+            else pbcon("[FBMP] no pude crear %s\n", fpath);
+        }
+        snprintf(cmd2, sizeof cmd2,
+                 "PID=%ld TID=%ld PT=/usr/bin/ptcall /bin/sh /usr/bin/fbm_ring.sh "
+                 "'FBM SetSMI 21 91 7 1 10' >>/dev/console 2>&1",
+                 (long)getpid(), victim_tid);
+        pbcon("[FBMP] $ %s\n", cmd2);
+        system(cmd2);
+        sleep(3);   /* el monitor sondea cada ~100 ms; 3 s de margen */
+        pbcon("[FBMP] tabla tras fbm_ring.sh:\n");
+        {   unsigned *t = (unsigned *)(fbm_base + 0xa3699c);
+            for (int k = 20; k <= 22; k++)
+                pbcon("[FBMP]   idx %d: name=%#x handle=%u status=%u OM=%#x\n", k, t[k * 5], t[k * 5 + 1], t[k * 5 + 2], t[k * 5 + 3]);
+        }
+    }
     victim_runa = 0;
     pbcon("[FBMP] fin de la prueba de ptrace\n");
 }
@@ -2145,6 +2173,12 @@ static void *pbinject_thread(void *a) {
     unsigned h = lookup("FBM", (void *)(fbm_base + 0xa51ee4));
     pbcon("[FBMC] registro del monitor %#lx: lookup(\"FBM\") -> %#x (esperado %#lx)\n",
           fbm_base + 0xa51ee4, h, fbm_base + 0x2b50d9);
+    if (getenv("PBSKIP") && *getenv("PBSKIP") == '2') {   /* PBSKIP=2: sólo volcar la tabla (línea base) */
+        pbcon("[FBMC] PBSKIP=2: sólo volcado de la tabla, sin consola, anillo ni ptrace\n");
+        fbm_dump("baseline");
+        pbcon("[FBMC] FIN\n");
+        return 0;
+    }
     if (getenv("PBSKIP")) {   /* pasada corta: sólo la prueba de ptrace, sin consola ni anillo */
         pbcon("[FBMC] PBSKIP: sin consola ni anillo, sólo la prueba de ptrace\n");
         { extern void fbm_ptrace_selftest(void); fbm_ptrace_selftest(); }

@@ -1,0 +1,30 @@
+== handle 0 (falta el sector): debe registrarlo y llamar a InitB 6 3 ==
+   llamadas : FBM::Init() · EntryWriteBaseDataFunction(userID=0x4, fn=0xaed2004f =stub 'movs r0,#0; bx lr', arg=0x0, mediaID=0x3) · EntryWriteBaseDataFunction(userID=0x21, fn=0xaed2004f =stub 'movs r0,#0; bx lr', arg=0x0, mediaID=0x3) · InitBackupData(OM=0x6, mediaID=0x3)
+   PC final : 0x7126ea (vuelve a 0x7126EA)
+   idx10    : sector=0x0000 handle=0x00000000 valido=0 om=0 b10=0x0
+   filas con fn != 0: fila 13 (userID=0x4 mediaID=0x3 sector=0x31 OM=0x6) fn=0xaed2004f arg=0x0; fila 14 (userID=0x21 mediaID=0x3 sector=0x31 OM=0x6) fn=0xaed2004f arg=0x0
+   regs preservados: r4=0x0 r5=0x0 (valores de vuelta de la cueva)
+   otras entradas de 0xA3699C tocadas: NINGUNA
+== handle 1 (ya existe, como tras reiniciar): la guarda debe salir antes ==
+   llamadas : FBM::Init()
+   PC final : 0x7126ea (vuelve a 0x7126EA)
+   idx10    : sector=0x0031 handle=0x00000001 valido=0 om=0 b10=0x0
+   filas con fn != 0: NINGUNA
+   regs preservados: r4=0x0 r5=0x0 (valores de vuelta de la cueva)
+   otras entradas de 0xA3699C tocadas: NINGUNA
+== handle 3 (ya existe) ==
+   llamadas : FBM::Init()
+   PC final : 0x7126ea (vuelve a 0x7126EA)
+   idx10    : sector=0x0031 handle=0x00000003 valido=0 om=0 b10=0x0
+   filas con fn != 0: NINGUNA
+   regs preservados: r4=0x0 r5=0x0 (valores de vuelta de la cueva)
+   otras entradas de 0xA3699C tocadas: NINGUNA
+== handle 0 e InitBackupData devolviendo error 0x10800010 ==
+   llamadas : FBM::Init() · EntryWriteBaseDataFunction(userID=0x4, fn=0xaed2004f =stub 'movs r0,#0; bx lr', arg=0x0, mediaID=0x3) · EntryWriteBaseDataFunction(userID=0x21, fn=0xaed2004f =stub 'movs r0,#0; bx lr', arg=0x0, mediaID=0x3) · InitBackupData(OM=0x6, mediaID=0x3)
+   PC final : 0x7126ea (vuelve a 0x7126EA)
+   idx10    : sector=0x0000 handle=0x00000000 valido=0 om=0 b10=0x0
+   filas con fn != 0: fila 13 (userID=0x4 mediaID=0x3 sector=0x31 OM=0x6) fn=0xaed2004f arg=0x0; fila 14 (userID=0x21 mediaID=0x3 sector=0x31 OM=0x6) fn=0xaed2004f arg=0x0
+   regs preservados: r4=0x0 r5=0x0 (valores de vuelta de la cueva)
+   otras entradas de 0xA3699C tocadas: NINGUNA
+
+VEREDICTO: OK

@@ -1,0 +1,139 @@
+# analysis/camera-extract/usr/lib/libmpr.so: syms=1412 plt=930  rodata=0x7a3e90..0x956750
+
+===== 0x5e7ec0 .. 0x5e8040 =====
+005e7ec0: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}
+005e7ec4: 85b0       sub      sp, #0x14
+005e7ec6: 624e       ldr      r6, [pc, #0x188]   ; =0x90f1e1
+005e7ec8: 04af       add      r7, sp, #0x10
+005e7eca: 0446       mov      r4, r0
+005e7ecc: 4068       ldr      r0, [r0, #4]
+005e7ece: 0025       movs     r5, #0
+005e7ed0: e6f78ff8   bl       #0x5cdff2
+005e7ed4: 3346       mov      r3, r6
+005e7ed6: 5f49       ldr      r1, [pc, #0x17c]   ; =0x8cbf14 "[IFO]"
+005e7ed8: 5f4a       ldr      r2, [pc, #0x17c]   ; =0x8d29a3 "[I]m2psIfo_rec::CancelMovieRec()"
+005e7eda: 0096       str      r6, [sp]
+005e7edc: 0195       str      r5, [sp, #4]
+005e7ede: 03f0d1fc   bl       #0x5eb884
+005e7ee2: 6068       ldr      r0, [r4, #4]
+005e7ee4: e6f785f8   bl       #0x5cdff2
+005e7ee8: 2946       mov      r1, r5
+005e7eea: 03f09cfc   bl       #0x5eb826
+005e7eee: 637a       ldrb     r3, [r4, #9]
+005e7ef0: 002b       cmp      r3, #0
+005e7ef2: 37d1       bne      #0x5e7f64
+005e7ef4: d4f8103a   ldr.w    r3, [r4, #0xa10]
+005e7ef8: 9bb1       cbz      r3, #0x5e7f22
+005e7efa: 6068       ldr      r0, [r4, #4]
+005e7efc: e6f761f8   bl       #0x5cdfc2
+005e7f00: 04f52161   add.w    r1, r4, #0xa10
+005e7f04: f9f77cfa   bl       #0x5e1400
+005e7f08: 0546       mov      r5, r0
+005e7f0a: 6068       ldr      r0, [r4, #4]
+005e7f0c: e6f771f8   bl       #0x5cdff2
+005e7f10: 5249       ldr      r1, [pc, #0x148]   ; =0x8d288c "m2psIfo_rec.cpp"
+005e7f12: 4ff4d872   mov.w    r2, #0x1b0
+005e7f16: 2b46       mov      r3, r5
+005e7f18: 03f038ff   bl       #0x5ebd8c
+005e7f1c: 002d       cmp      r5, #0
+005e7f1e: 42d1       bne      #0x5e7fa6
+005e7f20: 0ae0       b        #0x5e7f38
+005e7f22: 6068       ldr      r0, [r4, #4]
+005e7f24: e6f765f8   bl       #0x5cdff2
+005e7f28: 4c49       ldr      r1, [pc, #0x130]   ; =0x8d288c "m2psIfo_rec.cpp"
+005e7f2a: 40f2b512   movw     r2, #0x1b5
+005e7f2e: 4c4b       ldr      r3, [pc, #0x130]   ; =0xfa511002
+005e7f30: 03f02cff   bl       #0x5ebd8c
+005e7f34: 4a4d       ldr      r5, [pc, #0x128]   ; =0xfa511002
+005e7f36: 36e0       b        #0x5e7fa6
+005e7f38: 6068       ldr      r0, [r4, #4]
+005e7f3a: e6f742f8   bl       #0x5cdfc2
+005e7f3e: 04f51a63   add.w    r3, r4, #0x9a0
+005e7f42: 991c       adds     r1, r3, #2
+005e7f44: 03f10a02   add.w    r2, r3, #0xa
+005e7f48: 1333       adds     r3, #0x13
+005e7f4a: f8f787fe   bl       #0x5e0c5c
+005e7f4e: 0546       mov      r5, r0
+005e7f50: 6068       ldr      r0, [r4, #4]
+005e7f52: e6f74ef8   bl       #0x5cdff2
+005e7f56: 4149       ldr      r1, [pc, #0x104]   ; =0x8d288c "m2psIfo_rec.cpp"
+005e7f58: 40f2bb12   movw     r2, #0x1bb
+005e7f5c: 2b46       mov      r3, r5
+005e7f5e: 03f015ff   bl       #0x5ebd8c
+005e7f62: 05bb       cbnz     r5, #0x5e7fa6
+005e7f64: 6068       ldr      r0, [r4, #4]
+005e7f66: e6f750f8   bl       #0x5ce00a
+005e7f6a: c5f55dfa   bl       #0x3ad428
+005e7f6e: 0546       mov      r5, r0
+005e7f70: 6068       ldr      r0, [r4, #4]
+005e7f72: e6f73ef8   bl       #0x5cdff2
+005e7f76: 3949       ldr      r1, [pc, #0xe4]   ; =0x8d288c "m2psIfo_rec.cpp"
+005e7f78: 4ff4e172   mov.w    r2, #0x1c2
+005e7f7c: 2b46       mov      r3, r5
+005e7f7e: 03f005ff   bl       #0x5ebd8c
+005e7f82: 85b1       cbz      r5, #0x5e7fa6
+005e7f84: 6068       ldr      r0, [r4, #4]
+005e7f86: e6f734f8   bl       #0x5cdff2
+005e7f8a: 2946       mov      r1, r5
+005e7f8c: 354a       ldr      r2, [pc, #0xd4]   ; =0xfa8010ff
+005e7f8e: 04f0e3f9   bl       #0x5ec358
+005e7f92: 0546       mov      r5, r0
+005e7f94: 6068       ldr      r0, [r4, #4]
+005e7f96: e6f72cf8   bl       #0x5cdff2
+005e7f9a: 3049       ldr      r1, [pc, #0xc0]   ; =0x8d288c "m2psIfo_rec.cpp"
+005e7f9c: 40f2c512   movw     r2, #0x1c5
+005e7fa0: 2b46       mov      r3, r5
+005e7fa2: 03f0f3fe   bl       #0x5ebd8c
+005e7fa6: 637a       ldrb     r3, [r4, #9]
+005e7fa8: 6bbb       cbnz     r3, #0x5e8006
+005e7faa: 65bb       cbnz     r5, #0x5e8006
+005e7fac: 04f54c68   add.w    r8, r4, #0xcc0
+005e7fb0: a022       movs     r2, #0xa0
+005e7fb2: 08f10808   add.w    r8, r8, #8
+005e7fb6: 04f51a60   add.w    r0, r4, #0x9a0
+005e7fba: 4146       mov      r1, r8
+005e7fbc: 04f54269   add.w    sb, r4, #0xc20
+005e7fc0: 39f7acf0   bl       #0x12111c
+005e7fc4: 09f10809   add.w    sb, sb, #8
+005e7fc8: 4046       mov      r0, r8
+005e7fca: 04f53868   add.w    r8, r4, #0xb80
+005e7fce: 4946       mov      r1, sb
+005e7fd0: a022       movs     r2, #0xa0
+005e7fd2: 08f10808   add.w    r8, r8, #8
+005e7fd6: 39f7a1f0   bl       #0x12111c
+005e7fda: a022       movs     r2, #0xa0
+005e7fdc: 4146       mov      r1, r8
+005e7fde: 4846       mov      r0, sb
+005e7fe0: 39f79cf0   bl       #0x12111c
+005e7fe4: a021       movs     r1, #0xa0
+005e7fe6: 4046       mov      r0, r8
+005e7fe8: fff732fc   bl       #0x5e7850
+005e7fec: 84f8a059   strb.w   r5, [r4, #0x9a0]
+005e7ff0: 6068       ldr      r0, [r4, #4]
+005e7ff2: e5f7d6ff   bl       #0x5cdfa2
+005e7ff6: e2f7a1fa   bl       #0x5ca53c
+005e7ffa: 6068       ldr      r0, [r4, #4]
+005e7ffc: e5f7d1ff   bl       #0x5cdfa2
+005e8000: 2946       mov      r1, r5
+005e8002: e2f757f8   bl       #0x5ca0b4
+005e8006: 6068       ldr      r0, [r4, #4]
+005e8008: 4ff00008   mov.w    r8, #0
+005e800c: e5f7f1ff   bl       #0x5cdff2
+005e8010: 3346       mov      r3, r6
+005e8012: 1049       ldr      r1, [pc, #0x40]   ; =0x8cbf14 "[IFO]"
+005e8014: 144a       ldr      r2, [pc, #0x50]   ; =0x8d29c4 "[O]m2psIfo_rec::CancelMovieRec():"
+005e8016: 0096       str      r6, [sp]
+005e8018: cdf80480   str.w    r8, [sp, #4]
+005e801c: 03f032fc   bl       #0x5eb884
+005e8020: 6068       ldr      r0, [r4, #4]
+005e8022: e5f7e6ff   bl       #0x5cdff2
+005e8026: 0822       movs     r2, #8
+005e8028: 2b46       mov      r3, r5
+005e802a: 1049       ldr      r1, [pc, #0x40]   ; =0x8d28f7 "errorCode="
+005e802c: 0096       str      r6, [sp]
+005e802e: 0196       str      r6, [sp, #4]
+005e8030: cdf80880   str.w    r8, [sp, #8]
+005e8034: 03f092fc   bl       #0x5eb95c
+005e8038: 6068       ldr      r0, [r4, #4]
+005e803a: e5f7daff   bl       #0x5cdff2
+005e803e: 4146       mov      r1, r8
