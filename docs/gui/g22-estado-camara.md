@@ -82,9 +82,12 @@ consola del invitado. Es lo único que el anfitrión puede afirmar del invitado 
   (run 1, shim anterior), **143 s** (run 2) y **173 s** (run 3, shim corregido). Las tres sesiones compartieron CPU con otros dos
   `qemu-system-arm` de otros agentes, así que los números no son un banco de medidas; sí confirman el orden de magnitud de 2–3 min.
   **No se midió la restauración desde `estado.zst`** (cada sesión cambió `SHIMENV`, y la huella invalida el estado guardado).
+- **La página `GET /camara/` se sirve** con sus controles (lo comprueba el test de los puntos HTTP). No se ha abierto en un navegador en esta
+  sesión: lo probado es la respuesta del servidor, no el aspecto en pantalla.
 - **Pruebas.** `pytest tests/test_gui_harness.py` → 39 pasan, 8 saltan (las lentas con `A6000_HARNESS_RUN=1` y las que exigen CFW), con
   `A6000_HARNESS_WORK=/home/nicolas/a6000-arnes/analysis/gui/g22/harness` para que el test de compilación del shim tenga sysroot;
-  `tests/test_live_shimenv.py tests/test_shim_logic.py tests/test_live_reintento.py` → 37 pasan. `ruff` limpio en lo tocado; `mypy` sin
+  `tests/test_live_shimenv.py tests/test_shim_logic.py tests/test_live_reintento.py` → 37 pasan. `ruff` limpio en los módulos nuevos,
+  `emu_config.py` y los tests; `live.py` conserva el `I001` (imports sin ordenar) de su bloque, que ya estaba en `main`. `mypy` sin
   errores nuevos en los dos módulos nuevos (`emu_config.py` arrastra los suyos, previos).
 
 ## 3. INFERENCIA
