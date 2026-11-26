@@ -164,3 +164,112 @@ Ver [G22-OSD-REFRESCO](g22-osd-refresco.md). Lo que faltaba aquí —«no hay in
 | ID | Estado | Qué es | Criterio de cierre | Origen |
 |---|---|---|---|---|
 | G22-ESTADO-CAMARA | EN CURSO (26-11-2026) | **Batería, carga y USB del arnés (G22-E)**: modelo del anfitrión (`estado_camara.py` + sección `camara` del config) y dos órdenes LIVE nuevas del shim — `U <0\|1>` (jack USB como el driver de entrada: `{0x7000001, 0, estado, 0, 0x177}` a `0x7a0020`, la vía de §5.18w) y `B <0..100>` (palabra 3 de la respuesta emulada de CamMgr, `CAMGREMU`). Puntos `GET /camara/estado`, `GET /camara/`, `POST /camara/{bateria,usb,hdmi}`; enganche de dos líneas en `live.py`. **Medido**: el mensaje del jack llega y un hilo lo lee (`rcv_msg qid=0x7a0020`), pero **la pantalla no cambia** (0 px en 7 comparaciones, incluido el ruido); `B` no tiene consumidor (0 peticiones a `0x30001` en el perfil `estado`, av-cam tampoco contesta) y no hay icono de batería que cambie; HDMI solo modelo | Cerrar cuando (1) se identifique el modelo/vista que consume `0x3001` y el layout real de av-cam, de modo que un cambio de nivel se vea en la OSD o se demuestre que la A6000 no lo pinta con esos datos; (2) se compruebe en la cámara física qué produce el jack USB (icono de carga y/o «Modo USB», y si carga con la cámara encendida) y se refleje o se deseche `cargando = usb`; (3) haya orden verificada (o decisión explícita de no tenerla) para el jack HDMI | [G22-E estado de cámara](gui/g22-estado-camara.md) · `scripts/gui/harness/{estado_camara,camara_web}.py` · `shim/sonyshim.c` · `tests/test_gui_harness.py` |
+
+## 9. Que la OSD pinte el estado del anfitrión (28-11-2026): `model/POWER` desde el shim y repintado del invitado
+
+Intento de cerrar el punto (1) y el (2) de esta fila: que el nivel de `B` llegue al icono de batería y que `U` cambie lo que se ve.
+Lo implementado queda (es el mínimo que pedía la ficha y es correcto en su sitio); lo que **no** se consigue es el cambio visible, y
+ahora se sabe **por qué** con medida, no por inferencia: **en la OSD del arnés nadie pregunta por `model/POWER` y el icono de batería
+no se instancia**. Detalle abajo.
+
+### 9.1 Qué se ha añadido (código)
+
+1. `shim/sonyshim.c` — `power_params()`: responde `getModelInfo("model/POWER", …)` **cuando la llamada real falla** (si el modelo
+   existe —av-cam/UPM— manda él) con el nivel del anfitrión, igual que `reloj_params` hace con `@M018` y `CAMGREMU` con CamMgr.
+   Está enganchada en las tres puertas que el arnés ya usaba o podía usar: `viewManagerIf::getModelInfo` (la que la OSD usa de
+   verdad: **37 222** llamadas en la sesión medida), `ViewBase::getModelInfo` y `LayoutableWidgetBase::getModelInfo` (nueva).
+   `POWEREMU=0` lo apaga y `POWERPCT=nn` fuerza el nivel (diagnóstico).
+2. `shim/sonyshim.c` — `repinta()` / `repinthot()`: tras `B` y tras `U`, **el invitado** vuelve a activar la vista de disparo con la
+   misma ruta que REDIAL (`openView("view/STLREC")` sin argumento: el modo lo da el firmware). `REPINT=0` lo apaga —es el control de
+   la medida: mismo cambio de estado sin reapertura— y `REPINTROOT=1` añade el `O view/ROOT` previo. `live.py`, el HTML y el JS **no
+   se han tocado**: el anfitrión sigue mandando solo `B`/`U`.
+3. `tests/test_g22_osd.py` — 4 casos nuevos sin QEMU (relleno de `model/POWER`, «no pisa al modelo real», repintado del invitado y
+   los bytes de las claves que se rellenan). `sonyshim.so` reconstruido: **mismo conjunto de símbolos indefinidos** (70, ninguno nuevo).
+
+### 9.2 Claves que lee el icono (bytes verificados, `viewUnified2.so` md5 `1adc8395…`)
+
+`ACT_IconBattery::WidgetUpdateSync` (`+0x2758b8`) salta a `+0x275530`, que hace **dos** consultas y seis puertas:
+
+| consulta | clave | instrucción (VA) | qué exige |
+|---|---|---|---|
+| `"@M084"` info **1** | `0x101` | `movw r1,#0x101` en `+0x275568` | si vale 1 o 2 **no pinta** (`+0x275580` → `+0x27575a`) |
+| `"model/POWER"` info **0** | `0x100` | `mov.w r1,#0x100` en `+0x2755a0` | tiene que ser **2** (`cmp r0,#2; bne` en `+0x2755b4`) |
+| | `0x102` | `mov.w r1,#0x102` en `+0x2755be` | booleano cierto (tipo 5) |
+| | `0x104` | `mov.w r1,#0x104` en `+0x2755dc` | booleano cierto (tipo 5) |
+| | `0x105` | `movw r1,#0x105` en `+0x2755fa` | entero ≠ 0; se reenvía como **filtro `0x107`** de la consulta siguiente |
+| | `0x103` | `movw r1,#0x103` en `+0x27561a` | entero ≤ el valor cacheado del icono, que su constructor deja en **3** (`str.w r3,[r4,#0x960]` en `+0x275872`, con `+0x95c=1` y `+0x95d=1`) |
+| `"model/POWER"` info **1** (con filtro `0x107`) | `0x108` | `mov.w r1,#0x108` en `+0x2756bc` | tiene que ser **1** |
+| | `0x10b` | `movw r1,#0x10b` en `+0x2756d4` | tiene que ser **2** |
+| | **`0x10c`** | `mov.w r1,#0x10c` en `+0x2756ec` | **el nivel 0..100**: elige entre cinco imágenes con umbrales **20 / 50 / 80** y `0` = apagado (`+0x275726…+0x27573c`) |
+
+Lo que rellena `power_params()` es justo eso: info 0 → `0x100=2`, `0x102`/`0x104` ciertos, `0x103=3`, `0x105=1`; info 1 → `0x108=1`,
+`0x10b=2`, `0x10c = B`. El nombre `model/POWER` sólo se construye en **dos** sitios de `viewUnified2` (barrido de todo `.text`
+resolviendo los literales pc-relativos): `+0x2756ac` (este icono) y `+0x1ca4c4` (`CmnViewModelWrpPowerState`).
+
+### 9.3 Lo medido (perfil `estado2`, puerto 8670, 640×480)
+
+Sesión restaurada de `estado.zst` (restauración con la OSD ya poblada: primera pantalla a los **11 fotogramas / 15 s**). `WLALL=1` +
+`WAITLOG=1000` desde el arranque, `SETLOG=1`, y trampas `TRACEFN2` armadas en caliente sobre `viewUnified2` (`TRACELIB`).
+
+- **El repintado del invitado funciona.** Cada `B`/`U` deja en `live/estado2/shim.log` la orden (con el nivel) y la reapertura que
+  pide el propio invitado:
+
+  ```
+  538.47 342.04 BATERIA 5 % (LIVE, respuesta emulada de CamMgr y model/POWER)
+  538.48 342.05 REPINT BATERIA: el invitado vuelve a activar view/STLREC
+  538.83 342.40 OPENVIEWDIAL getRecViewFromDial() = 3
+  538.84 342.41 OPENHOT view/STLREC 0x3 -> 14438696
+  ```
+
+- **`model/POWER` no se pide nunca.** Con `SETLOG=1`, en la sesión hay **37 222** llamadas a `viewManagerIf::getModelInfo` y **0** con
+  `model/POWER` (ni con `@M084`). Modelos pedidos: `model/CAMERA` 28 510, `model/STILL_REC` 6 388, `@M096` 1 583, `model/REMOTE` 415,
+  `@M00A` 139, `model/INH_WRAPPER` 106, `@M006` 38, `@M09C` 22, `@M007` 20, `@M00B` 1. Es decir: el gancho del shim **sí** está en el
+  camino que usa la OSD (por eso llegan esas 37 222), y la consulta de alimentación simplemente no ocurre.
+- **El icono no se instancia.** Trampas armadas tres veces (`TRACEFN2`): `0x2758b8` (`WidgetUpdateSync`), `0x275530` (la actualización),
+  `0x275804` (su construcción: `str +0x960=3`), `0x275524` (`SetInfoOffVal`), `0x2c90c0` (`ACT_IconBattery::cast`) y `0x2c91d4`
+  (`Check_ACT_IconBattery`): **ninguna se disparó** en toda la sesión (ni al reabrir `view/ROOT`+`view/STLREC` ni al abrir el menú
+  `@V00E`). La única traza que saltó fue `1b4b10` con `@M00B` info `0x61` clave `0x2b5` desde `viewUnified2+0x27ab7a` (otro consumidor).
+  La clase existe en el paquete (descriptor en `viewUnified2+0xbacc`), pero **no hay instancia en la OSD de este arnés**: sin instancia
+  no hay quien lea `model/POWER`, y por eso ningún valor del anfitrión puede pintarse todavía.
+- **El jack USB tampoco cambia el contenido.** `U 0`/`U 1` con reapertura (y con `REPINTROOT=1`) no mueven un píxel fuera de la banda
+  animada de abajo: `CheckerUSBAndClockReady` es un `execCheck` que **decide**, no dibuja (§2 de `g22-osd-refresco.md`).
+
+Fotogramas estables (dos capturas seguidas idénticas; el OSD se desvanece al repintar y comparar durante la transición da diferencias
+de **alfa** en todo el fotograma, no de contenido). Fracción de píxeles **opacos**: OSD **0,080–0,092** (la variación es el elemento
+animado y el desvanecido, no el estado). Diferencias **de contenido (solo RGB)**:
+
+| comparación | todo el fotograma | fuera de la banda animada (`y < 340`) |
+|---|---|---|
+| `B 100` → `B 5` | 2 374 px, caja (357,344)-(625,471) | **0 px** |
+| `B 5` → `B 30` | 3 911 px, caja (357,367)-(639,471) | **0 px** |
+| `B 30` → `B 100` | 0 px | **0 px** |
+| `B 100` → `B 5` (2.ª vez) | 3 911 px, misma caja | **0 px** |
+| `POWEREMU=1` → `POWEREMU=0` con `B 5` | 3 911 px, misma caja | **0 px** |
+| `U 0` → `U 1` | 0 px | **0 px** |
+| `U 1` → `U 0` | 890 px, caja (498,438)-(575,471) | **0 px** |
+| **control**: reabrir la misma vista con el mismo estado | **859 px**, caja (321,344)-(609,471) | **0 px** |
+
+El control (misma vista reabierta, mismo estado) da **más** píxeles que `U 0`→`U 1`: todo lo que cambia en la columna «todo el
+fotograma» es la banda `y ≥ 344` que **parpadea sola** (medidor/indicadores), no el estado de la cámara. Fuera de esa banda el
+fotograma es idéntico en las 8 comparaciones. Capturas: [batería 100](img/g22-estado-camara-bateria100.png) ·
+[batería 5](img/g22-estado-camara-bateria5.png) · [USB 1](img/g22-estado-camara-usb1.png) · [USB 0](img/g22-estado-camara-usb0.png)
+(las cuatro con OSD poblado; las dos de batería son indistinguibles fuera de la banda animada).
+
+### 9.4 Qué falta, exactamente
+
+1. **Que exista el icono**: la OSD de este arnés no crea la instancia de `ACT_IconBattery` (traza negativa de §9.3). Hasta que el
+   layout la cree, `B` no tiene dónde pintarse. Caminos concretos: (a) averiguar de qué recurso de layout sale el icono y qué condición
+   lo excluye (candidato: el layout se construye con la lista de widgets que da el modelo de cámara/`model/CAMERA` y la batería falta
+   ahí); (b) `M model/POWER` + `S <id>` en caliente **antes** de abrir la vista, para que el layout lo vea; (c) llamar nosotros a
+   `+0x2758b8` sobre una instancia existente (hoy no hay ninguna: hace falta el puntero del widget).
+2. **Reabrir no basta para el jack**: hay que emular la transición de `ModelUsb*`/`CmnViewNoHdmi` (vista `…USB_CONNECTING`,
+   `CmnViewNoHdmi::enterConcurrentHdmiUsbMode`, `+0x1a9060`) o documentar que la A6000 sólo consulta el jack al activar la vista.
+3. Nada de esto invalida lo implementado: `power_params()` está en el gancho que la OSD usa de verdad (37 222 llamadas) y el
+   repintado del invitado está medido (`OPENHOT view/STLREC`); lo que falta es **consumidor**, no camino.
+
+### 9.5 Bloque PARA PENDIENTES.md (28-11-2026; sustituye las dos filas de §8)
+
+| ID | Estado | Qué es | Criterio de cierre | Origen |
+|---|---|---|---|---|
+| G22-ESTADO-CAMARA | EN CURSO (28-11-2026) | **Estado de cámara en la OSD.** Modelo del anfitrión (`estado_camara.py`, sección `camara`) + órdenes LIVE `B <0..100>` y `U <0|1>`. Añadido 28-11: `power_params()` en el shim responde `getModelInfo("model/POWER", 0/1)` con el nivel de `B` cuando la llamada real falla (claves medidas en `viewUnified2+0x275530`: info 0 → `0x100=2`, `0x102`/`0x104` ciertos, `0x103=3`, `0x105=1`; info 1 → `0x108=1`, `0x10b=2`, **`0x10c` = nivel**, umbrales 20/50/80) y `repinta()` hace que **el invitado** reabra `view/STLREC` tras cada `B`/`U` (misma ruta que REDIAL; `REPINT=0` lo apaga). **Medido** (perfil `estado2`, sesión restaurada): el repintado del invitado corre (`OPENHOT view/STLREC`, `OPENVIEWDIAL = 3`), pero **`model/POWER` no se pide nunca** (37 222 llamadas a `viewManagerIf::getModelInfo` con `SETLOG=1`, 0 con ese modelo) y **el icono no se instancia** (trampas `TRACEFN2` en `+0x2758b8`, `+0x275530`, `+0x275804`, `+0x275524`, `+0x2c90c0`, `+0x2c91d4`: 0 disparos). Diff de contenido **0 px fuera de la banda animada** (`y<340`) en 8 comparaciones, incluido el control de reabrir con el mismo estado (859 px en la banda, más que `U 0`→`U 1`); opacos 0,080–0,092 | Cerrar cuando (1) exista instancia de `ACT_IconBattery` en la OSD del arnés y un `B 5` vs `B 100` cambie píxeles **fuera** de la banda animada (con captura y tabla); (2) el jack USB produzca la transición de `ModelUsb*`/`CmnViewNoHdmi` (`…USB_CONNECTING`) o se documente que la A6000 sólo lo consulta al activar la vista; (3) el modelo de `cargando` se compruebe en la cámara física | §9 de este informe · `scripts/gui/harness/shim/sonyshim.c` · `tests/test_g22_osd.py` |
+| G22-OSD-REFRESCO | EN CURSO (28-11-2026) | **Repintado de la OSD al cambiar modo/batería/USB.** Lo del modo sigue cerrado en su efecto (REDIAL del invitado). Añadido 28-11: `B`/`U` ya disparan la misma reapertura del invitado (`REPINT`, por defecto activo; `REPINTROOT=1` añade `view/ROOT`), sin tocar `live.py` ni la página. **Medido**: la reapertura ocurre y **no cambia el contenido** (`y<340`: 0 px en todas las parejas batería/USB; el control de reabrir sin cambiar estado da 859 px sólo en la banda que parpadea). Conclusión: el repintado no era el eslabón que faltaba; falta el **consumidor** del estado (`ACT_IconBattery` no instanciado, `CheckerUSBAndClockReady` sólo decide) | Cerrar cuando (1) un cambio de batería o de jack cambie píxeles reales con la OSD poblada (no basta reabrir); (2) quede documentado qué vista/widget consume el estado en la cámara real | [informe](gui/g22-osd-refresco.md) · [§9](gui/g22-estado-camara.md) · `shim/sonyshim.c` |

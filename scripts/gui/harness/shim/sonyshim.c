@@ -186,6 +186,7 @@ static unsigned *bk_find(unsigned id, unsigned *len) {
     return 0;
 }
 static int readable(const void *p);
+static int power_params(const char *name, int info, void *list);  /* G22-ESTADO-CAMARA: model/POWER desde el anfitrión */
 static void backup_service(unsigned *m) {
     unsigned op = m[0], n = m[2], *id = m + 6, len = 0, *d = bk_find(id[0], &len);
     m[1] = 0;
@@ -1465,8 +1466,24 @@ static void gmi_dump(const char *name, int info, void *list) {
 #define MODHOOK(sym) int sym(const char *a, unsigned b, unsigned c, unsigned d) { static int (*r)(const char *, unsigned, unsigned, unsigned); if (!r) r = dlsym(RTLD_NEXT, #sym); \
     int x = r(a, b, c, d); if (getenv("SETLOG")) LOG("SETMOD " #sym " %s %x %x %x -> %#x", readable(a) ? a : "?", b, c, d, x); \
     if (x && readable(a)) gmi_dump(a, (int)b, (void *)(unsigned long)c); return x; }
-MODHOOK(_ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_)
 MODHOOK(_ZN13viewManagerIf19requestModelExecuteEPKcmP9ParamList)
+/* viewManagerIf::getModelInfo(nombre, info, lista, filtro) — MODHOOK con el relleno de model/POWER (G22-ESTADO-CAMARA); SETLOG lo registra igual. */
+int _ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_(const char *a, unsigned b, unsigned c, unsigned d) {
+    static int (*r)(const char *, unsigned, unsigned, unsigned); if (!r) r = nextsym("_ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_");
+    int x = r ? r(a, b, c, d) : 0;
+    if (getenv("SETLOG")) LOG("SETMOD viewManagerIf::getModelInfo %s %x %x %x -> %#x", readable(a) ? a : "?", b, c, d, x);
+    if (!x && readable(a) && power_params(a, (int)b, (void *)(unsigned long)c)) x = 1;
+    if (x && readable(a)) gmi_dump(a, (int)b, (void *)(unsigned long)c);
+    return x;
+}
+/* LayoutableWidgetBase::getModelInfo(this, nombre, info, lista, filtro): la otra puerta de las vistas a los modelos (UND de viewUnified2, definida
+ * en libObj+0x130c55). Mismo relleno de model/POWER; sin él solo se devuelve lo que diga el modelo real. */
+int _ZN20LayoutableWidgetBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *a, int b, void *c, const void *d) {
+    static int (*r)(void *, const char *, int, void *, const void *); if (!r) r = nextsym("_ZN20LayoutableWidgetBase12getModelInfoEPKciP9ParamListPKS2_");
+    int x = r ? r(self, a, b, c, d) : 0;
+    if (!x && readable(a) && power_params(a, b, c)) x = 1;
+    return x;
+}
 SETHOOK(_ZN21CmnViewProcessDataMgr8setValueEii)
 SETHOOK(_ZN21CmnViewProcessDataMgr8execProcEi)
 SETHOOK(_ZN31CmnViewProcessDataElementNormal8setValueEi)
@@ -1696,6 +1713,45 @@ static int reloj_params(void *list, int info) {
     efp("[shim] G22-FECHA reloj del anfitrión para la vista (info %d): %04d-%02d-%02d %02d:%02d:%02d\n", info, v[0], v[1], v[2], v[3], v[4], v[5]);
     return 1;
 }
+/* G22-ESTADO-CAMARA: el icono de batería no tiene dato en el arnés. `ACT_IconBattery::WidgetUpdateSync` (viewUnified2+0x2758b8) salta a
+ * +0x275530, que pide getModelInfo("model/POWER", 0, …) y ("model/POWER", 1, …, filtro {0x107}) y, si la primera devuelve 0, se queda sin
+ * pintar: nadie alimenta el modelo de alimentación (en la cámara lo haría av-cam/UPM). Se rellena aquí —como el reloj de G22-FECHA— con el
+ * nivel del ANFITRIÓN (`B <pct>`, el mismo de la respuesta emulada de CamMgr) y SÓLO cuando la llamada real FALLA: si el modelo existe
+ * (av-cam real), manda él. Claves y valores leídos en +0x275530 (VA = desplazamiento, md5 1adc83954cfad8b17ff2e7199090f923):
+ *   info 0 — 0x100 tipo de alimentación: sólo sigue si == 2 (0x2755b0/0x2755b4; la misma clave de CmnViewModelWrpPowerState::getPowerType,
+ *            +0x243c50); 0x102 (0x2755be) y 0x104 (0x2755dc) booleanos de tipo 5 que deben ser ciertos; 0x103 entero ≤ el valor cacheado del
+ *            icono, que su constructor deja en 3 (+0x275872) y no cambia ⇒ 3; 0x105 entero ≠ 0 (0x2755fa) que se reenvía como FILTRO 0x107
+ *            de la consulta info 1 (0x2756a8/0x2756ae) ⇒ 1.
+ *   info 1 — 0x108 == 1 (0x2756b8), 0x10b == 2 (0x2756d0) y **0x10c = nivel 0..100**, que elige entre cinco imágenes con umbrales
+ *            20/50/80 y 0 = apagado (0x275726…0x27573c).
+ * POWEREMU=0 lo apaga (control de la medida). POWERPCT=nn fuerza el nivel (diagnóstico). */
+static unsigned power_pct(void) { const char *e = getenv("POWERPCT"); int v = e ? num(e) : cam_bateria; return v < 0 ? 100u : (unsigned)v; }
+static int power_params(const char *name, int info, void *list) {
+    static int (*add)(void *, unsigned long, void *);
+    if (!add) add = dlsym(RTLD_DEFAULT, "_ZN9ParamList3addEmP9ParamBase");
+    Dl_info di; void *sym = lobj_h ? dlsym(lobj_h, "_ZN12ModelManager9pushEventEP5Event") : 0;
+    const char *e = getenv("POWEREMU");
+    if (!add || !sym || !dladdr(sym, &di) || !readable(list) || !name || strcmp(name, "model/POWER") || (e && *e == '0')) return 0;
+    if (info != 0 && info != 1) return 0;
+    unsigned char *lb = (unsigned char *)di.dli_fbase;
+    int (*pint)(void *, int) = (void *)(lb + 0xf0fb0 + 1);   /* Param<int>(int): el mismo que usa reloj_params */
+    int (*pbool)(void *, int) = (void *)(lb + 0xe50e8 + 1);  /* PrmBool(bool) tipo 5: lo que la vista pide para 0x102/0x104 */
+    int n = 0; void *p;
+    if (info == 0) {
+        if ((p = calloc(1, 0x10))) { pint(p, 2); add(list, 0x100, p); n++; }
+        if ((p = calloc(1, 0x10))) { pbool(p, 1); add(list, 0x102, p); n++; }
+        if ((p = calloc(1, 0x10))) { pint(p, 3); add(list, 0x103, p); n++; }
+        if ((p = calloc(1, 0x10))) { pbool(p, 1); add(list, 0x104, p); n++; }
+        if ((p = calloc(1, 0x10))) { pint(p, 1); add(list, 0x105, p); n++; }
+    } else {
+        if ((p = calloc(1, 0x10))) { pint(p, 1); add(list, 0x108, p); n++; }
+        if ((p = calloc(1, 0x10))) { pint(p, 2); add(list, 0x10b, p); n++; }
+        if ((p = calloc(1, 0x10))) { pint(p, (int)power_pct()); add(list, 0x10c, p); n++; }
+    }
+    { static int last[2] = { -1, -1 }, cnt; int pct = (int)power_pct();
+        if (pct != last[info] || cnt++ < 4) { last[info] = pct; LOG("POWER model/POWER info %d desde el anfitrión: %d claves, nivel %d %% (G22-ESTADO-CAMARA)", info, n, pct); } }
+    return n > 0;
+}
 /* ViewBase::getModelInfo(nombre, info, lista, filtro): las vistas piden datos de modelo por aquí (PLT → este símbolo antes que libObj). GMILOG=1 registra cada petición y su resultado. */
 int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name, int info, void *list, const void *flt) {
     static int (*real)(void *, const char *, int, void *, const void *);
@@ -1704,6 +1760,7 @@ int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name
     const char *re = getenv("RELOJEMU");  /* RELOJEMU=0 lo apaga (para medir el «antes» en la misma sesión) */
     if (!r && real && readable(name) && (!strcmp(name, "@M018") || !strcmp(name, "model/CLOCK")) && (info == 0 || info == 1) && !(re && re[0] == '0')) {  /* G22-FECHA: ModelClock no existe en el arnés; se responde con el reloj del anfitrión (ver reloj_params) */
         static unsigned n; if (reloj_params(list, info)) { r = 1; if (n++ < 20) LOG("getModelInfo(%s, %d) -> 1 (reloj del anfitrión, G22-FECHA)", name, info); } }
+    if (!r && real && readable(name) && power_params(name, info, list)) r = 1;  /* G22-ESTADO-CAMARA: model/POWER con el nivel del anfitrión */
     if (real && r && getenv("GMIPROBE2") && !strcmp(name, "model/ROOT") && info == 6) {  /* misma lista que la vista: info 1 y 7, y se restaura la 6 */
         static int n2; if (n2++ < 3) { int a = real(self, name, 1, list, flt), b = real(self, name, 7, list, flt), c = real(self, name, 6, list, flt); LOG("GMIPROBE2 misma lista: info1=%d info7=%d info6=%d", a, b, c); }
     }
@@ -2138,6 +2195,24 @@ static void *redialhot(void *a) {
     return openhot(a);  /* openhot libera el nombre */
 }
 static void *sddump(void *a);
+/* REPINT (G22-ESTADO-CAMARA): la batería y el jack USB se consultan al ACTIVAR la vista, no al llegar el mensaje —el nivel por
+ * ACT_IconBattery::WidgetUpdateSync («model/POWER») y el jack por el execCheck de ViewRootPowerSw (`CheckerUSBAndClockReady` lee
+ * `getInputEventStatus(0x15040010)`, literales en viewUnified2+0x17083c/0x1708cc/0x171a7c)—, así que cambiar `B`/`U` con la vista abierta no
+ * repinta nada (medido: 0 px). Después de cambiar el estado, el propio INVITADO vuelve a activar la vista de disparo por la misma ruta que
+ * REDIAL (`openView(view/STLREC)`, sin argumento: el modo lo da el firmware). Lo pide el shim, no el anfitrión: `live.py` sigue mandando solo
+ * `B`/`U`. REPINT=0 lo apaga (es el control de la medida: mismo cambio de estado, sin reapertura); REPINTROOT=1 añade el `O view/ROOT` previo. */
+static int repint_on(void) { const char *r = getenv("REPINT"); return r ? (*r != '0') : 1; }
+static void *repinthot(void *a) {
+    usleep(300000);  /* el hilo del driver de entrada (libObj+0x806f88) escribe el estado del jack después de recibir el mensaje */
+    if (getenv("REPINTROOT")) { char *r = strdup("view/ROOT"); openhot(r); usleep(200000); }
+    return openhot(a);  /* openhot libera el nombre */
+}
+static void repinta(const char *motivo) {
+    if (!repint_on()) { LOG("REPINT %s: sin reapertura (REPINT=0)", motivo); return; }
+    pthread_t th; char *nm = strdup("view/STLREC");
+    if (pthread_create(&th, 0, repinthot, nm)) { free(nm); return; }
+    pthread_detach(th); LOG("REPINT %s: el invitado vuelve a activar %s", motivo, nm);
+}
 static void *live_keys(void *a) {
     (void)a; static char buf[8192]; int n = 0;
     for (;;) {
@@ -2177,10 +2252,13 @@ static void *live_keys(void *a) {
             /* «U <0|1>» (G22-E): estado del jack USB, como el driver de entrada de la cámara: mensaje {clave 0x7000001, 0, estado, 0, índice 0x177}
              * a 0x7a0020 (la misma vía que KEYINIT=7000001:1:177, §5.18w) para poder cambiarlo en caliente. */
             if (ln[0] == 'U') { unsigned st = (ln[1] == ' ') ? (unsigned)hexv(ln + 2, &e) : 0;
-                entrada_estado(CLAVE_JACK_USB, st ? 1u : 0u, IDX_JACK_USB); LOG("JACK USB estado=%u (LIVE, driver de entrada 0x7a0020)", st ? 1u : 0u); }
-            /* «B <0..100>» (G22-E): nivel de batería de la respuesta emulada de CamMgr (CAMGREMU); DECIMAL, no hex, porque «100» tiene que valer cien */
+                entrada_estado(CLAVE_JACK_USB, st ? 1u : 0u, IDX_JACK_USB); LOG("JACK USB estado=%u (LIVE, driver de entrada 0x7a0020)", st ? 1u : 0u);
+                repinta("JACK USB"); }
+            /* «B <0..100>» (G22-E): nivel de batería de la respuesta emulada de CamMgr (CAMGREMU) y, además, el que se pinta en el icono
+             * (model/POWER, power_params); DECIMAL, no hex, porque «100» tiene que valer cien */
             if (ln[0] == 'B' && ln[1] == ' ') { unsigned bv = 0; for (const char *p = ln + 2; *p >= '0' && *p <= '9' && bv <= 1000; p++) bv = bv * 10 + (unsigned)(*p - '0');
-                if (bv > 100) bv = 100; cam_bateria = (int)bv; LOG("BATERIA %u %% (LIVE, respuesta emulada de CamMgr)", bv); }
+                if (bv > 100) bv = 100; cam_bateria = (int)bv; LOG("BATERIA %u %% (LIVE, respuesta emulada de CamMgr y model/POWER)", bv);
+                repinta("BATERIA"); }
             ln = nl + 1;
         }
         n = strlen(ln); memmove(buf, ln, n);

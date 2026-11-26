@@ -166,3 +166,60 @@ def test_de_donde_lee_la_osd_el_modo_y_la_bateria():
     # Las claves de model/POWER info 0 (0x100 tipo de alimentación, 0x102 y 0x104) van como `mov.w r1,#imm12`, cuyo inmediato no
     # aparece como palabra suelta; quedan documentadas con sus offsets en el informe y se comprueba solo el ancla del nombre.
     assert upd[:4] == bytes.fromhex("2de9f041")  # push.w {r4,r5,r6,r7,r8,lr}: es la función grande de actualización
+
+
+# --- (d) G22-ESTADO-CAMARA: model/POWER desde el anfitrión y repintado tras B/U ----------------------------------------------
+
+
+def test_power_se_rellena_con_el_nivel_del_anfitrion_y_solo_si_falta_el_modelo():
+    """`power_params` responde a `model/POWER` con las claves que lee +0x275530 y con el nivel de `B`; POWEREMU=0 lo apaga."""
+    src = SHIM.read_text()
+    i = src.index("static int power_params")
+    trozo = src[i : src.index("/* ViewBase::getModelInfo", i)]
+    assert 'strcmp(name, "model/POWER")' in trozo  # solo ese modelo
+    for clave in ("0x100", "0x102", "0x103", "0x104", "0x105"):  # info 0
+        assert f"add(list, {clave}," in trozo, clave
+    for clave in ("0x108", "0x10b", "0x10c"):  # info 1: 0x10c = nivel 0..100 (umbrales 20/50/80)
+        assert f"add(list, {clave}," in trozo, clave
+    assert "add(list, 0x10c, p)" in trozo and "power_pct()" in trozo
+    assert 'getenv("POWEREMU")' in trozo  # opt-out medible
+    # el nivel sale de la misma variable que la respuesta emulada de CamMgr («B <pct>»)
+    j = src.index("static unsigned power_pct")
+    assert "cam_bateria" in src[j : j + 160]
+
+
+def test_power_no_pisa_al_modelo_real():
+    """Las tres puertas de getModelInfo solo rellenan cuando la llamada real devuelve 0 (av-cam real manda)."""
+    src = SHIM.read_text()
+    for puerta in ("_ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_", "_ZN20LayoutableWidgetBase12getModelInfoEPKciP9ParamListPKS2_"):
+        i = src.index("int " + puerta + "(")
+        trozo = src[i : i + 900]
+        assert "if (!x && readable(a) && power_params(" in trozo, puerta
+    i = src.index("int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(")
+    assert "if (!r && real && readable(name) && power_params(" in src[i : i + 3000]
+
+
+def test_repint_al_cambiar_bateria_o_jack_lo_hace_el_invitado():
+    """`B`/`U` cambian el estado y el propio invitado reabre la vista (repinta), sin que el anfitrión mande «O view/…»."""
+    src = SHIM.read_text()
+    i = src.index("if (ln[0] == 'U')")
+    assert 'repinta("JACK USB")' in src[i : i + 600]
+    j = src.index("if (ln[0] == 'B' && ln[1] == ' ')")
+    assert 'repinta("BATERIA")' in src[j : j + 800]
+    k = src.index("static void *repinthot")
+    trozo = src[k : src.index("static void *live_keys", k)]
+    assert "openhot(a)" in trozo and "view/STLREC" in src[k - 900 : k + 900]
+    assert 'getenv("REPINT")' in src[k - 900 : k + 400]  # REPINT=0: control (mismo cambio, sin reapertura)
+    # el anfitrión (Python) no reabre nada en el camino de /camara/*
+    camara = (RAIZ / "scripts" / "gui" / "harness" / "camara_web.py").read_text()
+    assert "O view/" not in camara and "view/STLREC" not in camara
+
+
+@pytest.mark.skipif(_lib("viewUnified2.so") is None, reason="viewUnified2.so de 3.21 no disponible")
+def test_las_claves_de_model_power_que_se_rellenan_son_las_que_lee_el_icono():
+    """Bytes de +0x275530: 0x100/0x102/0x104 (info 0), 0x105 (filtro 0x107) y 0x108/0x10b/0x10c (info 1, nivel)."""
+    b = _lib("viewUnified2.so").read_bytes()
+    for off, imm in ((0x2755A0, "4ff48071"), (0x2755BE, "4ff48171"), (0x2755DC, "4ff48271"),  # mov.w r1,#0x100/0x102/0x104
+                     (0x2755FA, "40f20511"), (0x27561A, "40f20311"),                            # movw r1,#0x105/0x103
+                     (0x2756BC, "4ff48471"), (0x2756D4, "40f20b11"), (0x2756EC, "4ff48671")):  # mov.w/#0x108, movw #0x10b, mov.w #0x10c
+        assert b[off : off + 4] == bytes.fromhex(imm), hex(off)
