@@ -29,6 +29,21 @@
 > ausencia de miniatura de vídeo y que la duración se tome del índice (`0:02`) en vez del `moov` (9,5095 s).
 > [ifoFramework](../reports/film-pb-1-sub-ifoframework-20261126.md).
 >
+> **Prueba directa del propio firmware (26-11-2026).** El dump `analysis/camera-dumps/ram-servicio-20261020/ram_0x80000000.bin`
+> (1 GiB, **anterior al CFW**) conserva el anillo de log del proceso MPR en VA `0x82DF9300`–`0x82DFC400`, 130 líneas.
+> Dice tres cosas que zanjan la discusión: (1) `SetLoadInfo : TvSystem is NTSC, frameRate 3` ⇒ **la cámara es NTSC** y
+> los clips son 29,97, así que el «diagnóstico cerrado» PAL era falso; (2) **ningún IFO se carga** —
+> `MountCmd : Flash Mount Error`, `mp4Ifo faild … 0xB0800001`, `LoadSub : MP4 Load Error`, `CreateAndLoad Error`
+> (`0x31000006`) y `LoadExec : Flash Load Error` en los tres formatos (AVCHD, XAVC, MP4); (3) falla también en foto:
+> `[CACHE]BUFFER SIZE TOO SMALL : 00000000`, `Failed to dfs::seek offset=0x0049CE00 errcode=0x0E100001` y
+> `Failed to read errcd=0xC3000101`. El intento de reproducción deja `[AVI][PLAY] AviSeqPlay.cpp Error=[ER_BADARG]`
+> tras `CS_AviAcsr::Unknown Function[0x20]`. Y el `0:02` queda explicado por
+> `[MprCnv] Warning ResumeInfo Structure Size is different! 64 vs 60`. **Causa material: el IFO no se carga del
+> volumen.** La guarda A no se cae «por bits» sino por el mismo motivo que la B (`GetInhInfo` devuelve error con el
+> `mp4Ifo_If` sin *loaded*), y el mutex del `mp4Ifo_If` es el eslabón que lo hace visible, no la causa.
+> Tres pruebas sin riesgo antes de flashear nada: miniaturas de **foto**, **otra tarjeta formateada en la cámara**, y
+> reproducir **sin tarjeta** (memoria interna). [Informe del log](../reports/film-pb-1-log-real-20261126.md).
+>
 > **Lo que no es la causa, verificado:** la cadencia (clip propio); el `TvSystem` (sin bits con clip propio); la
 > BD/catálogo (la guarda es *fail-open* si falta el registro y recuperar la BD no cambia nada); el decodificador
 > H.264 (está **fuera de Linux**, en `av-cam` con microcódigo `ZM_AVCD*` de `/usr/sabin`; su fallo sería posterior a

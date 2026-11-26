@@ -182,3 +182,37 @@ tablas de curvas) y la NVRAM (64 volcados sin cambio de sistema de TV).
 - El clip «grabado por la propia cámara» no está identificado por nombre en esta sesión; si
   resultara ser un clip heredado o copiado, la prueba 2 perdería fuerza y habría que
   repetirla grabando uno nuevo y reproduciéndolo sin sacar la tarjeta.
+
+## 11. Corrección posterior: el log real de la cámara
+
+Un dump de RAM del **20-10-2026** (anterior al CFW) conserva el anillo de log del proceso MPR
+y contiene el arranque completo. Cambia dos cosas de este informe y añade la causa material
+([informe del log](film-pb-1-log-real-20261126.md)):
+
+1. **La cámara es NTSC, no PAL.** `[AVIMMGR][MS1]SetLoadInfo : TvSystem is NTSC, frameRate 3`
+   con `frameRate 3` = 30000/1001, el mismo de los clips. El «diagnóstico cerrado» del 27-11
+   partía de una cámara PAL: esa premisa es falsa y la guarda de cadencia no puede ser la causa.
+2. **La guarda A no queda descartada «por bits», sino que falla por el mismo motivo que la B.**
+   `GetInhInfo` devuelve error (`MP4 No exist` / `It is not loaded`) cuando el `mp4Ifo_If` no
+   está *loaded*, y eso basta para que `AviMMgr::GetPlayMovieStatus` devuelva 0 sin necesidad de
+   ningún bit de inhibición. El log muestra que **ningún IFO se carga**:
+
+   ```
+   [AVIMMGR][MS1]MountCmd : Flash Mount Error
+   [MP4IFO] ### mp4Ifo faild at IF/mp4Ifo_General.cpp(1749) ErrCd: 0xB0800001
+   [AVIMMGR][MS1]LoadSub : MP4 Load Error.       0xB0800001  MMgrMp4IfoAcsr.cpp(2319)
+   [MMGR][MMGR_ACSR] ## ERROR(MMGR):0x31000006 ## …CreateAndLoad()
+   [AVIMMGR][MS1]LoadExec : Flash Load Error
+   ```
+
+   Con el IFO sin cargar, la reproducción no puede funcionar y el `0x1A` sale por la guarda que
+   se evalúe primero (la A, `0x437BFA`). La conclusión de §9 se mantiene en lo esencial —el
+   fichero no se abre nunca— pero la causa raíz no es el mutex: **el IFO no se carga del
+   volumen**, y de ahí cae todo lo demás (sin miniatura, `0:02` del punto de reanudación, y
+   también fallos de `dfs::seek`/`dfs::read` en una miniatura de foto, con
+   `[CACHE]BUFFER SIZE TOO SMALL : 00000000`).
+
+Con esto, **el mutex del `mp4Ifo_If` pasa a ser el eslabón que hace visible el fallo, no la
+causa**: si el IFO estuviera cargado, `GetPlayThumbnailInfo` no tendría por qué fallar. Las tres
+pruebas sin riesgo de §8 del informe del log (miniaturas de foto, otra tarjeta, sin tarjeta)
+discriminan antes que cualquier flasheo.
