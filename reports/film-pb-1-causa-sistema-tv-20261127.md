@@ -64,31 +64,40 @@ la lectura es correcta. La partición par/impar es la de NTSC (60 Hz) frente a P
 - Las cadenas del módulo están en `libmpr.so`: «isSupportContent : Valid TvSystem detect»,
   «Invalid TvSystem detect», «Unknown frameRate %d», «24p/23.976p frameRate».
 
-## 3. Arreglo propuesto, con su riesgo
+## 3. El ajuste NO está en el menú de esta cámara (verificado el 27-11)
 
-1. **Antes de nada, copiar al PC todos los vídeos y fotos de la tarjeta.** El aviso del propio
-   menú dice que hay que formatear para *grabar* en una tarjeta usada en el otro sistema; copiar
-   evita cualquier pérdida.
-2. **Menú → «Selector PAL/NTSC»** (página de ajustes de la cámara) y poner el sistema **contrario
-   al actual**: si está en PAL, pasar a **NTSC** (es el que corresponde a clips de 30p). La cámara
-   reinicia.
-3. Reproducir un clip. Si aparece la imagen, queda cerrado.
-4. Si el ajuste ya estaba en NTSC, o el cambio no arregla nada, la hipótesis cae y el siguiente
-   paso es la traza con `scripts/camera_filmpb1_trace.py` (guarda A frente a guarda B) y la
-   lectura del índice `AVF_INFO\AVIN0001.INP` con `reports/evidence/film-pb-1-sub-avin-20261127/leer_avin.py`.
+El usuario confirma que la cámara no ofrece «Selector PAL/NTSC». Comprobado en el firmware 3.21:
 
-Riesgo: bajo. El cambio de sistema reinicia la cámara y no toca el firmware; el formateo **no** es
-necesario para reproducir y aquí no se propone.
+- `share/app/viewNtscPalSEL_D.uxc` **existe** (700 B): el módulo de interfaz del ajuste está compilado.
+- `share/app/global.xdb` lo declara (`viewNtscPalSEL_D.uxc`, y `CautionConfig.so` / `viewUnified2.so`
+  contienen `NtscPalSEL`).
+- Las cadenas de confirmación están en los 22 idiomas («Selector PAL/NTSC», «¿Cambiar a NTSC?»).
 
-## 4. Cómo se refuta o se confirma
+Es decir: **el firmware trae el ajuste, pero la configuración del modelo/región de esta cámara no lo
+expone en el menú**, igual que otros ajustes ocultos ya inventariados en
+[G13](../docs/gui/g13-barrido-ajustes-a6000-a6300.md). Por tanto el arreglo por menú **no está disponible** y
+hay que elegir entre las vías de §4.
+
+Dato que decide cuál: si la cámara graba hoy en **50p/25p/50i** está en PAL (`TvSystem != 1`) y los clips de
+30p se rechazan; si graba en **60p/30p/60i** está en NTSC (`TvSystem == 1`) y esta hipótesis cae.
+
+## 4. Vías de arreglo, con su riesgo
+
+| Vía | Qué se hace | Riesgo | Cuándo elegirla |
+|---|---|---|---|
+| **V1 · Convertir los clips a la cadencia de la cámara** | **Probado y descartado con ffmpeg**: `-r 25 -c copy` deja el `r_frame_rate` en `30000/1001` y **borra las cuatro cajas `uuid`, `MSNV`, `PROF`, `USMT` y `MTDT`** ([evidencia](evidence/film-pb-1-v1-remux-20261127/ensayo-remux-25p.txt)), que es justo lo que el lector de Sony verifica primero. Solo valdría un parche binario del `moov` (timescale + `stts` + `elst`) conservando esas cajas | Medio: hay que escribir el reescritor y probarlo | Si la cámara está en PAL y se quiere ver **estos** clips |
+| **V2 · Desbloquear el ajuste NTSC/PAL en el menú** | Parche de interfaz para exponer `viewNtscPalSEL_D` (mismo tipo de trabajo que G13/G14 con otros ajustes ocultos) | Medio: es un parche nuevo, sin probar en cámara | Si se prefiere arreglar la causa y seguir grabando en NTSC |
+| **V3 · Traza y reparación de la otra rama** | `scripts/camera_filmpb1_trace.py` para ver si salta A, B o el motor; si es la miniatura, «Recuperar BD imág.» o renombrar `AVF_INFO` | Nulo | Si la cámara ya graba en NTSC (hipótesis caída) |
+
+## 5. Cómo se refuta o se confirma
 
 | Observación | Conclusión |
 |---|---|
-| El ajuste estaba en PAL y al pasar a NTSC los clips se reproducen | **Causa raíz cerrada**; el CFW queda exculpado y no hay que flashear nada |
-| El ajuste ya estaba en NTSC | La guarda B no rechaza por TvSystem; seguir con la traza (A frente a B) |
-| El ajuste estaba en PAL y tras el cambio sigue fallando | El rechazo es por `GetPlayThumbnailInfo` o por el motor; seguir con la traza |
+| Un clip grabado ahora por la cámara **se reproduce** y los viejos no | La cámara está bien y los viejos son de otra cadencia ⇒ V1 |
+| La cámara graba en 60p/30p (está en NTSC) | La guarda B no rechaza por TvSystem; seguir con V3 |
+| La cámara graba en 50p/25p y tras convertir un clip a 25p sigue fallando | El rechazo es por `GetPlayThumbnailInfo` o por el motor; seguir con V3 |
 
-## 5. Límites
+## 6. Límites
 
 - **NO_VERIFICADO** el valor actual del ajuste en la cámara y el mapeo exacto `frameRate`→cadencia
   (solo la partición par/impar está verificada por bytes y por el caso 24p).

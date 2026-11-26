@@ -1,0 +1,18 @@
+# Ensayo V1 sobre una copia de MAH04198.MP4 (27-11-2026)
+
+## Comando
+ffmpeg -y -v error -i orig198.mp4 -c copy -r 25 out198-25p.mp4
+
+## ffprobe del resultado
+codec_name=h264
+width=1440
+height=1080
+r_frame_rate=30000/1001
+avg_frame_rate=3648000/121721
+duration=9.509453
+nb_frames=285
+duration=9.509453
+
+## Cajas propietarias (ocurrencias en el fichero)
+orig198.mp4 uuid=4 MSNV=2 PROF=1 USMT=3 MTDT=3 bytes=14545696
+out198-25p.mp4 uuid=0 MSNV=0 PROF=0 USMT=0 MTDT=0 bytes=14551233

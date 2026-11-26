@@ -7,9 +7,12 @@
 > `frameRate` del contenido (`[msg+0x124]`, 0..9): con `TvSystem == 1` acepta 24p y las cadencias **pares**;
 > con `TvSystem != 1` acepta 24p y las **impares**; en el resto devuelve 0 «Invalid TvSystem detect» → `0x437C3C`
 > → `0x1A` → caution `0x135` → «No se puede visualizar.». Los clips son 30p (par, NTSC) y la cámara muestra
-> `1-1-2014`, señal de ajustes reseteados. **Arreglo sin flashear: copiar los vídeos al PC, poner «Selector
-> PAL/NTSC» en el sistema contrario al actual (NTSC para clips de 30p) y reproducir.** Riesgo bajo; el formateo
-> que menciona el menú no es necesario para reproducir. [Informe](../reports/film-pb-1-causa-sistema-tv-20261127.md).
+> `1-1-2014`, señal de ajustes reseteados. **El ajuste no está expuesto en el menú de esta cámara** (verificado:
+> `viewNtscPalSEL_D.uxc`, `global.xdb` y `SettingSetupNtscPalSEL` existen en el firmware, pero la configuración del
+> modelo no lo muestra), así que el arreglo por menú no está disponible. Vías: convertir los clips a la cadencia de
+> la cámara (ffmpeg `-r` pierde las cajas `uuid`/`MSNV`: descartado; haría falta un reescritor del `moov`),
+> desbloquear el ajuste en la interfaz, o trazar con el kit si la cámara ya graba en NTSC.
+> [Informe](../reports/film-pb-1-causa-sistema-tv-20261127.md).
 
 Mecanismo de la finalización fallida **cerrado estáticamente**; causa raíz física, abierta. La traza enlaza
 `PlayMovieCmp` (`MPR::ER_FAILED=0x1A`) → `DefObjPlayer::ER_FAILED=7` → bloqueo → caution `0x135` → «No se puede
