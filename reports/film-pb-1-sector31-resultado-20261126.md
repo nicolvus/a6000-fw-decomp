@@ -259,3 +259,16 @@ queda registrado si el reinicio altera por sí solo el síntoma. La validación
 actual es offline y las operaciones físicas fueron lecturas. Quedan pendientes
 el paquete instalable y la prueba A/B.
 [Huellas y contraste](evidence/film-pb1-sector31-camara-20261126/5-control-av-aislado.txt).
+
+## 12. Resultado del control AV instalado
+
+Instalado por USB (`pmca-console firmware … --flash --confirm --reflash`, log `analysis/gui/install-av-control402.log`)
+el paquete `build/cfw_av_control402/pkg-4.02/package-4.02/firmware_packed.dat` (4.02 sin ISO + `AV-CAM.BIN` de fábrica 3.21).
+Verificado por Telnet tras el arranque: `AV-CAM.BIN` md5 `ef2e3003ddad7185b5398cb76287c5aa` (= fábrica, 11 427 236 B),
+`nflasha15` md5 `423fec97…` (= base 4.02), `/usr` y `/system` en solo lectura.
+
+El usuario reprodujo `MAH04204.MP4` y grabó otro clip de 6 s: ambos dan «No se puede visualizar». El anillo MPR
+(`/dev/mem` 0x82df9000) repite la secuencia: `EnterMoviePb`, `ff4PlayIf.cpp` 1084/1028/967 `0xB051000B`,
+`E_AVCON_MOVIE_CODEC_STOP (2003h)`, `Dec start complete error`, `ER_MOVIE_DECODE_FAILED (1600F101h)`, `STATE_RESTART`.
+El sector 0x31 sigue con handle 0 (`film_pb1_sector31.py --verifica`). **Conclusión: las 233 B de AV-CAM no causan el fallo.**
+No se probó el arreglo FBM sobre esta base. Evidencia: `evidence/film-pb1-sector31-camara-20261126/6-control-av-tras-reproducir.out`, `7-anillo-control-av.txt`.

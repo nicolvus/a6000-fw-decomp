@@ -1220,3 +1220,5 @@ fallido con la OSD a medio componer (1,14 % de píxeles opacos) y en él ninguna
 (qué instala `[View+0x20]`). Arreglado de paso un bug del helper de tests: `tests/test_g22_dispatch.py::_bl_target`
 no alineaba la base en `blx` (T2). Tests: `tests/test_g22_accion4.py` (11 casos) + 32 en verde con `test_g22_dispatch.py`.
 Evidencia: `reports/evidence/g22-accion4-20261126/`.
+
+- 26-11-2026 FILM-PB-1 control A/B: instalado 4.02 sin ISO + AV-CAM de fábrica; el PLAY sigue fallando igual ⇒ AV-CAM descartado. Informe §12.
