@@ -1007,9 +1007,36 @@ unsigned IMDB_find_target_bit(unsigned a, unsigned b, unsigned c, unsigned d) { 
 unsigned IMDB_find_entry(unsigned a, unsigned b, unsigned c, unsigned d) { return imdb_call("IMDB_find_entry", a, b, c, d); }
 unsigned IMDB_get_entries(unsigned a, unsigned b, unsigned c, unsigned d) { return imdb_call("IMDB_get_entries", a, b, c, d); }
 /* INJECT="seg:qid:w0,w1,..;seg:qid:.." (todo en hex; sin strtoul: la glibc 2.11 no tiene __isoc23_*): a los seg s entrega un mensaje a la cola síncrona con callback, como haría av-cam */
-/* OPENVIEWARG=n (hex): segundo argumento de openView para view/STLREC (la cámara pasa el modo de grabación de getRecViewFromDial; con 0 setInitForRec recibe int=0, §5.31). shortcut: valor medido, sin derivar del dial.
+/* OPENVIEWARG=n (hex): segundo argumento de openView para view/STLREC en el ARRANQUE (la cámara pasa el modo de grabación de getRecViewFromDial; con 0 setInitForRec recibe int=0, §5.31). En el arranque el dial aún no tiene estado (OPENVIEWAT=40 s, el toActive lo informa ≈ 118 s), así que aquí sigue siendo un valor medido.
+ * OPENVIEWDIAL=1: en caliente («O view/STLREC» sin argumento, tras girar el dial) ese modo lo da el firmware,
+ *   CmnViewBigModelUtil::getRecViewFromDial() (viewUnified2+0x19f004), que lo obtiene del estado del dial (0x15070050) con
+ *   InputService::getInputEventStatus (libObj+0x114104) — la misma consulta que hace la vista al abrirse en la cámara (G22-DIAL-FN).
  * OPENVIEW="Vista[,Vista…]" OPENVIEWAT=s: llama a viewManagerIf::openView(nombre, 0) de libObj desde un hilo propio (abrir la vista raíz sin el evento de arranque de av-cam) */
 static void *lobj_h;
+/* base de la biblioteca `nombre` según /proc/self/maps (0 si no está mapeada) */
+static unsigned long lib_base(const char *nombre) {
+    char ln[400]; unsigned long b = 0; FILE *m = fopen("/proc/self/maps", "r");
+    while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, nombre)) { b = hexv(ln, 0); break; }
+    if (m) fclose(m); return b;
+}
+/* modo de grabación que da el firmware para la posición actual del dial (lo consulta la vista al abrirse en la cámara).
+ * CmnViewBigModelUtil vive en viewUnified2.so (el handle de lobj_h es libObj), así que se resuelve por símbolo global y, si no,
+ * por dirección: getInstance +0x19ba28 y getRecViewFromDial +0x19f004 (fw 3.21, VA == desplazamiento en el fichero). */
+static int modo_del_dial(void) {
+    void *(*inst)(void) = dlsym(RTLD_DEFAULT, "_ZN19CmnViewBigModelUtil11getInstanceEv");
+    int (*grv)(void *) = dlsym(RTLD_DEFAULT, "_ZN19CmnViewBigModelUtil18getRecViewFromDialEv");
+    if (!inst || !grv) {
+        unsigned long b = lib_base("viewUnified2.so");
+        if (!b) { LOG("OPENVIEWDIAL: viewUnified2.so no está mapeada"); return -1; }
+        inst = (void *(*)(void))(b + 0x19ba28 + 1); grv = (int (*)(void *))(b + 0x19f004 + 1);
+    }
+    int m = grv(inst()); LOG("OPENVIEWDIAL getRecViewFromDial() = %d", m); return m;
+}
+/* modo para la apertura EN CALIENTE de la vista de grabación: del firmware si OPENVIEWDIAL está puesto («O view/STLREC» sin argumento) */
+static int modo_caliente(const char *vista) {
+    if (strcmp(vista, "view/STLREC") || !getenv("OPENVIEWDIAL")) return 0;
+    return modo_del_dial();
+}
 /* MENU: con la vista de disparo ausente nadie abre el menú al pulsar MENU (en la cámara DefRootView::ActionOpenSettingMenu pide «@V00E» = BASE_MENU 0x0E → SETTINGMENUX 0x7C).
  * Se sigue por las trazas de la UI si hay menú abierto (Vn/Vd de 07C o 039); con el menú cerrado la pulsación de MENU abre «@V00E» en vez de ir a la cola de teclas. */
 static volatile int menu_open;
@@ -1990,7 +2017,7 @@ static void *acqhot(void *a) { acquire_status((int)hexv(a, 0)); free(a); return 
 static void *modelhot(void *a) { model_create(a); free(a); return 0; }
 static void *openhot(void *a) {
     int (*ov)(const char *, int) = lobj_h ? dlsym(lobj_h, "_ZN13viewManagerIf8openViewEPKci") : 0;
-    char *nm = a, *sp = strchr(nm, ' '); int arg = 0; if (sp) { *sp = 0; arg = (int)hexv(sp + 1, 0); }  /* «O vista [modo_hex]»: el modo es el parámetro de apertura (getRecViewFromDial) */
+    char *nm = a, *sp = strchr(nm, ' '); int arg = 0; if (sp) { *sp = 0; arg = (int)hexv(sp + 1, 0); } else arg = modo_caliente(nm);  /* «O vista [modo_hex]»: el modo es el parámetro de apertura; sin él lo da el firmware (OPENVIEWDIAL) */
     int r = ov ? ov(nm, arg) : -99; LOG("OPENHOT %s %#x -> %d", nm, arg, r); free(a); return 0;
 }
 static void *sddump(void *a);
