@@ -45,6 +45,16 @@ REA y Ghidra comparten motor; verifica lo decisivo contra bytes/instrucciones. R
 Servidor MCP compartido con Claude Code: ver `knowledge/PROGRESS.md` (Fase 6)
 para el snippet de `~/.codex/config.toml` necesario para habilitarlo aquí.
 
+## Regla permanente: subagentes de Vibe en DeepSeek V4.1 Flash max
+
+Todo subagente que se abra desde Vibe (`agents.spawn`) debe lanzarse con el perfil
+`deepseek-flash-max` (`config_name = "deepseek-flash-max"`, definido en
+`~/.vibe/agents/deepseek-flash-max.toml` con `active_model = "deepseek-v4-1-flash-1017"`;
+el alias lleva `thinking = "max"` en el `[[models]]` de `~/.vibe/config.toml`). El agente
+principal conserva su modelo configurado: esta regla fija solo el modelo de los
+subagentes. Si el perfil aún no está cargado en la sesión (tras crearlo hace falta
+`/reload`), no lanzar subagentes con otro modelo sin avisar al usuario.
+
 Orden del repositorio: `ORDEN.md` y su gemelo `ORDER.md` son vinculantes (dónde va cada fichero, nombres, estados,
 pares ES/EN de la wiki); compruébalo con `python3 scripts/audit/check_order.py` y `python3 -m pytest tests/test_order.py`
 antes de cada commit.
