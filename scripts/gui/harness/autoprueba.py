@@ -250,14 +250,24 @@ def main() -> int:
             time.sleep(3)
         return contenido, opacos
 
+    io_live: dict = {}
+
+    def cierra_live() -> None:
+        f = io_live.pop("f", None)
+        if f is not None and not f.closed:
+            f.close()
+
     def arranca() -> tuple[subprocess.Popen, bool, float, dict, tuple[float, float]]:
         """Arranca live.py y espera a que el invitado PINTE: (proceso, listo, segundos, /estado, contenido dibujado).
 
         El cuelgue de «0 listas» (G22-CUELGUE) es intermitente: el invitado responde pero no llega a componer la pantalla, y no se arregla
         esperando. Se reintenta en frío borrando el perfil, que es lo que hace un usuario al volver a arrancar.
         """
+        # la salida de live.py va a un fichero: con una tubería sin lector se llena a los 64 KB y el invitado se queda esperando
+        cierra_live()
+        io_live["f"] = (p.dir / "live.log").open("wb")
         pr = subprocess.Popen([str(VENV), str(HERE / "live.py"), str(work), "--perfil-dir", a.perfil_dir, "--puerto", str(a.puerto),
-                               "--config", a.config], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, start_new_session=True)
+                               "--config", a.config], stdout=io_live["f"], stderr=subprocess.STDOUT, start_new_session=True)
         listo, t, estado = espera_pantalla(base, a.espera)
         p.dir.mkdir(parents=True, exist_ok=True)
         png = p.dir / "01-pantalla.png"
@@ -272,6 +282,7 @@ def main() -> int:
             break
         _post(f"{base}/salir")
         proc.wait(timeout=90)
+        cierra_live()
         shutil.rmtree(work / "live" / a.perfil_dir, ignore_errors=True)
         proc, listo, t, estado, (contenido, opacos) = arranca()
         p.paso("arranque-reintento", listo and contenido >= 0.002 and opacos >= 0.02,
@@ -365,6 +376,7 @@ def main() -> int:
         if proc.poll() is None:
             os.killpg(proc.pid, signal.SIGTERM)
             proc.wait(30)
+        cierra_live()
         estado_zst = work / "live" / a.perfil_dir / "estado.zst"
         p.paso("cierre", proc.returncode in (0, -11, -15) and socket.socket().connect_ex(("127.0.0.1", a.puerto)) != 0,
                f"código {proc.returncode}{' (SIGSEGV al cerrar tras guardar: G22-ARR3)' if proc.returncode == -11 else ''}, "
