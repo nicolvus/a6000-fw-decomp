@@ -1,0 +1,95 @@
+sha256 nuevo 831142ae9a0c1598c179c684200d86d57a1209f4ab0349e357d7e25b016e378e
+sha256 fabrica 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+tamano 10321204 10321204 iguales False
+
+== ELF header ==
+e_ident      Container({'EI_MAG': [127, 69, 76, 70], 'EI_CLASS': 'ELFCLASS32', 'EI_DATA': 'ELFDATA2LSB', 'EI_VERSION': 'EV_CURRENT', 'EI_OSABI': 'ELFOSABI_SYSV', 'EI_ABIVERSION': 0}) == Container({'EI_MAG': [127, 69, 76, 70], 'EI_CLASS': 'ELFCLASS32', 'EI_DATA': 'ELFDATA2LSB', 'EI_VERSION': 'EV_CURRENT', 'EI_OSABI': 'ELFOSABI_SYSV', 'EI_ABIVERSION': 0}) -> True
+e_type       'ET_DYN' == 'ET_DYN' -> True
+e_machine    'EM_ARM' == 'EM_ARM' -> True
+e_version    'EV_CURRENT' == 'EV_CURRENT' -> True
+e_entry      1180200 == 1180200 -> True
+e_phoff      52 == 52 -> True
+e_shoff      10320204 == 10320204 -> True
+e_flags      83886082 == 83886082 -> True
+e_ehsize     52 == 52 -> True
+e_phentsize  32 == 32 -> True
+e_phnum      5 == 5 -> True
+e_shentsize  40 == 40 -> True
+e_shnum      25 == 25 -> True
+e_shstrndx   24 == 24 -> True
+
+== Program headers ==
+('PT_ARM_EXIDX', 9953728, 9953728, 9953728, 249864, 249864, 4, 4) == ('PT_ARM_EXIDX', 9953728, 9953728, 9953728, 249864, 249864, 4, 4) -> True
+('PT_LOAD', 0, 0, 0, 10203592, 10203592, 5, 32768) == ('PT_LOAD', 0, 0, 0, 10203592, 10203592, 5, 32768) -> True
+('PT_LOAD', 10203592, 10236360, 10236360, 116288, 1149244, 6, 32768) == ('PT_LOAD', 10203592, 10236360, 10236360, 116288, 1149244, 6, 32768) -> True
+('PT_DYNAMIC', 10203904, 10236672, 10236672, 320, 320, 6, 4) == ('PT_DYNAMIC', 10203904, 10236672, 10236672, 320, 320, 6, 4) -> True
+('PT_GNU_STACK', 0, 0, 0, 0, 0, 6, 4) == ('PT_GNU_STACK', 0, 0, 0, 0, 0, 6, 4) -> True
+num_ph 5 5
+
+== Secciones ==
+num_sh 25 25 metadatos_iguales True
+[                ] addr 0x00000000 off 0x00000000 size 0x00000000 flags 0x0
+[.gnu.hash       ] addr 0x000000d4 off 0x000000d4 size 0x00002a50 flags 0x2
+[.dynsym         ] addr 0x00002b24 off 0x00002b24 size 0x000069c0 flags 0x2
+[.dynstr         ] addr 0x000094e4 off 0x000094e4 size 0x000113df flags 0x2
+[.gnu.version    ] addr 0x0001a8c4 off 0x0001a8c4 size 0x00000d38 flags 0x2
+[.gnu.version_r  ] addr 0x0001b5fc off 0x0001b5fc size 0x000000d0 flags 0x2
+[.rel.dyn        ] addr 0x0001b6cc off 0x0001b6cc size 0x00100098 flags 0x2
+[.rel.plt        ] addr 0x0011b764 off 0x0011b764 size 0x00001d10 flags 0x2
+[.init           ] addr 0x0011d474 off 0x0011d474 size 0x0000000a flags 0x6
+[.plt            ] addr 0x0011d480 off 0x0011d480 size 0x00002da8 flags 0x6
+[.text           ] addr 0x00120228 off 0x00120228 size 0x00683c5c flags 0x6
+[.fini           ] addr 0x007a3e84 off 0x007a3e84 size 0x00000006 flags 0x6
+[.rodata         ] addr 0x007a3e90 off 0x007a3e90 size 0x001b28c0 flags 0x2   <-- contiene 0x93B000
+[.ARM.extab      ] addr 0x00956750 off 0x00956750 size 0x00027a70 flags 0x2
+[.ARM.exidx      ] addr 0x0097e1c0 off 0x0097e1c0 size 0x0003d008 flags 0x82
+[.init_array     ] addr 0x009c31c8 off 0x009bb1c8 size 0x00000130 flags 0x3
+[.fini_array     ] addr 0x009c32f8 off 0x009bb2f8 size 0x00000004 flags 0x3
+[.jcr            ] addr 0x009c32fc off 0x009bb2fc size 0x00000004 flags 0x3
+[.dynamic        ] addr 0x009c3300 off 0x009bb300 size 0x00000140 flags 0x3
+[.got            ] addr 0x009c3440 off 0x009bb440 size 0x00000ea8 flags 0x3
+[.data           ] addr 0x009c42e8 off 0x009bc2e8 size 0x0001b520 flags 0x3
+[.bss            ] addr 0x009df808 off 0x009d7808 size 0x000fc2fc flags 0x3
+[.ARM.attributes ] addr 0x00000000 off 0x009d7808 size 0x00000033 flags 0x0
+[.comment        ] addr 0x00000000 off 0x009d783b size 0x0000003f flags 0x30
+[.shstrtab       ] addr 0x00000000 off 0x009d787a size 0x000000d2 flags 0x0
+
+== Gancho ==
+0x7126E6 fabrica: a2 f7 9b f0 96 f5 bb f8
+0x7126E6 nuevo  : 28 f2 8b fc 96 f5 bb f8
+0x7126EA intacto: True
+
+== Cueva ==
+fabrica 0x93B000..0x93B060: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+fabrica todo cero hasta siguiente seccion: False
+nuevo   0x93B000..0x93B060: 30 b5 79 f5 0d f4 7c 46 24 f0 03 04 4b f6 5c 21 c0 f2 0f 01 0c 44 60 68 b0 b9 4b f6 16 21 c0 f2 0f 01 a4 eb 01 05 01 35 04 20 29 46 00 22 03 23 76 f5 dc f6 21 20 29 46 00 22 03 23 76 f5 d6 f6 06 20 03 21 79 f5 d4 f1 30 bd 00 bf 00 bf 00 20 70 47 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+alineada a 4: True a 8: True a 16: True a 32: True
+
+== Relocaciones ==
+nuevo   .rel.dyn   entradas 131091  cerca_gancho_o_cueva []
+nuevo   .rel.plt   entradas 930  cerca_gancho_o_cueva []
+nuevo total_relocs 132021
+fabrica .rel.dyn   entradas 131091  cerca_gancho_o_cueva []
+fabrica .rel.plt   entradas 930  cerca_gancho_o_cueva []
+fabrica total_relocs 132021
+
+== Referencias literales a 0x93B000..0x93B052 ==
+nuevo ocurrencias 1 [('0x93b014', '0x495390')]
+fabrica ocurrencias 1 [('0x93b014', '0x495390')]
+
+== Simbolos .dynsym en 0x930000..0x940000 ==
+.dynsym _ZN9MprIfMcmd14m_subCmdTblRecE 0x932728 312 STT_OBJECT
+.dynsym _ZN9MprIfMcmd15m_subCmdTblPlayE 0x93247c 684 STT_OBJECT
+
+== Simbolos .dynsym en 0x712000..0x713000 ==
+--- secciones con SHF_EXECINSTR y si contienen 0x93B000 ---
+.init      0x0011d474..0x0011d47e  contiene=False
+.plt       0x0011d480..0x00120228  contiene=False
+.text      0x00120228..0x007a3e84  contiene=False
+.fini      0x007a3e84..0x007a3e8a  contiene=False
+--- PT_LOADs ---
+0 PT_ARM_EXIDX 0x97e1c0 0x97e1c0 0x3d008 flags 4 contiene= False
+1 PT_LOAD 0x0 0x0 0x9bb1c8 flags 5 contiene= True
+2 PT_LOAD 0x9bb1c8 0x9c31c8 0x1c640 flags 6 contiene= False
+3 PT_DYNAMIC 0x9bb300 0x9c3300 0x140 flags 6 contiene= False
+4 PT_GNU_STACK 0x0 0x0 0x0 flags 6 contiene= False

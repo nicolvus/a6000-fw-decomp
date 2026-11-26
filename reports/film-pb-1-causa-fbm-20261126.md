@@ -212,6 +212,35 @@ de grabación decide por `fileType` (`0x2B2F48`) y no por `fn`.
 - **«Recuperar BD imág.» no podía ayudar**: `BeginRepair` reescribe `AVF_INFO/AVIN0001.INP` pero no llama
   a `0x2B43F0` ni a `CreateSector32`; su re-registro choca en `0x5C9F7E` / `0x2B3D24` (`0x10100001`).
 
+### 6.4 ¿Basta crear el sector para que el cargador del IFO devuelva 0? Sí, y con matiz
+
+Medido en el arnés con la imagen real de `nflasha4`: tras `FBM EWBDFD 4 3 0` + `FBM InitB 6 3`
+(idx 10 = `0x31 / h3 / +8=1 / om6`), `BkRead(0x04,3)` devuelve **`0x10100003`**. Ese código lo tolera
+`0x35E0FA..0x35E100` y el resto de la cadena, por código, es:
+
+`0x35E118 vtbl[0xB8]` (`0x3B16B0`) escribe `8` y deja `[r7+0xd6] = 0` → `0x35E954` → `r5 = 0x00500003`
+(«tabla vacía») → **`RcsBackupTblData` = `0x00500003`** → `0x3AFA94` lo interpreta como **Need Salvage**,
+pone `[msv+0x44] = 1` (`0x3AFB18`) y **devuelve 0** → `0x698EC8`: `0x6F0D4C(0)` → **0**, sin el 1749.
+
+Antes de crear el sector los mismos puntos daban `0x00100001` y `0xB0800001`. Es decir: **crear el sector
+hace que el cargador deje de fallar**, pero lo que queda es una tabla vacía marcada para *salvage* — el
+propio firmware sabe que la BD está vacía y es él quien debe reconstruirla. Eso encaja con que un clip
+**nuevo** sí quede registrado y los viejos no.
+
+No se pudo medir `0x3AFA94` / `0x698EC8` ejecutándose de verdad: el arnés no arranca el gestor de vídeo
+(sin `MsvMcmd`), y las llamadas inyectadas se quedan en la macro de traza `0x34E468` →
+`osal_valloc_msg_wait`. El valor de arriba es la cadena leída instrucción a instrucción.
+
+### 6.5 Auditoría independiente del paquete 3.97
+
+Rehecha desde cero (desempaquetado propio, `debugfs`, Unicorn): `.dat` `69447a27…5cd9`, `libmpr`
+`831142ae…e378e`, gancho `0x7126E6 = 28 f2 8b fc`, `0x7126EA` intacto, 132 021 relocaciones sin un solo
+`r_offset` en el gancho o la cueva, cabecera y las 25 secciones byte a byte, y el `.dat` vuelve a pasar el
+auditor con `--base-dat` (`todo_ok`, 22/22). Dos observaciones no bloqueantes: la cueva vive en `.rodata`
+(flags de sección `A`) pero se ejecuta porque el primer `PT_LOAD` es `R E` y cubre esa VA —está medido en
+QEMU—, y su `push {r4,r5,lr}` deja `SP ≡ 4 (mod 8)` en las llamadas, fuera de AAPCS, sin que ninguno de los
+tres destinos use `ldrd/strd/vldr/vstr` en sus primeros `0x300` B.
+
 ## 7. Cómo verificarlo sin cámara y cómo comprobarlo en cámara
 
 - **Arnés**: `InitB` sobre el MPR real y lectura de `base+0xA3699C`; el sector debe quedar con `+4 != 0`

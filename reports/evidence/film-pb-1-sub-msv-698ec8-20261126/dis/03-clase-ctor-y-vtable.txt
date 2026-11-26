@@ -1,0 +1,87 @@
+# constructor de la clase: 0x3B04A4 (vtable 0x835980, [this+0x50]=new(0x4B78)+ctor 0x3B1DE8)
+003b04a4: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+003b04a8: 86b0       sub      sp, #0x18                     
+003b04aa: 0d46       mov      r5, r1                        
+003b04ac: 9046       mov      r8, r2                        
+003b04ae: 06af       add      r7, sp, #0x18                 
+003b04b0: 0b7c       ldrb     r3, [r1, #0x10]               
+003b04b2: 0446       mov      r4, r0                        
+003b04b4: 0a79       ldrb     r2, [r1, #4]                  
+003b04b6: 8968       ldr      r1, [r1, #8]                  
+003b04b8: 0091       str      r1, [sp]                      
+003b04ba: a97c       ldrb     r1, [r5, #0x12]               
+003b04bc: 0191       str      r1, [sp, #4]                  
+003b04be: 4ff09851   mov.w    r1, #0x13000000               
+003b04c2: 0291       str      r1, [sp, #8]                  
+003b04c4: 2968       ldr      r1, [r5]                      
+003b04c6: 9ff7e7fb   bl       #0x34fc98                     
+003b04ca: 1b4b       ldr      r3, [pc, #0x6c]                 ; [003b0538]=00835980
+003b04cc: 2046       mov      r0, r4                        
+003b04ce: 2360       str      r3, [r4]                      
+003b04d0: fff79aff   bl       #0x3b0408                     
+003b04d4: 44f67830   movw     r0, #0x4b78                   
+003b04d8: 6ef564e9   blx      #0x11e7a4                       ; _Znwj
+003b04dc: 0646       mov      r6, r0                        
+003b04de: 01f083fc   bl       #0x3b1de8                     
+003b04e2: 2665       str      r6, [r4, #0x50]               
+003b04e4: 3046       mov      r0, r6                        
+003b04e6: a3f749fb   bl       #0x353b7c                     
+003b04ea: e989       ldrh     r1, [r5, #0xe]                
+003b04ec: 2a79       ldrb     r2, [r5, #4]                  
+003b04ee: ab89       ldrh     r3, [r5, #0xc]                
+003b04f0: 0091       str      r1, [sp]                      
+003b04f2: 697c       ldrb     r1, [r5, #0x11]               
+003b04f4: 206d       ldr      r0, [r4, #0x50]               
+003b04f6: 0191       str      r1, [sp, #4]                  
+003b04f8: a968       ldr      r1, [r5, #8]                  
+003b04fa: 0291       str      r1, [sp, #8]                  
+003b04fc: e16b       ldr      r1, [r4, #0x3c]               
+003b04fe: 0391       str      r1, [sp, #0xc]                
+003b0500: 216c       ldr      r1, [r4, #0x40]               
+003b0502: 0491       str      r1, [sp, #0x10]               
+003b0504: e16a       ldr      r1, [r4, #0x2c]               
+003b0506: 0591       str      r1, [sp, #0x14]               
+003b0508: 2968       ldr      r1, [r5]                      
+003b050a: a3f783fc   bl       #0x353e14                     
+003b050e: 206d       ldr      r0, [r4, #0x50]               
+003b0510: 0021       movs     r1, #0                        
+003b0512: a3f7c7fc   bl       #0x353ea4                     
+003b0516: 236d       ldr      r3, [r4, #0x50]               
+003b0518: 2046       mov      r0, r4                        
+
+# ctor del hijo +0x4000: 0x3B1DE8 (vtable 0x835FB8)
+003b1de8: b0b5       push     {r4, r5, r7, lr}              
+003b1dea: 00af       add      r7, sp, #0                    
+003b1dec: 0446       mov      r4, r0                        
+003b1dee: a1f717fe   bl       #0x353a20                     
+003b1df2: 134b       ldr      r3, [pc, #0x4c]                 ; [003b1e40]=00835fb8
+003b1df4: 0025       movs     r5, #0                        
+003b1df6: 2046       mov      r0, r4                        
+003b1df8: 2360       str      r3, [r4]                      
+003b1dfa: 04f54253   add.w    r3, r4, #0x3080               
+003b1dfe: 9d64       str      r5, [r3, #0x48]               
+003b1e00: dd64       str      r5, [r3, #0x4c]               
+003b1e02: 1d65       str      r5, [r3, #0x50]               
+003b1e04: a1f7bafe   bl       #0x353b7c                     
+003b1e08: 04f59643   add.w    r3, r4, #0x4b00               
+003b1e0c: 1c20       movs     r0, #0x1c                     
+003b1e0e: 5d67       str      r5, [r3, #0x74]               
+003b1e10: 6cf5c8ec   blx      #0x11e7a4                       ; _Znwj
+003b1e14: 0021       movs     r1, #0                        
+003b1e16: 0546       mov      r5, r0                        
+003b1e18: 4bf2c2fc   bl       #0x5fd7a0                     
+003b1e1c: 4ff09853   mov.w    r3, #0x13000000               
+003b1e20: e565       str      r5, [r4, #0x5c]               
+003b1e22: 6365       str      r3, [r4, #0x54]               
+003b1e24: 2046       mov      r0, r4                        
+003b1e26: 4f23       movs     r3, #0x4f                     
+
+# ranura 0xB8 de 0x835FB8 -> 0x3B16B1 (escribe 8 en *pb y deja r0)
+003b16b0: 80b5       push     {r7, lr}                      
+003b16b2: 0823       movs     r3, #8                        
+003b16b4: 00af       add      r7, sp, #0                    
+003b16b6: 0b70       strb     r3, [r1]                      
+003b16b8: 80bd       pop      {r7, pc}                      
+003b16ba: 80b5       push     {r7, lr}                      
+003b16bc: 0846       mov      r0, r1                        
+003b16be: 00af       add      r7, sp, #0                    

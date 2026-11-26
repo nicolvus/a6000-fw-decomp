@@ -1,0 +1,165 @@
+# RcsBackupTblData 0x35EA1C (envoltorio)
+0035ea1c: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+0035ea20: 8db0       sub      sp, #0x34                     
+0035ea22: 00f58048   add.w    r8, r0, #0x4000               
+0035ea26: 0aaf       add      r7, sp, #0x28                 
+0035ea28: 0025       movs     r5, #0                        
+0035ea2a: 0446       mov      r4, r0                        
+0035ea2c: 0095       str      r5, [sp]                      
+0035ea2e: 87e80600   stm.w    r7, {r1, r2}                  
+0035ea32: 0126       movs     r6, #1                        
+0035ea34: 0195       str      r5, [sp, #4]                  
+0035ea36: 2a46       mov      r2, r5                        
+0035ea38: 0296       str      r6, [sp, #8]                  
+0035ea3a: 9a46       mov      sl, r3                        
+0035ea3c: d8f88400   ldr.w    r0, [r8, #0x84]               
+0035ea40: 2b46       mov      r3, r5                        
+0035ea42: 9949       ldr      r1, [pc, #0x264]                ; [0035eca8]=0090f1e1
+0035ea44: d7f83090   ldr.w    sb, [r7, #0x30]               
+0035ea48: d7f838b0   ldr.w    fp, [r7, #0x38]               
+0035ea4c: f4f75cfe   bl       #0x353708                     
+0035ea50: 2b46       mov      r3, r5                        
+0035ea52: 8de86000   stm.w    sp, {r5, r6}                  
+0035ea56: 2a46       mov      r2, r5                        
+0035ea58: 0296       str      r6, [sp, #8]                  
+0035ea5a: 9449       ldr      r1, [pc, #0x250]                ; [0035ecac]=0081dfa7 "RcsBackupTblData Start"
+0035ea5c: 04f54255   add.w    r5, r4, #0x3080               
+0035ea60: d8f88400   ldr.w    r0, [r8, #0x84]               
+0035ea64: f4f750fe   bl       #0x353708                     
+0035ea68: 2046       mov      r0, r4                        
+0035ea6a: f5f787f8   bl       #0x353b7c                     
+0035ea6e: ab6c       ldr      r3, [r5, #0x48]               
+0035ea70: 33b9       cbnz     r3, #0x35ea80                 
+0035ea72: 8f48       ldr      r0, [pc, #0x23c]                ; [0035ecb0]=0003171c
+0035ea74: bff596ee   blx      #0x11e7a4                       ; _Znwj
+0035ea78: 0646       mov      r6, r0                        
+
+# worker 0x35E04C: prologo (0xd5/0xd6/0xd7 a cero) + BkRead + rama 0x10100003 + 0x35E954
+0035e04c: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+0035e050: bbb0       sub      sp, #0xec                     
+0035e052: 00f5804a   add.w    sl, r0, #0x4000               
+0035e056: 04af       add      r7, sp, #0x10                 
+0035e058: 4ff00008   mov.w    r8, #0                        
+0035e05c: 4ff00109   mov.w    sb, #1                        
+0035e060: cdf80080   str.w    r8, [sp]                      
+0035e064: f962       str      r1, [r7, #0x2c]               
+0035e066: 0446       mov      r4, r0                        
+0035e068: fa61       str      r2, [r7, #0x1c]               
+0035e06a: 4246       mov      r2, r8                        
+0035e06c: 3b60       str      r3, [r7]                      
+0035e06e: 4346       mov      r3, r8                        
+0035e070: 87f8d780   strb.w   r8, [r7, #0xd7]               
+0035e074: 87f8d680   strb.w   r8, [r7, #0xd6]               
+0035e078: 87f8d580   strb.w   r8, [r7, #0xd5]               
+0035e07c: cdf80490   str.w    sb, [sp, #4]                  
+0035e080: cdf80890   str.w    sb, [sp, #8]                  
+0035e084: bb49       ldr      r1, [pc, #0x2ec]                ; [0035e374]=0081c85e "BKUP RcsTbl Start"
+0035e086: daf88400   ldr.w    r0, [sl, #0x84]               
+...
+0035e14a: c7f81880   str.w    r8, [r7, #0x18]               
+0035e14e: c7f82880   str.w    r8, [r7, #0x28]               
+0035e152: 8a4b       ldr      r3, [pc, #0x228]                ; [0035e37c]=10100003
+0035e154: 9842       cmp      r0, r3                        
+0035e156: 08d1       bne      #0x35e16a                     
+0035e158: 97f8d620   ldrb.w   r2, [r7, #0xd6]               
+0035e15c: 97f8d530   ldrb.w   r3, [r7, #0xd5]               
+0035e160: 9342       cmp      r3, r2                        
+0035e162: 40f0f783   bne.w    #0x35e954                     
+0035e166: 00f029bc   b.w      #0x35e9bc                     
+0035e16a: 97f8d730   ldrb.w   r3, [r7, #0xd7]               
+0035e16e: 04f58048   add.w    r8, r4, #0x4000               
+0035e172: 0125       movs     r5, #1                        
+0035e174: 8349       ldr      r1, [pc, #0x20c]                ; [0035e384]=0081c88e "BKUP backupId"
+0035e176: 0195       str      r5, [sp, #4]                  
+0035e178: 0422       movs     r2, #4                        
+0035e17a: 0093       str      r3, [sp]                      
+0035e17c: 0023       movs     r3, #0                        
+0035e17e: 0295       str      r5, [sp, #8]                  
+0035e180: 0395       str      r5, [sp, #0xc]                
+0035e182: d8f88400   ldr.w    r0, [r8, #0x84]               
+0035e186: f5f7f1fa   bl       #0x35376c                     
+0035e18a: d7f8c830   ldr.w    r3, [r7, #0xc8]               
+0035e18e: 0295       str      r5, [sp, #8]                  
+0035e190: 0422       movs     r2, #4                        
+0035e192: 0395       str      r5, [sp, #0xc]                
+0035e194: 8de82800   stm.w    sp, {r3, r5}                  
+0035e198: 0023       movs     r3, #0                        
+0035e19a: d8f88400   ldr.w    r0, [r8, #0x84]               
+0035e19e: 7a49       ldr      r1, [pc, #0x1e8]                ; [0035e388]=0081c89c "BKUP backupLen"
+0035e1a0: f5f7e4fa   bl       #0x35376c                     
+0035e1a4: d7f8cc30   ldr.w    r3, [r7, #0xcc]               
+0035e1a8: 7849       ldr      r1, [pc, #0x1e0]                ; [0035e38c]=0081c8ca "BKUP p_backup1"
+...
+0035e954: 112a       cmp      r2, #0x11                     
+0035e956: 31d0       beq      #0x35e9bc                     
+0035e958: a06d       ldr      r0, [r4, #0x58]               
+0035e95a: 44f20701   movw     r1, #0x4007                   
+0035e95e: 0023       movs     r3, #0                        
+0035e960: 0125       movs     r5, #1                        
+0035e962: eff795fd   bl       #0x34e490                     
+0035e966: 97f8d620   ldrb.w   r2, [r7, #0xd6]               
+0035e96a: 04f58043   add.w    r3, r4, #0x4000               
+0035e96e: 0195       str      r5, [sp, #4]                  
+0035e970: 0295       str      r5, [sp, #8]                  
+0035e972: 0092       str      r2, [sp]                      
+0035e974: 0422       movs     r2, #4                        
+0035e976: d3f88400   ldr.w    r0, [r3, #0x84]               
+0035e97a: 0023       movs     r3, #0                        
+0035e97c: 0d49       ldr      r1, [pc, #0x34]                 ; [0035e9b4]=0081e74c "BKUP Err Reconstruct rcsStatFlg"
+0035e97e: f4f7c3fe   bl       #0x353708                     
+0035e982: 0023       movs     r3, #0                        
+0035e984: 84f83f50   strb.w   r5, [r4, #0x3f]               
+0035e988: 84f84150   strb.w   r5, [r4, #0x41]               
+0035e98c: 84f84050   strb.w   r5, [r4, #0x40]               
+0035e990: 84f83c30   strb.w   r3, [r4, #0x3c]               
+0035e994: 084d       ldr      r5, [pc, #0x20]                 ; [0035e9b8]=00500003
+0035e996: 18e0       b        #0x35e9ca                     
+0035e998: 05e7       b        #0x35e7a6                     
+0035e99a: 8100       lsls     r1, r0, #2                    
+0035e99c: 0100       movs     r1, r0                        
+0035e99e: f00e       lsrs     r0, r6, #0x1b                 
+0035e9a0: 1ee7       b        #0x35e7e0                     
+0035e9a2: 8100       lsls     r1, r0, #2                    
+0035e9a4: 2ce7       b        #0x35e800                     
+0035e9a6: 8100       lsls     r1, r0, #2                    
+0035e9a8: d9c8       ldm      r0, {r0, r3, r4, r6, r7}      
+0035e9aa: 8100       lsls     r1, r0, #2                    
+0035e9ac: 0300       movs     r3, r0                        
+0035e9ae: 1010       asrs     r0, r2, #0x20                 
+0035e9b0: f8c8       ldm      r0!, {r3, r4, r5, r6, r7}     
+0035e9b2: 8100       lsls     r1, r0, #2                    
+0035e9b4: 4ce7       b        #0x35e850                     
+0035e9b6: 8100       lsls     r1, r0, #2                    
+0035e9b8: 0300       movs     r3, r0                        
+0035e9ba: 5000       lsls     r0, r2, #1                    
+0035e9bc: 2046       mov      r0, r4                        
+0035e9be: 0025       movs     r5, #0                        
+0035e9c0: fbf750fd   bl       #0x35a464                     
+0035e9c4: 2046       mov      r0, r4                        
+0035e9c6: faf7f5f8   bl       #0x358bb4                     
+0035e9ca: 07f13000   add.w    r0, r7, #0x30                 
+0035e9ce: 55f7d9fd   bl       #0x2b4584                     
+0035e9d2: 60b1       cbz      r0, #0x35e9ee                 
+0035e9d4: 04f58042   add.w    r2, r4, #0x4000               
+0035e9d8: 0123       movs     r3, #1                        
+0035e9da: 0090       str      r0, [sp]                      
+0035e9dc: 0193       str      r3, [sp, #4]                  
+0035e9de: 0293       str      r3, [sp, #8]                  
+0035e9e0: 013b       subs     r3, #1                        
+0035e9e2: d2f88400   ldr.w    r0, [r2, #0x84]               
+0035e9e6: 0222       movs     r2, #2                        
+0035e9e8: 0a49       ldr      r1, [pc, #0x28]                 ; [0035ea14]=0081c8d9 "BKUP Err FreeReadPackBuffer ec"
+0035e9ea: f4f78dfe   bl       #0x353708                     
+0035e9ee: 04f58044   add.w    r4, r4, #0x4000               
+0035e9f2: 0022       movs     r2, #0                        
+0035e9f4: 0123       movs     r3, #1                        
+0035e9f6: 0849       ldr      r1, [pc, #0x20]                 ; [0035ea18]=0081c978 "BKUP RcsTbl End"
+0035e9f8: 8de80c00   stm.w    sp, {r2, r3}                  
+0035e9fc: 0293       str      r3, [sp, #8]                  
+0035e9fe: 1346       mov      r3, r2                        
+0035ea00: d4f88400   ldr.w    r0, [r4, #0x84]               
+0035ea04: f4f780fe   bl       #0x353708                     
+0035ea08: 2846       mov      r0, r5                        
+
+# epilogo 0x35EA08 devuelve r5
+0035ea08: 2846       mov      r0, r5                        

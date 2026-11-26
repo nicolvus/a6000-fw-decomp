@@ -28,6 +28,14 @@
 > [paquete](film-pb-1-sub-paquete-cfw395-fbm31-20261126.md).
 > **Aviso:** crear el sector **no rellena** la base de datos; después hay que dejar que la cámara la
 > reconstruya (grabar un clip nuevo o el menú de recuperación) y solo entonces probar la reproducción.
+> **¿Basta el sector? Sí, con matiz (medido):** con idx 10 registrado, `BkRead(0x04,3)` = `0x10100003`
+> (tolerado) → `RcsBackupTblData` = `0x00500003` → `0x3AFA94` lo toma como *Need Salvage*, deja
+> `[msv+0x44]=1` y **devuelve 0** → `FlashLoadForMsv` (`0x698EC8`) devuelve **0**, sin el 1749. Antes daba
+> `0x00100001` / `0xB0800001`. Queda una tabla **vacía marcada para salvage**: el firmware la reconstruye y
+> un clip nuevo sí se registra; los viejos no.
+> **Auditoría independiente del 3.97:** `.dat` `69447a27…5cd9`, `libmpr` `831142ae…e378e`, relocaciones y
+> cabeceras intactas, auditor `todo_ok` 22/22; la cueva está en `.rodata` pero se ejecuta por el primer
+> `PT_LOAD` (`R E`) —medido en QEMU— y su alineación de pila no afecta a los tres destinos.
 
 
 > **La tabla de sectores del backup FBM está vacía y nada la recrea.** `0xA3699C` (30 entradas × 0x14,
