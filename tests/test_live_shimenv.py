@@ -62,7 +62,7 @@ def test_giro_del_dial_informa_la_posicion_y_reabre_la_vista(monkeypatch):
     vm.tecla = lambda k, v, i: enviados.append(("K", k, v, i))
     vm.envia = lambda d: enviados.append(d)
     monkeypatch.setattr(live.time, "sleep", lambda _: None)
-    monkeypatch.setattr(live.threading, "Thread", lambda target, args, daemon: type("T", (), {"start": lambda self: target(*args)})())
+    monkeypatch.setattr(live.threading, "Thread", lambda target, args=(), daemon=None: type("T", (), {"start": lambda self: target(*args)})())
     for nombre, estado in live.POSICIONES_MODO:
         enviados.clear()
         vm.gira(estado)
