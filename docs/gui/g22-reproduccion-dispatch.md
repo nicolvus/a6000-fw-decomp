@@ -1,6 +1,13 @@
 # G22-DISPATCH — de la tecla a la acción: quién convierte el evento, quién lo consume y por qué la acción 4 no se ejecuta
 
-**Estado (27-11-2026, sesión G22-ESTATICO): CAUSA ESTÁTICA IDENTIFICADA.** La tecla Reproducción sí llega a la cola
+**Estado (27-11-2026, sesión G22-ESTATICO + G22-TECLA): CAUSA ESTÁTICA IDENTIFICADA Y MEDIDA; el destino ya sale `c`
+y lo que falta es el eslabón de la vista.** La sesión **G22-TECLA** (§7.3) cerró la hipótesis del §7: el destino de los
+tres eventos no lo fija `libObj+0x111972` (ese código **no se ejecuta**: 0 ramas y 0 punteros en el fichero) sino
+`libObj+0x113076`, y el llamante real de `InputService::createEvent` se ve en `TRACE 1106b8 … lr=libObj+0x113080`.
+Con el interruptor `DESTKEYV=1` (3 sitios, `04 22` → `0c 22`) los tres eventos salen `dest=12` y **se despachan**
+(`TRACE 7eed0c`), pero el bit 8 de `AppSystem::dispatch` no llega a `libObj+0xf59f0` (ese thunk solo se ve llamarse
+desde `viewUnified2+0x198450` con ids numéricos) y `execAction` (`libObj+0x11817e`) sigue a 0 disparos. La tecla
+Reproducción sí llega a la cola
 del framework (medido en [G22-COLA](g22-cola-eventos.md): `code=150100f2 dest=4 clase=1`), pero **el `destino` del
 evento es el byte `4` de `Event[+8]`, y la vista de disparo solo recibe eventos por el bit `8` de ese byte**
 (`AppSystem::dispatch`, `libObj+0x7eed0c`). Con `dest & 8 == 0` el evento se entrega al gestor de datos
@@ -10,8 +17,9 @@ filtro de la vista» no es de la vista: es la `std::list` de trabajo de `InputSe
 el propio `pushFilterEvent` y su contenido va a `EventManager::push`. Ni la máscara `0x7ffffffe` ni la clase `1`
 son la puerta: la máscara es un dato que `InfraInput::GetEventStatus` **devuelve** y la clase solo elige cola.
 
-Sesión **sin cámara y sin QEMU**: todo leído con `readelf`/`capstone` sobre los ELF 3.21 de
-`analysis/gui/g22/harness/stage/cam/usr/lib`. Direcciones = VA del ELF (el primer `PT_LOAD` tiene vaddr 0; el
+§1–§6 y §9 son de la sesión **sin cámara y sin QEMU** (todo leído con `readelf`/`capstone` sobre los ELF 3.21 de
+`analysis/gui/g22/harness/stage/cam/usr/lib`); §7.1/§7.2 y §7.3 son **medidos en el invitado** con `qemu-system-arm` y
+el arnés (`scripts/gui/harness/live.py`), sin cámara. Direcciones = VA del ELF (el primer `PT_LOAD` tiene vaddr 0; el
 segundo lleva +0x8000, de ahí `v2o`). Los cuatro usuarios de `dest` se citan con sus bytes.
 
 ---
@@ -398,26 +406,148 @@ sintéticos los fija el filtro de la vista (`viewUnified2+0x18201c`/`+0x182042`,
 concreta: parchear esos dos literales a `0x0c` y repetir `EQTRACE` (debe salir `dest=c`) **y** `TRACEFN=f59f0,11817e` con la
 pulsación en la misma pasada; sin `dest=c` en `EQTRACE`, no tiene sentido mirar la vista.
 
+### 7.3 Medido con `DESTKEYV` (27-11-2026, sesión G22-TECLA): el destino sale `c` y lo fija `libObj+0x113076`
+
+Se añadió al shim un interruptor **`DESTKEYV=1`** (apagado por omisión) que cambia **tres** `movs r2,#4` de 2 bytes
+(`04 22` → `0c 22`, comprobando los bytes antes de escribir, idempotente y llamado en los dos ganchos `dlopen` porque
+`viewUnified2.so` entra **después** de `libObj.so`):
+
+| sitio | bytes | qué fija |
+|---|---|---|
+| `libObj+0x113076` | `04 22` | el destino de la **pulsación/suelta de la tecla** (`createEvent` en `0x11307c`) |
+| `viewUnified2+0x18201c` | `04 22` | `Event(0x15070010,4,1)` del filtro de la vista |
+| `viewUnified2+0x182042` | `04 22` | `Event(0x150701a0,4,1)` del filtro de la vista |
+
+**Cómo se localizó el sitio de la tecla (esto es lo que corrige la hipótesis del §7).** Con `TRACEFN=1106b8`
+(`InputService::createEvent`) armado **en caliente** (`E TRACEFN=…`, exige `TRACEFN=0` en el arranque para que el shim
+fije la base de `libObj`) y una pulsación de Reproducción, el llamante sale en la propia traza:
+
+```
+WAITLOG 318.14 tecla 0x1f7
+TRACE 1106b8 n=1 r0=80f54118 r1=150100f2 r2=c r3=3178 lr=ae0a2081 (libObj.so+0x113080)   <- el `blx` de 0x11307c
+EQTRACE 1 code=15070010 dest=12 clase=1 notify=0 lr=libObj.so+0x111841
+EQTRACE 2 code=150701a0 dest=12 clase=1 notify=0 lr=libObj.so+0x111841
+EQTRACE 3 code=150100f2 dest=12 clase=1 notify=0 lr=libObj.so+0x111841
+```
+
+- `r2=c` en `createEvent` **y** `dest=12` en los tres `EQTRACE`: el interruptor hace lo que dice. El antes está en §7.2
+  (`dest=4` en los tres, con `DESTKEY=1` aplicado).
+- `lr=libObj+0x113080` = retorno del `blx` de **`0x11307c`**, así que el `movs r2,#4` que hay que tocar es el de
+  **`0x113076`** (`04 22`), no el de `0x111972` (DESTKEY): la función de `0x11191c` que contiene ese último **no tiene ni
+  una referencia en el fichero** (0 ramas a `0x11191c` y 0 palabras `0x11191c`/`0x11191d` en `.text`, `.rodata`,
+  `.data`, `.data.rel.ro` ni `.got`; test `test_la_gemela_111972_no_tiene_ni_una_referencia`), o sea que `DESTKEY`
+  parcheaba código muerto. La función **viva** (`0x1130xx`) es su gemela: calcula el código desde la base
+  (`0x150100f0`) con `+2` (pulsación → `0x150100f2`, `0x11304c`), `+1` (suelta → `0x150100f1`, `0x113054`) o `+4`
+  (`0x113050`), llama a `createEvent` y luego a `pushFilterEvent`.
+- Los dos eventos sintéticos ya salían del filtro con `dest=12`, lo que confirma el §2.1 (el filtro **no** reescribe el
+  destino del original: no hay ningún `strb rX,[rY,#8]` entre `0x181fb8` y `0x182068`;
+  test `test_el_filtro_fija_el_destino_de_sus_dos_copias_y_no_toca_el_original`).
+
+**Qué pasa después (medido en el invitado, `TRACEFN=7eed0c,7ef910,7f4528,7eee68,f59f0,11817e`).** Los tres eventos se
+despachan; el consumidor del bit 4 los recibe y el reparto por destino **sí llega a la rama del bit 8**:
+
+```
+TRACE 7ef910 n=1 r0=518f20 r1=0 r2=518f2c r3=0 lr=ae77e03f (libObj.so+0x7ef03e)     <- trasvase cola 1 -> cola 0
+TRACE 7eed0c n=1 r0=aacfed10 r1=54c408 r2=518f2c r3=1 lr=ae77dfe7 (libObj.so+0x7eefe6)  <- AppSystem::dispatch
+TRACE 7f4528 n=1 r0=525658 r1=54c408 r2=518f2c r3=0 lr=ae77ddaf (libObj.so+0x7eedae)    <- consumidor del bit 4
+TRACE 7eee68 n=8 r0=807abce8 r1=1249870 r2=10 r3=aef46630 lr=ae75088b (libObj.so+0x7f488a)   <- rama dest&8
+  DEREF 0xaef46630+0: ae06ab49 ae06ab75 ae06a8ed 00000000 b6e08e50 aeb2814a aef45af8 b6e08e50 aeb2815b
+  DEREF 0x121ac08+0: 0121ac50 15070010 0000010c 0121ac20 …   <- Event: +0 int*, +4 CÓDIGO, +8 dest|clase
+  DEREF 0x1249870+0: 012498b8 150701a0 0000010c 01249888 …
+  DEREF 0x11cbd10+0: 011cca48 150100f2 0000010c 0119cf08 …
+```
+
+Es decir: **la vista sí recibe el evento** — la palabra `+8` de los tres es `0x0000010c` (`dest=0x0c`, `clase=0x01`) y la
+rama `dest & 8` de `AppSystem::dispatch` se ejecuta con el `Event*` en `r1`. `TRACE 11817e`
+(`ActionCheckerListBase::execAction`) sigue a **0 disparos** en las tres pasadas.
+
+**Corrección al §3.2 (bytes, verificados otra vez).** El reparto de `0x7eed0c` no es una cadena 1/2/4/8: los cuatro
+tests del **destino** están intercalados con impresiones de depuración que dependen de **otro** byte,
+`[AppSystem+0x24]` (bits 8/0x10/0x20/0x40 → `0x7eeb74`), y van en este orden: `and r3,r6,#4` (`0x7eed94` →
+`0x7f4528`), `and r3,r6,#2` (`0x7eedda` → `0x7ed49c`), `tst r6,#1` (`0x7eee20` → `0x7f4c30`) y `and r6,r6,#8`
+(`0x7eee5a` → `(*[AppSystem+0x1c])->vtable[+8]`), con `r6 = Event::getDest()` (`0x7eed78`).
+
+**La ranura `vtable[+8]` NO es `libObj+0xf59f0`.** Con `libObj` en `0xadf5c000` (lo dice la propia traza:
+`ae75088a & ~1 - 0x7f488a`), la tabla del objeto `[AppSystem+0x1c]` es `0xaef46630` y su **palabra de byte +8** (la
+tercera, `ldr r3,[r0]` + `ldr r3,[r3,#8]` en `0x7eee66`) es **`0xae06a8ed` = `libObj+0x10e8ed`**, no
+`libObj+0xf59f0`. `0xf59f0` es un *thunk* de 12 B (`ldr r3,[r0]` · `ldr r3,[r3,#8]` · `blx r3`, bytes en `0xf59f0`), y
+en el invitado **solo** se le ve llamar desde `viewUnified2+0x198450` con ids **numéricos**
+(`r1=2`, `r1=8`, `r1=0x2a`), nunca desde `AppSystem::dispatch` ni con un `Event*`.
+
+### 7.4 El eslabón que falta: el reparto multicast `libObj+0x10e8ec` y el mapa `{evento → acción}` de la vista
+
+`libObj+0x10e8ec` (destino real de la ranura) es un **reparto a todos los oyentes**: recorre una `std::list` en
+`this+0x14` y para cada elemento hace `(*oyente)->vtable[8](oyente, evento)`:
+
+```asm
+10e8ec  push {r4,r5,r7,lr} · r5 = r0 + 0x14 · r4 = r1          ; r4 = el Event*
+10e8fa  bl 0x10e8e2 · str r0,[r7,#4] · bl 0x10e8be · str r0,[r7]   ; begin()/end() de la lista
+10e90a  adds r0,r7,#4 · bl 0x10e844                            ; iterador -> valor
+10e910  mov r1,r4 · ldr r0,[r0,#4]                             ; r0 = el oyente, r1 = el Event*
+10e914  ldr r3,[r0] · ldr r3,[r3,#8] · blx r3                  ; (*oyente)->vtable[8](oyente, evento)
+```
+
+Con esto el mapa del evento queda así de medido: tecla → `createEvent(dest=0xc)` → cola 1 → cola 0 →
+`AppSystem::dispatch` (bit 4 al gestor de datos **y** bit 8 a la vista) → `libObj+0x10e8ec` → **cada oyente** decide →
+`execAction` **nunca** se llama. El eslabón que falta está, por tanto, dentro de los oyentes: el `ActionEventMap` de la
+vista no traduce `0x150100f0`/`0x150100f2` a la acción `4` (o la acción no está en su lista de *checkers*).
+
+Lo que se sabe de ese tramo, con su etiqueta:
+
+- **VERIFICADO (bytes)**: el traductor de ids de la vista es `ViewBase::GetEventId` (`libObj+0x121d58`):
+  `r0 = [this+0x14]` → `Event::getId()` (`0xdbafc`), y ese id se busca en el **mapa de `this+0x28`** con
+  `libObj+0xf2fe0` (`find(this+0x1c, clave)` → `[entrada+4]`); luego compara la clase con
+  `(View::getView()<<12)+0x13000000` y, si coincide, devuelve la **diferencia** (`0x121d76`: `bic r3,r5,#0xfe0` ·
+  `0x121d7a`: `bic r3,r3,#0x1f` · `0x121d84`: `cmp r3,r0` · `0x121d88`: `rsbeq r5,r3,r5`). Es el único lector de ese
+  mapa (los dos sitios que llaman a `0xf2fe0` son `0x121d6a`, dentro de esta función, y `0x131fe4`).
+- **VERIFICADO (bytes)**: la tabla `{evento, acción}` (`.rodata 0x3a03d4`, 19 entradas, `{0x150100f0,4}`) tiene un solo
+  lector, `viewUnified2+0x1906a8`, y ese lector **no es alcanzable**: 0 ramas a `0x1906a8` y 0 palabras `0x1906a9` en
+  `viewUnified2.so` ni en `libObj.so`. No es de ahí de donde sale la acción 4 de este binario.
+- **NO_VERIFICADO**: quién es el oyente que debería traducir, y con qué tabla. Candidatos a medir: (a) la lista de
+  `[AppSystem+0x1c]+0x14` (cuántos oyentes tiene y qué vtable tiene cada uno: `P`/`DEREF` sobre esa lista, o una
+  trampa en `0x10e914`); (b) si el mapa de `View+0x28` tiene entrada para `0x150100f0`/`0x150100f2` (leerlo con
+  `TRACEDEREF` en la entrada de `0x121d58`, donde `r0` es la vista); (c) la tabla de disparo `[View+0x20]`
+  (`View::getTriggerTable`, `libObj+0x7f1a98`).
+- **NO_VERIFICADO (de dónde salen los dos objetos)**: `AppSystem+0x1c` lo pone `[this+0x14]->vtable[0x3c]()`
+  (`0x7ef326`/`0x7ef332`); la tabla medida del objeto (`0xaef46630`) cae en `.data.rel.ro` de una biblioteca de la
+  familia `viewUnified*` (**INFERENCIA**: coincide con `viewUnified2.so+0x446630`, dentro de
+  `.data.rel.ro 0x4448d8…0x49b124`), lo que explicaría que la raíz de la vista viva fuera de `libObj`; falta medirlo.
+
+**Nota de método (para no repetir el fallo).** `TRACEDEREF=d<reg>:<off>:<n>` desreferencia **siempre**, así que solo vale
+en trampas cuyo registro sea un puntero: puesta en la trampa de `1106b8` (donde `r1` es el *código* del evento) o en la
+de `f59f0` (donde `r1` es un id pequeño) mata al hilo con SIGSEGV y deja el invitado sin ese hilo (pasó dos veces en esta
+sesión: `pila (sig 11 tid … I-InputEvent)` y `pila (sig 11 tid … Appframework)`, con `addr=150100f2` y `addr=2`). Los
+datos de esta sección son de las pasadas limpias; el `p1`/`p2` de los `EQTRACE` empieza en 1 en cada arranque.
+
+**Arranques.** Dos arranques en frío con `SHIMEXTRA='DESTKEYV=1 TRACEFN=0 WAITLOG=3000'` (`/home/nicolas/hv/harness`,
+perfiles `tecla2` y `tecla3`, puertos 8692/8693) se quedaron en el cuelgue conocido (G22-CUELGUE: 2 fotogramas, 2 listas,
+0,0046 de píxeles opacos) y **aun así sirven para medir el camino de la tecla** (§7.3), porque el bucle `AppSystem::Main`
+sigue vaciando la cola; para ver la pantalla hay que repetir el arranque. `destkeyv()` deja
+`DESTKEYV: libObj+0x113076 04 22 -> 0c 22` en el registro (necesita `WLALL=1` para llegar a `shim.log`).
+
 ## 8. Siguiente paso medible
 
-**Paso 1 (decisivo, 2 bytes, molde `EVQNOTIFY`, en el arnés y no en la cámara).** Cambiar sólo el destino de la
-publicación de la tecla: `libObj+0x111972` `04 22` (`movs r2,#4`) → **`0c 22`** (`movs r2,#0xc`), que suma el bit
-de la vista y conserva el consumidor de datos. Igual, si se quiere la copia sintética, en
-`viewUnified2+0x18201c` y `viewUnified2+0x182042`. Después de pulsar Reproducción, con
-`TRACEFN=f59f0,11817e,1117f4,121d58,f2fe0,17df8c` y `EQTRACE=1`:
+**Paso 0 (HECHO en G22-TECLA, §7.3).** El interruptor `DESTKEYV=1` cambia los tres sitios correctos
+(`libObj+0x113076`, `viewUnified2+0x18201c`, `viewUnified2+0x182042`) y la medida da `TRACE 1106b8 … r2=c` +
+`EQTRACE … dest=12` en los tres eventos. **El paso 1 del §8 original queda tachado**: el `movs` de `libObj+0x111972`
+no era el que fija el destino de esta ruta (código muerto).
 
-- criterio de cierre del tramo: **`TRACE f59f0 … r1=150100f2`** (o `=2`, si el mapa de `GetEventId` traduce) **y
-  `TRACE 11817e` > 0** en la misma pasada;
-- si `f59f0` recibe `2` pero `11817e` sigue a 0, el corte se ha movido al mapa `{evento, acción}` (§2.3) y al mapa
-  de `GetEventId` (`0xf2fe0`) → paso 2.
+**Paso 1 (decisivo ahora, medible).** Averiguar qué oyente de `[AppSystem+0x1c]+0x14` debería traducir el evento:
 
-**Paso 2 (estático, sin VM).** Volcar el mapa `[View+0x28]+0x1c` de la vista de disparo: quién lo rellena (buscando
-los `insert` con claves `0x1501xxxx` en `viewUnified2.so`) y si contiene `0x150100f0`/`0x150100f2`. Es la pregunta
-«¿está registrada su clase de evento?» en su forma real, y se puede contestar leyendo el ELF.
+- trampa en `libObj+0x10e914` (`ldr r0,[r0,#4]` del bucle multicast) con `TRACEDEREF=d0:0:8`: da el **oyente** de cada
+  vuelta (y cuántas vueltas hay) cuando llega la tecla;
+- con el oyente en la mano, `P`/`DEREF` sobre su vtable para ver su `vtable[8]`, y una trampa en esa ranura con
+  `TRACEDEREF=d1:0:3` (aquí `r1` **sí** es el `Event*`) para confirmar que recibe `code=150100f2 dest=0x0c`;
+- si el oyente es el `ActionEventMap`, leer su mapa de `{evento → acción}`: buscar en el invitado los `insert` con
+  claves `0x1501xxxx` (o volcar el mapa con `P` una vez conocido el puntero).
 
-**Paso 3 (si el 1 sale negativo).** Buscar el productor que sí enciende la vista: `dest` es un byte escribible, así
-que rastrear los `strb rX,[rY,#8]` sobre objetos `Event` (o el reenvío por `AppWidgetBase::pushEvent`
-`libObj+0x120190`, que construye `dest=4, clase=0`, y `libObj+0x127ba8` → `AbstractUtilityManager::pushEvent`).
+**Criterio de cierre del tramo:** `TRACE 11817e > 0` con `r1=4` en la misma pasada que la pulsación, o el mapa del
+oyente volcado y `0x150100f0` **ausente** de él (eso cerraría el diagnóstico: la vista nunca registra la tecla).
+
+**Paso 2 (si el mapa no tiene la entrada).** Buscar el productor que sí registra `{0x150100f0, 4}`: no es la tabla
+`.rodata 0x3a03d4` (su lector es inalcanzable, §7.4), así que o se construye en tiempo de ejecución (buscar en el
+invitado los `insert` con esa clave) o la tecla de la cámara no pasa por el `ActionEventMap` y hay otra vía
+(la `[View+0x20]`, `View::getTriggerTable`, sigue **NO_VERIFICADA**).
 
 ## 9. VERIFICADO / INFERENCIA / NO VERIFICADO
 
@@ -437,10 +567,17 @@ que rastrear los `strb rX,[rY,#8]` sobre objetos `Event` (o el reenvío por `App
 | 12 | El destino `4` es el valor de fábrica «correcto» y en la cámara la vista se alcanza por otra vía | **NO VERIFICADO** | — (paso 1 de §8) |
 | 13 | Qué contiene el mapa `[ViewBase+0x28]+0x1c` (`0xf2fe0`) para `0x150100f0`/`0x150100f2` | **NO VERIFICADO** | — (paso 2 de §8) |
 | 14 | La tabla de disparo (`View::getTriggerTable` = `[View+0x20]`) de la vista de disparo no es nula | **NO VERIFICADO** | `libObj+0x7f1a98`, `0x120934` (devuelve 5 si es nula) |
+| 15 | El destino de los tres eventos de una pulsación de Reproducción lo fijan `libObj+0x113076` y los dos literales del filtro; con `DESTKEYV=1` salen `dest=12` (`0x0c`) | **VERIFICADO (medido)** | `TRACE 1106b8 n=1 … r1=150100f2 r2=c lr=libObj.so+0x113080`; `EQTRACE 1..3 … dest=12` |
+| 16 | `libObj+0x111972` (DESTKEY) pertenece a código sin referencias: 0 ramas a `0x11191c` y 0 palabras `0x11191c`/`0x11191d` en todo el fichero | **VERIFICADO (bytes)** | test `test_la_gemela_111972_no_tiene_ni_una_referencia` |
+| 17 | La rama `dest & 8` de `AppSystem::dispatch` **sí** se ejecuta con los tres eventos (`Event[+8]=0x0c`) | **VERIFICADO (medido)** | `TRACE 7eee68` + `DEREF 0x11cbd10: … 150100f2 0000010c` |
+| 18 | La ranura `(*[AppSystem+0x1c])->vtable[byte+8]` **no** es `libObj+0xf59f0`: con `libObj` en `0xadf5c000`, la tabla `0xaef46630` tiene `0xae06a8ed` = `libObj+0x10e8ed` | **VERIFICADO (medido + aritmética)** | `DEREF 0xaef46630+0: ae06ab49 ae06ab75 ae06a8ed …`; corrige el §3.2/§7 |
+| 19 | `libObj+0x10e8ec` es un reparto multicast: recorre la lista de `this+0x14` y hace `(*oyente)->vtable[8](oyente, Event*)` | **VERIFICADO (bytes)** | `0x10e8ec`-`0x10e934` (`0x10e914`: `ldr r3,[r3,#8]` · `0x10e918`: `blx r3`) |
+| 20 | `execAction` (`libObj+0x11817e`) sigue sin ejecutarse con la tecla, aun con `dest=0xc` | **VERIFICADO (medido)** | 0 líneas `TRACE 11817e` en tres pasadas |
+| 21 | Qué oyente de `[AppSystem+0x1c]+0x14` traduce `0x150100f0` a la acción 4, y de qué tabla sale | **NO VERIFICADO** | §7.4 y §8 paso 1 |
 
 ## 10. Tests sin QEMU
 
-`tests/test_g22_dispatch.py` (13 casos) fija, contra los ELF 3.21 de
+`tests/test_g22_dispatch.py` (**16 casos**) fija, contra los ELF 3.21 de
 `analysis/gui/g22/harness/stage/cam/usr/lib` (no versionados: si faltan, el módulo se salta):
 
 1. `Event` +4/+8/+9 y `getDest`;
@@ -457,8 +594,13 @@ que rastrear los `strb rX,[rY,#8]` sobre objetos `Event` (o el reenvío por `App
 12. la lista de teclas del grupo `0xf` (`0x4aa6c8` → `0x4aa848`) y la máscara `0x7ffffffe`;
 13. la vista acepta `0x15xxxxx` (`0x17dfb0`) y `getInputEventStatus` no tiene llamantes.
 
-Medido en 5 s (`pytest tests/test_g22_dispatch.py -q`): 13 casos, sin QEMU. Los tres ficheros de la serie
-(`test_g22_cola.py`, `test_g22_repro.py`, `test_g22_dispatch.py`) suman 32 casos en verde.
+Medido en 7 s (`pytest tests/test_g22_dispatch.py -q`): 16 casos, sin QEMU. Los tres ficheros de la serie
+(`test_g22_cola.py`, `test_g22_repro.py`, `test_g22_dispatch.py`) suman 35 casos en verde. Los tres casos nuevos de
+G22-TECLA fijan los bytes que se parchean: los de `libObj+0x113076` (con el `blx` de `0x11307c` a `createEvent` y los
+`adds r1,r6,#2/#1/#4` del código), la ausencia de referencias a `libObj+0x11191c`, y los dos literales del filtro junto
+con la ausencia de `strb rX,[rY,#8]` en el filtro. En `tests/test_gui_harness.py` hay además un caso
+(`test_destkeyv_parchea_los_tres_sitios_medidos_y_comprueba_los_bytes`) que comprueba que el shim escribe sólo esos tres
+sitios, que compara los bytes antes (`*p != 0x2204`) y que se llama en los dos ganchos `dlopen`.
 
 ## PARA PENDIENTES.md
 

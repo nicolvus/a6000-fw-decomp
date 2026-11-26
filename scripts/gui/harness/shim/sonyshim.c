@@ -1327,6 +1327,44 @@ static void destkey(void) {
     *p = 0x220c; __builtin___clear_cache((char *)p, (char *)p + 2);
     LOG("DESTKEY: libObj+0x111972 movs r2,#4 -> #0xc (la tecla también va a la vista)");
 }
+/* DESTKEYV=1 (G22-DISPATCH-2; APAGADO por omisión): el destino de los TRES eventos de una pulsación de Reproducción no
+ * lo fija el `movs` de DESTKEY. Medido (sesión G22-TECLA, 26-11-2026) con `EQTRACE=1` y `DESTKEY=1` aplicado:
+ * `code=15070010 dest=4`, `code=150701a0 dest=4` y `code=150100f2 dest=4`, los tres con `lr=libObj+0x111841` (el `push`
+ * del bucle de `InputService::pushFilterEvent`, `0x11183c`), o sea que `libObj+0x111972` (DESTKEY) no es el que fija el
+ * destino de esta ruta. Con `TRACEFN=1106b8` armado en caliente y la misma pulsación el llamante real de
+ * `InputService::createEvent` sale en la traza: `TRACE 1106b8 n=1 r1=150100f2 r2=4 lr=libObj.so+0x113080`, es decir el
+ * `blx` de `libObj+0x11307c` y su `movs r2,#4` de `libObj+0x113076` (`04 22`) — la gemela viva de la función sin
+ * referencias `libObj+0x11191c`. Los sitios que fijan el destino de los tres eventos quedan así:
+ *  - libObj+0x113076: la pulsación (`0x150100f0+2` → `0x150100f2`) y la suelta (`+1` → `0x150100f1`) de cualquier tecla;
+ *  - viewUnified2+0x18201c y viewUnified2+0x182042: los dos literales del filtro de la vista (viewUnified2+0x181fb8) que
+ *    fabrican `Event(0x15070010,4,1)` y `Event(0x150701a0,4,1)`. El original entra en la lista con el destino que le puso
+ *    `createEvent` (el filtro no lo toca: no hay ningún `strb` sobre `[evento+8]` en 0x181fb8-0x182068).
+ * Con los tres a 0x0c (`0c 22`) el evento cae además en el bit 8 de `AppSystem::dispatch` (`libObj+0x7eed0c`) y llega a
+ * `(*[AppSystem+0x1c])->vtable[+8]` (`libObj+0xf59f0`, el thunk que reenvía a la ranura virtual). Es diagnóstico del
+ * arnés, no de la cámara; comprueba los bytes antes de escribir y es idempotente (viewUnified2 entra por dlopen DESPUÉS
+ * de libObj, así que se llama en los dos ganchos). Ver docs/gui/g22-reproduccion-dispatch.md §7.3. */
+static unsigned long libbase_de(const char *nombre) {
+    unsigned long base = 0; char ln[256]; FILE *m = fopen("/proc/self/maps", "r");
+    while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, nombre)) { base = hexv(ln, 0); break; }
+    if (m) fclose(m);
+    return base;
+}
+static void dest4_a_c(unsigned long base, unsigned long off, const char *lib) {
+    if (!base) return;                                       /* la biblioteca aún no está mapeada: se reintenta en el siguiente dlopen */
+    unsigned short *p = (unsigned short *)(base + off);
+    if (*p == 0x220c) return;                                /* ya parcheado */
+    if (*p != 0x2204) { LOG("DESTKEYV: %s+%#lx distinta (%#x, se esperaba 2204): sin parche", lib, off, *p); return; }
+    mprotect((void *)((unsigned long)p & ~4095UL), 8192, PROT_READ | PROT_WRITE | PROT_EXEC);
+    *p = 0x220c; __builtin___clear_cache((char *)p, (char *)p + 2);
+    LOG("DESTKEYV: %s+%#lx 04 22 -> 0c 22 (destino 4 -> 0xc)", lib, off);
+}
+static void destkeyv(void) {
+    const char *e = getenv("DESTKEYV"); if (!e || *e == '0') return;
+    dest4_a_c(libbase_de("libObj.so"), 0x113076, "libObj");        /* la pulsación/suelta de la tecla */
+    unsigned long vu = libbase_de("viewUnified2.so");
+    dest4_a_c(vu, 0x18201c, "viewUnified2");                        /* Event(0x15070010, 4, 1) del filtro */
+    dest4_a_c(vu, 0x182042, "viewUnified2");                        /* Event(0x150701a0, 4, 1) del filtro */
+}
 static void evqnotify(void) {
     static int hecho; const char *e = getenv("EVQNOTIFY"); if (hecho || !e || *e == '0') return;
     hecho = 1;
@@ -1362,7 +1400,8 @@ void *dlopen(const char *f, int fl) {
     if (f && strstr(f, "viewUnified")) gpu_live = 1;
     LOG("dlopen(%s) ...", f ? f : "(null)");
     void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
-    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lrm_arranque(); lobj_h = h; mwf_nullsafe(); evqnotify(); destkey(); }
+    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lrm_arranque(); lobj_h = h; mwf_nullsafe(); evqnotify(); destkey(); destkeyv(); }
+    if (h && f && strstr(f, "viewUnified")) destkeyv();  /* DESTKEYV: viewUnified2 entra por dlopen DESPUÉS de libObj; el parche de sus dos literales se hace aquí (idempotente) */
     if (h && f && getenv("TRACELIB") && (strstr(f, getenv("TRACELIB")) || strstr(f, "viewUnified")) && !trc_lib_done) {  /* la biblioteca puede entrar como dependencia de viewUnified*: se busca en /proc/self/maps tras cada dlopen hasta hallarla */
         char ln[256]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");
         while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, getenv("TRACELIB"))) { base = hexv(ln, 0); break; }
