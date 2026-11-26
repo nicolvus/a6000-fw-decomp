@@ -158,3 +158,46 @@ volvió a cambiar al reproducir.
 
 [Transcripción de las tres capturas](evidence/film-pb1-sector31-camara-20261126/2-graba-reproduce.txt).
 Se usaron los controles normales de la cámara y lecturas por Telnet y ADB.
+
+## 9. Contraste del tiempo solicitado y los límites del MP4
+
+El `0xB051000B` de la primera línea 1084 no identifica la pista. El ELF llama a ese
+buscador desde dos rutas de audio, una de metadatos y una de vídeo. Una ruta de audio
+trata ese código expresamente y sigue. Además, el retorno interno `0x200` también
+puede llegar si no se encuentra la entrada de tiempos de la pista. El código por sí
+solo deja abiertas esas posibilidades y el caso en que el tiempo alcanza el límite.
+
+El error de vídeo posterior sí queda localizado. Las líneas **3058** de
+`mp4FileLib_Play.cpp` y **362** de `mp4FileLib_Play_VideoTrack.cpp` corresponden,
+respectivamente, a la salida de `SetPlayStartAndEnd` al llamar a `SetPlayStart`
+y a la salida de `GetSyncSampleNoByTime` dentro de este último. El primer método
+calcula `startOffsetVT` convirtiendo una posición de la escala 90 000 a la escala
+de vídeo y aplicando una corrección con signo. La rutina de vídeo devuelve
+`0xB0F2000A` cuando la búsqueda de muestra o de cuadro de sincronía devuelve
+`0xB051000B`.
+
+El mensaje de la línea **166** de `mp4FileLib_Play.cpp` sitúa esa llamada dentro de
+`ChgPBAttribute`. Este método copia `ResumeInfo` antes de calcular el inicio. La
+posición que convierte `SetPlayStartAndEnd` es su campo `vSyncSampleTimeOffset` y la
+corrección llega del bloque de atributos. Esto vincula el error posterior con el
+cambio de atributos del reproductor. El log no conserva el valor de reanudación ni
+indica por qué el arranque inicial del decodificador falló.
+
+| Valor de control en `MAH04204.MP4` | Unidades de vídeo a 30 000/s |
+|---|---:|
+| Primer DTS y último DTS | 0 y 179 179 |
+| Primer CTS y último CTS | 1 001 y 180 180 |
+| Inicio de la edición y duración total | 1 001 y 180 180 |
+
+La edición resta 1 001 unidades al presentar la pista. Por ello el último CTS sin
+ajustar coincide numéricamente con la duración `mdhd`, mientras que el último
+instante de presentación ajustado es 179 179. Son referencias del archivo. La
+captura física no imprime `startOffsetVT` ni el límite interno de la tabla cargada;
+la igualdad en el archivo no demuestra una comparación de fin de pista en cámara.
+
+La comprobación que discrimina el fallo debe adquirir en la misma consulta
+`vSyncSampleTimeOffset`, `startOffsetVT`, el identificador de pista, el puntero
+devuelto por la búsqueda de la tabla y el límite, si la tabla existe. Si el puntero
+es nulo, la prioridad es la
+carga de la tabla. Si existe, se puede reconstruir la comparación con el tiempo
+solicitado. [Evidencia del contraste](evidence/film-pb1-sector31-camara-20261126/3-tiempo-de-muestra.txt).

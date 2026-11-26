@@ -1,5 +1,14 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## FILM-PB-1 — contraste del tiempo de muestra de MAH04204 (26-11-2026)
+
+El primer `0xB051000B` no identifica la pista. El ELF comparte el buscador entre audio, vídeo
+y metadatos, y distingue retorno por tabla ausente o por límite alcanzado. El error posterior
+de vídeo sí pasa por `SetPlayStart` y `GetSyncSampleNoByTime`. En el archivo, el último CTS
+sin editar es 180 180 y el último tiempo de presentación corregido es 179 179 (escala 30 000).
+Próximo paso: adquirir el ID de pista, `startOffsetVT`, la entrada de tiempos y su límite en
+el mismo intento. [Contraste](../reports/film-pb-1-sector31-resultado-20261126.md#9-contraste-del-tiempo-solicitado-y-los-límites-del-mp4).
+
 ## FILM-PB-1 — grabación y reproducción físicas del mismo clip (26-11-2026)
 
 `MAH04204` se grabó, tiene miniatura y se decodifica en el PC. La A6000 muestra «No se puede

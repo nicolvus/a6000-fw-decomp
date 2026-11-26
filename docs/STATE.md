@@ -104,8 +104,10 @@
 > En la cámara muestra «No se puede visualizar». El anillo añade `EnterMoviePb`,
 > `ff4PlayIf.cpp → 0xB051000B`, `ER_MOVIE_DECODE_FAILED (1600F101h)`, `PauseRelease
 > NG: ER_OUTSIDE_RANGE` y `PlayMovie err = MPR::ER_FAILED`. El primer código es el retorno
-> interno `0x200` de la consulta de muestra por tiempo. Una de sus rutas compara el tiempo
-> calculado con un límite. Falta identificar la rama tomada y su relación con el estado de FBM.
+> interno `0x200` de una consulta usada por audio, vídeo y metadatos. Puede venir del límite
+> de tiempo o de una entrada de tiempos ausente. El error posterior de vídeo se localizó en
+> `ChgPBAttribute` → `SetPlayStart` → `GetSyncSampleNoByTime`. La captura carece de `startOffsetVT` y del límite
+> cargado. [Contraste con el MP4](../reports/film-pb-1-sector31-resultado-20261126.md#9-contraste-del-tiempo-solicitado-y-los-límites-del-mp4).
 > [Resultado y evidencia](../reports/film-pb-1-sector31-resultado-20261126.md#8-relectura-física-del-arranque-posterior-26-11-2026-1633-clst).
 
 ## Reproducción de vídeo — FILM-PB-1 (26-11-2026)

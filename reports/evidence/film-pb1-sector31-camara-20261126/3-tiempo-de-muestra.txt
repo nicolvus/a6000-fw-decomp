@@ -1,0 +1,50 @@
+FILM-PB-1 | Contraste del tiempo de muestra | 26-11-2026
+
+Archivo: MAH04204.MP4; SHA-256 39f9becfa5017682cc3d60c7c76c29239c40fc705232e667797dfb8a8f048445.
+Lectura directa de cajas del MP4:
+  mvhd & tkhd (vídeo): escala global 90000, duración 540540.
+  mdhd (vídeo, track ID 1): escala 30000, duración 180180.
+  stts: 180 muestras de 1001 unidades. ctts: 180 desplazamientos de +1001.
+  elst: una edición (duración 540540 en escala global, inicio de medio 1001, velocidad 1).
+  stss: muestras 1, 31, 61, 91, 121 y 151 (numeración de caja, base 1).
+  DTS de la primera y última muestras: 0 y 179179.
+  CTS de la primera y última muestras: 1001 y 180180.
+  Tras aplicar el desplazamiento de la edición, primera/última presentación: 0 y 179179.
+  mdhd (audio, track ID 2): escala 48000, duración 287744; stts: 281 muestras de 1024.
+
+ELF: libmpr.so de fábrica, idéntico al MD5 verificado en cámara.
+Los BL directos a 0x6DE608 (GetSamplenoByMediatime32Offset) se verificaron contra bytes:
+  0x6894E6 AudioTrack       0x68A11C AudioTrack
+  0x68A936 RealTimeMetadataTrack      0x68D134 VideoTrack
+  0x68A124–0x68A132: el segundo llamador audio trata 0xB051000B aparte y sigue.
+  0x68D138–0x68D13E: si VideoTrack recibe 0xB051000B, salta a 0x68D1BC.
+  0x68D1BC carga 0xB0F2000A. 0x68D1F2 lo devuelve al llamador.
+  0x68D178 y 0x68D194 también pueden llegar a esa traducción, por 0x68D1A8.
+
+Vínculo exacto con los dos mensajes de vídeo registrados después del error del decodificador:
+  0x688402–0x68845E: SetPlayStartAndEnd calcula startOffsetVT:
+     convierte [objeto+0x88] de base 90000 a la escala de vídeo y aplica
+     la corrección con signo guardada en [objeto+0x10] (mismas conversiones).
+     0x68B764 obtiene la escala de destino de [VideoTrack+0x18].
+  0x6884A0 llama a VideoTrack::SetPlayStart, cuya salida se registra con línea 3058.
+  0x68D4DC llama a GetSyncSampleNoByTime y 0x68D4E0 fija línea 362.
+  0x68D4D6 y 0x68D4DA pasan startOffsetVT al buscador, como valor de dos palabras.
+  La línea 166 de MP4FileLib_Play.cpp también aparece en el log posterior al fallo.
+  0x68925C ChgPBAttribute vuelca ResumeInfo via 0x689178 y los atributos via 0x689064.
+  0x689288–0x689290 copia ResumeInfo al objeto +0x80. Su palabra +8, que queda en +0x88,
+  está rotulada vSyncSampleTimeOffset por el ldr de 0x68919E y la lectura de 0x6891A4.
+  0x689294–0x68929C copia los atributos al objeto +0x10.
+  0x6892A2 invoca SetPlayStartAndEnd; 0x6892A6 fija la línea 166 para su retorno.
+
+Causas alternativas del mismo retorno interno:
+  0x69F8D2 llama a 0x6ACC60 y el branch de 0x69F8DA propaga su retorno no nulo.
+  0x6ACC86 busca por id con 0x6AC9DA. Esta rutina devuelve puntero nulo si no halla la entrada.
+  0x6ACC90–0x6ACC94 toma 0x6ACD2C (retorno 0x200) cuando la entrada queda nula.
+  0x69F8E2–0x69F902 usa el tiempo o el tiempo menos una unidad según la bandera.
+  0x69F904–0x69F90E compara ese tiempo con el límite de 64 bits en [r1+0x40].
+  Si alcanza/supera el límite, toma 0x69F9C6 y devuelve 0x200.
+  0x6F0B32–0x6F0B52 traduce 0x200 a 0xB051000B.
+
+El log físico no contiene startOffsetVT, vSyncSampleTimeOffset, GetSyncSampleNoByTime ni p_mediaTimeOffsetVT.
+Los tiempos de las cajas son controles del archivo. El tiempo solicitado, el valor de
+[r1+0x40] y la rama concreta de esta ejecución no se midieron.
