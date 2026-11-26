@@ -28,6 +28,7 @@ from __future__ import annotations
 import argparse
 import base64
 import hashlib
+import importlib.util
 import io
 import json
 import os
@@ -1073,11 +1074,10 @@ def base_sony(salida: Path, teclas: str, espera_max: float, puerto: int) -> dict
 def etapa_arranque(usr: dict[str, Any] | None, checks: list[dict[str, Any]], salida: Path, perfil: str,
                    puerto: int | None, teclas: str, espera_max: float, nuevo_perfil: bool = False) -> dict[str, Any]:
     """Etapa 4: arranque en frío del CFW y comparación con Sony de serie (mismas teclas)."""
-    faltan = [n for n in ("vmlinuz", "base.cpio.gz", "stage/cam/usr") if not (TRABAJO / n).exists()]
     if not usr:
         add(checks, "arranque.overlay", False, "no hay /usr del CFW que superponer", 4)
         return {}
-    faltan += [n for n in ("debugfs", "qemu-system-arm") if shutil.which(n) is None]
+    faltan = artefactos_arranque()
     add(checks, "arranque.artefactos", not faltan, f"faltan {faltan}" if faltan else "vmlinuz, base.cpio.gz y stage/cam/usr",
         4, material=bool(faltan))
     if faltan:
@@ -1156,7 +1156,8 @@ def nombres_teclas() -> set[str]:
 
 def artefactos_arranque() -> list[str]:
     faltan = [n for n in ("vmlinuz", "base.cpio.gz", "stage/cam/usr") if not (TRABAJO / n).exists()]
-    faltan += [n for n in ("debugfs", "qemu-system-arm") if shutil.which(n) is None]
+    faltan += [n for n in ("debugfs", "qemu-system-arm", "cpio", "gzip", "zstd") if shutil.which(n) is None]
+    faltan += [f"python:{m}" for m in ("numpy", "PIL") if importlib.util.find_spec(m) is None]
     return faltan
 
 
