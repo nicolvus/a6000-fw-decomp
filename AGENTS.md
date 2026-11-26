@@ -25,7 +25,7 @@ decidir algo sobre el orden del repo, ejecuta `bash scripts/agent/sync_rules.sh`
 lista qué difiere de las copias locales. **Manda GitHub**: aplica en la sesión lo que traiga y,
 si la copia local versionada se quedó atrás, actualízala en el mismo commit. Nunca sobrescribas
 la copia local con un snapshot más antiguo: si GitHub aún no trae esta regla, esta regla sigue
-vigente y no se borra.
+vigente y no se borra. Norma: `ORDEN.md` §11.
 
 Restricciones del proyecto: sin firmware ejecutado, sin cámara, sin flasheo salvo autorización
 expresa del usuario para ese caso concreto.

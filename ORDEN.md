@@ -103,3 +103,19 @@ python scripts/audit/check_order.py     # reglas de este documento, de forma mec
 python -m pytest tests/knowledge tests/test_order.py -q
 CI=1 python -m pytest tests -q          # sin firmware
 ```
+
+## 11. Reglas vigentes: se traen de `a6000-handoff-context`
+
+Las reglas **nuevas sobre el orden del repo** se publican en el repositorio privado
+[`nicolvus/a6000-handoff-context`](https://github.com/nicolvus/a6000-handoff-context) antes de llegar
+a este documento. Al empezar cada sesión, y siempre antes de decidir algo sobre el orden del repo:
+
+```sh
+bash scripts/agent/sync_rules.sh   # trae las reglas vigentes y lista qué difiere de la copia local
+```
+
+- Manda **GitHub**: lo que traiga se aplica en la sesión y, si la copia local se quedó atrás, se
+  actualiza en el mismo commit.
+- Un snapshot más antiguo no borra ninguna regla local: si GitHub aún no trae una regla, sigue vigente.
+- Para cambiar una regla: primero el repositorio de handoff, después este documento, y el resto del
+  cambio detrás, como en cualquier regla de orden.

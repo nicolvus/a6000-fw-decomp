@@ -24,7 +24,7 @@ decidir algo sobre el orden del repo, ejecuta `bash scripts/agent/sync_rules.sh`
 lista qué difiere de las copias locales. **Manda GitHub**: aplica en la sesión lo que traiga y,
 si la copia local versionada se quedó atrás, actualízala en el mismo commit. Nunca sobrescribas
 la copia local con un snapshot más antiguo: si GitHub aún no trae esta regla, esta regla sigue
-vigente y no se borra.
+vigente y no se borra. Norma: `ORDEN.md` §11.
 
 Commits: al terminar cada fase (S54 en adelante) haz SIEMPRE commit local de los cambios propios (Conventional Commits; excluye logs de sesión REA). El README es mínimo y no se toca por sesión; el estado global (tabla «Estado técnico actual» y «Último cierre») vive en `wiki/14-Estado-actual.md` y haz `git push` a `origin` (GitHub personal nicolvus/a6000-fw-decomp, rama `main`) tras el commit (orden permanente del usuario, 2026-10-20).
 

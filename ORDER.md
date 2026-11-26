@@ -103,3 +103,19 @@ python scripts/audit/check_order.py     # this document's rules, mechanically
 python -m pytest tests/knowledge tests/test_order.py -q
 CI=1 python -m pytest tests -q          # no firmware
 ```
+
+## 11. Current rules: fetched from `a6000-handoff-context`
+
+**New rules about repository order** are published in the private repository
+[`nicolvus/a6000-handoff-context`](https://github.com/nicolvus/a6000-handoff-context) before they reach
+this document. At the start of every session, and always before deciding anything about repository order:
+
+```sh
+bash scripts/agent/sync_rules.sh   # fetches the current rules and lists what differs from the local copy
+```
+
+- **GitHub wins**: whatever it brings is applied in the session and, if the local copy fell behind, it is
+  updated in the same commit.
+- An older snapshot never deletes a local rule: if GitHub does not have a rule yet, it stays in force.
+- To change a rule: the handoff repository first, then this document, and the rest of the change behind it,
+  as with any order rule.
