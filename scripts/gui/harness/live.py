@@ -700,6 +700,7 @@ def supervisa(argv: list[str], consola: Path, avcam: Path, puerto: int, intentos
             if arranque_fallido(txt, time.time() - t0, listas, limite) and n < intentos:
                 print(f"arranque {n}/{intentos} fallido a los {time.time() - t0:.0f} s ({listas} listas): se repite", flush=True)
                 hijo.send_signal(signal.SIGTERM); hijo.wait(60)
+                (consola.parent / "estado.zst").unlink(missing_ok=True)  # el cuelgue se guarda solo a mitad de arranque: restaurarlo repetiría el cuelgue
                 break
         else:
             return hijo.wait()
