@@ -2385,6 +2385,34 @@ static void *peekhot(void *a) {
     if (sym && dladdr(sym, &di)) { unsigned char *q = (unsigned char *)di.dli_fbase + off; char h[200]; int o = 0; for (unsigned long k = 0; k < n; k++) o += snprintf(h + o, sizeof h - o, "%02x", q[k]); LOG("P libObj+%#lx: %s", off, h); }
     free(a); return 0;
 }
+/* «G modelo [max]» (/linea): sondea viewManagerIf::getModelInfo(modelo, código 0…max) con una lista propia y
+ * registra qué códigos responde y cuántos parámetros trae cada uno. Diagnóstico de G22-PBMODEL: separa «el modelo
+ * no existe» de «existe pero no tiene el dato para ese código». No cambia nada del firmware (solo lee). */
+static void lista_resumen(const char *name, unsigned code, void *list) {
+    unsigned *vec = readable(list) ? *(unsigned **)list : 0, *b = 0, *e = 0;
+    if (readable(vec)) { b = (unsigned *)(unsigned long)vec[0]; e = (unsigned *)(unsigned long)vec[1]; }
+    int n = (b && e && e >= b && ((char *)e - (char *)b) < 4096) ? (int)(e - b) : 0;
+    char s[500]; int o = 0; s[0] = 0;
+    for (int k = 0; k < n && k < 12; k++) { unsigned *q = (unsigned *)(unsigned long)b[k];
+        if (readable(q)) o += snprintf(s + o, sizeof s - o, "[%x/%x/%x] ", q[1], q[2], q[3]); }
+    LOG("G   %s %#x: %d parametros %s", name, code, n, s);
+}
+static void *gmihot(void *a) {
+    char *ln = a, *sp = strchr(ln, ' '); unsigned long max = 0x17; if (sp) { *sp = 0; max = hexv(sp + 1, 0); }
+    int (*gmi)(const char *, unsigned, void *, const void *) = lobj_h ? dlsym(lobj_h, "_ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_") : 0;
+    void (*ctor)(void *) = dlsym(RTLD_DEFAULT, "_ZN9ParamListC1Ev"), (*dtor)(void *) = dlsym(RTLD_DEFAULT, "_ZN9ParamListD1Ev");
+    if (!gmi || !ctor) { LOG("G: sin viewManagerIf::getModelInfo"); free(a); return 0; }
+    LOG("G %s codigos 0…%#lx", ln, max);
+    for (unsigned long c = 0; c <= max; c++) {
+        char *lb = calloc(1, 512); ctor(lb);
+        int rr = gmi(ln, (unsigned)c, lb, 0);
+        LOG("G %s codigo %#lx -> %d", ln, c, rr);
+        if (rr) lista_resumen(ln, (unsigned)c, lb);
+        if (dtor) dtor(lb);
+        free(lb);
+    }
+    free(a); return 0;
+}
 static void *startevhot(void *a) { startev(a); free(a); return 0; }
 static void *acqhot(void *a) { acquire_status((int)hexv(a, 0)); free(a); return 0; }
 static void *modelhot(void *a) { model_create(a); free(a); return 0; }
@@ -2452,6 +2480,7 @@ static void *live_keys(void *a) {
             if (ln[0] == 'S' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, startevhot, nm); pthread_detach(th); }  /* «S id[:modelo]»: publica un evento del ModelManager en caliente */
             if (ln[0] == 'A' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, acqhot, nm); pthread_detach(th); }  /* «A i»: acquireStatus(i) en caliente */
             if (ln[0] == 'M' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, modelhot, nm); pthread_detach(th); }  /* «M @Mxxx»: crea el modelo en caliente */
+            if (ln[0] == 'G' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, gmihot, nm); pthread_detach(th); }  /* «G modelo [max]»: sondea getModelInfo por códigos (G22-PBMODEL) */
             if (ln[0] == 'O') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, openhot, nm); pthread_detach(th); }  /* «O vista [modo]»: viewManagerIf::openView(vista, modo) en caliente */
             if (ln[0] == 'Y') date_type = (int)hexv(ln + 2, &e);
             if (ln[0] == 'Q' && ln[1] == ' ') avq_inject(ln + 2);
