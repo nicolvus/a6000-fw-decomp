@@ -1,0 +1,227 @@
+## MprIf::EnterMoviePb 0x7231B0 (dynsym _ZN5MprIf12EnterMoviePbEmmPN3MPR10VMuteColorEmNS0_11MoviePbTypeENS0_19StillPlayOutputModeE) — opcode 0x40000017
+007231b0: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+007231b4: 83b0       sub      sp, #0xc                      
+007231b6: 02af       add      r7, sp, #8                    
+007231b8: 8246       mov      sl, r0                        
+007231ba: 0846       mov      r0, r1                        
+007231bc: 9146       mov      sb, r2                        
+007231be: 8846       mov      r8, r1                        
+007231c0: 9b46       mov      fp, r3                        
+007231c2: be6a       ldr      r6, [r7, #0x28]               
+007231c4: fd6a       ldr      r5, [r7, #0x2c]               
+007231c6: 3c6b       ldr      r4, [r7, #0x30]               
+007231c8: fbf5ace5   blx      #0x11ed24                       ; _ZN8MprIfLog10GetMediaIdEm
+007231cc: b3b2       uxth     r3, r6                        
+007231ce: 0021       movs     r1, #0                        
+007231d0: 0093       str      r3, [sp]                      
+007231d2: 1ffa89f3   uxth.w   r3, sb                        
+007231d6: 0246       mov      r2, r0                        
+007231d8: 0d48       ldr      r0, [pc, #0x34]                 ; [00723210]=40000017
+007231da: faf5a8e6   blx      #0x11df2c                       ; _ZN8MprIfLog12AsyncApiCallItttEEvmtT_T0_T1_
+007231de: 0121       movs     r1, #1                        
+007231e0: aab2       uxth     r2, r5                        
+007231e2: 0b48       ldr      r0, [pc, #0x2c]                 ; [00723210]=40000017
+007231e4: fcf5c6e4   blx      #0x11fb74                       ; _ZN8MprIfLog12AsyncApiCallItEEvmtT_
+007231e8: 0221       movs     r1, #2                        
+007231ea: a2b2       uxth     r2, r4                        
+007231ec: 0848       ldr      r0, [pc, #0x20]                 ; [00723210]=40000017
+007231ee: fcf5c2e4   blx      #0x11fb74                       ; _ZN8MprIfLog12AsyncApiCallItEEvmtT_
+007231f2: be62       str      r6, [r7, #0x28]               
+007231f4: fd62       str      r5, [r7, #0x2c]               
+007231f6: 4146       mov      r1, r8                        
+007231f8: 3c63       str      r4, [r7, #0x30]               
+007231fa: 4a46       mov      r2, sb                        
+007231fc: daf80000   ldr.w    r0, [sl]                      
+00723200: 5b46       mov      r3, fp                        
+00723202: 07f10407   add.w    r7, r7, #4                    
+00723206: bd46       mov      sp, r7                        
+00723208: bde8f04f   pop.w    {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+
+## FeaIf::EnterMoviePb 0x44F2F4 — entra por API y prepara payload
+0044f2f4: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+0044f2f8: 9846       mov      r8, r3                        
+0044f2fa: 8bb0       sub      sp, #0x2c                     
+0044f2fc: 4e4b       ldr      r3, [pc, #0x138]                ; [0044f438]=00000000
+0044f2fe: 02af       add      r7, sp, #8                    
+0044f300: 07f14809   add.w    sb, r7, #0x48                 
+0044f304: 0446       mov      r4, r0                        
+0044f306: 1b78       ldrb     r3, [r3]                      
+0044f308: 0e46       mov      r6, r1                        
+0044f30a: 1546       mov      r5, r2                        
+0044f30c: 99e8000e   ldm.w    sb, {sb, sl, fp}              
+0044f310: 002b       cmp      r3, #0                        
+0044f312: 4fd0       beq      #0x44f3b4                     
+0044f314: 0122       movs     r2, #1                        
+0044f316: d0f89400   ldr.w    r0, [r0, #0x94]               
+0044f31a: 4849       ldr      r1, [pc, #0x120]                ; [0044f43c]=0085ea33 " API CALL EnterMoviePb()"
+0044f31c: c3f2eafa   bl       #0x7128f4                     
+0044f320: d4f89400   ldr.w    r0, [r4, #0x94]               
+0044f324: 4649       ldr      r1, [pc, #0x118]                ; [0044f440]=0085e020 " + modeId          : "
+0044f326: 33f289ff   bl       #0x68323c                     
+0044f32a: 4946       mov      r1, sb                        
+0044f32c: d4f89400   ldr.w    r0, [r4, #0x94]               
+0044f330: 33f242ff   bl       #0x6831b8
+
+## FeaIf::EnterMoviePb — payload 0x18 B y encolado (0x4296D0)
+0044f3d0: 2046       mov      r0, r4                        
+0044f3d2: 2049       ldr      r1, [pc, #0x80]                 ; [0044f454]=40000017
+0044f3d4: faf780fd   bl       #0x449ed8                     
+0044f3d8: 0920       movs     r0, #9                        
+0044f3da: 28e0       b        #0x44f42e                     
+0044f3dc: 7e60       str      r6, [r7, #4]                  
+0044f3de: bd60       str      r5, [r7, #8]                  
+0044f3e0: c7f81090   str.w    sb, [r7, #0x10]               
+0044f3e4: c7f814a0   str.w    sl, [r7, #0x14]               
+0044f3e8: c7f818b0   str.w    fp, [r7, #0x18]               
+0044f3ec: b8f1000f   cmp.w    r8, #0                        
+0044f3f0: 08d0       beq      #0x44f404                     
+0044f3f2: 07f10d00   add.w    r0, r7, #0xd                  
+0044f3f6: 4146       mov      r1, r8                        
+0044f3f8: 0322       movs     r2, #3                        
+0044f3fa: 0123       movs     r3, #1                        
+0044f3fc: 3b73       strb     r3, [r7, #0xc]                
+0044f3fe: d1f48dfe   bl       #0x12111c                     
+0044f402: 01e0       b        #0x44f408                     
+0044f404: 87f80c80   strb.w   r8, [r7, #0xc]                
+0044f408: 0025       movs     r5, #0                        
+0044f40a: 391d       adds     r1, r7, #4                    
+0044f40c: 0095       str      r5, [sp]                      
+0044f40e: 1822       movs     r2, #0x18                     
+0044f410: 6068       ldr      r0, [r4, #4]                  
+0044f412: 07f11c03   add.w    r3, r7, #0x1c                 
+0044f416: fd61       str      r5, [r7, #0x1c]               
+0044f418: daf75af9   bl       #0x4296d0                     
+0044f41c: 6068       ldr      r0, [r4, #4]                  
+0044f41e: 07f11c02   add.w    r2, r7, #0x1c                 
+0044f422: 0c49       ldr      r1, [pc, #0x30]                 ; [0044f454]=40000017
+0044f424: 0368       ldr      r3, [r0]                      
+0044f426: 1c6a       ldr      r4, [r3, #0x20]               
+0044f428: 0423       movs     r3, #4                        
+0044f42a: a047       blx      r4                            
+0044f42c: 2846       mov      r0, r5
+
+##   detalle del payload
+0044f3dc: 7e60       str      r6, [r7, #4]                  
+0044f3de: bd60       str      r5, [r7, #8]                  
+0044f3e0: c7f81090   str.w    sb, [r7, #0x10]               
+0044f3e4: c7f814a0   str.w    sl, [r7, #0x14]               
+0044f3e8: c7f818b0   str.w    fp, [r7, #0x18]               
+0044f3ec: b8f1000f   cmp.w    r8, #0                        
+0044f3f0: 08d0       beq      #0x44f404                     
+0044f3f2: 07f10d00   add.w    r0, r7, #0xd                  
+0044f3f6: 4146       mov      r1, r8                        
+0044f3f8: 0322       movs     r2, #3                        
+0044f3fa: 0123       movs     r3, #1                        
+0044f3fc: 3b73       strb     r3, [r7, #0xc]                
+0044f3fe: d1f48dfe   bl       #0x12111c                     
+0044f402: 01e0       b        #0x44f408                     
+0044f404: 87f80c80   strb.w   r8, [r7, #0xc]                
+0044f408: 0025       movs     r5, #0                        
+0044f40a: 391d       adds     r1, r7, #4
+
+## despachador FeaCore 0x429C54 — caso 0x40000017 -> 0x437A28
+0042a2ee: 00f0dfbc   b.w      #0x42acb0                     
+0042a2f2: 2046       mov      r0, r4                        
+0042a2f4: fff755fa   bl       #0x4297a2                     
+0042a2f8: 0146       mov      r1, r0                        
+0042a2fa: 2046       mov      r0, r4                        
+0042a2fc: 0df094fb   bl       #0x437a28                     
+0042a300: 00f0d6bc   b.w      #0x42acb0
+
+## EnterMoviePb 0x437A28 (handler de 0x40000017) — guarda estado y llama GetMemoryInformation
+00437a28: f0b5       push     {r4, r5, r6, r7, lr}          
+00437a2a: 89b0       sub      sp, #0x24                     
+00437a2c: 0446       mov      r4, r0                        
+00437a2e: 06af       add      r7, sp, #0x18                 
+00437a30: 0d46       mov      r5, r1                        
+00437a32: d0f8f031   ldr.w    r3, [r0, #0x1f0]              
+00437a36: 022b       cmp      r3, #2                        
+00437a38: 01d0       beq      #0x437a3e                     
+00437a3a: 0a23       movs     r3, #0xa                      
+00437a3c: 04e0       b        #0x437a48                     
+00437a3e: 0968       ldr      r1, [r1]                      
+00437a40: 09b1       cbz      r1, #0x437a46                 
+00437a42: 2b7a       ldrb     r3, [r5, #8]                  
+00437a44: 13b9       cbnz     r3, #0x437a4c                 
+00437a46: 0523       movs     r3, #5                        
+00437a48: 3b60       str      r3, [r7]                      
+00437a4a: 56e0       b        #0x437afa                     
+00437a4c: 6b68       ldr      r3, [r5, #4]                  
+00437a4e: c0f8c01d   str.w    r1, [r0, #0xdc0]              
+00437a52: c0f8b83d   str.w    r3, [r0, #0xdb8]              
+00437a56: d0f8ec01   ldr.w    r0, [r0, #0x1ec]              
+00437a5a: 10f018f9   bl       #0x447c8e                     
+00437a5e: 0028       cmp      r0, #0                        
+00437a60: 48d1       bne      #0x437af4                     
+00437a62: 21f305fd   bl       #0x759470                     
+00437a66: 08b1       cbz      r0, #0x437a6c                 
+00437a68: 1ff390f9   bl       #0x756d8c                     
+00437a6c: d4f8b81d   ldr.w    r1, [r4, #0xdb8]              
+00437a70: 11f0100f   tst.w    r1, #0x10                     
+00437a74: 0ad1       bne      #0x437a8c                     
+00437a76: 11f0800f   tst.w    r1, #0x80                     
+00437a7a: 09d1       bne      #0x437a90                     
+00437a7c: 01f48071   and      r1, r1, #0x100                
+00437a80: 0029       cmp      r1, #0                        
+00437a82: 0cbf       ite      eq                            
+00437a84: 0821       moveq    r1, #8
+
+##   seleccion de sub (segun [payload+4]=contentTypes) y de memType (segun [payload+0x10]=moviePbType)
+00437a8a: 02e0       b        #0x437a92                     
+00437a8c: 1021       movs     r1, #0x10                     
+00437a8e: 00e0       b        #0x437a92                     
+00437a90: 8021       movs     r1, #0x80                     
+00437a92: 2b69       ldr      r3, [r5, #0x10]               
+00437a94: 012b       cmp      r3, #1                        
+00437a96: 9abf       itte     ls                            
+00437a98: 244a       ldrls    r2, [pc, #0x90]                 ; [00437b2c]=0085aa54
+00437a9a: 52f82300   ldrls.w  r0, [r2, r3, lsl #2]          
+00437a9e: 0020       movhi    r0, #0                        
+00437aa0: eb68       ldr      r3, [r5, #0xc]                
+00437aa2: 0122       movs     r2, #1                        
+00437aa4: f0f702fd   bl       #0x4284ac
+
+##   justo antes de SetUpPlayerInstance: setupMode=1, bIsFinalizeMode=0, mmgrIdForMovie=[this+0xDC0]
+00437aa8: c4f8ac0d   str.w    r0, [r4, #0xdac]              
+00437aac: 78b1       cbz      r0, #0x437ace                 
+00437aae: 0026       movs     r6, #0                        
+00437ab0: 0390       str      r0, [sp, #0xc]                
+00437ab2: 0121       movs     r1, #1                        
+00437ab4: 2046       mov      r0, r4                        
+00437ab6: 3246       mov      r2, r6                        
+00437ab8: d4f8c03d   ldr.w    r3, [r4, #0xdc0]              
+00437abc: 0096       str      r6, [sp]                      
+00437abe: 0196       str      r6, [sp, #4]                  
+00437ac0: 0296       str      r6, [sp, #8]                  
+00437ac2: 0496       str      r6, [sp, #0x10]
+
+## GetMemoryInformation 0x4284AC — cabecera y mascara de tipos validos (0x9FD5)
+004284ac: 0f28       cmp      r0, #0xf                      
+004284ae: 2de9f047   push.w   {r4, r5, r6, r7, r8, sb, sl, lr}
+004284b2: 0446       mov      r4, r0                        
+004284b4: 00af       add      r7, sp, #0                    
+004284b6: 1546       mov      r5, r2                        
+004284b8: 9946       mov      sb, r3                        
+004284ba: 35d8       bhi      #0x428528                     
+004284bc: 0126       movs     r6, #1                        
+004284be: 49f6d573   movw     r3, #0x9fd5                   
+004284c2: 16fa00f2   lsls.w   r2, r6, r0                    
+004284c6: 02ea0303   and.w    r3, r2, r3                    
+004284ca: 002b       cmp      r3, #0                        
+004284cc: 2cd0       beq      #0x428528                     
+004284ce: 1029       cmp      r1, #0x10                     
+004284d0: 2dd0       beq      #0x42852e                     
+004284d2: 06dc       bgt      #0x4284e2
+
+##   cola: StreamAreaAllocate (0x5F7BE8) o ChangeAllocate (0x5F7F1C)
+0042857c: 35b1       cbz      r5, #0x42858c                 
+0042857e: 2046       mov      r0, r4                        
+00428580: 3146       mov      r1, r6                        
+00428582: 4a46       mov      r2, sb                        
+00428584: bde8f047   pop.w    {r4, r5, r6, r7, r8, sb, sl, lr}
+00428588: cff12ebb   b.w      #0x5f7be8                     
+0042858c: 2046       mov      r0, r4                        
+0042858e: 3146       mov      r1, r6                        
+00428590: bde8f047   pop.w    {r4, r5, r6, r7, r8, sb, sl, lr}
+00428594: cff1c2bc   b.w      #0x5f7f1c
+

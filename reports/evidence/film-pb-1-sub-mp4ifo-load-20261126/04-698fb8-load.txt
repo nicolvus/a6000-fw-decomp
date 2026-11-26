@@ -1,0 +1,35 @@
+# 04 — mp4Ifo_General::Load (0x698FB8) y sus llamantes
+00698fb8  b0b5       push     {r4, r5, r7, lr}               ; .text      
+00698fba  00af       add      r7, sp, #0                     ; .text      
+00698fbc  0446       mov      r4, r0                         ; .text      
+00698fbe  0d46       mov      r5, r1                         ; .text      
+00698fc0  fcf7f0fa   bl       #0x6955a4                      ; .text      
+00698fc4  1048       ldr      r0, [pc, #0x40]                ; .text      [00699008]=00914fa6 " mp4Ifo_General::Load IN (device="
+00698fc6  fcf733fa   bl       #0x695430                      ; .text      
+00698fca  0db9       cbnz     r5, #0x698fd0                  ; .text      
+00698fcc  0f48       ldr      r0, [pc, #0x3c]                ; .text      [0069900c]=007ae670 "FLASH"
+00698fce  00e0       b        #0x698fd2                      ; .text      
+00698fd0  0f48       ldr      r0, [pc, #0x3c]                ; .text      [00699010]=008ac35f "DISC"
+00698fd2  fcf72dfa   bl       #0x695430                      ; .text      
+00698fd6  0f48       ldr      r0, [pc, #0x3c]                ; .text      [00699014]=009272e2
+00698fd8  fcf788fa   bl       #0x6954ec                      ; .text      
+00698fdc  012d       cmp      r5, #1                         ; .text      
+00698fde  03d1       bne      #0x698fe8                      ; .text      
+00698fe0  2046       mov      r0, r4                         ; .text      
+00698fe2  fff749ff   bl       #0x698e78                      ; .text      
+00698fe6  02e0       b        #0x698fee                      ; .text      
+00698fe8  2046       mov      r0, r4                         ; .text      
+00698fea  fff76dff   bl       #0x698ec8                      ; .text      
+00698fee  0546       mov      r5, r0                         ; .text      
+00698ff0  10b9       cbnz     r0, #0x698ff8                  ; .text      
+00698ff2  0123       movs     r3, #1                         ; .text      
+00698ff4  84f82330   strb.w   r3, [r4, #0x23]                ; .text      
+00698ff8  fcf7d4fa   bl       #0x6955a4                      ; .text      
+00698ffc  0648       ldr      r0, [pc, #0x18]                ; .text      [00699018]=00914fc8 " mp4Ifo_General::Load OUT()"
+00698ffe  fcf775fa   bl       #0x6954ec                      ; .text      
+00699002  2846       mov      r0, r5                         ; .text      
+00699004  b0bd       pop      {r4, r5, r7, pc}               ; .text      
+00699006  00bf       nop                                     ; .text      
+
+# llamantes (BL analitico sobre .text):
+0x698fb8 ['0x6ec1e6', '0x6ee006', '0x6ee13a']

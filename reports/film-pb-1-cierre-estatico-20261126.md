@@ -180,6 +180,24 @@ o `/usr/share/dmm/DmmConfig.bin`, y **ninguno de los dos está en la imagen `070
 la cámara, `GetConfigData` devolvería −1 y `osal_abort` la pararía. Como la cámara arranca, el
 fichero está: el DMM queda fuera de la ecuación.
 
+### 5.5 El fallo real, con nombre: `0x10100001`, una entrada de la tabla de readers sin puntero
+
+Verificado (`reports/film-pb-1-sub-mp4ifo-load-20261126.md`):
+
+- Las líneas 1749 y 1340 del anillo son `0x698EE6` (`mp4Ifo_General::FlashLoadForMsv`,
+  `0x698EC8`) y `0x698F4A` (`mp4Ifo_General::CheckSalvageStatus`, `0x698F18`); la segunda es un
+  **eco** de la primera. `FlashLoadForMsv` tiene **una sola** condición de fallo: que `0x3AFA94`
+  devuelva ≠ 0.
+- Y `0xB0800001` **no es un código de fichero**: es el `default` del traductor `0x6F0D4C`.
+- El estado real es **`0x13100001`** = `0x350124(0x10100001, …)`, y `0x10100001` lo da `0x2B39B8`
+  cuando **`[0xA3699C + 0x14*idx + 4] == 0`**, es decir cuando esa entrada de la tabla de readers
+  **no tiene rutina de lectura**: `ReadFirstPackData` (`0x2B3948`) **ni se ejecuta**.
+
+O sea: no falta un dato del MP4, falta un **puntero a función** en una tabla del `.bss`. Por eso
+falla igual MSV, DCF y XAVC, por eso la tarjeta recién formateada no cambia nada, y por eso el
+formato del fichero es irrelevante. Y la foto se salva porque su miniatura va por `DCIM`/EXIF,
+sin pasar por ese almacén.
+
 ## 6. Reproducibilidad en el arnés
 
 - El arnés QEMU **arranca hoy** y llega a la pantalla de disparo (medido: `alive=206`,

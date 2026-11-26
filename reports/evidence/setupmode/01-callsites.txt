@@ -1,0 +1,235 @@
+# 12 llamadas directas (BL) a SetUpPlayerInstance 0x43910C — barrido completo de .text
+# (0x120228..0x7A3E84) con patrones BL y B.W: 12 BL, 0 B.W, 0 punteros en .text/.data.
+
+==== call 0x43094c en funcion 0x430924   setupMode=2
+     pistas de cadena: 
+00430924: 90b5       push     {r4, r7, lr}                  
+00430926: 0446       mov      r4, r0                        
+00430928: 87b0       sub      sp, #0x1c                     
+0043092a: 0b21       movs     r1, #0xb                      
+0043092c: 06af       add      r7, sp, #0x18                 
+0043092e: f8f779ff   bl       #0x429824                     
+00430932: d4f8d03d   ldr.w    r3, [r4, #0xdd0]              
+00430936: 0022       movs     r2, #0                        
+00430938: 2046       mov      r0, r4                        
+0043093a: 0221       movs     r1, #2                        
+0043093c: 0192       str      r2, [sp, #4]                  
+0043093e: 0093       str      r3, [sp]                      
+00430940: d4f8ac3d   ldr.w    r3, [r4, #0xdac]              
+00430944: 0292       str      r2, [sp, #8]                  
+00430946: 0492       str      r2, [sp, #0x10]               
+00430948: 0393       str      r3, [sp, #0xc]                
+0043094a: 1346       mov      r3, r2                        
+0043094c: 08f0defb   bl       #0x43910c
+
+==== call 0x431184 en funcion 0x43106c   setupMode=3
+     pistas de cadena: DvdEnterFinalize() | ChangePbSpeedCb |  from MPlayer. |  from APlayer.
+0043115c: d4f8ec01   ldr.w    r0, [r4, #0x1ec]              
+00431160: d4f8c01d   ldr.w    r1, [r4, #0xdc0]              
+00431164: 16f093fd   bl       #0x447c8e                     
+00431168: 0346       mov      r3, r0                        
+0043116a: b8b9       cbnz     r0, #0x43119c                 
+0043116c: d4f8d02d   ldr.w    r2, [r4, #0xdd0]              
+00431170: 0321       movs     r1, #3                        
+00431172: 0090       str      r0, [sp]                      
+00431174: 0290       str      r0, [sp, #8]                  
+00431176: 0192       str      r2, [sp, #4]                  
+00431178: d4f8ac2d   ldr.w    r2, [r4, #0xdac]              
+0043117c: 0490       str      r0, [sp, #0x10]               
+0043117e: 2046       mov      r0, r4                        
+00431180: 0392       str      r2, [sp, #0xc]                
+00431182: 0122       movs     r2, #1                        
+00431184: 07f0c2ff   bl       #0x43910c
+
+==== call 0x43530a en funcion 0x43525c   setupMode=5
+     pistas de cadena: GetMMgrObj(for BGM) | EnterBgmRead(for BGM) | GetMoviePlayer | GetMoviePlayer | core/feature/highlight/feaHighlightApi.cpp | GetAudioPlayer
+004352e2: ddf23dfb   bl       #0x712960                     
+004352e6: 3046       mov      r0, r6                        
+004352e8: dbf262ff   bl       #0x7111b0                     
+004352ec: 55e0       b        #0x43539a                     
+004352ee: d4f8b430   ldr.w    r3, [r4, #0xb4]               
+004352f2: 0521       movs     r1, #5                        
+004352f4: 0090       str      r0, [sp]                      
+004352f6: 3246       mov      r2, r6                        
+004352f8: 0190       str      r0, [sp, #4]                  
+004352fa: 0293       str      r3, [sp, #8]                  
+004352fc: fb6b       ldr      r3, [r7, #0x3c]               
+004352fe: 0490       str      r0, [sp, #0x10]               
+00435300: d4f89800   ldr.w    r0, [r4, #0x98]               
+00435304: 0393       str      r3, [sp, #0xc]                
+00435306: d4f8b030   ldr.w    r3, [r4, #0xb0]               
+0043530a: 03f0fffe   bl       #0x43910c
+
+==== call 0x436752 en funcion 0x4366ec   setupMode=3
+     pistas de cadena: EnterThumbnailPb() | EnterMovieThumbnailPb()
+0043672a: a968       ldr      r1, [r5, #8]                  
+0043672c: 0122       movs     r2, #1                        
+0043672e: eb68       ldr      r3, [r5, #0xc]                
+00436730: f1f7bcfe   bl       #0x4284ac                     
+00436734: c4f8ac0d   str.w    r0, [r4, #0xdac]              
+00436738: 00b3       cbz      r0, #0x43677c                 
+0043673a: d4f8c03d   ldr.w    r3, [r4, #0xdc0]              
+0043673e: 0022       movs     r2, #0                        
+00436740: 0390       str      r0, [sp, #0xc]                
+00436742: 0321       movs     r1, #3                        
+00436744: 0092       str      r2, [sp]                      
+00436746: 2046       mov      r0, r4                        
+00436748: 0193       str      r3, [sp, #4]                  
+0043674a: 0292       str      r2, [sp, #8]                  
+0043674c: 2b68       ldr      r3, [r5]                      
+0043674e: 0493       str      r3, [sp, #0x10]               
+00436750: 1346       mov      r3, r2                        
+00436752: 02f0dbfc   bl       #0x43910c
+
+==== call 0x436c1c en funcion 0x436b90   setupMode=3
+     pistas de cadena: EnterAviThumbnailPb()
+00436bf4: a968       ldr      r1, [r5, #8]                  
+00436bf6: 0246       mov      r2, r0                        
+00436bf8: eb68       ldr      r3, [r5, #0xc]                
+00436bfa: f1f757fc   bl       #0x4284ac                     
+00436bfe: c4f8ac0d   str.w    r0, [r4, #0xdac]              
+00436c02: 80b1       cbz      r0, #0x436c26                 
+00436c04: d4f8c83d   ldr.w    r3, [r4, #0xdc8]              
+00436c08: 0022       movs     r2, #0                        
+00436c0a: 0390       str      r0, [sp, #0xc]                
+00436c0c: 0321       movs     r1, #3                        
+00436c0e: 0092       str      r2, [sp]                      
+00436c10: 2046       mov      r0, r4                        
+00436c12: 0193       str      r3, [sp, #4]                  
+00436c14: 0292       str      r2, [sp, #8]                  
+00436c16: 2b68       ldr      r3, [r5]                      
+00436c18: 0493       str      r3, [sp, #0x10]               
+00436c1a: 1346       mov      r3, r2                        
+00436c1c: 02f076fa   bl       #0x43910c
+
+==== call 0x437ac4 en funcion 0x437a28   setupMode=1
+     pistas de cadena: EnterMoviePb()
+00437a9c: 2300       movs     r3, r4                        
+00437a9e: 0020       movs     r0, #0                        
+00437aa0: eb68       ldr      r3, [r5, #0xc]                
+00437aa2: 0122       movs     r2, #1                        
+00437aa4: f0f702fd   bl       #0x4284ac                     
+00437aa8: c4f8ac0d   str.w    r0, [r4, #0xdac]              
+00437aac: 78b1       cbz      r0, #0x437ace                 
+00437aae: 0026       movs     r6, #0                        
+00437ab0: 0390       str      r0, [sp, #0xc]                
+00437ab2: 0121       movs     r1, #1                        
+00437ab4: 2046       mov      r0, r4                        
+00437ab6: 3246       mov      r2, r6                        
+00437ab8: d4f8c03d   ldr.w    r3, [r4, #0xdc0]              
+00437abc: 0096       str      r6, [sp]                      
+00437abe: 0196       str      r6, [sp, #4]                  
+00437ac0: 0296       str      r6, [sp, #8]                  
+00437ac2: 0496       str      r6, [sp, #0x10]               
+00437ac4: 01f022fb   bl       #0x43910c
+
+==== call 0x438e90 en funcion 0x438d74   setupMode=4
+     pistas de cadena: EnterMoviePbStillRec() | core/feature/player/cam/feaCorePbCaptureApi.cpp | EnterMoviePbStillRec
+
+
+==== call 0x4396a6 en funcion 0x4395f8   setupMode=2
+     pistas de cadena: EnterStillPb()
+0043967e: c41d       adds     r4, r0, #7                    
+00439680: 0ef0d5fa   bl       #0x447c2e                     
+00439684: 0823       movs     r3, #8                        
+00439686: c4f8c46d   str.w    r6, [r4, #0xdc4]              
+0043968a: 7b60       str      r3, [r7, #4]                  
+0043968c: 29e0       b        #0x4396e2                     
+0043968e: d4f8c43d   ldr.w    r3, [r4, #0xdc4]              
+00439692: 0025       movs     r5, #0                        
+00439694: 0390       str      r0, [sp, #0xc]                
+00439696: 0221       movs     r1, #2                        
+00439698: 2046       mov      r0, r4                        
+0043969a: 2a46       mov      r2, r5                        
+0043969c: 0093       str      r3, [sp]                      
+0043969e: 2b46       mov      r3, r5                        
+004396a0: 0195       str      r5, [sp, #4]                  
+004396a2: 0295       str      r5, [sp, #8]                  
+004396a4: 0495       str      r5, [sp, #0x10]               
+004396a6: fff731fd   bl       #0x43910c
+
+==== call 0x439812 en funcion 0x439794   setupMode=2
+     pistas de cadena: ### SetPreLoadStill() is disable ### |  because DubMgr instance is exist | SetPreLoadStill()
+004397ea: 0bbb       cbnz     r3, #0x439830                 
+004397ec: d4f8ec01   ldr.w    r0, [r4, #0x1ec]              
+004397f0: 2946       mov      r1, r5                        
+004397f2: 0ef00cfa   bl       #0x447c0e                     
+004397f6: 0246       mov      r2, r0                        
+004397f8: 0028       cmp      r0, #0                        
+004397fa: 40f08280   bne.w    #0x439902                     
+004397fe: 0190       str      r0, [sp, #4]                  
+00439800: 0221       movs     r1, #2                        
+00439802: 0290       str      r0, [sp, #8]                  
+00439804: 1346       mov      r3, r2                        
+00439806: 0390       str      r0, [sp, #0xc]                
+00439808: 0490       str      r0, [sp, #0x10]               
+0043980a: 2046       mov      r0, r4                        
+0043980c: c4f8c45d   str.w    r5, [r4, #0xdc4]              
+00439810: 0095       str      r5, [sp]                      
+00439812: fff77bfc   bl       #0x43910c
+
+==== call 0x4463f2 en funcion 0x4463a4   setupMode=2
+     pistas de cadena:  Call ProcInMakeThumbEnterSPB() | ProcInMakeThumbEnterSPB() |  Call ProcInMakeThumbWaitCbThumbRec() | ProcInMakeThumbWaitCbThumbRec()
+004463ca: 28bb       cbnz     r0, #0x446418                 
+004463cc: 0120       movs     r0, #1                        
+004463ce: 94f86420   ldrb.w   r2, [r4, #0x64]               
+004463d2: 0146       mov      r1, r0                        
+004463d4: a36e       ldr      r3, [r4, #0x68]               
+004463d6: e2f769f8   bl       #0x4284ac                     
+004463da: 6063       str      r0, [r4, #0x34]               
+004463dc: d8b1       cbz      r0, #0x446416                 
+004463de: a36b       ldr      r3, [r4, #0x38]               
+004463e0: 0221       movs     r1, #2                        
+004463e2: 0390       str      r0, [sp, #0xc]                
+004463e4: 2a46       mov      r2, r5                        
+004463e6: e069       ldr      r0, [r4, #0x1c]               
+004463e8: 8de82800   stm.w    sp, {r3, r5}                  
+004463ec: 2b46       mov      r3, r5                        
+004463ee: 0295       str      r5, [sp, #8]                  
+004463f0: 0495       str      r5, [sp, #0x10]               
+004463f2: f2f78bfe   bl       #0x43910c
+
+==== call 0x446c1a en funcion 0x446bcc   setupMode=3
+     pistas de cadena:  Call ProcInMakeThumbEnterIPB() | ProcInMakeThumbEnterIPB() |  Call ProcInMakeThumbEnterIPB()
+00446bf2: 30bb       cbnz     r0, #0x446c42                 
+00446bf4: 0420       movs     r0, #4                        
+00446bf6: 616c       ldr      r1, [r4, #0x44]               
+00446bf8: 94f86420   ldrb.w   r2, [r4, #0x64]               
+00446bfc: a36e       ldr      r3, [r4, #0x68]               
+00446bfe: e1f755fc   bl       #0x4284ac                     
+00446c02: 6063       str      r0, [r4, #0x34]               
+00446c04: e0b1       cbz      r0, #0x446c40                 
+00446c06: e36b       ldr      r3, [r4, #0x3c]               
+00446c08: 0321       movs     r1, #3                        
+00446c0a: 0390       str      r0, [sp, #0xc]                
+00446c0c: 2a46       mov      r2, r5                        
+00446c0e: e069       ldr      r0, [r4, #0x1c]               
+00446c10: 0193       str      r3, [sp, #4]                  
+00446c12: 2b46       mov      r3, r5                        
+00446c14: 0095       str      r5, [sp]                      
+00446c16: 0295       str      r5, [sp, #8]                  
+00446c18: 0495       str      r5, [sp, #0x10]               
+00446c1a: f2f777fa   bl       #0x43910c
+
+==== call 0x446e02 en funcion 0x446dc0   setupMode=1
+     pistas de cadena:  Call ProcInMakeThumbEnterMPB() | ProcInMakeThumbEnterMPB()
+00446dda: 0446       mov      r4, r0                        
+00446ddc: 0028       cmp      r0, #0                        
+00446dde: 2bd1       bne      #0x446e38                     
+00446de0: 696c       ldr      r1, [r5, #0x44]               
+00446de2: 95f86420   ldrb.w   r2, [r5, #0x64]               
+00446de6: ab6e       ldr      r3, [r5, #0x68]               
+00446de8: e1f760fb   bl       #0x4284ac                     
+00446dec: 6863       str      r0, [r5, #0x34]               
+00446dee: 10b3       cbz      r0, #0x446e36                 
+00446df0: 0390       str      r0, [sp, #0xc]                
+00446df2: 0121       movs     r1, #1                        
+00446df4: e869       ldr      r0, [r5, #0x1c]               
+00446df6: 2246       mov      r2, r4                        
+00446df8: eb6b       ldr      r3, [r5, #0x3c]               
+00446dfa: 0094       str      r4, [sp]                      
+00446dfc: 0194       str      r4, [sp, #4]                  
+00446dfe: 0294       str      r4, [sp, #8]                  
+00446e00: 0494       str      r4, [sp, #0x10]               
+00446e02: f2f783f9   bl       #0x43910c
+

@@ -1,0 +1,31 @@
+# 02 — mp4Ifo_General::FlashLoadForMsv (0x698EC8). Emite la linea 1749 (0x6D5).
+# Formato: VA  bytes  mnemonico  operandos  ; seccion  [pool]=valor "cadena"
+00698ec8  b0b5       push     {r4, r5, r7, lr}               ; .text      
+00698eca  0446       mov      r4, r0                         ; .text      
+00698ecc  00af       add      r7, sp, #0                     ; .text      
+00698ece  fcf769fb   bl       #0x6955a4                      ; .text      
+00698ed2  0d48       ldr      r0, [pc, #0x34]                ; .text      [00698f08]=00914ef2 " mp4Ifo_General::FlashLoadForMsv IN ()"
+00698ed4  fcf70afb   bl       #0x6954ec                      ; .text      
+00698ed8  2068       ldr      r0, [r4]                       ; .text      
+00698eda  fdf702fb   bl       #0x6964e2                      ; .text      
+00698ede  16f5d9fd   bl       #0x3afa94                      ; .text      
+00698ee2  0a49       ldr      r1, [pc, #0x28]                ; .text      [00698f0c]=b0800001
+00698ee4  0a4a       ldr      r2, [pc, #0x28]                ; .text      [00698f10]=0091443d "IF/mp4Ifo_General.cpp"
+00698ee6  40f2d563   movw     r3, #0x6d5                     ; .text      
+00698eea  57f02fff   bl       #0x6f0d4c                      ; .text      
+00698eee  0546       mov      r5, r0                         ; .text      
+00698ef0  10b1       cbz      r0, #0x698ef8                  ; .text      
+00698ef2  2046       mov      r0, r4                         ; .text      
+00698ef4  fef73cff   bl       #0x697d70                      ; .text      
+00698ef8  fcf754fb   bl       #0x6955a4                      ; .text      
+00698efc  0548       ldr      r0, [pc, #0x14]                ; .text      [00698f14]=00914f19 " mp4Ifo_General::FlashLoadForMsv OUT()"
+00698efe  fcf7f5fa   bl       #0x6954ec                      ; .text      
+00698f02  2846       mov      r0, r5                         ; .text      
+00698f04  b0bd       pop      {r4, r5, r7, pc}               ; .text      
+00698f06  00bf       nop                                     ; .text      
+
+# pool 0x698F08..0x698F18
+00698f08  00914ef2
+00698f0c  b0800001
+00698f10  0091443d
+00698f14  00914f19

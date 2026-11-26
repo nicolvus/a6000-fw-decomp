@@ -1,0 +1,230 @@
+# setupMode en SetUpPlayerInstance: tabla TBB, ramas y clases que construye cada una
+
+## comprobacion del rango: 0x4391E6..0x4391FA
+004391e6: 7a68       ldr      r2, [r7, #4]                  
+004391e8: 531e       subs     r3, r2, #1                    
+004391ea: 042b       cmp      r3, #4                        
+004391ec: 00f22f81   bhi.w    #0x43944e                     
+004391f0: dfe803f0   tbb      [pc, r3]                      
+004391f4: 0338       subs     r0, #3                        
+004391f6: 7603       lsls     r6, r6, #0xd                  
+004391f8: c200       lsls     r2, r0, #3
+
+bytes .text 0x4391F0..0x4391F8:  df e8 03 f0 03 38 76 03 c2
+tbb [pc,r3] con PC=0x4391F4 -> tabla = ['0x3', '0x38', '0x76', '0x3', '0xc2']
+  setupMode=1 -> 0x4391fa
+  setupMode=2 -> 0x439264
+  setupMode=3 -> 0x4392e0
+  setupMode=4 -> 0x4391fa
+  setupMode=5 -> 0x439378
+
+## destino 0x43944E (setupMode fuera de 1..5)
+0043944e: 3db1       cbz      r5, #0x439460                 
+00439450: 4ff00008   mov.w    r8, #0                        
+00439454: c146       mov      sb, r8                        
+00439456: 4846       mov      r0, sb                        
+00439458: 4146       mov      r1, r8                        
+0043945a: 0122       movs     r2, #1                        
+0043945c: 20f340f8   bl       #0x7594e0                     
+00439460: 7b68       ldr      r3, [r7, #4]
+
+## clase construida en cada rama (ctor + Init + cadena del constructor interno)
+  mode 1 y 4 rama 0x4391FA  ctor 0x307E44 (obj en [this+0xD94])  interno 0x307878  'new MoviePlayer!!'
+  mode 2     rama 0x439264  ctor 0x321EC8 (obj en [this+0xD98])  interno 0x320074  'new StillPlayer!!'
+  mode 3     rama 0x4392E0  ctor 0x2FE0D4 (obj en [this+0xD9C])  interno 0x2FC268  'new IndexPlayer!!'
+  mode 5     rama 0x439378  ctor 0x2F699C (obj en [this+0xDA0])  interno -  'new AudioPlayerIf!!'
+
+== ctor 0x307e44
+00307e44: b0b5       push     {r4, r5, r7, lr}              
+00307e46: 00af       add      r7, sp, #0                    
+00307e48: 0446       mov      r4, r0                        
+00307e4a: d0f737f8   bl       #0x2d7ebc                     
+00307e4e: 0d4b       ldr      r3, [pc, #0x34]                 ; [00307e84]=00806fb0
+00307e50: 0020       movs     r0, #0                        
+00307e52: 2146       mov      r1, r4                        
+00307e54: 2360       str      r3, [r4]                      
+00307e56: f3f7a7f8   bl       #0x2fafa8                     
+00307e5a: 0023       movs     r3, #0                        
+00307e5c: 46f2d030   movw     r0, #0x63d0                   
+00307e60: 6360       str      r3, [r4, #4]                  
+00307e62: 16f6a0ec   blx      #0x11e7a4                       ; _Znwj
+00307e66: 0546       mov      r5, r0                        
+00307e68: fff706fd   bl       #0x307878                     
+00307e6c: 6560       str      r5, [r4, #4]                  
+00307e6e: 2046       mov      r0, r4                        
+00307e70: b0bd       pop      {r4, r5, r7, pc}              
+00307e72: 2846       mov      r0, r5
+==   ctor interno 0x307878
+00307878: 98b5       push     {r3, r4, r7, lr}              
+0030787a: 00af       add      r7, sp, #0                    
+0030787c: 0446       mov      r4, r0                        
+0030787e: f2f799fe   bl       #0x2fa5b4                     
+00307882: 0a4b       ldr      r3, [pc, #0x28]                 ; [003078ac]=00806c30
+00307884: 2360       str      r3, [r4]                      
+00307886: fff74eff   bl       #0x307726                     
+0030788a: 0948       ldr      r0, [pc, #0x24]                 ; [003078b0]=00806aeb "new MoviePlayer!! ( this = 0x"
+0030788c: f2f7c0fd   bl       #0x2fa410                     
+00307890: 0820       movs     r0, #8                        
+00307892: 2146       mov      r1, r4                        
+00307894: f2f774fd   bl       #0x2fa380
+
+== ctor 0x321ec8
+00321ec8: b0b5       push     {r4, r5, r7, lr}              
+00321eca: 00af       add      r7, sp, #0                    
+00321ecc: 0446       mov      r4, r0                        
+00321ece: b5f7f5ff   bl       #0x2d7ebc                     
+00321ed2: 134b       ldr      r3, [pc, #0x4c]                 ; [00321f20]=0080eae0
+00321ed4: 4ff43040   mov.w    r0, #0xb000                   
+00321ed8: 2360       str      r3, [r4]                      
+00321eda: fff799ff   bl       #0x321e10                     
+00321ede: 1148       ldr      r0, [pc, #0x44]                 ; [00321f24]=0080eb27
+00321ee0: 0021       movs     r1, #0                        
+00321ee2: d9f715fb   bl       #0x2fb510                     
+00321ee6: 0120       movs     r0, #1                        
+00321ee8: 2146       mov      r1, r4                        
+00321eea: d9f75df8   bl       #0x2fafa8                     
+00321eee: 0023       movs     r3, #0                        
+00321ef0: 46f2d030   movw     r0, #0x63d0                   
+00321ef4: 6360       str      r3, [r4, #4]
+==   ctor interno 0x320074
+00320074: 98b5       push     {r3, r4, r7, lr}              
+00320076: 00af       add      r7, sp, #0                    
+00320078: 0446       mov      r4, r0                        
+0032007a: daf79bfa   bl       #0x2fa5b4                     
+0032007e: 0a4b       ldr      r3, [pc, #0x28]                 ; [003200a8]=0080eaa0
+00320080: 2360       str      r3, [r4]                      
+00320082: e7f750fb   bl       #0x307726                     
+00320086: 0948       ldr      r0, [pc, #0x24]                 ; [003200ac]=0080e403 "new StillPlayer!! ( this = 0x"
+00320088: fff704ff   bl       #0x31fe94                     
+0032008c: 0820       movs     r0, #8                        
+0032008e: 2146       mov      r1, r4                        
+00320090: daf776f9   bl       #0x2fa380
+
+== ctor 0x2fe0d4
+002fe0d4: b0b5       push     {r4, r5, r7, lr}              
+002fe0d6: 00af       add      r7, sp, #0                    
+002fe0d8: 0446       mov      r4, r0                        
+002fe0da: d9f7effe   bl       #0x2d7ebc                     
+002fe0de: 114b       ldr      r3, [pc, #0x44]                 ; [002fe124]=00801810
+002fe0e0: 4ff44040   mov.w    r0, #0xc000                   
+002fe0e4: 2360       str      r3, [r4]                      
+002fe0e6: fff7a5ff   bl       #0x2fe034                     
+002fe0ea: 0220       movs     r0, #2                        
+002fe0ec: 2146       mov      r1, r4                        
+002fe0ee: fcf75bff   bl       #0x2fafa8                     
+002fe0f2: 0023       movs     r3, #0                        
+002fe0f4: 47f67070   movw     r0, #0x7f70                   
+002fe0f8: 6360       str      r3, [r4, #4]                  
+002fe0fa: 20f654eb   blx      #0x11e7a4                       ; _Znwj
+002fe0fe: 0546       mov      r5, r0                        
+002fe100: fef7b2f8   bl       #0x2fc268
+==   ctor interno 0x2fc268
+002fc268: 98b5       push     {r3, r4, r7, lr}              
+002fc26a: 00af       add      r7, sp, #0                    
+002fc26c: 0446       mov      r4, r0                        
+002fc26e: fef7a1f9   bl       #0x2fa5b4                     
+002fc272: 174b       ldr      r3, [pc, #0x5c]                 ; [002fc2d0]=00801130
+002fc274: 1748       ldr      r0, [pc, #0x5c]                 ; [002fc2d4]=00800f73 "new IndexPlayer!! ( this = 0x"
+002fc276: 2360       str      r3, [r4]                      
+002fc278: fef7caf8   bl       #0x2fa410                     
+002fc27c: 0820       movs     r0, #8                        
+002fc27e: 2146       mov      r1, r4                        
+002fc280: fef77ef8   bl       #0x2fa380                     
+002fc284: 1448       ldr      r0, [pc, #0x50]                 ; [002fc2d8]=0085bb8c
+
+== ctor 0x2f699c
+002f699c: f0b5       push     {r4, r5, r6, r7, lr}          
+002f699e: 83b0       sub      sp, #0xc                      
+002f69a0: 02af       add      r7, sp, #8                    
+002f69a2: 0446       mov      r4, r0                        
+002f69a4: 03f006fe   bl       #0x2fa5b4                     
+002f69a8: 2d4b       ldr      r3, [pc, #0xb4]                 ; [002f6a60]=007feb60
+002f69aa: 4ff42040   mov.w    r0, #0xa000                   
+002f69ae: 2360       str      r3, [r4]                      
+002f69b0: fff746ff   bl       #0x2f6840                     
+002f69b4: 2b48       ldr      r0, [pc, #0xac]                 ; [002f6a64]=007fe98c "new AudioPlayerIf!! ( this = 0x"
+002f69b6: 0021       movs     r1, #0                        
+002f69b8: fff760ff   bl       #0x2f687c                     
+002f69bc: 2046       mov      r0, r4                        
+002f69be: fff753ff   bl       #0x2f6868                     
+002f69c2: 2948       ldr      r0, [pc, #0xa4]                 ; [002f6a68]=0085bb8c
+002f69c4: 0021       movs     r1, #0                        
+002f69c6: fff7ddff   bl       #0x2f6984                     
+002f69ca: 0320       movs     r0, #3
+
+## despacho posterior por [FeaCore+0x1F8] (0x42B9AC, funcion 0x42B9AC..0x42C8D8)
+0042b9b4: 0446       mov      r4, r0                        
+0042b9b6: 9146       mov      sb, r2                        
+0042b9b8: d0f8f861   ldr.w    r6, [r0, #0x1f8]              
+0042b9bc: 9846       mov      r8, r3                        
+0042b9be: 3d6a       ldr      r5, [r7, #0x20]               
+0042b9c0: 01f0f00a   and      sl, r1, #0xf0                 
+0042b9c4: 052e       cmp      r6, #5                        
+0042b9c6: 05d1       bne      #0x42b9d4                     
+0042b9c8: 0095       str      r5, [sp]                      
+0042b9ca: 06f07bf9   bl       #0x431cc4                     
+0042b9ce: 48b1       cbz      r0, #0x42b9e4                 
+0042b9d0: 00f07cbf   b.w      #0x42c8cc                     
+0042b9d4: baf1c00f   cmp.w    sl, #0xc0                     
+0042b9d8: 04d1       bne      #0x42b9e4                     
+0042b9da: 0095       str      r5, [sp]                      
+0042b9dc: 06f072f9   bl       #0x431cc4                     
+0042b9e0: 00f074bf   b.w      #0x42c8cc                     
+0042b9e4: baf1100f   cmp.w    sl, #0x10
+...
+0042bcfc: d4f8f831   ldr.w    r3, [r4, #0x1f8]              
+0042bd00: 012b       cmp      r3, #1                        
+0042bd02: 03d0       beq      #0x42bd0c                     
+0042bd04: 042b       cmp      r3, #4                        
+0042bd06: 40f0e185   bne.w    #0x42c8cc                     
+0042bd0a: 07e0       b        #0x42bd1c                     
+0042bd0c: 2046       mov      r0, r4                        
+0042bd0e: 4146       mov      r1, r8                        
+0042bd10: 2a46       mov      r2, r5                        
+0042bd12: bd46       mov      sp, r7                        
+0042bd14: bde8f047   pop.w    {r4, r5, r6, r7, r8, sb, sl, lr}
+0042bd18: 0cf016ba   b.w      #0x438148                     
+0042bd1c: 2046       mov      r0, r4                        
+0042bd1e: 4146       mov      r1, r8                        
+0042bd20: 2a46       mov      r2, r5                        
+0042bd22: bd46       mov      sp, r7                        
+0042bd24: bde8f047   pop.w    {r4, r5, r6, r7, r8, sb, sl, lr}
+0042bd28: 0cf0eabf   b.w      #0x438d00                     
+0042bd2c: d4f8f831   ldr.w    r3, [r4, #0x1f8]              
+0042bd30: 012b       cmp      r3, #1                        
+0042bd32: 03d0       beq      #0x42bd3c                     
+0042bd34: 042b       cmp      r3, #4
+
+## ciclo de vida del campo 0x1F8
+ 0x42928e  ctor FeaCore: [this+0x1F8]=0
+   00429288: 4ff0804a   mov.w    sl, #0x40000000               
+   0042928c: 4821       movs     r1, #0x48                     
+   0042928e: c4f8f851   str.w    r5, [r4, #0x1f8]              
+   00429292: c4f8fc51   str.w    r5, [r4, #0x1fc]
+ 0x439466  SetUpPlayerInstance: [this+0x1F8]=setupMode
+   00439460: 7b68       ldr      r3, [r7, #4]                  
+   00439462: 4ff00108   mov.w    r8, #1                        
+   00439466: c4f8f831   str.w    r3, [r4, #0x1f8]              
+   0043946a: 07e0       b        #0x43947c                     
+   0043946c: 8046       mov      r8, r0                        
+   0043946e: 05e0       b        #0x43947c
+ 0x43957a  ClearPlayerInstance: [this+0x1F8]=0
+   00439574: bff90120   ldrsh.w  r2, [pc, #1]                  
+   00439578: 0023       movs     r3, #0                        
+   0043957a: c4f8f831   str.w    r3, [r4, #0x1f8]              
+   0043957e: b0bd       pop      {r4, r5, r7, pc}              
+   00439580: 66ab       add      r3, sp, #0x198                
+   00439582: 8500       lsls     r5, r0, #2
+ 0x431b3e  ExitHighlightPb: [this+0x1F8]=0
+   00431b38: 75fe726d   mrc2     p13, #3, r6, c5, c2, #3       
+   00431b3c: 0023       movs     r3, #0                        
+   00431b3e: c5f8f831   str.w    r3, [r5, #0x1f8]              
+   00431b42: 1ab1       cbz      r2, #0x431b4c                 
+   00431b44: a868       ldr      r0, [r5, #8]                  
+   00431b46: 0649       ldr      r1, [pc, #0x18]                 ; [00431b60]=008591b5 "ExitHighlightPb() callback"
+ 0x431b8a  ExitHighlightPb callback: [this+0x1F8]=0
+   00431b84: 03ff0023   vcgt.u8  d2, d3, d0                    
+   00431b88: a868       ldr      r0, [r5, #8]                  
+   00431b8a: c5f8f831   str.w    r3, [r5, #0x1f8]              
+   00431b8e: 0749       ldr      r1, [pc, #0x1c]                 ; [00431bac]=008591d0 "EnterHighlightPb callbaak()"
+   00431b90: 626d       ldr      r2, [r4, #0x54]
