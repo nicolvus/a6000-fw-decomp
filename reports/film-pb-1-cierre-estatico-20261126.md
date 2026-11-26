@@ -72,6 +72,25 @@ El dump `analysis/camera-dumps/ram-servicio-20261020/ram_0x80000000.bin` (1 GiB,
 *por qué* en el estado actual de la cámara, porque hacen falta datos que solo están en ella o
 en la tarjeta.
 
+Y hay una segunda lectura del mismo log, que apunta más arriba: `[CACHE]BUFFER SIZE TOO SMALL :
+00000000` **no es un fallo de lectura**, es un **área de memoria sin reservar**. Lo emite
+`StreamCache::SetArea` (`0x7594E0`), que compara el tamaño **pedido** contra el mínimo
+`GetEepData(0x3C0057) << 10`; el `0` que imprime es el pedido, que sale del descriptor
+`MemInfo[+0x140]` — es decir, el reproductor pidió un área de tamaño 0. El `0xC1000010` que
+sigue es literalmente «STREAMCACHE NOT SET AREA», y el `dfs::seek` posterior muere en la
+comprobación de estado (`0x0E100001`: handle que no está en la lista de abiertos), **sin tocar
+el medio**. Conclusión: el log muestra **inicialización incompleta del subsistema de
+reproducción**, no una tarjeta dañada ([informe](film-pb-1-sub-cache-still-20261126.md)).
+
+Eso deja dos familias de causa, ambas de estado interno y no de contenido:
+
+| Familia | Qué la sostiene | Qué la confirmaría |
+|---|---|---|
+| **M1 — memoria/DMM**: el área del reproductor no se reserva | tamaño pedido 0; `dmm.ko` reconstruye el mapa de memoria desde `/setting/DmmConfig.bin` en arranque en frío | que el fallo dependa del modo de arranque (paquete con WBI) |
+| **M2 — IFO**: el índice/IFO del volumen no carga | `mp4Ifo faild 0xB0800001`, `LoadSub : MP4 Load Error`, `CheckMSId` distinto | el `AVIN0001.INP` de la tarjeta, o formatearla en la cámara |
+
+Las dos producen el mismo cuadro visible, y el log del 20-10 las muestra **a la vez**.
+
 Un candidato concreto del destructor, ya verificado en desensamblado: `0x6E81BC` destruye
 aunque el acquire haya fallado, libera un lock que no posee, borra el semáforo tomado y **no
 limpia `[handle+4]`**. Si algo hace destruir el acsr, el `mp4Ifo_If` queda inservible para el

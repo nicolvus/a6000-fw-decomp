@@ -1,0 +1,39 @@
+# Inicializacion del minimo: NVRAM 0x3C0057 << 10 -> 0xad4f68
+00756ec2: 0421       movs     r1, #4                        
+00756ec4: 0122       movs     r2, #1                        
+00756ec6: 1b48       ldr      r0, [pc, #0x6c]                 ; [00756f34]=003c0056
+00756ec8: fff71afe   bl       #0x756b00                     
+00756ecc: 1a4b       ldr      r3, [pc, #0x68]                 ; [00756f38]=00ad4f84
+00756ece: 0821       movs     r1, #8                        
+00756ed0: 0122       movs     r2, #1                        
+00756ed2: 8002       lsls     r0, r0, #0xa                  
+00756ed4: 1860       str      r0, [r3]                      
+00756ed6: 1948       ldr      r0, [pc, #0x64]                 ; [00756f3c]=003c0057
+00756ed8: fff712fe   bl       #0x756b00                     
+00756edc: 184b       ldr      r3, [pc, #0x60]                 ; [00756f40]=00ad4f68
+00756ede: 0122       movs     r2, #1                        
+00756ee0: 0821       movs     r1, #8                        
+00756ee2: 8002       lsls     r0, r0, #0xa                  
+00756ee4: 1860       str      r0, [r3]                      
+00756ee6: 1748       ldr      r0, [pc, #0x5c]                 ; [00756f44]=003c0058
+00756ee8: fff70afe   bl       #0x756b00                     
+00756eec: 0146       mov      r1, r0                        
+00756eee: 0220       movs     r0, #2                        
+00756ef0: fff71dfe   bl       #0x756b2e                     
+00756ef4: 144b       ldr      r3, [pc, #0x50]                 ; [00756f48]=00ad4f70
+00756ef6: 0021       movs     r1, #0                        
+00756ef8: 0a46       mov      r2, r1                        
+00756efa: 8002       lsls     r0, r0, #0xa                  
+00756efc: 1860       str      r0, [r3]                      
+00756efe: 1348       ldr      r0, [pc, #0x4c]                 ; [00756f4c]=003c033f
+00756f00: fff7fefd   bl       #0x756b00                     
+00756f04: 124a       ldr      r2, [pc, #0x48]                 ; [00756f50]=00ad4f78
+00756f06: 3c23       movs     r3, #0x3c                     
+00756f08: 4343       muls     r3, r0, r3                    
+00756f0a: 1360       str      r3, [r2]                      
+00756f0c: 114b       ldr      r3, [pc, #0x44]                 ; [00756f54]=00ad4f88
+00756f0e: 0122       movs     r2, #1                        
+00756f10: 0020       movs     r0, #0                        
+00756f12: 1a70       strb     r2, [r3]                      
+00756f14: f8bd       pop      {r3, r4, r5, r6, r7, pc}      
+00756f16: 2046       mov      r0, r4                        

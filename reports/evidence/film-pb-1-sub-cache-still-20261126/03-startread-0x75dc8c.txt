@@ -1,0 +1,200 @@
+# StillCacheRead::StartRead (0x75dc8c): dfs::seek + mapeo a C3000101
+0075dc8c: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+0075dc90: 89b0       sub      sp, #0x24                     
+0075dc92: 04af       add      r7, sp, #0x10                 
+0075dc94: 0446       mov      r4, r0                        
+0075dc96: 8946       mov      sb, r1                        
+0075dc98: bd6b       ldr      r5, [r7, #0x38]               
+0075dc9a: 1646       mov      r6, r2                        
+0075dc9c: 0092       str      r2, [sp]                      
+0075dc9e: 0520       movs     r0, #5                        
+0075dca0: 6849       ldr      r1, [pc, #0x1a0]                ; [0075de44]=00940898 "StillCacheRead::StartRead"
+0075dca2: 9846       mov      r8, r3                        
+0075dca4: 684a       ldr      r2, [pc, #0x1a0]                ; [0075de48]=009408b2 "length=%lx offset=%lx
+"
+0075dca6: d7f844b0   ldr.w    fp, [r7, #0x44]               
+0075dcaa: d7f848a0   ldr.w    sl, [r7, #0x48]               
+0075dcae: fef7a1fa   bl       #0x75c1f4                     
+0075dcb2: 0023       movs     r3, #0                        
+0075dcb4: c4f81090   str.w    sb, [r4, #0x10]               
+0075dcb8: a661       str      r6, [r4, #0x18]               
+0075dcba: 6561       str      r5, [r4, #0x14]               
+0075dcbc: e361       str      r3, [r4, #0x1c]               
+0075dcbe: c4f82080   str.w    r8, [r4, #0x20]               
+0075dcc2: 7db1       cbz      r5, #0x75dce4                 
+0075dcc4: 3046       mov      r0, r6                        
+0075dcc6: 2946       mov      r1, r5                        
+0075dcc8: c2f588e0   blx      #0x11fddc                       ; __aeabi_uidivmod
+0075dccc: 3046       mov      r0, r6                        
+0075dcce: 8946       mov      sb, r1                        
+0075dcd0: 6162       str      r1, [r4, #0x24]               
+0075dcd2: 2946       mov      r1, r5                        
+0075dcd4: c0f5f2e3   blx      #0x11e4bc                       ; __aeabi_uidiv
+0075dcd8: 09eb0803   add.w    r3, sb, r8                    
+0075dcdc: 2362       str      r3, [r4, #0x20]               
+0075dcde: 6843       muls     r0, r5, r0                    
+0075dce0: a061       str      r0, [r4, #0x18]               
+0075dce2: 00e0       b        #0x75dce6                     
+0075dce4: 6562       str      r5, [r4, #0x24]               
+0075dce6: fb6b       ldr      r3, [r7, #0x3c]               
+0075dce8: 216a       ldr      r1, [r4, #0x20]               
+0075dcea: a269       ldr      r2, [r4, #0x18]               
+0075dcec: a362       str      r3, [r4, #0x28]               
+0075dcee: 3b6c       ldr      r3, [r7, #0x40]               
+0075dcf0: e362       str      r3, [r4, #0x2c]               
+0075dcf2: 0023       movs     r3, #0                        
+0075dcf4: 5218       adds     r2, r2, r1                    
+0075dcf6: 43f10003   adc      r3, r3, #0                    
+0075dcfa: 002a       cmp      r2, #0                        
+0075dcfc: 73f10100   sbcs     r0, r3, #1                    
+0075dd00: 06d3       blo      #0x75dd10                     
+0075dd02: 0220       movs     r0, #2                        
+0075dd04: 4f49       ldr      r1, [pc, #0x13c]                ; [0075de44]=00940898 "StillCacheRead::StartRead"
+0075dd06: 514a       ldr      r2, [pc, #0x144]                ; [0075de4c]=009408c9 "Parameter is over range !
+"
+0075dd08: fef774fa   bl       #0x75c1f4                     
+0075dd0c: 504d       ldr      r5, [pc, #0x140]                ; [0075de50]=c3000002
+0075dd0e: 00e0       b        #0x75dd12                     
+0075dd10: 0025       movs     r5, #0                        
+0075dd12: 236a       ldr      r3, [r4, #0x20]               
+0075dd14: e26a       ldr      r2, [r4, #0x2c]               
+0075dd16: 9342       cmp      r3, r2                        
+0075dd18: 06d9       bls      #0x75dd28                     
+0075dd1a: 0092       str      r2, [sp]                      
+0075dd1c: 0220       movs     r0, #2                        
+0075dd1e: 4949       ldr      r1, [pc, #0x124]                ; [0075de44]=00940898 "StillCacheRead::StartRead"
+0075dd20: 4c4a       ldr      r2, [pc, #0x130]                ; [0075de54]=009408e4 "readlen[0x%lx] is over than buffersize[0"
+0075dd22: fef767fa   bl       #0x75c1f4                     
+0075dd26: 4a4d       ldr      r5, [pc, #0x128]                ; [0075de50]=c3000002
+0075dd28: 236a       ldr      r3, [r4, #0x20]               
+0075dd2a: 0520       movs     r0, #5                        
+0075dd2c: 4549       ldr      r1, [pc, #0x114]                ; [0075de44]=00940898 "StillCacheRead::StartRead"
+0075dd2e: 4a4a       ldr      r2, [pc, #0x128]                ; [0075de58]=00940913 "SeekPoint=0x%lx ReadLength=0x%lx
+"
+0075dd30: 0093       str      r3, [sp]                      
+0075dd32: a369       ldr      r3, [r4, #0x18]               
+0075dd34: fef75efa   bl       #0x75c1f4                     
+0075dd38: 002d       cmp      r5, #0                        
+0075dd3a: 66d1       bne      #0x75de0a                     
+0075dd3c: a269       ldr      r2, [r4, #0x18]               
+0075dd3e: 07f11003   add.w    r3, r7, #0x10                 
+0075dd42: 0020       movs     r0, #0                        
+0075dd44: 0021       movs     r1, #0                        
+0075dd46: 63e90401   strd     r0, r1, [r3, #-0x10]!         
+0075dd4a: 8de82400   stm.w    sp, {r2, r5}                  
+0075dd4e: 2a46       mov      r2, r5                        
+0075dd50: e068       ldr      r0, [r4, #0xc]                
+0075dd52: 2169       ldr      r1, [r4, #0x10]               
+0075dd54: 0293       str      r3, [sp, #8]                  
+0075dd56: 5ef440fd   bl       #0x3bc7da                     
+0075dd5a: 0028       cmp      r0, #0                        
+0075dd5c: 3cd0       beq      #0x75ddd8                     
+0075dd5e: 0090       str      r0, [sp]                      
+0075dd60: 0220       movs     r0, #2                        
+0075dd62: 3849       ldr      r1, [pc, #0xe0]                 ; [0075de44]=00940898 "StillCacheRead::StartRead"
+0075dd64: 3d4a       ldr      r2, [pc, #0xf4]                 ; [0075de5c]=00940935 "Failed to dfs::seek offset=0x%lx errcode"
+0075dd66: a369       ldr      r3, [r4, #0x18]               
+0075dd68: fef744fa   bl       #0x75c1f4                     
+0075dd6c: 3c4d       ldr      r5, [pc, #0xf0]                 ; [0075de60]=c3000101
+0075dd6e: 4ce0       b        #0x75de0a                     
+0075dd70: 0420       movs     r0, #4                        
+0075dd72: 3449       ldr      r1, [pc, #0xd0]                 ; [0075de44]=00940898 "StillCacheRead::StartRead"
+0075dd74: 3b4a       ldr      r2, [pc, #0xec]                 ; [0075de64]=00940965 "Canceled reading by other context
+"
+0075dd76: fef73dfa   bl       #0x75c1f4                     
+0075dd7a: 3b4d       ldr      r5, [pc, #0xec]                 ; [0075de68]=c300000a
+0075dd7c: 45e0       b        #0x75de0a                     
+0075dd7e: 236a       ldr      r3, [r4, #0x20]               
+0075dd80: 266b       ldr      r6, [r4, #0x30]               
+0075dd82: 2169       ldr      r1, [r4, #0x10]               
+0075dd84: 9e42       cmp      r6, r3                        
+0075dd86: 28bf       it       hs                            
+0075dd88: 1e46       movhs    r6, r3                        
+0075dd8a: 07f11003   add.w    r3, r7, #0x10                 
+0075dd8e: a26a       ldr      r2, [r4, #0x28]               
+0075dd90: 43f8040d   str      r0, [r3, #-0x4]!              
+0075dd94: e068       ldr      r0, [r4, #0xc]                
+0075dd96: 0093       str      r3, [sp]                      
+0075dd98: 3346       mov      r3, r6                        
+0075dd9a: 5cf4cffc   bl       #0x3ba73c                     
+0075dd9e: 8046       mov      r8, r0                        
+0075dda0: 30b1       cbz      r0, #0x75ddb0                 
+0075dda2: 0220       movs     r0, #2                        
+0075dda4: 2749       ldr      r1, [pc, #0x9c]                 ; [0075de44]=00940898 "StillCacheRead::StartRead"
+0075dda6: 314a       ldr      r2, [pc, #0xc4]                 ; [0075de6c]=00940988 "Failed to dfs:read code=0x%lx
+"
+0075dda8: 4346       mov      r3, r8                        
+0075ddaa: fef723fa   bl       #0x75c1f4                     
+0075ddae: 21e0       b        #0x75ddf4                     
+0075ddb0: fb68       ldr      r3, [r7, #0xc]                
+0075ddb2: e269       ldr      r2, [r4, #0x1c]               
+0075ddb4: 9e42       cmp      r6, r3                        
+0075ddb6: 1a44       add      r2, r3                        
+0075ddb8: e261       str      r2, [r4, #0x1c]               
+0075ddba: a26a       ldr      r2, [r4, #0x28]               
+0075ddbc: 1a44       add      r2, r3                        
+0075ddbe: a262       str      r2, [r4, #0x28]               
+0075ddc0: 07d0       beq      #0x75ddd2                     
+0075ddc2: 0420       movs     r0, #4                        
+0075ddc4: 1f49       ldr      r1, [pc, #0x7c]                 ; [0075de44]=00940898 "StillCacheRead::StartRead"
+0075ddc6: 2a4a       ldr      r2, [pc, #0xa8]                 ; [0075de70]=009409a7 "It treats as EOF because reqlen is diffe"
+0075ddc8: fef714fa   bl       #0x75c1f4                     
+0075ddcc: c4f82080   str.w    r8, [r4, #0x20]               
+0075ddd0: 02e0       b        #0x75ddd8                     
+0075ddd2: 236a       ldr      r3, [r4, #0x20]               
+0075ddd4: 9e1b       subs     r6, r3, r6                    
+0075ddd6: 2662       str      r6, [r4, #0x20]               
+0075ddd8: 236a       ldr      r3, [r4, #0x20]               
+0075ddda: 002b       cmp      r3, #0                        
+0075dddc: 2cd0       beq      #0x75de38                     
+0075ddde: 2046       mov      r0, r4                        
+0075dde0: fff748ff   bl       #0x75dc74                     
+0075dde4: 0028       cmp      r0, #0                        
+0075dde6: cad0       beq      #0x75dd7e                     
+0075dde8: c2e7       b        #0x75dd70                     
+0075ddea: 0220       movs     r0, #2                        
+0075ddec: 1549       ldr      r1, [pc, #0x54]                 ; [0075de44]=00940898 "StillCacheRead::StartRead"
+0075ddee: 214a       ldr      r2, [pc, #0x84]                 ; [0075de74]=009409e2 "It was able to read valid data
+"
+0075ddf0: fef700fa   bl       #0x75c1f4                     
+0075ddf4: 204d       ldr      r5, [pc, #0x80]                 ; [0075de78]=c3000102
+0075ddf6: 08e0       b        #0x75de0a                     
+0075ddf8: e369       ldr      r3, [r4, #0x1c]               
+0075ddfa: cbf80030   str.w    r3, [fp]                      
+0075ddfe: baf1000f   cmp.w    sl, #0                        
+0075de02: 02d0       beq      #0x75de0a                     
+0075de04: 636a       ldr      r3, [r4, #0x24]               
+0075de06: caf80030   str.w    r3, [sl]                      
+0075de0a: 2846       mov      r0, r5                        
+0075de0c: 07f11407   add.w    r7, r7, #0x14                 
+0075de10: bd46       mov      sp, r7                        
+0075de12: bde8f08f   pop.w    {r4, r5, r6, r7, r8, sb, sl, fp, pc}
+0075de16: 0520       movs     r0, #5                        
+0075de18: 0a49       ldr      r1, [pc, #0x28]                 ; [0075de44]=00940898 "StillCacheRead::StartRead"
+0075de1a: 184a       ldr      r2, [pc, #0x60]                 ; [0075de7c]=00940a02 "Set drift=0x%lx
+"
+0075de1c: fef7eaf9   bl       #0x75c1f4                     
+0075de20: e669       ldr      r6, [r4, #0x1c]               
+0075de22: 636a       ldr      r3, [r4, #0x24]               
+0075de24: 0520       movs     r0, #5                        
+0075de26: 0749       ldr      r1, [pc, #0x1c]                 ; [0075de44]=00940898 "StillCacheRead::StartRead"
+0075de28: 154a       ldr      r2, [pc, #0x54]                 ; [0075de80]=00940a13 "validlen=0x%lx
+"
+0075de2a: f31a       subs     r3, r6, r3                    
+0075de2c: fef7e2f9   bl       #0x75c1f4                     
+0075de30: bbf1000f   cmp.w    fp, #0                        
+0075de34: e0d1       bne      #0x75ddf8                     
+0075de36: e2e7       b        #0x75ddfe                     
+0075de38: 636a       ldr      r3, [r4, #0x24]               
+0075de3a: e269       ldr      r2, [r4, #0x1c]               
+0075de3c: 9a42       cmp      r2, r3                        
+0075de3e: ead2       bhs      #0x75de16                     
+0075de40: d3e7       b        #0x75ddea                     
+0075de42: 00bf       nop                                    
+0075de44: 9808       lsrs     r0, r3, #2                    
+0075de46: 9400       lsls     r4, r2, #2                    
+0075de48: b208       lsrs     r2, r6, #2                    
+0075de4a: 9400       lsls     r4, r2, #2                    
+0075de4c: c908       lsrs     r1, r1, #3                    
+0075de4e: 9400       lsls     r4, r2, #2                    
+0075de50: 0200       movs     r2, r0                        

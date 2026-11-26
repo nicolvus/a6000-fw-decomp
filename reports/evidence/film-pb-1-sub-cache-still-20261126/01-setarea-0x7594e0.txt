@@ -1,0 +1,211 @@
+# libmpr.so fw3.21 - StreamCache::SetArea (0x7594e0): comparacion tamano vs minimo
+# VAs = offset de fichero en el primer LOAD (VA==offset)
+007594e0: 2de9f047   push.w   {r4, r5, r6, r7, r8, sb, sl, lr}
+007594e4: 88b0       sub      sp, #0x20                     
+007594e6: 02af       add      r7, sp, #8                    
+007594e8: 1646       mov      r6, r2                        
+007594ea: 0c46       mov      r4, r1                        
+007594ec: 0546       mov      r5, r0                        
+007594ee: 01f08ff9   bl       #0x75a810                     
+007594f2: 0021       movs     r1, #0                        
+007594f4: 8448       ldr      r0, [pc, #0x210]                ; [00759708]=0093e839 "CMD(SET_AREA): Addr "
+007594f6: 01f099f9   bl       #0x75a82c                     
+007594fa: 0022       movs     r2, #0                        
+007594fc: 2946       mov      r1, r5                        
+007594fe: 0820       movs     r0, #8                        
+00759500: 01f0b4f9   bl       #0x75a86c                     
+00759504: 0021       movs     r1, #0                        
+00759506: 8148       ldr      r0, [pc, #0x204]                ; [0075970c]=0093e84e "h / Size "
+00759508: 01f090f9   bl       #0x75a82c                     
+0075950c: 0022       movs     r2, #0                        
+0075950e: 2146       mov      r1, r4                        
+00759510: 0820       movs     r0, #8                        
+00759512: 01f0abf9   bl       #0x75a86c                     
+00759516: 0021       movs     r1, #0                        
+00759518: 7d48       ldr      r0, [pc, #0x1f4]                ; [00759710]=0093e858 "h, SaveCache "
+0075951a: 01f087f9   bl       #0x75a82c                     
+0075951e: 0120       movs     r0, #1                        
+00759520: 3146       mov      r1, r6                        
+00759522: 0246       mov      r2, r0                        
+00759524: 01f0a2f9   bl       #0x75a86c                     
+00759528: 0121       movs     r1, #1                        
+0075952a: 2a46       mov      r2, r5                        
+0075952c: 2020       movs     r0, #0x20                     
+0075952e: fdf763fb   bl       #0x756bf8                     
+00759532: 0221       movs     r1, #2                        
+00759534: 2246       mov      r2, r4                        
+00759536: 2020       movs     r0, #0x20                     
+00759538: fdf75efb   bl       #0x756bf8                     
+0075953c: 2020       movs     r0, #0x20                     
+0075953e: 0321       movs     r1, #3                        
+00759540: 3246       mov      r2, r6                        
+00759542: fdf759fb   bl       #0x756bf8                     
+00759546: 734b       ldr      r3, [pc, #0x1cc]                ; [00759714]=00ad4f88
+00759548: 1b78       ldrb     r3, [r3]                      
+0075954a: 3bb9       cbnz     r3, #0x75955c                 
+0075954c: 00f0c0f9   bl       #0x7598d0                     
+00759550: 7148       ldr      r0, [pc, #0x1c4]                ; [00759718]=0093e167 "STREAMCACHE UNINITIALZED"
+00759552: 0121       movs     r1, #1                        
+00759554: 714e       ldr      r6, [pc, #0x1c4]                ; [0075971c]=c1000003
+00759556: 00f0e7f9   bl       #0x759928                     
+0075955a: c5e0       b        #0x7596e8                     
+0075955c: 704b       ldr      r3, [pc, #0x1c0]                ; [00759720]=00ad4f68
+0075955e: d3f80090   ldr.w    sb, [r3]                      
+00759562: 4c45       cmp      r4, sb                        
+00759564: 0fd2       bhs      #0x759586                     
+00759566: 00f0b3f9   bl       #0x7598d0                     
+0075956a: 0021       movs     r1, #0                        
+0075956c: 6d48       ldr      r0, [pc, #0x1b4]                ; [00759724]=0093e866 "BUFFER SIZE TOO SMALL : "
+0075956e: 00f0dbf9   bl       #0x759928                     
+00759572: 2146       mov      r1, r4                        
+00759574: 0122       movs     r2, #1                        
+00759576: 0820       movs     r0, #8                        
+00759578: 00f0f2ff   bl       #0x75a560                     
+0075957c: 0120       movs     r0, #1                        
+0075957e: 0221       movs     r1, #2                        
+00759580: 0022       movs     r2, #0                        
+00759582: 2346       mov      r3, r4                        
+00759584: 12e0       b        #0x7595ac                     
+00759586: 04eb0508   add.w    r8, r4, r5                    
+0075958a: a045       cmp      r8, r4                        
+0075958c: 12d2       bhs      #0x7595b4                     
+0075958e: 00f09ff9   bl       #0x7598d0                     
+00759592: 0021       movs     r1, #0                        
+00759594: 6448       ldr      r0, [pc, #0x190]                ; [00759728]=0093e87f "BUFFER ADDRESS OVERFLOW : "
+00759596: 00f0c7f9   bl       #0x759928                     
+0075959a: 4146       mov      r1, r8                        
+0075959c: 0122       movs     r2, #1                        
+0075959e: 0820       movs     r0, #8                        
+007595a0: 00f0deff   bl       #0x75a560                     
+007595a4: 0220       movs     r0, #2                        
+007595a6: 0146       mov      r1, r0                        
+007595a8: 0022       movs     r2, #0                        
+007595aa: 4346       mov      r3, r8                        
+007595ac: 00f0d2f8   bl       #0x759754                     
+007595b0: 5e4e       ldr      r6, [pc, #0x178]                ; [0075972c]=c1000002
+007595b2: 99e0       b        #0x7596e8                     
+007595b4: 5e4b       ldr      r3, [pc, #0x178]                ; [00759730]=00ad4f84
+007595b6: 2846       mov      r0, r5                        
+007595b8: d3f80080   ldr.w    r8, [r3]                      
+007595bc: 4146       mov      r1, r8                        
+007595be: c6f50ee4   blx      #0x11fddc                       ; __aeabi_uidivmod
+007595c2: 29b1       cbz      r1, #0x7595d0                 
+007595c4: 2846       mov      r0, r5                        
+007595c6: 4146       mov      r1, r8                        
+007595c8: c4f578e7   blx      #0x11e4bc                       ; __aeabi_uidiv
+007595cc: 0130       adds     r0, #1                        
+007595ce: 03e0       b        #0x7595d8                     
+007595d0: 2846       mov      r0, r5                        
+007595d2: 4146       mov      r1, r8                        
+007595d4: c4f572e7   blx      #0x11e4bc                       ; __aeabi_uidiv
+007595d8: 08fb00fa   mul      sl, r8, r0                    
+007595dc: 4946       mov      r1, sb                        
+007595de: c5eb0a00   rsb      r0, r5, sl                    
+007595e2: 544d       ldr      r5, [pc, #0x150]                ; [00759734]=00ad4f90
+007595e4: 201a       subs     r0, r4, r0                    
+007595e6: 544c       ldr      r4, [pc, #0x150]                ; [00759738]=00ad4f6c
+007595e8: c4f568e7   blx      #0x11e4bc                       ; __aeabi_uidiv
+007595ec: c7f80880   str.w    r8, [r7, #8]                  
+007595f0: c7f80c90   str.w    sb, [r7, #0xc]                
+007595f4: 09fb00f0   mul      r0, sb, r0                    
+007595f8: a946       mov      sb, r5                        
+007595fa: 7860       str      r0, [r7, #4]                  
+007595fc: 2868       ldr      r0, [r5]                      
+007595fe: 7cf61ff7   bl       #0x1d6440                     
+00759602: 4e4b       ldr      r3, [pc, #0x138]                ; [0075973c]=00ad4f94
+00759604: 9846       mov      r8, r3                        
+00759606: 1a78       ldrb     r2, [r3]                      
+00759608: 1ab3       cbz      r2, #0x759652                 
+0075960a: 16b3       cbz      r6, #0x759652                 
+0075960c: fb68       ldr      r3, [r7, #0xc]                
+0075960e: 2068       ldr      r0, [r4]                      
+00759610: c7f800a0   str.w    sl, [r7]                      
+00759614: 0093       str      r3, [sp]                      
+00759616: 97e80e00   ldm.w    r7, {r1, r2, r3}              
+0075961a: faf7abfb   bl       #0x753d74                     
+0075961e: 0646       mov      r6, r0                        
+00759620: 0028       cmp      r0, #0                        
+00759622: 2fd0       beq      #0x759684                     
+00759624: 00f054f9   bl       #0x7598d0                     
+00759628: 0121       movs     r1, #1                        
+0075962a: 4548       ldr      r0, [pc, #0x114]                ; [00759740]=0093d795 "CELL MAX"
+0075962c: 00f07cf9   bl       #0x759928                     
+00759630: 0320       movs     r0, #3                        
+00759632: 0221       movs     r1, #2                        
+00759634: 8122       movs     r2, #0x81                     
+00759636: 3346       mov      r3, r6                        
+00759638: 00f08cf8   bl       #0x759754                     
+0075963c: 3b4b       ldr      r3, [pc, #0xec]                 ; [0075972c]=c1000002
+0075963e: 414a       ldr      r2, [pc, #0x104]                ; [00759744]=c1000001
+00759640: 4149       ldr      r1, [pc, #0x104]                ; [00759748]=c0000004
+00759642: 2868       ldr      r0, [r5]                      
+00759644: 8e42       cmp      r6, r1                        
+00759646: 14bf       ite      ne                            
+00759648: 1646       movne    r6, r2                        
+0075964a: 1e46       moveq    r6, r3                        
+0075964c: 7cf6fff6   bl       #0x1d644e                     
+00759650: 4ae0       b        #0x7596e8                     
+00759652: 2068       ldr      r0, [r4]                      
+00759654: 70b9       cbnz     r0, #0x759674                 
+00759656: 4ff45470   mov.w    r0, #0x350                    
+0075965a: c5f5a4e0   blx      #0x11e7a4                       ; _Znwj
+0075965e: fb68       ldr      r3, [r7, #0xc]                
+00759660: c7f800a0   str.w    sl, [r7]                      
+00759664: 0093       str      r3, [sp]                      
+00759666: 97e80e00   ldm.w    r7, {r1, r2, r3}              
+0075966a: 0546       mov      r5, r0                        
+0075966c: f8f76ef9   bl       #0x75194c                     
+00759670: 2560       str      r5, [r4]                      
+00759672: 07e0       b        #0x759684                     
+00759674: fb68       ldr      r3, [r7, #0xc]                
+00759676: c7f800a0   str.w    sl, [r7]                      
+0075967a: 0093       str      r3, [sp]                      
+0075967c: 97e80e00   ldm.w    r7, {r1, r2, r3}              
+00759680: f7f762ff   bl       #0x751548                     
+00759684: 314e       ldr      r6, [pc, #0xc4]                 ; [0075974c]=00ad4f7c
+00759686: 0523       movs     r3, #5                        
+00759688: 07f1100a   add.w    sl, r7, #0x10                 
+0075968c: 3b61       str      r3, [r7, #0x10]               
+0075968e: 033b       subs     r3, #3                        
+00759690: 7b61       str      r3, [r7, #0x14]               
+00759692: 3068       ldr      r0, [r6]                      
+00759694: 48b9       cbnz     r0, #0x7596aa                 
+00759696: 4830       adds     r0, #0x48                     
+00759698: c5f584e0   blx      #0x11e7a4                       ; _Znwj
+0075969c: 9ae80600   ldm.w    sl, {r1, r2}                  
+007596a0: 0546       mov      r5, r0                        
+007596a2: fcf763fd   bl       #0x75616c                     
+007596a6: 3560       str      r5, [r6]                      
+007596a8: 03e0       b        #0x7596b2                     
+007596aa: 9ae80600   ldm.w    sl, {r1, r2}                  
+007596ae: fcf7e8fc   bl       #0x756082                     
+007596b2: 274e       ldr      r6, [pc, #0x9c]                 ; [00759750]=00ad4f74
+007596b4: 3368       ldr      r3, [r6]                      
+007596b6: 3bb9       cbnz     r3, #0x7596c8                 
+007596b8: 1420       movs     r0, #0x14                     
+007596ba: c5f574e0   blx      #0x11e7a4                       ; _Znwj
+007596be: 6421       movs     r1, #0x64                     
+007596c0: 0546       mov      r5, r0                        
+007596c2: fcf77bfb   bl       #0x755dbc                     
+007596c6: 3560       str      r5, [r6]                      
+007596c8: 0123       movs     r3, #1                        
+007596ca: 2068       ldr      r0, [r4]                      
+007596cc: 88f80030   strb.w   r3, [r8]                      
+007596d0: faf70cff   bl       #0x7544ec                     
+007596d4: 18b1       cbz      r0, #0x7596de                 
+007596d6: 4ff49170   mov.w    r0, #0x122                    
+007596da: fdf75dfc   bl       #0x756f98                     
+007596de: d9f80000   ldr.w    r0, [sb]                      
+007596e2: 0026       movs     r6, #0                        
+007596e4: 7cf6b3f6   bl       #0x1d644e                     
+007596e8: 3046       mov      r0, r6                        
+007596ea: 00f0fff8   bl       #0x7598ec                     
+007596ee: 3046       mov      r0, r6                        
+007596f0: 07f11807   add.w    r7, r7, #0x18                 
+007596f4: bd46       mov      sp, r7                        
+007596f6: bde8f087   pop.w    {r4, r5, r6, r7, r8, sb, sl, pc}
+007596fa: ffe7       b        #0x7596fc                     
+007596fc: 2846       mov      r0, r5                        
+007596fe: c4f55ce7   blx      #0x11e5b8                       ; _ZdlPv
+00759702: c6f564e0   blx      #0x11f7cc                       ; __cxa_end_cleanup
+00759706: f9e7       b        #0x7596fc                     

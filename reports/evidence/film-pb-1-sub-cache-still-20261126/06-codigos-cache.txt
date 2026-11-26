@@ -1,0 +1,99 @@
+# 0xC1000010 = STREAMCACHE NOT SET AREA (0x756c48)
+00756c48: 98b5       push     {r3, r4, r7, lr}              
+00756c4a: 00af       add      r7, sp, #0                    
+00756c4c: 0446       mov      r4, r0                        
+00756c4e: 03f0dffd   bl       #0x75a810                     
+00756c52: 0121       movs     r1, #1                        
+00756c54: 1448       ldr      r0, [pc, #0x50]                 ; [00756ca8]=0093e1ae "CMD(CLEAR_READ_CANCEL_FLAG):"
+00756c56: 03f0e9fd   bl       #0x75a82c                     
+00756c5a: 5120       movs     r0, #0x51                     
+00756c5c: 0121       movs     r1, #1                        
+00756c5e: 2246       mov      r2, r4                        
+00756c60: fff7caff   bl       #0x756bf8                     
+00756c64: 114b       ldr      r3, [pc, #0x44]                 ; [00756cac]=00ad4f88
+00756c66: 1b78       ldrb     r3, [r3]                      
+00756c68: 3bb9       cbnz     r3, #0x756c7a                 
+00756c6a: 02f031fe   bl       #0x7598d0                     
+00756c6e: 1048       ldr      r0, [pc, #0x40]                 ; [00756cb0]=0093e167 "STREAMCACHE UNINITIALZED"
+00756c70: 0121       movs     r1, #1                        
+00756c72: 104c       ldr      r4, [pc, #0x40]                 ; [00756cb4]=c1000003
+00756c74: 02f058fe   bl       #0x759928                     
+00756c78: 10e0       b        #0x756c9c                     
+00756c7a: 0f4b       ldr      r3, [pc, #0x3c]                 ; [00756cb8]=00ad4f94
+00756c7c: 1b78       ldrb     r3, [r3]                      
+00756c7e: 3bb9       cbnz     r3, #0x756c90                 
+00756c80: 03f0c6fd   bl       #0x75a810                     
+00756c84: 0d48       ldr      r0, [pc, #0x34]                 ; [00756cbc]=0093e180 "STREAMCACHE NOT SET AREA"
+00756c86: 0121       movs     r1, #1                        
+00756c88: 0d4c       ldr      r4, [pc, #0x34]                 ; [00756cc0]=c1000010
+00756c8a: 03f0cffd   bl       #0x75a82c                     
+00756c8e: 05e0       b        #0x756c9c                     
+00756c90: 0c4b       ldr      r3, [pc, #0x30]                 ; [00756cc4]=00ad4f7c
+00756c92: 2146       mov      r1, r4                        
+00756c94: 0024       movs     r4, #0                        
+00756c96: 1868       ldr      r0, [r3]                      
+00756c98: fff700fb   bl       #0x75629c                     
+00756c9c: 2046       mov      r0, r4                        
+00756c9e: 02f025fe   bl       #0x7598ec                     
+00756ca2: 2046       mov      r0, r4                        
+00756ca4: 98bd       pop      {r3, r4, r7, pc}              
+00756ca6: 00bf       nop                                    
+
+# 0xC3000102 = read fallido / corto (0x75ddf4)
+0075dd7e: 236a       ldr      r3, [r4, #0x20]               
+0075dd80: 266b       ldr      r6, [r4, #0x30]               
+0075dd82: 2169       ldr      r1, [r4, #0x10]               
+0075dd84: 9e42       cmp      r6, r3                        
+0075dd86: 28bf       it       hs                            
+0075dd88: 1e46       movhs    r6, r3                        
+0075dd8a: 07f11003   add.w    r3, r7, #0x10                 
+0075dd8e: a26a       ldr      r2, [r4, #0x28]               
+0075dd90: 43f8040d   str      r0, [r3, #-0x4]!              
+0075dd94: e068       ldr      r0, [r4, #0xc]                
+0075dd96: 0093       str      r3, [sp]                      
+0075dd98: 3346       mov      r3, r6                        
+0075dd9a: 5cf4cffc   bl       #0x3ba73c                     
+0075dd9e: 8046       mov      r8, r0                        
+0075dda0: 30b1       cbz      r0, #0x75ddb0                 
+0075dda2: 0220       movs     r0, #2                        
+0075dda4: 2749       ldr      r1, [pc, #0x9c]                 ; [0075de44]=00940898 "StillCacheRead::StartRead"
+0075dda6: 314a       ldr      r2, [pc, #0xc4]                 ; [0075de6c]=00940988 "Failed to dfs:read code=0x%lx
+"
+0075dda8: 4346       mov      r3, r8                        
+0075ddaa: fef723fa   bl       #0x75c1f4                     
+0075ddae: 21e0       b        #0x75ddf4                     
+0075ddb0: fb68       ldr      r3, [r7, #0xc]                
+0075ddb2: e269       ldr      r2, [r4, #0x1c]               
+0075ddb4: 9e42       cmp      r6, r3                        
+0075ddb6: 1a44       add      r2, r3                        
+0075ddb8: e261       str      r2, [r4, #0x1c]               
+0075ddba: a26a       ldr      r2, [r4, #0x28]               
+0075ddbc: 1a44       add      r2, r3                        
+0075ddbe: a262       str      r2, [r4, #0x28]               
+0075ddc0: 07d0       beq      #0x75ddd2                     
+0075ddc2: 0420       movs     r0, #4                        
+0075ddc4: 1f49       ldr      r1, [pc, #0x7c]                 ; [0075de44]=00940898 "StillCacheRead::StartRead"
+0075ddc6: 2a4a       ldr      r2, [pc, #0xa8]                 ; [0075de70]=009409a7 "It treats as EOF because reqlen is diffe"
+0075ddc8: fef714fa   bl       #0x75c1f4                     
+0075ddcc: c4f82080   str.w    r8, [r4, #0x20]               
+0075ddd0: 02e0       b        #0x75ddd8                     
+0075ddd2: 236a       ldr      r3, [r4, #0x20]               
+0075ddd4: 9e1b       subs     r6, r3, r6                    
+0075ddd6: 2662       str      r6, [r4, #0x20]               
+0075ddd8: 236a       ldr      r3, [r4, #0x20]               
+0075ddda: 002b       cmp      r3, #0                        
+0075dddc: 2cd0       beq      #0x75de38                     
+0075ddde: 2046       mov      r0, r4                        
+0075dde0: fff748ff   bl       #0x75dc74                     
+0075dde4: 0028       cmp      r0, #0                        
+0075dde6: cad0       beq      #0x75dd7e                     
+0075dde8: c2e7       b        #0x75dd70                     
+0075ddea: 0220       movs     r0, #2                        
+0075ddec: 1549       ldr      r1, [pc, #0x54]                 ; [0075de44]=00940898 "StillCacheRead::StartRead"
+0075ddee: 214a       ldr      r2, [pc, #0x84]                 ; [0075de74]=009409e2 "It was able to read valid data
+"
+0075ddf0: fef700fa   bl       #0x75c1f4                     
+0075ddf4: 204d       ldr      r5, [pc, #0x80]                 ; [0075de78]=c3000102
+0075ddf6: 08e0       b        #0x75de0a                     
+0075ddf8: e369       ldr      r3, [r4, #0x1c]               
+0075ddfa: cbf80030   str.w    r3, [fp]                      

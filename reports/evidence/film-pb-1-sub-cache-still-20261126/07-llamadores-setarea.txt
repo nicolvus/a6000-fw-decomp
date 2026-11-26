@@ -1,0 +1,60 @@
+# Llamadores de SetArea(0x7594e0): VAs y origen del argumento 'size'
+  0x330128
+  0x42d38e
+  0x42d7d2
+  0x42d894
+  0x43945c
+  0x43f3d0
+  0x43f472
+  0x442562
+  0x44329c
+  0x759ab4
+
+## ThumbnailRecorder::SetMemoryTable (func 0x33009c): size = [MemInfo(MEM_TBL_STILL_REC)+0x140]
+003300f0: 6068       ldr      r0, [r4, #4]                  
+003300f2: 1d49       ldr      r1, [pc, #0x74]                 ; [00330168]=0080c66f "MOVIE"
+003300f4: cff25bfe   bl       #0x5ffdae                     
+003300f8: 58b1       cbz      r0, #0x330112                 
+003300fa: 6068       ldr      r0, [r4, #4]                  
+003300fc: 1b49       ldr      r1, [pc, #0x6c]                 ; [0033016c]=0080c687 "STILL"
+003300fe: cff256fe   bl       #0x5ffdae                     
+00330102: 30b9       cbnz     r0, #0x330112                 
+00330104: 1348       ldr      r0, [pc, #0x4c]                 ; [00330154]=00a4b5e8
+00330106: 0122       movs     r2, #1                        
+00330108: 1949       ldr      r1, [pc, #0x64]                 ; [00330170]=00812b84 " type = MemInfo::MEM_TBL_STILL_REC;"
+0033010a: 0324       movs     r4, #3                        
+0033010c: fef70cff   bl       #0x32ef28                     
+00330110: 00e0       b        #0x330114                     
+00330112: 0224       movs     r4, #2                        
+00330114: 2946       mov      r1, r5                        
+00330116: 2046       mov      r0, r4                        
+00330118: c7f282ff   bl       #0x5f8020                     
+0033011c: 0122       movs     r2, #1                        
+0033011e: 0546       mov      r5, r0                        
+00330120: d0f83801   ldr.w    r0, [r0, #0x138]              
+00330124: d5f84011   ldr.w    r1, [r5, #0x140]              
+00330128: 29f0daf1   bl       #0x7594e0                     
+0033012c: 114b       ldr      r3, [pc, #0x44]                 ; [00330174]=00a4b5f4
+0033012e: 1a68       ldr      r2, [r3]                      
+
+## SetUpPlayerInstance (func 0x43910c): sb=[meminfo+0x138], r8=[meminfo+0x140] -> SetArea(sb,r8,1)
+004392c6: 002d       cmp      r5, #0                        
+004392c8: 00f0ca80   beq.w    #0x439460                     
+004392cc: d4f8980d   ldr.w    r0, [r4, #0xd98]              
+004392d0: 2946       mov      r1, r5                        
+004392d2: d5f83891   ldr.w    sb, [r5, #0x138]              
+004392d6: d5f84081   ldr.w    r8, [r5, #0x140]              
+004392da: e8f63dfe   bl       #0x321f58                     
+004392de: bae0       b        #0x439456                     
+004392e0: 07f11002   add.w    r2, r7, #0x10                 
+004392e4: 0026       movs     r6, #0                        
+004392e6: d4f8ec01   ldr.w    r0, [r4, #0x1ec]              
+004392ea: 4946       mov      r1, sb                        
+004392ec: 42f8046d   str      r6, [r2, #-0x4]!              
+004392f0: 0ef08efa   bl       #0x447810                     
+004392f4: 0028       cmp      r0, #0                        
+004392f6: 40f0bb80   bne.w    #0x439470                     
+004392fa: 0830       adds     r0, #8                        
+004392fc: e5f452ea   blx      #0x11e7a4                       ; _Znwj
+00439300: 8246       mov      sl, r0                        
+00439302: c4f6e7fe   bl       #0x2fe0d4                     

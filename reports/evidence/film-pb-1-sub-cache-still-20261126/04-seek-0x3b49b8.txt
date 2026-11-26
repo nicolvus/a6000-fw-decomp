@@ -1,0 +1,35 @@
+# dfs::File::Seek = vtable[0x9d3f84 + 0x160] = 0x3b49b9 (Thumb) -> 0x3b49b8
+003b49a2: 80b5       push     {r7, lr}                      
+003b49a4: 00af       add      r7, sp, #0                    
+003b49a6: 30b1       cbz      r0, #0x3b49b6                 
+003b49a8: 21b1       cbz      r1, #0x3b49b4                 
+003b49aa: 2430       adds     r0, #0x24                     
+003b49ac: bde88040   pop.w    {r7, lr}                      
+003b49b0: 15f0dabe   b.w      #0x3ca768                     
+003b49b4: 0846       mov      r0, r1                        
+003b49b6: 80bd       pop      {r7, pc}                      
+003b49b8: 2de9b043   push.w   {r4, r5, r7, r8, sb, lr}      
+003b49bc: 00af       add      r7, sp, #0                    
+003b49be: 0546       mov      r5, r0                        
+003b49c0: 0c46       mov      r4, r1                        
+003b49c2: 9046       mov      r8, r2                        
+003b49c4: 9946       mov      sb, r3                        
+003b49c6: fff7ecff   bl       #0x3b49a2                     
+003b49ca: 68b1       cbz      r0, #0x3b49e8                 
+003b49cc: e369       ldr      r3, [r4, #0x1c]               
+003b49ce: 022b       cmp      r3, #2                        
+003b49d0: 0ad1       bne      #0x3b49e8                     
+003b49d2: 4ff0ff32   mov.w    r2, #-1                       
+003b49d6: 281d       adds     r0, r5, #4                    
+003b49d8: 04f10801   add.w    r1, r4, #8                    
+003b49dc: 1346       mov      r3, r2                        
+003b49de: fff7affd   bl       #0x3b4540                     
+003b49e2: 50b1       cbz      r0, #0x3b49fa                 
+003b49e4: bde8b083   pop.w    {r4, r5, r7, r8, sb, pc}      
+003b49e8: 0948       ldr      r0, [pc, #0x24]                 ; [003b4a10]=0e100001
+003b49ea: bde8b083   pop.w    {r4, r5, r7, r8, sb, pc}      
+003b49ee: c4e90a89   strd     r8, sb, [r4, #0x28]           
+003b49f2: 84f83000   strb.w   r0, [r4, #0x30]               
+003b49f6: bde8b083   pop.w    {r4, r5, r7, r8, sb, pc}      
+003b49fa: d4e90a23   ldrd     r2, r3, [r4, #0x28]           
+003b49fe: 82ea0802   eor.w    r2, r2, r8                    
