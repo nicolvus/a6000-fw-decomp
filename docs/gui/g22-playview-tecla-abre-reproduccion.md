@@ -123,3 +123,19 @@ y el fotograma queda vacío (0 listas, opacos 0,0). Conclusión: el modelo exist
 nada que devolver porque **nadie le ha cargado la lista de contenidos**; el siguiente paso es encontrar
 quién llena ese modelo (el mismo `GetAVIndexContentInfoList` de `libmpr` que alimenta `model/MEDIA`), no
 crearlo.
+
+## 9. Ya está en la autoprueba (regresión permanente)
+
+`autoprueba.py` tiene un paso nuevo, **`reproduccion-abre`**, que solo se ejecuta si el arranque lleva
+`PLAYVIEW=1` en `SHIMEXTRA` (si no, lo dice y no lo cuenta). Captura el fotograma, pulsa **Reproducción**
+(`0x1f7`) con el mismo camino que el usuario, y exige **≥ 100 filas distintas de 480** entre el antes y el
+después:
+
+```
+.venv/bin/python scripts/gui/harness/autoprueba.py <work> --perfil-dir <perfil> --puerto <puerto> --config <config>
+```
+
+La medida que lo justifica: durante semanas la misma pulsación dejó el fotograma **idéntico** (0 filas);
+hoy cambia la vista entera (347 de 480 filas). El umbral de 100 filas separa «la tecla no hizo nada» de
+«la vista cambió» sin depender de la traza del invitado (`WLALL`), que no siempre está activa.
+El cálculo vive en `_distintas()` con su test sin QEMU (`tests/test_gui_harness.py`).
