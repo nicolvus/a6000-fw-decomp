@@ -156,7 +156,7 @@ def test_etapa_arranque_orquesta_overlay_y_comparacion(tmp_path: Path, monkeypat
     base_png = tmp_path / "base-menu.png"
     base_png.write_bytes(b"png")
 
-    def falsa_sesion(overlay, perfil, puerto, salida, etiqueta, teclas, espera, hueco_max=900.0):
+    def falsa_sesion(overlay, perfil, puerto, salida, etiqueta, teclas, espera, hueco_max=900.0, nuevo=False):
         assert (overlay / "cam/usr/lib/a.so").read_bytes() == b"AAAB"  # el overlay lleva solo lo cambiado
         for n, nombre in ((1, "primera"), (2, "menu"), (3, "disparo")):
             (salida / f"{etiqueta}-{n}-{nombre}.png").write_bytes(b"png")

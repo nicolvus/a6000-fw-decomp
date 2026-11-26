@@ -125,7 +125,10 @@ puerto propio (8630–8645; espera si ya hay 2 `qemu-system-arm` en el sistema, 
   AVISO (un CFW puede añadir entradas legítimamente). La comparación es INFERENCIA: emulación no es cámara;
 - al acabar hace `POST /salir`, espera el cierre y termina cualquier QEMU de **su** perfil. Los
   reintentos del arnés (`LIVE_REINTENTOS`, 2 por defecto vía `AUDITA_REINTENTOS`) quedan registrados como
-  AVISO si hicieron falta (SEGV intermitente conocido de `im.elf`).
+  AVISO si hicieron falta (SEGV intermitente conocido de `im.elf`);
+- el perfil es nuevo en cada auditoría (se borra antes de arrancar para forzar el frío y al terminar),
+  salvo que se pase `--perfil-dir` o `AUDITA_CONSERVA_PERFIL=1`; la consola del invitado se copia a
+  `cfw-consola.log` en la salida antes de borrar el perfil.
 
 ### Etapa 5 — Informe
 
@@ -205,7 +208,8 @@ AUDITA_CFW_ARRANQUE=1 … -m pytest tests/test_gui_audita_cfw.py::test_arranque_
 
 Variables de entorno: `AUDITA_SONY_NFLASHA15` (base Sony), `AUDITA_BK_TBL` (volcado de ids),
 `AUDITA_WORKERS` (procesos de descompresión TPZL), `AUDITA_ESPERA`, `AUDITA_REINTENTOS`,
-`AUDITA_BASE_RECAPTURA=1` (rehacer la base de Sony), `AUDITA_USR_SONY` no se usa (la opción es `--usr-sony`).
+`AUDITA_BASE_RECAPTURA=1` (rehacer la base de Sony), `AUDITA_CONSERVA_PERFIL=1` (no borrar el perfil de la
+auditoría).
 
 ## 7. Resultado en este equipo (26-11-2026)
 

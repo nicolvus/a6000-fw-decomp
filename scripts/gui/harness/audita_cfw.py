@@ -953,7 +953,7 @@ def compara_png(cfw: bytes, sony: bytes) -> dict[str, Any]:
 
 
 def sesion_arranque(overlay: Path | None, perfil: str, puerto: int, salida: Path, etiqueta: str,
-                    teclas: str, espera_max: float, hueco_max: float = 900.0) -> dict[str, Any]:
+                    teclas: str, espera_max: float, hueco_max: float = 900.0, nuevo: bool = False) -> dict[str, Any]:
     """Arranca live.py (perfil y puerto propios), espera la primera pantalla y captura 3 PNG + secuencia opcional."""
     live = HERE / "live.py"
     env = {**os.environ, "LIVE_REINTENTOS": os.environ.get("AUDITA_REINTENTOS", "2"),
@@ -970,6 +970,8 @@ def sesion_arranque(overlay: Path | None, perfil: str, puerto: int, salida: Path
                            "im_exit": False, "qemu_murio": False, "error": "",
                            "consola": str(TRABAJO / "live" / perfil / "consola.log")}
     try:
+        if nuevo:  # arranque en frío de verdad: sin estado guardado de una auditoría anterior
+            shutil.rmtree(TRABAJO / "live" / perfil, ignore_errors=True)
         espera_hueco_qemu(hueco_max)
         t0 = time.time()  # el tope de arranque cuenta desde que hay hueco de QEMU, no desde la espera
         res["espera_hueco_s"] = round(t0 - t_inicio, 1)
@@ -1067,7 +1069,7 @@ def base_sony(salida: Path, teclas: str, espera_max: float, puerto: int) -> dict
 
 
 def etapa_arranque(usr: dict[str, Any] | None, checks: list[dict[str, Any]], salida: Path, perfil: str,
-                   puerto: int | None, teclas: str, espera_max: float) -> dict[str, Any]:
+                   puerto: int | None, teclas: str, espera_max: float, nuevo_perfil: bool = False) -> dict[str, Any]:
     """Etapa 4: arranque en frío del CFW y comparación con Sony de serie (mismas teclas)."""
     faltan = [n for n in ("vmlinuz", "base.cpio.gz", "stage/cam/usr") if not (TRABAJO / n).exists()]
     if not usr:
@@ -1091,7 +1093,7 @@ def etapa_arranque(usr: dict[str, Any] | None, checks: list[dict[str, Any]], sal
             evidencia="NO_VERIFICADO")
     puerto_cfw = puerto or puerto_libre()
     try:
-        r = sesion_arranque(overlay, perfil, puerto_cfw, salida, "cfw", teclas, espera_max)
+        r = sesion_arranque(overlay, perfil, puerto_cfw, salida, "cfw", teclas, espera_max, nuevo=nuevo_perfil)
     except EntradaError as e:
         add(checks, "arranque.no_arrancado", None, f"no se pudo arrancar (entorno): {e}", 4,
             evidencia="NO_VERIFICADO", material=True)
@@ -1240,7 +1242,8 @@ def audita(ruta: Path, *, completo: bool = True, arranque: bool | None = None, s
         else:
             add(checks, "usr.no_disponible", False, "no hay nflasha15 que extraer (contenedor inválido o sin partición /usr)", 2)
         r["usr"] = {k: usr.get(k, []) for k in ("anadidos", "cambiados", "quitados", "sin_justificar")}
-        r["usr"]["hashes"] = {k: usr.get("mapa_cfw", {}).get(k, "") for k in usr.get("anadidos", []) + usr.get("cambiados", [])}
+        r["usr"]["hashes"] = {k: usr.get("mapa_cfw", {}).get(k) or usr.get("mapa_sony", {}).get(k, "")
+                              for k in usr.get("anadidos", []) + usr.get("cambiados", []) + usr.get("quitados", [])}
         if usr and completo:
             try:
                 r["estructura"] = etapa_estructura(usr, checks, decl, tmp)
@@ -1253,7 +1256,9 @@ def audita(ruta: Path, *, completo: bool = True, arranque: bool | None = None, s
             if arranque is None:
                 arranque = bool(usr) and not faltan
             if arranque and usr:
-                r["arranque"] = etapa_arranque(usr, checks, destino, perfil or f"audit-{s8}", puerto, teclas, espera)
+                auto = not bool(perfil)
+                r["arranque"] = etapa_arranque(usr, checks, destino, perfil or f"audit-{s8}", puerto, teclas, espera,
+                                               nuevo_perfil=auto)
             else:
                 detalle = ("--sin-arranque" if faltan == [] else f"faltan {faltan}")
                 add(checks, "arranque.omitido", None,
@@ -1263,6 +1268,13 @@ def audita(ruta: Path, *, completo: bool = True, arranque: bool | None = None, s
             add(checks, "arranque.omitido", None, "--rapido no ejecuta el arranque", 4, evidencia="NO_VERIFICADO")
     r["veredicto"] = veredicto(checks)
     r["coste_s"] = round(time.time() - t0, 1)
+    a = r.get("arranque") or {}
+    if a.get("perfil") and not perfil and not os.environ.get("AUDITA_CONSERVA_PERFIL"):
+        consola = Path(str(a.get("consola", "")))
+        if consola.is_file():  # se conserva la consola como evidencia antes de borrar el perfil
+            shutil.copy2(consola, destino / "cfw-consola.log")
+            a["consola"] = str(destino / "cfw-consola.log")
+        shutil.rmtree(TRABAJO / "live" / str(a["perfil"]), ignore_errors=True)
     r["json"], r["markdown"] = escribe_informes(r, destino, explicita)
     return r
 
