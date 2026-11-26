@@ -82,14 +82,28 @@ comprobación de estado (`0x0E100001`: handle que no está en la lista de abiert
 el medio**. Conclusión: el log muestra **inicialización incompleta del subsistema de
 reproducción**, no una tarjeta dañada ([informe](film-pb-1-sub-cache-still-20261126.md)).
 
-Eso deja dos familias de causa, ambas de estado interno y no de contenido:
+### 5.1 El dato que cierra el volumen: las fotos sí muestran miniatura
+
+Comprobado en la cámara por el usuario (26-11-2026): **las miniaturas de las fotos aparecen**.
+Las fotos se leen del mismo volumen, por el mismo `dfs` y con el mismo montaje. Por tanto:
+
+- El volumen, la tarjeta, el sistema de ficheros y la lectura **funcionan**.
+- El `[CACHE]BUFFER SIZE TOO SMALL` / `dfs::seek` del log del 20-10 **no** son el estado actual
+  (ese día el volumen ni siquiera montaba: `MountCmd : Flash Mount Error`).
+- Queda descartada la familia «M2 — volumen/DFS».
+
+Lo que queda es **el camino de vídeo**: el `mp4Ifo_If` y los ficheros de índice AV, o el área de
+memoria que ese camino reserva y el de foto no.
+
+### 5.2 Familias que siguen vivas
 
 | Familia | Qué la sostiene | Qué la confirmaría |
 |---|---|---|
-| **M1 — memoria/DMM**: el área del reproductor no se reserva | tamaño pedido 0; `dmm.ko` reconstruye el mapa de memoria desde `/setting/DmmConfig.bin` en arranque en frío | que el fallo dependa del modo de arranque (paquete con WBI) |
-| **M2 — IFO**: el índice/IFO del volumen no carga | `mp4Ifo faild 0xB0800001`, `LoadSub : MP4 Load Error`, `CheckMSId` distinto | el `AVIN0001.INP` de la tarjeta, o formatearla en la cámara |
+| **M1 — área de memoria del reproductor**: no se reserva y el camino de vídeo no arranca | el tamaño pedido es 0 y el de foto reserva por otra caché | que el fallo dependa del modo de arranque (paquete con WBI) |
+| **M3 — índice AV del volumen**: `AVF_INFO` incoherente (falta un compañero, `CheckMSId` distinto, entradas huérfanas) | el IFO del MP4 es el único que lee esos ficheros; las fotos usan DCF y no los tocan | borrar `AVF_INFO` y dejar que la cámara lo reconstruya, o formatear en la cámara |
 
-Las dos producen el mismo cuadro visible, y el log del 20-10 las muestra **a la vez**.
+El log del 20-10 mostraba las dos a la vez porque el volumen no montaba; con las fotos
+funcionando, la que sigue viva es la que solo afecta al vídeo.
 
 Un candidato concreto del destructor, ya verificado en desensamblado: `0x6E81BC` destruye
 aunque el acquire haya fallado, libera un lock que no posee, borra el semáforo tomado y **no
@@ -123,7 +137,7 @@ resto de la sesión. Parche mínimo propuesto: `0x6E81E0: 20 B1 → 80 B9`
 | 3 | **Otra tarjeta formateada en la cámara**: grabar un clip y reproducirlo | nulo | tarjeta/volumen contra cámara |
 | 4 | **Formatear la tarjeta actual** en la cámara (con los clips copiados) | nulo (se pierde el contenido, no la cámara) | arreglo real si el volumen está incoherente |
 | 5 | Encender **sin tarjeta** | nulo | si el montaje y el aviso funcionan (la A6000 **no tiene memoria interna**: no hay nada que reproducir) |
-| 6 | Flashear **A2** (todo Sony, versión > instalada, conservando `nflasha5`) | bajo | si el firmware tiene algo que ver; es el único flasheo que discrimina con contenido coherente |
+| 6 | Flashear **A2** (todo Sony, versión > instalada, conservando `nflasha5`) | bajo | si el firmware tiene algo que ver; es el único flasheo que discrimina con contenido coherente. **Ya está construido y verificado**: `build/sony_puro_con_wbi_404/package-4.04/firmware_packed.dat` (`e45c502c…dc627`), cuyo `firmware.tar` tiene el **mismo SHA-256 que el de Sony 3.21** (`97024649…d5a8`), es decir payload byte a byte oficial con `nflasha5` dentro (`sin_wbi: false`) |
 | 7 | Flashear **C** (`libmpr` con las guardas anuladas) | medio-bajo | solo discrimina las guardas; si el IFO no carga, cambiará el código de error |
 
 El 3.21 oficial **tal cual no se instalaría**: el guard exige versión estrictamente mayor que
