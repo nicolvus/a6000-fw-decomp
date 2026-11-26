@@ -7,9 +7,11 @@ Lo que se fija aquí es el tramo estático del camino, leído de los ELF del fir
 2. `viewUnified2.so` registra esa clave con el evento `0x150100f0` (tabla `InfraInput` de `.data`, triplete
    `{0x7ffffffe, clave, evento}`);
 3. la tabla estática evento → acción de `viewUnified2.so` (`.rodata`) manda `0x150100f0` a la acción `4`;
-4. la tabla del `ViewManager` (tripletes `nombre de vista, biblioteca, símbolo` en `.rodata`) dice que
-   `view/INDEX_PLAYBACK` vive en `viewIndexPb.so`, biblioteca que **no existe** en el `/usr/lib` del firmware, mientras
-   `ViewIndexPbToInstance` sí la exporta `viewUnified3.so`; `view/SINGLEPB` sí la exporta `viewUnified2.so`;
+4. el pozo de cadenas de `.rodata` conserva el trío *de antes de la fusión* `view/INDEX_PLAYBACK`,
+   `viewIndexPb.so`, `ViewIndexPbToInstance` (vecinos, NO una tabla de registros: ver
+   `docs/gui/g22-pbvista-carga-bajo-demanda.md` §1), y `viewIndexPb.so` **no existe** en el `/usr/lib` del firmware,
+   mientras `ViewIndexPbToInstance` sí la exporta `viewUnified3.so`, que es el bundle que el registro real
+   (`IdSoTable::add`, dos pasadas) asocia a `view/INDEX_PLAYBACK`; `view/SINGLEPB` se sirve de `viewUnified2.so`;
 5. `libObj.so` exporta los modelos de reproducción (`ModelIndexPbToInstance`, `ModelSinglePbToInstance`,
    `ModelScrollSinglePbToInstance`).
 
@@ -40,7 +42,7 @@ ACCION_REPRODUCCION = 4
 ENTRADA_CLAVE_PLAY = 0x10A6054  # libObj: {clave, puntero al nombre} medido, nombre «KEY_TACT_PLAY»
 TABLA_EVENTO_ACCION = 0x3A03D4  # viewUnified2 .rodata: 19 pares {evento, acción}
 TABLA_INFRAINPUT = (0x4AA000, 0x4AB400)  # viewUnified2 .data: tripletes {0x7ffffffe, clave, evento}
-TRIPLETES_VIEWMANAGER = (0x3A1300, 0x3A1700)  # viewUnified2 .rodata: «view/…», «viewX.so», «ViewXToInstance»
+POZO_VIEWMANAGER = (0x3A1300, 0x3A1700)  # viewUnified2 .rodata: pozo ordenado de «view/…», «viewX.so», «ViewXToInstance»
 
 
 class Elf:
@@ -157,9 +159,14 @@ def test_el_evento_de_reproduccion_es_la_accion_4(viewunified2: Elf) -> None:
     assert pares[-1] == (0x15050050, 12)
 
 
-def test_viewmanager_manda_index_playback_a_una_biblioteca_que_no_existe(viewunified2: Elf) -> None:
-    """`view/INDEX_PLAYBACK` → `viewIndexPb.so` + `ViewIndexPbToInstance`; el `.so` no está en `/usr/lib` del firmware."""
-    desde, hasta = TRIPLETES_VIEWMANAGER
+def test_pozo_de_cadenas_index_playback_cita_una_biblioteca_que_no_existe(viewunified2: Elf) -> None:
+    """En el pozo, tras `view/INDEX_PLAYBACK` vienen `viewIndexPb.so` y `ViewIndexPbToInstance`; el `.so` no existe.
+
+    OJO: es el **pozo ordenado** (trío de antes de la fusión), no el registro; el registro real vive en
+    `viewUnified2+0x194844` y asocia la vista al bundle `viewUnified3.so`
+    (`docs/gui/g22-pbvista-carga-bajo-demanda.md`, `tests/test_g22_pbvista.py`).
+    """
+    desde, hasta = POZO_VIEWMANAGER
     cadenas = [s for _va, s in viewunified2.cadenas(desde, hasta)]
     i = cadenas.index("view/INDEX_PLAYBACK")
     assert cadenas[i + 1] == "viewIndexPb.so"

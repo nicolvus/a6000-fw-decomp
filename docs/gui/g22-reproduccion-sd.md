@@ -8,6 +8,9 @@ La sesión G22-REPRO-3 **corrige y avanza el corte** (§8): la tecla **sí** sal
 `InputService::createEvent(0x150100f2 pulsación / 0x150100f1 suelta)` → `InputService::pushFilterEvent` — y lo que no ocurre **ni para la Reproducción ni para ninguna otra tecla**
 es el paso siguiente: `ActionEventMapBase::DispatchEvent` (`libObj+0xf59f0`) no recibe **ningún** evento `0x1501xxxx` y `ActionCheckerListBase::execAction` no se ejecuta nunca.
 El invitado lo dice él mismo: `[FMWK] EventQueue pile count: 100` en el mismo instante de la pulsación (§8.3). Abrir la vista por la ruta del arnés sigue siendo posible pero **no pinta miniatura** (§8.4).
+**G22-PBVISTA (26-11-2026)**: el módulo de la vista **sí** se carga bajo demanda (`dlopen(viewUnified3.so)` al abrir
+`view/INDEX_PLAYBACK`); el eslabón que falta para pintar es el **modelo de contenidos** (`getModelInfo(@M00A =
+model/MEDIA, 0) -> 0`) → [g22-pbvista-carga-bajo-demanda.md](g22-pbvista-carga-bajo-demanda.md).
 
 Sesión: **26-11-2026** (reloj del anfitrión 02:30–05:30, −03). Cámara física: **no usada** (todo en `qemu-system-arm`, perfiles `repro`, `repro2`, `repro3`, `repro4` y `repro5`, puertos 8660/8661/8670/8671).
 Espacio de direcciones: **VA del ELF** de `libmpr.so`/`libObj.so`/`viewUnified2.so` 3.21 (el primer `PT_LOAD` tiene vaddr 0; el segundo de `viewUnified2.so` lleva +0x8000,
