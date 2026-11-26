@@ -151,6 +151,19 @@ def test_vigila_se_para_al_cesar_los_fotogramas(tmp_path: Path) -> None:
     assert json.loads((tmp_path / "resumen.json").read_text())["cuelgue_en"] == r["cuelgue_en"]
 
 
+def test_vigila_mide_la_latencia_de_cada_copia(tmp_path: Path) -> None:
+    """La latencia pulsación→copia separa «lento» de «colgado»: se guarda por fila y su p50/máx en el resumen."""
+    viva = VivaFalsa(aguanta=10_000)
+    try:
+        r = SC.vigila(SC.Vivo(viva.puerto), vueltas=1, max_puls=8, minutos=1, pausa=0, espera=0,
+                      ventana=5, salida=tmp_path)
+    finally:
+        viva.cierra()
+    assert r["latencia_p50"] is not None and r["latencia_max"] is not None
+    lat = [ln.split(",")[-1] for ln in (tmp_path / "pulsaciones.csv").read_text().strip().splitlines()[1:]]
+    assert all(x not in ("", '""') for x in lat), lat  # todas las pulsaciones pintaron
+
+
 def test_vigila_aguanta_si_sigue_pintando(tmp_path: Path) -> None:
     """Si cada pulsación pinta, no hay cuelgue y el conductor sale con la cuenta pedida."""
     viva = VivaFalsa(aguanta=10_000)

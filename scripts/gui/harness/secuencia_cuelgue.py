@@ -94,6 +94,14 @@ class Vivo:
         return True
 
 
+def _pct(v: list[float], q: int) -> float | None:
+    """Percentil `q` (sin numpy: lista corta) de las latencias medidas."""
+    if not v:
+        return None
+    s = sorted(v)
+    return s[min(len(s) - 1, max(0, round(q / 100 * (len(s) - 1))))]
+
+
 def vigila(vivo: Vivo, vueltas: int, max_puls: int, minutos: float, pausa: float, espera: float,
            ventana: int, salida: Path) -> dict:
     """Conduce la secuencia y devuelve el resumen; escribe pulsaciones.csv y los PNG de antes/después."""
@@ -108,16 +116,19 @@ def vigila(vivo: Vivo, vueltas: int, max_puls: int, minutos: float, pausa: float
     for i, nombre in enumerate(teclas, 1):
         if i > max_puls or (time.time() - t0) / 60 > minutos:
             break
+        t_puls = time.time()
         vivo.pulsa(nombre, pausa)
         est, t = vivo.estado(), time.time()
         while time.time() - t < espera and est.get("fotogramas", 0) <= prev:  # da tiempo a pintar antes de darla por perdida
             time.sleep(0.2)
             est = vivo.estado()
         fot = est.get("fotogramas", 0)
+        lat = round(time.time() - t_puls, 2) if fot > prev else ""
         fila = {"n": i, "tecla": nombre, "s": round(time.time() - t0, 2), "fotogramas": fot,
                 "nuevo": max(0, fot - prev), "listas": est.get("listas", 0),
                 "listas_nuevas": max(0, est.get("listas_total", 0) - prev_listas),
-                "listas_total": est.get("listas_total", 0), "opacos": est.get("opacos", 0.0)}
+                "listas_total": est.get("listas_total", 0), "opacos": est.get("opacos", 0.0),
+                "latencia": lat}  # s hasta la copia a pantalla ("" si no llegó en --espera)
         prev, prev_listas = fot, est.get("listas_total", prev_listas)
         hist.append(fila)
         if cuelga(hist, ventana):
@@ -134,6 +145,8 @@ def vigila(vivo: Vivo, vueltas: int, max_puls: int, minutos: float, pausa: float
                "listas_antes": ultimo.get("listas"), "listas_despues": fin.get("listas"),
                "listas_total_antes": ultimo.get("listas_total"), "listas_total_despues": fin.get("listas_total"),
                "opacos_antes": ultimo.get("opacos"), "opacos_despues": fin.get("opacos"),
+               "latencia_p50": _pct([f["latencia"] for f in hist if f["latencia"] != ""], 50),
+               "latencia_max": max([f["latencia"] for f in hist if f["latencia"] != ""], default=None),
                "texto": fin.get("texto")}
     (salida / "resumen.json").write_text(json.dumps(resumen, ensure_ascii=False, indent=2) + "\n")
     return resumen
