@@ -132,7 +132,11 @@ sin IFO cargado no hay duración real, ni miniatura, ni reproducción.
 |---|---|---|---|
 | 1 | Ver si las **miniaturas de las FOTOS** aparecen | descarta el almacenamiento y devuelve el foco al lector de vídeo | confirma que es el volumen: no hay que tocar el firmware |
 | 2 | **Otra tarjeta formateada en la cámara**, grabar un clip y reproducirlo | la tarjeta/volumen es la causa y el arreglo es formatear la actual | la causa está en la cámara (lector/memoria interna) |
-| 3 | **Quitar la tarjeta** y reproducir lo que haya en la memoria interna | confirma que el fallo viaja con el volumen | el fallo es del lector o del montaje, no del contenido |
+| 3 | **Quitar la tarjeta** y encender: ¿avisa «inserte la tarjeta» o se queda a medias? | el lector responde y el fallo viaja con el volumen | el montaje o el lector están implicados |
+| 4 | **Formatear la tarjeta en la cámara** (con los clips ya copiados al PC) y volver a grabar | arreglo: reconstruye `AVF_INFO` y toda la estructura, que es lo que «Recuperar BD imág.» no hace | el volumen no era el problema |
+
+La A6000 **no tiene memoria interna** para fotos ni vídeos (la «memoria interna del sensor» de S144 es otra cosa),
+así que la prueba de reproducir sin tarjeta no aplica: no hay nada que reproducir.
 
 Ninguna de las tres requiere autorización especial: no escriben nada en la cámara que no sea
 una grabación normal.

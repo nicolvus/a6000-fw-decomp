@@ -1,0 +1,60 @@
+# arnes1 — muerte de im.elf al armar en caliente una traza en 0x5fd71b (no es entrada de función: es el ra de un bl)
+
+IMLAST [shim] TRAZA mM` w ERROR 
+IMLAST [shim] TRAZA }P` J ERROR 
+IMLAST [shim] TRAZA l` w ERROR 
+IMLAST [shim] TRAZA Pn` ERROR 
+IMLAST [shim] TRAZA D k 6 [M_WIRELESS_POWER] getWirelessCurPwrSpplyState Error 
+IMLAST [shim] TRAZA k y Error 
+IMLAST [shim] TRAZA T o ? [ 127]: [ObjSpeaker][ExecCmdSetVol]CheckParameter(): Error:0x0 
+IMLAST [shim] TRAZA T 2 p ? [ 127]: [ObjSpeaker][ExecCmdSetVol]CheckParameter(): Error:0x0 
+IMLAST [shim] TRAZA H [WRPPR_DEPTH_GAUGE] getDepthInfo error=-1, infra=-1429214824, wrapper=2 
+IMLAST [shim] TRAZA N [CAMUSER]: Cam) ##### ERROR!!! PinGet REQ[[3][2][0]] CMP[[255][255][0]] ##### [shim] TRAZA + 5 6 [ 188]: [ObjSystemSound][SeqPinConnect]ExecSendComp() 
+IMLAST [shim] TRAZA B F Cam) ##### ERROR!!! PinGet REQ[[3][2][0]] CMP[[255][255][0]] ##### 
+IMLAST [shim] TRAZA 6 [M_WIRELESS_POWER] getWirelessCurPwrSpplyState Error 
+IMLAST [shim] TRAZA y Error 
+IMLAST [shim] TRAZA 5 S [ 215]: [ObjEffect]ParseYcInPinCommand[0]: PARAMID_INFRA_CONNECT_ERROR -> (0x0000) [shim] WAITLOG 68.01 fin tid 284 I-InputRepeat uipc6 id=0x910041 tmo=-
+IMLAST [shim] TRAZA U ``g + [  91]: [DummyMPR]Memory UnMapping Error!! 
+IMLAST [shim] TRAZA r^ w ERROR 
+IMLAST [shim] TRAZA ` d ERROR 
+IMLAST [shim] TRAZA U lZ + [  91]: [DummyMPR]Memory UnMapping Error!! 
+IMLAST [shim] LOG   83 B  Tc 0E5[shim] TRAZA U # + [  91]: [DummyMPR]Memory UnMapping Error!! 
+IMLAST [shim] TRAZA U % + [  91]: [DummyMPR]Memory UnMapping Error!! 
+IMDMESG [  234.962269] im.elf: monio(input): potentially unexpected fatal signal 11.
+IMDMESG [  234.963841] CPU: 1 UID: 0 PID: 290 Comm: monio(input) Not tainted 6.12.107+deb13-armmp #1  Debian 6.12.107-1
+IMDMESG [  234.964111] Hardware name: Generic DT based system
+IMDMESG [  234.964315] PC is at 0x18a
+IMDMESG [  234.965261] LR is at 0xb6e3fb88
+IMDMESG [  234.965319] pc : [<0000018a>]    lr : [<b6e3fb88>]    psr: a0000030
+IMDMESG [  234.965375] sp : 85ffec72  ip : b6e9071c  fp : 00000000
+IMDMESG [  234.965422] r10: 00000000  r9 : ab6183dc  r8 : ad953577
+IMDMESG [  234.965473] r7 : 2c380000  r6 : 860474b8  r5 : 001fa357  r4 : 710aaad7
+IMDMESG [  234.965530] r3 : 00000001  r2 : b6ed2e68  r1 : 00000000  r0 : 1811d2e0
+
+# --- ultimas lineas del shim.log antes del SIGSEGV ---
+167.49 [shim] WAITLOG 229.66 copia a pantalla seq=124
+167.50 [shim] WAITLOG 229.66 fotograma enviado seq=124
+168.12 [shim] WAITLOG 230.31 copia a pantalla seq=125
+168.57 [shim] WAITLOG 230.76 copia a pantalla seq=126
+168.77 [shim] WAITLOG 230.96 copia a pantalla seq=127
+168.99 [shim] WAITLOG 231.18 copia a pantalla seq=128
+169.30 [shim] WAITLOG 231.49 copia a pantalla seq=129
+169.84 [shim] WAITLOG 232.03 copia a pantalla seq=130
+170.07 [shim] WAITLOG 232.25 copia a pantalla seq=131
+170.40 [shim] WAITLOG 232.59 copia a pantalla seq=132
+170.66 [shim] WAITLOG 232.85 copia a pantalla seq=133
+170.88 [shim] WAITLOG 233.07 copia a pantalla seq=134
+171.43 [shim] WAITLOG 233.62 copia a pantalla seq=135
+172.14 [shim] WAITLOG 234.33 copia a pantalla seq=136
+172.29 [shim] WAITLOG 234.47 copia a pantalla seq=137
+172.67 [shim] WAITLOG 234.86 copia a pantalla seq=138
+172.73 [shim] --- pila (sig 11 tid 290 monio(input)) pc/lr:
+172.73 [shim]   raw pc=0000018a lr=b6e3fb88 addr=0000018a r0=1811d2e0 r1=00000000 r2=b6ed2e68
+172.73 [shim]   b6e3fb88 /usr/lib/sonyshim.so+0x9b88
+172.73 [shim]   0000ab61 /usr/bin/im.elf+0x2b61
+172.73 [shim]   0000b6e4 /usr/bin/im.elf+0x36e4
+172.73 [shim]   000085ff /usr/bin/im.elf+0x5ff
+172.73 [shim]   0000ad95 /usr/bin/im.elf+0x2d95
+172.73 [shim]   0000ab61 /usr/bin/im.elf+0x2b61
+172.73 [shim]   0000adda /usr/bin/im.elf+0x2dda
+172.73 [shim]   0000ad9d /usr/bin/im.elf+0x2d9d

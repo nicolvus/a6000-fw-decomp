@@ -50,8 +50,10 @@
 > (`cbnz r0,#0x6E8204`). Es decir: un fallo de montaje que haga destruir el acsr deja el `mp4Ifo_If` inservible para el
 > resto de la sesión, y por eso el fallo se ve también con un clip recién grabado.
 > [Auditoría del mutex](../reports/film-pb-1-sub-fuga-mutex-20261126.md).
-> Tres pruebas sin riesgo antes de flashear nada: miniaturas de **foto**, **otra tarjeta formateada en la cámara**, y
-> reproducir **sin tarjeta** (memoria interna). [Informe del log](../reports/film-pb-1-log-real-20261126.md).
+> Pruebas sin riesgo antes de flashear nada: miniaturas de **foto**, **otra tarjeta formateada en la cámara**, **formatear la
+> tarjeta actual** en la cámara (reconstruye `AVF_INFO`, que es lo que «Recuperar BD imág.» no hace) y encender **sin tarjeta**
+> para ver si el aviso es correcto. La A6000 no tiene memoria interna: reproducir «sin tarjeta» no aplica.
+> [Informe del log](../reports/film-pb-1-log-real-20261126.md).
 >
 > **Lo que no es la causa, verificado:** la cadencia (clip propio); el `TvSystem` (sin bits con clip propio); la
 > BD/catálogo (la guarda es *fail-open* si falta el registro y recuperar la BD no cambia nada); el decodificador
