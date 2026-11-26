@@ -1730,14 +1730,19 @@ static int reloj_params(void *list, int info) {
  *            de la consulta info 1 (0x2756a8/0x2756ae) ⇒ 1.
  *   info 1 — 0x108 == 1 (0x2756b8), 0x10b == 2 (0x2756d0) y **0x10c = nivel 0..100**, que elige entre cinco imágenes con umbrales
  *            20/50/80 y 0 = apagado (0x275726…0x27573c).
- * POWEREMU=0 lo apaga (control de la medida). POWERPCT=nn fuerza el nivel (diagnóstico). */
+ * POWEREMU=1 lo enciende (APAGADO por defecto). Medido el 26-11-2026: el icono no se instancia y nadie pide model/POWER (0 de
+ * 37 222 getModelInfo), así que rellenarlo no se ve en pantalla y, con el relleno activo, el arranque en frío dejó de componer la
+ * OSD en 3 de 3 intentos (0,002 de píxeles opacos) mientras que con POWEREMU=0 pintó a la primera (0,136) — con el mismo `.so`.
+ * shortcut: se apaga hasta que haya consumidor verificado; entonces habrá que medir si el relleno es lo que rompe el arranque.
+ * POWERPCT=nn fuerza el nivel (diagnóstico). */
 static unsigned power_pct(void) { const char *e = getenv("POWERPCT"); int v = e ? num(e) : cam_bateria; return v < 0 ? 100u : (unsigned)v; }
 static int power_params(const char *name, int info, void *list) {
     static int (*add)(void *, unsigned long, void *);
     if (!add) add = dlsym(RTLD_DEFAULT, "_ZN9ParamList3addEmP9ParamBase");
     Dl_info di; void *sym = lobj_h ? dlsym(lobj_h, "_ZN12ModelManager9pushEventEP5Event") : 0;
     const char *e = getenv("POWEREMU");
-    if (!add || !sym || !dladdr(sym, &di) || !readable(list) || !name || strcmp(name, "model/POWER") || (e && *e == '0')) return 0;
+    if (!e || *e == '0') return 0;  /* apagado por defecto: sin consumidor verificado (ver arriba) */
+    if (!add || !sym || !dladdr(sym, &di) || !readable(list) || !name || strcmp(name, "model/POWER")) return 0;
     if (info != 0 && info != 1) return 0;
     unsigned char *lb = (unsigned char *)di.dli_fbase;
     int (*pint)(void *, int) = (void *)(lb + 0xf0fb0 + 1);   /* Param<int>(int): el mismo que usa reloj_params */

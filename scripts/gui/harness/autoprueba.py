@@ -208,7 +208,7 @@ def main() -> int:
     ap.add_argument("--config", default="", help="config del configurador; sin él se usa uno propio en un directorio temporal")
     ap.add_argument("--espera", type=float, default=300, help="tope hasta la primera pantalla (frío ~170 s)")
     ap.add_argument("--salida", default="", help="carpeta del informe (por defecto DIR_TRABAJO/autoprueba/<fecha>)")
-    ap.add_argument("--intentos", type=int, default=2, help="arranques en frío si el invitado no llega a pintar (G22-CUELGUE, intermitente)")
+    ap.add_argument("--intentos", type=int, default=3, help="arranques en frío si el invitado no llega a pintar (G22-CUELGUE: 4 de 12 medidos)")
     a = ap.parse_args()
     work = a.work.resolve()
     base = f"http://127.0.0.1:{a.puerto}"
