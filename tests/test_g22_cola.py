@@ -142,4 +142,4 @@ def test_shim_trae_medida_y_arreglo() -> None:
     # medido: con el parche puesto, 3 de 3 arranques en frío no compusieron la OSD y con él apagado pintó; queda opt-in
     assert "static void evqnotify(void)" in src and 'getenv("EVQNOTIFY")' in src, "EVQNOTIFY=1 lo enciende"
     assert "*p = 0x2201" in src, "el arreglo escribe movs r2,#1 en libObj+0x7f0ade"
-    assert "mwf_nullsafe(); evqnotify(); }" in src, "se arma al cargar libObj"
+    assert "mwf_nullsafe(); evqnotify();" in src, "se arma al cargar libObj (junto a destkey, que también es opt-in)"
