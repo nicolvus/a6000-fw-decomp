@@ -95,6 +95,10 @@ def construye_shimenv(tarjeta: bool = True, extra: str | None = None, quita: str
 
 
 SHIMENV = construye_shimenv()
+# SD_MEDIA entra en el SHIMENV solo como marca: la huella del estado guardado incluye SHIMENV, y cambiar la tarjeta
+# (que va dentro del initrd) tiene que invalidar el snapshot. El shim no lee esta variable.
+if os.environ.get("SD_MEDIA") == "1":
+    SHIMENV += " SDMEDIA=1"
 # {clave KEY_*, índice físico[, paso del dial]}: tabla del driver de InfraInput volcada en el arranque (§5.18z¹²; las 7 primeras, también §5.18z′).
 # Los diales no tienen suelta: cada pulsación es un paso con signo (callback_dial_signed_speed); dial = 0x15070030, rueda = 0x15070040.
 # reproduccion: 0x1f7 = KEY_TACT_PLAY (libObj VA 0x10a6054) → evento 0x150100f0 (viewUnified2 .data VA 0x4aa844) → acción 4 (tabla .rodata 0x3a03d4, búsqueda 0x1906a8); G22-REPRO-2.
@@ -234,7 +238,11 @@ class Vm:
             with tempfile.TemporaryDirectory() as t:
                 cabeza = None
                 if "SDIMG=1" in shimenv:  # SD legible: imagen FAT32 de la carpeta de sd_emu (sectores en SDSECT, que ya va en shimenv)
-                    cabeza = Path(t) / "sd.head"; sd_image.construye(sd_emu.raiz_sd(""), cabeza, 4.0, completa=os.environ.get("SD_ESTRUCTURA") == "1")
+                    # SD_MEDIA=1 (G22-PBMEDIA): foto JPEG real + índice AVF_INFO coherente con ella (sd_media.py);
+                    # implica la estructura de SD_ESTRUCTURA. Sin la variable, la imagen es la de siempre.
+                    cabeza = Path(t) / "sd.head"; sd_image.construye(sd_emu.raiz_sd(""), cabeza, 4.0,
+                                                                    completa=os.environ.get("SD_ESTRUCTURA") == "1",
+                                                                    media=os.environ.get("SD_MEDIA") == "1")
                 escribe_atomico(initrd, run.build_initrd(work, HERE / "im.sh", Path(t), shimenv, pkg, self.nvram, cabeza, nflash4_img()).read_bytes())
             sello.write_text(actual)
         for s in (self.ui, self.mon):

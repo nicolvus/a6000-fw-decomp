@@ -17,6 +17,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+import sd_media
+
 ETIQUETA = "A6000SD"  # NO_VERIFICADO: la cámara pone «NO_NAME» o la etiqueta del formateo; solo es cosmético
 CARPETAS = ("DCIM", "DCIM/100MSDCF", "PRIVATE", "PRIVATE/M4ROOT", "PRIVATE/M4ROOT/CLIP", "PRIVATE/AVCHD")  # estructura base de la A6000 (sd_emu.py, docs del repo)
 # Carpetas que el firmware nombra en su código: `\\PRIVATE\\M4ROOT\\{CLIP,SUB,THMBNL,GENERAL}` de xavcIfo_DbDirMngr (libmpr+0x947c8a), `AVF_INFO` del índice AV
@@ -42,15 +44,21 @@ def ultimo_dato(f: int, tam: int) -> int:
     return fin
 
 
-def entradas(completa: bool = False) -> tuple[tuple[str, ...], tuple[str, ...]]:
-    """(carpetas, ficheros) que crea `construye` antes de copiar la carpeta del anfitrión (que va aparte, con `mcopy -s`)."""
+def entradas(completa: bool = False, media: bool = False) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """(carpetas, ficheros) que crea `construye` antes de copiar la carpeta del anfitrión (que va aparte, con `mcopy -s`).
+
+    `media` (SD_MEDIA=1, G22-PBMEDIA) implica `completa` y **no** deja el índice vacío: `sd_media.py` escribe
+    `AVIN0001.INP/.BNP` con una entrada real y una foto JPEG de verdad en `DCIM/100MSDCF`.
+    """
+    if media:
+        return CARPETAS + CARPETAS_CODIGO, ()
     return CARPETAS + (CARPETAS_CODIGO if completa else ()), AVF_INFO_FICHEROS if completa else ()
 
 
-def construye(raiz: Path, salida: Path, tamano_gb: float = 4.0, completa: bool = False) -> int:
+def construye(raiz: Path, salida: Path, tamano_gb: float = 4.0, completa: bool = False, media: bool = False) -> int:
     """Crea la imagen y escribe la cabeza en `salida`; devuelve los sectores totales (512 B)."""
     sectores = int(tamano_gb * (1 << 30)) // 512
-    carpetas, ficheros = entradas(completa)
+    carpetas, ficheros = entradas(completa, media)
     with tempfile.TemporaryDirectory() as t:
         img = Path(t) / "sd.img"
         with img.open("wb") as f:
@@ -63,6 +71,13 @@ def construye(raiz: Path, salida: Path, tamano_gb: float = 4.0, completa: bool =
         vacio.write_bytes(b"")
         for n in ficheros:
             subprocess.run(["mcopy", "-i", str(img), "-m", "-Q", str(vacio), f"::{n}"], check=True, capture_output=True, env=env)
+        if media:  # foto real + índice AV coherente con ella (opt-in: no toca los arranques que ya funcionan)
+            med = Path(t) / "media"
+            mapa = sd_media.construye(med)
+            for sub in sorted(p for p in med.iterdir() if p.is_dir()):
+                subprocess.run(["mcopy", "-i", str(img), "-s", "-m", "-Q", "-o", str(sub), "::"], check=True, capture_output=True, env=env)
+            if os.environ.get("SD_MEDIA_MAPA"):  # evidencia: qué se ha metido y con qué formato
+                print(f"SD_MEDIA {mapa}", file=sys.stderr)
         if raiz.is_dir():
             for sub in sorted(p for p in raiz.iterdir() if p.is_dir()):
                 subprocess.run(["mcopy", "-i", str(img), "-s", "-m", "-Q", "-o", str(sub), "::"], check=False, capture_output=True, env=env)
@@ -79,4 +94,4 @@ def construye(raiz: Path, salida: Path, tamano_gb: float = 4.0, completa: bool =
 
 if __name__ == "__main__":
     print(construye(Path(sys.argv[1]).expanduser(), Path(sys.argv[2]), float(sys.argv[3]) if len(sys.argv) > 3 else 4.0,
-                    sys.argv[4:] == ["completa"]))
+                    "completa" in sys.argv[4:], "media" in sys.argv[4:]))

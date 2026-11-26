@@ -1,0 +1,71 @@
+# G22-PBMEDIA — trazas del invitado, perfil pbmedia3/pbmedia2 (sd con foto real + AVIN0001.INP de 384 B)
+# shim.log del arranque en frío, SHIMEXTRA='WAITLOG=3000 WLALL=1 GMILOG=1 SDIO=20000 TRACELIB=libmpr.so TRACEFN2=13e474'
+
+== 1. Ciclo del medio (ObjMedia): montaje, inhibidor, rechazo/limpieza ==
+197.28 64.91 TRAZA 1 x [ObjMedia]onStarting 
+197.29 64.92 TRAZA 1 @ [ObjMedia]onStarting 
+197.31 64.94 TRAZA 1 A [ObjMedia]onStarting 
+197.32 64.95 TRAZA 1 [ObjMedia]RegistInput() 
+197.36 64.99 TRAZA 1 @ [ObjMedia]RegistInput() 
+197.38 65.01 TRAZA 1 A / [ObjMedia]SetInhStatus() [INH_INVALID_INFO_FS] 
+197.38 65.01 TRAZA 1 A , [ObjMedia]ChangeInhFactors() factorID = 177 
+197.40 65.03 TRAZA 1 A < [ObjMedia]RejectMedia() 
+197.40 65.03 TRAZA 1 A L + [ObjMedia]SetInhStatus() [INH_MEDIA_MOUNT] 
+197.41 65.04 TRAZA 1 A d , [ObjMedia]ChangeInhFactors() factorID = 169 
+197.44 65.07 TRAZA 1 [ObjMedia]StartRmProc() 
+197.44 65.07 TRAZA 1 A x [ObjMedia]SendToAppEvent() 
+197.45 65.08 TRAZA 1 A - 1 [ObjMedia]  DefObjMedia::MSGID_DETECT_REJECT_EVT 
+197.45 65.08 TRAZA 1 [ObjMedia]StartTempProc() 
+197.45 65.08 TRAZA 1 @ ; [ObjMedia]StartRmProc() 
+197.46 65.09 TRAZA 1 A # % [ObjMedia]NotifyCurrentMediaStatus() 
+197.46 65.09 TRAZA 1 , [ObjMedia]RegistDrop() 
+197.47 65.10 TRAZA 1 A [O 5 [ObjMedia]Skip Send MSGID_CURRENT_MEDIA_STATUS[Pin0] 
+197.47 65.10 TRAZA 1 @ W [ObjMedia]StartTempProc() 
+197.47 65.10 TRAZA 1 r^ ( [ObjMedia][CB]CallbackFuncMediaDetect() 
+197.47 65.10 TRAZA 1 A Y 5 [ObjMedia]Skip Send MSGID_CURRENT_MEDIA_STATUS[Pin1] 
+197.47 65.10 TRAZA 1 *\ ( [ObjMedia][CB]CallbackFuncMediaDetect() 
+197.48 65.11 TRAZA 1 |q $ [ObjMedia][CB]MSGID_START_INOUT_CMP 
+197.48 65.11 TRAZA 1 m / [ObjMedia]SetInhStatus() [INH_INVALID_INFO_FS] 
+197.48 65.11 TRAZA 1 A p 3 [ObjMedia]Skip Send MSGID_PULL_OUT_MEDIA_EVT[Pin0] 
+197.49 65.12 TRAZA 1 A 3 [ObjMedia]Skip Send MSGID_PULL_OUT_MEDIA_EVT[Pin1] 
+197.49 65.12 TRAZA 1 , [ObjMedia]ChangeInhFactors() factorID = 174 
+197.49 65.12 TRAZA 1 tq [ObjMedia][CB]MSGID_TEMP_EVT 
+197.49 65.12 TRAZA 1 A [ObjMedia]onStarting End 
+197.50 65.13 TRAZA 1 3 ( [ObjMedia][CB]CallbackFuncMediaDetect() 
+197.50 65.13 TRAZA 1 [ObjMedia]onStarting End 
+197.50 65.13 TRAZA 1 # [ObjMedia][CB]MSGID_START_TEMP_CMP 
+197.51 65.14 TRAZA 1 @ [ObjMedia]RegistDrop() 
+197.51 65.14 TRAZA 1 A [ObjMedia]eventProcessing!!! : 
+197.51 65.14 TRAZA 1 @ / [ObjMedia]SetInhStatus() [INH_INVALID_INFO_FS] 
+197.52 65.14 TRAZA 1 1 [ObjMedia]eventProcessing!!! : 
+197.52 65.15 TRAZA 1 @ , [ObjMedia]ChangeInhFactors() factorID = 175 
+197.52 65.15 TRAZA 1 @ / ( [ObjMedia][CB]CallbackFuncMediaDetect() 
+197.53 65.15 TRAZA 1 s [ObjMedia]ParseObjCommand : 
+197.53 65.16 TRAZA 1 @  6 $ [ObjMedia][CB]MSGID_START_INOUT_CMP 
+
+== 2. getModelInfo(model/MEDIA,*) y vecinos ==
+190.20 57.83 getModelInfo(model/MEDIA, 0) -> 0
+219.37 87.00 getModelInfo(model/MEDIA, 0) -> 0
+220.59 88.22 getModelInfo(model/ROOT, 6) -> 1
+220.63 88.26 getModelInfo(model/ROOT, 6) -> 1
+220.64 88.27 getModelInfo(model/ROOT, 6) -> 1
+220.64 88.27 getModelInfo(model/ROOT, 6) -> 1
+220.65 88.28 getModelInfo(model/ROOT, 6) -> 1
+220.66 88.29 getModelInfo(model/ROOT, 6) -> 1
+236.25 103.88 getModelInfo(model/MEDIA, 0) -> 0
+237.68 105.31 getModelInfo(model/ROOT, 6) -> 1
+239.34 106.97 getModelInfo(model/ROOT, 6) -> 1
+
+== 3. E/S de sectores de la SD (SDIO): total y rango ==
+total lecturas: 34
+198.38 66.01 SDIO rd sec=0 n=1
+198.39 66.02 SDIO rd sec=0 n=1
+198.41 66.04 SDIO rd sec=32 n=256
+198.57 66.20 SDIO rd sec=7456 n=256
+198.58 66.21 SDIO rd sec=7712 n=256
+198.58 66.21 SDIO rd sec=7968 n=256
+sectores distintos: 0 32 288 544 800 1056 1312 1568 1824 2080 2336 2592 2848 3104 3360 3616 3872 4128 4384 4640 4896 5152 5408 5664 5920 6176 6432 6688 6944 7200 7456 7712 7968 
+
+== 4. Fsys_FindFirst (libmpr+0x13e474) — trampa armada y disparos ==
+TRACELIB: 1
+disparos 13e474: 0

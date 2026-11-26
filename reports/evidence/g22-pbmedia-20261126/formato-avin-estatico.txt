@@ -1,0 +1,91 @@
+# G22-PBMEDIA — formato de AVIN0001.INP en libmpr.so (fw 3.21, sha256 9a74a3bb…5e4c30)
+# Direcciones = VA del ELF (el .data cae en el 2.º PT_LOAD: off = VA - 0x9c31c8 + 0x9bb1c8)
+
+== descriptor .data 0x9d1270 (0x50 B; el .INT empieza en 0x9d12c0) ==
+  0x009d1270  41 56 49 4e 30 30 30 31 2e 49 4e 50 00 00 00 00  AVIN0001.INP....
+  0x009d1280  80 00 00 00 10 27 00 00 ff ff ff ff 01 00 00 00  .....'..........
+  0x009d1290  b0 04 00 00 86 00 00 00 ff 06 75 81 fa 7b e2 90  ..........u..{..
+  0x009d12a0  45 27 84 b0 5e 61 10 ad 46 60 02 00 00 00 00 00  E'..^a..F`......
+  0x009d12b0  00 01 00 00 04 00 00 00 04 00 00 00 04 00 00 00  ................
+
+  +0x00 char name[16] = AVIN0001.INP
+  +0x10 u32 0x00000080  0x80 = tamaño de registro
+  +0x14 u32 0x00002710  0x2710 = 10 000 registros máximo
+  +0x18 u32 0xffffffff  0xFFFFFFFF centinela
+  +0x1c u32 0x00000001  1
+  +0x20 u32 0x000004b0  0x4b0
+  +0x24 u32 0x00000086  0x86
+  +0x38 u32 0x00026046  0x26046
+  +0x3c u32 0x00000000  0
+  +0x40 u32 0x00000100  0x100
+  +0x44 u32 0x00000004  4
+  +0x48 u32 0x00000004  4
+  +0x4c u32 0x00000004  4
+  +0x28 u8  file ID 16 B = ff067581fa7be290452784b05e6110ad
+
+== tamaño máximo del índice: getter en libmpr 0x6800e4 ==
+  bytes 0x6800e4..0x6800ec: 80 b5 00 af 00 48 80 bd -> devuelve 0x138800
+  0x138800 = 0x2710 * 0x80 = 10 000 registros de 128 B, SIN cabecera (argumento a favor de cabecera 0)
+
+== campos del registro, leídos por el volcado [AVI][MON] de libmpr 0x1de030..0x1de110 ==
+  0x1de030  ldrb.w    r6, [r7, #0x167]
+  0x1de034  ldr       r3, [pc, #0x184]
+  0x1de036  mov.w     r1, #0x400
+  0x1de03a  ldr       r2, [pc, #0x184]
+  0x1de03c  cmp       r6, #0
+  0x1de03e  it        ne
+  0x1de040  movne     r3, r5
+  0x1de042  ldr       r0, [pc, #0x144]
+  0x1de044  blx       #0x11f3ec
+  0x1de048  ldr       r0, [pc, #0x13c]
+  0x1de04a  bl        #0x1202d4
+  0x1de04e  bl        #0x120c58
+  0x1de052  ldrb.w    r3, [r7, #0x167]
+  0x1de056  cmp       r3, #0
+  0x1de058  beq.w     #0x1de420
+  0x1de05c  ldr       r0, [pc, #0x164]
+  0x1de05e  bl        #0x1202d4
+  0x1de062  mov.w     r1, #0x400
+  0x1de066  ldr       r2, [pc, #0x160]
+  0x1de068  add.w     r3, r7, #0xb8
+  0x1de06c  ldr       r0, [pc, #0x118]
+  0x1de06e  blx       #0x11f3ec
+  0x1de072  ldr       r0, [pc, #0x114]
+  0x1de074  bl        #0x1202d4
+  0x1de078  bl        #0x120c58
+  0x1de07c  mov.w     r1, #0x400
+  0x1de080  ldr       r2, [pc, #0x148]
+  0x1de082  add.w     r3, r7, #0xca
+  0x1de086  ldr       r0, [pc, #0x100]
+  0x1de088  blx       #0x11f3ec
+  0x1de08c  ldr       r0, [pc, #0xf8]
+  0x1de08e  bl        #0x1202d4
+  0x1de092  bl        #0x120c58
+  0x1de096  mov.w     r1, #0x400
+  0x1de09a  ldr       r2, [pc, #0x134]
+  0x1de09c  ldr.w     r3, [r7, #0xd8]
+  0x1de0a0  ldr       r0, [pc, #0xe4]
+  0x1de0a2  blx       #0x11f3ec
+  0x1de0a6  ldr       r0, [pc, #0xe0]
+  0x1de0a8  bl        #0x1202d4
+  0x1de0ac  bl        #0x120c58
+  0x1de0b0  mov.w     r1, #0x400
+  0x1de0b4  ldr       r2, [pc, #0x11c]
+  0x1de0b6  ldr.w     r3, [r7, #0xe0]
+  0x1de0ba  ldr       r0, [pc, #0xcc]
+  0x1de0bc  blx       #0x11f3ec
+  0x1de0c0  ldr       r0, [pc, #0xc4]
+  0x1de0c2  bl        #0x1202d4
+  0x1de0c6  bl        #0x120c58
+  0x1de0ca  mov.w     r1, #0x400
+  0x1de0ce  ldr       r2, [pc, #0x108]
+  0x1de0d0  ldr.w     r3, [r7, #0xe4]
+  0x1de0d4  ldr       r0, [pc, #0xb0]
+  0x1de0d6  blx       #0x11f3ec
+  0x1de0da  ldr       r0, [pc, #0xac]
+  0x1de0dc  bl        #0x1202d4
+  0x1de0e0  bl        #0x120c58
+  0x1de0e4  ldr.w     r3, [r7, #0xe8]
+
+  base del struct en r7+0xb8 → cDirPath +0x00, cFileName +0x12, nFileSize +0x20,
+  +0x28 (r7+0xe0), +0x2c (r7+0xe4), +0x30 (r7+0xe8), +0x38 (r7+0xf0, códec comparado con 2)
