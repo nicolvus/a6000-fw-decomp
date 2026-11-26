@@ -287,6 +287,35 @@ TRACELIB=libmpr.so TRACEFN2=620028,620262,62059c GMILOG=1 SETLOG=1" \
   de §3; por eso el efecto colateral `AF-S`→`MF` de [film-pb-1-sub-arnes-galeria](../reports/film-pb-1-sub-arnes-galeria-20261126.md) **no se ha reproducido aquí** y
   queda NO_VERIFICADO en esta sesión. La conclusión de (c) no depende de eso: el corte está antes de `openView` en ambos casos.
 
+### 7.2 bis Medido con las tres trampas y `WLALL=1` (perfil `repro3x`, puerto 8665, invitado hasta 630 s)
+
+El arranque bueno para diagnóstico es con `TRACEFN=f59f0,11817e,1251fc` (`libObj`: despachador de acciones, `execAction` y `openView`), `TRACELIB=libmpr.so
+TRACEFN2=620028,620262,62059c` (recuento), `TRACEDEREF=d0:0:18 TRACEREP=1 TRACEMAX=16 WLALL=1 GMILOG=1 SETLOG=1`. Lo medido:
+
+```
+37.45  dlopen(libmpr.so) -> 0x1d3c4f0
+37.47  TRACELIB libmpr.so base 0xad34d000          <- las trampas del recuento se arman al cargar la biblioteca
+70.38  FsysMount /dev/mmca ... Fsys_MountAsync("/dev/mmca") OK 'A'
+91.07  [INPUTSERVICE] toActive:3515 insert key_code=0x00000002 event_code=0x15010010   <- entrada activa (tecla de encendido)
+133.91 tecla 0x1f7                                   (pulsación Reproducción, escrita en la cola 0x7a0020)
+133.95 WAITLOG fin tid 282 I-InputRecv uipc7 id=0x7a0020 tmo=-1 tras 42758 ms   <- la espera del hilo de entrada TERMINA con la tecla
+135.03 tecla 0x1f7                                   (suelta)
+         sin línea [INPUTSERVICE] con key_code=0x1f7
+         19 × TRACE f59f0 (DispatchEvent): r1 = 2, 8, 0x23, 0x2a, 0x11012001, 0x11014001, 0x11012004 … ninguna 0x150100f0
+         0 × TRACE 11817e (ActionCheckerListBase::execAction) en 630 s
+         0 × TRACE 620028 / 620262 / 62059c en 630 s
+```
+
+- **La tecla llega al firmware**: el hilo `I-InputRecv` estaba esperando en la cola `0x7a0020` y su espera **acaba en el mismo instante** en que el shim escribe la tecla
+  (`tras 42758 ms` en 133.95 frente a `tecla 0x1f7` en 133.91). No es un problema de entrega del arnés.
+- **Pero no se traduce**: no aparece la línea `[INPUTSERVICE] … key_code=0x1f7` que sí sale con la tecla de encendido (`0x2`), y el despachador de acciones
+  (`libObj+0xf59f0`, `DispatchEvent`) recibe eventos internos (`2`, `8`, `0x23`, `0x2a`, `0x1101xxxx`) **nunca `0x150100f0`**. El corte medido está, por tanto,
+  **entre el hilo de entrada y el despachador**, antes de la acción 4. `r1` es el evento en esa función (el `r0` es `this`): dato para la próxima traza.
+- **`execAction` no se usa en este arranque** (0 disparos): el camino de acciones de `DefRootView` que se suponía en §7.1(e) **no se ejecuta** con esta UI.
+- **El recuento tampoco**: con `libmpr` cargada a los 37 s y las tres direcciones armadas, **ninguna dispara en 630 s**, mientras que en el arranque de §3
+  (mismo árbol de SD, con ciclo de cámara) `620028` salía a los ≈397 s. Es decir: en este perfil el manejador del recuento **no llega a ejecutarse**; la diferencia
+  medida entre los dos arranques es el ciclo de cámara (`av-cam`), que aquí no está (INFERENCIA). Sigue sin medirse si la fórmula `0x620262`/`0x62059c` corre.
+
 ### 7.3 La vista de reproducción: qué haría falta (medido + estático)
 
 - `openView("view/INDEX_PLAYBACK")` y `openView("view/SINGLEPB")` **se aceptan** (la llamada entra con el nombre correcto) y la pantalla queda en blanco: la vista no
