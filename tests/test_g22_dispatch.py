@@ -68,6 +68,20 @@ VIEW_GETTRIGGER = 0x7F1A98  # View::getTriggerTable() -> [View+0x20]
 GINPUTSTATUS = 0x114104  # InputService::getInputEventStatus(ParamList*, ParamList const*)
 INFRA_GETSTATUS = 0x805804  # InfraInput::GetEventStatus(int, int, _InfraInputEvent*)
 MASCARA_SIN_CONDICION = 0x7FFFFFFE
+# G22-TECLA (27-11-2026): el destino de la tecla NO lo fija `libObj+0x111972` (DESTKEY): con ese parche puesto la medida
+# siguió dando `dest=4` y `TRACE 1106b8 r1=150100f2 r2=4 lr=libObj+0x113080` señala el `blx` de `0x11307c`, cuyo
+# `movs r2,#4` está en `0x113076`. La función gemela `0x11191c` (con el `movs` en `0x111972`) no tiene ni una referencia.
+TECLA_DEST_VIVA = 0x113076  # movs r2,#4 de la publicación de la tecla (04 22)
+TECLA_CREATE_BLX = 0x11307C  # blx InputService::createEvent
+CREATE_EVENT_PLT = 0xDF280  # stub .plt de createEvent en libObj
+TECLA_DEST_MUERTA = 0x111972  # el `movs r2,#4` de DESTKEY: código sin llamantes
+TECLA_BASE_MAS_UNO = 0x113054  # adds r1,r6,#1 (suelta)
+TECLA_BASE_MAS_DOS = 0x11304C  # adds r1,r6,#2 (pulsación, r6 = 0x150100f0)
+
+
+FILTRO_DEST_1 = 0x18201C  # movs r2,#4 -> Event(0x15070010,4,1) del filtro
+FILTRO_DEST_2 = 0x182042  # movs r2,#4 -> Event(0x150701a0,4,1) del filtro
+FILTRO_FIN = 0x182068  # fin del filtro (pop {r4,r5,r6,r7,pc} en 0x182068)
 
 # ------------------------------------------------------------ viewUnified2 (VA del ELF)
 FILTRO = 0x181FB8  # el filtro registrado en libObj+0x10a8c50 (el invitado tenía +1)
@@ -403,3 +417,55 @@ def test_get_input_event_status_no_es_portero(libobj: Elf, plt_obj: dict[int, st
         "0x121d76: bic r3,r5,#0xfe0 (limpia los 12 bits bajos para comparar la clase de la vista)"
     assert _bl_target(libobj, VIEW_GETEVENTID + 0x12) == VIEW_MAP_ID, "0x121d6a: bl 0xf2fe0 (mapa de ids)"
     assert _h(libobj, VIEW_GETTRIGGER + 4) == 0x6A00, "0x7f1a9c: ldr r0,[r0,#0x20] (la tabla de disparo)"
+
+
+# ------------------------------------------------- G22-TECLA: quién fija el destino de los tres eventos
+def test_el_destino_de_la_tecla_esta_en_113076_y_llama_a_create_event(libobj: Elf) -> None:
+    """`TRACE 1106b8 … lr=libObj+0x113080`: el llamante es el `blx` de `0x11307c`, y su `movs r2,#4` está en `0x113076`.
+
+    Es la función gemela **viva** de `0x11191c` (la del `movs` de DESTKEY en `0x111972`, sin referencias): el código del
+    evento se calcula desde la base (`r6`, `0x150100f0` para la Reproducción) con `+1` (suelta → `0x150100f1`), `+2`
+    (pulsación → `0x150100f2`) o `+4` según el estado que devuelve `InputService::changeTactStatus`.
+    """
+    assert _h(libobj, TECLA_DEST_VIVA) == 0x2204, "0x113076: movs r2,#4 (bytes 04 22)"
+    assert _bl_target(libobj, TECLA_CREATE_BLX) == CREATE_EVENT_PLT, "0x11307c: blx createEvent (0xdf280)"
+    assert _h(libobj, 0x113074) == 0x4B23, "0x113074: ldr r3,[pc,#0x8c] (desplazamiento del singleton en el .got)"
+    assert _h(libobj, 0x113078) == 0x58EE, "0x113078: ldr r6,[r5,r3] (la instancia de InputService)"
+    assert _h(libobj, 0x11307A) == 0x6830, "0x11307a: ldr r0,[r6] (this = la instancia)"
+    assert _h(libobj, 0x113080) == 0x4605, "0x113080: mov r5,r0 (retorno de createEvent, y el lr de la traza)"
+    assert _h(libobj, TECLA_BASE_MAS_DOS) == 0x1CB1, "0x11304c: adds r1,r6,#2 (pulsación)"
+    assert _h(libobj, TECLA_BASE_MAS_UNO) == 0x1C71, "0x113054: adds r1,r6,#1 (suelta)"
+    assert _h(libobj, 0x113050) == 0x1D31, "0x113050: adds r1,r6,#4 (estado 2 con [r4+0x14] != 0)"
+    # los parámetros que añade después: 0x1b, 0x1c y 0x20 (los mismos que la gemela muerta)
+    assert _h(libobj, 0x11309A) == 0x2120, "0x11309a: movs r1,#0x20 (tercer addParameter)"
+    assert _h(libobj, 0x11309C) == 0x4642, "0x11309c: mov r2,r8 (valor del parámetro 0x20)"
+
+
+def test_la_gemela_111972_no_tiene_ni_una_referencia(libobj: Elf) -> None:
+    """`DESTKEY` parchea `0x111972` y la medida siguió dando `dest=4`: ese código no se ejecuta (0 ramas y 0 punteros)."""
+    assert _h(libobj, TECLA_DEST_MUERTA) == 0x2204, "0x111972: movs r2,#4 (mismo molde que la viva)"
+    assert _sin_llamantes_a(libobj, 0x11191C) == [], "ninguna rama apunta a la función gemela"
+    for seccion in (".data.rel.ro", ".data", ".rodata", ".got", ".text"):
+        s = libobj.secs.get(seccion)
+        if not s:
+            continue
+        for va in range(s["addr"], s["addr"] + s["size"] - 4, 4):
+            if libobj.v2o(va) is None:
+                continue
+            assert _w(libobj, va) not in (0x11191C, 0x11191D), f"puntero a la gemela en {seccion}:{va:#x}"
+
+
+def test_el_filtro_fija_el_destino_de_sus_dos_copias_y_no_toca_el_original(viewunified2: Elf) -> None:
+    """Los dos `movs r2,#4` del filtro (`0x18201c`, `0x182042`) son el destino de `0x15070010` y `0x150701a0`.
+
+    Y el original entra en la lista con el destino que le dio `createEvent`: entre `0x181fb8` y `0x182068` no hay ningún
+    `strb rX,[rY,#8]` (codificación T1 `0x7200..0x723f`) ni otra escritura sobre `[evento+8]`.
+    """
+    assert _h(viewunified2, FILTRO_DEST_1) == 0x2204, "0x18201c: movs r2,#4"
+    assert _h(viewunified2, FILTRO_DEST_1 + 2) == 0x2301, "0x18201e: movs r3,#1 (clase)"
+    assert _w(viewunified2, 0x182090) == 0x15070010, "0x182090: código de la 1.ª copia"
+    assert _h(viewunified2, FILTRO_DEST_2) == 0x2204, "0x182042: movs r2,#4"
+    assert _h(viewunified2, FILTRO_DEST_2 + 2) == 0x2301, "0x182044: movs r3,#1 (clase)"
+    assert _w(viewunified2, 0x182098) == 0x150701A0, "0x182098: código de la 2.ª copia"
+    escrituras = [va for va in range(FILTRO, FILTRO_FIN, 2) if 0x7200 <= _h(viewunified2, va) <= 0x723F]
+    assert escrituras == [], f"strb rX,[rY,#8] dentro del filtro: {[hex(v) for v in escrituras]}"

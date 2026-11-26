@@ -847,3 +847,20 @@ def test_botones_conocidos_se_cachea_y_se_rehace_si_cambia_el_fichero(tmp_path: 
     f.write_text("TECLAS = {'uno': (1, 2), 'dos': (3, 4)}\n")
     assert E.botones_conocidos(f) == ["uno", "dos"]
     assert E.botones_conocidos(HARNESS / "live.py")[:2] == ["arriba", "abajo"]
+
+
+def test_destkeyv_parchea_los_tres_sitios_medidos_y_comprueba_los_bytes() -> None:
+    """G22-TECLA: `DESTKEYV=1` cambia el destino de los tres eventos de la tecla Reproducción (`04 22` → `0c 22`).
+
+    Medido: con `DESTKEY=1` (el `movs` de `libObj+0x111972`) el destino siguió saliendo `4`; el llamante real de
+    `InputService::createEvent` que señala `TRACE 1106b8` (`lr=libObj+0x113080`) es el de `libObj+0x11307c`, cuyo `movs`
+    está en `libObj+0x113076`, y las dos copias sintéticas salen de los literales del filtro de la vista. El interruptor
+    tiene que comprobar los bytes antes de escribir y ser idempotente (viewUnified2 entra por dlopen después de libObj).
+    """
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    assert 'getenv("DESTKEYV")' in src and "*p != 0x2204" in src and "*p = 0x220c" in src
+    for off in ("0x113076", "0x18201c", "0x182042"):
+        assert off in src, f"DESTKEYV debe parchear {off}"
+    assert 'dest4_a_c(libbase_de("libObj.so"), 0x113076, "libObj")' in src
+    # se llama en los dos ganchos: libObj (la tecla) y viewUnified2 (las copias del filtro)
+    assert src.count("destkeyv();") == 2
