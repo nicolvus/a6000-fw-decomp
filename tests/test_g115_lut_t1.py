@@ -1,4 +1,4 @@
-"""G113 (LUT-T-1) — curva 1D tras la gamma en el ajuste «LUT»: cueva ejecutada con Unicorn sobre `av-cam` real, zona de la curva y paquete `.LUT` v2.
+"""G115 (LUT-T-1) — curva 1D tras la gamma en el ajuste «LUT»: cueva ejecutada con Unicorn sobre `av-cam` real, zona de la curva y paquete `.LUT` v2.
 
 La cueva pone `bd5 = 1`, `be1 = 8`, `bd1 = bd3 = 0` y `c68[8]` (`0x440013ec`) = la curva de 33 nodos expandida, en los cuatro ganchos
 de `FUN_43852f7c` (los mismos que la curva de Film, G98). Con Off, o con una LUT que no lleva curva, no escribe nada.

@@ -1,4 +1,4 @@
-"""G95/G113 (LUT-PKG-1) — LUT precalculada en el PC para que la cámara no procese nada: `LUT/LUT<n>.LUT` en la SD.
+"""G95/G115 (LUT-PKG-1) — LUT precalculada en el PC para que la cámara no procese nada: `LUT/LUT<n>.LUT` en la SD.
 
 La tabla 5×9×9 se ajusta en el PC en ΔE2000 (`cube_a6000.descompone`, mejor que el muestreo del nodo que hace `lutsd.c` con un `.cube`)
 y se guarda ya en el formato de la ranura del blob de Backup (405 nodos × 21 bits, orden lógico, `avcam_dinamico.empaqueta_21`).

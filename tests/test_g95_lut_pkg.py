@@ -21,7 +21,7 @@ def arm():
 
 
 def llama(arm, datos: bytes) -> bytes | None:
-    """Ejecuta `lutsd_paquete(p, n, dst, dst_t)` del ARM compilado en Unicorn → carga copiada o None (G113: 4.º argumento, registro de la curva)."""
+    """Ejecuta `lutsd_paquete(p, n, dst, dst_t)` del ARM compilado en Unicorn → carga copiada o None (G115: 4.º argumento, registro de la curva)."""
     from unicorn import UC_ARCH_ARM, UC_MODE_THUMB, Uc
     from unicorn.arm_const import (
         UC_ARM_REG_LR,
@@ -62,7 +62,7 @@ def test_paquete_ida_y_vuelta_y_arm_igual_a_referencia(arm):
 def test_paquete_de_cube_es_la_tabla_ajustada_en_el_pc(tmp_path):
     ruta = tmp_path / "pelicula.cube"
     C.escribe_cube(ruta, C.lut_pelicula, 17, "pelicula")
-    carga = P.valida(P.desde_cube(ruta, usa_t=False))      # G113: sin curva, la tabla del ajuste en ΔE de G90 (como G95)
+    carga = P.valida(P.desde_cube(ruta, usa_t=False))      # G115: sin curva, la tabla del ajuste en ΔE de G90 (como G95)
     img = C.BIN.read_bytes()
     perm = list(struct.unpack_from("<405H", img, P.D.PERM - P.D.BASE))
     tab, lo, hi = C.lee_cube(ruta)

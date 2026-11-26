@@ -1,4 +1,4 @@
-# G113 — LUT-T-1: curva 1D tras la gamma en el ajuste «LUT» (26-11-2026)
+# G115 — LUT-T-1: curva 1D tras la gamma en el ajuste «LUT» (26-11-2026)
 
 Petición: cerrar **offline** el pendiente LUT-T-1 (curva 1D tras la gamma dentro del ajuste «LUT» genérico, con la curva guardada
 de forma compacta, elección T sí/no por LUT y paquete `.LUT` ampliado). Solo PC: Unicorn sobre `av-cam.bin`, estático y compilación
@@ -25,7 +25,7 @@ y ajustes en `tests/test_g71_lut.py` y `tests/test_g95_lut_pkg.py`. Contexto: [g
   SD; paquete `.LUT` **v2** (3128 B) con la curva completa y el flag; v1 sigue valiendo tal cual.
 - **La integración está BLOQUEADA por ZONA-1 para instalarse en cámara** (§5): la cueva histórica de la LUT y sus 3 tablas siguen
   escribiendo en `ZONA_A` (tabla T1 de estabilización) y `ZONA_B` (tablas BOKS del YC de captura), que **no son huecos**. Todo lo que
-  añade G113 va a una ventana verificada del hueco G18. No se cierra LUT-T-1 como instalable.
+  añade G115 va a una ventana verificada del hueco G18. No se cierra LUT-T-1 como instalable.
 
 ## 2. Mecanismo, direcciones y bytes exactos
 
@@ -84,7 +84,7 @@ cámara solo la usa si vale 1.
 |---|---|
 | 0 | `LUTS` (u32) · 4: versión 1 · 6: nº de ranuras (6) · 8…13: máscara de válidas · 14: letra de la unidad |
 | 16 + (k−1)·1064 | tabla de la ranura `k` (1064 B) |
-| **0x1900 + (k−1)·68** | **curva de la ranura `k`**: `u16 nº de nodos` (0 o 33) + 33 u16 (nuevo en G113) |
+| **0x1900 + (k−1)·68** | **curva de la ranura `k`**: `u16 nº de nodos` (0 o 33) + 33 u16 (nuevo en G115) |
 | 0x2000 | diagnóstico de rutas/lecturas de G89 (lo ignora `av-cam`) |
 
 `av-cam` desempaqueta la tabla como siempre y ahora expande el registro de la curva. El `.cube` **no** lleva curva (la cámara no puede
@@ -121,7 +121,7 @@ La auditoría paralela de G107 §3 (posterior a G71/G73) demostró que **`ZONA_A
 - `ZONA_B` (`0x43c1ff24…0x43c20c8c`) son **dos tablas s16 6×13×11 del YC de captura BOKS** (descriptor `0x438f6fa4`, interpoladas en
   `0x43881290`).
 
-Estado tras G113:
+Estado tras G115:
 
 | Pieza de la LUT | Dónde | ¿Seguro? |
 |---|---|---|

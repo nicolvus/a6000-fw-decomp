@@ -71,7 +71,7 @@ def test_empaquetado_21_bits_sin_perdida():
 
 
 def test_parche_solo_toca_ganchos_y_zonas_verificadas(parcheada):
-    """G113: ZONA_A y ZONA_B no son huecos (G107 §3: tabla T1 y tablas BOKS). El parche histórico sigue escribiendo ahí (deuda
+    """G115: ZONA_A y ZONA_B no son huecos (G107 §3: tabla T1 y tablas BOKS). El parche histórico sigue escribiendo ahí (deuda
     ZONA-1), y la curva nueva (LUT-T-1) va SOLO a `lut_t.ZONA_T18`, un tramo del hueco G18 que ningún otro parche usa."""
     import lut_t as TT
     dif = [i + P.BASE for i in range(len(IMG)) if IMG[i] != parcheada[i]]

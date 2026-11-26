@@ -4,7 +4,7 @@ Petición: continuar la integración de LUTs propios, decidir la mejor forma de 
 5×9×9 y qué debe cumplir un LUT para subirlo directo a la cámara. Sin cámara, sin CFW nuevo instalado: estático + Unicorn + PC.
 
 Código nuevo: `scripts/lut/cube_spec.py` (validador, `tests/test_lut_spec.py`), paquete `.LUT` v2 y su integración en
-`scripts/lut/lut_pkg.py`/`lutsd.c`/`lut_patch.py` según el estado que deje [G113](g113-lut-t1-curva-1d.md).
+`scripts/lut/lut_pkg.py`/`lutsd.c`/`lut_patch.py` según el estado que deje [G115](g115-lut-t1-curva-1d.md).
 Medidas de las LUTs del usuario: `/home/nicolas/Documentos/a6000/lut-eval/informe.md` (fuera del repo, no se versionan las LUTs).
 
 ## 0. Resumen ejecutivo
@@ -33,7 +33,7 @@ Medidas de las LUTs del usuario: `/home/nicolas/Documentos/a6000/lut-eval/inform
 | `lut_patch.py` | ganchos `0x4381d2fe` (SA) y `0x4381d372` (MOV/MON/CAP) que entregan una tabla propia | hecho, Unicorn; **zona insegura (ZONA-1)**, LUT-C reabierto |
 | `film_patch.py` | LUT + **curva 1D tras la gamma** (`bd5=1`, `be1=8`, `c68[8]`), máquina de cambio en caliente, blob «FILM» | hecho y en CFW (G98/G111) |
 | `lutsd.c` (userland) | hilo en `viewUnified2.so`: lee `X:/LUT/LUT<n>.cube` o `LUT<n>.LUT`, remuestrea/valida y escribe el blob de Backup `0x150005` | hecho, Unicorn; **sin probar en cámara** (LUT-SD-2) |
-| `lut_pkg.py` | `.cube` → tabla 5×9×9 ajustada en ΔE → paquete `.LUT` v1 (1080 B) o v2 (3128 B, con T elegida por LUT) | hecho (v2 en G113) |
+| `lut_pkg.py` | `.cube` → tabla 5×9×9 ajustada en ΔE → paquete `.LUT` v1 (1080 B) o v2 (3128 B, con T elegida por LUT) | hecho (v2 en G115) |
 | `lutjpg` | `.cube` completo (2…129³, tetraédrico) sobre el JPEG en la cámara | hecho, qemu; **sin probar en cámara** (LUT-SW-2) |
 | `.cube` en la SD | respaldo si no hay `.LUT` | hecho, Unicorn; **sin probar en cámara** |
 
@@ -80,7 +80,7 @@ llega a vídeo, vista en vivo y foto. Es la descomposición estándar «shaper +
 ΔE2000 medio / p95 / máx, métrica corregida (G91 §5), modelo sRGB de `cube_a6000`; en cámara la gamma no es exactamente sRGB
 (el adaptador de G97 mide 1,7 ΔE de mediana solo por eso). **T no siempre ayuda**: en LUT suaves o de solo color empeora; hay que
 elegir por LUT (`cube_a6000.elige` ya lo hace). La implementación existe en `film_patch.py` (G98) para los looks Film; llevarla
-al ajuste «LUT» genérico es [G113](g113-lut-t1-curva-1d.md)/LUT-T-1. **Matiz importante:** la T que vale en la cámara se construye
+al ajuste «LUT» genérico es [G115](g115-lut-t1-curva-1d.md)/LUT-T-1. **Matiz importante:** la T que vale en la cámara se construye
 sobre el código de gamma real (`sosang_a6000.t_grises`/`_con_t`, 1024 u16), no sobre el modelo sRGB de `descompone`; las cifras de
 T de esta tabla son del modelo sRGB y sirven para decidir sí/no, no como curva final.
 
@@ -113,7 +113,7 @@ LUT fuertes satura cientos de nodos.
 
 | Vía | Alcance | Calidad (ΔE medio) | Coste en cámara | Estado |
 |---|---|---|---|---|
-| `.LUT` v2 en SD → blob → ganchos (tabla + T) | foto, vídeo, vista en vivo | la mejor del hardware (T+LUT: 0,19 película) | leer 3–5 KB y CRC al insertar tarjeta; 0 por fotograma | G113 (T) + LUT-SD-2 |
+| `.LUT` v2 en SD → blob → ganchos (tabla + T) | foto, vídeo, vista en vivo | la mejor del hardware (T+LUT: 0,19 película) | leer 3–5 KB y CRC al insertar tarjeta; 0 por fotograma | G115 (T) + LUT-SD-2 |
 | `.cube` en SD → `lutsd.c` remuestrea | ídem | peor (muestreo por nodo: 1,05–1,43 en película) | parser + remuestreo una vez por tarjeta | hecho; LUT-SD-2 |
 | `.cube` en SD → `lutjpg` sobre JPEG | solo foto | exacta (0 en la LUT; +0,57 por recompresión) | proceso aparte, segundos por foto | hecho; LUT-SW-2 |
 | tablas en el `.dat` del CFW | ídem hardware | ídem | ninguna | hecho; requiere construir CFW |
@@ -166,7 +166,7 @@ Formato v1 (1080 B, little-endian), el que entiende `lutsd.c` y `lut_pkg.py`:
 La carga es la tabla de `0x654` B del hardware compactada sin pérdida (3 componentes s7 → 21 bits); `av-cam` la desempaqueta con
 la permutación `0x43bef2ac`. Si el CRC o la firma fallan, la ranura se ignora y se usa el `.cube`; si tampoco, la tabla de fábrica.
 
-**v2 (con shaper T, [G113](g113-lut-t1-curva-1d.md)):** 3128 B. Misma cabecera con versión 2, byte 5 = `usa_T` (0/1), y CRC32 sobre
+**v2 (con shaper T, [G115](g115-lut-t1-curva-1d.md)):** 3128 B. Misma cabecera con versión 2, byte 5 = `usa_T` (0/1), y CRC32 sobre
 los 3112 B que siguen a la cabecera. Carga = tabla 1064 B (idéntica a v1) + curva T de 1024 u16 (2048 B) sobre el código de gamma.
 `usa_T = 0` guarda la curva igualmente; la cámara solo la usa si vale 1. Un v1 en una cámara v2 y al revés se rechaza por longitud y
 se cae al `.cube` sin romper nada. En el blob de Backup la curva se guarda compacta (33 nodos = 68 B) en `+0x1900 + (k−1)·68`; en el
@@ -183,7 +183,7 @@ Insertar o reinsertar la tarjeta dispara el barrido; no hay que reiniciar.
 2. **Exporta `.cube` 33³**, dominio 0…1, sin 1D, con la transformación completa (contraste, color, virado). Para B/N o curvas
    extremas, asume que el 5×9×9 no llega: usa `lutjpg` o sube el contraste con la receta de la cámara.
 3. **Valida**: `python3 scripts/lut/cube_spec.py mi.cube` (debe decir HARDWARE; si dice SOLO SOFTWARE, es 1D disfrazada).
-4. **Convierte y mide**: `python3 scripts/lut/lut_pkg.py mi.cube LUT1.LUT` (G113: elige T sí/no por ΔE y escribe v2 con la curva;
+4. **Convierte y mide**: `python3 scripts/lut/lut_pkg.py mi.cube LUT1.LUT` (G115: elige T sí/no por ΔE y escribe v2 con la curva;
    `--sin-t` fuerza v1). Elige la variante con menor ΔE, no la que «parezca» mejor.
 5. **Copia** `LUT1.LUT`…`LUT6.LUT` a `LUT/` en la raíz de la SD (FAT32/exFAT), inserta la tarjeta y elige la ranura en el menú.
 6. **Comprueba en la cámara** (pendiente LUT-SD-2): que el look cambia en vista en vivo y en la foto, y que el blob `0x150005`
@@ -231,7 +231,7 @@ elegir T sí/no; la curva final se construye con `sosang_a6000.t_grises`/`_con_t
 gamma real puede diferir (el adaptador de G97 tiene 1,7 ΔE de mediana).
 
 Pack recomendado para las 6 ranuras, por calidad medida: **LUT1 portra400 · LUT2 pro400h · LUT3 gold200 · LUT4 ektachrome_e100 ·
-LUT5 kodachrome64 · LUT6 velvia50**. Los paquetes de referencia están en `lut-eval/pack/LUT1…6.LUT` (v1, sin T). Con G113 se regeneran con `lut_pkg.py` (v2, T automática
+LUT5 kodachrome64 · LUT6 velvia50**. Los paquetes de referencia están en `lut-eval/pack/LUT1…6.LUT` (v1, sin T). Con G115 se regeneran con `lut_pkg.py` (v2, T automática
 por LUT); recuerda que la T de la tabla es la del modelo sRGB y la definitiva se construye sobre la gamma real. El resto de `sosang/std`
 solo es fiel con el `.cube` completo por software (`lutjpg`).
 
@@ -240,11 +240,11 @@ solo es fiel con el `.cube` completo por software (`lutjpg`).
 | Idea | Veredicto |
 |---|---|
 | Rejilla 17³/9³ en el ISP | **imposible**: SRAM y generador fijos (G93) |
-| Curva T tras la gamma | **hecha en Film**; falta en el ajuste LUT genérico (G113) |
+| Curva T tras la gamma | **hecha en Film**; falta en el ajuste LUT genérico (G115) |
 | Elegir T por LUT | **necesario** (medido: ayuda 2–4× o empeora 0,1–0,4) |
 | Ajuste en ΔE2000 + modelo real | hecho el ajuste; el modelo exige cámara (LUT-INT-1) |
 | Matriz M | **no** (empeora) |
-| Paquete precalculado | **hecho** (v1); v2 con T en G113 |
+| Paquete precalculado | **hecho** (v1); v2 con T en G115 |
 | `.cube` completo por software | **hecho** para foto (LUT-SW-2) |
 | Segunda curva 1D post-LUT | abierta (LUT-2C-1); sin consumidor localizado |
 | Reubicar cueva/tablas (ZONA-1) | **obligatorio antes de cámara**: ZONA_A/B están ocupadas (G107) |
@@ -266,7 +266,7 @@ solo es fiel con el `.cube` completo por software (`lutjpg`).
 interpolación/optimización · [G91](g91-lut-completa-por-software.md) software · [G92](g92-auditoria-cadena-color-lut-general.md) cadena y T ·
 [G93](g93-ampliar-lut-3d-17.md) geometría · [G94](g94-lut-resolucion-entrega-fidelidad.md) entrega/modos ·
 [G95](g95-lut-paquete-precalculado.md) paquete · [G96](g96-peliculas-iconicas.md)/[G97](g97-cfw-film-sosang.md) películas ·
-[G113](g113-lut-t1-curva-1d.md) T en el ajuste LUT · [PENDIENTES](../PENDIENTES.md) filas LUT-*.
+[G115](g115-lut-t1-curva-1d.md) T en el ajuste LUT · [PENDIENTES](../PENDIENTES.md) filas LUT-*.
 Evidencias completas (auditoría, medidas de los 75 `.cube` y especificaciones de otros fabricantes):
 [reports/lut-20261126](../../reports/lut-20261126/README.md).
 

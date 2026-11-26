@@ -1,6 +1,6 @@
 # LUTs propios — evidencias (26-11-2026)
 
-Material de apoyo de [G113](../../docs/gui/g113-lut-t1-curva-1d.md) y
+Material de apoyo de [G115](../../docs/gui/g115-lut-t1-curva-1d.md) y
 [G114](../../docs/gui/g114-lut-propios-especificacion.md). No es fuente de
 verdad: las conclusiones vigentes están en esos informes y en
 [docs/PENDIENTES.md](../../docs/PENDIENTES.md) (filas `LUT-*`, `ZONA-1`).

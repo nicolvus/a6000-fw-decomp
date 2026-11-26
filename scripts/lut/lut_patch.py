@@ -6,8 +6,8 @@ empaquetadas a 21 bits por nodo (1064 B) en `ZONA_B` (`0x43C1FF24`); se desempaq
 `LUT_CELDA`); si `malloc` falla se entrega el puntero original (fábrica).
 **G107 §3 corrige a G72/G73: esas dos zonas NO son huecos** (`ZONA_A` es la tabla T1 de estabilización y `ZONA_B` las tablas BOKS del
 YC de captura), así que el parche histórico escribe en memoria viva. Es la deuda **ZONA-1**: hay que reubicar cueva y tablas antes de
-instalar. Lo que añade G113 va fuera de esas zonas (`lut_t.ZONA_T18`, hueco G18).
-G113 (LUT-T-1): además de la tabla, el ajuste lleva la **curva 1D tras la gamma** (`lut_t`): cuatro ganchos en las llamadas a `FUN_43852f7c` y una cueva que, con el ajuste activo *y* curva para esa LUT, pone `bd5 = 1`, `be1 = 8`, `bd1 = bd3 = 0` y `c68[8]` = la curva expandida desde 33 nodos. Con Off no escribe nada (ni el objeto ni `c68[8]`). El mecanismo es el mismo de `film_patch` (G98), que ocupa esos mismos ganchos y el mismo id de Backup: **un build lleva Film o LUT, no los dos** (aquí se comprueba y se rechaza si ya están puestos).
+instalar. Lo que añade G115 va fuera de esas zonas (`lut_t.ZONA_T18`, hueco G18).
+G115 (LUT-T-1): además de la tabla, el ajuste lleva la **curva 1D tras la gamma** (`lut_t`): cuatro ganchos en las llamadas a `FUN_43852f7c` y una cueva que, con el ajuste activo *y* curva para esa LUT, pone `bd5 = 1`, `be1 = 8`, `bd1 = bd3 = 0` y `c68[8]` = la curva expandida desde 33 nodos. Con Off no escribe nada (ni el objeto ni `c68[8]`). El mecanismo es el mismo de `film_patch` (G98), que ocupa esos mismos ganchos y el mismo id de Backup: **un build lleva Film o LUT, no los dos** (aquí se comprueba y se rechaza si ya están puestos).
 shortcut: la matriz del `cube_a6000` no (vive en el preset de Backup: LUT-A); transición por LUT: solo las que se eligen con curva la llevan. `python3 scripts/lut/lut_patch.py` = autocomprobación con Unicorn.
 """
 from __future__ import annotations

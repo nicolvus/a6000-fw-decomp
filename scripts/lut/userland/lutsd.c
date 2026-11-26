@@ -257,7 +257,7 @@ static i32 letra_sd(struct ctx *c) {
 
 /* G95 (LUT-PKG-1): `X:/LUT/LUT<n>.LUT` precalculado en el PC (`lut_pkg.py`): cabecera de 16 B + tabla de 1064 B ya en el formato de la ranura.
  * La cámara no remuestrea nada: valida firma, versión, longitud y CRC32 y copia.
- * G113 (LUT-T-1): versión 2 = lo mismo + la curva 1D de 1024 u16 (+5 = usa_T) y CRC sobre tabla+curva (3128 B). El hilo la guarda
+ * G115 (LUT-T-1): versión 2 = lo mismo + la curva 1D de 1024 u16 (+5 = usa_T) y CRC sobre tabla+curva (3128 B). El hilo la guarda
  * compacta en el blob (33 nodos cada 32 códigos, 68 B por ranura en `T_OFF`); `av-cam` la expande en su cueva. v1 sigue valiendo (sin curva). */
 #define PKG_MAGIC 0x544C3641u /* "A6LT" */
 #define PKG_TAM (16 + TAM_TABLA)

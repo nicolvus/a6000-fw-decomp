@@ -1,4 +1,4 @@
-"""G113 (LUT-T-1) — curva 1D tras la gamma para el ajuste «LUT»: ganchos en las llamadas a `FUN_43852f7c`, almacenamiento compacto y referencia de la expansión.
+"""G115 (LUT-T-1) — curva 1D tras la gamma para el ajuste «LUT»: ganchos en las llamadas a `FUN_43852f7c`, almacenamiento compacto y referencia de la expansión.
 
 Reutiliza el mecanismo ya probado de la función Film (`film_patch`, G98/G111), que es el de la «gamma extendida» de Sony
 (`CameraEx.setExtendedGammaTable`): en las cuatro llamadas a `FUN_43852f7c` que construyen la curva —`0x438548b0`, `0x43854c46`,
