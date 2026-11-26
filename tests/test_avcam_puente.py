@@ -109,3 +109,58 @@ def test_encabezado_del_anillo_se_comparte_con_el_invitado(request: pytest.Fixtu
         salida.clear()
         pu._avanza()
     assert all(not s.startswith(b"H ") or bytes.fromhex(s[2:].decode())[4:16] == bytes(12) for s in salida)  # los campos de libObj no vuelven al invitado
+
+
+def test_el_puente_reutiliza_la_vm_que_arranco_colas_avcam(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """G22-ARR2: con la caché de colas fría (cualquier cambio de scripts/gui/avcam/*.py o de av-cam/idt/bk.tbl/liro.ko) la LIRO VM
+    arrancaba dos veces en el mismo inicio (colas + Puente); ahora `colas_avcam` entrega su VM al Puente y arranca una sola."""
+    p = pytest.importorskip("puente")
+    from types import SimpleNamespace
+    from typing import ClassVar
+
+    arranques: list[tuple] = []
+
+    class VmFalsa:
+        qcb: ClassVar[dict] = {0x30001: None}
+        tasks: ClassVar[dict] = {}
+        t = 5043.0
+        sensor_v = SimpleNamespace(inicia=lambda _t: None)
+
+    monkeypatch.setattr(p.L, "carga", lambda *a: (arranques.append(a), VmFalsa())[1])
+    monkeypatch.setattr(p.L, "crea_tarea", lambda *_a: SimpleNamespace(estado="lista"))
+    monkeypatch.setattr(p.L, "planifica", lambda *_a: None)
+    av = tmp_path / "av-cam.bin"
+    av.write_bytes(b"uno")
+    cache = tmp_path / "colas.json"
+    assert p.colas_avcam(av, cache) == [0x30001] and len(arranques) == 1
+    vm = p.vm_de_colas(av)
+    assert vm is not None and p.vm_de_colas(av) is None  # se entrega una sola vez
+    vm2, t2 = p.arranca(av, vm=vm)  # lo que hace el Puente
+    assert vm2 is vm and t2 == 5043.0 and len(arranques) == 1  # reutilizada: no se vuelve a cargar av-cam
+    assert p.vm_de_colas(tmp_path / "otro.bin") is None  # otra imagen: no se reutiliza la de esta
+
+
+def test_la_vm_de_colas_sirve_para_responder_la_peticion_dataflow(request: pytest.FixtureRequest, tmp_path: Path,
+                                                                 monkeypatch: pytest.MonkeyPatch) -> None:
+    """La VM que arranca `colas_avcam` es la misma que usaría el Puente recién arrancado: con ella responde la petición capturada y
+    solo se carga av-cam una vez."""
+    p = pytest.importorskip("puente")
+    if not p.L.AVCAM.exists() or not p.L.LIRO_KO.exists():
+        pytest.skip("faltan av-cam.bin o liro.ko (no versionados)")
+    real, montajes = p.L.carga, []
+
+    def carga(*a):
+        montajes.append(1)
+        return real(*a)
+
+    monkeypatch.setattr(p.L, "carga", carga)
+    p.colas_avcam(None, tmp_path / "colas.json")  # caché fría: arranca la VM
+    salida: list[bytes] = []
+    pu = p.Puente(salida.append)  # reutiliza esa VM (si no, `montajes` tendría 2)
+    request.addfinalizer(pu.cierra)
+    pu.desde_invitado(" ".join(REQ))
+    t0 = time.time()
+    while not any(x.startswith(b"Q ") for x in salida) and time.time() - t0 < 3:
+        time.sleep(0.05)
+    assert [x for x in salida if x.startswith(b"Q ")]
+    assert len(montajes) == 1
