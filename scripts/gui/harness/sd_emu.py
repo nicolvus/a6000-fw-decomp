@@ -11,16 +11,18 @@ import datetime as dt
 import io
 import re
 import shutil
+import threading
 from pathlib import Path
 
 from PIL import Image
 
 SD_DEFECTO = Path.home() / "A6000-SD"
-FOTO_RE = re.compile(r"^DSC(\d{5})\.(JPG|ARW)$", re.IGNORECASE)
+FOTO_RE = re.compile(r"^DSC(\d{5})\.(JPG|ARW|PNG|WEBP|BMP|GIF)$", re.IGNORECASE)
 CARPETA_RE = re.compile(r"^(\d{3})MSDCF$")
 CLIP_RE = re.compile(r"^C(\d{4})\.(MP4|WEBM)$", re.IGNORECASE)
 MAX_POR_CARPETA = 9999  # NO_VERIFICADO: tope del contador de 4 dígitos de DCF
 MAX_CLIP = 9999
+CERROJO = threading.Lock()  # numerar + escribir, de uno en uno: dos subidas o dos disparos a la vez no deben pisarse (QA F08)
 FOTO_MEDIA = 6 << 20  # NO_VERIFICADO: JPEG de 24 Mpx ≈ 6 MB; solo para el «disparos restantes» aproximado
 VIDEO_BPS = 50_000_000 / 8  # XAVC S 50 Mbps (máximo de la A6000); solo para los «minutos restantes» aproximados
 
@@ -99,8 +101,21 @@ def estado(raiz: Path, tamano_gb: float) -> dict:
 
 def escribe_atomico(destino: Path, datos: bytes) -> None:
     destino.parent.mkdir(parents=True, exist_ok=True)
+    if destino.is_symlink():  # escribir no sigue enlaces: un enlace en la SD no puede sacar el fichero fuera (QA F09)
+        destino.unlink()
     tmp = destino.with_name(destino.name + ".tmp")
     tmp.write_bytes(datos)
+    tmp.replace(destino)
+
+
+def escribe_desde(destino: Path, origen: Path) -> None:
+    """Copia un fichero a la SD sin cargarlo entero en memoria (un clip de 20 min no cabe en RAM, QA F11)."""
+    destino.parent.mkdir(parents=True, exist_ok=True)
+    if destino.is_symlink():
+        destino.unlink()
+    tmp = destino.with_name(destino.name + ".tmp")
+    with origen.open("rb") as fi, tmp.open("wb") as fo:
+        shutil.copyfileobj(fi, fo, 1 << 20)
     tmp.replace(destino)
 
 
@@ -139,28 +154,49 @@ def borra(raiz: Path, rel: str) -> None:
 
 
 def formatea(raiz: Path) -> int:
-    """«Formatear» de la cámara sobre la carpeta: borra el contenido y recrea la estructura base. Devuelve los ficheros borrados."""
+    """«Formatear» de la cámara: borra SOLO el árbol de la cámara (DCIM, PRIVATE, MP_ROOT, AVF_INFO) y lo recrea.
+
+    No borra la carpeta del anfitrión ni nada que no sea de la cámara: si la ruta no parece una SD (ni DCIM ni
+    PRIVATE y con otros ficheros dentro) se niega, para que una config equivocada no vacíe una carpeta de trabajo.
+    """
+    if raiz.exists() and not raiz.is_dir():
+        raise ValueError("la SD configurada no es una carpeta")
+    propios = ("DCIM", "PRIVATE", "MP_ROOT", "AVF_INFO")
+    ajenos = [p.name for p in raiz.iterdir() if p.name not in propios] if raiz.is_dir() else []
+    if ajenos and not any((raiz / d).exists() for d in ("DCIM", "PRIVATE")):
+        raise ValueError("no parece una tarjeta SD (no hay DCIM ni PRIVATE): no se formatea")
     n = 0
-    if raiz.is_dir():
-        for f in raiz.rglob("*"):
-            if f.is_file():
-                n += 1
-        shutil.rmtree(raiz)
+    for d in propios:
+        if not (raiz / d).exists():
+            continue
+        if (raiz / d).is_symlink():  # un enlace no se sigue: se quita el enlace
+            (raiz / d).unlink()
+            continue
+        n += sum(1 for f in (raiz / d).rglob("*") if f.is_file())
+        shutil.rmtree(raiz / d)
     for c in ("DCIM/100MSDCF", "PRIVATE/M4ROOT/CLIP", "PRIVATE/AVCHD"):
         (raiz / c).mkdir(parents=True, exist_ok=True)
     return n
 
 
-def importa(raiz: Path, nombre: str, datos: bytes) -> Path:
-    """Sube un fichero del anfitrión a la SD (arrastrar y soltar): una foto se numera como la cámara; el resto conserva su nombre."""
-    n, num = siguiente_foto(raiz)
-    if Path(nombre).suffix.lower() in (".jpg", ".jpeg"):
-        d = ruta_foto(raiz, n, num)
-        escribe_atomico(d, jpeg_con_exif(datos))
-    elif Path(nombre).suffix.lower() in (".arw", ".png", ".webp", ".bmp", ".gif"):
-        d = ruta_foto(raiz, n, num).with_suffix(Path(nombre).suffix.upper())
-        escribe_atomico(d, datos)
-    else:
-        d = raiz / "PRIVATE/M4ROOT/CLIP" / (Path(nombre).name or "clip.mp4")
+def importa(raiz: Path, nombre: str, datos: bytes, cuota: int | None = None) -> Path:
+    """Sube un fichero del anfitrión a la SD: fotos con la numeración de la cámara (DSCnnnnn), clips como Cnnnn.
+
+    La cuota se comprueba con el tamaño definitivo (el JPEG reescrito con EXIF puede crecer, QA F07) y la numeración
+    va bajo cerrojo para que dos subidas a la vez no elijan el mismo nombre (QA F08).
+    """
+    ext = Path(nombre).suffix.lower()
+    with CERROJO:
+        if ext in (".jpg", ".jpeg"):
+            datos = jpeg_con_exif(datos)
+            n, num = siguiente_foto(raiz)
+            d = ruta_foto(raiz, n, num)
+        elif ext in (".arw", ".png", ".webp", ".bmp", ".gif"):
+            n, num = siguiente_foto(raiz)
+            d = ruta_foto(raiz, n, num).with_suffix(ext.upper())
+        else:  # un vídeo o cualquier otro fichero entra como clip de la cámara, no con su nombre original (QA F05)
+            d = ruta_clip(raiz, siguiente_clip(raiz), ext.lstrip(".").upper() or "MP4")
+        if cuota is not None and usado(raiz) + len(datos) > cuota:
+            raise ValueError("SD llena (cuota superada)")
         escribe_atomico(d, datos)
     return d

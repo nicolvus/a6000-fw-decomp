@@ -190,10 +190,11 @@ def maneja(h, metodo: str, ruta: str, cuerpo: bytes, cfg_ruta: str) -> bool:
             js({"ok": True, "borrados": S.formatea(raiz)})
         elif metodo == "POST" and p == "/sd/importa":
             nombre = unquote(h.headers.get("X-Nombre", "importado.jpg"))
-            if not S.cabe(raiz, gb, len(cuerpo)):
-                js({"error": "SD llena (cuota superada)"}, 507)
+            try:  # la cuota se mide con el tamaño final (el JPEG se reescribe con EXIF) y la numeración va bajo cerrojo
+                d = S.importa(raiz, nombre, cuerpo, cuota=S.cuota_bytes(gb))
+            except ValueError as e:
+                js({"error": str(e)}, 507 if "llena" in str(e) else 400)
                 return True
-            d = S.importa(raiz, nombre, cuerpo)
             js({"ruta": d.relative_to(raiz).as_posix(), "bytes": d.stat().st_size})
         elif metodo == "POST" and p in ("/captura/video/inicia", "/captura/video/para"):
             r = cap.video_inicia() if p.endswith("inicia") else cap.video_para()
