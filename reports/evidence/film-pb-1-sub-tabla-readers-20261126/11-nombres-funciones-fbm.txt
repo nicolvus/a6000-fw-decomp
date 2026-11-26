@@ -1,0 +1,70 @@
+# 11 - Mapa de funciones del modulo FBM (nombres tomados de las cadenas de traza de 0x2B1E68)
+     'funcion exidx' = inicio segun .ARM.exidx (une funciones con la misma info de unwind)
+
+  002b1c90  %s 
+  002b1ca8  CreateMovieTimeInfo OUT
+  002b1dec  [FBM] BackupMgr::EntryWriteBaseDataFunction(userID[%d],,,mediaID[%d])
+  002b1e90  GetPackSize
+  002b1ea8  GetOperationMode
+  002b1ee8  SetOperationMode
+  002b1f40  [FBM]%s Error:0x%x
+  002b1f84  EndDoubleCache
+  002b2008  StartDoubleCache
+  002b208c  SetSectorManagerInfo
+  002b20d4  GetAlignSize
+  002b2108  Unknown error
+  002b2138  ...
+  002b21ac  ??????????
+  002b23a0   %09s %010s %s    %07s             0x%08x            0x%08x   
+  002b2480  GetSectorInfo
+  002b2564  GetSectorStatus(void)
+  002b25d0    Write length error!! dataLength:%d != writeSize:%d
+  002b267c  ReadPack
+  002b2950  DisableAccessExceptForcedClear
+  002b2974  DeleteAllSectors
+  002b29cc  DeleteAllSectors
+  002b2a2c  DeleteSector
+  002b2a6c  CloseSector
+  002b2ac8  WaitDeleteSector
+  002b2af0  FlushBuffer
+  002b2b18  GetFileType
+  002b2b70  GetFileTypeSizeInfo
+  002b2bcc  GetOperationModeFromUserFuncTable
+  002b2c18  GetUserIDAndMediaIDFromFileType
+  002b2d54  GetMediaIDFromUserID
+  002b2df4  GetOperationModeFromUserIDAndMediaID
+  002b2e54  GetNewSectorManagerInfoTableIndexFromUserID
+  002b3000  GetSectorHandleFromOperatioModeAndMediaID
+  002b30c4  GetSectorStatus(USERID,MEDIAID)
+  002b31b8  GetRemainSize
+  002b3260    OM & Sector Info & Remian size View
+  002b34d8  Destroy(UserID,MediaID)
+  002b361c  Destroy(OperationMode,MediaID)
+  002b3794  Destroy(void)
+  002b385c  GetUserIDFromOperationModeAndMediaID
+  002b38b4  [FBM]<RWB>GetRWBuffer wait handle[0x%x]
+  002b3948  ReadNextPackData
+  002b3a58       <RWB>handleAdrs[0x%x]
+  002b3ab8     [SeekPoint][UserID][DataID]  [Length]    [Data]
+  002b3b70  <RWB>FreeWritePackBuffer
+  002b3b94  WritePackEnd
+  002b3c64  WritePack
+  002b3d24  WritePackBegin
+  002b3ef8  WriteSectorManagerInfo
+  002b3f7c  CallUserFuncWriteBaseDataRequest
+  002b4030  WriteBaseData
+  002b41b4  ChangeSector
+  002b42ac    Can not changesector in OM_INITIAL!
+  002b4374  ChangeSector(void)
+  002b43f0  InitBackupData
+  002b4584  <RWB>FreeReadPackBuffer
+  002b45a8  SetSectorManagerTable
+  002b4624  WarmBootInit
+  002b47e0  [FBM]Event()  [eventId:%d]
+  002b4820  Init
+  002b49ec       handle information FBS_HANDLE[%d]userID[0x%x]mediaID[0x%x]
+  002b4d70  FBM
+  002b50d8  FBM 
+
+  (las funciones 0x2B39B8 ReadFirstPackData y 0x2B2F48/0x2B2E54 no figuran como inicio exidx:
+   comparten entrada unwind con 0x2B3948 y 0x2B2E54 respectivamente)

@@ -1,0 +1,16 @@
+00722bcc: 2de9f041   push.w    {r4, r5, r6, r7, r8, lr}      
+00722bd0: 0c46       mov       r4, r1                        
+00722bd2: 0646       mov       r6, r0                        
+00722bd4: 1546       mov       r5, r2                        
+00722bd6: 0021       movs      r1, #0                        
+00722bd8: a2b2       uxth      r2, r4                        
+00722bda: 00af       add       r7, sp, #0                    
+00722bdc: 0448       ldr       r0, [pc, #0x10]                 ; [00722bf0]=40000005
+00722bde: fcf5cae7   blx       #0x11fb74                     
+00722be2: 3068       ldr       r0, [r6]                      
+00722be4: 2146       mov       r1, r4                        
+00722be6: 2a46       mov       r2, r5                        
+00722be8: bde8f041   pop.w     {r4, r5, r6, r7, r8, lr}      
+00722bec: 2df56eba   b.w       #0x4500cc                     
+00722bf0: 0500       movs      r5, r0                        
+00722bf2: 0040       ands      r0, r0                        

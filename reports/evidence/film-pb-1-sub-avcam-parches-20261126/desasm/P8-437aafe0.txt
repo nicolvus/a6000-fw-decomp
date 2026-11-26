@@ -1,0 +1,23 @@
+=== 437aafb0..437ab014
+437aafb0    321 83f85122   strb.w   r2, [r3, #0x251]                           | cfw 83f85122   strb.w   r2, [r3, #0x251]
+437aafb4    321 2268       ldr      r2, [r4]                                   | cfw 2268       ldr      r2, [r4]
+437aafb6    321 6369       ldr      r3, [r4, #0x14]                            | cfw 6369       ldr      r3, [r4, #0x14]
+437aafb8    321 92f81521   ldrb.w   r2, [r2, #0x115]                           | cfw 92f81521   ldrb.w   r2, [r2, #0x115]
+437aafbc    321 83f85222   strb.w   r2, [r3, #0x252]                           | cfw 83f85222   strb.w   r2, [r3, #0x252]
+437aafc0    321 2368       ldr      r3, [r4]                                   | cfw 2368       ldr      r3, [r4]
+437aafc2    321 db78       ldrb     r3, [r3, #3]                               | cfw db78       ldrb     r3, [r3, #3]
+437aafc4    321 13b1       cbz      r3, #0x437aafcc                            | cfw 13b1       cbz      r3, #0x437aafcc
+437aafc6    321 2046       mov      r0, r4                                     | cfw 2046       mov      r0, r4
+437aafc8    321 fef758fd   bl       #0x437a9a7c  ; ->437a9a7c                  | cfw fef758fd   bl       #0x437a9a7c  ; ->437a9a7c
+437aafcc    321 05b0       add      sp, #0x14                                  | cfw 05b0       add      sp, #0x14
+437aafce    321 bde8f08f   pop.w    {r4, r5, r6, r7, r8, sb, sl, fp, pc}       | cfw bde8f08f   pop.w    {r4, r5, r6, r7, r8, sb, sl, fp, pc}
+437aafd2    321 00bf       nop                                                 | cfw 00bf       nop      
+437aafd4    321 7448       ldr      r0, [pc, #0x1d0]                           | cfw 7448       ldr      r0, [pc, #0x1d0]
+437aafd6    321 8700       lsls     r7, r0, #2                                 | cfw 8700       lsls     r7, r0, #2
+437aafd8    321 9c39       subs     r1, #0x9c                                  | cfw 9c39       subs     r1, #0x9c
+437aafda    321 0000       movs     r0, r0                                     | cfw 0000       movs     r0, r0
+437aafdc    321 8efe7e00   mcr2     p0, #4, r0, c14, c14, #3                   | cfw 8efe7e00   mcr2     p0, #4, r0, c14, c14, #3
+437aafe0  * 321 d0be       bkpt     #0xd0                                      | cfw decb       ldm      r3, {r1, r2, r3, r4, r6, r7}
+437aafe2  * 321 4f00       lsls     r7, r1, #1                                 | cfw 8000       lsls     r0, r0, #2
+437aafe4    321 c5be       bkpt     #0xc5                                      | cfw c5be       bkpt     #0xc5
+437aafe6    321 4f00       lsls     r7, r1, #1                                 | cfw 4f00       lsls     r7, r1, #1

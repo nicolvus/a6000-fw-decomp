@@ -1,0 +1,108 @@
+# lc1: TRACE de las trampas (base por biblioteca), LOGMARK y lineas LOG del firmware (WLALL=1)
+# perfil analysis/gui/g22/harness/live/lc1  (perfil propio corto, gitignored) — volcado al cerrar la sesion
+
+## recuento
+      1 TRACE 2bf05d0c
+      1 TRACE 598930
+      1 TRACE 6dc30d0c
+    103 TRACE 7eed0c
+      1 TRACE ff9f7d00
+
+## armados
+139.96 209.96 TRACELIB viewUnified3.so base 0x40a97000: TRACEFN2 armadas en caliente (3)
+142.53 212.53 TRACELIB libmpr.so base 0xad316000: TRACEFN2 armadas en caliente (8)
+178.22 248.22 TRACELIB libObj.so base 0xaded9000: TRACEFN2 armadas en caliente (9)
+206.98 276.94 TRACELIB libObj.so base 0xaded9000: TRACEFN2 armadas en caliente (12)
+234.63 304.63 TRACELIB libInfraScalarMpr.so base 0x827c2000: TRACEFN2 armadas en caliente (15)
+237.88 307.89 TRACELIB libIMDB.so base 0xb6dd8000: TRACEFN2 armadas en caliente (16)
+275.44 345.44 TRACELIB libInfraScalarMpr.so base 0x827c2000: TRACEFN2 armadas en caliente (20)
+307.14 377.13 TRACELIB viewUnified3.so base 0x40a97000: TRACEFN2 armadas en caliente (21)
+
+## TRACE de interes (598930 = ModelIndexPbToInstance; 11d90e = PrmCntInfoList::add; 3f684/3f960 = vista; 7203c0/7202c8 = goznes del MPR; 1e668 = Api_GetAviData)
+178.72 [shim] TRACE 7eed0c n=1 r0=aabfed10 r1=4136adb0 r2=1f4158c r3=1 lr=ae6c7fe7
+219.04 [shim] TRACE 598930 n=1 r0=15 r1=1f44258 r2=a r3=ae471931 lr=ae6ca1f5
+
+## vistas y capas
+95.66 168.26 LOG   83 B  Vn 03F_viewUnified3.so
+95.70 168.27 LOG   83 E  Vn 03F_viewUnified3.so
+95.73 168.28 LOG   83 B  Vo 00000017
+95.73 168.28 LOG   83 B  Lc Layer
+96.51 168.30 LOG   83 E  Lc Layer
+96.90 168.32 LOG   83 B  Lc Layout
+96.90 168.36 LOG   83 E  Lc Layout
+96.90 168.37 LOG   83 E  Vo 00000017
+146.53 216.53 LOG   83 B  Vo 00000017
+146.54 216.54 LOG   83 B  Lc Layer
+146.54 216.54 LOG   83 E  Lc Layer
+146.55 216.55 LOG   83 B  Lc Layout
+146.55 216.55 LOG   83 E  Lc Layout
+146.55 216.55 LOG   83 E  Vo 00000017
+210.91 280.88 LOG   83 B  Vo 00000006
+210.92 280.88 LOG   83 B  Lc Layer
+211.13 281.13 LOG   83 E  Lc Layer
+211.14 281.14 LOG   83 B  Lc Layout
+211.55 281.55 LOG   83 E  Lc Layout
+211.55 281.55 LOG   83 E  Vo 00000006
+216.99 286.99 LOG   83 B  Vn 03F_viewUnified3.so
+217.01 287.01 LOG   83 E  Vn 03F_viewUnified3.so
+217.02 287.02 LOG   83 B  Vo 00000017
+217.03 287.02 LOG   83 B  Lc Layer
+218.17 287.05 LOG   83 E  Lc Layer
+218.82 287.07 LOG   83 B  Lc Layout
+218.82 287.10 LOG   83 E  Lc Layout
+218.82 287.10 LOG   83 E  Vo 00000017
+249.09 319.10 LOG   83 B  Vo 00000006
+249.10 319.10 LOG   83 B  Lc Layer
+249.53 319.21 LOG   83 E  Lc Layer
+249.53 319.21 LOG   83 B  Lc Layout
+249.53 319.37 LOG   83 E  Lc Layout
+249.53 319.37 LOG   83 E  Vo 00000006
+254.14 324.14 LOG   83 B  Vn 03F_viewUnified3.so
+254.14 324.14 LOG   83 E  Vn 03F_viewUnified3.so
+254.14 324.14 LOG   83 B  Vo 00000017
+254.14 324.15 LOG   83 B  Lc Layer
+254.17 324.17 LOG   83 E  Lc Layer
+254.42 324.17 LOG   83 B  Lc Layout
+254.42 324.19 LOG   83 E  Lc Layout
+254.42 324.19 LOG   83 E  Vo 00000017
+279.24 349.24 LOG   83 B  Vo 00000006
+279.24 349.24 LOG   83 B  Lc Layer
+279.37 349.36 LOG   83 E  Lc Layer
+279.37 349.36 LOG   83 B  Lc Layout
+279.49 349.49 LOG   83 E  Lc Layout
+279.49 349.49 LOG   83 E  Vo 00000006
+283.02 353.02 LOG   83 B  Vn 03F_viewUnified3.so
+283.02 353.02 LOG   83 E  Vn 03F_viewUnified3.so
+283.03 353.03 LOG   83 B  Vo 00000017
+283.03 353.03 LOG   83 B  Lc Layer
+283.05 353.05 LOG   83 E  Lc Layer
+283.32 353.06 LOG   83 B  Lc Layout
+283.32 353.08 LOG   83 E  Lc Layout
+283.32 353.08 LOG   83 E  Vo 00000017
+310.38 380.38 LOG   83 B  Vo 00000006
+310.38 380.38 LOG   83 B  Lc Layer
+310.77 380.56 LOG   83 E  Lc Layer
+310.77 380.56 LOG   83 B  Lc Layout
+
+## recuento de vistas
+Vn 03F: 20  Vo 00000017: 12  Vn 011: 0  Vd 03F: 0
+
+## dlopen
+95.66 168.26 dlopen(viewUnified3.so) ...
+95.67 168.27 dlopen(viewUnified3.so) -> 0x40919778
+142.74 212.74 dlopen(libObj.so) ...
+142.74 212.74 dlopen(libObj.so) -> 0x1dde230
+216.99 286.99 dlopen(viewUnified3.so) ...
+216.99 286.99 dlopen(viewUnified3.so) -> 0x40919778
+219.01 289.01 dlopen(libObj.so) ...
+219.01 289.02 dlopen(libObj.so) -> 0x1dde230
+254.14 324.14 dlopen(viewUnified3.so) ...
+254.14 324.14 dlopen(viewUnified3.so) -> 0x40919778
+283.02 353.02 dlopen(viewUnified3.so) ...
+283.02 353.02 dlopen(viewUnified3.so) -> 0x40919778
+315.75 385.75 dlopen(viewUnified3.so) ...
+315.75 385.76 dlopen(viewUnified3.so) -> 0x40919778
+
+## PRECREATE
+90.78 [shim] PRECREATE mm=0x1f44258 id=0x15
+90.79 [shim] PRECREATE -> -1

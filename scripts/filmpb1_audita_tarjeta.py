@@ -79,7 +79,8 @@ def audita(raiz: Path) -> dict:
         return informe
     avf = raiz / "AVF_INFO"
     informe["avf_info"] = sorted(
-        {"fichero": p.name, "bytes": p.stat().st_size} for p in avf.iterdir() if p.is_file()
+        ({"fichero": p.name, "bytes": p.stat().st_size} for p in avf.iterdir() if p.is_file()),
+        key=lambda d: d["fichero"],
     )
     for reg in registros(inp.read_bytes()):
         item = dict(reg)

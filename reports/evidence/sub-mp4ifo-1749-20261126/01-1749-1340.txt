@@ -1,0 +1,64 @@
+# libmpr.so sha256 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+## mp4Ifo_General::FlashLoadForMsv (0x698EC8) / linea 1749
+00698ec8: b0b5       push     {r4, r5, r7, lr}              
+00698eca: 0446       mov      r4, r0                        
+00698ecc: 00af       add      r7, sp, #0                    
+00698ece: fcf769fb   bl       #0x6955a4                     
+00698ed2: 0d48       ldr      r0, [pc, #0x34]                 ; [00698f08]=00914ef2 " mp4Ifo_General::FlashLoadForMsv IN ()"
+00698ed4: fcf70afb   bl       #0x6954ec                     
+00698ed8: 2068       ldr      r0, [r4]                      
+00698eda: fdf702fb   bl       #0x6964e2                     
+00698ede: 16f5d9fd   bl       #0x3afa94                     
+00698ee2: 0a49       ldr      r1, [pc, #0x28]                 ; [00698f0c]=b0800001
+00698ee4: 0a4a       ldr      r2, [pc, #0x28]                 ; [00698f10]=0091443d "IF/mp4Ifo_General.cpp"
+00698ee6: 40f2d563   movw     r3, #0x6d5                    
+00698eea: 57f02fff   bl       #0x6f0d4c                     
+00698eee: 0546       mov      r5, r0                        
+00698ef0: 10b1       cbz      r0, #0x698ef8                 
+00698ef2: 2046       mov      r0, r4                        
+00698ef4: fef73cff   bl       #0x697d70                     
+00698ef8: fcf754fb   bl       #0x6955a4                     
+00698efc: 0548       ldr      r0, [pc, #0x14]                 ; [00698f14]=00914f19 " mp4Ifo_General::FlashLoadForMsv OUT()"
+00698efe: fcf7f5fa   bl       #0x6954ec                     
+00698f02: 2846       mov      r0, r5                        
+00698f04: b0bd       pop      {r4, r5, r7, pc}              
+00698f06: 00bf       nop                                    
+## mp4Ifo_General::CheckSalvageStatus (0x698F18) / linea 1340
+00698f18: f8b5       push     {r3, r4, r5, r6, r7, lr}      
+00698f1a: 0546       mov      r5, r0                        
+00698f1c: 0e46       mov      r6, r1                        
+00698f1e: 00af       add      r7, sp, #0                    
+00698f20: fcf740fb   bl       #0x6955a4                     
+00698f24: 1d48       ldr      r0, [pc, #0x74]                 ; [00698f9c]=00914f40 " mp4Ifo_General::CheckSalvageStatus IN"
+00698f26: fcf7e1fa   bl       #0x6954ec                     
+00698f2a: 0023       movs     r3, #0                        
+00698f2c: 3370       strb     r3, [r6]                      
+00698f2e: 95f82330   ldrb.w   r3, [r5, #0x23]               
+00698f32: 3bb1       cbz      r3, #0x698f44                 
+00698f34: 1a48       ldr      r0, [pc, #0x68]                 ; [00698fa0]=0091443d "IF/mp4Ifo_General.cpp"
+00698f36: 40f23651   movw     r1, #0x536                    
+00698f3a: 1a4a       ldr      r2, [pc, #0x68]                 ; [00698fa4]=b0100006
+00698f3c: 57f08afd   bl       #0x6f0a54                     
+00698f40: 184c       ldr      r4, [pc, #0x60]                 ; [00698fa4]=b0100006
+00698f42: 18e0       b        #0x698f76                     
+00698f44: 2846       mov      r0, r5                        
+00698f46: fff7bfff   bl       #0x698ec8                     
+00698f4a: 40f23c51   movw     r1, #0x53c                    
+00698f4e: 0446       mov      r4, r0                        
+00698f50: 1348       ldr      r0, [pc, #0x4c]                 ; [00698fa0]=0091443d "IF/mp4Ifo_General.cpp"
+00698f52: 2246       mov      r2, r4                        
+00698f54: 57f07efd   bl       #0x6f0a54                     
+00698f58: 6cb9       cbnz     r4, #0x698f76                 
+00698f5a: 2846       mov      r0, r5                        
+00698f5c: fff7effd   bl       #0x698b3e                     
+00698f60: 3070       strb     r0, [r6]                      
+00698f62: 2846       mov      r0, r5                        
+00698f64: fef704ff   bl       #0x697d70                     
+00698f68: 40f24751   movw     r1, #0x547                    
+00698f6c: 0446       mov      r4, r0                        
+00698f6e: 0c48       ldr      r0, [pc, #0x30]                 ; [00698fa0]=0091443d "IF/mp4Ifo_General.cpp"
+00698f70: 2246       mov      r2, r4                        
+00698f72: 57f06ffd   bl       #0x6f0a54                     
+00698f76: fcf715fb   bl       #0x6955a4                     
+00698f7a: 0b48       ldr      r0, [pc, #0x2c]                 ; [00698fa8]=00914f67 " mp4Ifo_General::CheckSalvageStatus OUT"
+00698f7c: fcf7b6fa   bl       #0x6954ec                     

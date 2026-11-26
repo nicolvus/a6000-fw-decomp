@@ -1,0 +1,16 @@
+Simbolo: _ZN5MprIf14ExecMprUtilityEN3MPR12UtilityCmdIdEPv
+  libmpr.so      0x722bcc  (40 B, exportado)  -> implementacion local 0x4500cc
+  libmpr.so      0x72dd98  MprIfMcmd::ExecMprUtility (comando de consola del grupo MPR)
+
+scenario/MPR_SCN_FLASH_BACKUP_INIT.so: stub PLT de ExecMprUtility = 0x5c0 ; llamantes encadenados = [('0x6de', 'bl')]
+   (el scenario_run usa el stub 0x5c0 con r1=1, r2=0)
+scenario/MPR_SCN_EXEC_FACTORY_MODE.so: stub PLT de ExecMprUtility = 0x6dc ; llamantes encadenados = [('0x79e', 'bl')]
+   (el scenario_run usa el stub 0x6dc con r1=1, r2=0)
+scenario/MPR_SCN_INSTALL_MAP_DEMOMOVIE.so: stub PLT de ExecMprUtility = 0x29fc ; llamantes encadenados = [('0x5460', 'bl')]
+
+Comando de consola equivalente (MprIfMcmd::ExecMprUtility, 0x72dd98):
+   "quickFormat" -> id 0   "fullFormat" -> id 3   "init" -> id 1   "check" -> id 4   "flush" -> id del argumento
+   log de error: "ex) MPR FUNCRECOVERY ExecMprUtility [commandId" (0x92ca61)
+
+Reglas de argumento en 0x436408 (mask 0x16 = ids 1,2,4 / mask 0x9 = ids 0,3):
+   ids 1,2,4 exigen 'sin datos' (byte +4 == 0)   ids 0,3 exigen 'con datos' (byte +4 != 0)

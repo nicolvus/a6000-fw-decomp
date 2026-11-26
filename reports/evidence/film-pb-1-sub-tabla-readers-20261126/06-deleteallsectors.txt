@@ -1,0 +1,34 @@
+# 06 - Escritor #4: DeleteAllSectors 0x2B2974 (pone a 0 +4,+8,+0xc de las 31 primeras entradas)
+
+002b2974: 98b5       push     {r3, r4, r7, lr}              
+002b2976: 00af       add      r7, sp, #0                    
+002b2978: 0e48       ldr      r0, [pc, #0x38]                 ; [002b29b4]=007e6e5d "DeleteAllSectors"
+002b297a: fff775fa   bl       #0x2b1e68                     
+002b297e: 0e4b       ldr      r3, [pc, #0x38]                 ; [002b29b8]=00a3699c
+002b2980: 03f51b72   add.w    r2, r3, #0x26c                
+002b2984: 0020       movs     r0, #0                        
+002b2986: 9860       str      r0, [r3, #8]                  
+002b2988: d860       str      r0, [r3, #0xc]                
+002b298a: 5860       str      r0, [r3, #4]                  
+002b298c: 1433       adds     r3, #0x14                     
+002b298e: 9342       cmp      r3, r2                        
+002b2990: f8d1       bne      #0x2b2984                     
+002b2992: 0a4b       ldr      r3, [pc, #0x28]                 ; [002b29bc]=00a36974
+002b2994: 1860       str      r0, [r3]                      
+002b2996: 0a4b       ldr      r3, [pc, #0x28]                 ; [002b29c0]=00a36970
+002b2998: 1860       str      r0, [r3]                      
+002b299a: 0a4b       ldr      r3, [pc, #0x28]                 ; [002b29c4]=00a36c08
+002b299c: 1860       str      r0, [r3]                      
+002b299e: fff745fd   bl       #0x2b242c                     
+002b29a2: 0446       mov      r4, r0                        
+002b29a4: 6cf630ea   blx      #0x11ee08                       ; _ZN8FlashLib4SyncEv
+002b29a8: 0748       ldr      r0, [pc, #0x1c]                 ; [002b29c8]=007e6e6e "ForcedClearAllSectors"
+002b29aa: 2146       mov      r1, r4                        
+002b29ac: fff7d4fa   bl       #0x2b1f58                     
+002b29b0: 2046       mov      r0, r4                        
+002b29b2: 98bd       pop      {r3, r4, r7, pc}              
+
+  0x2B2980 add.w r2,r3,#0x26c  -> fin del barrido; 0x26c/0x14 = 31 entradas (0..0x1E)
+  0x2B2986 str r0,[r3,#8] / 0x2B2988 [+0xc] / 0x2B298A [+4]  con r0 = 0
+
+== llamantes (ninguno en .text: solo por puntero / consola) ==

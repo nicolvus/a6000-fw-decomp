@@ -1,0 +1,51 @@
+## 0x3AFA94: lee RcsBackupTblData y decide
+003afaf6: aef791ff   bl       #0x35ea1c                     
+003afafa: 0646       mov      r6, r0                        
+003afafc: 10b3       cbz      r0, #0x3afb44                 
+003afafe: 00f07f43   and      r3, r0, #0xff000000           
+003afb02: 4ff00108   mov.w    r8, #1                        
+003afb06: b3f1805f   cmp.w    r3, #0x10000000               
+003afb0a: 0dd0       beq      #0x3afb28                     
+003afb0c: a06b       ldr      r0, [r4, #0x38]               
+003afb0e: 2a46       mov      r2, r5                        
+003afb10: 2e49       ldr      r1, [pc, #0xb8]                 ; [003afbcc]=008bcc33 " Need Salvage"
+003afb12: 2b46       mov      r3, r5                        
+003afb14: 8de82001   stm.w    sp, {r5, r8}                  
+003afb18: 2e46       mov      r6, r5                        
+003afb1a: cdf80880   str.w    r8, [sp, #8]                  
+003afb1e: a3f7ddfd   bl       #0x3536dc                     
+003afb22: 84f84480   strb.w   r8, [r4, #0x44]               
+003afb26: 09e0       b        #0x3afb3c                     
+003afb28: a06b       ldr      r0, [r4, #0x38]               
+003afb2a: 2a46       mov      r2, r5                        
+003afb2c: 2849       ldr      r1, [pc, #0xa0]                 ; [003afbd0]=00823999 "Err RcsBackupTblData"
+003afb2e: 2b46       mov      r3, r5                        
+003afb30: 8de82001   stm.w    sp, {r5, r8}                  
+003afb34: cdf80880   str.w    r8, [sp, #8]                  
+003afb38: a3f7d0fd   bl       #0x3536dc                     
+003afb3c: 206d       ldr      r0, [r4, #0x50]               
+003afb3e: a4f71df8   bl       #0x353b7c                     
+## 0x35EA1C -> 0x35E04C -> ReadFirstPackData
+0035e0ec: daf88800   ldr.w    r0, [sl, #0x88]               
+0035e0f0: daf88c10   ldr.w    r1, [sl, #0x8c]               
+0035e0f4: 55f760fc   bl       #0x2b39b8                     
+0035e0f8: 0546       mov      r5, r0                        
+0035e0fa: 68b1       cbz      r0, #0x35e118                 
+0035e0fc: 9f4b       ldr      r3, [pc, #0x27c]                ; [0035e37c]=10100003
+0035e0fe: 9842       cmp      r0, r3                        
+0035e100: 0ad0       beq      #0x35e118                     
+0035e102: 8de82002   stm.w    sp, {r5, sb}                  
+0035e106: 0222       movs     r2, #2                        
+0035e108: cdf80890   str.w    sb, [sp, #8]                  
+0035e10c: 4346       mov      r3, r8                        
+0035e10e: daf88400   ldr.w    r0, [sl, #0x84]               
+0035e112: 9b49       ldr      r1, [pc, #0x26c]                ; [0035e380]=0081c870 "BKUP Err ReadFirstPackData ec"
+0035e114: 00f01bbc   b.w      #0x35e94e                     
+## 0x35EA1C llama 0x35E04C
+0035eac8: 04f57c52   add.w    r2, r4, #0x3f00               
+0035eacc: 7c32       adds     r2, #0x7c                     
+0035eace: 9b6c       ldr      r3, [r3, #0x48]               
+0035ead0: fff7bcfa   bl       #0x35e04c                     
+0035ead4: 7860       str      r0, [r7, #4]                  
+0035ead6: 10b1       cbz      r0, #0x35eade                 
+0035ead8: 2046       mov      r0, r4                        

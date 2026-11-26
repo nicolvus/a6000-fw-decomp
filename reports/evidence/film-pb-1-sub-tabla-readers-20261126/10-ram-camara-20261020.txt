@@ -1,0 +1,55 @@
+# 10 - LECTURA DE LA TABLA EN LA RAM REAL DE LA CAMARA (volcado 2026-10-20, pre-CFW)
+     analysis/camera-dumps/ram-servicio-20261020/ram_0x80000000.bin (1 GiB desde 0x80000000)
+
+Base de libmpr en el proceso MPR: 0x8A5CB000  =>  0xA3699C -> 0x8B00199C
+Como se localizo: barrido numpy de u16 con paso 0x14 buscando la secuencia exacta de los 30
+sectores (0x10,0x11,0x12,0x20,...,0xBC,0xBD). Un unico acierto en 1 GiB.
+
+Anclas que confirman la base 0x8A5CB000 (vecinos .bss de la tabla, ver 01):
+   base+a36970 0xA36970 (ultimo +0xc)   = 00000007
+   base+a36974 0xA36974 (ultimo +0xc)   = 0000000a
+   base+a3697c 0xA3697C (new 0x50)      = 00073108
+   base+a36c08 0xA36C08                 = 00000000
+   base+a36c14 0xA36C14 flag vista      = 00000000
+   base+a36c18 0xA36C18                 = 00000003
+   base+a36c20 0xA36C20 ptr anillo      = 0749b970
+
+   (el .text y el .data file-backed de ese proceso NO estan en el volcado: solo paginas
+    anonimas/.bss. Por eso base+0x2B208C y base+0x9D2380 leen 0.)
+
+== Contenido de la tabla 0xA3699C en esa RAM ==
+   [00] sec=0010 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [01] sec=0011 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [02] sec=0012 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [03] sec=0020 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [04] sec=0021 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [05] sec=0028 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [06] sec=0029 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [07] sec=002c +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [08] sec=002d +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [09] sec=0030 +4=00000004 +8=00000001 +c=04 +10=00 REGISTRADA
+   [10] sec=0031 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [11] sec=0038 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [12] sec=0039 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [13] sec=0040 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [14] sec=0060 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [15] sec=0061 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [16] sec=0068 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [17] sec=006c +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [18] sec=0062 +4=00000003 +8=00000001 +c=07 +10=00 REGISTRADA
+   [19] sec=0063 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [20] sec=0090 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [21] sec=0091 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [22] sec=0092 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [23] sec=00a0 +4=00000001 +8=00000001 +c=09 +10=08 REGISTRADA
+   [24] sec=00b1 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [25] sec=00b2 +4=00000005 +8=00000001 +c=0a +10=00 REGISTRADA
+   [26] sec=00b3 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [27] sec=00b8 +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [28] sec=00bc +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+   [29] sec=00bd +4=00000000 +8=00000000 +c=00 +10=00 SIN HANDLE
+
+   TOTAL con +4 != 0: 4 de 30   (con +4 == 0: 26)
+
+== Lectura equivalente en Python de lo que hace 0x2B39EC (una linea) ==
+   h = u32(0x8B00199C + 0x14*idx + 4); if h == 0: return 0x10100001

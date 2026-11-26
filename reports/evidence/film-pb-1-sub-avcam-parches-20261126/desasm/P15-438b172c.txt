@@ -1,0 +1,46 @@
+=== 438b16fc..438b1760
+438b16fc    321 0093       str      r3, [sp]                                   | cfw 0093       str      r3, [sp]
+438b16fe    321 1d4b       ldr      r3, [pc, #0x74]                            | cfw 1d4b       ldr      r3, [pc, #0x74]
+438b1700    321 7b44       add      r3, pc                                     | cfw 7b44       add      r3, pc
+438b1702    321 fef729ff   bl       #0x438b0558  ; ->438b0558                  | cfw fef729ff   bl       #0x438b0558  ; ->438b0558
+438b1706    321 1c48       ldr      r0, [pc, #0x70]                            | cfw 1c48       ldr      r0, [pc, #0x70]
+438b1708    321 bdf87c10   ldrh.w   r1, [sp, #0x7c]                            | cfw bdf87c10   ldrh.w   r1, [sp, #0x7c]
+438b170c    321 7844       add      r0, pc                                     | cfw 7844       add      r0, pc
+438b170e    321 51f003f8   bl       #0x43902718  ; ->43902718                  | cfw 51f003f8   bl       #0x43902718  ; ->43902718
+438b1712    321 3046       mov      r0, r6                                     | cfw 3046       mov      r0, r6
+438b1714    321 1ba9       add      r1, sp, #0x6c                              | cfw 1ba9       add      r1, sp, #0x6c
+438b1716    321 64f294fe   bl       #0x43b16442  ; ->43b16442                  | cfw 64f294fe   bl       #0x43b16442  ; ->43b16442
+438b171a    321 21b0       add      sp, #0x84                                  | cfw 21b0       add      sp, #0x84
+438b171c    321 bde8f08f   pop.w    {r4, r5, r6, r7, r8, sb, sl, fp, pc}       | cfw bde8f08f   pop.w    {r4, r5, r6, r7, r8, sb, sl, fp, pc}
+438b1720    321 dadc       bgt      #0x438b16d8                                | cfw dadc       bgt      #0x438b16d8
+438b1722    321 7600       lsls     r6, r6, #1                                 | cfw 7600       lsls     r6, r6, #1
+438b1724    321 0410       asrs     r4, r0, #0x20                              | cfw 0410       asrs     r4, r0, #0x20
+438b1726    321 0000       movs     r0, r0                                     | cfw 0000       movs     r0, r0
+438b1728    321 583d       subs     r5, #0x58                                  | cfw 583d       subs     r5, #0x58
+438b172a    321 0000       movs     r0, r0                                     | cfw 0000       movs     r0, r0
+438b172c  * 321 a073       strb     r0, [r4, #0xe]                             | cfw ac03       lsls     r4, r5, #0xe
+438b172e  * 321 0000       movs     r0, r0                                     | cfw f9ffc807   vneg.f32 q8, q4
+438b1730  * 321 c807       lsls     r0, r1, #0x1f                              | cfw 
+438b1732    321 0000       movs     r0, r0                                     | cfw 0000       movs     r0, r0
+438b1734    321 4a30       adds     r0, #0x4a                                  | cfw 4a30       adds     r0, #0x4a
+438b1736    321 4100       lsls     r1, r0, #1                                 | cfw 4100       lsls     r1, r0, #1
+438b1738    321 5030       adds     r0, #0x50                                  | cfw 5030       adds     r0, #0x50
+438b173a    321 4100       lsls     r1, r0, #1                                 | cfw 4100       lsls     r1, r0, #1
+438b173c    321 6230       adds     r0, #0x62                                  | cfw 6230       adds     r0, #0x62
+438b173e    321 4100       lsls     r1, r0, #1                                 | cfw 4100       lsls     r1, r0, #1
+438b1740    321 6830       adds     r0, #0x68                                  | cfw 6830       adds     r0, #0x68
+438b1742    321 4100       lsls     r1, r0, #1                                 | cfw 4100       lsls     r1, r0, #1
+438b1744    321 7a30       adds     r0, #0x7a                                  | cfw 7a30       adds     r0, #0x7a
+438b1746    321 4100       lsls     r1, r0, #1                                 | cfw 4100       lsls     r1, r0, #1
+438b1748    321 8030       adds     r0, #0x80                                  | cfw 8030       adds     r0, #0x80
+438b174a    321 4100       lsls     r1, r0, #1                                 | cfw 4100       lsls     r1, r0, #1
+438b174c    321 9230       adds     r0, #0x92                                  | cfw 9230       adds     r0, #0x92
+438b174e    321 4100       lsls     r1, r0, #1                                 | cfw 4100       lsls     r1, r0, #1
+438b1750    321 9830       adds     r0, #0x98                                  | cfw 9830       adds     r0, #0x98
+438b1752    321 4100       lsls     r1, r0, #1                                 | cfw 4100       lsls     r1, r0, #1
+438b1754    321 aa30       adds     r0, #0xaa                                  | cfw aa30       adds     r0, #0xaa
+438b1756    321 4100       lsls     r1, r0, #1                                 | cfw 4100       lsls     r1, r0, #1
+438b1758    321 b030       adds     r0, #0xb0                                  | cfw b030       adds     r0, #0xb0
+438b175a    321 4100       lsls     r1, r0, #1                                 | cfw 4100       lsls     r1, r0, #1
+438b175c    321 c230       adds     r0, #0xc2                                  | cfw c230       adds     r0, #0xc2
+438b175e    321 4100       lsls     r1, r0, #1                                 | cfw 4100       lsls     r1, r0, #1

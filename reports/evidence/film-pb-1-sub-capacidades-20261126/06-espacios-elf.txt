@@ -1,0 +1,28 @@
+# Espacios de direcciones (libmpr.so 3.21) y comprobacion de los VA del informe
+# reports/film-pb-1-sub-dmm-area-20261126.md
+libmpr.so   tamano fichero 0x9D7D34
+LOAD1 off 0x0        VA 0x0        -> VA == offset
+LOAD2 off 0x9BB1C8   VA 0x9C31C8   -> VA == offset + 0x10000
+.text    VA 0x00120228-0x007A3E83  off 0x00120228-0x007A3E83
+.rodata  VA 0x007A3E90-0x0095674F  off 0x007A3E90-0x0095674F
+.data    VA 0x009C42E8-0x009DF807  off 0x009BC2E8-0x009D7807
+.bss     VA 0x009DF808-0x00ADBB03  off 0x009D7808-0x00AD3B03
+
+0x7594E0 StreamCache::SetArea            VA 0x007594E0 -> .text (+0x6392B8)
+0x330120 SetMemoryTable                  VA 0x00330120 -> .text (+0x20FEF8)
+0x5F703C DistributeBufInfo               VA 0x005F703C -> .text (+0x4D6E14)
+0x8D87E8 mp_modeTblForBufTbl             VA 0x008D87E8 -> .rodata (+0x134958)
+0x9DBD20 tbl Still Pb                    VA 0x009DBD20 -> .data (+0x17A38)  off fichero 0x9CBD20
+0x9DB0E4 tbl Movie Pb                    VA 0x009DB0E4 -> .data (+0x16DFC)  off fichero 0x9CB0E4
+0x9DA8E0 tbl Still Rec                   VA 0x009DA8E0 -> .data (+0x165F8)  off fichero 0x9CA8E0
+0x5F699C Type2Mode                       VA 0x005F699C -> .text (+0x4D6774)
+0x9DEFE0 m_systemType                    VA 0x009DEFE0 -> .data (+0x1ACF8)  off fichero 0x9CEFE0
+0x9DE7C8 tbl sys0                        VA 0x009DE7C8 -> .data (+0x1A4E0)  off fichero 0x9CE7C8
+0x9DE898 tbl sys1                        VA 0x009DE898 -> .data (+0x1A5B0)  off fichero 0x9CE898
+0x9DEDC0 tbl sys2                        VA 0x009DEDC0 -> .data (+0x1AAD8)  off fichero 0x9CEDC0
+0xA4F368 singleton MemInfo               VA 0x00A4F368 -> .bss (+0x6FB60)  off fichero 0xA3F368
+0xA4FD88 areas fijas                     VA 0x00A4FD88 -> .bss (+0x70580)  off fichero 0xA3FD88
+0x9DECAC puntero areaType                VA 0x009DECAC -> .data (+0x1A9C4)  off fichero 0x9CECAC
+0x4392D2 SetUpPlayerInstance             VA 0x004392D2 -> .text (+0x3190AA)
+0x937.. /0x93E839 log SET_AREA           VA 0x0093E839 -> .rodata (+0x19A9A9)
+0x28F850 (informe menu)                  VA 0x0028F850 -> .text (+0x16F628)

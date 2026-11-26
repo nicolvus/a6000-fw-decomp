@@ -1,0 +1,391 @@
+# libmprctrl.so — MprCtrl::GetTvSystem 0x11D74 (VA==offset, primer LOAD)
+00011d74: f0b5       push     {r4, r5, r6, r7, lr}          
+00011d76: 83b0       sub      sp, #0xc                      
+00011d78: 00af       add      r7, sp, #0                    
+00011d7a: 07f10802   add.w    r2, r7, #8                    
+00011d7e: 0025       movs     r5, #0                        
+00011d80: 0121       movs     r1, #1                        
+00011d82: 1148       ldr      r0, [pc, #0x44]                 ; [00011dc8]=010704fd
+00011d84: 02f8015d   strb     r5, [r2, #-0x1]!              
+00011d88: fdf70ae9   blx      #0xefa0                         ; _ZN9BackupLib10GetEepDataEjhPv
+00011d8c: 0f4c       ldr      r4, [pc, #0x3c]                 ; [00011dcc]=00029ed6 "TSZ_DRJPG_L_1_1_EXFINE_MAX"
+00011d8e: 7c44       add      r4, pc                        
+00011d90: 061e       subs     r6, r0, #0                    
+00011d92: 0bda       bge      #0x11dac                      
+00011d94: 0120       movs     r0, #1                        
+00011d96: fdf76aee   blx      #0xfa6c                         ; _ZN7MprCtrl15SetSelfCheckLogEb
+00011d9a: 0d4b       ldr      r3, [pc, #0x34]                 ; [00011dd0]=000007a8
+00011d9c: 0d49       ldr      r1, [pc, #0x34]                 ; [00011dd4]=0000fa7e
+00011d9e: 3246       mov      r2, r6                        
+00011da0: e358       ldr      r3, [r4, r3]                  
+00011da2: 7944       add      r1, pc                        
+00011da4: 1868       ldr      r0, [r3]                      
+00011da6: fdf75ced   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+00011daa: 07e0       b        #0x11dbc                      
+00011dac: fa79       ldrb     r2, [r7, #7]                  
+00011dae: 012a       cmp      r2, #1                        
+00011db0: 04d8       bhi      #0x11dbc                      
+00011db2: 094b       ldr      r3, [pc, #0x24]                 ; [00011dd8]=0000fa54
+00011db4: 7b44       add      r3, pc                        
+00011db6: 53f82200   ldr.w    r0, [r3, r2, lsl #2]          
+00011dba: 00e0       b        #0x11dbe                      
+00011dbc: 2846       mov      r0, r5                        
+00011dbe: 07f10c07   add.w    r7, r7, #0xc                  
+00011dc2: bd46       mov      sp, r7                        
+00011dc4: f0bd       pop      {r4, r5, r6, r7, pc}          
+00011dc6: 00bf       nop                                    
+00011dc8: fd04       lsls     r5, r7, #0x13                 
+00011dca: 0701       lsls     r7, r0, #4                    
+00011dcc: d69e       ldr      r6, [sp, #0x358]              
+00011dce: 0200       movs     r2, r0                        
+00011dd0: a807       lsls     r0, r5, #0x1e                 
+00011dd2: 0000       movs     r0, r0                        
+
+# libmprctrl.so — MprCtrl::GetSupportContentTypes 0x11DDC
+00011ddc: f0b5       push     {r4, r5, r6, r7, lr}          
+00011dde: 83b0       sub      sp, #0xc                      
+00011de0: 00af       add      r7, sp, #0                    
+00011de2: 07f10802   add.w    r2, r7, #8                    
+00011de6: 0023       movs     r3, #0                        
+00011de8: 0121       movs     r1, #1                        
+00011dea: 4c48       ldr      r0, [pc, #0x130]                ; [00011f1c]=003c0368
+00011dec: 02f8013d   strb     r3, [r2, #-0x1]!              
+00011df0: fdf7d6e8   blx      #0xefa0                         ; _ZN9BackupLib10GetEepDataEjhPv
+00011df4: 4f4d       ldr      r5, [pc, #0x13c]                ; [00011f34]=00029e6e "NE_TGT"
+00011df6: 7d44       add      r5, pc                        
+00011df8: 041e       subs     r4, r0, #0                    
+00011dfa: 0cda       bge      #0x11e16                      
+00011dfc: 0120       movs     r0, #1                        
+00011dfe: fdf736ee   blx      #0xfa6c                         ; _ZN7MprCtrl15SetSelfCheckLogEb
+00011e02: 4d4b       ldr      r3, [pc, #0x134]                ; [00011f38]=000007a8
+00011e04: 4d49       ldr      r1, [pc, #0x134]                ; [00011f3c]=0000fa3d
+00011e06: 2246       mov      r2, r4                        
+00011e08: 0124       movs     r4, #1                        
+00011e0a: eb58       ldr      r3, [r5, r3]                  
+00011e0c: 7944       add      r1, pc                        
+00011e0e: 1868       ldr      r0, [r3]                      
+00011e10: fdf726ed   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+00011e14: 04e0       b        #0x11e20                      
+00011e16: fc79       ldrb     r4, [r7, #7]                  
+00011e18: 012c       cmp      r4, #1                        
+00011e1a: 0cbf       ite      eq                            
+00011e1c: 0924       moveq    r4, #9                        
+00011e1e: 0124       movne    r4, #1                        
+00011e20: 0121       movs     r1, #1                        
+00011e22: fa1d       adds     r2, r7, #7                    
+00011e24: 3e48       ldr      r0, [pc, #0xf8]                 ; [00011f20]=003c036c
+00011e26: fdf7bce8   blx      #0xefa0                         ; _ZN9BackupLib10GetEepDataEjhPv
+00011e2a: 061e       subs     r6, r0, #0                    
+00011e2c: 0bda       bge      #0x11e46                      
+00011e2e: 0120       movs     r0, #1                        
+00011e30: fdf71cee   blx      #0xfa6c                         ; _ZN7MprCtrl15SetSelfCheckLogEb
+00011e34: 404b       ldr      r3, [pc, #0x100]                ; [00011f38]=000007a8
+00011e36: 4249       ldr      r1, [pc, #0x108]                ; [00011f40]=0000fa3a
+00011e38: 3246       mov      r2, r6                        
+00011e3a: eb58       ldr      r3, [r5, r3]                  
+00011e3c: 7944       add      r1, pc                        
+00011e3e: 1868       ldr      r0, [r3]                      
+00011e40: fdf70eed   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+00011e44: 04e0       b        #0x11e50                      
+00011e46: fb79       ldrb     r3, [r7, #7]                  
+00011e48: 012b       cmp      r3, #1                        
+00011e4a: 08bf       it       eq                            
+00011e4c: 44f01004   orreq    r4, r4, #0x10                 
+00011e50: 0121       movs     r1, #1                        
+00011e52: fa1d       adds     r2, r7, #7                    
+00011e54: 3348       ldr      r0, [pc, #0xcc]                 ; [00011f24]=003c036d
+00011e56: fdf7a4e8   blx      #0xefa0                         ; _ZN9BackupLib10GetEepDataEjhPv
+00011e5a: 061e       subs     r6, r0, #0                    
+00011e5c: 0bda       bge      #0x11e76                      
+00011e5e: 0120       movs     r0, #1                        
+00011e60: fdf704ee   blx      #0xfa6c                         ; _ZN7MprCtrl15SetSelfCheckLogEb
+00011e64: 344b       ldr      r3, [pc, #0xd0]                 ; [00011f38]=000007a8
+00011e66: 3749       ldr      r1, [pc, #0xdc]                 ; [00011f44]=0000fa36
+00011e68: 3246       mov      r2, r6                        
+00011e6a: eb58       ldr      r3, [r5, r3]                  
+00011e6c: 7944       add      r1, pc                        
+00011e6e: 1868       ldr      r0, [r3]                      
+00011e70: fdf7f6ec   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+00011e74: 04e0       b        #0x11e80                      
+00011e76: fb79       ldrb     r3, [r7, #7]                  
+00011e78: 012b       cmp      r3, #1                        
+00011e7a: 08bf       it       eq                            
+00011e7c: 44f00404   orreq    r4, r4, #4                    
+00011e80: 0121       movs     r1, #1                        
+00011e82: fa1d       adds     r2, r7, #7                    
+00011e84: 2848       ldr      r0, [pc, #0xa0]                 ; [00011f28]=003c0409
+00011e86: fdf78ce8   blx      #0xefa0                         ; _ZN9BackupLib10GetEepDataEjhPv
+00011e8a: 061e       subs     r6, r0, #0                    
+00011e8c: 0bda       bge      #0x11ea6                      
+00011e8e: 0120       movs     r0, #1                        
+00011e90: fdf7eced   blx      #0xfa6c                         ; _ZN7MprCtrl15SetSelfCheckLogEb
+00011e94: 284b       ldr      r3, [pc, #0xa0]                 ; [00011f38]=000007a8
+00011e96: 2c49       ldr      r1, [pc, #0xb0]                 ; [00011f48]=0000fa31
+00011e98: 3246       mov      r2, r6                        
+00011e9a: eb58       ldr      r3, [r5, r3]                  
+00011e9c: 7944       add      r1, pc                        
+00011e9e: 1868       ldr      r0, [r3]                      
+00011ea0: fdf7deec   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+00011ea4: 04e0       b        #0x11eb0                      
+00011ea6: fb79       ldrb     r3, [r7, #7]                  
+00011ea8: 012b       cmp      r3, #1                        
+00011eaa: 08bf       it       eq                            
+00011eac: 44f48074   orreq    r4, r4, #0x100                
+00011eb0: 0121       movs     r1, #1                        
+00011eb2: fa1d       adds     r2, r7, #7                    
+00011eb4: 1d48       ldr      r0, [pc, #0x74]                 ; [00011f2c]=003c044d
+00011eb6: fdf774e8   blx      #0xefa0                         ; _ZN9BackupLib10GetEepDataEjhPv
+00011eba: 061e       subs     r6, r0, #0                    
+00011ebc: 0bda       bge      #0x11ed6                      
+00011ebe: 0120       movs     r0, #1                        
+00011ec0: fdf7d4ed   blx      #0xfa6c                         ; _ZN7MprCtrl15SetSelfCheckLogEb
+00011ec4: 1c4b       ldr      r3, [pc, #0x70]                 ; [00011f38]=000007a8
+00011ec6: 2149       ldr      r1, [pc, #0x84]                 ; [00011f4c]=0000fa2d
+00011ec8: 3246       mov      r2, r6                        
+00011eca: eb58       ldr      r3, [r5, r3]                  
+00011ecc: 7944       add      r1, pc                        
+00011ece: 1868       ldr      r0, [r3]                      
+00011ed0: fdf7c6ec   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+00011ed4: 04e0       b        #0x11ee0                      
+00011ed6: fb79       ldrb     r3, [r7, #7]                  
+00011ed8: 012b       cmp      r3, #1                        
+00011eda: 08bf       it       eq                            
+00011edc: 44f40074   orreq    r4, r4, #0x200                
+00011ee0: 0121       movs     r1, #1                        
+00011ee2: fa1d       adds     r2, r7, #7                    
+00011ee4: 1248       ldr      r0, [pc, #0x48]                 ; [00011f30]=003c0408
+00011ee6: fdf75ce8   blx      #0xefa0                         ; _ZN9BackupLib10GetEepDataEjhPv
+00011eea: 061e       subs     r6, r0, #0                    
+00011eec: 0bda       bge      #0x11f06                      
+00011eee: 0120       movs     r0, #1                        
+00011ef0: fdf7bced   blx      #0xfa6c                         ; _ZN7MprCtrl15SetSelfCheckLogEb
+00011ef4: 104b       ldr      r3, [pc, #0x40]                 ; [00011f38]=000007a8
+00011ef6: 1649       ldr      r1, [pc, #0x58]                 ; [00011f50]=0000fa28
+00011ef8: 3246       mov      r2, r6                        
+00011efa: eb58       ldr      r3, [r5, r3]                  
+00011efc: 7944       add      r1, pc                        
+00011efe: 1868       ldr      r0, [r3]                      
+00011f00: fdf7aeec   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+00011f04: 04e0       b        #0x11f10                      
+00011f06: fb79       ldrb     r3, [r7, #7]                  
+00011f08: 012b       cmp      r3, #1                        
+00011f0a: 08bf       it       eq                            
+00011f0c: 44f08004   orreq    r4, r4, #0x80                 
+00011f10: 2046       mov      r0, r4                        
+00011f12: 07f10c07   add.w    r7, r7, #0xc                  
+00011f16: bd46       mov      sp, r7                        
+00011f18: f0bd       pop      {r4, r5, r6, r7, pc}          
+00011f1a: 00bf       nop                                    
+00011f1c: 6803       lsls     r0, r5, #0xd                  
+00011f1e: 3c00       movs     r4, r7                        
+00011f20: 6c03       lsls     r4, r5, #0xd                  
+00011f22: 3c00       movs     r4, r7                        
+00011f24: 6d03       lsls     r5, r5, #0xd                  
+00011f26: 3c00       movs     r4, r7                        
+00011f28: 0904       lsls     r1, r1, #0x10                 
+00011f2a: 3c00       movs     r4, r7                        
+00011f2c: 4d04       lsls     r5, r1, #0x11                 
+00011f2e: 3c00       movs     r4, r7                        
+00011f30: 0804       lsls     r0, r1, #0x10                 
+00011f32: 3c00       movs     r4, r7                        
+00011f34: 6e9e       ldr      r6, [sp, #0x1b8]              
+00011f36: 0200       movs     r2, r0                        
+00011f38: a807       lsls     r0, r5, #0x1e                 
+00011f3a: 0000       movs     r0, r0                        
+
+# libmprctrl.so — MprCtrl::GetAviManagedContentTypes 0x11FC0
+00011fc0: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+00011fc4: 82b0       sub      sp, #8                        
+00011fc6: 00af       add      r7, sp, #0                    
+00011fc8: 07f10804   add.w    r4, r7, #8                    
+00011fcc: 4e4d       ldr      r5, [pc, #0x138]                ; [00012108]=00029c8e "XFINE_TGT"
+00011fce: 0023       movs     r3, #0                        
+00011fd0: 4e49       ldr      r1, [pc, #0x138]                ; [0001210c]=0000f99a
+00011fd2: 04f8013d   strb     r3, [r4, #-0x1]!              
+00011fd6: 7d44       add      r5, pc                        
+00011fd8: 4d4b       ldr      r3, [pc, #0x134]                ; [00012110]=0000076c
+00011fda: 7944       add      r1, pc                        
+00011fdc: ee58       ldr      r6, [r5, r3]                  
+00011fde: 3068       ldr      r0, [r6]                      
+00011fe0: fdf73eec   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+00011fe4: 0121       movs     r1, #1                        
+00011fe6: 2246       mov      r2, r4                        
+00011fe8: 4248       ldr      r0, [pc, #0x108]                ; [000120f4]=003c0368
+00011fea: fcf7daef   blx      #0xefa0                         ; _ZN9BackupLib10GetEepDataEjhPv
+00011fee: 041e       subs     r4, r0, #0                    
+00011ff0: 0cda       bge      #0x1200c                      
+00011ff2: 0120       movs     r0, #1                        
+00011ff4: fdf73aed   blx      #0xfa6c                         ; _ZN7MprCtrl15SetSelfCheckLogEb
+00011ff8: 464b       ldr      r3, [pc, #0x118]                ; [00012114]=000007a8
+00011ffa: 4749       ldr      r1, [pc, #0x11c]                ; [00012118]=0000f847
+00011ffc: 2246       mov      r2, r4                        
+00011ffe: 0124       movs     r4, #1                        
+00012000: eb58       ldr      r3, [r5, r3]                  
+00012002: 7944       add      r1, pc                        
+00012004: 1868       ldr      r0, [r3]                      
+00012006: fdf72cec   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+0001200a: 04e0       b        #0x12016                      
+0001200c: fc79       ldrb     r4, [r7, #7]                  
+0001200e: 012c       cmp      r4, #1                        
+00012010: 0cbf       ite      eq                            
+00012012: 0924       moveq    r4, #9                        
+00012014: 0124       movne    r4, #1                        
+00012016: 0121       movs     r1, #1                        
+00012018: fa1d       adds     r2, r7, #7                    
+0001201a: 3748       ldr      r0, [pc, #0xdc]                 ; [000120f8]=003c036c
+0001201c: fcf7c0ef   blx      #0xefa0                         ; _ZN9BackupLib10GetEepDataEjhPv
+00012020: b0f10008   subs.w   r8, r0, #0                    
+00012024: 09da       bge      #0x1203a                      
+00012026: 0120       movs     r0, #1                        
+00012028: fdf720ed   blx      #0xfa6c                         ; _ZN7MprCtrl15SetSelfCheckLogEb
+0001202c: 3b49       ldr      r1, [pc, #0xec]                 ; [0001211c]=0000f844
+0001202e: 3068       ldr      r0, [r6]                      
+00012030: 4246       mov      r2, r8                        
+00012032: 7944       add      r1, pc                        
+00012034: fdf714ec   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+00012038: 04e0       b        #0x12044                      
+0001203a: fb79       ldrb     r3, [r7, #7]                  
+0001203c: 012b       cmp      r3, #1                        
+0001203e: 08bf       it       eq                            
+00012040: 44f01004   orreq    r4, r4, #0x10                 
+00012044: 0121       movs     r1, #1                        
+00012046: fa1d       adds     r2, r7, #7                    
+00012048: 2c48       ldr      r0, [pc, #0xb0]                 ; [000120fc]=003c036d
+0001204a: fcf7aaef   blx      #0xefa0                         ; _ZN9BackupLib10GetEepDataEjhPv
+0001204e: b0f10008   subs.w   r8, r0, #0                    
+00012052: 0bda       bge      #0x1206c                      
+00012054: 0120       movs     r0, #1                        
+00012056: fdf70aed   blx      #0xfa6c                         ; _ZN7MprCtrl15SetSelfCheckLogEb
+0001205a: 2e4b       ldr      r3, [pc, #0xb8]                 ; [00012114]=000007a8
+0001205c: 3049       ldr      r1, [pc, #0xc0]                 ; [00012120]=0000f840
+0001205e: 4246       mov      r2, r8                        
+00012060: eb58       ldr      r3, [r5, r3]                  
+00012062: 7944       add      r1, pc                        
+00012064: 1868       ldr      r0, [r3]                      
+00012066: fdf7fceb   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+0001206a: 04e0       b        #0x12076                      
+0001206c: fb79       ldrb     r3, [r7, #7]                  
+0001206e: 012b       cmp      r3, #1                        
+00012070: 08bf       it       eq                            
+00012072: 44f00404   orreq    r4, r4, #4                    
+00012076: 0121       movs     r1, #1                        
+00012078: fa1d       adds     r2, r7, #7                    
+0001207a: 2148       ldr      r0, [pc, #0x84]                 ; [00012100]=003c0409
+0001207c: fcf790ef   blx      #0xefa0                         ; _ZN9BackupLib10GetEepDataEjhPv
+00012080: b0f10008   subs.w   r8, r0, #0                    
+00012084: 0bda       bge      #0x1209e                      
+00012086: 0120       movs     r0, #1                        
+00012088: fdf7f0ec   blx      #0xfa6c                         ; _ZN7MprCtrl15SetSelfCheckLogEb
+0001208c: 214b       ldr      r3, [pc, #0x84]                 ; [00012114]=000007a8
+0001208e: 2549       ldr      r1, [pc, #0x94]                 ; [00012124]=0000f839
+00012090: 4246       mov      r2, r8                        
+00012092: eb58       ldr      r3, [r5, r3]                  
+00012094: 7944       add      r1, pc                        
+00012096: 1868       ldr      r0, [r3]                      
+00012098: fdf7e2eb   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+0001209c: 04e0       b        #0x120a8                      
+0001209e: fb79       ldrb     r3, [r7, #7]                  
+000120a0: 012b       cmp      r3, #1                        
+000120a2: 08bf       it       eq                            
+000120a4: 44f48074   orreq    r4, r4, #0x100                
+000120a8: 0121       movs     r1, #1                        
+000120aa: fa1d       adds     r2, r7, #7                    
+000120ac: 1548       ldr      r0, [pc, #0x54]                 ; [00012104]=003c044d
+000120ae: fcf778ef   blx      #0xefa0                         ; _ZN9BackupLib10GetEepDataEjhPv
+000120b2: b0f10008   subs.w   r8, r0, #0                    
+000120b6: 0bda       bge      #0x120d0                      
+000120b8: 0120       movs     r0, #1                        
+000120ba: fdf7d8ec   blx      #0xfa6c                         ; _ZN7MprCtrl15SetSelfCheckLogEb
+000120be: 154b       ldr      r3, [pc, #0x54]                 ; [00012114]=000007a8
+000120c0: 1949       ldr      r1, [pc, #0x64]                 ; [00012128]=0000f833
+000120c2: 4246       mov      r2, r8                        
+000120c4: eb58       ldr      r3, [r5, r3]                  
+000120c6: 7944       add      r1, pc                        
+000120c8: 1868       ldr      r0, [r3]                      
+000120ca: fdf7caeb   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+000120ce: 04e0       b        #0x120da                      
+000120d0: fb79       ldrb     r3, [r7, #7]                  
+000120d2: 012b       cmp      r3, #1                        
+000120d4: 08bf       it       eq                            
+000120d6: 44f40074   orreq    r4, r4, #0x200                
+000120da: 1449       ldr      r1, [pc, #0x50]                 ; [0001212c]=0000f8b5
+000120dc: 2246       mov      r2, r4                        
+000120de: 3068       ldr      r0, [r6]                      
+000120e0: 7944       add      r1, pc                        
+000120e2: fdf7beeb   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+000120e6: 2046       mov      r0, r4                        
+000120e8: 07f10807   add.w    r7, r7, #8                    
+000120ec: bd46       mov      sp, r7                        
+000120ee: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+000120f2: 00bf       nop                                    
+000120f4: 6803       lsls     r0, r5, #0xd                  
+000120f6: 3c00       movs     r4, r7                        
+000120f8: 6c03       lsls     r4, r5, #0xd                  
+000120fa: 3c00       movs     r4, r7                        
+000120fc: 6d03       lsls     r5, r5, #0xd                  
+000120fe: 3c00       movs     r4, r7                        
+00012100: 0904       lsls     r1, r1, #0x10                 
+00012102: 3c00       movs     r4, r7                        
+00012104: 4d04       lsls     r5, r1, #0x11                 
+00012106: 3c00       movs     r4, r7                        
+00012108: 8e9c       ldr      r4, [sp, #0x238]              
+0001210a: 0200       movs     r2, r0                        
+0001210c: 9af90000   ldrsb.w  r0, [sl]                      
+00012110: 6c07       lsls     r4, r5, #0x1d                 
+00012112: 0000       movs     r0, r0                        
+00012114: a807       lsls     r0, r5, #0x1e                 
+00012116: 0000       movs     r0, r0                        
+00012118: 47f80000   str.w    r0, [r7, r0]                  
+0001211c: 44f80000   str.w    r0, [r4, r0]                  
+00012120: 40f80000   str.w    r0, [r0, r0]                  
+00012124: 39f80000   ldrh.w   r0, [sb, r0]                  
+00012128: 33f80000   ldrh.w   r0, [r3, r0]                  
+0001212c: b5f80000   ldrh.w   r0, [r5]                      
+
+# libmprctrl.so — MprCtrl::GetModelName 0x12390
+00012390: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+00012394: 0646       mov      r6, r0                        
+00012396: 194c       ldr      r4, [pc, #0x64]                 ; [000123fc]=000298ca "_JPGPN_HORIZON_360DEG_FINE_MAX"
+00012398: 00af       add      r7, sp, #0                    
+0001239a: 7c44       add      r4, pc                        
+0001239c: 38b3       cbz      r0, #0x123ee                  
+0001239e: 1648       ldr      r0, [pc, #0x58]                 ; [000123f8]=003e0005
+000123a0: fdf73cea   blx      #0xf81c                         ; _ZN9BackupLib11GetDataSizeEj
+000123a4: 164b       ldr      r3, [pc, #0x58]                 ; [00012400]=0000076c
+000123a6: 1749       ldr      r1, [pc, #0x5c]                 ; [00012404]=0000f720
+000123a8: 54f80380   ldr.w    r8, [r4, r3]                  
+000123ac: 7944       add      r1, pc                        
+000123ae: 0546       mov      r5, r0                        
+000123b0: d8f80000   ldr.w    r0, [r8]                      
+000123b4: 2a46       mov      r2, r5                        
+000123b6: fdf754ea   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+000123ba: e9b2       uxtb     r1, r5                        
+000123bc: 0e48       ldr      r0, [pc, #0x38]                 ; [000123f8]=003e0005
+000123be: 3246       mov      r2, r6                        
+000123c0: fcf7eeed   blx      #0xefa0                         ; _ZN9BackupLib10GetEepDataEjhPv
+000123c4: 051e       subs     r5, r0, #0                    
+000123c6: 0ada       bge      #0x123de                      
+000123c8: 0120       movs     r0, #1                        
+000123ca: fdf750eb   blx      #0xfa6c                         ; _ZN7MprCtrl15SetSelfCheckLogEb
+000123ce: 0e4b       ldr      r3, [pc, #0x38]                 ; [00012408]=000007a8
+000123d0: 0e49       ldr      r1, [pc, #0x38]                 ; [0001240c]=0000f715
+000123d2: 2a46       mov      r2, r5                        
+000123d4: e358       ldr      r3, [r4, r3]                  
+000123d6: 7944       add      r1, pc                        
+000123d8: 1868       ldr      r0, [r3]                      
+000123da: fdf742ea   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+000123de: 0c49       ldr      r1, [pc, #0x30]                 ; [00012410]=0000f723
+000123e0: 3246       mov      r2, r6                        
+000123e2: d8f80000   ldr.w    r0, [r8]                      
+000123e6: 7944       add      r1, pc                        
+000123e8: fdf73aea   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+000123ec: 01e0       b        #0x123f2                      
+000123ee: 6ff06305   mvn      r5, #0x63                     
+000123f2: 2846       mov      r0, r5                        
+000123f4: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+000123f8: 0500       movs     r5, r0                        
+000123fa: 3e00       movs     r6, r7                        
+000123fc: ca98       ldr      r0, [sp, #0x328]              
+000123fe: 0200       movs     r2, r0                        
+00012400: 6c07       lsls     r4, r5, #0x1d                 
+00012402: 0000       movs     r0, r0                        

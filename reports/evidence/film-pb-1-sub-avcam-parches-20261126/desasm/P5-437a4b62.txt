@@ -1,0 +1,42 @@
+=== 437a4b32..437a4b96
+437a4b32    321 07b0       add      sp, #0x1c                                  | cfw 07b0       add      sp, #0x1c
+437a4b34    321 bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}               | cfw bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}
+437a4b38    321 4ea4       adr      r4, #0x138                                 | cfw 4ea4       adr      r4, #0x138
+437a4b3a    321 8700       lsls     r7, r0, #2                                 | cfw 8700       lsls     r7, r0, #2
+437a4b3c    321 a071       strb     r0, [r4, #6]                               | cfw a071       strb     r0, [r4, #6]
+437a4b3e    321 0000       movs     r0, r0                                     | cfw 0000       movs     r0, r0
+437a4b40    321 f8b5       push     {r3, r4, r5, r6, r7, lr}                   | cfw f8b5       push     {r3, r4, r5, r6, r7, lr}
+437a4b42  * 321 0f29       cmp      r1, #0xf                                   | cfw 1129       cmp      r1, #0x11
+437a4b44    321 1f4b       ldr      r3, [pc, #0x7c]                            | cfw 1f4b       ldr      r3, [pc, #0x7c]
+437a4b46    321 0646       mov      r6, r0                                     | cfw 0646       mov      r6, r0
+437a4b48    321 0c46       mov      r4, r1                                     | cfw 0c46       mov      r4, r1
+437a4b4a    321 1546       mov      r5, r2                                     | cfw 1546       mov      r5, r2
+437a4b4c    321 7b44       add      r3, pc                                     | cfw 7b44       add      r3, pc
+437a4b4e    321 37d8       bhi      #0x437a4bc0                                | cfw 37d8       bhi      #0x437a4bc0
+437a4b50    321 1d4a       ldr      r2, [pc, #0x74]                            | cfw 1d4a       ldr      r2, [pc, #0x74]
+437a4b52    321 0729       cmp      r1, #7                                     | cfw 0729       cmp      r1, #7
+437a4b54    321 9f58       ldr      r7, [r3, r2]                               | cfw 9f58       ldr      r7, [r3, r2]
+437a4b56    321 04d8       bhi      #0x437a4b62                                | cfw 04d8       bhi      #0x437a4b62
+437a4b58    321 1221       movs     r1, #0x12                                  | cfw 1221       movs     r1, #0x12
+437a4b5a    321 01fb0471   mla      r1, r1, r4, r7                             | cfw 01fb0471   mla      r1, r1, r4, r7
+437a4b5e    321 4831       adds     r1, #0x48                                  | cfw 4831       adds     r1, #0x48
+437a4b60    321 0be0       b        #0x437a4b7a  ; ->437a4b7a                  | cfw 0be0       b        #0x437a4b7a  ; ->437a4b7a
+437a4b62  * 321 0f29       cmp      r1, #0xf                                   | cfw 12f0959c   b.w      #0x43fb7490  ; ->43fb7490
+437a4b64  * 321 07d0       beq      #0x437a4b76                                | cfw 
+437a4b66    321 a1f10803   sub.w    r3, r1, #8                                 | cfw a1f10803   sub.w    r3, r1, #8
+437a4b6a    321 1221       movs     r1, #0x12                                  | cfw 1221       movs     r1, #0x12
+437a4b6c    321 01fb0371   mla      r1, r1, r3, r7                             | cfw 01fb0371   mla      r1, r1, r3, r7
+437a4b70    321 01f58061   add.w    r1, r1, #0x400                             | cfw 01f58061   add.w    r1, r1, #0x400
+437a4b74    321 01e0       b        #0x437a4b7a  ; ->437a4b7a                  | cfw 01e0       b        #0x437a4b7a  ; ->437a4b7a
+437a4b76    321 07f54471   add.w    r1, r7, #0x310                             | cfw 07f54471   add.w    r1, r7, #0x310
+437a4b7a    321 3046       mov      r0, r6                                     | cfw 3046       mov      r0, r6
+437a4b7c    321 46f302ff   bl       #0x43aeb984  ; ->43aeb984                  | cfw 46f302ff   bl       #0x43aeb984  ; ->43aeb984
+437a4b80    321 072c       cmp      r4, #7                                     | cfw 072c       cmp      r4, #7
+437a4b82    321 0fd1       bne      #0x437a4ba4                                | cfw 0fd1       bne      #0x437a4ba4
+437a4b84    321 2b68       ldr      r3, [r5]                                   | cfw 2b68       ldr      r3, [r5]
+437a4b86    321 93f82340   ldrb.w   r4, [r3, #0x23]                            | cfw 93f82340   ldrb.w   r4, [r3, #0x23]
+437a4b8a    321 631e       subs     r3, r4, #1                                 | cfw 631e       subs     r3, r4, #1
+437a4b8c    321 dbb2       uxtb     r3, r3                                     | cfw dbb2       uxtb     r3, r3
+437a4b8e    321 062b       cmp      r3, #6                                     | cfw 062b       cmp      r3, #6
+437a4b90    321 0ad8       bhi      #0x437a4ba8                                | cfw 0ad8       bhi      #0x437a4ba8
+437a4b92    321 6401       lsls     r4, r4, #5                                 | cfw 6401       lsls     r4, r4, #5

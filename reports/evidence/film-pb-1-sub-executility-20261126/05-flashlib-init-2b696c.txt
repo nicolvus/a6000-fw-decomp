@@ -1,0 +1,112 @@
+002b696c: 2de9f047   push.w    {r4, r5, r6, r7, r8, sb, sl, lr}
+002b6970: 84b0       sub       sp, #0x10                     
+002b6972: 02af       add       r7, sp, #8                    
+002b6974: 07f10802   add.w     r2, r7, #8                    
+002b6978: 0024       movs      r4, #0                        
+002b697a: 0121       movs      r1, #1                        
+002b697c: 8146       mov       sb, r0                        
+002b697e: 02f8014d   strb      r4, [r2, #-0x1]!              
+002b6982: 7748       ldr       r0, [pc, #0x1dc]                ; [002b6b60]=003c00bf
+002b6984: faf770fd   bl        #0x2b1468                     
+002b6988: fb79       ldrb      r3, [r7, #7]                  
+002b698a: 764a       ldr       r2, [pc, #0x1d8]                ; [002b6b64]=00a36c78
+002b698c: 13f0010f   tst.w     r3, #1                        
+002b6990: 02d1       bne       #0x2b6998                       ; _ZN8FlashLib4InitEN3MPR10SystemTypeE+0x2c
+002b6992: 0121       movs      r1, #1                        
+002b6994: 1170       strb      r1, [r2]                      
+002b6996: 00e0       b         #0x2b699a                       ; _ZN8FlashLib4InitEN3MPR10SystemTypeE+0x2e
+002b6998: 1470       strb      r4, [r2]                      
+002b699a: 734d       ldr       r5, [pc, #0x1cc]                ; [002b6b68]=009d2790
+002b699c: 13f00203   ands      r3, r3, #2                    
+002b69a0: 724e       ldr       r6, [pc, #0x1c8]                ; [002b6b6c]=00a36c88
+002b69a2: 18bf       it        ne                            
+002b69a4: 0123       movs      r3, #1                        
+002b69a6: 4ff00108   mov.w     r8, #1                        
+002b69aa: 2b70       strb      r3, [r5]                      
+002b69ac: 86f80080   strb.w    r8, [r6]                      
+002b69b0: 68f686ea   blx       #0x11eec0                     
+002b69b4: 4846       mov       r0, sb                        
+002b69b6: 6e49       ldr       r1, [pc, #0x1b8]                ; [002b6b70]=00a36c7c
+002b69b8: 6e4a       ldr       r2, [pc, #0x1b8]                ; [002b6b74]=00a36c74
+002b69ba: 6f4b       ldr       r3, [pc, #0x1bc]                ; [002b6b78]=00a36c80
+002b69bc: faf71efb   bl        #0x2b0ffc                     
+002b69c0: 0446       mov       r4, r0                        
+002b69c2: 0028       cmp       r0, #0                        
+002b69c4: 2dd0       beq       #0x2b6a22                       ; _ZN8FlashLib4InitEN3MPR10SystemTypeE+0xb6
+002b69c6: 4928       cmp       r0, #0x49                     
+002b69c8: 12d0       beq       #0x2b69f0                       ; _ZN8FlashLib4InitEN3MPR10SystemTypeE+0x84
+002b69ca: 0022       movs      r2, #0                        
+002b69cc: 6b48       ldr       r0, [pc, #0x1ac]                ; [002b6b7c]=0083b4ea "Init"
+002b69ce: 1346       mov       r3, r2                        
+002b69d0: 2146       mov       r1, r4                        
+002b69d2: 0092       str       r2, [sp]                      
+002b69d4: 0192       str       r2, [sp, #4]                  
+002b69d6: 67f67cea   blx       #0x11ded0                     
+002b69da: 2b78       ldrb      r3, [r5]                      
+002b69dc: 002b       cmp       r3, #0                        
+002b69de: 00f0b780   beq.w     #0x2b6b50                     
+002b69e2: 882c       cmp       r4, #0x88                     
+002b69e4: 32d0       beq       #0x2b6a4c                       ; _ZN8FlashLib4InitEN3MPR10SystemTypeE+0xe0
+002b69e6: 892c       cmp       r4, #0x89                     
+002b69e8: 30d0       beq       #0x2b6a4c                       ; _ZN8FlashLib4InitEN3MPR10SystemTypeE+0xe0
+002b69ea: e0b2       uxtb      r0, r4                        
+002b69ec: 4af3eefe   bl        #0x6017cc                     
+002b69f0: 892c       cmp       r4, #0x89                     
+002b69f2: 2bd0       beq       #0x2b6a4c                       ; _ZN8FlashLib4InitEN3MPR10SystemTypeE+0xe0
+002b69f4: 3378       ldrb      r3, [r6]                      
+002b69f6: dff87481   ldr.w     r8, [pc, #0x174]                ; [002b6b6c]=00a36c88
+002b69fa: 202b       cmp       r3, #0x20                     
+002b69fc: 00f2ac80   bhi.w     #0x2b6b58                     
+002b6a00: 1020       movs      r0, #0x10                     
+002b6a02: a2b2       uxth      r2, r4                        
+002b6a04: 7821       movs      r1, #0x78                     
+002b6a06: 8de80c00   stm.w     sp, {r2, r3}                  
+002b6a0a: 34fa00f3   lsrs.w    r3, r4, r0                    
+002b6a0e: 41f20d02   movw      r2, #0x100d                   
+002b6a12: 04f313ff   bl        #0x5bb83c                     
+002b6a16: 98f80030   ldrb.w    r3, [r8]                      
+002b6a1a: 0133       adds      r3, #1                        
+002b6a1c: 88f80030   strb.w    r3, [r8]                      
+002b6a20: 9ae0       b         #0x2b6b58                       ; _ZN8FlashLib4InitEN3MPR10SystemTypeE+0x1ec
+002b6a22: 5748       ldr       r0, [pc, #0x15c]                ; [002b6b80]=00a36fca
+002b6a24: faf774fc   bl        #0x2b1310                     
+002b6a28: 08bb       cbnz      r0, #0x2b6a6e                 
+002b6a2a: 564b       ldr       r3, [pc, #0x158]                ; [002b6b84]=00a36c6c
+002b6a2c: 2246       mov       r2, r4                        
+002b6a2e: 83f80080   strb.w    r8, [r3]                      
+002b6a32: 554b       ldr       r3, [pc, #0x154]                ; [002b6b88]=009d2a08
+002b6a34: 05e0       b         #0x2b6a42                       ; _ZN8FlashLib4InitEN3MPR10SystemTypeE+0xd6
+002b6a36: 13f8061c   ldrb      r1, [r3, #-0x6]               
+002b6a3a: 5218       adds      r2, r2, r1                    
+002b6a3c: d2b2       uxtb      r2, r2                        
+002b6a3e: 03f8022c   strb      r2, [r3, #-0x2]               
+002b6a42: 13f8031b   ldrb      r1, [r3], #3                  
+002b6a46: 0029       cmp       r1, #0                        
+002b6a48: f5d1       bne       #0x2b6a36                       ; _ZN8FlashLib4InitEN3MPR10SystemTypeE+0xca
+002b6a4a: 10e0       b         #0x2b6a6e                       ; _ZN8FlashLib4InitEN3MPR10SystemTypeE+0x102
+002b6a4c: 0022       movs      r2, #0                        
+002b6a4e: 4f48       ldr       r0, [pc, #0x13c]                ; [002b6b8c]=007e8eea "DFB initialize failed!"
+002b6a50: 1346       mov       r3, r2                        
+002b6a52: 2146       mov       r1, r4                        
+002b6a54: 0092       str       r2, [sp]                      
+002b6a56: 0192       str       r2, [sp, #4]                  
+002b6a58: 67f63aea   blx       #0x11ded0                     
+002b6a5c: 2b78       ldrb      r3, [r5]                      
+002b6a5e: 33b1       cbz       r3, #0x2b6a6e                 
+002b6a60: 882c       cmp       r4, #0x88                     
+002b6a62: 04d0       beq       #0x2b6a6e                       ; _ZN8FlashLib4InitEN3MPR10SystemTypeE+0x102
+002b6a64: 892c       cmp       r4, #0x89                     
+002b6a66: 02d0       beq       #0x2b6a6e                       ; _ZN8FlashLib4InitEN3MPR10SystemTypeE+0x102
+002b6a68: e0b2       uxtb      r0, r4                        
+002b6a6a: 4af3affe   bl        #0x6017cc                     
+002b6a6e: 67f696ed   blx       #0x11e59c                     
+002b6a72: 4748       ldr       r0, [pc, #0x11c]                ; [002b6b90]=00a36c89
+002b6a74: 0021       movs      r1, #0                        
+002b6a76: 40f24132   movw      r2, #0x341                    
+002b6a7a: 69f632fc   bl        #0x1202e2                     
+002b6a7e: d4b9       cbnz      r4, #0x2b6ab6                 
+002b6a80: 3d4b       ldr       r3, [pc, #0xf4]                 ; [002b6b78]=00a36c80
+002b6a82: 1868       ldr       r0, [r3]                      
+002b6a84: 89f779f9   bl        #0x23fd7a                     
+002b6a88: 424b       ldr       r3, [pc, #0x108]                ; [002b6b94]=00a36c84
+002b6a8a: 1860       str       r0, [r3]                      

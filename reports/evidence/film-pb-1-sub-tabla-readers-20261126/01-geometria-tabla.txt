@@ -1,0 +1,48 @@
+# 01 - Geometria de la tabla 0xA3699C (sector manager info / 'tabla de readers')
+
+Binario: libmpr.so fw 3.21, SHA-256 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+Secciones: .text 0x00120228-0x007A3E84  .rodata 0x007A3E90-0x00956750
+           .data 0x009C42E8-0x009DF808  .bss  0x009DF808-0x00ADBB04
+
+0xA3699C cae en .bss (sin contenido en fichero; el cargador la pone a 0).
+
+== Tamano de entrada = 0x14 (constante 0x14 en TODAS las referencias) ==
+002b20a4: 0a4a       ldr      r2, [pc, #0x28]                 ; [002b20d0]=00a3699c
+002b20a6: 1423       movs     r3, #0x14                     
+002b20a8: 5c43       muls     r4, r3, r4                    
+002b20aa: 1319       adds     r3, r2, r4                    
+002b20ac: 1551       str      r5, [r2, r4]                  
+
+== Numero de indices = 30 (0..0x1D) ==
+  SetSectorManagerInfo  0x2B20A0  cmp r4,#0x1d ; 0x2B20A2 bhi -> rechaza idx>0x1D
+  Init/WarmBootInit     recorren la lista estatica 0x9D2380 (30 u32 + terminador -1)
+  Busquedas             0x2B2EC6 / 0x2B2EF0 / 0x2B2FAE: cmp r5,#0x1e ; bne  (0..0x1D)
+
+  30 * 0x14 = 0x258  =>  tabla = 0xA3699C .. 0xA36BF3
+
+== Lista estatica de sectores (indice i -> sector) 0x9D2380 ==
+  10 11 12 20 21 28 29 2c 2d 30 31 38 39 40 60 61 68 6c 62 63 90 91 92 a0 b1 b2 b3 b8 bc bd ffffffff
+
+== Campos (deducidos de los escritores, ver 02/03/04) ==
+  +0x00 u32  sector/fileType  (valor de 0x9D2380[i]; comparado con ldr 32b en 0x2B2EAA/0x2B2ED8/0x2B2F96)
+  +0x04 u32  HANDLE de sector FlashLib (de OpenSector32). NO es puntero a funcion.
+             prueba: 0x2B39FE str r2,[r3,#4] -> 0x2B3A20 bl ReadNextPackData
+                    0x2B3976 ldr r1,[r4,#4] -> 0x2B267C ReadPack -> 0x2B26AA blx ChangeSeekPoint
+  +0x08 u32  flag VALIDO/registrado: 1 solo si SetSectorManagerTable tuvo exito (0x2B45F6)
+             0 en la rama de fallo (0x2B4928/0x2B472A) y tras DeleteAllSectors (0x2B2986)
+  +0x0c u32  byte0 del primer pack del sector (dif 0x00)  - 0 si no se leyo
+  +0x10 u32  byte1 del primer pack del sector (dif 0x01)  - solo lo escribe 0x2B4600
+
+== Globals vecinos usados por FBM ==
+  0xA36970 0xA36974 0xA36978 0xA3697C   contadores/cursores de sector (Init 0x2B4858..)
+  0xA36C08 0xA36C0C 0xA36C14 0xA36C18   copias de (userID,dataID) del primer pack
+  0xA36C20                              puntero al anillo de buffers RWB -> 0x9E6970
+  0x9D2380                              lista de 30 sectores (idx -> sector)
+  0x9D23FC                              tabla (userID,mediaID)->(fileType,sector,OM), 0x18 B/fila, 37 filas
+  0x9E691C 0x9E6938                     semaforos RWB ; 0x9D278C longitud de sector
+
+== Vecinos inmediatos de la tabla ==
+  0xA36980..0xA3699B  Semaphore RWB (construido por el ctor estatico 0x2B4A44)
+  0xA3699C..0xA36BF3  tabla (30 * 0x14) ; 0xA36BF4..0xA36C07 relleno
+  0xA36C08 0xA36C0C 0xA36C14 0xA36C18 0xA36C20 (ver arriba)
+  0x9E691C 0x9E6938 0x9E6954  semaforos RWB (0x9E691C = "GetRWBuffer" en 0x2B38BA)

@@ -1,0 +1,33 @@
+=== 438538fe..43853962
+438538fe    321 af58       ldr      r7, [r5, r2]                               | cfw af58       ldr      r7, [r5, r2]
+43853900    321 9b79       ldrb     r3, [r3, #6]                               | cfw 9b79       ldrb     r3, [r3, #6]
+43853902    321 002b       cmp      r3, #0                                     | cfw 002b       cmp      r3, #0
+43853904    321 00f0bf80   beq.w    #0x43853a86  ; ->43853a86                  | cfw 00f0bf80   beq.w    #0x43853a86  ; ->43853a86
+43853908    321 90f8643c   ldrb.w   r3, [r0, #0xc64]                           | cfw 90f8643c   ldrb.w   r3, [r0, #0xc64]
+4385390c    321 23b1       cbz      r3, #0x43853918                            | cfw 23b1       cbz      r3, #0x43853918
+4385390e    321 90f8653c   ldrb.w   r3, [r0, #0xc65]                           | cfw 90f8653c   ldrb.w   r3, [r0, #0xc65]
+43853912    321 012b       cmp      r3, #1                                     | cfw 012b       cmp      r3, #1
+43853914    321 40f0b780   bne.w    #0x43853a86  ; ->43853a86                  | cfw 40f0b780   bne.w    #0x43853a86  ; ->43853a86
+43853918    321 b4f9ea3b   ldrsh.w  r3, [r4, #0xbea]                           | cfw b4f9ea3b   ldrsh.w  r3, [r4, #0xbea]
+4385391c    321 002b       cmp      r3, #0                                     | cfw 002b       cmp      r3, #0
+4385391e    321 00f0b280   beq.w    #0x43853a86  ; ->43853a86                  | cfw 00f0b280   beq.w    #0x43853a86  ; ->43853a86
+43853922    321 94f8d92b   ldrb.w   r2, [r4, #0xbd9]                           | cfw 94f8d92b   ldrb.w   r2, [r4, #0xbd9]
+43853926    321 94f8d63b   ldrb.w   r3, [r4, #0xbd6]                           | cfw 94f8d63b   ldrb.w   r3, [r4, #0xbd6]
+4385392a    321 03eb4202   add.w    r2, r3, r2, lsl #1                         | cfw 03eb4202   add.w    r2, r3, r2, lsl #1
+4385392e  * 321 57f82220   ldr.w    r2, [r7, r2, lsl #2]                       | cfw 63f319f6   bl       #0x43fb7564  ; ->43fb7564
+43853932    321 002a       cmp      r2, #0                                     | cfw 002a       cmp      r2, #0
+43853934    321 00f07481   beq.w    #0x43853c20  ; ->43853c20                  | cfw 00f07481   beq.w    #0x43853c20  ; ->43853c20
+43853938    321 94f8d12b   ldrb.w   r2, [r4, #0xbd1]                           | cfw 94f8d12b   ldrb.w   r2, [r4, #0xbd1]
+4385393c    321 12b9       cbnz     r2, #0x43853944                            | cfw 12b9       cbnz     r2, #0x43853944
+4385393e    321 94f8d32b   ldrb.w   r2, [r4, #0xbd3]                           | cfw 94f8d32b   ldrb.w   r2, [r4, #0xbd3]
+43853942    321 42b1       cbz      r2, #0x43853956                            | cfw 42b1       cbz      r2, #0x43853956
+43853944    321 c54a       ldr      r2, [pc, #0x314]                           | cfw c54a       ldr      r2, [pc, #0x314]
+43853946    321 94f8db1b   ldrb.w   r1, [r4, #0xbdb]                           | cfw 94f8db1b   ldrb.w   r1, [r4, #0xbdb]
+4385394a    321 aa58       ldr      r2, [r5, r2]                               | cfw aa58       ldr      r2, [r5, r2]
+4385394c    321 52f82120   ldr.w    r2, [r2, r1, lsl #2]                       | cfw 52f82120   ldr.w    r2, [r2, r1, lsl #2]
+43853950    321 002a       cmp      r2, #0                                     | cfw 002a       cmp      r2, #0
+43853952    321 00f06581   beq.w    #0x43853c20  ; ->43853c20                  | cfw 00f06581   beq.w    #0x43853c20  ; ->43853c20
+43853956    321 94f8d32b   ldrb.w   r2, [r4, #0xbd3]                           | cfw 94f8d32b   ldrb.w   r2, [r4, #0xbd3]
+4385395a    321 42b1       cbz      r2, #0x4385396e                            | cfw 42b1       cbz      r2, #0x4385396e
+4385395c    321 c04a       ldr      r2, [pc, #0x300]                           | cfw c04a       ldr      r2, [pc, #0x300]
+4385395e    321 94f8dd1b   ldrb.w   r1, [r4, #0xbdd]                           | cfw 94f8dd1b   ldrb.w   r1, [r4, #0xbdd]

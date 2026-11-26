@@ -1,0 +1,37 @@
+=== 438531f6..4385325a
+438531f6    321 0020       movs     r0, #0                                     | cfw 0020       movs     r0, #0
+438531f8    321 70bd       pop      {r4, r5, r6, pc}                           | cfw 70bd       pop      {r4, r5, r6, pc}
+438531fa    321 00bf       nop                                                 | cfw 00bf       nop      
+438531fc    321 32e0       b        #0x43853264  ; ->43853264                  | cfw 32e0       b        #0x43853264  ; ->43853264
+438531fe    321 fcff2de9   vtbl.8   d30, {d12, d13}, d29                       | cfw fcff2de9   vtbl.8   d30, {d12, d13}, d29
+43853202    321 ff41       rors     r7, r7                                     | cfw ff41       rors     r7, r7
+43853204    321 0446       mov      r4, r0                                     | cfw 0446       mov      r4, r0
+43853206    321 7c49       ldr      r1, [pc, #0x1f0]                           | cfw 7c49       ldr      r1, [pc, #0x1f0]
+43853208    321 0922       movs     r2, #9                                     | cfw 0922       movs     r2, #9
+4385320a    321 7c4d       ldr      r5, [pc, #0x1f0]                           | cfw 7c4d       ldr      r5, [pc, #0x1f0]
+4385320c    321 01a8       add      r0, sp, #4                                 | cfw 01a8       add      r0, sp, #4
+4385320e    321 7944       add      r1, pc                                     | cfw 7944       add      r1, pc
+43853210    321 72f186e8   blx      #0x439c5320  ; ->439c5320                  | cfw 72f186e8   blx      #0x439c5320  ; ->439c5320
+43853214    321 7a4b       ldr      r3, [pc, #0x1e8]                           | cfw 7a4b       ldr      r3, [pc, #0x1e8]
+43853216    321 7d44       add      r5, pc                                     | cfw 7d44       add      r5, pc
+43853218    321 94f8d91b   ldrb.w   r1, [r4, #0xbd9]                           | cfw 94f8d91b   ldrb.w   r1, [r4, #0xbd9]
+4385321c    321 94f8d62b   ldrb.w   r2, [r4, #0xbd6]                           | cfw 94f8d62b   ldrb.w   r2, [r4, #0xbd6]
+43853220    321 eb58       ldr      r3, [r5, r3]                               | cfw eb58       ldr      r3, [r5, r3]
+43853222    321 02eb4101   add.w    r1, r2, r1, lsl #1                         | cfw 02eb4101   add.w    r1, r2, r1, lsl #1
+43853226  * 321 53f82130   ldr.w    r3, [r3, r1, lsl #2]                       | cfw 64f393f1   bl       #0x43fb7550  ; ->43fb7550
+4385322a    321 94f8df1b   ldrb.w   r1, [r4, #0xbdf]                           | cfw 94f8df1b   ldrb.w   r1, [r4, #0xbdf]
+4385322e    321 0529       cmp      r1, #5                                     | cfw 0529       cmp      r1, #5
+43853230    321 06d8       bhi      #0x43853240                                | cfw 06d8       bhi      #0x43853240
+43853232    321 7448       ldr      r0, [pc, #0x1d0]                           | cfw 7448       ldr      r0, [pc, #0x1d0]
+43853234    321 02eb4102   add.w    r2, r2, r1, lsl #1                         | cfw 02eb4102   add.w    r2, r2, r1, lsl #1
+43853238    321 2858       ldr      r0, [r5, r0]                               | cfw 2858       ldr      r0, [r5, r0]
+4385323a    321 50f822c0   ldr.w    ip, [r0, r2, lsl #2]                       | cfw 50f822c0   ldr.w    ip, [r0, r2, lsl #2]
+4385323e    321 01e0       b        #0x43853244  ; ->43853244                  | cfw 01e0       b        #0x43853244  ; ->43853244
+43853240    321 4ff0000c   mov.w    ip, #0                                     | cfw 4ff0000c   mov.w    ip, #0
+43853244    321 002b       cmp      r3, #0                                     | cfw 002b       cmp      r3, #0
+43853246    321 00f0d380   beq.w    #0x438533f0  ; ->438533f0                  | cfw 00f0d380   beq.w    #0x438533f0  ; ->438533f0
+4385324a    321 94f8d16b   ldrb.w   r6, [r4, #0xbd1]                           | cfw 94f8d16b   ldrb.w   r6, [r4, #0xbd1]
+4385324e    321 16b9       cbnz     r6, #0x43853256                            | cfw 16b9       cbnz     r6, #0x43853256
+43853250    321 94f8d32b   ldrb.w   r2, [r4, #0xbd3]                           | cfw 94f8d32b   ldrb.w   r2, [r4, #0xbd3]
+43853254    321 42b1       cbz      r2, #0x43853268                            | cfw 42b1       cbz      r2, #0x43853268
+43853256    321 6c4a       ldr      r2, [pc, #0x1b0]                           | cfw 6c4a       ldr      r2, [pc, #0x1b0]

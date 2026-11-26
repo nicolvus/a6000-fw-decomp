@@ -1,0 +1,15 @@
+# Entradas
+
+| fichero | tamaño | sha256 |
+|---|---:|---|
+| firmware/extracted/fw321/.../nflasha3_unpacked_unpacked/av-cam.bin (3.21 de fábrica) | 11427236 | b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9 |
+| av-cam del paquete instalado (build/cfw_func393/pp/base-film.tar → 0700_part_image/dev/nflasha3 → TPZL → FAT16 → AV-CAM.BIN) | 11427236 | be11ee6f2dc7181b445fcb817dcda871933b4eb5d29194d38696526feb842fb0 |
+| av-cam de build/cfw_func393/base/base-film.tar (base sin PP: «3.38 + tres estados») | 11427236 | b8ad482f1b6c8ba172a822d578b71bd79a92728dbf78fb9ede5cafdccb49aeaa |
+
+Extracción: scripts/e25_27/{tarball,tpzl,fatimg,build}.py (members['0700_part_image/dev/nflasha3'] →
+TpzlImage.parse().decompressed(workers=1) → Fat16.parse().read('AV-CAM.BIN')). Sin tocar la cámara.
+
+VA = 0x43541000 + desplazamiento en av-cam.bin. El visor de análisis
+analysis/av-cam-analysis-view.elf tiene UNA sección .text en VA 0x43541000, fichero 0x1f0,
+tamaño 0xAE5DA4 = el binario entero, así que la correspondencia es exacta y todos los
+VA del informe caen dentro de .text (0x43541000..0x44026da3).

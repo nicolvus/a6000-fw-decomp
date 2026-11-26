@@ -1,0 +1,79 @@
+# identidad de arranque 0xAD28F8 (modelo + TvSystem)
+## libmpr.so MprIf::SnapShotBootInit 0x71CE64 -> 0x712010
+0071ce64: 80b5       push     {r7, lr}                      
+0071ce66: 84b0       sub      sp, #0x10                     
+0071ce68: 00af       add      r7, sp, #0                    
+0071ce6a: 3846       mov      r0, r7                        
+0071ce6c: 0b68       ldr      r3, [r1]                      
+0071ce6e: 3b60       str      r3, [r7]                      
+0071ce70: 4b68       ldr      r3, [r1, #4]                  
+0071ce72: 7b60       str      r3, [r7, #4]                  
+0071ce74: 8b68       ldr      r3, [r1, #8]                  
+0071ce76: bb60       str      r3, [r7, #8]                  
+0071ce78: 0b7b       ldrb     r3, [r1, #0xc]                
+0071ce7a: 3b73       strb     r3, [r7, #0xc]                
+0071ce7c: f5f7c8f8   bl       #0x712010                     
+0071ce80: 07f11007   add.w    r7, r7, #0x10                 
+0071ce84: bd46       mov      sp, r7                        
+0071ce86: 80bd       pop      {r7, pc}                      
+00712010: f8b5       push     {r3, r4, r5, r6, r7, lr}      
+00712012: 0446       mov      r4, r0                        
+00712014: 0668       ldr      r6, [r0]                      
+00712016: 00af       add      r7, sp, #0                    
+00712018: beb1       cbz      r6, #0x71204a                 
+0071201a: 3046       mov      r0, r6                        
+0071201c: dcf6b0f7   bl       #0x1eef80                     
+00712020: 0c28       cmp      r0, #0xc                      
+00712022: 12d8       bhi      #0x71204a                     
+00712024: 0b4d       ldr      r5, [pc, #0x2c]                 ; [00712054]=00ad28f8
+00712026: 3146       mov      r1, r6                        
+00712028: 2846       mov      r0, r5                        
+0071202a: 32f6bbf7   bl       #0x144fa4                     
+0071202e: 6368       ldr      r3, [r4, #4]                  
+00712030: 012b       cmp      r3, #1                        
+00712032: 0cd8       bhi      #0x71204e                     
+00712034: a268       ldr      r2, [r4, #8]                  
+00712036: ab62       str      r3, [r5, #0x28]               
+00712038: 074b       ldr      r3, [pc, #0x1c]                 ; [00712058]=009df380
+0071203a: 1a60       str      r2, [r3]                      
+0071203c: 227b       ldrb     r2, [r4, #0xc]                
+0071203e: 074b       ldr      r3, [pc, #0x1c]                 ; [0071205c]=00ad3538
+00712040: 1a70       strb     r2, [r3]                      
+00712042: c8f419f8   bl       #0x3da078                     
+00712046: 0020       movs     r0, #0                        
+00712048: f8bd       pop      {r3, r4, r5, r6, r7, pc}      
+0071204a: 0520       movs     r0, #5                        
+0071204c: f8bd       pop      {r3, r4, r5, r6, r7, pc}      
+0071204e: 0520       movs     r0, #5                        
+
+## libObj.so llamador 0x7E6E9C (GetTvSystem + GetModelName)
+007e6ed0: 0028       cmp      r0, #0                        
+007e6ed2: 40f0ab80   bne.w    #0x7e702c                     
+007e6ed6: f8f486e7   blx      #0xdfde4                        ; _ZN7MprCtrl11GetTvSystemEv
+007e6eda: 1122       movs     r2, #0x11                     
+007e6edc: 2146       mov      r1, r4                        
+007e6ede: b861       str      r0, [r7, #0x18]               
+007e6ee0: 3846       mov      r0, r7                        
+007e6ee2: 95f797f6   bl       #0x37cc14                       ; _init+0x2a185c
+007e6ee6: 3846       mov      r0, r7                        
+007e6ee8: f9f454e5   blx      #0xe0994                        ; _ZN7MprCtrl12GetModelNameEPc
+007e6eec: 0028       cmp      r0, #0                        
+007e6eee: 02da       bge      #0x7e6ef6                     
+007e6ef0: 594b       ldr      r3, [pc, #0x164]                ; [007e7058]=0059f3a9
+007e6ef2: 7b44       add      r3, pc                        
+007e6ef4: 00e0       b        #0x7e6ef8                     
+007e6ef6: 3b1c       adds     r3, r7, #0                    
+007e6ef8: 7b61       str      r3, [r7, #0x14]               
+007e6efa: f7f442e0   blx      #0xddf80                        ; _ZN7MprCtrl24IsSerialNumberRecSupportEv
+007e6efe: f8b1       cbz      r0, #0x7e6f40                 
+007e6f00: f7f4a2e4   blx      #0xde848                        ; _ZN7MprCtrl15GetSerialNumberEv
+007e6f04: 0024       movs     r4, #0                        
+007e6f06: 1823       movs     r3, #0x18                     
+
+## getter TvSystem que lee el bloque: 0x1EEFDC
+001eefdc: 024b       ldr      r3, [pc, #8]                  
+001eefde: 80b5       push     {r7, lr}                      
+001eefe0: 00af       add      r7, sp, #0                    
+001eefe2: 986a       ldr      r0, [r3, #0x28]               
+001eefe4: 80bd       pop      {r7, pc}                      
+001eefe6: 00bf       nop                                    

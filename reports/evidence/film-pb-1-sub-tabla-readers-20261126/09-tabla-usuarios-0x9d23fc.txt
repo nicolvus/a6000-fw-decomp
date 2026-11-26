@@ -1,0 +1,78 @@
+# 09 - 0x9D23FC: (userID,mediaID) -> (fileType=sector, OM); y lista de 30 sectores 0x9D2380
+     Fila de 0x18 B; terminador: +0 == 0. 37 filas.
+     Lectores: GetFileType 0x2B2B18 (+0==userID y +4==mediaID -> out +8)
+               GetOperationModeFromUserIDAndMediaID 0x2B2DF4 (-> out +0xc)
+
+  [00] userID=0x10 mediaID=1 sector=0x10 OM=0x4   (+0x10=0 +0x14=0)
+  [01] userID=0x02 mediaID=1 sector=0x11 OM=0x2   (+0x10=0 +0x14=0)
+  [02] userID=0x03 mediaID=1 sector=0x12 OM=0x3   (+0x10=0 +0x14=0)
+  [03] userID=0x10 mediaID=2 sector=0x20 OM=0x4   (+0x10=0 +0x14=0)
+  [04] userID=0x04 mediaID=2 sector=0x21 OM=0x6   (+0x10=0 +0x14=0)
+  [05] userID=0x21 mediaID=2 sector=0x21 OM=0x6   (+0x10=0 +0x14=0)
+  [06] userID=0x10 mediaID=5 sector=0x28 OM=0x4   (+0x10=0 +0x14=0)
+  [07] userID=0x04 mediaID=5 sector=0x29 OM=0x6   (+0x10=0 +0x14=0)
+  [08] userID=0x21 mediaID=5 sector=0x29 OM=0x6   (+0x10=0 +0x14=0)
+  [09] userID=0x10 mediaID=6 sector=0x2c OM=0x4   (+0x10=0 +0x14=0)
+  [10] userID=0x04 mediaID=6 sector=0x2d OM=0x6   (+0x10=0 +0x14=0)
+  [11] userID=0x21 mediaID=6 sector=0x2d OM=0x6   (+0x10=0 +0x14=0)
+  [12] userID=0x10 mediaID=3 sector=0x30 OM=0x4   (+0x10=0 +0x14=0)
+  [13] userID=0x04 mediaID=3 sector=0x31 OM=0x6   (+0x10=0 +0x14=0)
+  [14] userID=0x21 mediaID=3 sector=0x31 OM=0x6   (+0x10=0 +0x14=0)
+  [15] userID=0x10 mediaID=4 sector=0x38 OM=0x4   (+0x10=0 +0x14=0)
+  [16] userID=0x04 mediaID=4 sector=0x39 OM=0x6   (+0x10=0 +0x14=0)
+  [17] userID=0x21 mediaID=4 sector=0x39 OM=0x6   (+0x10=0 +0x14=0)
+  [18] userID=0x01 mediaID=1 sector=0x40 OM=0x1   (+0x10=0 +0x14=0)
+  [19] userID=0x30 mediaID=1 sector=0x40 OM=0x1   (+0x10=0 +0x14=0)
+  [20] userID=0x20 mediaID=1 sector=0x60 OM=0x7   (+0x10=0 +0x14=0)
+  [21] userID=0x20 mediaID=2 sector=0x61 OM=0x7   (+0x10=0 +0x14=0)
+  [22] userID=0x20 mediaID=5 sector=0x68 OM=0x7   (+0x10=0 +0x14=0)
+  [23] userID=0x20 mediaID=6 sector=0x6c OM=0x7   (+0x10=0 +0x14=0)
+  [24] userID=0x20 mediaID=3 sector=0x62 OM=0x7   (+0x10=0 +0x14=0)
+  [25] userID=0x20 mediaID=4 sector=0x63 OM=0x7   (+0x10=0 +0x14=0)
+  [26] userID=0x10 mediaID=7 sector=0x90 OM=0x4   (+0x10=0 +0x14=0)
+  [27] userID=0x04 mediaID=7 sector=0x91 OM=0x6   (+0x10=0 +0x14=0)
+  [28] userID=0x21 mediaID=7 sector=0x91 OM=0x6   (+0x10=0 +0x14=0)
+  [29] userID=0x20 mediaID=7 sector=0x92 OM=0x7   (+0x10=0 +0x14=0)
+  [30] userID=0x22 mediaID=8 sector=0xa0 OM=0x9   (+0x10=0 +0x14=0)
+  [31] userID=0x23 mediaID=2 sector=0xb1 OM=0xa   (+0x10=0 +0x14=0)
+  [32] userID=0x23 mediaID=3 sector=0xb2 OM=0xa   (+0x10=0 +0x14=0)
+  [33] userID=0x23 mediaID=4 sector=0xb3 OM=0xa   (+0x10=0 +0x14=0)
+  [34] userID=0x23 mediaID=5 sector=0xb8 OM=0xa   (+0x10=0 +0x14=0)
+  [35] userID=0x23 mediaID=6 sector=0xbc OM=0xa   (+0x10=0 +0x14=0)
+  [36] userID=0x23 mediaID=7 sector=0xbd OM=0xa   (+0x10=0 +0x14=0)
+  [37] fin
+
+== Mapa indice <-> sector <-> quien lo pide  (idx = posicion en 0x9D2380) ==
+lista 0x9D2380 (30 sectores): 10 11 12 20 21 28 29 2c 2d 30 31 38 39 40 60 61 68 6c 62 63 90 91 92 a0 b1 b2 b3 b8 bc bd
+
+idx sec  | filas(userID,mediaID,OM) que piden ese sector | RAM 20-10: +4 +8 +C +10
+00  10  | (10,1,OM4)                                     | 00000000 00000000 00 00
+01  11  | (02,1,OM2)                                     | 00000000 00000000 00 00
+02  12  | (03,1,OM3)                                     | 00000000 00000000 00 00
+03  20  | (10,2,OM4)                                     | 00000000 00000000 00 00
+04  21  | (04,2,OM6),(21,2,OM6)                          | 00000000 00000000 00 00
+05  28  | (10,5,OM4)                                     | 00000000 00000000 00 00
+06  29  | (04,5,OM6),(21,5,OM6)                          | 00000000 00000000 00 00
+07  2c  | (10,6,OM4)                                     | 00000000 00000000 00 00
+08  2d  | (04,6,OM6),(21,6,OM6)                          | 00000000 00000000 00 00
+09  30  | (10,3,OM4)                                     | 00000004 00000001 04 00
+10  31  | (04,3,OM6),(21,3,OM6)                          | 00000000 00000000 00 00
+11  38  | (10,4,OM4)                                     | 00000000 00000000 00 00
+12  39  | (04,4,OM6),(21,4,OM6)                          | 00000000 00000000 00 00
+13  40  | (01,1,OM1),(30,1,OM1)                          | 00000000 00000000 00 00
+14  60  | (20,1,OM7)                                     | 00000000 00000000 00 00
+15  61  | (20,2,OM7)                                     | 00000000 00000000 00 00
+16  68  | (20,5,OM7)                                     | 00000000 00000000 00 00
+17  6c  | (20,6,OM7)                                     | 00000000 00000000 00 00
+18  62  | (20,3,OM7)                                     | 00000003 00000001 07 00
+19  63  | (20,4,OM7)                                     | 00000000 00000000 00 00
+20  90  | (10,7,OM4)                                     | 00000000 00000000 00 00
+21  91  | (04,7,OM6),(21,7,OM6)                          | 00000000 00000000 00 00
+22  92  | (20,7,OM7)                                     | 00000000 00000000 00 00
+23  a0  | (22,8,OM9)                                     | 00000001 00000001 09 08
+24  b1  | (23,2,OM10)                                    | 00000000 00000000 00 00
+25  b2  | (23,3,OM10)                                    | 00000005 00000001 0a 00
+26  b3  | (23,4,OM10)                                    | 00000000 00000000 00 00
+27  b8  | (23,5,OM10)                                    | 00000000 00000000 00 00
+28  bc  | (23,6,OM10)                                    | 00000000 00000000 00 00
+29  bd  | (23,7,OM10)                                    | 00000000 00000000 00 00

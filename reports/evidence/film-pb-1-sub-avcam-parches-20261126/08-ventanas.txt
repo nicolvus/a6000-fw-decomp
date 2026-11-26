@@ -1,0 +1,30 @@
+Ventanas de 64 KiB del av-cam con algún byte distinto (3.21 -> instalado):
+
+  0x437a0000..0x437affff      42 B
+  0x43800000..0x4380ffff       4 B
+  0x43840000..0x4384ffff     101 B
+  0x43850000..0x4385ffff      12 B
+  0x43860000..0x4386ffff       2 B
+  0x438b0000..0x438bffff      12 B
+  0x438c0000..0x438cffff       4 B
+  0x438d0000..0x438dffff      25 B
+  0x43bc0000..0x43bcffff       1 B
+  0x43cb0000..0x43cbffff      17 B
+  0x43fa0000..0x43faffff    3282 B
+  0x43fb0000..0x43fbffff   30480 B
+  0x44000000..0x4400ffff      31 B
+
+Ventanas del códec / muxer / decodificador / presentación / escalado / NAL:
+  0x435c0000..0x435cffff     0 B   McAvcDecVDisplayBase, McAvcDec60I50IVDisplay
+  0x435d0000..0x435dffff     0 B   McAvcDecVDisplayBase (presentación)
+  0x43600000..0x4360ffff     0 B   cdcMgr/cdcMgrEnc
+  0x43610000..0x4361ffff     0 B   mux/MP4/IFO
+  0x43900000..0x4390ffff     0 B   video/dec, audio, bgmDec
+  0x43910000..0x4391ffff     0 B   video/enc/avcEncVideoStateIdle, video/dec/avcDecVideoZimaAccessor, MojitoAvcEncoder
+  0x43920000..0x4392ffff     0 B   MpgPinConverter
+  0x43930000..0x4393ffff     0 B   pcpCtrl
+  0x43940000..0x4394ffff     0 B   RcDriver/api_rc/RcResize
+  0x43950000..0x4395ffff     0 B   RcCalc/RcCopy
+  0x43980000..0x4398ffff     0 B   nalSepTop/nalSepApp
+
+Tamaño del av-cam: 11427236 B; VA 0x43541000..0x44026da3 (.text completo del visor de análisis).

@@ -1,0 +1,75 @@
+# 02 - Escritor #1: SetSectorManagerInfo 0x2B208C  (API) + su unico llamante 0x2B59DC (consola 'SetSMI')
+
+002b208c: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+002b2090: 0446       mov      r4, r0                        
+002b2092: 00af       add      r7, sp, #0                    
+002b2094: 0d48       ldr      r0, [pc, #0x34]                 ; [002b20cc]=007e6801 "SetSectorManagerInfo"
+002b2096: 0d46       mov      r5, r1                        
+002b2098: 1646       mov      r6, r2                        
+002b209a: 9846       mov      r8, r3                        
+002b209c: fff7e4fe   bl       #0x2b1e68                     
+002b20a0: 1d2c       cmp      r4, #0x1d                     
+002b20a2: 0bd8       bhi      #0x2b20bc                     
+002b20a4: 0a4a       ldr      r2, [pc, #0x28]                 ; [002b20d0]=00a3699c
+002b20a6: 1423       movs     r3, #0x14                     
+002b20a8: 5c43       muls     r4, r3, r4                    
+002b20aa: 1319       adds     r3, r2, r4                    
+002b20ac: 1551       str      r5, [r2, r4]                  
+002b20ae: 0024       movs     r4, #0                        
+002b20b0: ba69       ldr      r2, [r7, #0x18]               
+002b20b2: 5e60       str      r6, [r3, #4]                  
+002b20b4: c3f80880   str.w    r8, [r3, #8]                  
+002b20b8: da60       str      r2, [r3, #0xc]                
+002b20ba: 00e0       b        #0x2b20be                     
+002b20bc: 0124       movs     r4, #1                        
+002b20be: 0348       ldr      r0, [pc, #0xc]                  ; [002b20cc]=007e6801 "SetSectorManagerInfo"
+002b20c0: 2146       mov      r1, r4                        
+002b20c2: fff749ff   bl       #0x2b1f58                     
+002b20c6: 2046       mov      r0, r4                        
+002b20c8: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+
+== llamantes de 0x2B208C (barrido de bl/blx en .text) ==
+0x2b5a3a None
+
+== el llamante: 0x2B59DC (comando de consola) ==
+002b59dc: 0528       cmp      r0, #5                        
+002b59de: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+002b59e2: 85b0       sub      sp, #0x14                     
+002b59e4: 0c46       mov      r4, r1                        
+002b59e6: 04af       add      r7, sp, #0x10                 
+002b59e8: 2ddd       ble      #0x2b5a46                     
+002b59ea: cb68       ldr      r3, [r1, #0xc]                
+002b59ec: 0d1d       adds     r5, r1, #4                    
+002b59ee: 1a48       ldr      r0, [pc, #0x68]                 ; [002b5a58]=007e8887 "%s %s %s %s %s %s"
+002b59f0: 2e1d       adds     r6, r5, #4                    
+002b59f2: 0093       str      r3, [sp]                      
+002b59f4: 0b69       ldr      r3, [r1, #0x10]               
+002b59f6: 0193       str      r3, [sp, #4]                  
+002b59f8: 4b69       ldr      r3, [r1, #0x14]               
+002b59fa: 0293       str      r3, [sp, #8]                  
+002b59fc: 0ec9       ldm      r1, {r1, r2, r3}              
+002b59fe: fff77dfb   bl       #0x2b50fc                     
+002b5a02: 6068       ldr      r0, [r4, #4]                  
+002b5a04: 341d       adds     r4, r6, #4                    
+002b5a06: 4af332fa   bl       #0x5ffe6e                     
+002b5a0a: 8146       mov      sb, r0                        
+002b5a0c: 6868       ldr      r0, [r5, #4]                  
+002b5a0e: 4af304fa   bl       #0x5ffe1a                     
+002b5a12: 8046       mov      r8, r0                        
+002b5a14: 7068       ldr      r0, [r6, #4]                  
+002b5a16: 4af32afa   bl       #0x5ffe6e                     
+002b5a1a: 261d       adds     r6, r4, #4                    
+002b5a1c: 0546       mov      r5, r0                        
+002b5a1e: 6068       ldr      r0, [r4, #4]                  
+002b5a20: 4af325fa   bl       #0x5ffe6e                     
+002b5a24: 0446       mov      r4, r0                        
+002b5a26: 7068       ldr      r0, [r6, #4]                  
+002b5a28: 4af321fa   bl       #0x5ffe6e                     
+002b5a2c: 1ffa88f1   uxth.w   r1, r8                        
+002b5a30: 2a46       mov      r2, r5                        
+002b5a32: 2346       mov      r3, r4                        
+002b5a34: 0090       str      r0, [sp]                      
+002b5a36: 5ffa89f0   uxtb.w   r0, sb                        
+
+Firma: SetSectorManagerInfo(idx=r0, +0=r1, +4=r2, +8=r3, +0xc=[sp+0x18]); rechaza idx>0x1D.
+NO es la via de arranque: solo se llega desde el despachador de comandos de consola.

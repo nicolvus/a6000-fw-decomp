@@ -1,6 +1,32 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+## Reproducción de vídeo — FILM-PB-1, causa raíz FBM (26-11-2026, cerrada)
+
+> **La tabla de sectores del backup FBM está vacía y nada la recrea.** `0xA3699C` (30 entradas × 0x14,
+> `+4` = handle de sector de `FlashLib`) solo tiene **4 entradas con handle** en el volcado de RAM del
+> 20-10 (`0x30`, `0x62`, `0xA0`, `0xB2`); las de foto (`0x90/0x91/0x92`) y las de vídeo (idx 24…29) están
+> a 0. `ReadFirstPackData` (`0x2B3948`) devuelve `0x10100001` en `0x2B3A28` cuando `[entrada+4]==0`; con
+> eso `RcsBackupTblData` falla, `mp4Ifo` imprime `0xB0800001` por su fallback (`0x6F0D4C`), el IFO no queda
+> cargado y la guarda A (`0x447810`, « Pb Disable!! ref) dsm get») deja **`0x1A`** en `0x437C0A` ⇒ «No se
+> puede visualizar.». `FBM::Init` (`0x2B4820`) solo registra sectores que **ya existen**
+> (`CheckExistSector == 0x45`) y **no crea ninguno**; el anillo de `nflasha4` nunca tuvo más de cinco
+> `fileType` en ninguno de los tres volcados. **Correcciones a lo publicado el 26-11:**
+> `FlashLib::Init` **sí** tiene llamante (`0x7126E2`, antes de `BackupMgr::Init`) y el log de arranque
+> trae `[DFB] partition start sector = 100864`, así que el flash arranca bien; `ExecMprUtility(1)` no es
+> la vía de arranque. **Arreglo:** `BackupMgr::InitBackupData(OM, mediaID)` (`0x2B43F0`) o su consola
+> `InitB [OM] [MediaID]` (`0x2B5B5A`), y después reiniciar MPR (la tabla es un snapshot de
+> `MprIf::Create`). No escribir `nflasha4` a mano sin rollback.
+> [Informe](../reports/film-pb-1-causa-fbm-20261126.md).
+
+
 ## Reproducción de vídeo — FILM-PB-1 (26-11-2026)
+
+> **Descartado el 26-11-2026: el «modo con movie = 0».** `Type2Mode` (`0x5F699C`) decide solo con
+> `(type, subType)` y `m_systemType` (constante 1, escrita solo en `0x5F755C`); no intervienen HDMI, tarjeta,
+> batería ni ajustes. Los cinco modos con movie = 0 son trabajos de foto (`Still Rec`→0x03, `Still Pb`→0x06,
+> `Still Dubbing`→0x12, `Still Pb RAW`→0x20; 0x13 no se alcanza) y la entrada en reproducción de vídeo
+> (`0x437A40`–`0x437AC4`) pide `Movie Pb` y cambia a **0x0E con 20 MiB**. Medida en cámara pendiente: leer
+> `0x9DECAC`, `0xA4F478` y `0xA4F4A8` al pulsar play. [Informe](../reports/film-pb-1-sub-modo-camara-20261126.md).
 
 > **Reencuadre del 26-11-2026: la cadencia NO es la causa.** Dos pruebas del usuario con la cámara en mano lo
 > cierran: un clip convertido a 25p (`scripts/filmpb1_convertir_clips.py`) da «No se puede visualizar.», y **un clip
@@ -59,7 +85,10 @@
 > BD/catálogo (la guarda es *fail-open* si falta el registro y recuperar la BD no cambia nada); el decodificador
 > H.264 (está **fuera de Linux**, en `av-cam` con microcódigo `ZM_AVCD*` de `/usr/sabin`; su fallo sería posterior a
 > `PbStart` y las miniaturas JPEG seguirían saliendo); el `av-cam` del paquete (**no es un binario 3.38**: es el de
-> 3.21 con 40 B integrados y 34 KB de tablas de curvas; `vmlinux.bin` e `initrd.img` son byte a byte los de 3.21);
+> 3.21 + **233 B** de parches integrados (tres estados y Silent r5) + **33 780 B** de PP/S-Log3/B&N
+> —32 437 B de curvas, 1 164 B de cuevas, 72 B de ganchos y 107 B de tablas—; `vmlinux.bin` e `initrd.img` son byte
+> a byte los de 3.21 y ninguno de sus 25 parches de código cae en códec, muxer, decodificador ni IFO
+> ([informe](../reports/film-pb-1-sub-avcam-parches-20261126.md)));
 > la NVRAM (64 volcados, sistema de TV fijo); y los parches de código en la ruta de reproducción (auditoría del
 > paquete 3.93 `pp`).
 >
@@ -69,7 +98,9 @@
 > (2) paquete **con WBI** (arranque caliente, un flag: `build_package_nflasha15.py` sin `--sin-wbi`) — comando y
 > dry-run 20/20 en [arranque/WBI](../reports/film-pb-1-sub-arranque-wbi-20261128.md); (3) restauración del 3.21
 > oficial verificado (`scripts/camera_reflash_fw321.sh`, SHA-256
-> `29aef21ab9b5c2e98388974ac9749c2cbfb1815273b444e62f2e41398aa8892f`).
+> `29aef21ab9b5c2e98388974ac9749c2cbfb1815273b444e62f2e41398aa8892f`); (4) paquete **3.94 con el `av-cam` de
+> fábrica 3.21** (núcleo de Sony + el `/usr` del 3.93; `.dat` sha256
+> `2a6fd62ff4ed0e63af31a73a2dfb0b261700515147c421f8026b9463dd284c1c`) — [informe](../reports/film-pb-1-sub-paquete-avcam-limpio-20261126.md).
 >
 > **Prueba de campo decisiva (gratis, 30 s):** encender y pulsar reproducción **lo antes posible**, sin dar tiempo a
 > que la galería genere miniaturas. Si así reproduce y luego deja de hacerlo, el mutex se filtra al generar

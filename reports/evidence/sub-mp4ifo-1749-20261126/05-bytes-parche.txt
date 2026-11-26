@@ -1,0 +1,34 @@
+# libmpr.so fw 3.21  sha256 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+# offset de fichero = VA (primer LOAD p_offset=0). Verificado con capstone.
+
+## Contexto 0x698ED8..0x698EF4 (FlashLoadForMsv; 1749 en 0x698EE6)
+00698ed8  20 68 fd f7 02 fb 16 f5 d9 fd 0a 49 0a 4a 40 f2 d5 63 57 f0 2f ff 05 46 10 b1 20 46
+
+## A) 0x698EDE  bl 0x3AFA94 -> movs r0,#0 ; nop
+antes   00698ede  16 f5 d9 fd
+despues 00698ede  00 20 00 bf
+
+## B) 0x35E100  beq 0x35E118 -> b 0x35E118
+antes   0035e100  0a d0
+despues 0035e100  0a e0
+
+## C) 0x2B3A28  ldr.w sb,=0x10100001 -> mov.w sb,#0
+antes   002b3a28  df f8 28 90
+despues 002b3a28  4f f0 00 09
+
+## Contexto 0x2B39E8..0x2B3A38 (ReadFirstPackData)
+002b39e8  19 48 42 18 52 68 da b1 b9 f1 00 0f 1a d1 41 5a 18 46 83 f8 24 90 5a 60
+002b3a24  81 46 06 e0 df f8 28 90
+
+## Contexto 0x35E0EC..0x35E11C (llamada y comprobacion)
+0035e0ec  da f8 88 00 da f8 8c 10 55 f7 60 fc 05 46 68 b1 9f 4b 98 42 0a d0 8d e8 20 02 02 22
+
+## Traductor 0x6F0D4C..0x6F0EBC (fallback 0xB0800001 en 0x6F0E96/0x6F0EBC)
+006f0d4c  2d e9 f8 4f 8c 46 00 af 16 46 19 46 00 28 00 f0 a3 80 58 4b 98 42 00 f0 a5 80 57 4b 98 42 00 f0
+006f0e72  19 4b 15 4a 19 4c a0 42 0c bf 14 46 1c 46 0b e0 17 4b c3 18 23 2b 18 d8 16 4a 52 f8 23 40 02 e0 15 4c 01 e0 64 46 3c b1
+
+## Literales
+0x2B3A54 = 0x10100001
+0x2B3A50 = 0x00A3699C
+0x35E37C = 0x10100003
+0x698F0C = 0xB0800001

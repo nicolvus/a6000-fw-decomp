@@ -11,6 +11,13 @@ Herramientas: capstone del `.venv` con `dump.py`/`dis2.py` (copiados en la evide
 aquí quedan el formato de la tabla fuente, el de la tabla destino y los tamaños de los huecos 11
 (movie) y 13 (still) para los 35 modos.
 
+> **Corregido por** [film-pb-1-sub-modo-camara-20261126.md](film-pb-1-sub-modo-camara-20261126.md) §7: la
+> columna «nombre» de §4 y de la evidencia 08 está **desplazada una posición**. El literal real es
+> `0x009DF094`, el formato es `{id, ptr}` (no `{ptr, id}`) y `id 0` = `Movie Pb`; además esa tabla nombra
+> el argumento **`type`** de `StreamAreaAllocate`, **no** los `modeId` (que no tienen nombres). Los
+> **tamaños** de movie/still de §4 **no cambian**; lo que cambia es quién pide cada modo (los cinco con
+> movie = 0 son trabajos de **foto**: `Still Rec`, `Still Pb`, `Still Dubbing`, `Still Pb RAW`).
+
 **Regla VA→offset usada y comprobada** (`readelf -lW`, evidencia 03):
 
 | LOAD | offset | VA | filesz | consecuencia |

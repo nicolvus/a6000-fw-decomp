@@ -1,5 +1,23 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## FILM-PB-1 — causa raíz FBM y arreglo identificado (26-11-2026)
+
+La tabla de sectores del backup FBM (`0xA3699C`, 30 entradas × 0x14, `+4` = handle) tiene solo 4 entradas
+con handle en el volcado de RAM del 20-10; foto y vídeo están a 0. `ReadFirstPackData` (`0x2B3948`)
+devuelve `0x10100001` en `0x2B3A28` cuando `[entrada+4]==0`, lo que deja `Err RcsBackupTblData`,
+`0xB0800001` en mp4Ifo (1749) y ninguna IFO cargada: la guarda A del reproductor (`0x447810`) produce
+`0x1A` en `0x437C0A`. `FBM::Init` (`0x2B4820`) solo registra sectores existentes
+(`CheckExistSector == 0x45`) y no crea ninguno; el anillo de `nflasha4` nunca tuvo más de cinco
+`fileType`. Corregido el «`FlashLib::Init` sin llamante»: lo llama `0x7126E2` y el log de arranque trae la
+geometría DFB. Arreglo: `BackupMgr::InitBackupData(OM, mediaID)` (`0x2B43F0`) o la consola
+`InitB [OM] [MediaID]` (`0x2B5B5A`), y reiniciar MPR. Cuatro auditorías independientes:
+[mp4ifo-1749](../reports/film-pb-1-sub-mp4ifo-1749-20261126.md),
+[tabla-readers](../reports/film-pb-1-sub-tabla-readers-20261126.md),
+[nflasha4](../reports/film-pb-1-sub-nflasha4-20261126.md),
+[executility](../reports/film-pb-1-sub-executility-20261126.md); síntesis en
+[causa-fbm](../reports/film-pb-1-causa-fbm-20261126.md).
+
+
 > **E26 R9 parcial:** [revisión](../docs/capture/e26-r9-bootrom-ram-execution.md) corrige R8: CRC-32, copia por tipos distintos de 0 y 0xffff; parser R8 no válido. Falta emular la ruta, demostrar RAM ejecutable y señal física.
 
 **R6 fase 1, checkpoint:** [BLDR](../docs/capture/e26-r6-recuperacion-bionz.md). PMCA payload local byte a byte igual a upstream 0ce3c7e8, gitlink plataforma 85bcb545. ELF extraído y REA: un safe/cuatro normales, normales die0/plane0, metadatos descartados, error => trama vacía; wrapper rechaza estado 1 de ECC tolerado por Loader2. Mapa condicional de 480 KiB con una trama normal perdida; ID/error desconocidos. Cola INFO6 die0/plane1/block2/pages0–20 sin correspondencia adquirida. Regresión inicial falló por inspector inexistente; implementado, 3 pruebas, ruff/mypy pasan. Sin cámara. Próximo paso exacto: verificar límites del selector en los primeros 43 folios y localizar orientación CN4906 en SIDE A.
@@ -20,6 +38,35 @@ idéntico, CLI, tamaños ajenos) y 27 en `tests/test_e25_27_build.py` (cadena, d
 el contenedor pasa a cambiar los bloques `{0, 39, 48, 57}`. Límites: sólo cambia **qué** fuente usa el
 área de AF, no **cada cuánto** se pide (la continuidad sigue dependiendo de AF-C; cadencia
 NO_VERIFICADA), el efecto en cámara es NO_VERIFICADO y no se ha instalado nada.
+
+## FILM-PB-1 — paquete 3.94 con el `av-cam` de fábrica 3.21 (26-11-2026)
+Artefacto offline para separar núcleo y userland: `build/cfw_avcam_limpio/pkg-3.94/package-3.94/firmware_packed.dat`,
+sha256 `2a6fd62ff4ed0e63af31a73a2dfb0b261700515147c421f8026b9463dd284c1c`, versión **3.94**, Darwin v3 y sin `nflasha5`
+(mismo criterio que la 3.93). Base `build/cfw_func393/pp/base-film.tar`; se sustituye `AV-CAM.BIN` en la FAT de `nflasha3`
+por el de fábrica (`b60c845c…6bb9` = `build.AVCAM_SHA256`), se recomponen los 369 bloques TPZL y `part_image.sum`
+(`0,b5b1ca79,00af4e00,…`); de los 104 miembros del tar solo cambian `nflasha3` (11 504 128 → 11 488 768 B) y su línea de
+suma, y de los ficheros de la FAT solo `AV-CAM.BIN` (34 013 B distintos). Atribución: 40 B de los parches del «3.38»
+(2 zonas, `0x300472..0x300488` y `0x38F1AA..0x38F1C2`) + 33 992 B de PP del núcleo/Silent r5/S-Log3/B-N/Hi-Light/
+películas/ISO (25 zonas de código ≤112 B entre `0x26172C` y `0x7746FE`, 7 de tablas en `0xA6E290..0xA76E6A` — la mayor de 33 084 B — y una de 60 B en `0xAC04A8`; A∩B=19). Verificado byte a byte en el tar y otra vez a través del `.dat`
+cifrado; auditoría 27/29 (las dos rojas son las comprobaciones de identidad del núcleo, que solo conocen variantes
+parcheadas). NO instalado. Informe: [paquete av-cam limpio](../reports/film-pb-1-sub-paquete-avcam-limpio-20261126.md).
+
+## FILM-PB-1 (sub) — qué tocan exactamente los parches de código del `av-cam` (26-11-2026)
+Comparado byte a byte el `AV-CAM.BIN` del paquete `pp` (`build/cfw_func393/pp/base-film.tar`) con el de fábrica
+3.21: **34 013 B distintos en 659 tramos exactos** (los «33 rangos» del informe del 26-11 salen de unir huecos
+≤16 B). Reparto medido: **233 B integrados** (tres estados G22 + Silent r5, 8 sitios) y **33 780 B del proyecto**
+(32 437 de curvas, 1 164 de cuevas, 72 de ganchos en 25 sitios, 107 de tablas); corrige los «40 B + 33 992 B» del
+paquete 3.94 y el «~32 084 B» de tablas. Ninguno de los 25 parches de código cae en códec/muxer/decodificador/IFO
+(**0 B distintos** en `0x435C–0x4361` y `0x4390–0x4398`): están en color/gamma (`CAMERA_MAIN_CC`, LUT de 96 puntos
+`0x43853200/0x438538e4/0x43853c70`, `Camera::YC::job_apc_{gain,coring}_stl`), S-Log3, S-Gamut3 y en el transporte de
+ajustes de captura (constructor del paquete `0x0c`, envío a Darwin, copiador de `cap+0x41c/0x41d`). Curvas y cuevas
+viven en un hueco de **40 020 B** (`0x43FAF28C..0x43FB8EDF`) a cero y sin referencias válidas en 3.21. **Conclusión:
+ningún parche del `av-cam` puede romper la reproducción («NO»)**; lo único abierto es que ese hueco sea RAM viva del
+decodificador (medida: leer `0x43FAF290` y `0x43FB7528` al arrancar y tras intentar reproducir).
+[Informe](../reports/film-pb-1-sub-avcam-parches-20261126.md) · [evidencia](../reports/evidence/film-pb-1-sub-avcam-parches-20261126/).
+
+## FILM-PB-1 (sub) — «modo con movie=0»: descartado como causa de la reproducción de vídeo (26-11-2026)
+`MemInfo::Type2Mode` (`0x5F699C`) solo depende de `(type, subType)` y de **`m_systemType`**, constante de compilación escrita una única vez en `MemInfo::Init` (`0x5F755C`, `str` del literal 1); no lee HDMI, flash, tarjeta, batería ni menús. La cadena es única: `GetMemoryInformation` (`0x4284AC`, 33 llamadas) → `StreamAreaAllocate` (`0x5F7BE8`, Type2Mode en `0x5F7C40`) o `ChangeAllocate` (`0x5F7F1C`, en `0x5F7F44`) → `DistributeBufInfo`. Los cinco modos con movie=0 son **trabajos de foto**: `Still Rec`(3,8)→0x03, `Still Pb`(1,8)→0x06, `Still Dubbing`(0x0B,8)→0x12, `Still Pb RAW`(0x1B,8)→0x20, y 0x13 no lo pide nadie con `m_systemType=1`. La entrada en reproducción de vídeo (`0x437A40`–`0x437AC4`, `EnterMoviePbStillRec`, `feaCorePbCaptureApi.cpp`) toma `type` de la tabla `0x85AA54` = {`Movie Pb`, `Movie Pb 3D`}, pide reparto **nuevo** (`r2=1`) y cambia a **0x0E con 20 MiB**; si el reparto falla aborta antes de `SetUpPlayerInstance` (`0x437AA8` `cbz`), pero `areaTblMode` ya se había escrito (`0x5F7C7C`). Corregido además el nombre de los modos: la tabla real es `0x9DF094` `{id,ptr}` con `id 0 = Movie Pb` (el informe anterior la leía desplazada). Queda como medida en cámara: `0x9DECAC` / `0xA4F478` / `0xA4F4A8` y las cinco líneas de `libmpr`. [Informe](../reports/film-pb-1-sub-modo-camara-20261126.md) · [evidencia](../reports/evidence/film-pb-1-sub-modo-camara-20261126/).
 
 ## FILM-PB-1 — el log real de la cámara: NTSC, IFO sin cargar y lectura del volumen rota (26-11-2026)
 El dump `analysis/camera-dumps/ram-servicio-20261020/ram_0x80000000.bin` (1 GiB, por SWD, **anterior al CFW 3.93 del 24-11**) conserva el anillo de log del proceso MPR en VA `0x82DF9300`–`0x82DFC400` (130 líneas, extraídas y reproducibles con `reports/evidence/film-pb-1-log-real-20261126/extraer_anillo.py`, SHA-256 del dump `f96c6152…fdbf`). Tres pruebas directas: (1) **la cámara es NTSC** — `[AVIMMGR][MS1]SetLoadInfo : TvSystem is NTSC, frameRate 3`, con frameRate 3 = 30000/1001, el de los siete clips: la premisa PAL del «diagnóstico cerrado» es falsa; (2) **ningún IFO se carga** — `MountCmd : Flash Mount Error` en `/dev/mmca`, `GetDeviceInfo : ER_SEQUENCE DEVICE Unmounted`, `[MP4IFO] ### mp4Ifo faild at IF/mp4Ifo_General.cpp(1749|1340) ErrCd: 0xB0800001`, `LoadSub : MP4 Load Error` (AVCHD `0xA0100003`, XAVC `0xB0800005`, MP4 `0xB0800001`), `CreateAndLoad Error` (`0x31000006` → `0x32400001`) y `LoadExec : Flash Load Error`; (3) **no es solo vídeo** — en reproducción de imagen: `[CACHE]BUFFER SIZE TOO SMALL : 00000000`, `Failed to dfs::seek offset=0x0049CE00 errcode=0x0E100001` y `Failed to read errcd=0xC3000101`. El intento de reproducción deja `[AVI]CS_AviAcsr::Unknown Function[0x20]` + `[AVI][PLAY] sources/avi_if/AviSeqPlay.cpp Error=[ER_BADARG] Line:10332`, y la BD de respaldo falla en las tres capas (`CheckSalvageStatus() 0xA0100003`, `Err RcsBackupTblData`), que es justo lo que consulta «Recuperar BD imág.». El `0:02` queda explicado por `[MprCnv] Warning ResumeInfo Structure Size is different! sizeof(MPR::RSMPoint): 64, sizeof(PubResume::ResumeInfo): 60`. **Causa material: el IFO no se carga del volumen**; la guarda A falla por el mismo motivo que la B (`GetInhInfo` devuelve error con el `mp4Ifo_If` sin *loaded*) y el mutex del `mp4Ifo_If` es el eslabón que lo hace visible, no la causa. Antes de flashear nada: miniaturas de foto, otra tarjeta formateada en la cámara y reproducir sin tarjeta. [Informe](../reports/film-pb-1-log-real-20261126.md).
@@ -963,3 +1010,62 @@ del handoff y lista qué difiere de las copias locales: las de `estado/` (que de
 `tests/test_agent_rules_handoff.py` falla si una superficie deja de nombrarla o si el script pierde
 el manejo de la copia. Manda este repositorio si algo difiere; la copia se actualiza en el mismo
 cambio. Detalle en [PENDIENTES](../docs/PENDIENTES.md) R9.
+
+## 26-11-2026 — log del MMgr en los 215 estados del arnés: ningún IFO cargado
+
+Barrido completo de `analysis/gui/g22/harness/live/*/estado.zst` (215 ficheros de 721 perfiles)
+con `extraer_log_estado.py`. **165 perfiles llegan al IFO y los 165 fallan** (MP4 153, MP4+XAVC 9,
+MP4+XAVC+AVCHD 3: `arnes4`, `arnes6`, `sony`); 49 ni lo intentan; `uilive` sin `estado.zst` al
+leerlo. Confirma y amplía la conclusión del 26-11 (antes, 1 perfil). Nuevo en el arnés: XAVC con
+`xavcIfo_DbIf(0311)`/`DbSequencer(0579/0587)` `0xB0510010` (12 perfiles), AVCHD `0xA0100003` (3),
+`SetLoadInfo 0xB0400005` (3) e `IfoComposer 0x46400001`/`0x46500001`. **Cero `Load OK` y cero
+reproducción**: `LoadAvi :  Load OK`, `FlashLoadMp4 : MP4 Load Completed` y `FlashLoadDcf : DCF
+Flash Load Success.` son literales de `.rodata` idénticos en los 214 perfiles (conteo en crudo),
+no emisiones; `PlayMovie` (156) y `PbStart` (79) también son constantes (símbolos). El único
+positivo emitido es `[AVI][MEDIA] sources/avi_if/AviSeqMedia.cpp Error=[ER_OK] Line:2594` en
+`arnes4`, `arnes6` y `t45p`. Informe: [film-pb-1-sub-logs-arnes-todos-20261126](../reports/film-pb-1-sub-logs-arnes-todos-20261126.md);
+evidencia: `reports/evidence/logs-arnes-todos/` (214 logs + 214 conteos + índice) y
+`reports/evidence/claude-sub-logs-arnes-todos-20261126/` (scripts). Solo lectura; el arnés estaba
+corriendo (`davf2`), sin tocarlo.
+
+## 26-11-2026 — galería: quién debería llenar la lista de contenidos y por qué no lo hace (arnés)
+
+Estático (`viewUnified3.so`, `libObj.so`, `libmpr.so`, `libInfraScalarMpr.so`, `libIMDB.so`, fw 3.21):
+el ctor `ViewIndexPb` (`viewUnified3+0x3A100`) crea las dos `PrmCntInfoList` (`+0x11C`, `+0x1B0`) y activa
+`setModelRequest(true)`; **el único que escribe `+0x1B0` es `viewUnified3+0x3F960`** (manejador de *evento de
+modelo*) en `0x3FC3E`, y las listas se piden al modelo **`@M015` = `ModelIndexPb`** (`libObj+0x598930`) con
+`getModelInfo("@M015", 0xC04)` → clave `0x11FFFD23` (ayudante `0x3F684`) y `0xC03`/`0x11FFFF06` (en `0x3F960`).
+`MprIf::GetAVIndexContentInfoList` (`libmpr+0x7203C0`) **no lo importa ningún módulo del UI**: lo emite
+`libInfraScalarMpr.so` (`MprCb_GetAVIndexContentInfoList` `0x1B198`, `CnvAviFileInfo_MprToInfra` `0x20D24`,
+`Api_GetAviData` `0x1E668`), cargado por `libIMDB.so`; `MprIfMcmd::GetAVIndexContentInfoList` (`0x7352CC`) es
+sólo la vía de texto de consola.
+
+Medido (perfil propio corto `lc1`, `estable.sh lc1 live`, tarjeta con `AVF_INFO` completo + 2 MP4 + 3 JPG):
+`ModelIndexPbToInstance` = **1** disparo al abrir la galería; `PrmCntInfoList::add` (`libObj+0x11D90E`) = **0**;
+`0x3F684`/`0x3F960` = **0**; los cuatro goznes del MPR y `libInfraScalarMpr`/`libIMDB` (ambas mapeadas) = **0**;
+control positivo `libObj+0x7EED0C` = 103. Cambio real frente a la sesión de la mañana: `Vo 00000017` + `Lc
+Layer`/`Lc Layout` y **`Vn 011` = 0** (antes `Vo FFFFFFFF` + cautela), pero pantalla uniforme ⇒ `Vo` no prueba
+contenido. `M @M015` no sirve de forzado (`PRECREATE -> -1`). Informe:
+[film-pb-1-sub-arnes-lista-contenidos-20261126](../reports/film-pb-1-sub-arnes-lista-contenidos-20261126.md).
+
+**Próximo paso exacto**: añadir a `scripts/gui/harness/shim/sonyshim.c` un comando `G <off> a0..a3` gemelo de
+`F` pero con la base de `libmpr` (o de `TRACELIB`), recompilar el shim (`sh scripts/gui/harness/shim/build.sh`),
+arrancar `estable.sh lc2 live` con `TRACELIB=libmpr.so TRACEFN2=7203c0,7202c8,454162,6146a4,7352cc` **al
+arranque** y más `TRACELIB=libInfraScalarMpr.so TRACEFN2=1e668,1cf2c,1def4` en un segundo perfil; lanzar
+`G 7352cc 0 0` y comprobar `TRACE 7203c0` ≥ 1 y `TRACE 11d90e` ≥ 1 con la galería abierta.
+
+**Checkpoint 26-11-2026 (noche) — ¿reproduce el arnés el fallo de reproducción de vídeo? NO.** Dos perfiles nuevos
+(`pbvid1` 8799, `pbvid2` 8801, `estable.sh <perfil> live`, arranque en frío ≈3 min). Medido: la tecla Reproducción
+`0x1f7` llega al invitado y **no abre nada**; forzada `O view/INDEX_PLAYBACK` la vista se instancia (id `0x3F`) con
+`Vo FFFFFFFF` + cautela `011` y la pantalla no cambia ⇒ **ni miniatura de vídeo ni de foto**. Con
+`TRACELIB=libmpr.so` + `TRACEFN2=437bc0,6e8430,7229e0,44ee9c,61a8f0` (`TRACEREP=1`, `TRACEDEREF=d0:0:7`): **0
+disparos** en los cinco puntos tras tecla/menú/vista forzada/cursores/Intro; control positivo `TRACE 125104 n=1`.
+`0x437C0A`/`0x437C3C` **no son entradas de función** (`chequea_trampas.py`): se instrumenta el manejador `0x437BC0` que
+las contiene. Trampa en desplazamiento **impar** (`openView` `0x1251fd`) corrompe una instrucción y deja al invitado
+sin procesar líneas: sólo entradas pares. Informe:
+[film-pb-1-arnes-repro-video-20261126](../reports/film-pb-1-arnes-repro-video-20261126.md).
+
+**Próximo paso exacto:** no volver a pedirle al arnés que discrimine la guarda A/B: para eso hace falta P1–P4
+(`MprFileIf`/`FindFirst` con el volumen, `AVF_INFO\AVIN0001.INP` legible por libmpr, `@M015` con lista, capa de la
+vista) y, antes, implementar el comando `G <off> a0..a3` del shim (llamar a `libmpr`/`TRACELIB`, hoy `F` sólo alcanza
+`libObj`) ya acordado en [sub-arnés-lista-contenidos §4](../reports/film-pb-1-sub-arnes-lista-contenidos-20261126.md).

@@ -1,0 +1,46 @@
+=== 437a4d82..437a4de6
+437a4d82    321 a801       lsls     r0, r5, #6                                 | cfw a801       lsls     r0, r5, #6
+437a4d84    321 9901       lsls     r1, r3, #6                                 | cfw 9901       lsls     r1, r3, #6
+437a4d86    321 a801       lsls     r0, r5, #6                                 | cfw a801       lsls     r0, r5, #6
+437a4d88    321 7f01       lsls     r7, r7, #5                                 | cfw 7f01       lsls     r7, r7, #5
+437a4d8a    321 a801       lsls     r0, r5, #6                                 | cfw a801       lsls     r0, r5, #6
+437a4d8c    321 9c01       lsls     r4, r3, #6                                 | cfw 9c01       lsls     r4, r3, #6
+437a4d8e    321 a801       lsls     r0, r5, #6                                 | cfw a801       lsls     r0, r5, #6
+437a4d90    321 a801       lsls     r0, r5, #6                                 | cfw a801       lsls     r0, r5, #6
+437a4d92    321 8f01       lsls     r7, r1, #6                                 | cfw 8f01       lsls     r7, r1, #6
+437a4d94    321 a801       lsls     r0, r5, #6                                 | cfw a801       lsls     r0, r5, #6
+437a4d96    321 a801       lsls     r0, r5, #6                                 | cfw a801       lsls     r0, r5, #6
+437a4d98    321 a801       lsls     r0, r5, #6                                 | cfw a801       lsls     r0, r5, #6
+437a4d9a    321 a801       lsls     r0, r5, #6                                 | cfw a801       lsls     r0, r5, #6
+437a4d9c    321 9401       lsls     r4, r2, #6                                 | cfw 9401       lsls     r4, r2, #6
+437a4d9e    321 2600       movs     r6, r4                                     | cfw 2600       movs     r6, r4
+437a4da0    321 a801       lsls     r0, r5, #6                                 | cfw a801       lsls     r0, r5, #6
+437a4da2    321 2600       movs     r6, r4                                     | cfw 2600       movs     r6, r4
+437a4da4    321 2600       movs     r6, r4                                     | cfw 2600       movs     r6, r4
+437a4da6    321 a801       lsls     r0, r5, #6                                 | cfw a801       lsls     r0, r5, #6
+437a4da8    321 4a01       lsls     r2, r1, #5                                 | cfw 4a01       lsls     r2, r1, #5
+437a4daa    321 08f1ff38   add.w    r8, r8, #-1                                | cfw 08f1ff38   add.w    r8, r8, #-1
+437a4dae    321 b8f1140f   cmp.w    r8, #0x14                                  | cfw b8f1140f   cmp.w    r8, #0x14
+437a4db2  * 321 00f2e480   bhi.w    #0x437a4f7e  ; ->437a4f7e                  | cfw 12f04d9b   b.w      #0x43fb7450  ; ->43fb7450
+437a4db6    321 dfe818f0   tbh      [pc, r8, lsl #1]                           | cfw dfe818f0   tbh      [pc, r8, lsl #1]
+437a4dba    321 1b00       movs     r3, r3                                     | cfw 1b00       movs     r3, r3
+437a4dbc    321 5c00       lsls     r4, r3, #1                                 | cfw 5c00       lsls     r4, r3, #1
+437a4dbe    321 2b00       movs     r3, r5                                     | cfw 2b00       movs     r3, r5
+437a4dc0    321 3b00       movs     r3, r7                                     | cfw 3b00       movs     r3, r7
+437a4dc2    321 1500       movs     r5, r2                                     | cfw 1500       movs     r5, r2
+437a4dc4    321 6c00       lsls     r4, r5, #1                                 | cfw 6c00       lsls     r4, r5, #1
+437a4dc6    321 7c00       lsls     r4, r7, #1                                 | cfw 7c00       lsls     r4, r7, #1
+437a4dc8    321 8c00       lsls     r4, r1, #2                                 | cfw 8c00       lsls     r4, r1, #2
+437a4dca    321 4b00       lsls     r3, r1, #1                                 | cfw 4b00       lsls     r3, r1, #1
+437a4dcc    321 e200       lsls     r2, r4, #3                                 | cfw e200       lsls     r2, r4, #3
+437a4dce    321 9c00       lsls     r4, r3, #2                                 | cfw 9c00       lsls     r4, r3, #2
+437a4dd0    321 e200       lsls     r2, r4, #3                                 | cfw e200       lsls     r2, r4, #3
+437a4dd2    321 d900       lsls     r1, r3, #3                                 | cfw d900       lsls     r1, r3, #3
+437a4dd4    321 db00       lsls     r3, r3, #3                                 | cfw db00       lsls     r3, r3, #3
+437a4dd6    321 ac00       lsls     r4, r5, #2                                 | cfw ac00       lsls     r4, r5, #2
+437a4dd8    321 bb00       lsls     r3, r7, #2                                 | cfw bb00       lsls     r3, r7, #2
+437a4dda    321 cc00       lsls     r4, r1, #3                                 | cfw cc00       lsls     r4, r1, #3
+437a4ddc    321 e600       lsls     r6, r4, #3                                 | cfw e600       lsls     r6, r4, #3
+437a4dde    321 f400       lsls     r4, r6, #3                                 | cfw f400       lsls     r4, r6, #3
+437a4de0    321 d200       lsls     r2, r2, #3                                 | cfw d200       lsls     r2, r2, #3
+437a4de2    321 ac00       lsls     r4, r5, #2                                 | cfw ac00       lsls     r4, r5, #2

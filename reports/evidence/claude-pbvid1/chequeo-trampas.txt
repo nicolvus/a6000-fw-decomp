@@ -1,0 +1,20 @@
+# chequea_trampas.py sobre firmware/extracted/fw321/.../lib/libmpr.so y libObj.so (26-11-2026)
+$ python3 scripts/gui/harness/chequea_trampas.py <libmpr.so> 437c0a,437c3c,437bc0,61a8f0,7229e0,44ee9c,6e8430,13e496
+NO ARMAR en caliente: no todos son entrada de función demostrada (ver informe §3). Si aun así hace falta, FUERZA=1 en estable.sh asume el riesgo de IMEXIT 139.
+# firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so: 8 desplazamiento(s); .text 6831196 B; 30603 destinos de bl
+0x437c0a NO       llamadores=  0 punteros=  0 previo=0xfe97 prologo=no — sin bl, sin puntero, previo 0xfe97 no cierra función y no hay prólogo
+0x437c3c NO       llamadores=  0 punteros=  0 previo=0xfe7e prologo=no — sin bl, sin puntero, previo 0xfe7e no cierra función y no hay prólogo
+0x437bc0 ENTRADA  llamadores=  1 punteros=  0 previo=0x0085 prologo=si — bl desde 0x42a37a
+0x61a8f0 ENTRADA  llamadores=  0 punteros=  1 previo=0x3100 prologo=si — puntero en 0x8e6eb0 + prólogo
+0x7229e0 ENTRADA  llamadores=  0 punteros=  1 previo=0x4000 prologo=si — puntero en 0x5d68 + prólogo
+0x44ee9c ENTRADA  llamadores=  0 punteros=  1 previo=0x4000 prologo=si — puntero en 0x89b8 + prólogo
+0x6e8430 ENTRADA  llamadores=  4 punteros=  0 previo=0x0086 prologo=si — bl desde 0x4d37e0, 0x61a9e4, 0x67b598
+0x13e496 NO       llamadores=  0 punteros=  0 previo=0x4621 prologo=no — sin bl, sin puntero, previo 0x4621 no cierra función y no hay prólogo
+
+$ python3 scripts/gui/harness/chequea_trampas.py <libObj.so> 125104
+# firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so: 1 desplazamiento(s); .text 11430428 B; 50987 destinos de bl
+0x125104 ENTRADA  llamadores=  0 punteros=  1 previo=0x0000 prologo=no — puntero en 0xaabc + frontera
+
+# readelf de viewManagerIf::openView (por qué NO se usa como control: offset impar 0x1251fd)
+  2047: 00122969   220 FUNC    GLOBAL DEFAULT   10 _ZN8ViewBase24openViewWithoutUnsetMuteEPKcib
+  2113: 001251fd    16 FUNC    GLOBAL DEFAULT   10 _ZN13viewManagerIf8openViewEPKci

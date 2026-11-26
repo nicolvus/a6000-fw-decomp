@@ -1,0 +1,13 @@
+[shim] PBINJ t=30s dir_mp_feaCore=0xaeea689c dir_mp_owner=0xaeea6000 core=0x8e046008 owner=0x5d83d0 feaIf=0xaeee9a88 feaIf[4]=0xaeeca6d5
+[shim] PBINJ core: estado=0x2 ent=0x613e00 id=0 mask=0 motor=0
+[shim] PBINJ: FeaIf no utilizable ([MprIf+0]=0xaeee9a88, [feaIf+4]≠core); se salta la vía de la cola
+[shim] PBINJ: estado 2 -> 5 (precondición de las guardas)
+[shim] PBINJ directa 0x437BC0 (libmpr base=0xae3d2000) core=0x8e046008 region=0 EntryId=0 rsm=0 ctrl=0xb6b71d60
+[shim] TRACE 437bc0 n=1 r0=8e046008 r1=0 r2=0 r3=0 lr=b6ec471c
+[shim] TRACE 437bfa n=1 r0=613e00 r1=0 r2=0 r3=5 lr=b6ec471c
+[shim] TRACE 447810 n=1 r0=613e00 r1=0 r2=b6b71c74 r3=5 lr=ae819a2d
+[shim] TRACE 437c0a n=1 r0=0 r1=b6e r2=7bf0 r3=aee24630 lr=aea55e53
+[shim] TRACE 437d1a n=1 r0=aeea5f98 r1=aec30965 r2=1a r3=1a lr=aea55e53
+[shim] TRACE 437d2c n=1 r0=0 r1=0 r2=5dc424 r3=1 lr=b6e51d3d
+[shim] PBINJ: 0x437BC0 retornó (estado=5)
+[shim] PBINJ FIN core=0x8e046008 estado=5

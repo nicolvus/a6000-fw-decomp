@@ -1,0 +1,34 @@
+tag	VA_ini	VA_fin	tamano	bytes_distintos	bytes_integrados	runs	familia	categoria	que
+T1	0x43841472	0x43841488	22	16	16	3	integrado	captura	ctor del paquete de foto (0x0c): EFCS/Silent
+T2	0x4384219e	0x438421a2	4	1	1	1	integrado	captura	lector Sony cap+0x41c -> ldrb
+T3	0x43842270	0x43842274	4	1	1	1	integrado	captura	lector Sony cap+0x41c -> ldrb
+T4	0x43845f2e	0x43845fa4	118	83	83	12	integrado	captura	copiador de ajustes a cap+0x41c/0x41d (118 B)
+T5	0x438c82fe	0x438c8302	4	4	4	1	integrado	captura	gancho silent r5 en la secuencia de foto
+T6	0x43fb7e00	0x43fb7e6c	108	103	103	4	integrado	captura	cueva silent r5 (Tv -> cap+0x64c)
+T7	0x438d01a2	0x438d01a6	4	1	1	1	integrado	captura	envio a Darwin: cbnz r6
+T8	0x438d01aa	0x438d01c2	24	24	24	1	integrado	captura	envio a Darwin: pkt[0x0e]=silent
+P1	0x437a2728	0x437a2744	28	24	0	1	pp	imagen/color	monocromo = tipo Color Mode 8 (B&W)
+P2	0x437a44d2	0x437a44d6	4	1	0	1	pp	imagen/color	S-Gamut3: limite del conjunto de deltas 0x18 -> 0x1a
+P3	0x437a44fa	0x437a44fe	4	4	0	1	pp	imagen/color	S-Gamut3: gancho a cueva de deltas
+P4	0x437a4b42	0x437a4b46	4	1	0	1	pp	imagen/color	S-Gamut3: limite de matriz 0xf -> 0x11
+P5	0x437a4b62	0x437a4b66	4	4	0	1	pp	imagen/color	S-Gamut3: gancho a cueva de matrices
+P6	0x437a4db2	0x437a4db6	4	4	0	1	pp	imagen/color	switch id Color Mode: caso por defecto -> cueva
+P7	0x437aa816	0x437aa818	2	1	0	1	pp	imagen/color	tabla tipo->id: cmp 6 -> 0xa
+P8	0x437aafe0	0x437aafe4	4	3	0	1	pp	imagen/color	literal de la tabla tipo->id -> cueva 0x43fb7410
+P9	0x43802b64	0x43802b68	4	4	0	1	pp	control/ajustes	desempaquetador del 0x4066: snapshot pp
+P10	0x43853226	0x4385322a	4	4	0	1	pp	imagen/YC	tramplin curva LUT (constructor 1)
+P11	0x4385392e	0x43853932	4	4	0	1	pp	imagen/YC	tramplin curva LUT (constructor 2)
+P12	0x43853c8e	0x43853c92	4	4	0	1	pp	imagen/YC	tramplin curva LUT (constructor 3)
+P13	0x4386783a	0x4386783c	2	1	0	1	pp	imagen/YC	S-Log3: cmp gamma <= 2 -> <= 3 (0x14..0x17)
+P14	0x43867924	0x43867926	2	1	0	1	pp	imagen/YC	S-Log3: blo 0x4386794c -> 0x43867932 (clase S-Log2)
+P15	0x438b172c	0x438b1730	4	4	0	1	pp	imagen/YC	literal GOT de Hi-Light -> tabla de la cueva
+P16	0x438b336e	0x438b3372	4	4	0	1	pp	imagen/YC	APC coring: tramplin (job_apc_coring_stl)
+P17	0x438b3d52	0x438b3d56	4	4	0	1	pp	imagen/YC	APC ganancia: tramplin (job_apc_gain_stl)
+D1	0x43bc868c	0x43bc8690	4	1	0	1	pp	datos	tabla de clase por gamma [0x17] = 8
+D2	0x43cb56ea	0x43cb56fe	20	17	0	2	pp	datos	tabla selector->gamma (13 entradas de 2 B)
+D3	0x43faf290	0x43faf2b4	36	9	0	2	pp	datos	datos Hi-Light de la cueva (puntero + T)
+D0	0x43fb7400	0x43fb7450	80	49	0	7	pp	datos	datos de color: tabla tipo->id, matrices S-Gamut3 y deltas
+D4	0x43fb7450	0x43fb74f0	160	132	0	10	pp	codigo-cueva	cueva del switch/matrices/deltas de Color Mode
+D5	0x43fb7528	0x43fb7982	1114	1032	0	70	pp	codigo-cueva	cueva de tono: gancho 0x4066 + pp_curve/pp_gain/pp_coring
+D6	0x43faf300	0x43fb7400	33024	32437	0	518	pp	tablas	8 curvas de gamma de 0x101A B
+D7	0x440014a8	0x440014e4	60	31	0	8	pp	datos	punteros de curva (tabla 0x44001404, indices 0x14..0x17)

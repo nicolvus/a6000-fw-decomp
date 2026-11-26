@@ -1,0 +1,119 @@
+007126c0: 0c01       lsls      r4, r1, #4                    
+007126c2: 7b60       str       r3, [r7, #4]                  
+007126c4: 07f10802   add.w     r2, r7, #8                    
+007126c8: 3b1d       adds      r3, r7, #4                    
+007126ca: e5f6a3f9   bl        #0x5f7a14                     
+007126ce: fb68       ldr       r3, [r7, #0xc]                
+007126d0: 2bb1       cbz       r3, #0x7126de                 
+007126d2: bb68       ldr       r3, [r7, #8]                  
+007126d4: 1bb1       cbz       r3, #0x7126de                 
+007126d6: 7b68       ldr       r3, [r7, #4]                  
+007126d8: 0bb1       cbz       r3, #0x7126de                 
+007126da: 15f67bf0   bl        #0x1277d4                     
+007126de: a069       ldr       r0, [r4, #0x18]               
+007126e0: 504c       ldr       r4, [pc, #0x140]                ; [00712824]=00ad28e8
+007126e2: 0bf682e4   blx       #0x11dfe8                     
+007126e6: a2f79bf0   bl        #0x2b4820                     
+007126ea: 96f5bbf8   bl        #0x4a8864                     
+007126ee: 72f515fa   bl        #0x484b1c                     
+007126f2: 5df509fa   bl        #0x46fb08                     
+007126f6: fff51dff   bl        #0x512534                     
+007126fa: b4f5a1f9   bl        #0x4c6a40                     
+007126fe: ??
+0071cc20: f0b5       push      {r4, r5, r6, r7, lr}          
+0071cc22: 8db0       sub       sp, #0x34                     
+0071cc24: 234b       ldr       r3, [pc, #0x8c]                 ; [0071ccb4]=00ad3900
+0071cc26: 0d46       mov       r5, r1                        
+0071cc28: 00af       add       r7, sp, #0                    
+0071cc2a: 1b78       ldrb      r3, [r3]                      
+0071cc2c: 002b       cmp       r3, #0                        
+0071cc2e: 33d0       beq       #0x71cc98                       ; _ZN5MprIf6CreateEPNS_11CreateParamEPPS_b+0x78
+0071cc30: 0028       cmp       r0, #0                        
+0071cc32: 33d0       beq       #0x71cc9c                       ; _ZN5MprIf6CreateEPNS_11CreateParamEPPS_b+0x7c
+0071cc34: 0029       cmp       r1, #0                        
+0071cc36: 31d0       beq       #0x71cc9c                       ; _ZN5MprIf6CreateEPNS_11CreateParamEPPS_b+0x7c
+0071cc38: 0668       ldr       r6, [r0]                      
+0071cc3a: 002e       cmp       r6, #0                        
+0071cc3c: 2ed0       beq       #0x71cc9c                       ; _ZN5MprIf6CreateEPNS_11CreateParamEPPS_b+0x7c
+0071cc3e: 4468       ldr       r4, [r0, #4]                  
+0071cc40: 002c       cmp       r4, #0                        
+0071cc42: 2bd0       beq       #0x71cc9c                       ; _ZN5MprIf6CreateEPNS_11CreateParamEPPS_b+0x7c
+0071cc44: c168       ldr       r1, [r0, #0xc]                
+0071cc46: 0029       cmp       r1, #0                        
+0071cc48: 28d0       beq       #0x71cc9c                       ; _ZN5MprIf6CreateEPNS_11CreateParamEPPS_b+0x7c
+0071cc4a: 0369       ldr       r3, [r0, #0x10]               
+0071cc4c: b3f5807f   cmp.w     r3, #0x100                    
+0071cc50: 24d8       bhi       #0x71cc9c                       ; _ZN5MprIf6CreateEPNS_11CreateParamEPPS_b+0x7c
+0071cc52: 7b61       str       r3, [r7, #0x14]               
+0071cc54: 037d       ldrb      r3, [r0, #0x14]               
+0071cc56: bc60       str       r4, [r7, #8]                  
+0071cc58: 8468       ldr       r4, [r0, #8]                  
+0071cc5a: 3b76       strb      r3, [r7, #0x18]               
+0071cc5c: 8369       ldr       r3, [r0, #0x18]               
+0071cc5e: 3961       str       r1, [r7, #0x10]               
+0071cc60: 1146       mov       r1, r2                        
+0071cc62: fc60       str       r4, [r7, #0xc]                
+0071cc64: fb61       str       r3, [r7, #0x1c]               
+0071cc66: c369       ldr       r3, [r0, #0x1c]               
+0071cc68: 7e60       str       r6, [r7, #4]                  
+0071cc6a: 3b62       str       r3, [r7, #0x20]               
+0071cc6c: 036a       ldr       r3, [r0, #0x20]               
+0071cc6e: 7b62       str       r3, [r7, #0x24]               
+0071cc70: 436a       ldr       r3, [r0, #0x24]               
+0071cc72: bb62       str       r3, [r7, #0x28]               
+0071cc74: 836a       ldr       r3, [r0, #0x28]               
+0071cc76: 381d       adds      r0, r7, #4                    
+0071cc78: fb62       str       r3, [r7, #0x2c]               
+0071cc7a: f5f759fc   bl        #0x712530                     
+0071cc7e: 0446       mov       r4, r0                        
+0071cc80: 68b9       cbnz      r0, #0x71cc9e                 
+0071cc82: 0420       movs      r0, #4                        
+0071cc84: 01f68ee5   blx       #0x11e7a4                     
+0071cc88: 0646       mov       r6, r0                        
+0071cc8a: 01f62ee1   blx       #0x11dee8                     
+0071cc8e: 0a4b       ldr       r3, [pc, #0x28]                 ; [0071ccb8]=00ad3901
+00011718: 2de9f04f   push.w    {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+0001171c: adf5f46d   sub.w     sp, sp, #0x7a0                
+00011720: 83b0       sub       sp, #0xc                      
+00011722: dff89445   ldr.w     r4, [pc, #0x594]                ; [00011cb8]=0002a530 "GING_DATSZ_DRJPG_M_17_9_FINE_MAX"
+00011726: 0220       movs      r0, #2                        
+00011728: 00af       add       r7, sp, #0                    
+0001172a: 8621       movs      r1, #0x86                     
+0001172c: fdf7ecee   blx       #0xf508                         ; _init+0xb40
+00011730: dff88835   ldr.w     r3, [pc, #0x588]                ; [00011cbc]=00000754
+00011734: 7c44       add       r4, pc                        
+00011736: e358       ldr       r3, [r4, r3]                  
+00011b70: fdf7feee   blx       #0xf970                         ; _init+0xfa8
+00011b74: 07f5f461   add.w     r1, r7, #0x7a0                
+00011b78: 07f5ee60   add.w     r0, r7, #0x770                
+00011b7c: 0431       adds      r1, #4                        
+00011b7e: 3246       mov       r2, r6                        
+00011b80: c7f8a467   str.w     r6, [r7, #0x7a4]              
+00011b84: fef706e9   blx       #0xfd94                         ; _init+0x13cc
+00011b88: 0028       cmp       r0, #0                        
+00011b8a: 32d1       bne       #0x11bf2                        ; _ZN7MprCtrl4InitEv+0x4da
+00011b8c: d7f8a407   ldr.w     r0, [r7, #0x7a4]              
+00011b90: 2860       str       r0, [r5]                      
+00011b92: fcf7caef   blx       #0xeb28                         ; _init+0x160
+00011b96: 664b       ldr       r3, [pc, #0x198]                ; [00011d30]=000007cc
+00011b98: 2868       ldr       r0, [r5]                      
+00011b9a: e158       ldr       r1, [r4, r3]                  
+00011b9c: 0246       mov       r2, r0                        
+00011b9e: ??
+007897c0: ??
+007897c2: fb68       ldr       r3, [r7, #0xc]                
+007897c4: 2bb1       cbz       r3, #0x7897d2                 
+007897c6: bb68       ldr       r3, [r7, #8]                  
+007897c8: 1bb1       cbz       r3, #0x7897d2                 
+007897ca: 7b68       ldr       r3, [r7, #4]                  
+007897cc: 0bb1       cbz       r3, #0x7897d2                 
+007897ce: baf5d1f6   bl        #0x144574                     
+007897d2: a069       ldr       r0, [r4, #0x18]               
+007897d4: 504c       ldr       r4, [pc, #0x140]                ; [00789918]=00b53c2c
+007897d6: 56f77df7   bl        #0x2e06d4                       ; _ZN8FlashLib4InitEN3MPR10SystemTypeE
+007897da: 48f78df6   bl        #0x2d24f8                     
+007897de: 75f5e7f8   bl        #0x4fe9b0                     
+007897e2: 4ef5c3fd   bl        #0x4d836c                     
+007897e6: 39f517fb   bl        #0x4c2e18                     
+007897ea: e6f5a7f8   bl        #0x56f93c                     
+007897ee: ??

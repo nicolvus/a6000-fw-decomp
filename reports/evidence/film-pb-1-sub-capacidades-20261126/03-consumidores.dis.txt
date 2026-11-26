@@ -1,0 +1,372 @@
+# libmpr.so — API de capacidad: setters y puerta de Create
+## MprIf::SetCreateParam_SupportContentTypes 0x71CB98 / _SupportDefinition 0x71CBAC
+0071cb98: 80b5       push     {r7, lr}                      
+0071cb9a: 00af       add      r7, sp, #0                    
+0071cb9c: f5f780fb   bl       #0x7122a0                     
+0071cba0: 014b       ldr      r3, [pc, #4]                  
+0071cba2: 0122       movs     r2, #1                        
+0071cba4: 1a70       strb     r2, [r3]                      
+0071cba6: 80bd       pop      {r7, pc}                      
+0071cba8: 0039       subs     r1, #0                        
+0071cbaa: ad00       lsls     r5, r5, #2                    
+0071cbac: 80b5       push     {r7, lr}                      
+0071cbae: 00af       add      r7, sp, #0                    
+0071cbb0: f5f794fb   bl       #0x7122dc                     
+0071cbb4: 014b       ldr      r3, [pc, #4]                  
+0071cbb6: 0122       movs     r2, #1                        
+0071cbb8: 1a70       strb     r2, [r3]                      
+0071cbba: 80bd       pop      {r7, pc}                      
+0071cbbc: 0039       subs     r1, #0                        
+0071cbbe: ad00       lsls     r5, r5, #2                    
+0071cbc0: 80b5       push     {r7, lr}                      
+0071cbc2: 00af       add      r7, sp, #0                    
+0071cbc4: bde88040   pop.w    {r7, lr}                      
+0071cbc8: f5f7c6bb   b.w      #0x712358                     
+0071cbcc: 80b5       push     {r7, lr}                      
+0071cbce: 00af       add      r7, sp, #0                    
+0071cbd0: bde88040   pop.w    {r7, lr}                      
+0071cbd4: f5f7cebb   b.w      #0x712374                     
+0071cbd8: 80b5       push     {r7, lr}                      
+0071cbda: 00af       add      r7, sp, #0                    
+0071cbdc: bde88040   pop.w    {r7, lr}                      
+## setter interno 0x7122A0 (copia bit a bit) y 0x7122DC
+007122a0: 90b5       push     {r4, r7, lr}                  
+007122a2: 83b0       sub      sp, #0xc                      
+007122a4: 00af       add      r7, sp, #0                    
+007122a6: 07f10801   add.w    r1, r7, #8                    
+007122aa: 0a4c       ldr      r4, [pc, #0x28]                 ; [007122d4]=00ad28e4
+007122ac: 41f8040d   str      r0, [r1, #-0x4]!              
+007122b0: 2046       mov      r0, r4                        
+007122b2: fff72ffc   bl       #0x711b14                     
+007122b6: 2368       ldr      r3, [r4]                      
+007122b8: 13f0080f   tst.w    r3, #8                        
+007122bc: 064b       ldr      r3, [pc, #0x18]                 ; [007122d8]=00ad28f4
+007122be: 01d0       beq      #0x7122c4                     
+007122c0: 0022       movs     r2, #0                        
+007122c2: 00e0       b        #0x7122c6                     
+007122c4: 0122       movs     r2, #1                        
+007122c6: 1a60       str      r2, [r3]                      
+007122c8: 0020       movs     r0, #0                        
+007122ca: 07f10c07   add.w    r7, r7, #0xc                  
+007122ce: bd46       mov      sp, r7                        
+007122d0: 90bd       pop      {r4, r7, pc}                  
+007122d2: 00bf       nop                                    
+007122d4: e428       cmp      r0, #0xe4                     
+007122d6: ad00       lsls     r5, r5, #2                    
+007122d8: f428       cmp      r0, #0xf4                     
+007122da: ad00       lsls     r5, r5, #2                    
+007122dc: 80b5       push     {r7, lr}                      
+007122de: 00af       add      r7, sp, #0                    
+007122e0: 10b1       cbz      r0, #0x7122e8                 
+007122e2: 0128       cmp      r0, #1                        
+007122e4: 0cd1       bne      #0x712300                     
+007122e6: 02e0       b        #0x7122ee                     
+007122e8: 064b       ldr      r3, [pc, #0x18]                 ; [00712304]=00ad28e4
+007122ea: 0822       movs     r2, #8                        
+007122ec: 1a60       str      r2, [r3]                      
+007122ee: 054b       ldr      r3, [pc, #0x14]                 ; [00712304]=00ad28e4
+007122f0: 1a68       ldr      r2, [r3]                      
+007122f2: 42f0b502   orr      r2, r2, #0xb5                 
+007122f6: 1a60       str      r2, [r3]                      
+007122f8: 034b       ldr      r3, [pc, #0xc]                  ; [00712308]=00ad28f4
+007122fa: 1860       str      r0, [r3]                      
+007122fc: 0020       movs     r0, #0                        
+007122fe: 80bd       pop      {r7, pc}                      
+00712300: 0520       movs     r0, #5                        
+00712302: 80bd       pop      {r7, pc}                      
+00712304: e428       cmp      r0, #0xe4                     
+00712306: ad00       lsls     r5, r5, #2                    
+00712308: f428       cmp      r0, #0xf4                     
+0071230a: ad00       lsls     r5, r5, #2                    
+0071230c: f0b5       push     {r4, r5, r6, r7, lr}          
+0071230e: 83b0       sub      sp, #0xc                      
+## MprIf::Create 0x71CC20 (puerta 0xAD3900)
+0071cc20: f0b5       push     {r4, r5, r6, r7, lr}          
+0071cc22: 8db0       sub      sp, #0x34                     
+0071cc24: 234b       ldr      r3, [pc, #0x8c]                 ; [0071ccb4]=00ad3900
+0071cc26: 0d46       mov      r5, r1                        
+0071cc28: 00af       add      r7, sp, #0                    
+0071cc2a: 1b78       ldrb     r3, [r3]                      
+0071cc2c: 002b       cmp      r3, #0                        
+0071cc2e: 33d0       beq      #0x71cc98                     
+0071cc30: 0028       cmp      r0, #0                        
+0071cc32: 33d0       beq      #0x71cc9c                     
+0071cc34: 0029       cmp      r1, #0                        
+0071cc36: 31d0       beq      #0x71cc9c                     
+0071cc38: 0668       ldr      r6, [r0]                      
+0071cc3a: 002e       cmp      r6, #0                        
+0071cc3c: 2ed0       beq      #0x71cc9c                     
+0071cc3e: 4468       ldr      r4, [r0, #4]                  
+
+# consumidores de IsSupport
+## AviMMgr: creacion de MdvIf 0x60B4C4
+0060b4c4: 0820       movs     r0, #8                        
+0060b4c6: e0f5a3fd   bl       #0x3ec010                     
+0060b4ca: 80b9       cbnz     r0, #0x60b4ee                 
+0060b4cc: 0230       adds     r0, #2                        
+0060b4ce: e0f59ffd   bl       #0x3ec010                     
+0060b4d2: 60b9       cbnz     r0, #0x60b4ee                 
+0060b4d4: 0430       adds     r0, #4                        
+0060b4d6: e0f59bfd   bl       #0x3ec010                     
+0060b4da: 40b9       cbnz     r0, #0x60b4ee                 
+0060b4dc: 8030       adds     r0, #0x80                     
+0060b4de: e0f597fd   bl       #0x3ec010                     
+0060b4e2: 20b9       cbnz     r0, #0x60b4ee                 
+0060b4e4: 4ff48070   mov.w    r0, #0x100                    
+0060b4e8: e0f592fd   bl       #0x3ec010                     
+0060b4ec: 30b3       cbz      r0, #0x60b53c                 
+0060b4ee: 4ff44270   mov.w    r0, #0x308                    
+0060b4f2: 13f758e1   blx      #0x11e7a4                       ; _Znwj
+0060b4f6: 3146       mov      r1, r6                        
+0060b4f8: 8146       mov      sb, r0                        
+0060b4fa: e5f7e9ff   bl       #0x5f14d0                     
+0060b4fe: 7f4a       ldr      r2, [pc, #0x1fc]                ; [0060b6fc]=008e016f "AviMMgr : create MdvIf instance        :"
+0060b500: 4b46       mov      r3, sb                        
+0060b502: 98f80010   ldrb.w   r1, [r8]                      
+0060b506: e068       ldr      r0, [r4, #0xc]                
+0060b508: c4f85497   str.w    sb, [r4, #0x754]              
+0060b50c: 45f08ef8   bl       #0x65062c                     
+0060b510: fff76cfa   bl       #0x60a9ec                     
+## AviMMgr 0x61DCEC
+0061dcec: 0820       movs     r0, #8                        
+0061dcee: cef58ff9   bl       #0x3ec010                     
+0061dcf2: 0028       cmp      r0, #0                        
+0061dcf4: 00f0aa80   beq.w    #0x61de4c                     
+0061dcf8: a068       ldr      r0, [r4, #8]                  
+0061dcfa: 0368       ldr      r3, [r0]                      
+0061dcfc: d3f8f430   ldr.w    r3, [r3, #0xf4]               
+0061dd00: 9847       blx      r3                            
+0061dd02: 0328       cmp      r0, #3                        
+0061dd04: 0cd0       beq      #0x61dd20                     
+0061dd06: d4f87807   ldr.w    r0, [r4, #0x778]              
+0061dd0a: 53f03dfc   bl       #0x671588                     
+0061dd0e: 3246       mov      r2, r6                        
+0061dd10: fb1d       adds     r3, r7, #7                    
+0061dd12: 0146       mov      r1, r0                        
+0061dd14: d4f82807   ldr.w    r0, [r4, #0x728]              
+0061dd18: 90f79efa   bl       #0x5ae258                     
+## AviMMgr: flags por tipo 0x620C1E
+00620c1e: 0820       movs     r0, #8                        
+00620c20: cbf5f6f9   bl       #0x3ec010                     
+00620c24: 30b1       cbz      r0, #0x620c34                 
+00620c26: a068       ldr      r0, [r4, #8]                  
+00620c28: 1bf180fc   bl       #0x73c52c                     
+00620c2c: 10b1       cbz      r0, #0x620c34                 
+00620c2e: 0123       movs     r3, #1                        
+00620c30: 84f8f932   strb.w   r3, [r4, #0x2f9]              
+00620c34: 1020       movs     r0, #0x10                     
+00620c36: cbf5ebf9   bl       #0x3ec010                     
+00620c3a: 30b1       cbz      r0, #0x620c4a                 
+00620c3c: a068       ldr      r0, [r4, #8]                  
+00620c3e: 1bf187fc   bl       #0x73c550                     
+00620c42: 10b1       cbz      r0, #0x620c4a                 
+00620c44: 0123       movs     r3, #1                        
+00620c46: 84f8fa32   strb.w   r3, [r4, #0x2fa]              
+00620c4a: 0420       movs     r0, #4                        
+00620c4c: cbf5e0f9   bl       #0x3ec010                     
+00620c50: 18b9       cbnz     r0, #0x620c5a                 
+00620c52: 0230       adds     r0, #2                        
+00620c54: cbf5dcf9   bl       #0x3ec010                     
+00620c58: 30b1       cbz      r0, #0x620c68                 
+00620c5a: a068       ldr      r0, [r4, #8]                  
+00620c5c: 1bf18afc   bl       #0x73c574                     
+00620c60: 10b1       cbz      r0, #0x620c68                 
+00620c62: 0123       movs     r3, #1                        
+00620c64: 84f8fb32   strb.w   r3, [r4, #0x2fb]              
+00620c68: 8020       movs     r0, #0x80                     
+00620c6a: cbf5d1f9   bl       #0x3ec010                     
+00620c6e: 30b1       cbz      r0, #0x620c7e                 
+00620c70: a068       ldr      r0, [r4, #8]                  
+00620c72: 1bf1a3fc   bl       #0x73c5bc                     
+00620c76: 10b1       cbz      r0, #0x620c7e                 
+00620c78: 0123       movs     r3, #1                        
+00620c7a: 84f81233   strb.w   r3, [r4, #0x312]              
+00620c7e: 4ff48070   mov.w    r0, #0x100                    
+00620c82: cbf5c5f9   bl       #0x3ec010                     
+00620c86: 30b1       cbz      r0, #0x620c96                 
+00620c88: a068       ldr      r0, [r4, #8]                  
+00620c8a: 1bf1a9fc   bl       #0x73c5e0                     
+## AviMMgr: acceso por tipo 0x620F64
+00620f64: 8020       movs     r0, #0x80                     
+00620f66: cbf553f8   bl       #0x3ec010                     
+00620f6a: 28b1       cbz      r0, #0x620f78                 
+00620f6c: d4f88807   ldr.w    r0, [r4, #0x788]              
+00620f70: 2946       mov      r1, r5                        
+00620f72: 0368       ldr      r3, [r0]                      
+00620f74: 9b6b       ldr      r3, [r3, #0x38]               
+00620f76: 9847       blx      r3                            
+00620f78: 4ff48070   mov.w    r0, #0x100                    
+00620f7c: cbf548f8   bl       #0x3ec010                     
+00620f80: 28b1       cbz      r0, #0x620f8e                 
+00620f82: d4f88c07   ldr.w    r0, [r4, #0x78c]              
+00620f86: 2946       mov      r1, r5                        
+00620f88: 0368       ldr      r3, [r0]                      
+00620f8a: 9b6b       ldr      r3, [r3, #0x38]               
+00620f8c: 9847       blx      r3                            
+00620f8e: 4ff40070   mov.w    r0, #0x200                    
+## ResumeMgr::BackupWrite 0x75F100
+0075f100: 0120       movs     r0, #1                        
+0075f102: 8cf485ff   bl       #0x3ec010                     
+0075f106: 58b1       cbz      r0, #0x75f120                 
+0075f108: 3a1c       adds     r2, r7, #0                    
+0075f10a: 2846       mov      r0, r5                        
+0075f10c: 931c       adds     r3, r2, #2                    
+0075f10e: 0021       movs     r1, #0                        
+0075f110: 0093       str      r3, [sp]                      
+0075f112: 4246       mov      r2, r8                        
+0075f114: 4b46       mov      r3, sb                        
+0075f116: 0126       movs     r6, #1                        
+0075f118: fff726ff   bl       #0x75ef68                     
+0075f11c: 5424       movs     r4, #0x54                     
+0075f11e: 01e0       b        #0x75f124                     
+0075f120: 0646       mov      r6, r0                        
+0075f122: 0224       movs     r4, #2                        
+0075f124: 0220       movs     r0, #2                        
+0075f126: 8cf473ff   bl       #0x3ec010                     
+0075f12a: 50b1       cbz      r0, #0x75f142                 
+0075f12c: 3a1c       adds     r2, r7, #0                    
+0075f12e: 2846       mov      r0, r5                        
+0075f130: 1319       adds     r3, r2, r4                    
+0075f132: 0121       movs     r1, #1                        
+0075f134: 0093       str      r3, [sp]                      
+0075f136: 4246       mov      r2, r8                        
+0075f138: 4b46       mov      r3, sb                        
+0075f13a: 5234       adds     r4, #0x52                     
+0075f13c: fff714ff   bl       #0x75ef68                     
+0075f140: 0136       adds     r6, #1                        
+0075f142: 0420       movs     r0, #4                        
+0075f144: 8cf464ff   bl       #0x3ec010                     
+0075f148: 50b1       cbz      r0, #0x75f160                 
+0075f14a: 3a1c       adds     r2, r7, #0                    
+0075f14c: 2846       mov      r0, r5                        
+0075f14e: 1319       adds     r3, r2, r4                    
+0075f150: 0221       movs     r1, #2                        
+0075f152: 0093       str      r3, [sp]                      
+0075f154: 4246       mov      r2, r8                        
+0075f156: 4b46       mov      r3, sb                        
+0075f158: 5234       adds     r4, #0x52                     
+0075f15a: fff705ff   bl       #0x75ef68                     
+0075f15e: 0136       adds     r6, #1                        
+0075f160: 0820       movs     r0, #8                        
+0075f162: 8cf455ff   bl       #0x3ec010                     
+0075f166: 50b1       cbz      r0, #0x75f17e                 
+0075f168: 3a1c       adds     r2, r7, #0                    
+0075f16a: 2846       mov      r0, r5                        
+0075f16c: 1319       adds     r3, r2, r4                    
+0075f16e: 0321       movs     r1, #3                        
+0075f170: 0093       str      r3, [sp]                      
+0075f172: 4246       mov      r2, r8                        
+0075f174: 4b46       mov      r3, sb                        
+0075f176: 5234       adds     r4, #0x52                     
+0075f178: fff7f6fe   bl       #0x75ef68                     
+0075f17c: 0136       adds     r6, #1                        
+0075f17e: 1020       movs     r0, #0x10                     
+0075f180: 8cf446ff   bl       #0x3ec010                     
+0075f184: 50b1       cbz      r0, #0x75f19c                 
+0075f186: 3a1c       adds     r2, r7, #0                    
+0075f188: 2846       mov      r0, r5                        
+0075f18a: 1319       adds     r3, r2, r4                    
+0075f18c: 0421       movs     r1, #4                        
+0075f18e: 0093       str      r3, [sp]                      
+## orden de tipos para el acsr MP4 0x6820DC
+006820dc: f8b5       push     {r3, r4, r5, r6, r7, lr}      
+006820de: 0446       mov      r4, r0                        
+006820e0: 00af       add      r7, sp, #0                    
+006820e2: 8260       str      r2, [r0, #8]                  
+006820e4: c260       str      r2, [r0, #0xc]                
+006820e6: 0346       mov      r3, r0                        
+006820e8: 0025       movs     r5, #0                        
+006820ea: 3ae0       b        #0x682162                     
+006820ec: 51f8040b   ldr      r0, [r1], #4                  
+006820f0: 0433       adds     r3, #4                        
+006820f2: 80bb       cbnz     r0, #0x682156                 
+006820f4: 0830       adds     r0, #8                        
+006820f6: 69f58bff   bl       #0x3ec010                     
+006820fa: d0b9       cbnz     r0, #0x682132                 
+006820fc: 1030       adds     r0, #0x10                     
+006820fe: 69f587ff   bl       #0x3ec010                     
+00682102: c0b9       cbnz     r0, #0x682136                 
+00682104: 0630       adds     r0, #6                        
+00682106: 69f583ff   bl       #0x3ec010                     
+0068210a: b0b9       cbnz     r0, #0x68213a                 
+0068210c: 0130       adds     r0, #1                        
+0068210e: 69f57fff   bl       #0x3ec010                     
+00682112: a0b9       cbnz     r0, #0x68213e                 
+00682114: 4ff48070   mov.w    r0, #0x100                    
+00682118: 69f57aff   bl       #0x3ec010                     
+0068211c: 88b9       cbnz     r0, #0x682142                 
+0068211e: 4ff40070   mov.w    r0, #0x200                    
+00682122: 69f575ff   bl       #0x3ec010                     
+00682126: 0028       cmp      r0, #0                        
+00682128: 14bf       ite      ne                            
+0068212a: 4ff40070   movne.w  r0, #0x200                    
+0068212e: 0020       moveq    r0, #0                        
+00682130: 09e0       b        #0x682146                     
+00682132: 0820       movs     r0, #8                        
+00682134: 07e0       b        #0x682146                     
+00682136: 1020       movs     r0, #0x10                     
+00682138: 05e0       b        #0x682146                     
+0068213a: 0620       movs     r0, #6                        
+0068213c: 03e0       b        #0x682146                     
+0068213e: 0120       movs     r0, #1                        
+00682140: 01e0       b        #0x682146                     
+00682142: 4ff48070   mov.w    r0, #0x100                    
+00682146: 2369       ldr      r3, [r4, #0x10]               
+00682148: 04eb8505   add.w    r5, r4, r5, lsl #2            
+0068214c: 6861       str      r0, [r5, #0x14]               
+## comando de debug que imprime la mascara 0x72AEC0
+0072aec0: 8949       ldr      r1, [pc, #0x224]                ; [0072b0e8]=0092a4a7 "  l  SupportContents         : 0x"
+0072aec2: 7c48       ldr      r0, [pc, #0x1f0]                ; [0072b0b4]=00000000
+0072aec4: 58f7baf9   bl       #0x68323c                     
+0072aec8: baf4faf9   bl       #0x3e52c0                     
+0072aecc: 0821       movs     r1, #8                        
+0072aece: 0246       mov      r2, r0                        
+0072aed0: 7848       ldr      r0, [pc, #0x1e0]                ; [0072b0b4]=00000000
+0072aed2: 58f791f9   bl       #0x6831f8                     
+0072aed6: 8549       ldr      r1, [pc, #0x214]                ; [0072b0ec]=00837147
+0072aed8: 7648       ldr      r0, [pc, #0x1d8]                ; [0072b0b4]=00000000
+0072aeda: 58f7aff9   bl       #0x68323c                     
+0072aede: baf4eff9   bl       #0x3e52c0                     
+0072aee2: a2f4cbfb   bl       #0x3cd67c                     
+0072aee6: 18b1       cbz      r0, #0x72aef0                 
+0072aee8: 7248       ldr      r0, [pc, #0x1c8]                ; [0072b0b4]=00000000
+0072aeea: 8149       ldr      r1, [pc, #0x204]                ; [0072b0f0]=0092a4c9 "      + AVCHD
+"
+0072aeec: 58f7a6f9   bl       #0x68323c                     
+0072aef0: baf4e6f9   bl       #0x3e52c0                     
+0072aef4: a2f4c7fb   bl       #0x3cd686                     
+0072aef8: 18b1       cbz      r0, #0x72af02                 
+0072aefa: 6e48       ldr      r0, [pc, #0x1b8]                ; [0072b0b4]=00000000
+0072aefc: 7d49       ldr      r1, [pc, #0x1f4]                ; [0072b0f4]=0092a4d8 "      + MP4 AVC
+"
+0072aefe: 58f79df9   bl       #0x68323c                     
+0072af02: baf4ddf9   bl       #0x3e52c0                     
+0072af06: a2f4c3fb   bl       #0x3cd690                     
+0072af0a: 18b1       cbz      r0, #0x72af14                 
+0072af0c: 6948       ldr      r0, [pc, #0x1a4]                ; [0072b0b4]=00000000
+0072af0e: 7a49       ldr      r1, [pc, #0x1e8]                ; [0072b0f8]=0092a4e9 "      + MP4 MPEG4
+"
+0072af10: 58f794f9   bl       #0x68323c                     
+0072af14: baf4d4f9   bl       #0x3e52c0                     
+0072af18: a2f4bffb   bl       #0x3cd69a                     
+0072af1c: 18b1       cbz      r0, #0x72af26                 
+0072af1e: 6548       ldr      r0, [pc, #0x194]                ; [0072b0b4]=00000000
+0072af20: 7649       ldr      r1, [pc, #0x1d8]                ; [0072b0fc]=0092a4fc "      + M2PS
+"
+0072af22: 58f78bf9   bl       #0x68323c                     
+0072af26: baf4cbf9   bl       #0x3e52c0                     
+0072af2a: a2f4bbfb   bl       #0x3cd6a4                     
+0072af2e: 18b1       cbz      r0, #0x72af38                 
+0072af30: 6048       ldr      r0, [pc, #0x180]                ; [0072b0b4]=00000000
+0072af32: 7349       ldr      r1, [pc, #0x1cc]                ; [0072b100]=0092a50a "      + DCF
+"
+0072af34: 58f782f9   bl       #0x68323c                     
+0072af38: baf4c2f9   bl       #0x3e52c0                     
+0072af3c: a2f4b7fb   bl       #0x3cd6ae                     
+0072af40: 18b1       cbz      r0, #0x72af4a                 
+0072af42: 5c48       ldr      r0, [pc, #0x170]                ; [0072b0b4]=00000000
+0072af44: 6f49       ldr      r1, [pc, #0x1bc]                ; [0072b104]=0092a517 "      + DVD
+"
+0072af46: 58f779f9   bl       #0x68323c                     
+0072af4a: 5a48       ldr      r0, [pc, #0x168]                ; [0072b0b4]=00000000
+0072af4c: 6e49       ldr      r1, [pc, #0x1b8]                ; [0072b108]=0092a524 "  l  GpsModule Exist         : "
