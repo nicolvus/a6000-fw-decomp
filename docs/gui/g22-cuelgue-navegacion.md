@@ -135,8 +135,8 @@ en el arranque (2 de 2), así que **no sirve tal cual para cazar el de la navega
 1. **¿Qué variable separa los arranques que pintan de los que no?** En estas medidas **ninguna**: el
    cuelgue salió con el `SHIMENV` de `live.py` sin `LIVE_QUITA` (perfil `hangkeys`, 38 pulsaciones) y en un
    arranque en frío sin teclas el invitado no se cuelga, se queda **ocioso** (sigue registrando
-   `UpdateStatusMonitor` y contesta a las teclas: en `hangbase` hubo copia a pantalla 10 s después de una
-   tecla que no era mía). Las tres variables sospechosas no llegan a ejecutarse en esta traza:
+   `UpdateStatusMonitor` y el camino de entrada sigue vivo: en `hangbase`, sin teclas mías, llegó una
+   tecla de otra sesión al mismo puerto y hubo copia a pantalla 10 s después). Las tres variables sospechosas no llegan a ejecutarse en esta traza:
    `RELOJEMU` no deja **ni una** línea `G22-FECHA` (ninguna vista pide `@M018`/`model/CLOCK`), `ZOOM` solo
    actúa sobre `IssueCommandAsync` con `0x7612/0x7614` (no hay ninguna) y `OPENVIEWDIAL` solo en la
    apertura en caliente `O view/STLREC`. El cuelgue es **intermitente y de carrera**, no de configuración.
@@ -171,6 +171,10 @@ en el arranque (2 de 2), así que **no sirve tal cual para cazar el de la navega
   medido la secuencia sin `WLALL`.
 - Un estado guardado durante el cuelgue se restaura colgado (útil para reproducir, inservible para seguir
   navegando): hay que borrar `estado.zst` del perfil antes de cada tanda.
+- El rango de puertos 8660–8690 lo comparten las ramas: en una tanda llegó a mi VM una tecla de otra
+  sesión (0x1f7). Las medidas de esta página se apoyan en el registro del invitado, no en el contador de
+  teclas propio, así que la contaminación no cambia las conclusiones; aun así, conviene comprobar el
+  puerto con `ss -tln` antes de arrancar.
 
 ## PARA PENDIENTES.md
 
