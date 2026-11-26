@@ -22,6 +22,9 @@ Evidencia: [`reports/evidence/film-pb-1-wbi-silent-20261128/`](evidence/film-pb-
 | **Comportamiento** (ShutMode 0, `r5`, tristate hacia Darwin) | `av-cam.bin` → `nflasha3` (`/system`) | **Sí**: `av-cam.bin` tiene **0 de 2 200 páginas** dentro del WBI y Loader3 lo recarga en **ambos** modos (RAMCFG `0x1000000` y `0x4000000`) |
 | **Bandera** (Silent 0/1, `[0x43EDF684+0x238]`, comando `0x40e3`) y **entrada de menú** | `libObj.so`, `CautionConfig.so`, `viewUnified2.so`, `share/app/*.uxc` → `nflasha15` (`/usr`) | **No**: el WBI congela el `/usr` de Sony (TOC en `0x8D3B8000` + **1 654 páginas de 77 ficheros**, `libObj.so` 998/4 254) |
 
+Además la bandera **no se puede dejar puesta**: el bloque de ajustes se reinicializa en cada arranque
+(`0x43804610`) y `+0x238` queda a 0 (§2.4), así que no hay atajo «seleccionar Silent una vez».
+
 Y el motivo de que fuera **irreversible**: **la cámara no vuelve a fabricar su WBI**. `im.elf` escribe
 `"warm"` en `/sys/power/state` solo si una compuerta (`0x9F44`) deja, y esa compuerta compara un
 **contador persistente** (Backup `0x940004`) con un límite; pasada la cuenta escribe `"mem"` (`0x9FB4`) y la
@@ -101,6 +104,22 @@ incompatibles. La única salida es **que el WBI se rehaga con el `/usr` nuevo**.
 
 ---
 
+### 2.4 Y la bandera de Silent no se puede «dejar puesta» (VERIFICADO)
+
+Medido en [S64](capture/s64-silent-ram-nvram-test.md): el bloque de ajustes `0x43EDF684` se **reinicializa a
+valores por defecto en cada arranque** (`0x43804610` lee un byte de `Backup` y pone `+0x238` y `+0x280` a 0; «el
+byte de backup no fija `+0x238`»), y las escrituras de `Backup` cercanas al bloque tocan `+0x40a/+0x4cc/+0x450/+0xd0`,
+**nunca** `+0x238`. Es decir: Silent **no es persistente** y siempre arranca a 0.
+
+Consecuencia doble:
+
+* no existe la vía «poner el ajuste una vez y que sobreviva a los arranques»;
+* el único que lo pone es el menú en caliente (comando `0x40e3`), que vive en `/usr` ⇒ vuelve al problema de §2.
+
+⚠️ Y un aviso de S64 que condiciona el plan B: escribir 10 palabras de `0x230…0x254` del espejo
+(`0x83EDF684`, solo RAM) **reinició la cámara**. Cualquier variante debe **cambiar lecturas del firmware, no
+escribir ese bloque**.
+
 ## 3. El eslabón que faltaba: la cámara ya no fabrica su WBI (VERIFICADO contra bytes)
 
 `/usr/bin/im.elf` (ELD Thumb, VA = offset + `0x8000`; desensamblado completo en
@@ -169,8 +188,11 @@ El bloque de ajustes tiene **`+0x210` = EFCS** (lo pone el menú de fábrica «F
 * `patch_tristate.py`: `ldrb.w r4,[r4,#0x238]` en el copiador `0x43845F2E`.
 * `patch_silent_r5.py`: `LIVE_SILENT = 0x43EDF684 + 0x238`.
 
-Cambiando esas dos lecturas a `+0x210`, «EFCS On» pasa a significar **obturador electrónico (Silent)** y
-«EFCS Off» mecánico, **sin tocar `/usr`** ⇒ convive con el WBI de Sony tal cual y la reproducción sigue
+Cambiando esas dos lecturas a `+0x210` se conserva el ajuste de fábrica «Front Curtain Shutter» como mando. La
+polaridad correcta, según los tres estados medidos en [R87](capture/e26-r87-disparo-remoto-y-recalibracion.md)
+(mecánico = `(+0x210, +0x238)` = `(1,0)`, EFCS = `(0,0)`, Silent = `(1,1)`), es **usar `+0x210` invertido**:
+EFCS **On** (`+0x210 == 0`) ⇒ Silent; EFCS **Off** (`+0x210 == 1`, el valor de fábrica que hoy da mecánico) ⇒
+mecánico. Así el ajuste de fábrica pasa a elegir entre mecánico y electrónico, **sin tocar `/usr`** ⇒ convive con el WBI de Sony tal cual y la reproducción sigue
 funcionando. **No se implementa aquí** porque cambia el significado de un ajuste de fábrica (quien tenga
 EFCS On de fábrica pasaría a Silent, y Silent no sincroniza con flash) y eso exige medirlo en cámara; queda
 como plan B con el cambio ya localizado en dos instrucciones.
