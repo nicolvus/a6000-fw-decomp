@@ -4,6 +4,20 @@
 
 **R6 fase 1, checkpoint:** [BLDR](../docs/capture/e26-r6-recuperacion-bionz.md). PMCA payload local byte a byte igual a upstream 0ce3c7e8, gitlink plataforma 85bcb545. ELF extraído y REA: un safe/cuatro normales, normales die0/plane0, metadatos descartados, error => trama vacía; wrapper rechaza estado 1 de ECC tolerado por Loader2. Mapa condicional de 480 KiB con una trama normal perdida; ID/error desconocidos. Cola INFO6 die0/plane1/block2/pages0–20 sin correspondencia adquirida. Regresión inicial falló por inspector inexistente; implementado, 3 pruebas, ruff/mypy pasan. Sin cámara. Próximo paso exacto: verificar límites del selector en los primeros 43 folios y localizar orientación CN4906 en SIDE A.
 
+## G22-REPRO — la SD emulada trae `AVF_INFO`; el firmware lo consulta y el índice real sigue faltando (26-11-2026)
+Arranque en frío del arnés G22 (`live.py`, perfil `repro`, puerto 8650) con `SD_ESTRUCTURA=1` y un
+`DSC00001.JPG` real (1536x1024) en `DCIM/100MSDCF`: `sd_image.py` crea `AVF_INFO/{AVIN0001.INP,.BNP,.INT,PRV00001.BIN,STAT0000.BIN}`
+a 0 B (contenido no inventado, no hay volcado de tarjeta en el repo) y `MP_ROOT/100ANV01`; 5 tests en
+`tests/test_gui_sd_image.py`. MEDIDO: `libmpr` consulta `ms:/AVF_INFO` y sigue con `PRV00001.BIN`, las tres
+`AVIN0001.*` y `STAT0000.BIN` (24 disparos de `FindFirst` en `libmpr+0x13e474`, rutas decodificadas);
+`Fsys_MountAsync("/dev/mmca") OK 'A'` y el manejador del recuento `libmpr+0x620028` se ejecuta. Estático:
+«hay medio» en `libmpr+0x1d1774` ⇔ `FindFirst("ms:/AVF_INFO")==0` (`0x2109` falla). SIGUE FALLANDO: la tecla
+Reproducción `0x1f7` no abre ninguna vista (solo cambia AF-S→MF) y el recuento no sale numérico; el volcado
+del disco del invitado (`POST /sd-volcado`) es idéntico al de arranque, así que la cámara no crea ni repara el
+índice. Informe: `docs/gui/g22-reproduccion-sd.md` (bloque PARA PENDIENTES: fila G22-REPRO). Próximo paso
+exacto: arrancar con `TRACEFN2=615928,620246,620262,62059c` (¿llega la fórmula del recuento?) y trazar la acción
+de la tecla `0x1f7` en `InputService`→`viewManagerIf::openView`. Sin cámara.
+
 ## H3 — Eye AF dentro del CFW: 2 bytes en `av-cam`, sin APK (28-11-2026)
 El usuario descartó la app (`ar.eyeaf`) y pidió que el Eye AF «venga directo en el cfw». Se parchea el
 selector de fuente del área de AF: en `0x437b7200` el firmware sólo usa los ojos si el modo de área es 2
