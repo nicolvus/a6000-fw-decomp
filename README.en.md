@@ -1,4 +1,4 @@
-# Sony A6000 — Silent Shutter
+# Sony A6000 — electronic shutter and CFW
 
 [![Versión en español](https://img.shields.io/badge/🇪🇸_Versión_en_español-blue?style=for-the-badge)](README.md)
 
@@ -8,121 +8,129 @@
 [![CI](https://github.com/nicolvus/a6000-fw-decomp/actions/workflows/tests.yml/badge.svg)](https://github.com/nicolvus/a6000-fw-decomp/actions/workflows/tests.yml)
 [![Featured in Awesome REA](https://img.shields.io/badge/Featured%20in-Awesome%20REA-f0b429)](https://github.com/AIshihzong/awesome-reverse-engineer-anything)
 
-Reverse engineering of the Sony A6000 firmware 3.21 (ILCE-6000: BIONZ + Darwin microcontroller) to shoot with a fully
-electronic shutter. **Milestone:** with the modified firmware **3.23** (a 2-byte patch to Darwin) the real camera shot
-silently and without errors. **Later**, the integrated firmware **3.25** left the camera unable to boot because of a format error
-in the `nflasha3` partition, now identified and fixed in **3.25c**. That camera was **recovered on 2026-11-03 over SWD** and now boots stock firmware 3.26 ([R49](docs/capture/e26-r49-cierre-recuperacion-326.md)).
+Reverse engineering of the Sony A6000 (ILCE-6000: BIONZ + Darwin microcontroller) **3.21** firmware to get
+**electronic shutter** operation and to add features the camera never had. The repository holds analysis, patches,
+scripts and documentation; Sony's firmware is not versioned here (`scripts/agent/bootstrap.sh` downloads it from
+Sony's server).
 
-> **⚠️ 3.25c: experimental.** [3.25c](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) fixes the errors
-> that bricked 3.25 (30/30 checks, and an emulation of the real bootloader with no failures) and **should** boot, but it **has never been
-> installed on a camera**. The original 3.25 is not published. Installing any modified firmware can leave the camera unusable and **there is
-> no proven independent recovery**. Read [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-14-Current-state).
+## Current state (2026-11-25)
+
+| Area | Status | Evidence |
+|---|---|---|
+| **Electronic shutter** | **Works** on the author's camera from CFW **3.30** (inline `pkt[0x0e]` + Darwin gate). **3.23** was the first milestone: a 2-byte patch to Darwin and the camera shoots without moving motor or coils | [R54](docs/capture/e26-r54-paquete-330-envio-pkt0e.md), [T040](docs/capture/registro-pruebas-camara.md) |
+| **Calibrated Silent** | Uniform row exposure; CFW **3.77** levels it from 1/1250 to 1/50 (E = 17.135 µs·n + 564 µs) | [R87](docs/capture/e26-r87-disparo-remoto-y-recalibracion.md) |
+| **EFCS** | EFCS/Electronic selector in the menu. With EFCS on, ≈1.27 ms are lost and the frame is **black from 1/1000**, also with stock Sony firmware: the cause is physical, not firmware | [R74](docs/capture/e26-r74-conclusion-final-efcs-negro.md), [R83](docs/capture/e26-r83-informe-final-efcs-negro.md) |
+| **Author's camera** | CFW of the 3.93/4.0x series on top of the Silent base (`pp` is the last audited build); the stock 3.21 roll-back package is verified | [G105](docs/gui/g105-builds-por-funcion.md), [CFW audit](reports/film-pb-1-auditoria-cfw-20261127.md) |
+| **Video (FILM-PB-1)** | **Open**: clips record fine and play on a PC, but the camera will not play them. Patched code was ruled out; the likely cause is the «PAL/NTSC selector» not matching the clip frame rate, and that setting is not exposed in this model's menu | [likely cause](reports/film-pb-1-causa-sistema-tv-20261127.md) |
+| **GUI** | QEMU harness that boots `im.elf` 3.21 and draws menus, icons and settings without the camera; CFWs are built on top of it | [GUI lane](docs/gui/README.md), [G22](docs/gui/g22-arnes-ui-qemu.md) |
+| **USB charging while on** | Under investigation: the command reaches Darwin but is not applied by a wall charger | [report](docs/capture/usb-carga-encendida.md) |
+| **Recovery** | Closed: camera recovered on 2026-11-03 over SWD, forcing the factory updater without writing NAND | [R49](docs/capture/e26-r49-cierre-recuperacion-326.md) |
+
+## Firmware series
+
+These numbers are **internal builds**, not Sony versions: each one is a `.dat` built from stock 3.21 and verified
+offline before installing. They are flashed with `pmca-console firmware --flash` (and `--reflash` to switch between
+builds sharing a version number).
+
+| Build | What it adds | Status |
+|---|---|---|
+| 3.23 / 3.24 | Darwin patch: shutter motor and coils never move / same payload numbered 3.24 | 3.23 installed and confirmed on the camera; 3.24 verified offline |
+| 3.25 | EFCS/Electronic selector from the menu | **Left the camera unable to boot**: TPZL format of `nflasha3` (E26 incident, [R36](docs/capture/e26-r36-causa-fallo-325.md)) |
+| 3.25c / 3.26 / 3.27 | 3.25 with `nflasha3` in Sony's shape, plus the roll-backs | 3.26 installed by the stock updater to recover the camera; 3.27 = 3.25c installed |
+| 3.30 – 3.38 | Real electronic shutter (inline `pkt[0x0e]`) and calibration | Installed and tested on the camera |
+| 3.76 / 3.77 | Silent calibrated in `av-cam` (ShutMode 0 + `r5`) | Validated in RAM; base of the following CFWs |
+| 3.93 (`base`/`film`/`pp`/`exfine`/`iso`) | One build per feature on the Silent base: Film Simulation, Picture Profile, Extra Fine, ISO | Installed and tested one by one; `iso` leaves the camera in a boot loop |
+| 4.01 – 4.02 | Film recipe driven from the GUI + Fn icons; video bisection (Silent only) | Installed; FILM-PB-1 is detected at this point |
+| 4.03 / 4.04 | 4.02 core with Sony's `/usr` / stock 3.21 minus `nflasha5` (control) | Built and audited, not installed |
+
+## Limits and risks
+
+> **⚠️ Installing modified firmware can brick the camera.** BIONZ recovery over SWD is proven
+> ([R48](docs/capture/e26-r48-plan-recuperacion-actualizador-swd.md),
+> [R49](docs/capture/e26-r49-cierre-recuperacion-326.md)), but **no independent recovery of the Darwin firmware has
+> been demonstrated** and everything has been tried on **one camera** only. Read
+> [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-14-Current-state) before touching
+> anything.
+
+- The electronic shutter is measured on one camera and one sensor unit; with EFCS on, black frames from 1/1000.
+- With the current CFW the camera **cannot play video** (FILM-PB-1); recording and playing on a PC do work.
+- The dashboard figures (modules, sessions, tests) measure documentation and verifiers, not camera behaviour.
 
 ## Documentation
 
-All the detail lives in the **[Sony a6000 CFW Wiki](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-Home)** (source in [`wiki/`](wiki/en-Home.md)): requirements and risks, how to reproduce it end to end, how the patch works,
-results, current state and limits, tools, glossary and repository map. The wiki is available in English and Spanish; the research reports and code comments are in **Spanish**.
-Prebuilt packages are in the [`fw-3.23-3.24` release](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) and, as an
-experimental *pre-release*, in [`fw-3.25c-experimental`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) (3.25c and a 3.26 to roll back).
-[Progress board](https://nicolvus.github.io/a6000-fw-decomp/progress/) (current state, coverage and tests) · [site home](https://nicolvus.github.io/a6000-fw-decomp/).
+| Where | What |
+|---|---|
+| **[Wiki](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-Home)** ([source](wiki/en-Home.md), EN/ES) | Requirements and risks, end-to-end reproduction, how the patch works, results, current state, tools, glossary and repository map |
+| [Progress board](https://nicolvus.github.io/a6000-fw-decomp/progress/) · [site home](https://nicolvus.github.io/a6000-fw-decomp/) | Status, coverage and tests generated from the repository |
+| [knowledge/CURRENT.md](knowledge/CURRENT.md) | Minimal context for agents |
+| [docs/STATE.md](docs/STATE.md) | Standing conclusions and limits |
+| [docs/PENDIENTES.md](docs/PENDIENTES.md) | Open, blocked and closed tasks (single source) |
+| [docs/INDEX.md](docs/INDEX.md) | Reports by subsystem; the reports live in [`docs/capture/`](docs/capture/) and [`reports/`](reports/) |
+| [FUNCIONES.md](FUNCIONES.md) | Full list of target features |
 
-| Version | What it does | Status |
-|---|---|---|
-| 3.23 | Darwin patch: the shutter motor and coils never move | **Installed and confirmed** on a real camera: silent, no errors |
-| 3.24 | Stock Darwin with version number 3.24 (roll back from 3.23) | Verified offline, never installed |
-| 3.25 | EFCS / Electronic selector from the menu | **Bricked the author's camera** (not published) |
-| 3.25c | 3.25 with `nflasha3` in Sony's exact format | Published as experimental; verified offline, **never installed** |
-| 3.26 | Stock Sony content with version number 3.26 (roll back from 3.25c) | Verified offline; installed once on the author's camera to recover it ([R49](docs/capture/e26-r49-cierre-recuperacion-326.md)) |
-
-**Status:** firmware 3.23 (T040) makes the camera shoot silently and without errors; 3.25 (E26) left the author's camera unable to boot;
-its cause is fixed in 3.25c (experimental, untested on a camera, [R45](docs/capture/e26-r45-firmware-325c-experimental.md)) and that camera was recovered over SWD with the stock updater and 3.26 ([R49](docs/capture/e26-r49-cierre-recuperacion-326.md)).
-Details in [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-14-Current-state). Contributing: [CONTRIBUTING.en.md](CONTRIBUTING.en.md).
+Research reports and code comments are in **Spanish**; the wiki and this README come in Spanish and English.
 
 ## Target features
 
-Details in [Goals](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-16-Goals) (✅ = verified on the camera). ≈ = Sony model from memory, unverified (web search only confirmed Silent Shooting → α7S, FTP → α9 and AF Track Sens → α99 II); may not be the first.
+**On the camera:** Silent base, Picture Profiles PP1–PP10 (menu, lists and selector), Film Simulation, Extra Fine
+(with the open «no space on card» bug) and the GUI's own icons and texts. **Built and audited, boot loop still to
+solve:** expanded ISO. **Under research:** LUTs, HLG, 1/8000 and the rest of the list. Per-feature status and origin
+model in [FUNCIONES.md](FUNCIONES.md) and [Goals](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-16-Goals).
 
-| Feature | Category | Origin | Status |
-|---|---|---|---|
-| Silent Shooting | In progress | Sony α7S | ⬜ |
-| Picture Profiles PP1–PP10 | In progress | ≈Sony α7R III | ⬜ |
-| Maximum shutter speed 1/8000 | Photo | ≈Sony α7 | ⬜ |
-| Expanded ISO up to 409600 | Photo | Sony α7S | ⬜ |
-| Pixel Shift Multi Shooting / High Res Shot / Handheld High Res Shot | Photo | ≈Sony α7R III; Olympus E-M1 II, E-M1X; Panasonic G9 | ⬜ |
-| 4K/6K Photo (incl. 4K Photo Burst S/S) | Photo | Panasonic GH5, G9 | ⬜ |
-| Pre Capture photo / Pro Capture / Pre-Burst 4K/6K | Photo | Olympus E-M1 II; Panasonic GH5, G9 | ⬜ |
-| Post Focus | Photo | Panasonic GH5, G9 | ⬜ |
-| Multiple Exposure | Photo | Canon EOS 7D Mark II; Nikon D850; Olympus E-M1 II | ⬜ |
-| Live Composite | Photo | Olympus E-M1 II | ⬜ |
-| Live Bulb / Live Time | Photo | Olympus E-M1 II | ⬜ |
-| Bulb Timer | Photo | Canon EOS 7D Mark II | ⬜ |
-| Focus Shift Shooting / Focus Stacking | Photo | Nikon D850; Panasonic GH5, G9; Olympus E-M1 II, E-M1X | ⬜ |
-| Smile Shutter | Photo | Sony α5100 | ⬜ |
-| Internal intervalometer | Photo | ≈Sony α9 | ⬜ |
-| Interval AE Tracking Sensitivity / Exposure Smoothing | Photo | ≈Sony α7R III; Nikon D850 | ⬜ |
-| Anti-Flicker Shooting / Flicker Reduction / Flicker Scan | Photo | Canon EOS 7D Mark II; Nikon D500, D850; Fujifilm X-T3; Olympus E-M1 II, E-M1X | ⬜ |
-| Keystone Compensation | Photo | Olympus E-M1 II, E-M1X | ⬜ |
-| Live ND | Photo | Olympus E-M1X | ⬜ |
-| In-camera photo rating | Photo | ≈Sony α9 | ⬜ |
-| S-Log2 | Image and color | ≈Sony α7S | ⬜ |
-| S-Log3 | Image and color | ≈Sony α7S II | ⬜ |
-| HLG 1-3 | Image and color | ≈Sony α7R III | ⬜ |
-| D Range Priority | Image and color | Fujifilm X-T3 | ⬜ |
-| Color Chrome Effect | Image and color | Fujifilm X-T3 | ⬜ |
-| LUT import | Image and color | Sony ZV-E1 | ⬜ |
-| Direct film simulation | Image and color | Fujifilm X-T5 | ⬜ |
-| Full HD / HD 120 fps | Video | ≈Sony α6300 | ⬜ |
-| Variable Frame Rate | Video | Panasonic GH5 | ⬜ |
-| Internal 4K | Video | ≈Sony α7R II | ⬜ |
-| Dual Video Recording | Video | ≈Sony α7R III | ⬜ |
-| 4K HDMI output | Video | Sony α7S | ⬜ |
-| Timecode / User Bit | Video | ≈Sony α7S II | ⬜ |
-| Loop Recording | Video | Panasonic GH5 | ⬜ |
-| Movie Silent Control / Silent Multi Controller | Video | Fujifilm X-T3; Sony α99 II | ⬜ |
-| Anamorphic Desqueeze | Video | Panasonic GH5 | ⬜ |
-| Synchro Scan | Video | Panasonic GH5 | ⬜ |
-| Auto Object Framing | Video | ≈Sony ZV-E1 | ⬜ |
-| Voice Memo | Video | ≈Sony α9 | ⬜ |
-| Zebra 0–109 % | Monitoring | ≈Sony α6400 | ⬜ |
-| Waveform Monitor | Monitoring | Panasonic GH5 | ⬜ |
-| Vectorscope | Monitoring | Panasonic GH5 | ⬜ |
-| Gamma Display Assist | Monitoring | ≈Sony α7R III | ⬜ |
-| Sports Finder Mode | Monitoring | Fujifilm X-T3 | ⬜ |
-| Real-time Eye AF | Focus | ≈Sony α9 | ⬜ |
-| Real-time AF tracking (3D Tracking / EOS iTR AF) | Focus | ≈Sony α6400; Nikon D500, D850; Canon EOS 7D Mark II | ⬜ |
-| AF tracking sensitivity settings (AF-C Custom Settings / AF-C Cases) | Focus | Sony α99 II; Fujifilm X-T3; Panasonic GH5; Olympus E-M1 II; Canon EOS 7D Mark II | ⬜ |
-| AF Acceleration/Deceleration Tracking | Focus | Canon EOS 7D Mark II | ⬜ |
-| AF Range Control | Focus | ≈Sony α99 II | ⬜ |
-| AF Micro Adjustment | Focus | ≈Sony α99 | ⬜ |
-| Pre-AF | Focus | Fujifilm X-T3 | ⬜ |
-| AF Point Auto Switching / Zone Area Switching | Focus | Canon EOS 7D Mark II; Fujifilm X-T3 | ⬜ |
-| Starry Sky AF | Focus | Olympus E-M1 II | ⬜ |
-| Intelligent Subject Detection AF | Focus | Olympus E-M1X | ⬜ |
-| USB charging while powered on | System and connectivity | ≈Sony α7 II | ⬜ |
-| FTP Background Transfer | System and connectivity | Sony α9 | ⬜ |
+**Ruled out for now:** digital level (the orientation sensor is optical and binary,
+[R88](docs/capture/e26-r88-sensor-inclinacion-swd.md)), anamorphic desqueeze (`av-cam` 3.21's parameter table does
+not define it) and open gate recording at 6000×4000 (the sensor delivers 14.98 Hz; the only firmware path would be
+1440×960, [G112](docs/gui/g112-opengate-video-3-2.md)).
+
+## Build and install
+
+1. `scripts/agent/bootstrap.sh` downloads stock 3.21 from Sony (the repository holds **no** firmware).
+2. Packages are built with the repository scripts: see
+   [Building the packages](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-4-Building-the-packages) and
+   [Installing 3.23](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-5-Installing-3.23). `.dat` files are not
+   published in the repository or in a release.
+3. Before any camera test: NVRAM backup and the owner's explicit authorisation; the IP comes from `A6000_HOST`.
+
+## Repository layout
+
+```
+docs/        reports (capture/), state, pending tasks, index, GUI lane (gui/)
+knowledge/   minimal context, history and knowledge graphs
+scripts/     bootstrap, package builds, GUI harness, analysis tools
+tests/       verifiers for every conclusion (pytest; firmware tests are skipped)
+analysis/    reproducible evidence and results
+wiki/        wiki source (Spanish pages and en-* English counterparts)
+src/, tools/, references/, projects/   analysis code, utilities and third-party references
+```
+
+## Quality and contributing
+
+`CI=1 python -m pytest tests -q`, plus `ruff` and `mypy` with no new warnings; CI never uses firmware. Full rules in
+[CONTRIBUTING.en.md](CONTRIBUTING.en.md).
 
 ## Copyright and use
 
-**Copyright.** The two `.dat` files in the [`fw-3.23-3.24` release](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24) are
-Sony's official 3.21 firmware with a minimal, documented binary change to `darwin_core.bin` (2–9 bytes; see
-[How the patch works](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-8-How-the-patch-works) and [E25-05](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e25-05-preparacion-paquetes-323-324.md)).
-The ones in the [`fw-3.25c-experimental` release](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) are the same firmware
-with 22 bytes changed in `darwin_core.bin` and 89 in `av-cam.bin` (3.25c), or unchanged except for the version number (3.26)
-([R45](docs/capture/e26-r45-firmware-325c-experimental.md)).
-The original firmware is © Sony Corporation, which keeps all rights to it. The author **holds no license from Sony** for that
-firmware and this repository claims no ownership of it. The project being open does not change that: the openness covers only what
-the author wrote (scripts, analysis, documentation), not the Sony part contained in the `.dat` files.
-They are published for research and interoperability purposes (reverse engineering to change the behavior of hardware the author
-owns), without any Sony source code. This note states the author's position, it is not a legal guarantee, and the files will be
-removed if Sony asks.
+**Copyright.** The `.dat` files built with these scripts are Sony's stock firmware with a minimal, documented binary
+change in `darwin_core.bin` and `av-cam.bin` (see
+[How the patch works](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-8-How-the-patch-works)). The original
+firmware is © Sony Corporation, which keeps all rights to it; the author holds no Sony licence and this repository
+claims no ownership over it. The project's openness covers only what the author wrote (scripts, analysis,
+documentation), not Sony's part. It is published for research and interoperability (reverse engineering of hardware
+the author owns), without Sony source code. This note states the author's position; it is not a legal warranty.
 
-**Use.**
-- Everything is provided "as is", without warranty of any kind; use it at your own risk, it can render the camera unusable (see [Current state and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-14-Current-state)).
-- Meant for research, learning and personal use on a camera you own. Do not use it to bypass protections for unlawful purposes or to redistribute Sony firmware on your own.
-- The author's code, scripts, analysis and documentation are released under the [MIT](LICENSE) license. That license does **not** cover Sony's firmware, the release `.dat` files, or the third-party material below.
+**Use.** Everything is provided «as is», without warranty of any kind; using it is at your own risk and can brick the
+camera. Meant for research, learning and personal use on a camera you own. The author's code, scripts, analysis and
+documentation are under the [MIT](LICENSE) licence, which does **not** cover Sony's firmware or the third-party
+material below.
 
-**Sony and third-party material used by the project**
-- **Source code published by Sony** for this camera (Linux and other open-source packages). Used to understand the boot process, the drivers and the Loader2/Loader3 console. It keeps its original license (GPL and others); the extracted copies are in `analysis/session18/`.
-- **Level 3 service manual** for the ILCE-6000/6000L/6000Y (Rev. 1.1), publicly available online. Used as a source of schematics and board sheets. The PDF is **not** versioned (it is in `.gitignore`); `references/manuals/` only holds the manifest with its hash and origin, plus a few sample pages.
-- **Official firmware 3.21**: each person downloads it from Sony's server with `scripts/agent/bootstrap.sh`; it is not included in the repository.
-- **Third-party tools** with their own licenses: [Sony-PMCA-RE](https://github.com/ma1co/Sony-PMCA-RE), [fwtool.py](https://github.com/ma1co/fwtool.py) and [OpenMemories-Tweak](https://github.com/ma1co/OpenMemories-Tweak) in `references/`.
+**Sony and third-party material:**
+
+- **Source code published by Sony** (Linux and other open packages): used to understand boot, drivers and the
+  console. Keeps its original licence.
+- **Level 3 service manual** for the ILCE-6000/6000L/6000Y (Rev. 1.1), publicly available: source of schematics and
+  board sheets. The PDF is not versioned; `references/manuals/` only holds the manifest with hash, origin and a few
+  sample pages.
+- **Stock 3.21 firmware**: downloaded by each user from Sony's server.
+- **Third-party tools** under their own licences: [Sony-PMCA-RE](https://github.com/ma1co/Sony-PMCA-RE),
+  [fwtool.py](https://github.com/ma1co/fwtool.py) and
+  [OpenMemories-Tweak](https://github.com/ma1co/OpenMemories-Tweak).
