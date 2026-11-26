@@ -78,8 +78,9 @@ PNG = b"A6KF"  # lo único que mira el conductor: bytes del último fotograma
 class VivaFalsa:
     """Servidor que hace de `live.py`: cuenta las pulsaciones y deja de producir fotogramas tras `aguanta`."""
 
-    def __init__(self, aguanta: int = 6) -> None:
+    def __init__(self, aguanta: int = 6, opacos: float = 0.09) -> None:
         self.aguanta, self.pulsaciones, self.fotogramas, self.listas_total = aguanta, 0, 1, 5
+        self.opacos = opacos  # alfa opaco del último fotograma: 0,09 = OSD de disparo pintada; 0,005 = vacía
         self.teclas: list[str] = []
         viva = self
 
@@ -98,7 +99,7 @@ class VivaFalsa:
             def do_GET(self) -> None:
                 if self.path == "/estado":
                     self._json({"texto": "falsa", "fotogramas": viva.fotogramas, "listas": 0,
-                                "listas_total": viva.listas_total})
+                                "listas_total": viva.listas_total, "opacos": viva.opacos})
                 elif self.path == "/eventos":
                     self.send_response(200)
                     self.send_header("Content-Type", "text/event-stream")
@@ -175,6 +176,49 @@ def test_vigila_aguanta_si_sigue_pintando(tmp_path: Path) -> None:
     assert r["cuelgue_en"] is None
     assert r["pulsaciones"] == 8
     assert r["fotogramas_despues"] > r["fotogramas_antes"]
+
+
+def test_veredicto_pass_exige_la_osd_no_solo_que_pinte(tmp_path: Path) -> None:
+    """Criterio de PASS para la autoprueba: aguantar la secuencia **y** alfa opaco de OSD (≥ 0,05).
+
+    La pantalla vacía del cuelgue tiene alfa opaco 0,005–0,01: pintar no basta, hay que ver OSD.
+    """
+    viva = VivaFalsa(aguanta=10_000, opacos=0.09)
+    try:
+        r = SC.vigila(SC.Vivo(viva.puerto), vueltas=1, max_puls=8, minutos=1, pausa=0, espera=0,
+                      ventana=5, salida=tmp_path)
+    finally:
+        viva.cierra()
+    assert r["veredicto"] == "PASS", r
+    assert r["min_opacos"] == 0.05
+
+    vacia = VivaFalsa(aguanta=10_000, opacos=0.005)  # aguanta pero la pantalla está en blanco
+    try:
+        r = SC.vigila(SC.Vivo(vacia.puerto), vueltas=1, max_puls=8, minutos=1, pausa=0, espera=0,
+                      ventana=5, salida=tmp_path)
+    finally:
+        vacia.cierra()
+    assert r["veredicto"] == "SIN-OSD", r  # sobrevivir sin OSD no es PASS
+    assert json.loads((tmp_path / "resumen.json").read_text())["veredicto"] == "SIN-OSD"
+
+    cuelga = VivaFalsa(aguanta=2, opacos=0.09)
+    try:
+        r = SC.vigila(SC.Vivo(cuelga.puerto), vueltas=10, max_puls=80, minutos=1, pausa=0, espera=0,
+                      ventana=5, salida=tmp_path)
+    finally:
+        cuelga.cierra()
+    assert r["veredicto"] == "CUELGUE", r
+
+
+def test_veredicto_se_puede_endurecer_por_parametro(tmp_path: Path) -> None:
+    """`min_opacos` es el umbral del PASS: con 0,5 ninguna pantalla medida lo alcanza."""
+    viva = VivaFalsa(aguanta=10_000, opacos=0.09)
+    try:
+        r = SC.vigila(SC.Vivo(viva.puerto), vueltas=1, max_puls=8, minutos=1, pausa=0, espera=0,
+                      ventana=5, salida=tmp_path, min_opacos=0.5)
+    finally:
+        viva.cierra()
+    assert r["veredicto"] == "SIN-OSD" and r["min_opacos"] == 0.5, r
 
 
 # --- piezas del arnés que este trabajo toca --------------------------------------------------------

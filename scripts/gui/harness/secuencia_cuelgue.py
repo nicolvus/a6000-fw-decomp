@@ -9,6 +9,10 @@ fotograma (el síntoma documentado: «0 listas», las flechas dejan de responder
 
 uso: secuencia_cuelgue.py PUERTO [--vueltas N] [--max-pulsaciones N] [--minutos N]
                                [--espera s] [--pausa s] [--salida DIR] [--ventana N]
+                               [--min-opacos F]
+  El resumen trae `veredicto`: `PASS` (aguantó la secuencia y la pantalla tiene OSD: alfa opaco ≥
+  `--min-opacos`, medido 0,09 en la OSD de disparo y 0,005–0,01 en «0 listas»), `CUELGUE` (dejó de pintar)
+  o `SIN-OSD` (pintó pero la pantalla está vacía: no sirve como prueba de que la UI responde).
   Cada pulsación es `POST /tecla {"k": nombre, "v": 1}` y la suelta `v: 0` (lo que hace la ventana al
   teclado). Tras la pulsación se espera hasta `--espera` s a que llegue un fotograma nuevo; si no llega
   ninguno, esa pulsación cuenta como «sin respuesta» (la ventana con WLALL=1 puede tardar segundos en
@@ -103,7 +107,7 @@ def _pct(v: list[float], q: int) -> float | None:
 
 
 def vigila(vivo: Vivo, vueltas: int, max_puls: int, minutos: float, pausa: float, espera: float,
-           ventana: int, salida: Path) -> dict:
+           ventana: int, salida: Path, min_opacos: float = 0.05) -> dict:
     """Conduce la secuencia y devuelve el resumen; escribe pulsaciones.csv y los PNG de antes/después."""
     salida.mkdir(parents=True, exist_ok=True)
     teclas = secuencia(vueltas)
@@ -148,6 +152,11 @@ def vigila(vivo: Vivo, vueltas: int, max_puls: int, minutos: float, pausa: float
                "latencia_p50": _pct([f["latencia"] for f in hist if f["latencia"] != ""], 50),
                "latencia_max": max([f["latencia"] for f in hist if f["latencia"] != ""], default=None),
                "texto": fin.get("texto")}
+    # Veredicto con las dos medidas que separan «responde» de «está colgado» sin mirar el PNG: que la
+    # secuencia no haya cesado los fotogramas y que el último fotograma tenga OSD (alfa opaco ≥ min_opacos).
+    opacos = resumen["opacos_despues"] or 0.0
+    resumen["veredicto"] = "CUELGUE" if cuelgue_en else ("PASS" if opacos >= min_opacos else "SIN-OSD")
+    resumen["min_opacos"] = min_opacos
     (salida / "resumen.json").write_text(json.dumps(resumen, ensure_ascii=False, indent=2) + "\n")
     return resumen
 
@@ -162,10 +171,13 @@ def main() -> None:
     ap.add_argument("--espera", type=float, default=3.0, help="s máx esperando a que el invitado esté quieto antes de pulsar")
     ap.add_argument("--ventana", type=int, default=5, help="pulsaciones seguidas sin fotograma nuevo para declarar cuelgue")
     ap.add_argument("--salida", type=Path, default=Path("analysis/gui/g22/harness/cuelgue"))
+    ap.add_argument("--min-opacos", type=float, default=0.05,
+                    help="alfa opaco mínimo del último fotograma para dar la pantalla por pintada (OSD ≈ 0,09)")
     a = ap.parse_args()
-    r = vigila(Vivo(a.puerto), a.vueltas, a.max_pulsaciones, a.minutos, a.pausa, a.espera, a.ventana, a.salida)
+    r = vigila(Vivo(a.puerto), a.vueltas, a.max_pulsaciones, a.minutos, a.pausa, a.espera, a.ventana,
+               a.salida, a.min_opacos)
     print(json.dumps(r, ensure_ascii=False, indent=2))
-    sys.exit(0 if r["cuelgue_en"] else 1)  # 1 = no se reprodujo (aguantó)
+    sys.exit(0 if r["veredicto"] == "PASS" else (2 if r["veredicto"] == "SIN-OSD" else 1))  # 0 PASS · 1 cuelgue · 2 sin OSD
 
 
 if __name__ == "__main__":
