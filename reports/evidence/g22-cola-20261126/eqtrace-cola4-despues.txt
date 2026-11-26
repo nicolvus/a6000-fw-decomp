@@ -1,0 +1,43 @@
+# G22-COLA — DESPUÉS del parche (EVQNOTIFY, por omisión): perfil cola4 (puerto 8687), arranque en frío,
+# 4 pulsaciones iguales que en cola2 y luego 15 más de Reproducción (39 eventos de entrada en total).
+# SHIMEXTRA="WAITLOG=3000 EQTRACE=1 EQMAX=400 TRACEFN=7ef960,7ef910,7ef940,7eed0c,1106b8,1117f4,f59f0,11817e TRACEREP=1 TRACEMAX=16"
+
+## EQTRACE: las 4 primeras pulsaciones (mismo orden que cola2) — ahora notify=1
+702.20 [shim] EQTRACE 130 code=150100f2 dest=4 clase=1 notify=1 lr=libObj.so+0x111841
+702.82 [shim] EQTRACE 132 code=150100f1 dest=4 clase=1 notify=1 lr=libObj.so+0x111841
+704.87 [shim] EQTRACE 134 code=15010072 dest=4 clase=1 notify=1 lr=libObj.so+0x111841
+705.38 [shim] EQTRACE 136 code=15010074 dest=4 clase=1 notify=1 lr=libObj.so+0x111841
+705.42 [shim] EQTRACE 138 code=15010074 dest=4 clase=1 notify=1 lr=libObj.so+0x111841
+705.45 [shim] EQTRACE 140 code=15010074 dest=4 clase=1 notify=1 lr=libObj.so+0x111841
+705.49 [shim] EQTRACE 142 code=15010071 dest=4 clase=1 notify=1 lr=libObj.so+0x111841
+710.12 [shim] EQTRACE 172 code=150100f2 dest=4 clase=1 notify=1 lr=libObj.so+0x111841
+
+## EQTRACE: eventos 0x1501xxxx publicados en total: 39
+## EQTRACE: notify de los 0x1501xxxx:      39 notify=1 
+
+## TRACEFN: última potencia de 2 vista por función (cota inferior de disparos)
+7ef960   256
+7ef910   64
+7ef940   256
+7eed0c   256
+1106b8   32
+1117f4   32
+f59f0    128
+11817e   
+
+## DispatchEvent (libObj+0xf59f0): valores de r1 vistos (ninguno 0x1501xxxx)
+      1 r1=11012001
+      1 r1=11012004
+      2 r1=11014001
+     13 r1=2
+      1 r1=23
+      6 r1=2a
+      1 r1=8
+
+## execAction (libObj+0x11817e): 0 disparos
+## Avisos [FMWK] EventQueue pile: 0
+## SIGSEGV/abortos: 0
+
+## /estado tras la ráfaga de 15 pulsaciones más (19 en total): pantalla en blanco, el mismo síntoma de G22-CUELGUE
+{"texto": "arranque en frío, 220 s · 5 fotogramas · 1.5 fps · último: 0 listas · dibujo 0 ms · copias 100 ms · LDEC 0 ms", "fotogramas": 5, "listas": 0, "listas_total": 59, "opacos": 0.0}
+{"texto": "arranque en frío, 254 s · 5 fotogramas · 1.5 fps · último: 0 listas · …", "fotogramas": 5, "listas": 0, "listas_total": 59, "opacos": 0.0}  <- 8 s después de MENU: no se recupera

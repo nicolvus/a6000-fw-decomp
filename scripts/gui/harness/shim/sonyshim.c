@@ -1294,6 +1294,30 @@ static void efcs_patch(void) {  /* la carga de ranuras al crear ModelStillRec (e
     mprotect((void *)((unsigned long)p & ~4095UL), 8192, PROT_READ | PROT_WRITE | PROT_EXEC); *p = 0xde00; __builtin___clear_cache((char *)p, (char *)p + 2);
     struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_trace; sa.sa_flags = SA_SIGINFO | SA_NODEFER; sigaction(SIGILL, &sa, 0);
 }
+/* EVQNOTIFY (G22-COLA, por omisión; NOEVQNOTIFY=1 lo quita): avisa al consumidor al encolar un evento de entrada.
+ * `InputService::pushFilterEvent` vacía su lista filtrada llamando a libObj+0x7f0adc → PLT 0xdf270 =
+ * EventManager::push(evento, notify=**0**), así que la tecla entra en la cola 1 (clase 1) SIN despertar al hilo
+ * Appframework: solo la recoge en su siguiente vuelta (medido 26-11-2026: 43 eventos de clase 1 y 32 trasvases
+ * en 290 s → hasta minutos de retardo y la cola creciendo, «[FMWK] EventQueue pile. count: %d» cada 100).
+ * El mismo fichero tiene la variante con aviso en 0x7f0acc (`AbstractUtilityManager::pushEvent`, notify=1), que es
+ * la que usa ModelManager: aquí se cambia el `movs r2,#0` de 0x7f0ade por `movs r2,#1` (2 bytes, mismo molde
+ * mprotect+clear_cache que efcs_patch/NULLMWF). shortcut: no se sabe si la cámara avisa en este punto concreto
+ * (INFERENCIA: sí, o tendría el mismo retardo); el resto del camino (trasvase 0x7ef910, pop 0x7ef940,
+ * AppSystem::dispatch 0x7eed0c) es el del firmware, sin tocar.
+ * Ver docs/gui/g22-cola-eventos.md. */
+static void evqnotify(void) {
+    static int hecho; if (hecho || getenv("NOEVQNOTIFY")) return;
+    hecho = 1;
+    unsigned long base = 0; char ln[256]; FILE *m = fopen("/proc/self/maps", "r");
+    while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, "libObj.so")) { base = hexv(ln, 0); break; }
+    if (m) fclose(m);
+    if (!base) { LOG("EVQNOTIFY: libObj no hallada"); return; }
+    unsigned short *p = (unsigned short *)(base + 0x7f0ade);
+    if (*p != 0x2200) { LOG("EVQNOTIFY: libObj distinta (%#x en +0x7f0ade): sin parche", *p); return; }
+    mprotect((void *)((unsigned long)p & ~4095UL), 8192, PROT_READ | PROT_WRITE | PROT_EXEC);
+    *p = 0x2201; __builtin___clear_cache((char *)p, (char *)p + 2);
+    LOG("EVQNOTIFY: libObj+0x7f0ade movs r2,#0 -> #1 (la entrada avisa al consumidor de la cola del framework)");
+}
 /* Fuerza a ExcMgr fuera del modo LRM 0x60 al arranque. En modo 0x60, SendEvent (libObj 0x995c58) encaja las órdenes de ObjCamera en
  * pendientes sin enviarlas a CamMgr (0x30001), así que ObjCamera nunca recibe estado de cámara y los iconos (modo, batería, fotos
  * restantes, exposición) se quedan en 0. docs/gui/g22-respuesta-efcs-objcamera.md §11 (VERIFICADO): 0x7504 con modo 0x60 → 0x61;
@@ -1316,7 +1340,7 @@ void *dlopen(const char *f, int fl) {
     if (f && strstr(f, "viewUnified")) gpu_live = 1;
     LOG("dlopen(%s) ...", f ? f : "(null)");
     void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
-    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lrm_arranque(); lobj_h = h; mwf_nullsafe(); }
+    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lrm_arranque(); lobj_h = h; mwf_nullsafe(); evqnotify(); }
     if (h && f && getenv("TRACELIB") && (strstr(f, getenv("TRACELIB")) || strstr(f, "viewUnified")) && !trc_lib_done) {  /* la biblioteca puede entrar como dependencia de viewUnified*: se busca en /proc/self/maps tras cada dlopen hasta hallarla */
         char ln[256]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");
         while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, getenv("TRACELIB"))) { base = hexv(ln, 0); break; }
@@ -1598,8 +1622,17 @@ void *_ZN5EventC1Emhh(void *th, unsigned long id, unsigned char a, unsigned char
     static void *(*real)(void *, unsigned long, unsigned char, unsigned char); if (!real) real = nextsym("_ZN5EventC1Emhh");
     static int n; if (!mwf_quiet() && n++ < 3000) { char c[64], t[32]; mwf_lr(__builtin_return_address(0), c, sizeof c); efp("[shim] SYNCTRACE %.2f tid %ld %s Event id=%#lx a=%u b=%u por %s\n", wl_ts(), (long)syscall(224), tname((int)syscall(224), t, sizeof t), id, a, b, c); }
     return real ? real(th, id, a, b) : th; }
+/* EQTRACE=1 (G22-COLA): cada publicación en la cola del framework con el CÓDIGO del evento (Event+4, el que
+ * compara la vista), su DESTINO (Event+8) y la CLASE (Event+9: 1 = cola 1 —la que solo pasa a la 0 por el
+ * trasvase libObj+0x7ef910—, 0 = cola 0, la que vacía el hilo Appframework) más el aviso (f). Contesta «¿el
+ * evento llega a la cola del framework, y a cuál?» sin deducirlo del registro del invitado. EQMAX=n líneas
+ * (200 por omisión, 0 = sin límite). Ver docs/gui/g22-cola-eventos.md. */
 int _ZN12EventManager4pushEP5Eventb(void *th, void *e, int f) {
     static int (*real)(void *, void *, int); if (!real) real = nextsym("_ZN12EventManager4pushEP5Eventb");
+    if (getenv("EQTRACE") && e) { static unsigned ne; unsigned mx = getenv("EQMAX") ? (unsigned)hexv(getenv("EQMAX"), 0) : 200;
+        if (!mx || ne < mx) { unsigned long lr = (unsigned long)__builtin_return_address(0); Dl_info di; int ok = dladdr((void *)lr, &di);
+            unsigned char *q = e; ne++; efp("[shim] EQTRACE %u code=%08x dest=%u clase=%u notify=%d lr=%s+%#lx\n", ne, *(unsigned *)(q + 4), q[8], q[9], f,
+                ok && di.dli_fname ? (strrchr(di.dli_fname, '/') ? strrchr(di.dli_fname, '/') + 1 : di.dli_fname) : "?", ok ? lr - (unsigned long)di.dli_fbase : 0); } }
     static int n; if (!mwf_quiet() && n++ < 3000) { char c[64], t[32]; mwf_lr(__builtin_return_address(0), c, sizeof c); efp("[shim] SYNCTRACE %.2f tid %ld %s push id=%#x dest=%u por %s\n", wl_ts(), (long)syscall(224), tname((int)syscall(224), t, sizeof t), mwf_ev_id(e), e ? ((unsigned char *)e)[8] : 0, c); }
     { static int nc; if (!mwf_quiet() && nc++ < 3) { char c[64], d[64]; mwf_lr(((void **)th)[1], c, sizeof c); mwf_lr(((void **)th)[2], d, sizeof d); efp("[shim] SYNCTRACE %.2f EventManager=%p cb1=%s cb2=%s\n", wl_ts(), th, c, d); } }
     return real ? real(th, e, f) : -1; }

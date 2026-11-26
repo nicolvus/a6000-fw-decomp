@@ -1,0 +1,43 @@
+# G22-COLA — ANTES del parche: perfil cola2 (puerto 8685), arranque en frío, 4 pulsaciones (reproduccion, arriba, menu, reproduccion)
+# SHIMEXTRA="WAITLOG=3000 EQTRACE=1 EQMAX=400 TRACEFN=7ef960,7ef910,7ef940,7eed0c,1106b8,1117f4,f59f0,11817e TRACEREP=1 TRACEMAX=16"
+
+## EQTRACE: las 8 publicaciones de eventos de entrada (notify=0)
+254.27 [shim] EQTRACE 132 code=150100f2 dest=4 clase=1 notify=0 lr=libObj.so+0x111841
+254.86 [shim] EQTRACE 134 code=150100f1 dest=4 clase=1 notify=0 lr=libObj.so+0x111841
+256.88 [shim] EQTRACE 136 code=15010072 dest=4 clase=1 notify=0 lr=libObj.so+0x111841
+257.35 [shim] EQTRACE 138 code=15010074 dest=4 clase=1 notify=0 lr=libObj.so+0x111841
+257.42 [shim] EQTRACE 140 code=15010074 dest=4 clase=1 notify=0 lr=libObj.so+0x111841
+257.49 [shim] EQTRACE 142 code=15010071 dest=4 clase=1 notify=0 lr=libObj.so+0x111841
+262.24 [shim] EQTRACE 172 code=150100f2 dest=4 clase=1 notify=0 lr=libObj.so+0x111841
+262.82 [shim] EQTRACE 174 code=150100f1 dest=4 clase=1 notify=0 lr=libObj.so+0x111841
+
+## EQTRACE: reparto por clase (todo el arranque hasta t=263 s del invitado)
+    164 clase=0
+     44 clase=1
+
+## TRACEFN: última potencia de 2 vista por función (cota inferior de disparos)
+7ef960   128
+7ef910   32
+7ef940   128
+7eed0c   128
+1106b8   9
+1117f4   9
+f59f0    32
+11817e   
+
+## DispatchEvent (libObj+0xf59f0): cola de disparos y eventos vistos (ninguno 0x1501xxxx)
+      1 r1=11012001
+      1 r1=11012004
+      2 r1=11014001
+     12 r1=2
+      1 r1=23
+      5 r1=2a
+      1 r1=8
+
+## execAction (libObj+0x11817e): 0 disparos
+
+## Primera línea de la tecla (InputService) y de la publicación
+262.22 [shim] TRACE 1106b8 n=8 r0=809ffd80 r1=150100f2 r2=4 r3=3178 lr=ae0b4081 (libObj.so+0x113080)
+262.22 [shim] TRACE 1117f4 n=8 r0=809ffd80 r1=1849f0 r2=0 r3=0 lr=ae0b40ab (libObj.so+0x1130aa)
+262.79 [shim] TRACE 1106b8 n=9 r0=809ffd80 r1=150100f1 r2=4 r3=3178 lr=ae0b4081 (libObj.so+0x113080)
+262.79 [shim] TRACE 1117f4 n=9 r0=809ffd80 r1=4812c8 r2=0 r3=0 lr=ae0b40ab (libObj.so+0x1130aa)
