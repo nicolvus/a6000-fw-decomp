@@ -20,9 +20,9 @@ mide parte; **NO** = no emulado.
 | 6 | Disparar una foto | EMULADO | El anfitrión compone el JPEG y lo deja en la SD; EXIF `ILCE-6000` | `autoprueba.py`: «1 foto nueva, modelo EXIF ILCE-6000» | La cadena interna del firmware (S1/S2 → `ModelStillRec` → `0x3003` a av-cam) sigue parada en la barrera del objetivo ([G85](g85-plan-trazas-camara-vm.md)) |
 | 7 | Grabar vídeo | EMULADO | `captura.py` graba y al cerrar escribe el MP4 en la SD | `autoprueba.py`: «1 clip nuevo MP4», `PRIVATE/M4ROOT/CLIP/C0001.MP4` | Igual que 6: no es la cadena del firmware |
 | 8 | Tarjeta SD: listar, bajar, importar, borrar, formatear | IGUAL | Imagen FAT32 real montada por el invitado (`sd_image.py`) y puntos `/sd/*` del anfitrión | `autoprueba.py`: 2 ficheros, descarga HTTP 200 (28 268 B), importar, borrar y formatear (`{"ok":true,"borrados":2}`) | El índice `AVF_INFO` vacío hace que el recuento del firmware no sea numérico (G22-REPRO) |
-| 9 | Reproducción: abrir, miniaturas, ver una foto | NO (en curso) | La tecla sale del driver y, con `DESTKEYV=1`, llega a la vista (`dest=0x0c` → `libObj+0x10e8ec`) | Con `PLAYVIEW=1` la pulsación ejecuta `convertViewEventToAB` (acción 4), abre `view/INDEX_PLAYBACK`, carga `viewUnified3.so` y cambia la pantalla (347 de 480 filas distintas); queda en blanco | El modelo de contenidos: `getModelInfo(@M010,1) -> 0` (G22-PBMODEL). El medio ya se acepta y `model/MEDIA -> 1` (G22-PBMEDIA-INDICE) |
+| 9 | Reproducción: abrir, miniaturas, ver una foto | PARCIAL | La tecla sale del driver y, con `DESTKEYV=1`, llega a la vista (`dest=0x0c` → `libObj+0x10e8ec`) | Con `PLAYVIEW=1` la pulsación ejecuta `convertViewEventToAB` (acción 4), abre `view/INDEX_PLAYBACK`, carga `viewUnified3.so` y cambia la pantalla (347 de 480 filas distintas); queda en blanco | El modelo de contenidos: `getModelInfo(@M010,1) -> 0` (G22-PBMODEL). El medio ya se acepta y `model/MEDIA -> 1` (G22-PBMEDIA-INDICE) |
 | 10 | Iconos de batería, carga y jack USB | PARCIAL | Órdenes LIVE `B <0..100>` y `U <0|1>` al driver de entrada y a la respuesta emulada de CamMgr | Los mensajes llegan (`rcv_msg qid=0x7a0020`), `B 5`/`U 1` salen del configurador | **La pantalla no cambia** (0 px en 7 comparaciones): falta el modelo que consume `0x3001` ([G22-ESTADO-CAMARA](g22-estado-camara.md)) |
-| 11 | Cargar por USB con la cámara encendida | IGUAL (dato de la cámara) | No se emula nada: la A6000 real **no carga** encendida | Medido en la cámara el 17-11-2026: «USB powered: false», estado 3, nivel 56 % ([G85](g85-plan-trazas-camara-vm.md)) | — |
+| 11 | Cargar por USB con la cámara encendida | IGUAL | No se emula nada: la A6000 real **no carga** encendida | Medido en la cámara el 17-11-2026: «USB powered: false», estado 3, nivel 56 % ([G85](g85-plan-trazas-camara-vm.md)) | — |
 | 12 | Conectarse a un PC (almacenamiento masivo / MTP) | NO | — | — | No emulado; el `viewUsbMassStorage`/`viewUsbMTP` existen en el registro de vistas pero no se abren |
 | 13 | Sensor de imagen, AE y balance | EMULADO | Imagen fija, vídeo o cámara web por `sensor_web.py`; AE de escena constante a `ObjCamera` | `--sin-ae`/`--sin-sd` como controles; el fotograma sale del sensor emulado | El AE/AWB reales (BIONZ) no se ejecutan |
 | 14 | Visor y sensor de ojo | NO | — | `KEY_TACT_FINDER`, `SLIKEY_EVF_OPEN/CLOSE` y `0x1000001x` no producen ningún cambio de `ObjDisplay` ([§5.18z](g22-arnes-ui-qemu.md)) | Es hardware del panel/visor, no una tecla del driver |
@@ -43,3 +43,11 @@ mide parte; **NO** = no emulado.
 Cómo se comprueba todo esto de una vez: `.venv/bin/python scripts/gui/harness/autoprueba.py <work>
 --perfil-dir <perfil> --puerto <puerto> --config <config.json>` (15 pasos, PASS/FAIL con informe en
 Markdown y PNG por paso).
+
+## Cómo se mantiene esta tabla
+
+`tests/test_g22_funciones.py` comprueba, sin QEMU, que el documento sigue siendo auditable: que hay una fila
+numerada por función, que el estado es uno de `IGUAL`/`EMULADO`/`PARCIAL`/`NO`, que **todos** los enlaces
+relativos (informes y evidencias de `reports/evidence/`) apuntan a ficheros que existen, y que ninguna fila
+`PARCIAL` o `NO` se queda sin escribir su límite. Si una evidencia se mueve o se borra, el test falla: la
+tabla no puede quedarse «bonita» con enlaces muertos.
