@@ -28,7 +28,7 @@ done < "$DEST/.paths"
 # de espejo; se ignora al compararlas con la fuente canonica del repositorio del proyecto.
 igual() {
   case $1 in
-    *ORDEN.md|*ORDER.md) diff -q <(grep -v '^> ' "$1") <(grep -v '^> ' "$2") >/dev/null ;;
+    *ORDEN.md|*ORDER.md) diff -q -B <(grep -v '^> ' "$1") <(grep -v '^> ' "$2") >/dev/null ;;
     *) cmp -s "$1" "$2" ;;
   esac
 }
