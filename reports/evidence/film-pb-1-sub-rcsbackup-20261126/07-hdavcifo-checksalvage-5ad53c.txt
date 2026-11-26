@@ -1,0 +1,47 @@
+005ad53c: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+005ad540: 0446       mov      r4, r0                        
+005ad542: 83b0       sub      sp, #0xc                      
+005ad544: 1648       ldr      r0, [pc, #0x58]                 ; [005ad5a0]=008b427b "[IFO]Start hdAvcIfo_If::CheckSalvageStat"
+005ad546: 02af       add      r7, sp, #8                    
+005ad548: 0e46       mov      r6, r1                        
+005ad54a: 9046       mov      r8, r2                        
+005ad54c: 9946       mov      sb, r3                        
+005ad54e: 80f749ff   bl       #0x52e3e4                     
+005ad552: 6068       ldr      r0, [r4, #4]                  
+005ad554: 4e21       movs     r1, #0x4e                     
+005ad556: 0122       movs     r2, #1                        
+005ad558: 0df0d2fb   bl       #0x5bad00                     
+005ad55c: 88b9       cbnz     r0, #0x5ad582                 
+005ad55e: 3a6a       ldr      r2, [r7, #0x20]               
+005ad560: 3146       mov      r1, r6                        
+005ad562: 2068       ldr      r0, [r4]                      
+005ad564: 0368       ldr      r3, [r0]                      
+005ad566: 0092       str      r2, [sp]                      
+005ad568: 7a6a       ldr      r2, [r7, #0x24]               
+005ad56a: 0192       str      r2, [sp, #4]                  
+005ad56c: 4246       mov      r2, r8                        
+005ad56e: d3f8b050   ldr.w    r5, [r3, #0xb0]               
+005ad572: 4b46       mov      r3, sb                        
+005ad574: a847       blx      r5                            
+005ad576: 0121       movs     r1, #1                        
+005ad578: 0546       mov      r5, r0                        
+005ad57a: 6068       ldr      r0, [r4, #4]                  
+005ad57c: 0df098fb   bl       #0x5bacb0                     
+005ad580: 00e0       b        #0x5ad584                     
+005ad582: 084d       ldr      r5, [pc, #0x20]                 ; [005ad5a4]=a0000001
+005ad584: 0848       ldr      r0, [pc, #0x20]                 ; [005ad5a8]=008b42a8 "[IFO]End  hdAvcIfo_If::CheckSalvageStatu"
+005ad586: 80f7cffe   bl       #0x52e328                     
+005ad58a: 0820       movs     r0, #8                        
+005ad58c: 2946       mov      r1, r5                        
+005ad58e: 80f743ff   bl       #0x52e418                     
+005ad592: 2846       mov      r0, r5                        
+005ad594: 07f10407   add.w    r7, r7, #4                    
+005ad598: bd46       mov      sp, r7                        
+005ad59a: bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}  
+005ad59e: 00bf       nop                                    
+005ad5a0: 7b42       rsbs     r3, r7, #0                    
+005ad5a2: 8b00       lsls     r3, r1, #2                    
+005ad5a4: 0100       movs     r1, r0                        
+005ad5a6: 00a0       adr      r0, #0                        
+005ad5a8: a842       cmp      r0, r5                        
+005ad5aa: 8b00       lsls     r3, r1, #2                    

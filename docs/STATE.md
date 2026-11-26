@@ -138,10 +138,14 @@ el nombre que `MMgrAvcHdIfoAcsr::CheckSalvageStatus` (`0x671DAC`) registra en la
 códigos «esperados» de `0x5215AC`, de ahí el banner). **Orden obligado:** estado de dispositivo → `FlashMount`/DFS
 (`0x3BB220`; éxito ⇒ `[this+0x140]=4` vía `0x64C5DC` en `0x626960`) → `CheckSalvageStatus` (estado AVI ∈ {2,3,4,6}) →
 gate `0x64C298` con `state==4` → `CreateAndLoad` → `CreateSub` → `LoadSub` → `Load` → `mp4Ifo_General::Load` (FLASH) →
-`FlashLoadForMsv` → `RcsBackupTblData` (única lectura real del volumen). **Consecuencia:** `0xB0800001` y `0x31000006`
-son códigos por defecto y no identifican causa; la huella de «volumen ilegible» es `Err RcsBackupTblData → 0xB0800001 →
-0x31000006`, mientras que un IFO corrupto pero legible daría un código específico (`0xB0400005`, `0xB0510001`,
-`0xB0F30001`…). **No verificado:** identidad de las virtuales `vtbl[0x140]`/`[0x60]`/`[0x168]`, cuál de las dos vías de
+`FlashLoadForMsv` → `RcsBackupTblData`. **Corrección 26-11-2026 (bytes):** `RcsBackupTblData` (`0x35EA1C` → `0x35E04C`)
+**no abre ningún fichero**: hace un `BkRead` de un pack de sectores por `(userId, backupId)` (`0x2B39B8` → `0x2B2F48`
+→ `0x2B3948`) y devuelve `0x10xxxxxx` cuando esa entrada no tiene reader (`0x2B39EE` → `0x2B3A28`); **no** prueba
+«volumen ilegible» ni ausencia de `AVF_INFO`. **Consecuencia:** `0xB0800001` y `0x31000006` son códigos por defecto y no
+identifican causa; el desajuste lógico del journal es `" Need Salvage"` (`0x00500003`), y el `INP` ausente se ve por la
+reconstrucción del índice, no por `Err RcsBackupTblData`; un IFO corrupto pero legible daría un código específico
+(`0xB0400005`, `0xB0510001`, `0xB0F30001`…). Los ficheros del índice son `AVF_INFO\AVIN0001.INP` (primario), `.BNP`
+(respaldo) y `.INT` (tabla interna); `PRV00001.BIN` es propiedades. [sub-rcsbackup](../reports/film-pb-1-sub-rcsbackup-20261126.md). **No verificado:** identidad de las virtuales `vtbl[0x140]`/`[0x60]`/`[0x168]`, cuál de las dos vías de
 `MountCmd` disparó la línea del anillo (el anillo no es transcripción completa: falta `MountCmd : `) y semántica nominal
 de la cabecera `0x10`. [Informe de montaje/IFO](../reports/film-pb-1-sub-mount-ifo-20261126.md).
 

@@ -1,0 +1,81 @@
+0012c5c8: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+0012c5cc: 83b0       sub      sp, #0xc                      
+0012c5ce: 9846       mov      r8, r3                        
+0012c5d0: 00af       add      r7, sp, #0                    
+0012c5d2: 0646       mov      r6, r0                        
+0012c5d4: 437d       ldrb     r3, [r0, #0x15]               
+0012c5d6: 4ff00009   mov.w    sb, #0                        
+0012c5da: 4ff0640a   mov.w    sl, #0x64                     
+0012c5de: 1446       mov      r4, r2                        
+0012c5e0: 0d46       mov      r5, r1                        
+0012c5e2: 5246       mov      r2, sl                        
+0012c5e4: 06f1050b   add.w    fp, r6, #5                    
+0012c5e8: 0846       mov      r0, r1                        
+0012c5ea: 4946       mov      r1, sb                        
+0012c5ec: 3b71       strb     r3, [r7, #4]                  
+0012c5ee: 87f80590   strb.w   sb, [r7, #5]                  
+0012c5f2: f3f78ce8   blx      #0x11f70c                       ; memset
+0012c5f6: 5946       mov      r1, fp                        
+0012c5f8: 2846       mov      r0, r5                        
+0012c5fa: a5f0c7fe   bl       #0x1d238c                     
+0012c5fe: 391d       adds     r1, r7, #4                    
+0012c600: 2846       mov      r0, r5                        
+0012c602: a5f0c3fe   bl       #0x1d238c                     
+0012c606: 2846       mov      r0, r5                        
+0012c608: 2649       ldr      r1, [pc, #0x98]                 ; [0012c6a4]=007a637f "AVF_INFO"
+0012c60a: a5f0bffe   bl       #0x1d238c                     
+0012c60e: 391d       adds     r1, r7, #4                    
+0012c610: 2846       mov      r0, r5                        
+0012c612: a5f0bbfe   bl       #0x1d238c                     
+0012c616: f06c       ldr      r0, [r6, #0x4c]               
+0012c618: 17f034fd   bl       #0x144084                     
+0012c61c: 00f1bc01   add.w    r1, r0, #0xbc                 
+0012c620: 2846       mov      r0, r5                        
+0012c622: a5f0b3fe   bl       #0x1d238c                     
+0012c626: 5246       mov      r2, sl                        
+0012c628: 4946       mov      r1, sb                        
+0012c62a: 2046       mov      r0, r4                        
+0012c62c: f3f76ee8   blx      #0x11f70c                       ; memset
+0012c630: 5946       mov      r1, fp                        
+0012c632: 2046       mov      r0, r4                        
+0012c634: a5f0aafe   bl       #0x1d238c                     
+0012c638: 391d       adds     r1, r7, #4                    
+0012c63a: 2046       mov      r0, r4                        
+0012c63c: a5f0a6fe   bl       #0x1d238c                     
+0012c640: 2046       mov      r0, r4                        
+0012c642: 1849       ldr      r1, [pc, #0x60]                 ; [0012c6a4]=007a637f "AVF_INFO"
+0012c644: a5f0a2fe   bl       #0x1d238c                     
+0012c648: 391d       adds     r1, r7, #4                    
+0012c64a: 2046       mov      r0, r4                        
+0012c64c: a5f09efe   bl       #0x1d238c                     
+0012c650: f06c       ldr      r0, [r6, #0x4c]               
+0012c652: 17f017fd   bl       #0x144084                     
+0012c656: 00f1c901   add.w    r1, r0, #0xc9                 
+0012c65a: 2046       mov      r0, r4                        
+0012c65c: a5f096fe   bl       #0x1d238c                     
+0012c660: 5246       mov      r2, sl                        
+0012c662: 4946       mov      r1, sb                        
+0012c664: 4046       mov      r0, r8                        
+0012c666: f3f752e8   blx      #0x11f70c                       ; memset
+0012c66a: 5946       mov      r1, fp                        
+0012c66c: 4046       mov      r0, r8                        
+0012c66e: a5f08dfe   bl       #0x1d238c                     
+0012c672: 391d       adds     r1, r7, #4                    
+0012c674: 4046       mov      r0, r8                        
+0012c676: a5f089fe   bl       #0x1d238c                     
+0012c67a: 4046       mov      r0, r8                        
+0012c67c: 0949       ldr      r1, [pc, #0x24]                 ; [0012c6a4]=007a637f "AVF_INFO"
+0012c67e: a5f085fe   bl       #0x1d238c                     
+0012c682: 391d       adds     r1, r7, #4                    
+0012c684: 4046       mov      r0, r8                        
+0012c686: a5f081fe   bl       #0x1d238c                     
+0012c68a: f06c       ldr      r0, [r6, #0x4c]               
+0012c68c: 17f0fafc   bl       #0x144084                     
+0012c690: 00f1f001   add.w    r1, r0, #0xf0                 
+0012c694: 4046       mov      r0, r8                        
+0012c696: a5f079fe   bl       #0x1d238c                     
+0012c69a: 07f10c07   add.w    r7, r7, #0xc                  
+0012c69e: bd46       mov      sp, r7                        
+0012c6a0: bde8f08f   pop.w    {r4, r5, r6, r7, r8, sb, sl, fp, pc}
+0012c6a4: 7f63       str      r7, [r7, #0x34]               
+0012c6a6: 7a00       lsls     r2, r7, #1                    

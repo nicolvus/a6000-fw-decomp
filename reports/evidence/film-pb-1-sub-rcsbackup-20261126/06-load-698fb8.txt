@@ -1,0 +1,31 @@
+00698fb8: b0b5       push     {r4, r5, r7, lr}              
+00698fba: 00af       add      r7, sp, #0                    
+00698fbc: 0446       mov      r4, r0                        
+00698fbe: 0d46       mov      r5, r1                        
+00698fc0: fcf7f0fa   bl       #0x6955a4                     
+00698fc4: 1048       ldr      r0, [pc, #0x40]                 ; [00699008]=00914fa6 " mp4Ifo_General::Load IN (device="
+00698fc6: fcf733fa   bl       #0x695430                     
+00698fca: 0db9       cbnz     r5, #0x698fd0                 
+00698fcc: 0f48       ldr      r0, [pc, #0x3c]                 ; [0069900c]=007ae670 "FLASH"
+00698fce: 00e0       b        #0x698fd2                     
+00698fd0: 0f48       ldr      r0, [pc, #0x3c]                 ; [00699010]=008ac35f "DISC"
+00698fd2: fcf72dfa   bl       #0x695430                     
+00698fd6: 0f48       ldr      r0, [pc, #0x3c]                 ; [00699014]=009272e2
+00698fd8: fcf788fa   bl       #0x6954ec                     
+00698fdc: 012d       cmp      r5, #1                        
+00698fde: 03d1       bne      #0x698fe8                     
+00698fe0: 2046       mov      r0, r4                        
+00698fe2: fff749ff   bl       #0x698e78                     
+00698fe6: 02e0       b        #0x698fee                     
+00698fe8: 2046       mov      r0, r4                        
+00698fea: fff76dff   bl       #0x698ec8                     
+00698fee: 0546       mov      r5, r0                        
+00698ff0: 10b9       cbnz     r0, #0x698ff8                 
+00698ff2: 0123       movs     r3, #1                        
+00698ff4: 84f82330   strb.w   r3, [r4, #0x23]               
+00698ff8: fcf7d4fa   bl       #0x6955a4                     
+00698ffc: 0648       ldr      r0, [pc, #0x18]                 ; [00699018]=00914fc8 " mp4Ifo_General::Load OUT()"
+00698ffe: fcf775fa   bl       #0x6954ec                     
+00699002: 2846       mov      r0, r5                        
+00699004: b0bd       pop      {r4, r5, r7, pc}              
+00699006: 00bf       nop                                    

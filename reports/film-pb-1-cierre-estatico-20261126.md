@@ -100,7 +100,7 @@ memoria que ese camino reserva y el de foto no.
 | Familia | Qué la sostiene | Qué la confirmaría |
 |---|---|---|
 | **M1 — área de memoria del reproductor**: no se reserva y el camino de vídeo no arranca | el tamaño pedido es 0 y el de foto reserva por otra caché | que el fallo dependa del modo de arranque (paquete con WBI) |
-| **M3 — índice AV del volumen**: `AVF_INFO` incoherente (falta un compañero, `CheckMSId` distinto, entradas huérfanas) | el IFO del MP4 es el único que lee esos ficheros; las fotos usan DCF y no los tocan | borrar `AVF_INFO` y dejar que la cámara lo reconstruya, o formatear en la cámara |
+| **M3 — índice/journal AV**: `AVF_INFO\AVIN0001.INP` o el pack `RcsTbl` incoherentes | ver §5.3 | renombrar `AVF_INFO` y dejar que la cámara lo reconstruya, o formatear en la cámara |
 
 El log del 20-10 mostraba las dos a la vez porque el volumen no montaba; con las fotos
 funcionando, la que sigue viva es la que solo afecta al vídeo.
@@ -110,6 +110,34 @@ aunque el acquire haya fallado, libera un lock que no posee, borra el semáforo 
 limpia `[handle+4]`**. Si algo hace destruir el acsr, el `mp4Ifo_If` queda inservible para el
 resto de la sesión. Parche mínimo propuesto: `0x6E81E0: 20 B1 → 80 B9`
 ([auditoría](film-pb-1-sub-fuga-mutex-20261126.md)).
+
+
+### 5.3 Corrección: `RcsBackupTblData` no lee ficheros, y el dato de las fotos tiene un límite
+
+Auditado (`reports/film-pb-1-sub-rcsbackup-20261126.md`): `RcsBackupTblData` (`0x35EA1C`)
+**no abre ningún fichero**. Es un envoltorio de `0x35E04C`, que hace `BkRead` de un pack de
+sectores por `(userId, backupId)` (`0x2B39B8` → `0x2B2F48` → `0x2B3948`); no hay ni una cadena
+`AVIN*` ni `PRV00001.BIN` en esas funciones. El pack se llama **`RcsTbl`** y guarda el journal
+de la última grabación (`rootDirName`, `recDirName`, `recFileName`, flags y `contFileNo`).
+
+- `Err RcsBackupTblData` solo sale con cabecera `0x10` (`0x3AFAFE`/`0x3AFB06`); el caso típico,
+  `0x10100001`, significa **«esa entrada no tiene reader registrado»**.
+- Un desajuste real del journal da `0x00500003` → «Need Salvage» + flag `[obj+0x44]=1`, que es
+  **otra firma**.
+
+Ficheros de `AVF_INFO` (constructor de rutas `0x12C5C8`, tabla `0x7A9070`): `AVIN0001.INP`
+(+0xBC, primario), `AVIN0001.BNP` (+0xC9, respaldo) y `AVIN0001.INT` (+0xF0, tabla interna);
+`mp4Ifo` **no tiene índice propio: su catálogo es el `INP`**, y sin `.BNP`/`.INT` el IFO sigue
+cargando.
+
+Y el límite del dato de las fotos: la rejilla de miniaturas lee `DCIM`/EXIF y **no pasa por el
+IFO**, mientras que el IFO de foto (`FlashLoadHdm`, `0x5D2BD0`) falla igual si falla el journal.
+O sea: «fotos sí» prueba que **la lectura de ficheros funciona**, no que el journal AV esté sano.
+
+Consecuencia práctica: si el código del log es de la familia `0x10xxxxxx`, **ningún fichero
+copiado lo arregla**; hay que dejar que la cámara reescriba el pack. Y como «Recuperar BD imág.»
+se apoya en ese mismo journal, el gesto que sí fuerza reconstrucción es **renombrar `AVF_INFO`**
+(y, si eso no basta, formatear en la cámara).
 
 ## 6. Reproducibilidad en el arnés
 
