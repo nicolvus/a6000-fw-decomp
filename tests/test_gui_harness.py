@@ -828,3 +828,16 @@ def test_sin_avcam_el_cierre_no_espera_al_puente(tmp_path: Path, monkeypatch: py
     vm = live.Vm(work, "", "optA", None, False, True, False, "")
     assert vm.puente is None and vm.avq_cola is None
     assert vm.puente_listo.is_set() and vm.puente_listo.wait(5) and time.monotonic() - t < 0.5
+
+
+def test_botones_conocidos_se_cachea_y_se_rehace_si_cambia_el_fichero(tmp_path: Path) -> None:
+    """G22-ARR3: el ast.parse de live.py no se repite en cada petición, pero un fichero nuevo se vuelve a leer."""
+    sys.path.insert(0, str(HARNESS))
+    import emu_config as E
+
+    f = tmp_path / "live.py"
+    f.write_text("TECLAS = {'uno': (1, 2)}\n")
+    assert E.botones_conocidos(f) == ["uno"]
+    f.write_text("TECLAS = {'uno': (1, 2), 'dos': (3, 4)}\n")
+    assert E.botones_conocidos(f) == ["uno", "dos"]
+    assert E.botones_conocidos(HARNESS / "live.py")[:2] == ["arriba", "abajo"]

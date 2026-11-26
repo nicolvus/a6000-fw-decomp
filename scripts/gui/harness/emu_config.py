@@ -45,15 +45,27 @@ class DatError(ValueError):
     """Paquete no válido o no compatible: el mensaje va tal cual a la página."""
 
 
+_BOTONES: dict[tuple[str, float, int], list[str]] = {}  # ast.parse de live.py cuesta ~15 ms y /sd/* lo hacía en cada petición
+
+
 def botones_conocidos(live_py: Path = HERE / "live.py") -> list[str]:
     """Botones con código de cámara verificado: las claves del literal TECLAS de live.py (otras tareas lo ampliarán)."""
     try:
-        for n in ast.parse(live_py.read_text()).body:
-            if isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "TECLAS" for t in n.targets) and isinstance(n.value, ast.Dict):
-                return [k.value for k in n.value.keys if isinstance(k, ast.Constant)]
-    except (OSError, SyntaxError):
-        pass
-    return list(BOTONES_DEFECTO)
+        st = live_py.stat()
+        clave = (str(live_py), st.st_mtime, st.st_size)  # se rehace solo si cambia el fichero
+    except OSError:
+        clave = (str(live_py), 0.0, 0)
+    if clave not in _BOTONES:
+        out = list(BOTONES_DEFECTO)
+        try:
+            for n in ast.parse(live_py.read_text()).body:
+                if isinstance(n, ast.Assign) and any(isinstance(t, ast.Name) and t.id == "TECLAS" for t in n.targets) and isinstance(n.value, ast.Dict):
+                    out = [k.value for k in n.value.keys if isinstance(k, ast.Constant)]
+                    break
+        except (OSError, SyntaxError):
+            pass
+        _BOTONES[clave] = out
+    return list(_BOTONES[clave])
 
 
 def valida_teclas(teclas: object, botones: list[str]) -> dict[str, list[str]]:
