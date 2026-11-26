@@ -1,12 +1,13 @@
 #!/usr/bin/env python3
 """Autoprueba del arnés (G22): arranca la VM, ejercita las funciones de la cámara y dice PASS/FAIL con evidencia.
 
-Uso: autoprueba.py DIR_TRABAJO [--perfil-dir autoprueba] [--puerto 8695] [--config CONFIG.json] [--espera 300] [--rapida]
+Uso: autoprueba.py DIR_TRABAJO [--perfil-dir autoprueba] [--puerto 8695] [--config CONFIG.json] [--espera 300] [--intentos 2] [--rapida]
 
 Arranca `live.py` como subproceso, espera la primera pantalla y recorre: teclas (MENU abre/cierra), dial de modos, disparador
 (foto en la SD con EXIF), MOVIE (clip MP4), galería (lista/fichero/importar/borrar/formatear), estado de cámara (batería/USB)
 y cierre (`/salir`: estado guardado y sin procesos). Cada paso deja su PNG y su comprobación en el informe JSON/Markdown de
-`DIR_TRABAJO/autoprueba/<AAAAMMDD-HHMMSS>/`; código de salida 1 si algo falla.
+`DIR_TRABAJO/autoprueba/<AAAAMMDD-HHMMSS>/`; código de salida 1 si algo falla. El cuelgue intermitente del arranque (G22-CUELGUE: el invitado responde pero no llega a
+componer la pantalla) se reintenta en frío con `--intentos`; el paso `arranque-reintento` deja constancia.
 
 Es la comprobación de humo que el usuario puede correr tras tocar cualquier pieza del arnés: mide lo que la cámara hace de
 verdad en el invitado (teclas, dial, captura, SD) y no solo que los procesos arranquen.
@@ -187,6 +188,7 @@ def main() -> int:
     ap.add_argument("--config", default="", help="config del configurador; sin él se usa uno propio en un directorio temporal")
     ap.add_argument("--espera", type=float, default=300, help="tope hasta la primera pantalla (frío ~170 s)")
     ap.add_argument("--salida", default="", help="carpeta del informe (por defecto DIR_TRABAJO/autoprueba/<fecha>)")
+    ap.add_argument("--intentos", type=int, default=2, help="arranques en frío si el invitado no llega a pintar (G22-CUELGUE, intermitente)")
     a = ap.parse_args()
     work = a.work.resolve()
     base = f"http://127.0.0.1:{a.puerto}"
@@ -197,16 +199,36 @@ def main() -> int:
         a.config = str(_config(tmp))
     cfg = json.loads(Path(a.config).read_text())
     raiz_sd = Path(cfg["sd"]["carpeta"])
-    proc = subprocess.Popen([str(VENV), str(HERE / "live.py"), str(work), "--perfil-dir", a.perfil_dir, "--puerto", str(a.puerto),
-                             "--config", a.config], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, start_new_session=True)
-    try:
+    def arranca() -> tuple[subprocess.Popen, bool, float, dict, float]:
+        """Arranca live.py y espera a que el invitado PINTE: (proceso, listo, segundos, /estado, fracción de píxeles opacos).
+
+        El cuelgue de «0 listas» (G22-CUELGUE) es intermitente: el invitado responde pero no llega a componer la pantalla, y no se arregla
+        esperando. Se reintenta en frío borrando el perfil, que es lo que hace un usuario al volver a arrancar.
+        """
+        pr = subprocess.Popen([str(VENV), str(HERE / "live.py"), str(work), "--perfil-dir", a.perfil_dir, "--puerto", str(a.puerto),
+                               "--config", a.config], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, start_new_session=True)
         listo, t, estado = espera_pantalla(base, a.espera)
-        png = p.dir / "01-pantalla.png"
         p.dir.mkdir(parents=True, exist_ok=True)
+        png = p.dir / "01-pantalla.png"
+        _post(f"{base}/refrescar")
         _png(f"{base}/eventos", png, 25) if listo else None
-        p.paso("arranque", listo, f"primera pantalla en {t:.1f} s · {estado.get('texto', 'sin /estado')}", png.name if png.exists() else "")
+        return pr, listo, t, estado, _opaco(png) if png.exists() else 0.0
+
+    proc, listo, t, estado, opacos = arranca()
+    p.paso("arranque", listo, f"primera pantalla en {t:.1f} s · {estado.get('texto', 'sin /estado')}", "01-pantalla.png" if listo else "")
+    for intento in range(2, a.intentos + 1):  # el invitado que no pinta no se arregla esperando: se vuelve a arrancar en frío
+        if not listo or opacos >= 0.02:
+            break
+        _post(f"{base}/salir")
+        proc.wait(timeout=90)
+        shutil.rmtree(work / "live" / a.perfil_dir, ignore_errors=True)
+        proc, listo, t, estado, opacos = arranca()
+        p.paso("arranque-reintento", listo and opacos >= 0.02,
+               f"intento {intento}: primera pantalla en {t:.1f} s, opacos {opacos:.3f}", "01-pantalla.png" if listo else "")
+    try:
         if not listo:
             return 1
+        png = p.dir / "01-pantalla.png"
 
         # pantalla: tras restaurar puede no haber repintado (G22-ARR2): se pide el fotograma actual y, si sigue vacía, DISP.
         pantalla = p.dir / "01b-pantalla.png"
@@ -292,7 +314,10 @@ def main() -> int:
         cod, cuerpo = _post(f"{base}/camara/usb", b'{"on":true}')
         p.paso("camara-usb", cod == 200 and "U 1" in _js(cuerpo).get("enviado", []), f"HTTP {cod} → {_js(cuerpo).get('enviado')}")
     finally:
-        cod, _ = _post(f"{base}/salir", timeout=60)
+        try:
+            _post(f"{base}/salir", timeout=60)
+        except OSError:  # el arranque pudo quedarse sin VM: el cierre no debe tapar el motivo
+            pass
         for _ in range(120):  # el cierre guarda el estado (8 s) y termina QEMU
             if proc.poll() is not None:
                 break
