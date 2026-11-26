@@ -1,0 +1,38 @@
+001da1ec: 2e48       ldr       r0, [pc, #0xb8]                   ; [001da2a8]=007ae46a
+001da1ee: 46f771f8   bl        #0x1202d4                       
+001da1f2: 0db9       cbnz      r5, #0x1da1f8                   
+001da1f4: 2d48       ldr       r0, [pc, #0xb4]                   ; [001da2ac]=007ae476 "AVI_STATE_INVALID"
+001da1f6: 1ee0       b         #0x1da236                       
+001da1f8: 012d       cmp       r5, #1                          
+001da1fa: 01d1       bne       #0x1da200                       
+001da1fc: 2c48       ldr       r0, [pc, #0xb0]                   ; [001da2b0]=007ae488 "AVI_STATE_VALID"
+001da1fe: 1ae0       b         #0x1da236                       
+001da200: 022d       cmp       r5, #2                          
+001da202: 01d1       bne       #0x1da208                       
+001da204: 2b48       ldr       r0, [pc, #0xac]                   ; [001da2b4]=007ae498 "AVI_STATE_NEED_SALVAGE"
+001da206: 16e0       b         #0x1da236                       
+001da208: 032d       cmp       r5, #3                          
+001da20a: 01d1       bne       #0x1da210                       
+001da20c: 2a48       ldr       r0, [pc, #0xa8]                   ; [001da2b8]=007ae4af "AVI_STATE_NEED_ORG_RESCUE"
+001da20e: 12e0       b         #0x1da236                       
+001da210: 042d       cmp       r5, #4                          
+001da212: 01d1       bne       #0x1da218                       
+001da214: 2948       ldr       r0, [pc, #0xa4]                   ; [001da2bc]=007ae4c9 "AVI_STATE_NEED_BAK_RESCUE"
+001da216: 0ee0       b         #0x1da236                       
+001da218: 062d       cmp       r5, #6                          
+001da21a: 01d1       bne       #0x1da220                       
+001da21c: 2848       ldr       r0, [pc, #0xa0]                   ; [001da2c0]=007ae4e3 "AVI_STATE_NEED_UPDATE"
+001da21e: 0ae0       b         #0x1da236                       
+001da220: 052d       cmp       r5, #5                          
+001da222: 01d1       bne       #0x1da228                       
+001da224: 2748       ldr       r0, [pc, #0x9c]                   ; [001da2c4]=007ae4f9 "AVI_STATE_NEED_SIZE_FULL_RESCUE"
+001da226: 06e0       b         #0x1da236                       
+001da228: 072d       cmp       r5, #7                          
+001da22a: 01d1       bne       #0x1da230                       
+001da22c: 2648       ldr       r0, [pc, #0x98]                   ; [001da2c8]=007ae519 "AVI_STATE_VALID_CANNOT_INCREASE"
+001da22e: 02e0       b         #0x1da236                       
+001da230: 082d       cmp       r5, #8                          
+001da232: 02d1       bne       #0x1da23a                       
+001da234: 2548       ldr       r0, [pc, #0x94]                   ; [001da2cc]=007ae539 "AVI_STATE_VALID_READ_ONLY"
+001da236: 46f74df8   bl        #0x1202d4                       
+001da23a: 46f70dfd   bl        #0x120c58                       

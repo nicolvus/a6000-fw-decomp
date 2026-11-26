@@ -119,6 +119,32 @@ manejador no consulta el modo). Los logs son 4 líneas incondicionales a stdout 
 regla de decisión por línea. Kit de medida listo y probado en seco: `scripts/camera_filmpb1_trace.py`.
 [Camino final y plan P0–P3](../reports/film-pb-1-camino-final-20261127.md).
 
+**Montaje y carga del IFO, cerrado estáticamente (26-11-2026).** Los cinco literales del anillo salen de `libmpr.so` y
+tienen emisor único: `MountCmd : Flash Mount Error` (`0x8EA305`) lo imprime `AviMMgrCmd::MountCmd` (`0x626DB8`, gemela
+con *driveLetter* en `0x627020`) en `0x626F18`, solo desde el bloque de error común `0x626F08`, al que se llega por
+`FlashMount()`≠0 (y ≠`0x31001001`) o por «media fuera + salvage» con `0x31000002`; `GetDeviceInfo : ER_SEQUENCE  DEVICE
+Unmounted` (`0x8E9EAA`) sale de `0x625C7A` cuando `[this+8]->vtbl[0x140]()` devuelve 0 (registra `0x31000007`);
+`FlashLoadMp4 : CreateAndLoad Error` (`0x8EA6B8`) sale de `0x627C86` cuando `MMgrMp4IfoAcsr::CreateAndLoad` (`0x67CA6C`)
+devuelve ≠0 (línea 13247, `0x31000006`); `Err RcsBackupTblData` (`0x823999`) sale de `0x3AFB2C` cuando
+`RcsBackupTblData()` devuelve un código con cabecera `0x10` y **no** marca salvage; `CheckSalvageStatus` (`0x90A075`) es
+el nombre que `MMgrAvcHdIfoAcsr::CheckSalvageStatus` (`0x671DAC`) registra en la línea 791 con el código de
+`hdAvcIfo_If::CheckSalvageStatus` (`0x5AD53C`). **Los códigos están resueltos por tablas del propio binario:**
+`0x31000001 ER_OK`, `0x31000002 ER_INVALID_PARAM`, `0x31000003 ER_FAILED`, `0x31000006` = **`MMgrGlobal::ER_CMD_CONFLICT`**
+(rama **por defecto** del traductor `0x64E300` en `0x64ECEC`: «error de subsistema no clasificado»), `0x31000007` =
+**`ER_INTERNAL`** (precondición interna), `0x31000008 ER_SEQUENCE`, `0x31001001 ER_DIFFERENT_DEVICE_TYPE`,
+`0x3100200C ER_NOT_MOUNTED` (tabla `{nombre,código}` en `0x8F6CA8`); `0x32400001` = `ER_FAILED` de AVI (mapper
+`0x1DA818`); `0xB0800001` = fallo **genérico** de `mp4Ifo` (traductor `0x6F0D4C`: `0x6F0E40` para `0xXX100000` y default
+`0x6F0EBC`); `0xA0100003` = comando HD-AVC `0x4E` fallido en la capa de comando (`0x520BFC`, fuera de la lista de
+códigos «esperados» de `0x5215AC`, de ahí el banner). **Orden obligado:** estado de dispositivo → `FlashMount`/DFS
+(`0x3BB220`; éxito ⇒ `[this+0x140]=4` vía `0x64C5DC` en `0x626960`) → `CheckSalvageStatus` (estado AVI ∈ {2,3,4,6}) →
+gate `0x64C298` con `state==4` → `CreateAndLoad` → `CreateSub` → `LoadSub` → `Load` → `mp4Ifo_General::Load` (FLASH) →
+`FlashLoadForMsv` → `RcsBackupTblData` (única lectura real del volumen). **Consecuencia:** `0xB0800001` y `0x31000006`
+son códigos por defecto y no identifican causa; la huella de «volumen ilegible» es `Err RcsBackupTblData → 0xB0800001 →
+0x31000006`, mientras que un IFO corrupto pero legible daría un código específico (`0xB0400005`, `0xB0510001`,
+`0xB0F30001`…). **No verificado:** identidad de las virtuales `vtbl[0x140]`/`[0x60]`/`[0x168]`, cuál de las dos vías de
+`MountCmd` disparó la línea del anillo (el anillo no es transcripción completa: falta `MountCmd : `) y semántica nominal
+de la cabecera `0x10`. [Informe de montaje/IFO](../reports/film-pb-1-sub-mount-ifo-20261126.md).
+
 ## Estado global (actualizado 03-11-2026)
 
 - **Cámara recuperada (03-11-2026):** con autorización física expresa, se accedió por SWD al BIONZ (R46/R47), se confirmó en la propia

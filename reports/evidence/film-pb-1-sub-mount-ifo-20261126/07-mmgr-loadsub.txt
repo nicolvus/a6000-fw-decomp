@@ -1,0 +1,90 @@
+0067c8cc: 2de9f043   push.w    {r4, r5, r6, r7, r8, sb, lr}    
+0067c8d0: 83b0       sub       sp, #0xc                        
+0067c8d2: 354b       ldr       r3, [pc, #0xd4]                   ; [0067c9a8]=009df25c
+0067c8d4: 0446       mov       r4, r0                          
+0067c8d6: 0e46       mov       r6, r1                          
+0067c8d8: 1546       mov       r5, r2                          
+0067c8da: 02af       add       r7, sp, #8                      
+0067c8dc: 1978       ldrb      r1, [r3]                        
+0067c8de: 3346       mov       r3, r6                          
+0067c8e0: 0092       str       r2, [sp]                        
+0067c8e2: 324a       ldr       r2, [pc, #0xc8]                   ; [0067c9ac]=0090bc42
+0067c8e4: 0069       ldr       r0, [r0, #0x10]                 
+0067c8e6: d3f7a1fe   bl        #0x65062c                       
+0067c8ea: 85f00101   eor       r1, r5, #1                      
+0067c8ee: a06c       ldr       r0, [r4, #0x48]                 
+0067c8f0: 6bf0a4fc   bl        #0x6e823c                       
+0067c8f4: dff8c080   ldr.w     r8, [pc, #0xc0]                   ; [0067c9b8]=0090d18c "mmgrifoacsr/MMgrMp4IfoAcsr.cpp"
+0067c8f8: dff8c090   ldr.w     sb, [pc, #0xc0]                   ; [0067c9bc]=0090d5fb "LoadSub"
+0067c8fc: 0546       mov       r5, r0                          
+0067c8fe: a8b1       cbz       r0, #0x67c92c                   
+0067c900: 2a46       mov       r2, r5                          
+0067c902: 2046       mov       r0, r4                          
+0067c904: 40f2a311   movw      r1, #0x1a3                      
+0067c908: 40f6e403   movw      r3, #0x8e4                      
+0067c90c: 8de80003   stm.w     sp, {r8, sb}                    
+0067c910: fbf74ff9   bl        #0x677bb2                       
+0067c914: e068       ldr       r0, [r4, #0xc]                  
+0067c916: 0021       movs      r1, #0                          
+0067c918: 0368       ldr       r3, [r0]                        
+0067c91a: 5b6f       ldr       r3, [r3, #0x74]                 
+0067c91c: 9847       blx       r3                              
+0067c91e: 244b       ldr       r3, [pc, #0x90]                   ; [0067c9b0]=009df25a
+0067c920: 2069       ldr       r0, [r4, #0x10]                 
+0067c922: 2449       ldr       r1, [pc, #0x90]                   ; [0067c9b4]=0090d3fe "LoadSub : MP4 Load Error."
+0067c924: 1a78       ldrb      r2, [r3]                        
+0067c926: d3f70cff   bl        #0x650742                       
+0067c92a: 2ee0       b         #0x67c98a                       
+0067c92c: e068       ldr       r0, [r4, #0xc]                  
+0067c92e: 0121       movs      r1, #1                          
+0067c930: 0368       ldr       r3, [r0]                        
+0067c932: 5b6f       ldr       r3, [r3, #0x74]                 
+0067c934: 9847       blx       r3                              
+0067c936: 4eb9       cbnz      r6, #0x67c94c                   
+0067c938: 2046       mov       r0, r4                          
+0067c93a: 2946       mov       r1, r5                          
+0067c93c: f4f7a6f8   bl        #0x670a8c                       
+0067c940: e068       ldr       r0, [r4, #0xc]                  
+0067c942: 2946       mov       r1, r5                          
+0067c944: 0368       ldr       r3, [r0]                        
+0067c946: d3f8d830   ldr.w     r3, [r3, #0xd8]                 
+0067c94a: 14e0       b         #0x67c976                       
+0067c94c: 012e       cmp       r6, #1                          
+0067c94e: 09d1       bne       #0x67c964                       
+0067c950: 2046       mov       r0, r4                          
+0067c952: 0221       movs      r1, #2                          
+0067c954: f4f79af8   bl        #0x670a8c                       
+0067c958: e068       ldr       r0, [r4, #0xc]                  
+0067c95a: 0221       movs      r1, #2                          
+0067c95c: 0368       ldr       r3, [r0]                        
+0067c95e: d3f8d830   ldr.w     r3, [r3, #0xd8]                 
+0067c962: 08e0       b         #0x67c976                       
+0067c964: 2046       mov       r0, r4                          
+0067c966: 0321       movs      r1, #3                          
+0067c968: f4f790f8   bl        #0x670a8c                       
+0067c96c: e068       ldr       r0, [r4, #0xc]                  
+0067c96e: 0121       movs      r1, #1                          
+0067c970: 0368       ldr       r3, [r0]                        
+0067c972: d3f8d830   ldr.w     r3, [r3, #0xd8]                 
+0067c976: 9847       blx       r3                              
+0067c978: a068       ldr       r0, [r4, #8]                    
+0067c97a: e9f7b3f8   bl        #0x665ae4                       
+0067c97e: 40f01001   orr       r1, r0, #0x10                   
+0067c982: a068       ldr       r0, [r4, #8]                    
+0067c984: 89b2       uxth      r1, r1                          
+0067c986: e8f7abff   bl        #0x6658e0                       
+0067c98a: 2046       mov       r0, r4                          
+0067c98c: 40f2a311   movw      r1, #0x1a3                      
+0067c990: 2a46       mov       r2, r5                          
+0067c992: 40f60f13   movw      r3, #0x90f                      
+0067c996: 8de80003   stm.w     sp, {r8, sb}                    
+0067c99a: fbf7f8f8   bl        #0x677b8e                       
+0067c99e: 07f10407   add.w     r7, r7, #4                      
+0067c9a2: bd46       mov       sp, r7                          
+0067c9a4: bde8f083   pop.w     {r4, r5, r6, r7, r8, sb, pc}    
+0067c9a8: 5cf2       <dato>
+0067c9aa: 9d00       lsls      r5, r3, #2                      
+0067c9ac: 42bc       pop       {r1, r6}                        
+0067c9ae: 9000       lsls      r0, r2, #2                      
+0067c9b0: 5af2       <dato>
+0067c9b2: 9d00       lsls      r5, r3, #2                      

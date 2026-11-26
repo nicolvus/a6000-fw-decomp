@@ -1,0 +1,34 @@
+006f0d4c: 2de9f84f   push.w    {r3, r4, r5, r6, r7, r8, sb, sl, fp, lr}
+006f0d50: 8c46       mov       ip, r1                          
+006f0d52: 00af       add       r7, sp, #0                      
+006f0d54: 1646       mov       r6, r2                          
+006f0d56: 1946       mov       r1, r3                          
+006f0d58: 0028       cmp       r0, #0                          
+006f0d5a: 00f0a380   beq.w     #0x6f0ea4                       
+006f0d5e: 584b       ldr       r3, [pc, #0x160]                  ; [006f0ec0]=13810001
+006f0d60: 9842       cmp       r0, r3                          
+006f0d62: 00f0a580   beq.w     #0x6f0eb0                       
+006f0d66: 574b       ldr       r3, [pc, #0x15c]                  ; [006f0ec4]=1340000e
+006f0d68: 9842       cmp       r0, r3                          
+006f0d6a: 00f0a380   beq.w     #0x6f0eb4                       
+006f0d6e: 0c3b       subs      r3, #0xc                        
+006f0d70: 9842       cmp       r0, r3                          
+006f0d72: 00f09f80   beq.w     #0x6f0eb4                       
+006f0d76: 0333       adds      r3, #3                          
+006f0d78: 9842       cmp       r0, r3                          
+006f0d7a: 00f09b80   beq.w     #0x6f0eb4                       
+006f0d7e: 0133       adds      r3, #1                          
+006f0d80: 9842       cmp       r0, r3                          
+006f0d82: 00f09780   beq.w     #0x6f0eb4                       
+006f0d86: 0133       adds      r3, #1                          
+006f0d88: 9842       cmp       r0, r3                          
+006f0d8a: 00f09380   beq.w     #0x6f0eb4                       
+006f0d8e: 4ff47f04   mov.w     r4, #0xff0000                   
+006f0d92: 0025       movs      r5, #0                          
+006f0d94: 0440       ands      r4, r0                          
+006f0d96: 4ff40008   mov.w     r8, #0x800000                   
+006f0d9a: 4ff00009   mov.w     sb, #0                          
+006f0d9e: 84ea080a   eor.w     sl, r4, r8                      
+006f0da2: 85ea090b   eor.w     fp, r5, sb                      
+006f0da6: 5aea0b03   orrs.w    r3, sl, fp                      
+006f0daa: 62d0       beq       #0x6f0e72                       

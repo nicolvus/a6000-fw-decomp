@@ -1,0 +1,64 @@
+001da818: 304a       ldr       r2, [pc, #0xc0]                   ; [001da8dc]=32200003
+001da81a: 0346       mov       r3, r0                          
+001da81c: 80b5       push      {r7, lr}                        
+001da81e: 9042       cmp       r0, r2                          
+001da820: 00af       add       r7, sp, #0                      
+001da822: 3fd0       beq       #0x1da8a4                       
+001da824: 19d8       bhi       #0x1da85a                       
+001da826: 2e4a       ldr       r2, [pc, #0xb8]                   ; [001da8e0]=32000003
+001da828: 9042       cmp       r0, r2                          
+001da82a: 31d0       beq       #0x1da890                       
+001da82c: 06d8       bhi       #0x1da83c                       
+001da82e: 0128       cmp       r0, #1                          
+001da830: 52d0       beq       #0x1da8d8                       
+001da832: 29d3       blo       #0x1da888                       
+001da834: 013a       subs      r2, #1                          
+001da836: 9042       cmp       r0, r2                          
+001da838: 46d1       bne       #0x1da8c8                       
+001da83a: 27e0       b         #0x1da88c                       
+001da83c: 294a       ldr       r2, [pc, #0xa4]                   ; [001da8e4]=32100001
+001da83e: 9042       cmp       r0, r2                          
+001da840: 2ad0       beq       #0x1da898                       
+001da842: 03d8       bhi       #0x1da84c                       
+001da844: 284a       ldr       r2, [pc, #0xa0]                   ; [001da8e8]=32000004
+001da846: 9042       cmp       r0, r2                          
+001da848: 3ed1       bne       #0x1da8c8                       
+001da84a: 23e0       b         #0x1da894                       
+001da84c: 274a       ldr       r2, [pc, #0x9c]                   ; [001da8ec]=32200001
+001da84e: 9042       cmp       r0, r2                          
+001da850: 24d0       beq       #0x1da89c                       
+001da852: 0132       adds      r2, #1                          
+001da854: 9042       cmp       r0, r2                          
+001da856: 37d1       bne       #0x1da8c8                       
+001da858: 22e0       b         #0x1da8a0                       
+001da85a: 254a       ldr       r2, [pc, #0x94]                   ; [001da8f0]=32400004
+001da85c: 9042       cmp       r0, r2                          
+001da85e: 29d0       beq       #0x1da8b4                       
+001da860: 07d8       bhi       #0x1da872                       
+001da862: 023a       subs      r2, #2                          
+001da864: 9042       cmp       r0, r2                          
+001da866: 21d0       beq       #0x1da8ac                       
+001da868: 22d8       bhi       #0x1da8b0                       
+001da86a: 013a       subs      r2, #1                          
+001da86c: 9042       cmp       r0, r2                          
+001da86e: 2bd1       bne       #0x1da8c8                       
+001da870: 1ae0       b         #0x1da8a8                       
+001da872: 204a       ldr       r2, [pc, #0x80]                   ; [001da8f4]=32400006
+001da874: 9042       cmp       r0, r2                          
+001da876: 21d0       beq       #0x1da8bc                       
+001da878: 1ed3       blo       #0x1da8b8                       
+001da87a: 0132       adds      r2, #1                          
+001da87c: 9042       cmp       r0, r2                          
+001da87e: 1fd0       beq       #0x1da8c0                       
+001da880: 0132       adds      r2, #1                          
+001da882: 9042       cmp       r0, r2                          
+001da884: 20d1       bne       #0x1da8c8                       
+001da886: 1de0       b         #0x1da8c4                       
+001da888: 1b48       ldr       r0, [pc, #0x6c]                   ; [001da8f8]=0083959e "ER_OK"
+001da88a: 80bd       pop       {r7, pc}                        
+001da88c: 1b48       ldr       r0, [pc, #0x6c]                   ; [001da8fc]=008f5710 "ER_INTERNAL"
+001da88e: 80bd       pop       {r7, pc}                        
+001da890: 1b48       ldr       r0, [pc, #0x6c]                   ; [001da900]=007ae7d5 "ER_ILLEGAL_SEQUENCE"
+001da892: 80bd       pop       {r7, pc}                        
+001da894: 1b48       ldr       r0, [pc, #0x6c]                   ; [001da904]=007ae7e9 "ER_KERNEL_CALL"
+001da896: 80bd       pop       {r7, pc}                        

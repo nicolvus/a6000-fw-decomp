@@ -1,0 +1,28 @@
+0064c298: 2de9f843   push.w    {r3, r4, r5, r6, r7, r8, sb, lr}
+0064c29c: 00f59279   add.w     sb, r0, #0x124                  
+0064c2a0: 0446       mov       r4, r0                          
+0064c2a2: 00af       add       r7, sp, #0                      
+0064c2a4: 4846       mov       r0, sb                          
+0064c2a6: 0d46       mov       r5, r1                          
+0064c2a8: 8af7caf0   bl        #0x1d6440                       
+0064c2ac: 4846       mov       r0, sb                          
+0064c2ae: d4f84081   ldr.w     r8, [r4, #0x140]                
+0064c2b2: d4f84861   ldr.w     r6, [r4, #0x148]                
+0064c2b6: d4f84c41   ldr.w     r4, [r4, #0x14c]                
+0064c2ba: 8af7c8f0   bl        #0x1d644e                       
+0064c2be: 15f0020f   tst.w     r5, #2                          
+0064c2c2: 05d0       beq       #0x64c2d0                       
+0064c2c4: b8f1020f   cmp.w     r8, #2                          
+0064c2c8: 02d1       bne       #0x64c2d0                       
+0064c2ca: 0eb9       cbnz      r6, #0x64c2d0                   
+0064c2cc: 002c       cmp       r4, #0                          
+0064c2ce: 4fd0       beq       #0x64c370                       
+0064c2d0: 15f0040f   tst.w     r5, #4                          
+0064c2d4: 05d0       beq       #0x64c2e2                       
+0064c2d6: b8f1040f   cmp.w     r8, #4                          
+0064c2da: 02d1       bne       #0x64c2e2                       
+0064c2dc: 0eb9       cbnz      r6, #0x64c2e2                   
+0064c2de: 002c       cmp       r4, #0                          
+0064c2e0: 46d0       beq       #0x64c370                       
+0064c2e2: 15f0080f   tst.w     r5, #8                          
+0064c2e6: 05d0       beq       #0x64c2f4                       

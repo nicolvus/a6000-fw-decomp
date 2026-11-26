@@ -1,0 +1,68 @@
+0067ca6c: 2de9f04f   push.w    {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+0067ca70: 1d46       mov       r5, r3                          
+0067ca72: 83b0       sub       sp, #0xc                        
+0067ca74: 264b       ldr       r3, [pc, #0x98]                   ; [0067cb10]=009df25c
+0067ca76: 0446       mov       r4, r0                          
+0067ca78: 0e46       mov       r6, r1                          
+0067ca7a: 02af       add       r7, sp, #8                      
+0067ca7c: 1978       ldrb      r1, [r3]                        
+0067ca7e: 9046       mov       r8, r2                          
+0067ca80: 0092       str       r2, [sp]                        
+0067ca82: 3346       mov       r3, r6                          
+0067ca84: 0069       ldr       r0, [r0, #0x10]                 
+0067ca86: 234a       ldr       r2, [pc, #0x8c]                   ; [0067cb14]=0090b704
+0067ca88: d3f7d0fd   bl        #0x65062c                       
+0067ca8c: d4f84890   ldr.w     sb, [r4, #0x48]                 
+0067ca90: dff894a0   ldr.w     sl, [pc, #0x94]                   ; [0067cb28]=0090d18c "mmgrifoacsr/MMgrMp4IfoAcsr.cpp"
+0067ca94: b9f1000f   cmp.w     sb, #0                          
+0067ca98: 13d0       beq       #0x67cac2                       
+0067ca9a: 1f4b       ldr       r3, [pc, #0x7c]                   ; [0067cb18]=009df25a
+0067ca9c: 2069       ldr       r0, [r4, #0x10]                 
+0067ca9e: 1f49       ldr       r1, [pc, #0x7c]                   ; [0067cb1c]=0090d441 "CreateAndLoad : MP4 already created."
+0067caa0: 1a78       ldrb      r2, [r3]                        
+0067caa2: d3f74efe   bl        #0x650742                       
+0067caa6: 1e4b       ldr       r3, [pc, #0x78]                   ; [0067cb20]=0090d0dc "CreateAndLoad"
+0067caa8: 2046       mov       r0, r4                          
+0067caaa: 40f29111   movw      r1, #0x191                      
+0067caae: 1d4a       ldr       r2, [pc, #0x74]                   ; [0067cb24]=018000ff
+0067cab0: 0193       str       r3, [sp, #4]                    
+0067cab2: d723       movs      r3, #0xd7                       
+0067cab4: cdf800a0   str.w     sl, [sp]                        
+0067cab8: fbf77bf8   bl        #0x677bb2                       
+0067cabc: dff864b0   ldr.w     fp, [pc, #0x64]                   ; [0067cb24]=018000ff
+0067cac0: 16e0       b         #0x67caf0                       
+0067cac2: 2046       mov       r0, r4                          
+0067cac4: 2946       mov       r1, r5                          
+0067cac6: fff77dfd   bl        #0x67c5c4                       
+0067caca: 8346       mov       fp, r0                          
+0067cacc: 80b9       cbnz      r0, #0x67caf0                   
+0067cace: 2b68       ldr       r3, [r5]                        
+0067cad0: 2046       mov       r0, r4                          
+0067cad2: 3146       mov       r1, r6                          
+0067cad4: 4246       mov       r2, r8                          
+0067cad6: a364       str       r3, [r4, #0x48]                 
+0067cad8: fff7f8fe   bl        #0x67c8cc                       
+0067cadc: 8346       mov       fp, r0                          
+0067cade: 38b1       cbz       r0, #0x67caf0                   
+0067cae0: 2046       mov       r0, r4                          
+0067cae2: a16c       ldr       r1, [r4, #0x48]                 
+0067cae4: fff730fe   bl        #0x67c748                       
+0067cae8: c4f84890   str.w     sb, [r4, #0x48]                 
+0067caec: c5f80090   str.w     sb, [r5]                        
+0067caf0: 0b4b       ldr       r3, [pc, #0x2c]                   ; [0067cb20]=0090d0dc "CreateAndLoad"
+0067caf2: 2046       mov       r0, r4                          
+0067caf4: 40f29111   movw      r1, #0x191                      
+0067caf8: 5a46       mov       r2, fp                          
+0067cafa: cdf800a0   str.w     sl, [sp]                        
+0067cafe: 0193       str       r3, [sp, #4]                    
+0067cb00: f623       movs      r3, #0xf6                       
+0067cb02: fbf744f8   bl        #0x677b8e                       
+0067cb06: 07f10407   add.w     r7, r7, #4                      
+0067cb0a: bd46       mov       sp, r7                          
+0067cb0c: bde8f08f   pop.w     {r4, r5, r6, r7, r8, sb, sl, fp, pc}
+0067cb10: 5cf2       <dato>
+0067cb12: 9d00       lsls      r5, r3, #2                      
+0067cb14: 04b7       <dato>
+0067cb16: 9000       lsls      r0, r2, #2                      
+0067cb18: 5af2       <dato>
+0067cb1a: 9d00       lsls      r5, r3, #2                      

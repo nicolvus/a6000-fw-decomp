@@ -1,0 +1,39 @@
+00625c4c: 2de9f043   push.w    {r4, r5, r6, r7, r8, sb, lr}    
+00625c50: 91b0       sub       sp, #0x44                       
+00625c52: 0446       mov       r4, r0                          
+00625c54: 04af       add       r7, sp, #0x10                   
+00625c56: 8846       mov       r8, r1                          
+00625c58: 8068       ldr       r0, [r0, #8]                    
+00625c5a: 9146       mov       sb, r2                          
+00625c5c: 0368       ldr       r3, [r0]                        
+00625c5e: d3f84031   ldr.w     r3, [r3, #0x140]                
+00625c62: 9847       blx       r3                              
+00625c64: 0546       mov       r5, r0                          
+00625c66: d0b9       cbnz      r0, #0x625c9e                   
+00625c68: ff23       movs      r3, #0xff                       
+00625c6a: c8f80030   str.w     r3, [r8]                        
+00625c6e: 8e4b       ldr       r3, [pc, #0x238]                  ; [00625ea8]=009df25a
+00625c70: 0126       movs      r6, #1                          
+00625c72: e068       ldr       r0, [r4, #0xc]                  
+00625c74: c9f80060   str.w     r6, [sb]                        
+00625c78: 1a78       ldrb      r2, [r3]                        
+00625c7a: 8c49       ldr       r1, [pc, #0x230]                  ; [00625eac]=008e9eaa "GetDeviceInfo : ER_SEQUENCE  DEVICE Unmounted"
+00625c7c: 2af061fd   bl        #0x650742                       
+00625c80: 8b4b       ldr       r3, [pc, #0x22c]                  ; [00625eb0]=008e79d7 "GetDeviceInfo"
+00625c82: 0220       movs      r0, #2                          
+00625c84: 2946       mov       r1, r5                          
+00625c86: 8b4a       ldr       r2, [pc, #0x22c]                  ; [00625eb4]=31000007
+00625c88: 0093       str       r3, [sp]                        
+00625c8a: 43f25b13   movw      r3, #0x315b                     
+00625c8e: 0193       str       r3, [sp, #4]                    
+00625c90: 6368       ldr       r3, [r4, #4]                    
+00625c92: 0396       str       r6, [sp, #0xc]                  
+00625c94: 0293       str       r3, [sp, #8]                    
+00625c96: 884b       ldr       r3, [pc, #0x220]                  ; [00625eb8]=008e7f72 "avimmgr/AviMMgrCmd.cpp"
+00625c98: 28f0f0fa   bl        #0x64e27c                       
+00625c9c: 66e1       b         #0x625f6c                       
+00625c9e: 0021       movs      r1, #0                          
+00625ca0: 3022       movs      r2, #0x30                       
+00625ca2: 3846       mov       r0, r7                          
+00625ca4: f9f632e5   blx       #0x11f70c                       
+00625ca8: d4f82807   ldr.w     r0, [r4, #0x728]                

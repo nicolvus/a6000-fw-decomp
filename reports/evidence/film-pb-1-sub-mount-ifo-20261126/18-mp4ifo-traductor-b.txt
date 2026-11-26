@@ -1,0 +1,32 @@
+006f0d8e: 4ff47f04   mov.w     r4, #0xff0000                   
+006f0d92: 0025       movs      r5, #0                          
+006f0d94: 0440       ands      r4, r0                          
+006f0d96: 4ff40008   mov.w     r8, #0x800000                   
+006f0d9a: 4ff00009   mov.w     sb, #0                          
+006f0d9e: 84ea080a   eor.w     sl, r4, r8                      
+006f0da2: 85ea090b   eor.w     fp, r5, sb                      
+006f0da6: 5aea0b03   orrs.w    r3, sl, fp                      
+006f0daa: 62d0       beq       #0x6f0e72                       
+006f0dac: a045       cmp       r8, r4                          
+006f0dae: 79eb050a   sbcs.w    sl, sb, r5                      
+006f0db2: 27db       blt       #0x6f0e04                       
+006f0db4: 4ff40018   mov.w     r8, #0x200000                   
+006f0db8: 4ff00009   mov.w     sb, #0                          
+006f0dbc: 84ea080a   eor.w     sl, r4, r8                      
+006f0dc0: 85ea090b   eor.w     fp, r5, sb                      
+006f0dc4: 5aea0b03   orrs.w    r3, sl, fp                      
+006f0dc8: 76d0       beq       #0x6f0eb8                       
+006f0dca: a045       cmp       r8, r4                          
+006f0dcc: 79eb050a   sbcs.w    sl, sb, r5                      
+006f0dd0: 07db       blt       #0x6f0de2                       
+006f0dd2: 0023       movs      r3, #0                          
+006f0dd4: 4ff48012   mov.w     r2, #0x100000                   
+006f0dd8: 5440       eors      r4, r2                          
+006f0dda: 5d40       eors      r5, r3                          
+006f0ddc: 54ea0500   orrs.w    r0, r4, r5                      
+006f0de0: 2ee0       b         #0x6f0e40                       
+006f0de2: 0023       movs      r3, #0                          
+006f0de4: 4ff48002   mov.w     r2, #0x400000                   
+006f0de8: 6240       eors      r2, r4                          
+006f0dea: 6b40       eors      r3, r5                          
+006f0dec: 52ea0308   orrs.w    r8, r2, r3                      

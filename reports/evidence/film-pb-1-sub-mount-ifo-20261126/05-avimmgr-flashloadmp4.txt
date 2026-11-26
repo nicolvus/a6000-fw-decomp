@@ -1,0 +1,103 @@
+00627bec: 2de9f043   push.w    {r4, r5, r6, r7, r8, sb, lr}    
+00627bf0: 85b0       sub       sp, #0x14                       
+00627bf2: 3e4d       ldr       r5, [pc, #0xf8]                   ; [00627cec]=009df25c
+00627bf4: 0446       mov       r4, r0                          
+00627bf6: 04af       add       r7, sp, #0x10                   
+00627bf8: c068       ldr       r0, [r0, #0xc]                  
+00627bfa: 8946       mov       sb, r1                          
+00627bfc: 2a78       ldrb      r2, [r5]                        
+00627bfe: a846       mov       r8, r5                          
+00627c00: 3b49       ldr       r1, [pc, #0xec]                   ; [00627cf0]=008ea686 "FlashLoadMp4 : Started"
+00627c02: 28f09efd   bl        #0x650742                       
+00627c06: 2046       mov       r0, r4                          
+00627c08: 0421       movs      r1, #4                          
+00627c0a: 3a4e       ldr       r6, [pc, #0xe8]                   ; [00627cf4]=008ed0ab "FlashLoadMp4"
+00627c0c: 24f044fb   bl        #0x64c298                       
+00627c10: d0b9       cbnz      r0, #0x627c48                   
+00627c12: 394b       ldr       r3, [pc, #0xe4]                   ; [00627cf8]=009df25a
+00627c14: e068       ldr       r0, [r4, #0xc]                  
+00627c16: 3949       ldr       r1, [pc, #0xe4]                   ; [00627cfc]=008ea69d "FlashLoadMp4 : ER_SEQUENCE"
+00627c18: 1a78       ldrb      r2, [r3]                        
+00627c1a: 28f092fd   bl        #0x650742                       
+00627c1e: 6068       ldr       r0, [r4, #4]                    
+00627c20: 40f28311   movw      r1, #0x183                      
+00627c24: 364a       ldr       r2, [pc, #0xd8]                   ; [00627d00]=31000007
+00627c26: 43f29433   movw      r3, #0x3394                     
+00627c2a: 27f052ff   bl        #0x64fad2                       
+00627c2e: 43f29533   movw      r3, #0x3395                     
+00627c32: 0193       str       r3, [sp, #4]                    
+00627c34: 0220       movs      r0, #2                          
+00627c36: 6368       ldr       r3, [r4, #4]                    
+00627c38: 40f28311   movw      r1, #0x183                      
+00627c3c: 0096       str       r6, [sp]                        
+00627c3e: 304a       ldr       r2, [pc, #0xc0]                   ; [00627d00]=31000007
+00627c40: 0293       str       r3, [sp, #8]                    
+00627c42: 0123       movs      r3, #1                          
+00627c44: 0393       str       r3, [sp, #0xc]                  
+00627c46: 48e0       b         #0x627cda                       
+00627c48: a068       ldr       r0, [r4, #8]                    
+00627c4a: 0021       movs      r1, #0                          
+00627c4c: 0368       ldr       r3, [r0]                        
+00627c4e: 5b6f       ldr       r3, [r3, #0x74]                 
+00627c50: 9847       blx       r3                              
+00627c52: 04f5e663   add.w     r3, r4, #0x730                  
+00627c56: d4f88007   ldr.w     r0, [r4, #0x780]                
+00627c5a: 4946       mov       r1, sb                          
+00627c5c: 0122       movs      r2, #1                          
+00627c5e: 0433       adds      r3, #4                          
+00627c60: 54f004ff   bl        #0x67ca6c                       
+00627c64: 0546       mov       r5, r0                          
+00627c66: 50b9       cbnz      r0, #0x627c7e                   
+00627c68: d4f88007   ldr.w     r0, [r4, #0x780]                
+00627c6c: 53f024fc   bl        #0x67b4b8                       
+00627c70: 0121       movs      r1, #1                          
+00627c72: d4f86407   ldr.w     r0, [r4, #0x764]                
+00627c76: 0a46       mov       r2, r1                          
+00627c78: 3ff51af9   bl        #0x366eb0                       
+00627c7c: 13e0       b         #0x627ca6                       
+00627c7e: 1e4b       ldr       r3, [pc, #0x78]                   ; [00627cf8]=009df25a
+00627c80: 4ff00009   mov.w     sb, #0                          
+00627c84: e068       ldr       r0, [r4, #0xc]                  
+00627c86: 1f49       ldr       r1, [pc, #0x7c]                   ; [00627d04]=008ea6b8 "FlashLoadMp4 : CreateAndLoad Error"
+00627c88: 1a78       ldrb      r2, [r3]                        
+00627c8a: c4f83497   str.w     sb, [r4, #0x734]                
+00627c8e: 28f058fd   bl        #0x650742                       
+00627c92: 6068       ldr       r0, [r4, #4]                    
+00627c94: 40f28311   movw      r1, #0x183                      
+00627c98: 2a46       mov       r2, r5                          
+00627c9a: 43f2b233   movw      r3, #0x33b2                     
+00627c9e: cdf80090   str.w     sb, [sp]                        
+00627ca2: 27f0e9fe   bl        #0x64fa78                       
+00627ca6: e068       ldr       r0, [r4, #0xc]                  
+00627ca8: 1749       ldr       r1, [pc, #0x5c]                   ; [00627d08]=008ea6db "FlashLoadMp4 : MP4 Load Completed"
+00627caa: 98f80020   ldrb.w    r2, [r8]                        
+00627cae: 28f048fd   bl        #0x650742                       
+00627cb2: 6068       ldr       r0, [r4, #4]                    
+00627cb4: 40f28311   movw      r1, #0x183                      
+00627cb8: 2a46       mov       r2, r5                          
+00627cba: 43f2bd33   movw      r3, #0x33bd                     
+00627cbe: 27f008ff   bl        #0x64fad2                       
+00627cc2: 43f2bf33   movw      r3, #0x33bf                     
+00627cc6: 0193       str       r3, [sp, #4]                    
+00627cc8: 0220       movs      r0, #2                          
+00627cca: 6368       ldr       r3, [r4, #4]                    
+00627ccc: 40f28311   movw      r1, #0x183                      
+00627cd0: 2a46       mov       r2, r5                          
+00627cd2: 0096       str       r6, [sp]                        
+00627cd4: 0293       str       r3, [sp, #8]                    
+00627cd6: 0123       movs      r3, #1                          
+00627cd8: 0393       str       r3, [sp, #0xc]                  
+00627cda: 0c4b       ldr       r3, [pc, #0x30]                   ; [00627d0c]=008e7f72 "avimmgr/AviMMgrCmd.cpp"
+00627cdc: 26f0cefa   bl        #0x64e27c                       
+00627ce0: 07f10407   add.w     r7, r7, #4                      
+00627ce4: bd46       mov       sp, r7                          
+00627ce6: bde8f083   pop.w     {r4, r5, r6, r7, r8, sb, pc}    
+00627cea: 00bf       nop                                       
+00627cec: 5cf2       <dato>
+00627cee: 9d00       lsls      r5, r3, #2                      
+00627cf0: 86a6       adr       r6, #0x218                      
+00627cf2: 8e00       lsls      r6, r1, #2                      
+00627cf4: abd0       beq       #0x627c4e                       
+00627cf6: 8e00       lsls      r6, r1, #2                      
+00627cf8: 5af2       <dato>
+00627cfa: 9d00       lsls      r5, r3, #2                      

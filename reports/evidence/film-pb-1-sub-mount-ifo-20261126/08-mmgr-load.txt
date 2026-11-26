@@ -1,0 +1,56 @@
+0067c9c0: 2de9f043   push.w    {r4, r5, r6, r7, r8, sb, lr}    
+0067c9c4: 83b0       sub       sp, #0xc                        
+0067c9c6: 214b       ldr       r3, [pc, #0x84]                   ; [0067ca4c]=009df25c
+0067c9c8: 0446       mov       r4, r0                          
+0067c9ca: 0e46       mov       r6, r1                          
+0067c9cc: 02af       add       r7, sp, #8                      
+0067c9ce: 1546       mov       r5, r2                          
+0067c9d0: 1978       ldrb      r1, [r3]                        
+0067c9d2: 3346       mov       r3, r6                          
+0067c9d4: 0092       str       r2, [sp]                        
+0067c9d6: 1e4a       ldr       r2, [pc, #0x78]                   ; [0067ca50]=0090b70d
+0067c9d8: 0069       ldr       r0, [r0, #0x10]                 
+0067c9da: d3f727fe   bl        #0x65062c                       
+0067c9de: a36c       ldr       r3, [r4, #0x48]                 
+0067c9e0: dff88080   ldr.w     r8, [pc, #0x80]                   ; [0067ca64]=0090d18c "mmgrifoacsr/MMgrMp4IfoAcsr.cpp"
+0067c9e4: dff88090   ldr.w     sb, [pc, #0x80]                   ; [0067ca68]=0090d53c "Load"
+0067c9e8: 33b9       cbnz      r3, #0x67c9f8                   
+0067c9ea: 1a4b       ldr       r3, [pc, #0x68]                   ; [0067ca54]=009df25a
+0067c9ec: 2069       ldr       r0, [r4, #0x10]                 
+0067c9ee: 1a49       ldr       r1, [pc, #0x68]                   ; [0067ca58]=0090d418 "Load : MP4 No exist."
+0067c9f0: 1a78       ldrb      r2, [r3]                        
+0067c9f2: d3f7a6fe   bl        #0x650742                       
+0067c9f6: 14e0       b         #0x67ca22                       
+0067c9f8: e068       ldr       r0, [r4, #0xc]                  
+0067c9fa: 0368       ldr       r3, [r0]                        
+0067c9fc: d3f85431   ldr.w     r3, [r3, #0x154]                
+0067ca00: 9847       blx       r3                              
+0067ca02: 80b1       cbz       r0, #0x67ca26                   
+0067ca04: 134b       ldr       r3, [pc, #0x4c]                   ; [0067ca54]=009df25a
+0067ca06: 2069       ldr       r0, [r4, #0x10]                 
+0067ca08: 1449       ldr       r1, [pc, #0x50]                   ; [0067ca5c]=0090d42d "Load : MP4 Loading."
+0067ca0a: 1a78       ldrb      r2, [r3]                        
+0067ca0c: d3f799fe   bl        #0x650742                       
+0067ca10: 2046       mov       r0, r4                          
+0067ca12: 4321       movs      r1, #0x43                       
+0067ca14: 124a       ldr       r2, [pc, #0x48]                   ; [0067ca60]=018000ff
+0067ca16: 40f23f13   movw      r3, #0x13f                      
+0067ca1a: 8de80003   stm.w     sp, {r8, sb}                    
+0067ca1e: fbf7c8f8   bl        #0x677bb2                       
+0067ca22: 0f4a       ldr       r2, [pc, #0x3c]                   ; [0067ca60]=018000ff
+0067ca24: 05e0       b         #0x67ca32                       
+0067ca26: 2a46       mov       r2, r5                          
+0067ca28: 2046       mov       r0, r4                          
+0067ca2a: 3146       mov       r1, r6                          
+0067ca2c: fff74eff   bl        #0x67c8cc                       
+0067ca30: 0246       mov       r2, r0                          
+0067ca32: 2046       mov       r0, r4                          
+0067ca34: 4321       movs      r1, #0x43                       
+0067ca36: 4ff4a473   mov.w     r3, #0x148                      
+0067ca3a: 8de80003   stm.w     sp, {r8, sb}                    
+0067ca3e: fbf7a6f8   bl        #0x677b8e                       
+0067ca42: 07f10407   add.w     r7, r7, #4                      
+0067ca46: bd46       mov       sp, r7                          
+0067ca48: bde8f083   pop.w     {r4, r5, r6, r7, r8, sb, pc}    
+0067ca4c: 5cf2       <dato>
+0067ca4e: 9d00       lsls      r5, r3, #2                      

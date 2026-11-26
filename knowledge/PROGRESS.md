@@ -916,3 +916,36 @@ se firma (`out/EyeAf.apk`, 16,7 KB) y su núcleo Java puro pasa **32 comprobacio
 con bytes las afirmaciones del informe. Límite: **nada probado en cámara**; la cadencia de peticiones de AF
 en AF-C vive fuera de `av-cam` (NO_VERIFICADO) y el enganche por VD (vía H5) exige parche de código en RAM
 de BIONZ. Cero escrituras en cámara o firmware.
+
+## 2026-11-26 — Montaje del volumen y carga del IFO MP4 (libmpr.so, estático)
+
+Se cierra la pregunta «por qué el IFO del MP4 no se carga y qué condición exacta lo impide», sobre `libmpr.so`
+(`0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so`, ELF32 ARM *stripped*) y el anillo MPR del dump
+`ram-servicio-20261020` (VA `0x82DF9300`-`0x82DFC400`, SHA-256 `f96c6152…ff2fdbf`).
+
+- Los cinco literales del anillo tienen emisor único e identificado por VA: `MountCmd : Flash Mount Error` (`0x8EA305`)
+  → `AviMMgrCmd::MountCmd` `0x626DB8` (carga en `0x626F18`, gemela con *driveLetter* `0x627020` / `0x627204`);
+  `GetDeviceInfo : ER_SEQUENCE  DEVICE Unmounted` (`0x8E9EAA`) → `AviMMgrCmd::GetDeviceInfo` `0x625C4C` (`0x625C7A`);
+  `FlashLoadMp4 : CreateAndLoad Error` (`0x8EA6B8`) → `AviMMgrCmd::FlashLoadMp4` `0x627BEC` (`0x627C86`);
+  `Err RcsBackupTblData` (`0x823999`) → llamante de `RcsBackupTblData` (`0x35EA1C`) en `0x3AFA94` (impresión `0x3AFB2C`)
+  y tres copias más; `CheckSalvageStatus` (`0x90A075`) → `MMgrAvcHdIfoAcsr::CheckSalvageStatus` `0x671DAC` (línea 791).
+- **Códigos resueltos con tablas del propio binario**: tabla `{nombre, código}` MMgrGlobal en `0x8F6CA8` →
+  `0x31000006 = ER_CMD_CONFLICT` (y es la rama **por defecto** del traductor `0x64E300`, `0x64ECEC`),
+  `0x31000007 = ER_INTERNAL`, `0x31000002 = ER_INVALID_PARAM`, `0x31001001 = ER_DIFFERENT_DEVICE_TYPE`,
+  `0x3100200C = ER_NOT_MOUNTED`; mapper AVI `0x1DA818` → `0x32400001 = ER_FAILED`; traductor `0x6F0D4C` →
+  `0xB0800001` genérico de `mp4Ifo` (rama `0x6F0E40` para `0xXX100000` y default `0x6F0EBC`);
+  `0xA0100003` = comando HD-AVC `0x4E` fallido en la capa de comando (`0x520BFC`).
+- **Orden obligado**: `GetDeviceInfo`/`MountCmd` (`[this+8]->vtbl[0x140]`) → `FlashMount` `0x62684C` → DFS mount
+  `0x3BB220` (éxito ⇒ `[this+0x140]=4` vía `0x64C5DC`, `0x626960`) → `CheckSalvageStatus` (estado AVI ∈ {2,3,4,6},
+  `tst #0x5C`) → gate `0x64C298` con `state==4` → `CreateAndLoad` `0x67CA6C` → `CreateSub` `0x67C5C4` → `LoadSub`
+  `0x67C8CC` → `Load` `0x67C9C0` → `mp4Ifo_If::Load` `0x6E823C` → `mp4Ifo_General::Load` `0x698FB8` → `FlashLoadForMsv`
+  `0x698EC8` → `RcsBackupTblData` `0x35EA1C` (única lectura real del volumen).
+- **Conclusión operativa**: `0xB0800001` y `0x31000006` son códigos por defecto y no identifican causa; la huella de
+  «volumen ilegible por DFS» es `Err RcsBackupTblData` → `0xB0800001` → `0x31000006`, mientras que un IFO corrupto pero
+  legible produciría un código específico (`0xB0400005`, `0xB0510001`, `0xB0F30001`…). Si el gate de estado no da `4`,
+  el mensaje es otro: `FlashLoad* : ER_SEQUENCE` + `0x31000007` (IFO no cargado, sin tocar la tarjeta).
+- **NO_VERIFICADO**: identidad de las virtuales `vtbl[0x140]`/`[0x60]`/`[0x168]`; cuál de las dos vías de `MountCmd`
+  disparó la línea del anillo (el anillo no es transcripción completa: falta `MountCmd : ` y `###GRecMount IN###`);
+  semántica nominal de la cabecera `0x10` (solo su uso); que el estado de `vtbl[0xF4]` comparta el enum `AVI_STATE_*`.
+- Evidencia reproducible en `reports/evidence/film-pb-1-sub-mount-ifo-20261126/` (21 listados + `extraer_evidencia.py`).
+  Cero escrituras en cámara, firmware o tarjeta; solo lectura del binario y del dump.

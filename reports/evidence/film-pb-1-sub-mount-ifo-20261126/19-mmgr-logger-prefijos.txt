@@ -1,0 +1,55 @@
+0064e300: 2de9f04f   push.w    {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+0064e304: 1e46       mov       r6, r3                          
+0064e306: 87b0       sub       sp, #0x1c                       
+0064e308: 02f07f43   and       r3, r2, #0xff000000             
+0064e30c: b3f1606f   cmp.w     r3, #0xe000000                  
+0064e310: 02af       add       r7, sp, #8                      
+0064e312: 0546       mov       r5, r0                          
+0064e314: 8846       mov       r8, r1                          
+0064e316: 1446       mov       r4, r2                          
+0064e318: d7f83c90   ldr.w     sb, [r7, #0x3c]                 
+0064e31c: d7f840a0   ldr.w     sl, [r7, #0x40]                 
+0064e320: 97f844b0   ldrb.w    fp, [r7, #0x44]                 
+0064e324: 2dd0       beq       #0x64e382                       
+0064e326: 11dc       bgt       #0x64e34c                       
+0064e328: b3f17a4f   cmp.w     r3, #-0x6000000                 
+0064e32c: 41d0       beq       #0x64e3b2                       
+0064e32e: 06dc       bgt       #0x64e33e                       
+0064e330: b3f1204f   cmp.w     r3, #-0x60000000                
+0064e334: 34d0       beq       #0x64e3a0                       
+0064e336: b3f1764f   cmp.w     r3, #-0xa000000                 
+0064e33a: 40d1       bne       #0x64e3be                       
+0064e33c: 2de0       b         #0x64e39a                       
+0064e33e: b3f1406f   cmp.w     r3, #0xc000000                  
+0064e342: 1bd0       beq       #0x64e37c                       
+0064e344: b3f1506f   cmp.w     r3, #0xd000000                  
+0064e348: 39d1       bne       #0x64e3be                       
+0064e34a: 14e0       b         #0x64e376                       
+0064e34c: b3f1d05f   cmp.w     r3, #0x1a000000                 
+0064e350: 1dd0       beq       #0x64e38e                       
+0064e352: 06dc       bgt       #0x64e362                       
+0064e354: b3f1885f   cmp.w     r3, #0x11000000                 
+0064e358: 25d0       beq       #0x64e3a6                       
+0064e35a: b3f1905f   cmp.w     r3, #0x12000000                 
+0064e35e: 2ed1       bne       #0x64e3be                       
+0064e360: 12e0       b         #0x64e388                       
+0064e362: b3f10c5f   cmp.w     r3, #0x23000000                 
+0064e366: 15d0       beq       #0x64e394                       
+0064e368: b3f1485f   cmp.w     r3, #0x32000000                 
+0064e36c: 24d0       beq       #0x64e3b8                       
+0064e36e: b3f1005f   cmp.w     r3, #0x20000000                 
+0064e372: 24d1       bne       #0x64e3be                       
+0064e374: 1ae0       b         #0x64e3ac                       
+0064e376: 3846       mov       r0, r7                          
+0064e378: 2549       ldr       r1, [pc, #0x94]                   ; [0064e410]=008f64f6 "(DRVMON):0x"
+0064e37a: 22e0       b         #0x64e3c2                       
+0064e37c: 3846       mov       r0, r7                          
+0064e37e: 2549       ldr       r1, [pc, #0x94]                   ; [0064e414]=008f6502 "(ATA):0x"
+0064e380: 1fe0       b         #0x64e3c2                       
+0064e382: 3846       mov       r0, r7                          
+0064e384: 2449       ldr       r1, [pc, #0x90]                   ; [0064e418]=008f650b "(DFS):0x"
+0064e386: 1ce0       b         #0x64e3c2                       
+0064e388: 3846       mov       r0, r7                          
+0064e38a: 2449       ldr       r1, [pc, #0x90]                   ; [0064e41c]=008f6514 "(DCF):0x"
+0064e38c: 19e0       b         #0x64e3c2                       
+0064e38e: 3846       mov       r0, r7                          
