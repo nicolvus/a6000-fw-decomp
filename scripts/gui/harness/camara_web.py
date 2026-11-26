@@ -113,19 +113,25 @@ def maneja(h, metodo: str, ruta: str, cuerpo: bytes, vm) -> bool:
         return True
     try:
         if metodo == "GET" and ruta == "/camara/estado":
-            js({"modelo": _estado(vm).a_dict(), "invitado": invitado(vm), "config": str(_ruta_config(vm))})
+            m = _estado(vm).a_dict()
+            js({"modelo": m, "invitado": invitado(vm), "config": str(_ruta_config(vm)), **m})  # plano además de bajo `modelo`: el configurador lee bateria/usb/hdmi arriba
         elif metodo == "POST" and ruta.startswith("/camara/") and ruta.count("/") == 2 and ruta[8:] in ("bateria", "usb", "hdmi"):
             punto = ruta[8:]
             d = json.loads(cuerpo or b"{}")
             if not isinstance(d, dict):
                 raise ValueError("el cuerpo debe ser un objeto JSON")
             antes = _estado(vm)
+            def val(*nombres):  # el configurador manda {"valor": N}; la página propia, {"pct"/"on": …}: se aceptan las dos formas
+                for n in nombres:
+                    if n in d:
+                        return d[n]
+                return None
             if punto == "bateria":
-                e, orden = antes.con(bateria=d.get("pct")), 0
+                e, orden = antes.con(bateria=val("pct", "valor", "nivel")), 0
             elif punto == "usb":
-                e, orden = antes.con(usb=d.get("on")), 1
+                e, orden = antes.con(usb=val("on", "valor")), 1
             else:
-                e, orden = antes.con(hdmi=d.get("on")), None  # HDMI no se envía: el shim no tiene orden para ese jack
+                e, orden = antes.con(hdmi=val("on", "valor")), None  # HDMI no se envía: el shim no tiene orden para ese jack
             e = _guarda(vm, e)
             enviado = b"" if orden is None else e.ordenes()[orden]
             if enviado:

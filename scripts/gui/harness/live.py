@@ -177,6 +177,7 @@ class Vm:
         shimenv = construye_shimenv(tarjeta) + net
         self.dir = work / "live" / (perfil or (Path(pkg).name if pkg else "sony"))
         self.dir.mkdir(parents=True, exist_ok=True)
+        self.cfg_ruta = CONFIG["ruta"]  # el config activo (--config), no el de ~/.config: lo usan captura y /camara/*
         self.avcam_ruta, avcam_sha = None, ""
         if avcam and avcam_de:  # E2E-1: av-cam del artefacto que se instalaría; se guarda en el perfil y su sha entra en la huella
             sys.path.insert(0, str(HERE.parent / "avcam"))
