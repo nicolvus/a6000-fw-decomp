@@ -13,13 +13,14 @@ ejecutarlo. **NO_VERIFICADO** = hipótesis sin prueba.
 | Pieza | Valor | Nivel |
 |---|---|---|
 | Quién emite | `ModelCamera` (`libObj`): `0x4bf230` → orden *inteligente*, `0x4bf108` → orden *precisión* | VERIFICADO |
+| Acción del modelo | despachador `0x4cfd62`: **`0x63` = inteligente**, **`0x64` = precisión** (`requestModelExecute("model/CAMERA", 0x63\|0x64)`) | VERIFICADO |
 | Mensaje | `ObjMsg(categoría 0x3100, id 0x7612` \| `0x7614)`, `AddParam(0x9798` \| `0x979b, VALUEID)` | VERIFICADO |
 | Destino | objeto **8** = `008_ObjCamera` (en el mismo proceso, por `MWF::ObjIf::IssueCommandAsync`, ruta `0x4bcc54`) | VERIFICADO |
 | Valores | `0x2d9` 1,4× · `0x2da` 2,0× · `0x2db` apagado (inteligente); `0x2dc` activada · `0x2dd` desactivada (precisión) | VERIFICADO |
 | Respuesta | CMP `0x7613`/`0x7615` (categoría `0x3130`, `+0x9502=0xf000`) y EVT `0x85b1`/`0x85b2` (`0x3100`) con `SET`/`ACT`(+`RATE`) | VERIFICADO |
 | Quién responde | `ObjCamera`, **dentro de `libObj`** (secuencias `0x956ebc` y `0xa0d4b0`), sin LIRO/av-cam | VERIFICADO |
 | CamMgr (`0x30001`) | **no interviene**: su tabla de despacho solo tiene ids `0x3000–0x3036` | VERIFICADO |
-| Backup/NVRAM del ajuste | sin identificar en estático | NO_VERIFICADO (ver §6) |
+| Backup del ajuste | `PARAMID_BKUP_DIGITAL_ZOOM_SETTING` = **`0x2093`** (tabla PARAMID de `libScalarDaemon.so`); su registro `0x1070xxx` del Backup, sin identificar | PARAMID VERIFICADO, registro NO_VERIFICADO (ver §6) |
 
 ## 2. Ruta desde el menú
 
@@ -57,15 +58,19 @@ ejecutarlo. **NO_VERIFICADO** = hipótesis sin prueba.
 | `0x4bf294` | `bl 0x4da600` | añade `PARAMID_DIRECT_SMART_EZOOM_MODE` (`0x9798`) |
 
 Formato del mensaje: `ObjMsg{ categoría=0x3100, id=0x7612|0x7614, ParamList{ 0x9798|0x979b = VALUEID } }`;
-el valor viaja como **VALUEID**, no como número de menú:
-
-| Ajuste | valor del modelo | VALUEID enviado | Nombre |
+el valor viaja como **VALUEID**, no como número de menú:| Ajuste | valor del modelo | VALUEID enviado | Nombre |
 |---|---|---|---|
 | Inteligente | 0 | `0x2d9` | `VALUEID_DIRECT_SMART_EZOOM_1_4` |
 | Inteligente | 1 | `0x2da` | `VALUEID_DIRECT_SMART_EZOOM_2_0` |
 | Inteligente | 2 | `0x2db` | `VALUEID_DIRECT_SMART_EZOOM_OFF` |
 | Precisión | 0 | `0x2dc` | `VALUEID_DIRECT_PRECISION_EZOOM_ON` |
 | Precisión | 1 | `0x2dd` | `VALUEID_DIRECT_PRECISION_EZOOM_OFF` |
+
+**Códigos de acción (VERIFICADO en el despachador `0x4cfb...`/`0x4cfd...` del modelo).** Las dos acciones se
+piden por `requestModelExecute("model/CAMERA", código)`: la cadena de comparaciones de `ModelCamera` lleva
+`0x4cfd62 cmp r0,#0x63` → `0x4cfd64 beq.w 0x4d00d8` → `0x4d00dc bl 0x4bf230` (orden **inteligente** = código
+**0x63**) y `0x4cfd68 cmp r0,#0x64` → `0x4cfd6e b 0x4d00e2` → `0x4d00e6 bl 0x4bf108` (orden **precisión** =
+código **0x64**). Son los dos únicos `bl` a `0x4bf230`/`0x4bf108` de todo `.text`, como ya decía §2.
 
 Conversores del modelo (VERIFICADO instrucción a instrucción): `0x4e35e8` modelo→cámara y `0x4e3638`
 cámara→modelo (inteligente); `0x4e3694` / `0x4e36dc` (precisión). Tabla de nombres de `libObj`
@@ -125,6 +130,27 @@ En estático **no se ha demostrado** ningún id de Backup para este ajuste:
 - el elemento de menú (`0x d9`) no declara respaldo en `process-bindings-a6000.json`;
 - los candidatos `0x1070xxx` de la fila G22-E siguen sin evidencia para el zoom.
 
+**Lo que sí está identificado (VERIFICADO en bytes, 26-11-2026).** `libScalarDaemon.so` (el demonio que
+traduce PARAMID ↔ Backup) lleva la **tabla completa del enum PARAMID**: 960 entradas de 8 B en el fichero
+`0x1b05a4` = `{puntero al nombre, id u32}` — la primera es `PARAMID_INVALID`/0 y la última
+`PARAMID_CAMSETTING_MANUAL_RING_MODE`. De ahí salen los ids de este ajuste en el espacio *escalar* (distinto
+del de `libObj`, que usa `0x95xx`/`0x97xx` para los mismos nombres):
+
+| Nombre | id | Uso |
+|---|---|---|
+| `PARAMID_BKUP_DIGITAL_ZOOM_SETTING` | **`0x2093`** | ajuste del menú (lo que persiste) |
+| `PARAMID_BKUP_EZOOM_MODE` | `0x2082` | modo de e-zoom |
+| `PARAMID_BKUP_EZOOM_SUPER_RESOLUTION_MODE` | `0x2083` | zoom de imagen nítida |
+| `PARAMID_SYS_DATA_EZOOM_MODE_SET` / `…_ACT` | `0x12a2` / `0x12a3` | datos del sistema (SET/ACT) |
+| `PARAMID_CAMSETTING_EZOOM_MODE` | `0x5002` | ajuste de la cámara |
+
+`PARAMID_BKUP_DIGITAL_ZOOM_SETTING = 0x2093` es el candidato natural a registro de Backup, pero **no se ha
+podido unir con el espacio `0x1070xxx` de `bk.tbl`** (3 279 registros de 1 B entre `0x1070000` y `0x1070d0e`;
+el del EFCS, `0x107086e`, tampoco aparece en la tabla escalar), así que el registro concreto sigue
+**NO_VERIFICADO**. La tabla se lee en cualquier copia de 3.21 del binario
+(`analysis/camera-extract/usr/lib/libScalarDaemon.so` o el `harness/stage/cam/usr/lib/` no versionado),
+offset `0x1b05a4`, con `tests/test_g22_zoom.py`.
+
 Por eso el valor se deja **en memoria del modelo** (que es lo que hace la cámara mientras está encendida) y
 la persistencia se busca por la vía que sí es observable: lo que la **vista** escriba en el Backup al
 cambiar el ajuste (`CmnViewProcessDataElementNormal::setValueToBackup`, que el shim ya registra) y la
@@ -149,60 +175,145 @@ versión** (como el bloque de EFCS): arma solo si `libObj+0x4bf136` es `f247 621
 `libObj+0x4bcc5a` es `4605` (`mov r5,r0`); si no, deja una traza `ZOOM: libObj distinta …` y no toca nada.
 No se emula ningún registro de Backup (§6).
 
+**Diagnóstico añadido (`GMIPROBE3=1`, 26-11-2026).** `viewManagerIf::getModelInfo` pasa a ser un envoltorio a
+mano (antes solo registro): si la petición falla y el nombre es `model/CAMERA`, la repite con `@M00B` —el
+mismo `ModelCamera` por su nombre corto— con la **misma** lista y filtro de la vista, y deja la traza
+`GMIPROBE3 … -> 0; @M00B -> …`. Sirvió para descartar que el fallo fuera de resolución de nombre (§8.2). Es
+solo diagnóstico: no cambia ninguna respuesta.
+
 Compilación y pruebas: `sh scripts/gui/harness/shim/build.sh SYSROOT analysis/gui/g22/harness/stage/cam/lib
 analysis/gui/g22/harness/overlay/cam/usr/lib/sonyshim.so` (SYSROOT = los dos `.deb` de `harness/dl`
 extraídos; en este equipo sin `dpkg-deb` se extraen con `bsdtar -xf … data.tar.xz` + `tar`). Pruebas:
-`tests/test_g22_zoom.py` (6, verdes), con las del shim y las de bytes de `libObj`/`av-cam`.
+`tests/test_g22_zoom.py` (**9**: 8 verdes y 1 omitida sin el `av-cam.bin` no versionado), con las del shim, las de bytes de `libObj` y la de la tabla PARAMID de `libScalarDaemon`.
 
-## 8. Medida en el arnés (lo que se pudo medir y lo que no)
+## 8. Medida en el arnés (26-11-2026, G22-ZOOM)
 
-**Hecho y medido.** Arranque en frío del perfil propio `zoom` (puerto HTTP 8711) con el shim recién
-compilado y `SHIMEXTRA="FULLLOG=1 SETLOG=1 IMCMDLOG=1 GMIDUMP=model/CAMERA"`: primera pantalla a **173–195 s**,
-menú abierto con la tecla MENU (captura [`g22-zoom-menu-ajustes-p4.png`](img/g22-zoom-menu-ajustes-p4.png),
-pestaña Ajustes, página 4) y **el shim nuevo no rompe el arranque** (la pantalla de disparo y el menú se
-dibujan igual; captura [`g22-zoom-pantalla-disparo.png`](img/g22-zoom-pantalla-disparo.png)). Efecto
-lateral medido en la NVRAM del perfil: el arranque escribe **175 propiedades nuevas `0x1070xxx`**
-(`nvram.json` 17 → 192 claves; solo cambian `1070939` `02040100`→`02040000` y `10708ff`
-`00b0d950`→`00b0e94a`), es decir, el modelo sí vuelca sus propiedades a Backup al arrancar; ninguna de esas
-escrituras se puede atribuir al zoom todavía (§6).
+Perfil propio `zoom2`/`zoom3` (puertos 8721/8722), `SHIMEXTRA="FULLLOG=1 SETLOG=1 IMCMDLOG=1"`, shim
+recién compilado (`build.sh`, md5 `d02772f2a84cf0026066df665a47d24e`, idéntico al de `main`). Dos arranques:
+uno **en frío** (primera pantalla a **121 s**) y uno **restaurado** desde `estado.zst` (32 s). Todo lo que
+sigue se midió **igual en los dos**, así que no es un artefacto de la restauración.
 
-**NO medido (y por qué).** La fila «Ajuste de zoom» **no se llegó a abrir** en esta sesión: llegar a ella
-exige bajar a la página 3 del menú y, tras la primera ronda de navegación, el invitado entra en el cuelgue
-ya documentado (0 listas de GPU; `/estado` sigue contando fotogramas pero la pantalla no cambia y las
-flechas dejan de responder; MENU sigue abriendo/cerrando). Se intentó tres veces (dos arranques en frío y
-un reinicio con estado guardado) con el mismo resultado. Además el equipo tenía el cupo de 2 `qemu-system-arm`
-ocupado por otros agentes casi todo el tiempo, así que cada intento cuesta 3–4 min de espera más 3 min de
-arranque. Por eso **la emulación de §7 está implementada y probada unitariamente, pero su efecto en la
-pantalla queda NO_VERIFICADO**, igual que la persistencia.
+### 8.1 La navegación por teclas funciona y es corta (VERIFICADO)
 
-**Siguiente paso concreto (para retomar).**
-1. Arrancar con `FULLLOG=1` y, sin tocar pestañas (el cuelgue aparece al cambiar de pestaña), ir directo a
-   «Ajuste de zoom»: MENU → la vista abre en Ajustes p4 → `abajo`/`arriba` (¡en este arnés están invertidas!)
-   hasta la página 3, `intro`, elegir «Activ.: zoom digital», `intro`.
-2. Comprobar en `guest.log`: `SETMOD requestModelExecute model/CAMERA …`, los dos
-   `IssueCommandAsync cat=0x3100 id=0x7612|0x7614` y la línea nueva `ZOOM: … ranuras SET/ACT = v`.
-3. Comparar `nvram.json` antes/después (si aparece un id nuevo, ese es el registro de Backup y se escribe a
-   mano en el shim como en EFCS `0x107086e`).
-4. Arrancar en frío (borrar `estado.zst`) y capturar la fila para la persistencia.
+**MENU abre el menú en la pestaña del engranaje, página 4** (`AEL con obturad.`, `e-Prim. cortin. obtur.`, …;
+[`g22-zoom-menu-ajustes-p4.png`](img/g22-zoom-menu-ajustes-p4.png)). Desde ahí, **`izquierda` cambia de
+página dentro de la pestaña** (p4 → p3, 80 479 px distintos, 26,2 % del fotograma) y **`abajo` mueve el foco
+a la fila** (54 051 px, 17,6 %), que es «Ajuste de zoom — Solo zoom óptico». Tres pulsaciones y ninguna
+pestaña tocada: **la ruta que §8 daba por imposible es esta** y no aparece el cuelgue de 0 listas.
+
+- Las flechas **no** están invertidas en esta ruta (`abajo` baja el foco; comprobado por los píxeles y por
+  el marco naranja de la fila).
+- La métrica del fotograma (fracción de **píxeles opacos**, la de la autoprueba) acompaña a la ruta:
+  pantalla de disparo **0,005** → menú/página/fila **1,000** → modal **1,000**; el cambio de página son
+  80 479 px distintos y el del foco 54 051 px, con el mismo fotograma de 70 513 B en frío y restaurado.
+- Cada tecla se manda **pulsación y suelta** (`POST /tecla {"k":"abajo","v":1}` y `v:0`): el driver descarta
+  el evento repetido, y sin la suelta la pulsación siguiente se pierde.
+- **Menú desincronizado**: si el interruptor del shim (`menu_open`) queda al revés, MENU no hace nada y la
+  secuencia entera no pinta. Se arregla mandando la línea `N` al invitado (`POST /linea N`), que es lo que
+  hace `live.py` al conectar; pasó una vez en esta sesión y se recuperó así.
+- Capturas (mismo perfil, arranque en frío y restaurado dan el **mismo PNG byte a byte**, 70 513 B):
+  [`g22-zoom-p3-fila.png`](img/g22-zoom-p3-fila.png) es la fila seleccionada;
+  [`g22-zoom-p3-fila-deshabilitada.png`](img/g22-zoom-p3-fila-deshabilitada.png) es la misma página con el
+  foco en «Pre-AF» y la fila **en gris** (deshabilitada, ver §8.2).
+
+### 8.2 La fila se abre pero la UI la rechaza: falta `getModelInfo model/CAMERA 0xf` (VERIFICADO)
+
+`intro` sobre la fila **sí llega a la vista**: contesta con el modal «Función desactivada actualmente.» y
+«Aceptar» ([`g22-zoom-fila-desactivada.png`](img/g22-zoom-fila-desactivada.png); 92 073 px distintos de la
+página, 30,0 %). En el registro del shim (`WAITLOG=60000` + `WLALL=1`, que se pueden encender **en
+caliente** con `POST /linea "E WLALL=1"` / `"E WAITLOG=60000"`) la causa es literal:
+
+```
+SETMOD viewManagerIf::getModelInfo model/CAMERA f ab660a00 0 -> 0      (y 4 repeticiones)
+```
+
+Es decir: la fila pregunta el estado a `model/CAMERA` info **0xf** (el mismo bloque de estado que la pantalla
+de disparo pide sin parar — 254 veces por arranque, §5.18z¹³, y que deja la OSD casi vacía), recibe **0** y
+se pinta como deshabilitada. **No emite ninguna orden**: en la ventana del registro con `WLALL=1` no hay ni
+una línea `IssueCommandAsync cat=…` ni `ZOOM: …`, porque el zoom nunca sale del modelo.
+
+- **No es un problema de teclas ni de foco**: el resto de la misma página funciona («Pre-AF» → lista
+  `Activar/Desactivar` con el foco, y los modelos de menú responden: `requestModelExecute @M00B 30 -> 0`,
+  `@M00F 4f -> 0`, `@M00B 30 -> 0`).
+- **No es una carrera**: con `E GMIRETRY=1` (20 reintentos × 50 ms) sigue en 0, y tampoco cambia en el
+  arranque en frío.
+- **No es el nombre del modelo (medido y descartado)**: con `GMIPROBE3=1` el shim repite la misma petición
+  con el nombre corto del **mismo** modelo (`@M00B` es `ModelCamera`, medido por los `AttachInfoEvent` de la
+  vista de disparo en [`g22-avcam-puente`](g22-avcam-puente.md)), con la lista y el filtro de la vista:
+  `GMIPROBE3 model/CAMERA info 0xf -> 0; @M00B -> 0`. El alias no arregla nada: lo que falta es el **dato**,
+  no la resolución del nombre. (Y en la misma sesión los modelos de menú sí contestan: `requestModelExecute
+  @M00B 30`, `@M00F 4f`.)
+- **Medido también en la cámara de verdad**: no; esto es del arnés (la cámara responde su info 0xf). Es el
+  pendiente ya abierto de la OSD (`ObjCamera` retenido en el modo LRM `0x60`, §5.18z¹³), no del zoom.
+
+### 8.3 Los dos caminos del arnés tampoco llegan al ajuste (VERIFICADO en caliente)
+
+`POST /linea "O view/DIGITAL_ZOOM_SETTING"` (vista del ajuste) **abre la vista** pero no dibuja nada:
+
+```
+OPENHOT view/DIGITAL_ZOOM_SETTING 0 -> -2138198000
+Vn 021_viewUnified4.so                      (id de vista 0x21, en viewUnified4.so)
+SETMOD getModelInfo model/CAMERA 98 … -> 0   (info 0x98, la que necesita la página)
+```
+
+y la pantalla queda **0 px distinta** de la página 3 (se sigue viendo el menú detrás). O sea que la página
+del ajuste pide **otra** info del mismo modelo que no contesta. **Este camino es del arnés, no de la
+cámara**: sirve para saber qué pide la página (0x98), pero no demuestra nada del ajuste.
+
+`POST /linea "X model/CAMERA 63"` (códigos de acción de §3) devuelve `requestModelExecute(model/CAMERA, 0x63)
+-> 0` y **no** produce `IssueCommandAsync`: la ejecución de modelo desde el hilo del diagnóstico no llega al
+despachador, así que el bloque «ZOOM» de §7 no se puede disparar por ahí. El camino `Z obj:clase:id` (mensaje
+crudo a `ObjCamera`) tampoco vale para probar la emulación: salta al modelo, y el bloque se engancha
+precisamente en el **envío del modelo**.
+
+### 8.4 Qué queda demostrado y qué no
+
+- **Demostrado**: la ruta de teclas hasta la fila (3 pulsaciones, sin cuelgue, reproducible y determinista);
+  que la fila **está deshabilitada por falta de la info 0xf de `model/CAMERA`**; que la página del ajuste
+  existe (`view/DIGITAL_ZOOM_SETTING`, id 0x21) y pide la info 0x98; que en toda la sesión el invitado **no
+  escribe ni una vez el Backup** (`WLALL=1` no deja ninguna línea `backup op=8`, solo lecturas `op=3`), o sea
+  que la fila deshabilitada no escribe nada: la parte (b) del pendiente **no se puede cerrar por esta vía**.
+- **NO demostrado**: que el ajuste cambie en pantalla y que el zoom emulado se vea. Para eso hace falta que
+  `model/CAMERA` conteste la info **0xf** (habilitación) y la **0x98** (estado de la página). Fabricarlas
+  sin la cámara real sería inventar el dato, y el proyecto exige medirlo antes; el molde para hacerlo
+  existe y es el de `RELOJEMU` (§7 de [`g22-fecha-hora`](g22-fecha-hora.md)): responder solo cuando el
+  modelo no contesta, con valores **medidos**.
+
+**Para retomar (con el molde de `RELOJEMU`)**: volcar en la cámara real la info `model/CAMERA` 0xf y 0x98
+(`GMILOG=1 GMIDUMP=model/CAMERA` en el arnés da la forma de la respuesta; en la cámara, `0xf` es el bloque
+grande de estado y `0x98` el del zoom), rellenarlas en el shim cuando `getModelInfo` devuelva 0 —igual que
+`reloj_params` con `@M018`— y entonces sí: `intro` abre la lista, `abajo` elige «Activ.: zoom digital»,
+`intro` emite `requestModelExecute model/CAMERA 0x63`, el bloque de §7 aplica SET/ACT y la fila cambia.
 
 ## 9. Límites de evidencia
 
-- **VERIFICADO** (bytes): emisores `0x4bf108`/`0x4bf230`, ids `0x7612/0x7614` (+CMP `0x7613/0x7615`, EVT
-  `0x85b1/0x85b2`), parámetros `0x9798/0x979b` y sus valores `0x2d9–0x2dd` (conversores `0x4e35e8`,
+- **VERIFICADO** (bytes): emisores `0x4bf108`/`0x4bf230` y sus **códigos de acción `0x64`/`0x63`** en el
+  despachador (`0x4cfd62`/`0x4cfd68` → `0x4d00d8`/`0x4d00e2`), ids `0x7612/0x7614` (+CMP `0x7613/0x7615`,
+  EVT `0x85b1/0x85b2`), parámetros `0x9798/0x979b` y sus valores `0x2d9–0x2dd` (conversores `0x4e35e8`,
   `0x4e3638`, `0x4e3694`, `0x4e36dc`), destino objeto 8 por `0x4bcc54`, despacho de `ObjCamera`
   (`0xad4ce4` → `0xad7826`/`0xad7852`), CMP por `0xa16042` con categoría `0x3130` y `0x9502=0xf000`, EVT
   `0x85b1/0x85b2` por `0xa15f98`, lectura de `SET`/`ACT` por el modelo (`0x4e9538`, `0x4eae68`, `0x4eafd4`,
   `0x4a54fc`, `0x4a5836`), aviso a la vista con id `0x61` (`0x4a57e8`, `0x4cc83c/0x4cc852/0x4cc86c`), tabla
-  de CamMgr de `av-cam.bin` (203 registros, ids `0x3000–0x3036`, sin `0x76xx`).
-- **INFERENCIA**: que el elemento de menú `CustomZoomSetting` de `viewUnified2` sea quien manda la orden
-  (cadenas y ProcessId `0xd9`; la llamada real está medida en §8 de [`g22-arnes-ui-qemu`](g22-arnes-ui-qemu.md)
-  §5.18z⁸ como `requestModelExecute model/CAMERA 9/62`, pero no se ha relacionado con el código de la vista).
-- **NO_VERIFICADO**: (a) que la emulación de §7 cambie la fila (no se pudo abrir en esta sesión);
-  (b) el registro de Backup/NVRAM del ajuste; (c) el papel del valor que el emisor lee antes de convertir
-  (la llamada `0x42ac00` de `0x4da600`/`0x4da51c` ignora el `r1 = 0x2e3`/`0x2e6` que el código carga, así
-  que ese tag no identifica el parámetro); (d) que la cámara real escriba `SET = ACT = valor` (la emulación
-  usa el valor que el emisor dejó en la ranura 2).
+  de CamMgr de `av-cam.bin` (203 registros, ids `0x3000–0x3036`, sin `0x76xx`), tabla PARAMID de
+  `libScalarDaemon.so` (`0x1b05a4`, 960 entradas) con `PARAMID_BKUP_DIGITAL_ZOOM_SETTING` **`0x2093`**,
+  `PARAMID_BKUP_EZOOM_MODE` `0x2082` y `PARAMID_SYS_DATA_EZOOM_MODE_SET/ACT` `0x12a2/0x12a3`.
+- **VERIFICADO** (arnés, 26-11-2026, §8): la ruta MENU → `izquierda` → `abajo` llega a la fila sin cuelgue y
+  de forma determinista; `intro` la abre y la UI contesta «Función desactivada actualmente.» porque
+  `viewManagerIf::getModelInfo("model/CAMERA", 0xf)` devuelve 0; la página del ajuste es
+  `view/DIGITAL_ZOOM_SETTING` (id de vista `0x21`, en `viewUnified4.so`) y pide la info `0x98`; la sesión no
+  escribe ni un registro de Backup.
+- **INFERENCIA**: que el elemento de menú `CustomZoomSetting` (ProcessId `0xd9`) sea la fila medida — la
+  llamada real a `model/CAMERA` desde esa fila **no se ha podido ver** todavía (la fila no pasa de la info
+  0xf); sí está medido que la fila ocupa la página 3 de la pestaña del engranaje y que se llama «Ajuste de
+  zoom» con el valor «Solo zoom óptico».
+- **NO_VERIFICADO**: (a) que la emulación de §7 cambie la fila (la fila no se puede habilitar sin la info
+  0xf); (b) el registro de Backup/NVRAM del ajuste (el PARAMID `0x2093` no se ha podido mapear a un id
+  `0x1070xxx`); (c) el papel del valor que el emisor lee antes de convertir (la llamada `0x42ac00` de
+  `0x4da600`/`0x4da51c` ignora el `r1 = 0x2e3`/`0x2e6` que el código carga, así que ese tag no identifica el
+  parámetro); (d) que la cámara real escriba `SET = ACT = valor` (la emulación usa el valor que el emisor
+  dejó en la ranura 2); (e) la semántica de las infos `0xf` y `0x98` de `model/CAMERA` (es lo que falta para
+  poder emularlas con datos medidos).
 
 ## PARA PENDIENTES.md
 
-| G22-ZOOM | PARCIAL (26-11-2026) | **«Ajuste de zoom» (`model/CAMERA`) especificado en estático y emulado; falta medirlo.** Especificación ([§§1–5](gui/g22-ajuste-zoom.md)): la orden la emite `ModelCamera` (`libObj+0x4bf108` precisión / `0x4bf230` inteligente) como `ObjMsg(0x3100, 0x7614|0x7612)` con `PARAMID_DIRECT_PRECISION_EZOOM_MODE 0x979b` / `…SMART… 0x9798`, valores `0x2dc/0x2dd` y `0x2d9/0x2da/0x2db`, al objeto 8 (`ObjCamera`) por `0x4bcc54` → `IssueCommandAsync`. La respuesta la da `ObjCamera` **dentro de `libObj`** (despachador `0xad4ce4`, casos `0xad7826`/`0xad7852`): CMP `0x7613`/`0x7615` (cat `0x3130`, `0x9502=0xf000`) + EVT `0x85b1`/`0x85b2`; el modelo aplica `SET`/`ACT` en las ranuras 0/1 de `[ModelCamera+0x1480+0x34|0x38]` y avisa a la vista con el id `0x61`. **Corregido**: `CamMgr` (cola `0x30001`) no interviene — su tabla de despacho (`av-cam.bin` offset `0xabcd30`, 203 registros de 16 B) solo tiene ids `0x3000–0x3036` (el `0x43ffe09c` del comentario del shim era el campo `siguiente` del registro `0x300c`). Emulación en `sonyshim.c` (`issue_cmd`, bloque «ZOOM», `NOZOOM=1` la apaga) con las funciones reales del modelo; `tests/test_g22_zoom.py` (6). Medido: arranque en frío 173–195 s con el shim nuevo, menú abierto (captura) y 175 propiedades `0x1070xxx` escritas al arrancar. **Abierto**: (a) abrir la fila en la página 3 del menú y capturar antes/después — el invitado entra en el cuelgue de 0 listas al navegar y las flechas dejan de responder (3 intentos); (b) identificar el id de Backup del ajuste comparando `nvram.json` antes/después; (c) persistencia en frío. Siguiente paso exacto en [§8](gui/g22-ajuste-zoom.md).
+| G22-ZOOM | PARCIAL (26-11-2026) | **«Ajuste de zoom»: la fila se alcanza con las teclas y se abre, pero la UI la rechaza por una info del modelo que el arnés no tiene.** Especificación estática ([§§1–7](gui/g22-ajuste-zoom.md)): la orden la emite `ModelCamera` (acción **`0x63`** inteligente → `libObj+0x4bf230`, **`0x64`** precisión → `0x4bf108`, despachador `0x4cfd62`/`0x4cfd68`) como `ObjMsg(0x3100, 0x7612|0x7614)` con `PARAMID_DIRECT_…EZOOM_MODE 0x9798/0x979b`, valores `0x2d9–0x2dd`, al objeto 8 (`ObjCamera`) por `0x4bcc54` → `IssueCommandAsync`; responde `ObjCamera` dentro de `libObj` (CMP `0x7613`/`0x7615` cat `0x3130` + EVT `0x85b1`/`0x85b2`) y el modelo aplica `SET`/`ACT` avisando a la vista con `0x61`. `CamMgr` no interviene. Emulación en `sonyshim.c` (bloque «ZOOM» de `issue_cmd`, `NOZOOM=1` la apaga). **Nuevo**: tabla PARAMID de `libScalarDaemon.so` (`0x1b05a4`) → `PARAMID_BKUP_DIGITAL_ZOOM_SETTING` **`0x2093`** (`PARAMID_BKUP_EZOOM_MODE 0x2082`), sin poder unirla aún al registro `0x1070xxx` del Backup. **MEDIDO (arnés, dos arranques, frío 121 s y restaurado 32 s, resultado idéntico)**: la fila se alcanza con **MENU → `izquierda` (Ajustes p4→p3) → `abajo`** y se captura ([`g22-zoom-p3-fila.png`](img/g22-zoom-p3-fila.png)); `intro` la abre y la UI contesta «Función desactivada actualmente.» ([`g22-zoom-fila-desactivada.png`](img/g22-zoom-fila-desactivada.png)) porque **`viewManagerIf::getModelInfo("model/CAMERA", 0xf) -> 0`**; no sale ninguna orden (`IssueCommandAsync`/`ZOOM:` ausentes) y no se escribe Backup (`backup op=8` ausente). `O view/DIGITAL_ZOOM_SETTING` abre la vista (id `0x21` en `viewUnified4.so`) pero pide `model/CAMERA 0x98 -> 0` y **no dibuja** (0 px): **ese camino es del arnés, no de la cámara**. La ruta de teclas funciona; lo que falta es la info. **Abierto**: (a) volcar en la cámara real las infos `model/CAMERA` `0xf` y `0x98` y emularlas en el shim con el molde de `RELOJEMU` (solo si el modelo devuelve 0) — con eso `intro` abrirá la lista y la orden disparará el bloque «ZOOM»; (b) mapear `PARAMID_BKUP_DIGITAL_ZOOM_SETTING 0x2093` al registro `0x1070xxx`; (c) persistencia en frío. Pruebas: `tests/test_g22_zoom.py` (9).

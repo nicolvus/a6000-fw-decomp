@@ -1466,6 +1466,21 @@ static void gmi_dump(const char *name, int info, void *list) {
 #define MODHOOK(sym) int sym(const char *a, unsigned b, unsigned c, unsigned d) { static int (*r)(const char *, unsigned, unsigned, unsigned); if (!r) r = dlsym(RTLD_NEXT, #sym); \
     int x = r(a, b, c, d); if (getenv("SETLOG")) LOG("SETMOD " #sym " %s %x %x %x -> %#x", readable(a) ? a : "?", b, c, d, x); \
     if (x && readable(a)) gmi_dump(a, (int)b, (void *)(unsigned long)c); return x; }
+int _ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_(const char *a, unsigned b, unsigned c, unsigned d) {
+    static int (*r)(const char *, unsigned, unsigned, unsigned); if (!r) r = nextsym("_ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_");
+    int x = r ? r(a, b, c, d) : 0;
+    if (getenv("SETLOG")) LOG("SETMOD viewManagerIf::getModelInfo %s %x %x %x -> %#x", readable(a) ? a : "?", b, c, d, x);
+    /* GMIPROBE3=1: la fila «Ajuste de zoom» pide model/CAMERA y recibe 0; @M00B ES ModelCamera, así que se prueba el
+     * MISMO modelo por su nombre corto con la lista y el filtro de la vista. Medido: también devuelve 0, luego el
+     * problema no es el nombre sino el dato (docs/gui/g22-ajuste-zoom.md §8.2). */
+    if (!x && r && getenv("GMIPROBE3") && readable(a) && !strcmp(a, "model/CAMERA")) {
+        static unsigned n3; int x3 = r("@M00B", b, (void *)(unsigned long)c, (void *)(unsigned long)d);
+        if (n3++ < 20) LOG("GMIPROBE3 %s info %#x -> %d; @M00B -> %d", a, b, x, x3);
+    }
+    if (!x && readable(a) && power_params(a, (int)b, (void *)(unsigned long)c)) x = 1;
+    if (x && readable(a)) gmi_dump(a, (int)b, (void *)(unsigned long)c);
+    return x;
+}
 MODHOOK(_ZN13viewManagerIf19requestModelExecuteEPKcmP9ParamList)
 /* viewManagerIf::getModelInfo(nombre, info, lista, filtro) — MODHOOK con el relleno de model/POWER (G22-ESTADO-CAMARA); SETLOG lo registra igual. */
 int _ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_(const char *a, unsigned b, unsigned c, unsigned d) {
@@ -1784,6 +1799,14 @@ int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name
         }
     }
     if (!r && real && getenv("GMIRETRY")) for (int k = 0; k < 20 && !r; k++) { usleep(50000); r = real(self, name, info, list, flt); if (r) LOG("getModelInfo(%s, %d) acierta en el reintento %d", name, info, k + 1); }  /* ¿carrera con la inicialización del modelo? */
+    /* G22-ZOOM (diagnóstico): la fila «Ajuste de zoom» pide «model/CAMERA» y recibe 0 (docs/gui/g22-ajuste-zoom.md §8.2).
+     * `@M00B` ES `ModelCamera` (medido por los AttachInfoEvent de la vista de disparo, docs/gui/g22-avcam-puente.md), así que
+     * aquí se prueba el MISMO modelo por su nombre corto, con la lista y el filtro de la vista. GMIPROBE3=1 solo registra. */
+    if (!r && real && getenv("GMIPROBE3") && readable(name) && !strcmp(name, "model/CAMERA")) {
+        static unsigned n3; int r3 = real(self, "@M00B", info, list, flt);
+        if (n3++ < 20) LOG("GMIPROBE3 %s info %#x -> %d; @M00B -> %d", name, info, r, r3);
+        if (r3 && getenv("ZOOMALIAS")) { r = r3; if (n3 < 40) LOG("ZOOMALIAS: %s info %#x servida como @M00B", name, info); }
+    }
     if (getenv("GMILOG")) { static int n; if (n++ < 400) LOG("getModelInfo(%s, %d) -> %d", name, info, r); }
     if (r) gmi_dump(name, info, list);
     return r;
