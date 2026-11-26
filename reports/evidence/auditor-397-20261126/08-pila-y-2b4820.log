@@ -1,0 +1,72 @@
+push {r4,r5,lr} (0xB530) en .text: 1
+de ellos, seguidos de bl/blx inmediato: 0
+
+=== 0x2B4820 (funcion original del gancho) ===
+0x002B4820  push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+0x002B4824  sub      sp, #0x34
+0x002B4826  add      r7, sp, #8
+0x002B4828  blx      #0x11d924
+0x002B482C  ldr      r4, [pc, #0x180]
+0x002B482E  ldr      r3, [pc, #0x184]
+0x002B4830  ldr      r2, [pc, #0x184]
+0x002B4832  str      r2, [r3]
+0x002B4834  movs     r2, #0
+0x002B4836  str      r2, [r3, #4]
+0x002B4838  str      r2, [r3, #8]
+0x002B483A  str      r2, [r3, #0xc]
+0x002B483C  ldr      r3, [r4]
+0x002B483E  cbnz     r3, #0x2b484e
+0x002B4840  movs     r0, #0x50
+0x002B4842  blx      #0x11e7a4
+0x002B4846  mov      r5, r0
+0x002B4848  bl       #0x23fd58
+0x002B484C  str      r5, [r4]
+0x002B484E  bl       #0x2b4d70
+0x002B4852  ldr      r0, [pc, #0x168]
+0x002B4854  bl       #0x2b1e68
+0x002B4858  ldr      r1, [pc, #0x164]
+0x002B485A  ldr      r2, [pc, #0x168]
+0x002B485C  movs     r5, #0
+0x002B485E  ldr      r3, [pc, #0x168]
+0x002B4860  mov      r4, r5
+0x002B4862  str      r5, [r1]
+0x002B4864  mov      r6, r5
+0x002B4866  str      r5, [r2]
+0x002B4868  mov      sl, r1
+0x002B486A  str      r5, [r3]
+0x002B486C  mov      fp, r2
+0x002B486E  b        #0x2b4936
+0x002B4870  ldr      r0, [pc, #0x158]
+0x002B4872  mov      r1, r5
+0x002B4874  movs     r6, #0
+0x002B4876  str      r6, [r7, #0x24]
+0x002B4878  bl       #0x2b5080
+0x002B487C  ldr.w    r0, [r8, r5, lsl #2]
+0x002B4880  blx      #0x11d594
+0x002B4884  ldr.w    sb, [pc, #0x15c]
+0x002B4888  cmp      r0, #0x45
+0x002B488A  bne      #0x2b4918
+0x002B488C  mov      r1, r6
+0x002B488E  add.w    r2, r7, #0x24
+0x002B4892  ldr.w    r0, [r8, r5, lsl #2]
+0x002B4896  blx      #0x11dce4
+0x002B489A  ldr      r2, [r7, #0x24]
+0x002B489C  mov      r6, r0
+0x002B489E  ldr      r0, [pc, #0x130]
+0x002B48A0  mov      r1, r6
+0x002B48A2  bl       #0x2b5080
+0x002B48A6  cbnz     r6, #0x2b48ac
+0x002B48A8  ldr      r0, [r7, #0x24]
+0x002B48AA  cbnz     r0, #0x2b48b2
+0x002B48AC  movs     r3, #0
+0x002B48AE  str      r3, [r7, #0x24]
+0x002B48B0  b        #0x2b4918
+0x002B48B2  adds     r1, r7, #4
+0x002B48B4  mov      r2, r6
+0x002B48B6  bl       #0x2b2480
+0x002B48BA  mov      r4, r0
+0x002B48BC  cbnz     r0, #0x2b4918
+0x002B48BE  ldrh     r3, [r7, #6]
+
+0x2B1DEC accesos 64-bit/NEON en primeros 0x300 B: []
+0x2B43F0 accesos 64-bit/NEON en primeros 0x300 B: []

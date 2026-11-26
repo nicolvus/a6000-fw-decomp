@@ -1,0 +1,14 @@
+$ python3 scripts/film_pb1_sector31.py --host 127.0.0.1 --port 2323 --verifica
+== alcance y proceso (127.0.0.1:2323) ==
+  herramientas: pidof=pidof is /.net/bin/pidof  awk=awk: not found  sed=sed is /.net/bin/sed  df=df: not found  dd=dd is /.net/bin/dd  chmod=chmod is /.net/bin/chmod  md5sum=md5sum is /.net/bin/md5sum  grep=grep is /.net/bin/grep  cat=cat is /.net/bin/cat  sync=sync is /.net/bin/sync
+  PID im.elf=289  libmpr base=0xaeba5000
+== anillo del monitor (sólo lectura) ==
+  X=0x904e2000  A=31  B=31  libres=1023 de 1023
+== tabla de sectores (base+0xA3699C, 30 x 0x14) ==
+  ahora: idx 10: sector=0x31 handle=3 valido=1 OM=6
+  ahora: con handle != 0: 2/30 -> idx 10(0x31 h3), idx 23(0xa0 h1)
+
+  ANTES  : sector=0x31 handle=3 valido=1 OM=6  -> EXISTE   (2/30 con handle)
+
+  VEREDICTO: sector 0x31 EXISTE
+

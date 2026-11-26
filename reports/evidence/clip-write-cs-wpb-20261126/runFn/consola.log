@@ -1,0 +1,103 @@
+[NF4] base libmpr=0xae2af000 tabla sectores=0xaece599c (0xA3699C)
+[NF4] tabla LLENA (nombres 0x10..0xbd)
+[NF4] ===== modo fn =====
+[NF4] arranque  handle!=0 = 1/30
+[NF4] arranque [00..14]  00:010=h0/s0/om0 01:011=h0/s0/om0 02:012=h0/s0/om0 03:020=h0/s0/om0 04:021=h0/s0/om0 05:028=h0/s0/om0 06:029=h0/s0/om0 07:02c=h0/s0/om0 08:02d=h0/s0/om0 09:030=h0/s0/om0 10:031=h0/s0/om0 11:038=h0/s0/om0 12:039=h0/s0/om0 13:040=h0/s0/om0 14:060=h0/s0/om0 
+[NF4] arranque [15..29]  15:061=h0/s0/om0 16:068=h0/s0/om0 17:06c=h0/s0/om0 18:062=h0/s0/om0 19:063=h0/s0/om0 20:090=h0/s0/om0 21:091=h0/s0/om0 22:092=h0/s0/om0 23:0a0=h1/s1/om9 24:0b1=h0/s0/om0 25:0b2=h0/s0/om0 26:0b3=h0/s0/om0 27:0b8=h0/s0/om0 28:0bc=h0/s0/om0 29:0bd=h0/s0/om0 
+[NF4] arranque idx10 sec=0x031 handle=0 estado=0 om=0
+[NF4] imagen(arranque): origen=10485760 B copia=10485760 B; bytes distintos=0; primero=-1 (0xffffffff) ultimo=-1 (0xffffffff)
+[NF4] tabla 0x9D23FC[13] (u04/m3/ft031/om6): fn=0 arg=0 -> fn=0xb6d912a0 arg=0 (stub propio de 0xb6d912a0)
+[NF4] tras-registrar-fn  handle!=0 = 1/30
+[NF4] tras-registrar-fn [00..14]  00:010=h0/s0/om0 01:011=h0/s0/om0 02:012=h0/s0/om0 03:020=h0/s0/om0 04:021=h0/s0/om0 05:028=h0/s0/om0 06:029=h0/s0/om0 07:02c=h0/s0/om0 08:02d=h0/s0/om0 09:030=h0/s0/om0 10:031=h0/s0/om0 11:038=h0/s0/om0 12:039=h0/s0/om0 13:040=h0/s0/om0 14:060=h0/s0/om0 
+[NF4] tras-registrar-fn [15..29]  15:061=h0/s0/om0 16:068=h0/s0/om0 17:06c=h0/s0/om0 18:062=h0/s0/om0 19:063=h0/s0/om0 20:090=h0/s0/om0 21:091=h0/s0/om0 22:092=h0/s0/om0 23:0a0=h1/s1/om9 24:0b1=h0/s0/om0 25:0b2=h0/s0/om0 26:0b3=h0/s0/om0 27:0b8=h0/s0/om0 28:0bc=h0/s0/om0 29:0bd=h0/s0/om0 
+[NF4] ChangeSector(4,3) [clip] ...
+[NF4] ChangeSector(4,3) [clip] -> 0x10100006  «unknown»
+[NF4] imagen(tras-ChangeSector-4-3): origen=10485760 B copia=10485760 B; bytes distintos=0; primero=-1 (0xffffffff) ultimo=-1 (0xffffffff)
+[NF4] WritePackBegin(4,3,0,0x800,&pack,0,0) ...
+[NF4] WritePackBegin(4,3,0,0x800) -> 0x10100001  «unknown»  bufferIndex=0xffff
+[NF4]   pack: hdr=000000000000 totalDL=0 curDL=0 hdrDL=0 sector=0 handle=0
+[NF4] imagen(tras-WritePackBegin): origen=10485760 B copia=10485760 B; bytes distintos=0; primero=-1 (0xffffffff) ultimo=-1 (0xffffffff)
+[NF4] no se llama WritePackAdd/End: WritePackBegin devolvió 0x10100001
+[NF4] desglose(4,3)[clip]: 0x2B2B18-> 0 fileType=0x31 ; 0x2B2F48-> 0 idx=0xa ; 0x2B3094-> 0 handle=0 ; 0x2B2BCC-> 0 operationMode=0x6 ; 0x2B1DCC(0x6)=0
+[NF4] 0x2B3000(OM=6,media=3,&h) -> 0000000000 handle=0  «sin error»
+[NF4] BackupMgr::WriteBaseData(OM=6,media=3) -> 0000000000  «sin error»
+[NF4] imagen(tras-desglose-6-3): origen=10485760 B copia=10485760 B; bytes distintos=1300; primero=644096 (0x9d400) ultimo=3670527 (0x3801ff)
+[NF4] pagina(tras-desglose-6-3) de /nflasha4.img en 0x9d400:
+[NF4] PG 000 000000004a004a0081000000010103ffa0000000000101ff31000000000507ff
+[NF4] PG 020 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+[NF4] PG 040 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+[NF4] PG 060 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+[NF4] PG 080 ffffffffffffffffffffffffffffffffffffffffffffffffffffffff44000003
+[NF4] PG 0a0 01000003ffffffff16000002ffffffffffffffffffffffffffffffffffffffff
+[NF4] PG 0c0 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+[NF4] PG 0e0 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+[NF4] PG 100 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+[NF4] PG 120 ffffffffffffffffffff0014ffff0101ffff0014ffff0014ffff0014ffff0014
+[NF4] PG 140 ffff0014ffff0014ffff0014ffff0014ffff0014ffff0014ffff0014ffff0014
+[NF4] PG 160 ffff0014ffff0014ffff0014ffff0014ffff0014ffff0014ffff0014ffff0014
+[NF4] PG 180 ffff0114ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013
+[NF4] PG 1a0 ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013
+[NF4] PG 1c0 ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013
+[NF4] PG 1e0 ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013
+[NF4] PG 200 ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013
+[NF4] PG 220 ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0113ffff0013
+[NF4] PG 240 ffff0013ffff0013ffff0013ffff0013ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 260 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 280 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 2a0 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 2c0 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 2e0 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 300 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 320 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 340 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 360 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 380 ffff0000ffff000000100000000000ffffffffffffff00ffffffffffffff00ff
+[NF4] PG 3a0 00100000d4001522000002647261434e563427000000000000000000ffffffff
+[NF4] PG 3c0 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+[NF4] PG 3e0 ffffffffffffffffffffffffffffffffffffffffc2230000c20200008fd506ac
+[NF4] trozo(tras-desglose-6-3) @0x9d400 32 B: 000000004a004a0081000000010103ffa0000000000101ff31000000000507ff
+[NF4] diag FlashLib::GetSectorInfo(3,&info) -> 0  «sin error»
+[NF4] diag info[0..0x27] = 310003000002000000fe0d00000200000000000000000a000002000000cccccccccccccccccccccc
+[NF4] diag info: u16[0]=0x31 u16[2]=0x3 u32[4]=0x200 u32[8]=0xdfe00 u32[0xc]=0x200 u32[0x10]=0
+[NF4] diag FlashLib::WriteSector(3,0x10,buf,&w) -> 0 (CRUDO) written=0x10
+[NF4] imagen(tras-diag-WriteSector): origen=10485760 B copia=10485760 B; bytes distintos=1812; primero=644096 (0x9d400) ultimo=3671039 (0x3803ff)
+[NF4] pagina(tras-diag-WriteSector) de /nflasha4.img en 0x9d400:
+[NF4] PG 000 000000004a004a0081000000010103ffa0000000000101ff31000000000507ff
+[NF4] PG 020 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+[NF4] PG 040 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+[NF4] PG 060 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+[NF4] PG 080 ffffffffffffffffffffffffffffffffffffffffffffffffffffffff44000003
+[NF4] PG 0a0 01000003ffffffff16000002ffffffffffffffffffffffffffffffffffffffff
+[NF4] PG 0c0 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+[NF4] PG 0e0 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+[NF4] PG 100 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+[NF4] PG 120 ffffffffffffffffffff0014ffff0101ffff0014ffff0014ffff0014ffff0014
+[NF4] PG 140 ffff0014ffff0014ffff0014ffff0014ffff0014ffff0014ffff0014ffff0014
+[NF4] PG 160 ffff0014ffff0014ffff0014ffff0014ffff0014ffff0014ffff0014ffff0014
+[NF4] PG 180 ffff0114ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013
+[NF4] PG 1a0 ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013
+[NF4] PG 1c0 ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013
+[NF4] PG 1e0 ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013
+[NF4] PG 200 ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013
+[NF4] PG 220 ffff0013ffff0013ffff0013ffff0013ffff0013ffff0013ffff0113ffff0013
+[NF4] PG 240 ffff0013ffff0013ffff0013ffff0013ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 260 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 280 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 2a0 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 2c0 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 2e0 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 300 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 320 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 340 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 360 ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000ffff0000
+[NF4] PG 380 ffff0000ffff000000100000000000ffffffffffffff00ffffffffffffff00ff
+[NF4] PG 3a0 00100000d4001522000002647261434e563427000000000000000000ffffffff
+[NF4] PG 3c0 ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+[NF4] PG 3e0 ffffffffffffffffffffffffffffffffffffffffc2230000c20200008fd506ac
+[NF4] trozo(tras-diag-WriteSector) @0x9d400 32 B: 000000004a004a0081000000010103ffa0000000000101ff31000000000507ff
+[NF4] fin  handle!=0 = 2/30
+[NF4] fin [00..14]  00:010=h0/s0/om0 01:011=h0/s0/om0 02:012=h0/s0/om0 03:020=h0/s0/om0 04:021=h0/s0/om0 05:028=h0/s0/om0 06:029=h0/s0/om0 07:02c=h0/s0/om0 08:02d=h0/s0/om0 09:030=h0/s0/om0 10:031=h3/s1/om6 11:038=h0/s0/om0 12:039=h0/s0/om0 13:040=h0/s0/om0 14:060=h0/s0/om0 
+[NF4] fin [15..29]  15:061=h0/s0/om0 16:068=h0/s0/om0 17:06c=h0/s0/om0 18:062=h0/s0/om0 19:063=h0/s0/om0 20:090=h0/s0/om0 21:091=h0/s0/om0 22:092=h0/s0/om0 23:0a0=h1/s1/om9 24:0b1=h0/s0/om0 25:0b2=h0/s0/om0 26:0b3=h0/s0/om0 27:0b8=h0/s0/om0 28:0bc=h0/s0/om0 29:0bd=h0/s0/om0 
+[NF4] fin idx10 sec=0x031 handle=0x3 estado=0x1 om=0x6
+[NF4] imagen(fin): origen=10485760 B copia=10485760 B; bytes distintos=1812; primero=644096 (0x9d400) ultimo=3671039 (0x3803ff)
+[FBMC] FIN

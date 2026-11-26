@@ -180,6 +180,83 @@ tabla no se rellena porque el shim no emula `/dev/nflasha4` (`CreateSector32` de
 Después de crearlo: **reiniciar MPR** (la tabla `0xA3699C` es un snapshot de `FBM::Init`) — aunque
 `fbm-crear` documenta que el alta ya queda en la SMT viva y `FBM::Init` la reabre al arrancar.
 
+### 6.2 La consola sola no basta: hay que registrar antes el escritor
+
+`BackupMgr::InitBackupData(6, 3)` aborta con **`0x10800010`** porque `0x2B3000` (`0x2B301A cbz r2`) salta
+las filas de `0x9D23FC` con `fn == 0`, y **las 37 lo están**. El único escritor de ese campo es
+`BackupMgr::EntryWriteBaseDataFunction` (`0x2B1DEC`), que la consola expone como **`EWBDFD`** y como el
+test de fábrica **`LTC`**.
+
+Secuencia medida en el arnés con la imagen real de `nflasha4` (`NFLASH4=1`):
+
+| línea | efecto | flash |
+|---|---|---|
+| `FBM EWBDFD 4 3 0` | `0x2B3000(6,3)`: `0x10800010` → `0` | 0 B |
+| `FBM InitB 6 3` | idx 10 = `0x31 / h3 / +8 = 1 / om6`; `BkRead(0x04,3)` = `0x10100003` (tolerado) | **1 300 B** |
+| reinicio | `FBM::Init` la registra sola desde el flash | 0 B |
+
+`LTC 1` también funciona (`BkRead` = `0`) pero **no debe usarse en la cámara**: sus escritores
+`0x2B5724`/`0x2B5658` son de fábrica y escriben en la página de datos base un texto de prueba
+(`"MS "/"HDD "+"packData"`). El escritor real de `(4,3)` es `0x5CA354`, registrado en `0x5C9B06` por
+`m2psIfo_Backup`, y hoy no lo registra nadie; el dummy `0x2B5184` de `EWBDFD` no estorba porque el camino
+de grabación decide por `fileType` (`0x2B2F48`) y no por `fn`.
+
+### 6.3 Qué se arregla y qué no
+
+- **Clip nuevo: sí.** Con handle en idx 10 al arrancar, la grabación registra el clip en la BD
+  (`m2psIfo_Backup` → `OpenRecFile` `0x5E7B8C`, `CloseRecFile` `0x5E7E50`) y ese clip tiene IFO.
+- **Clips viejos: no quedan registrados.** El sector se crea vacío y nadie rellena registros antiguos;
+  su lectura degrada a `0x10100003`, que los llamantes toleran, pero el contenido no está.
+- **La grabación llevaba fallando en silencio**: `CloseRecFile` (`0x5E7E50`) descarta el `r0` del backup y
+  `0x61D950` ni mira el retorno del gestor de medios. Por eso grababa clips sin registrarlos.
+- **«Recuperar BD imág.» no podía ayudar**: `BeginRepair` reescribe `AVF_INFO/AVIN0001.INP` pero no llama
+  a `0x2B43F0` ni a `CreateSector32`; su re-registro choca en `0x5C9F7E` / `0x2B3D24` (`0x10100001`).
+
+### 6.4 ¿Basta crear el sector para que el cargador del IFO devuelva 0? Sí, y con matiz
+
+Medido en el arnés con la imagen real de `nflasha4`: tras `FBM EWBDFD 4 3 0` + `FBM InitB 6 3`
+(idx 10 = `0x31 / h3 / +8=1 / om6`), `BkRead(0x04,3)` devuelve **`0x10100003`**. Ese código lo tolera
+`0x35E0FA..0x35E100` y el resto de la cadena, por código, es:
+
+`0x35E118 vtbl[0xB8]` (`0x3B16B0`) escribe `8` y deja `[r7+0xd6] = 0` → `0x35E954` → `r5 = 0x00500003`
+(«tabla vacía») → **`RcsBackupTblData` = `0x00500003`** → `0x3AFA94` lo interpreta como **Need Salvage**,
+pone `[msv+0x44] = 1` (`0x3AFB18`) y **devuelve 0** → `0x698EC8`: `0x6F0D4C(0)` → **0**, sin el 1749.
+
+Antes de crear el sector los mismos puntos daban `0x00100001` y `0xB0800001`. Es decir: **crear el sector
+hace que el cargador deje de fallar**, pero lo que queda es una tabla vacía marcada para *salvage* — el
+propio firmware sabe que la BD está vacía y es él quien debe reconstruirla. Eso encaja con que un clip
+**nuevo** sí quede registrado y los viejos no.
+
+No se pudo medir `0x3AFA94` / `0x698EC8` ejecutándose de verdad: el arnés no arranca el gestor de vídeo
+(sin `MsvMcmd`), y las llamadas inyectadas se quedan en la macro de traza `0x34E468` →
+`osal_valloc_msg_wait`. El valor de arriba es la cadena leída instrucción a instrucción.
+
+### 6.5 Auditoría independiente del paquete 3.97
+
+Rehecha desde cero (desempaquetado propio, `debugfs`, Unicorn): `.dat` `69447a27…5cd9`, `libmpr`
+`831142ae…e378e`, gancho `0x7126E6 = 28 f2 8b fc`, `0x7126EA` intacto, 132 021 relocaciones sin un solo
+`r_offset` en el gancho o la cueva, cabecera y las 25 secciones byte a byte, y el `.dat` vuelve a pasar el
+auditor con `--base-dat` (`todo_ok`, 22/22). Dos observaciones no bloqueantes: la cueva vive en `.rodata`
+(flags de sección `A`) pero se ejecuta porque el primer `PT_LOAD` es `R E` y cubre esa VA —está medido en
+QEMU—, y su `push {r4,r5,lr}` deja `SP ≡ 4 (mod 8)` en las llamadas, fuera de AAPCS, sin que ninguno de los
+tres destinos use `ldrd/strd/vldr/vstr` en sus primeros `0x300` B.
+
+### 6.6 El camino de escritura, medido con el sector y con `fn`
+
+En el invitado, sobre copias de la imagen (`nf4` + `NFLASH4=1`):
+
+| llamada | antes (imagen prístina) | sólo sector `0x31` | sector + `fn` |
+|---|---|---|---|
+| `ChangeSector(4,3)` `0x2B41B4` | `0x10100006` | `0x10800010` | **0** |
+| `WritePackBegin` `0x2B3D24` | `0x10100001` | 0 | **0** |
+| `WritePackAdd` `0x2B3C64` | — | 0 | **0** |
+| `WritePackEnd` `0x2B3B94` | — | `0x10800020` (`FBS_UNCERTAIN_WRITE_POINT`) | **0** |
+| bytes escritos en `nflasha4` | 0 | 0 | **4 770** |
+
+Es decir: **hacen falta las dos cosas**, el sector y el `fn` de la fila `0x9D23FC[13]` (`u04 / m3 /
+ft031 / om6`) — exactamente lo que hacen `FBM EWBDFD 4 3 0` + `FBM InitB 6 3` y lo que hace el parche C.
+Con las dos, un clip nuevo queda registrado en la BD.
+
 ## 7. Cómo verificarlo sin cámara y cómo comprobarlo en cámara
 
 - **Arnés**: `InitB` sobre el MPR real y lectura de `base+0xA3699C`; el sector debe quedar con `+4 != 0`

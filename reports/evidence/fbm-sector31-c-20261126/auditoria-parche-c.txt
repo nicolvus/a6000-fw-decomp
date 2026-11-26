@@ -1,0 +1,58 @@
+original : /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+sha256   : 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+anclas   : mov r4,pc en C+0x6 (r4 = base+0xa36a64) · stub fn en C+0x4e (r5 = base+0x93b04e|1)
+delta    : 0xfba5c · stub_k 0xfba16
+cueva    : 82 B de código en 0093b000 (máximo 129 B libres hasta 0093b081)
+gancho   : 007126e6  a2 f7 9b f0 = bl 0x002b4820 (FBM::Init)  ->  28 f2 8b fc = bl 0x0093b000
+siguiente: 007126ea  96 f5 bb f8 (no se toca)
+cueva    : 0093b000  30 b5 79 f5 0d f4 7c 46 24 f0 03 04 4b f6 5c 21 c0 f2 0f 01 0c 44 60 68 b0 b9 4b f6 16 21 c0 f2 0f 01 a4 eb 01 05 01 35 04 20 29 46 00 22 03 23 76 f5 dc f6 21 20 29 46 00 22 03 23 76 f5 d6 f6 06 20 03 21 79 f5 d4 f1 30 bd 00 bf 00 bf 00 20 70 47 00 00
+desasm   :
+   0093b000: 30b5       push     {r4, r5, lr}
+   0093b002: 79f50df4   bl       #0x2b4820
+   0093b006: 7c46       mov      r4, pc
+   0093b008: 24f00304   bic      r4, r4, #3
+   0093b00c: 4bf65c21   movw     r1, #0xba5c
+   0093b010: c0f20f01   movt     r1, #0xf
+   0093b014: 0c44       add      r4, r1
+   0093b016: 6068       ldr      r0, [r4, #4]
+   0093b018: b0b9       cbnz     r0, #0x93b048
+   0093b01a: 4bf61621   movw     r1, #0xba16
+   0093b01e: c0f20f01   movt     r1, #0xf
+   0093b022: a4eb0105   sub.w    r5, r4, r1
+   0093b026: 0135       adds     r5, #1
+   0093b028: 0420       movs     r0, #4
+   0093b02a: 2946       mov      r1, r5
+   0093b02c: 0022       movs     r2, #0
+   0093b02e: 0323       movs     r3, #3
+   0093b030: 76f5dcf6   bl       #0x2b1dec
+   0093b034: 2120       movs     r0, #0x21
+   0093b036: 2946       mov      r1, r5
+   0093b038: 0022       movs     r2, #0
+   0093b03a: 0323       movs     r3, #3
+   0093b03c: 76f5d6f6   bl       #0x2b1dec
+   0093b040: 0620       movs     r0, #6
+   0093b042: 0321       movs     r1, #3
+   0093b044: 79f5d4f1   bl       #0x2b43f0
+   0093b048: 30bd       pop      {r4, r5, pc}
+   0093b04a: 00bf       nop      
+   0093b04c: 00bf       nop      
+   0093b04e: 0020       movs     r0, #0
+   0093b050: 7047       bx       lr
+zona     : 0093b000..0093b053 a cero; 0093b054.. sin tocar (0000000000000000…)
+segmento : PT_LOAD R+X off=0 vaddr=0 filesz=0x9bb1c8 (cueva y gancho dentro)
+relocs   : 132021 en el ELF; en el gancho/cueva: NINGUNA
+ldr/adr  : pc-relativos que apuntan a la cueva: NINGUNO
+punteros : u32 iguales a una dirección de la cueva: NINGUNO
+           descartados por caer dentro de una instrucción: ['00495390=0x0093b014(.text)']
+diff     : 88 bytes en 2 rangos (007126e6..007126e9, 0093b000..0093b053); 81 de ellos cambian de valor (7 ya eran 0x00); tamaño 10321204 B sin cambios
+ELF      : cabecera, 5 PT_* y 25 secciones idénticas byte a byte
+desasm   : gancho 0x7126DE..0x7126F2
+   007126de: a069       ldr      r0, [r4, #0x18]
+   007126e0: 504c       ldr      r4, [pc, #0x140]
+   007126e2: 0bf682e4   blx      #0x11dfe8
+   007126e6: 28f28bfc   bl       #0x93b000
+   007126ea: 96f5bbf8   bl       #0x4a8864
+   007126ee: 72f515fa   bl       #0x484b1c
+salida   : /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/build/cfw_fbm_sector31_c/libmpr.so
+sha256   : 831142ae9a0c1598c179c684200d86d57a1209f4ab0349e357d7e25b016e378e
+original intacto: 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30

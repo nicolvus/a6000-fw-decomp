@@ -28,6 +28,19 @@
 > [paquete](film-pb-1-sub-paquete-cfw395-fbm31-20261126.md).
 > **Aviso:** crear el sector **no rellena** la base de datos; después hay que dejar que la cámara la
 > reconstruya (grabar un clip nuevo o el menú de recuperación) y solo entonces probar la reproducción.
+> **¿Basta el sector? Sí, con matiz (medido):** con idx 10 registrado, `BkRead(0x04,3)` = `0x10100003`
+> (tolerado) → `RcsBackupTblData` = `0x00500003` → `0x3AFA94` lo toma como *Need Salvage*, deja
+> `[msv+0x44]=1` y **devuelve 0** → `FlashLoadForMsv` (`0x698EC8`) devuelve **0**, sin el 1749. Antes daba
+> `0x00100001` / `0xB0800001`. Queda una tabla **vacía marcada para salvage**: el firmware la reconstruye y
+> un clip nuevo sí se registra; los viejos no.
+> **Auditoría independiente del 3.97:** `.dat` `69447a27…5cd9`, `libmpr` `831142ae…e378e`, relocaciones y
+> cabeceras intactas, auditor `todo_ok` 22/22; la cueva está en `.rodata` pero se ejecuta por el primer
+> `PT_LOAD` (`R E`) —medido en QEMU— y su alineación de pila no afecta a los tres destinos.
+> **Camino de escritura (medido en el invitado):** con el sector `0x31` **y** el `fn` de `0x9D23FC[13]`,
+> `ChangeSector(4,3)` = `0`, `WritePackBegin/Add/End` = `0` y un clip nuevo deja **4 770 B** en `nflasha4`;
+> sin uno de los dos, `WritePackEnd` = `0x10800020` o `ChangeSector` = `0x10800010`/`0x10100006`. Es decir:
+> el arreglo completo son las dos cosas, y eso es justo lo que hacen `EWBDFD 4 3 0` + `InitB 6 3` y el
+> parche C.
 
 
 > **La tabla de sectores del backup FBM está vacía y nada la recrea.** `0xA3699C` (30 entradas × 0x14,
@@ -48,10 +61,18 @@
 > (`0x2B1DEC`), que la consola expone como `EWBDFD`/`CWBDF` — y como el test de fábrica **`LTC 1`**.
 > Secuencia que funciona en el arnés (`NFLASH4=1`): `FBM LTC 1` (o `FBM EWBDFD 4 3 0`) + `FBM InitB 6 3`
 > ⇒ idx 10 de `0xA3699C` = `0x31`/handle válido/`+8=1`, `BkRead(0x04,3)` = `0` (`0x10100003` con el dummy)
-> y **persiste** al reiniciar (1 300 B en `nflasha4`: páginas `0x9D400`, `0xBD780` y `0x380000`).
+> y **persiste** al reiniciar (1 300 B en `nflasha4`: páginas `0x9D400`, `0xBD400` y `0x380000`).
 > No escribir `nflasha4` a mano sin rollback.
+> **Parche C (26-11-2026, medido):** un `libmpr` que en cada arranque hace eso mismo — tras `FBM::Init`,
+> si `0xA3699C[10].handle==0` llama a `0x2B1DEC` para `(4,3)` y `(0x21,3)` con un stub propio y a
+> `InitBackupData(6,3)` — **crea y persiste**: la imagen que escribe es byte a byte la de la consola
+> (`6d2ab43a…`) y un segundo arranque con el `libmpr` de fábrica ya registra idx 10 (`CheckExistSector=0x45`,
+> `BkRead(0x04,3)=0x10100003`) **sin escribir un byte**; cuando el sector ya existe el parche tampoco escribe
+> (0 B). Dato nuevo de código: `0x2B3F7C` **sí llama** al `fn` registrado (`blx r3`, `r0=arg`) ⇒ el dummy de
+> fábrica `0x2B5185` aborta el arranque y hay que registrar un stub inocuo.
 > [Informe causa](../reports/film-pb-1-causa-fbm-20261126.md) ·
-> [informe consola/0x31](../reports/film-pb-1-sub-consola-sector31-20261126.md).
+> [informe consola/0x31](../reports/film-pb-1-sub-consola-sector31-20261126.md) ·
+> [informe parche C](../reports/fbm-sector31-c-persistente-20261126.md).
 
 
 ## Reproducción de vídeo — FILM-PB-1 (26-11-2026)

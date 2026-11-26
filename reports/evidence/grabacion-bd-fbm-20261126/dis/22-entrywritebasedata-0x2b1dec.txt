@@ -1,0 +1,48 @@
+# analysis/camera-extract/usr/lib/libmpr.so: syms=1412 plt=930  rodata=0x7a3e90..0x956750
+
+===== 0x2b1dec .. 0x2b1e4c =====
+002b1dec: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}
+002b1df0: 0446       mov      r4, r0
+002b1df2: 00af       add      r7, sp, #0
+002b1df4: 0e46       mov      r6, r1
+002b1df6: 1546       mov      r5, r2
+002b1df8: 0c48       ldr      r0, [pc, #0x30]   ; =0x7e6680 "[FBM] BackupMgr::EntryWriteBaseDataFunction(userID[%d],,,mediaID[%d])"
+002b1dfa: 1a46       mov      r2, r3
+002b1dfc: 2146       mov      r1, r4
+002b1dfe: 9846       mov      r8, r3
+002b1e00: 03f03ef9   bl       #0x2b5080
+002b1e04: 0023       movs     r3, #0
+002b1e06: 08e0       b        #0x2b1e1a
+002b1e08: a042       cmp      r0, r4
+002b1e0a: 04d1       bne      #0x2b1e16
+002b1e0c: 5168       ldr      r1, [r2, #4]
+002b1e0e: 4145       cmp      r1, r8
+002b1e10: 04bf       itt      eq
+002b1e12: 1661       streq    r6, [r2, #0x10]
+002b1e14: 5561       streq    r5, [r2, #0x14]
+002b1e16: 0133       adds     r3, #1
+002b1e18: dbb2       uxtb     r3, r3
+002b1e1a: 0548       ldr      r0, [pc, #0x14]   ; =0x9d23fc
+002b1e1c: 1821       movs     r1, #0x18
+002b1e1e: 5943       muls     r1, r3, r1
+002b1e20: 4218       adds     r2, r0, r1
+002b1e22: 4058       ldr      r0, [r0, r1]
+002b1e24: 0028       cmp      r0, #0
+002b1e26: efd1       bne      #0x2b1e08
+002b1e28: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}
+002b1e2c: 8066       str      r0, [r0, #0x68]
+002b1e2e: 7e00       lsls     r6, r7, #1
+002b1e30: fc23       movs     r3, #0xfc
+002b1e32: 9d00       lsls     r5, r3, #2
+002b1e34: b0b5       push     {r4, r5, r7, lr}
+002b1e36: 0346       mov      r3, r0
+002b1e38: 00af       add      r7, sp, #0
+002b1e3a: 0022       movs     r2, #0
+002b1e3c: 09e0       b        #0x2b1e52
+002b1e3e: 9842       cmp      r0, r3
+002b1e40: 05d1       bne      #0x2b1e4e
+002b1e42: 6068       ldr      r0, [r4, #4]
+002b1e44: 8842       cmp      r0, r1
+002b1e46: 02d1       bne      #0x2b1e4e
+002b1e48: 0020       movs     r0, #0
+002b1e4a: 2061       str      r0, [r4, #0x10]

@@ -1,0 +1,136 @@
+# analysis/camera-extract/usr/lib/libmpr.so: syms=1412 plt=930  rodata=0x7a3e90..0x956750
+
+===== 0x5e7d28 .. 0x5e7ea8 =====
+005e7d28: 2de9f047   push.w   {r4, r5, r6, r7, r8, sb, sl, lr}
+005e7d2c: 90b0       sub      sp, #0x40
+005e7d2e: 5c4e       ldr      r6, [pc, #0x170]   ; =0x90f1e1
+005e7d30: 06af       add      r7, sp, #0x18
+005e7d32: 0446       mov      r4, r0
+005e7d34: 4068       ldr      r0, [r0, #4]
+005e7d36: 8a46       mov      sl, r1
+005e7d38: e6f75bf9   bl       #0x5cdff2
+005e7d3c: 594a       ldr      r2, [pc, #0x164]   ; =0x8d293f "[I]m2psIfo_rec::CloseRecFile()"
+005e7d3e: 3346       mov      r3, r6
+005e7d40: 5949       ldr      r1, [pc, #0x164]   ; =0x8cbf14 "[IFO]"
+005e7d42: 0025       movs     r5, #0
+005e7d44: 0096       str      r6, [sp]
+005e7d46: 0195       str      r5, [sp, #4]
+005e7d48: 03f09cfd   bl       #0x5eb884
+005e7d4c: 6068       ldr      r0, [r4, #4]
+005e7d4e: e6f750f9   bl       #0x5cdff2
+005e7d52: 2946       mov      r1, r5
+005e7d54: 03f067fd   bl       #0x5eb826
+005e7d58: 84f8e2a9   strb.w   sl, [r4, #0x9e2]
+005e7d5c: 6068       ldr      r0, [r4, #4]
+005e7d5e: fd84       strh     r5, [r7, #0x26]
+005e7d60: e6f72ff9   bl       #0x5cdfc2
+005e7d64: 04f52161   add.w    r1, r4, #0xa10
+005e7d68: f9f74afb   bl       #0x5e1400
+005e7d6c: 0546       mov      r5, r0
+005e7d6e: 6068       ldr      r0, [r4, #4]
+005e7d70: e6f73ff9   bl       #0x5cdff2
+005e7d74: 4d49       ldr      r1, [pc, #0x134]   ; =0x8d288c "m2psIfo_rec.cpp"
+005e7d76: 40f25112   movw     r2, #0x151
+005e7d7a: 2b46       mov      r3, r5
+005e7d7c: 04f006f8   bl       #0x5ebd8c
+005e7d80: 55bb       cbnz     r5, #0x5e7dd8
+005e7d82: 04f51a65   add.w    r5, r4, #0x9a0
+005e7d86: 4a48       ldr      r0, [pc, #0x128]   ; =0x8d295e "[IFO]SetWriteFile [recFileName = %s]"
+005e7d88: 1335       adds     r5, #0x13
+005e7d8a: 2946       mov      r1, r5
+005e7d8c: ecf786ff   bl       #0x5d4c9c
+005e7d90: 6068       ldr      r0, [r4, #4]
+005e7d92: e6f73af9   bl       #0x5ce00a
+005e7d96: 2946       mov      r1, r5
+005e7d98: 07f12602   add.w    r2, r7, #0x26
+005e7d9c: c5f5a2fa   bl       #0x3ad2e4
+005e7da0: 0546       mov      r5, r0
+005e7da2: 6068       ldr      r0, [r4, #4]
+005e7da4: e6f725f9   bl       #0x5cdff2
+005e7da8: 4049       ldr      r1, [pc, #0x100]   ; =0x8d288c "m2psIfo_rec.cpp"
+005e7daa: 40f25712   movw     r2, #0x157
+005e7dae: 2b46       mov      r3, r5
+005e7db0: 03f0ecff   bl       #0x5ebd8c
+005e7db4: 65b1       cbz      r5, #0x5e7dd0
+005e7db6: 6068       ldr      r0, [r4, #4]
+005e7db8: e6f71bf9   bl       #0x5cdff2
+005e7dbc: 3d4b       ldr      r3, [pc, #0xf4]   ; =0xfa511402
+005e7dbe: 3b49       ldr      r1, [pc, #0xec]   ; =0x8d288c "m2psIfo_rec.cpp"
+005e7dc0: 40f25b12   movw     r2, #0x15b
+005e7dc4: 0093       str      r3, [sp]
+005e7dc6: 2b46       mov      r3, r5
+005e7dc8: 03f096ff   bl       #0x5ebcf8
+005e7dcc: 0546       mov      r5, r0
+005e7dce: 03e0       b        #0x5e7dd8
+005e7dd0: 238a       ldrh     r3, [r4, #0x10]
+005e7dd2: 0bb1       cbz      r3, #0x5e7dd8
+005e7dd4: 013b       subs     r3, #1
+005e7dd6: 2382       strh     r3, [r4, #0x10]
+005e7dd8: 07f10408   add.w    r8, r7, #4
+005e7ddc: 04f51a69   add.w    sb, r4, #0x9a0
+005e7de0: 2021       movs     r1, #0x20
+005e7de2: 4046       mov      r0, r8
+005e7de4: fff734fd   bl       #0x5e7850
+005e7de8: 09f10a01   add.w    r1, sb, #0xa
+005e7dec: 0822       movs     r2, #8
+005e7dee: 4046       mov      r0, r8
+005e7df0: 39f794f1   bl       #0x12111c
+005e7df4: 09f11301   add.w    r1, sb, #0x13
+005e7df8: 0c22       movs     r2, #0xc
+005e7dfa: 07f10c00   add.w    r0, r7, #0xc
+005e7dfe: 39f78df1   bl       #0x12111c
+005e7e02: 6068       ldr      r0, [r4, #4]
+005e7e04: 0023       movs     r3, #0
+005e7e06: bb61       str      r3, [r7, #0x18]
+005e7e08: fb61       str      r3, [r7, #0x1c]
+005e7e0a: e6f7faf8   bl       #0x5ce002
+005e7e0e: 07f1100e   add.w    lr, r7, #0x10
+005e7e12: e946       mov      sb, sp
+005e7e14: 8446       mov      ip, r0
+005e7e16: bee80f00   ldm.w    lr!, {r0, r1, r2, r3}
+005e7e1a: a9e80f00   stm.w    sb!, {r0, r1, r2, r3}
+005e7e1e: 4b46       mov      r3, sb
+005e7e20: def80020   ldr.w    r2, [lr]
+005e7e24: 6046       mov      r0, ip
+005e7e26: 1a60       str      r2, [r3]
+005e7e28: 98e80e00   ldm.w    r8, {r1, r2, r3}
+005e7e2c: d4f7aaf9   bl       #0x5bc184
+005e7e30: 85b9       cbnz     r5, #0x5e7e54
+005e7e32: 84f8a059   strb.w   r5, [r4, #0x9a0]
+005e7e36: 6068       ldr      r0, [r4, #4]
+005e7e38: e6f7b3f8   bl       #0x5cdfa2
+005e7e3c: 04f51e62   add.w    r2, r4, #0x9e0
+005e7e40: 5146       mov      r1, sl
+005e7e42: 0832       adds     r2, #8
+005e7e44: e2f783fb   bl       #0x5ca54e
+005e7e48: 6068       ldr      r0, [r4, #4]
+005e7e4a: e6f7aaf8   bl       #0x5cdfa2
+005e7e4e: 2946       mov      r1, r5
+005e7e50: e2f730f9   bl       #0x5ca0b4
+005e7e54: 6068       ldr      r0, [r4, #4]
+005e7e56: 4ff00008   mov.w    r8, #0
+005e7e5a: e6f7caf8   bl       #0x5cdff2
+005e7e5e: 3346       mov      r3, r6
+005e7e60: 1149       ldr      r1, [pc, #0x44]   ; =0x8cbf14 "[IFO]"
+005e7e62: 154a       ldr      r2, [pc, #0x54]   ; =0x8d2983 "[O]m2psIfo_rec::CloseRecFile():"
+005e7e64: 0096       str      r6, [sp]
+005e7e66: cdf80480   str.w    r8, [sp, #4]
+005e7e6a: 03f00bfd   bl       #0x5eb884
+005e7e6e: 6068       ldr      r0, [r4, #4]
+005e7e70: e6f7bff8   bl       #0x5cdff2
+005e7e74: 0822       movs     r2, #8
+005e7e76: 2b46       mov      r3, r5
+005e7e78: 1049       ldr      r1, [pc, #0x40]   ; =0x8d28f7 "errorCode="
+005e7e7a: 0096       str      r6, [sp]
+005e7e7c: 0196       str      r6, [sp, #4]
+005e7e7e: cdf80880   str.w    r8, [sp, #8]
+005e7e82: 03f06bfd   bl       #0x5eb95c
+005e7e86: 6068       ldr      r0, [r4, #4]
+005e7e88: e6f7b3f8   bl       #0x5cdff2
+005e7e8c: 4146       mov      r1, r8
+005e7e8e: 03f0cafc   bl       #0x5eb826
+005e7e92: 2846       mov      r0, r5
+005e7e94: 07f12807   add.w    r7, r7, #0x28
+005e7e98: bd46       mov      sp, r7
+005e7e9a: bde8f087   pop.w    {r4, r5, r6, r7, r8, sb, sl, pc}
+005e7e9e: 00bf       nop      

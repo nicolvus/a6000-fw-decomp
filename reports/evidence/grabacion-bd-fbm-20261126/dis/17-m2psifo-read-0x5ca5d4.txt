@@ -1,0 +1,44 @@
+# analysis/camera-extract/usr/lib/libmpr.so: syms=1412 plt=930  rodata=0x7a3e90..0x956750
+
+===== 0x5ca5d4 .. 0x5ca634 =====
+005ca5d4: f0b5       push     {r4, r5, r6, r7, lr}
+005ca5d6: 85b0       sub      sp, #0x14
+005ca5d8: 02af       add      r7, sp, #8
+005ca5da: 0446       mov      r4, r0
+005ca5dc: 1546       mov      r5, r2
+005ca5de: 1846       mov      r0, r3
+005ca5e0: 97f820c0   ldrb.w   ip, [r7, #0x20]
+005ca5e4: 0e46       mov      r6, r1
+005ca5e6: 91b1       cbz      r1, #0x5ca60e
+005ca5e8: 8bb1       cbz      r3, #0x5ca60e
+005ca5ea: 3b1d       adds     r3, r7, #4
+005ca5ec: bcf1000f   cmp.w    ip, #0
+005ca5f0: 08d1       bne      #0x5ca604
+005ca5f2: 0093       str      r3, [sp]
+005ca5f4: 3246       mov      r2, r6
+005ca5f6: 0190       str      r0, [sp, #4]
+005ca5f8: 2b46       mov      r3, r5
+005ca5fa: 0420       movs     r0, #4
+005ca5fc: e168       ldr      r1, [r4, #0xc]
+005ca5fe: e9f4dbf9   bl       #0x2b39b8
+005ca602: 01e0       b        #0x5ca608
+005ca604: e9f4a0f9   bl       #0x2b3948
+005ca608: 0123       movs     r3, #1
+005ca60a: 2374       strb     r3, [r4, #0x10]
+005ca60c: 00e0       b        #0x5ca610
+005ca60e: 0120       movs     r0, #1
+005ca610: 07f10c07   add.w    r7, r7, #0xc
+005ca614: bd46       mov      sp, r7
+005ca616: f0bd       pop      {r4, r5, r6, r7, pc}
+005ca618: 98b5       push     {r3, r4, r7, lr}
+005ca61a: 0446       mov      r4, r0
+005ca61c: 037c       ldrb     r3, [r0, #0x10]
+005ca61e: 00af       add      r7, sp, #0
+005ca620: 23b1       cbz      r3, #0x5ca62c
+005ca622: 0846       mov      r0, r1
+005ca624: e9f4aeff   bl       #0x2b4584
+005ca628: 0023       movs     r3, #0
+005ca62a: 2374       strb     r3, [r4, #0x10]
+005ca62c: 0020       movs     r0, #0
+005ca62e: 98bd       pop      {r3, r4, r7, pc}
+005ca630: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}

@@ -1,0 +1,181 @@
+[shim] FBMTAB libmpr base=0xae35f000 tabla=0xaed9599c gancho@7126e6=28 f2 8b fc cueva@93b000=30 b5 79 f5 0d f4 7c 21
+[shim] FBMTAB t=0s llena=0 nh=0 lst:
+[shim] FBMTAB t=0s idx= 0 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 1 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 2 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 3 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 4 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 5 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 6 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 7 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 8 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 9 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=10 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=11 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=12 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=13 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=14 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=15 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=16 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=17 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=18 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=19 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=20 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=21 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=22 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=23 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=24 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=25 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=26 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=27 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=28 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=29 sector=000000 handle=0000000000 valido=0 om=0
+[    9.953154] 8<--- cut here ---
+[    9.954727] Unhandled prefetch abort: unknown 1 (0x001) at 0xae614186
+alive= threads=0 lineas=1915 modulos=48
+EXIT=132
+--- ultimas lineas (filtradas)
+[shim] dlopen(libmprctrl.so) ...
+[shim] dlopen(libmprctrl.so) -> 0xc70168
+[shim] open(/dev/stream2, 0x1002) -> 32 (generico)
+[shim] open(/dev/mem, 0x1002) -> 33 (generico)
+[shim] mmap(/dev/mem, len=0x7c000 off=0x82df9000) -> 0x8fc9c000 (anónima)
+[shim] TRAZA < HJ # % 
+[shim] direct 0x90013d get_date -> 2026-11-26 5:35:13 tipo 1 (base 0)
+[shim] TRAZA < ,U S 4 
+[shim] uipc dynamic_id cola -> 0x3c4050
+[shim] uipc reg_msg_queue_cb qid=0x3c4050 arg=0xac4fe47c cb=0xae95f3e9 (libmpr.so+0x6003e8) t2=0
+[shim] RTMAP prioridad 120 -> 81 (policy 2)
+[shim] NFLASH4: 10485760 B de /usr/share/nflasha4.img
+[shim] open(/dev/nflasha4, 0x2) -> 34 (generico)
+[shim] NFLASH4 ioctl 0x6e07 -> lblk 0x20000 x 80
+[shim] NFLASH4 open(/sys/block/nflasha0/nflasha0p4/start) -> 35 (100864
+)
+[shim] RTMAP prioridad 87 -> 66 (policy 2)
+[shim] TRAZA < : ` $ 
+[shim] TRAZA < 2Q 8 
+[shim] TRAZA < Bd 1 
+[shim] --- pila (sig 7 tid 226 THREAD_INFRA1) pc/lr:
+[shim]   raw pc=ae614186 lr=ae612fcb addr=ae614186 r0=00000000 r1=00000004 r2=ae614186
+[shim]   ae614186 /usr/lib/libmpr.so+0x2b5186
+[shim]   ae612fcb /usr/lib/libmpr.so+0x2b3fcb
+[shim]   b6e5a77c /usr/lib/sonyshim.so+0x1b77c
+[shim]   ae613135 /usr/lib/libmpr.so+0x2b4135
+[shim]   ae61344d /usr/lib/libmpr.so+0x2b444d
+[shim]   ae61398b /usr/lib/libmpr.so+0x2b498b
+[shim]   ae61408d /usr/lib/libmpr.so+0x2b508d
+[shim]   ae610e05 /usr/lib/libmpr.so+0x2b1e05
+[shim]   ae614186 /usr/lib/libmpr.so+0x2b5186
+[shim]   aee5c7ce /usr/lib/libmprctrl.so+0x217ce
+[shim]   aec9a049 /usr/lib/libmpr.so+0x93b049
+[shim]   aea716eb /usr/lib/libmpr.so+0x7126eb
+[shim]   00008000 /usr/bin/im.elf+0
+[shim]   aea7bc7f /usr/lib/libmpr.so+0x71cc7f
+[shim]   aee5c7ce /usr/lib/libmprctrl.so+0x217ce
+[shim]   aee4cb89 /usr/lib/libmprctrl.so+0x11b89
+Illegal instruction
+EXIT=132
+--- NF4DUMP (nflasha4)
+NF4IMG -rw-r--r--    1 root     root      10485760 Nov 26 05:35 /cam/nflasha4.img
+NF4IMG -rw-r--r--    1 root     root      10485760 Nov 26 05:34 /cam/usr/share/nflasha4.img
+NF4DIFF bytes_distintos=394
+NF4DIFF sectores=1258 1259 
+/cam/harness.sh: line 103: od: not found
+NF4DIFF sector=1258 off=644096 
+/cam/harness.sh: line 103: od: not found
+NF4DIFF sector=1259 off=644608 
+--- FBMTAB (sub-arnes FBM)
+[shim] FBMTAB libmpr base=0xae35f000 tabla=0xaed9599c gancho@7126e6=28 f2 8b fc cueva@93b000=30 b5 79 f5 0d f4 7c 21
+[shim] FBMTAB t=0s llena=0 nh=0 lst:[shim] GPUEMU: timbre de la GPU en libObj+0x6c4c46 (0xaf5e6c46)
+[shim] FBMTAB t=0s idx= 0 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 1 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 2 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 3 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 4 sector=000000 handle=0000000000 valido=0 om=0
+[shim] EFCS: emulación armada (libObj 0xaef22000)[shim] FBMTAB t=0s idx= 5 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 6 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 7 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 8 sector=000000 handle=0000000000 valido=0 om=0
+[shim] [shim] FBMTAB t=0s idx= 9 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=10 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=11 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=12 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=13 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=14 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=15 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=16 sector=000000 handle=0000000000 valido=0 om=0
+[shim] NULLMWF: +0x2f850 protegida (this NULL = regreso inmediato)[shim] FBMTAB t=0s idx=17 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=18 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=19 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=20 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=21 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=22 sector=000000 handle=0000000000 valido=0 om=0
+[shim] [shim] FBMTAB t=0s idx=23 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=24 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=25 sector=000000 handle=0000000000 valido=0 om=0
+[shim] [shim] FBMTAB t=0s idx=26 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=27 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=28 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=29 sector=000000 handle=0000000000 valido=0 om=0
+--- FBM / FlashLib (log del invitado)
+[shim] FBMTAB libmpr base=0xae35f000 tabla=0xaed9599c gancho@7126e6=28 f2 8b fc cueva@93b000=30 b5 79 f5 0d f4 7c 21
+[shim] FBMTAB t=0s llena=0 nh=0 lst:[shim] GPUEMU: timbre de la GPU en libObj+0x6c4c46 (0xaf5e6c46)
+[shim] FBMTAB t=0s idx= 0 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 1 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 2 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 3 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 4 sector=000000 handle=0000000000 valido=0 om=0
+[shim] EFCS: emulación armada (libObj 0xaef22000)[shim] FBMTAB t=0s idx= 5 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 6 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 7 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx= 8 sector=000000 handle=0000000000 valido=0 om=0
+[shim] [shim] FBMTAB t=0s idx= 9 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=10 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=11 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=12 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=13 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=14 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=15 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=16 sector=000000 handle=0000000000 valido=0 om=0
+[shim] NULLMWF: +0x2f850 protegida (this NULL = regreso inmediato)[shim] FBMTAB t=0s idx=17 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=18 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=19 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=20 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=21 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=22 sector=000000 handle=0000000000 valido=0 om=0
+[shim] [shim] FBMTAB t=0s idx=23 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=24 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=25 sector=000000 handle=0000000000 valido=0 om=0
+[shim] [shim] FBMTAB t=0s idx=26 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=27 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=28 sector=000000 handle=0000000000 valido=0 om=0
+[shim] FBMTAB t=0s idx=29 sector=000000 handle=0000000000 valido=0 om=0
+--- ultimas lineas del invitado
+)
+[shim] RTMAP prioridad 87 -> 66 (policy 2)
+[shim] TRAZA < : ` $ 
+[shim] TRAZA < 2Q 8 
+[shim] TRAZA < Bd 1 
+[shim] --- pila (sig 7 tid 226 THREAD_INFRA1) pc/lr:
+[shim]   raw pc=ae614186 lr=ae612fcb addr=ae614186 r0=00000000 r1=00000004 r2=ae614186
+[shim]   ae614186 /usr/lib/libmpr.so+0x2b5186
+[shim]   ae612fcb /usr/lib/libmpr.so+0x2b3fcb
+[shim]   b6e5a77c /usr/lib/sonyshim.so+0x1b77c
+[shim]   ae613135 /usr/lib/libmpr.so+0x2b4135
+[shim]   ae61344d /usr/lib/libmpr.so+0x2b444d
+[shim]   ae61398b /usr/lib/libmpr.so+0x2b498b
+[shim]   ae61408d /usr/lib/libmpr.so+0x2b508d
+[shim]   ae610e05 /usr/lib/libmpr.so+0x2b1e05
+[shim]   ae614186 /usr/lib/libmpr.so+0x2b5186
+[shim]   aee5c7ce /usr/lib/libmprctrl.so+0x217ce
+[shim]   aec9a049 /usr/lib/libmpr.so+0x93b049
+[shim]   aea716eb /usr/lib/libmpr.so+0x7126eb
+[shim]   00008000 /usr/bin/im.elf+0
+[shim]   aea7bc7f /usr/lib/libmpr.so+0x71cc7f
+[shim]   aee5c7ce /usr/lib/libmprctrl.so+0x217ce
+[shim]   aee4cb89 /usr/lib/libmprctrl.so+0x11b89
+Illegal instruction
+EXIT=132
+--- IMEXIT/estado
+EXIT=132
+[  130.502451] reboot: Power down

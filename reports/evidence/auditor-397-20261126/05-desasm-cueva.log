@@ -1,0 +1,55 @@
+=== CUEVA 0x93B000..0x93B060 (nuevo) ===
+0x0093B000  push     {r4, r5, lr}
+0x0093B002  bl       #0x2b4820
+0x0093B006  mov      r4, pc
+0x0093B008  bic      r4, r4, #3
+0x0093B00C  movw     r1, #0xba5c
+0x0093B010  movt     r1, #0xf
+0x0093B014  add      r4, r1
+0x0093B016  ldr      r0, [r4, #4]
+0x0093B018  cbnz     r0, #0x93b048
+0x0093B01A  movw     r1, #0xba16
+0x0093B01E  movt     r1, #0xf
+0x0093B022  sub.w    r5, r4, r1
+0x0093B026  adds     r5, #1
+0x0093B028  movs     r0, #4
+0x0093B02A  mov      r1, r5
+0x0093B02C  movs     r2, #0
+0x0093B02E  movs     r3, #3
+0x0093B030  bl       #0x2b1dec
+0x0093B034  movs     r0, #0x21
+0x0093B036  mov      r1, r5
+0x0093B038  movs     r2, #0
+0x0093B03A  movs     r3, #3
+0x0093B03C  bl       #0x2b1dec
+0x0093B040  movs     r0, #6
+0x0093B042  movs     r1, #3
+0x0093B044  bl       #0x2b43f0
+0x0093B048  pop      {r4, r5, pc}
+0x0093B04A  nop      
+0x0093B04C  nop      
+0x0093B04E  movs     r0, #0
+0x0093B050  bx       lr
+0x0093B052  movs     r0, r0
+0x0093B054  movs     r0, r0
+0x0093B056  movs     r0, r0
+0x0093B058  movs     r0, r0
+0x0093B05A  movs     r0, r0
+0x0093B05C  movs     r0, r0
+0x0093B05E  movs     r0, r0
+
+=== PUNTO DE GANCHO 0x7126E0..0x7126F8 (fabrica) ===
+0x007126E0  ldr      r4, [pc, #0x140]
+0x007126E2  blx      #0x11dfe8
+0x007126E6  bl       #0x2b4820
+0x007126EA  bl       #0x4a8864
+0x007126EE  bl       #0x484b1c
+0x007126F2  bl       #0x46fb08
+
+=== PUNTO DE GANCHO 0x7126E0..0x7126F8 (nuevo) ===
+0x007126E0  ldr      r4, [pc, #0x140]
+0x007126E2  blx      #0x11dfe8
+0x007126E6  bl       #0x93b000
+0x007126EA  bl       #0x4a8864
+0x007126EE  bl       #0x484b1c
+0x007126F2  bl       #0x46fb08

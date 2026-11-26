@@ -1,0 +1,39 @@
+bytes en 0x495380..0x4953A0 fabrica: 0b d3 ba 6a 4f f0 00 0b da 46 c7 f8 20 b0 c7 f8 14 b0 93 00 5b 42 bb 60 86 e0 3b 6b 1b 78 07 2b
+bytes en 0x495380..0x4953A0 nuevo  : 0b d3 ba 6a 4f f0 00 0b da 46 c7 f8 20 b0 c7 f8 14 b0 93 00 5b 42 bb 60 86 e0 3b 6b 1b 78 07 2b
+--- desensamblado fabrica desde 0x495370 ---
+0x00495370  lsls     r4, r4, #0x1b
+0x00495372  subs     r1, r3, #1
+0x00495374  add.w    r3, r7, #0x3c
+0x00495378  bl       #0x5bb02c
+0x0049537C  ldr      r1, [r7, #0x2c]
+0x0049537E  cmp      r1, r6
+0x00495380  blo      #0x49539a
+0x00495382  ldr      r2, [r7, #0x28]
+0x00495384  mov.w    fp, #0
+0x00495388  mov      sl, fp
+0x0049538A  str.w    fp, [r7, #0x20]
+0x0049538E  str.w    fp, [r7, #0x14]
+0x00495392  lsls     r3, r2, #2
+0x00495394  rsbs     r3, r3, #0
+0x00495396  str      r3, [r7, #8]
+0x00495398  b        #0x4954a8
+0x0049539A  ldr      r3, [r7, #0x30]
+0x0049539C  ldrb     r3, [r3]
+0x0049539E  cmp      r3, #7
+0x004953A0  beq      #0x495382
+0x004953A2  mov      r3, sl
+0x004953A4  str.w    sl, [r7, #0x20]
+0x004953A8  str.w    sl, [r7, #0x14]
+0x004953AC  str      r3, [r7, #0x10]
+0x004953AE  b        #0x4954c4
+0x004953B0  add.w    r2, r7, #0x30
+0x004953B4  add.w    r3, r7, #0x3c
+0x004953B8  ldr.w    r0, [r4, #0x6e4]
+0x004953BC  mov      r1, fp
+0x004953BE  bl       #0x5bb02c
+0x004953C2  ldr      r3, [r7, #0x30]
+0x004953C4  ldrb     r2, [r3]
+0x004953C6  cmp      r2, #7
+0x004953C8  bne      #0x4953ce
+0x004953CA  movs     r3, #1
+0x004953CC  b        #0x495426

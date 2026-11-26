@@ -1,0 +1,88 @@
+[MSV] base libmpr=0xae212000 tabla sectores=0xaec4899c (0xA3699C)
+[MSV] trampa 698ec8 FlashLoadForMsv en 0xae8aaec8 (orig b5b0)
+[MSV] trampa 3afa94 MsvMcmd::RcsBackupTbl en 0xae5c1a94 (orig e92d)
+[MSV] trampa 35ea1c RcsBackupTblData en 0xae570a1c (orig e92d)
+[MSV] trampa 698fb8 mp4Ifo_General::Load en 0xae8aafb8 (orig b5b0)
+[MSV] trampa 67ca6c MMgrMp4IfoAcsr::CrAndLd en 0xae88ea6c (orig e92d)
+[MSV] trampa 698f18 CheckSalvageStatus en 0xae8aaf18 (orig b5f8)
+[MSV] tabla LLENA (nombres 0x10..0xbd)
+[MSV] trampa 698ec8 FlashLoadForMsv: 0 capturas
+[MSV] trampa 3afa94 MsvMcmd::RcsBackupTbl: 0 capturas
+[MSV] trampa 35ea1c RcsBackupTblData: 0 capturas
+[MSV] trampa 698fb8 mp4Ifo_General::Load: 0 capturas
+[MSV] trampa 67ca6c MMgrMp4IfoAcsr::CrAndLd: 0 capturas
+[MSV] trampa 698f18 CheckSalvageStatus: 0 capturas
+[MSV] sin objeto real todavia: barrido de emergencia
+[MSV] scan: no veo libmpr en maps
+[MSV] CTOR 0x3B04A4(this=0xb3872568, cfg=0xb384be20, &out) ...
+[MSV] CTOR -> ret=0xb3872568  [obj]=0xaea47980 (esperado base+0x835980=0xaea47980)  [obj+0x50]=0xb3872c80  out=0xb3872c80
+[MSV] objeto construido: this=0xb3872568 hijo=0xb3872c80; fijados [+0x4088]=4 [+0x408c]=3
+[MSV] objeto exterior de 0x698EC8 sintetico 0xb384be68 -> sub 0xb386fa78 -> msv 0xb3872568
+[MSV] midiendo con ifo(this)=0xb384be68 msv=0xb3872568
+[MSV] antes  handle!=0 = 1/30
+[MSV] antes [00..14]  00:010=h0/s0/om0 01:011=h0/s0/om0 02:012=h0/s0/om0 03:020=h0/s0/om0 04:021=h0/s0/om0 05:028=h0/s0/om0 06:029=h0/s0/om0 07:02c=h0/s0/om0 08:02d=h0/s0/om0 09:030=h0/s0/om0 10:031=h0/s0/om0 11:038=h0/s0/om0 12:039=h0/s0/om0 13:040=h0/s0/om0 14:060=h0/s0/om0 
+[MSV] antes [15..29]  15:061=h0/s0/om0 16:068=h0/s0/om0 17:06c=h0/s0/om0 18:062=h0/s0/om0 19:063=h0/s0/om0 20:090=h0/s0/om0 21:091=h0/s0/om0 22:092=h0/s0/om0 23:0a0=h1/s1/om9 24:0b1=h0/s0/om0 25:0b2=h0/s0/om0 26:0b3=h0/s0/om0 27:0b8=h0/s0/om0 28:0bc=h0/s0/om0 29:0bd=h0/s0/om0 
+[MSV] CRITERIO idx10 sec=0x31 handle=0 +8=0 => FALLA
+[MSV] tabla 0x9D23FC (antes): [00]u10/m1/ft010/om4/fn0/arg0 [01]u02/m1/ft011/om2/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [02]u03/m1/ft012/om3/fn0/arg0 [03]u10/m2/ft020/om4/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [04]u04/m2/ft021/om6/fn0/arg0 [05]u21/m2/ft021/om6/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [06]u10/m5/ft028/om4/fn0/arg0 [07]u04/m5/ft029/om6/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [08]u21/m5/ft029/om6/fn0/arg0 [09]u10/m6/ft02c/om4/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [10]u04/m6/ft02d/om6/fn0/arg0 [11]u21/m6/ft02d/om6/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [12]u10/m3/ft030/om4/fn0/arg0 [13]u04/m3/ft031/om6/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [14]u21/m3/ft031/om6/fn0/arg0 [15]u10/m4/ft038/om4/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [16]u04/m4/ft039/om6/fn0/arg0 [17]u21/m4/ft039/om6/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [18]u01/m1/ft040/om1/fn0/arg0 [19]u30/m1/ft040/om1/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [20]u20/m1/ft060/om7/fn0/arg0 [21]u20/m2/ft061/om7/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [22]u20/m5/ft068/om7/fn0/arg0 [23]u20/m6/ft06c/om7/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [24]u20/m3/ft062/om7/fn0/arg0 [25]u20/m4/ft063/om7/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [26]u10/m7/ft090/om4/fn0/arg0 [27]u04/m7/ft091/om6/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [28]u21/m7/ft091/om6/fn0/arg0 [29]u20/m7/ft092/om7/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [30]u22/m8/ft0a0/om9/fn0/arg0 [31]u23/m2/ft0b1/oma/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [32]u23/m3/ft0b2/oma/fn0/arg0 [33]u23/m4/ft0b3/oma/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [34]u23/m5/ft0b8/oma/fn0/arg0 [35]u23/m6/ft0bc/oma/fn0/arg0 
+[MSV] tabla 0x9D23FC (antes): [36]u23/m7/ft0bd/oma/fn0/arg0 [37]u00/m0/ftffffffff/omff/fn0/arg0 
+[MSV] 0x2B3000(OM=6,media=3,&h) -> ret=0x10800010 handle=0xdeadbeef  «unknown»
+[MSV] MSVONLY=1: se omiten las llamadas a 0x3AFA94/0x698EC8
+[MSV] ===== creando el sector 0x31 (EWBDFD 4 3 0 + InitB 6 3) =====
+[MSV] stubs de traza retirados (2 funciones)
+[MSV] MON> FBM EWBDFD 4 3 0   (argc=5, al comando=4)
+[MSV] FBM EWBDFD 4 3 0 -> 1
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [00]u10/m1/ft010/om4/fn0/arg0 [01]u02/m1/ft011/om2/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [02]u03/m1/ft012/om3/fn0/arg0 [03]u10/m2/ft020/om4/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [04]u04/m2/ft021/om6/fn0/arg0 [05]u21/m2/ft021/om6/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [06]u10/m5/ft028/om4/fn0/arg0 [07]u04/m5/ft029/om6/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [08]u21/m5/ft029/om6/fn0/arg0 [09]u10/m6/ft02c/om4/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [10]u04/m6/ft02d/om6/fn0/arg0 [11]u21/m6/ft02d/om6/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [12]u10/m3/ft030/om4/fn0/arg0 [13]u04/m3/ft031/om6/fnae4c7185/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [14]u21/m3/ft031/om6/fn0/arg0 [15]u10/m4/ft038/om4/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [16]u04/m4/ft039/om6/fn0/arg0 [17]u21/m4/ft039/om6/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [18]u01/m1/ft040/om1/fn0/arg0 [19]u30/m1/ft040/om1/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [20]u20/m1/ft060/om7/fn0/arg0 [21]u20/m2/ft061/om7/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [22]u20/m5/ft068/om7/fn0/arg0 [23]u20/m6/ft06c/om7/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [24]u20/m3/ft062/om7/fn0/arg0 [25]u20/m4/ft063/om7/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [26]u10/m7/ft090/om4/fn0/arg0 [27]u04/m7/ft091/om6/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [28]u21/m7/ft091/om6/fn0/arg0 [29]u20/m7/ft092/om7/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [30]u22/m8/ft0a0/om9/fn0/arg0 [31]u23/m2/ft0b1/oma/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [32]u23/m3/ft0b2/oma/fn0/arg0 [33]u23/m4/ft0b3/oma/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [34]u23/m5/ft0b8/oma/fn0/arg0 [35]u23/m6/ft0bc/oma/fn0/arg0 
+[MSV] tabla 0x9D23FC (tras-EWBDFD): [36]u23/m7/ft0bd/oma/fn0/arg0 [37]u00/m0/ftffffffff/omff/fn0/arg0 
+[MSV] 0x2B3000(OM=6,media=3,&h) -> ret=0 handle=0  «sin error»
+[MSV] MON> FBM InitB 6 3   (argc=4, al comando=3)
+[MSV] FBM InitB 6 3 -> 1
+[MSV] tras-InitB-6-3  handle!=0 = 2/30
+[MSV] tras-InitB-6-3 [00..14]  00:010=h0/s0/om0 01:011=h0/s0/om0 02:012=h0/s0/om0 03:020=h0/s0/om0 04:021=h0/s0/om0 05:028=h0/s0/om0 06:029=h0/s0/om0 07:02c=h0/s0/om0 08:02d=h0/s0/om0 09:030=h0/s0/om0 10:031=h3/s1/om6 11:038=h0/s0/om0 12:039=h0/s0/om0 13:040=h0/s0/om0 14:060=h0/s0/om0 
+[MSV] tras-InitB-6-3 [15..29]  15:061=h0/s0/om0 16:068=h0/s0/om0 17:06c=h0/s0/om0 18:062=h0/s0/om0 19:063=h0/s0/om0 20:090=h0/s0/om0 21:091=h0/s0/om0 22:092=h0/s0/om0 23:0a0=h1/s1/om9 24:0b1=h0/s0/om0 25:0b2=h0/s0/om0 26:0b3=h0/s0/om0 27:0b8=h0/s0/om0 28:0bc=h0/s0/om0 29:0bd=h0/s0/om0 
+[MSV] CRITERIO idx10 sec=0x31 handle=0x3 +8=0x1 => OK
+[MSV] imagen(tras-InitB): origen=10485760 B copia=10485760 B; bytes distintos=1300; primero=644096 (0x9d400) ultimo=3670527 (0x3801ff)
+[MSV] 0x2B3000(OM=6,media=3,&h) -> ret=0 handle=0x3  «sin error»
+[MSV] ===== DESPUES de crear el sector 0x31 =====
+[MSV] BkRead(0x04,3) ...
+[MSV] BkRead(0x04,3) -> 0x10100003   entrada: sec=0x31 h=0x3 est=0x4 om=0x3
+[MSV] despues  handle!=0 = 2/30
+[MSV] despues [00..14]  00:010=h0/s0/om0 01:011=h0/s0/om0 02:012=h0/s0/om0 03:020=h0/s0/om0 04:021=h0/s0/om0 05:028=h0/s0/om0 06:029=h0/s0/om0 07:02c=h0/s0/om0 08:02d=h0/s0/om0 09:030=h0/s0/om0 10:031=h3/s1/om6 11:038=h0/s0/om0 12:039=h0/s0/om0 13:040=h0/s0/om0 14:060=h0/s0/om0 
+[MSV] despues [15..29]  15:061=h0/s0/om0 16:068=h0/s0/om0 17:06c=h0/s0/om0 18:062=h0/s0/om0 19:063=h0/s0/om0 20:090=h0/s0/om0 21:091=h0/s0/om0 22:092=h0/s0/om0 23:0a0=h1/s1/om9 24:0b1=h0/s0/om0 25:0b2=h0/s0/om0 26:0b3=h0/s0/om0 27:0b8=h0/s0/om0 28:0bc=h0/s0/om0 29:0bd=h0/s0/om0 
+[MSV] CRITERIO idx10 sec=0x31 handle=0x3 +8=0x1 => OK
+[MSV] imagen(fin): origen=10485760 B copia=10485760 B; bytes distintos=1300; primero=644096 (0x9d400) ultimo=3670527 (0x3801ff)
+[MSV] ===== objetos sinteticos =====
+[MSV] SIN1 obj=0xb3879348 [obj+0x4088]=4 [obj+0x408c]=3 resto=0
