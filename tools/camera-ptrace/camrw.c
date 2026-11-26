@@ -82,12 +82,14 @@ __attribute__((used)) static int main_c(long *sp){
     long ret=-1; int ok=0;
     if(bad(s4(SYS_ptrace,PT_GETREGS,pid,0,(long)regs))){P=ps(b,"GETREGS falló\n");out();goto fin;}
     { long orig[18]; for(q=0;q<18;q++) orig[q]=regs[q];
-      stk=((ulong)regs[13]-0x200)&~7UL;
+      /* 0x100 de margen: el push de la función no debe pisar el UDF */
+      stk=((ulong)regs[13]-0x400)&~7UL;
       if(peekw(pid,stk,&w0)<0){P=ps(b,"PEEK stack falló\n");out();goto fin;}
       if(pokew(pid,stk,(w0&0xffff0000UL)|UDF)<0){P=ps(b,"POKE stack falló\n");out();goto fin;}
       regs[0]=(argc>5)?ph(av[5]):0; regs[1]=(argc>6)?ph(av[6]):0;
       regs[2]=(argc>7)?ph(av[7]):0; regs[3]=(argc>8)?ph(av[8]):0;
-      regs[14]=(long)stk; regs[13]=(long)(stk+8); regs[15]=(long)(va|1UL);
+      /* lr necesita el bit Thumb, o el retorno al UDF 0xde00 no da SIGILL */
+      regs[14]=(long)(stk|1UL); regs[13]=(long)(stk+0x100); regs[15]=(long)(va|1UL);
       if(bad(s4(SYS_ptrace,PT_SETREGS,pid,0,(long)regs))){P=ps(b,"SETREGS falló\n");out();goto fin;}
       s4(SYS_ptrace,PT_CONT,pid,0,0);
       for(q=0;q<200;q++){
@@ -96,7 +98,10 @@ __attribute__((used)) static int main_c(long *sp){
         wr=s4(SYS_wait4,pid,(long)&st2,WALL|1,0);
         if(wr==pid){
           long rr[18];
-          if(!bad(s4(SYS_ptrace,PT_GETREGS,pid,0,(long)rr))) ret=rr[0];
+          if(!bad(s4(SYS_ptrace,PT_GETREGS,pid,0,(long)rr))){ ret=rr[0];
+            P=ps(b,"parada st=");P=hx(P,(ulong)st2);P=ps(P," pc=");P=hx(P,(ulong)rr[15]);
+            P=ps(P," lr=");P=hx(P,(ulong)rr[14]);P=ps(P," udf=");P=hx(P,stk);*P++='\n';out();
+          }
           ok=1; break;
         }
       }

@@ -106,6 +106,16 @@
 > leen con ptrace (el anillo se toca por `dd` sobre la física `0x82df9000`).
 > [Informe](film-pb1-traza-camara-20261126.md).
 
+> **Aplicado en la cámara el 26-11-2026: el sector `0x31` YA EXISTE** (`idx 10 = 0x31 handle=6
+> valido=1 OM=6`, 5/30 con handle, `A=31 B=31` en el anillo) tras `FBM EWBDFD 4 3 0` y
+> `FBM InitB 6 3`. El transporte que faltaba es `ringput` (`mmap` de `/dev/mem`): ni ptrace
+> (`EFAULT` en los mapeos de `/dev/mem`) ni `dd` (este busybox **no trae `printf`** y no acepta
+> `seek` > 2³¹) escribían, por eso el monitor no consumía y `A` seguía en 0. **La reproducción
+> sigue fallando**: ni un clip nuevo de 5 s ni los antiguos se reproducen, y «Recuperar BD imág.»
+> sigue sin error. Pendiente comprobar el `fn` de `0x9D23FC[13]` (debe ser `0x2B5185`; sin él el
+> clip nuevo no se registra), `BkRead(0x04,3)` y la persistencia tras reiniciar.
+> [Informe](film-pb-1-sector31-resultado-20261126.md).
+
 ## Reproducción de vídeo — FILM-PB-1 (26-11-2026)
 
 > **Descartado el 26-11-2026: el «modo con movie = 0».** `Type2Mode` (`0x5F699C`) decide solo con

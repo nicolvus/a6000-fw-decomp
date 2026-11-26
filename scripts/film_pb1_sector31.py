@@ -29,7 +29,9 @@ import argparse
 import hashlib
 import os
 import re
+import shutil
 import struct
+import subprocess
 import sys
 import time
 from pathlib import Path
@@ -39,6 +41,8 @@ from camera_telnet import run as telnet
 
 REPO = Path(__file__).resolve().parent.parent
 PTCALL_LOCAL = REPO / "tools/camera-ptrace/ptcall"
+RINGPUT_LOCAL = REPO / "tools/camera-ptrace/ringput"
+RINGPUT_REMOTO = "/tmp/ringput"
 
 # libmpr.so: offsets del ELF (base = primer mapeo r-xp de /proc/PID/maps)
 OFF_DESCRIPTOR = 0xA4FD88   # u32 -> X (puntero al área del anillo)
@@ -70,6 +74,15 @@ class Fallo(Exception):
 # ---------------------------------------------------------------------------------------------
 # utilidades
 # ---------------------------------------------------------------------------------------------
+def _adb() -> str:
+    """adb del sistema o el de ~/.local (para no subir binarios por 68 conexiones telnet)."""
+    for c in (os.environ.get("ADB", ""), shutil.which("adb") or "",
+              os.path.expanduser("~/.local/platform-tools/adb")):
+        if c and os.access(c, os.X_OK):
+            return c
+    return ""
+
+
 def u32(mem: dict[int, int], addr: int) -> int:
     return sum(mem.get(addr + i, 0) << (8 * i) for i in range(4))
 
@@ -195,15 +208,26 @@ class Camara:
         return mem
 
     def poke_mem(self, pid: int, addr: int, datos: bytes) -> None:
+        """Escribe en el anillo. Dos límites del busybox de la cámara: no hay `printf` y `dd`
+        no acepta skip/seek > 2^31 (el anillo vive en la física 0x82df9000), así que se escribe
+        por bloques alineados de 4 B con seek = fisica/4."""
         fis = self.fisica_de(pid, addr)
         if fis is None:
             return self.poke(pid, addr, datos)
-        esc = "".join(f"\\0{b:03o}" for b in datos)
-        out = self.sh(f"printf '{esc}' | dd of=/dev/mem bs=1 seek={fis} conv=notrunc 2>&1")
-        if "records" in out:
-            m = re.search(r"(\d+)\+0 records out", out)
-            if m and int(m.group(1)) != len(datos):
-                raise Fallo(f"dd escribió {m.group(1)} de {len(datos)} B en /dev/mem {fis:#x}")
+        i = 0
+        while i < len(datos):
+            blk_fis = (fis + i) & ~3
+            dentro = (fis + i) - blk_fis                     # 0..3
+            n = min(4 - dentro, len(datos) - i)
+            actual = self.peek_mem(pid, addr + i - dentro, 4)
+            bloque = bytearray(actual.get(addr + i - dentro + k, 0) for k in range(4))
+            for k in range(n):
+                bloque[dentro + k] = datos[i + k]
+            esc = "".join(f"\\0{b:03o}" for b in bloque)
+            out = self.sh(f"echo -ne '{esc}' | dd of=/dev/mem bs=4 seek={blk_fis // 4} conv=notrunc 2>&1")
+            if "records out" not in out and out.strip():
+                raise Fallo(f"dd no escribió el bloque {blk_fis:#x}: {out.strip()[:160]}")
+            i += n
 
     # -- anillo ------------------------------------------------------------------------------
     def anillo(self, pid: int, base: int) -> tuple[int, int, int]:
@@ -218,9 +242,45 @@ class Camara:
             raise Fallo(f"cabecera del anillo imposible: A={a} B={b} en X={x:#x}")
         return x, a, b
 
+    def sube_ringput(self) -> None:
+        if self.sh(f"[ -x {RINGPUT_REMOTO} ] && echo si").strip().endswith("si"):
+            return
+        datos = RINGPUT_LOCAL.read_bytes()
+        adb = _adb()
+        if adb:
+            r = subprocess.run([adb, "-s", f"{self.host}:5555", "push", str(RINGPUT_LOCAL),
+                                "/data/local/tmp/ringput"], capture_output=True, text=True, check=False)
+            if r.returncode == 0:
+                self.sh(f"cp /android/data/local/tmp/ringput {RINGPUT_REMOTO}; chmod 755 {RINGPUT_REMOTO}")
+                return
+        self.sh(f": > {RINGPUT_REMOTO}")
+        for i in range(0, len(datos), 96):
+            esc = "".join(f"\\0{b:03o}" for b in datos[i:i + 96])
+            self.sh(f"echo -ne '{esc}' >> {RINGPUT_REMOTO}")
+        self.sh(f"chmod 755 {RINGPUT_REMOTO}")
+        if not self.sh(f"[ -s {RINGPUT_REMOTO} ] && echo ok").strip().endswith("ok"):
+            raise Fallo(f"no pude subir {RINGPUT_REMOTO}")
+
     def deposita(self, pid: int, base: int, linea: str, espera: float) -> tuple[int, int]:
-        """Deposita `linea` + CR y espera al monitor. Devuelve (A_antes, A_despues)."""
+        """Deposita `linea` + CR y espera al monitor. Devuelve (A_antes, A_despues).
+
+        El anillo vive en un mapeo de /dev/mem: ni ptrace (EFAULT) ni dd (seek > 2^31 en este
+        busybox, y no hay printf) sirven. Lo deposita `ringput`, que hace mmap de /dev/mem."""
         x, a, b = self.anillo(pid, base)
+        fis = self.fisica_de(pid, x)
+        if fis is not None:
+            self.sube_ringput()
+            out = self.sh(f"{RINGPUT_REMOTO} {fis:#x} '{linea}'")
+            if "B=" not in out:
+                raise Fallo(f"ringput no depositó «{linea}»: {out.strip()[:200]}")
+            t0 = time.time()
+            esperado = (b + len(linea) + 1) & RING_CAP
+            while time.time() - t0 < espera:
+                time.sleep(1.0)
+                if self.anillo(pid, base)[1] in (esperado, esperado - RING_BUF):
+                    return a, esperado
+            a2 = self.anillo(pid, base)[1]
+            raise Fallo(f"el monitor no consumió «{linea}» (A={a2}, esperaba {esperado}); no se sigue")
         datos = linea.encode() + b"\r"
         libres = (a - b - 1) & RING_CAP
         if libres < len(datos):
