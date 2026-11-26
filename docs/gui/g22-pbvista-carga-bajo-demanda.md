@@ -200,6 +200,10 @@ Traza del invitado (`shim.log`, extracto en `reports/evidence/g22-pbvista-202611
 671.02 LOG   83 B  Vo 00000015 / 671.35 Vo 0000003C
 ```
 
+Repetido con los modos **1, 3 y 5**, el resultado es el mismo (`dlopen(viewUnified3.so)` ya cacheado, handle
+`0x55a67460`, `Vn 03F_viewUnified3.so` y **ningún** `Vo` de la vista): el argumento de apertura no cambia nada porque
+lo que falta no es la vista sino su contenido.
+
 Y lo que la vista **pide** al modelo en esa misma apertura (`GMILOG=1`):
 
 ```
