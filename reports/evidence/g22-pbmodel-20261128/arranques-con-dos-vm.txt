@@ -30,3 +30,16 @@ Contención medida mientras corrían esos arranques (misma máquina, otros agent
 Conclusión operativa (ya la avisaba el usuario y coincide con G22-CUELGUE): con dos invitados a la vez el
 arranque se queda en «2 listas» y no hay OSD; no se puede medir ni la tecla ni la rejilla. Los tres arranques
 de esta tanda son de esta clase y no se usan como medida de nada.
+
+pbmodel3  (receta exacta del usuario, sin SDIO ni trampas en el arranque; LIVE_ARRANQUE_MAX=260 LIVE_REINTENTOS=5)
+  arrancado con la máquina ocupada por otros dos invitados (estadic/ap2) y con load ≈ 8:
+  {"texto": "arranque en frío, 134 s · 2 fotogramas · 1.0 fps · último: 2 listas · dibujo 1 ms · copias 202 ms",
+   "fotogramas": 2, "listas": 2, "opacos": 0.0046}                     <- firma G22-CUELGUE en el 1.er intento
+  arranque 1/5 fallido a los 260 s (2 listas): se repite
+  {"texto": "restaurado, 138 s · 1 fotogramas · 0.5 fps", "fotogramas": 1, "listas": 0, "opacos": 0.0046}
+  $ pgrep -c qemu-system-arm -> 2   ·   $ uptime -> load average: 8,55 8,31 8,71
+
+Los cuatro arranques de la sesión (pbmodel1..3 y el reintento) mueren en la misma firma. Ninguno llega a la OSD,
+así que en el shim.log no hay ni una línea de PLAYVIEW ni de getModelInfo(@M010…): no hay medida de la tecla que
+valga de esta tanda. La medida de cierre queda pendiente de una ventana con la máquina libre (pgrep -c
+qemu-system-arm = 0), que es la condición que el usuario describe como 6/6.
