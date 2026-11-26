@@ -1474,7 +1474,7 @@ int _ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_(const char *a, unsigne
      * MISMO modelo por su nombre corto con la lista y el filtro de la vista. Medido: también devuelve 0, luego el
      * problema no es el nombre sino el dato (docs/gui/g22-ajuste-zoom.md §8.2). */
     if (!x && r && getenv("GMIPROBE3") && readable(a) && !strcmp(a, "model/CAMERA")) {
-        static unsigned n3; int x3 = r("@M00B", b, (void *)(unsigned long)c, (void *)(unsigned long)d);
+        static unsigned n3; int x3 = r("@M00B", b, c, d);
         if (n3++ < 20) LOG("GMIPROBE3 %s info %#x -> %d; @M00B -> %d", a, b, x, x3);
     }
     if (!x && readable(a) && power_params(a, (int)b, (void *)(unsigned long)c)) x = 1;
@@ -1482,15 +1482,6 @@ int _ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_(const char *a, unsigne
     return x;
 }
 MODHOOK(_ZN13viewManagerIf19requestModelExecuteEPKcmP9ParamList)
-/* viewManagerIf::getModelInfo(nombre, info, lista, filtro) — MODHOOK con el relleno de model/POWER (G22-ESTADO-CAMARA); SETLOG lo registra igual. */
-int _ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_(const char *a, unsigned b, unsigned c, unsigned d) {
-    static int (*r)(const char *, unsigned, unsigned, unsigned); if (!r) r = nextsym("_ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_");
-    int x = r ? r(a, b, c, d) : 0;
-    if (getenv("SETLOG")) LOG("SETMOD viewManagerIf::getModelInfo %s %x %x %x -> %#x", readable(a) ? a : "?", b, c, d, x);
-    if (!x && readable(a) && power_params(a, (int)b, (void *)(unsigned long)c)) x = 1;
-    if (x && readable(a)) gmi_dump(a, (int)b, (void *)(unsigned long)c);
-    return x;
-}
 /* LayoutableWidgetBase::getModelInfo(this, nombre, info, lista, filtro): la otra puerta de las vistas a los modelos (UND de viewUnified2, definida
  * en libObj+0x130c55). Mismo relleno de model/POWER; sin él solo se devuelve lo que diga el modelo real. */
 int _ZN20LayoutableWidgetBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *a, int b, void *c, const void *d) {

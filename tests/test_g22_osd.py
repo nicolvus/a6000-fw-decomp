@@ -193,7 +193,7 @@ def test_power_no_pisa_al_modelo_real():
     src = SHIM.read_text()
     for puerta in ("_ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_", "_ZN20LayoutableWidgetBase12getModelInfoEPKciP9ParamListPKS2_"):
         i = src.index("int " + puerta + "(")
-        trozo = src[i : i + 900]
+        trozo = src[i : i + 2000]  # la ventana cubre la sonda GMIPROBE3 que va antes del relleno
         assert "if (!x && readable(a) && power_params(" in trozo, puerta
     i = src.index("int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(")
     assert "if (!r && real && readable(name) && power_params(" in src[i : i + 3000]
