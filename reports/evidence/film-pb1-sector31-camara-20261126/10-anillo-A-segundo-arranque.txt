@@ -1,0 +1,197 @@
+66.97 181.28
+
+eb12512e6b74a940f1ae6de1c38477db  /usr/lib/libObj.so
+
+busybox dd if=/dev/mem bs=4096 skip=536057 count=4 2>/dev/null; echo __END2_
+**** EX-PC Monitor Program ****
+[DFB]mb_useDfaCache = 1
+lblkinfo.lblk_size    = 262144
+lblkinfo.num_of_lblks = 1892
+lblkinfo.ltu_size     = 4096
+[DFB] partition start sector = 100864
+MON>[MprIf] Callback GetPreFirstMountInfo[MprIf] CallbackData CBID_GET_PRE_FIRST_MOUNT_INFO  errCd: 0x00000000
+retPreFirstMountInfoNum: 0x00000001
+pRetPreFirstMountInfo[0].uniqueId: 0x00001000
+####### dfs_Core::dfs_Core #######
+pdeviceName : "/dev/ms"
+deviceType  : 00000004
+AviThread::Main 1
+writePoint  = 4608
+[MprIf] Callback GetPreFirstMountInfo[MprIf] CallbackData CBID_GET_PRE_FIRST_MOUNT_INFO  errCd: 0x00000000
+retPreFirstMountInfoNum: 0x00000001
+pRetPreFirstMountInfo[0].uniqueId: 0x00001000
+######################
+## HD-AVC IFO ERROR ##
+######################
+FILE : IF/hdAvcIfo_Restore.cpp
+LINE : 1081
+ERR  : A0810008
+Backup :00000007 Config : 00000002
+##########################
+## HD-AVC COMMAND ERROR ##
+##   CMD ID :     004E  ##
+##   ERROR  : A0810008  ##
+##########################
+[MMGR][MMGR_ACSR] ## ERROR(HDAVCIFO):0xA0810008 ## mmgrifoacsr/MMgrAvcHdIfoAcsr.cpp(791) CheckSalvageStatus()
+[XAVCIFO] ### xavcIfo faild at CMN/xavcIfo_File.cpp(0874) ErrCd: 0xB0520001
+[XAVCIFO] ### xavcIfo faild at CMN/xavcIfo_File.cpp(0874) ErrCd: 0xB0520001
+[XAVCIFO] ### xavcIfo faild at CMN/xavcIfo_File.cpp(0874) ErrCd: 0xB0520001
+[XAVCIFO] ### xavcIfo faild at IF/xavcIfo_General.cpp(1508) ErrCd: 0xB0800005
+[AVIMMGR][MS1]FirstMountExec : FS DeleteBackup
+[MprIf] Callback FirstMount
+####### dfs_Core::dfs_Core #######
+pdeviceName : "/dev/mmca"
+deviceType  : 00000004
+[DFB] ERASE BLOCK[9]
+[DFB] ERASE BLOCK[8]
+[DFB] ERASE BLOCK[10]
+[AVIMMGR][MS1]MountCmd : Flash Mount Error
+[AVI][MEDIA]    sources/avi_if/AviSeqMedia.cpp Error=[ER_FAILED] Line:1896
+[AVI][MEDIA]    sources/avi_if/AviSeqMedia.cpp Error=[ER_FAILED] Line:1653
+[MMGR][AVI] ## ERROR(AVI):0x32400001 ## avimmgr/AviMMgrCmd.cpp(13459) FlashLoadAvi()
+[AVIMMGR][MS1]LoadExec : Flash Load Error
+[MprIf] Callback EnterRec
+INITTERMINATE[MprIf] Callback ExitRec
+[MprIf] Callback EnterRec
+line=825, time=6253, diff=6250
+line=838, time=23381, diff=17128
+line=875, time=23449, diff=68
+[MSV][MS1]Err RcsBackupTblData
+[MP4IFO] ### mp4Ifo faild at IF/mp4Ifo_General.cpp(1749) ErrCd: 0xB0800001
+[AVIMMGR][MS1]LoadSub : MP4 Load Error.
+[MMGR][MMGR_ACSR] ## ERROR(MMGR):0xB0800001 ## mmgrifoacsr/MMgrMp4IfoAcsr.cpp(2319) LoadSub()
+[MMGR][MMGR_ACSR] ## ERROR(MMGR):0x31000006 ## mmgrifoacsr/MMgrMp4IfoAcsr.cpp(246) CreateAndLoad()
+[AVIMMGR][MS1]FlashLoadMp4 : CreateAndLoad Error
+[MMGR][AVI] ## ERROR(MMGR):0x31000006 ## avimmgr/AviMMgrCmd.cpp(13247) FlashLoadMp4()
+[AVIMMGR][MS1]LoadExec : Flash Load Error
+[AVIMMGR][MS1]SetLoadInfo : TvSystem is NTSC, frameRate 3
+line=825, time=3514, diff=3511
+line=838, time=16190, diff=12676
+line=875, time=16261, diff=71
+##########################
+## HD-AVC COMMAND ERROR ##
+##   CMD ID :     0000  ##
+##   ERROR  : A0100003  ##
+##########################
+[AVIMMGR][MS1]LoadSub : AVCHD IFO Load() Error.
+[MMGR][MMGR_ACSR] ## ERROR(HDAVCIFO):0xA0100003 ## mmgrifoacsr/MMgrAvcHdIfoAcsr.cpp(2608) LoadSub()
+[MMGR][MMGR_ACSR] ## ERROR(MMGR):0x31000006 ## mmgrifoacsr/MMgrAvcHdIfoAcsr.cpp(282) CreateAndLoad()
+[AVIMMGR][MS1]FlashLoadAvcHd : CreateAndLoad Error
+[MMGR][AVI] ## ERROR(MMGR):0x31000006 ## avimmgr/AviMMgrCmd.cpp(13089) FlashLoadAvcHd()
+[AVIMMGR][MS1]LoadExec : Flash Load Error
+line=825, time=14970, diff=14967
+line=838, time=31974, diff=17004
+line=875, time=32066, diff=92
+[AVIMMGR][MS1]LoadSub : XAVC Load Error.
+[MMGR][MMGR_ACSR] ## ERROR(MMGR):0xB0800005 ## mmgrifoacsr/MMgrXavcIfoAcsr.cpp(2480) LoadSub()
+[MMGR][MMGR_ACSR] ## ERROR(MMGR):0x31000006 ## mmgrifoacsr/MMgrXavcIfoAcsr.cpp(245) CreateAndLoad()
+[AVIMMGR][MS1]FlashLoadXavc : CreateAndLoad Error
+[MMGR][AVI] ## ERROR(MMGR):0x31000006 ## avimmgr/AviMMgrCmd.cpp(13584) FlashLoadXavc()
+[AVIMMGR][MS1]LoadExec : Flash Load Error
+[AVI]AviEdit::Unknown Function[0x000000BD] Error=[Module 0x00000001 Unknown Error[0x00001017]]Line=[6490]
+module = 1, func = 189, err = 0x00001017, line = 6490
+[AVI]CS_AviAcsr::Unknown Function[0x00000020] Error=[INT_ERCD_INVALID_PARAM]Line=[9860]
+[AVI][PLAY]     sources/avi_if/AviSeqPlay.cpp Error=[ER_BADARG] Line:10332
+[XAVCIFO] ### xavcIfo faild at xavcIfo_AVISequence.cpp(4215) ErrCd: 0xB0810001
+[XAVCIFO] ### xavcIfo faild at xavcIfo_AVISequence.cpp(0958) ErrCd: 0xB0810001
+[MMGR][MMGR_ACSR] ## ERROR(MMGR):0xB0810001 ## mmgrifoacsr/MMgrXavcIfoAcsr.cpp(501) SetLoadInfo()
+INITTERMINATE[MprIf] Callback ExitRec
+[AVIMMGR][MS1]GetContentFocusPointCmd : GetResumeInfo Error [47000003]
+[MMGR][AVI] ## ERROR(MMGR):0x47000003 ## avimmgr/AviMMgrDBIf.cpp(1945) GetContentFocusPointCmd()
+[CACHE]BUFFER SIZE TOO SMALL : 00000000
+[CACHE]ERROR(C1000002h)
+[MprIf] Callback EnterAviThumbnailPb
+[CACHE]ERROR(C1000010h)
+[MprIf] Callback PlayAviThumbnail
+[MprIf] Callback ExitAviThumbnailPb
+[MprIf] Callback
+[MprIf] Callback EnterMoviePb
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(1084) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(1028) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(1028) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(0967) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(0967) ErrCd: 0xB051000B
+[CodecDrv][Error] E_AVCON_MOVIE_CODEC_STOP ( 00002003h )
+Dec start complete error!!
+[MDecI/F][Error] ER_MOVIE_DECODE_FAILED ( 1600F101h )
+[PlayMovieCam] : !!! DECODE ERROR !!!
+[PlayMovieCam] : Filters Stop/Pause Complete
+[PlayMovieCam] : ******************************************************
+[PlayMovieCam] : ******               WARNING                    ******
+[PlayMovieCam] : ****** Main State: STATE_RESTART                ******
+[PlayMovieCam] : ****** Sub State :MP4F]B_WAIT_RUN_PAUSEREL f4**f4PlaovieCam( **0****************************************
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(1028) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(1028) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(0967) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(0967) ErrCd: 0xB051000B
+[CodecDrv][Error] E_AVCON_MOVIE_CODEC_STOP ( 00002003h )
+Dec start complete error!!
+[MDecI/F][Error] ER_MOVIE_DECODE_FAILED ( 1600F101h )
+[PlayMovieCam] : !!! DECODE ERROR !!!
+[PlayMovieCam] : Filters Stop/Pause Complete
+[PlayMovieCam] : ******************************************************
+[PlayMovieCam] : ******               WARNING                    ******
+[PlayMovieCam] : ****** Main State: STATE_RESTART                ******
+[PlayMovieCam] : ****** Sub State : MP4IFO]UBWI_U_ASEREL  ffLbflayMovieCam] : **1084*********B051000B**************************
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(1028) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(1028) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(0967) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(0967) ErrCd: 0xB051000B
+[CodecDrv][Error] E_AVCON_MOVIE_CODEC_STOP ( 00002003h )
+Dec start complete error!!
+[MDecI/F][Error] ER_MOVIE_DECODE_FAILED ( 1600F101h )
+[PlayMovieCam] : !!! DECODE ERROR !!!
+[PlayMovieCam] : Filters Stop/Pause Complete
+[PlayMovieCam] : ******************************************************
+[PlayMovieCam] : ******               WARNING                    ******
+[PlayMovieCam] : ****** Main State: STATE_RESTART                ******
+[PlayMovieCam] : ****** Sub State[: ATE] #mp4IfoN_PAUSERELff4iI/Plyfcp] : *0**)Erd xB50*
+**************************
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(1028) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(1028) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(0967) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(0967) ErrCd: 0xB051000B
+[CodecDrv][Error] E_AVCON_MOVIE_CODEC_STOP ( 00002003h )
+Dec start complete error!!
+[MDecI/F][Error] ER_MOVIE_DECODE_FAILED ( 1600F101h )
+[PlayMovieCam] : !!! DECODE ERROR !!!
+[PlayMovieCam] : Filters Stop/Pause Complete
+[PlayMovieCam] : ******************************************************
+[PlayMovieCam] : ******               WARNING                    ******
+[PlayMovieCam] : ****** Main State: STATE_RESTART                ******
+[PlayMovieCam] : ****** Sub State : 4TAT] SBWAIT_RUNfaild at ff4Lib**
+[lyMovieCam] 108*) ErrCd: 0x**B051000****************************
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(1028) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(1028) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(0967) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(0967) ErrCd: 0xB051000B
+[CodecDrv][Error] E_AVCON_MOVIE_CODEC_STOP ( 00002003h )
+Dec start complete error!!
+[MDecI/F][Error] ER_MOVIE_DECODE_FAILED ( 1600F101h )
+[PlayMovieCam] : !!! DECODE ERROR !!!
+[PlayMovieCam] : Filters Stop/Pause Complete
+[PlayMovieCam] : ******************************************************
+[PlayMovieCam] : ******               WARNING                    ******
+[PlayMovieCam] : ****** Main State: STATE_RESTART                *[MP4IFO] ### mp4Ifo faild at ff4Lib****
+PlayIf.cppeC]108** u t500ESUB_WAIT_RUN_PAUSEREL  ******
+[PlayMovieCam] : *****************[*4***] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(1028) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(1028) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(0967) ErrCd: 0xB051000B
+[MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(0967) ErrCd: 0xB051000B
+[CodecDrv][Error] E_AVCON_MOVIE_CODEC_STOP ( 00002003h )
+Dec start complete error!!
+[MDecI/F][Error] ER_MOVIE_DECODE_FAILED ( 1600F101h )
+[PlayMovieCam] : !!! DECODE ERROR !!!
+[MprIf] Callback PlayMovie err = MPR::ER_FAILED
+[MprIf] Callback PbStop
+[MprIf] Callback ExitMoviePb
+[MprIf] Callback DrawPixels
+[CACHE]BUFFER SIZE TOO SMALL : 00000000
+[CACHE]ERROR(C1000002h)
+[MprIf] Callback EnterAviThumbnailPb
+[CACHE]ERROR(C1000010h)
+[MprIf] Callback PlayAviThumbnail
+[MprIf] Callback ExitAviThumbnailPb
+[MprIf] Callback
+[MprIf] Callback EnterRec
+END2__
