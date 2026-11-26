@@ -278,3 +278,5 @@ Paquetes en `build/cfw_bisect/{A,B}` (logs `analysis/gui/install-bisect-{A,B}.lo
 A (sin Silent, sin WBI): no reproduce; anillo `0xB051000B` → `ER_MOVIE_DECODE_FAILED` (`evidence/film-pb1-sector31-camara-20261126/8-anillo-variante-A.txt`), sector 0x31 sin registro.
 B (3.21 idéntico, con WBI): reproduce vídeos (observación del usuario). Sin medición por telnet tras B.
 Conclusión: la rotura viene de quitar `nflasha5` (`--sin-wbi`), no de Silent. Límite: B no aísla el procedimiento de instalación.
+
+Comparación de arranques (telnet; `evidence/film-pb1-sector31-camara-20261126/{A-frio,B-caliente}/`): cmdline (`warm.mode=2 warm.ignore_drop=1`), módulos y montajes idénticos; `upm_bootmode=NORM` en ambos. Corrección: el `0xB051000B` de `ff4PlayIf` aparece también en B, que reproduce (acaba en `ER_STREAM_END`), así que **no** es la causa; el fallo de A empieza en `E_AVCON_MOVIE_CODEC_STOP`. Solo en A el primer montaje registra `MS IDs are not same` (0x31000007), efecto de la tarjeta/BD, no del códec.
