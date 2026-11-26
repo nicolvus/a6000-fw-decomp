@@ -1,0 +1,50 @@
+# Traza del arnés (perfil uilive, puerto 8633) — apertura forzada de view/INDEX_PLAYBACK
+# SHIMEXTRA='WAITLOG=800 LOGMARK=viewUnified,Vd,OPENHOT TRACEFN=1251fc,120a5e,7f1b3c TRACEREP=1 TRACEMAX=16'
+# HOME=/tmp/uilive/home SD_ESTRUCTURA=1 (tarjeta con MP_ROOT/103ANV01/MAH04198.MP4 + AVF_INFO/AVIN0001.INP sintético)
+
+## Recuento global en shim.log (canal LOGMARK = una línea por evento; B y E son el ámbito de instanciación)
+aperturas de INDEX_PLAYBACK (B  Vn 03F_): 4   destrucciones (B  Vd 03F_): 0
+aperturas de CAUTION  (B  Vn 011_): 4   destrucciones (B  Vd 011_): 4
+aperturas de STLREC   (B  Vn 088_): 1   destrucciones (B  Vd 088_): 0
+
+## Secuencia de la apertura (una de las cuatro hechas; las cuatro son idénticas)
+394.15 [shim] TRACE 7f1b3c n=1 r0=7de898 r1=7ccb30 r2=7de890 r3=4e lr=adf7c3fb
+394.15 [shim] TRACE 120a5e n=1 r0=7de898 r1=1 r2=0 r3=adf7aa5f lr=ae649c77
+416.85 [shim] TRACE 1251fc n=1 r0=855660 r1=0 r2=adf7f1fd r3=52 lr=b6e9f768
+419.08 [shim] TRACE 7f1b3c n=2 r0=6336ce98 r1=7ccb30 r2=633 r3=4e lr=adf7c3fb
+419.11 [shim] TRACE 7f1b3c n=3 r0=6336dc28 r1=7ccb30 r2=633 r3=4e lr=adf7c3fb
+419.13 [shim] TRACE 7f1b3c n=4 r0=6336e268 r1=7ccb30 r2=633 r3=4e lr=adf7c3fb
+419.13 [shim] TRACE 120a5e n=2 r0=7de898 r1=2 r2=1 r3=adf7aa5f lr=ae649c77
+419.13 [shim] TRACE 120a5e n=3 r0=7de898 r1=4d r2=aad6e4aa r3=adf7aa5f lr=ae649be9
+419.21 [shim] TRACE 120a5e n=4 r0=6336ce98 r1=1 r2=0 r3=adf7aa5f lr=ae649c77
+420.94 [shim] TRACE 120a5e n=5 r0=6336dc28 r1=1 r2=0 r3=adf7aa5f lr=ae649c77
+420.94 [shim] TRACE 120a5e n=6 r0=6336e268 r1=1 r2=0 r3=adf7aa5f lr=ae649c77
+435.08 [shim] TRACE 1251fc n=2 r0=85566a r1=3 r2=adf7f1fd r3=ffffff9f lr=b6e9f768
+436.13 [shim] TRACE 7f1b3c n=5 r0=633d0828 r1=7ccb30 r2=633 r3=4e lr=adf7c3fb
+436.54 [shim] TRACE 120a5e n=7 r0=633d0828 r1=0 r2=5 r3=adf7aa5f lr=ae649c77
+471.37 [shim] TRACE 1251fc n=3 r0=7de9a0 r1=0 r2=ffffffa9 r3=ffffff9f lr=b6ec22d4
+471.51 [shim] TRACE 7f1b3c n=6 r0=562364c0 r1=7ccb30 r2=562 r3=4e lr=adf7c3fb
+471.64 [shim] TRACE 7f1b3c n=7 r0=56574f90 r1=7ccb30 r2=565 r3=4e lr=adf7c3fb
+472.27 [shim] TRACE 120a5e n=8 r0=56574f90 r1=3 r2=0 r3=adf7aa5f lr=ae649c77
+474.11 [shim] TRACE 120a5e n=9 r0=56574f90 r1=4d r2=aad6e462 r3=adf7aa5f lr=ae649be9
+614.18 [shim] TRACE 1251fc n=4 r0=8d8b30 r1=0 r2=ffffffa9 r3=ffffff9f lr=b6ec22d4
+614.19 303.73 OPENHOT view/INDEX_PLAYBACK 0 -> 8238904
+614.32 [shim] TRACE 7f1b3c n=8 r0=56575348 r1=7ccb30 r2=565 r3=4e lr=adf7c3fb
+614.45 303.99 LOG   83 B  Vo FFFFFFFF
+614.48 304.02 LOG   83 E  Vo FFFFFFFF
+614.65 [shim] TRACE 7f1b3c n=9 r0=56574f90 r1=7ccb30 r2=565 r3=4e lr=adf7c3fb
+614.70 304.23 LOG   83 B  Vo 0000003B
+615.68 [shim] TRACE 120a5e n=10 r0=56574f90 r1=3 r2=0 r3=adf7aa5f lr=ae649c77
+615.68 304.79 LOG   83 E  Vo 0000003B
+617.56 [shim] TRACE 120a5e n=11 r0=56574f90 r1=0 r2=1 r3=adf7aa5f lr=ae649be9
+850.50 [shim] TRACE 1251fc n=5 r0=82d030 r1=3 r2=ffffffa9 r3=ffffff9f lr=b6ec22d4
+850.61 540.15 LOG   83 B  Vo 00000006
+850.64 540.18 LOG   83 E  Vo 00000006
+855.65 [shim] TRACE 1251fc n=6 r0=846a10 r1=0 r2=ffffffa9 r3=ffffff9f lr=b6ec22d4
+855.78 [shim] TRACE 7f1b3c n=10 r0=552ffdf8 r1=7ccb30 r2=552 r3=4e lr=adf7c3fb
+855.82 545.36 LOG   83 B  Vo 00000015
+855.84 [shim] TRACE 120a5e n=12 r0=633d0828 r1=4 r2=0 r3=adf7aa5f lr=ae649c77
+858.17 [shim] TRACE 120a5e n=13 r0=552ffdf8 r1=1 r2=0 r3=adf7aa5f lr=ae649c77
+858.17 546.09 LOG   83 E  Vo 00000015
+899.04 [shim] TRACE 1251fc n=7 r0=70ffd0 r1=0 r2=ffffffa9 r3=ffffff9f lr=b6ec22d4
+900.90 [shim] TRACE 7f1b3c n=11 r0=54f77c70 r1=7ccb30 r2=54f r3=4e lr=adf7c3fb

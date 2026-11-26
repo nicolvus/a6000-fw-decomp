@@ -140,6 +140,24 @@ se apoya en ese mismo journal, el gesto que sí fuerza reconstrucción es **reno
 (y, si eso no basta, formatear en la cámara).
 
 
+### 5.4b El área de movie es una FILA de tabla, y hay modos con movie=0 y still>0
+
+Verificado (`reports/film-pb-1-sub-tabla-buffers-20261126.md`): `DistributeBufInfo` (`0x5F703C`)
+copia la entrada `0xC` B de la tabla del modo (`+0`=tamaño, `+4`=orden, `+8`=índice; terminador
+`+8 == -1`) al singleton `0xA4F368 + idx*0x18` (`+0` vAdrs, `+4` pAdrs, `+8` size), con el store
+`dst+8 = [src+0]` en `0x5F73E0`. Lista de modos en `0x8D87E8` (35 entradas), puntero en
+`0xA4F0A4`. Hueco **11 = movie** (`+0x108/+0x110`), hueco **13 = still** (`+0x138/+0x140`).
+
+Y lo importante: **cinco modos tienen movie = 0 con still > 0** — `0x03` (24 MiB), `0x06` (22),
+`0x12` (24), `0x13` (16) y `0x20` (3) —, y con `m_systemType = 1` los alcanzables son `0x03`,
+`0x06`, `0x12` y `0x20`. La miniatura de foto va por el hueco 13 y el vídeo por el 11: **basta la
+fila del modo para tener exactamente el síntoma** (foto sí, vídeo no, con cualquier clip y con la
+tarjeta recién formateada).
+
+El modo activo se lee en `0x9DECAC`; en cámara basta leer `0x9DECAC`, `0xA4F478` (movie) y
+`0xA4F4A8` (still), y la línea `StreamAreaAllocate(next): complete ret=%ld` (`0x8DA720`) para
+separar «la tabla dice 0» de «falló el allocate».
+
 ### 5.4 Corrección de M1: el área no la da el DMM, la da una tabla estática por modo
 
 Auditado (`reports/film-pb-1-sub-dmm-area-20261126.md`):

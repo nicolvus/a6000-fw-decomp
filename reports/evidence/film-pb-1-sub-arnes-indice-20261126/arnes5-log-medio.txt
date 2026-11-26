@@ -1,0 +1,71 @@
+# arnes5 (WLALL=1): lineas del registro de la camara relacionadas con medio/montaje (grep -ai 'mmca|media|Fsys|errno|MOUNT|SD')
+310.69 16.77 LOG   94 B  Ii 0cf_libInfraMediaConfig.so
+311.00 17.07 TRAZA H` [IMCfg]InfraMediaConfig! 
+311.04 17.12 TRAZA 1 [IMCfg]CreateMediaconfig 
+312.90 18.97 TRAZA \! A [WR_E]: init_module `/usr/kmod/wlanMemoryAllocator ko': errno(8) 
+314.72 20.80 LOG   94 E  Ii 0cf_libInfraMediaConfig.so
+321.85 27.92 LOG   94 B  Ii 0c5_libInfraFsys.so
+321.93 27.99 LOG   94 E  Ii 0c5_libInfraFsys.so
+322.06 28.14 TRAZA 'a % [IMCfg]InfraMediaConfig::GetIdOffset 
+322.07 28.14 TRAZA 3n % [IMCfg]InfraMediaConfig::GetIdOffset 
+322.11 28.15 TRAZA y % [IMCfg]InfraMediaConfig::GetIdOffset 
+322.12 28.15 TRAZA % [IMCfg]InfraMediaConfig::GetIdOffset 
+322.12 28.16 TRAZA % [IMCfg]InfraMediaConfig::GetIdOffset 
+322.12 28.16 TRAZA ; ' [IMCfg]InfraMediaConfig::GetDeviceInfo 
+322.12 28.17 TRAZA ' [IMCfg]InfraMediaConfig::GetDeviceInfo 
+324.30 30.38 TRAZA T 5} R [33m[DAEMON]SystemParameterEntry(PARAMID_SYS_HAS_MEDIA_MOUNT_ERROR): created [0m 
+324.30 30.38 TRAZA T S [33m[DAEMON]SystemModelInfo("model/MEDIA":INFO_HAS_MEDIA_MOUNT_ERROR) created [0m 
+324.36 30.41 TRAZA T P [33m[DAEMON]SystemParameterEntry(PARAMID_SYS_DATA_HDMI_FORMAT_SD): created [0m 
+324.36 30.41 TRAZA T S [33m[DAEMON]SystemModelInfo("model/DISPLAY":INFO_DATA_HDMI_FORMAT_SD) created [0m 
+324.37 30.44 TRAZA T Q [33m[DAEMON]SystemParameterEntry(PARAMID_SYS_DATA_LINEOUT_RESO_SD): created [0m 
+324.38 30.46 TRAZA K & # [UDTR_UFP] nflasha1 mount errno=19 
+324.86 30.94 LOG   94 B  Ii 15d_libInfraFuFsys.so
+324.89 30.97 TRAZA ] & # InfraFuFsysCore::InfraFuFsysCore() 
+324.90 30.98 LOG   94 E  Ii 15d_libInfraFuFsys.so
+325.69 31.77 TRAZA T U [33m[DAEMON]ParameterEntry Added:[PARAMID_SYS_HAS_MEDIA_MOUNT_ERROR](Type:BOOL) [0m 
+325.69 31.77 TRAZA T i [33m[DAEMON]SystemModelInfo("model/MEDIA":INFO_HAS_MEDIA_MOUNT_ERROR): All Parameter Entries Stored [0m 
+325.70 31.78 TRAZA T / U [33m[DAEMON]ParameterEntry Added:[PARAMID_SYS_DATA_HDMI_FORMAT_SD](Type:NUMBER) [0m 
+325.71 31.78 TRAZA T i [33m[DAEMON]SystemModelInfo("model/DISPLAY":INFO_DATA_HDMI_FORMAT_SD): All Parameter Entries Stored [0m 
+325.73 31.81 TRAZA T T V [33m[DAEMON]ParameterEntry Added:[PARAMID_SYS_DATA_LINEOUT_RESO_SD](Type:NUMBER) [0m 
+328.14 34.19 TRAZA > % [IMCfg]InfraMediaConfig::GetIdOffset 
+328.14 34.19 TRAZA % [IMCfg]InfraMediaConfig::GetIdOffset 
+328.14 34.19 TRAZA r % [IMCfg]InfraMediaConfig::GetIdOffset 
+328.14 34.20 TRAZA [ % [IMCfg]InfraMediaConfig::GetIdOffset 
+341.70 47.77 TRAZA ) % [IMCfg]InfraMediaConfig::GetIdOffset 
+341.77 47.82 TRAZA Q % [IMCfg]InfraMediaConfig::GetIdOffset 
+341.81 47.88 TRAZA % [IMCfg]InfraMediaConfig::GetIdOffset 
+341.86 47.94 TRAZA 2{ % [IMCfg]InfraMediaConfig::GetIdOffset 
+341.90 47.98 TRAZA % [IMCfg]InfraMediaConfig::GetIdOffset 
+341.91 47.99 TRAZA E % [IMCfg]InfraMediaConfig::GetIdOffset 
+341.93 48.01 TRAZA x % [IMCfg]InfraMediaConfig::GetIdOffset 
+341.94 48.01 TRAZA % [IMCfg]InfraMediaConfig::GetIdOffset 
+341.97 48.01 TRAZA % [IMCfg]InfraMediaConfig::GetIdOffset 
+341.99 48.04 TRAZA B % [IMCfg]InfraMediaConfig::GetIdOffset 
+341.99 48.04 TRAZA 1 A v + [ObjMedia]SetInhStatus() [INH_MEDIA_MOUNT] 
+342.27 48.34 LOG   31 B  MediaMount /dev/mmca
+342.29 48.37 TRAZA 9 % [IMCfg]InfraMediaConfig::GetIdOffset 
+342.33 48.41 TRAZA % [IMCfg]InfraMediaConfig::GetIdOffset 
+342.55 48.62 TRAZA 1 ; [ObjMedia] - StateID[0x0004] : INSERT_WAIT_MEDIA_MOUNT_CMP 
+342.55 48.62 TRAZA 1 a / [ObjMedia] - EventID[0x0005] : MEDIA_MOUNT_CMP 
+342.55 48.63 LOG   31 E  MediaMount /dev/mmca
+342.56 48.64 TRAZA 1 - [ObjMedia]Fsys_GetDeviceInfo("/dev/mmca") OK 
+342.58 48.65 TRAZA 1 b / [ObjMedia]  DefObjMedia::MSGID_MEDIA_MOUNT_EVT 
+342.59 48.67 TRAZA 1 0 [ObjMedia]Skip Send MSGID_MEDIA_MOUNT_EVT[Pin0] 
+342.59 48.67 TRAZA 1 0 [ObjMedia]Skip Send MSGID_MEDIA_MOUNT_EVT[Pin1] 
+342.61 48.69 TRAZA 1 ( [ObjMedia]Get ACQUIRED_RSRC_MEDIA_MOUNT 
+342.62 48.70 TRAZA 1 : [ObjMedia]MSGID_FSYSMOUNT_CMD 
+342.63 48.70 TRAZA 1 & D [ObjMedia] - StateID[0x0005] : INSERT_WAIT_ACQUIRE_RSRC_MEDIA_MOUNT 
+342.63 48.71 TRAZA 1 `- 9 [ObjMedia] - EventID[0x0006] : ACQUIRED_RSRC_MEDIA_MOUNT 
+342.63 48.71 TRAZA 1 > [ObjMedia]StartFsysMount() 
+342.65 48.72 LOG   31 B  FsysMount /dev/mmca
+342.65 48.73 TRAZA 1 > 0 [ObjMedia]Fsys_MountAsync("/dev/mmca") start OK 
+342.65 [shim] WAITLOG 48.73 fin tid 265 IFsys cond_wait id=0xade37e98 tmo=-1 tras 20774 ms ra=libInfraFsys.so+0x217d9
+342.67 48.74 TRAZA , [IFsys][flashif] error - FlashLib_Open(193) 
+343.63 48.89 TRAZA 1 D ' [ObjMedia][CB]CallbackPointFsysMount() 
+343.63 48.89 TRAZA 1 " [ObjMedia]MSGID_FSYSMOUNT_END_CMD 
+343.63 48.90 TRAZA 1 [ObjMedia]EndFsysMount() 
+343.63 48.90 LOG   31 E  FsysMount /dev/mmca
+343.63 48.90 TRAZA 1 ' [ObjMedia]Fsys_MountAsync("/dev/mmca") OK 'A' 
+343.63 48.92 TRAZA 1 Za $ [ObjMedia]Fsys_GetDriveInfo('A') OK 
+343.63 48.92 TRAZA ] _ & fufsys_SetDeviceInformation() ans = 0 
+343.63 48.93 TRAZA 1 [ObjMedia]FsysMountNotify() 

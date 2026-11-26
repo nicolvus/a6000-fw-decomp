@@ -1,0 +1,67 @@
+# Llamadas a StreamCache::SetArea (0x7594E0) que leen del buffer 0xA4F368
+#   indice 11 -> +0x108 (vAdrs) / +0x110 (size)    indice 13 -> +0x138 (vAdrs) / +0x140 (size)
+# (0x108 = 11*0x18, 0x138 = 13*0x18; 0x110 = 0x108+8, 0x140 = 0x138+8 -> +8 = campo size)
+
+## ThumbnailRecorder::SetMemoryTable  (r5 = p_bufInfoTbl devuelto por 0x5F8020 -> ChangeAllocate 0x5F7F1C)
+00330104: 1348       ldr      r0, [pc, #0x4c]                 ; [00330154]=00a4b5e8
+00330106: 0122       movs     r2, #1                        
+00330108: 1949       ldr      r1, [pc, #0x64]                 ; [00330170]=00812b84 " type = MemInfo::MEM_TBL_STILL_REC;"
+0033010a: 0324       movs     r4, #3                        
+0033010c: fef70cff   bl       #0x32ef28                     
+00330110: 00e0       b        #0x330114                     
+00330112: 0224       movs     r4, #2                        
+00330114: 2946       mov      r1, r5                        
+00330116: 2046       mov      r0, r4                        
+00330118: c7f282ff   bl       #0x5f8020                     
+0033011c: 0122       movs     r2, #1                        
+0033011e: 0546       mov      r5, r0                        
+00330120: d0f83801   ldr.w    r0, [r0, #0x138]              
+00330124: d5f84011   ldr.w    r1, [r5, #0x140]              
+00330128: 29f0daf1   bl       #0x7594e0                     
+
+## SetUpPlayerInstance (0x43910C): despacho setupMode y lecturas de los dos huecos
+004391e6: 7a68       ldr      r2, [r7, #4]                  
+004391e8: 531e       subs     r3, r2, #1                    
+004391ea: 042b       cmp      r3, #4                        
+004391ec: 00f22f81   bhi.w    #0x43944e                     
+004391f0: dfe803f0   tbb      [pc, r3]                      
+0043924a: 002d       cmp      r5, #0                        
+0043924c: 00f00881   beq.w    #0x439460                     
+00439250: d4f8940d   ldr.w    r0, [r4, #0xd94]              
+00439254: 2946       mov      r1, r5                        
+00439256: d5f80891   ldr.w    sb, [r5, #0x108]              
+0043925a: d5f81081   ldr.w    r8, [r5, #0x110]              
+0043925e: cef61afe   bl       #0x307e96                     
+00439262: f8e0       b        #0x439456                     
+004392c6: 002d       cmp      r5, #0                        
+004392c8: 00f0ca80   beq.w    #0x439460                     
+004392cc: d4f8980d   ldr.w    r0, [r4, #0xd98]              
+004392d0: 2946       mov      r1, r5                        
+004392d2: d5f83891   ldr.w    sb, [r5, #0x138]              
+004392d6: d5f84081   ldr.w    r8, [r5, #0x140]              
+004392da: e8f63dfe   bl       #0x321f58                     
+004392de: bae0       b        #0x439456                     
+00439312: 3a4b       ldr      r3, [pc, #0xe8]                 ; [004393fc]=40000031
+00439314: 9845       cmp      r8, r3                        
+00439316: 07d1       bne      #0x439328                     
+00439318: 75b1       cbz      r5, #0x439338                 
+0043931a: d5f83891   ldr.w    sb, [r5, #0x138]              
+0043931e: 4ff0010b   mov.w    fp, #1                        
+00439322: d5f84081   ldr.w    r8, [r5, #0x140]              
+00439326: 0de0       b        #0x439344                     
+00439328: 4db1       cbz      r5, #0x43933e                 
+0043932a: d5f80891   ldr.w    sb, [r5, #0x108]              
+0043932e: 4ff0000b   mov.w    fp, #0                        
+00439332: d5f81081   ldr.w    r8, [r5, #0x110]              
+00439336: 05e0       b        #0x439344                     
+
+## rama 'sin area' literal: SetArea(0,0,1)
+0043944e: 3db1       cbz      r5, #0x439460                 
+00439450: 4ff00008   mov.w    r8, #0                        
+00439454: c146       mov      sb, r8                        
+00439456: 4846       mov      r0, sb                        
+00439458: 4146       mov      r1, r8                        
+0043945a: 0122       movs     r2, #1                        
+0043945c: 20f340f8   bl       #0x7594e0                     
+00439460: 7b68       ldr      r3, [r7, #4]                  
+00439462: 4ff00108   mov.w    r8, #1                        

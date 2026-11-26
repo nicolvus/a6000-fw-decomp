@@ -1,0 +1,184 @@
+# MemInfo::Type2Mode (0x5F699C): (type, subType) -> areaTblMode
+#   entrada {type, subType, modeId, ramMapAreaMode} 0x10 B, terminador type == 0x20
+#   m_systemType = [0x9DEFE0] = 1 en el fichero -> tabla activa 0x9DE898
+005f699c: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+005f69a0: 85b0       sub      sp, #0x14                     
+005f69a2: 284e       ldr      r6, [pc, #0xa0]                 ; [005f6a44]=009defe0
+005f69a4: 04af       add      r7, sp, #0x10                 
+005f69a6: 8846       mov      r8, r1                        
+005f69a8: 1446       mov      r4, r2                        
+005f69aa: 1d46       mov      r5, r3                        
+005f69ac: 8146       mov      sb, r0                        
+005f69ae: 03f02dfa   bl       #0x5f9e0c                     
+005f69b2: 0121       movs     r1, #1                        
+005f69b4: 3368       ldr      r3, [r6]                      
+005f69b6: 244a       ldr      r2, [pc, #0x90]                 ; [005f6a48]=008d908c "[MemInfo]Type2Mode()   ** m_systemType = [%ld]!!"
+005f69b8: 03f0e8f9   bl       #0x5f9d8c                     
+005f69bc: 3368       ldr      r3, [r6]                      
+005f69be: 012b       cmp      r3, #1                        
+005f69c0: 07d0       beq      #0x5f69d2                     
+005f69c2: 022b       cmp      r3, #2                        
+005f69c4: 0bd0       beq      #0x5f69de                     
+005f69c6: 0bbb       cbnz     r3, #0x5f6a0c                 
+005f69c8: 2360       str      r3, [r4]                      
+005f69ca: 0e33       adds     r3, #0xe                      
+005f69cc: 2b60       str      r3, [r5]                      
+005f69ce: 1f4b       ldr      r3, [pc, #0x7c]                 ; [005f6a4c]=009de7c8
+005f69d0: 19e0       b        #0x5f6a06                     
+005f69d2: 0023       movs     r3, #0                        
+005f69d4: 2360       str      r3, [r4]                      
+005f69d6: 1133       adds     r3, #0x11                     
+005f69d8: 2b60       str      r3, [r5]                      
+005f69da: 1d4b       ldr      r3, [pc, #0x74]                 ; [005f6a50]=009de898
+005f69dc: 13e0       b        #0x5f6a06                     
+005f69de: 0023       movs     r3, #0                        
+005f69e0: 2360       str      r3, [r4]                      
+005f69e2: 1133       adds     r3, #0x11                     
+005f69e4: 2b60       str      r3, [r5]                      
+005f69e6: 1b4b       ldr      r3, [pc, #0x6c]                 ; [005f6a54]=009dedc0
+005f69e8: 0de0       b        #0x5f6a06                     
+005f69ea: 9145       cmp      sb, r2                        
+005f69ec: 0ad1       bne      #0x5f6a04                     
+005f69ee: 5a68       ldr      r2, [r3, #4]                  
+005f69f0: 082a       cmp      r2, #8                        
+005f69f2: 01d0       beq      #0x5f69f8                     
+005f69f4: 9045       cmp      r8, r2                        
+005f69f6: 05d1       bne      #0x5f6a04                     
+005f69f8: da68       ldr      r2, [r3, #0xc]                
+005f69fa: 0126       movs     r6, #1                        
+005f69fc: 2260       str      r2, [r4]                      
+005f69fe: 9b68       ldr      r3, [r3, #8]                  
+005f6a00: 2b60       str      r3, [r5]                      
+005f6a02: 04e0       b        #0x5f6a0e                     
+005f6a04: 1033       adds     r3, #0x10                     
+005f6a06: 1a68       ldr      r2, [r3]                      
+005f6a08: 202a       cmp      r2, #0x20                     
+005f6a0a: eed1       bne      #0x5f69ea                     
+005f6a0c: 0026       movs     r6, #0                        
+005f6a0e: 03f0fdf9   bl       #0x5f9e0c                     
+005f6a12: 2368       ldr      r3, [r4]                      
+005f6a14: 0121       movs     r1, #1                        
+005f6a16: 104a       ldr      r2, [pc, #0x40]                 ; [005f6a58]=008d90c0 "[MemInfo]Type2Mode: type=%d /subType=%d / ramMap"
+005f6a18: cdf80080   str.w    r8, [sp]                      
+005f6a1c: 0193       str      r3, [sp, #4]                  
+005f6a1e: 2b68       ldr      r3, [r5]                      
+005f6a20: 0293       str      r3, [sp, #8]                  
+005f6a22: 4b46       mov      r3, sb                        
+005f6a24: 03f0b2f9   bl       #0x5f9d8c                     
+005f6a28: 2eb9       cbnz     r6, #0x5f6a36                 
+005f6a2a: 03f0d7f9   bl       #0x5f9ddc                     
+005f6a2e: 0121       movs     r1, #1                        
+005f6a30: 0a4a       ldr      r2, [pc, #0x28]                 ; [005f6a5c]=008d910f "[MemInfo]not found mode"
+005f6a32: 03f0abf9   bl       #0x5f9d8c                     
+005f6a36: 3046       mov      r0, r6                        
+005f6a38: 07f10407   add.w    r7, r7, #4                    
+005f6a3c: bd46       mov      sp, r7                        
+005f6a3e: bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}  
+
+# Contenido de las tres tablas por m_systemType
+[0x9DEFE0] m_systemType = 1
+--- systemType 0 0x009DE7C8 ---
+   type= 0 sub= 1 -> modeId=0x04 ramMapAreaMode=2
+   type= 1 sub= 8 -> modeId=0x07 ramMapAreaMode=4
+   type= 2 sub= 1 -> modeId=0x02 ramMapAreaMode=9
+   type= 3 sub= 8 -> modeId=0x03 ramMapAreaMode=7
+   type= 4 sub= 8 -> modeId=0x06 ramMapAreaMode=8
+   type= 8 sub= 8 -> modeId=0x05 ramMapAreaMode=2
+   type= 5 sub= 8 -> modeId=0x0A ramMapAreaMode=12
+   type= 9 sub= 8 -> modeId=0x08 ramMapAreaMode=14
+   type=10 sub= 8 -> modeId=0x09 ramMapAreaMode=14
+   type=11 sub= 8 -> modeId=0x0D ramMapAreaMode=14
+   type=13 sub= 8 -> modeId=0x0B ramMapAreaMode=8
+   type=14 sub= 8 -> modeId=0x0C ramMapAreaMode=8
+   terminador type=0x00000020
+--- systemType 1  (ACTIVA en este firmware) 0x009DE898 ---
+   type=16 sub= 8 -> modeId=0x11 ramMapAreaMode=0
+   type= 1 sub= 8 -> modeId=0x06 ramMapAreaMode=4
+   type= 2 sub= 1 -> modeId=0x01 ramMapAreaMode=6
+   type= 2 sub= 3 -> modeId=0x01 ramMapAreaMode=6
+   type= 2 sub= 2 -> modeId=0x01 ramMapAreaMode=6
+   type= 2 sub= 4 -> modeId=0x01 ramMapAreaMode=6
+   type= 2 sub= 6 -> modeId=0x01 ramMapAreaMode=6
+   type= 2 sub= 7 -> modeId=0x21 ramMapAreaMode=6
+   type=17 sub= 8 -> modeId=0x01 ramMapAreaMode=6
+   type=28 sub= 8 -> modeId=0x01 ramMapAreaMode=6
+   type= 3 sub= 8 -> modeId=0x03 ramMapAreaMode=7
+   type= 4 sub= 0 -> modeId=0x05 ramMapAreaMode=8
+   type= 4 sub= 1 -> modeId=0x05 ramMapAreaMode=8
+   type= 4 sub= 2 -> modeId=0x05 ramMapAreaMode=8
+   type= 4 sub= 3 -> modeId=0x05 ramMapAreaMode=8
+   type= 4 sub= 4 -> modeId=0x05 ramMapAreaMode=8
+   type= 4 sub= 6 -> modeId=0x05 ramMapAreaMode=8
+   type= 4 sub= 7 -> modeId=0x05 ramMapAreaMode=8
+   type= 6 sub= 1 -> modeId=0x0C ramMapAreaMode=9
+   type= 6 sub= 3 -> modeId=0x0C ramMapAreaMode=10
+   type= 6 sub= 2 -> modeId=0x0C ramMapAreaMode=10
+   type= 6 sub= 4 -> modeId=0x0C ramMapAreaMode=10
+   type= 6 sub= 6 -> modeId=0x0C ramMapAreaMode=10
+   type= 0 sub= 0 -> modeId=0x0E ramMapAreaMode=3
+   type= 0 sub= 1 -> modeId=0x0E ramMapAreaMode=3
+   type= 0 sub= 2 -> modeId=0x0E ramMapAreaMode=3
+   type= 0 sub= 3 -> modeId=0x0E ramMapAreaMode=3
+   type= 0 sub= 4 -> modeId=0x0E ramMapAreaMode=3
+   type= 0 sub= 6 -> modeId=0x0E ramMapAreaMode=3
+   type= 0 sub= 7 -> modeId=0x22 ramMapAreaMode=3
+   type= 8 sub= 0 -> modeId=0x0E ramMapAreaMode=3
+   type= 8 sub= 1 -> modeId=0x0E ramMapAreaMode=3
+   type= 8 sub= 2 -> modeId=0x0E ramMapAreaMode=3
+   type= 8 sub= 3 -> modeId=0x0E ramMapAreaMode=3
+   type= 8 sub= 4 -> modeId=0x0E ramMapAreaMode=3
+   type= 8 sub= 6 -> modeId=0x0E ramMapAreaMode=3
+   type= 5 sub= 8 -> modeId=0x0B ramMapAreaMode=12
+   type= 9 sub= 8 -> modeId=0x08 ramMapAreaMode=14
+   type=10 sub= 8 -> modeId=0x09 ramMapAreaMode=14
+   type=11 sub= 8 -> modeId=0x12 ramMapAreaMode=14
+   type=13 sub= 8 -> modeId=0x0F ramMapAreaMode=8
+   type=14 sub= 8 -> modeId=0x17 ramMapAreaMode=8
+   type=15 sub= 2 -> modeId=0x07 ramMapAreaMode=15
+   type=15 sub= 3 -> modeId=0x07 ramMapAreaMode=15
+   type=12 sub= 8 -> modeId=0x0A ramMapAreaMode=16
+   type=22 sub= 8 -> modeId=0x1B ramMapAreaMode=17
+   type=23 sub= 8 -> modeId=0x1C ramMapAreaMode=18
+   type=24 sub= 8 -> modeId=0x1D ramMapAreaMode=19
+   type=25 sub= 8 -> modeId=0x1E ramMapAreaMode=20
+   type=26 sub= 8 -> modeId=0x1F ramMapAreaMode=21
+   type=27 sub= 8 -> modeId=0x20 ramMapAreaMode=22
+   type=21 sub= 8 -> modeId=0x11 ramMapAreaMode=0
+   type=29 sub= 8 -> modeId=0x23 ramMapAreaMode=23
+   type=30 sub= 8 -> modeId=0x24 ramMapAreaMode=23
+   terminador type=0x00000020
+--- systemType 2 0x009DEDC0 ---
+   type=16 sub= 8 -> modeId=0x14 ramMapAreaMode=0
+   type= 0 sub= 1 -> modeId=0x07 ramMapAreaMode=2
+   type= 0 sub= 0 -> modeId=0x06 ramMapAreaMode=3
+   type= 0 sub= 2 -> modeId=0x06 ramMapAreaMode=3
+   type= 0 sub= 3 -> modeId=0x06 ramMapAreaMode=3
+   type= 1 sub= 8 -> modeId=0x0A ramMapAreaMode=4
+   type=18 sub= 8 -> modeId=0x03 ramMapAreaMode=5
+   type=17 sub= 8 -> modeId=0x02 ramMapAreaMode=6
+   type= 2 sub= 1 -> modeId=0x05 ramMapAreaMode=5
+   type= 2 sub= 2 -> modeId=0x04 ramMapAreaMode=6
+   type= 2 sub= 3 -> modeId=0x04 ramMapAreaMode=6
+   type= 3 sub= 8 -> modeId=0x0A ramMapAreaMode=9
+   type= 4 sub= 1 -> modeId=0x09 ramMapAreaMode=10
+   type= 4 sub= 0 -> modeId=0x08 ramMapAreaMode=10
+   type= 4 sub= 2 -> modeId=0x08 ramMapAreaMode=10
+   type= 4 sub= 3 -> modeId=0x08 ramMapAreaMode=10
+   type= 5 sub= 8 -> modeId=0x15 ramMapAreaMode=11
+   type= 6 sub= 8 -> modeId=0x03 ramMapAreaMode=13
+   type= 8 sub= 1 -> modeId=0x07 ramMapAreaMode=2
+   type= 8 sub= 0 -> modeId=0x06 ramMapAreaMode=3
+   type= 8 sub= 2 -> modeId=0x06 ramMapAreaMode=3
+   type= 8 sub= 3 -> modeId=0x06 ramMapAreaMode=3
+   type= 9 sub= 0 -> modeId=0x0D ramMapAreaMode=14
+   type= 9 sub= 8 -> modeId=0x0E ramMapAreaMode=14
+   type=10 sub= 8 -> modeId=0x0F ramMapAreaMode=14
+   type= 3 sub= 8 -> modeId=0x0A ramMapAreaMode=9
+   type=11 sub= 8 -> modeId=0x17 ramMapAreaMode=14
+   type=13 sub= 8 -> modeId=0x10 ramMapAreaMode=10
+   type=14 sub= 8 -> modeId=0x11 ramMapAreaMode=10
+   type=15 sub= 1 -> modeId=0x0C ramMapAreaMode=15
+   type=15 sub= 2 -> modeId=0x0B ramMapAreaMode=15
+   type=15 sub= 3 -> modeId=0x0B ramMapAreaMode=15
+   type=12 sub= 8 -> modeId=0x12 ramMapAreaMode=16
+   terminador type=0x00000020

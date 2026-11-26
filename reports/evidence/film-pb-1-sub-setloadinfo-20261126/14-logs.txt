@@ -1,0 +1,56 @@
+--- arnes: reports/../analysis/film-pb1-arnes/log-e2e17b.txt (lineas 1-26)
+[AVIMMGR][MS1]MountCmd : Flash Mount Error
+[MMGR][CTRL] ## ERROR(MMGR):0x00000007 ## mmgrcontrol/MMgrBackup.cpp(157) Backup()
+[AVI][MEDIA]    sources/avi_if/AviSeqMedia.cpp Error=[ER_FAILED] Line:1637
+[MMGR][AVI] ## ERROR(AVI):0x32400001 ## avimmgr/AviMMgrCmd.cpp(13459) FlashLoadAvi()
+[AVIMMGR][MS1]LoadExec : Flash Load Error
+[AVI]CS_AviAcsr::Unknown Function[0x00000120] Error=[INT_ERCD_NO_AVI_FILE]Line=[30511]
+[AVI][COMMON]   sources/avi_if/AviSeqCommon.cpp Error=[ER_AVI_FORMAT] Line:18962
+[AVI][MEDIA]    sources/avi_if/AviSeqMedia.cpp Error=[ER_INTERNAL] Line:3109
+[MMGR][AVI] ## ERROR(AVI):0x32000002 ## avimmgr/AviMMgrCmd.cpp(2197) LoadExec()
+[AVI][PLAY]     sources/avi_if/AviSeqPlay.cpp Error=[ER_INTERNAL] Line:12476
+[MSV][MS1]Err RcsBackupTblData
+[MP4IFO] ### mp4Ifo faild at IF/mp4Ifo_General.cpp(1749) ErrCd: 0xB0800001
+[AVIMMGR][MS1]LoadSub : MP4 Load Error.
+[MMGR][MMGR_ACSR] ## ERROR(MMGR):0xB0800001 ## mmgrifoacsr/MMgrMp4IfoAcsr.cpp(2319) LoadSub()
+[MMGR][MMGR_ACSR] ## ERROR(MMGR):0x31000006 ## mmgrifoacsr/MMgrMp4IfoAcsr.cpp(246) CreateAndLoad()
+[AVIMMGR][MS1]FlashLoadMp4 : CreateAndLoad Error
+[MMGR][AVI] ## ERROR(MMGR):0x31000006 ## avimmgr/AviMMgrCmd.cpp(13247) FlashLoadMp4()
+[AVI]CS_AviAcsr::Unknown Function[0x00000004] Error=[INT_ERCD_NO_AVI_FILE]Line=[1512]
+[AVI][PLAY]     sources/avi_if/AviSeqPlay.cpp Error=[ER_AVI_FORMAT] Line:10234
+[MP4IFO] ### mp4Ifo faild at mp4Ifo_AVISequence.cpp(3646) ErrCd: 0xB0510007
+[MP4IFO] ### mp4Ifo faild at mp4Ifo_AVISequence.cpp(0889) ErrCd: 0xB0510007
+[MMGR][MMGR_ACSR] ## ERROR(MMGR):0xB0510007 ## mmgrifoacsr/MMgrMp4IfoAcsr.cpp(523) SetLoadInfo()
+[MMGR][CTRL] ## ERROR(MMGR):0x00000007 ## mmgrcontrol/MMgrBackup.cpp(74) ReadBackupData()
+[MprIf] Callback GetPreFirstMountInfo[MprIf] CallbackData CBID_GET_PRE_FIRST_MOUNT_INFO  errCd: 0x00000000
+[AVIMMGR][MS1]CheckMSId : MS IDs are not same!
+[AVI]^@CS_AviAcsr Object is not exist.
+--- camara real: reports/evidence/film-pb-1-log-real-20261126/anillo-mpr-20261020.txt (lineas 15-25 y 90-110)
+
+## HD-AVC COMMAND ERROR ##
+##   CMD ID :     004E  ##
+##   ERROR  : A0100003  ##
+##########################
+[MMGR][MMGR_ACSR] ## ERROR(HDAVCIFO):0xA0100003 ## mmgrifoacsr/MMgrAvcHdIfoAcsr.cpp(791) CheckSalvageStatus()
+[MSV][MS1]Err RcsBackupTblData
+[MP4IFO] ### mp4Ifo faild at IF/mp4Ifo_General.cpp(1749) ErrCd: 0xB0800001
+[MP4IFO] ### mp4Ifo faild at IF/mp4Ifo_General.cpp(1340) ErrCd: 0xB0800001
+[DCF][MS1]Err RcsBackupTblData
+[XAVCIFO] ### xavcIfo faild at CMN/xavcIfo_File.cpp(0874) ErrCd: 0xB0520001
+[XAVCIFO] ### xavcIfo faild at CMN/xavcIfo_File.cpp(0874) ErrCd: 0xB0520001
+[XAVCIFO] ### xavcIfo faild at xavcIfo_AVISequence.cpp(4215) ErrCd: 0xB0810001
+[XAVCIFO] ### xavcIfo faild at xavcIfo_AVISequence.cpp(0958) ErrCd: 0xB0810001
+[MMGR][MMGR_ACSR] ## ERROR(MMGR):0xB0810001 ## mmgrifoacsr/MMgrXavcIfoAcsr.cpp(501) SetLoadInfo()
+[MSV][MS1]Err RcsBackupTblData
+[MP4IFO] ### mp4Ifo faild at IF/mp4Ifo_General.cpp(1749) ErrCd: 0xB0800001
+[AVIMMGR][MS1]LoadSub : MP4 Load Error.
+[MMGR][MMGR_ACSR] ## ERROR(MMGR):0xB0800001 ## mmgrifoacsr/MMgrMp4IfoAcsr.cpp(2319) LoadSub()
+[MMGR][MMGR_ACSR] ## ERROR(MMGR):0x31000006 ## mmgrifoacsr/MMgrMp4IfoAcsr.cpp(246) CreateAndLoad()
+[AVIMMGR][MS1]FlashLoadMp4 : CreateAndLoad Error
+[MMGR][AVI] ## ERROR(MMGR):0x31000006 ## avimmgr/AviMMgrCmd.cpp(13247) FlashLoadMp4()
+[AVIMMGR][MS1]LoadExec : Flash Load Error
+[AVIMMGR][MS1]SetLoadInfo : TvSystem is NTSC, frameRate 3
+line=825, time=4030, diff=4027
+line=838, time=21376, diff=17346
+line=875, time=21448, diff=72
+[AVIMMGR][MS1]GetContentFocusPointCmd : GetResumeInfo Error [47000003]

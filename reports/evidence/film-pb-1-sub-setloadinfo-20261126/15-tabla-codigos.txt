@@ -1,0 +1,45 @@
+TABLAS DE CODIGOS DEL CAMINO mp4Ifo  (libmpr.so 3.21, VA = offset de fichero, base 0)
+
+A) Traductor "mp4Ifo" -> codigo de error.  DOS copias identicas del mismo switch:
+   0x6DF7EC  (loguea con "mp4Ifo_AVISequence.cpp")   [evidencia 02-*.dis]
+   0x6E3860  (recibe (r1=codigo, r2=fichero, r3=linea)) [evidencia 03-*.dis]
+
+   entrada        -> salida
+   --------------    ----------
+   0                 -> 0                 (pasa tal cual)
+   1                 -> 0xB0810001
+   0x32000003        -> 0xB0100006
+   0x32100001        -> 0xB0F30001
+   0x32200001        -> 0xB0510007   <== UNICA entrada que produce 0xB0510007
+   0x32400001        -> 0xB0510002
+   0x32400002        -> 0xB0200001
+   0x32400003        -> 0xB0400005
+   0x32400004        -> 0xB0400001
+   0x32400005        -> 0xB0510001
+   0x32400006        -> 0xB0400002
+   0x32400007        -> 0xB0400003
+   0x32400008        -> 0xB0400004
+   cualquier otro    -> 0xB0800001   (rama por defecto, 0x6DF874 / 0x6E38E8)
+
+B) Nombre de los codigos de la capa AVI (mapper 0x1DA818, devuelve char*) [evidencia 05-*.dis]
+   0x32000001 ER_OK / 1 ER_BADARG / 0x32000002 ER_INTERNAL / 0x32000003 ER_ILLEGAL_SEQUENCE
+   0x32000004 ER_KERNEL_CALL / 0x32100001 ER_CANCELED / 0x32200001 ER_AVI_FORMAT
+   0x32200002 ER_AVI_MEDIUM_FULL / 0x32200003 ER_AVI_TVSYSTEM_NONE
+   0x32400001 ER_FAILED / 0x32400002 ER_DRIVE / 0x32400003 ER_MEDIUM / 0x32400004 ER_ACCESS
+   0x32400005 ER_UNRECOGNIZED / 0x32400006 ER_DISC_CORRUPT / 0x32400007 ER_WRITE_VERIFY_ERROR
+   0x32400008 ER_NO_MEDIUM
+
+   => 0xB0510007 == "mp4Ifo: el AVI dice ER_AVI_FORMAT (0x32200001)"
+   => 0xB0800001 == "mp4Ifo: codigo no clasificado" (default del switch)
+
+C) Normalizador de mp4Ifo_General 0x6F0D4C(codigo r0, por_defecto r1, fichero r2, linea r3) [evidencia 04-*.dis]
+   - codigo == 0                -> 0
+   - exactos 0x13400002/05/06/07/0E -> 0xB0400005 ; 0x13810001 -> 0xB0810001
+   - por byte de grupo (bits 16..23 del codigo):
+       0x80 -> 0xB0800001 ; 0x20 -> 0xB0200001 ; 0x40 -> 0xB0400001
+       0x50 -> 0xB0510001 (o 0xB0400006 si coincide con 0x13500002)
+       0x81 -> 0xB0810001 ; 0xF0 -> 0xB0800001 ; 0xF2 -> 0
+   - cualquier otro grupo -> r1 = el "por_defecto" que pasa el llamante.
+     Los dos llamantes de mp4Ifo_General pasan 0xB0800001 (0x698EE2 y 0x698E94).
+   => el grupo 0x10 (MSV/MSV-DFS) NO tiene traduccion: sale 0xB0800001.
+      Es exactamente lo que muestra el anillo real tras "[MSV][MS1]Err RcsBackupTblData".

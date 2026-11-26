@@ -1,0 +1,109 @@
+# Cadena que demuestra que el puntero base del reproductor ES 0xA4F368
+# A) StreamAreaAllocate (0x5F7BE8) llama a DistributeBufInfo con r1 = 0xA4F368 y DEVUELVE 0xA4F368
+005f7cec: 2a68       ldr      r2, [r5]                      
+005f7cee: b868       ldr      r0, [r7, #8]                  
+005f7cf0: 2049       ldr      r1, [pc, #0x80]                 ; [005f7d74]=00a4f368
+005f7cf2: fff7a3f9   bl       #0x5f703c                     
+005f7cf6: 0546       mov      r5, r0                        
+005f7cf8: 02f0a0f8   bl       #0x5f9e3c                     
+005f7cfc: 1e4a       ldr      r2, [pc, #0x78]                 ; [005f7d78]=008da720 "[MemInfo]StreamAreaAllocate(next): complete ret="
+005f7cfe: 2b46       mov      r3, r5                        
+005f7d06: 1d4a       ldr      r2, [pc, #0x74]                 ; [005f7d7c]=009dedbc
+005f7d08: 1d4b       ldr      r3, [pc, #0x74]                 ; [005f7d80]=009dec30
+005f7d0a: 75b1       cbz      r5, #0x5f7d2a                 
+005f7d0c: 1660       str      r6, [r2]                      
+005f7d0e: c3f80080   str.w    r8, [r3]                      
+005f7d12: 1848       ldr      r0, [pc, #0x60]                 ; [005f7d74]=00a4f368
+005f7d14: fff7f6fe   bl       #0x5f7b04                     
+005f7d18: 0120       movs     r0, #1                        
+005f7d1a: b1b2       uxth     r1, r6                        
+005f7d1c: 1ffa88f2   uxth.w   r2, r8                        
+005f7d20: bb89       ldrh     r3, [r7, #0xc]                
+005f7d22: 01f0d7fe   bl       #0x5f9ad4                     
+005f7d26: 1348       ldr      r0, [pc, #0x4c]                 ; [005f7d74]=00a4f368
+005f7d28: 0be0       b        #0x5f7d42                     
+005f7d2a: 2021       movs     r1, #0x20                     
+005f7d2c: 0920       movs     r0, #9                        
+005f7d2e: 1160       str      r1, [r2]                      
+005f7d30: 0822       movs     r2, #8                        
+005f7d32: b1b2       uxth     r1, r6                        
+005f7d34: 1a60       str      r2, [r3]                      
+005f7d36: 1ffa88f2   uxth.w   r2, r8                        
+005f7d3a: bb89       ldrh     r3, [r7, #0xc]                
+005f7d3c: 01f0cafe   bl       #0x5f9ad4                     
+005f7d40: 2846       mov      r0, r5                        
+005f7d42: 07f11407   add.w    r7, r7, #0x14                 
+005f7d46: bd46       mov      sp, r7                        
+005f7d48: bde8f08f   pop.w    {r4, r5, r6, r7, r8, sb, sl, fp, pc}
+
+# B) GetMemoryInformation (0x4284AC) hace tail-call a StreamAreaAllocate y devuelve su r0
+0042857c: 35b1       cbz      r5, #0x42858c                 
+0042857e: 2046       mov      r0, r4                        
+00428580: 3146       mov      r1, r6                        
+00428582: 4a46       mov      r2, sb                        
+00428584: bde8f047   pop.w    {r4, r5, r6, r7, r8, sb, sl, lr}
+00428588: cff12ebb   b.w      #0x5f7be8                     
+0042858c: 2046       mov      r0, r4                        
+0042858e: 3146       mov      r1, r6                        
+00428590: bde8f047   pop.w    {r4, r5, r6, r7, r8, sb, sl, lr}
+00428594: cff1c2bc   b.w      #0x5f7f1c                     
+
+# C) SetUpPlayerInstance recibe ese puntero como 4o argumento de pila ([r7+0x44] -> r5)
+0043910c: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+00439110: 87b0       sub      sp, #0x1c                     
+00439112: 02af       add      r7, sp, #8                    
+00439114: 0446       mov      r4, r0                        
+00439116: 1e46       mov      r6, r3                        
+00439118: c068       ldr      r0, [r0, #0xc]                
+0043911a: 7960       str      r1, [r7, #4]                  
+0043911c: 3a60       str      r2, [r7]                      
+0043911e: d7f838b0   ldr.w    fp, [r7, #0x38]               
+00439122: d7f83c90   ldr.w    sb, [r7, #0x3c]               
+00439126: d7f840a0   ldr.w    sl, [r7, #0x40]               
+0043912a: 7d6c       ldr      r5, [r7, #0x44]               
+0043912c: d7f84880   ldr.w    r8, [r7, #0x48]               
+
+# D) un llamador de SetUpPlayerInstance pasa el retorno de GetMemoryInformation (0x4284AC)
+00438e60: 0cbf       ite      eq                            
+00438e62: 0146       moveq    r1, r0                        
+00438e64: 1021       movs     r1, #0x10                     
+00438e66: eff721fb   bl       #0x4284ac                     
+00438e6a: c4f8ac0d   str.w    r0, [r4, #0xdac]              
+00438e6e: 10b9       cbnz     r0, #0x438e76                 
+00438e70: 0823       movs     r3, #8                        
+00438e72: 3b60       str      r3, [r7]                      
+00438e74: 4de0       b        #0x438f12                     
+00438e76: 0025       movs     r5, #0                        
+00438e78: 0390       str      r0, [sp, #0xc]                
+00438e7a: 0421       movs     r1, #4                        
+00438e7c: 2046       mov      r0, r4                        
+00438e7e: 2a46       mov      r2, r5                        
+00438e80: d4f8c03d   ldr.w    r3, [r4, #0xdc0]              
+00438e84: 0095       str      r5, [sp]                      
+00438e86: 4ff00808   mov.w    r8, #8                        
+00438e8a: 0195       str      r5, [sp, #4]                  
+00438e8c: 0295       str      r5, [sp, #8]                  
+00438e8e: 0495       str      r5, [sp, #0x10]               
+00438e90: 00f03cf9   bl       #0x43910c                     
+00438e94: 10b9       cbnz     r0, #0x438e9c                 
+
+# E) who references DistributeBufInfo (0x5F703C): 4 sitios bl
+0x5f7654 None
+0x5f7cf2 None
+0x5f7fa4 None
+0x5f819e None
+
+# F) el areaTblMode (0x9DECAC) se escribe con la salida de Type2Mode y luego se usa como arg0 de DistributeBufInfo
+005f7c34: 4146       mov      r1, r8                        
+005f7c36: 07f10c02   add.w    r2, r7, #0xc                  
+005f7c3a: 07f10803   add.w    r3, r7, #8                    
+005f7c3e: 3046       mov      r0, r6                        
+005f7c40: fef7acfe   bl       #0x5f699c                     
+005f7c44: 0546       mov      r5, r0                        
+005f7c46: 02f0e1f8   bl       #0x5f9e0c                     
+005f7c74: 40e0       b        #0x5f7cf8                     
+005f7c76: ba68       ldr      r2, [r7, #8]                  
+005f7c78: 2046       mov      r0, r4                        
+005f7c7a: 384b       ldr      r3, [pc, #0xe0]                 ; [005f7d5c]=009decac
+005f7c7c: 1a60       str      r2, [r3]                      
+005f7c7e: fef73bfe   bl       #0x5f68f8                     
