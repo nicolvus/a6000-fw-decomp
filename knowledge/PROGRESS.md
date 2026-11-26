@@ -1,5 +1,21 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## FILM-PB-1 — WBI y Silent: causa y solución construida (28-11-2026)
+
+Silent son dos capas y solo una choca con el WBI. El **comportamiento** vive en `av-cam.bin`
+(`nflasha3`) y es compatible: 0 de 24 432 páginas no nulas del WBI son suyas y Loader3 la recarga
+en ambos modos. La **bandera y el menú** viven en `/usr` (`libObj.so` 998 de 4 254 páginas
+restauradas, `viewUnified2.so` 50, `CautionConfig.so` 8, `.uxc`), y el WBI devuelve el `/usr` de Sony
+congelado; con `/usr` recompuesto la instantánea queda incoherente (0/6 arranques). **Eslabón que
+faltaba:** la cámara ya no fabrica su WBI — `im.elf` escribe `"warm"` en `/sys/power/state` solo si la
+compuerta `0x9F44` deja, y compara un contador persistente (Backup `0x940004`) con un límite; pasado,
+escribe `"mem"`. **Solución (S1) construida:** paquete 4.05 con el `/usr` del CFW Silent + `im.elf`
+parcheado en 4 B (`0x9F44` → `movs r0,#1 ; bx lr`) y `--sin-wbi`: instalar → frío (menú sí, vídeo no) →
+apagar con el interruptor → WBI nuevo con el `/usr` del CFW → caliente con reproducción y Silent.
+Plan B: disparar Silent desde el ajuste de fábrica EFCS (`+0x210`) sin tocar `/usr`.
+[Informe](../reports/film-pb-1-wbi-silent-20261128.md) ·
+[evidencia](../reports/evidence/film-pb-1-wbi-silent-20261128/).
+
 ## FILM-PB-1 — la rotura es del arranque en frío, no del CFW (28-11-2026)
 
 Diez investigaciones estáticas (init del initrd, módulos, `av-cam`/`idt_cam`, ruta del decodificador

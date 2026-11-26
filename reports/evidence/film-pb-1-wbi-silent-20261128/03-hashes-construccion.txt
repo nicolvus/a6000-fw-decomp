@@ -1,0 +1,23 @@
+ed456f8ac0e511f1cef06416a0769355d5c9b3d5ea802b2224621ada7de5e27b  build/wbi_silent/nflasha15-405.bin
+584d2aacf185f2a922a67e200657c0f302973a3f5213d3381efe9fc678aca166  build/wbi_silent/pkg405/package-4.05/firmware_packed.dat
+522f2f2ef64b895cb8d01c05ca9fd7562a7dc1485f278b18373903831013be7d  build/wbi_silent/files/bin/im.elf
+f0f181426af4add55a8510c5441ff86c3121678fd1f7e0467152070e870d803a  firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/bin/im.elf
+
+## Cadena de construcción (offline, sin cámara)
+1. scripts/gui/patch_im_elf_warm.py      im.elf de fábrica -> im.elf con 4 B parcheados (0x9F44)
+2. build/wbi_silent/files                /usr del CFW Silent (29 ficheros) + bin/im.elf parcheado
+3. scripts/gui/build_nflasha15.py        nflasha15 reconstruida (TPZL)
+4. scripts/gui/verify_nflasha15_im_elf.py comprueba que dentro está el parcheado y solo 4 B difieren
+5. scripts/gui/build_package_nflasha15.py .dat 4.05 con --sin-wbi
+6. scripts/gui/audit_package_nflasha15.py auditoría independiente del .dat
+
+## Resultado de la auditoría (ver audit-405*.json)
+  "share/app/string_swedish.uxc",
+  "share/app/string_traditionalchinese.uxc",
+  "share/app/string_turkish.uxc",
+  "share/app/string_vietnamese.uxc"
+ ],
+ "fsck": "limpio antes de restaurar el bloque 0; despu\u00e9s solo contadores de libres desfasados",
+92cbd3b22dab67419bae08ee5617cf9455617013583dff5ef7bee864c0e124a6  build/wbi_silent/pkg405sony/package-4.05/firmware_packed.dat
+## Auditoría
+todo_ok True | comprobaciones 23 | cambios ['0700_part_image/dev/nflasha15', '0701_part_image_sum/part_image.sum'] | quitados ['0700_part_image/dev/nflasha5']

@@ -1,5 +1,28 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+## Reproducción de vídeo + Silent: por qué el WBI no convive con Silent y cómo se arregla (28-11-2026)
+
+> **Silent son dos capas y solo una choca con el WBI.** El **comportamiento** (ShutMode 0, `r5`, tristate a
+> Darwin) vive en `av-cam.bin` → `nflasha3` (`/system`) y **sí** convive: **0 de 24 432** páginas no nulas del
+> WBI son suyas y Loader3 la recarga en los dos modos de RAMCFG. La **bandera** (`[0x43EDF684+0x238]`, comando
+> `0x40e3`) y la **entrada de menú** viven en `/usr` (`libObj.so` 998 de 4 254 páginas restauradas,
+> `viewUnified2.so` 50, `CautionConfig.so` 8, `.uxc`), y el WBI devuelve el `/usr` de Sony congelado (TOC en
+> `0x8D3B8000`). Con `/usr` recompuesto la instantánea queda incoherente: **0/6** arranques (G11 §11).
+> **El eslabón que faltaba:** la cámara **ya no fabrica su WBI**. `im.elf` escribe `"warm"` en
+> `/sys/power/state` solo si la compuerta `0x9F44` deja, y esa compuerta compara un **contador persistente**
+> (Backup `0x940004`) con un límite; pasado el límite escribe `"mem"` (`0x9FB4`) y no hay instantánea nueva.
+> Por eso todo CFW instalado en frío se queda en frío para siempre.
+> **Solución construida (S1):** paquete 4.05 con el `/usr` del CFW Silent + `/usr/bin/im.elf` parcheado en
+> 4 B (`0x9F44`: `06 4B 80 B5` → `01 20 70 47`) y `--sin-wbi`. Secuencia: instalar → primer arranque **frío**
+> (menú Silent sí, vídeo no) → apagar con el interruptor (la cámara crea un WBI con el `/usr` del CFW) →
+> arranques siguientes **calientes** con reproducción **y** Silent. El parche se agota solo: con WBI válido no
+> se ejecuta `/sbin/init` ni `im.elf`. **Plan B (S2)** si no se crea el WBI: llevar el disparo de Silent al
+> ajuste de fábrica EFCS (`+0x210` en vez de `+0x238`, dos lecturas ya localizadas) para no tocar `/usr`.
+> Verificado offline: 4 B en `im.elf`, `nflasha15` 84 615 168 B con `fsck` limpio y bloque TPZL 0 = Sony,
+> `.dat` sha256 `584d2aac…`; **prueba física pendiente**.
+> [Informe](../reports/film-pb-1-wbi-silent-20261128.md) ·
+> [evidencia](../reports/evidence/film-pb-1-wbi-silent-20261128/)
+
 ## Reproducción de vídeo — la rotura es del arranque EN FRÍO del propio 3.21 (28-11-2026)
 
 > **Cambio de conclusión, medido.** El par A/B de la bisecta no aísla un parche: A es el tar de fábrica

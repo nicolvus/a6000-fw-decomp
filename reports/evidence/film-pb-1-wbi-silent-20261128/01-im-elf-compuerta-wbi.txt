@@ -1,0 +1,124 @@
+# Compuerta de creación del WBI en /usr/bin/im.elf (Sony 3.21) — 28-11-2026
+# Desensamblado: Capstone 5.0.7, Thumb. VA = offset de fichero + 0x8000 (primer PT_LOAD).
+
+## 1. Quién pide el WBI (cadenas y literales)
+  /sys/power/state        VA 0xC0B7
+  WARM(warm_count=%d)     VA 0xC0CD
+  warm                    VA 0xC0C8   <- se escribe como 4 B
+  SUS(warm_count=%d)      VA 0xC0E1
+  mem                     VA 0xC0F4   <- se escribe como 3 B
+
+## 2. warm_permitido() @ 0x9F44  (lee límite y contador)
+00009f44 ldr      r3, [pc, #0x18]
+00009f46 push     {r7, lr}
+00009f48 add      r7, sp, #0
+00009f4a ldr      r3, [r3]
+00009f4c cbz      r3, #0x9f5c
+00009f4e ldr      r2, [pc, #0x14]
+00009f50 ldr      r0, [r2]
+00009f52 cmp      r0, r3
+00009f54 ite      hi
+00009f56 movhi    r0, #0
+00009f58 movls    r0, #1
+00009f5a pop      {r7, pc}
+00009f5c movs     r0, #1
+00009f5e pop      {r7, pc}
+00009f60 strb     r4, [r2, r3]
+00009f62 movs     r1, r0
+
+## 3. incremento del contador persistente @ 0x9F68
+  Backup_read (blx 0x8E80) / Backup_write (blx 0x8FBC), canal 0x94, elemento 0x940004,
+  puntero al global 0x154B8 (.bss). Literales en el pool: 0x9FAC=0x154B8, 0x9FB0=0x940004, 0x9FA8=0x154D4.
+00009f68 push     {r4, r7, lr}
+00009f6a sub      sp, #0xc
+00009f6c add      r7, sp, #0
+00009f6e movs     r3, #0
+00009f70 str      r3, [r7, #4]
+00009f72 ldr      r3, [pc, #0x34]
+00009f74 ldr      r3, [r3]
+00009f76 cbz      r3, #0x9f9e
+00009f78 ldr      r4, [pc, #0x30]
+00009f7a adds     r1, r7, #4
+00009f7c ldr      r0, [pc, #0x30]
+00009f7e blx      #0x8e80
+00009f82 ldr      r2, [r7, #4]
+00009f84 ldr      r3, [r4]
+00009f86 cmp      r2, r3
+00009f88 beq      #0x9f8e
+00009f8a bl       #0xaad4
+00009f8e ldr      r3, [r7, #4]
+00009f90 movs     r0, #0x94
+00009f92 ldr      r1, [pc, #0x1c]
+00009f94 ldr      r2, [pc, #0x14]
+00009f96 adds     r3, #1
+00009f98 str      r3, [r4]
+00009f9a blx      #0x8fbc
+00009f9e add.w    r7, r7, #0xc
+00009fa2 mov      sp, r7
+
+## 4. escritura de estado @ 0x9FB4  (modo 2 -> siempre 'warm'; modo 1 -> compuerta)
+00009fb4 push     {r4, r5, r7, lr}
+00009fb6 sub      sp, #0x40
+00009fb8 mov      r5, r0
+00009fba add      r7, sp, #0
+00009fbc ldr      r0, [pc, #0x98]
+00009fbe movw     r1, #0x1001
+00009fc2 blx      #0x8e44
+00009fc6 subs     r4, r0, #0
+00009fc8 blt      #0xa04c
+00009fca cmp      r5, #2
+00009fcc bne      #0x9fd4
+00009fce bl       #0xaad4
+00009fd2 b        #0xa012
+00009fd4 bl       #0x9f68
+00009fd8 bl       #0xab10
+00009fdc mov      r1, r0
+00009fde cbz      r0, #0x9fe6
+00009fe0 bl       #0xaad4
+00009fe4 b        #0xa03e
+00009fe6 cmp      r5, #1
+00009fe8 bne      #0xa030
+00009fea movs     r2, #0x40
+00009fec mov      r0, r7
+00009fee blx      #0x8ef8
+00009ff2 bl       #0x9f44
+00009ff6 cbz      r0, #0xa01a
+00009ff8 bl       #0xaad4
+00009ffc bl       #0x9f34
+0000a000 movs     r1, #0x40
+0000a002 ldr      r2, [pc, #0x58]
+0000a004 mov      r3, r0
+0000a006 mov      r0, r7
+0000a008 blx      #0x909c
+0000a00c mov      r0, r7
+0000a00e bl       #0x9800
+0000a012 mov      r0, r4
+
+## 5. el llamante decide el modo (1 o 0) @ 0xA270
+0000a270 ldr      r3, [r3]
+0000a272 cmp      r3, #1
+0000a274 bne      #0xa280
+0000a276 ldr      r0, [r4, #4]
+0000a278 subs     r0, #0
+0000a27a it       ne
+0000a27c movne    r0, #1
+0000a27e b        #0xa282
+0000a280 movs     r0, #0
+0000a282 bl       #0x9fb4
+
+## 6. Existe una rutina que PONE EL CONTADOR A CERO (0x9A84): Backup_write(0x94, 0x940004, 0)
+00009a84 push     {r7, lr}
+00009a86 add      r7, sp, #0
+00009a88 ldr      r1, [pc, #0x1c]
+00009a8a ldr      r0, [pc, #0x20]
+00009a8c blx      #0x8e80
+00009a90 ldr      r2, [pc, #0x1c]
+00009a92 movs     r3, #0
+00009a94 movs     r0, #0x94
+00009a96 ldr      r1, [pc, #0x1c]
+00009a98 str      r3, [r2]
+00009a9a blx      #0x8fbc
+
+## 7. Bytes del parche aplicado (4 B) y verificación
+  antes:  0x9F44  06 4B 80 B5   ->  ldr r3,[pc,#0x18] ; push {r7,lr}
+  después:0x9F44  01 20 70 47   ->  movs r0,#1 ; bx lr   (warm_permitido() siempre 1)

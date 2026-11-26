@@ -1,0 +1,20 @@
+# Qué guarda el WBI de Sony (dev/nflasha5, 42 293 120 B) — medido por páginas de 4 KiB
+# Método: fwtool.sony.wbi.readWbi (descompresión LZ77 de las 1164 secciones) + SHA-1 por página
+#         contra los ficheros de la imagen de fábrica 3.21. Script: scripts/gui/cuenta_paginas_wbi.py
+
+  páginas no nulas del WBI ............ 24 432
+  páginas que son de av-cam.bin ....... 0        <- la imagen del core AV NO está en el WBI
+  páginas que son de un fichero de /usr 1 654    (77 ficheros distintos)
+     lib/libObj.so ................... 998
+     lib/viewUnified2.so ............. 50
+     lib/CautionConfig.so ............ 8
+     bin/im.elf ...................... 5
+
+## Lectura
+  1. El menú Silent vive en /usr; el WBI devuelve el /usr de Sony congelado en el arranque caliente:
+     el menú no aparece y los parches de libObj/CautionConfig/viewUnified2/.uxc quedan inertes.
+  2. El comportamiento de Silent (av-cam.bin, /system) sí es compatible con el WBI: 0 páginas del
+     WBI son suyas y Loader3 la recarga en los dos modos de RAMCFG.
+
+## Reproducible
+  .venv/bin/python3 scripts/gui/cuenta_paginas_wbi.py
