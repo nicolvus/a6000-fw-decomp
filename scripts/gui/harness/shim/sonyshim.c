@@ -1257,26 +1257,32 @@ static void mwf_nullsafe(void) {
    pbmedia*) ocurra ANTES de `DefObjMedia::onStarting` (≈ 65 s): medido, si onStarting llega primero el medio queda
    `INH_INVALID_INFO_FS` → `RejectMedia()` y `getModelInfo(model/MEDIA, 0)` se queda en 0. Trampolín: copia los 12 B
    del prólogo, duerme y vuelve a +0x0c. */
+static void media_delay_hit(void) {  /* una sola vez: si no, las 11+ llamadas a ObjMedia_Create suman el retardo */
+    static int hecho; if (hecho) return;
+    hecho = 1;
+    const char *e = getenv("MEDIADELAY"); int s = e ? num(e) : 0;
+    if (s > 0) { LOG("MEDIADELAY: primera llamada a ObjMedia_Create, %d s", s); sleep(s); }
+}
 static void media_delay(unsigned long base) {
-    const char *e = getenv("MEDIADELAY"); if (!e) return;
-    int s = num(e); if (s <= 0 || s > 250) return;
+    const char *e = getenv("MEDIADELAY"); if (!e || num(e) <= 0) return;
+    if (*(unsigned short *)(base + 0x93d2cc) == 0xf8df) return;   /* ya parcheada */
     unsigned char *fn = (unsigned char *)(base + 0x93d2cc);
     unsigned char *tr = mmap(0, 4096, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (tr == MAP_FAILED) { LOG("MEDIADELAY: mmap falló"); return; }
-    /* 12 B del prólogo original (0x93d2cc..0x93d2d7), copiados tal cual: push {r3-r7,lr}; mov r6,r0; add r7,sp,#0;
-       mov.w r0,#0x3c0; mov r5,r1. Sin el último la función escribe por r5 basura (SEGV medido). */
+    /* 12 B del prólogo original (0x93d2cc..0x93d2d7): push {r3-r7,lr}; mov r6,r0; add r7,sp,#0;
+       mov.w r0,#0x3c0; mov r5,r1. Copiados tal cual: sin `mov r5,r1` la función escribe por r5 basura (SEGV medido). */
     static const unsigned char pro[12] = { 0xb5, 0xf8, 0x06, 0x46, 0x00, 0xaf, 0x4f, 0xf4, 0x70, 0x70, 0x0d, 0x46 };
-    unsigned char code[14] = { 0x0f, 0xb4, (unsigned char)(s & 0xff), 0x20, 0x04, 0x4b, 0x98, 0x47, 0x0f, 0xbc, 0xdf, 0xf8, 0x04, 0xf0 };
-    memcpy(tr, pro, sizeof pro); memcpy(tr + 0x0c, code, sizeof code);
-    unsigned long cont = (unsigned long)(fn + 0x0c) | 1, slp = (unsigned long)sleep;
-    memcpy(tr + 0x1c, &cont, 4); memcpy(tr + 0x24, &slp, 4);
+    unsigned char code[12] = { 0x0f, 0xb4, 0x04, 0x4b, 0x98, 0x47, 0x0f, 0xbc, 0xdf, 0xf8, 0x04, 0xf0 };
+    memcpy(tr, pro, sizeof pro); memcpy(tr + 0x0c, code, sizeof code); memset(tr + 0x18, 0xbf, 4);
+    unsigned long cont = (unsigned long)(fn + 0x0c) | 1, hit = (unsigned long)media_delay_hit;
+    memcpy(tr + 0x1c, &cont, 4); memcpy(tr + 0x20, &hit, 4);
     unsigned long pg = (unsigned long)fn & ~4095UL;
     if (mprotect((void *)pg, 8192, PROT_READ | PROT_WRITE | PROT_EXEC)) { LOG("MEDIADELAY: mprotect falló"); return; }
     unsigned long dst = (unsigned long)tr | 1;
     unsigned char sw[12] = { 0xdf, 0xf8, 0x00, 0xf0 };            /* ldr.w pc,[pc,#0] ; .word trampolín */
     memcpy(sw + 4, &dst, 4); sw[8] = sw[10] = 0x00; sw[9] = sw[11] = 0xbf;
     memcpy(fn, sw, 12); __builtin___clear_cache((char *)fn, (char *)fn + 12); __builtin___clear_cache((char *)tr, (char *)tr + 0x28);
-    LOG("MEDIADELAY: ObjMedia_Create en %p parcheada, %d s de retardo", (void *)fn, s);
+    LOG("MEDIADELAY: ObjMedia_Create en %p parcheada (una sola espera)", (void *)fn);
 }
 static void skip_fns(void) {
     char ln[256]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");

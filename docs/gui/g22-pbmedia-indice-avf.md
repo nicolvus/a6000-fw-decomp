@@ -221,18 +221,25 @@ Dos instrumentos independientes, mismo arranque (367 s de invitado):
 | `TRACELIB=libmpr.so TRACEFN2=13e474` | entrada de `Fsys_FindFirst` | **0 disparos** (la traza sí se armó: `TRACELIB libmpr.so base 0xad3ac000` a los 46,50 s) |
 
 Conclusión medida: en estos arranques **el camino del índice AV no se ejecuta**, así que el formato del `AVIN0001.INP`
-—por muy correcto que sea— **no puede** ser todavía la causa del 0. El experimento `MEDIADELAY` (§5.2) ataca
+—por muy correcto que sea— **no puede** ser todavía la causa del 0. El experimento `MEDIADELAY` (§4.3) ataca
 exactamente el orden medido en §4.1.
 
-### 4.3 Intento de invertir el orden (`MEDIADELAY`, en curso)
+### 4.3 Intento de invertir el orden (`MEDIADELAY`): el parche entra, el orden no se puede mover así (M)
 
-`sonyshim.c` gana `MEDIADELAY=n`: parchea la entrada de `ObjMedia_Create` (`libObj` **0x93d2cc**, símbolo de `.dynsym`
-`ObjMedia_Create` = `0x93d2cd` con el bit Thumb) con un trampolín que copia los 12 B del prólogo
-(`push {r3-r7,lr}; mov r6,r0; add r7,sp,#0; mov.w r0,#0x3c0`), **duerme n s** y vuelve a `+0x0c`, para que
-`FsysMount` (65,98 s) llegue **antes** de `onStarting` (65 s). Medido: el parche se aplica
-(`MEDIADELAY: ObjMedia_Create en 0xae8072cc parcheada, 10 s de retardo`) y el objeto se crea después; **el resultado
-final de esta prueba no se pudo cerrar en esta sesión**: el arranque en frío se quedó otra vez en la firma de
-G22-CUELGUE y el supervisor de `live.py` lo reinició (§5.1).
+`sonyshim.c` gana `MEDIADELAY=n`: parchea la entrada de `ObjMedia_Create` (`libObj` **0x93d2cc**; símbolo de `.dynsym`
+`ObjMedia_Create` = `0x93d2cd`, bit Thumb) con `ldr.w pc,[pc,#0]` + un trampolín que **copia los 12 B del prólogo**
+(`push {r3-r7,lr}; mov r6,r0; add r7,sp,#0; mov.w r0,#0x3c0; mov r5,r1`), llama a una espera **de una sola vez** y
+vuelve a `+0x0c`. Objetivo: que `FsysMount` (65,98 s) llegue antes que `onStarting` (65 s).
+
+| intento | qué pasó | evidencia |
+|---|---|---|
+| trampolín de 10 B (sin `mov r5,r1`) | **SEGV del invitado** (`IMEXIT im_s 139`) a los 79,96 s: la función escribía por `r5` basura | `mediadelay-intento.txt` §2 |
+| trampolín de 12 B, `MEDIADELAY=4`, espera solo en la 1.ª llamada | el parche se aplica (`ObjMedia_Create en 0xae81d2cc parcheada (una sola espera)`) y la espera se toma (`62,51 s, 4 s`), pero a los **228 s** el invitado **no ha llegado ni a `onStarting` ni a `FsysMount`** (sin parche llegaban a 65/66 s) y no hay ni un fotograma | `mediadelay-intento.txt` §1 |
+
+Lectura: dormir dentro de `ObjMedia_Create` **no es un retardo inocuo** — esa llamada está en el camino de arranque del
+contador/MPR y bloquea la secuencia que se quería adelantar. El orden `montaje → onStarting` hay que conseguirlo por
+otra vía (adelantar el montaje, o una espera fuera de `ObjMedia_Create`), no durmiendo ahí. **No se ha demostrado**
+que el rechazo temprano sea la causa del 0; sigue siendo la hipótesis con más apoyo (§4.1).
 
 ---
 
@@ -262,8 +269,10 @@ borró `live/<perfil>` entre intentos (los tres son arranques en frío de verdad
 
 ### 5.3 Siguiente paso concreto
 
-1. Arrancar **con la máquina libre** (0–1 `qemu-system-arm`) y `MEDIADELAY=10` (§4.3): si `FsysMount` precede a
-   `onStarting`, comprobar si desaparece `RejectMedia()` y si `getModelInfo(model/MEDIA, 0)` pasa a 1.
+1. Conseguir que el **montaje preceda a `onStarting`** con un mecanismo que no duerma dentro de `ObjMedia_Create`
+   (§4.3): o adelantar el montaje (la traza `MediaMount /dev/mmca` marca el disparo), o esperar **fuera** de esa
+   llamada (p. ej. en el hilo que la invoca). Si `FsysMount` precede a `onStarting`, comprobar si desaparece
+   `RejectMedia()` y si `getModelInfo(model/MEDIA, 0)` pasa a 1.
 2. Si sigue en 0 con el medio aceptado, repetir el arranque con `SDIO=20000` y buscar lecturas en el sector del
    índice (el generador imprime su sector: `mdir` + `img.find(ID)`); con eso se decide la cabecera (`SD_MEDIA_CAB=0`
    frente a `0x100`) sin adivinar.
@@ -302,7 +311,7 @@ PY
 MTOOLS_SKIP_CHECK=1 mdir -i /tmp/pbmedia/sd.head -/ ::/AVF_INFO
 
 # invitado (con la máquina libre de otros qemu)
-SD_MEDIA=1 SHIMEXTRA='WAITLOG=3000 WLALL=1 GMILOG=1 SDIO=20000 MEDIADELAY=10' \
+SD_MEDIA=1 SHIMEXTRA='WAITLOG=3000 WLALL=1 GMILOG=1 SDIO=20000' \
   .venv/bin/python scripts/gui/harness/live.py analysis/gui/g22/harness --perfil-dir pbmedia \
   --puerto 8693 --config /tmp/final/cfg.json
 grep -a 'ObjMedia\]onStarting\|RejectMedia\|ClearInhStatus\|FsysMount /dev/mmca\|getModelInfo(model/MEDIA' \
@@ -318,5 +327,6 @@ curl -s -X POST http://127.0.0.1:8693/salir
 |---|---|
 | [`formato-avin-estatico.txt`](../../reports/evidence/g22-pbmedia-20261126/formato-avin-estatico.txt) | descriptor `0x9d1270` volcado, getter `0x6800e4 = 0x138800`, desensamblado de `0x1de030` con los offsets del registro |
 | [`pbmedia2-trazas.txt`](../../reports/evidence/g22-pbmedia-20261126/pbmedia2-trazas.txt) | ciclo de `[ObjMedia]` (rechazo y limpieza), `getModelInfo(model/MEDIA,*)`, 34 lecturas `SDIO` con sus sectores, 0 disparos de `13e474` |
+| [`mediadelay-intento.txt`](../../reports/evidence/g22-pbmedia-20261126/mediadelay-intento.txt) | los dos intentos de `MEDIADELAY`: el SEGV del trampolín corto y la espera de 4 s que deja el arranque sin `onStarting` ni `FsysMount` |
 | [`mapa-sd-media.txt`](../../reports/evidence/g22-pbmedia-20261126/mapa-sd-media.txt) | `mdir` de la imagen con `SD_MEDIA=1` (foto 294 771 B, índice 384 B) y el sector del *file ID* |
 | [`00-antes.png`](../../reports/evidence/g22-pbmedia-20261126/00-antes.png) · [`01-index.png`](../../reports/evidence/g22-pbmedia-20261126/01-index.png) | fotogramas antes y después de `O view/INDEX_PLAYBACK 0` (idénticos: el arranque no pinta, §5.1) |

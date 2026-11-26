@@ -1,0 +1,16 @@
+# G22-PBMEDIA — MEDIADELAY (intento de invertir el orden montaje/onStarting)
+
+== pbmedia7: MEDIADELAY=4, espera solo en la primera llamada a ObjMedia_Create ==
+725.54 23.34 MEDIADELAY: ObjMedia_Create en 0xae81d2cc parcheada (una sola espera)
+754.88 52.68 getModelInfo(model/MEDIA, 0) -> 0
+764.71 62.51 MEDIADELAY: primera llamada a ObjMedia_Create, 4 s
+
+(228 s de invitado: el parche se aplica y la espera se toma, pero ya no llega ni onStarting ni FsysMount; sin parche llegaban a 65/66 s)
+
+== pbmedia5: primer intento, con un trampolin que se saltaba 'mov r5,r1' -> SEGV del invitado ==
+analysis/gui/g22/harness/live/pbmedia5/consola.log:IMEXIT im_s 139
+analysis/gui/g22/harness/live/pbmedia5/shim.log:95.51 32.32 MEDIADELAY: ObjMedia_Create en 0xae8ac2cc parcheada, 10 s de retardo
+analysis/gui/g22/harness/live/pbmedia5/shim.log:96.15 32.95 MEDIADELAY: ObjMedia_Create en 0xae8ac2cc parcheada, 10 s de retardo
+analysis/gui/g22/harness/live/pbmedia5/shim.log:96.16 32.97 MEDIADELAY: ObjMedia_Create en 0xae8ac2cc parcheada, 10 s de retardo
+analysis/gui/g22/harness/live/pbmedia5/shim.log:96.33 33.14 MEDIADELAY: ObjMedia_Create en 0xae8ac2cc parcheada, 10 s de retardo
+analysis/gui/g22/harness/live/pbmedia5/shim.log:96.42 33.22 MEDIADELAY: ObjMedia_Create en 0xae8ac2cc parcheada, 10 s de retardo
