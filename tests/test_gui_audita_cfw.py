@@ -187,3 +187,93 @@ def test_etapa_arranque_orquesta_overlay_y_comparacion(tmp_path: Path, monkeypat
     c2 = {x["id"]: x for x in checks2}
     assert c2["arranque.no_arrancado"]["ok"] is None and c2["arranque.no_arrancado"]["material"] is True
     assert A.veredicto(checks2) == "PARCIAL"  # falta de QEMU no es un fallo del CFW
+
+
+# ---------------------------------------------------------------- G22-CFW-ARRANQUE: acoplamiento WBI (nflasha5)
+class _Img:
+    """Doble de `e25_27.tpzl.TpzlImage`: solo lo que usa `analiza_wbi`."""
+
+    def __init__(self, entries: list[tuple[int, int]], datos: bytes = b"") -> None:
+        self.entries = tuple(entries)
+        self.data = datos
+
+
+SONY_ENTRIES = [(0x18, 0x1000), (0x1018, 0x2000), (0x3018, 0x800)]
+CFW_ENTRIES = [(0x18, 0x1000), (0x1018, 0x2010), (0x3028, 0x800)]  # el bloque 1 crece: el TOC se mueve
+
+
+def _sony5(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, datos: bytes = b"WBI1" + b"\x01" * 60) -> Path:
+    p = tmp_path / "nflasha5-sony"
+    p.write_bytes(datos)
+    monkeypatch.setenv("AUDITA_SONY_NFLASHA5", str(p))
+    return p
+
+
+def test_wbi_sin_nflasha5_en_el_paquete_es_ok(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Arranque en frío: el paquete no lleva instantánea, no hay acoplamiento que romper (G11 §11/§12)."""
+    _sony5(tmp_path, monkeypatch)
+    checks: list[dict] = []
+    r = A.analiza_wbi({"0700_part_image/dev/nflasha15": b"TPZL"}, _Img(SONY_ENTRIES), _Img(SONY_ENTRIES), checks)
+    assert r["miembro"] == "" and r["toc_movido"] is False
+    assert checks[0]["id"] == "contenedor.wbi_acoplamiento" and checks[0]["ok"] is True
+    assert "nflasha5" in checks[0]["detalle"]
+    assert A.veredicto(checks) == "OK"
+
+
+def test_wbi_de_sony_con_toc_igual_es_ok(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    sony5 = _sony5(tmp_path, monkeypatch)
+    miembros = {"0700_part_image/dev/nflasha5": sony5.read_bytes()}
+    checks: list[dict] = []
+    r = A.analiza_wbi(miembros, _Img(SONY_ENTRIES, b"X"), _Img(SONY_ENTRIES, b"X"), checks)
+    assert r["magic_ok"] is True and r["igual_sony"] is True and r["toc_movido"] is False
+    assert checks[0]["ok"] is True and checks[0]["aviso"] is False
+    assert A.veredicto(checks) == "OK"
+
+
+def test_wbi_de_sony_con_el_usr_recompuesto_es_fallo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """Puerta 1: `/usr` recompuesto (TOC movido) + WBI de Sony sin invalidar → FALLO con motivo."""
+    sony5 = _sony5(tmp_path, monkeypatch)
+    miembros = {"0700_part_image/dev/nflasha5": sony5.read_bytes()}
+    checks: list[dict] = []
+    r = A.analiza_wbi(miembros, _Img(CFW_ENTRIES, b"Y"), _Img(SONY_ENTRIES, b"X"), checks)
+    assert r["toc_movido"] is True and r["toc_primera"] == 1 and r["igual_sony"] is True
+    assert checks[0]["ok"] is False
+    assert "TOC movido" in checks[0]["detalle"] and "sin-wbi" in checks[0]["detalle"]
+    assert A.veredicto(checks) == "FALLO"
+
+
+def test_wbi_regenerado_con_toc_movido_no_se_puede_verificar(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _sony5(tmp_path, monkeypatch)
+    miembros = {"0700_part_image/dev/nflasha5": b"WBI1" + b"\x02" * 60}  # otro WBI: no es el de Sony
+    checks: list[dict] = []
+    r = A.analiza_wbi(miembros, _Img(CFW_ENTRIES, b"CFW"), _Img(SONY_ENTRIES, b"SONY"), checks)
+    assert r["igual_sony"] is False
+    assert checks[0]["ok"] is None and checks[0]["evidencia"] == "NO_VERIFICADO" and checks[0]["material"] is True
+    assert A.veredicto(checks) == "PARCIAL"  # ni OK falso ni FALLO inventado
+
+
+def test_wbi_de_sony_con_nflasha15_distinto_de_su_contenido_es_aviso(tmp_path: Path,
+                                                                     monkeypatch: pytest.MonkeyPatch) -> None:
+    """TOC igual (se puede reanudar), pero el contenido no es el de Sony: la caché de páginas puede discrepar."""
+    sony5 = _sony5(tmp_path, monkeypatch)
+    miembros = {"0700_part_image/dev/nflasha5": sony5.read_bytes()}
+    checks: list[dict] = []
+    A.analiza_wbi(miembros, _Img(SONY_ENTRIES, b"CFW"), _Img(SONY_ENTRIES, b"SONY"), checks)
+    assert checks[0]["ok"] is True and checks[0]["aviso"] is True
+    assert A.veredicto(checks) == "AVISO"
+
+
+def test_miembro_nflasha5_sin_magia_es_fallo(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _sony5(tmp_path, monkeypatch)
+    checks: list[dict] = []
+    A.analiza_wbi({"0700_part_image/dev/nflasha5": b"\0" * 64}, _Img(SONY_ENTRIES), _Img(SONY_ENTRIES), checks)
+    assert checks[0]["ok"] is False and "WBI1/WBI0" in checks[0]["detalle"]
+
+
+def test_wbi_sin_referencia_de_sony_queda_no_verificado(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("AUDITA_SONY_NFLASHA5", str(tmp_path / "no-existe"))
+    monkeypatch.setattr(A, "NFLASHA5_SONY", tmp_path / "tampoco-existe")
+    checks: list[dict] = []
+    A.analiza_wbi({"0700_part_image/dev/nflasha5": b"WBI1" + b"\0" * 60}, _Img(CFW_ENTRIES), _Img(SONY_ENTRIES), checks)
+    assert checks[0]["ok"] is None and checks[0]["material"] is True
+    assert A.veredicto(checks) == "PARCIAL"
