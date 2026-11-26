@@ -10,6 +10,7 @@ Evidencia de cada elemento (ver docs/gui/g22-emulador-uso.md § «Sensor, SD y g
 import datetime as dt
 import io
 import re
+import shutil
 from pathlib import Path
 
 from PIL import Image
@@ -101,3 +102,65 @@ def escribe_atomico(destino: Path, datos: bytes) -> None:
     tmp = destino.with_name(destino.name + ".tmp")
     tmp.write_bytes(datos)
     tmp.replace(destino)
+
+
+def ruta_segura(raiz: Path, rel: str) -> Path:
+    """Fichero de la SD a partir de su ruta relativa (`DCIM/100MSDCF/DSC00001.JPG`), sin salir de `raiz`."""
+    p = (raiz / rel).resolve()
+    if raiz.resolve() not in p.parents and p != raiz.resolve():
+        raise ValueError("ruta fuera de la SD")
+    return p
+
+
+def lista(raiz: Path) -> list[dict]:
+    """Contenido de la SD para la galería: fotos y clips con tamaño, fecha y si la extensión es de la cámara.
+
+    Orden: lo más nuevo primero (la cámara reproduce del último al primero). `media` = la galería puede mostrarlo.
+    """
+    if not raiz.is_dir():
+        return []
+    out = []
+    for f in raiz.rglob("*"):
+        if not f.is_file() or f.name.endswith((".tmp", ".ok")):
+            continue
+        out.append({"ruta": f.relative_to(raiz).as_posix(), "bytes": f.stat().st_size, "mtime": int(f.stat().st_mtime),
+                    "media": f.suffix.lower() in (".jpg", ".jpeg", ".arw", ".mp4", ".webm", ".mov", ".png")})
+    return sorted(out, key=lambda d: (d["mtime"], d["ruta"]), reverse=True)
+
+
+def borra(raiz: Path, rel: str) -> None:
+    f = ruta_segura(raiz, rel)
+    if not f.is_file():
+        raise ValueError("no existe en la SD")
+    f.unlink()
+    for d in (f.parent, f.parent.parent):  # deja de existir una carpeta vacía de la cámara (100MSDCF, DCIM)
+        if d != raiz.resolve() and d.is_dir() and not any(d.iterdir()) and d.name != "DCIM":
+            d.rmdir()
+
+
+def formatea(raiz: Path) -> int:
+    """«Formatear» de la cámara sobre la carpeta: borra el contenido y recrea la estructura base. Devuelve los ficheros borrados."""
+    n = 0
+    if raiz.is_dir():
+        for f in raiz.rglob("*"):
+            if f.is_file():
+                n += 1
+        shutil.rmtree(raiz)
+    for c in ("DCIM/100MSDCF", "PRIVATE/M4ROOT/CLIP", "PRIVATE/AVCHD"):
+        (raiz / c).mkdir(parents=True, exist_ok=True)
+    return n
+
+
+def importa(raiz: Path, nombre: str, datos: bytes) -> Path:
+    """Sube un fichero del anfitrión a la SD (arrastrar y soltar): una foto se numera como la cámara; el resto conserva su nombre."""
+    n, num = siguiente_foto(raiz)
+    if Path(nombre).suffix.lower() in (".jpg", ".jpeg"):
+        d = ruta_foto(raiz, n, num)
+        escribe_atomico(d, jpeg_con_exif(datos))
+    elif Path(nombre).suffix.lower() in (".arw", ".png", ".webp", ".bmp", ".gif"):
+        d = ruta_foto(raiz, n, num).with_suffix(Path(nombre).suffix.upper())
+        escribe_atomico(d, datos)
+    else:
+        d = raiz / "PRIVATE/M4ROOT/CLIP" / (Path(nombre).name or "clip.mp4")
+        escribe_atomico(d, datos)
+    return d

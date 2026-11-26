@@ -37,10 +37,12 @@ from PIL import Image
 
 HERE = Path(__file__).resolve().parent
 sys.path.insert(0, str(HERE))
+import captura
+import emu_config
 import isp_web
+import run
 import sd_emu
 import sd_image
-import run
 import sensor_web
 
 # Posición inicial del dial de modo (KEY_POS_MODE_DIAL 0x7025, índice físico 0x27) que el driver informa a InputService al activarse (se envía con el toActive: antes se perdía).
@@ -110,6 +112,7 @@ def pulsa(vm: "Vm", nombre: str, v: int) -> None:
         vm.tecla(k, v, i)
     elif v:
         vm.tecla(k, paso[0] & 0xFFFFFFFF, i)
+    vm.captura.tecla(nombre, v)  # la foto/clip los dispara la tecla de la cámara igual que el botón de la página (T4b)
 
 
 def rgba4444_png(w: int, h: int, raw: bytes) -> bytes:
@@ -195,6 +198,8 @@ class Vm:
         initrd, sello = self.dir / "initrd.gz", self.dir / "huella.txt"
         self.nvram_f = self.dir / "nvram.json"
         self.nvram = {int(k, 16): bytes.fromhex(v) for k, v in self.carga(self.nvram_f).items()}
+        # Foto y clip (G22-E/T4b): la tecla del disparador y la de MOVIE escriben en la SD como el botón de la página.
+        self.captura = captura.Captura(self.dir, lambda: emu_config.carga_config(Path(CONFIG["ruta"])) if CONFIG["ruta"] else emu_config.valida_config({}))
         actual = huella(work, pkg, shimenv, avcam_sha)
         if not sello.exists() or sello.read_text() != actual:  # cambió el shim, im.sh, run.py, SHIMENV u overlay: el estado ya no vale
             for f in (self.estado, initrd, sello):
@@ -489,7 +494,7 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
             self.wfile.write(cuerpo)
 
         def do_GET(self) -> None:
-            if sensor_web.maneja(self, "GET", self.path.partition("?")[0], b"", CONFIG["ruta"]):  # sensor, SD y grabación (T4)
+            if sensor_web.maneja(self, "GET", self.path, b"", CONFIG["ruta"]):  # sensor, SD y grabación (T4); con la consulta, la galería pide /sd/fichero?r=
                 return
             if isp_web.maneja(self, "GET", self.path, b"", vm):  # ISP emulado (T9)
                 return
@@ -501,6 +506,13 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
                 texto = f"{fase} · {vm.seq} fotogramas · {vm.fps:.1f} fps · último: {vm.coste}" if vm.seq else f"{fase}: esperando la primera pantalla…"
                 if vm.red.get("telnet"):
                     texto += f" · telnet 127.0.0.1:{vm.red['puerto']}"
+                c = vm.captura.estado()
+                if c["grabando"]:
+                    texto += f" · grabando clip {c['segundos']} s"
+                elif c["ultimo"]:
+                    texto += f" · último {c['ultimo']['tipo']}: {c['ultimo']['ruta']}"
+                if c["aviso"]:
+                    texto += f" · aviso: {c['aviso']}"
                 if vm.p.poll() is not None:
                     texto = f"QEMU terminó (código {vm.p.returncode})"
                 self.responde(json.dumps({"texto": texto, "fotogramas": vm.seq}).encode(), "application/json")
@@ -567,6 +579,7 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
             else:
                 self.send_error(404)
 
+    sensor_web.registra_captura(vm.captura)  # los puntos /captura/* y /sd/* comparten la captura de esta VM
     srv = ThreadingHTTPServer(("127.0.0.1", puerto), H)
     return srv
 
@@ -645,6 +658,8 @@ def main() -> None:
     try:
         srv.serve_forever()
     finally:
+        if vm.captura.grabando:  # un clip en curso se cierra y se guarda en la SD antes de parar
+            print(vm.captura.video_para(), flush=True)
         if vm.p.poll() is None:
             if vm.seq:  # solo hay estado válido si ya se pintó una pantalla
                 print(vm.guardar(), flush=True)
