@@ -175,6 +175,12 @@ versión** (como el bloque de EFCS): arma solo si `libObj+0x4bf136` es `f247 621
 `libObj+0x4bcc5a` es `4605` (`mov r5,r0`); si no, deja una traza `ZOOM: libObj distinta …` y no toca nada.
 No se emula ningún registro de Backup (§6).
 
+**Diagnóstico añadido (`GMIPROBE3=1`, 26-11-2026).** `viewManagerIf::getModelInfo` pasa a ser un envoltorio a
+mano (antes solo registro): si la petición falla y el nombre es `model/CAMERA`, la repite con `@M00B` —el
+mismo `ModelCamera` por su nombre corto— con la **misma** lista y filtro de la vista, y deja la traza
+`GMIPROBE3 … -> 0; @M00B -> …`. Sirvió para descartar que el fallo fuera de resolución de nombre (§8.2). Es
+solo diagnóstico: no cambia ninguna respuesta.
+
 Compilación y pruebas: `sh scripts/gui/harness/shim/build.sh SYSROOT analysis/gui/g22/harness/stage/cam/lib
 analysis/gui/g22/harness/overlay/cam/usr/lib/sonyshim.so` (SYSROOT = los dos `.deb` de `harness/dl`
 extraídos; en este equipo sin `dpkg-deb` se extraen con `bsdtar -xf … data.tar.xz` + `tar`). Pruebas:
@@ -197,6 +203,9 @@ pestaña tocada: **la ruta que §8 daba por imposible es esta** y no aparece el 
 
 - Las flechas **no** están invertidas en esta ruta (`abajo` baja el foco; comprobado por los píxeles y por
   el marco naranja de la fila).
+- La métrica del fotograma (fracción de **píxeles opacos**, la de la autoprueba) acompaña a la ruta:
+  pantalla de disparo **0,005** → menú/página/fila **1,000** → modal **1,000**; el cambio de página son
+  80 479 px distintos y el del foco 54 051 px, con el mismo fotograma de 70 513 B en frío y restaurado.
 - Cada tecla se manda **pulsación y suelta** (`POST /tecla {"k":"abajo","v":1}` y `v:0`): el driver descarta
   el evento repetido, y sin la suelta la pulsación siguiente se pierde.
 - **Menú desincronizado**: si el interruptor del shim (`menu_open`) queda al revés, MENU no hace nada y la
@@ -228,6 +237,12 @@ una línea `IssueCommandAsync cat=…` ni `ZOOM: …`, porque el zoom nunca sale
   `@M00F 4f -> 0`, `@M00B 30 -> 0`).
 - **No es una carrera**: con `E GMIRETRY=1` (20 reintentos × 50 ms) sigue en 0, y tampoco cambia en el
   arranque en frío.
+- **No es el nombre del modelo (medido y descartado)**: con `GMIPROBE3=1` el shim repite la misma petición
+  con el nombre corto del **mismo** modelo (`@M00B` es `ModelCamera`, medido por los `AttachInfoEvent` de la
+  vista de disparo en [`g22-avcam-puente`](g22-avcam-puente.md)), con la lista y el filtro de la vista:
+  `GMIPROBE3 model/CAMERA info 0xf -> 0; @M00B -> 0`. El alias no arregla nada: lo que falta es el **dato**,
+  no la resolución del nombre. (Y en la misma sesión los modelos de menú sí contestan: `requestModelExecute
+  @M00B 30`, `@M00F 4f`.)
 - **Medido también en la cámara de verdad**: no; esto es del arnés (la cámara responde su info 0xf). Es el
   pendiente ya abierto de la OSD (`ObjCamera` retenido en el modo LRM `0x60`, §5.18z¹³), no del zoom.
 

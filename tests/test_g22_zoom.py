@@ -179,6 +179,9 @@ def test_shim_emula_la_respuesta_de_objcamera_del_ajuste_de_zoom() -> None:
     assert "0x4a58b2 + 1" in src and "0x4a5836 + 1" in src and "0x4a5914 + 1" in src  # get/set/sync reales
     assert 'getenv("NOZOOM")' in src
     assert "*a == 0xf247 && *(a + 1) == 0x6214 && *b == 0x4605" in src  # guardia de versión: bytes de 3.21
+    # Diagnóstico que descartó que el fallo de la fila fuera de nombre de modelo (§8.2): prueba @M00B con la
+    # misma lista y filtro de la vista. Solo registro; no cambia la respuesta.
+    assert 'getenv("GMIPROBE3")' in src and 'r("@M00B", b, c, d)' in src
 
 
 def test_el_modelo_despacha_las_acciones_0x63_y_0x64() -> None:
