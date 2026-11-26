@@ -22,12 +22,13 @@ Service mode + `scripts/senser_backup_restore.py FILE SHA256` with your backup (
 the recompressed `nflasha3` did not follow the format the hardware decompressor reads (blocks starting mid-sector and a single 64 KiB record
 instead of 16 × 4 KiB). Physical confirmation is missing. The original 3.25 is not published.
 
-**3.25c** ([release](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental), [R45](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r45-firmware-325c-experimental.md))
+**3.25c** ([R45](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r45-firmware-325c-experimental.md))
 has the same features with `nflasha3` in Sony's format: 0 decompressor violations, 366/369 blocks identical to Sony's and 0 failures in the emulation
-of the real bootloader (3.25 fails on 361). **It should boot, but it has never been installed**, and its new BIONZ/Darwin code has only run in emulation.
+of the real bootloader (3.25 fails on 361). **It was installed as 3.27** (2026-11-03, [R51](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r51-respaldo-clave-nflasha0-nvram-326.md) §5):
+the camera boots and the selector works inside BIONZ, but the value was never seen in the packet sent to Darwin.
 Requirements: official firmware 3.21 (or 3.23/3.24), charged battery and an NVRAM backup; it does **not** help a camera that already installed the original 3.25.
-To go back to Sony firmware after 3.25c use **3.26** from the same release (3.24 is no longer accepted after a 3.25).
-If you prefer the tested path: **3.23 + layer 2 in RAM, without touching `nflasha3`.**
+After 3.27 the line went on: **3.30** (real electronic shutter), 3.35, 3.77 and the 3.93 series. No `.dat` files are published:
+they are built with the repository scripts ([page 4](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-4-Building-the-packages)).
 
 **That camera was recovered (2026-11-03, [R49](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r49-cierre-recuperacion-326.md), Spanish).** Over SWD, Loader3 was made to boot the factory updater by forcing a single CPU register, with no NAND write; the updater then installed stock **3.26** over USB. Method and limits: [15. SWD recovery](en-15-SWD-recovery-experimental). It requires opening the camera and soldering; this is a single case, not a guarantee. Other paths studied and not used: restoring `nflasha3` from a copy, or writing `\updater\mode` into `nflasha2` (Loader3 ignores block writes, R48 §2.1).
 

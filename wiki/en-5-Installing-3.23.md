@@ -16,6 +16,12 @@ pmca-console info          # must show version 3.23
 The mechanical shutter becomes **completely inactive**: it does not move on capture or re-cocking. The camera shoots silently and without errors.
 Without [layer 2](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-6-Layer-2-uniform-exposure) the exposure is **not uniform** (the bottom of the image gets more light): see [Results and limits](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-9-Results-and-limits).
 
+## After 3.23
+
+3.23 is the minimal stop. For the **electronic** shutter (not just the idle mechanical one) follow the **3.30–3.35** series and, for new
+features, the builds of the **3.93** series; they all install the same way and, to switch between builds sharing a version number, use
+`pmca-console firmware -f PACKAGE.dat --flash --confirm --reflash`. Current state and limits: [14](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-14-Current-state).
+
 ## Minimal test
 
 Take a normal shot and check: no shutter noise, full image (JPEG 6000×4000 / ARW 6024×4024), no error message and re-cocking in ~0.7–1.0 s.

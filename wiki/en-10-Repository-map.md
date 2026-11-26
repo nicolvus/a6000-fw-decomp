@@ -51,9 +51,9 @@ python3 scripts/knowledge/search.py text "concepto"  # search without re-reading
 ## Security and contributing
 
 - The repository code does not contain Sony firmware, `*.bin`/`*.elf`, RAW files or personal data (the serial number, the
-  personal email and `libmprctrl.so` were removed from history on 2026-10-31; see R7 in PENDIENTES). The ready-to-flash `.dat`
-  packages are published separately as GitHub Releases ([`fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24),
-  [`fw-3.25c-experimental`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental); not in the git tree), with their copyright note. Conventional Commits.
+  personal email and `libmprctrl.so` were removed from history on 2026-10-31; see R7 in PENDIENTES). Ready-to-flash `.dat`
+  packages are **not published** (neither in the git tree nor as releases): they are built with the repository scripts
+  ([page 4](https://github.com/nicolvus/a6000-fw-decomp/wiki/en-4-Building-the-packages)). Conventional Commits and the file order in [ORDER.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/ORDER.md).
 - Every camera test has a prior NVRAM backup and is logged; every task updates [PENDIENTES](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/PENDIENTES.md) in the same commit.
 
 How to contribute: [CONTRIBUTING.en.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/CONTRIBUTING.en.md).

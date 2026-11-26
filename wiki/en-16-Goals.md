@@ -4,11 +4,18 @@ Features wanted on the A6000, inherited from other Sony models and other brands,
 
 ≈ = Sony model from memory, unverified (web search only confirmed Silent Shooting → α7S, FTP → α9 and AF Track Sens → α99 II); may not be the first.
 
-## Under research and in progress
+CFW state: the **Silent** base has been on the camera since **3.30** (with the EFCS limit: black from 1/1000) and the **3.93** series
+adds Film Simulation, Picture Profile, Extra Fine and ISO as separate builds; `iso` leaves the camera in a boot loop
+([14](en-14-Current-state)).
 
-- ⬜ Silent Shooting ([state](en-14-Current-state)) — _Origin: Sony α7S_
-- ⬜ Picture Profiles PP1–PP10 — _Origin: ≈Sony α7R III_
-- ⬜ JPEG Extra Fine quality — _Origin: Sony α6300_
+## On the camera
+
+- ✅ Silent Shooting / electronic shutter ([state](en-14-Current-state)) — _Origin: Sony α7S_. Verified on the camera since 3.30;
+  with EFCS on, black from 1/1000 for a physical reason (R74/R83)
+- 🔧 Picture Profiles PP1–PP10 — _Origin: ≈Sony α7R III_. Menu, Fn lists and wheel selector in the `pp` build of the 3.93 series;
+  PP7–PP10 and S-Gamut fixed in the harness, still to be validated on the camera ([G107](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/gui/g107-causas-pp-ids-zonas.md))
+- 🔧 JPEG Extra Fine quality — _Origin: Sony α6300_. In the `exfine` build of the 3.93 series the camera reports no room on the card
+  and sticks (cause not isolated)
 
 ## Pending
 

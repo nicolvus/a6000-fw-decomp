@@ -5,10 +5,10 @@
 Guía para replicar, de principio a fin, el obturador **completamente silencioso** de la Sony A6000 (ILCE-6000) obtenido por
 ingeniería inversa del firmware 3.21: el microcontrolador Darwin deja de mover las cortinillas mecánicas y el sensor controla la exposición.
 
-> ⚠️ **Instalar firmware modificado puede inutilizar la cámara.** No hay recuperación independiente demostrada: un firmware posterior
-> (3.25, no publicado) dejó la cámara del autor sin arrancar. Su versión corregida, el
-> [3.25c](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental), debería funcionar pero es **experimental y
-> nunca se ha instalado** ([página 7](https://github.com/nicolvus/a6000-fw-decomp/wiki/7-Volver-atras-y-recuperacion)). Lee [Requisitos y riesgos](https://github.com/nicolvus/a6000-fw-decomp/wiki/1-Requisitos-y-riesgos) antes de empezar.
+> ⚠️ **Instalar firmware modificado puede inutilizar la cámara.** No hay recuperación independiente demostrada: el 3.25 (no publicado)
+> dejó la cámara del autor sin arrancar y solo se recuperó por SWD
+> ([página 15](https://github.com/nicolvus/a6000-fw-decomp/wiki/15-Recuperacion-SWD-experimental)). El 3.25 corregido se instaló como **3.27**
+> y desde el **3.30** la cámara dispara con obturador electrónico. Lee [Requisitos y riesgos](https://github.com/nicolvus/a6000-fw-decomp/wiki/1-Requisitos-y-riesgos) antes de empezar.
 
 ## Ruta de réplica
 
@@ -22,6 +22,22 @@ ingeniería inversa del firmware 3.21: el microcontrolador Darwin deja de mover 
 | 6 | Opcional: exposición uniforme por filas (parche en RAM) | [Capa 2](https://github.com/nicolvus/a6000-fw-decomp/wiki/6-Capa-2-exposicion-uniforme) |
 | 7 | Qué hacer si algo falla | [Volver atrás y recuperación](https://github.com/nicolvus/a6000-fw-decomp/wiki/7-Volver-atras-y-recuperacion) |
 
+### Después del 3.23
+
+El 3.23 es el **parche mínimo** que deja el obturador mecánico inactivo, y esta guía lo usa como ruta de réplica. La línea siguió así
+(estado y enlaces en [14. Estado actual](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual)):
+
+| Build | Qué añadió |
+|---|---|
+| 3.25 / 3.25c / 3.27 | Selector EFCS/Electronic en el firmware. El 3.25 bloqueó la cámara; el corregido se instaló como 3.27 |
+| 3.30 – 3.35 | Obturador **electrónico** real (envío en línea de `pkt[0x0e]` + compuerta de Darwin) y exposición calibrada |
+| 3.77 | Silent calibrado dentro del firmware: ya no hace falta el parche de RAM de la [capa 2](https://github.com/nicolvus/a6000-fw-decomp/wiki/6-Capa-2-exposicion-uniforme) |
+| 3.93 | Una build por función sobre la base Silent (Film Simulation, Picture Profile, Extra Fine, ISO) y el arnés de la interfaz |
+
+Límites vigentes: con **EFCS activo** la foto sale negra desde 1/1000 (causa física, también con el firmware de Sony) y los CFW
+**no reproducen vídeo** (FILM-PB-1). Los `.dat` no se publican en releases: se construyen con los scripts del repositorio
+([página 4](https://github.com/nicolvus/a6000-fw-decomp/wiki/4-Construir-los-paquetes)).
+
 Todos los scripts y apps, con su uso: [Herramientas](https://github.com/nicolvus/a6000-fw-decomp/wiki/12-Herramientas).
 
 Para entender el porqué: [Cómo funciona el parche](https://github.com/nicolvus/a6000-fw-decomp/wiki/8-Como-funciona-el-parche), [Resultados y límites](https://github.com/nicolvus/a6000-fw-decomp/wiki/9-Resultados-y-limites) y el
@@ -31,13 +47,13 @@ Para entender el porqué: [Cómo funciona el parche](https://github.com/nicolvus
 
 | Paso | Verificación |
 |---|---|
-| Construir los `.dat` 3.23 y 3.24 desde el firmware oficial | **Reproducido el 01-11-2026**: mismos SHA-256 que el release, 69/69 comprobaciones |
+| Construir los `.dat` 3.23 y 3.24 desde el firmware oficial | **Reproducido el 01-11-2026**: mismos SHA-256 que los de referencia, 69/69 comprobaciones |
 | Medir el guard sin flashear | Probado offline y con la cámara en MTP |
 | Backup y restauración de NVRAM | Probados en hardware (20-10-2026) |
 | Instalar el 3.23 | **Confirmado en cámara real** (T040/T041, 27-10-2026), desde un 3.22 intermedio |
 | Instalar el 3.23 desde un 3.21 directo | Solo verificado offline (el guard lo acepta); no instalado así |
 | Instalar el 3.24 | **Nunca instalado en una cámara real** |
-| Instalar el 3.25c | **Nunca instalado en una cámara real**; verificado offline (30/30 comprobaciones, emulación del cargador sin fallos) |
+| Instalar el 3.25c | **Instalado como 3.27** (03-11-2026): arranca; el selector no llegó a verse en el paquete enviado a Darwin ([R52](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/capture/e26-r52-prueba-fisica-selector-327.md)) |
 | Capa 2 (parche en RAM) | Probada en T050; escala absoluta con ±25 % de incertidumbre |
 | Instalar Tweak y RemoteShutter con las instrucciones de esta wiki | El autor ya los tenía instalados; los pasos escritos aquí vienen de la documentación y **no se han vuelto a ejecutar desde cero** |
 | Capa 2 sin PC (desde la cámara) | Solo idea, sin implementar |
@@ -46,5 +62,7 @@ Glosario de términos y etiquetas: [Glosario](https://github.com/nicolvus/a6000-
 
 ## Estado en una línea
 
-3.23 instalado y confirmado en cámara real (27-10-2026): dispara en silencio y sin error. El 3.24 (vuelta al Darwin oficial) solo está
-verificado offline y nunca se instaló en una cámara real. El 3.25c está publicado como experimental y nunca se ha instalado.
+Obturador **electrónico** funcionando desde el **3.30** y Silent calibrado en el firmware desde el **3.77**; el 3.23 sigue siendo el
+parche mínimo confirmado en cámara real (27-10-2026). La cámara del autor lleva un CFW de la serie **3.93/4.0x** y con él **no reproduce
+vídeo** (FILM-PB-1); la causa probable es el ajuste PAL/NTSC frente a la cadencia de los clips. El 3.24 (vuelta al Darwin oficial) solo está
+verificado offline.

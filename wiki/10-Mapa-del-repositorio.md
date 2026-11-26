@@ -51,8 +51,8 @@ python3 scripts/knowledge/search.py text "concepto"  # buscar sin releer el repo
 
 - El código del repositorio no sube firmware de Sony, `*.bin`/`*.elf`, RAW ni datos personales (el número de serie, el
   correo personal y `libmprctrl.so` se borraron del historial el 31-10-2026; ver R7 en PENDIENTES). Los paquetes `.dat`
-  listos para flashear se publican aparte, como GitHub Releases ([`fw-3.23-3.24`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24),
-  [`fw-3.25c-experimental`](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental); no en el árbol de git), con su nota de copyright. Commits convencionales.
+  listos para flashear **no se publican** (ni en el árbol de git ni como releases): se construyen con los scripts del repositorio
+  ([página 4](https://github.com/nicolvus/a6000-fw-decomp/wiki/4-Construir-los-paquetes)). Commits convencionales y el orden de ficheros de [ORDEN.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/ORDEN.md).
 - Toda prueba en cámara lleva backup NVRAM previo y se anota en el registro; toda tarea actualiza [PENDIENTES](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/PENDIENTES.md) en el mismo commit.
 
 Cómo contribuir: [CONTRIBUTING.md](https://github.com/nicolvus/a6000-fw-decomp/blob/main/CONTRIBUTING.md).

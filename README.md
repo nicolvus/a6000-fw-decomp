@@ -66,6 +66,7 @@ entre builds del mismo número).
 | [docs/PENDIENTES.md](docs/PENDIENTES.md) | Tareas abiertas, bloqueadas y cerradas (única fuente) |
 | [docs/INDEX.md](docs/INDEX.md) | Informes por subsistema; los informes están en [`docs/capture/`](docs/capture/) y en [`reports/`](reports/) |
 | [FUNCIONES.md](FUNCIONES.md) | Lista completa de funciones objetivo |
+| [ORDEN.md](ORDEN.md) | Reglas de orden del repositorio (vinculantes, con comprobador) |
 
 Los informes de investigación y los comentarios del código están en español; la wiki y este README, en español e inglés.
 

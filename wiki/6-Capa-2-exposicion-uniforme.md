@@ -49,8 +49,9 @@ es accesible al usuario de la app. **Nada de esto está probado en la cámara co
 - **Interfaz:** un interruptor «uniforme» y la velocidad actual bastan: la app calcula `r5 = 4219 − µs/15,2` y, si `r5 < 10` (T > ≈ 64 ms), dispara normal.
 - **Condiciones de seguridad:** `ShutMode 0` vale para todas las llamadas mientras esté parcheado (Live View ya lo usa); AF, vídeo y ráfagas largas no están probados;
   la función debe estar **desactivada por defecto** y revertir siempre en un bloque `finally`.
-- **Persistir es experimental:** el 3.25 lo llevaba a firmware y bloqueó la cámara del autor por un error de formato de `nflasha3`; el
-  [3.25c](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) lo corrige pero nunca se ha instalado. La vía probada sigue siendo el parche en RAM.
+- **Persistir ya está hecho, y la capa 2 queda como respaldo:** el firmware lo lleva desde el **3.30** (obturador electrónico real) y el
+  **3.77** lo calibra (1/1250 a 1/50) sin parche de RAM. El 3.25 intentó esa vía y bloqueó la cámara por un error de formato de `nflasha3`;
+  el corregido se instaló como 3.27 y la línea continuó. Usa el parche en RAM solo si te quedas en 3.23.
 
 ## Límites
 

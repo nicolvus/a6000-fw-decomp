@@ -17,9 +17,10 @@
 - **No independent recovery.** Darwin also controls power; a Darwin or BIONZ that does not boot has no proven way back over USB.
 - **3.24 was never installed on a real camera.** It only works if the camera still has access to the updater and is on 3.23.
 - **Offline verification does not guarantee booting.** 3.25 passed every offline check and still bricked the author's camera.
-  3.25c adds the checks that would have caught that failure (decompressor format and emulation of the real bootloader), but it is still untested on a camera.
+  3.25c adds the checks that would have caught that failure (decompressor format and emulation of the real bootloader) and was installed as **3.27**, which boots; the electronic shutter was never validated in that build.
 - **Untested scenarios with 3.23:** Darwin operation 5 (P40/P41=3) and P4B/P4C are still active; their physical effect was not measured. Neither were flash, video and Live View with the patches active.
-- The updater only accepts versions **strictly higher** than the installed one: you cannot "downgrade".
+- The updater only accepts versions **strictly higher** than the installed one: you cannot "downgrade"; to switch between builds sharing a number use `pmca-console firmware --reflash`.
+- **Video does not play** with CFWs of the 3.93/4.0x series (FILM-PB-1); if you need it, stay on stock 3.21 or on 3.23.
 
 ## Project safety rules
 

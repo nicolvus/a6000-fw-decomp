@@ -4,10 +4,18 @@ Funciones que se quieren en la A6000, heredadas de otros modelos Sony y de otras
 
 ≈ = modelo de Sony según mi memoria, sin verificar (la búsqueda web solo confirmó Silent Shooting → α7S, FTP → α9 y AF Track Sens → α99 II); puede no ser el primero.
 
-## En investigación y ejecución
+Estado del CFW: la base **Silent** está en la cámara desde el **3.30** (con el límite de EFCS: negro desde 1/1000) y la serie **3.93**
+añade Film Simulation, Picture Profile, Extra Fine e ISO en builds separadas; `iso` deja la cámara en bucle de arranque
+([14](14-Estado-actual)).
 
-- ⬜ Silent Shooting ([estado](14-Estado-actual)) — _Origen: Sony α7S_
-- ⬜ Picture Profiles PP1–PP10 — _Origen: ≈Sony α7R III_
+## En la cámara
+
+- ✅ Silent Shooting / obturador electrónico ([estado](14-Estado-actual)) — _Origen: Sony α7S_. Verificado en cámara desde el 3.30;
+  con EFCS activo, negro desde 1/1000 por causa física (R74/R83)
+- 🔧 Picture Profiles PP1–PP10 — _Origen: ≈Sony α7R III_. Menú, listas de Fn y selector en la rueda en la build `pp` de la serie 3.93;
+  PP7–PP10 y S-Gamut corregidos en el arnés, pendiente de validar en cámara ([G107](https://github.com/nicolvus/a6000-fw-decomp/blob/main/docs/gui/g107-causas-pp-ids-zonas.md))
+
+## En investigación y ejecución
 
 ## Pendientes
 

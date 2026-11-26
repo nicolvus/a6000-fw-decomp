@@ -16,6 +16,12 @@ pmca-console info          # debe mostrar la versión 3.23
 El obturador mecánico queda **completamente inactivo**: no se mueve en captura ni en rearme. La cámara dispara en silencio y sin error.
 Sin la [capa 2](https://github.com/nicolvus/a6000-fw-decomp/wiki/6-Capa-2-exposicion-uniforme) la exposición **no es uniforme** (la parte inferior de la imagen recibe más luz): ver [Resultados y límites](https://github.com/nicolvus/a6000-fw-decomp/wiki/9-Resultados-y-limites).
 
+## Después del 3.23
+
+El 3.23 es la parada mínima. Si quieres el obturador **electrónico** (no solo el mecánico inactivo) sigue la serie **3.30–3.35** y,
+para las funciones nuevas, las builds de la serie **3.93**; todas se instalan igual y, para cambiar entre builds del mismo número, con
+`pmca-console firmware -f PAQUETE.dat --flash --confirm --reflash`. Estado y límites vigentes: [14](https://github.com/nicolvus/a6000-fw-decomp/wiki/14-Estado-actual).
+
 ## Prueba mínima
 
 Haz un disparo normal y comprueba: sin ruido de obturador, imagen completa (JPEG 6000×4000 / ARW 6024×4024), sin mensaje de error y rearme de ~0,7–1,0 s.

@@ -49,8 +49,9 @@ is accessible to the app user. **None of this has been tested on the full camera
 - **Interface:** a "uniform" switch and the current shutter speed are enough: the app computes `r5 = 4219 − µs/15.2` and, if `r5 < 10` (T > ≈ 64 ms), shoots normally.
 - **Safety conditions:** `ShutMode 0` applies to every call while patched (Live View already uses it); AF, video and long bursts are untested;
   the feature must be **off by default** and always revert in a `finally` block.
-- **Making it persistent is experimental:** 3.25 put it into firmware and bricked the author's camera because of an `nflasha3` format error;
-  [3.25c](https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental) fixes that but has never been installed. The tested path is still the RAM patch.
+- **Making it persistent is done, and layer 2 remains a fallback:** firmware has carried it since **3.30** (real electronic shutter) and
+  **3.77** calibrates it (1/1250 to 1/50) without a RAM patch. 3.25 tried that route and bricked the camera over an `nflasha3` format error;
+  the fixed build was installed as 3.27 and the line went on. Use the RAM patch only if you stay on 3.23.
 
 ## Limits
 

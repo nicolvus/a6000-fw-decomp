@@ -28,7 +28,7 @@
 | **`ShutMode`** | BIONZ register (`0x836d6fb6`) that selects the shutter mode; the patch sets it to 0 |
 | **`r5`** | Sensor exposure parameter (`0x836d7000`); (4219 − `r5`) × 15.2 µs is the exposure |
 | **Watchdog** | `sh` process on the camera that reverts the RAM patch if the PC does not answer within 25 s |
-| **3.25c** | 3.25 rebuilt with `nflasha3` in Sony's exact format; experimental, never installed |
+| **3.25c** | 3.25 rebuilt with `nflasha3` in Sony's exact format; it was installed as 3.27 |
 
 ## Report labels
 
