@@ -49,6 +49,7 @@ import argparse
 import hashlib
 import os
 import re
+import shutil
 import socket
 import struct
 import subprocess
@@ -67,7 +68,7 @@ LIBDIR321 = os.path.join(
 LIBMPR_SHA256 = "9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30"
 LIBOBJ_CFW = os.path.join(RAIZ, "build/cfw_func393/pp/files/lib/libObj.so")
 
-HELPER_REMOTO = "/tmp/filmpb1bp"
+HELPER_REMOTO = "/tmp/filmpb1bp"      # /tmp del sistema Linux de la cámara
 LOG_REMOTO = "/tmp/filmpb1.log"
 
 COD_OK, COD_LOCAL, COD_SIN_CAMARA, COD_HASH, COD_SIN_GOLPE = 0, 2, 3, 4, 5
@@ -90,6 +91,8 @@ PUNTOS_BASE = (
           "entrada de la traducción de error interna→MPR llamada tras PbStart (0x437CFC) o por su precondición (0x437C7E)"),
 )
 PUNTOS_LLAMADAS = (
+    Punto("E", 0x437BC0, "sub sp, #8",
+          "entrada del manejador de PlayMovie: si no dispara, el 0x1A no sale de aquí"),
     Punto("C1", 0x437C7E, "bl #0x7111b0",
           "llamada a la traducción desde la PRECONDICIÓN (FUN_00457DA8 != 0), sin llegar a PbStart"),
     Punto("C2", 0x437CFC, "bl #0x7111b0",
@@ -143,7 +146,7 @@ static long sy4(long n, long a, long b, long c, long d) { return sc4(n, a, b, c,
 #define SIGTRAP 5
 #define SIGSTOP 19
 #define UDF 0xde00
-#define MAXT 128
+#define MAXT 256
 #define MAXP 6
 
 static long tid[MAXT];
@@ -187,19 +190,20 @@ static long now_ms(void) { long tv[2]; sy2(SYS_gettimeofday, (long)tv, 0); retur
 static int bad(long r) { return (ulong)r > 0xfffff000UL; }
 static long err(long r) { return bad(r) ? -r : 0; }
 
+/* ARM: PEEKTEXT devuelve 0 y escribe el dato en *data (generic_ptrace_peekdata);
+ * POKETEXT lleva el valor en data. Con data=0 el kernel da -EFAULT. */
 static int get_hw(long t, ulong a, ushort *out) {
-    long w = sy4(SYS_ptrace, PT_PEEKTEXT, t, (long)(a & ~3UL), 0);
-    if (bad(w)) return -1;
-    *out = (ushort)((a & 2) ? (((ulong)w >> 16) & 0xffffUL) : ((ulong)w & 0xffffUL));
+    ulong w = 0;
+    long r = sy4(SYS_ptrace, PT_PEEKTEXT, t, (long)(a & ~3UL), (long)&w);
+    if (bad(r)) { long e = err(r); return (int)(e ? e : -1); }
+    *out = (ushort)((a & 2) ? ((w >> 16) & 0xffffUL) : (w & 0xffffUL));
     return 0;
 }
 static int set_hw(long t, ulong a, ushort v) {
-    ulong aw = a & ~3UL;
-    long w = sy4(SYS_ptrace, PT_PEEKTEXT, t, (long)aw, 0);
-    ulong nw;
-    if (bad(w)) return -1;
-    nw = (a & 2) ? (((ulong)w & 0xffffUL) | ((ulong)v << 16)) : (((ulong)w & 0xffff0000UL) | (ulong)v);
-    return bad(sy4(SYS_ptrace, PT_POKETEXT, t, (long)aw, (long)nw)) ? -1 : 0;
+    ulong aw = a & ~3UL, w = 0;
+    if (bad(sy4(SYS_ptrace, PT_PEEKTEXT, t, (long)aw, (long)&w))) return -1;
+    w = (a & 2) ? ((w & 0xffffUL) | ((ulong)v << 16)) : ((w & 0xffff0000UL) | (ulong)v);
+    return bad(sy4(SYS_ptrace, PT_POKETEXT, t, (long)aw, (long)w)) ? -1 : 0;
 }
 static int vivos(void) {
     int i, n = 0;
@@ -287,6 +291,9 @@ int main_c(long *sp) {
             p = putkv(obuf, "X tid=", (ulong)tid[i]); p = putkv(p, " err=", (ulong)err(r)); *p++ = '\n'; emit(p);
             if (err(r) != ESRCH) fallo = 1;
             tid[i] = -1;
+        } else {
+            /* sin recoger el SIGSTOP, PEEK/POKE devuelve -1 (leido=0x0 en la 1ª prueba) */
+            if (bad(sy4(SYS_wait4, tid[i], (long)&st, WALL, 0))) { p = putkv(obuf, "X wait tid=", (ulong)tid[i]); *p++ = '\n'; emit(p); }
         }
     }
     if (fallo || vivos() == 0) {
@@ -297,11 +304,13 @@ int main_c(long *sp) {
     left = 0;
     for (i = 0; i < npt; i++) {
         ushort hw = 0;
-        if (get_hw(tid[0], pt[i].addr, &hw) == 0 && hw == pt[i].expect && set_hw(tid[0], pt[i].addr, UDF) == 0) {
+        int gr = get_hw(tid[0], pt[i].addr, &hw);
+        if (gr == 0 && hw == pt[i].expect && set_hw(tid[0], pt[i].addr, UDF) == 0) {
             pt[i].orig = hw; pt[i].ok = 1; left++;
         } else {
             p = puts_(obuf, "X i="); p = puthex(p, (ulong)i); p = putkv(p, " addr=", pt[i].addr);
             p = putkv(p, " leido=", (ulong)hw); p = putkv(p, " esperado=", (ulong)pt[i].expect);
+            p = putkv(p, " err=", (ulong)(gr < 0 ? -gr : 0));
             *p++ = '\n'; emit(p);
         }
     }
@@ -469,7 +478,7 @@ class Camara:
     def mem(self, pid: int, addr: int, n: int = 16) -> bytes:
         """n bytes de /proc/PID/mem con dd + hd de toybox (el busybox no trae od/hexdump)."""
         self.lee(f"dd if=/proc/{pid}/mem bs=1 skip={addr} count={n} of=/android/dev/fpb1 2>/dev/null", timeout=30)
-        out = self.lee("chroot /android /system/bin/hd /android/dev/fpb1", timeout=30)
+        out = self.lee("chroot /android /system/bin/hd /dev/fpb1", timeout=30)
         self.lee("rm -f /android/dev/fpb1")
         datos = bytearray()
         for ln in out.splitlines():
@@ -523,7 +532,7 @@ class CamaraSimulada(Camara):
             return self.maps_txt
         if cmd.startswith("ls /proc/"):
             return "\n".join(str(t) for t in self.tids)
-        if cmd.startswith("cat /tmp/filmpb1.log"):
+        if cmd.startswith("cat " + LOG_REMOTO):
             return self.log_forzado
         raise ErrorLocal(f"simulador: orden no prevista «{cmd}»")
 
@@ -630,16 +639,34 @@ def hilos(cam: Camara, pid: int) -> list[int]:
     out = cam.lee(f"ls /proc/{pid}/task")
     tids = sorted({int(x) for x in re.findall(r"\b(\d{1,6})\b", out)} - {pid})
     lista = [pid] + tids
-    if len(lista) > 127:
+    if len(lista) > 255:
         say(f"   aviso: {len(lista)} hilos; se trazan los 127 primeros")
-        lista = lista[:127]
+        lista = lista[:255]
     return lista
+
+
+def _adb() -> str:
+    """adb del sistema o el de ~/.local (el de apt no está instalado en este host)."""
+    for c in (os.environ.get("ADB", ""), shutil.which("adb") or "",
+              os.path.expanduser("~/.local/platform-tools/adb")):
+        if c and os.access(c, os.X_OK):
+            return c
+    return ""
 
 
 def sube_helper(cam: Camara, datos: bytes) -> None:
     if cam.simulada:
         say(f"   [simulado] se subirían {len(datos)} B en {(len(datos) + 95) // 96} trozos de 96 B")
         return
+    adb = _adb()
+    if adb:
+        r = subprocess.run([adb, "-s", f"{cam.host}:5555", "push", "/tmp/filmpb1bp",
+                            "/data/local/tmp/filmpb1bp"], capture_output=True, text=True, check=False)
+        if r.returncode == 0:
+            cam.escribe(f"cp /android/data/local/tmp/filmpb1bp {HELPER_REMOTO}; chmod 755 {HELPER_REMOTO}")
+            say(f"   auxiliar subido por adb push → cp a {HELPER_REMOTO} ({len(datos)} B)")
+            return
+        say(f"   adb push no sirvió ({r.stderr.strip()[:80]}); se sube por telnet")
     cam.escribe(f": > {HELPER_REMOTO}")
     for i in range(0, len(datos), 96):
         esc = "".join(f"\\0{b:03o}" for b in datos[i:i + 96])
@@ -663,7 +690,12 @@ def restaura_y_verifica(cam: Camara, pid: int, puntos, direcciones, ventanas) ->
     sano = True
     for p in puntos:
         d = direcciones[p.clave]
-        ahora = lee_mem(cam, pid, d)
+        try:
+            ahora = lee_mem(cam, pid, d)
+        except SinCamara as err_lectura:
+            say(f"   {p.clave:<4} 0x{d:08X} no se pudo leer ({err_lectura}) → ¿im.elf cambió de PID?")
+            sano = False
+            continue
         if ahora == ventanas[p.clave]:
             say(f"   {p.clave:<4} 0x{d:08X} intacto")
             continue
@@ -700,30 +732,39 @@ def interpreta(evs: list[dict]) -> tuple[str, str, int]:
                 ("ningún punto se ejecutó: o no se reprodujo el vídeo durante la ventana armada, o el "
                 "manejador 0x437BC0 no llegó a esas ramas. Se puede repetir con --secs mayor."),
                 COD_SIN_GOLPE)
-    orden = " → ".join(e["punto"].clave for e in evs)
-    pr = evs[0]["punto"]
-    if pr.clave == "A":
+    claves = [e["punto"].clave for e in evs]
+    orden = " → ".join(claves)
+    if "A" in claves:
         return ("GUARDA A · capacidades/«dsm»  ⇒ H1 (estado de arranque, WBI/nflasha5)",
                 (f"orden de impacto: {orden}. El 0x1A es el de la guarda A: una capacidad exigida por el "
                 "bitmap [core+0xDB8] está deshabilitada. Contrastar con «Recuperar BD imág.» y con el "
                 "3.21 oficial (E2/E3 del informe de auditoría)."), COD_OK)
-    if pr.clave == "B":
+    if "B" in claves:
         return ("GUARDA B · contenido no soportado  ⇒ H2 (contenido / base de datos de imágenes)",
                 (f"orden de impacto: {orden}. El 0x1A es el de «Detect UnSupported Content»: el contenido "
                 "no está soportado para la entidad (catálogo/entrada de la tarjeta). Contrastar con "
                 "«Recuperar BD imág.» antes de tocar el firmware."), COD_OK)
-    if pr.clave in ("T", "C1", "C2"):
-        sitio = ""
-        if pr.clave == "T" and evs[0].get("lr"):
-            lr = int(evs[0]["lr"], 16)
+    if "C2" in claves:
+        return ("MOTOR · fallo de MoviePlayerIf::PbStart (bl 0x437CFC)",
+                (f"orden de impacto: {orden}. Se llegó a PbStart y devolvió error: el 0x1A es la "
+                "traducción de ese error interno. Mirar el motor y el clip."), COD_OK)
+    if "C1" in claves:
+        return ("PRECONDICIÓN del manejador (bl 0x437C7E) sin llegar a PbStart",
+                (f"orden de impacto: {orden}. El 0x1A sale de FUN_00457DA8 != 0, antes del motor."), COD_OK)
+    sitio = ""
+    for e in evs:
+        if e["punto"].clave == "T" and e.get("lr"):
+            lr = int(e["lr"], 16) & ~1
             for va, nombre in LLAMADAS_CONOCIDAS.items():
                 if lr - 4 == va:
-                    sitio = f"; lr={evs[0]['lr']} ⇒ llamada desde 0x{va:08x} ({nombre})"
-        return ("MOTOR · MoviePlayerIf::PbStart (traducción de error, 0x7111B0)",
-                (f"orden de impacto: {orden}. El 0x1A sale de la traducción de un error interno de "
-                f"PbStart (seis sitios de 0x7111B0 devuelven 0x1A){sitio}. Mirar el motor y el clip, "
-                "no las guardas."), COD_OK)
-    return ("NO CONCLUYENTE", f"orden de impacto: {orden}", COD_SIN_GOLPE)
+                    sitio = f"; lr={e['lr']} ⇒ llamada desde 0x{va:08x} ({nombre})"
+    if "E" in claves:
+        return ("MANEJADOR EJECUTADO · entrada 0x437BC0 (y ninguna guarda: el 0x1A sale de otra rama)" + sitio,
+                (f"orden de impacto: {orden}. El manejador sí corre, pero ni la guarda A, ni la B, ni las "
+                 "llamadas a la traducción dispararon."), COD_OK)
+    return ("MOTOR · MoviePlayerIf::PbStart (traducción de error, 0x7111B0)" + sitio,
+            (f"orden de impacto: {orden}. El 0x1A sale de la traducción de un error interno de "
+             "PbStart (seis sitios de 0x7111B0 devuelven 0x1A), sin pasar por las guardas."), COD_OK)
 
 
 # ---------------------------------------------------------------- modos
@@ -819,7 +860,7 @@ def ejecuta(args) -> int:
     say(f"   se lanza: {orden}")
     say("   AHORA reproduce el vídeo en la cámara (el clip del error «No se puede visualizar»).")
     cam.escribe(orden)
-    vistos, salida = 0, ""
+    vistos, salida, acumuladas = 0, "", []
     t0 = time.time()
     while time.time() - t0 < args.secs + 20:
         time.sleep(1.0)
@@ -827,25 +868,26 @@ def ejecuta(args) -> int:
         lineas = [ln for ln in txt.splitlines() if ln.strip()]
         for ln in lineas[vistos:]:
             say("   > " + ln)
+            acumuladas.append(ln)
         vistos = len(lineas)
-        salida = "\n".join(lineas)
+        salida = "\n".join(acumuladas)   # acumula: una lectura vacía al final no borra los golpes
         if any(ln.startswith("E ") for ln in lineas):
             break
     cam.escribe("killall filmpb1bp 2>/dev/null")
     sano = restaura_y_verifica(cam, pid, activos, dir_mpr, ventanas)
-    cam.escribe(f"rm -f {HELPER_REMOTO} {LOG_REMOTO}")
+    cam.escribe(f"rm -f {HELPER_REMOTO}")   # el registro se conserva para releerlo
 
     evs, notas = parsea_eventos(salida, activos)
     veredicto, detalle, codigo = interpreta(evs)
     say("")
     say("resultado")
-    say(f"   productores que dispararon: {[e['punto'].clave for e in evs] or 'ninguno'}")
+    say(f"   productores que dispararon: {[ev['punto'].clave for ev in evs] or 'ninguno'}")
     if evs:
-        for n, e in enumerate(evs, 1):
-            say(f"   {n}º  {e['punto'].clave}  0x{e['punto'].va:08X}  ms={e['ms']} tid={e['tid']} pc={e['pc']} "
-                f"lr={e['lr']} r0={e['r0']} r1={e['r1']}")
-    for n in notas:
-        say(f"   nota {n}")
+        for n, ev in enumerate(evs, 1):
+            say(f"   {n}º  {ev['punto'].clave}  0x{ev['punto'].va:08X}  ms={ev['ms']} tid={ev['tid']} "
+                f"pc={ev['pc']} lr={ev['lr']} r0={ev['r0']} r1={ev['r1']}")
+    for nota in notas:
+        say(f"   nota {nota}")
     say(f"   código en memoria: {'restaurado' if sano else 'NO restaurado (revisar X/R arriba)'}")
     say("")
     say(f"VEREDICTO: {veredicto}")

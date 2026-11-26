@@ -77,7 +77,7 @@ def u32(mem: dict[int, int], addr: int) -> int:
 def lee_peek(texto: str) -> dict[int, int]:
     """Memoria de la salida de `ptcall peek`: líneas `0x82df9000: 00 40 88 8f`."""
     mem: dict[int, int] = {}
-    for m in re.finditer(r"(?m)^\s*(0x[0-9a-fA-F]{8}):\s*((?:[0-9a-fA-F]{2}\s*)*)$", texto):
+    for m in re.finditer(r"(?m)^\s*(0x[0-9a-fA-F]{1,8}):\s*((?:[0-9a-fA-F]{2}\s*)*)$", texto):
         base = int(m.group(1), 16)
         for i, b in enumerate(m.group(2).split()):
             mem[base + i] = int(b, 16)
@@ -132,9 +132,15 @@ class Camara:
 
     def base_libmpr(self, pid: int) -> int:
         maps = f"/proc/{pid}/maps"
-        cmd = (f"awk '/libmpr\\.so/ && /r-xp/ {{print $1; exit}}' {maps} 2>/dev/null; "
-               f"grep -aF libmpr.so {maps} 2>/dev/null | grep -aF r-xp | cut -d' ' -f1 | cut -d- -f1")
-        m = re.search(r"\b([0-9a-fA-F]{8})\b", self.sh(cmd))
+        # el shell del Tweak no trae awk/cut/head: sólo grep y el parseo aquí
+        out = self.sh(f"grep -aF libmpr.so {maps} 2>/dev/null")
+        m = None
+        for ln in out.splitlines():
+            if "r-xp" in ln:
+                m = re.match(r"\s*([0-9a-fA-F]{8})-", ln)
+                if m:
+                    break
+                m = None
         if not m:
             raise Fallo(f"libmpr.so no está mapeado en {pid} (¿root?): falta /proc/{pid}/maps")
         return int(m.group(1), 16)
@@ -155,6 +161,50 @@ class Camara:
         if "poke ok" not in out:
             raise Fallo(f"ptcall poke falló en {addr:#x}: {out.strip()[:300]}")
 
+    # -- memoria que ptrace no alcanza (mapeos de /dev/mem: el anillo del monitor) -----------
+    def fisica_de(self, pid: int, addr: int) -> int | None:
+        """Física de `addr` si cae en un mapeo de /dev/mem, o None."""
+        out = self.sh(f"grep -aF /dev/mem /proc/{pid}/maps 2>/dev/null")
+        for ln in out.splitlines():
+            m = re.match(r"([0-9a-f]{8})-([0-9a-f]{8})\s+\S{4}\s+([0-9a-f]+)\s+\S+\s+\d+\s+/dev/mem",
+                         ln.strip())
+            if m and int(m.group(1), 16) <= addr < int(m.group(2), 16):
+                return int(m.group(3), 16) + (addr - int(m.group(1), 16))
+        return None
+
+    def peek_mem(self, pid: int, addr: int, n: int) -> dict[int, int]:
+        """peek() normal, salvo si cae en /dev/mem, donde ptrace da EFAULT: se lee por dd."""
+        fis = self.fisica_de(pid, addr)
+        if fis is None:
+            return self.peek(pid, addr, n)
+        self.sh(f"dd if=/dev/mem bs=1 skip={fis} count={n} of=/android/dev/fbmrw.bin 2>/dev/null")
+        out = self.sh("chroot /android /system/bin/hd /dev/fbmrw.bin 2>/dev/null")
+        mem: dict[int, int] = {}
+        for ln in out.splitlines():
+            m = re.match(r"\s*([0-9a-fA-F]{8}):(.*)$", ln)
+            if not m:
+                continue
+            off = int(m.group(1), 16)
+            # el hd añade columna ASCII: parar en el primer token que no sea un byte hex
+            for i, tok in enumerate(m.group(2).split()):
+                if len(tok) != 2 or any(c not in "0123456789abcdefABCDEF" for c in tok):
+                    break
+                mem[addr + off + i] = int(tok, 16)
+        if not mem:
+            raise Fallo(f"no pude leer {n} B de la física {fis:#x} (addr {addr:#x}): {out.strip()[:200]}")
+        return mem
+
+    def poke_mem(self, pid: int, addr: int, datos: bytes) -> None:
+        fis = self.fisica_de(pid, addr)
+        if fis is None:
+            return self.poke(pid, addr, datos)
+        esc = "".join(f"\\0{b:03o}" for b in datos)
+        out = self.sh(f"printf '{esc}' | dd of=/dev/mem bs=1 seek={fis} conv=notrunc 2>&1")
+        if "records" in out:
+            m = re.search(r"(\d+)\+0 records out", out)
+            if m and int(m.group(1)) != len(datos):
+                raise Fallo(f"dd escribió {m.group(1)} de {len(datos)} B en /dev/mem {fis:#x}")
+
     # -- anillo ------------------------------------------------------------------------------
     def anillo(self, pid: int, base: int) -> tuple[int, int, int]:
         """(X, A, B) del anillo del monitor EX-PC."""
@@ -162,7 +212,7 @@ class Camara:
         x = u32(self.peek(pid, d, 4), d)
         if x == 0:
             raise Fallo(f"el descriptor {d:#x} vale 0: el monitor EX-PC no ha arrancado")
-        hdr = self.peek(pid, x, 8)
+        hdr = self.peek_mem(pid, x, 8)
         a, b = u32(hdr, x), u32(hdr, x + 4)
         if not (0 <= a < RING_BUF and 0 <= b < RING_BUF):
             raise Fallo(f"cabecera del anillo imposible: A={a} B={b} en X={x:#x}")
@@ -176,11 +226,11 @@ class Camara:
         if libres < len(datos):
             raise Fallo(f"no caben {len(datos)} B en el anillo (libres {libres})")
         tramo1 = min(RING_BUF - b, len(datos))
-        self.poke(pid, x + RING_HDR + b, datos[:tramo1])          # primero los bytes
+        self.poke_mem(pid, x + RING_HDR + b, datos[:tramo1])      # primero los bytes
         if tramo1 < len(datos):
-            self.poke(pid, x + RING_HDR, datos[tramo1:])
+            self.poke_mem(pid, x + RING_HDR, datos[tramo1:])
         nb = (b + len(datos)) & RING_CAP
-        self.poke(pid, x + 4, struct.pack("<I", nb))              # y B de una vez
+        self.poke_mem(pid, x + 4, struct.pack("<I", nb))          # y B de una vez
         t0 = time.time()
         while time.time() - t0 < espera:
             time.sleep(1.0)
