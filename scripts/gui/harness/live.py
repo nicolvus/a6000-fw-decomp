@@ -404,12 +404,12 @@ class Vm:
         escribe_atomico(self.nvram_f, json.dumps({f"{k:x}": v.hex() for k, v in self.nvram.items()}).encode())
 
     def gira(self, estado: int) -> None:
-        """Gira el dial de modo: el driver informa la posición (KEY_POS_MODE_DIAL 0x7025) y la vista de disparo se reabre.
-        El evento llega a InputService::callback_mode_dial (MEDIDO: libObj+0x112040) pero no repinta el icono de modo, así que la
-        reapertura sigue siendo del arnés (G22-DIAL-FN, §5.26). El MODO ya no lo pone el anfitrión: «O view/STLREC» va sin argumento
-        y el shim pide el modo al firmware (CmnViewBigModelUtil::getRecViewFromDial, OPENVIEWDIAL), que lo lee del estado del dial."""
+        """Gira el dial de modo: solo se manda la tecla del driver (KEY_POS_MODE_DIAL 0x7025) con la posición.
+        El repintado del icono de modo lo hace el INVITADO: el shim, al ver esa tecla, vuelve a activar la vista de disparo con el modo que
+        da el firmware (REDIAL → openView sin argumento → CmnViewBigModelUtil::getRecViewFromDial, OPENVIEWDIAL). En la cámara el icono es
+        el parámetro de apertura de la vista y el evento 0x15070050 no tiene manejador en viewUnified* (G22-OSD-REFRESCO, g22-osd-refresco.md).
+        El anfitrión ya no reabre ninguna vista; `reabre_vista()` queda solo para diagnóstico manual (POST /linea «O view/…»)."""
         self.tecla(DIAL_MODO[0], estado, DIAL_MODO[1])
-        threading.Thread(target=self.reabre_vista, daemon=True).start()
 
     def reabre_vista(self) -> None:
         with self.cerrojo_dial:

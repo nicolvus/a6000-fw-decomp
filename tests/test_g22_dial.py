@@ -47,24 +47,25 @@ def test_mensajes_al_driver_de_entrada(monkeypatch):
 
 
 def test_el_giro_no_pone_el_modo_desde_python(monkeypatch):
-    """El modo lo da el firmware: la reapertura va sin argumento («O view/STLREC») para que el shim lo pida a getRecViewFromDial."""
+    """El modo lo da el firmware y el repintado también: el anfitrión solo manda la tecla del dial (G22-OSD-REFRESCO).
+
+    El shim, al ver la tecla 0x7025, vuelve a activar «view/STLREC» sin modo y el modo lo pone getRecViewFromDial (OPENVIEWDIAL)."""
     vm = _vm_falsa(monkeypatch)
     for _nombre, estado in live.POSICIONES_MODO:
         vm.enviados.clear()
         vm.gira(estado)
-        assert vm.enviados == [("K", 0x7025, estado, 0x27), b"O view/ROOT 0\n", b"O view/STLREC\n"], estado
+        assert vm.enviados == [("K", 0x7025, estado, 0x27)], estado
 
 
 def test_el_atajo_solo_se_usa_si_no_hay_ruta_real(monkeypatch):
-    """La fila del giro en la evidencia: el atajo que queda es la REAPERTURA (el evento no repinta el icono), no el modo."""
+    """El repintado ya no es del anfitrión: lo pide el invitado (shim REDIAL) con el modo del firmware, no con un número de Python."""
     fuente = inspect.getsource(live.Vm.gira)
     assert "OPENVIEWDIAL" in fuente and "getRecViewFromDial" in fuente
     assert "shortcut" not in inspect.getsource(live.Vm.reabre_vista)  # la reapertura ya no es un atajo de valor
-    # el atajo está declarado donde toca: la reapertura sigue siendo del arnés
-    assert "sigue siendo del arnés" in fuente
+    assert "self.reabre_vista" not in fuente  # ni se llama: queda para diagnóstico manual
     vm = _vm_falsa(monkeypatch)
     vm.gira(live.POSICIONES_MODO[1][1])
-    assert vm.enviados[1:] == [b"O view/ROOT 0\n", b"O view/STLREC\n"]  # sin número de modo en el camino caliente
+    assert vm.enviados[1:] == []  # el anfitrión no manda ninguna línea «O view/…»
 
 
 def test_shimenv_del_dial():
