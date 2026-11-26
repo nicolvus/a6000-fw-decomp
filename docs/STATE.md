@@ -1,6 +1,6 @@
 # Estado vigente — Sony A6000 reverse engineering
 
-## Reproducción de vídeo — FILM-PB-1, causa raíz FBM (26-11-2026, cerrada)
+## Reproducción de vídeo — FILM-PB-1, estado de FBM (26-11-2026)
 
 > **Arreglo identificado y verificado en el arnés (26-11-2026).** El sector que falta es **uno solo**:
 > `0x31`, idx **10** de `0xA3699C`, compartido por `userID 0x04` y `0x21` (**OM 6 = M2PS**) con
@@ -97,6 +97,16 @@
 > el registro del clip nuevo y su persistencia. El paquete 3.97 conserva la guarda que omite
 > el alta de `fn` si el sector ya existe.
 > [Resultado auditado](../reports/film-pb-1-sector31-resultado-20261126.md).
+
+> **Prueba física con clip nuevo (26-11-2026, 16:33–16:39 CLST).** El PID 144 conservó
+> el mismo tiempo de inicio. El sector `0x31` tuvo `handle=0` y `fn=0` antes y después
+> de REC y PLAY. `MAH04204.MP4` se grabó, tiene miniatura y decodifica íntegro en FFmpeg.
+> En la cámara muestra «No se puede visualizar». El anillo añade `EnterMoviePb`,
+> `ff4PlayIf.cpp → 0xB051000B`, `ER_MOVIE_DECODE_FAILED (1600F101h)`, `PauseRelease
+> NG: ER_OUTSIDE_RANGE` y `PlayMovie err = MPR::ER_FAILED`. El primer código es el retorno
+> interno `0x200` de la consulta de muestra por tiempo. Una de sus rutas compara el tiempo
+> calculado con un límite. Falta identificar la rama tomada y su relación con el estado de FBM.
+> [Resultado y evidencia](../reports/film-pb-1-sector31-resultado-20261126.md#8-relectura-física-del-arranque-posterior-26-11-2026-1633-clst).
 
 ## Reproducción de vídeo — FILM-PB-1 (26-11-2026)
 

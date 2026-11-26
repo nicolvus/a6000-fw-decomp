@@ -89,3 +89,72 @@ volcado y si se reinició el MPR.
 - `ringput` escribe en `/dev/mem`: si se le pasa una física equivocada, corrompe RAM. La física
   del anillo es el **offset** del mapeo `rw-s /dev/mem` que contiene `X` (hoy `0x82df9000`, pero
   se calcula con `fisica_de`, no se asume).
+
+## 8. Relectura física del arranque posterior (26-11-2026, 16:33 CLST)
+
+La A6000 respondió por Telnet y ADB. `im.elf` era PID 144, tiempo de inicio 148 ticks,
+`libmpr.so` con base `0x06B22000` y MD5 `d65462a32da6b8249ec7add0a99d8fe0`, igual al ELF
+de fábrica de referencia. El hash identifica esa biblioteca, y la versión completa del
+firmware instalado queda sin verificar.
+
+| Lectura | Resultado |
+|---|---|
+| Fila 10 de la tabla de sectores | `sector=0x31 handle=0 válido=0 OM=0` |
+| Fila del escritor `(4,3)` | `sector=0x31 OM=6 fn=0 arg=0` |
+| MD5 de `nflasha4` | `5cec73d04b3761d7327eab3d184b527a` |
+| Archivos MP4 visibles antes de grabar | `MAH04202.MP4` y `MAH04203.MP4` |
+
+El sector observado con handle en la sesión anterior no está abierto en este proceso. Esto
+verifica el estado de RAM tras el arranque posterior. Falta comprobar si la entrada existe en
+flash y este arranque falló al reabrirla, o si nunca quedó persistida.
+
+El descriptor actual y su mapa `/dev/mem` coincidieron con la región histórica del anillo MPR.
+Una lectura pasiva de 12 544 bytes contenía `Err RcsBackupTblData`, `mp4Ifo_General.cpp(1749)`
+con `0xB0800001` y `AviSeqPlay.cpp Error=[ER_BADARG]` en la línea base, antes del nuevo intento.
+Estas líneas establecen el control anterior a la grabación. El resultado del clip nuevo debe
+identificarse por diferencias entre las capturas, conservando PID y tiempo de inicio.
+
+### Después de grabar, antes de pulsar PLAY (16:37:59 CLST)
+
+La tarjeta añadió `MAH04204.MP4` (9 168 986 B) y `MAH04204.THM` (5 813 B) en
+`MP_ROOT/100ANV01`. El anillo añadió `RecStart`, `RecStop`, `EvtStreamWriteComplete` y
+`EvtRecComplete`. Seguía el PID 144 con el mismo tiempo de inicio. El handle, la validez
+del sector y `fn` seguían a cero. El MD5 de `nflasha4` cambió a
+`6de6b36cd5aee15190edee51c592e7f7`. Ese cambio de la imagen global no acredita una
+entrada FBM para el clip, y en este tramo no apareció un retorno de escritura de FBM.
+
+### Después de reproducir el clip nuevo (16:39:20 CLST)
+
+El usuario vio la miniatura de `MAH04204` y el mensaje «No se puede visualizar» al pulsar
+reproducir. El `.THM` copiado por ADB es un JPEG de 160 × 120 identificado como Sony ILCE-6000.
+El MP4 contiene 180 cuadros H.264 de 1440 × 1080 a 30000/1001, 6,006 s y audio AAC estéreo
+de 48 kHz. FFmpeg completó la decodificación de audio y vídeo con `-xerror`.
+En el archivo, `stts` suma 180 muestras de 1001 unidades y cuadra con `stsz` y la duración
+`mdhd` de 180 180 unidades a escala 30 000.
+
+El PID y el tiempo de inicio siguieron iguales. Entre las lecturas posterior a REC y posterior
+a PLAY se añadieron dos secuencias con este orden:
+
+1. `EnterMoviePb`
+2. `ff4PlayIf.cpp` devuelve `0xB051000B` (primera aparición en línea 1084).
+3. `E_AVCON_MOVIE_CODEC_STOP (00002003h)`, `Dec start complete error` y
+   `ER_MOVIE_DECODE_FAILED (1600F101h)`.
+4. `mp4FileLib_Play.cpp` devuelve `0xB0F2000A`. `PauseRelease` termina con
+   `ER_OUTSIDE_RANGE` (`54003024`) y la respuesta es `PlayMovie err = MPR::ER_FAILED`.
+
+El fallo de este clip llega a la ruta de reproducción y de inicio del decodificador. El primer
+error nuevo registrado es `0xB051000B`. En el ELF verificado, la línea 1084 pertenece a
+`Ff4PlayIf::GetSamplenoByMediatime32Offset` (`0x6DE608`), que busca la muestra correspondiente
+a un tiempo multimedia. `0x6F0B08` traduce el retorno interno `0x200` a `0xB051000B`.
+El llamado `0x69F83E` puede devolver `0x200` cuando el tiempo calculado alcanza o supera
+el límite leído en `[r1+0x40]` (`0x69F904–0x69F90E`), y también propaga errores de otras
+llamadas. No se midieron los operandos ni qué rama tomó este intento. El criterio siguiente
+es reproducir esa consulta con el mismo MP4 y contrastar el tiempo solicitado con el límite que
+usa el firmware.
+
+La relación causal entre ese error, el sector FBM cerrado y el fallo de decodificación sigue
+abierta. La fila 10 y `fn` continuaron a cero durante toda la prueba. El MD5 de `nflasha4` no
+volvió a cambiar al reproducir.
+
+[Transcripción de las tres capturas](evidence/film-pb1-sector31-camara-20261126/2-graba-reproduce.txt).
+Se usaron los controles normales de la cámara y lecturas por Telnet y ADB.

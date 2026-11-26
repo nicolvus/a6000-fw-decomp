@@ -1,0 +1,52 @@
+FILM-PB-1 | A6000 | prueba física del 26-11-2026
+Adquisición por Telnet y ADB, solo lecturas; REC y PLAY por los controles de la cámara.
+
+antes UTC=2026-11-26T19:33:49.761130+00:00 pid=144 starttime=148 base=0x6b22000
+  idx10: 00000031 00000000 00000000 00000000 00000003; fila (4,3): 00000004 00000003 00000031 00000006 00000000 00000000
+  nflasha4 md5=5cec73d04b3761d7327eab3d184b527a; anillo SHA-256=dd3bc1c3ace839d7b556d94c8589072fe604a3db51c38e2b6d7aa6107d5117ef
+grabado UTC=2026-11-26T19:37:59.341402+00:00 pid=144 starttime=148 base=0x6b22000
+  idx10: 00000031 00000000 00000000 00000000 00000003; fila (4,3): 00000004 00000003 00000031 00000006 00000000 00000000
+  nflasha4 md5=6de6b36cd5aee15190edee51c592e7f7; anillo SHA-256=bb574d1f944d983119bcdd84174421badc0d42f43bb4f78d808b5e8265dcd326
+reproducido UTC=2026-11-26T19:39:20.388205+00:00 pid=144 starttime=148 base=0x6b22000
+  idx10: 00000031 00000000 00000000 00000000 00000003; fila (4,3): 00000004 00000003 00000031 00000006 00000000 00000000
+  nflasha4 md5=6de6b36cd5aee15190edee51c592e7f7; anillo SHA-256=5675aa38c43407da581c0abe0120395c757a185fea78888558d471400b05d67b
+
+REC: nuevos tramos (offset de byte en el volcado del anillo)
+13ab Enc Face Set![MprIf] Callback RecStart
+1484 [MprIf] Callback RecStop
+159b [MprIf] Callback EvtStreamWriteComplete
+15c4 [MprIf] Callback EvtRecComplete
+
+PLAY: primera secuencia añadida (offset de byte en el volcado del anillo)
+16ea [MprIf] Callback EnterMoviePb
+1709 [MP4IFO] ### mp4Ifo faild at ff4LibIf/ff4PlayIf.cpp(1084) ErrCd: 0xB051000B
+188a [CodecDrv][Error] E_AVCON_MOVIE_CODEC_STOP ( 00002003h )
+18c4 Dec start complete error!!
+18e0 [MDecI/F][Error] ER_MOVIE_DECODE_FAILED ( 1600F101h )
+1b1b [MP4FLB] ### mp4FileLib faild at IF/mp4FileLib_Play.cpp(3058) ErrCd: 0xB0F2000A
+1cc7 [PlayMovieCam] : PauseRelease NG: ER_OUTSIDE_RANGE
+1d29 [MprIf] Callback PlayMovie err = MPR::ER_FAILED
+
+Archivo de la prueba: MAH04204.MP4
+SHA-256: 39f9becfa5017682cc3d60c7c76c29239c40fc705232e667797dfb8a8f048445
+H.264 1440x1080; 180 cuadros a 30000/1001; 6.006 s. AAC estéreo, 48 kHz.
+Pista de vídeo: mdhd escala=30000 y duración=180180; stts=(180,1001); stsz=180 muestras.
+FFmpeg con -xerror: audio y vídeo decodificados, salida 0.
+MAH04204.THM: JPEG 160x120; EXIF SONY ILCE-6000.
+Pantalla, observación del usuario: miniatura presente; «No se puede visualizar» al reproducir.
+
+Contraste estático con el ELF de libmpr cuyo MD5 coincide con el de cámara:
+0x91646B  "---- Ff4PlayIf::GetSamplenoByMediatime32Offset() ---"
+0x6DE63E  c1f7fef8  bl #0x69F83E
+0x6DE644  28b1      cbz r0, #0x6DE652
+0x6DE646  0c49      ldr r1, [pc, #0x30]   ; "ff4LibIf/ff4PlayIf.cpp"
+0x6DE648  40f23c42  movw r2, #0x43c      ; 1084
+0x6DE64C  12f05cfa  bl #0x6F0B08
+0x6F0B32  b0f5007f  cmp.w r0, #0x200
+0x6F0B36  0cd0      beq #0x6F0B52        ; selecciona literal 0xB051000B
+0x69F904  ldrd r2, r3, [r1, #0x40]
+0x69F908  cmp r8, r2
+0x69F90A  sbcs.w r0, sb, r3
+0x69F90E  bhs #0x69F9C6
+0x69F9C6  mov.w r4, #0x200
+El bloque también propaga retornos de sus llamadas. Los operandos en vivo y la rama concreta quedan sin medir.

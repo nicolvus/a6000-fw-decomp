@@ -1,5 +1,15 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## FILM-PB-1 — grabación y reproducción físicas del mismo clip (26-11-2026)
+
+`MAH04204` se grabó, tiene miniatura y se decodifica en el PC. La A6000 muestra «No se puede
+visualizar». Se conservaron PID y hora de inicio entre las lecturas. En PLAY se añadió primero
+`0xB051000B` en `ff4PlayIf.cpp(1084)`, seguido del fallo de arranque del decodificador.
+`0x31` y `fn` quedaron sin abrir y sin registrar, respectivamente. El ELF vincula
+`0xB051000B` con el retorno interno `0x200` al buscar la muestra por tiempo. Próximo paso:
+contrastar, con el mismo MP4, el tiempo solicitado, el límite de la pista y la rama que
+produjo el retorno. [Transcripción](../reports/evidence/film-pb1-sector31-camara-20261126/2-graba-reproduce.txt).
+
 ## FILM-PB-1 — causa raíz FBM y arreglo identificado (26-11-2026)
 
 ### FILM-PB-1 — revisión y corrección del diagnóstico físico (26-11-2026)
