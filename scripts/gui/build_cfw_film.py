@@ -39,6 +39,7 @@ import iso_avcam_patch
 import iso_libobj_patch
 import iso_ui_patch
 import iso_ui_recursos
+import og_avcam_patch
 import patch_libobj_ppeco
 import patch_silent_r5
 import pp_menu_spec as M
@@ -51,7 +52,7 @@ LOOKS = ROOT / "analysis/lut/g97/looks.npz"
 AYUDA_PP = "Picture Profile: choose from the full list of values."
 
 
-FUNCIONES = frozenset({"film", "pp", "exfine", "iso"})   # G105: base = Silent (tres estados + Silent calibrado + Darwin v3); cada función se suma aparte
+FUNCIONES = frozenset({"film", "pp", "exfine", "iso", "og"})   # G105: base = Silent (tres estados + Silent calibrado + Darwin v3); cada función se suma aparte
 BISECCION = frozenset({"film_ui", "film_nucleo", "iso_ui", "iso_nucleo"})   # G106: solo la parte userland o solo la capa del núcleo de film/iso (aislar fallos en cámara)
 NUCLEO_FILM, NUCLEO_ISO, UI_FILM, UI_ISO = {"film", "film_nucleo"}, {"iso", "iso_nucleo"}, {"film", "film_ui"}, {"iso", "iso_ui"}
 POR_DEFECTO = frozenset({"film", "exfine", "iso"})     # el CFW Film 3.92 (con `--pp` además «pp»)
@@ -62,7 +63,8 @@ def bionz_de(funciones=POR_DEFECTO):
     def f(original: bytes) -> bytes:
         d = build_base_pp.bionz_cfw(original) if "pp" in funciones else patch_silent_r5.apply_bytes(original)
         d = film_patch.apply_bytes(d) if NUCLEO_FILM & set(funciones) else d
-        return iso_avcam_patch.apply_bytes(d) if NUCLEO_ISO & set(funciones) else d
+        d = iso_avcam_patch.apply_bytes(d) if NUCLEO_ISO & set(funciones) else d
+        return og_avcam_patch.apply_bytes(d) if "og" in funciones else d   # G113: opengate (3:2 + 1440×960)
     return f
 
 
