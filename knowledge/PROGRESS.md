@@ -1157,3 +1157,24 @@ Firma real de `WritePackBegin(userID, mediaID, dataID, dataSize, &pack, —, ope
 (`MprFileIf`/`FindFirst` con el volumen, `AVF_INFO\AVIN0001.INP` legible por libmpr, `@M015` con lista, capa de la
 vista) y, antes, implementar el comando `G <off> a0..a3` del shim (llamar a `libmpr`/`TRACELIB`, hoy `F` sólo alcanza
 `libObj`) ya acordado en [sub-arnés-lista-contenidos §4](../reports/film-pb-1-sub-arnes-lista-contenidos-20261126.md).
+
+**Checkpoint 26-11-2026 — G22-ACCION4: el eslabón «evento de ENTRADA → acción de vista» está en `libScalarDaemon.so`
+y en 3.21 nadie lo llama (MEDIDO + estático).** El traductor pedido en [g22-reproduccion-dispatch §8](../docs/gui/g22-reproduccion-dispatch.md)
+no es de la vista: es `convertViewEventToAB(unsigned int, unsigned int&)` = `libScalarDaemon+0x13a704` (símbolo
+exportado `_Z21convertViewEventToABTjRj`, 48 B), con `bic r5,r0,#0xf` sobre el código de entrada, de modo que
+`0x150100f2` (pulsación) y `0x150100f1` (suelta) caen en la fila `{0x150100f0 → 4}` de la tabla de 19 pares de
+`libScalarDaemon+0x19db0c` ⇒ **acción 4**. La tabla de `viewUnified2+0x3a03d4` es **la misma, byte a byte**, y su único
+lector `viewUnified2+0x1906a8` es **código muerto** (0 ramas de 16 y 32 bits, 0 palabras que lo apunten en las ocho
+`viewUnified*.so` ni en `libObj`). `ViewBase::transformByTriggerTable` (`libObj+0x1208ec`, compone
+`(getView()<<12)+id+0x13000000` ⇒ `0x1306c004` para la acción 4) tampoco tiene llamantes, y `[View+0x20]`
+(`View::getTriggerTable`, `libObj+0x7f1a98`) es una **función**, no una tabla. Único puente vista→daemon:
+`ScalarView::EventHandler` (`0x116bd0`) → `ScalarDaemonIf::onSystemEventReceived` (`0x116c28`), llamado sólo desde
+`viewUnified8+0x15418`. En el invitado (perfiles `acc4a`/`acc4b`, puertos 8697/8698, `DESTKEYV=1`): la tecla `0x1f7`
+da **0 disparos** en las cinco trampas (`116bd0`, `1170e8`, `libScalarDaemon+13a704`, `+da20c`, `+d5655`) y con el
+interruptor nuevo `PLAYVIEW=1` el propio firmware contesta `convertViewEventToAB(0x150100f2) -> 1 accion=4` y
+`openView(view/INDEX_PLAYBACK,0) -> 26358096`. Diff de PNG 0,000 %: el invitado venía restaurado de un arranque
+fallido con la OSD a medio componer (1,14 % de píxeles opacos) y en él ninguna vía instancia la vista (sin
+`dlopen(viewUnified3.so)`) ⇒ abiertos `G22-ACCION4-FALLA` (validar en arranque con OSD) y `G22-ACCION4-TRIG`
+(qué instala `[View+0x20]`). Arreglado de paso un bug del helper de tests: `tests/test_g22_dispatch.py::_bl_target`
+no alineaba la base en `blx` (T2). Tests: `tests/test_g22_accion4.py` (11 casos) + 32 en verde con `test_g22_dispatch.py`.
+Evidencia: `reports/evidence/g22-accion4-20261126/`.

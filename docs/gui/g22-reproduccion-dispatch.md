@@ -670,7 +670,258 @@ comparación de pantalla se hizo sobre la OSD a medio componer: es evidencia del
 | 29 | `ScalarView::EventHandler` (`0x116bd0`) y `execAction` (`0x11817e`) siguen a **0 disparos** con la tecla llegando al reparto | **VERIFICADO (medido)** | trampas armadas >380 s en `oyente6`, 0 líneas `TRACE 116bd0`/`TRACE 11817e` |
 | 30 | Cerrar el tramo con un interruptor de destino («estilo `DESTKEYV`») es imposible: el destino ya no corta nada y lo que falta es la traducción del id (entrada del mapa `View+0x28` o productor de eventos `0x1306cNNN`) | **VERIFICADO (medido)** | §8.5 |
 
-## 10. Tests sin QEMU
+## 10. G22-ACCION4 (26-11-2026): la cadena «código de entrada → acción» existe, está en **`libScalarDaemon.so`**, y en 3.21 no la llama nadie
+
+Esta sesión cierra la pregunta que dejaron abierta §7 y §8. El resumen en una línea: **el firmware sí tiene el
+traductor de «código de entrada → acción de vista», vive en el daemon escalar (`libScalarDaemon.so`) y da la acción
+`4` para la tecla Reproducción; lo que no tiene es el llamante**, ni en la capa de vista (`ScalarView::TriggerTableEvent`,
+`ViewBase::transformByTriggerTable`) ni en la vía de tecla del daemon (`dispatchKeyEvent`). Medido en el invitado: con
+la tecla pulsada y cinco trampas armadas, **cero disparos** (§10.6).
+
+Los tres candidatos del encargo quedan así:
+
+| candidato del encargo | qué es de verdad | estado |
+|---|---|---|
+| `viewUnified2+0x1820cc` `getFilterEventFunc`, `+0x182400` `getFuncEvent`, `+0x182a84` `inverseTransformFuncEvent` | no son el traductor: son ayudas del **filtro** de entrada y del *reparto* de eventos de vista (`0x17df8c` y su tabla `tbb` en `0x17e0d8`, que no tiene llamantes) | **descartado** (§10.3) |
+| tabla `{evento, acción}` de `.rodata 0x3a03d4` y su lector `viewUnified2+0x1906a8` | **es la tabla buena**, pero esa copia es **código muerto**: la viva es la misma tabla, byte a byte, en `libScalarDaemon+0x19db0c`, leída por `convertViewEventToAB` | **CERRADO** (§10.1, §10.2) |
+| `ActionEventMapBase::DispatchEvent` (`libObj+0xf59f0` es un thunk de 12 B) | el thunk reenvía a `vtable[8]` del objeto; el `DispatchEvent` real de la clase que importa **no participa** en el camino de la tecla | **CERRADO** (§10.4) |
+
+### 10.1 El traductor vivo: `convertViewEventToAB` (`libScalarDaemon+0x13a704`, 48 B) y la máscara `& ~0xf`
+
+`libScalarDaemon.so` exporta `_Z21convertViewEventToABTjRj` = `convertViewEventToAB(unsigned int, unsigned int&)`,
+48 B en `+0x13a704`. Es el **único** lector de la tabla `{código → acción}`:
+
+```asm
+13a704  f0b5        push {r4,r5,r6,r7,lr}
+13a706  0023        movs r3,#0                     ; i = 0
+13a708  00af        add  r7,sp,#0
+13a70a  094a        ldr  r2,[pc,#0x24]             ; literal 0x13a730 = 0x000633f6
+13a70c  20f00f05    bic  r5,r0,#0xf                ; <<< código & ~0xf
+13a710  dc00        lsls r4,r3,#3                  ; r4 = i*8
+13a712  7a44        add  r2,pc                     ; r2 = 0x13a712+4+0x633f6 = 0x19db0c (la tabla)
+13a714  52f83360    ldr.w r6,[r2,r3,lsl #3]        ; r6 = tabla[i].codigo
+13a718  ae42        cmp  r6,r5
+13a71a  04d1        bne  0x13a726
+13a71c  1219        adds r2,r2,r4
+13a71e  0120        movs r0,#1                     ; return 1 (encontrado)
+13a720  5368        ldr  r3,[r2,#4]                ; acción
+13a722  0b60        str  r3,[r1]                   ; *accion = tabla[i].accion
+13a724  f0bd        pop  {r4,r5,r6,r7,pc}
+13a726  0133        adds r3,#1
+13a728  132b        cmp  r3,#0x13                   ; 19 filas
+13a72a  eed1        bne  0x13a70a
+13a72c  0020        movs r0,#0                     ; return 0 (no está)
+13a72e  f0bd        pop  {r4,r5,r6,r7,pc}
+```
+
+La máscara `& ~0xf` es la pieza que faltaba en todo el análisis anterior: la tabla guarda el **código base**
+(`0x150100f0`) y los cuatro bits bajos llevan el *tipo* de pulsación (`+1` suelta, `+2` pulsación), así que
+**`0x150100f2` (la pulsación) y `0x150100f1` (la suelta) caen las dos en la fila `{0x150100f0 → 4}`** y devuelven
+**acción 4**. Es decir: la traducción que §7 y §8 buscaban no es «código → id de vista», es «código base → número de
+acción», y ocurre en el daemon, no en la vista.
+
+### 10.2 La copia de la tabla en la vista es la **misma tabla** y su lector es código muerto (barrido)
+
+| | `libScalarDaemon.so+0x19db0c` | `viewUnified2.so+0x3a03d4` |
+|---|---|---|
+| filas | 19 pares de 8 B (`cmp r3,#0x13`) | 19 pares de 8 B (`cmp r3,#0x13`) |
+| contenido | idéntico **byte a byte** (los 19 pares) | idéntico |
+| lector | `convertViewEventToAB` `+0x13a704` | `+0x1906a8` (mismo esquema, con `0x1906b2  add r2,pc`) |
+| llamantes del lector | 1: `ScalarView::TriggerTableEvent` (`libObj+0x1170f4`) | **0 ramas (16 y 32 bits) y 0 palabras `0x1906a8`/`0x1906a9` en las ocho `viewUnified*.so` y en `libObj.so`** |
+
+Las dos tablas (volcado completo en `reports/evidence/g22-accion4-20261126/estatico.txt`):
+
+```
+0x150100f0->4    0x15040010->8    0x15010020->1    0x150102b0->2    0x15010030->3
+0x15010110->7    0x15010050->6    0x15090010->152  0x15050010->153  0x15070050->5
+0x15020080->155  0x150200c0->156  0x15020030->157  0x15020090->158  0x15030100->11
+0x150300e0->9    0x150300f0->10   0x15050040->12   0x15050050->12
+```
+
+Conclusión: la tabla **no está muerta**, está **duplicada**; la copia de la vista es la que quedó sin uso al fusionar
+módulos, y la del daemon es la que se usa.
+
+### 10.3 «Tabla de disparo» = una **función**, no una tabla: `[View+0x20]` y el consumo desconectado
+
+`View::getTriggerTable()` (`libObj+0x7f1a98`) es `push{r7,lr} · ldr r0,[r0,#0x20] · pop{r7,pc}`: devuelve **un
+puntero a función**. Sus dos únicos lectores son `ViewBase::transformByTriggerTable` (`libObj+0x1208ec`) y
+`…ForFuncEvent` (`+0x120935`), que hacen:
+
+```asm
+1208ec  ...  blx View::getTriggerTable            ; r5 = la función
+1208f6  ...
+1208fe  vtable[0xc4]()                            ; «modo» de la vista
+12090c  bl 0x111054                               ; (código, modo) -> código interno
+12091a  blx r5                                    ; r = tablaDeDisparo(códigoInterno)
+120926  b.w 0x1208d2                              ; compone el id de vista
+```
+
+y `0x1208d2` es exactamente el inverso de `ViewBase::GetEventId`:
+
+```asm
+1208d2  21f47e63  bic  r3,r1,#0xfe0
+1208d6  23f01f03  bic  r3,r3,#0x1f
+1208de  1bb9      cbnz r3,0x1208e8        ; si ya es un id de vista (>=0x2000) se devuelve tal cual
+1208e0  0003      lsls r0,r0,#0xc          ; vista << 12
+1208e2  0918      adds r1,r1,r0
+1208e4  01f19851  add.w r1,r1,#0x13000000  ; + base de la familia de eventos de vista
+```
+
+Es decir: **el productor de `0x1306cNNN` que pedía §8.4 existe** — es `transformByTriggerTable` — y con la acción 4
+daría `(0x6c<<12)+0x13000000+4 = 0x1306c004`. Pero:
+
+* `transformByTriggerTable` y `transformByTriggerTableForFuncEvent`: **0 ramas y 0 punteros** en `libObj.so`, y
+  **ninguna** de las ocho `viewUnified*.so` importa su símbolo (`_ZN8ViewBase23transformByTriggerTableEm` /
+  `…35transformByTriggerTableForFuncEventEm` no aparecen en ninguna `.plt`);
+* su consumidor en la capa de vista, `ScalarView::TriggerTableEvent` (`libObj+0x1170e8`), es el único llamante del
+  traductor (`0x1170f4 blx convertViewEventToAB`) y **tampoco tiene llamantes ni punteros**: es la candidata natural
+  a `[View+0x20]`, pero nadie la instala ni la invoca en este build.
+
+`ScalarView::TriggerTableEvent`, además, no ejecuta la acción: consulta un **mapa de bits de acciones permitidas**
+(`ldr r3,[pc]` + `add r3,pc` → tabla de palabras; `and r3,r2,#0x1f`; `lsrs r2,r2,#5`; `tst r1,r3`) y devuelve
+`0x11012004` («permitido») o `0x11012005` («no permitido»).
+
+### 10.4 El único puente de una vista al ejecutor de acciones, y por qué tampoco se cruza
+
+`ScalarView::EventHandler(Event*, unsigned long)` (`libObj+0x116bd0`, 1136 B) llama en `0x116c28` a
+`ScalarDaemonIf::onSystemEventReceived(Event&, ViewBase*)` — el único sitio de todo `libObj` que habla con el daemon.
+Ese método es la ranura virtual del `ScalarView` que **sólo** llama `viewUnified8+0x15418` (una función de 54 B que
+también es una ranura virtual: `sb=[this+0x11c]`, `r8=[this+0x14]`, `ScalarView::EventHandler(sb, r8, modo)` y luego
+`vtable[0xe4]` de la base). Para la **vista de disparo** (`viewUnified2`, vista `0x6c`) no hay ninguna llamada
+equivalente: 0 ramas a `0x116bd0` en `libObj` y el símbolo `_ZN10ScalarView12EventHandlerEP5Eventm` sólo lo importa
+`viewUnified8.so`.
+
+En el daemon, el camino paralelo —el que **sí** usa `KEY_CODE` y no el código `0x1501xxxx`— es:
+
+```
+InputServantObserver::notifyKeyEventCallback(void*, void*)   libScalarDaemon+0xda20c
+   └─ ScalarDaemon::onKeyEventReceived(KEY_CODE, KEY_STATE)  +0xd37b8  (thunk de 14 B)
+        └─ EventDispatcher::dispatchKeyEvent                 +0xd5654
+             cmp r4,#2 ; bhi → log y return 2                (¡sólo mira KEY_CODE <= 2!)
+             movw r1,#0x102c ; SDJobManager::executeSyncProcess(0x102c)
+```
+
+`ScancodeToFunc(unsigned)` (`+0x133057`) traduce *scancodes* del espacio `0x6x…0x27c` (no `0x1f7`) a
+`PARAMETER_ID` `0x2090…0x20be`, así que la tecla del arnés (`0x1f7`) no entra por ahí tal cual.
+
+### 10.5 La cadena, con bytes
+
+```
+pulsador Reproducción  0x1f7                        (driver; WAITLOG «tecla 0x1f7»)
+  └─ InputService::createEvent(0x150100f2, dest=4)   libObj+0x1106b8 (dest en +0x113076)
+       └─ filtro de la vista viewUnified2+0x181fb8   sintetiza 0x15070010 y 0x150701a0 (§2)
+            └─ AppSystem::dispatch  libObj+0x7eed0c  bit4 → [AppSystem+0]->0x7f4528 ; bit8 → UtilityManager (§8)
+                 └─ (NADIE) ───────────────────────►  convertViewEventToAB(0x150100f2)  libScalarDaemon+0x13a704
+                                                          bic r5,r0,#0xf → fila {0x150100f0 → 4}
+                                                          ⇒ ACCIÓN 4
+                                                       └─ ScalarView::TriggerTableEvent      libObj+0x1170e8
+                                                            (único llamante; 0 llamantes de éste)
+                                                       └─ ViewBase::transformByTriggerTable  libObj+0x1208ec
+                                                            (0 llamantes; compondría 0x1306c004)
+                                                       └─ ScalarView::EventHandler           libObj+0x116bd0
+                                                            └─ ScalarDaemonIf::onSystemEventReceived 0x116c28
+```
+
+La parte izquierda está medida (§7.3, §8.3) y la derecha está medida en esta sesión con las funciones del firmware
+(§10.6). El hueco es el único eslabón que el firmware 3.21 no tiene cableado: **nadie llama al traductor desde el
+evento**.
+
+### 10.6 Medido en el invitado (26-11-2026): la acción 4 sale del firmware, y el firmware no la busca
+
+Dos invitados, perfiles y puertos propios (8697, 8698), sin cámara.
+
+**(a) El traductor, ejecutado con la tecla pulsada (`acc4a`, `PLAYVIEW=1`, §10.8).** Extracto de `live/acc4a/shim.log`:
+
+```
+317.22 [shim] WAITLOG 684.75 tecla 0x1f7
+317.27 [shim] WAITLOG 684.79 tecla 0x1f7
+317.34 [shim] PLAYVIEW n=2 convertViewEventToAB(0x150100f2) -> 1 accion=4 (tabla libScalarDaemon+0x19db0c)
+317.36 [shim] PLAYVIEW n=2 openView(view/INDEX_PLAYBACK,0) -> 26358096
+```
+
+Es decir: **con la tecla realmente pulsada, la función y la tabla de la cámara devuelven `1` (encontrado) y
+`acción = 4`**. Repetido tras el reinicio del supervisor: mismo `1 / accion=4`.
+
+**(b) El contraste, sin interruptor y sin tocar destinos (`acc4b`, condiciones de fábrica).** Cinco trampas armadas
+(`TRACEFN=116bd0,1170e8` en `libObj` y `TRACELIB=libScalarDaemon.so TRACEFN2=13a704,da20c,d5655`), la tecla pulsada:
+
+```
+223.28 79.73 TRACELIB libScalarDaemon.so base 0x8792c000     <- armadas
+366.50 [shim] WAITLOG 220.67 tecla 0x1f7                     <- la tecla llega al firmware
+366.50 [shim] WAITLOG 220.67 tecla 0x1f7
+   (ninguna línea TRACE)
+```
+
+**Cero disparos** en `ScalarView::EventHandler` (`0x116bd0`), `ScalarView::TriggerTableEvent` (`0x1170e8`),
+`convertViewEventToAB` (`libScalarDaemon+0x13a704`), `InputServantObserver::notifyKeyEventCallback` (`+0xda20c`) y
+`EventDispatcher::dispatchKeyEvent` (`+0xd5655`). Ese arranque estaba en la firma de **G22-CUELGUE** (`2 listas`,
+`opacos 0,0046`) a los 230 s, y se midió igual porque el reparto del despacho funciona en ese estado (§7.3); la tecla
+llega al driver y el resto de la cadena está verificada en §7–§8.
+
+### 10.7 Cambio de pantalla (diff de PNG): no lo hay, y **la OSD no está completa**
+
+| fichero | píxeles distintos vs `00-antes.png` | % | opacos |
+|---|---|---|---|
+| `png/00-antes.png` (acc4a, antes de pulsar) | 0 | 0,000 % | **1,14 %** |
+| `png/10-repro-playview.png` (tras pulsar Reproducción con `PLAYVIEW=1`) | **0** | **0,000 %** | 1,14 % |
+| `png/02-console-index.png` (tras `O view/INDEX_PLAYBACK 0`) | **0** | **0,000 %** | 1,14 % |
+| `png/20-contraste-sin-playview.png` (acc4b, sin interruptor) | — (otro invitado) | — | 0,29 % |
+
+Lectura honesta: **la medida de pantalla no sirve para cerrar el eslabón en esta sesión**. El invitado de `acc4a`
+estaba *restaurado* desde un arranque que el supervisor dio por fallido (3 listas) y su fotograma es de OSD a medio
+componer (1,14 % de píxeles opacos, sin menú): pulsar Reproducción **no cambia un solo píxel**, y la orden de consola
+`O view/INDEX_PLAYBACK 0` tampoco, ni aparece el `dlopen(viewUnified3.so)`/`Vn 03F_viewUnified3.so` que G22-PBVISTA
+midió en un arranque completo. Es decir: en ese invitado **la vista de reproducción no llega a instanciarse por
+ninguna de las dos vías**, así que el 0 % no distingue «no se abre» de «se abre y no pinta». Lo que sí queda medido y
+firmado es el contador de fotogramas (`1 → 2` con `PLAYVIEW=1`) y, sobre todo, el par (a)+(b) de arriba, que es
+independiente del repintado.
+
+### 10.8 El interruptor del arnés: `PLAYVIEW=1`
+
+`sonyshim.c`, apagado por omisión, diagnóstico del arnés (no de la cámara):
+
+1. **Enganche**: UDF (`0xde00`) en `libObj+0x1106b8` = `InputService::createEvent(código, destino)`, comprobando
+   antes los bytes (`f8 b5` = `push {r3,r4,r5,r6,r7,lr}`) y **emulando** esa instrucción en el manejador (24 B de
+   pila, `r3,r4,r5,r6,r7,lr`), de modo que la trampa es repetible sin parchear la instrucción siguiente — el mismo
+   patrón que `OYD` (§8);
+2. **Filtro**: sólo actúa si `r1 == 0x150100f2` (la pulsación de Reproducción); deja una petición en una variable;
+3. **Trabajo, en un hilo** (nunca en el manejador de señal): `dlsym` de las **dos funciones del firmware** y llamada:
+   * `_Z21convertViewEventToABTjRj` (`libScalarDaemon.so`) → imprime `1 / accion=4`;
+   * `_ZN13viewManagerIf8openViewEPKci` (`libObj.so`) → `openView("view/INDEX_PLAYBACK", 0)`.
+
+No parchea ni una instrucción del traductor ni del abridor: **lo único que pone el arnés es el llamante que al
+firmware 3.21 le falta**. Lo que no consigue en este invitado es que la vista se pinte (§10.7), y por eso el valor
+del cambio de pantalla es **0,000 %**.
+
+### 10.9 Correcciones a §7 y §8
+
+* §7.4/§8.4 daban la tabla `{evento, acción}` por «sin usar por falta de llamante»: **es una copia muerta de la tabla
+  viva del daemon**, y el traductor real enmascara el código con `& ~0xf` (§10.1).
+* §8.4 buscaba «el productor que convierte un código de entrada en un evento `0x1306cNNN`»: existe
+  (`ViewBase::transformByTriggerTable` + `0x1208d2`), está **desconectado**, y el id que produciría para la acción 4
+  sería `0x1306c004`.
+* §9 fila 14 («la tabla de disparo de la vista de disparo no es nula», NO VERIFICADO): `getTriggerTable` devuelve una
+  **función** (`[View+0x20]`), no una tabla; sigue **NO VERIFICADO** qué función instala la vista de disparo.
+* El «eslabón que falta» deja de ser la traducción del id y pasa a ser **el llamante del traductor**: en 3.21 no hay
+  ninguno cableado (0 ramas, 0 punteros, 0 importaciones en las ocho vistas).
+
+### 10.10 VERIFICADO / INFERENCIA / NO VERIFICADO (nuevas filas)
+
+| # | Afirmación | Etiqueta | Evidencia |
+|---|---|---|---|
+| 31 | `convertViewEventToAB` (`libScalarDaemon+0x13a704`) es el lector **vivo** de la tabla `{código→acción}`: `bic r5,r0,#0xf`, 19 filas, `ldr r3,[r2,#4]` → `*accion` | **VERIFICADO (bytes)** | `estatico.txt` §2; test `test_convertViewEventToAB_enmascara_con_0xf_y_recorre_las_19_filas` |
+| 32 | La tabla de `viewUnified2+0x3a03d4` es **la misma** que `libScalarDaemon+0x19db0c` (19 pares idénticos) | **VERIFICADO (bytes)** | `estatico.txt` §1; test `test_la_tabla_de_codigo_a_accion_es_la_misma_en_el_daemon_y_en_la_vista` |
+| 33 | El lector de la copia de la vista (`0x1906a8`) no tiene llamantes: 0 ramas de 16 y 32 bits y 0 palabras en las ocho vistas y en `libObj` | **VERIFICADO (barrido)** | test `test_el_lector_de_la_copia_de_la_vista_es_codigo_muerto` |
+| 34 | La «tabla de disparo» `[View+0x20]` es una **función** (`getTriggerTable` = `ldr r0,[r0,#0x20]; bx lr`) y sus dos lectores (`0x1208ec`, `0x120935`) no tienen llamantes | **VERIFICADO (bytes)** | tests `test_la_tabla_de_disparo_es_una_funcion_…`, `…_no_tienen_llamantes` |
+| 35 | `0x1208d2` compone `(getView()<<12)+id+0x13000000` (para la acción 4 y la vista `0x6c`: `0x1306c004`) | **VERIFICADO (bytes)** | test `test_el_id_de_vista_se_compone_con_1208d2` |
+| 36 | El único puente vista→daemon es `ScalarView::EventHandler` → `ScalarDaemonIf::onSystemEventReceived`, y sólo lo llama `viewUnified8+0x15418` | **VERIFICADO (bytes)** | test `test_el_unico_puente_de_una_vista_al_ejecutor_es_eventhandler` |
+| 37 | El traductor devuelve **1 / acción 4** para `0x150100f2`, ejecutado en el invitado con la tecla pulsada | **VERIFICADO (medido)** | `medida-acc4a-playview.txt` |
+| 38 | Con la tecla pulsada y sin interruptor, **0 disparos** en `116bd0`, `1170e8`, `13a704`, `da20c`, `d5655` | **VERIFICADO (medido)** | `medida-acc4b-contraste.txt` |
+| 39 | La vía de tecla de la cámara usa `KEY_CODE` (`dispatchKeyEvent` sólo mira `<= 2` y lanza el proceso `0x102c`), no el código `0x1501xxxx` | **VERIFICADO (bytes)** + **NO VERIFICADO** que ese proceso abra la reproducción | `estatico.txt` §6; test `test_la_via_de_tecla_del_daemon_no_usa_el_codigo_del_evento` |
+| 40 | `openView("view/INDEX_PLAYBACK",0)` desde un hilo del shim devuelve 26358096 pero **no** instancia la vista (sin `dlopen(viewUnified3.so)`) en el invitado restaurado de esta sesión | **VERIFICADO (medido)** / causa **NO VERIFICADA** | `medida-acc4a-playview.txt`; §10.7 |
+| 41 | Con `PLAYVIEW=1` la pantalla **no cambia** (0 px de 307 200) y la OSD del invitado está a medio componer (1,14 % opacos) | **VERIFICADO (medido)** | `png/diff-png.txt` |
+
+## 11. Tests sin QEMU
 
 `tests/test_g22_dispatch.py` (**21 casos**, 5 de ellos nuevos de G22-OYENTE) fija, contra los ELF 3.21 de
 `analysis/gui/g22/harness/stage/cam/usr/lib` (no versionados: si faltan, el módulo se salta):
@@ -703,9 +954,38 @@ con la ausencia de `strb rX,[rY,#8]` en el filtro. En `tests/test_gui_harness.py
 (`test_destkeyv_parchea_los_tres_sitios_medidos_y_comprueba_los_bytes`) que comprueba que el shim escribe sólo esos tres
 sitios, que compara los bytes antes (`*p != 0x2204`) y que se llama en los dos ganchos `dlopen`.
 
+**G22-ACCION4** añade `tests/test_g22_accion4.py` (**11 casos**, 13 s, sin QEMU):
+
+1. las dos copias de la tabla `{código → acción}` son idénticas (19 pares) y la primera es `{0x150100f0, 4}`;
+2. los bytes del traductor vivo: `push`, `movs r3,#0`, `ldr r2,[pc,#0x24]`, `bic r5,r0,#0xf`, `add r2,pc`,
+   `ldr.w r6,[r2,r3,lsl #3]`, `ldr r3,[r2,#4]`, `str r3,[r1]`, `cmp r3,#0x13`, y que el literal PIC resuelve a
+   `libScalarDaemon+0x19db0c`;
+3. `0x150100f2 & ~0xf` y `0x150100f1 & ~0xf` caen en la misma fila → acción 4;
+4. el lector de la copia de la vista (`viewUnified2+0x1906a8`) es código muerto: 0 ramas (16 y 32 bits) y 0 palabras en
+   las ocho `viewUnified*.so` y en `libObj.so` — el barrido **sólo mira `.text`/`.rodata`/`.data.rel.ro`/`.got`/`.data`**
+   (mirando el fichero entero salen falsos positivos en `.dynsym`: el `st_value` del propio símbolo);
+5. `libObj+0x1170f4` es el **único** `blx` a `convertViewEventToAB`, y `ScalarView::TriggerTableEvent` no tiene
+   llamantes ni punteros;
+6. `transformByTriggerTable` y `…ForFuncEvent`: 0 ramas, 0 punteros y ninguna vista las importa;
+7. `getTriggerTable` = `ldr r0,[r0,#0x20]; bx lr` (una **función**) con sólo dos lectores;
+8. `0x1208d2` compone el id de vista (`lsls r0,r0,#0xc` + `add.w r1,r1,#0x13000000`, `f101 5198`);
+9. el único puente vista→daemon es `0x116c28` y sólo lo llama `viewUnified8+0x15418`;
+10. la vía de tecla del daemon: `cmp r4,#2`, `movw r1,#0x102c`, y el thunk de 14 B de `onKeyEventReceived`;
+11. el interruptor `PLAYVIEW` del shim: comprueba bytes (`*p != 0xb5f8`), emula el `push`, filtra `0x150100f2`,
+    usa los dos símbolos exportados, se arma en el gancho de `libObj`, el trabajo lo hace un hilo y **el manejador de
+    señal no llama a `dlsym` ni a `openView`**.
+
+De paso se corrige un fallo del ayudante compartido `tests/test_g22_dispatch.py::_bl_target`: **`blx` (inmediato, T2)
+alinea la base** (`destino = Align(PC,4) + imm`, ARM ARM A5.3.2), así que sin alinear todos los `blx` a los stubs
+`.plt` de las vistas salían 16 B cortos (0x15418 → `0xcadc` en vez de `0xcaec`). Con el arreglo, sus 21 casos siguen
+en verde y los «0 llamantes» de esta serie pasan a apoyarse en un barrido aritmético de los **dos** alineamientos
+(16 y 32 bits) en vez de en el pre-filtro por expresión regular del módulo anterior.
+
 ## PARA PENDIENTES.md
 
 | ID | Estado | Resumen | Criterio de cierre |
 |---|---|---|---|
 | G22-OYENTE | CERRADO (26-11-2026) | **El reparto del bit 8 es un `UtilityManager` con 8 oyentes y ninguno es una vista.** VERIFICADO en bytes y medido: la vtable que el invitado midió en `libObj+0xfea630` es de `UtilityManager` (RTTI `14UtilityManager`, `offset-to-top` 0, ranuras `0x10eb49`/`0x10eb75`/`0x10e8ed`; `0x10e8ed` aparece **una sola vez** en el fichero). Su ranura `+8` recorre el `std::map<int, UtilityBase*>` de `this+0x14` (header `+0x18`, left `+0x20`, cuenta `+0x28`, nodo `{+0x10 clave, +0x14 puntero}`, incremento importado por el veneer `0xe0b00`) y llama a `(*oyente)->vtable[8](oyente, Event*)` en `0x10e914`. Interruptor nuevo `OYD=1` del shim (trampa repetible con **emulación** de `ldr r3,[r0]`, sin parchear la instrucción siguiente; imprime clave, oyente, vtable, ranura `+8`, RTTI y cuenta del mapa como «biblioteca+desplazamiento»). MEDIDO: `oyentes=8` y los ocho son `LookManager` (`+0x137684`), `SvcCaution` (`+0x123954`), `TestcmdManager` (`+0xfebd8`), `HighlightManagerCustom` (vtable `viewUnified2+0x452870`, `+0x104650`), `InputService` (`+0x1106e0`), `CameraProfileService` (`+0x1142ea`), `TopologyManager` (`+0x41a934`) y `Database::HndlMgr` (`+0x439520`). Con `DESTKEYV=1` la tecla **sí** llega: `EQTRACE code=150100f2 dest=12 clase=1`, `TRACE 7eee68` + `DEREF d1:4:3` da `15070010/150701a0/150100f1` con palabra `+8 = 0x010c`, y `OYENTE n=256 … codigo=0x15070010 dest=0xc clase=0x1 oyentes=8`. `ScalarView::EventHandler` (`0x116bd0`) y `ActionCheckerListBase::execAction` (`0x11817e`) siguen a **0 disparos** con las trampas armadas >380 s. Evidencia en `reports/evidence/g22-oyente-20261126/`. Tests: `tests/test_g22_dispatch.py` (5 casos nuevos) y `tests/test_gui_harness.py` (1). | Cumplido: los 8 oyentes identificados con RTTI y la tecla medida dentro del reparto. |
-| G22-ACCION4 | ABIERTO (26-11-2026) | **El eslabón que falta es la traducción del id, no el destino del evento.** MEDIDO: `ViewBase::GetEventId` (`libObj+0x121d58`) recibe la tecla (141 llamadas, `codigo=150100f2 dest|clase=0000010c`) y **la devuelve sin traducir** (`0x150100f2`): su regla es «si `mapa[View+0x28][id]` tiene la forma `(View::getView()<<12)+0x13000000` devuelve la diferencia», y para la vista de disparo esa base es `0x1306c000` (vista `0x6c`), así que los eventos de la vista (`0x1306cNNN`) sí se traducen (`r0=0x2a`, `0x8`, `0x2`) y los de entrada (`0x1501xxxx`/`0x1507xxxx`) no. El conmutador del consumidor (`viewUnified2+0x1994e8`, casos `0xf07`/`0xf03`/`2`/`8`/`0x2a`) no tiene caso para ellos. Corrige la hipótesis del destino (`DESTKEYV` no cierra nada, §8.5). MEDIDO además: pulsar Reproducción **no cambia la pantalla** (`antes.png`/`despues.png` idénticos, 12 861 B, 0 píxeles distintos; `/estado` en `2 fotogramas · 2 listas · opacos 0,0046`); los cinco arranques en frío de la sesión acabaron en **G22-CUELGUE**, así que la captura es de la OSD a medio componer. | Identificar el productor que convierte un código de entrada `0x1501xxxx` en un evento de vista `0x1306cNNN` (candidatos: `viewUnified2+0x1820cc` `getFilterEventFunc`, `+0x182400` `getFuncEvent`, `+0x182a84` `inverseTransformFuncEvent`, y la tabla de disparo `[View+0x20]` = `View::getTriggerTable` `libObj+0x7f1a98`), o demostrar que la cámara lo hace por otra vía; cierre en el arnés: `TRACE 11817e` > 0 con `r1=4` tras una pulsación y cambio de pantalla con diff de PNG sobre una OSD completa (requiere antes cerrar G22-CUELGUE en frío) |
+| G22-ACCION4 | **CERRADO en la cadena; ABIERTO en el arranque de la vista** (26-11-2026) | **La cadena «código de entrada → acción» está en `libScalarDaemon.so`, no en la vista, y en 3.21 nadie la llama.** VERIFICADO en bytes: el traductor vivo es `convertViewEventToAB(unsigned int, unsigned int&)` = `libScalarDaemon+0x13a704` (símbolo exportado `_Z21convertViewEventToABTjRj`, 48 B) y enmascara `bic r5,r0,#0xf`, así que `0x150100f2` (pulsación) y `0x150100f1` (suelta) caen en la fila `{0x150100f0 → 4}` de la tabla de 19 pares de `libScalarDaemon+0x19db0c` ⇒ **acción 4**. La tabla de `viewUnified2+0x3a03d4` es **la misma, byte a byte**, y su lector `viewUnified2+0x1906a8` es **código muerto** (0 ramas de 16 y 32 bits y 0 palabras en las ocho `viewUnified*.so` y en `libObj`). El productor de ids de vista que pedía §8.4 existe —`ViewBase::transformByTriggerTable` (`libObj+0x1208ec`) + `0x1208d2` = `(getView()<<12)+id+0x13000000`, que para la acción 4 daría `0x1306c004`— y **tampoco tiene llamantes**; la «tabla de disparo» `[View+0x20]` (`View::getTriggerTable` `libObj+0x7f1a98`) es una **función**, no una tabla. El único puente vista→daemon es `ScalarView::EventHandler` (`0x116bd0`) → `ScalarDaemonIf::onSystemEventReceived` (`0x116c28`), y solo lo llama `viewUnified8+0x15418`. MEDIDO (2 invitados, perfiles `acc4a`/`acc4b`, puertos 8697/8698): (a) con el interruptor nuevo `PLAYVIEW=1`, la tecla real `0x1f7` dispara `PLAYVIEW n=2 convertViewEventToAB(0x150100f2) -> 1 accion=4` (¡el firmware devuelve la acción!) y `openView(view/INDEX_PLAYBACK,0) -> 26358096`; (b) sin interruptor y sin tocar destinos, la misma pulsación da **0 disparos** en `116bd0`, `1170e8`, `libScalarDaemon+13a704`, `+da20c` y `+d5655`. La vía de tecla que sí existe en el daemon usa `KEY_CODE` (`dispatchKeyEvent` sólo mira `<= 2` y lanza el proceso síncrono `0x102c`), no el código `0x1501xxxx`. Diff de PNG: **0,000 %** (0 de 307 200 px) tras pulsar y también tras `O view/INDEX_PLAYBACK 0`; el invitado estaba *restaurado* desde un arranque fallido con la OSD a medio componer (1,14 % de píxeles opacos) y en él **ninguna** de las dos vías llega a instanciar la vista (sin `dlopen(viewUnified3.so)`), así que el 0 % no distingue «no se abre» de «se abre y no pinta». Evidencia en `reports/evidence/g22-accion4-20261126/`. Tests: `tests/test_g22_accion4.py` (11 casos) y arreglo de `blx` en `tests/test_g22_dispatch.py`. | Cumplido lo que se pedía identificar: la cadena con bytes y la demostración (medida) de que el firmware no la ejecuta. Queda abierto, en las dos filas siguientes, **abrir la vista de verdad y verla pintar**. |
+| G22-ACCION4-FALLA | ABIERTO (26-11-2026) | **`openView("view/INDEX_PLAYBACK", 0)` devuelve 26358096 (0x1923b90) pero no instancia la vista** en el invitado restaurado de esta sesión: no aparece `dlopen(viewUnified3.so)` ni `Vn 03F_viewUnified3.so`, y la orden de consola `O view/INDEX_PLAYBACK 0` tampoco lo consigue en ese mismo invitado. En un arranque completo G22-PBVISTA sí lo consiguió, así que la causa probable es el estado del invitado (G22-CUELGUE/restauración), no la llamada; **NO VERIFICADO**. | Repetir en un arranque que llegue a la OSD (≥20 listas) y comparar: (a) `O view/INDEX_PLAYBACK 0` por consola y (b) `PLAYVIEW=1` con la tecla, exigiendo `dlopen(viewUnified3.so)` + `Vn 03F` en las dos y un diff de PNG > 0. Si (a) funciona y (b) no, el fallo está en el contexto de hilo de `openView`. |
+| G22-ACCION4-TRIG | ABIERTO (26-11-2026) | **Qué función instala la vista de disparo en `[View+0x20]`** (`View::getTriggerTable`) sigue sin medir; `ScalarView::TriggerTableEvent` es la candidata, pero no tiene llamantes ni punteros en 3.21. Sin ese dato no se sabe si el firmware *podría* producir `0x1306cNNN` desde `0x1501xxxx` en otra variante de build. | Medir `[vista+0x20]` en el invitado (`TRACEDEREF` sobre la vista de disparo, donde `r0` es la vista) y nombrar la función con `dladdr`; si es nula, cerrar la fila como «no hay tabla de disparo en la vista de disparo». |
