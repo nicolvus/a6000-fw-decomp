@@ -1,8 +1,8 @@
-"""La regla de reglas vigentes (`a6000-handoff-context`) debe estar en todas las superficies.
+"""El orden del repo lo fija `ORDEN.md` y su copia de lectura vive en `a6000-handoff-context`.
 
-Las reglas nuevas sobre el orden del repo se publican en el repo privado
-`nicolvus/a6000-handoff-context` y se traen con `scripts/agent/sync_rules.sh`. Si alguien
-crea una superficie de instrucciones sin la regla, o rompe el script, este test falla.
+`estado/ORDEN.md` y `estado/ORDER.md` replican este repositorio y se traen con
+`scripts/agent/sync_rules.sh` (`ORDEN.md` §12). Si una superficie de instrucciones deja de nombrar
+la regla, o el script pierde el manejo de la copia, este test falla.
 """
 import shutil
 import subprocess
@@ -11,16 +11,31 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "scripts" / "agent" / "sync_rules.sh"
-SURFACES = [ROOT / "AGENTS.md", ROOT / "CLAUDE.md", ROOT / "docs" / "agent" / "README.md"]
+AGENT_SURFACES = [ROOT / "AGENTS.md", ROOT / "CLAUDE.md", ROOT / "docs" / "agent" / "README.md"]
+ORDER_DOCS = [ROOT / "ORDEN.md", ROOT / "ORDER.md"]
 
 
 class HandoffRules(unittest.TestCase):
-    def test_every_surface_points_to_the_handoff_repo(self):
-        for path in SURFACES:
+    def test_agent_surfaces_point_to_the_reading_copy(self):
+        for path in AGENT_SURFACES:
             with self.subTest(surface=str(path.relative_to(ROOT))):
                 text = path.read_text(encoding="utf-8")
                 self.assertIn("a6000-handoff-context", text)
                 self.assertIn("sync_rules.sh", text)
+                self.assertIn("§12", text)
+
+    def test_order_docs_define_and_fetch_the_copy(self):
+        for path in ORDER_DOCS:
+            with self.subTest(document=str(path.relative_to(ROOT))):
+                text = path.read_text(encoding="utf-8")
+                self.assertIn("a6000-handoff-context", text)
+                self.assertIn("sync_rules.sh", text)
+                self.assertIn("## 12.", text)
+
+    def test_script_maps_the_reading_copies(self):
+        text = SCRIPT.read_text(encoding="utf-8")
+        self.assertIn("estado/ORDEN.md", text)
+        self.assertIn("Read-only copy", text)  # nota de cabecera que no cuenta como diferencia
 
     def test_script_is_present_and_executable(self):
         self.assertTrue(SCRIPT.is_file())

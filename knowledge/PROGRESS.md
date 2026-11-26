@@ -949,3 +949,16 @@ Se cierra la pregunta «por qué el IFO del MP4 no se carga y qué condición ex
   semántica nominal de la cabecera `0x10` (solo su uso); que el estado de `vtbl[0xF4]` comparta el enum `AVI_STATE_*`.
 - Evidencia reproducible en `reports/evidence/film-pb-1-sub-mount-ifo-20261126/` (21 listados + `extraer_evidencia.py`).
   Cero escrituras en cámara, firmware o tarjeta; solo lectura del binario y del dump.
+
+## 26-11-2026 — reglas de orden: copia de lectura en `a6000-handoff-context` (§12)
+
+`ORDEN.md` queda como fuente única del orden del repositorio y el repo privado
+`nicolvus/a6000-handoff-context` guarda una **copia de lectura** en `estado/ORDEN.md` y
+`estado/ORDER.md`, para los agentes que no tienen el repositorio a mano (`ORDEN.md` §12). La copia se
+comprobó idéntica salvo su nota de cabecera. `scripts/agent/sync_rules.sh` trae las 59 reglas `.md`
+del handoff y lista qué difiere de las copias locales: las de `estado/` (que deben coincidir),
+`home/` y `workspace/` (que solo cambian al re-ejecutar `pack.sh`). La regla está en los cuatro
+`AGENTS.md`/`CLAUDE.md` de los dos niveles y en las preferencias globales de Vibe y Claude, y
+`tests/test_agent_rules_handoff.py` falla si una superficie deja de nombrarla o si el script pierde
+el manejo de la copia. Manda este repositorio si algo difiere; la copia se actualiza en el mismo
+cambio. Detalle en [PENDIENTES](../docs/PENDIENTES.md) R9.
