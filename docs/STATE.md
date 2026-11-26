@@ -26,6 +26,19 @@
 > elemento de menú `CustomNTSCPALSelection` no tiene id de respaldo en el mapa de la A6000. El sistema de TV es fijo
 > por firmware/región: o la cámara es PAL y los clips de 30p nunca se han podido reproducir en ella, o es NTSC y la
 > guarda de cadencia no es la causa. [Informe](../reports/film-pb-1-nvram-pal-ntsc-20261127.md).
+>
+> **Diagnóstico cerrado (27-11-2026): cámara PAL con clips NTSC.** Con el enum de cadencia verificado
+> (`0=24000/1001, 1=24, 2=25, 3=30000/1001, 4=50, 5=60000/1001, 6=100, 7=120000/1001, 8=200, 9=240000/1001`;
+> tablas en `0x686A34` y `tbb` de `0x77AF2C`), `TvSystem==1` es PAL y acepta 24p y 25/50/100/200, mientras que
+> NTSC acepta 24p y 29,97/59,94/119,88/239,76. Los **siete** clips son enum 3 (29,97) y **ninguno** se reproduce:
+> la única combinación que explica el 100 % de fallos es cámara PAL (y una cámara PAL no puede grabarlos, luego
+> vienen de otra fuente). Las dos guardas comparan TvSystem (A `0x437BFA` → `GetInhInfo` `0x67B6E0`; B
+> `0x437C2C` → `isSupportContent` `0x61A8F0`). El cambio de sistema está cerrado: `ActionNtscCaution::execute`
+> exige `Bkup_Read(0x01070148)==1` y ese id vale `00` en los **62** volcados, y el ítem de menú es un stub
+> (`getValue`/`setValue` = `return 0`) ⇒ **V2 descartada por inútil**. Arreglo preparado y probado en laboratorio:
+> `scripts/mp4_set_framerate.py` cambia solo el `mdhd.timescale` (2 bytes, cajas intactas, fps 25,000000) para
+> pasar los clips a enum 2; falta copiar `prueba-MAH04198-25p.mp4` a la tarjeta y reproducirlo.
+> [Diagnóstico cerrado](../reports/film-pb-1-diagnostico-cerrado-20261127.md).
 
 Mecanismo de la finalización fallida **cerrado estáticamente**; causa raíz física, abierta. La traza enlaza
 `PlayMovieCmp` (`MPR::ER_FAILED=0x1A`) → `DefObjPlayer::ER_FAILED=7` → bloqueo → caution `0x135` → «No se puede

@@ -1,0 +1,26 @@
+LIB firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/viewUnified2.so
+  símbolo destino cmnViewSettingNodeRootSettingSetupNtscPalSEL = dynsym[697] -> r_info 0x0002b902
+  celdas que ya lo usan: 10
+  cfg 0x4c43c8 sección 0x4c3324 página 0x4c6980: celda 0x4a3548 (arr 0x4a353c+0xc) DropSensor -> SettingSetupNtscPalSEL
+      .rel.dyn @0xe0e8c:  02 b9 03 00  ->  02 b9 02 00
+  cfg 0x4c53f4 sección 0x4c6360 página 0x4c6700: celda 0x4a2f68 (arr 0x4a2f64+0x4) SetupMenuStart -> SettingSetupNtscPalSEL
+      .rel.dyn @0xdf12c:  02 94 04 00  ->  02 b9 02 00
+  cfg 0x4c5820 sección 0x4c4340 página 0x4c3e64: celda 0x4a49f0 (arr 0x4a49f0+0x0) SetupMenuStart -> SettingSetupNtscPalSEL
+      .rel.dyn @0xdf154:  02 94 04 00  ->  02 b9 02 00
+  cfg 0x4c5d88 sección 0x4c4208 página 0x4c63e0: celda 0x4a496c (arr 0x4a495c+0x10) SetupGPSSettings -> SettingSetupNtscPalSEL
+      .rel.dyn @0xdf834:  02 84 04 00  ->  02 b9 02 00
+  cfg 0x4c5db8 sección 0x4c4800 página 0x4c4a58: celda 0x4a40dc (arr 0x4a40cc+0x10) 24pMode -> SettingSetupNtscPalSEL
+      .rel.dyn @0xe18f4:  02 b6 03 00  ->  02 b9 02 00
+  cfg 0x4c6660 sección 0x4c5640 página 0x4c51b4: celda 0x4a3368 (arr 0x4a3368+0x0) SetupMenuStart -> SettingSetupNtscPalSEL
+      .rel.dyn @0xdf13c:  02 94 04 00  ->  02 b9 02 00
+
+SALIDA /tmp/viewUnified2.menu.so (4953524 B, 24 bytes cambiados)
+  24 bytes escritos; 11 con valor distinto -> ['0xdf131', '0xdf132', '0xdf141', '0xdf142', '0xdf159', '0xdf15a', '0xdf839', '0xdf83a', '0xe0e92', '0xe18f9', '0xe18fa']
+  celdas que ahora usan el símbolo: 16
+  cfg 0x4c43c8 arr 0x4a353c: SetupMenuStart, ShowTopMenu, SetupStartPowerSave, SettingSetupNtscPalSEL
+  cfg 0x4c53f4 arr 0x4a2f64: SetupUploadSettings, SettingSetupNtscPalSEL
+  cfg 0x4c5820 arr 0x4a49f0: SettingSetupNtscPalSEL
+  cfg 0x4c5d88 arr 0x4a495c: SetupLCDBrightness, SetupViewFinderBright, SetupVolumeSettings, SetupAudioSignals, SettingSetupNtscPalSEL
+  cfg 0x4c5db8 arr 0x4a40cc: SetupMenuStart, ShowTopMenu, SetupDeleteConfirm, SetupPowerSave, SettingSetupNtscPalSEL
+  cfg 0x4c6660 arr 0x4a3368: SettingSetupNtscPalSEL
+  OK: las 6 celdas apuntan a SettingSetupNtscPalSEL y nada más ha cambiado

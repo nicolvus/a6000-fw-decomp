@@ -10,6 +10,8 @@
 
 **FILM-PB-1 (27-11), NVRAM:** 16 102 propiedades en 64 volcados (20-10 a 22-11); los cuatro valores con forma N/P (`0x115002b`='N', `0x10706b1`='P\x01', `0x3c0412`='P', `0x69007c`='P') son **idénticos en todos**, y ninguna de las 176 propiedades que cambian entre el primer y el último volcado es un selector N/P; `CustomNTSCPALSelection` no tiene id de respaldo. No hay rastro de cambio de sistema de TV: es fijo por firmware/región. [Informe](../reports/film-pb-1-nvram-pal-ntsc-20261127.md).
 
+**FILM-PB-1 (27-11), diagnóstico cerrado:** cámara PAL con clips NTSC. Enum de cadencia verificado (0=24000/1001, 1=24, 2=25, 3=30000/1001, 4=50, 5=60000/1001, 6=100, 7=120000/1001, 8=200, 9=240000/1001; `0x686A34` y `tbb` de `0x77AF2C`); `TvSystem==1` es PAL. Los siete clips son enum 3 y ninguno se reproduce: solo una cámara PAL lo explica, y una PAL no puede grabarlos. Ambas guardas comparan TvSystem (A `0x437BFA`/`GetInhInfo` `0x67B6E0`; B `0x437C2C`/`isSupportContent` `0x61A8F0`). Cambio de sistema cerrado: `0x01070148`=00 en 62 volcados y el ítem de menú es un stub ⇒ V2 descartada. Arreglo: `scripts/mp4_set_framerate.py` (2 bytes, cajas intactas, fps 25,000000). [Diagnóstico cerrado](../reports/film-pb-1-diagnostico-cerrado-20261127.md).
+
 
 Contexto operativo mínimo para agentes. Última revisión: **07-11-2026** (E26 R65–R68: rama EFCS de Darwin y auditoría).
 No es historial ni fuente de verdad de los pendientes: ver [Responsabilidades](#responsabilidades-documentales).
