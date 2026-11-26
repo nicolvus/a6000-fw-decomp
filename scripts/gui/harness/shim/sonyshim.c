@@ -1337,6 +1337,40 @@ __attribute__((used, noinline)) static int issue_cmd(void *h, void *msg, unsigne
         if (gc && gm) { cat = gc(msg); mid = gm(msg); } }
     { static __thread int dentro; char *p = 0; if (!dentro && msg_pend) { pthread_mutex_lock(&msg_pm); p = msg_pend; msg_pend = 0; pthread_mutex_unlock(&msg_pm); }
       if (p) { dentro = 1; msg_send(p); dentro = 0; } }  /* «Z» pendiente: en el hilo de la UI */
+    /* ZOOM — «Ajuste de zoom» (model/CAMERA). Especificación: docs/gui/g22-ajuste-zoom.md.
+     * ModelCamera envía ObjMsg(0x3100, 0x7614) DIRECT_PRECISION_EZOOM_MODE con PARAMID 0x979b (valores 0x2dc/0x2dd)
+     * desde libObj+0x4bf108, y ObjMsg(0x3100, 0x7612) DIRECT_SMART_EZOOM_MODE con 0x9798 (0x2d9/0x2da/0x2db) desde
+     * libObj+0x4bf230; el envío pasa por libObj+0x4bcc54 (mov r5,r0 → aquí r5 = ModelCamera) y IssueCommandAsync
+     * entrega la orden al objeto 8 (ObjCamera). ObjCamera contesta dentro de libObj (despachador 0xad4ce4, casos
+     * 0xad7826/0xad7852) con CMP 0x7613/0x7615 (cat 0x3130, 0x9502=0xf000) y EVT 0x85b1/0x85b2; el modelo aplica
+     * los parámetros SET (0x9799/0x979d) y ACT (0x979a/0x979f) en las ranuras 0 y 1 de su propiedad
+     * [ModelCamera+0x1480+0x34|0x38] con 0x4a5836 (que además avisa a la vista con el id 0x61). Aquí se aplica ese
+     * mismo efecto cuando la respuesta no llega; el emisor ya dejó el valor del modelo en la ranura 2.
+     * NOZOOM=1 lo desactiva. */
+    { Dl_info di = {0}; unsigned long off = (dladdr(ra, &di) && di.dli_fbase) ? (unsigned long)ra - (unsigned long)di.dli_fbase : 0;
+      static int zoom_ok = -1;  /* 1 = los bytes son los de 3.21: 0x4bf136 movw r2,#0x7614 y 0x4bcc5a mov r5,r0 */
+      if (zoom_ok < 0 && off) {
+        unsigned short *a = (unsigned short *)((char *)di.dli_fbase + 0x4bf136), *b = (unsigned short *)((char *)di.dli_fbase + 0x4bcc5a);
+        zoom_ok = (*a == 0xf247 && *(a + 1) == 0x6214 && *b == 0x4605) ? 1 : 0;
+        if (!zoom_ok) LOG("ZOOM: libObj distinta (%#x %#x %#x): sin emulación", *a, *(a + 1), *b);
+        else LOG("ZOOM: emulación armada (libObj %p)", di.dli_fbase);
+      }
+      if (zoom_ok > 0 && !getenv("NOZOOM") && off && (off & ~1UL) == 0x4bcc68 && readable(msg)) {
+        static unsigned (*zc)(void *), (*zm)(void *); if (!zc) { zc = nextsym("_ZNK3MWF6ObjMsg13GetCategoryIdEv"); zm = nextsym("_ZNK3MWF6ObjMsg12GetMessageIdEv"); }
+        unsigned cat2 = zc ? zc(msg) : 0, mid2 = zm ? zm(msg) : 0;
+        if (cat2 == 0x3100 && (mid2 == 0x7612 || mid2 == 0x7614)) {
+            void *prop = *(void **)((char *)r5 + 0x1480 + (mid2 == 0x7612 ? 0x34 : 0x38));
+            if (readable(prop)) {
+                unsigned (*zget)(void *, unsigned) = (void *)((char *)di.dli_fbase + 0x4a58b2 + 1);
+                void (*zset)(void *, unsigned, unsigned) = (void *)((char *)di.dli_fbase + 0x4a5836 + 1);
+                void (*zsync)(void *, unsigned) = (void *)((char *)di.dli_fbase + 0x4a5914 + 1);
+                unsigned v = zget(prop, 2);  /* ranura 2: lo que el emisor acaba de pedir (0/1/2) */
+                zset(prop, 0, v); zsync(prop, 0);   /* SET, lo que aplica el CMP */
+                zset(prop, 1, v); zsync(prop, 1);   /* ACT, lo que aplica el EVT */
+                LOG("ZOOM: %#x -> ModelCamera %p ranuras SET/ACT = %u (aviso 0x61)", mid2, (void *)r5, v);
+            }
+        }
+      } }
     if (efcs_ra && (unsigned long)ra == efcs_ra && (!r || r == 65535) && (r5 == 1 || r5 == 2)) {  /* cadena LRM→SetInit→EE_START (docs/gui/g22-respuesta-efcs-objcamera.md): ObjCamera::IssueCommandAsync (libObj+0x98dad8) acepta (0) la primera orden y rechaza con 0xffff las siguientes (causa NO_VERIFICADA); la cámara real las acepta, así que se devuelve 0 */
         r = 0;
         unsigned long base = efcs_ra - 0x689745;
