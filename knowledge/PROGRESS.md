@@ -1,5 +1,14 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## FILM-PB-1 — base del control AV identificada (26-11-2026)
+
+Se verificó en la A6000 el MD5 de `nflasha15` comprimida y de `/system` lógico.
+Ambos coinciden con el tar 4.02 sin ISO. El control lógico con AV de fábrica cambia
+233 bytes de un único fichero. Su manifiesto conserva `/usr` y 69 archivos más;
+solo cambia `nflasha3` y su registro de integridad. Próximo paso en una prueba
+autorizada: repetir el mismo MP4, con huellas y estado FBM antes de cada ensayo.
+[Contraste](../reports/evidence/film-pb1-sector31-camara-20261126/5-control-av-aislado.txt).
+
 ## FILM-PB-1 — respuesta de arranque y entorno AV (26-11-2026)
 
 El manejador recibe un estado de error y normaliza `0xF1000001` y `0xFB050001` a

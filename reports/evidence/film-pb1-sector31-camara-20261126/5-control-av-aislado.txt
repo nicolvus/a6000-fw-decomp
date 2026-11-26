@@ -1,0 +1,36 @@
+FILM-PB-1 | Identificación de las particiones de la prueba y control AV | 26-11-2026
+
+Lecturas en la A6000
+  im.elf PID=144, starttime=148 ticks, uptime=2544.72 s; upm_bootmode=NORM.
+  /usr montado desde /dev/dnflasha15 en ext2 de solo lectura.
+  /system montado desde /dev/dnflasha3 en FAT de solo lectura.
+  /dev/nflasha15: 1291 bloques de 65536 B + 9 de 512 B = 84611584 B comprimidos.
+    MD5=423fec97f8b421d82a5da6e1f93d1dfa.
+  /dev/dnflasha3: 5904 bloques de 4096 B = 24182784 B lógicos.
+    MD5=7fbf82c58c63b4293d9051eb1e4d0c38.
+
+Comparación de los paquetes candidatos
+  build/cfw_func393/base/pkg-3.93/firmware.tar
+    nflasha15 comprimida: 84611584 B, MD5=ea16316bea2ccedaceeafa87e6da4be4.
+    nflasha3 lógica: 24182784 B, MD5=7fbf82c58c63b4293d9051eb1e4d0c38.
+  build/cfw_func402s/sin_iso/pkg-4.02/firmware.tar
+    nflasha15 comprimida: 84611584 B, MD5=423fec97f8b421d82a5da6e1f93d1dfa.
+    nflasha15 SHA-256=7e4c4b507be8ada942ceeb28214e70750146282c4616b59f2034cb659bab4be6.
+    nflasha3 lógica: 24182784 B, MD5=7fbf82c58c63b4293d9051eb1e4d0c38.
+  Coincide el candidato 4.02 sin ISO en las dos huellas medidas.
+  Sus dos tar contienen 72 archivos regulares; difieren nflasha15 y part_image.sum.
+
+Control A/B validado en memoria
+  Base: los 72 miembros de 4.02 sin ISO.
+  Reemplazo: nflasha3 de Sony 3.21 y su registro en part_image.sum.
+  nflasha3 Sony comprimida: 11489040 B, SHA-256=93d4a1f089e306d14a9c48732a0be33427951966db88b30ec48af24a92963765.
+  nflasha3 Sony lógica: 24182784 B, SHA-256=a031bb492c7f3c6f2e0f21444d944ebbbbd488b0f36c6a9591ca995198b424.
+  Esta imagen FAT lógica es idéntica al control obtenido cambiando únicamente AV-CAM.BIN
+  del FAT de la base. También coincide con la nflasha3 lógica del paquete 3.94 limpio.
+  Diferencias frente a la imagen lógica A: 233 B en 5 clústeres, todos de AV-CAM.BIN.
+  vmlinux.bin: 3478912 B idénticos. initrd.img: 4079616 B idénticos.
+  70 miembros de archivo conservan su SHA-256, incluido nflasha15.
+  Los otros dos son nflasha3 y part_image.sum, con un solo registro recalculado y verificado.
+
+Se validaron las particiones y el manifiesto lógico. Quedan pendientes el instalador
+y la comparación física A/B. Las operaciones en la cámara fueron lecturas.

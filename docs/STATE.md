@@ -117,6 +117,13 @@
 > estados originales del fin de arranque: `0xF1000001` y `0xFB050001`.
 > [Huellas y condición de control](../reports/film-pb-1-sector31-resultado-20261126.md#10-respuesta-de-inicio-del-decodificador-y-estado-del-bloque-av).
 
+> **Base verificada para el control AV.** La huella de `nflasha15` medida en la A6000
+> coincide con 4.02 sin ISO. El `/system` lógico coincide con la variante de captura
+> compartida con 3.93 base. En memoria se comprobó que el control con AV de fábrica
+> conserva `/usr` y el resto del contenido, con 233 bytes distintos dentro de
+> `AV-CAM.BIN`. Queda pendiente la comparación física.
+> [Control aislado](../reports/film-pb-1-sector31-resultado-20261126.md#11-base-de-la-cámara-y-control-que-conserva-usr).
+
 ## Reproducción de vídeo — FILM-PB-1 (26-11-2026)
 
 > **Descartado el 26-11-2026: el «modo con movie = 0».** `Type2Mode` (`0x5F699C`) decide solo con

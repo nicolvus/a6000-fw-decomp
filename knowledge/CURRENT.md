@@ -1,6 +1,7 @@
 # Estado actual — léeme primero
 
 > **FILM-PB-1, entorno medido.** `0x1600F101` es un estado traducido del fin de arranque del decodificador. DMM activo y microcódigo H.264 de disco igual al de fábrica. El AV-CAM medido solo difiere en los 233 bytes catalogados de captura, y el 3.94 limpio cambia también `libObj.so` respecto a esta sesión. [Diagnóstico y control](../reports/film-pb-1-sector31-resultado-20261126.md#10-respuesta-de-inicio-del-decodificador-y-estado-del-bloque-av).
+> La lectura de `nflasha15` identifica 4.02 sin ISO como base del control. Se verificó en memoria el cambio aislado al AV de fábrica, con `/usr` idéntico. [Control aislado](../reports/film-pb-1-sector31-resultado-20261126.md#11-base-de-la-cámara-y-control-que-conserva-usr).
 
 > **FILM-PB-1, nueva prueba física del 26-11.** `MAH04204` tiene miniatura, se decodifica en el PC y falla en la cámara. En el mismo PID, `0x31` quedó con handle y `fn` a cero. El nuevo log de PLAY empieza con `0xB051000B` en `ff4PlayIf.cpp(1084)`, seguido del fallo de arranque del decodificador y `MPR::ER_FAILED`. El primer código no identifica la pista y admite tabla ausente o tiempo fuera de límite. El error posterior de vídeo pasa por `SetPlayStart`; faltan `startOffsetVT` y el límite cargado. [Resultado auditado](../reports/film-pb-1-sector31-resultado-20261126.md#8-relectura-física-del-arranque-posterior-26-11-2026-1633-clst).
 

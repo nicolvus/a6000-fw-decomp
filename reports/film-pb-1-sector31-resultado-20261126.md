@@ -236,3 +236,26 @@ El control que aislaría el núcleo AV debe conservar las bibliotecas medidas y 
 misma tarjeta, y cambiar solo `av-cam.bin`. En paralelo, una captura del mensaje de
 fin de arranque antes de que se traduzca `+8` separaría los orígenes que hoy
 comparten `0x1600F101`. [Huellas y rama de arranque](evidence/film-pb1-sector31-camara-20261126/4-arranque-decodificador.txt).
+
+## 11. Base de la cámara y control que conserva `/usr`
+
+En el mismo arranque, la huella de los 84 611 584 bytes de `nflasha15`
+comprimida coincide con la del paquete **4.02 sin ISO**. La huella de los
+24 182 784 bytes lógicos de `/system` coincide con la de ese paquete, compartida
+con 3.93 base. La partición `/usr` distingue ambos candidatos.
+
+Validé en memoria el control sobre la base **4.02 sin ISO**. Reemplazar solo
+`AV-CAM.BIN` por el de fábrica cambia **233 bytes en cinco clústeres**, todos
+del mismo archivo. La imagen lógica resultante coincide con `nflasha3` de
+Sony 3.21. `vmlinux.bin`, `initrd.img` y los metadatos FAT resultan idénticos
+a los de la base. En el manifiesto del tar solo cambian `nflasha3` y su
+registro de tamaño y CRC en `part_image.sum`; los otros **70 archivos** conservan
+su SHA-256, incluida la partición `nflasha15` medida en cámara.
+
+Para comparar A y B hay que repetir la reproducción del clip conservado
+`MAH04204.MP4` y comprobar después de cada arranque las huellas de `/usr` y
+`/system`, el estado de FBM y el anillo del mismo intento de PLAY. Así también
+queda registrado si el reinicio altera por sí solo el síntoma. La validación
+actual es offline y las operaciones físicas fueron lecturas. Quedan pendientes
+el paquete instalable y la prueba A/B.
+[Huellas y contraste](evidence/film-pb1-sector31-camara-20261126/5-control-av-aislado.txt).

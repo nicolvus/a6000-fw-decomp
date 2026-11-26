@@ -2,7 +2,7 @@
 
 > **Comparación con la cámara medida después.** El 3.94 conserva el userland del
 > paquete 3.93 PP usado como base de esta construcción. La sesión física posterior
-> llevaba otro `libObj.so` y un núcleo AV con 233 bytes modificados.
+> llevaba `/usr` de 4.02 sin ISO y un núcleo AV con 233 bytes modificados.
 > [Huellas de la sesión](film-pb-1-sector31-resultado-20261126.md#10-respuesta-de-inicio-del-decodificador-y-estado-del-bloque-av).
 
 26-11-2026. Paquete construido **offline**: no se ha instalado nada, no se ha tocado la cámara ni
