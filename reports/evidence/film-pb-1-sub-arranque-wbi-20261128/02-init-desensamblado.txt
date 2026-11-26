@@ -1,0 +1,249 @@
+# EVIDENCIA 2 — /sbin/init del initrd de nflasha3 (ELF32 ARM, Thumb, con .symtab)
+# fichero: firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/initrd.img_unpacked/sbin/init
+# idéntico a nflasha7/sbin/init (mismo SHA-256, ver 01-hashes.txt)
+# Los símbolos FUNC de readelf tienen el bit0 de Thumb puesto: el VA real es value & ~1.
+# Desensamblado con 'python3 /tmp/thumbdis.py <elf> dis <VA> <LEN>' (Capstone 5, CS_MODE_THUMB).
+
+## Tabla de símbolos (readelf -sW, FUNC definidos, ordenados por dirección)
+   338: 000089f9     0 FUNC    GLOBAL DEFAULT   10 _init
+   264: 00008c2d     0 FUNC    GLOBAL DEFAULT   12 _start
+    38: 00008c65     0 FUNC    LOCAL  DEFAULT   12 call_gmon_start
+    56: 00008c7d     0 FUNC    LOCAL  DEFAULT   12 __do_global_dtors_aux
+    61: 00008c91     0 FUNC    LOCAL  DEFAULT   12 frame_dummy
+   281: 00008cad    42 FUNC    GLOBAL DEFAULT   12 term_echo_on
+    71: 00008cd9    28 FUNC    LOCAL  DEFAULT   12 profile_exit
+    76: 00008cf5    40 FUNC    LOCAL  DEFAULT   12 profile_entry
+    80: 00008d1d   280 FUNC    LOCAL  DEFAULT   12 insmod_drivers
+    84: 00008e35    88 FUNC    LOCAL  DEFAULT   12 run_bg_process
+    89: 00008e8d   364 FUNC    LOCAL  DEFAULT   12 mount_partition
+   312: 00008ff9    30 FUNC    GLOBAL DEFAULT   12 sigchild
+    97: 00009019   112 FUNC    LOCAL  DEFAULT   12 check_forced_senser
+   311: 00009089   252 FUNC    GLOBAL DEFAULT   12 check_mode_file
+   329: 00009185   156 FUNC    GLOBAL DEFAULT   12 check_qemu
+   336: 00009221   140 FUNC    GLOBAL DEFAULT   12 check_nfs
+   315: 000092ad   160 FUNC    GLOBAL DEFAULT   12 check_bootmode
+   270: 0000934d   168 FUNC    GLOBAL DEFAULT   12 parse_cmdline
+   308: 000093f5    20 FUNC    GLOBAL DEFAULT   12 check_oreore1
+   330: 00009409    12 FUNC    GLOBAL DEFAULT   12 check_oreore2
+   273: 00009415    16 FUNC    GLOBAL DEFAULT   12 check_oreore3
+   289: 00009425    96 FUNC    GLOBAL DEFAULT   12 skip_comment_and_space
+   313: 00009485   228 FUNC    GLOBAL DEFAULT   12 parse_and_set_env
+   316: 00009569   152 FUNC    GLOBAL DEFAULT   12 set_oreore_env
+   285: 00009601    88 FUNC    GLOBAL DEFAULT   12 setup_low_memory_killer
+   293: 00009659    76 FUNC    GLOBAL DEFAULT   12 set_stack_size_to_2MB
+   263: 000096a5    40 FUNC    GLOBAL DEFAULT   12 shell_loop_pvt
+   337: 000096cd  1452 FUNC    GLOBAL DEFAULT   12 main
+   298: 00009c79   136 FUNC    GLOBAL DEFAULT   12 __libc_csu_init
+   262: 00009d01     2 FUNC    GLOBAL DEFAULT   12 __libc_csu_fini
+   272: 00009d05    12 FUNC    GLOBAL HIDDEN    12 __fstat
+   322: 00009d05    12 FUNC    WEAK   HIDDEN    12 fstat
+   271: 00009d11     0 FUNC    GLOBAL DEFAULT   13 _fini
+
+## check_bootmode — VA 0x92AC (símbolo 0x92AD), 160 B
+000092ac: 90b5       push      {r4, r7, lr}                      
+000092ae: adf5806d   sub.w     sp, sp, #0x400                    
+000092b2: 83b0       sub       sp, #0xc                          
+000092b4: 0021       movs      r1, #0                            
+000092b6: 02af       add       r7, sp, #8                        
+000092b8: 4ff48062   mov.w     r2, #0x400                        
+000092bc: 3846       mov       r0, r7                            
+000092be: fff7e4eb   blx       #0x8a88                             ; memset
+000092c2: 0021       movs      r1, #0                            
+000092c4: 1948       ldr       r0, [pc, #0x64]                     ; [0000932c]=0000a013 "/proc/udm/upm_bootmode"
+000092c6: fff7a8eb   blx       #0x8a18                             ; open
+000092ca: 041e       subs      r4, r0, #0                        
+000092cc: 0cda       bge       #0x92e8                           
+000092ce: fff7a8ec   blx       #0x8c20                             ; __errno_location
+000092d2: 1749       ldr       r1, [pc, #0x5c]                     ; [00009330]=0000a02a "init %s:(%d): /proc/udm/upm_bootmode open failed"
+000092d4: 174a       ldr       r2, [pc, #0x5c]                     ; [00009334]=00009d73 "check_bootmode"
+000092d6: 0368       ldr       r3, [r0]                          
+000092d8: 0093       str       r3, [sp]                          
+000092da: 174b       ldr       r3, [pc, #0x5c]                     ; [00009338]=000134b0
+000092dc: 1868       ldr       r0, [r3]                          
+000092de: 40f26713   movw      r3, #0x167                        
+000092e2: fff742ec   blx       #0x8b68                             ; fprintf
+000092e6: 1ae0       b         #0x931e                             ; check_bootmode+0x72
+000092e8: 3946       mov       r1, r7                            
+000092ea: 4ff48062   mov.w     r2, #0x400                        
+000092ee: fff7eaeb   blx       #0x8ac4                             ; read
+000092f2: 88b1       cbz       r0, #0x9318                       
+000092f4: 3846       mov       r0, r7                            
+000092f6: 1149       ldr       r1, [pc, #0x44]                     ; [0000933c]=0000a067 "ADJUST"
+000092f8: 0622       movs      r2, #6                            
+000092fa: fff77aec   blx       #0x8bf0                             ; strncmp
+000092fe: 10b9       cbnz      r0, #0x9306                       
+00009300: 0122       movs      r2, #1                            
+00009302: 0f4b       ldr       r3, [pc, #0x3c]                     ; [00009340]=000144cc
+00009304: 07e0       b         #0x9316                             ; check_bootmode+0x6a
+00009306: 3846       mov       r0, r7                            
+00009308: 0e49       ldr       r1, [pc, #0x38]                     ; [00009344]=0000a06e
+0000930a: 0322       movs      r2, #3                            
+0000930c: fff770ec   blx       #0x8bf0                             ; strncmp
+00009310: 10b9       cbnz      r0, #0x9318                       
+00009312: 0d4b       ldr       r3, [pc, #0x34]                     ; [00009348]=000144c8
+00009314: 0122       movs      r2, #1                            
+00009316: 1a60       str       r2, [r3]                          
+00009318: 2046       mov       r0, r4                            
+0000931a: fff714ec   blx       #0x8b44                             ; close
+0000931e: 0020       movs      r0, #0                            
+00009320: 07f10407   add.w     r7, r7, #4                        
+00009324: 07f58067   add.w     r7, r7, #0x400                    
+00009328: bd46       mov       sp, r7                            
+0000932a: 90bd       pop       {r4, r7, pc}                      
+0000932c: 13a0       adr       r0, #0x4c                         
+0000932e: 0000       movs      r0, r0                            
+00009330: 2aa0       adr       r0, #0xa8                         
+00009332: 0000       movs      r0, r0                            
+00009334: 739d       ldr       r5, [sp, #0x1cc]                  
+00009336: 0000       movs      r0, r0                            
+00009338: b034       adds      r4, #0xb0                         
+0000933a: 0100       movs      r1, r0                            
+0000933c: 67a0       adr       r0, #0x19c                        
+0000933e: 0000       movs      r0, r0                            
+00009340: cc44       add       ip, sb                            
+00009342: 0100       movs      r1, r0                            
+00009344: 6ea0       adr       r0, #0x1b8                        
+00009346: 0000       movs      r0, r0                            
+00009348: c844       add       r8, sb                            
+0000934a: 0100       movs      r1, r0                            
+
+## check_oreore1/2/3 — VA 0x93F4, 0x9408, 0x9414 (envoltorios que fijan el orden del arranque)
+000093f4: 80b5       push      {r7, lr}                          
+000093f6: 00af       add       r7, sp, #0                        
+000093f8: fff7c4fe   bl        #0x9184                             ; check_qemu
+000093fc: fff710ff   bl        #0x9220                             ; check_nfs
+00009400: bde88040   pop.w     {r7, lr}                          
+00009404: fff7a2bf   b.w       #0x934c                             ; parse_cmdline
+00009408: 80b5       push      {r7, lr}                          
+0000940a: 00af       add       r7, sp, #0                        
+0000940c: bde88040   pop.w     {r7, lr}                          
+00009410: fff73abe   b.w       #0x9088                             ; check_mode_file
+00009414: 80b5       push      {r7, lr}                          
+00009416: 00af       add       r7, sp, #0                        
+00009418: fff748ff   bl        #0x92ac                             ; check_bootmode
+0000941c: bde88040   pop.w     {r7, lr}                          
+00009420: fff7fabd   b.w       #0x9018                             ; check_forced_senser
+00009424: 2de9f843   push.w    {r3, r4, r5, r6, r7, r8, sb, lr}  
+
+## parse_cmdline — VA 0x934C
+0000934c: f0b5       push      {r4, r5, r6, r7, lr}              
+0000934e: 83b0       sub       sp, #0xc                          
+00009350: 0021       movs      r1, #0                            
+00009352: 02af       add       r7, sp, #8                        
+00009354: 1e48       ldr       r0, [pc, #0x78]                     ; [000093d0]=0000a072 "/proc/cmdline"
+00009356: fff760eb   blx       #0x8a18                             ; open
+0000935a: 041e       subs      r4, r0, #0                        
+0000935c: 0ada       bge       #0x9374                           
+0000935e: fff760ec   blx       #0x8c20                             ; __errno_location
+00009362: 1c49       ldr       r1, [pc, #0x70]                     ; [000093d4]=0000a080 "init %s:(%d): /proc/cmdline failed(errno:%d)
+"
+00009364: 1c4a       ldr       r2, [pc, #0x70]                     ; [000093d8]=00009d8d "parse_cmdline"
+00009366: 0368       ldr       r3, [r0]                          
+00009368: 0093       str       r3, [sp]                          
+0000936a: 1c4b       ldr       r3, [pc, #0x70]                     ; [000093dc]=000134b0
+0000936c: 1868       ldr       r0, [r3]                          
+0000936e: 40f28d13   movw      r3, #0x18d                        
+00009372: 12e0       b         #0x939a                             ; parse_cmdline+0x4e
+00009374: 1a49       ldr       r1, [pc, #0x68]                     ; [000093e0]=000134b5
+00009376: 4ff48052   mov.w     r2, #0x1000                       
+0000937a: fff7a4eb   blx       #0x8ac4                             ; read
+0000937e: 194b       ldr       r3, [pc, #0x64]                     ; [000093e4]=000144c0
+00009380: 0d28       cmp       r0, #0xd                          
+00009382: 0546       mov       r5, r0                            
+00009384: 1860       str       r0, [r3]                          
+00009386: 01d9       bls       #0x938c                           
+00009388: 0026       movs      r6, #0                            
+0000938a: 15e0       b         #0x93b8                             ; parse_cmdline+0x6c
+0000938c: 134b       ldr       r3, [pc, #0x4c]                     ; [000093dc]=000134b0
+0000938e: 1649       ldr       r1, [pc, #0x58]                     ; [000093e8]=0000a0ae "init %s:(%d): /proc/cmdline too short(sz:%d)
+"
+00009390: 114a       ldr       r2, [pc, #0x44]                     ; [000093d8]=00009d8d "parse_cmdline"
+00009392: 0090       str       r0, [sp]                          
+00009394: 1868       ldr       r0, [r3]                          
+00009396: 40f29313   movw      r3, #0x193                        
+0000939a: fff7e6eb   blx       #0x8b68                             ; fprintf
+0000939e: 0fe0       b         #0x93c0                             ; parse_cmdline+0x74
+000093a0: 0f49       ldr       r1, [pc, #0x3c]                     ; [000093e0]=000134b5
+000093a2: 0e22       movs      r2, #0xe                          
+000093a4: 1148       ldr       r0, [pc, #0x44]                     ; [000093ec]=0000a0dc "console=ttyAM0"
+000093a6: 8919       adds      r1, r1, r6                        
+000093a8: fff722ec   blx       #0x8bf0                             ; strncmp
+000093ac: 18b9       cbnz      r0, #0x93b6                       
+000093ae: 104b       ldr       r3, [pc, #0x40]                     ; [000093f0]=000144dc
+000093b0: 0122       movs      r2, #1                            
+000093b2: 1a60       str       r2, [r3]                          
+000093b4: 04e0       b         #0x93c0                             ; parse_cmdline+0x74
+000093b6: 0136       adds      r6, #1                            
+000093b8: a5f10e03   sub.w     r3, r5, #0xe                      
+000093bc: 9e42       cmp       r6, r3                            
+000093be: efd3       blo       #0x93a0                           
+000093c0: 2046       mov       r0, r4                            
+000093c2: 07f10407   add.w     r7, r7, #4                        
+000093c6: bd46       mov       sp, r7                            
+000093c8: bde8f040   pop.w     {r4, r5, r6, r7, lr}              
+000093cc: fff7b8bb   b.w       #0x8b40                             ; putenv+0xc
+000093d0: 72a0       adr       r0, #0x1c8                        
+000093d2: 0000       movs      r0, r0                            
+000093d4: 80a0       adr       r0, #0x200                        
+000093d6: 0000       movs      r0, r0                            
+000093d8: 8d9d       ldr       r5, [sp, #0x234]                  
+000093da: 0000       movs      r0, r0                            
+000093dc: b034       adds      r4, #0xb0                         
+000093de: 0100       movs      r1, r0                            
+000093e0: b534       adds      r4, #0xb5                         
+000093e2: 0100       movs      r1, r0                            
+000093e4: c044       add       r8, r8                            
+000093e6: 0100       movs      r1, r0                            
+000093e8: aea0       adr       r0, #0x2b8                        
+000093ea: 0000       movs      r0, r0                            
+000093ec: dca0       adr       r0, #0x370                        
+000093ee: 0000       movs      r0, r0                            
+000093f0: dc44       add       ip, fp                            
+000093f2: 0100       movs      r1, r0                            
+
+## check_forced_senser — VA 0x9018 (/setting/sen/smode == "UU" y BIS==0 -> flag 0x144C4)
+00009018: 90b5       push      {r4, r7, lr}                      
+0000901a: adf5806d   sub.w     sp, sp, #0x400                    
+0000901e: 81b0       sub       sp, #4                            
+00009020: 0021       movs      r1, #0                            
+00009022: 00af       add       r7, sp, #0                        
+00009024: 4ff48062   mov.w     r2, #0x400                        
+00009028: 3846       mov       r0, r7                            
+0000902a: fff72eed   blx       #0x8a88                             ; memset
+0000902e: 0021       movs      r1, #0                            
+00009030: 1148       ldr       r0, [pc, #0x44]                     ; [00009078]=00009f71 "/setting/sen/smode"
+00009032: fff7f2ec   blx       #0x8a18                             ; open
+00009036: 041e       subs      r4, r0, #0                        
+00009038: 16db       blt       #0x9068                           
+0000903a: 3946       mov       r1, r7                            
+0000903c: 4ff48072   mov.w     r2, #0x100                        
+00009040: fff740ed   blx       #0x8ac4                             ; read
+00009044: 58b1       cbz       r0, #0x905e                       
+00009046: 3846       mov       r0, r7                            
+00009048: 0c49       ldr       r1, [pc, #0x30]                     ; [0000907c]=00009f84
+0000904a: 0222       movs      r2, #2                            
+0000904c: fff7d0ed   blx       #0x8bf0                             ; strncmp
+00009050: 28b9       cbnz      r0, #0x905e                       
+00009052: 0b4b       ldr       r3, [pc, #0x2c]                     ; [00009080]=000144c8
+00009054: 1b68       ldr       r3, [r3]                          
+00009056: 13b9       cbnz      r3, #0x905e                       
+00009058: 0a4b       ldr       r3, [pc, #0x28]                     ; [00009084]=000144c4
+0000905a: 0122       movs      r2, #1                            
+0000905c: 1a60       str       r2, [r3]                          
+0000905e: 2046       mov       r0, r4                            
+00009060: fff770ed   blx       #0x8b44                             ; close
+00009064: 0020       movs      r0, #0                            
+00009066: 01e0       b         #0x906c                             ; check_forced_senser+0x54
+00009068: 4ff0ff30   mov.w     r0, #-1                           
+0000906c: 07f10407   add.w     r7, r7, #4                        
+00009070: 07f58067   add.w     r7, r7, #0x400                    
+00009074: bd46       mov       sp, r7                            
+00009076: 90bd       pop       {r4, r7, pc}                      
+00009078: 719f       ldr       r7, [sp, #0x1c4]                  
+0000907a: 0000       movs      r0, r0                            
+0000907c: 849f       ldr       r7, [sp, #0x210]                  
+0000907e: 0000       movs      r0, r0                            
+00009080: c844       add       r8, sb                            
+00009082: 0100       movs      r1, r0                            
+00009084: c444       add       ip, r8                            
+00009086: 0100       movs      r1, r0                            

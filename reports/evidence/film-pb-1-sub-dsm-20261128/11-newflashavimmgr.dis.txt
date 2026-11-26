@@ -1,0 +1,127 @@
+0066b3d4: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+0066b3d8: cfb0       sub      sp, #0x13c                    
+0066b3da: 0446       mov      r4, r0                        
+0066b3dc: 02af       add      r7, sp, #8                    
+0066b3de: 0d46       mov      r5, r1                        
+0066b3e0: 71b9       cbnz     r1, #0x66b400                 
+0066b3e2: 6f4b       ldr      r3, [pc, #0x1bc]                ; [0066b5a0]=009df25a
+0066b3e4: 6f49       ldr      r1, [pc, #0x1bc]                ; [0066b5a4]=009063f1 "AviMMgrIf::NewFlashAviMMgr : pp_mmgrIf ="
+0066b3e6: 1878       ldrb     r0, [r3]                      
+0066b3e8: e5f712f8   bl       #0x650410                     
+0066b3ec: 40f21513   movw     r3, #0x115                    
+0066b3f0: 0320       movs     r0, #3                        
+0066b3f2: 8de82800   stm.w    sp, {r3, r5}                  
+0066b3f6: 0521       movs     r1, #5                        
+0066b3f8: 4ff44052   mov.w    r2, #0x3000                   
+0066b3fc: 253b       subs     r3, #0x25                     
+0066b3fe: 0ee0       b        #0x66b41e                     
+0066b400: 88b9       cbnz     r0, #0x66b426                 
+0066b402: 674b       ldr      r3, [pc, #0x19c]                ; [0066b5a0]=009df25a
+0066b404: 6849       ldr      r1, [pc, #0x1a0]                ; [0066b5a8]=00906427 "AviMMgrIf::NewFlashAviMMgr  : p_param =="
+0066b406: 1878       ldrb     r0, [r3]                      
+0066b408: e5f702f8   bl       #0x650410                     
+0066b40c: 40f22113   movw     r3, #0x121                    
+0066b410: 0320       movs     r0, #3                        
+0066b412: 8de81800   stm.w    sp, {r3, r4}                  
+0066b416: 0521       movs     r1, #5                        
+0066b418: 4ff44052   mov.w    r2, #0x3000                   
+0066b41c: 313b       subs     r3, #0x31                     
+0066b41e: e4f7f7fa   bl       #0x64fa10                     
+0066b422: 0520       movs     r0, #5                        
+0066b424: b1e0       b        #0x66b58a                     
+0066b426: c368       ldr      r3, [r0, #0xc]                
+0066b428: 0bb1       cbz      r3, #0x66b42e                 
+0066b42a: 0369       ldr      r3, [r0, #0x10]               
+0066b42c: 7bb9       cbnz     r3, #0x66b44e                 
+0066b42e: 5c4b       ldr      r3, [pc, #0x170]                ; [0066b5a0]=009df25a
+0066b430: 5e49       ldr      r1, [pc, #0x178]                ; [0066b5ac]=0090645c "AviMMgrIf::NewFlashAviMMgr : p_param->pD"
+0066b432: 1878       ldrb     r0, [r3]                      
+0066b434: e4f7ecff   bl       #0x650410                     
+0066b438: 40f22d13   movw     r3, #0x12d                    
+0066b43c: 0093       str      r3, [sp]                      
+0066b43e: 0023       movs     r3, #0                        
+0066b440: 0320       movs     r0, #3                        
+0066b442: 0193       str      r3, [sp, #4]                  
+0066b444: 0521       movs     r1, #5                        
+0066b446: 4ff44052   mov.w    r2, #0x3000                   
+0066b44a: f033       adds     r3, #0xf0                     
+0066b44c: e7e7       b        #0x66b41e                     
+0066b44e: dff89881   ldr.w    r8, [pc, #0x198]                ; [0066b5e8]=009df25c
+0066b452: 0022       movs     r2, #0                        
+0066b454: 5648       ldr      r0, [pc, #0x158]                ; [0066b5b0]=009064ad "NewFlashAviMMgr : "
+0066b456: 98f80010   ldrb.w   r1, [r8]                      
+0066b45a: e5f75ff9   bl       #0x65071c                     
+0066b45e: 98f80000   ldrb.w   r0, [r8]                      
+0066b462: 5449       ldr      r1, [pc, #0x150]                ; [0066b5b4]=009064c0 "   FlashAviCreateParam
+"
+0066b464: e4f7d4ff   bl       #0x650410                     
+0066b468: 98f80000   ldrb.w   r0, [r8]                      
+0066b46c: 5249       ldr      r1, [pc, #0x148]                ; [0066b5b8]=00906171 "     uniqueId              = [%x]
+"
+0066b46e: 2268       ldr      r2, [r4]                      
+0066b470: e4f7ceff   bl       #0x650410                     
+0066b474: 98f80000   ldrb.w   r0, [r8]                      
+0066b478: 5049       ldr      r1, [pc, #0x140]                ; [0066b5bc]=00906194 "     deviceType            = [%x]
+"
+0066b47a: 6268       ldr      r2, [r4, #4]                  
+0066b47c: e4f7c8ff   bl       #0x650410                     
+0066b480: 98f80000   ldrb.w   r0, [r8]                      
+0066b484: 4e49       ldr      r1, [pc, #0x138]                ; [0066b5c0]=009061b7 "     deviceNo              = [%x]
+"
+0066b486: a268       ldr      r2, [r4, #8]                  
+0066b488: e4f7c2ff   bl       #0x650410                     
+0066b48c: 98f80000   ldrb.w   r0, [r8]                      
+0066b490: 4c49       ldr      r1, [pc, #0x130]                ; [0066b5c4]=009061da "     pDevice               = [%s]
+"
+0066b492: e268       ldr      r2, [r4, #0xc]                
+0066b494: e4f7bcff   bl       #0x650410                     
+0066b498: 98f80000   ldrb.w   r0, [r8]                      
+0066b49c: 4a49       ldr      r1, [pc, #0x128]                ; [0066b5c8]=009061fd "     pPrefix               = [%s]
+"
+0066b49e: 2269       ldr      r2, [r4, #0x10]               
+0066b4a0: e4f7b6ff   bl       #0x650410                     
+0066b4a4: 98f80000   ldrb.w   r0, [r8]                      
+0066b4a8: 4849       ldr      r1, [pc, #0x120]                ; [0066b5cc]=00906220 "     maxDcfFileCountForPb  = [%x]
+"
+0066b4aa: 6269       ldr      r2, [r4, #0x14]               
+0066b4ac: e4f7b0ff   bl       #0x650410                     
+0066b4b0: 98f80000   ldrb.w   r0, [r8]                      
+0066b4b4: 4649       ldr      r1, [pc, #0x118]                ; [0066b5d0]=00906243 "     maxDcfFileCountForRec = [%x]
+"
+0066b4b6: a269       ldr      r2, [r4, #0x18]               
+0066b4b8: e4f7aaff   bl       #0x650410                     
+0066b4bc: 98f80000   ldrb.w   r0, [r8]                      
+0066b4c0: 4449       ldr      r1, [pc, #0x110]                ; [0066b5d4]=00906266 "     bDcfFileNoLap         = [%x]
+"
+0066b4c2: 227f       ldrb     r2, [r4, #0x1c]               
+0066b4c4: e4f7a4ff   bl       #0x650410                     
+0066b4c8: 98f80000   ldrb.w   r0, [r8]                      
+0066b4cc: 4249       ldr      r1, [pc, #0x108]                ; [0066b5d8]=00906289 "     bAVIndex              = [%x]
+"
+0066b4ce: a27f       ldrb     r2, [r4, #0x1e]               
+0066b4d0: e4f79eff   bl       #0x650410                     
+0066b4d4: 98f80000   ldrb.w   r0, [r8]                      
+0066b4d8: 4049       ldr      r1, [pc, #0x100]                ; [0066b5dc]=009062ac "     bDpof                 = [%x]
+"
+0066b4da: e27f       ldrb     r2, [r4, #0x1f]               
+0066b4dc: e4f798ff   bl       #0x650410                     
+0066b4e0: 3020       movs     r0, #0x30                     
+0066b4e2: b3f660e1   blx      #0x11e7a4                       ; _Znwj
+0066b4e6: 0646       mov      r6, r0                        
+0066b4e8: fff742fd   bl       #0x66af70                     
+0066b4ec: 4ff49672   mov.w    r2, #0x12c                    
+0066b4f0: 2e60       str      r6, [r5]                      
+0066b4f2: 0021       movs     r1, #0                        
+0066b4f4: 381d       adds     r0, r7, #4                    
+0066b4f6: b4f6f4f6   bl       #0x1202e2                     
+0066b4fa: 2368       ldr      r3, [r4]                      
+0066b4fc: 2169       ldr      r1, [r4, #0x10]               
+0066b4fe: 7b60       str      r3, [r7, #4]                  
+0066b500: 6368       ldr      r3, [r4, #4]                  
+0066b502: bb60       str      r3, [r7, #8]                  
+0066b504: a368       ldr      r3, [r4, #8]                  
+0066b506: fb60       str      r3, [r7, #0xc]                
+0066b508: 3b1d       adds     r3, r7, #4                    
+0066b50a: 03f10c00   add.w    r0, r3, #0xc                  
+0066b50e: d9f649f5   bl       #0x144fa4                     
+0066b512: 3b1d       adds     r3, r7, #4                    

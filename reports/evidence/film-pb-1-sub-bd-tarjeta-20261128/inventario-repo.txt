@@ -1,0 +1,57 @@
+# Inventario de restos de tarjeta en el repo — 2026-11-26T01:11:18Z
+
+## 1. find por nombres de fichero de tarjeta (nada encontrado)
+$ find . -iname "*AVF_INFO*" -o -iname "*MEDIAPRO*" -o -iname "*.THM" -o -iname "*.INP" -o -iname "*.MODD" -o -iname "*.AVIN"
+./analysis/camera-extract/android/app/MediaProvider.apk
+./analysis/camera-extract/android/app/MediaProvider.odex
+./analysis/apk-por-funcion/5-proveedores-datos/MediaProvider.apk
+./analysis/decomp-apk/dex/MediaProvider.dex
+./analysis/decomp-apk/src/MediaProvider
+./analysis/decomp-apk/src/MediaProvider/sources/com/android/providers/media/MediaProvider.java
+./analysis/gui/g22/harness/t6/overlay/cam/and/system/app/MediaProvider.apk
+./analysis/gui/g22/harness/t6/overlay/cam/and/system/app/MediaProvider.odex
+./reports/evidence/film-pb-1-sub-avin-20261127/AVIN0001_sintetico.INP
+./firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha16_unpacked_unpacked/app/MediaProvider.apk
+./firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha16_unpacked_unpacked/app/MediaProvider.odex
+./firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha16_unpacked_unpacked/app/MediaProvider.apk
+./firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha16_unpacked_unpacked/app/MediaProvider.odex
+(fin: solo AVIN0001_sintetico.INP y MediaProvider.*)
+
+## 2. find por directorios de tarjeta (DCIM/PRIVATE/MP_ROOT/AVCHD)
+$ find . -type d \( -iname DCIM -o -iname PRIVATE -o -iname MP_ROOT -o -iname AVCHD \)
+(fin: ninguno)
+
+## 3. find de MP4 reales en el repo
+$ find . -iname "*.MP4"
+(fin: ninguno; MAH04198.MP4 vive fuera del repo, /home/nicolas/Documents/a6000/)
+
+## 4. grep de contenido de tarjeta
+$ grep -rIl -E "AVIN0001|PRV00001|MEDIAPRO|CUEUP\.XML|STATUS\.BIN|THMBNL|100ANV01|103ANV01|101ANV01" .
+./docs/gui/g22-avcam-puente.md
+./docs/gui/g79-xavcs-sin-restriccion-de-tarjeta.md
+./docs/PENDIENTES.md
+./docs/STATE.md
+./scripts/gui/harness/sd_image.py
+./tests/test_sd_image.py
+./reports/evidence/film-pb-1-sub-catalogo-20261127/libmpr-mediadprofile-strings.txt
+./reports/evidence/film-pb-1-sub-tarjeta-20261127/mapa-cadenas-y-tablas.txt
+./reports/evidence/film-pb-1-sub-avin-20261127/sintetico_avin.py
+./reports/evidence/film-pb-1-sub-avin-20261127/leer_avin.py
+./reports/evidence/film-pb-1-sub-avin-20261127/transcripcion-prueba.txt
+./reports/evidence/film-pb-1-sub-bd-tarjeta-20261128/inventario-repo.txt
+./reports/film-pb-1-traspaso-20261125.md
+./reports/film-pb-1-sub-catalogo-20261127.md
+./reports/film-pb-1-sub-tarjeta-20261127.md
+./reports/film-pb-1-sub-arnes-20261127.md
+./reports/film-pb-1-camino-final-20261127.md
+./reports/film-pb-1-sub-avin-20261127.md
+./reports/film-pb-1-sub-resume-20261127.md
+./reports/film-pb-1-causa-sistema-tv-20261127.md
+./reports/film-pb-1-sub-framerate-20261127.md
+./reports/film-pb-1-diagnostico-cerrado-20261127.md
+./knowledge/CURRENT.md
+./knowledge/PROGRESS.md
+./work/opengate/07-experimento-fisico.md
+
+## 5. Conclusion
+Cero volcados reales de tarjeta. Todo lo anterior son informes, codigo y un .INP sintetico.

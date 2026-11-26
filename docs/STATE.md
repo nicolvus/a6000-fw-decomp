@@ -2,43 +2,54 @@
 
 ## Reproducción de vídeo — FILM-PB-1 (26-11-2026)
 
-> **Causa probable localizada el 27-11-2026: el ajuste «Selector PAL/NTSC» de la cámara no coincide con la
-> cadencia de los clips.** `AviMMgr::isSupportContent` (ELF `0x61A8F0`) compara `TvSystem()` (`0x1EEFDC`) con el
-> `frameRate` del contenido (`[msg+0x124]`, 0..9). **Enum verificado** (`0x686A34`, `tbb` de `0x77AF2C`):
-> 0=24000/1001, 1=24, **2=25**, **3=30000/1001**, **4=50**, **5=60000/1001**, **6=100**, **7=120000/1001**,
-> **8=200**, **9=240000/1001**. Con `TvSystem==1` (**PAL**) acepta 24p y 25/50/100/200; con `!=1` (**NTSC**) acepta
-> 24p y 29,97/59,94/119,88/239,76; el resto devuelve 0 «Invalid TvSystem detect» → `0x437C3C`
-> → `0x1A` → caution `0x135` → «No se puede visualizar.». Los clips son 30p (par, NTSC) y la cámara muestra
-> `1-1-2014`, señal de ajustes reseteados. Los siete clips son **enum 3 (29,97)**: que fallen todos encaja con una
-> cámara **PAL**, que no puede grabarlos (no ofrece 30p). **El ajuste no está expuesto en el menú de esta cámara** (verificado:
-> `viewNtscPalSEL_D.uxc`, `global.xdb` y `SettingSetupNtscPalSEL` existen en el firmware, pero la configuración del
-> modelo no lo muestra), así que el arreglo por menú no está disponible. Vías: convertir los clips a la cadencia de
-> la cámara (ya existe `scripts/mp4_set_framerate.py`, que cambia solo el `mdhd.timescale` y conserva las cajas
-> `uuid`/`MSNV`/`PROF`/`USMT`/`MTDT`; ffmpeg `-r` no sirve porque las borra), desbloquear el ajuste en la interfaz,
-> o trazar con el kit. **Ensayo listo:** `prueba-MAH04198-25p.mp4` copiado a la tarjeta distingue PAL de NTSC en
-> un solo clip.
-> [Informe](../reports/film-pb-1-causa-sistema-tv-20261127.md).
+> **Reencuadre del 26-11-2026: la cadencia NO es la causa.** Dos pruebas del usuario con la cámara en mano lo
+> cierran: un clip convertido a 25p (`scripts/filmpb1_convertir_clips.py`) da «No se puede visualizar.», y **un clip
+> grabado por la propia cámara también**. Un clip propio cumple por construcción todo lo que exige la guarda de
+> sistema de TV. Además «Recuperar BD imág.» no cambia el síntoma, la miniatura no aparece y el vídeo sí se lista.
+> [Informe de reencuadre](../reports/film-pb-1-fallo-global-pb-20261126.md).
 >
-> **NVRAM verificada (27-11-2026): no hay ningún cambio de PAL/NTSC.** Leídas las 16 102 propiedades de los 64
-> volcados (`pmca.backup.BackupFile`, 32 parejas flash/mem del 20-10 al 22-11): los cuatro únicos valores con forma
-> de sistema de TV (`0x115002b`='N', `0x10706b1`='P\x01', `0x3c0412`='P', `0x69007c`='P') son **idénticos en todos**.
-> Entre el primer y el último volcado cambian 176 propiedades (ajustes de pruebas) y ninguna es un selector N/P. El
-> elemento de menú `CustomNTSCPALSelection` no tiene id de respaldo en el mapa de la A6000. El sistema de TV es fijo
-> por firmware/región: o la cámara es PAL y los clips de 30p nunca se han podido reproducir en ella, o es NTSC y la
-> guarda de cadencia no es la causa. [Informe](../reports/film-pb-1-nvram-pal-ntsc-20261127.md).
+> **Árbol de salidas del manejador, verificado instrucción a instrucción** (`FUN_00437BC0`): `[core+0x1F0]!=5`
+> → `0x0A`; `[core+0x1F0]==5` y `arg5==0` → `5`; **guarda A** `0x447A1E`=0 → `0x1A` («Pb Disable!! ref) dsm get»);
+> **guarda B** `0x447F26`=0 → `0x1A` («Detect UnSupported Content»); `0x447DA8`≠0 y `PbStart`≠0 → código de
+> `0x7111B0`. Solo las filas A y B producen el mensaje de la cámara.
 >
-> **Diagnóstico cerrado (27-11-2026): cámara PAL con clips NTSC.** Con el enum de cadencia verificado
-> (`0=24000/1001, 1=24, 2=25, 3=30000/1001, 4=50, 5=60000/1001, 6=100, 7=120000/1001, 8=200, 9=240000/1001`;
-> tablas en `0x686A34` y `tbb` de `0x77AF2C`), `TvSystem==1` es PAL y acepta 24p y 25/50/100/200, mientras que
-> NTSC acepta 24p y 29,97/59,94/119,88/239,76. Los **siete** clips son enum 3 (29,97) y **ninguno** se reproduce:
-> la única combinación que explica el 100 % de fallos es cámara PAL (y una cámara PAL no puede grabarlos, luego
-> vienen de otra fuente). Las dos guardas comparan TvSystem (A `0x437BFA` → `GetInhInfo` `0x67B6E0`; B
-> `0x437C2C` → `isSupportContent` `0x61A8F0`). El cambio de sistema está cerrado: `ActionNtscCaution::execute`
-> exige `Bkup_Read(0x01070148)==1` y ese id vale `00` en los **62** volcados, y el ítem de menú es un stub
-> (`getValue`/`setValue` = `return 0`) ⇒ **V2 descartada por inútil**. Arreglo preparado y probado en laboratorio:
-> `scripts/mp4_set_framerate.py` cambia solo el `mdhd.timescale` (2 bytes, cajas intactas, fps 25,000000) para
-> pasar los clips a enum 2; falta copiar `prueba-MAH04198-25p.mp4` a la tarjeta y reproducirlo.
-> [Diagnóstico cerrado](../reports/film-pb-1-diagnostico-cerrado-20261127.md).
+> **Guarda A descartada con clip propio.** `0x447A1E` es una comprobación de *capacidades por bits* sobre la máscara
+> `[core+0xDB8]`; con máscara 0 devuelve 1 (`0x447AC8`→`0x447AE0`). `GetInhInfo` (`0x67B6E0`) rellena 15 palabras y el
+> único bit de desacuerdo `TvSystem` cae en `info[0]`, que la guarda de vídeo no lee (lee `info[1]`, máscara 6 ⇒ dos
+> `AviMMgr::GetPlayMovieStatus`). No hay ruta que deje basura: `memset` + `0x018000FF`/`0x80000000` en los fallos, y
+> `0x80000000` no activa ningún bit consultado. [Guarda A por bits](../reports/film-pb-1-sub-guardaa-bits-20261126.md).
+>
+> **Guarda B: el fallo está en el lector de metadatos del MP4, no en el contenido.** `isSupportContent` (`0x61A8F0`)
+> llama **primero** a `Mp4IfoIf::GetPlayThumbnailInfo` (`0x6E8430`, `0x61A9E4`) y solo después compara `TvSystem`
+> (`0x61A9EE`). Y `0x6E8430` **no decodifica ni abre el fichero**: en `0x6E845A` toma el mutex del `mp4Ifo_If`
+> (`0x5BAD00`, `ifoFramework_Semaphore.cpp`); si falla, `0x6E846C` devuelve el literal **`0xB0100002`** sin tocar el
+> MP4. Ese mutex es un **try-lock no recursivo** cuyo byte `[obj+4]` solo escriben 3 sitios (ctor/release/acquire);
+> solo puede estar a 0 si **otro hilo lo retiene** o si el handle quedó **colgante** (el destructor `0x6E81BC`
+> libera el semáforo y no limpia el puntero). Un único fallo ahí produce a la vez el `0x1A` de la guarda B, la
+> ausencia de miniatura de vídeo y que la duración se tome del índice (`0:02`) en vez del `moov` (9,5095 s).
+> [ifoFramework](../reports/film-pb-1-sub-ifoframework-20261126.md).
+>
+> **Lo que no es la causa, verificado:** la cadencia (clip propio); el `TvSystem` (sin bits con clip propio); la
+> BD/catálogo (la guarda es *fail-open* si falta el registro y recuperar la BD no cambia nada); el decodificador
+> H.264 (está **fuera de Linux**, en `av-cam` con microcódigo `ZM_AVCD*` de `/usr/sabin`; su fallo sería posterior a
+> `PbStart` y las miniaturas JPEG seguirían saliendo); el `av-cam` del paquete (**no es un binario 3.38**: es el de
+> 3.21 con 40 B integrados y 34 KB de tablas de curvas; `vmlinux.bin` e `initrd.img` son byte a byte los de 3.21);
+> la NVRAM (64 volcados, sistema de TV fijo); y los parches de código en la ruta de reproducción (auditoría del
+> paquete 3.93 `pp`).
+>
+> **Artefactos listos para probar (nada instalado):** (1) `libmpr.so` con las dos guardas anuladas
+> (`0x437BFA`/`0x437C2C` → `movs r0,#1 ; nop`), verificado byte a byte y sin relocaciones en los parches, en
+> `build/cfw_bypass_guardas/libmpr.so` — [informe](../reports/film-pb-1-sub-bypass-guardas-20261126.md);
+> (2) paquete **con WBI** (arranque caliente, un flag: `build_package_nflasha15.py` sin `--sin-wbi`) — comando y
+> dry-run 20/20 en [arranque/WBI](../reports/film-pb-1-sub-arranque-wbi-20261128.md); (3) restauración del 3.21
+> oficial verificado (`scripts/camera_reflash_fw321.sh`, SHA-256
+> `29aef21ab9b5c2e98388974ac9749c2cbfb1815273b444e62f2e41398aa8892f`).
+>
+> **Prueba de campo decisiva (gratis, 30 s):** encender y pulsar reproducción **lo antes posible**, sin dar tiempo a
+> que la galería genere miniaturas. Si así reproduce y luego deja de hacerlo, el mutex se filtra al generar
+> miniaturas (dueño vivo); si falla igual, el handle está colgado o el `mp4Ifo_If` no se creó nunca.
+> Breakpoint de un solo uso en `0x5BAD24` con `r4`=semáforo: leer `[r4]` (vtable esperada `base+0x8BBCF8`),
+> `[r4+4]`, y el dueño `[r4+8]/[r4+0xC]/[r4+0x10]`. Kit: `scripts/camera_filmpb1_trace.py`.
 
 Mecanismo de la finalización fallida **cerrado estáticamente**; causa raíz física, abierta. La traza enlaza
 `PlayMovieCmp` (`MPR::ER_FAILED=0x1A`) → `DefObjPlayer::ER_FAILED=7` → bloqueo → caution `0x135` → «No se puede

@@ -1,0 +1,209 @@
+# EVIDENCIA 7 — quien CONSUME y quien PRODUCE el modo de arranque
+# fichero im.elf: firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/bin/im.elf
+
+## im.elf — cadenas relevantes (VA / texto)
+0x0bfc4 '/proc/udm/upm_bootmode'
+0x0c0b7 '/sys/power/state'
+0x0c0c8 'warm'
+0x0c0cd 'WARM(warm_count=%d)'
+0x0c0e1 'SUS(warm_count=%d)'
+0x0bfdb 'BIS'
+0x0bfae '/setting/sen/smode'
+0x0c044 '/sbin/dosfsck -Y %s'
+0x0c05d '/usr/bin/e2fsck -y %s'
+
+## im.elf 0x93B0-0x9462: lectura de /proc/udm/upm_bootmode y comparacion con "BIS" (devuelve 1 si NO es BIS)
+000093b0: f0b5       push      {r4, r5, r6, r7, lr}              
+000093b2: adf5006d   sub.w     sp, sp, #0x800                    
+000093b6: 81b0       sub       sp, #4                            
+000093b8: 0021       movs      r1, #0                            
+000093ba: 00af       add       r7, sp, #0                        
+000093bc: 4ff48062   mov.w     r2, #0x400                        
+000093c0: 07f58060   add.w     r0, r7, #0x400                    
+000093c4: fff798ed   blx       #0x8ef8                             ; memset
+000093c8: 0021       movs      r1, #0                            
+000093ca: 4ff48062   mov.w     r2, #0x400                        
+000093ce: 3846       mov       r0, r7                            
+000093d0: fff792ed   blx       #0x8ef8                             ; memset
+000093d4: 0021       movs      r1, #0                            
+000093d6: 2348       ldr       r0, [pc, #0x8c]                     ; [00009464]=0000bfae "/setting/sen/smode"
+000093d8: fff734ed   blx       #0x8e44                             ; open
+000093dc: 041e       subs      r4, r0, #0                        
+000093de: 03da       bge       #0x93e8                           
+000093e0: 01f078fb   bl        #0xaad4                             ; osal_free_msg+0x19c8
+000093e4: 0026       movs      r6, #0                            
+000093e6: 36e0       b         #0x9456                             ; osal_free_msg+0x34a
+000093e8: 01f074fb   bl        #0xaad4                             ; osal_free_msg+0x19c8
+000093ec: 2046       mov       r0, r4                            
+000093ee: 07f58061   add.w     r1, r7, #0x400                    
+000093f2: 4ff48072   mov.w     r2, #0x100                        
+000093f6: fff7b2ed   blx       #0x8f5c                             ; read
+000093fa: 30b3       cbz       r0, #0x944a                       
+000093fc: 1a49       ldr       r1, [pc, #0x68]                     ; [00009468]=0000bfc1
+000093fe: 07f58060   add.w     r0, r7, #0x400                    
+00009402: 0222       movs      r2, #2                            
+00009404: fff750ee   blx       #0x90a8                             ; strncmp
+00009408: 0146       mov       r1, r0                            
+0000940a: 00bb       cbnz      r0, #0x944e                       
+0000940c: 1748       ldr       r0, [pc, #0x5c]                     ; [0000946c]=0000bfc4 "/proc/udm/upm_bootmode"
+0000940e: fff71aed   blx       #0x8e44                             ; open
+00009412: 051e       subs      r5, r0, #0                        
+00009414: 03da       bge       #0x941e                           
+00009416: 01f05dfb   bl        #0xaad4                             ; osal_free_msg+0x19c8
+0000941a: 0126       movs      r6, #1                            
+0000941c: 18e0       b         #0x9450                             ; osal_free_msg+0x344
+0000941e: 3946       mov       r1, r7                            
+00009420: 4ff48072   mov.w     r2, #0x100                        
+00009424: fff79aed   blx       #0x8f5c                             ; read
+00009428: 3846       mov       r0, r7                            
+0000942a: 1149       ldr       r1, [pc, #0x44]                     ; [00009470]=0000bfdb
+0000942c: 0322       movs      r2, #3                            
+0000942e: fff73cee   blx       #0x90a8                             ; strncmp
+00009432: 0646       mov       r6, r0                            
+00009434: 10b9       cbnz      r0, #0x943c                       
+00009436: 01f04dfb   bl        #0xaad4                             ; osal_free_msg+0x19c8
+0000943a: 02e0       b         #0x9442                             ; osal_free_msg+0x336
+0000943c: 01f04afb   bl        #0xaad4                             ; osal_free_msg+0x19c8
+00009440: 0126       movs      r6, #1                            
+00009442: 2846       mov       r0, r5                            
+00009444: fff7e0ed   blx       #0x9008                             ; close
+00009448: 02e0       b         #0x9450                             ; osal_free_msg+0x344
+0000944a: 0646       mov       r6, r0                            
+0000944c: 00e0       b         #0x9450                             ; osal_free_msg+0x344
+0000944e: 0026       movs      r6, #0                            
+00009450: 2046       mov       r0, r4                            
+00009452: fff7daed   blx       #0x9008                             ; close
+00009456: 3046       mov       r0, r6                            
+00009458: 07f10407   add.w     r7, r7, #4                        
+0000945c: 07f50067   add.w     r7, r7, #0x800                    
+00009460: bd46       mov       sp, r7                            
+00009462: f0bd       pop       {r4, r5, r6, r7, pc}              
+
+## im.elf 0x9FE0-0xA058: escritura en /sys/power/state. "warm" (4 B) si 0x9F44()!=0, si no "mem" (3 B).
+00009fe0: 00f078fd   bl        #0xaad4                             ; osal_free_msg+0x19c8
+00009fe4: 2be0       b         #0xa03e                             ; osal_free_msg+0xf32
+00009fe6: 012d       cmp       r5, #1                            
+00009fe8: 22d1       bne       #0xa030                           
+00009fea: 4022       movs      r2, #0x40                         
+00009fec: 3846       mov       r0, r7                            
+00009fee: fef784ef   blx       #0x8ef8                             ; memset
+00009ff2: fff7a7ff   bl        #0x9f44                             ; osal_free_msg+0xe38
+00009ff6: 80b1       cbz       r0, #0xa01a                       
+00009ff8: 00f06cfd   bl        #0xaad4                             ; osal_free_msg+0x19c8
+00009ffc: fff79aff   bl        #0x9f34                             ; osal_free_msg+0xe28
+0000a000: 4021       movs      r1, #0x40                         
+0000a002: 164a       ldr       r2, [pc, #0x58]                     ; [0000a05c]=0000c0cd "WARM(warm_count=%d)"
+0000a004: 0346       mov       r3, r0                            
+0000a006: 3846       mov       r0, r7                            
+0000a008: fff748e8   blx       #0x909c                             ; snprintf
+0000a00c: 3846       mov       r0, r7                            
+0000a00e: fff7f7fb   bl        #0x9800                             ; osal_free_msg+0x6f4
+0000a012: 2046       mov       r0, r4                            
+0000a014: 1249       ldr       r1, [pc, #0x48]                     ; [0000a060]=0000c0c8 "warm"
+0000a016: 0422       movs      r2, #4                            
+0000a018: 0fe0       b         #0xa03a                             ; osal_free_msg+0xf2e
+0000a01a: fff78bff   bl        #0x9f34                             ; osal_free_msg+0xe28
+0000a01e: 4021       movs      r1, #0x40                         
+0000a020: 104a       ldr       r2, [pc, #0x40]                     ; [0000a064]=0000c0e1 "SUS(warm_count=%d)"
+0000a022: 0346       mov       r3, r0                            
+0000a024: 3846       mov       r0, r7                            
+0000a026: fff73ae8   blx       #0x909c                             ; snprintf
+0000a02a: 3846       mov       r0, r7                            
+0000a02c: fff7e8fb   bl        #0x9800                             ; osal_free_msg+0x6f4
+0000a030: 00f050fd   bl        #0xaad4                             ; osal_free_msg+0x19c8
+0000a034: 0c49       ldr       r1, [pc, #0x30]                     ; [0000a068]=0000c0f4
+0000a036: 2046       mov       r0, r4                            
+0000a038: 0322       movs      r2, #3                            
+0000a03a: fef796ef   blx       #0x8f68                             ; write
+0000a03e: 2046       mov       r0, r4                            
+0000a040: fef7e2ef   blx       #0x9008                             ; close
+0000a044: fff716fd   bl        #0x9a74                             ; osal_free_msg+0x968
+0000a048: 0020       movs      r0, #0                            
+0000a04a: 01e0       b         #0xa050                             ; osal_free_msg+0xf44
+0000a04c: 4ff0ff30   mov.w     r0, #-1                           
+0000a050: 07f14007   add.w     r7, r7, #0x40                     
+0000a054: bd46       mov       sp, r7                            
+0000a056: b0bd       pop       {r4, r5, r7, pc}                  
+0000a058: b7c0       stm       r0!, {r0, r1, r2, r4, r5, r7}     
+0000a05a: 0000       movs      r0, r0                            
+
+## im.elf 0x9F44: decision (compara un contador) y 0x9F68: contador de warm boots en Backup (canal 0x00940004)
+00009f34: 024b       ldr       r3, [pc, #8]                      
+00009f36: 80b5       push      {r7, lr}                          
+00009f38: 00af       add       r7, sp, #0                        
+00009f3a: 1868       ldr       r0, [r3]                          
+00009f3c: 80bd       pop       {r7, pc}                          
+00009f3e: 00bf       nop                                         
+00009f40: b854       strb      r0, [r7, r2]                      
+00009f42: 0100       movs      r1, r0                            
+00009f44: 064b       ldr       r3, [pc, #0x18]                     ; [00009f60]=000154d4
+00009f46: 80b5       push      {r7, lr}                          
+00009f48: 00af       add       r7, sp, #0                        
+00009f4a: 1b68       ldr       r3, [r3]                          
+00009f4c: 33b1       cbz       r3, #0x9f5c                       
+00009f4e: 054a       ldr       r2, [pc, #0x14]                     ; [00009f64]=000154b8
+00009f50: 1068       ldr       r0, [r2]                          
+00009f52: 9842       cmp       r0, r3                            
+00009f54: 8cbf       ite       hi                                
+00009f56: 0020       movhi     r0, #0                            
+00009f58: 0120       movls     r0, #1                            
+00009f5a: 80bd       pop       {r7, pc}                          
+00009f5c: 0120       movs      r0, #1                            
+00009f5e: 80bd       pop       {r7, pc}                          
+00009f60: d454       strb      r4, [r2, r3]                      
+00009f62: 0100       movs      r1, r0                            
+00009f64: b854       strb      r0, [r7, r2]                      
+00009f66: 0100       movs      r1, r0                            
+00009f68: 90b5       push      {r4, r7, lr}                      
+00009f6a: 83b0       sub       sp, #0xc                          
+00009f6c: 00af       add       r7, sp, #0                        
+00009f6e: 0023       movs      r3, #0                            
+00009f70: 7b60       str       r3, [r7, #4]                      
+00009f72: 0d4b       ldr       r3, [pc, #0x34]                     ; [00009fa8]=000154d4
+00009f74: 1b68       ldr       r3, [r3]                          
+00009f76: 93b1       cbz       r3, #0x9f9e                       
+00009f78: 0c4c       ldr       r4, [pc, #0x30]                     ; [00009fac]=000154b8
+00009f7a: 391d       adds      r1, r7, #4                        
+00009f7c: 0c48       ldr       r0, [pc, #0x30]                     ; [00009fb0]=00940004
+00009f7e: fef780ef   blx       #0x8e80                             ; Backup_read
+00009f82: 7a68       ldr       r2, [r7, #4]                      
+00009f84: 2368       ldr       r3, [r4]                          
+00009f86: 9a42       cmp       r2, r3                            
+00009f88: 01d0       beq       #0x9f8e                           
+00009f8a: 00f0a3fd   bl        #0xaad4                             ; osal_free_msg+0x19c8
+00009f8e: 7b68       ldr       r3, [r7, #4]                      
+00009f90: 9420       movs      r0, #0x94                         
+00009f92: 0749       ldr       r1, [pc, #0x1c]                     ; [00009fb0]=00940004
+00009f94: 054a       ldr       r2, [pc, #0x14]                     ; [00009fac]=000154b8
+00009f96: 0133       adds      r3, #1                            
+00009f98: 2360       str       r3, [r4]                          
+00009f9a: fff710e8   blx       #0x8fbc                             ; Backup_write
+00009f9e: 07f10c07   add.w     r7, r7, #0xc                      
+00009fa2: bd46       mov       sp, r7                            
+
+## upm.ko y backup.ko importan wbi_drop (EXPORT_SYMBOL de warm.c); nand.ko NO
+--- kmod/upm.ko
+   130: 00000000     0 NOTYPE  GLOBAL DEFAULT  UND wbi_drop
+   137: 00000000     0 NOTYPE  GLOBAL DEFAULT  UND ssboot_is_rewriting
+   143: 00000000     0 NOTYPE  GLOBAL DEFAULT  UND ssboot_is_profiling
+   346: 00000000     0 NOTYPE  GLOBAL DEFAULT  UND ssboot_optimizer_stop_profiling
+--- kmod/backup.ko
+    92: 00000000     0 NOTYPE  GLOBAL DEFAULT  UND wbi_drop
+--- kmod/nand.ko
+   (nada de wbi/ssboot)
+
+## upm.ko — cadenas de modos de arranque y nodos /proc
+41:LDR_BOOT_MODE_COLD
+42:LDR_BOOT_MODE_HOT
+43:LDR_BOOT_MODE_UPDATER
+44:LDR_BOOT_MODE_CIPA
+45:LDR_BOOT_MODE_ADJUST
+46:LDR_BOOT_MODE_USB_CHARGE
+47:LDR_BOOT_MODE_WARM
+48:LDR_BOOT_MODE_SS
+49:LDR_BOOT_MODE_BIS
+238:upm_bootmode
+297:upm_bootmode_read_proc
+327:ldr_mode2str
+553:proc_upm_bootmode
+575:k_upm_get_ldr_mode

@@ -1,0 +1,57 @@
+0066d0c8: 406a       ldr      r0, [r0, #0x24]               
+0066d0ca: 80b5       push     {r7, lr}                      
+0066d0cc: 00af       add      r7, sp, #0                    
+0066d0ce: 0368       ldr      r3, [r0]                      
+0066d0d0: 9b69       ldr      r3, [r3, #0x18]               
+0066d0d2: 9847       blx      r3                            
+0066d0d4: 80bd       pop      {r7, pc}                      
+0066d0d6: 406a       ldr      r0, [r0, #0x24]               
+0066d0d8: 80b5       push     {r7, lr}                      
+0066d0da: 00af       add      r7, sp, #0                    
+0066d0dc: 0368       ldr      r3, [r0]                      
+0066d0de: db69       ldr      r3, [r3, #0x1c]               
+0066d0e0: 9847       blx      r3                            
+0066d0e2: 80bd       pop      {r7, pc}                      
+0066d0e4: 0649       ldr      r1, [pc, #0x18]                 ; [0066d100]=00a5141c
+0066d0e6: 074b       ldr      r3, [pc, #0x1c]                 ; [0066d104]=00907c50
+0066d0e8: 80b5       push     {r7, lr}                      
+0066d0ea: 00af       add      r7, sp, #0                    
+0066d0ec: 0360       str      r3, [r0]                      
+0066d0ee: 0023       movs     r3, #0                        
+0066d0f0: c1f80432   str.w    r3, [r1, #0x204]              
+0066d0f4: 0b60       str      r3, [r1]                      
+0066d0f6: 0362       str      r3, [r0, #0x20]               
+0066d0f8: 8361       str      r3, [r0, #0x18]               
+0066d0fa: c360       str      r3, [r0, #0xc]                
+0066d0fc: 80bd       pop      {r7, pc}                      
+0066d0fe: 00bf       nop                                    
+0066d100: 1c14       asrs     r4, r3, #0x10                 
+0066d102: a500       lsls     r5, r4, #2                    
+0066d104: 507c       ldrb     r0, [r2, #0x11]               
+0066d106: 9000       lsls     r0, r2, #2                    
+0066d108: 2de9f047   push.w   {r4, r5, r6, r7, r8, sb, sl, lr}
+0066d10c: 00af       add      r7, sp, #0                    
+0066d10e: 124c       ldr      r4, [pc, #0x48]                 ; [0066d158]=009df25a
+0066d110: 8046       mov      r8, r0                        
+0066d112: d7f82090   ldr.w    sb, [r7, #0x20]               
+0066d116: 1546       mov      r5, r2                        
+0066d118: 9a46       mov      sl, r3                        
+0066d11a: 0e46       mov      r6, r1                        
+0066d11c: 2078       ldrb     r0, [r4]                      
+0066d11e: e3f71afb   bl       #0x650756                     
+0066d122: 2078       ldrb     r0, [r4]                      
+0066d124: 0d49       ldr      r1, [pc, #0x34]                 ; [0066d15c]=0090823b "[MMGRIF]DummyCallBackFunc : TargetID[%x]"
+0066d126: 4246       mov      r2, r8                        
+0066d128: 4b46       mov      r3, sb                        
+0066d12a: e3f771f9   bl       #0x650410                     
+0066d12e: 2078       ldrb     r0, [r4]                      
+0066d130: 0b49       ldr      r1, [pc, #0x2c]                 ; [0066d160]=00908271 "[MMGRIF]                    MsgAddr [%x]"
+0066d132: 2a46       mov      r2, r5                        
+0066d134: 5346       mov      r3, sl                        
+0066d136: e3f76bf9   bl       #0x650410                     
+0066d13a: 2078       ldrb     r0, [r4]                      
+0066d13c: 35b1       cbz      r5, #0x66d14c                 
+0066d13e: 2b68       ldr      r3, [r5]                      
+0066d140: 3246       mov      r2, r6                        
+0066d142: 0849       ldr      r1, [pc, #0x20]                 ; [0066d164]=009082a7 "[MMGRIF]                    EventID [%x]"
+0066d144: bde8f047   pop.w    {r4, r5, r6, r7, r8, sb, sl, lr}

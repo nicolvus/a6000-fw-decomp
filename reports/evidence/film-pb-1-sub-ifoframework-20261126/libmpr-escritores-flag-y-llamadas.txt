@@ -1,0 +1,47 @@
+# Escritores del byte [obj+4] y censo de llamadas (libmpr.so 3.21)
+# SHA-256 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+
+==========================================================================
+## 1. Barrido completo de 'strb rX,[rY,#4]' en 0x5BA000-0x5BB800 (TU entera)
+##    Solo 3 escritores. No hay ningun otro punto que toque el flag.
+==========================================================================
+005bacc6: strb     r3, [r4, #4]              (instruccion previa: mov r0, r4)
+005bace0: strb     r3, [r0, #4]              (instruccion previa: movs r3, #1)
+005badc2: strb.w   sb, [r4, #4]              (instruccion previa: mov r0, r4)
+
+   -> 0x5BACE0 = ctor   pone 1  (LIBRE)
+   -> 0x5BACC6 = release pone 1 (LIBRE) tras limpiar propietario
+   -> 0x5BADC2 = acquire pone 0 (OCUPADO) y a continuacion graba PID/TID/CMD
+
+==========================================================================
+## 2. Censo de llamadas en libmpr
+==========================================================================
+acquire 0x5BAD00 : 809 llamantes
+release 0x5BACB0 : 809 llamantes
+ctor    0x5BACD0 : 9 llamantes
+
+En la TU mp4Ifo_* (0x6E8000-0x6ED000): acquire=106 release=106 ctor=1
+  primer acquire: 0x6e81dc   ultimo: 0x6ebfba
+  primer release: 0x6e81f6   ultimo: 0x6ebfe6
+
+En la TU m2psIfo_* (0x5CDC00-0x5D0E00): acquire=128 release=128
+En la TU ifoFramework 0x5B6xxx-0x5BAC00: acquire=74 release=74
+
+Ningun sitio de libmpr llama a 0x5BAD00 sobre el objeto del mp4Ifo salvo los
+metodos de mp4Ifo_If: todos usan "ldr r0,[r4,#4] ; bl 0x5BAD00".
+
+==========================================================================
+## 3. Los 9 puntos de construccion (cada uno crea su propio semaforo)
+==========================================================================
+0x2BA73A  MprUtil/otros (objeto vtable 0x7EA3F0, 0x14 B)
+0x3A838A  idem, objeto 0x3A83xx
+0x5AC6E8  hdAvcIfo_If::Create  ('[IFO]End  hdAvcIfo_If::Create() errcode')
+0x5D0D90  m2psIfo_If (TU 0x5CDC00-0x5D0E00, '[M2PS]AcquireSemaphore Error !' 0x8C86D0)
+0x5ECE24  otro XXXIfo_If (log 'Err CopyFileEnd() Collision')
+0x765F0E  XXXIfo_If (mapeo de tipo 2..11 -> 0..8)
+0x78FB56  XXXIfo_If (TUs 0x78Fxxx, 0xB0100002 en 0x78F9C6..)
+0x79EAC6  XXXIfo_If (mapeo 2..11 -> 0..8)
+0x6E8166  mp4Ifo_If  <-- ESTE es el del camino de reproduccion/miniatura
+
+## El unico escritor de [mp4IfoIf+4] es 0x6E816A (0x6E80A4), y el de la semantica
+## del flag son los 3 de arriba. No hay reset externo ni inicializacion perezosa.

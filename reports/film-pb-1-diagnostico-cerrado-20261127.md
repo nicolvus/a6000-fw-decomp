@@ -1,5 +1,12 @@
 # FILM-PB-1 — Diagnóstico cerrado: cámara PAL, clips NTSC
 
+> **SUPERADO el 26-11-2026.** Dos pruebas de la cámara en mano refutan la causa de este informe:
+> un clip convertido a 25p da «No se puede visualizar» y **un clip grabado por la propia cámara
+> tampoco se reproduce**. La cadencia no es la causa; el fallo está en el mutex del `mp4Ifo_If`
+> (`0x5BAD00`), que bloquea `GetPlayThumbnailInfo` (`0x6E8430`) y con ello la guarda B
+> (`0x437C3C`). Ver [reencuadre](film-pb-1-fallo-global-pb-20261126.md). Se conserva el resto
+> del documento por el enum de cadencia, la auditoría de `GetInhInfo` y el estado del selector.
+
 Fecha: 27-11-2026. Sustituye al estado «causa probable» del
 [informe de sistema de TV](film-pb-1-causa-sistema-tv-20261127.md) §2: ahora la combinación
 está cerrada por evidencia y el arreglo está preparado y probado en laboratorio.

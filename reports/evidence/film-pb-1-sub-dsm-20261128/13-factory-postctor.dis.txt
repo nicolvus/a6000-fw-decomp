@@ -1,0 +1,44 @@
+0066b510: 49f53b1d   adc      sp, sb, #0x2ec000             
+0066b514: 03f11c00   add.w    r0, r3, #0x1c                 
+0066b518: e168       ldr      r1, [r4, #0xc]                
+0066b51a: d9f643f5   bl       #0x144fa4                     
+0066b51e: 0123       movs     r3, #1                        
+0066b520: 87f82b31   strb.w   r3, [r7, #0x12b]              
+0066b524: 40f6c800   movw     r0, #0x8c8                    
+0066b528: 6369       ldr      r3, [r4, #0x14]               
+0066b52a: d5f80090   ldr.w    sb, [r5]                      
+0066b52e: c7f82031   str.w    r3, [r7, #0x120]              
+0066b532: a369       ldr      r3, [r4, #0x18]               
+0066b534: c7f82431   str.w    r3, [r7, #0x124]              
+0066b538: 237f       ldrb     r3, [r4, #0x1c]               
+0066b53a: 87f82831   strb.w   r3, [r7, #0x128]              
+0066b53e: 637f       ldrb     r3, [r4, #0x1d]               
+0066b540: 87f82931   strb.w   r3, [r7, #0x129]              
+0066b544: a37f       ldrb     r3, [r4, #0x1e]               
+0066b546: 87f82c31   strb.w   r3, [r7, #0x12c]              
+0066b54a: e37f       ldrb     r3, [r4, #0x1f]               
+0066b54c: 87f82d31   strb.w   r3, [r7, #0x12d]              
+0066b550: b3f628e1   blx      #0x11e7a4                       ; _Znwj
+0066b554: 0646       mov      r6, r0                        
+0066b556: 9ff79ffa   bl       #0x60aa98                     
+0066b55a: 2b68       ldr      r3, [r5]                      
+0066b55c: 391d       adds     r1, r7, #4                    
+0066b55e: c9f82460   str.w    r6, [sb, #0x24]               
+0066b562: 586a       ldr      r0, [r3, #0x24]               
+0066b564: d862       str      r0, [r3, #0x2c]               
+0066b566: 9ff7adfd   bl       #0x60b0c4                     
+0066b56a: 2b68       ldr      r3, [r5]                      
+0066b56c: 2268       ldr      r2, [r4]                      
+0066b56e: 1c48       ldr      r0, [pc, #0x70]                 ; [0066b5e0]=009064d8 "NewFlashAviMMgr : ER_OK"
+0066b570: 98f80010   ldrb.w   r1, [r8]                      
+0066b574: 1a62       str      r2, [r3, #0x20]               
+0066b576: 0022       movs     r2, #0                        
+0066b578: e5f7d0f8   bl       #0x65071c                     
+0066b57c: 98f80000   ldrb.w   r0, [r8]                      
+0066b580: 1849       ldr      r1, [pc, #0x60]                 ; [0066b5e4]=009062e5 "- mmgrIfInstance = [%x]
+"
+0066b582: 2a68       ldr      r2, [r5]                      
+0066b584: e4f744ff   bl       #0x650410                     
+0066b588: 0020       movs     r0, #0                        
+0066b58a: 07f59a77   add.w    r7, r7, #0x134                
+0066b58e: bd46       mov      sp, r7                        

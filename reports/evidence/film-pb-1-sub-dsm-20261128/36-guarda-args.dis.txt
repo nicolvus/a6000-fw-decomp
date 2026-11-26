@@ -1,0 +1,42 @@
+00437a04: f0bd       pop      {r4, r5, r6, r7, pc}          
+00437a06: 00bf       nop                                    
+00437a08: 58a7       adr      r7, #0x160                    
+00437a0a: 8500       lsls     r5, r0, #2                    
+00437a0c: 84a7       adr      r7, #0x210                    
+00437a0e: 8500       lsls     r5, r0, #2                    
+00437a10: 9ca7       adr      r7, #0x270                    
+00437a12: 8500       lsls     r5, r0, #2                    
+00437a14: 2680       strh     r6, [r4]                      
+00437a16: 0040       ands     r0, r0                        
+00437a18: 024b       ldr      r3, [pc, #8]                  
+00437a1a: 80b5       push     {r7, lr}                      
+00437a1c: 00af       add      r7, sp, #0                    
+00437a1e: 1878       ldrb     r0, [r3]                      
+00437a20: 80bd       pop      {r7, pc}                      
+00437a22: 00bf       nop                                    
+00437a24: dd28       cmp      r0, #0xdd                     
+00437a26: ad00       lsls     r5, r5, #2                    
+00437a28: f0b5       push     {r4, r5, r6, r7, lr}          
+00437a2a: 89b0       sub      sp, #0x24                     
+00437a2c: 0446       mov      r4, r0                        
+00437a2e: 06af       add      r7, sp, #0x18                 
+00437a30: 0d46       mov      r5, r1                        
+00437a32: d0f8f031   ldr.w    r3, [r0, #0x1f0]              
+00437a36: 022b       cmp      r3, #2                        
+00437a38: 01d0       beq      #0x437a3e                     
+00437a3a: 0a23       movs     r3, #0xa                      
+00437a3c: 04e0       b        #0x437a48                     
+00437a3e: 0968       ldr      r1, [r1]                      
+00437a40: 09b1       cbz      r1, #0x437a46                 
+00437a42: 2b7a       ldrb     r3, [r5, #8]                  
+00437a44: 13b9       cbnz     r3, #0x437a4c                 
+00437a46: 0523       movs     r3, #5                        
+00437a48: 3b60       str      r3, [r7]                      
+00437a4a: 56e0       b        #0x437afa                     
+00437a4c: 6b68       ldr      r3, [r5, #4]                  
+00437a4e: c0f8c01d   str.w    r1, [r0, #0xdc0]              
+00437a52: c0f8b83d   str.w    r3, [r0, #0xdb8]              
+00437a56: d0f8ec01   ldr.w    r0, [r0, #0x1ec]              
+00437a5a: 10f018f9   bl       #0x447c8e                     
+00437a5e: 0028       cmp      r0, #0                        
+00437a60: 48d1       bne      #0x437af4                     

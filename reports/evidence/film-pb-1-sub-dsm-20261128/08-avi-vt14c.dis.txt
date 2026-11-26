@@ -1,0 +1,23 @@
+0061a598: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+0061a59c: 85b0       sub      sp, #0x14                     
+0061a59e: 674d       ldr      r5, [pc, #0x19c]                ; [0061a73c]=009df25c
+0061a5a0: 0446       mov      r4, r0                        
+0061a5a2: 04af       add      r7, sp, #0x10                 
+0061a5a4: 4068       ldr      r0, [r0, #4]                  
+0061a5a6: 40f6bb42   movw     r2, #0xcbb                    
+0061a5aa: 0e46       mov      r6, r1                        
+0061a5ac: 40f20531   movw     r1, #0x305                    
+0061a5b0: 35f0f2f9   bl       #0x64f998                     
+0061a5b4: e068       ldr      r0, [r4, #0xc]                
+0061a5b6: 6249       ldr      r1, [pc, #0x188]                ; [0061a740]=008e520f "ClearContentResume : "
+0061a5b8: a946       mov      sb, r5                        
+0061a5ba: 2a78       ldrb     r2, [r5]                      
+0061a5bc: 36f0c1f8   bl       #0x650742                     
+0061a5c0: 2046       mov      r0, r4                        
+0061a5c2: 31f0cfff   bl       #0x64c564                     
+0061a5c6: 8046       mov      r8, r0                        
+0061a5c8: f0b1       cbz      r0, #0x61a608                 
+0061a5ca: 40f6c843   movw     r3, #0xcc8                    
+0061a5ce: 6068       ldr      r0, [r4, #4]                  
+0061a5d0: 40f20531   movw     r1, #0x305                    
+0061a5d4: 5b4a       ldr      r2, [pc, #0x16c]                ; [0061a744]=31000005

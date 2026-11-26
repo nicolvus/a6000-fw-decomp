@@ -1,0 +1,162 @@
+# Microcodigo DSP presente en el /usr de fabrica (directorio sabin/)
+# Comando: ls -la + xxd -l 32 de las cabeceras
+---
+total 6796
+drwxr-xr-x 1 nicolas nicolas   3324 ene 23  2019 .
+drwxr-xr-x 1 nicolas nicolas     96 ene 23  2019 ..
+-rw-r--r-- 1 nicolas nicolas  10728 ene 21  2019 dcv_psf_table_movie.bin
+-rw-r--r-- 1 nicolas nicolas  57848 ene 21  2019 dcv_psf_table_still.bin
+-rw-r--r-- 1 nicolas nicolas 286468 ene 21  2019 sa_aaclcdec.bin
+-rw-r--r-- 1 nicolas nicolas 220932 ene 21  2019 sa_aaclcenc.bin
+-rw-r--r-- 1 nicolas nicolas 302852 ene 21  2019 sa_aaclcenc_nr.bin
+-rw-r--r-- 1 nicolas nicolas 327428 ene 21  2019 sa_ac3dec.bin
+-rw-r--r-- 1 nicolas nicolas 474884 ene 21  2019 sa_ac3enc_ac3dec.bin
+-rw-r--r-- 1 nicolas nicolas 237572 ene 21  2019 sa_apollo.bin
+-rw-r--r-- 1 nicolas nicolas  55940 ene 21  2019 sa_avcd_compatible_zma.bin
+-rw-r--r-- 1 nicolas nicolas  38660 ene 21  2019 sa_avcd_performance_zma.bin
+-rw-r--r-- 1 nicolas nicolas 198916 ene 21  2019 sa_avce_performance_plus_zma.bin
+-rw-r--r-- 1 nicolas nicolas 190468 ene 21  2019 sa_avce_performance_zma.bin
+-rw-r--r-- 1 nicolas nicolas 196228 ene 21  2019 sa_avce_quality_zma.bin
+-rw-r--r-- 1 nicolas nicolas  71044 ene 21  2019 sa_bayes_tracker.bin
+-rw-r--r-- 1 nicolas nicolas 130820 ene 21  2019 sa_bd_lpcmdec.bin
+-rw-r--r-- 1 nicolas nicolas  65284 ene 21  2019 sa_bd_lpcmenc.bin
+-rw-r--r-- 1 nicolas nicolas 302852 ene 21  2019 sa_bd_lpcmenc_nr.bin
+-rw-r--r-- 1 nicolas nicolas  53380 ene 21  2019 sa_bdro2_bdex.bin
+-rw-r--r-- 1 nicolas nicolas  36228 ene 21  2019 sa_cecil.bin
+-rw-r--r-- 1 nicolas nicolas  18564 ene 21  2019 sa_dcv.bin
+-rw-r--r-- 1 nicolas nicolas 302852 ene 21  2019 sa_dd51enc.bin
+-rw-r--r-- 1 nicolas nicolas 302852 ene 21  2019 sa_dd51enc_nr.bin
+-rw-r--r-- 1 nicolas nicolas  37124 ene 21  2019 sa_defect.bin
+-rw-r--r-- 1 nicolas nicolas 155780 ene 21  2019 sa_dfdet.bin
+-rw-r--r-- 1 nicolas nicolas  62084 ene 21  2019 sa_frc2.bin
+-rw-r--r-- 1 nicolas nicolas 393988 ene 21  2019 sa_integenc.bin
+-rw-r--r-- 1 nicolas nicolas 459524 ene 21  2019 sa_integenc_nr.bin
+-rw-r--r-- 1 nicolas nicolas  10756 ene 21  2019 sa_jpeg_dec_1core.bin
+-rw-r--r-- 1 nicolas nicolas  11012 ene 21  2019 sa_jpeg_dec_1unit.bin
+-rw-r--r-- 1 nicolas nicolas  13956 ene 21  2019 sa_jpeg_enc_1core.bin
+-rw-r--r-- 1 nicolas nicolas  22404 ene 21  2019 sa_jpeg_enc_1unit.bin
+-rw-r--r-- 1 nicolas nicolas  66052 ene 21  2019 sa_kknr.bin
+-rw-r--r-- 1 nicolas nicolas  22660 ene 21  2019 sa_lfnr_minna0.bin
+-rw-r--r-- 1 nicolas nicolas  22660 ene 21  2019 sa_lfnr_minna1.bin
+-rw-r--r-- 1 nicolas nicolas  22660 ene 21  2019 sa_lfnr_zma0.bin
+-rw-r--r-- 1 nicolas nicolas  43908 ene 21  2019 sa_sftfcs.bin
+-rw-r--r-- 1 nicolas nicolas   3076 ene 21  2019 sa_shapep.bin
+-rw-r--r-- 1 nicolas nicolas  23300 ene 21  2019 sa_spica.bin
+-rw-r--r-- 1 nicolas nicolas 471940 ene 21  2019 sa_star.bin
+-rw-r--r-- 1 nicolas nicolas  18948 ene 21  2019 sa_sweep_panorama.bin
+-rw-r--r-- 1 nicolas nicolas  77828 ene 21  2019 sa_tbox.bin
+-rw-r--r-- 1 nicolas nicolas   3204 ene 21  2019 sa_zima_startup_minna1.bin
+-rw-r--r-- 1 nicolas nicolas   3204 ene 21  2019 sa_zima_startup_minna.bin
+-rw-r--r-- 1 nicolas nicolas   3204 ene 21  2019 sa_zima_startup_zma0.bin
+-rw-r--r-- 1 nicolas nicolas   3204 ene 21  2019 sa_zima_startup_zma1.bin
+-rw-r--r-- 1 nicolas nicolas  18564 ene 21  2019 sa_zphdefdet.bin
+-rw-r--r-- 1 nicolas nicolas  40000 ene 21  2019 spica_musashi_dualrec_4k_c_tap_step1.bin
+-rw-r--r-- 1 nicolas nicolas  40000 ene 21  2019 spica_musashi_dualrec_4k_c_tap_step2.bin
+-rw-r--r-- 1 nicolas nicolas  48000 ene 21  2019 spica_musashi_dualrec_4k_y_tap_step1.bin
+-rw-r--r-- 1 nicolas nicolas  48000 ene 21  2019 spica_musashi_dualrec_4k_y_tap_step2.bin
+-rw-r--r-- 1 nicolas nicolas  40000 ene 21  2019 spica_musashi_dualrec_c_tap_step1.bin
+-rw-r--r-- 1 nicolas nicolas  40000 ene 21  2019 spica_musashi_dualrec_c_tap_step2.bin
+-rw-r--r-- 1 nicolas nicolas  48000 ene 21  2019 spica_musashi_dualrec_y_tap_step1.bin
+-rw-r--r-- 1 nicolas nicolas  48000 ene 21  2019 spica_musashi_dualrec_y_tap_step2.bin
+-rw-r--r-- 1 nicolas nicolas  40000 ene 21  2019 spica_musashi_mov_4k_c_tap_step1.bin
+-rw-r--r-- 1 nicolas nicolas  40000 ene 21  2019 spica_musashi_mov_4k_c_tap_step2.bin
+-rw-r--r-- 1 nicolas nicolas  48000 ene 21  2019 spica_musashi_mov_4k_y_tap_step1.bin
+-rw-r--r-- 1 nicolas nicolas  48000 ene 21  2019 spica_musashi_mov_4k_y_tap_step2.bin
+-rw-r--r-- 1 nicolas nicolas  40000 ene 21  2019 spica_musashi_mov_c_tap_step1.bin
+-rw-r--r-- 1 nicolas nicolas  40000 ene 21  2019 spica_musashi_mov_c_tap_step2.bin
+-rw-r--r-- 1 nicolas nicolas  40000 ene 21  2019 spica_musashi_mov_interlace_c_tap_step1.bin
+-rw-r--r-- 1 nicolas nicolas  48000 ene 21  2019 spica_musashi_mov_interlace_y_tap_step1.bin
+-rw-r--r-- 1 nicolas nicolas  48000 ene 21  2019 spica_musashi_mov_y_tap_step1.bin
+-rw-r--r-- 1 nicolas nicolas  48000 ene 21  2019 spica_musashi_mov_y_tap_step2.bin
+-rw-r--r-- 1 nicolas nicolas  40000 ene 21  2019 spica_musashi_still_c_tap_step1.bin
+-rw-r--r-- 1 nicolas nicolas  40000 ene 21  2019 spica_musashi_still_c_tap_step2.bin
+-rw-r--r-- 1 nicolas nicolas  48000 ene 21  2019 spica_musashi_still_y_tap_step1.bin
+-rw-r--r-- 1 nicolas nicolas  48000 ene 21  2019 spica_musashi_still_y_tap_step2.bin
+-rw-r--r-- 1 nicolas nicolas  31658 ene 21  2019 star_kernel_param.bin
+
+=== Cabeceras de los modulos de decodificacion/codificacion ===
+-- sa_avcd_performance_zma.bin
+00000000: aa0a 1391 0400 0002 01c8 0002 8300 0100  ................
+00000010: 0000 0000 5a4d 5f41 5643 4450 3078 3030  ....ZM_AVCDP0x00
+-- sa_avcd_compatible_zma.bin
+00000000: aa0a 1391 0400 0002 01c9 0002 8300 0100  ................
+00000010: 0000 0000 5a4d 5f41 5643 4443 3078 3030  ....ZM_AVCDC0x00
+-- sa_avce_performance_zma.bin
+00000000: aa0a 1391 0400 0002 01c0 0002 8300 0100  ................
+00000010: 0000 0000 5a4d 5f41 5643 4550 3078 3030  ....ZM_AVCEP0x00
+-- sa_avce_performance_plus_zma.bin
+00000000: aa0a 1391 0400 0002 01c4 0002 8300 0100  ................
+00000010: 0000 0000 5a4d 4156 4345 5050 3078 3030  ....ZMAVCEPP0x00
+-- sa_avce_quality_zma.bin
+00000000: aa0a 1391 0400 0002 01c1 0002 8300 0100  ................
+00000010: 0000 0000 5a4d 5f41 5643 4551 3078 3030  ....ZM_AVCEQ0x00
+-- sa_jpeg_dec_1core.bin
+00000000: aa0a 1391 0400 0002 01e9 0001 0200 0100  ................
+00000010: 0000 0000 5341 4a50 4744 5f43 3078 3032  ....SAJPGD_C0x02
+-- sa_jpeg_dec_1unit.bin
+00000000: aa0a 1391 0400 0002 01e8 0001 0300 0100  ................
+00000010: 0000 0000 5341 4a50 4744 5f55 3078 3031  ....SAJPGD_U0x01
+-- sa_jpeg_enc_1core.bin
+00000000: aa0a 1391 0400 0002 01e1 0001 0200 0100  ................
+00000010: 0000 0000 5341 4a50 4745 5f43 3078 3032  ....SAJPGE_C0x02
+-- sa_jpeg_enc_1unit.bin
+00000000: aa0a 1391 0400 0002 01e0 0001 0300 0100  ................
+00000010: 0000 0000 5341 4a50 4745 5f55 3078 3032  ....SAJPGE_U0x02
+-- sa_zima_startup_zma0.bin
+00000000: aa0a 1391 0400 0002 01f0 0001 0100 0100  ................
+00000010: 0000 0000 5341 5f5a 5f53 5430 3078 3030  ....SA_Z_ST00x00
+-- sa_aaclcdec.bin
+00000000: aa0a 1391 0400 0002 01d7 0001 0200 0100  ................
+00000010: 0000 0000 5a4d 5f41 4143 445f 3078 3030  ....ZM_AACD_0x00
+-- dcv_psf_table_movie.bin
+00000000: 494d 5832 3130 0000 0000 0000 0000 0000  IMX210..........
+00000010: 5341 4c35 3020 4365 6e47 6368 5f33 0000  SAL50 CenGch_3..
+-- dcv_psf_table_still.bin
+00000000: 494d 5832 3130 0000 0000 0000 0000 0000  IMX210..........
+00000010: 5341 4c35 3020 4365 6e47 6368 5f30 0000  SAL50 CenGch_0..
+
+=== Nombres internos (offset 0x10 de la cabecera) ===
+sa_aaclcdec.bin                          ZM_AACD_0x00
+sa_aaclcenc.bin                          ZM_AACE_0x00
+sa_aaclcenc_nr.bin                       ZM_AACNR0x00
+sa_ac3dec.bin                            ZM_AC3D_0x00
+sa_ac3enc_ac3dec.bin                     ZM_ACE&D0x00
+sa_apollo.bin                            APOLLO_50x06
+sa_avcd_compatible_zma.bin               ZM_AVCDC0x00
+sa_avcd_performance_zma.bin              ZM_AVCDP0x00
+sa_avce_performance_plus_zma.bin         ZMAVCEPP0x00
+sa_avce_performance_zma.bin              ZM_AVCEP0x00
+sa_avce_quality_zma.bin                  ZM_AVCEQ0x00
+sa_bayes_tracker.bin                     SABT____0x07
+sa_bd_lpcmdec.bin                        ZM_LPCMD0x00
+sa_bd_lpcmenc.bin                        ZM_LPCME0x00
+sa_bd_lpcmenc_nr.bin                     ZM_LPCME0x00
+sa_bdro2_bdex.bin                        SA_BDRO20x01
+sa_cecil.bin                             SA_CECIL0x00
+sa_dcv.bin                               SA_DCV__0x13
+sa_dd51enc.bin                           ZM_DD51E0x00
+sa_dd51enc_nr.bin                        ZM_AC3NR0x00
+sa_defect.bin                            SADEFECT0x01
+sa_dfdet.bin                             ZITTOOLS0x02
+sa_frc2.bin                              SA_FRC2_0x00
+sa_integenc.bin                          ZM_A3E__0x00
+sa_integenc_nr.bin                       ZM_A3ENR0x00
+sa_jpeg_dec_1core.bin                    SAJPGD_C0x02
+sa_jpeg_dec_1unit.bin                    SAJPGD_U0x01
+sa_jpeg_enc_1core.bin                    SAJPGE_C0x02
+sa_jpeg_enc_1unit.bin                    SAJPGE_U0x02
+sa_kknr.bin                              DRECKKNR0x00
+sa_lfnr_minna0.bin                       SALFNRM00x03
+sa_lfnr_minna1.bin                       SALFNRM10x03
+sa_lfnr_zma0.bin                         SALFNRZ00x03
+sa_sftfcs.bin                            SASFTFCS0x02
+sa_shapep.bin                            SA_SHAPE0x01
+sa_spica.bin                             SA_SPICA0x00
+sa_star.bin                              SA_STAR_0x00
+sa_sweep_panorama.bin                    SAPANORM0x00
+sa_tbox.bin                              SATBOX__0x01
+sa_zima_startup_minna1.bin               SA_Z_MN10x00
+sa_zima_startup_minna.bin                SA_Z_MNS0x00
+sa_zima_startup_zma0.bin                 SA_Z_ST00x00
+sa_zima_startup_zma1.bin                 SA_Z_ST10x00
+sa_zphdefdet.bin                         SA_ZPHD20x06

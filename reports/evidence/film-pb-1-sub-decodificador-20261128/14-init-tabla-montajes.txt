@@ -1,0 +1,24 @@
+# Tabla de montajes de sbin/init: registros de 20 B desde el offset 0x3344
+# Comando: parseo ELF32 (PT_LOAD) + lectura de los 5 punteros/enteros de cada registro
+# sha256 init: 6bfcaf0062a14693a548263dc600783c4b022965c127489691485193936fb4d6
+# campos: {origen, destino, fstype, flags, opciones}
+# (los flags 0xc0ed0490 / 0xc0ed0001 son MS_* de vfat/ext2 con bit de "ro" en 0x0001)
+
+00003344  /dev/nflasha2 | /setting | vfat | c0ed0490 | posix_attr
+00003358  /dev/dnflasha3 | /system | vfat | c0ed0001 | posix_attr
+0000336c  /dev/nflasha3 | /system | vfat | c0ed0490 | posix_attr
+00003380  /dev/nflasha10 | /tmp | vfat | c0ed0490 | posix_attr
+00003394  /dev/nflasha15 | /usr | cramfs | c0ed0001 | 00009ddd
+000033a8  /dev/dnflasha15 | /usr | ext2 | c0ed0001 | 00009ddd
+000033bc  /dev/nflasha15 | /usr | vfat | c0ed0490 | posix_attr
+000033d0  /dev/nflasha9 | /usr/upgrade | vfat | c0ed0490 | posix_attr
+000033e4  /dev/nflasha23 | /log | vfat | c0ed0490 | posix_attr
+000033f8  /dev/nflasha24 | /log | vfat | c0ed0490 | posix_attr
+0000340c  /dev/nflasha25 | /log | vfat | c0ed0490 | posix_attr
+00003420  /dev/ms1 | /log | vfat | c0ed0490 | posix_attr
+00003434  /dev/nflasha10 | /log | vfat | c0ed0490 | posix_attr
+00003448  /dev/nflasha18 | /lens | vfat | c0ed0490 | posix_attr
+0000345c  /dev/nflasha15 | /usr | ext2 | c0ed0001 | 00009ddd
+00003470  /dev/nflasha11 | /log | vfat | c0ed0490 | batch_sync,posix_attr
+00003484  /dev/dnflasha7 | /rootfs | ext2 | c0ed0001 | 00009ddd
+00003498  /dev/nflasha7 | /rootfs | ext2 | c0ed0001 | 00009ddd

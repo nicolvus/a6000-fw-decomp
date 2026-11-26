@@ -1,0 +1,207 @@
+# Ciclo de vida del objeto que contiene el semaforo (mp4Ifo_If)
+# SHA-256 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+
+==========================================================================
+## 1. 0x6E80A4  creador (mp4Ifo_If.cpp:0x4d..0x7e).  new(0x1c) = 28 B del semaforo
+##    0x6E80CC/0x6E80CE: [this]=0 y [this+4]=0 (handle de 8 bytes)
+##    0x6E815A: movs r0,#0x1c ; blx operator new ; 0x6E8166: bl 0x5BACD0 (ctor semaforo)
+##    0x6E816A: str r5,[r4,#4]  <-- UNICA escritura del puntero al semaforo
+##    OJO 0x6E8128: 'cbnz r0,0x6E816C' -> si falla la creacion interna NO crea semaforo
+##        y deja [this+4]=0 (puntero NULL; el acquire posterior desreferenciaria 0x4)
+==========================================================================
+006e80a4: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+006e80a8: 87b0       sub      sp, #0x1c                     
+006e80aa: 02af       add      r7, sp, #8                    
+006e80ac: 0446       mov      r4, r0                        
+006e80ae: 1d46       mov      r5, r3                        
+006e80b0: 3846       mov      r0, r7                        
+006e80b2: 0e46       mov      r6, r1                        
+006e80b4: 9046       mov      r8, r2                        
+006e80b6: d7f83090   ldr.w    sb, [r7, #0x30]               
+006e80ba: aef76bf9   bl       #0x696394                     
+006e80be: 354b       ldr      r3, [pc, #0xd4]                 ; [006e8194]=0091b801 "mp4Ifo_If"
+006e80c0: 3548       ldr      r0, [pc, #0xd4]                 ; [006e8198]=008648d3 "START"
+006e80c2: 4d22       movs     r2, #0x4d                     
+006e80c4: 3549       ldr      r1, [pc, #0xd4]                 ; [006e819c]=0091b6df "mp4Ifo_If.cpp"
+006e80c6: adf7d5fd   bl       #0x695c74                     
+006e80ca: 0023       movs     r3, #0                        
+006e80cc: 2360       str      r3, [r4]                      
+006e80ce: 6360       str      r3, [r4, #4]                  
+006e80d0: 6b68       ldr      r3, [r5, #4]                  
+006e80d2: 63b1       cbz      r3, #0x6e80ee                 
+006e80d4: 012b       cmp      r3, #1                        
+006e80d6: 0cd0       beq      #0x6e80f2                     
+006e80d8: 022b       cmp      r3, #2                        
+006e80da: 0cd0       beq      #0x6e80f6                     
+006e80dc: 032b       cmp      r3, #3                        
+006e80de: 0cd0       beq      #0x6e80fa                     
+006e80e0: 042b       cmp      r3, #4                        
+006e80e2: 0cd0       beq      #0x6e80fe                     
+006e80e4: 2e4a       ldr      r2, [pc, #0xb8]                 ; [006e81a0]=00070006
+006e80e6: 052b       cmp      r3, #5                        
+006e80e8: 18bf       it       ne                            
+006e80ea: 0022       movne    r2, #0                        
+006e80ec: 08e0       b        #0x6e8100                     
+006e80ee: 2d4a       ldr      r2, [pc, #0xb4]                 ; [006e81a4]=00070001
+006e80f0: 06e0       b        #0x6e8100                     
+006e80f2: 2d4a       ldr      r2, [pc, #0xb4]                 ; [006e81a8]=00070002
+006e80f4: 04e0       b        #0x6e8100                     
+006e80f6: 2d4a       ldr      r2, [pc, #0xb4]                 ; [006e81ac]=00070003
+006e80f8: 02e0       b        #0x6e8100                     
+006e80fa: 2d4a       ldr      r2, [pc, #0xb4]                 ; [006e81b0]=00070004
+006e80fc: 00e0       b        #0x6e8100                     
+006e80fe: 2d4a       ldr      r2, [pc, #0xb4]                 ; [006e81b4]=00070005
+006e8100: 0720       movs     r0, #7                        
+006e8102: 2146       mov      r1, r4                        
+006e8104: 0023       movs     r3, #0                        
+006e8106: 19f71fff   bl       #0x601f48                     
+006e810a: 36b9       cbnz     r6, #0x6e811a                 
+006e810c: 4046       mov      r0, r8                        
+006e810e: 2946       mov      r1, r5                        
+006e8110: 4a46       mov      r2, sb                        
+006e8112: 2346       mov      r3, r4                        
+006e8114: 03f0b2ff   bl       #0x6ec07c                     
+006e8118: 06e0       b        #0x6e8128                     
+006e811a: 3046       mov      r0, r6                        
+006e811c: 4146       mov      r1, r8                        
+006e811e: 2a46       mov      r2, r5                        
+006e8120: 4b46       mov      r3, sb                        
+006e8122: 0094       str      r4, [sp]                      
+006e8124: 03f080ff   bl       #0x6ec028                     
+006e8128: 00bb       cbnz     r0, #0x6e816c                 
+006e812a: 6e68       ldr      r6, [r5, #4]                  
+006e812c: 66b1       cbz      r6, #0x6e8148                 
+006e812e: 012e       cmp      r6, #1                        
+006e8130: 0cd0       beq      #0x6e814c                     
+006e8132: 022e       cmp      r6, #2                        
+006e8134: 0cd0       beq      #0x6e8150                     
+006e8136: 032e       cmp      r6, #3                        
+006e8138: 0cd0       beq      #0x6e8154                     
+006e813a: 042e       cmp      r6, #4                        
+006e813c: 0cd0       beq      #0x6e8158                     
+006e813e: 052e       cmp      r6, #5                        
+006e8140: 0cbf       ite      eq                            
+006e8142: 0826       moveq    r6, #8                        
+006e8144: 0026       movne    r6, #0                        
+006e8146: 08e0       b        #0x6e815a                     
+006e8148: 0126       movs     r6, #1                        
+006e814a: 06e0       b        #0x6e815a                     
+006e814c: 0226       movs     r6, #2                        
+006e814e: 04e0       b        #0x6e815a                     
+006e8150: 0326       movs     r6, #3                        
+006e8152: 02e0       b        #0x6e815a                     
+006e8154: 0426       movs     r6, #4                        
+006e8156: 00e0       b        #0x6e815a                     
+006e8158: 0626       movs     r6, #6                        
+006e815a: 1c20       movs     r0, #0x1c                     
+006e815c: 36f622e3   blx      #0x11e7a4                       ; _Znwj
+006e8160: 0521       movs     r1, #5                        
+006e8162: 3246       mov      r2, r6                        
+006e8164: 0546       mov      r5, r0                        
+006e8166: d2f6b3fd   bl       #0x5bacd0                     
+006e816a: 6560       str      r5, [r4, #4]                  
+006e816c: 3946       mov      r1, r7                        
+006e816e: 1248       ldr      r0, [pc, #0x48]                 ; [006e81b8]=0086d72f "END : "
+006e8170: aef716f9   bl       #0x6963a0                     
+006e8174: 0949       ldr      r1, [pc, #0x24]                 ; [006e819c]=0091b6df "mp4Ifo_If.cpp"
+006e8176: 7e22       movs     r2, #0x7e                     
+006e8178: 064b       ldr      r3, [pc, #0x18]                 ; [006e8194]=0091b801 "mp4Ifo_If"
+
+==========================================================================
+## 2. 0x6E81BC  ~mp4Ifo_If: acquire(cmd=1) -> teardown -> release SIEMPRE
+##    (libera el semaforo incluso si el acquire fallo: release sin ownership)
+##    0x6E81FA: ldr r0,[r4,#4] ; 0x6E8200 ldr r3,[r3,#4] ; 0x6E8202 blx r3  => delete(sem)
+##    NO pone [r4+4]=0 -> el handle queda apuntando a memoria liberada
+==========================================================================
+006e81bc: 90b5       push     {r4, r7, lr}                  
+006e81be: 85b0       sub      sp, #0x14                     
+006e81c0: 00af       add      r7, sp, #0                    
+006e81c2: 0446       mov      r4, r0                        
+006e81c4: 3846       mov      r0, r7                        
+006e81c6: aef7e5f8   bl       #0x696394                     
+006e81ca: 1748       ldr      r0, [pc, #0x5c]                 ; [006e8228]=008648d3 "START"
+006e81cc: 1749       ldr      r1, [pc, #0x5c]                 ; [006e822c]=0091b6df "mp4Ifo_If.cpp"
+006e81ce: 9122       movs     r2, #0x91                     
+006e81d0: 174b       ldr      r3, [pc, #0x5c]                 ; [006e8230]=0091b3fd "~mp4Ifo_If"
+006e81d2: adf74ffd   bl       #0x695c74                     
+006e81d6: 0121       movs     r1, #1                        
+006e81d8: 6068       ldr      r0, [r4, #4]                  
+006e81da: 0a46       mov      r2, r1                        
+006e81dc: d2f690fd   bl       #0x5bad00                     
+006e81e0: 20b1       cbz      r0, #0x6e81ec                 
+006e81e2: 1248       ldr      r0, [pc, #0x48]                 ; [006e822c]=0091b6df "mp4Ifo_If.cpp"
+006e81e4: 9721       movs     r1, #0x97                     
+006e81e6: 134a       ldr      r2, [pc, #0x4c]                 ; [006e8234]=b0100002
+006e81e8: 08f034fc   bl       #0x6f0a54                     
+006e81ec: 2046       mov      r0, r4                        
+006e81ee: 03f06bff   bl       #0x6ec0c8                     
+006e81f2: 6068       ldr      r0, [r4, #4]                  
+006e81f4: 0121       movs     r1, #1                        
+006e81f6: d2f65bfd   bl       #0x5bacb0                     
+006e81fa: 6068       ldr      r0, [r4, #4]                  
+006e81fc: 10b1       cbz      r0, #0x6e8204                 
+006e81fe: 0368       ldr      r3, [r0]                      
+006e8200: 5b68       ldr      r3, [r3, #4]                  
+006e8202: 9847       blx      r3                            
+006e8204: 0720       movs     r0, #7                        
+006e8206: 2146       mov      r1, r4                        
+006e8208: 19f74afe   bl       #0x601ea0                     
+006e820c: 3946       mov      r1, r7                        
+006e820e: 0a48       ldr      r0, [pc, #0x28]                 ; [006e8238]=0086d72f "END : "
+006e8210: aef7c6f8   bl       #0x6963a0                     
+006e8214: 0549       ldr      r1, [pc, #0x14]                 ; [006e822c]=0091b6df "mp4Ifo_If.cpp"
+006e8216: ac22       movs     r2, #0xac                     
+006e8218: 054b       ldr      r3, [pc, #0x14]                 ; [006e8230]=0091b3fd "~mp4Ifo_If"
+006e821a: adf72bfd   bl       #0x695c74                     
+006e821e: 2046       mov      r0, r4                        
+006e8220: 07f11407   add.w    r7, r7, #0x14                 
+006e8224: bd46       mov      sp, r7                        
+006e8226: 90bd       pop      {r4, r7, pc}                  
+
+==========================================================================
+## 3. Llamantes del creador 0x6E80A4
+==========================================================================
+0x67c676 None
+0x6f1bec None
+
+##   0x67C676 -> MMgrMp4IfoAcsr.cpp, funcion que registra 'CreateIfoAcsrInstance'
+0067c660: 7874       strb     r0, [r7, #0x11]               
+0067c662: 0820       movs     r0, #8                        
+0067c664: a2f69ee0   blx      #0x11e7a4                       ; _Znwj
+0067c668: 07f11403   add.w    r3, r7, #0x14                 
+0067c66c: 616b       ldr      r1, [r4, #0x34]               
+0067c66e: 0093       str      r3, [sp]                      
+0067c670: 3b1d       adds     r3, r7, #4                    
+0067c672: e26b       ldr      r2, [r4, #0x3c]               
+0067c674: 0646       mov      r6, r0                        
+0067c676: 6bf015fd   bl       #0x6e80a4                     
+0067c67a: 0021       movs     r1, #0                        
+0067c67c: 7a69       ldr      r2, [r7, #0x14]               
+0067c67e: 2e60       str      r6, [r5]                      
+0067c680: a068       ldr      r0, [r4, #8]                  
+0067c682: 35f5e7fc   bl       #0x3b2054                     
+0067c686: 2868       ldr      r0, [r5]                      
+0067c688: 94f82510   ldrb.w   r1, [r4, #0x25]               
+
+##   0x6F1BEC -> inicializacion de instancia unica en mp4Ifo_Instance (argumentos 0x12345678/0x98765432)
+006f1bd0: 164d       ldr      r5, [pc, #0x58]                 ; [006f1c2c]=00ad287c
+006f1bd2: 3b74       strb     r3, [r7, #0x10]               
+006f1bd4: 2b68       ldr      r3, [r5]                      
+006f1bd6: 63b9       cbnz     r3, #0x6f1bf2                 
+006f1bd8: 0820       movs     r0, #8                        
+006f1bda: 2cf6e4e5   blx      #0x11e7a4                       ; _Znwj
+006f1bde: 07f11403   add.w    r3, r7, #0x14                 
+006f1be2: 1349       ldr      r1, [pc, #0x4c]                 ; [006f1c30]=12345678
+006f1be4: 0093       str      r3, [sp]                      
+006f1be6: 3b1d       adds     r3, r7, #4                    
+006f1be8: 124a       ldr      r2, [pc, #0x48]                 ; [006f1c34]=98765432
+006f1bea: 0446       mov      r4, r0                        
+006f1bec: f6f75afa   bl       #0x6e80a4                     
+006f1bf0: 2c60       str      r4, [r5]                      
+006f1bf2: 0120       movs     r0, #1                        
+
+==========================================================================
+## 4. Llamantes del destructor 0x6E81BC
+==========================================================================
+0x67c784 None
+0x6f1b28 None

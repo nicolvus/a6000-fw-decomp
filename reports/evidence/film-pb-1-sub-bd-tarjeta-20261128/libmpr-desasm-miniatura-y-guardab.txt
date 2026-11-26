@@ -1,0 +1,302 @@
+# libmpr.so 3.21 (sha256 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30) — desensamblado Capstone 5, VA del ELF
+# comando: .venv/bin/python3 /tmp/elfhelper.py <libmpr.so> dis <VA> <LEN>
+
+==========================================================================
+## 1. Guarda B: AviMMgr::isSupportContent = vtable 0x8E6E58 + 0x58 = 0x61A8F0
+##    Tramo que decide: miniatura PRIMERO (0x61A9E4) y cadencia DESPUES (0x61A9EE)
+==========================================================================
+0061a9d0: 0493       str      r3, [sp, #0x10]               
+0061a9d2: 07f5dc73   add.w    r3, r7, #0x1b8                
+0061a9d6: 0593       str      r3, [sp, #0x14]               
+0061a9d8: 07f5da73   add.w    r3, r7, #0x1b4                
+0061a9dc: 0693       str      r3, [sp, #0x18]               
+0061a9de: 3b1c       adds     r3, r7, #0                    
+0061a9e0: 0793       str      r3, [sp, #0x1c]               
+0061a9e2: 1f23       movs     r3, #0x1f                     
+0061a9e4: cdf024fd   bl       #0x6e8430                     
+0061a9e8: 0346       mov      r3, r0                        
+0061a9ea: 0028       cmp      r0, #0                        
+0061a9ec: 36d1       bne      #0x61aa5c                     
+0061a9ee: d4f7f5f2   bl       #0x1eefdc                     
+0061a9f2: d7f82431   ldr.w    r3, [r7, #0x124]              
+0061a9f6: 0128       cmp      r0, #1                        
+0061a9f8: 11d1       bne      #0x61aa1e                     
+0061a9fa: 092b       cmp      r3, #9                        
+0061a9fc: 29d8       bhi      #0x61aa52                     
+0061a9fe: 9840       lsls     r0, r3                        
+0061aa00: 10f42a7f   tst.w    r0, #0x2a8                    
+0061aa04: 19d1       bne      #0x61aa3a                     
+0061aa06: 10f4aa7f   tst.w    r0, #0x154                    
+0061aa0a: 1ed1       bne      #0x61aa4a                     
+0061aa0c: 10f0030f   tst.w    r0, #3                        
+0061aa10: 11e0       b        #0x61aa36                     
+0061aa12: e068       ldr      r0, [r4, #0xc]                
+0061aa14: 2978       ldrb     r1, [r5]                      
+0061aa16: 1e4a       ldr      r2, [pc, #0x78]                 ; [0061aa90]=008e5384 "isSupportContent : 24p/23.976p frameRate"
+0061aa18: 35f008fe   bl       #0x65062c                     
+0061aa1c: 26e0       b        #0x61aa6c                     
+0061aa1e: 092b       cmp      r3, #9                        
+0061aa20: 17d8       bhi      #0x61aa52                     
+0061aa22: 0122       movs     r2, #1                        
+0061aa24: 9a40       lsls     r2, r3                        
+0061aa26: 12f42a7f   tst.w    r2, #0x2a8                    
+0061aa2a: 0ed1       bne      #0x61aa4a                     
+0061aa2c: 12f4aa7f   tst.w    r2, #0x154                    
+0061aa30: 03d1       bne      #0x61aa3a                     
+0061aa32: 12f0030f   tst.w    r2, #3                        
+0061aa36: ecd1       bne      #0x61aa12                     
+0061aa38: 0be0       b        #0x61aa52                     
+0061aa3a: 124a       ldr      r2, [pc, #0x48]                 ; [0061aa84]=009df25a
+0061aa3c: e068       ldr      r0, [r4, #0xc]                
+0061aa3e: 1178       ldrb     r1, [r2]                      
+0061aa40: 144a       ldr      r2, [pc, #0x50]                 ; [0061aa94]=008e5348 "isSupportContent : Invalid TvSystem dete"
+0061aa42: 35f0f3fd   bl       #0x65062c                     
+0061aa46: 0020       movs     r0, #0                        
+0061aa48: 11e0       b        #0x61aa6e                     
+0061aa4a: e068       ldr      r0, [r4, #0xc]                
+0061aa4c: 2978       ldrb     r1, [r5]                      
+0061aa4e: 124a       ldr      r2, [pc, #0x48]                 ; [0061aa98]=008e530e "isSupportContent : Valid TvSystem detect"
+0061aa50: e2e7       b        #0x61aa18                     
+0061aa52: 0c4a       ldr      r2, [pc, #0x30]                 ; [0061aa84]=009df25a
+0061aa54: e068       ldr      r0, [r4, #0xc]                
+0061aa56: 1178       ldrb     r1, [r2]                      
+0061aa58: 104a       ldr      r2, [pc, #0x40]                 ; [0061aa9c]=008e53b2 "isSupportContent : Unknown frameRate %d "
+0061aa5a: dde7       b        #0x61aa18                     
+0061aa5c: 094a       ldr      r2, [pc, #0x24]                 ; [0061aa84]=009df25a
+0061aa5e: e068       ldr      r0, [r4, #0xc]                
+0061aa60: 1178       ldrb     r1, [r2]                      
+0061aa62: 0f4a       ldr      r2, [pc, #0x3c]                 ; [0061aaa0]=008e53dc "isSupportContent : GetPlayThumbnailInfo "
+0061aa64: 35f0e2fd   bl       #0x65062c                     
+0061aa68: 3046       mov      r0, r6                        
+0061aa6a: 00e0       b        #0x61aa6e                     
+0061aa6c: 0120       movs     r0, #1                        
+0061aa6e: 07f5ea77   add.w    r7, r7, #0x1d4                
+0061aa72: bd46       mov      sp, r7                        
+0061aa74: bde8f043   pop.w    {r4, r5, r6, r7, r8, sb, lr}  
+0061aa78: 04b0       add      sp, #0x10                     
+0061aa7a: 7047       bx       lr                            
+
+==========================================================================
+## 2. mp4Ifo_If::GetPlayThumbnailInfo = 0x6E8430 (mp4Ifo_If.cpp:0x1a9)
+##    Si 0x5BAD00 (semaforo de ifoFramework, recurso 0x23) falla -> devuelve 0xB0100002 SIN tocar el MP4
+==========================================================================
+006e8430: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+006e8434: 8fb0       sub      sp, #0x3c                     
+006e8436: 0aaf       add      r7, sp, #0x28                 
+006e8438: 0446       mov      r4, r0                        
+006e843a: 3846       mov      r0, r7                        
+006e843c: 0e46       mov      r6, r1                        
+006e843e: 9046       mov      r8, r2                        
+006e8440: 9946       mov      sb, r3                        
+006e8442: adf7a7ff   bl       #0x696394                     
+006e8446: 2148       ldr      r0, [pc, #0x84]                 ; [006e84cc]=008648d3 "START"
+006e8448: 40f2a912   movw     r2, #0x1a9                    
+006e844c: 2049       ldr      r1, [pc, #0x80]                 ; [006e84d0]=0091b6df "mp4Ifo_If.cpp"
+006e844e: 214b       ldr      r3, [pc, #0x84]                 ; [006e84d4]=0091b38e "GetPlayThumbnailInfo"
+006e8450: adf710fc   bl       #0x695c74                     
+006e8454: 6068       ldr      r0, [r4, #4]                  
+006e8456: 2321       movs     r1, #0x23                     
+006e8458: 0122       movs     r2, #1                        
+006e845a: d2f651fc   bl       #0x5bad00                     
+006e845e: 38b1       cbz      r0, #0x6e8470                 
+006e8460: 1b48       ldr      r0, [pc, #0x6c]                 ; [006e84d0]=0091b6df "mp4Ifo_If.cpp"
+006e8462: 40f2af11   movw     r1, #0x1af                    
+006e8466: 1c4a       ldr      r2, [pc, #0x70]                 ; [006e84d8]=b0100002
+006e8468: 08f0f4fa   bl       #0x6f0a54                     
+006e846c: 1a4d       ldr      r5, [pc, #0x68]                 ; [006e84d8]=b0100002
+006e846e: 1de0       b        #0x6e84ac                     
+006e8470: 2368       ldr      r3, [r4]                      
+006e8472: 396b       ldr      r1, [r7, #0x30]               
+006e8474: 1a68       ldr      r2, [r3]                      
+006e8476: 0091       str      r1, [sp]                      
+006e8478: 796b       ldr      r1, [r7, #0x34]               
+006e847a: 0890       str      r0, [sp, #0x20]               
+006e847c: 1846       mov      r0, r3                        
+006e847e: 4b46       mov      r3, sb                        
+006e8480: 0191       str      r1, [sp, #4]                  
+006e8482: b96b       ldr      r1, [r7, #0x38]               
+006e8484: 0291       str      r1, [sp, #8]                  
+006e8486: f96b       ldr      r1, [r7, #0x3c]               
+006e8488: 0391       str      r1, [sp, #0xc]                
+006e848a: 396c       ldr      r1, [r7, #0x40]               
+006e848c: 0491       str      r1, [sp, #0x10]               
+006e848e: 796c       ldr      r1, [r7, #0x44]               
+006e8490: 0591       str      r1, [sp, #0x14]               
+006e8492: b96c       ldr      r1, [r7, #0x48]               
+006e8494: 0691       str      r1, [sp, #0x18]               
+006e8496: f96c       ldr      r1, [r7, #0x4c]               
+006e8498: 0791       str      r1, [sp, #0x1c]               
+006e849a: 3146       mov      r1, r6                        
+006e849c: 9569       ldr      r5, [r2, #0x18]               
+006e849e: 4246       mov      r2, r8                        
+006e84a0: a847       blx      r5                            
+006e84a2: 0121       movs     r1, #1                        
+006e84a4: 0546       mov      r5, r0                        
+006e84a6: 6068       ldr      r0, [r4, #4]                  
+006e84a8: d2f602fc   bl       #0x5bacb0                     
+006e84ac: 3946       mov      r1, r7                        
+006e84ae: 0b48       ldr      r0, [pc, #0x2c]                 ; [006e84dc]=0086d72f "END : "
+006e84b0: adf776ff   bl       #0x6963a0                     
+006e84b4: 0649       ldr      r1, [pc, #0x18]                 ; [006e84d0]=0091b6df "mp4Ifo_If.cpp"
+006e84b6: 40f2cb12   movw     r2, #0x1cb                    
+006e84ba: 064b       ldr      r3, [pc, #0x18]                 ; [006e84d4]=0091b38e "GetPlayThumbnailInfo"
+006e84bc: adf7dafb   bl       #0x695c74                     
+006e84c0: 2846       mov      r0, r5                        
+006e84c2: 07f11407   add.w    r7, r7, #0x14                 
+006e84c6: bd46       mov      sp, r7                        
+006e84c8: bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}  
+006e84cc: d348       ldr      r0, [pc, #0x34c]                ; [006e881c]=46052101
+006e84ce: 8600       lsls     r6, r0, #2                    
+
+==========================================================================
+## 3. 0x5BAD00: adquisicion del semaforo de ifoFramework (ifoFramework_Semaphore.cpp)
+==========================================================================
+005bad00: 2de9f047   push.w   {r4, r5, r6, r7, r8, sb, sl, lr}
+005bad04: 82b0       sub      sp, #8                        
+005bad06: 02af       add      r7, sp, #8                    
+005bad08: 0446       mov      r4, r0                        
+005bad0a: 0d46       mov      r5, r1                        
+005bad0c: 9246       mov      sl, r2                        
+005bad0e: 42f00dfd   bl       #0x5fd72c                     
+005bad12: 8046       mov      r8, r0                        
+005bad14: 42f010fd   bl       #0x5fd738                     
+005bad18: 94f80490   ldrb.w   sb, [r4, #4]                  
+005bad1c: 0646       mov      r6, r0                        
+005bad1e: b9f1000f   cmp.w    sb, #0                        
+005bad22: 4bd1       bne      #0x5badbc                     
+005bad24: 324a       ldr      r2, [pc, #0xc8]                 ; [005badf0]=ca001001
+005bad26: 8f21       movs     r1, #0x8f                     
+005bad28: 3248       ldr      r0, [pc, #0xc8]                 ; [005badf4]=008bbb14 "ifoFramework_Semaphore.cpp"
+005bad2a: fff74ffa   bl       #0x5ba1cc                     
+005bad2e: 4846       mov      r0, sb                        
+005bad30: 4146       mov      r1, r8                        
+005bad32: fff7a3fa   bl       #0x5ba27c                     
+005bad36: 0120       movs     r0, #1                        
+005bad38: 3146       mov      r1, r6                        
+005bad3a: fff79ffa   bl       #0x5ba27c                     
+005bad3e: 0220       movs     r0, #2                        
+005bad40: 2946       mov      r1, r5                        
+005bad42: fff79bfa   bl       #0x5ba27c                     
+005bad46: 0320       movs     r0, #3                        
+005bad48: a168       ldr      r1, [r4, #8]                  
+005bad4a: fff797fa   bl       #0x5ba27c                     
+005bad4e: 0420       movs     r0, #4                        
+005bad50: e168       ldr      r1, [r4, #0xc]                
+005bad52: fff793fa   bl       #0x5ba27c                     
+005bad56: 2169       ldr      r1, [r4, #0x10]               
+005bad58: 0520       movs     r0, #5                        
+005bad5a: fff78ffa   bl       #0x5ba27c                     
+005bad5e: 2648       ldr      r0, [pc, #0x98]                 ; [005badf8]=008bbc95
+
+==========================================================================
+## 4. Tabla de punteros a las 4 cadenas de emThumbnailType (0x21FACC)
+##    y funcion de volcado que la indexa con tbb tras cmp r3,#3
+==========================================================================
+0021fa9c: 0720       movs     r0, #7                        
+0021fa9e: 2a49       ldr      r1, [pc, #0xa8]                 ; [0021fb48]=007c0bf1 "           nDurationTime = %ld(msec)
+"
+0021faa0: d4f8e420   ldr.w    r2, [r4, #0xe4]               
+0021faa4: bcf7f0fe   bl       #0x1dc888                     
+0021faa8: e368       ldr      r3, [r4, #0xc]                
+0021faaa: 032b       cmp      r3, #3                        
+0021faac: 51d8       bhi      #0x21fb52                     
+0021faae: dfe803f0   tbb      [pc, r3]                      
+0021fab2: 0205       lsls     r2, r0, #0x14                 
+0021fab4: 084d       ldr      r5, [pc, #0x20]                 ; [0021fad8]=007c07b4 "[Output] *pemThumbnailType : THUMBNAIL_T"
+0021fab6: 0720       movs     r0, #7                        
+0021fab8: 1149       ldr      r1, [pc, #0x44]                 ; [0021fb00]=007c08c7 "           emAspectRatio = ASPECT_RATIO_"
+0021faba: 4ce0       b        #0x21fb56                     
+0021fabc: 0720       movs     r0, #7                        
+0021fabe: 1149       ldr      r1, [pc, #0x44]                 ; [0021fb04]=007c08f7 "           emAspectRatio = ASPECT_RATIO_"
+0021fac0: 49e0       b        #0x21fb56                     
+0021fac2: 0720       movs     r0, #7                        
+0021fac4: 1049       ldr      r1, [pc, #0x40]                 ; [0021fb08]=007c0928 "           emAspectRatio = ASPECT_RATIO_"
+0021fac6: 46e0       b        #0x21fb56                     
+0021fac8: 88fc7b00   stc2     p0, c0, [r8], {0x7b}          
+
+==========================================================================
+## 5. Por que el camino 0x61AA68 devuelve 0 y no 'r6 sin inicializar'
+##    r6 se reutiliza: 0x61A984 mov r6,r0 (retorno de ConvEntryIdPreToPost 0x677FB0)
+##    y 0x61A986 cmp r0,#0 ; 0x61A988 bne 0x61AA6C (RET 1) => si se llega a 0x61A9E4, r6 == 0
+==========================================================================
+0061a976: e473       strb     r4, [r4, #0xf]                
+0061a978: 07f5ca79   add.w    sb, r7, #0x194                
+0061a97c: cdf80090   str.w    sb, [sp]                      
+0061a980: 5df016fb   bl       #0x677fb0                     
+0061a984: 0646       mov      r6, r0                        
+0061a986: 0028       cmp      r0, #0                        
+0061a988: 70d1       bne      #0x61aa6c                     
+0061a98a: d7f8c831   ldr.w    r3, [r7, #0x1c8]              
+0061a98e: 042b       cmp      r3, #4                        
+0061a990: 6cd1       bne      #0x61aa6c                     
+0061a992: 013b       subs     r3, #1                        
+0061a994: c7f8c001   str.w    r0, [r7, #0x1c0]              
+0061a998: c7f8c431   str.w    r3, [r7, #0x1c4]              
+0061a99c: 4946       mov      r1, sb                        
+0061a99e: c7f8bc01   str.w    r0, [r7, #0x1bc]              
+0061a9a2: 07f5e273   add.w    r3, r7, #0x1c4                
+0061a9a6: c7f8b801   str.w    r0, [r7, #0x1b8]              
+0061a9aa: 3246       mov      r2, r6                        
+0061a9ac: c7f8b401   str.w    r0, [r7, #0x1b4]              
+0061a9b0: 87f87401   strb.w   r0, [r7, #0x174]              
+0061a9b4: 0093       str      r3, [sp]                      
+
+==========================================================================
+## 6. Prólogo completo de isSupportContent 0x61A8F0-0x61A980 (fail-open)
+##    0x61A938 -> 0x61AA18 (bl log) -> 0x61AA6C movs r0,#1  = SOPORTADO
+==========================================================================
+0061a8f0: 84b0       sub      sp, #0x10                     
+0061a8f2: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+0061a8f6: fdb0       sub      sp, #0x1f4                    
+0061a8f8: 604d       ldr      r5, [pc, #0x180]                ; [0061aa7c]=009df25c
+0061a8fa: 08af       add      r7, sp, #0x20                 
+0061a8fc: 0446       mov      r4, r0                        
+0061a8fe: 07f5fa78   add.w    r8, r7, #0x1f4                
+0061a902: c068       ldr      r0, [r0, #0xc]                
+0061a904: 07f59e76   add.w    r6, r7, #0x13c                
+0061a908: 88e80e00   stm.w    r8, {r1, r2, r3}              
+0061a90c: 2978       ldrb     r1, [r5]                      
+0061a90e: 5c4a       ldr      r2, [pc, #0x170]                ; [0061aa80]=008e52b4 "isSupportContent 
+"
+0061a910: 35f08cfe   bl       #0x65062c                     
+0061a914: 07f5e873   add.w    r3, r7, #0x1d0                
+0061a918: 0022       movs     r2, #0                        
+0061a91a: d4f86807   ldr.w    r0, [r4, #0x768]              
+0061a91e: 03f8012d   strb     r2, [r3, #-0x1]!              
+0061a922: d7f8f411   ldr.w    r1, [r7, #0x1f4]              
+0061a926: d7f8f821   ldr.w    r2, [r7, #0x1f8]              
+0061a92a: 0096       str      r6, [sp]                      
+0061a92c: dff5a6f9   bl       #0x3f9c7c                     
+0061a930: 10b9       cbnz     r0, #0x61a938                 
+0061a932: 97f8cf31   ldrb.w   r3, [r7, #0x1cf]              
+0061a936: 2bb9       cbnz     r3, #0x61a944                 
+0061a938: 524b       ldr      r3, [pc, #0x148]                ; [0061aa84]=009df25a
+0061a93a: e068       ldr      r0, [r4, #0xc]                
+0061a93c: 524a       ldr      r2, [pc, #0x148]                ; [0061aa88]=008e52c7 "isSupportContent : Can't get condition
+"
+0061a93e: 1978       ldrb     r1, [r3]                      
+0061a940: 0023       movs     r3, #0                        
+0061a942: 69e0       b        #0x61aa18                     
+0061a944: 3346       mov      r3, r6                        
+0061a946: 2046       mov      r0, r4                        
+0061a948: c421       movs     r1, #0xc4                     
+0061a94a: 0422       movs     r2, #4                        
+0061a94c: cdf80080   str.w    r8, [sp]                      
+0061a950: fff708ff   bl       #0x61a764                     
+0061a954: 0346       mov      r3, r0                        
+0061a956: 20b1       cbz      r0, #0x61a962                 
+0061a958: 4a4a       ldr      r2, [pc, #0x128]                ; [0061aa84]=009df25a
+0061a95a: e068       ldr      r0, [r4, #0xc]                
+0061a95c: 1178       ldrb     r1, [r2]                      
+0061a95e: 4b4a       ldr      r2, [pc, #0x12c]                ; [0061aa8c]=008e52ef "isSupportContent : Error [%x]
+"
+0061a960: 5ae0       b        #0x61aa18                     
+0061a962: d7f83c31   ldr.w    r3, [r7, #0x13c]              
+0061a966: 13f0040f   tst.w    r3, #4                        
+0061a96a: 7fd0       beq      #0x61aa6c                     
+0061a96c: 3146       mov      r1, r6                        
+0061a96e: d4f87007   ldr.w    r0, [r4, #0x770]              
+0061a972: 4246       mov      r2, r8                        
+0061a974: 07f5e473   add.w    r3, r7, #0x1c8                
+0061a978: 07f5ca79   add.w    sb, r7, #0x194                
+0061a97c: cdf80090   str.w    sb, [sp]                      

@@ -1,0 +1,85 @@
+# ldec.ko = LDEC del stack NAND BOSS (no decodificador de video)
+# Comandos: readelf -sW ldec.ko ; strings -a ldec.ko
+# sha256 ldec.ko: 93aa24427b9c52519ac39eb4e749fd86a00c80dcf1452ce9539a29de7b742f3b
+--- Simbolos FUNC/OBJECT ---
+00000000 20 FUNC ldec_open
+00000014 20 FUNC ldec_close
+00000028 20 FUNC ldec_resume
+0000003c 40 FUNC ldec_suspend
+00000064 64 FUNC ldec_remove
+000000a4 92 FUNC ldec_probe
+00000100 44 FUNC ldec_exit
+000002ac 1144 FUNC ldec_ioctl
+00000724 928 FUNC ldec_read_proc
+00000ac4 124 FUNC ldec_init
+00000ba8 268 FUNC boss_hw_ldec_process
+00000d38 356 FUNC boss_hw_ldec_set
+00000000 300 OBJECT __this_module
+00000d04 52 FUNC boss_hw_ldec_enable_irq
+000010d4 140 FUNC boss_hw_ldec_resource_init
+00000f5c 236 FUNC boss_hw_ldec_wait
+00000000 48 FUNC cleanup_module
+00000e9c 52 FUNC boss_hw_ldec_disable_irq
+00000b5c 76 FUNC boss_hw_ldec_lock
+00000000 48 FUNC init_module
+00000064 100 OBJECT udif_ldec
+00001160 80 FUNC boss_hw_ldec_get_state
+00001048 140 FUNC boss_hw_ldec_stop
+00000b40 28 FUNC boss_lld_get_base_addr_ldec
+00000ed0 140 FUNC boss_hw_ldec_request_irq
+00000cb4 80 FUNC boss_hw_ldec_free_irq
+
+--- Cadenas: ruta de compilacion y trazas (prueba de identidad) ---
+<3>[BOSS] %s() line %d: Cannot alloc trans->pages, nr_pages = %d 
+<3>[BOSS] %s() line %d: cmd(%d) parameter is invalid. 
+<3>[BOSS] %s() line %d: failed get_user_pages(), addr = 0x%x/0x%x, nr_pages = %d, ret = %d
+<3>[BOSS] %s() line %d: ldec_get_user_pages err. 
+<3>[BOSS] %s() line %d: NULL params err. 
+<3>[BOSS] %s() line %d: proc file creation can not be created. 
+<3>[BOSS] %s() line %d: udif_cdev_register err. 
+<3>[BOSS] %s() line %d: udif_copy_from_user err. 
+boss_hw_dmac_mutex
+boss_hw_dmac_start_wait
+boss_hw_ldec_disable_irq
+boss_hw_ldec_enable_irq
+boss_hw_ldec_free_irq
+boss_hw_ldec_get_state
+boss_hw_ldec_lock
+boss_hw_ldec_process
+boss_hw_ldec_request_irq
+boss_hw_ldec_resource_init
+boss_hw_ldec_set
+boss_hw_ldec_stop
+boss_hw_ldec_wait
+boss_lld_get_base_addr_ldec
+dstlen     : 0x%x
+dst_phys   : 0x%x
+get_user_pages
+/home/jp10239/git-work/build/141H/141H.DSLR.DM_UUD3.reco.LATEST.diadem.set/Etools-NAND-BOSS-lld_131H/driver/boss/src/ldec/../boss_core/hw/boss_hw_ldec.c
+&(&ldec_api_lock)->mtx
+&(&(&ldec_api_lock)->mtx)->lock
+ldec_base_addr  : 0x%x
+ldec_close
+ldec %d
+ldec_drive_dmac_ch
+ldec_exit
+ldec_get_user_pages
+ldec_init
+ldec_ioctl
+ldec_open
+ldec_page
+ldec_probe
+ldec_read_proc
+ldec_remove
+ldec_resume
+ldec_suspend
+(spinlock_t *)&(&ldec_lock)->lock
+&((spinlock_t *)&(&ldec_lock)->lock)->lock
+srclen     : 0x%x
+udif_ldec
+xsrcflush  : 0x%x
+
+--- Dependencias declaradas y param ---
+license=Proprietary
+depends=
+vermagic=3.0.27_nl-rt106 SMP preempt mod_unload ARMv7 

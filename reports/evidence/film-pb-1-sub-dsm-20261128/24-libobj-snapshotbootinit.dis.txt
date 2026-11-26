@@ -1,0 +1,54 @@
+007e6ef0: 594b       ldr      r3, [pc, #0x164]                ; [007e7058]=0059f3a9
+007e6ef2: 7b44       add      r3, pc                        
+007e6ef4: 00e0       b        #0x7e6ef8                     
+007e6ef6: 3b1c       adds     r3, r7, #0                    
+007e6ef8: 7b61       str      r3, [r7, #0x14]               
+007e6efa: f7f442e0   blx      #0xddf80                        ; _ZN7MprCtrl24IsSerialNumberRecSupportEv
+007e6efe: f8b1       cbz      r0, #0x7e6f40                 
+007e6f00: f7f4a2e4   blx      #0xde848                        ; _ZN7MprCtrl15GetSerialNumberEv
+007e6f04: 0024       movs     r4, #0                        
+007e6f06: 1823       movs     r3, #0x18                     
+007e6f08: 0122       movs     r2, #1                        
+007e6f0a: 50fa03f1   asrs.w   r1, r0, r3                    
+007e6f0e: 083b       subs     r3, #8                        
+007e6f10: 01f0ff01   and      r1, r1, #0xff                 
+007e6f14: 02fb0144   mla      r4, r2, r1, r4                
+007e6f18: 1202       lsls     r2, r2, #8                    
+007e6f1a: 13f1080f   cmn.w    r3, #8                        
+007e6f1e: f4d1       bne      #0x7e6f0a                     
+007e6f20: 0833       adds     r3, #8                        
+007e6f22: 0121       movs     r1, #1                        
+007e6f24: 1a46       mov      r2, r3                        
+007e6f26: 34fa03f0   lsrs.w   r0, r4, r3                    
+007e6f2a: 0433       adds     r3, #4                        
+007e6f2c: 00f00f00   and      r0, r0, #0xf                  
+007e6f30: 01fb0022   mla      r2, r1, r0, r2                
+007e6f34: 0a20       movs     r0, #0xa                      
+007e6f36: 4143       muls     r1, r0, r1                    
+007e6f38: 202b       cmp      r3, #0x20                     
+007e6f3a: f4d1       bne      #0x7e6f26                     
+007e6f3c: fa61       str      r2, [r7, #0x1c]               
+007e6f3e: 02e0       b        #0x7e6f46                     
+007e6f40: 4ff0ff33   mov.w    r3, #-1                       
+007e6f44: fb61       str      r3, [r7, #0x1c]               
+007e6f46: f4f4aee2   blx      #0xdb4a4                        ; _ZN7MprCtrl12IsGpsSupportEv
+007e6f4a: 07f11401   add.w    r1, r7, #0x14                 
+007e6f4e: 87f82000   strb.w   r0, [r7, #0x20]               
+007e6f52: e868       ldr      r0, [r5, #0xc]                
+007e6f54: f8f436e6   blx      #0xdfbc4                        ; _ZN5MprIf16SnapShotBootInitEPNS_21SnapShotBootInitParamE
+007e6f58: 0023       movs     r3, #0                        
+007e6f5a: 85f83430   strb.w   r3, [r5, #0x34]               
+007e6f5e: 3146       mov      r1, r6                        
+007e6f60: ab63       str      r3, [r5, #0x38]               
+007e6f62: 0322       movs     r2, #3                        
+007e6f64: 3a4b       ldr      r3, [pc, #0xe8]                 ; [007e7050]=4000000b
+007e6f66: e868       ldr      r0, [r5, #0xc]                
+007e6f68: 6b62       str      r3, [r5, #0x24]               
+007e6f6a: f7f434e2   blx      #0xde3d4                        ; _ZN5MprIf6ResumeEbN3MPR8BootTypeE
+007e6f6e: 8046       mov      r8, r0                        
+007e6f70: fff7d6f9   bl       #0x7e6320                       ; _init+0x70af68
+007e6f74: 0446       mov      r4, r0                        
+007e6f76: 70b1       cbz      r0, #0x7e6f96                 
+007e6f78: 384e       ldr      r6, [pc, #0xe0]                 ; [007e705c]=0059f36f
+007e6f7a: 0420       movs     r0, #4                        
+007e6f7c: 4246       mov      r2, r8                        

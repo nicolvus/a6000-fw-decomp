@@ -1,0 +1,44 @@
+--- 0x4356f0
+004356f0: 0421       movs     r1, #4                        
+004356f2: fff787fd   bl       #0x435204                     
+004356f6: 0421       movs     r1, #4                        
+004356f8: 04f18c00   add.w    r0, r4, #0x8c                 
+004356fc: fff782fd   bl       #0x435204                     
+00435700: d4f89c00   ldr.w    r0, [r4, #0x9c]               
+00435704: d4f8b010   ldr.w    r1, [r4, #0xb0]               
+00435708: d4f8a820   ldr.w    r2, [r4, #0xa8]               
+0043570c: 12f087f9   bl       #0x447a1e                     
+00435710: 38b9       cbnz     r0, #0x435722                 
+00435712: d4f89400   ldr.w    r0, [r4, #0x94]               
+00435716: 0122       movs     r2, #1                        
+--- 0x435a94
+00435a94: 88b9       cbnz     r0, #0x435aba                 
+00435a96: 2046       mov      r0, r4                        
+00435a98: bd46       mov      sp, r7                        
+00435a9a: bde8f041   pop.w    {r4, r5, r6, r7, r8, lr}      
+00435a9e: 04b0       add      sp, #0x10                     
+00435aa0: fdf712bb   b.w      #0x4330c8                     
+00435aa4: d4f89c00   ldr.w    r0, [r4, #0x9c]               
+00435aa8: d4f8b010   ldr.w    r1, [r4, #0xb0]               
+00435aac: d4f8a820   ldr.w    r2, [r4, #0xa8]               
+00435ab0: 11f0b5ff   bl       #0x447a1e                     
+00435ab4: 0028       cmp      r0, #0                        
+00435ab6: cad1       bne      #0x435a4e                     
+00435ab8: c1e7       b        #0x435a3e                     
+00435aba: bd46       mov      sp, r7                        
+--- 0x438962
+00438962: 3ce0       b        #0x4389de                     
+00438964: a068       ldr      r0, [r4, #8]                  
+00438966: 0122       movs     r2, #1                        
+00438968: 2749       ldr      r1, [pc, #0x9c]                 ; [00438a08]=0085a97f "ProcCbAtRegeneLastTimeCodeStage1 ... No "
+0043896a: d9f2e5ff   bl       #0x712938                     
+0043896e: 0023       movs     r3, #0                        
+00438970: 0ee0       b        #0x438990                     
+00438972: d4f8ec01   ldr.w    r0, [r4, #0x1ec]              
+00438976: d4f8c01d   ldr.w    r1, [r4, #0xdc0]              
+0043897a: d4f8b82d   ldr.w    r2, [r4, #0xdb8]              
+0043897e: 0ff04ef8   bl       #0x447a1e                     
+00438982: 38b9       cbnz     r0, #0x438994                 
+00438984: a068       ldr      r0, [r4, #8]                  
+00438986: 0122       movs     r2, #1                        
+00438988: 2049       ldr      r1, [pc, #0x80]                 ; [00438a0c]=0085a51c " Pb Disable!! ref) dsm get"

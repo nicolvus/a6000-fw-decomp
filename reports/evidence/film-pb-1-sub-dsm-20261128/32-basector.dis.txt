@@ -1,0 +1,40 @@
+0064caa0: 98b5       push     {r3, r4, r7, lr}              
+0064caa2: 00af       add      r7, sp, #0                    
+0064caa4: 0446       mov      r4, r0                        
+0064caa6: fff7f5fc   bl       #0x64c494                     
+0064caaa: 094b       ldr      r3, [pc, #0x24]                 ; [0064cad0]=008f60a0
+0064caac: 2046       mov      r0, r4                        
+0064caae: 2360       str      r3, [r4]                      
+0064cab0: 0023       movs     r3, #0                        
+0064cab2: c4f8c832   str.w    r3, [r4, #0x2c8]              
+0064cab6: c4f8fc36   str.w    r3, [r4, #0x6fc]              
+0064caba: c4f80037   str.w    r3, [r4, #0x700]              
+0064cabe: 84f8cc32   strb.w   r3, [r4, #0x2cc]              
+0064cac2: c4f80437   str.w    r3, [r4, #0x704]              
+0064cac6: c4f8d032   str.w    r3, [r4, #0x2d0]              
+0064caca: c4f8d434   str.w    r3, [r4, #0x4d4]              
+0064cace: 98bd       pop      {r3, r4, r7, pc}              
+0064cad0: a060       str      r0, [r4, #8]                  
+0064cad2: 8f00       lsls     r7, r1, #2                    
+0064cad4: b0b5       push     {r4, r5, r7, lr}              
+0064cad6: 82b0       sub      sp, #8                        
+0064cad8: 02af       add      r7, sp, #8                    
+0064cada: 0446       mov      r4, r0                        
+0064cadc: 0d46       mov      r5, r1                        
+0064cade: fff7d9fc   bl       #0x64c494                     
+0064cae2: 274b       ldr      r3, [pc, #0x9c]                 ; [0064cb80]=008f60a0
+0064cae4: 0420       movs     r0, #4                        
+0064cae6: 4ff48051   mov.w    r1, #0x1000                   
+0064caea: f022       movs     r2, #0xf0                     
+0064caec: 2360       str      r3, [r4]                      
+0064caee: 4ff4fc73   mov.w    r3, #0x1f8                    
+0064caf2: 02f047ff   bl       #0x64f984                     
+0064caf6: 75b3       cbz      r5, #0x64cb56                 
+0064caf8: 2420       movs     r0, #0x24                     
+0064cafa: d1f654e6   blx      #0x11e7a4                       ; _Znwj
+0064cafe: 2149       ldr      r1, [pc, #0x84]                 ; [0064cb84]=0064dda1
+0064cb00: 2246       mov      r2, r4                        
+0064cb02: 0546       mov      r5, r0                        
+0064cb04: b1f752fb   bl       #0x5fe1ac                     
+0064cb08: c4f8c852   str.w    r5, [r4, #0x2c8]              
+0064cb0c: 5020       movs     r0, #0x50                     

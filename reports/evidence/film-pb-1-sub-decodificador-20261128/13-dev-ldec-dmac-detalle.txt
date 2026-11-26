@@ -1,0 +1,95 @@
+# Quien define y quien consume /dev/ldec, /dev/dmac, /dev/uipc, /dev/stream*
+--- libObj.so: cadenas con /dev/ldec y su vecindad en .rodata (strings -t x) ---
+199526: d2703d FPS: %.2f <UX_LOG_NOTIFY>
+199539: d2722c Skip bit blit. <UX_LOG_NOTIFY>
+200145: d2e5dc /dev/ldec
+200146: d2e5e6 Failed open /dev/ldec <UX_LOG_NOTIFY>
+200148: d2e639 Failed BMP_GetPhysicalAddress() <UX_LOG_NOTIFY>
+200151: d2e6a6 Failed close /dev/ldec <UX_LOG_NOTIFY>
+201844: d3cd12 BMP_Error grm::bmp::BMP_GetPhysicalAddress(void*, off_t*)
+
+--- libmpr.so: /dev/dmac y su vecindad ---
+111045: 84df26 ETCMDV
+125699: 8d6760 [MDV]SetRecCamInfoPack : 
+125700: 8d677a [MDV]SetSerialNumber : 
+125701: 8d6792 [MDV]SetModelName : 
+125702: 8d67a7 [MDV]SetLensName : 
+125703: 8d67bb [MDV]SetMnfi
+125704: 8d67c8 [MDV]GetMakerOptionData m_mdvCommFlg =
+125705: 8d67ef [MDV]SetMdvCommDatMode m_mdvCommFlg =
+125706: 8d6815 [MDV]SetColorData
+125707: 8d6827 [MDV] Warning MdvIf::SetRecInfo Call ClockLib::Get()
+125708: 8d685c [MDV]SetRecInfo
+125721: 8d6962 [MDV]SetMakerOptionData
+125739: 8d6a9b [MDV]SetRecParam
+125747: 8d6b2e [MDV]Error viewId over VIEW_ID_MAX
+125748: 8d6b51 [MDV]pGpsInfo  = NULL
+125749: 8d6b69 [MDV]GpsInfo.bVersionIdValid    = [true]
+125750: 8d6b94 [MDV]GpsInfo.bVersionId         = 
+125751: 8d6bb7 [MDV]GpsInfo.bVersionIdValid    = [false]
+125752: 8d6be3 [MDV]GpsInfo.bLatitudeValid     = [true]
+125753: 8d6c0e [MDV]GpsInfo.latitudeRef        = [
+125754: 8d6c32 [MDV]GpsInfo.latitude           = [d:
+125755: 8d6c58 [MDV]GpsInfo.bLatitudeValid     = [false]
+125756: 8d6c84 [MDV]GpsInfo.bLongitudeValid    = [true]
+125757: 8d6caf [MDV]GpsInfo.longitudeRef       = [
+125758: 8d6cd3 [MDV]GpsInfo.longitude          = [d:
+125759: 8d6cf9 [MDV]GpsInfo.bLongitudeValid    = [false]
+125760: 8d6d25 [MDV]GpsInfo.bAltitudeValid     = [true]
+125761: 8d6d50 [MDV]GpsInfo.altitudeRef        = [
+125762: 8d6d74 [MDV]GpsInfo.altitude           = [
+125763: 8d6d98 [MDV]GpsInfo.bAltitudeValid     = [false]
+125764: 8d6dc4 [MDV]GpsInfo.bDateStampValid    = [true]
+125765: 8d6def [MDV]GpsInfo.dateStamp          = [y:
+125766: 8d6e15 [MDV]GpsInfo.bDateStampValid    = [false]
+125767: 8d6e41 [MDV]GpsInfo.bTimeStampValid    = [true]
+125768: 8d6e6c [MDV]GpsInfo.timeStamp          = [h:
+125769: 8d6e92 [MDV]GpsInfo.bTimeStampValid    = [false]
+125770: 8d6ebe [MDV]GpsInfo.bStatusValid       = [true]
+125771: 8d6ee9 [MDV]GpsInfo.status             = [
+125772: 8d6f0d [MDV]GpsInfo.bStatusValid       = [false]
+125773: 8d6f39 [MDV]GpsInfo.bMeasureModeValid  = [true]
+125774: 8d6f64 [MDV]GpsInfo.measureMode        = [
+125775: 8d6f88 [MDV]GpsInfo.bMeasureModeValid  = [false]
+125776: 8d6fb4 [MDV]GpsInfo.bDopValid          = [true]
+125777: 8d6fdf [MDV]GpsInfo.dop                = [
+125778: 8d7003 [MDV]GpsInfo.bDopValid          = [false]
+125779: 8d702f [MDV]GpsInfo.bSpeedValid        = [true]
+125780: 8d705a [MDV]GpsInfo.speed_ref          = [
+125781: 8d707e [MDV]GpsInfo.speed              = [
+125782: 8d70a2 [MDV]GpsInfo.bSpeedValid        = [false]
+125783: 8d70ce [MDV]GpsInfo.bTrackValid        = [true]
+125784: 8d70f9 [MDV]GpsInfo.track_ref          = [
+125785: 8d711d [MDV]GpsInfo.track              = [
+125786: 8d7141 [MDV]GpsInfo.bTrackValid        = [false]
+125787: 8d716d [MDV]GpsInfo.bImgDirectionValid = [true]
+125788: 8d7198 [MDV]GpsInfo.imgDirectionRef    = [
+125789: 8d71bc [MDV]GpsInfo.imgDirection       = [
+125790: 8d71e0 [MDV]GpsInfo.bImgDirectionValid = [false]
+125791: 8d720c [MDV]GpsInfo.bMapDatumValid     = [true]
+125792: 8d7237 [MDV]GpsInfo.mapDatum           = [
+125793: 8d725b [MDV]GpsInfo.bMapDatumValid     = [false]
+125794: 8d7287 [MDV]ConvGpsInfo
+125795: 8d7298 [MDV]p_gpsInfo=NULL
+125796: 8d72ac [MDV]bDataValid=
+125797: 8d72bd [MDV]SetGPSData
+125798: 8d72cd [MDV]p_gpsInfo=
+125799: 8d72dd [MDV]b_isPeriodicGpsInfo = 
+125800: 8d72f9 [MDV]browse_mark = 1
+125801: 8d730e [MDV]browse_mark = 0
+125804: 8d734a [MDV]GetMdvData m_mdvCommFlg =
+125805: 8d7369 [MDV]GetParameter
+125814: 8d7444 MDV Test Command
+125815: 8d7455 RECMDV, PLAYMDV
+125817: 8d7488 /dev/dmac
+125818: 8d7492 /dev/dmac open failed
+125819: 8d74a8 DMA Close Error
+125820: 8d74b8 ioctl DMAC_MEM_TRANSFER faild
+126537: 8dd17c MDV List
+126829: 8df34a         - MDV   instance      = [%x]
+
+--- libObj: no hay referencia literal al VA de la cadena (0xd2e5dc) ---
+0xd2e5dc literales u32 iguales en todo el fichero: 0
+0xd2e5e6 literales u32 iguales en todo el fichero: 0
+0xd2e6a6 literales u32 iguales en todo el fichero: 0
+tabla de cadenas (id,ptr) en 0xfcbe10: ['0xd2e5a2', '0x0', '0x0', '0xd2e726', '0xd2e9df', '0xd2e9ef']

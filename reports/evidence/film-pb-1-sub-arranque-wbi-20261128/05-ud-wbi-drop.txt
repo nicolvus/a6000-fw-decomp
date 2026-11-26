@@ -1,0 +1,562 @@
+# EVIDENCIA 5 — ud_wbi_drop.elf: el 'drop' real del WBI
+
+## us_mkfs.sh (updater.img_unpacked/bin/us_mkfs.sh) — líneas relevantes
+73:		fmode="full"
+74:		test -f $NOT_WRITE_LOADER && fmode="app"
+75:		test "$fmode" = "app" && { uc_pclear -f $FILE_MOUNTCONF ; }
+79:		fmode="app"
+83:		fmode="full"
+92:echo "fmode=$fmode"
+93:uc_mkfs.elf -m $fmode -f $FILE_MOUNTCONF || { getledval.elf $ERROR_LOGICAL_FORMAT ; exit $? ; }
+95:	mount -t vfat /dev/nflasha2 /setting $VFAT_MOUNT_OPTION_SYNC || { echo "[ERROR]nflasha2 mount failed" ; blink_error_exit $ERROR_NAND_MOUNT ; }
+106:ud_wbi_drop.elf $FILE_PARTINF || { echo "[ERROR] ud_wbi_drop.elf" ; getledval.elf $ERROR_WBI_DROP ; exit $? ; }
+111:#execute dosfsck
+112:dosfsck -Y /dev/nflasha2
+113:echo "[DETAIL] dosfsck done."
+116:#mount -t vfat /dev/nflasha2 /setting -o posix_attr,noatime,nodiratime,shortname=mixed
+117:mount -t vfat /dev/nflasha2 /setting $VFAT_MOUNT_OPTION_SYNC || { echo "[ERROR]nflasha2 mount failed" ; blink_error_exit $ERROR_NAND_MOUNT ; }
+124:if [ "${fmode}" == "app" ] ; then
+
+## us_mkfs.sh es idéntico en updater.img y en nflasha15/bin/udtrbody.bin (ver 01-hashes.txt)
+
+## ud_wbi_drop.elf: símbolos dinámicos (NO importa ioctl: solo open/write)
+     1: 00000000     0 FUNC    GLOBAL DEFAULT  UND __aeabi_unwind_cpp_pr0@GCC_3.5 (4)
+     4: 00000000     0 FUNC    GLOBAL DEFAULT  UND __aeabi_unwind_cpp_pr1@GCC_3.5 (4)
+     5: 00008660     0 FUNC    GLOBAL DEFAULT  UND open@GLIBC_2.4 (2)
+     6: 000086b8     0 FUNC    GLOBAL DEFAULT  UND memset@GLIBC_2.4 (3)
+     7: 000086d0     0 FUNC    GLOBAL DEFAULT  UND fseek@GLIBC_2.4 (3)
+     8: 00008718     0 FUNC    GLOBAL DEFAULT  UND __aeabi_uidivmod@GCC_3.5 (4)
+     9: 0000866c     0 FUNC    GLOBAL DEFAULT  UND abort@GLIBC_2.4 (3)
+    10: 000086ac     0 FUNC    GLOBAL DEFAULT  UND fopen@GLIBC_2.4 (3)
+    11: 000086c4     0 FUNC    GLOBAL DEFAULT  UND write@GLIBC_2.4 (2)
+    12: 00008748     0 FUNC    GLOBAL DEFAULT  UND exit@GLIBC_2.4 (3)
+    13: 00008678     0 FUNC    GLOBAL DEFAULT  UND __libc_start_main@GLIBC_2.4 (3)
+    14: 000086a0     0 FUNC    GLOBAL DEFAULT  UND fgets@GLIBC_2.4 (3)
+    15: 000086f4     0 FUNC    GLOBAL DEFAULT  UND __aeabi_uidiv@GCC_3.5 (4)
+    16: 00008754     0 FUNC    GLOBAL DEFAULT  UND __errno_location@GLIBC_2.4 (2)
+    17: 0000873c     0 FUNC    GLOBAL DEFAULT  UND ferror@GLIBC_2.4 (3)
+    18: 00008694     0 FUNC    GLOBAL DEFAULT  UND fclose@GLIBC_2.4 (3)
+    19: 000086dc     0 FUNC    GLOBAL DEFAULT  UND strlen@GLIBC_2.4 (3)
+    20: 00008730     0 FUNC    GLOBAL DEFAULT  UND snprintf@GLIBC_2.4 (3)
+    21: 00008724     0 FUNC    GLOBAL DEFAULT  UND puts@GLIBC_2.4 (3)
+    22: 0000870c     0 FUNC    GLOBAL DEFAULT  UND close@GLIBC_2.4 (2)
+    23: 000086e8     0 FUNC    GLOBAL DEFAULT  UND feof@GLIBC_2.4 (3)
+    24: 00008700     0 FUNC    GLOBAL DEFAULT  UND printf@GLIBC_2.4 (3)
+
+## ud_wbi_drop.elf: cadenas
+wbi_drop
+Usage: ud_wbi_drop.elf filename
+[UD_WBI_DROP] AnalyzePartitionSettingFile() error
+[UD_WBI_DROP] wbi size is zero. skip wbi_drop()
+[UD_WBI_DROP] error : wbi size is too small. size = %lu
+/dev/nflasha%d
+[UD_WBI_DROP] %s wbi_drop
+[UD_WBI_DROP] %s %d, errno=%d
+[UD_WBI_DROP] wbi_drop() error
+parameter error
+parameter error(address = %ld, block_num = %ld, block_size = %ld)
+Partition setting file not found (%s)
+
+## ud_wbi_drop.elf: .text completo (0x8760, 0x4f4 B)
+00008760: 4ff0000b   mov.w     fp, #0                            
+00008764: 4ff0000e   mov.w     lr, #0                            
+00008768: 5df8041b   ldr       r1, [sp], #4                      
+0000876c: 6a46       mov       r2, sp                            
+0000876e: 4df8042d   str       r2, [sp, #-0x4]!                  
+00008772: 4df8040d   str       r0, [sp, #-0x4]!                  
+00008776: dff814c0   ldr.w     ip, [pc, #0x14]                     ; [0000878c]=00008c51
+0000877a: 4df804cd   str       ip, [sp, #-0x4]!                  
+0000877e: 0448       ldr       r0, [pc, #0x10]                     ; [00008790]=000087e1
+00008780: 044b       ldr       r3, [pc, #0x10]                     ; [00008794]=00008bc9
+00008782: fff77aef   blx       #0x8678                             ; __libc_start_main
+00008786: fff772ef   blx       #0x866c                             ; abort
+0000878a: 0000       movs      r0, r0                            
+0000878c: 518c       ldrh      r1, [r2, #0x22]                   
+0000878e: 0000       movs      r0, r0                            
+00008790: e187       strh      r1, [r4, #0x3e]                   
+00008792: 0000       movs      r0, r0                            
+00008794: c98b       ldrh      r1, [r1, #0x1e]                   
+00008796: 0000       movs      r0, r0                            
+00008798: 034b       ldr       r3, [pc, #0xc]                      ; [000087a8]=00008984
+0000879a: 044a       ldr       r2, [pc, #0x10]                     ; [000087ac]=00000060
+0000879c: 7b44       add       r3, pc                            
+0000879e: 9b58       ldr       r3, [r3, r2]                      
+000087a0: 0bb1       cbz       r3, #0x87a6                       
+000087a2: fff76fbf   b.w       #0x8684                             ; __libc_start_main+0xc
+000087a6: 7047       bx        lr                                
+000087a8: 8489       ldrh      r4, [r0, #0xc]                    
+000087aa: 0000       movs      r0, r0                            
+000087ac: 6000       lsls      r0, r4, #1                        
+000087ae: 0000       movs      r0, r0                            
+000087b0: 41f29013   movw      r3, #0x1190                       
+000087b4: c0f20103   movt      r3, #1                            
+000087b8: 1a78       ldrb      r2, [r3]                          
+000087ba: 0ab9       cbnz      r2, #0x87c0                       
+000087bc: 0120       movs      r0, #1                            
+000087be: 1870       strb      r0, [r3]                          
+000087c0: 7047       bx        lr                                
+000087c2: 00bf       nop                                         
+000087c4: 41f20800   movw      r0, #0x1008                       
+000087c8: c0f20100   movt      r0, #1                            
+000087cc: 08b5       push      {r3, lr}                          
+000087ce: 0368       ldr       r3, [r0]                          
+000087d0: 2bb1       cbz       r3, #0x87de                       
+000087d2: 40f20003   movw      r3, #0                            
+000087d6: c0f20003   movt      r3, #0                            
+000087da: 03b1       cbz       r3, #0x87de                       
+000087dc: 9847       blx       r3                                
+000087de: 08bd       pop       {r3, pc}                          
+000087e0: 2de9f041   push.w    {r4, r5, r6, r7, r8, lr}          
+000087e4: adf5836d   sub.w     sp, sp, #0x418                    
+000087e8: 00af       add       r7, sp, #0                        
+000087ea: 0546       mov       r5, r0                            
+000087ec: 0c46       mov       r4, r1                            
+000087ee: 07f50170   add.w     r0, r7, #0x204                    
+000087f2: 0021       movs      r1, #0                            
+000087f4: 4ff40072   mov.w     r2, #0x200                        
+000087f8: fff75eef   blx       #0x86b8                             ; memset
+000087fc: 012d       cmp       r5, #1                            
+000087fe: 06dc       bgt       #0x880e                           
+00008800: 3c48       ldr       r0, [pc, #0xf0]                     ; [000088f4]=00008c69 "Usage: ud_wbi_drop.elf filename"
+00008802: fff790ef   blx       #0x8724                             ; puts
+00008806: 4ff0ff30   mov.w     r0, #-1                           
+0000880a: fff79eef   blx       #0x8748                             ; exit
+0000880e: 6068       ldr       r0, [r4, #4]                      
+00008810: 07f50171   add.w     r1, r7, #0x204                    
+00008814: 00f022f9   bl        #0x8a5c                             ; __errno_location+0x308
+00008818: 08b1       cbz       r0, #0x881e                       
+0000881a: 3748       ldr       r0, [pc, #0xdc]                     ; [000088f8]=00008c89 "[UD_WBI_DROP] AnalyzePartitionSettingFile() erro"
+0000881c: 5ae0       b         #0x88d4                             ; __errno_location+0x180
+0000881e: 07f50175   add.w     r5, r7, #0x204                    
+00008822: 0124       movs      r4, #1                            
+00008824: ab6a       ldr       r3, [r5, #0x28]                   
+00008826: 022b       cmp       r3, #2                            
+00008828: 57d1       bne       #0x88da                           
+0000882a: 696a       ldr       r1, [r5, #0x24]                   
+0000882c: 19b9       cbnz      r1, #0x8836                       
+0000882e: 3348       ldr       r0, [pc, #0xcc]                     ; [000088fc]=00008cbb "[UD_WBI_DROP] wbi size is zero. skip wbi_drop()"
+00008830: fff778ef   blx       #0x8724                             ; puts
+00008834: 51e0       b         #0x88da                             ; __errno_location+0x186
+00008836: 4b1e       subs      r3, r1, #1                        
+00008838: b3f5ff7f   cmp.w     r3, #0x1fe                        
+0000883c: 05d8       bhi       #0x884a                           
+0000883e: 3048       ldr       r0, [pc, #0xc0]                     ; [00008900]=00008ceb "[UD_WBI_DROP] error : wbi size is too small. siz"
+00008840: fff75eef   blx       #0x8700                             ; printf
+00008844: 4ff0ff30   mov.w     r0, #-1                           
+00008848: 4ce0       b         #0x88e4                             ; __errno_location+0x190
+0000884a: 07f58060   add.w     r0, r7, #0x400                    
+0000884e: 1421       movs      r1, #0x14                         
+00008850: 2c4a       ldr       r2, [pc, #0xb0]                     ; [00008904]=00008d24 "/dev/nflasha%d"
+00008852: 2346       mov       r3, r4                            
+00008854: 0430       adds      r0, #4                            
+00008856: fff76cef   blx       #0x8730                             ; snprintf
+0000885a: 07f58061   add.w     r1, r7, #0x400                    
+0000885e: 0431       adds      r1, #4                            
+00008860: 2948       ldr       r0, [pc, #0xa4]                     ; [00008908]=00008d33 "[UD_WBI_DROP] %s wbi_drop
+"
+00008862: fff74eef   blx       #0x8700                             ; printf
+00008866: 07f58060   add.w     r0, r7, #0x400                    
+0000886a: 0430       adds      r0, #4                            
+0000886c: 41f20201   movw      r1, #0x1002                       
+00008870: fff7f6ee   blx       #0x8660                             ; open
+00008874: b0f1ff3f   cmp.w     r0, #-1                           
+00008878: 0646       mov       r6, r0                            
+0000887a: 09d1       bne       #0x8890                           
+0000887c: fff76aef   blx       #0x8754                             ; __errno_location
+00008880: 2249       ldr       r1, [pc, #0x88]                     ; [0000890c]=00008c60 "wbi_drop"
+00008882: 2422       movs      r2, #0x24                         
+00008884: 0346       mov       r3, r0                            
+00008886: 2248       ldr       r0, [pc, #0x88]                     ; [00008910]=00008d4e "[UD_WBI_DROP] %s %d, errno=%d
+"
+00008888: 1b68       ldr       r3, [r3]                          
+0000888a: fff73aef   blx       #0x8700                             ; printf
+0000888e: 20e0       b         #0x88d2                             ; __errno_location+0x17e
+00008890: 0021       movs      r1, #0                            
+00008892: 381d       adds      r0, r7, #4                        
+00008894: 4ff40072   mov.w     r2, #0x200                        
+00008898: fff70eef   blx       #0x86b8                             ; memset
+0000889c: 391d       adds      r1, r7, #4                        
+0000889e: 3046       mov       r0, r6                            
+000088a0: 4ff40072   mov.w     r2, #0x200                        
+000088a4: fff70eef   blx       #0x86c4                             ; write
+000088a8: b0f10008   subs.w    r8, r0, #0                        
+000088ac: 09da       bge       #0x88c2                           
+000088ae: fff752ef   blx       #0x8754                             ; __errno_location
+000088b2: 1649       ldr       r1, [pc, #0x58]                     ; [0000890c]=00008c60 "wbi_drop"
+000088b4: 2d22       movs      r2, #0x2d                         
+000088b6: 0346       mov       r3, r0                            
+000088b8: 1548       ldr       r0, [pc, #0x54]                     ; [00008910]=00008d4e "[UD_WBI_DROP] %s %d, errno=%d
+"
+000088ba: 1b68       ldr       r3, [r3]                          
+000088bc: fff720ef   blx       #0x8700                             ; printf
+000088c0: 01e0       b         #0x88c6                             ; __errno_location+0x172
+000088c2: 4ff00008   mov.w     r8, #0                            
+000088c6: 3046       mov       r0, r6                            
+000088c8: fff720ef   blx       #0x870c                             ; close
+000088cc: b8f1000f   cmp.w     r8, #0                            
+000088d0: 03d0       beq       #0x88da                           
+000088d2: 1048       ldr       r0, [pc, #0x40]                     ; [00008914]=00008d6d "[UD_WBI_DROP] wbi_drop() error"
+000088d4: fff726ef   blx       #0x8724                             ; puts
+000088d8: b4e7       b         #0x8844                             ; __errno_location+0xf0
+000088da: 0134       adds      r4, #1                            
+000088dc: 1035       adds      r5, #0x10                         
+000088de: 1f2c       cmp       r4, #0x1f                         
+000088e0: a0d1       bne       #0x8824                           
+000088e2: 0020       movs      r0, #0                            
+000088e4: 07f11807   add.w     r7, r7, #0x18                     
+000088e8: 07f58067   add.w     r7, r7, #0x400                    
+000088ec: bd46       mov       sp, r7                            
+000088ee: bde8f081   pop.w     {r4, r5, r6, r7, r8, pc}          
+000088f2: 00bf       nop                                         
+000088f4: 698c       ldrh      r1, [r5, #0x22]                   
+000088f6: 0000       movs      r0, r0                            
+000088f8: 898c       ldrh      r1, [r1, #0x24]                   
+000088fa: 0000       movs      r0, r0                            
+000088fc: bb8c       ldrh      r3, [r7, #0x24]                   
+000088fe: 0000       movs      r0, r0                            
+00008900: eb8c       ldrh      r3, [r5, #0x26]                   
+00008902: 0000       movs      r0, r0                            
+00008904: 248d       ldrh      r4, [r4, #0x28]                   
+00008906: 0000       movs      r0, r0                            
+00008908: 338d       ldrh      r3, [r6, #0x28]                   
+0000890a: 0000       movs      r0, r0                            
+0000890c: 608c       ldrh      r0, [r4, #0x22]                   
+0000890e: 0000       movs      r0, r0                            
+00008910: 4e8d       ldrh      r6, [r1, #0x2a]                   
+00008912: 0000       movs      r0, r0                            
+00008914: 6d8d       ldrh      r5, [r5, #0x2a]                   
+00008916: 0000       movs      r0, r0                            
+00008918: 2de9f047   push.w    {r4, r5, r6, r7, r8, sb, sl, lr}  
+0000891c: 0026       movs      r6, #0                            
+0000891e: 00af       add       r7, sp, #0                        
+00008920: 0546       mov       r5, r0                            
+00008922: 0c46       mov       r4, r1                            
+00008924: 9046       mov       r8, r2                            
+00008926: b146       mov       sb, r6                            
+00008928: d8f82c30   ldr.w     r3, [r8, #0x2c]                   
+0000892c: 13f0010f   tst.w     r3, #1                            
+00008930: 24d0       beq       #0x897c                           
+00008932: d8f820a0   ldr.w     sl, [r8, #0x20]                   
+00008936: 5645       cmp       r6, sl                            
+00008938: 0bd8       bhi       #0x8952                           
+0000893a: 5046       mov       r0, sl                            
+0000893c: 2146       mov       r1, r4                            
+0000893e: fff7ecee   blx       #0x8718                             ; __aeabi_uidivmod
+00008942: 31b9       cbnz      r1, #0x8952                       
+00008944: d8f82460   ldr.w     r6, [r8, #0x24]                   
+00008948: 2146       mov       r1, r4                            
+0000894a: 3046       mov       r0, r6                            
+0000894c: fff7e4ee   blx       #0x8718                             ; __aeabi_uidivmod
+00008950: 19b1       cbz       r1, #0x895a                       
+00008952: 0f48       ldr       r0, [pc, #0x3c]                     ; [00008990]=00008dc3 "parameter error"
+00008954: fff7d4ee   blx       #0x8700                             ; printf
+00008958: 0ce0       b         #0x8974                             ; __errno_location+0x220
+0000895a: 5644       add       r6, sl                            
+0000895c: 2146       mov       r1, r4                            
+0000895e: 3046       mov       r0, r6                            
+00008960: fff7c8ee   blx       #0x86f4                             ; __aeabi_uidiv
+00008964: 8542       cmp       r5, r0                            
+00008966: 09d2       bhs       #0x897c                           
+00008968: 0a48       ldr       r0, [pc, #0x28]                     ; [00008994]=00008dd3 "parameter error(address = %ld, block_num = %ld, "
+0000896a: 3146       mov       r1, r6                            
+0000896c: 2a46       mov       r2, r5                            
+0000896e: 2346       mov       r3, r4                            
+00008970: fff7c6ee   blx       #0x8700                             ; printf
+00008974: 4ff0ff30   mov.w     r0, #-1                           
+00008978: bde8f087   pop.w     {r4, r5, r6, r7, r8, sb, sl, pc}  
+0000897c: 09f10109   add.w     sb, sb, #1                        
+00008980: 08f11008   add.w     r8, r8, #0x10                     
+00008984: b9f11e0f   cmp.w     sb, #0x1e                         
+00008988: ced1       bne       #0x8928                           
+0000898a: 0020       movs      r0, #0                            
+0000898c: bde8f087   pop.w     {r4, r5, r6, r7, r8, sb, sl, pc}  
+00008990: c38d       ldrh      r3, [r0, #0x2e]                   
+00008992: 0000       movs      r0, r0                            
+00008994: d38d       ldrh      r3, [r2, #0x2e]                   
+00008996: 0000       movs      r0, r0                            
+00008998: 3038       subs      r0, #0x30                         
+0000899a: 80b5       push      {r7, lr}                          
+0000899c: c0b2       uxtb      r0, r0                            
+0000899e: 3628       cmp       r0, #0x36                         
+000089a0: 00af       add       r7, sp, #0                        
+000089a2: 9abf       itte      ls                                
+000089a4: 014b       ldrls     r3, [pc, #4]                      
+000089a6: 185c       ldrbls    r0, [r3, r0]                      
+000089a8: ff20       movhi     r0, #0xff                         
+000089aa: 80bd       pop       {r7, pc}                          
+000089ac: 8c8d       ldrh      r4, [r1, #0x2c]                   
+000089ae: 0000       movs      r0, r0                            
+000089b0: 2de9f843   push.w    {r3, r4, r5, r6, r7, r8, sb, lr}  
+000089b4: 0446       mov       r4, r0                            
+000089b6: 0b78       ldrb      r3, [r1]                          
+000089b8: 00af       add       r7, sp, #0                        
+000089ba: 0d46       mov       r5, r1                            
+000089bc: 302b       cmp       r3, #0x30                         
+000089be: 21d1       bne       #0x8a04                           
+000089c0: 4b78       ldrb      r3, [r1, #1]                      
+000089c2: 782b       cmp       r3, #0x78                         
+000089c4: 1ed1       bne       #0x8a04                           
+000089c6: 022a       cmp       r2, #2                            
+000089c8: 1cdd       ble       #0x8a04                           
+000089ca: 0a2a       cmp       r2, #0xa                          
+000089cc: 1edc       bgt       #0x8a0c                           
+000089ce: 0026       movs      r6, #0                            
+000089d0: 02f1ff38   add.w     r8, r2, #-1                       
+000089d4: b146       mov       sb, r6                            
+000089d6: 15f80800   ldrb.w    r0, [r5, r8]                      
+000089da: fff7ddff   bl        #0x8998                             ; __errno_location+0x244
+000089de: ff28       cmp       r0, #0xff                         
+000089e0: 08d0       beq       #0x89f4                           
+000089e2: 08f1ff38   add.w     r8, r8, #-1                       
+000089e6: b040       lsls      r0, r6                            
+000089e8: b8f1010f   cmp.w     r8, #1                            
+000089ec: 8144       add       sb, r0                            
+000089ee: 04d0       beq       #0x89fa                           
+000089f0: 0436       adds      r6, #4                            
+000089f2: f0e7       b         #0x89d6                             ; __errno_location+0x282
+000089f4: 6ff00200   mvn       r0, #2                            
+000089f8: 00e0       b         #0x89fc                             ; __errno_location+0x2a8
+000089fa: 0020       movs      r0, #0                            
+000089fc: c4f80090   str.w     sb, [r4]                          
+00008a00: bde8f883   pop.w     {r3, r4, r5, r6, r7, r8, sb, pc}  
+00008a04: 6ff00100   mvn       r0, #1                            
+00008a08: bde8f883   pop.w     {r3, r4, r5, r6, r7, r8, sb, pc}  
+00008a0c: 6ff00100   mvn       r0, #1                            
+00008a10: bde8f883   pop.w     {r3, r4, r5, r6, r7, r8, sb, pc}  
+00008a14: f0b5       push      {r4, r5, r6, r7, lr}              
+00008a16: adf5017d   sub.w     sp, sp, #0x204                    
+00008a1a: 00af       add       r7, sp, #0                        
+00008a1c: 7e1e       subs      r6, r7, #1                        
+00008a1e: 1c46       mov       r4, r3                            
+00008a20: 0de0       b         #0x8a3e                             ; __errno_location+0x2ea
+00008a22: 0d5d       ldrb      r5, [r1, r4]                      
+00008a24: 2c2d       cmp       r5, #0x2c                         
+00008a26: 03d0       beq       #0x8a30                           
+00008a28: 0a2d       cmp       r5, #0xa                          
+00008a2a: 01d0       beq       #0x8a30                           
+00008a2c: 0d2d       cmp       r5, #0xd                          
+00008a2e: 03d1       bne       #0x8a38                           
+00008a30: e21a       subs      r2, r4, r3                        
+00008a32: 0021       movs      r1, #0                            
+00008a34: b954       strb      r1, [r7, r2]                      
+00008a36: 04e0       b         #0x8a42                             ; __errno_location+0x2ee
+00008a38: 0134       adds      r4, #1                            
+00008a3a: 06f8015f   strb      r5, [r6, #1]!                     
+00008a3e: 9442       cmp       r4, r2                            
+00008a40: efdb       blt       #0x8a22                           
+00008a42: d7f81822   ldr.w     r2, [r7, #0x218]                  
+00008a46: 611c       adds      r1, r4, #1                        
+00008a48: 1160       str       r1, [r2]                          
+00008a4a: 3946       mov       r1, r7                            
+00008a4c: e21a       subs      r2, r4, r3                        
+00008a4e: fff7afff   bl        #0x89b0                             ; __errno_location+0x25c
+00008a52: 07f50177   add.w     r7, r7, #0x204                    
+00008a56: bd46       mov       sp, r7                            
+00008a58: f0bd       pop       {r4, r5, r6, r7, pc}              
+00008a5a: 0000       movs      r0, r0                            
+00008a5c: 2de9f04f   push.w    {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+00008a60: adf5077d   sub.w     sp, sp, #0x21c                    
+00008a64: 02af       add       r7, sp, #8                        
+00008a66: 8b46       mov       fp, r1                            
+00008a68: 5049       ldr       r1, [pc, #0x140]                    ; [00008bac]=00008cb9
+00008a6a: 7860       str       r0, [r7, #4]                      
+00008a6c: fff71eee   blx       #0x86ac                             ; fopen
+00008a70: 0546       mov       r5, r0                            
+00008a72: 30b9       cbnz      r0, #0x8a82                       
+00008a74: 4e48       ldr       r0, [pc, #0x138]                    ; [00008bb0]=00008e15 "Partition setting file not found (%s)
+"
+00008a76: 4ff0ff39   mov.w     sb, #-1                           
+00008a7a: 7968       ldr       r1, [r7, #4]                      
+00008a7c: fff740ee   blx       #0x8700                             ; printf
+00008a80: 8de0       b         #0x8b9e                             ; __errno_location+0x44a
+00008a82: 0021       movs      r1, #0                            
+00008a84: 1e23       movs      r3, #0x1e                         
+00008a86: 0a46       mov       r2, r1                            
+00008a88: cbf80830   str.w     r3, [fp, #8]                      
+00008a8c: fff720ee   blx       #0x86d0                             ; fseek
+00008a90: 0024       movs      r4, #0                            
+00008a92: 2646       mov       r6, r4                            
+00008a94: a146       mov       sb, r4                            
+00008a96: 07f10c00   add.w     r0, r7, #0xc                      
+00008a9a: 4ff40071   mov.w     r1, #0x200                        
+00008a9e: 2a46       mov       r2, r5                            
+00008aa0: fff7feed   blx       #0x86a0                             ; fgets
+00008aa4: 78b9       cbnz      r0, #0x8ac6                       
+00008aa6: 2846       mov       r0, r5                            
+00008aa8: fff71eee   blx       #0x86e8                             ; feof
+00008aac: 0028       cmp       r0, #0                            
+00008aae: 63d1       bne       #0x8b78                           
+00008ab0: 2846       mov       r0, r5                            
+00008ab2: fff744ee   blx       #0x873c                             ; ferror
+00008ab6: 30b1       cbz       r0, #0x8ac6                       
+00008ab8: 3e48       ldr       r0, [pc, #0xf8]                     ; [00008bb4]=00008e3c "Failed to read file (%s)
+"
+00008aba: 4ff0ff39   mov.w     sb, #-1                           
+00008abe: 7968       ldr       r1, [r7, #4]                      
+00008ac0: fff71eee   blx       #0x8700                             ; printf
+00008ac4: 58e0       b         #0x8b78                             ; __errno_location+0x424
+00008ac6: 3b7b       ldrb      r3, [r7, #0xc]                    
+00008ac8: 0136       adds      r6, #1                            
+00008aca: 232b       cmp       r3, #0x23                         
+00008acc: e3d0       beq       #0x8a96                           
+00008ace: 07f10c00   add.w     r0, r7, #0xc                      
+00008ad2: fff704ee   blx       #0x86dc                             ; strlen
+00008ad6: 0228       cmp       r0, #2                            
+00008ad8: 8046       mov       r8, r0                            
+00008ada: dcdd       ble       #0x8a96                           
+00008adc: 04f1020c   add.w     ip, r4, #2                        
+00008ae0: 07f10c01   add.w     r1, r7, #0xc                      
+00008ae4: 4246       mov       r2, r8                            
+00008ae6: 0023       movs      r3, #0                            
+00008ae8: 0beb0c1c   add.w     ip, fp, ip, lsl #4                
+00008aec: 07f5037a   add.w     sl, r7, #0x20c                    
+00008af0: 6046       mov       r0, ip                            
+00008af2: c7f800c0   str.w     ip, [r7]                          
+00008af6: cdf800a0   str.w     sl, [sp]                          
+00008afa: fff78bff   bl        #0x8a14                             ; __errno_location+0x2c0
+00008afe: d7f800c0   ldr.w     ip, [r7]                          
+00008b02: 8146       mov       sb, r0                            
+00008b04: 08b1       cbz       r0, #0x8b0a                       
+00008b06: 2c48       ldr       r0, [pc, #0xb0]                     ; [00008bb8]=00008e56 "Invalid character or string in field 1 of line %"
+00008b08: 32e0       b         #0x8b70                             ; __errno_location+0x41c
+00008b0a: 0cf10400   add.w     r0, ip, #4                        
+00008b0e: 07f10c01   add.w     r1, r7, #0xc                      
+00008b12: 4246       mov       r2, r8                            
+00008b14: d7f80c32   ldr.w     r3, [r7, #0x20c]                  
+00008b18: cdf800a0   str.w     sl, [sp]                          
+00008b1c: fff77aff   bl        #0x8a14                             ; __errno_location+0x2c0
+00008b20: 8146       mov       sb, r0                            
+00008b22: 08b1       cbz       r0, #0x8b28                       
+00008b24: 2548       ldr       r0, [pc, #0x94]                     ; [00008bbc]=00008e89 "Invalid character or string in field 2 of line %"
+00008b26: 23e0       b         #0x8b70                             ; __errno_location+0x41c
+00008b28: 0beb041c   add.w     ip, fp, r4, lsl #4                
+00008b2c: 07f10c01   add.w     r1, r7, #0xc                      
+00008b30: 0cf1280c   add.w     ip, ip, #0x28                     
+00008b34: 4246       mov       r2, r8                            
+00008b36: 6046       mov       r0, ip                            
+00008b38: d7f80c32   ldr.w     r3, [r7, #0x20c]                  
+00008b3c: c7f800c0   str.w     ip, [r7]                          
+00008b40: cdf800a0   str.w     sl, [sp]                          
+00008b44: fff766ff   bl        #0x8a14                             ; __errno_location+0x2c0
+00008b48: d7f800c0   ldr.w     ip, [r7]                          
+00008b4c: 8146       mov       sb, r0                            
+00008b4e: 08b1       cbz       r0, #0x8b54                       
+00008b50: 1b48       ldr       r0, [pc, #0x6c]                     ; [00008bc0]=00008ebc "Invalid character or string in field 3 of line %"
+00008b52: 0de0       b         #0x8b70                             ; __errno_location+0x41c
+00008b54: 0cf10400   add.w     r0, ip, #4                        
+00008b58: 07f10c01   add.w     r1, r7, #0xc                      
+00008b5c: 4246       mov       r2, r8                            
+00008b5e: d7f80c32   ldr.w     r3, [r7, #0x20c]                  
+00008b62: cdf800a0   str.w     sl, [sp]                          
+00008b66: fff755ff   bl        #0x8a14                             ; __errno_location+0x2c0
+00008b6a: 8146       mov       sb, r0                            
+00008b6c: 20b1       cbz       r0, #0x8b78                       
+00008b6e: 1548       ldr       r0, [pc, #0x54]                     ; [00008bc4]=00008eef "Invalid character or string in field 4 of line %"
+00008b70: 3146       mov       r1, r6                            
+00008b72: fff7c6ed   blx       #0x8700                             ; printf
+00008b76: 8ee7       b         #0x8a96                             ; __errno_location+0x342
+00008b78: 2846       mov       r0, r5                            
+00008b7a: fff7b6ed   blx       #0x86e8                             ; feof
+00008b7e: 48b9       cbnz      r0, #0x8b94                       
+00008b80: 0134       adds      r4, #1                            
+00008b82: 1e2c       cmp       r4, #0x1e                         
+00008b84: 87d1       bne       #0x8a96                           
+00008b86: b9f1000f   cmp.w     sb, #0                            
+00008b8a: 03d0       beq       #0x8b94                           
+00008b8c: 2846       mov       r0, r5                            
+00008b8e: fff782ed   blx       #0x8694                             ; fclose
+00008b92: 04e0       b         #0x8b9e                             ; __errno_location+0x44a
+00008b94: 2846       mov       r0, r5                            
+00008b96: 4ff00009   mov.w     sb, #0                            
+00008b9a: fff77ced   blx       #0x8694                             ; fclose
+00008b9e: 4846       mov       r0, sb                            
+00008ba0: 07f50577   add.w     r7, r7, #0x214                    
+00008ba4: bd46       mov       sp, r7                            
+00008ba6: bde8f08f   pop.w     {r4, r5, r6, r7, r8, sb, sl, fp, pc}
+00008baa: 00bf       nop                                         
+00008bac: b98c       ldrh      r1, [r7, #0x24]                   
+00008bae: 0000       movs      r0, r0                            
+00008bb0: 158e       ldrh      r5, [r2, #0x30]                   
+00008bb2: 0000       movs      r0, r0                            
+00008bb4: 3c8e       ldrh      r4, [r7, #0x30]                   
+00008bb6: 0000       movs      r0, r0                            
+00008bb8: 568e       ldrh      r6, [r2, #0x32]                   
+00008bba: 0000       movs      r0, r0                            
+00008bbc: 898e       ldrh      r1, [r1, #0x34]                   
+00008bbe: 0000       movs      r0, r0                            
+00008bc0: bc8e       ldrh      r4, [r7, #0x34]                   
+00008bc2: 0000       movs      r0, r0                            
+00008bc4: ef8e       ldrh      r7, [r5, #0x36]                   
+00008bc6: 0000       movs      r0, r0                            
+00008bc8: 2de9f047   push.w    {r4, r5, r6, r7, r8, sb, sl, lr}  
+00008bcc: 0746       mov       r7, r0                            
+00008bce: 0e46       mov       r6, r1                            
+00008bd0: 1546       mov       r5, r2                            
+00008bd2: dff87480   ldr.w     r8, [pc, #0x74]                     ; [00008c48]=00008420 "c_s.so.1"
+00008bd6: fff733fd   bl        #0x8640                           
+00008bda: 1c48       ldr       r0, [pc, #0x70]                     ; [00008c4c]=00008422 "s.so.1"
+00008bdc: f844       add       r8, pc                            
+00008bde: 7844       add       r0, pc                            
+00008be0: c8eb0009   rsb       sb, r8, r0                        
+00008be4: 5feaa909   asrs.w    sb, sb, #2                        
+00008be8: 28d0       beq       #0x8c3c                           
+00008bea: 3846       mov       r0, r7                            
+00008bec: 3146       mov       r1, r6                            
+00008bee: d8f80030   ldr.w     r3, [r8]                          
+00008bf2: 2a46       mov       r2, r5                            
+00008bf4: 0124       movs      r4, #1                            
+00008bf6: 9847       blx       r3                                
+00008bf8: 4c45       cmp       r4, sb                            
+00008bfa: 09f1ff3a   add.w     sl, sb, #-1                       
+00008bfe: 0af0010a   and       sl, sl, #1                        
+00008c02: 1dd2       bhs       #0x8c40                           
+00008c04: baf1000f   cmp.w     sl, #0                            
+00008c08: 08d0       beq       #0x8c1c                           
+00008c0a: d8f80440   ldr.w     r4, [r8, #4]                      
+00008c0e: 3846       mov       r0, r7                            
+00008c10: 3146       mov       r1, r6                            
+00008c12: 2a46       mov       r2, r5                            
+00008c14: a047       blx       r4                                
+00008c16: 0224       movs      r4, #2                            
+00008c18: 4c45       cmp       r4, sb                            
+00008c1a: 13d2       bhs       #0x8c44                           
+00008c1c: 58f82430   ldr.w     r3, [r8, r4, lsl #2]              
+00008c20: 0134       adds      r4, #1                            
+00008c22: 3846       mov       r0, r7                            
+00008c24: 3146       mov       r1, r6                            
+00008c26: 2a46       mov       r2, r5                            
+00008c28: 9847       blx       r3                                
+00008c2a: 58f82430   ldr.w     r3, [r8, r4, lsl #2]              
+00008c2e: 3846       mov       r0, r7                            
+00008c30: 3146       mov       r1, r6                            
+00008c32: 2a46       mov       r2, r5                            
+00008c34: 0134       adds      r4, #1                            
+00008c36: 9847       blx       r3                                
+00008c38: 4c45       cmp       r4, sb                            
+00008c3a: efd3       blo       #0x8c1c                           
+00008c3c: bde8f087   pop.w     {r4, r5, r6, r7, r8, sb, sl, pc}  
+00008c40: bde8f087   pop.w     {r4, r5, r6, r7, r8, sb, sl, pc}  
+00008c44: bde8f087   pop.w     {r4, r5, r6, r7, r8, sb, sl, pc}  
+00008c48: 2084       strh      r0, [r4, #0x20]                   
+00008c4a: 0000       movs      r0, r0                            
+00008c4c: 2284       strh      r2, [r4, #0x20]                   
+00008c4e: 0000       movs      r0, r0                            
+00008c50: 7047       bx        lr                                
+00008c52: 00bf       nop                                         
+
+## Anexo 5b — quien mas habla del WBI en el actualizador
+### 0100_config/mount.conf (linea 17): particion WBI declarada como 'filesystem' de 60 MB
+17:/dev/nflasha5 /wbi wbi 62914560 0
+
+### uc_mkfs.elf -m full -f mount.conf (us_mkfs.sh:93) solo formatea nflasha1 y nflasha2 (mkdosfs); NO toca nflasha5
+48:[DETAIL][MKFS]Format mode "full"
+49:[DETAIL][MKFS]Format mode "app"
+50:[ERROR][MKFS][Invalid Format mode -m %s
+57:/dev/nflasha1
+58:/dev/nflasha2
+59:mkdosfs -f 1 -s %lu %s
+64:[ERROR][MKFS] mkdosfs exit at error : %d
+
+### unicos ficheros del actualizador que mencionan el WBI
+firmware/extracted/fw321/updater.img_unpacked/bin/ud_wbi_drop.elf
+firmware/extracted/fw321/updater.img_unpacked/bin/us_mkfs.sh

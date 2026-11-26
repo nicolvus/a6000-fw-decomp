@@ -1,0 +1,39 @@
+0061aa20: 17d8       bhi      #0x61aa52                     
+0061aa22: 0122       movs     r2, #1                        
+0061aa24: 9a40       lsls     r2, r3                        
+0061aa26: 12f42a7f   tst.w    r2, #0x2a8                    
+0061aa2a: 0ed1       bne      #0x61aa4a                     
+0061aa2c: 12f4aa7f   tst.w    r2, #0x154                    
+0061aa30: 03d1       bne      #0x61aa3a                     
+0061aa32: 12f0030f   tst.w    r2, #3                        
+0061aa36: ecd1       bne      #0x61aa12                     
+0061aa38: 0be0       b        #0x61aa52                     
+0061aa3a: 124a       ldr      r2, [pc, #0x48]                 ; [0061aa84]=009df25a
+0061aa3c: e068       ldr      r0, [r4, #0xc]                
+0061aa3e: 1178       ldrb     r1, [r2]                      
+0061aa40: 144a       ldr      r2, [pc, #0x50]                 ; [0061aa94]=008e5348 "isSupportContent : Invalid TvSystem dete"
+0061aa42: 35f0f3fd   bl       #0x65062c                     
+0061aa46: 0020       movs     r0, #0                        
+0061aa48: 11e0       b        #0x61aa6e                     
+0061aa4a: e068       ldr      r0, [r4, #0xc]                
+0061aa4c: 2978       ldrb     r1, [r5]                      
+0061aa4e: 124a       ldr      r2, [pc, #0x48]                 ; [0061aa98]=008e530e "isSupportContent : Valid TvSystem detect"
+0061aa50: e2e7       b        #0x61aa18                     
+0061aa52: 0c4a       ldr      r2, [pc, #0x30]                 ; [0061aa84]=009df25a
+0061aa54: e068       ldr      r0, [r4, #0xc]                
+0061aa56: 1178       ldrb     r1, [r2]                      
+0061aa58: 104a       ldr      r2, [pc, #0x40]                 ; [0061aa9c]=008e53b2 "isSupportContent : Unknown frameRate %d "
+0061aa5a: dde7       b        #0x61aa18                     
+0061aa5c: 094a       ldr      r2, [pc, #0x24]                 ; [0061aa84]=009df25a
+0061aa5e: e068       ldr      r0, [r4, #0xc]                
+0061aa60: 1178       ldrb     r1, [r2]                      
+0061aa62: 0f4a       ldr      r2, [pc, #0x3c]                 ; [0061aaa0]=008e53dc "isSupportContent : GetPlayThumbnailInfo "
+0061aa64: 35f0e2fd   bl       #0x65062c                     
+0061aa68: 3046       mov      r0, r6                        
+0061aa6a: 00e0       b        #0x61aa6e                     
+0061aa6c: 0120       movs     r0, #1                        
+0061aa6e: 07f5ea77   add.w    r7, r7, #0x1d4                
+0061aa72: bd46       mov      sp, r7                        
+0061aa74: bde8f043   pop.w    {r4, r5, r6, r7, r8, sb, lr}  
+0061aa78: 04b0       add      sp, #0x10                     
+0061aa7a: 7047       bx       lr                            

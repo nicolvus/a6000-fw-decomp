@@ -1,0 +1,114 @@
+{
+ "modo": "DRY RUN — no se escribió firmware.tar ni firmware_packed.dat",
+ "base_tar": "build/cfw_func393/base/base-film.tar",
+ "nflasha15_nuevo": "build/cfw_func393/base/nflasha15-393.bin",
+ "version_propuesta": "3.94 (debe ser > 3.93 instalada)",
+ "miembros_base": 105,
+ "miembros_con_wbi": 105,
+ "tar_con_wbi_sha256": "890bb29991a43a47d9ee1db3eba08ebebd60530f5ec73c22fa04dd498cedd789",
+ "tar_con_wbi_bytes": 212579840,
+ "nflasha5_sha256": "fe080cda9f330537f36d7e9e283ecd69e4e8096d974dbdd16d598a8cbdcf3f04",
+ "comprobaciones": [
+  {
+   "comprobacion": "base_tar contiene 0700_part_image/dev/nflasha5",
+   "ok": true,
+   "detalle": "42293120 B"
+  },
+  {
+   "comprobacion": "nflasha5 de la base == nflasha5 de Sony 3.21 (sha256)",
+   "ok": true,
+   "detalle": "fe080cda9f330537f36d7e9e283ecd69e4e8096d974dbdd16d598a8cbdcf3f04"
+  },
+  {
+   "comprobacion": "nflasha5 de la base == dev/nflasha5 desempaquetado del fw321",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "comprobacion": "base_tar contiene 0700_part_image/dev/nflasha15",
+   "ok": true,
+   "detalle": "84042977 B"
+  },
+  {
+   "comprobacion": "nflasha15 nuevo existe y difiere del de la base",
+   "ok": true,
+   "detalle": "84611584 B, sha256 32ba8f5f5816ebbe…"
+  },
+  {
+   "comprobacion": "part_image.sum de la base tiene exactamente 1 línea de dev/nflasha5",
+   "ok": true,
+   "detalle": "0,9cb10112,02855780,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha5,"
+  },
+  {
+   "comprobacion": "esa línea verifica contra los bytes del miembro",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "comprobacion": "sums.update reescribe solo dev/nflasha15",
+   "ok": true,
+   "detalle": "0,fefe4bb9,050b1200,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha15,"
+  },
+  {
+   "comprobacion": "sin_wbi=False conserva la línea de dev/nflasha5",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "comprobacion": "sin_wbi=False -> NO se pone nflasha5 a None en repl",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "comprobacion": "tar con WBI: miembro nflasha5 idéntico byte a byte",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "comprobacion": "tar con WBI: nflasha15 nuevo",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "comprobacion": "tar con WBI: suma de nflasha5 sigue verificando",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "comprobacion": "tar con WBI: suma de nflasha15 verifica",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "comprobacion": "tar con WBI: solo 2 miembros reescritos",
+   "ok": true,
+   "detalle": "0700_part_image/dev/nflasha15, 0701_part_image_sum/part_image.sum"
+  },
+  {
+   "comprobacion": "tar con WBI: mismos 105 miembros que la base",
+   "ok": true,
+   "detalle": "105"
+  },
+  {
+   "comprobacion": "sin_wbi=True: el miembro nflasha5 desaparece",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "comprobacion": "sin_wbi=True: la línea del sum desaparece",
+   "ok": true,
+   "detalle": ""
+  },
+  {
+   "comprobacion": "--darwin-v3 aplicable sobre esta base (darwin_core distinto)",
+   "ok": true,
+   "detalle": "sha256 5fea521f6c17c0fc…"
+  },
+  {
+   "comprobacion": "--darwin-v3: la suma de darwin verifica",
+   "ok": true,
+   "detalle": ""
+  }
+ ],
+ "todo_ok": true
+}

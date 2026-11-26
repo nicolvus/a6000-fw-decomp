@@ -1,0 +1,57 @@
+# Manejador PlayMovie FUN_00437BC0 (libmpr.so 3.21) - contexto de las dos guardas
+# ORIGINAL (sin parchear): las dos llamadas que el parche sustituye
+00437bc0: 82b0       sub      sp, #8                        
+00437bc2: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+00437bc6: a5b0       sub      sp, #0x94                     
+00437bc8: 14af       add      r7, sp, #0x50                 
+00437bca: 0446       mov      r4, r0                        
+00437bcc: 07f16000   add.w    r0, r7, #0x60                 
+00437bd0: 8946       mov      sb, r1                        
+00437bd2: d7f87880   ldr.w    r8, [r7, #0x78]               
+00437bd6: 80e80c00   stm.w    r0, {r2, r3}                  
+00437bda: 0023       movs     r3, #0                        
+00437bdc: fb63       str      r3, [r7, #0x3c]               
+00437bde: d4f8f031   ldr.w    r3, [r4, #0x1f0]              
+00437be2: fd6f       ldr      r5, [r7, #0x7c]               
+00437be4: 052b       cmp      r3, #5                        
+00437be6: 01d0       beq      #0x437bec                     
+00437be8: 0a23       movs     r3, #0xa                      
+00437bea: 0fe0       b        #0x437c0c                     
+00437bec: 75b1       cbz      r5, #0x437c0c                 
+00437bee: d4f8ec01   ldr.w    r0, [r4, #0x1ec]              
+00437bf2: d4f8c01d   ldr.w    r1, [r4, #0xdc0]              
+00437bf6: d4f8b82d   ldr.w    r2, [r4, #0xdb8]              
+00437bfa: 0ff010ff   bl       #0x447a1e                     
+00437bfe: 38b9       cbnz     r0, #0x437c10                 
+00437c00: a068       ldr      r0, [r4, #8]                  
+00437c02: 0122       movs     r2, #1                        
+00437c04: 4d49       ldr      r1, [pc, #0x134]                ; [00437d3c]=0085a51c " Pb Disable!! ref) dsm get"
+00437c06: daf297fe   bl       #0x712938                     
+00437c0a: 1a23       movs     r3, #0x1a                     
+00437c0c: fb63       str      r3, [r7, #0x3c]               
+00437c0e: 7ee0       b        #0x437d0e                     
+00437c10: 07f16806   add.w    r6, r7, #0x68                 
+00437c14: 96e80f00   ldm.w    r6, {r0, r1, r2, r3}          
+00437c18: 8de80f00   stm.w    sp, {r0, r1, r2, r3}          
+00437c1c: 07f16001   add.w    r1, r7, #0x60                 
+...
+00437c70: d4f8ec01   ldr.w    r0, [r4, #0x1ec]              
+00437c74: d4f8c01d   ldr.w    r1, [r4, #0xdc0]              
+00437c78: 10f096f8   bl       #0x447da8                     
+00437c7c: 18b1       cbz      r0, #0x437c86                 
+00437c7e: d9f297fa   bl       #0x7111b0                     
+00437c82: f863       str      r0, [r7, #0x3c]               
+00437c84: 43e0       b        #0x437d0e                     
+00437c86: b8f1000f   cmp.w    r8, #0                        
+00437c8a: 06d0       beq      #0x437c9a                     
+00437c8c: 3846       mov      r0, r7                        
+00437c8e: 4146       mov      r1, r8                        
+
+# FLUJO
+#   0x437BE4  cmp [r4+0x1f0],#5 ; bne -> 0x437C0C (r3=0xa)   (solo se sigue si el estado es 5)
+#   0x437BEC  cbz r5 -> 0x437C0C
+#   0x437BFA  bl 0x447A1E  (guarda A: capacidades)  -> PARCHEADO: movs r0,#1 ; nop
+#   0x437BFE  cbnz r0 -> 0x437C10   (INTACTO)
+#   0x437C2C  bl 0x447F26  (guarda B: isSupportContent) -> PARCHEADO: movs r0,#1 ; nop
+#   0x437C30  cbnz r0 -> 0x437C70   (INTACTO)
+#   0x437C70  ldr r0,[r4+0x1EC] ; ldr r1,[r4+0xDC0] ; bl 0x447DA8 -> AviMMgr+0xB4 = MovieReadStart 0x608698

@@ -1,0 +1,100 @@
+# Mapas de error 0xCA001001 / 0xB0100002 en libmpr.so 3.21
+# SHA-256 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+
+==========================================================================
+## 1. 0xCA001001 SI tiene nombre en el binario: ER_FAILED_ACQUIRE_SEMAPHORE
+##    0x8BBC95 = 'ER_FAILED_ACQUIRE_SEMAPHORE' ; lo imprime el propio acquire
+##    (0x5BAD5E-0x5BAD66: ldr r0,=0x8BBC95 ; bl 0x5BA4A8)
+==========================================================================
+005bad5e: 2648       ldr      r0, [pc, #0x98]                 ; [005badf8]=008bbc95
+005bad60: fff7a2fb   bl       #0x5ba4a8                     
+005bad64: 2548       ldr      r0, [pc, #0x94]                 ; [005badfc]=008bbcb3 " ### REJECT PID = "
+005bad66: fff79ffb   bl       #0x5ba4a8                     
+
+##   Cadenas de diagnostico del acquire
+  008bbc95 'ER_FAILED_ACQUIRE_SEMAPHORE\r\n'
+  008bbcb3 ' ### REJECT PID = '
+  008bbcc6 ' TID = '
+  008bbcce ' CMD = '
+  008bbcd6 ' ### ACTIVE PID = '
+
+==========================================================================
+## 2. 0xB0100002 NO tiene cadena ni tabla en TODO el firmware
+##    grep -a 'B010' sobre todo nflasha15_unpacked: 0 resultados.
+##    Solo existe como literal de codigo en libmpr (+ 0xB0100001 en libObj).
+==========================================================================
+##   Familia de literales en libmpr (censo de palabras de 32 bits):
+   0xB0100001  x56
+   0xB0100002  x144
+   0xB0100003  x4
+   0xB0100004  x4
+   0xB0100005  x2
+   0xB0100006  x80
+   0xB0100007  x1
+   0xB0100008  x1
+   0xB0100009  x4
+   0xCA001001  x77
+
+##   Logger de la TU mp4Ifo 0x6F0A54 -> texto real en el log:
+##     0x91C945 ' ### mp4Ifo faild at ' + <fichero> + '(' + <linea> + ')' 
+##     0x8BBA44 ') ErrCd: 0x' + %08X
+##   => '### mp4Ifo faild at mp4Ifo_If.cpp(0x1af) ErrCd: 0xB0100002'
+006f0a86: 1b48       ldr      r0, [pc, #0x6c]                 ; [006f0af4]=0091c945 " ### mp4Ifo faild at "
+006f0a88: a4f756fe   bl       #0x695738                     
+006f0a8c: 3046       mov      r0, r6                        
+006f0a8e: a4f753fe   bl       #0x695738                     
+006f0a92: 1948       ldr      r0, [pc, #0x64]                 ; [006f0af8]=008dd35e
+006f0a94: a4f750fe   bl       #0x695738                     
+006f0a98: 2946       mov      r1, r5                        
+006f0a9a: 0420       movs     r0, #4                        
+006f0a9c: a4f772fe   bl       #0x695784                     
+006f0aa0: 1648       ldr      r0, [pc, #0x58]                 ; [006f0afc]=008bba44 ") ErrCd: 0x"
+006f0aa2: a4f749fe   bl       #0x695738                     
+006f0aa6: 0820       movs     r0, #8                        
+006f0aa8: 2146       mov      r1, r4                        
+006f0aaa: 07f10407   add.w    r7, r7, #4                    
+006f0aae: bd46       mov      sp, r7                        
+
+==========================================================================
+## 3. En 0x6E8430 el UNICO camino que devuelve 0xB0100002 es el acquire fallido
+==========================================================================
+006e8454: 6068       ldr      r0, [r4, #4]                  
+006e8456: 2321       movs     r1, #0x23                     
+006e8458: 0122       movs     r2, #1                        
+006e845a: d2f651fc   bl       #0x5bad00                     
+006e845e: 38b1       cbz      r0, #0x6e8470                 
+006e8460: 1b48       ldr      r0, [pc, #0x6c]                 ; [006e84d0]=0091b6df "mp4Ifo_If.cpp"
+006e8462: 40f2af11   movw     r1, #0x1af                    
+006e8466: 1c4a       ldr      r2, [pc, #0x70]                 ; [006e84d8]=b0100002
+006e8468: 08f0f4fa   bl       #0x6f0a54                     
+006e846c: 1a4d       ldr      r5, [pc, #0x68]                 ; [006e84d8]=b0100002
+006e846e: 1de0       b        #0x6e84ac                     
+
+==========================================================================
+## 4. Consumidor final: AviMMgr::isSupportContent 0x61A8F0
+##    r0 = *(avimMgr+0x734) = instancia mp4Ifo_If (0x61A9BA)
+##    si 0x6E8430 != 0 -> 0x61AA5C log + 0x61AA68 RET 0 (NO soportado)
+==========================================================================
+0061a9b4: 0093       str      r3, [sp]                      
+0061a9b6: 07f5e073   add.w    r3, r7, #0x1c0                
+0061a9ba: d4f83407   ldr.w    r0, [r4, #0x734]              
+0061a9be: 0193       str      r3, [sp, #4]                  
+0061a9c0: 07f5ba73   add.w    r3, r7, #0x174                
+0061a9c4: 0293       str      r3, [sp, #8]                  
+0061a9c6: 07f5d673   add.w    r3, r7, #0x1ac                
+0061a9ca: 0393       str      r3, [sp, #0xc]                
+0061a9cc: 07f5de73   add.w    r3, r7, #0x1bc                
+0061a9e0: 0793       str      r3, [sp, #0x1c]               
+0061a9e2: 1f23       movs     r3, #0x1f                     
+0061a9e4: cdf024fd   bl       #0x6e8430                     
+0061a9e8: 0346       mov      r3, r0                        
+0061a9ea: 0028       cmp      r0, #0                        
+0061a9ec: 36d1       bne      #0x61aa5c                     
+0061aa5c: 094a       ldr      r2, [pc, #0x24]                 ; [0061aa84]=009df25a
+0061aa5e: e068       ldr      r0, [r4, #0xc]                
+0061aa60: 1178       ldrb     r1, [r2]                      
+0061aa62: 0f4a       ldr      r2, [pc, #0x3c]                 ; [0061aaa0]=008e53dc "isSupportContent : GetPlayThumbnailInfo "
+0061aa64: 35f0e2fd   bl       #0x65062c                     
+0061aa68: 3046       mov      r0, r6                        
+0061aa6a: 00e0       b        #0x61aa6e                     
+0061aa6c: 0120       movs     r0, #1                        

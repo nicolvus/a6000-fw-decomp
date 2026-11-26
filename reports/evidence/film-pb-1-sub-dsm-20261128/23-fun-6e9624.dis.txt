@@ -1,0 +1,32 @@
+006e9624: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+006e9628: 84b0       sub      sp, #0x10                     
+006e962a: 134c       ldr      r4, [pc, #0x4c]                 ; [006e9678]=0091b79a "GetEnableFuncTbl"
+006e962c: 00af       add      r7, sp, #0                    
+006e962e: 0646       mov      r6, r0                        
+006e9630: 3846       mov      r0, r7                        
+006e9632: 0d46       mov      r5, r1                        
+006e9634: 9046       mov      r8, r2                        
+006e9636: acf7adfe   bl       #0x696394                     
+006e963a: 2346       mov      r3, r4                        
+006e963c: 0f48       ldr      r0, [pc, #0x3c]                 ; [006e967c]=008648d3 "START"
+006e963e: 1049       ldr      r1, [pc, #0x40]                 ; [006e9680]=0091b6df "mp4Ifo_If.cpp"
+006e9640: 40f69902   movw     r2, #0x899                    
+006e9644: acf716fb   bl       #0x695c74                     
+006e9648: 3068       ldr      r0, [r6]                      
+006e964a: 4246       mov      r2, r8                        
+006e964c: 2946       mov      r1, r5                        
+006e964e: 0368       ldr      r3, [r0]                      
+006e9650: d3f89c30   ldr.w    r3, [r3, #0x9c]               
+006e9654: 9847       blx      r3                            
+006e9656: 3946       mov      r1, r7                        
+006e9658: 0546       mov      r5, r0                        
+006e965a: 0a48       ldr      r0, [pc, #0x28]                 ; [006e9684]=0086d72f "END : "
+006e965c: acf7a0fe   bl       #0x6963a0                     
+006e9660: 0749       ldr      r1, [pc, #0x1c]                 ; [006e9680]=0091b6df "mp4Ifo_If.cpp"
+006e9662: 40f6b502   movw     r2, #0x8b5                    
+006e9666: 2346       mov      r3, r4                        
+006e9668: acf704fb   bl       #0x695c74                     
+006e966c: 2846       mov      r0, r5                        
+006e966e: 07f11007   add.w    r7, r7, #0x10                 
+006e9672: bd46       mov      sp, r7                        
+006e9674: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      

@@ -1,0 +1,67 @@
+0071ce64: 80b5       push     {r7, lr}                      
+0071ce66: 84b0       sub      sp, #0x10                     
+0071ce68: 00af       add      r7, sp, #0                    
+0071ce6a: 3846       mov      r0, r7                        
+0071ce6c: 0b68       ldr      r3, [r1]                      
+0071ce6e: 3b60       str      r3, [r7]                      
+0071ce70: 4b68       ldr      r3, [r1, #4]                  
+0071ce72: 7b60       str      r3, [r7, #4]                  
+0071ce74: 8b68       ldr      r3, [r1, #8]                  
+0071ce76: bb60       str      r3, [r7, #8]                  
+0071ce78: 0b7b       ldrb     r3, [r1, #0xc]                
+0071ce7a: 3b73       strb     r3, [r7, #0xc]                
+0071ce7c: f5f7c8f8   bl       #0x712010                     
+0071ce80: 07f11007   add.w    r7, r7, #0x10                 
+0071ce84: bd46       mov      sp, r7                        
+0071ce86: 80bd       pop      {r7, pc}                      
+0071ce88: b0b5       push     {r4, r5, r7, lr}              
+0071ce8a: 0021       movs     r1, #0                        
+0071ce8c: 0446       mov      r4, r0                        
+0071ce8e: 00af       add      r7, sp, #0                    
+0071ce90: 0348       ldr      r0, [pc, #0xc]                  ; [0071cea0]=4000000d
+0071ce92: 01f602e2   blx      #0x11e298                       ; _ZN8MprIfLog12AsyncApiCallEmt
+0071ce96: 2068       ldr      r0, [r4]                      
+0071ce98: bde8b040   pop.w    {r4, r5, r7, lr}              
+0071ce9c: 32f5a2bf   b.w      #0x44fde4                     
+0071cea0: 0d00       movs     r5, r1                        
+0071cea2: 0040       ands     r0, r0                        
+0071cea4: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+0071cea8: 0546       mov      r5, r0                        
+0071ceaa: 0c46       mov      r4, r1                        
+0071ceac: 00af       add      r7, sp, #0                    
+0071ceae: 0021       movs     r1, #0                        
+0071ceb0: 0548       ldr      r0, [pc, #0x14]                 ; [0071cec8]=4000000d
+0071ceb2: 1646       mov      r6, r2                        
+0071ceb4: 01f6f0e1   blx      #0x11e298                       ; _ZN8MprIfLog12AsyncApiCallEmt
+0071ceb8: 2868       ldr      r0, [r5]                      
+0071ceba: 2146       mov      r1, r4                        
+0071cebc: 3246       mov      r2, r6                        
+0071cebe: bde8f041   pop.w    {r4, r5, r6, r7, r8, lr}      
+0071cec2: 02f689b3   b.w      #0x11f5d8                     
+0071cec6: 00bf       nop                                    
+0071cec8: 0d00       movs     r5, r1                        
+0071ceca: 0040       ands     r0, r0                        
+0071cecc: 98b5       push     {r3, r4, r7, lr}              
+0071cece: 0446       mov      r4, r0                        
+0071ced0: 00af       add      r7, sp, #0                    
+0071ced2: 0021       movs     r1, #0                        
+0071ced4: 0648       ldr      r0, [pc, #0x18]                 ; [0071cef0]=10000012
+0071ced6: 00f622e4   blx      #0x11d71c                       ; _ZN8MprIfLog11SyncApiCallEmt
+0071ceda: 2068       ldr      r0, [r4]                      
+0071cedc: 2cf592fb   bl       #0x449604                     
+0071cee0: 0446       mov      r4, r0                        
+0071cee2: 0348       ldr      r0, [pc, #0xc]                  ; [0071cef0]=10000012
+0071cee4: 2146       mov      r1, r4                        
+0071cee6: 00f658e6   blx      #0x11db98                       ; _ZN8MprIfLog11SyncApiDoneEmm
+0071ceea: 2046       mov      r0, r4                        
+0071ceec: 98bd       pop      {r3, r4, r7, pc}              
+0071ceee: 00bf       nop                                    
+0071cef0: 1200       movs     r2, r2                        
+0071cef2: 0010       asrs     r0, r0, #0x20                 
+0071cef4: b0b5       push     {r4, r5, r7, lr}              
+0071cef6: 0546       mov      r5, r0                        
+0071cef8: 0c46       mov      r4, r1                        
+0071cefa: 00af       add      r7, sp, #0                    
+0071cefc: 0021       movs     r1, #0                        
+0071cefe: 0448       ldr      r0, [pc, #0x10]                 ; [0071cf10]=40000088
+0071cf00: 01f6cae1   blx      #0x11e298                       ; _ZN8MprIfLog12AsyncApiCallEmt

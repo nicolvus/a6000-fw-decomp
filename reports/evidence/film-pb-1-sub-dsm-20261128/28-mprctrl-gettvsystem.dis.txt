@@ -1,0 +1,41 @@
+00011d74: f0b5       push     {r4, r5, r6, r7, lr}          
+00011d76: 83b0       sub      sp, #0xc                      
+00011d78: 00af       add      r7, sp, #0                    
+00011d7a: 07f10802   add.w    r2, r7, #8                    
+00011d7e: 0025       movs     r5, #0                        
+00011d80: 0121       movs     r1, #1                        
+00011d82: 1148       ldr      r0, [pc, #0x44]                 ; [00011dc8]=010704fd
+00011d84: 02f8015d   strb     r5, [r2, #-0x1]!              
+00011d88: fdf70ae9   blx      #0xefa0                         ; _ZN9BackupLib10GetEepDataEjhPv
+00011d8c: 0f4c       ldr      r4, [pc, #0x3c]                 ; [00011dcc]=00029ed6 "TSZ_DRJPG_L_1_1_EXFINE_MAX"
+00011d8e: 7c44       add      r4, pc                        
+00011d90: 061e       subs     r6, r0, #0                    
+00011d92: 0bda       bge      #0x11dac                      
+00011d94: 0120       movs     r0, #1                        
+00011d96: fdf76aee   blx      #0xfa6c                         ; _ZN7MprCtrl15SetSelfCheckLogEb
+00011d9a: 0d4b       ldr      r3, [pc, #0x34]                 ; [00011dd0]=000007a8
+00011d9c: 0d49       ldr      r1, [pc, #0x34]                 ; [00011dd4]=0000fa7e
+00011d9e: 3246       mov      r2, r6                        
+00011da0: e358       ldr      r3, [r4, r3]                  
+00011da2: 7944       add      r1, pc                        
+00011da4: 1868       ldr      r0, [r3]                      
+00011da6: fdf75ced   blx      #0xf860                         ; _ZNK7MonCtrl16ConPrintfMessageEPKcz
+00011daa: 07e0       b        #0x11dbc                      
+00011dac: fa79       ldrb     r2, [r7, #7]                  
+00011dae: 012a       cmp      r2, #1                        
+00011db0: 04d8       bhi      #0x11dbc                      
+00011db2: 094b       ldr      r3, [pc, #0x24]                 ; [00011dd8]=0000fa54
+00011db4: 7b44       add      r3, pc                        
+00011db6: 53f82200   ldr.w    r0, [r3, r2, lsl #2]          
+00011dba: 00e0       b        #0x11dbe                      
+00011dbc: 2846       mov      r0, r5                        
+00011dbe: 07f10c07   add.w    r7, r7, #0xc                  
+00011dc2: bd46       mov      sp, r7                        
+00011dc4: f0bd       pop      {r4, r5, r6, r7, pc}          
+00011dc6: 00bf       nop                                    
+00011dc8: fd04       lsls     r5, r7, #0x13                 
+00011dca: 0701       lsls     r7, r0, #4                    
+00011dcc: d69e       ldr      r6, [sp, #0x358]              
+00011dce: 0200       movs     r2, r0                        
+00011dd0: a807       lsls     r0, r5, #0x1e                 
+00011dd2: 0000       movs     r0, r0                        

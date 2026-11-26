@@ -1,0 +1,51 @@
+0060ac00: 4046       mov      r0, r8                        
+0060ac02: dff5aafb   bl       #0x3ea35a                     
+0060ac06: 05f50a60   add.w    r0, r5, #0x8a0                
+0060ac0a: 0123       movs     r3, #1                        
+0060ac0c: 85f85848   strb.w   r4, [r5, #0x858]              
+0060ac10: c5f8a448   str.w    r4, [r5, #0x8a4]              
+0060ac14: 0c30       adds     r0, #0xc                      
+0060ac16: c5f8a848   str.w    r4, [r5, #0x8a8]              
+0060ac1a: 2146       mov      r1, r4                        
+0060ac1c: 85f87832   strb.w   r3, [r5, #0x278]              
+0060ac20: 1022       movs     r2, #0x10                     
+0060ac22: 85f87932   strb.w   r3, [r5, #0x279]              
+0060ac26: 85f80847   strb.w   r4, [r5, #0x708]              
+0060ac2a: 15f75af3   bl       #0x1202e2                     
+0060ac2e: 85f8ac48   strb.w   r4, [r5, #0x8ac]              
+0060ac32: c5f8c048   str.w    r4, [r5, #0x8c0]              
+0060ac36: 2846       mov      r0, r5                        
+0060ac38: 85f89c47   strb.w   r4, [r5, #0x79c]              
+0060ac3c: 85f85948   strb.w   r4, [r5, #0x859]              
+0060ac40: bde8f883   pop.w    {r3, r4, r5, r6, r7, r8, sb, pc}
+0060ac44: 2046       mov      r0, r4                        
+0060ac46: 0ff71bfb   bl       #0x51a280                     
+0060ac4a: 3046       mov      r0, r6                        
+0060ac4c: dff599fb   bl       #0x3ea382                     
+0060ac50: ffe7       b        #0x60ac52                     
+0060ac52: 4046       mov      r0, r8                        
+0060ac54: dff595fb   bl       #0x3ea382                     
+0060ac58: ffe7       b        #0x60ac5a                     
+0060ac5a: 4846       mov      r0, sb                        
+0060ac5c: f2f7a0fc   bl       #0x5fd5a0                     
+0060ac60: ffe7       b        #0x60ac62                     
+0060ac62: 2846       mov      r0, r5                        
+0060ac64: 41f0e4fe   bl       #0x64ca30                     
+0060ac68: 14f7b0e5   blx      #0x11f7cc                       ; __cxa_end_cleanup
+0060ac6c: 586e       ldr      r0, [r3, #0x64]               
+0060ac6e: 8e00       lsls     r6, r1, #2                    
+0060ac70: 19c9       ldm      r1!, {r0, r3, r4}             
+0060ac72: 6400       lsls     r4, r4, #1                    
+0060ac74: f0b5       push     {r4, r5, r6, r7, lr}          
+0060ac76: d5b0       sub      sp, #0x154                    
+0060ac78: 0546       mov      r5, r0                        
+0060ac7a: 02af       add      r7, sp, #8                    
+0060ac7c: 0e46       mov      r6, r1                        
+0060ac7e: 8068       ldr      r0, [r0, #8]                  
+0060ac80: 0368       ldr      r3, [r0]                      
+0060ac82: d3f8f430   ldr.w    r3, [r3, #0xf4]               
+0060ac86: 9847       blx      r3                            
+0060ac88: 0446       mov      r4, r0                        
+0060ac8a: 002e       cmp      r6, #0                        
+0060ac8c: 36d1       bne      #0x60acfc                     
+0060ac8e: 2422       movs     r2, #0x24                     

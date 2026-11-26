@@ -1,0 +1,93 @@
+# Como entra libmpr.so en el paquete CFW (fw 3.21, nflasha15 = /usr)
+
+## 1. Raiz del ext2 = /usr  (scripts/gui/build_nflasha15.py)
+def replace_files(image: Path, package: Path, files: list[str]) -> None:
+    for rel in files:
+        dest = "/" + rel  # la raíz del ext2 es /usr: lib/… → /lib/…, share/app/… → /share/app/…
+        attrs = stat_fields(image, dest)
+
+## 2. La lista de ficheros a sustituir sale de MANIFEST.json -> parcheados (build_nflasha15.py:71-74)
+def main(original: Path, package: Path, out: Path) -> dict:
+    manifest = json.loads((package / "MANIFEST.json").read_text())
+    files = sorted(manifest["parcheados"])
+    blob = original.read_bytes()
+
+## 3. build_cfw_film.py: quien arma files/ (overlay) y quien llama a los dos build_*
+    parcheados = sorted(json.loads((pp / "MANIFEST.json").read_text())["parcheados"]) + ["lib/libObj.so"]
+    man = {"idiomas": json.loads((pp / "MANIFEST.json").read_text())["idiomas"], "nuevos": {}, "originales": {}, "parcheados": {}, "md5": {}}
+    for rel in sorted(set(parcheados)):
+        o, n = (orig / rel).read_bytes(), (files / rel).read_bytes()
+        man["originales"][rel], man["parcheados"][rel] = C.sha(o), C.sha(n)
+        man["md5"][rel] = {"original": C.md5(o), "parcheado": C.md5(n)}
+    (files / "MANIFEST.json").write_text(json.dumps(man, indent=1, sort_keys=True))
+    (files / "SHA256SUMS").write_text("".join(f"{h}  {r}\n" for r, h in man["parcheados"].items()))
+    nf15 = out / f"nflasha15-{version.replace('.', '')}.bin"
+    rep15 = build_nflasha15.main(C.DEV_A / "nflasha15", files, nf15)
+    base = out / "base-film.tar"
+    rep_base = build_base_pp.main(C.BASE_TAR, base, bionz=bionz_de(funciones))
+    res = build_package_nflasha15.main(nf15, out / f"pkg-{version}", base, version, darwin_v3=True, sin_wbi=True)
+    (out / "build-nflasha15.json").write_text(json.dumps(rep15, indent=1))
+
+## 4. build_package_nflasha15.py: tar + part_image.sum + fwtool pack + roundtrip
+    entries, _ = tarball.parse(base)
+    members = {e.name: e.data for e in entries}
+    part_sum, detail = sums.update(members[build.PART_SUM].decode("ascii"), ENTRY, blob)
+    assert sums.verify(part_sum, ENTRY, blob)
+    if sin_wbi:  # sin nflasha5 el WBI queda invalidado por ud_wbi_drop (us_mkfs.sh) y Loader3 arranca en frío
+        lines = part_sum.splitlines(keepends=True)
+        part_sum = "".join(ln for ln in lines if not ln.rstrip().endswith(",dev/nflasha5,"))
+        core, _ = build.efcs_tabla_diff(members[build.DARWIN_CORE])
+        dsum, _ = build._sum_text_with_core(members[build.DARWIN_SUM].decode("ascii"), core)
+        repl |= {build.DARWIN_CORE: core, build.DARWIN_SUM: dsum.encode("ascii")}
+    tar_bytes, _ = tarball.rebuild(base, repl)
+    tar_path = out / "firmware.tar"
+    pkg = out / f"package-{version}"
+    pkg.mkdir(exist_ok=True)
+    B.pack(cfg, tar_path, FW / "updater.img", pkg)
+    header = B.header_of(pkg / "firmware_packed.fdat")
+    assert header["version"] == version and header["model"] == f"0x{build.MODEL:08x}", header
+    with tempfile.TemporaryDirectory() as tmp:
+        B.unpack(pkg / "firmware_packed.dat", Path(tmp))
+        got = (Path(tmp) / "firmware.tar").read_bytes()
+        assert sha(got) == sha(tar_bytes), "el tar extraído no coincide"
+        got_members = {e.name: e.data for e in tarball.parse(got)[0]}
+        assert all(got_members.get(k) == v for k, v in repl.items()) and got_members[NFLASHA15] == blob and sums.verify(got_members[build.PART_SUM].decode("ascii"), ENTRY, blob)
+        assert tpzl.TpzlImage.parse(got_members[NFLASHA15]).decompressed()[1080:1082] == b"\x53\xef"  # firma ext2 (superbloque)
+        for name, data in members.items():  # el resto de miembros, intacto
+            if name not in repl:
+                assert got_members[name] == data, name
+    B.package_checksums(pkg)
+    result = {"version": version, "darwin_v3": darwin_v3, "sin_wbi": sin_wbi, "base_tar": str(base_tar), "tar_sha256": sha(tar_bytes), "part_sum_linea": detail["line_after"],
+
+## 5. e25_05/build_packages.py: pack/unpack = fwtool externo (references/fwtool)
+def pack(config: Path, tar_file: Path, updater: Path, outdir: Path) -> None:
+    outdir.mkdir(parents=True, exist_ok=True)
+    run_fwtool(["pack", "-c", str(config), "-u", str(updater), "-f", str(tar_file), "-o", str(outdir)])
+
+
+def unpack(dat_file: Path, outdir: Path) -> None:
+    """Descifra y valida el paquete con fwtool (DEND, cabecera, suma por bloque)."""
+    outdir.mkdir(parents=True, exist_ok=True)
+    run_fwtool(["unpack", "-f", str(dat_file), "-o", str(outdir)])
+
+
+def _fwtool_module():
+    sys.path.insert(0, str(ROOT / "references/fwtool"))
+    from fwtool.sony import dat as datmod
+    from fwtool.sony import fdat as fdatmod
+
+    return datmod, fdatmod
+
+## 6. Hay firma por fichero? grep de sign/rsa/cert/hmac en fwtool
+  (sin coincidencias: fwtool solo cifra/empaqueta y valida CRC/DEND)
+
+## 7. Overlay del CFW 3.93 ya construido (para la ruta exacta)
+total 31356
+-rw-r--r-- 1 nicolas nicolas  2761824 nov 24 14:14 CautionConfig.so
+-rw-r--r-- 1 nicolas nicolas 18127472 nov 24 14:14 libObj.so
+-rw-r--r-- 1 nicolas nicolas  8782208 nov 24 14:14 viewUnified2.so
+-rw-r--r-- 1 nicolas nicolas  1963148 nov 24 14:14 viewUnified4.so
+-rw-r--r-- 1 nicolas nicolas   459008 nov 24 14:14 viewUnified7.so
+3453f85db2ab78e19158c15001d1cbfb65c842c0f337f5f937c909220bdb7617  lib/CautionConfig.so
+db382008e153499653325c1d8b7c2d7d9551cafd24a418c104cddc925cf045d0  lib/libObj.so
+73c640448ec4e48b5fd01d9bcc9be3b226e62be979b60651002d03508dbd5d52  lib/viewUnified2.so

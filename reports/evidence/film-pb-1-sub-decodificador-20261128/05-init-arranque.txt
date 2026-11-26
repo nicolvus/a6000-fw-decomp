@@ -1,0 +1,84 @@
+# Secuencia de arranque: kmods y parametros (cadenas embebidas de sbin/init)
+# Comando: strings -a -n 6 .../nflasha7_unpacked_unpacked/sbin/init
+# sha256 init: 6bfcaf0062a14693a548263dc600783c4b022965c127489691485193936fb4d6
+---
+//lib/ld-linux.so.3
+check_bootmode
+<<insmod start>>
+init %s:(%d): error: open file: %s , option: %s 
+init %s:(%d): mmap `%s' error
+init %s:(%d): error(%d): insmod %s %s
+<<insmod end>>
+init %s:(%d): %s: error fork %s
+init %s:(%d): mounting1 %s -> %s as %s failed.  errno(%d)
+init %s:(%d): %s: statfs() error=%d
+init %s:(%d): %s: statfs() error=%d
+/sbin/dosfsck -Y %s
+init %s:(%d): %s: dosfsck failed, err=%d.
+init %s:(%d): mounting2 %s -> %s as %s failed.  errno(%d)
+/setting/sen/smode
+/setting/mode/dmode
+/proc/version
+init %s:(%d): %s: error reading /proc/version
+/proc/mounts
+init %s:(%d): %s: error reading /proc/mounts
+/proc/udm/upm_bootmode
+init %s:(%d): /proc/udm/upm_bootmode open failed. errno(%d)
+/proc/cmdline
+init %s:(%d): /proc/cmdline failed(errno:%d)
+init %s:(%d): /proc/cmdline too short(sz:%d)
+init %s:(%d): malloc for putenv failed.
+init %s:(%d): putenv(%s) failed(%d)
+/setting/env.txt
+init %s:(%d): mmap '%s', len:%d error
+/proc/1/oom_adj
+init %s:(%d): %s: error open /proc/1/oom_adj
+init %s:(%d): %s: setrlimit(2MB)failed. errno(%d)
+/proc/snsc_boot_time
+<<init start>>
+/rootfs
+/initrd/%s
+/dev/ttycons
+/dev/console
+init %s:(%d): shell_loop: can not open %s: errno=%d
+%s: mounting /setting failed(%d).
+/proc/udm/drivers
+init %s:(%d): %s: error open /proc/udm/drivers
+/sbin/mkdosfs -s 32 %s
+/usr/bin/swap_prepare.sh
+/usr/bin/bootin.elf
+/usr/bin/sen.elf
+/usr/bin/s_start_android.sh
+/usr/bin/net_cmdd.elf
+<<init end>>
+init %s:(%d): shell_loop: setsid failed: errno=%d
+/bin/ash
+/dev/nflasha2
+/setting
+/dev/dnflasha3
+/system
+/dev/nflasha3
+/dev/nflasha10
+/dev/nflasha15
+/dev/dnflasha15
+/dev/nflasha9
+/usr/upgrade
+/dev/nflasha23
+/dev/nflasha24
+/dev/nflasha25
+/dev/ms1
+/dev/nflasha18
+/dev/nflasha11
+/dev/dnflasha7
+/dev/nflasha7
+/kmod/devno.ko
+/kmod/dmac.ko
+/kmod/ldec.ko
+/kmod/lld.ko
+/kmod/nand.ko
+/usr/kmod/osal_utm.ko
+/usr/kmod/osal_uipc.ko
+/usr/kmod/utimer.ko
+/usr/kmod/backup.ko
+/usr/kmod/osal_ulogio.ko
+ulogio_initfile=/setting/ulogio.bin 

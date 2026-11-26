@@ -1,0 +1,85 @@
+# Puntos de la ruta ejecutada (libmpr.so fw 3.21, VA = VA del ELF)
+
+## 0x6E8430 mp4Ifo_If::GetPlayThumbnailInfo: despacho virtual +0x18
+006e8470: 2368       ldr r3, [r4]
+006e8472: 396b       ldr r1, [r7, #0x30]
+006e8474: 1a68       ldr r2, [r3]
+006e8476: 0091       str r1, [sp]
+006e8478: 796b       ldr r1, [r7, #0x34]
+006e847a: 0890       str r0, [sp, #0x20]
+006e847c: 1846       mov r0, r3
+006e847e: 4b46       mov r3, sb
+006e8480: 0191       str r1, [sp, #4]
+006e8482: b96b       ldr r1, [r7, #0x38]
+006e8484: 0291       str r1, [sp, #8]
+006e8486: f96b       ldr r1, [r7, #0x3c]
+006e8488: 0391       str r1, [sp, #0xc]
+006e848a: 396c       ldr r1, [r7, #0x40]
+006e848c: 0491       str r1, [sp, #0x10]
+006e848e: 796c       ldr r1, [r7, #0x44]
+006e8490: 0591       str r1, [sp, #0x14]
+006e8492: b96c       ldr r1, [r7, #0x48]
+006e8494: 0691       str r1, [sp, #0x18]
+006e8496: f96c       ldr r1, [r7, #0x4c]
+006e8498: 0791       str r1, [sp, #0x1c]
+006e849a: 3146       mov r1, r6
+006e849c: 9569       ldr r5, [r2, #0x18]
+006e849e: 4246       mov r2, r8
+006e84a0: a847       blx r5
+006e84a2: 0121       movs r1, #1
+006e84a4: 0546       mov r5, r0
+
+## 0x6E0AB8 mp4Ifo_AVISequence::GetPlayThumbnailInfo: memset 0x110 y 3.er arg a 0x1D7022
+006e0af6: a748       ldr r0, [pc, #0x29c]
+006e0af8: b4f7f8fc   bl #0x6954ec                          ; -> 0x6954ec
+006e0afc: 0021       movs r1, #0
+006e0afe: 07f10800   add.w r0, r7, #8
+006e0b02: 4ff48872   mov.w r2, #0x110
+006e0b06: 3ff6ecf3   bl #0x1202e2                          ; -> 0x1202e2
+006e0b6a: 2a46       mov r2, r5
+006e0b6c: d6f80802   ldr.w r0, [r6, #0x208]
+006e0b70: 0693       str r3, [sp, #0x18]
+006e0b72: 07f10803   add.w r3, r7, #8
+006e0b76: 0893       str r3, [sp, #0x20]
+006e0b78: 7b68       ldr r3, [r7, #4]
+006e0b7a: cdf80ca0   str.w sl, [sp, #0xc]
+
+## 0x1D7022 thunk: r0=[r0+0xC], r3=4 -> 0x21F1F4
+001d704e: 0423       movs r3, #4
+001d7050: c068       ldr r0, [r0, #0xc]
+001d7052: 48f0cff8   bl #0x21f1f4                          ; -> 0x21f1f4
+001d7056: bd46       mov sp, r7
+001d7058: 80bd       pop {r7, pc}
+
+## 0x21F1F4 cabecera: 8 punteros de salida obligatorios
+0021f21a: bdf7b7fb   bl #0x1dc98c                          ; -> 0x1dc98c
+0021f21e: 7020       movs r0, #0x70
+0021f220: 1b21       movs r1, #0x1b
+0021f222: 2a46       mov r2, r5
+0021f224: 2b46       mov r3, r5
+0021f226: 0095       str r5, [sp]
+0021f228: cef76cfe   bl #0x1edf04                          ; -> 0x1edf04
+0021f22c: d8f81400   ldr.w r0, [r8, #0x14]
+0021f230: b7f78bf9   bl #0x1d654a                          ; -> 0x1d654a
+0021f24e: d7f8e821   ldr.w r2, [r7, #0x1e8]
+0021f252: 2ab9       cbnz r2, #0x21f260                    ; -> 0x21f260
+0021f254: 0720       movs r0, #7
+0021f256: 9649       ldr r1, [pc, #0x258]
+0021f258: 0132       adds r2, #1
+0021f25a: 43f2f033   movw r3, #0x33f0
+0021f25e: 07e0       b #0x21f270                           ; -> 0x21f270
+0021f260: d7f8ec31   ldr.w r3, [r7, #0x1ec]
+0021f264: 4bb9       cbnz r3, #0x21f27a                    ; -> 0x21f27a
+0021f266: 9249       ldr r1, [pc, #0x248]
+0021f268: 0720       movs r0, #7
+0021f26a: 0122       movs r2, #1
+0021f26c: 43f2f633   movw r3, #0x33f6
+0021f270: bdf7b6fb   bl #0x1dc9e0                          ; -> 0x1dc9e0
+0021f274: 0125       movs r5, #1
+0021f276: 00f0d7bd   b.w #0x21fe28                         ; -> 0x21fe28
+
+## 0x6E0CD6 conversion 1..10 -> 0..9 (ya verificada antes; se reejecuta aquí)
+006e0cd6: d7f80031   ldr.w r3, [r7, #0x100]
+006e0cda: 013b       subs r3, #1
+006e0cdc: 0a2b       cmp r3, #0xa
+006e0cde: 36d8       bhi #0x6e0d4e

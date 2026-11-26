@@ -1,0 +1,48 @@
+# EVIDENCIA 9 — quien carga el firmware del sub-CPU y alcance real de los parches del CFW en /usr
+
+## 9.1 unico fichero de /usr y de /usr(nflasha3 que referencia av-cam.bin: im.elf
+firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/bin/im.elf
+
+## 9.2 cadena literal en im.elf
+292:fn=/system/av-cam.bin load=1 debug=1
+
+## 9.3 im.elf solo se lanza desde bootin.elf, y bootin.elf solo desde /sbin/init (arranque en FRIO)
+141:     <im_target> : im.elf target=<tim_target>
+179:qsi.elf &
+180:qsi.elf noevent0 &
+182:/tmp/qsi.elf.pid
+218:im.elf s &
+219:im.elf g &
+220:im.elf r &
+221:im.elf u &
+222:im.elf l &
+223:im.elf i &
+(confirmado: cadenas 'im.elf s &' en bootin.elf)
+
+## 9.4 alcance de los parches: build_cfw_completo.build_files solo sustituye lib/ y share/app/
+7:     Copy y Reset; `patch_libobj_pp`);
+8:  3. eco de Silent en `libObj` (`g22.patch_libobj_eco`, 3.59) y, G30, eco del estado PP + selector de perfil (`patch_libobj_ppeco`, 3.67);
+28:import patch_libobj_ppeco
+30:from g22 import patch_libobj_eco
+49:    for a, old, new, _ in patch_libobj_eco.SITES:
+61:    for rel in ("lib/libObj.so", "lib/CautionConfig.so", "lib/viewUnified2.so", "lib/viewUnified4.so"):
+64:    (stage / USR / "share/app").mkdir(parents=True, exist_ok=True)
+65:    for f in (orig / "share/app").glob("string_*.uxc"):
+66:        shutil.copy(f, stage / USR / "share/app" / f.name)
+68:    for f in (silent / "share/app").glob("*.uxc"):
+69:        shutil.copy(f, stage / USR / "share/app" / f.name)
+77:    (files / "lib/libObj.so").write_bytes(patch_libobj_ppeco.patch(eco((pp / "lib/libObj.so").read_bytes())))   # G30: eco del estado PP y selector de perfil (nuevo LOAD al final)
+
+## 9.5 por tanto /usr/sabin (imagenes del decodificador AVC/JPEG) NO lo toca ningun CFW de esta cadena
+dcv_psf_table_movie.bin
+dcv_psf_table_still.bin
+sa_aaclcdec.bin
+sa_aaclcenc.bin
+sa_aaclcenc_nr.bin
+sa_avcd_compatible_zma.bin
+sa_avcd_performance_zma.bin
+sa_avce_performance_plus_zma.bin
+sa_avce_performance_zma.bin
+sa_avce_quality_zma.bin
+sa_dcv.bin
+sa_jpeg_dec_1core.bin

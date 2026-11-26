@@ -1,0 +1,61 @@
+# EVIDENCIA 8 — maquinaria de paquete y riesgo documentado
+
+## 8.1 scripts implicados (existen todos)
+scripts/gui/build_package_nflasha15.py         OK 86 líneas
+scripts/gui/build_cfw_completo.py              OK 107 líneas
+scripts/gui/build_nflasha15.py                 OK 115 líneas
+scripts/gui/build_base_pp.py                   OK 70 líneas
+scripts/gui/audit_package_nflasha15.py         OK 257 líneas
+scripts/e25_27/tarball.py                      OK 144 líneas
+scripts/e25_27/sums.py                         OK 68 líneas
+scripts/e25_27/build.py                        OK 549 líneas
+scripts/e25_05/build_packages.py               OK 691 líneas
+
+## 8.2 opciones reales de build_package_nflasha15.py (NO existe --dry-run)
+33:def main(new15: Path, out: Path, base_tar: Path, version: str, darwin_v3: bool = False, sin_wbi: bool = False) -> dict:
+79:    ap.add_argument("nflasha15", type=Path)
+80:    ap.add_argument("salida", type=Path)
+81:    ap.add_argument("--base-tar", type=Path, default=DEFAULT_BASE)
+82:    ap.add_argument("--version", default="3.39")
+83:    ap.add_argument("--darwin-v3", action="store_true", help="añade el parche EFCS v3 de Darwin (R82, commit 20b33eed)")
+84:    ap.add_argument("--sin-wbi", action="store_true", help="quita nflasha5 (WBI de Sony) para forzar arranque en frío (G11 §11)")
+
+## 8.3 ocurrencias de --dry-run en scripts/ (ninguna en la cadena de empaquetado)
+(ninguna)
+
+## 8.4 tars base candidatos y presencia de nflasha5
+firmware/extracted/fw321/firmware.tar                miembros=105 nflasha5=True sha=fe080cda9f330537… linea_sum=0,9cb10112,02855780,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha5,
+analysis/e25-27/artifacts-338/firmware.integrated.tar miembros=105 nflasha5=True sha=fe080cda9f330537… linea_sum=0,9cb10112,02855780,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha5,
+analysis/gui/g22/base-380.tar                        miembros=105 nflasha5=True sha=fe080cda9f330537… linea_sum=0,9cb10112,02855780,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha5,
+build/cfw_func393/base/base-film.tar                 miembros=105 nflasha5=True sha=fe080cda9f330537… linea_sum=0,9cb10112,02855780,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha5,
+
+## 8.5 el 3.93 instalado se construyó SIN WBI (container.json)
+{
+ "version": "3.93",
+ "darwin_v3": true,
+ "sin_wbi": true,
+ "base_tar": "build/cfw_func393/base/base-film.tar",
+ "tar_sha256": "77ea5d74b9dbfea9d329a9720f21210612025915b1f19ba0249d37bb90899229",
+ "part_sum_linea": "0,fefe4bb9,050b1200,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha15,",
+ "dat": "build/cfw_func393/base/pkg-3.93/package-3.93/firmware_packed.dat",
+ "dat_sha256": "bb17e1c048be125b22b0a85aaf7cb84b8215d2e91153cd5c282f3fb63bd39e34",
+ "estado": "CONSTRUIDO OFFLINE \u2014 INSTALACI\u00d3N NO AUTORIZADA"
+}
+## 8.6 riesgo documentado (citas literales)
+--- reports/film-pb-1-auditoria-cfw-20261127.md, tabla §4, fila E4:
+92:| **E4** | Reconstruir el mismo paquete **conservando `nflasha5`** (`build_package_nflasha15.py` sin `--sin-wbi`) y reproducir | Arreglo definitivo: CFW completo con arranque en caliente | El WBI reinyecta el `/usr` de Sony y el CFW queda inerte (motivo documentado por el que se quita); se descarta esta vía |
+94:E4 es la única vía que puede dar **arreglo** sin renunciar al CFW, pero su riesgo está
+--- reports/film-pb-1-auditoria-cfw-20261127.md, párrafo tras la tabla:
+95:documentado: el WBI es una instantánea de RAM con el `/usr` de Sony. E3 es la que
+--- reports/film-pb-1-sub-wbi-20261127.md §4(a) y §2.2:
+42:2. **Índice y caché de `/usr`.** En caliente `/usr` se sirve con el TOC de `0x8D3B8000` y las páginas
+85:`viewUnified2`, `CautionConfig`, `.uxc`) ⇒ sin menús Silent/PP. Riesgo **BAJO-MEDIO**: mecanismo documentado (0/4 con `nflasha15`
+91:el WBI lleva el propio kernel (`0x80038000`), luego no hay restauración «parcial» conocida. Riesgo **ALTO**; NO_VERIFICADO si Loader3
+45:   parches de `/usr` **no se cargan nunca**.
+70:de `.text`). Y el frío es lo que hace **efectivos** los parches de `/usr`, no lo que los oculta (§2.2).
+--- docs/gui/g11-auditoria-307-nflasha15.md §11.2:
+212:**Causa (VERIFICADO salvo donde se indica):** el arranque normal no carga Linux de `nflasha3`: **reanuda la instantánea de RAM de `nflasha5` (WBI1)
+215:1. **Modo 11 = instantánea.** En Loader3, `chk ssboot` (`0xc01f20f4`) lee la cabecera de `nflasha5` (`0xc01f2bc6`/`0xc01f2be6`, `0xc01fbf0e`) y, si la firma
+220:   282 de 2377 páginas de 4 KiB muestreadas (caché de páginas).
+222:   se escribe **después** con el WBI de Sony: tras la actualización la cámara reanuda la instantánea de Sony.
+231:**Consecuencia para el CFW:** cambiar `/usr` exige invalidar el WBI. Aunque el TOC no se moviera, los procesos de la instantánea ya tienen cargadas las

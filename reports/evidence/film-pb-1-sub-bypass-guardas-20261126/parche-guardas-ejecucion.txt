@@ -1,0 +1,43 @@
+original : /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+sha256   : 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+  00437bfa  0f f0 10 ff -> 01 20 00 bf   bl 0x447A1E -> movs r0,#1 ; nop
+  00437c2c  10 f0 7b f9 -> 01 20 00 bf   bl 0x447F26 -> movs r0,#1 ; nop
+  00437bfe  38b9    cbnz r0, #0x437C10  (no se toca)
+  00437c30  f0b9    cbnz r0, #0x437C70  (no se toca)
+.text    : VA 00120228..007a3e84  fichero 00120228..007a3e84
+offset   : .text addr==off? True (los parches van a offset = VA)
+diff     : 8 bytes en 2 rangos -> 00437bfa..00437bfd, 00437c2c..00437c2f
+ELF      : cabecera, 5 PT_* y 25 secciones identicas byte a byte
+reloc    : 00437bfa -> NINGUNA
+reloc    : 00437c2c -> NINGUNA
+reloc    : 132021 entradas revisadas en .rel* (ninguna apunta a los dos sitios)
+desasm   : 0x437BF0..0x437C38
+   00437bf0: ec01       lsls     r4, r5, #7
+   00437bf2: d4f8c01d   ldr.w    r1, [r4, #0xdc0]
+   00437bf6: d4f8b82d   ldr.w    r2, [r4, #0xdb8]
+   00437bfa: 0120       movs     r0, #1
+   00437bfc: 00bf       nop      
+   00437bfe: 38b9       cbnz     r0, #0x437c10
+   00437c00: a068       ldr      r0, [r4, #8]
+   00437c02: 0122       movs     r2, #1
+   00437c04: 4d49       ldr      r1, [pc, #0x134]
+   00437c06: daf297fe   bl       #0x712938
+   00437c0a: 1a23       movs     r3, #0x1a
+   00437c0c: fb63       str      r3, [r7, #0x3c]
+   00437c0e: 7ee0       b        #0x437d0e
+   00437c10: 07f16806   add.w    r6, r7, #0x68
+   00437c14: 96e80f00   ldm.w    r6, {r0, r1, r2, r3}
+   00437c18: 8de80f00   stm.w    sp, {r0, r1, r2, r3}
+   00437c1c: 07f16001   add.w    r1, r7, #0x60
+   00437c20: d4f8ec01   ldr.w    r0, [r4, #0x1ec]
+   00437c24: 91e80c00   ldm.w    r1, {r2, r3}
+   00437c28: d4f8c01d   ldr.w    r1, [r4, #0xdc0]
+   00437c2c: 0120       movs     r0, #1
+   00437c2e: 00bf       nop      
+   00437c30: f0b9       cbnz     r0, #0x437c70
+   00437c32: a068       ldr      r0, [r4, #8]
+   00437c34: 0122       movs     r2, #1
+   00437c36: 4249       ldr      r1, [pc, #0x108]
+salida   : /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/build/cfw_bypass_guardas/libmpr.so
+sha256   : 63dfaed5a6ebf8e6d9a94a8bf29a5effdb98350cc680d41abf913617a92e1578
+original intacto: 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30

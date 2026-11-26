@@ -1,0 +1,27 @@
+0066af70: 98b5       push     {r3, r4, r7, lr}              
+0066af72: 00af       add      r7, sp, #0                    
+0066af74: 0446       mov      r4, r0                        
+0066af76: 02f0b5f8   bl       #0x66d0e4                     
+0066af7a: 0a4b       ldr      r3, [pc, #0x28]                 ; [0066afa4]=009067a8
+0066af7c: 2046       mov      r0, r4                        
+0066af7e: 0a4a       ldr      r2, [pc, #0x28]                 ; [0066afa8]=0066d109
+0066af80: 2360       str      r3, [r4]                      
+0066af82: 0023       movs     r3, #0                        
+0066af84: a260       str      r2, [r4, #8]                  
+0066af86: e362       str      r3, [r4, #0x2c]               
+0066af88: e360       str      r3, [r4, #0xc]                
+0066af8a: 2361       str      r3, [r4, #0x10]               
+0066af8c: 6261       str      r2, [r4, #0x14]               
+0066af8e: a361       str      r3, [r4, #0x18]               
+0066af90: e361       str      r3, [r4, #0x1c]               
+0066af92: e1f7ddfb   bl       #0x64c750                     
+0066af96: 2046       mov      r0, r4                        
+0066af98: 98bd       pop      {r3, r4, r7, pc}              
+0066af9a: 2046       mov      r0, r4                        
+0066af9c: 01f09cfe   bl       #0x66ccd8                     
+0066afa0: b4f614e4   blx      #0x11f7cc                       ; __cxa_end_cleanup
+0066afa4: a867       str      r0, [r5, #0x78]               
+0066afa6: 9000       lsls     r0, r2, #2                    
+0066afa8: 09d1       bne      #0x66afbe                     
+0066afaa: 6600       lsls     r6, r4, #1                    
+0066afac: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  

@@ -1,0 +1,131 @@
+# libmpr.so 3.21 — cadenas de la cadena de miniatura y de la BD de imagenes
+# fichero: firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+# sha256: 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+# VA == offset de fichero en el primer PT_LOAD (p_vaddr=0, p_offset=0, 0x9bb1c8 B); a partir de ahi VA=off+0x8000
+
+## A. Enumerado del tipo de miniatura (que la produjo)
+ 7c070b [Output] *pemThumbnailType : THUMBNAIL_TYPE_AVINDEX
+ 7c0740 [Output] *pemThumbnailType : THUMBNAIL_TYPE_ORIG_CONTENT
+ 7c077a [Output] *pemThumbnailType : THUMBNAIL_TYPE_INCONSISTENT
+ 7c07b4 [Output] *pemThumbnailType : THUMBNAIL_TYPE_NOTHING
+-- log del despachador AVI:
+ 876f59 GetPlayThumbnailInfo Type : NORMAL
+ 876f7c GetPlayThumbnailInfo Type : ORIG_CONTENT
+ 876fa5 GetPlayThumbnailInfo Type : INCONSISTENT
+ 876fce GetPlayThumbnailInfo Type : NOTHING
+-- tabla de punteros a esas 4 cadenas (indice emThumbnailType):
+  0x21facc -> 0x007c070b
+  0x21fad0 -> 0x007c0740
+  0x21fad4 -> 0x007c077a
+  0x21fad8 -> 0x007c07b4
+
+## B. Lector de miniatura por tipo de medio (filtro + decodificador)
+ 8052b8 delete [HdAvcThumbnailReaderFilter]
+ 8052de delete [M2psThumbnailReaderFilter]
+ 805303 delete [Mp4ThumbnailReaderFilter]
+ 805327 delete [DcfThumbnailReaderFilter]
+ 80534b delete [DvAviThumbnailReaderFilter]
+ 805371 delete [XavcThumbnailReaderFilter]
+ 805396 delete [WavThumbnailReaderFilter]
+ 80546d ConvertBaseThumbnailReaderFilterErrToCcError() errCode[
+ 805567 GetContentNameInfo() ThumbnailReaderFilter->GetContentNameInfo errCode[
+ 8055bd GetBasicContentInfo() ThumbnailReaderFilter->GetBaicContentInfo errCode[
+ 805606 GetAviContentInfo() ThumbnailReaderFilter->GetAviContentInfo errCode[
+ 80567f SetCmdStopThumbnailReaderFilter() ThumbnailReaderFilter->Cancel errCode[
+ 8056c8 PlayJpegThum::CancelThumbnailReaderFilter() : m_state[
+ 80572f SetCmdStopThumbnailReaderFilter() ThumbnailReaderFilter->Control CMD_STOP errCode[
+ 805782 ErrProcToStopThumbnailReader() SetCmdStopThumbnailReaderFilter errCode[
+ 8057fa SetCmdReadThumbnailReaderFilter() ThumbnailReaderFilter->Control : CMD_READ errCode[
+ 8058c9 ThumbnailReaderFilter->ConnectDecordStillInfoOutputPlug() : errCode[
+ 805cbf <<<BaseThumbnailReaderFilter::AviContentInfo>>>
+ 805e80 SetCmdReadyThumbnailReaderFilter() mp_hdavcThumbnailReaderFilter->SetReadTarget
+ 805ed0 SetCmdReadyThumbnailReaderFilter() mp_m2psThumbnailReaderFilter->SetReadTarget
+ 805f1f SetCmdReadyThumbnailReaderFilter() mp_mp4ThumbnailReaderFilter->SetReadTarget
+ 805f6d SetCmdReadyThumbnailReaderFilter() mp_dcfThumbnailReaderFilter->SetReadTarget
+ 805fbb SetCmdReadyThumbnailReaderFilter() mp_dvAviThumbnailReaderFilter->SetReadTarget
+ 80600b SetCmdReadyThumbnailReaderFilter() mp_xavcThumbnailReaderFilter->SetReadTarget
+ 80605a SetCmdReadyThumbnailReaderFilter() mp_wavThumbnailReaderFilter->SetReadTarget
+ 8060a8 SetCmdReadyThumbnailReaderFilter() m_filter_type unknown type[
+ 806118 SetCmdReadyThumbnailReaderFilter() mp_ThumbnailReaderFilter->Control CMD_READY
+ 806192 ThumbnailReaderFilter->DisconnectDecordStillInfoOutputPlug()
+ 8061f9 new HdAvcThumbnailReaderFilter()
+ 80621c new M2psThumbnailReaderFilter()
+ 80623e new Mp4ThumbnailReaderFilter()
+ 80625f new DcfThumbnailReaderFilter()
+ 806280 new DvAviThumbnailReaderFilter()
+ 8062a3 new XavcThumbnailReaderFilter()
+ 8062c5 new WavThumbnailReaderFilter()
+ 8062e6 create [THUMBNAIL-READER] mp_ThumbnailReaderFilter : 0x
+ 806361 ThumbnailReaderFilter->SetCallback()
+ 80640a CreateThumbnailReaderFilter() m_mediaType unknown type[
+ 806453 CreateThumbnailReaderFilter()
+ 806471 ReadyThumbnailReaderFilter()
+ 80648e PlayJpegThum::CheckRemainThumbnail() : SetCmdReadyThumbnailReaderFilter errCode[
+ 806512 PlayJpegThum::ProcInIdle() : SetCmdReadThumbnailReaderFilter errCode[
+ 806592 PlayJpegThum::ProcInIdle() : SetCmdStopThumbnailReaderFilter errCode[
+ 806652 PlayJpegThum::ProcInIdle() :CancelThumbnailReaderFilter errCode[
+ 8066f5 PlayJpegThum::ProcInIdleWithFilter() : SetCmdReadyThumbnailReaderFilter errCode[
+ 806936 PlayJpegThum::ProcInIdle() : SetCmdReadyThumbnailReaderFilter errCode[
+ 8769d0 25BaseThumbnailReaderFilter
+ 877066 ThumReader Infomation
+ 8770c0 24DcfThumbnailReaderFilter
+ 8772a1 26DvAviThumbnailReaderFilter
+ 877335 26HdAvcThumbnailReaderFilter
+ 877410 25M2psThumbnailReaderFilter
+ 87742c 24Mp4ThumbnailReaderFilter
+ 877608 24WavThumbnailReaderFilter
+ 877670 25xavcThumbnailReaderFilter
+
+## C. Almacen de miniatura en el indice AV / flush
+ 7a637f AVF_INFO
+ 7a912c AVIN0001.INP
+ 7a9139 AVIN0001.BNP
+ 7a9160 AVIN0001.INT
+ 7a95ee ThumbPictFile Status No
+ 7a9c74 thumPictFileName
+ 7aa211 avi_sdk_SetThumbPictFileAccessFlag Start
+ 7aa23a avi_sdk_SetThumbPictFileAccessFlag End
+ 7aa295 avi_sdk_ReadThumbPictFile Start
+ 7aa2b5 avi_sdk_ReadThumbPictFile End
+ 7aaf44 ThumbDataSize
+ 7ab174 Thumbnail Slot Num
+ 7ab2d3 Thumbnail Size
+ 7adfc4 TargetFile [ 0:FLUSH_FILE_ORIGINAL/1:FLUSH_FILE_PRV/2:FLUSH_FILE_THUMB/3:FLUSH_FILE_BACKUP/4:FLUSH_FILE_ALL ]
+ 7b16cf [AVI][MON] FLUSH_FILE_ORIGINAL : %ld [ms]
+ 7b16f9 [AVI][MON] FLUSH_FILE_PRV      : %ld [ms]
+ 7b1723 [AVI][MON] FLUSH_FILE_THUMB    : %ld [ms]
+ 7b174d [AVI][MON] FLUSH_FILE_BACKUP   : %ld [ms]
+ 7b1777 [AVI][MON] FLUSH_FILE_ALL      : %ld [ms]
+ 7c7ff6 PRV00001.BIN
+ 837aa8 .INP
+ 9c9270 AVIN0001.INP
+ 9c92c0 AVIN0001.INT
+
+## D. .THM: solo en el gestor de directorios XAVC
+ 7ef829 .THM
+ 7f018c {{AUDIODEC, .THM, PHOTOMOVIE, BBCAPTURE } {ON, OFF}}
+ 8358d1  p_file(.THM)
+ 9428da  .THM: 
+ 9436b4    .THM path: 
+-- xref de la cadena 0x0x7ef829:
+0x2c9b44 None
+0x3af780 None
+0x3af920 None
+0x3af980 None
+0x3b0400 None
+0x5edbd4 None
+0x763c98 None
+-- xref de la cadena 0x0x8118bb:
+0x80f198 None
+
+## E. MEDIAPRO.XML: xrefs (solo el volcado de xavcIfo_DbDirMngr, ~0x779F40)
+  0x947cf2 -> 0x779fd0 None 
+  0x947d0f -> 0x779fd4 None 
+  0x947c8a -> 0x779fbc None 0x77cfe8 None 
+  0x947cc3 -> 0x779fc8 None 
+  0x947cda -> 0x779fcc None 
+
+## F. Rutas MP4 (sin ninguna ruta de indice propia del modulo mp4Ifo)
+ 7a743a %s%cMP_ROOT%c101PNV01%cM2U00001.MPG
+ 7a7abd %s%cMP_ROOT%c101PNV01%cM2U%05ld.MPG
+ 7acaec /MP_ROOT/100ANV01/MAH%05ld.MP4

@@ -1,0 +1,260 @@
+# Cadenas /dev/* por fichero en el /usr de fabrica 3.21
+# Comando: for f in $(find . -maxdepth 2 -type f \( -name "*.so*" -o -name "*.elf" \)); do strings -a -n 5 "$f" | grep -E "^/dev/[a-z]"; done | sort | uniq -c | sort -rn
+---
+     33 /dev/mem
+     12 /dev/gpio
+      6 /dev/ms1
+      5 /dev/sda
+      5 /dev/nflasha25
+      5 /dev/ms
+      5 /dev/mmccb
+      5 /dev/mmcbb
+      5 /dev/mmcab
+      4 /dev/stream
+      4 /dev/sdd
+      4 /dev/sdc
+      4 /dev/sdb
+      4 /dev/null
+      4 /dev/nflasha6
+      4 /dev/nflasha26
+      4 /dev/nflasha24
+      4 /dev/nflasha23
+      4 /dev/nflasha15
+      4 /dev/nflasha12
+      4 /dev/nflasha11
+      4 /dev/msb
+      4 /dev/mmcca
+      4 /dev/mmcba
+      4 /dev/mmcb
+      4 /dev/mmcaa
+      4 /dev/mmca
+      3 /dev/urandom
+      3 /dev/sr1
+      3 /dev/sr0
+      3 /dev/satauhsb
+      3 /dev/satauhsa
+      3 /dev/satauhs
+      3 /dev/satassd
+      3 /dev/satad
+      3 /dev/satac
+      3 /dev/satab
+      3 /dev/sataa
+      3 /dev/sata
+      3 /dev/nflasha9
+      3 /dev/nflasha7
+      3 /dev/nflasha5
+      3 /dev/nflasha4
+      3 /dev/nflasha3
+      3 /dev/nflasha2
+      3 /dev/nflasha18
+      3 /dev/nflasha17
+      3 /dev/nflasha10
+      3 /dev/nflasha1
+      3 /dev/mmccd
+      3 /dev/mmccc
+      3 /dev/mmcc
+      3 /dev/mmcbd
+      3 /dev/mmcbc
+      2 /dev/usb/sicd_core
+      2 /dev/ttyAM1
+      2 /dev/stream2
+      2 /dev/sda1
+      2 /dev/ram9
+      2 /dev/ram8
+      2 /dev/nflasha8
+      2 /dev/nflasha31
+      2 /dev/nflasha30
+      2 /dev/nflasha29
+      2 /dev/nflasha28
+      2 /dev/nflasha27
+      2 /dev/nflasha22
+      2 /dev/nflasha21
+      2 /dev/nflasha20
+      2 /dev/nflasha19
+      2 /dev/nflasha16
+      2 /dev/nflasha14
+      2 /dev/nflasha13
+      2 /dev/msa
+      2 /dev/ms/
+      2 /dev/mmcad
+      2 /dev/mmcac
+      2 /dev/mmca1
+      2 /dev/hrdb
+      2 /dev/fb0
+      1 /dev/usb/usbg_bspwr
+      1 /dev/usb/usb_extcmd
+      1 /dev/usb/usbcore
+      1 /dev/usb/ter
+      1 /dev/usb/sicd_event
+      1 /dev/usb/sicd_data
+      1 /dev/usb/sen
+      1 /dev/usb/scsi
+      1 /dev/usb/portmon
+      1 /dev/usb/otgcore
+      1 /dev/usb/massstorage
+      1 /dev/usb/kikilog
+      1 /dev/usb/gadgetcore
+      1 /dev/usb/event
+      1 /dev/usb/cur
+      1 /dev/usb/buspwric
+      1 /dev/usb/buspwr
+      1 /dev/usb/adb
+      1 /dev/uipc
+      1 /dev/uinput
+      1 /dev/ttyAM0
+      1 /dev/tty
+      1 /dev/tp
+      1 /dev/threadplot
+      1 /dev/stream open failed
+      1 /dev/ssd*
+      1 /dev/ssd
+      1 /dev/srandom
+      1 /dev/sr
+      1 /dev/sdd4
+      1 /dev/sdd3
+      1 /dev/sdd2
+      1 /dev/sdd1
+      1 /dev/sdc4
+      1 /dev/sdc3
+      1 /dev/sdc2
+      1 /dev/sdc1
+      1 /dev/sdb4
+      1 /dev/sdb3
+      1 /dev/sdb2
+      1 /dev/sdb1
+      1 /dev/sda :     : ptr == NULL
+      1 /dev/sda :     : [prefix    ] "%s" (%d)
+      1 /dev/sda :     : path : "%s",  openmode : "%s"
+      1 /dev/sda :     : path : "%s"
+      1 /dev/sda :     :  [path(conv)] "%s" (%d)
+      1 /dev/sda :     : [path(base)] "%s" (%d)
+      1 /dev/sda :     : modpath : "%s",  option : "%s"
+      1 /dev/sda :     : modname : "%s"
+      1 /dev/sda :     : Execute : mount("%s", "%s", "%s")
+      1 /dev/sda :     : [ERR] write(req_size:0x%llX, ret_write:0x%llX) <errno:%d> %s
+      1 /dev/sda :     : [ERR] umount("%s") <errno:%d> %s
+      1 /dev/sda :     : [ERR] tntfs_getdevnamelist() Not Found...
+      1 /dev/sda :     : [ERR] telldir() <errno:%d> %s
+      1 /dev/sda :     : [ERR] syscall() <errno:%d> %s
+      1 /dev/sda :     : [ERR] statfs()  <errno:%d> %s
+      1 /dev/sda :     : [ERR] stat()  <errno:%d> %s
+      1 /dev/sda :     : [ERR] rmdir("%s") <errno:%d> %s
+      1 /dev/sda :     : [ERR] rename("%s" -> "%s") <errno:%d> %s
+      1 /dev/sda :     : [ERR] remove("%s") <errno:%d> %s
+      1 /dev/sda :     : [ERR] read(req_size:0x%llX, ret_read:0x%llX) <errno:%d> %s
+      1 /dev/sda :     : [ERR] readdir_r() <errno:%d> %s
+      1 /dev/sda :     : [ERR] readdir() <errno:%d> %s
+      1 /dev/sda :     : [ERR] open("%s") <errno:%d> %s
+      1 /dev/sda :     : [ERR] opendir("%s") <errno:%d> %s
+      1 /dev/sda :     : [ERR] munmap() <errno:%d> %s
+      1 /dev/sda :     : [ERR] mount("%s") <errno:%d> %s
+      1 /dev/sda :     : [ERR] mmap() <errno:%d> %s
+      1 /dev/sda :     : [ERR] mkdir("%s") <errno:%d> %s
+      1 /dev/sda :     : [ERR] lseek(off_lseek : 0x%llX, ret_lseek : 0x%llX) <errno:%d> %s
+      1 /dev/sda :     : [ERR] fwrite(req_size:0x%08X, ret_write:0x%08X) <errno:%d> %s
+      1 /dev/sda :     : [ERR] fsync() <errno:%d> %s
+      1 /dev/sda :     : [ERR] fstatfs() <errno:%d> %s
+      1 /dev/sda :     : [ERR] fstat() <errno:%d> %s
+      1 /dev/sda :     : [ERR] fsetpos() <errno:%d> %s
+      1 /dev/sda :     : [ERR] fseek() <errno:%d> %s
+      1 /dev/sda :     : [ERR] fread(req_size:0x%08X, ret_read:0x%08X) <errno:%d> %s
+      1 /dev/sda :     : [ERR] fopen("%s") <errno:%d> %s
+      1 /dev/sda :     : [ERR] fileno() <errno:%d> %s
+      1 /dev/sda :     : [ERR] fgetpos() <errno:%d> %s
+      1 /dev/sda :     : [ERR] feof() <errno:%d> %s
+      1 /dev/sda :     : [ERR] fclose() <errno:%d> %s
+      1 /dev/sda :     : [ERR] fchmod() <errno:%d> %s
+      1 /dev/sda :     : [ERR] close()  <errno:%d> %s
+      1 /dev/sda :     : [ERR] closedir()  <errno:%d> %s
+      1 /dev/sda :     : [ERR] chmod("%s")  <errno:%d> %s
+      1 /dev/sda :     : [ERR] chdir("%s") <errno:%d> %s
+      1 /dev/sda4
+      1 /dev/sda3
+      1 /dev/sda2
+      1 /dev/sd
+      1 /dev/satauhs*
+      1 /dev/satassd1
+      1 /dev/sata*
+      1 /dev/random
+      1 /dev/pts
+      1 /dev/ptmx
+      1 /dev/paflb
+      1 /dev/pafl*
+      1 /dev/nflasha12/INFO/WIFI_INF.TXT
+      1 /dev/nflasha12/INFO
+      1 /dev/nflasha
+      1 /dev/nf*
+      1 /dev/msm
+      1 /dev/ms/FILE
+      1 /dev/ms-char
+      1 /dev/msbb
+      1 /dev/msb*
+      1 /dev/ms2
+      1 /dev/ms*
+      1 /dev/mmccd1
+      1 /dev/mmcc-char
+      1 /dev/mmccc1
+      1 /dev/mmccb1
+      1 /dev/mmcca1
+      1 /dev/mmcc1
+      1 /dev/mmcb-char
+      1 /dev/mmcb1
+      1 /dev/mmca/FL
+      1 /dev/mmca-char
+      1 /dev/mmca/
+      1 /dev/mm*
+      1 /dev/mcmn
+      1 /dev/mapper/%s
+      1 /dev/mapper/
+      1 /dev/mapper
+      1 /dev/loop7
+      1 /dev/loop6
+      1 /dev/loop0
+      1 /dev/ldec
+      1 /dev/ipcm
+      1 /dev/hrda
+      1 /dev/hrd*
+      1 /dev/hdmi
+      1 /dev/hdar
+      1 /dev/hda
+      1 /dev/hd*
+      1 /dev/ha*
+      1 /dev/gadget/net2280
+      1 /dev/gadget/ep-c
+      1 /dev/gadget/ep-b
+      1 /dev/gadget/ep-a
+      1 /dev/fuse
+      1 /dev/egd-pool
+      1 /dev/dvdc
+      1 /dev/dv*
+      1 /dev/dnflasha7
+      1 /dev/dnflasha3
+      1 /dev/dnflasha15
+      1 /dev/dmpgles2
+      1 /dev/dmac open failed
+      1 /dev/dmac
+      1 /dev/disk/by-uuid/
+      1 /dev/disk/by-label/
+      1 /dev/cuse
+      1 /dev/compass
+      1 /dev/cnflasha4
+      1 /dev/cec
+      1 /dev/blog_compass
+=== Referencias por fichero (grep -rla) ===
+lib/libObj.so
+--- /dev/dmac:
+lib/libmpr.so
+--- /dev/uipc:
+lib/libosal_uipc.so
+bin/ramdisk.img_unpacked
+bin/ramdisk.img_unpacked_unpacked/init
+--- /dev/stream y /dev/stream2:
+lib/libInfraMtpServer.so
+lib/libInfraMediaCommon.so
+lib/libmpr.so
+lib/libObj.so
+bin/ramdisk.img_unpacked
+bin/ramdisk.img_unpacked_unpacked/init
+--- /dev/dsp* /dev/vdec /dev/avdec /dev/*dec* (buscado, resultado por fichero):
+bin/ramdisk.img_unpacked
+bin/ramdisk.img_unpacked_unpacked/ueventd.rc

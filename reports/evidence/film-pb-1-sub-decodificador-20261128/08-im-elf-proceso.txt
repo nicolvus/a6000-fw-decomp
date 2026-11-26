@@ -1,0 +1,43 @@
+# Cadena de procesos: init -> bootin.elf -> im.elf -> dlopen(/usr/lib/libObj.so) + carga de /system/av-cam.bin
+--- strings im.elf (referencias) ---
+dlopen
+/dev/gpio
+/dev/nflasha2
+/dev/nflasha3
+/dev/nflasha10
+/dev/nflasha15
+/dev/nflasha9
+/dev/nflasha23
+/dev/nflasha24
+/dev/nflasha25
+/dev/ms1
+/dev/nflasha18
+/dev/nflasha11
+/dev/nflasha7
+/usr/lib/libObj.so
+fn=/system/av-cam.bin load=1 debug=1
+
+--- strings bootin.elf (lanzamiento de im.elf) ---
+     <im_target> : im.elf target=<tim_target>
+gdb --args im.elf 
+im.elf s &
+im.elf g &
+im.elf r &
+im.elf u &
+im.elf l &
+im.elf i &
+im.elf a &
+im.elf
+
+--- NEEDED de im.elf ---
+ 0x00000001 (NEEDED)                     Shared library: [libIMDB.so]
+ 0x00000001 (NEEDED)                     Shared library: [libosal_uipc.so]
+ 0x00000001 (NEEDED)                     Shared library: [libosal_utm.so]
+ 0x00000001 (NEEDED)                     Shared library: [libbackup.so]
+ 0x00000001 (NEEDED)                     Shared library: [libdl.so.2]
+ 0x00000001 (NEEDED)                     Shared library: [libpthread.so.0]
+ 0x00000001 (NEEDED)                     Shared library: [libstdc++.so.6]
+ 0x00000001 (NEEDED)                     Shared library: [libm.so.6]
+ 0x00000001 (NEEDED)                     Shared library: [libgcc_s.so.1]
+ 0x00000001 (NEEDED)                     Shared library: [libc.so.6]
+ 0x00000001 (NEEDED)                     Shared library: [librt.so.1]

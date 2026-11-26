@@ -1,0 +1,18 @@
+# dmm.ko: gestor de memoria compartida (extents/unit types) y su configuracion de arranque
+# sha256 dmm.ko: e91787bef95a64613888948f6615229c54dae826a16eeec0154549d8849b23fc
+--- modinfo/params ---
+author=Sony Corporation
+license=Proprietary
+parmtype=DmmConfig:charp
+parmtype=DmmConfigExtra:string
+depends=
+vermagic=3.0.27_nl-rt106 SMP preempt mod_unload ARMv7 
+--- ficheros de configuracion que menciona ---
+DmmConfig
+DmmConfigExtra
+parmtype=DmmConfig:charp
+parmtype=DmmConfigExtra:string
+/setting/DmmConfigExtra.bin
+--- parametro DmmConfig que pasa init ---
+/usr/kmod/dmm.ko
+DmmConfig=/setting/DmmConfig.bin 

@@ -1,0 +1,123 @@
+# Miniatura de clip vs reproduccion: quien usa que decodificador
+# Fuente: catalogo de cadenas de libmpr.so (strings -a -n 5 > lista numerada)
+--- Bloque MovieDecoder / BBControl / SetNextThumbnailParamForMovieDecoder ---
+  - facePosInfo
+  - mainSizeX [
+  - mainSizeY [
+  - faceThumbExtAreaRateX [
+  - faceThumbExtAreaRateY [
+b_isFaceEnable [
+ycSdsMemoryAddr [
+SetNextThumbnailParamForMovieDecoder()
+Issue Cmd: BBControl::GetPlayRegionInfo
+  -  regionId [
+BBControl::GetPlayRegionInfo NG (ErrCode:0x
+Issue Cmd: mp_movieDecoder->SetBBThumbnailRegionParam
+mp_movieDecoder->SetBBThumbnailRegionParam NG (ErrCode:0x
+Issue Cmd: mp_movieDecoder->SetBBThumbnailBufferParam
+mp_movieDecoder->SetBBThumbnailBufferParam NG (ErrCode:0x
+setRunParamForMovieDecoder()
+  RunParam : [ONLY_I]
+ : speed[
+ : startThreshold[
+ : Direction[FORWARD]
+mp_movieDecoder->SetRunParam NG (ErrCode:0x
+12PlayJpegThum
+[PlayJpegThum] : 
+~PlayJpegThum() start
+delete [StillDecodr]
+delete [HdAvcThumbnailReaderFilter]
+delete [M2psThumbnailReaderFilter]
+delete [Mp4ThumbnailReaderFilter]
+delete [DcfThumbnailReaderFilter]
+delete [DvAviThumbnailReaderFilter]
+delete [XavcThumbnailReaderFilter]
+delete [WavThumbnailReaderFilter]
+Free Memory Area
+~PlayJpegThum() end
+SetStillSizeList()
+SetStillSizeList() StillDecoderIf::DefinedSize[
+] illegal value[0x
+Callback::IndexPlayer <---- PlayJpegThum errCode[
+ConvertBaseThumbnailReaderFilterErrToCcError() errCode[
+CopyReadStillStream() GetReadImageBufferInfo errCd:0x
+CopyReadStillStream() UnitMemAllocate errCd:0x
+CopyReadStillStream() StreamSize Over!!!
+GetContentsCountAndNo()
+GetContentsCount errCd:0x
+GetContentNameInfo() ThumbnailReaderFilter->GetContentNameInfo errCode[
+] m_stateSub[
+GetBasicContentInfo() ThumbnailReaderFilter->GetBaicContentInfo errCode[
+GetAviContentInfo() ThumbnailReaderFilter->GetAviContentInfo errCode[
+PlayJpegThum ----> hdavcThumbnailReader : CANCEL
+SetCmdStopThumbnailReaderFilter() ThumbnailReaderFilter->Cancel errCode[
+PlayJpegThum::CancelThumbnailReaderFilter() : m_state[
+
+--- Bloque THUMBNAIL-READER / PlayJpegThum / STILL-DECODER ---
+52760:new PlayJpegThumbnail
+53101:create [MOVIE-DECODER]
+53104:MOVIE-DECODER has already existed
+53114:delete [MOVIE-DECODER-IF]
+53271:12PlayJpegThum
+53272:[PlayJpegThum] : 
+53273:~PlayJpegThum() start
+53275:delete [HdAvcThumbnailReaderFilter]
+53276:delete [M2psThumbnailReaderFilter]
+53277:delete [Mp4ThumbnailReaderFilter]
+53278:delete [DcfThumbnailReaderFilter]
+53279:delete [DvAviThumbnailReaderFilter]
+53280:delete [XavcThumbnailReaderFilter]
+53281:delete [WavThumbnailReaderFilter]
+53283:~PlayJpegThum() end
+53287:Callback::IndexPlayer <---- PlayJpegThum errCode[
+53288:ConvertBaseThumbnailReaderFilterErrToCcError() errCode[
+53294:GetContentNameInfo() ThumbnailReaderFilter->GetContentNameInfo errCode[
+53296:GetBasicContentInfo() ThumbnailReaderFilter->GetBaicContentInfo errCode[
+53297:GetAviContentInfo() ThumbnailReaderFilter->GetAviContentInfo errCode[
+53298:PlayJpegThum ----> hdavcThumbnailReader : CANCEL
+53299:SetCmdStopThumbnailReaderFilter() ThumbnailReaderFilter->Cancel errCode[
+53300:PlayJpegThum::CancelThumbnailReaderFilter() : m_state[
+53301:PlayJpegThum ----> ThumbnailReader : CMD_STOP
+53302:SetCmdStopThumbnailReaderFilter() ThumbnailReaderFilter->Control CMD_STOP errCode[
+53303:ErrProcToStopThumbnailReader() SetCmdStopThumbnailReaderFilter errCode[
+53304:PlayJpegThum ----> ThumbnailReader : CMD_READ
+53305:SetCmdReadThumbnailReaderFilter() ThumbnailReaderFilter->Control : CMD_READ errCode[
+53309:ThumbnailReaderFilter->ConnectDecordStillInfoOutputPlug() : errCode[
+53317:PlayJpegThum::DrawPixelErrInfo() : BBControl::DrawPixels UncfmImg errCode[
+53318:PlayJpegThum::DrawPixelErrInfo() : BBControl::DrawPixels No UncfmImg!!
+53319:PlayJpegThum::DrawPixelErrInfo() : BBControl::DrawPixels ErrImg errCode[
+53320:PlayJpegThum::DrawPixelErrInfo() : BBControl::DrawPixels No ErrImg!!
+53329:PlayJpegThum ----> StillDecoder : CMD_DEC
+53331:<<<BaseThumbnailReaderFilter::AviContentInfo>>>
+53346:EventSend::IndexPlayer <---- PlayJpegThum(EV_NOTICE_JPEG_THUM_PLAY_PB_ONE) errCode[
+53348:EventSend::IndexPlayer <---- PlayJpegThum(EV_NOTICE_JPEG_THUM_READ_ONE) errCode[
+53350:SetCmdReadyThumbnailReaderFilter() mp_hdavcThumbnailReaderFilter->SetReadTarget
+53351:SetCmdReadyThumbnailReaderFilter() mp_m2psThumbnailReaderFilter->SetReadTarget
+53352:SetCmdReadyThumbnailReaderFilter() mp_mp4ThumbnailReaderFilter->SetReadTarget
+
+--- Catalogo de comandos del decodificador (MDEC) y callbacks ---
+50149:MDECOPEN
+50150:MDECSTART
+50151:MDECCHANGESPEED
+50152:MDECNEXTFRAME
+50153:MDECSTOP
+50154:MDECCLOSE
+50159:MDECERROR
+50192:MDECHOST
+50193:MDECAVCON
+50199:MDECA
+50200:MDECENTER
+50201:MDECRUN
+50202:MDECCSP
+50224:MDECCTRL
+50252:CONV CALL: [INITTABLE], [CMD_ENTER], [CMD_RUN], [CMD_STOP], [CMD_EXIT]
+50257:DUMMYCALL : [MENC], [MDEC], [ADEC], [SENC], [SDEC], [HS], [CONV]
+50258:DUMMYCALL : [MENC], [MDEC], [ADEC], [SDEC], [SENC], [HS], [CONV]
+50259:EXIT : [MDEC], [MENC], [SDEC], [SENC], [HS], [ALL]
+50260:EXIT : [ENTER], [MDEC], [MENC], [SDEC], [SENC], [HS], [ALL]
+50261:MDEC : [InitTable], [CMD_ENTER], [CMD_RUN], [CMD_CHANGE_SPEED], [CMD_NEXT_FRAME], [CMD_NEXT_THUMBNAIL], [CMD_STOP], [CMD_EXIT]
+50262:CMD_NEXT_FRAME
+50263:CMD_NEXT_THUMBNAIL
+50264:************ MDEC : COMPLETE!!! ************
+50265:MDEC : [InitTable], [CMD_ENTER], [CMD_FACE_SET], [CMD_RUN], [CMD_NEXT_PHOTO_MOVIE], [CMD_STOP], [CMD_EXIT]
+50267:CMD_NEXT_PHOTO

@@ -1,0 +1,591 @@
+# EVIDENCIA 4 — flujo de main() de /sbin/init (VA 0x96CC, 1452 B). Resumen con las llamadas y saltos.
+# Filtro: solo ldr de literales, bl/blx, comparaciones y saltos. Desensamblado completo en 04b.
+000096cc: 2de9f043   push.w    {r4, r5, r6, r7, r8, sb, lr}      
+000096d0: c3b0       sub       sp, #0x10c                        
+000096d2: a748       ldr       r0, [pc, #0x29c]                    ; [00009970]=0001331c
+000096d4: 02af       add       r7, sp, #8                        
+000096d6: a64c       ldr       r4, [pc, #0x298]                    ; [00009970]=0001331c
+000096d8: fff7d8fb   bl        #0x8e8c                             ; mount_partition
+000096dc: a54d       ldr       r5, [pc, #0x294]                    ; [00009974]=000144c8
+000096de: 0028       cmp       r0, #0                            
+000096e0: 40f0f781   bne.w     #0x9ad2                           
+000096e4: 0121       movs      r1, #1                            
+000096e6: a448       ldr       r0, [pc, #0x290]                    ; [00009978]=0000a1f5 "/proc/snsc_boot_time"
+000096e8: fff796e9   blx       #0x8a18                             ; open
+000096ec: a34b       ldr       r3, [pc, #0x28c]                    ; [0000997c]=000131e8
+000096ee: 1860       str       r0, [r3]                          
+000096f0: a348       ldr       r0, [pc, #0x28c]                    ; [00009980]=0000a20a "<<init start>>"
+000096f2: fff7fffa   bl        #0x8cf4                             ; profile_entry
+000096f6: a348       ldr       r0, [pc, #0x28c]                    ; [00009984]=0000a219 "HOME=/"
+000096f8: fff71cea   blx       #0x8b34                             ; putenv
+000096fc: a248       ldr       r0, [pc, #0x288]                    ; [00009988]=0000a220 "PATH=/sbin:/bin:/usr/sbin:/usr/bin:/devel/usr/bi"
+000096fe: fff71aea   blx       #0x8b34                             ; putenv
+00009702: a248       ldr       r0, [pc, #0x288]                    ; [0000998c]=0000a252 "TOPRC=/etc/toprc"
+00009704: fff716ea   blx       #0x8b34                             ; putenv
+00009708: a148       ldr       r0, [pc, #0x284]                    ; [00009990]=0000a263 "MALLOC_OPTIONS=gfffffffff"
+0000970a: fff714ea   blx       #0x8b34                             ; putenv
+0000970e: a148       ldr       r0, [pc, #0x284]                    ; [00009994]=0000a27d "LT_ABORTREASON=0"
+00009710: fff710ea   blx       #0x8b34                             ; putenv
+00009714: fff7a0ff   bl        #0x9658                             ; set_stack_size_to_2MB
+00009718: 9f49       ldr       r1, [pc, #0x27c]                    ; [00009998]=00008ff9
+0000971a: 1120       movs      r0, #0x11                         
+0000971c: fff79ae9   blx       #0x8a54                             ; signal
+00009720: fff768fe   bl        #0x93f4                             ; check_oreore1
+00009724: 9d48       ldr       r0, [pc, #0x274]                    ; [0000999c]=000131ec
+00009726: 0521       movs      r1, #5                            
+00009728: fff7f8fa   bl        #0x8d1c                             ; insmod_drivers
+0000972c: 9c4b       ldr       r3, [pc, #0x270]                    ; [000099a0]=000144d4
+0000972e: 1b68       ldr       r3, [r3]                          
+00009730: 002b       cmp       r3, #0                            
+00009732: 40f0c680   bne.w     #0x98c2                           
+00009736: 9b4b       ldr       r3, [pc, #0x26c]                    ; [000099a4]=000144d0
+00009738: 1b68       ldr       r3, [r3]                          
+0000973a: 002b       cmp       r3, #0                            
+0000973c: 40f0a680   bne.w     #0x988c                           
+00009740: 04f5b470   add.w     r0, r4, #0x168                    
+00009744: fff7a2fb   bl        #0x8e8c                             ; mount_partition
+00009748: 28b1       cbz       r0, #0x9756                       
+0000974a: 04f5be70   add.w     r0, r4, #0x17c                    
+0000974e: fff79dfb   bl        #0x8e8c                             ; mount_partition
+00009752: 0028       cmp       r0, #0                            
+00009754: 79d1       bne       #0x984a                           
+00009756: 9448       ldr       r0, [pc, #0x250]                    ; [000099a8]=0000a28e "/rootfs"
+00009758: fff712ea   blx       #0x8b80                             ; chdir
+0000975c: da20       movs      r0, #0xda                         
+0000975e: 9349       ldr       r1, [pc, #0x24c]                    ; [000099ac]=00009f24
+00009760: 934a       ldr       r2, [pc, #0x24c]                    ; [000099b0]=0000a296 "initrd"
+00009762: fff74cea   blx       #0x8bfc                             ; syscall
+00009766: 38b1       cbz       r0, #0x9778                       
+00009768: fff75aea   blx       #0x8c20                             ; __errno_location
+0000976c: 9149       ldr       r1, [pc, #0x244]                    ; [000099b4]=0000abc4 "main"
+0000976e: 0346       mov       r3, r0                            
+00009770: 9148       ldr       r0, [pc, #0x244]                    ; [000099b8]=0000a29d "%s: pivot_root failed: errno = %d
+"
+00009772: 1a68       ldr       r2, [r3]                          
+00009774: fff7d8e9   blx       #0x8b28                             ; printf
+00009778: 8c48       ldr       r0, [pc, #0x230]                    ; [000099ac]=00009f24
+0000977a: fff7cae9   blx       #0x8b10                             ; chroot
+0000977e: 8021       movs      r1, #0x80                         
+00009780: 8e4a       ldr       r2, [pc, #0x238]                    ; [000099bc]=0000a2c0 "/initrd/%s"
+00009782: 3846       mov       r0, r7                            
+00009784: 6368       ldr       r3, [r4, #4]                      
+00009786: fff72eea   blx       #0x8be4                             ; snprintf
+0000978a: 0023       movs      r3, #0                            
+0000978c: 3846       mov       r0, r7                            
+0000978e: 0093       str       r3, [sp]                          
+00009790: 4ff40053   mov.w     r3, #0x2000                       
+00009794: 6168       ldr       r1, [r4, #4]                      
+00009796: a268       ldr       r2, [r4, #8]                      
+00009798: fff7dae9   blx       #0x8b50                             ; mount
+0000979c: 38b1       cbz       r0, #0x97ae                       
+0000979e: fff740ea   blx       #0x8c20                             ; __errno_location
+000097a2: 8449       ldr       r1, [pc, #0x210]                    ; [000099b4]=0000abc4 "main"
+000097a4: 0346       mov       r3, r0                            
+000097a6: 8648       ldr       r0, [pc, #0x218]                    ; [000099c0]=0000a2cb "%s: move_partition failed: errno = %d
+"
+000097a8: 1a68       ldr       r2, [r3]                          
+000097aa: fff7bee9   blx       #0x8b28                             ; printf
+000097ae: 0120       movs      r0, #1                            
+000097b0: fff7c8e9   blx       #0x8b44                             ; close
+000097b4: 0220       movs      r0, #2                            
+000097b6: fff7c6e9   blx       #0x8b44                             ; close
+000097ba: 0020       movs      r0, #0                            
+000097bc: fff7c2e9   blx       #0x8b44                             ; close
+000097c0: fff72eea   blx       #0x8c20                             ; __errno_location
+000097c4: 7f49       ldr       r1, [pc, #0x1fc]                    ; [000099c4]=000144dc
+000097c6: 0022       movs      r2, #0                            
+000097c8: 8846       mov       r8, r1                            
+000097ca: 0260       str       r2, [r0]                          
+000097cc: 0646       mov       r6, r0                            
+000097ce: 0b68       ldr       r3, [r1]                          
+000097d0: 1bb1       cbz       r3, #0x97da                       
+000097d2: 7d48       ldr       r0, [pc, #0x1f4]                    ; [000099c8]=0000a2f2 "/dev/ttycons"
+000097d4: 40f60201   movw      r1, #0x802                        
+000097d8: 03e0       b         #0x97e2                             ; main+0x116
+000097da: 7c48       ldr       r0, [pc, #0x1f0]                    ; [000099cc]=0000a2ff "/dev/console"
+000097dc: 40f60201   movw      r1, #0x802                        
+000097e0: 1a46       mov       r2, r3                            
+000097e2: fff71ae9   blx       #0x8a18                             ; open
+000097e6: 0028       cmp       r0, #0                            
+000097e8: 8146       mov       sb, r0                            
+000097ea: 0cda       bge       #0x9806                           
+000097ec: 764b       ldr       r3, [pc, #0x1d8]                    ; [000099c8]=0000a2f2 "/dev/ttycons"
+000097ee: 7849       ldr       r1, [pc, #0x1e0]                    ; [000099d0]=0000a30c "init %s:(%d): shell_loop: can not open %s: errno"
+000097f0: 784a       ldr       r2, [pc, #0x1e0]                    ; [000099d4]=0000abea "reopen_fds"
+000097f2: 0093       str       r3, [sp]                          
+000097f4: 3368       ldr       r3, [r6]                          
+000097f6: 0193       str       r3, [sp, #4]                      
+000097f8: 774b       ldr       r3, [pc, #0x1dc]                    ; [000099d8]=000134b0
+000097fa: 1868       ldr       r0, [r3]                          
+000097fc: 40f2bd23   movw      r3, #0x2bd                        
+00009800: fff7b2e9   blx       #0x8b68                             ; fprintf
+00009804: 1ee0       b         #0x9844                             ; main+0x178
+00009806: 0021       movs      r1, #0                            
+00009808: fff7c6e9   blx       #0x8b98                             ; dup2
+0000980c: 0121       movs      r1, #1                            
+0000980e: 4846       mov       r0, sb                            
+00009810: fff7c2e9   blx       #0x8b98                             ; dup2
+00009814: 0221       movs      r1, #2                            
+00009816: 4846       mov       r0, sb                            
+00009818: fff7bee9   blx       #0x8b98                             ; dup2
+0000981c: b9f1020f   cmp.w     sb, #2                            
+00009820: 02dd       ble       #0x9828                           
+00009822: 4846       mov       r0, sb                            
+00009824: fff78ee9   blx       #0x8b44                             ; close
+00009828: d8f80030   ldr.w     r3, [r8]                          
+0000982c: 53b1       cbz       r3, #0x9844                       
+0000982e: 0020       movs      r0, #0                            
+00009830: 0321       movs      r1, #3                            
+00009832: 0246       mov       r2, r0                            
+00009834: fff7bce9   blx       #0x8bb0                             ; fcntl
+00009838: 0421       movs      r1, #4                            
+0000983a: 20f40062   bic       r2, r0, #0x800                    
+0000983e: 0020       movs      r0, #0                            
+00009840: fff7b6e9   blx       #0x8bb0                             ; fcntl
+00009844: 654b       ldr       r3, [pc, #0x194]                    ; [000099dc]=000144ec
+00009846: 0122       movs      r2, #1                            
+00009848: 1a60       str       r2, [r3]                          
+0000984a: 6548       ldr       r0, [pc, #0x194]                    ; [000099e0]=000133a8
+0000984c: fff71efb   bl        #0x8e8c                             ; mount_partition
+00009850: 0246       mov       r2, r0                            
+00009852: c0b1       cbz       r0, #0x9886                       
+00009854: 5749       ldr       r1, [pc, #0x15c]                    ; [000099b4]=0000abc4 "main"
+00009856: 6348       ldr       r0, [pc, #0x18c]                    ; [000099e4]=0000a341 "%s: mounting /usr as ext2 failed(%d), trying no-"
+00009858: fff766e9   blx       #0x8b28                             ; printf
+0000985c: 6248       ldr       r0, [pc, #0x188]                    ; [000099e8]=0001345c
+0000985e: fff715fb   bl        #0x8e8c                             ; mount_partition
+00009862: 0246       mov       r2, r0                            
+00009864: 78b1       cbz       r0, #0x9886                       
+00009866: 5349       ldr       r1, [pc, #0x14c]                    ; [000099b4]=0000abc4 "main"
+00009868: 6048       ldr       r0, [pc, #0x180]                    ; [000099ec]=0000a37b "%s: mounting /usr as ext2(no-compress) failed(%d"
+0000986a: fff75ee9   blx       #0x8b28                             ; printf
+0000986e: 6048       ldr       r0, [pc, #0x180]                    ; [000099f0]=00013394
+00009870: fff70cfb   bl        #0x8e8c                             ; mount_partition
+00009874: 0246       mov       r2, r0                            
+00009876: 30b1       cbz       r0, #0x9886                       
+00009878: 5e48       ldr       r0, [pc, #0x178]                    ; [000099f4]=0000a3bd "%s: mounting /usr as cramfs failed(%d), trying v"
+0000987a: 4e49       ldr       r1, [pc, #0x138]                    ; [000099b4]=0000abc4 "main"
+0000987c: fff754e9   blx       #0x8b28                             ; printf
+00009880: 5d48       ldr       r0, [pc, #0x174]                    ; [000099f8]=000133bc
+00009882: fff703fb   bl        #0x8e8c                             ; mount_partition
+00009886: 5d48       ldr       r0, [pc, #0x174]                    ; [000099fc]=00013380
+00009888: fff700fb   bl        #0x8e8c                             ; mount_partition
+0000988c: 5c48       ldr       r0, [pc, #0x170]                    ; [00009a00]=00013358
+0000988e: fff7fdfa   bl        #0x8e8c                             ; mount_partition
+00009892: 0246       mov       r2, r0                            
+00009894: 30b1       cbz       r0, #0x98a4                       
+00009896: 5b48       ldr       r0, [pc, #0x16c]                    ; [00009a04]=0000a3f2 "%s: mounting compressed /system failed(%d), tryi"
+00009898: 4649       ldr       r1, [pc, #0x118]                    ; [000099b4]=0000abc4 "main"
+0000989a: fff746e9   blx       #0x8b28                             ; printf
+0000989e: 5a48       ldr       r0, [pc, #0x168]                    ; [00009a08]=0001336c
+000098a0: fff7f4fa   bl        #0x8e8c                             ; mount_partition
+000098a4: 5948       ldr       r0, [pc, #0x164]                    ; [00009a0c]=00013344
+000098a6: fff7f1fa   bl        #0x8e8c                             ; mount_partition
+000098aa: 0246       mov       r2, r0                            
+000098ac: 18b1       cbz       r0, #0x98b6                       
+000098ae: 5848       ldr       r0, [pc, #0x160]                    ; [00009a10]=0000a42b "%s: mounting /setting failed(%d).
+"
+000098b0: 4049       ldr       r1, [pc, #0x100]                    ; [000099b4]=0000abc4 "main"
+000098b2: fff73ae9   blx       #0x8b28                             ; printf
+000098b6: 5748       ldr       r0, [pc, #0x15c]                    ; [00009a14]=00013470
+000098b8: fff7e8fa   bl        #0x8e8c                             ; mount_partition
+000098bc: 5648       ldr       r0, [pc, #0x158]                    ; [00009a18]=00013448
+000098be: fff7e5fa   bl        #0x8e8c                             ; mount_partition
+000098c2: fff7a1fd   bl        #0x9408                             ; check_oreore2
+000098c6: 554b       ldr       r3, [pc, #0x154]                    ; [00009a1c]=000144bc
+000098c8: 1b68       ldr       r3, [r3]                          
+000098ca: 0bb1       cbz       r3, #0x98d0                       
+000098cc: fff74cfe   bl        #0x9568                             ; set_oreore_env
+000098d0: 534b       ldr       r3, [pc, #0x14c]                    ; [00009a20]=000144e4
+000098d2: 1b68       ldr       r3, [r3]                          
+000098d4: 002b       cmp       r3, #0                            
+000098d6: 40f0fc80   bne.w     #0x9ad2                           
+000098da: 0322       movs      r2, #3                            
+000098dc: 5149       ldr       r1, [pc, #0x144]                    ; [00009a24]=00009d1c
+000098de: 3846       mov       r0, r7                            
+000098e0: fff710e9   blx       #0x8b04                             ; memcpy
+000098e4: 0121       movs      r1, #1                            
+000098e6: 5048       ldr       r0, [pc, #0x140]                    ; [00009a28]=0000a44e "/proc/udm/drivers"
+000098e8: fff796e8   blx       #0x8a18                             ; open
+000098ec: 061e       subs      r6, r0, #0                        
+000098ee: 08da       bge       #0x9902                           
+000098f0: 4e4a       ldr       r2, [pc, #0x138]                    ; [00009a2c]=00009d54 "set_mindrv"
+000098f2: 394b       ldr       r3, [pc, #0xe4]                     ; [000099d8]=000134b0
+000098f4: 4e49       ldr       r1, [pc, #0x138]                    ; [00009a30]=0000a460 "init %s:(%d): %s: error open /proc/udm/drivers
+"
+000098f6: 0092       str       r2, [sp]                          
+000098f8: 1868       ldr       r0, [r3]                          
+000098fa: b523       movs      r3, #0xb5                         
+000098fc: fff734e9   blx       #0x8b68                             ; fprintf
+00009900: 06e0       b         #0x9910                             ; main+0x244
+00009902: 3946       mov       r1, r7                            
+00009904: 0322       movs      r2, #3                            
+00009906: fff7e6e8   blx       #0x8ad4                             ; write
+0000990a: 3046       mov       r0, r6                            
+0000990c: fff71ae9   blx       #0x8b44                             ; close
+00009910: 2121       movs      r1, #0x21                         
+00009912: 4848       ldr       r0, [pc, #0x120]                    ; [00009a34]=00013214
+00009914: fff702fa   bl        #0x8d1c                             ; insmod_drivers
+00009918: fff77cfd   bl        #0x9414                             ; check_oreore3
+0000991c: 2b68       ldr       r3, [r5]                          
+0000991e: ebb1       cbz       r3, #0x995c                       
+00009920: 0021       movs      r1, #0                            
+00009922: 4ff48072   mov.w     r2, #0x100                        
+00009926: 3846       mov       r0, r7                            
+00009928: fff7aee8   blx       #0x8a88                             ; memset
+0000992c: d4f85801   ldr.w     r0, [r4, #0x158]                  
+00009930: fff7c2e8   blx       #0x8ab8                             ; umount
+00009934: 4ff48071   mov.w     r1, #0x100                        
+00009938: 3f4a       ldr       r2, [pc, #0xfc]                     ; [00009a38]=0000a490 "/sbin/mkdosfs -s 32 %s"
+0000993a: 3846       mov       r0, r7                            
+0000993c: d4f85431   ldr.w     r3, [r4, #0x154]                  
+00009940: fff750e9   blx       #0x8be4                             ; snprintf
+00009944: 3846       mov       r0, r7                            
+00009946: fff794e8   blx       #0x8a70                             ; system
+0000994a: 3248       ldr       r0, [pc, #0xc8]                     ; [00009a14]=00013470
+0000994c: fff79efa   bl        #0x8e8c                             ; mount_partition
+00009950: 3a48       ldr       r0, [pc, #0xe8]                     ; [00009a3c]=00013330
+00009952: fff79bfa   bl        #0x8e8c                             ; mount_partition
+00009956: 3a48       ldr       r0, [pc, #0xe8]                     ; [00009a40]=0000a4a7 "/usr/bin/swap_prepare.sh"
+00009958: fff78ae8   blx       #0x8a70                             ; system
+0000995c: 394b       ldr       r3, [pc, #0xe4]                     ; [00009a44]=000144e0
+0000995e: 1b68       ldr       r3, [r3]                          
+00009960: 002b       cmp       r3, #0                            
+00009962: 73d0       beq       #0x9a4c                           
+00009964: 3848       ldr       r0, [pc, #0xe0]                     ; [00009a48]=0000a4c0 "LD_PRELOAD=/usr/tool/libkmcsup.so.2.0.0"
+00009966: fff7c5f9   bl        #0x8cf4                             ; profile_entry
+0000996a: 3748       ldr       r0, [pc, #0xdc]                     ; [00009a48]=0000a4c0 "LD_PRELOAD=/usr/tool/libkmcsup.so.2.0.0"
+0000996c: 8ce0       b         #0x9a88                             ; main+0x3bc
+0000996e: 00bf       nop                                         
+00009970: 1c33       adds      r3, #0x1c                         
+00009972: 0100       movs      r1, r0                            
+00009974: c844       add       r8, sb                            
+00009976: 0100       movs      r1, r0                            
+00009978: f5a1       adr       r1, #0x3d4                        
+0000997a: 0000       movs      r0, r0                            
+0000997c: e831       adds      r1, #0xe8                         
+0000997e: 0100       movs      r1, r0                            
+00009980: 0aa2       adr       r2, #0x28                         
+00009982: 0000       movs      r0, r0                            
+00009984: 19a2       adr       r2, #0x64                         
+00009986: 0000       movs      r0, r0                            
+00009988: 20a2       adr       r2, #0x80                         
+0000998a: 0000       movs      r0, r0                            
+0000998c: 52a2       adr       r2, #0x148                        
+0000998e: 0000       movs      r0, r0                            
+00009990: 63a2       adr       r2, #0x18c                        
+00009992: 0000       movs      r0, r0                            
+00009994: 7da2       adr       r2, #0x1f4                        
+00009996: 0000       movs      r0, r0                            
+00009998: f98f       ldrh      r1, [r7, #0x3e]                   
+0000999a: 0000       movs      r0, r0                            
+0000999c: ec31       adds      r1, #0xec                         
+0000999e: 0100       movs      r1, r0                            
+000099a0: d444       add       ip, sl                            
+000099a2: 0100       movs      r1, r0                            
+000099a4: d044       add       r8, sl                            
+000099a6: 0100       movs      r1, r0                            
+000099a8: 8ea2       adr       r2, #0x238                        
+000099aa: 0000       movs      r0, r0                            
+000099ac: 249f       ldr       r7, [sp, #0x90]                   
+000099ae: 0000       movs      r0, r0                            
+000099b0: 96a2       adr       r2, #0x258                        
+000099b2: 0000       movs      r0, r0                            
+000099b4: c4ab       add       r3, sp, #0x310                    
+000099b6: 0000       movs      r0, r0                            
+000099b8: 9da2       adr       r2, #0x274                        
+000099ba: 0000       movs      r0, r0                            
+000099bc: c0a2       adr       r2, #0x300                        
+000099be: 0000       movs      r0, r0                            
+000099c0: cba2       adr       r2, #0x32c                        
+000099c2: 0000       movs      r0, r0                            
+000099c4: dc44       add       ip, fp                            
+000099c6: 0100       movs      r1, r0                            
+000099c8: f2a2       adr       r2, #0x3c8                        
+000099ca: 0000       movs      r0, r0                            
+000099cc: ffa2       adr       r2, #0x3fc                        
+000099ce: 0000       movs      r0, r0                            
+000099d0: 0ca3       adr       r3, #0x30                         
+000099d2: 0000       movs      r0, r0                            
+000099d4: eaab       add       r3, sp, #0x3a8                    
+000099d6: 0000       movs      r0, r0                            
+000099d8: b034       adds      r4, #0xb0                         
+000099da: 0100       movs      r1, r0                            
+000099dc: ec44       add       ip, sp, ip                        
+000099de: 0100       movs      r1, r0                            
+000099e0: a833       adds      r3, #0xa8                         
+000099e2: 0100       movs      r1, r0                            
+000099e4: 41a3       adr       r3, #0x104                        
+000099e6: 0000       movs      r0, r0                            
+000099e8: 5c34       adds      r4, #0x5c                         
+000099ea: 0100       movs      r1, r0                            
+000099ec: 7ba3       adr       r3, #0x1ec                        
+000099ee: 0000       movs      r0, r0                            
+000099f0: 9433       adds      r3, #0x94                         
+000099f2: 0100       movs      r1, r0                            
+000099f4: bda3       adr       r3, #0x2f4                        
+000099f6: 0000       movs      r0, r0                            
+000099f8: bc33       adds      r3, #0xbc                         
+000099fa: 0100       movs      r1, r0                            
+000099fc: 8033       adds      r3, #0x80                         
+000099fe: 0100       movs      r1, r0                            
+00009a00: 5833       adds      r3, #0x58                         
+00009a02: 0100       movs      r1, r0                            
+00009a04: f2a3       adr       r3, #0x3c8                        
+00009a06: 0000       movs      r0, r0                            
+00009a08: 6c33       adds      r3, #0x6c                         
+00009a0a: 0100       movs      r1, r0                            
+00009a0c: 4433       adds      r3, #0x44                         
+00009a0e: 0100       movs      r1, r0                            
+00009a10: 2ba4       adr       r4, #0xac                         
+00009a12: 0000       movs      r0, r0                            
+00009a14: 7034       adds      r4, #0x70                         
+00009a16: 0100       movs      r1, r0                            
+00009a18: 4834       adds      r4, #0x48                         
+00009a1a: 0100       movs      r1, r0                            
+00009a1c: bc44       add       ip, r7                            
+00009a1e: 0100       movs      r1, r0                            
+00009a20: e444       add       ip, ip                            
+00009a22: 0100       movs      r1, r0                            
+00009a24: 1c9d       ldr       r5, [sp, #0x70]                   
+00009a26: 0000       movs      r0, r0                            
+00009a28: 4ea4       adr       r4, #0x138                        
+00009a2a: 0000       movs      r0, r0                            
+00009a2c: 549d       ldr       r5, [sp, #0x150]                  
+00009a2e: 0000       movs      r0, r0                            
+00009a30: 60a4       adr       r4, #0x180                        
+00009a32: 0000       movs      r0, r0                            
+00009a34: 1432       adds      r2, #0x14                         
+00009a36: 0100       movs      r1, r0                            
+00009a38: 90a4       adr       r4, #0x240                        
+00009a3a: 0000       movs      r0, r0                            
+00009a3c: 3033       adds      r3, #0x30                         
+00009a3e: 0100       movs      r1, r0                            
+00009a40: a7a4       adr       r4, #0x29c                        
+00009a42: 0000       movs      r0, r0                            
+00009a44: e044       add       r8, ip                            
+00009a46: 0100       movs      r1, r0                            
+00009a48: c0a4       adr       r4, #0x300                        
+00009a4a: 0000       movs      r0, r0                            
+00009a4c: 6d4b       ldr       r3, [pc, #0x1b4]                    ; [00009c04]=000144b8
+00009a4e: 1b68       ldr       r3, [r3]                          
+00009a50: 23b1       cbz       r3, #0x9a5c                       
+00009a52: 6d48       ldr       r0, [pc, #0x1b4]                    ; [00009c08]=0000a4e8 "LD_PRELOAD=/usr/tool/libsonyefence.so"
+00009a54: fff74ef9   bl        #0x8cf4                             ; profile_entry
+00009a58: 6b48       ldr       r0, [pc, #0x1ac]                    ; [00009c08]=0000a4e8 "LD_PRELOAD=/usr/tool/libsonyefence.so"
+00009a5a: 15e0       b         #0x9a88                             ; main+0x3bc
+00009a5c: 6b4b       ldr       r3, [pc, #0x1ac]                    ; [00009c0c]=000144e8
+00009a5e: 1b68       ldr       r3, [r3]                          
+00009a60: a3b1       cbz       r3, #0x9a8c                       
+00009a62: 6b48       ldr       r0, [pc, #0x1ac]                    ; [00009c10]=0000a50e "LD_PRELOAD=/usr/tool/libduma.so"
+00009a64: fff746f9   bl        #0x8cf4                             ; profile_entry
+00009a68: 6a48       ldr       r0, [pc, #0x1a8]                    ; [00009c14]=0000a52e "DUMA_MALLOC_0_STRATEGY=1"
+00009a6a: fff764e8   blx       #0x8b34                             ; putenv
+00009a6e: 6a48       ldr       r0, [pc, #0x1a8]                    ; [00009c18]=0000a547 "DUMA_PROTECT_FREE=1"
+00009a70: fff760e8   blx       #0x8b34                             ; putenv
+00009a74: 6948       ldr       r0, [pc, #0x1a4]                    ; [00009c1c]=0000a55b "DUMA_ALIGNMENT=4"
+00009a76: fff75ee8   blx       #0x8b34                             ; putenv
+00009a7a: 6948       ldr       r0, [pc, #0x1a4]                    ; [00009c20]=0000a56c "DUMA_OUTPUT_FILE=/root/dumaLog.txt"
+00009a7c: fff75ae8   blx       #0x8b34                             ; putenv
+00009a80: 6848       ldr       r0, [pc, #0x1a0]                    ; [00009c24]=0000a58f "echo 1000000 > /proc/sys/vm/max_map_count"
+00009a82: fef7f6ef   blx       #0x8a70                             ; system
+00009a86: 6248       ldr       r0, [pc, #0x188]                    ; [00009c10]=0000a50e "LD_PRELOAD=/usr/tool/libduma.so"
+00009a88: fff754e8   blx       #0x8b34                             ; putenv
+00009a8c: 664b       ldr       r3, [pc, #0x198]                    ; [00009c28]=000144d8
+00009a8e: 1b68       ldr       r3, [r3]                          
+00009a90: 33b1       cbz       r3, #0x9aa0                       
+00009a92: 6648       ldr       r0, [pc, #0x198]                    ; [00009c2c]=0000a5b9
+00009a94: fff72ef9   bl        #0x8cf4                             ; profile_entry
+00009a98: 6548       ldr       r0, [pc, #0x194]                    ; [00009c30]=0000a5bd "/usr/bin/bootin.elf"
+00009a9a: fef7eaef   blx       #0x8a70                             ; system
+00009a9e: 02e0       b         #0x9aa6                             ; main+0x3da
+00009aa0: 6348       ldr       r0, [pc, #0x18c]                    ; [00009c30]=0000a5bd "/usr/bin/bootin.elf"
+00009aa2: fff7c7f9   bl        #0x8e34                             ; run_bg_process
+00009aa6: 634b       ldr       r3, [pc, #0x18c]                    ; [00009c34]=000144c4
+00009aa8: 1b68       ldr       r3, [r3]                          
+00009aaa: 13b1       cbz       r3, #0x9ab2                       
+00009aac: 6248       ldr       r0, [pc, #0x188]                    ; [00009c38]=0000a5d1 "/usr/bin/sen.elf"
+00009aae: fff7c1f9   bl        #0x8e34                             ; run_bg_process
+00009ab2: fff7a5fd   bl        #0x9600                             ; setup_low_memory_killer
+00009ab6: 614b       ldr       r3, [pc, #0x184]                    ; [00009c3c]=000144cc
+00009ab8: 1b68       ldr       r3, [r3]                          
+00009aba: 13b9       cbnz      r3, #0x9ac2                       
+00009abc: 6048       ldr       r0, [pc, #0x180]                    ; [00009c40]=0000a5e2 "/usr/bin/s_start_android.sh"
+00009abe: fff7b9f9   bl        #0x8e34                             ; run_bg_process
+00009ac2: 6048       ldr       r0, [pc, #0x180]                    ; [00009c44]=0000a5fe "/usr/bin/net_cmdd.elf"
+00009ac4: fff7b6f9   bl        #0x8e34                             ; run_bg_process
+00009ac8: 5f48       ldr       r0, [pc, #0x17c]                    ; [00009c48]=0000a614 "<<init end>>"
+00009aca: fff713f9   bl        #0x8cf4                             ; profile_entry
+00009ace: fff703f9   bl        #0x8cd8                             ; profile_exit
+00009ad2: 2b68       ldr       r3, [r5]                          
+00009ad4: 13b9       cbnz      r3, #0x9adc                       
+00009ad6: 5d48       ldr       r0, [pc, #0x174]                    ; [00009c4c]=00013330
+00009ad8: fff7d8f9   bl        #0x8e8c                             ; mount_partition
+00009adc: 5c48       ldr       r0, [pc, #0x170]                    ; [00009c50]=0000a621 "LD_PRELOAD="
+00009ade: fff72ae8   blx       #0x8b34                             ; putenv
+00009ae2: fff7f9f8   bl        #0x8cd8                             ; profile_exit
+00009ae6: 2b68       ldr       r3, [r5]                          
+00009ae8: 73b1       cbz       r3, #0x9b08                       
+00009aea: 5a4b       ldr       r3, [pc, #0x168]                    ; [00009c54]=00009d2c
+00009aec: 0fcb       ldm       r3, {r0, r1, r2, r3}              
+00009aee: 87e80f00   stm.w     r7, {r0, r1, r2, r3}              
+00009af2: fff7dbf8   bl        #0x8cac                             ; term_echo_on
+00009af6: 0121       movs      r1, #1                            
+00009af8: 1120       movs      r0, #0x11                         
+00009afa: fef7acef   blx       #0x8a54                             ; signal
+00009afe: 3868       ldr       r0, [r7]                          
+00009b00: 3946       mov       r1, r7                            
+00009b02: fef7faef   blx       #0x8af8                             ; execv
+00009b06: f0e7       b         #0x9aea                             ; main+0x41e
+00009b08: 534b       ldr       r3, [pc, #0x14c]                    ; [00009c58]=000144ec
+00009b0a: 1b68       ldr       r3, [r3]                          
+00009b0c: 13b1       cbz       r3, #0x9b14                       
+00009b0e: fff7c9fd   bl        #0x96a4                             ; shell_loop_pvt
+00009b12: 71e0       b         #0x9bf8                             ; main+0x52c
+00009b14: fff7caf8   bl        #0x8cac                             ; term_echo_on
+00009b18: fff750e8   blx       #0x8bbc                             ; fork
+00009b1c: 041e       subs      r4, r0, #0                        
+00009b1e: 61d1       bne       #0x9be4                           
+00009b20: 4e4a       ldr       r2, [pc, #0x138]                    ; [00009c5c]=0000abcc
+00009b22: 4f4d       ldr       r5, [pc, #0x13c]                    ; [00009c60]=000134b0
+00009b24: 07ca       ldm       r2, {r0, r1, r2}                  
+00009b26: 87e80700   stm.w     r7, {r0, r1, r2}                  
+00009b2a: 0121       movs      r1, #1                            
+00009b2c: 1120       movs      r0, #0x11                         
+00009b2e: fef792ef   blx       #0x8a54                             ; signal
+00009b32: fef7b6ef   blx       #0x8aa0                             ; setsid
+00009b36: 0028       cmp       r0, #0                            
+00009b38: 0bda       bge       #0x9b52                           
+00009b3a: fff772e8   blx       #0x8c20                             ; __errno_location
+00009b3e: 4949       ldr       r1, [pc, #0x124]                    ; [00009c64]=0000a62d "init %s:(%d): shell_loop: setsid failed: errno=%"
+00009b40: 494a       ldr       r2, [pc, #0x124]                    ; [00009c68]=00009d82 "shell_loop"
+00009b42: 0368       ldr       r3, [r0]                          
+00009b44: 0093       str       r3, [sp]                          
+00009b46: 40f24e43   movw      r3, #0x44e                        
+00009b4a: 2868       ldr       r0, [r5]                          
+00009b4c: fff70ce8   blx       #0x8b68                             ; fprintf
+00009b50: 41e0       b         #0x9bd6                             ; main+0x50a
+00009b52: 464b       ldr       r3, [pc, #0x118]                    ; [00009c6c]=000144dc
+00009b54: 1b68       ldr       r3, [r3]                          
+00009b56: 002b       cmp       r3, #0                            
+00009b58: 3dd0       beq       #0x9bd6                           
+00009b5a: 0120       movs      r0, #1                            
+00009b5c: fef7f2ef   blx       #0x8b44                             ; close
+00009b60: 0220       movs      r0, #2                            
+00009b62: fef7f0ef   blx       #0x8b44                             ; close
+00009b66: 2046       mov       r0, r4                            
+00009b68: fef7ecef   blx       #0x8b44                             ; close
+00009b6c: fff758e8   blx       #0x8c20                             ; __errno_location
+00009b70: 40f60201   movw      r1, #0x802                        
+00009b74: 2246       mov       r2, r4                            
+00009b76: 0460       str       r4, [r0]                          
+00009b78: 0646       mov       r6, r0                            
+00009b7a: 3d48       ldr       r0, [pc, #0xf4]                     ; [00009c70]=0000a2f2 "/dev/ttycons"
+00009b7c: fef74cef   blx       #0x8a18                             ; open
+00009b80: b0f10008   subs.w    r8, r0, #0                        
+00009b84: 0bda       bge       #0x9b9e                           
+00009b86: 3a4b       ldr       r3, [pc, #0xe8]                     ; [00009c70]=0000a2f2 "/dev/ttycons"
+00009b88: 3a49       ldr       r1, [pc, #0xe8]                     ; [00009c74]=0000a30c "init %s:(%d): shell_loop: can not open %s: errno"
+00009b8a: 374a       ldr       r2, [pc, #0xdc]                     ; [00009c68]=00009d82 "shell_loop"
+00009b8c: 0093       str       r3, [sp]                          
+00009b8e: 3368       ldr       r3, [r6]                          
+00009b90: 0193       str       r3, [sp, #4]                      
+00009b92: 40f25a43   movw      r3, #0x45a                        
+00009b96: 2868       ldr       r0, [r5]                          
+00009b98: fef7e6ef   blx       #0x8b68                             ; fprintf
+00009b9c: 2ce0       b         #0x9bf8                             ; main+0x52c
+00009b9e: 2146       mov       r1, r4                            
+00009ba0: fef7faef   blx       #0x8b98                             ; dup2
+00009ba4: 0121       movs      r1, #1                            
+00009ba6: 4046       mov       r0, r8                            
+00009ba8: fef7f6ef   blx       #0x8b98                             ; dup2
+00009bac: 0221       movs      r1, #2                            
+00009bae: 4046       mov       r0, r8                            
+00009bb0: fef7f2ef   blx       #0x8b98                             ; dup2
+00009bb4: b8f1020f   cmp.w     r8, #2                            
+00009bb8: 02dd       ble       #0x9bc0                           
+00009bba: 4046       mov       r0, r8                            
+00009bbc: fef7c2ef   blx       #0x8b44                             ; close
+00009bc0: 0020       movs      r0, #0                            
+00009bc2: 0321       movs      r1, #3                            
+00009bc4: 0246       mov       r2, r0                            
+00009bc6: fef7f4ef   blx       #0x8bb0                             ; fcntl
+00009bca: 0421       movs      r1, #4                            
+00009bcc: 20f40062   bic       r2, r0, #0x800                    
+00009bd0: 0020       movs      r0, #0                            
+00009bd2: fef7eeef   blx       #0x8bb0                             ; fcntl
+00009bd6: 3868       ldr       r0, [r7]                          
+00009bd8: 3946       mov       r1, r7                            
+00009bda: fef78eef   blx       #0x8af8                             ; execv
+00009bde: 0120       movs      r0, #1                            
+00009be0: fff718e8   blx       #0x8c14                             ; exit
+00009be4: 04dd       ble       #0x9bf0                           
+00009be6: 0021       movs      r1, #0                            
+00009be8: 0a46       mov       r2, r1                            
+00009bea: 0b46       mov       r3, r1                            
+00009bec: fef75eef   blx       #0x8aac                             ; wait4
+00009bf0: 0220       movs      r0, #2                            
+00009bf2: fef7ccef   blx       #0x8b8c                             ; sleep
+00009bf6: 8de7       b         #0x9b14                             ; main+0x448
+00009bf8: 0020       movs      r0, #0                            
+00009bfa: 07f58277   add.w     r7, r7, #0x104                    
+00009bfe: bd46       mov       sp, r7                            
+00009c00: bde8f083   pop.w     {r4, r5, r6, r7, r8, sb, pc}      
+00009c04: b844       add       r8, r7                            
+00009c06: 0100       movs      r1, r0                            
+00009c08: e8a4       adr       r4, #0x3a0                        
+00009c0a: 0000       movs      r0, r0                            
+00009c0c: e844       add       r8, sp, r8                        
+00009c0e: 0100       movs      r1, r0                            
+00009c10: 0ea5       adr       r5, #0x38                         
+00009c12: 0000       movs      r0, r0                            
+00009c14: 2ea5       adr       r5, #0xb8                         
+00009c16: 0000       movs      r0, r0                            
+00009c18: 47a5       adr       r5, #0x11c                        
+00009c1a: 0000       movs      r0, r0                            
+00009c1c: 5ba5       adr       r5, #0x16c                        
+00009c1e: 0000       movs      r0, r0                            
+00009c20: 6ca5       adr       r5, #0x1b0                        
+00009c22: 0000       movs      r0, r0                            
+00009c24: 8fa5       adr       r5, #0x23c                        
+00009c26: 0000       movs      r0, r0                            
+00009c28: d844       add       r8, fp                            
+00009c2a: 0100       movs      r1, r0                            
+00009c2c: b9a5       adr       r5, #0x2e4                        
+00009c2e: 0000       movs      r0, r0                            
+00009c30: bda5       adr       r5, #0x2f4                        
+00009c32: 0000       movs      r0, r0                            
+00009c34: c444       add       ip, r8                            
+00009c36: 0100       movs      r1, r0                            
+00009c38: d1a5       adr       r5, #0x344                        
+00009c3a: 0000       movs      r0, r0                            
+00009c3c: cc44       add       ip, sb                            
+00009c3e: 0100       movs      r1, r0                            
+00009c40: e2a5       adr       r5, #0x388                        
+00009c42: 0000       movs      r0, r0                            
+00009c44: fea5       adr       r5, #0x3f8                        
+00009c46: 0000       movs      r0, r0                            
+00009c48: 14a6       adr       r6, #0x50                         
+00009c4a: 0000       movs      r0, r0                            
+00009c4c: 3033       adds      r3, #0x30                         
+00009c4e: 0100       movs      r1, r0                            
+00009c50: 21a6       adr       r6, #0x84                         
+00009c52: 0000       movs      r0, r0                            
+00009c54: 2c9d       ldr       r5, [sp, #0xb0]                   
+00009c56: 0000       movs      r0, r0                            
+00009c58: ec44       add       ip, sp, ip                        
+00009c5a: 0100       movs      r1, r0                            
+00009c5c: ccab       add       r3, sp, #0x330                    
+00009c5e: 0000       movs      r0, r0                            
+00009c60: b034       adds      r4, #0xb0                         
+00009c62: 0100       movs      r1, r0                            
+00009c64: 2da6       adr       r6, #0xb4                         
+00009c66: 0000       movs      r0, r0                            
+00009c68: 829d       ldr       r5, [sp, #0x208]                  
+00009c6a: 0000       movs      r0, r0                            
+00009c6c: dc44       add       ip, fp                            
+00009c6e: 0100       movs      r1, r0                            
+00009c70: f2a2       adr       r2, #0x3c8                        
+00009c72: 0000       movs      r0, r0                            
+00009c74: 0ca3       adr       r3, #0x30                         
+00009c76: 0000       movs      r0, r0                            

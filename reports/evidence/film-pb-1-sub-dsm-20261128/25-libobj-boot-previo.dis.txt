@@ -1,0 +1,65 @@
+007e6e40: 4ff0ff31   mov.w    r1, #-1                       
+007e6e44: f6f440e2   blx      #0xdd2c8                        ; _ZN19EventHandlerWrapper9WaitEventEj
+007e6e48: e86a       ldr      r0, [r5, #0x2c]               
+007e6e4a: 07f13801   add.w    r1, r7, #0x38                 
+007e6e4e: f9f4d4e2   blx      #0xe03f8                        ; _ZN3MWF13EventReceiver9RecvEventEPNS_6ObjMsgE
+007e6e52: 07f13800   add.w    r0, r7, #0x38                 
+007e6e56: f9f408e6   blx      #0xe0a68                        ; _ZNK3MWF6ObjMsg12GetMessageIdEv
+007e6e5a: 0146       mov      r1, r0                        
+007e6e5c: 60b9       cbnz     r0, #0x7e6e78                 
+007e6e5e: 07f13800   add.w    r0, r7, #0x38                 
+007e6e62: 0722       movs     r2, #7                        
+007e6e64: f7f410e4   blx      #0xde688                        ; _ZNK3MWF6ObjMsg8GetParamEjNS_5Param4TypeE
+007e6e68: 28b1       cbz      r0, #0x7e6e76                 
+007e6e6a: f7f47ae2   blx      #0xde360                        ; _ZNK3MWF17ParamStd_TemplateIiLNS_5Param4TypeE7EE8GetValueEv
+007e6e6e: 0028       cmp      r0, #0                        
+007e6e70: 18bf       it       ne                            
+007e6e72: 0924       movne    r4, #9                        
+007e6e74: 00e0       b        #0x7e6e78                     
+007e6e76: 0924       movs     r4, #9                        
+007e6e78: 07f13800   add.w    r0, r7, #0x38                 
+007e6e7c: f6f48ae7   blx      #0xddd94                        ; _ZN3MWF6ObjMsgD1Ev
+007e6e80: 2046       mov      r0, r4                        
+007e6e82: 07f14007   add.w    r7, r7, #0x40                 
+007e6e86: bd46       mov      sp, r7                        
+007e6e88: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+007e6e8c: 07f13800   add.w    r0, r7, #0x38                 
+007e6e90: f6f480e7   blx      #0xddd94                        ; _ZN3MWF6ObjMsgD1Ev
+007e6e94: f6f430e3   blx      #0xdd4f8                        ; __cxa_end_cleanup
+007e6e98: 1481       strh     r4, [r2, #8]                  
+007e6e9a: ae00       lsls     r6, r5, #2                    
+007e6e9c: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+007e6ea0: 8db0       sub      sp, #0x34                     
+007e6ea2: 00af       add      r7, sp, #0                    
+007e6ea4: 9b46       mov      fp, r3                        
+007e6ea6: 0546       mov      r5, r0                        
+007e6ea8: 9246       mov      sl, r2                        
+007e6eaa: 0e46       mov      r6, r1                        
+007e6eac: fff7b8f9   bl       #0x7e6220                       ; _init+0x70ae68
+007e6eb0: 6849       ldr      r1, [pc, #0x1a0]                ; [007e7054]=0059f439
+007e6eb2: 0420       movs     r0, #4                        
+007e6eb4: 40f2a732   movw     r2, #0x3a7                    
+007e6eb8: 7944       add      r1, pc                        
+007e6eba: 01f0ddfe   bl       #0x7e8c78                       ; _init+0x70d8c0
+007e6ebe: 0023       movs     r3, #0                        
+007e6ec0: 2846       mov      r0, r5                        
+007e6ec2: 8af80030   strb.w   r3, [sl]                      
+007e6ec6: 8bf80030   strb.w   r3, [fp]                      
+007e6eca: fff7d1f9   bl       #0x7e6270                       ; _init+0x70aeb8
+007e6ece: 0446       mov      r4, r0                        
+007e6ed0: 0028       cmp      r0, #0                        
+007e6ed2: 40f0ab80   bne.w    #0x7e702c                     
+007e6ed6: f8f486e7   blx      #0xdfde4                        ; _ZN7MprCtrl11GetTvSystemEv
+007e6eda: 1122       movs     r2, #0x11                     
+007e6edc: 2146       mov      r1, r4                        
+007e6ede: b861       str      r0, [r7, #0x18]               
+007e6ee0: 3846       mov      r0, r7                        
+007e6ee2: 95f797f6   bl       #0x37cc14                       ; _init+0x2a185c
+007e6ee6: 3846       mov      r0, r7                        
+007e6ee8: f9f454e5   blx      #0xe0994                        ; _ZN7MprCtrl12GetModelNameEPc
+007e6eec: 0028       cmp      r0, #0                        
+007e6eee: 02da       bge      #0x7e6ef6                     
+007e6ef0: 594b       ldr      r3, [pc, #0x164]                ; [007e7058]=0059f3a9
+007e6ef2: 7b44       add      r3, pc                        
+007e6ef4: 00e0       b        #0x7e6ef8                     
+007e6ef6: 3b1c       adds     r3, r7, #0                    

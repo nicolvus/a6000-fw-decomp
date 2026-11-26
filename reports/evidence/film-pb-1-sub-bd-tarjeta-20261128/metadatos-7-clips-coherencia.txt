@@ -1,0 +1,32 @@
+# Coherencia interna de los metadatos de los 7 clips de la tarjeta
+# Fuente: reports/evidence/film-pb-1-20261125/clip-metadata-summary.json (ffprobe de los 7)
+#         reports/evidence/film-pb-1-20261125/provided-04198-ffprobe.json (completo, MAH04198)
+# Recalculado aqui: duracion = nframes * 1001/30000 ; audio = nframes*1024/48000
+
+clip          dur_ffprobe  nframes  nf*1001/30000     delta          fps        WxH  codec  aud_n   aud_dur  aud_n*1024/48000   delta_a
+---------------------------------------------------------------------------------------------------------------------------------------
+MAH04114.MP4      72.5725     2175        72.5725  0.000000   30000/1001 1440x 1080   h264   3401   72.5547           72.5547  0.000000
+MAH04115.MP4      34.5345     1035        34.5345  0.000000   30000/1001 1440x 1080   h264   1618   34.5173           34.5173  0.000000
+MAH04165.MP4      24.5245      735        24.5245  0.000000   30000/1001 1440x 1080   h264   1149   24.5120           24.5120  0.000000
+MAH04167.MP4      31.5315      945        31.5315  0.000000   30000/1001 1440x 1080   h264   1478   31.5307           31.5307  0.000000
+MAH04191.MP4      52.5525     1575        52.5525  0.000000   30000/1001 1440x 1080   h264   2463   52.5440           52.5440  0.000000
+MAH04198.MP4       9.5095      285         9.5095  0.000000   30000/1001 1440x 1080   h264    445    9.4933            9.4933  0.000000
+MAH04199.MP4       5.0050      150         5.0050  0.000000   30000/1001 1440x 1080   h264    234    4.9920            4.9920  0.000000
+
+VEREDICTO: COHERENTES — los 7 clips: 1440x1080, 30000/1001, H.264+AAC,
+duracion declarada == cuadros*1001/30000 con error < 0,1 ms. Ninguna duracion rara (~2 s) en el contenedor.
+
+# MAH04198: contenedor vs bitrate
+#   size=14545696 B  bit_rate=12236770 b/s  => 9.5095 s (ffprobe: 9.509500)
+#   major_brand=MSNV  minor_version=22675568  compatible=MSNVmp42isom
+#   creation_time=2014-01-01T05:02:01.000000Z  (mvhd cr/mod = 3471397321 s desde 1904-01-01)
+#   video: H.264 Main@L4.0 1440x1080 SAR 4:3 DAR 16:9 30000/1001 285 frames, color bt709/bt709/iec61966-2-4
+#   decode completo con ffmpeg -f null: rc 0, log vacio (evidence/film-pb-1-20261125/provided-04198-decode.txt, 0 B)
+
+# Comparacion con lo que muestra la camara (reports/film-pb-1-traspaso-20261125.md:35)
+#   OSD: '1-1-2014' '11/87' '30p' '1080' 'MP4' '0:02'
+#   MP4: creation_time 2014-01-01T05:02:01Z  -> '1-1-2014'  COINCIDE
+#        r_frame_rate 30000/1001           -> '30p'        COINCIDE
+#        height 1080 / MP4 brand MSNV       -> '1080','MP4' COINCIDE
+#        duracion 9,5095 s                 -> '0:02'       NO COINCIDE
+#        '11/87' no tiene contrapartida en el fichero: es contador de la BD/indice

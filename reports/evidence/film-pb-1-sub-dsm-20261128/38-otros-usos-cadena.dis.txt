@@ -1,0 +1,16 @@
+00439ad8: 2046       mov      r0, r4                        
+00439ada: 0849       ldr      r1, [pc, #0x20]                 ; [00439afc]=40000022
+00439adc: 3a1d       adds     r2, r7, #4                    
+00439ade: dd69       ldr      r5, [r3, #0x1c]               
+00439ae0: 4ff45673   mov.w    r3, #0x358                    
+00439ae4: a847       blx      r5                            
+00439ae6: 07f56877   add.w    r7, r7, #0x3a0                
+00439aea: bd46       mov      sp, r7                        
+00439aec: bde8f041   pop.w    {r4, r5, r6, r7, r8, lr}      
+00439af0: 02b0       add      sp, #8                        
+00439af2: 7047       bx       lr                            
+00439af4: 1ca5       adr      r5, #0x70                     
+00439af6: 8500       lsls     r5, r0, #2                    
+00439af8: 04e98500   stmdb    r4, {r0, r2, r7}              
+00439afc: 2200       movs     r2, r4                        
+00439afe: 0040       ands     r0, r0                        

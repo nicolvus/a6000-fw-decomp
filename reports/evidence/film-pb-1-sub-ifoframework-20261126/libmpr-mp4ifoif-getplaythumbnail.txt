@@ -1,0 +1,75 @@
+# 0x6E8430 Mp4IfoIf::GetPlayThumbnailInfo  (mp4Ifo_If.cpp:0x1a9) — desensamblado completo
+# SHA-256 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+
+## Punto exacto del fallo: 0x6E8454 ldr r0,[r4,#4] (semaforo) / 0x6E845A bl 0x5BAD00
+## Si ret != 0 -> 0x6E8460 log(0xB0100002) ; 0x6E846C devuelve 0xB0100002 SIN abrir el MP4.
+## NO existe ningun otro camino que devuelva 0xB0100002 en esta funcion.
+## El unico camino de exito libera el semaforo en 0x6E84A8 (bl 0x5BACB0).
+
+006e8430: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+006e8434: 8fb0       sub      sp, #0x3c                     
+006e8436: 0aaf       add      r7, sp, #0x28                 
+006e8438: 0446       mov      r4, r0                        
+006e843a: 3846       mov      r0, r7                        
+006e843c: 0e46       mov      r6, r1                        
+006e843e: 9046       mov      r8, r2                        
+006e8440: 9946       mov      sb, r3                        
+006e8442: adf7a7ff   bl       #0x696394                     
+006e8446: 2148       ldr      r0, [pc, #0x84]                 ; [006e84cc]=008648d3 "START"
+006e8448: 40f2a912   movw     r2, #0x1a9                    
+006e844c: 2049       ldr      r1, [pc, #0x80]                 ; [006e84d0]=0091b6df "mp4Ifo_If.cpp"
+006e844e: 214b       ldr      r3, [pc, #0x84]                 ; [006e84d4]=0091b38e "GetPlayThumbnailInfo"
+006e8450: adf710fc   bl       #0x695c74                     
+006e8454: 6068       ldr      r0, [r4, #4]                  
+006e8456: 2321       movs     r1, #0x23                     
+006e8458: 0122       movs     r2, #1                        
+006e845a: d2f651fc   bl       #0x5bad00                     
+006e845e: 38b1       cbz      r0, #0x6e8470                 
+006e8460: 1b48       ldr      r0, [pc, #0x6c]                 ; [006e84d0]=0091b6df "mp4Ifo_If.cpp"
+006e8462: 40f2af11   movw     r1, #0x1af                    
+006e8466: 1c4a       ldr      r2, [pc, #0x70]                 ; [006e84d8]=b0100002
+006e8468: 08f0f4fa   bl       #0x6f0a54                     
+006e846c: 1a4d       ldr      r5, [pc, #0x68]                 ; [006e84d8]=b0100002
+006e846e: 1de0       b        #0x6e84ac                     
+006e8470: 2368       ldr      r3, [r4]                      
+006e8472: 396b       ldr      r1, [r7, #0x30]               
+006e8474: 1a68       ldr      r2, [r3]                      
+006e8476: 0091       str      r1, [sp]                      
+006e8478: 796b       ldr      r1, [r7, #0x34]               
+006e847a: 0890       str      r0, [sp, #0x20]               
+006e847c: 1846       mov      r0, r3                        
+006e847e: 4b46       mov      r3, sb                        
+006e8480: 0191       str      r1, [sp, #4]                  
+006e8482: b96b       ldr      r1, [r7, #0x38]               
+006e8484: 0291       str      r1, [sp, #8]                  
+006e8486: f96b       ldr      r1, [r7, #0x3c]               
+006e8488: 0391       str      r1, [sp, #0xc]                
+006e848a: 396c       ldr      r1, [r7, #0x40]               
+006e848c: 0491       str      r1, [sp, #0x10]               
+006e848e: 796c       ldr      r1, [r7, #0x44]               
+006e8490: 0591       str      r1, [sp, #0x14]               
+006e8492: b96c       ldr      r1, [r7, #0x48]               
+006e8494: 0691       str      r1, [sp, #0x18]               
+006e8496: f96c       ldr      r1, [r7, #0x4c]               
+006e8498: 0791       str      r1, [sp, #0x1c]               
+006e849a: 3146       mov      r1, r6                        
+006e849c: 9569       ldr      r5, [r2, #0x18]               
+006e849e: 4246       mov      r2, r8                        
+006e84a0: a847       blx      r5                            
+006e84a2: 0121       movs     r1, #1                        
+006e84a4: 0546       mov      r5, r0                        
+006e84a6: 6068       ldr      r0, [r4, #4]                  
+006e84a8: d2f602fc   bl       #0x5bacb0                     
+006e84ac: 3946       mov      r1, r7                        
+006e84ae: 0b48       ldr      r0, [pc, #0x2c]                 ; [006e84dc]=0086d72f "END : "
+006e84b0: adf776ff   bl       #0x6963a0                     
+006e84b4: 0649       ldr      r1, [pc, #0x18]                 ; [006e84d0]=0091b6df "mp4Ifo_If.cpp"
+006e84b6: 40f2cb12   movw     r2, #0x1cb                    
+006e84ba: 064b       ldr      r3, [pc, #0x18]                 ; [006e84d4]=0091b38e "GetPlayThumbnailInfo"
+006e84bc: adf7dafb   bl       #0x695c74                     
+006e84c0: 2846       mov      r0, r5                        
+006e84c2: 07f11407   add.w    r7, r7, #0x14                 
+006e84c6: bd46       mov      sp, r7                        
+006e84c8: bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}  
+006e84cc: d348       ldr      r0, [pc, #0x34c]                ; [006e881c]=46052101
+006e84ce: 8600       lsls     r6, r0, #2                    

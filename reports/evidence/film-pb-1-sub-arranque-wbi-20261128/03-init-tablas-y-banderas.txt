@@ -1,0 +1,85 @@
+# EVIDENCIA 3 — tablas de /sbin/init: montajes, módulos y banderas
+# decode: struct de 0x14 B {dev, mnt, type, flags, data}; módulos: struct de 8 B {path, opts}
+
+## Tabla de montajes — VA 0x1331C (19 entradas)
+idx  0 @0x1331c dev='proc'                   mp='/proc'        type='proc'   flags=0x00000000 data=(null)
+idx  1 @0x13330 dev='none'                   mp='/sys'         type='sysfs'  flags=0x00000000 data=(null)
+idx  2 @0x13344 dev='/dev/nflasha2'          mp='/setting'     type='vfat'   flags=0xc0ed0490 data='posix_attr'
+idx  3 @0x13358 dev='/dev/dnflasha3'         mp='/system'      type='vfat'   flags=0xc0ed0001 data='posix_attr'
+idx  4 @0x1336c dev='/dev/nflasha3'          mp='/system'      type='vfat'   flags=0xc0ed0490 data='posix_attr'
+idx  5 @0x13380 dev='/dev/nflasha10'         mp='/tmp'         type='vfat'   flags=0xc0ed0490 data='posix_attr'
+idx  6 @0x13394 dev='/dev/nflasha15'         mp='/usr'         type='cramfs' flags=0xc0ed0001 data=''
+idx  7 @0x133a8 dev='/dev/dnflasha15'        mp='/usr'         type='ext2'   flags=0xc0ed0001 data=''
+idx  8 @0x133bc dev='/dev/nflasha15'         mp='/usr'         type='vfat'   flags=0xc0ed0490 data='posix_attr'
+idx  9 @0x133d0 dev='/dev/nflasha9'          mp='/usr/upgrade' type='vfat'   flags=0xc0ed0490 data='posix_attr'
+idx 10 @0x133e4 dev='/dev/nflasha23'         mp='/log'         type='vfat'   flags=0xc0ed0490 data='posix_attr'
+idx 11 @0x133f8 dev='/dev/nflasha24'         mp='/log'         type='vfat'   flags=0xc0ed0490 data='posix_attr'
+idx 12 @0x1340c dev='/dev/nflasha25'         mp='/log'         type='vfat'   flags=0xc0ed0490 data='posix_attr'
+idx 13 @0x13420 dev='/dev/ms1'               mp='/log'         type='vfat'   flags=0xc0ed0490 data='posix_attr'
+idx 14 @0x13434 dev='/dev/nflasha10'         mp='/log'         type='vfat'   flags=0xc0ed0490 data='posix_attr'
+idx 15 @0x13448 dev='/dev/nflasha18'         mp='/lens'        type='vfat'   flags=0xc0ed0490 data='posix_attr'
+idx 16 @0x1345c dev='/dev/nflasha15'         mp='/usr'         type='ext2'   flags=0xc0ed0001 data=''
+idx 17 @0x13470 dev='/dev/nflasha11'         mp='/log'         type='vfat'   flags=0xc0ed0490 data='batch_sync,posix_attr'
+idx 18 @0x13484 dev='/dev/dnflasha7'         mp='/rootfs'      type='ext2'   flags=0xc0ed0001 data=''
+idx 19 @0x13498 dev='/dev/nflasha7'          mp='/rootfs'      type='ext2'   flags=0xc0ed0001 data=''
+
+## Tablas de insmod_drivers — lote 1 @0x131EC (5) y lote 2 @0x13214 (0x21=33)
+=== lote1 ===
+ 0 /kmod/devno.ko               opts=''
+ 1 /kmod/dmac.ko                opts='pri_mode_ch_0_3=1 pri_mode_ch_4_7=1 '
+ 2 /kmod/ldec.ko                opts=''
+ 3 /kmod/lld.ko                 opts=''
+ 4 /kmod/nand.ko                opts=''
+=== lote2 ===
+ 0 /usr/kmod/osal_utm.ko        opts=''
+ 1 /usr/kmod/osal_uipc.ko       opts=''
+ 2 /usr/kmod/utimer.ko          opts=''
+ 3 /usr/kmod/backup.ko          opts='Backup_load=0 '
+ 4 /usr/kmod/osal_ulogio.ko     opts='ulogio_initfile=/setting/ulogio.bin '
+ 5 /usr/kmod/input.ko           opts=''
+ 6 /usr/kmod/udate.ko           opts=''
+ 7 /usr/kmod/indctr.ko          opts=''
+ 8 /usr/kmod/i2c.ko             opts=''
+ 9 /usr/kmod/sircs.ko           opts=''
+10 /usr/kmod/stream.ko          opts=''
+11 /usr/kmod/stream2.ko         opts=''
+12 /usr/kmod/usb_portMonitor.ko opts=''
+13 /usr/kmod/usbg_sen.ko        opts=''
+14 /usr/kmod/usb_extcmd.ko      opts=''
+15 /usr/kmod/kikilog.ko         opts=''
+16 /usr/kmod/dmm.ko             opts='DmmConfig=/setting/DmmConfig.bin '
+17 /usr/kmod/upm.ko             opts=''
+18 /usr/kmod/nfc.ko             opts=''
+19 /usr/kmod/grm_ma.ko          opts=''
+20 /usr/kmod/grm_gles.ko        opts=''
+21 /usr/kmod/hdmi.ko            opts=''
+22 /usr/kmod/cec.ko             opts=''
+23 /usr/kmod/accel.ko           opts=''
+24 /usr/kmod/mag.ko             opts=''
+25 /usr/kmod/compass.ko         opts=''
+26 /usr/kmod/mcmn_drv.ko        opts=''
+27 /usr/kmod/ms_drv.ko          opts=''
+28 /usr/kmod/mmc_drv.ko         opts=''
+29 /usr/kmod/sata_drv.ko        opts=''
+30 /usr/kmod/msen_drv.ko        opts=''
+31 /usr/kmod/usbg_adb.ko        opts=''
+32 /usr/kmod/sprop.ko           opts=''
+
+## Banderas globales de .data y quién las escribe/lee (xrefs literales)
+0x131ec tabla modulos lote 1                                 xrefs=['0x999c']
+0x13214 tabla modulos lote 2                                 xrefs=['0x9a34']
+0x1331c tabla de montajes                                    xrefs=['0x9970']
+0x144b8 dmode 'e'->LD_PRELOAD=libsonyefence                  xrefs=['0x9170', '0x9c04']
+0x144bc =1 si check_mode_file corre -> set_oreore_env()      xrefs=['0x916c', '0x9a1c']
+0x144c0 longitud de /proc/cmdline                            xrefs=['0x93e4']
+0x144c4 check_forced_senser -> run_bg_process(sen.elf)       xrefs=['0x9084', '0x9c34']
+0x144c8 bootmode=="BIS" -> mkdosfs/swap/remount + no sen.elf xrefs=['0x9080', '0x9348', '0x9974']
+0x144cc bootmode=="ADJUST" -> NO arranca Android             xrefs=['0x9340', '0x9c3c']
+0x144d0 check_nfs                                            xrefs=['0x92a8', '0x99a4']
+0x144d4 check_qemu                                           xrefs=['0x921c', '0x99a0']
+0x144d8 dmode 'g' -> system(bootin.elf) en vez de fork       xrefs=['0x9180', '0x9c28']
+0x144dc cmdline tiene console=ttyAM0 -> /dev/ttycons         xrefs=['0x93f0', '0x99c4', '0x9c6c']
+0x144e0 dmode 'k' -> LD_PRELOAD=libkmcsup                    xrefs=['0x917c', '0x9a44']
+0x144e4 dmode '0' -> salta a la via de shell (no bootin)     xrefs=['0x9178', '0x9a20']
+0x144e8 dmode 'd' -> LD_PRELOAD=libduma                      xrefs=['0x9174', '0x9c0c']
+0x144ec =1 antes de pivot_root (flag de estado)              xrefs=['0x99dc', '0x9c58']

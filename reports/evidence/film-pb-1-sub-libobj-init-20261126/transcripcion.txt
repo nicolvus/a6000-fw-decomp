@@ -1,0 +1,90 @@
+# FILM-PB-1 — libObj.so: .init_array de fábrica vs parcheado (ejecución Unicorn)
+# 2026-11-26T01:21:37Z  libObj fábrica sha256 8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a
+# libObj parcheado sha256 db382008e153499653325c1d8b7c2d7d9551cafd24a418c104cddc925cf045d0
+
+$ python3 init_emu.py --json ejecucion.json
+entradas=263 ok=260 import_datos=2 import_off=0 fallo=1 truncado=0 escrituras=2945 llamadas_import=190 instrucciones=9222 en_codigo_parchado=0
+relocs=84413 imports=1798  t=(0.107, 0.1)
+rw_sha orig=9e173a7050883c54bfa19da54be7e227144ae0c48dd4e704484f33df3ba84357
+rw_sha patch=f36ec9e91905dc3cbd4fdb4c173a30e136c401b1b7231ddd4d701b5a847b9072
+entradas de .init_array con resultado distinto: 0
+rangos distintos en el segmento RW tras la ejecución: 13
+  VA 0xfdf19e  1 B
+  VA 0xfdf1a0  4 B
+  VA 0xfdf276  1 B
+  VA 0xfdf278  4 B
+  VA 0xfdf312  1 B
+  VA 0xfdf314  4 B
+  VA 0xfdf3ea  1 B
+  VA 0xfdf3ec  4 B
+  VA 0xfdf486  1 B
+  VA 0xfdf488  4 B
+  VA 0xfdf55e  1 B
+  VA 0xfdf560  4 B
+  VA 0x102cb6c  4 B
+json -> ejecucion.json
+
+$ python3 estatico.py   # (volcado completo en estatico.txt)
+# libObj.so 3.21 de fábrica  firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so  17436172 B
+# libObj.so parcheado (CFW) build/cfw_func393/pp/files/lib/libObj.so  18127472 B
+
+## phdrs (fábrica): 5
+  [0] type=0x70000001 off=0x0f5fe34 va=0x0f5fe34 fsz=0x06a770 msz=0x06a770 fl=4 al=4
+  [1] type=0x00000001 off=0x0000000 va=0x0000000 fsz=0xfca5a4 msz=0xfca5a4 fl=5 al=32768
+  [2] type=0x00000001 off=0x0fca5a4 va=0x0fd25a4 fsz=0x0d6304 msz=0x11062c fl=6 al=32768
+  [3] type=0x00000002 off=0x1024a60 va=0x102ca60 fsz=0x000170 msz=0x000170 fl=6 al=4
+  [4] type=0x6474e551 off=0x0000000 va=0x0000000 fsz=0x000000 msz=0x000000 fl=6 al=4
+
+## phdrs (parcheado): 7
+  [0] type=0x70000001 off=0x0f5fe34 va=0x0f5fe34 fsz=0x06a770 msz=0x06a770 fl=4 al=4
+  [1] type=0x00000001 off=0x0000000 va=0x0000000 fsz=0xfca5a4 msz=0xfca5a4 fl=5 al=32768
+  [2] type=0x00000001 off=0x1149000 va=0x0fcb000 fsz=0x000a70 msz=0x000a70 fl=7 al=4096
+  [3] type=0x00000001 off=0x0fca5a4 va=0x0fd25a4 fsz=0x0d6304 msz=0x11062c fl=6 al=32768
+  [4] type=0x00000002 off=0x1024a60 va=0x102ca60 fsz=0x000170 msz=0x000170 fl=6 al=4
+  [5] type=0x6474e551 off=0x0000000 va=0x0000000 fsz=0x000000 msz=0x000000 fl=6 al=4
+  [6] type=0x00000001 off=0x10a8000 va=0x10e8000 fsz=0x0a0380 msz=0x0a0380 fl=6 al=32768
+
+## .dynamic (fábrica)
+  tag 12  = 0xdb3b9
+  tag 13  = 0xbc958d
+  tag 25  = 0xfd25a4
+  tag 27  = 0x41c
+  tag 26  = 0xfd29c0
+  tag 28  = 0x8
+  tag 23  = 0xd6818
+  tag 17  = 0x365d0
+  tag 18  = 0xa0248
+
+## .dynamic (parcheado)
+  tag 12  = 0xdb3b9
+  tag 13  = 0xbc958d
+  tag 25  = 0xfd25a4
+  tag 27  = 0x41c
+  tag 26  = 0xfd29c0
+  tag 28  = 0x8
+  tag 23  = 0xd6818
+  tag 17  = 0x10e8000
+  tag 18  = 0xa0248
+
+$ python3 init_armlib.py --json ejecucion-armlib.txt   # cargador del repo (scripts/g22/sim/armlib.py)
+armlib: entradas=263  ok fábrica=262  ok parcheado=262
+fallos: [(251, '0x80a369', 'UcError: Invalid memory write (UC_ERR_WRITE_UNMAPPED)')]
+importaciones llamadas: 194 (idénticas=True)
+entradas con resultado distinto: 0
+rw sha fábrica=e61a9c7440b9b7244971a45d8aa0fec801e1598a8956846751edeb256a595e30
+rw sha parcheado=d7a30f882d5770e1c68f0de0556e2356a33df37019c4405f43e67f47b77c75f7
+rangos distintos del segmento RW: 13
+  VA 0xfdf19e  1 B
+  VA 0xfdf1a0  4 B
+  VA 0xfdf276  1 B
+  VA 0xfdf278  4 B
+  VA 0xfdf312  1 B
+  VA 0xfdf314  4 B
+  VA 0xfdf3ea  1 B
+  VA 0xfdf3ec  4 B
+  VA 0xfdf486  1 B
+  VA 0xfdf488  4 B
+  VA 0xfdf55e  1 B
+  VA 0xfdf560  4 B
+  VA 0x102cb6c  4 B
+json -> ejecucion-armlib.txt

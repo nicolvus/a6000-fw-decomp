@@ -1,0 +1,45 @@
+00605e04: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+00605e08: 87b0       sub      sp, #0x1c                     
+00605e0a: 334e       ldr      r6, [pc, #0xcc]                 ; [00605ed8]=009df25c
+00605e0c: 0446       mov      r4, r0                        
+00605e0e: 04af       add      r7, sp, #0x10                 
+00605e10: 4068       ldr      r0, [r0, #4]                  
+00605e12: 43f22c52   movw     r2, #0x352c                   
+00605e16: 8846       mov      r8, r1                        
+00605e18: ec21       movs     r1, #0xec                     
+00605e1a: 49f0bdfd   bl       #0x64f998                     
+00605e1e: e068       ldr      r0, [r4, #0xc]                
+00605e20: 2e49       ldr      r1, [pc, #0xb8]                 ; [00605edc]=008de08c "BeginImport : "
+00605e22: 3278       ldrb     r2, [r6]                      
+00605e24: 4af08dfc   bl       #0x650742                     
+00605e28: 2046       mov      r0, r4                        
+00605e2a: 46f09bfb   bl       #0x64c564                     
+00605e2e: 0546       mov      r5, r0                        
+00605e30: b0b1       cbz      r0, #0x605e60                 
+00605e32: 2b4b       ldr      r3, [pc, #0xac]                 ; [00605ee0]=008e77a3 "BeginImport"
+00605e34: ec21       movs     r1, #0xec                     
+00605e36: 0220       movs     r0, #2                        
+00605e38: 2a4a       ldr      r2, [pc, #0xa8]                 ; [00605ee4]=31000005
+00605e3a: 43f22c56   movw     r6, #0x352c                   
+00605e3e: 0196       str      r6, [sp, #4]                  
+00605e40: 0093       str      r3, [sp]                      
+00605e42: 6368       ldr      r3, [r4, #4]                  
+00605e44: 0293       str      r3, [sp, #8]                  
+00605e46: 0123       movs     r3, #1                        
+00605e48: 0393       str      r3, [sp, #0xc]                
+00605e4a: 274b       ldr      r3, [pc, #0x9c]                 ; [00605ee8]=008dd9c0 "avimmgr/AviMMgr.cpp"
+00605e4c: 48f016fa   bl       #0x64e27c                     
+00605e50: ec21       movs     r1, #0xec                     
+00605e52: 244a       ldr      r2, [pc, #0x90]                 ; [00605ee4]=31000005
+00605e54: 3346       mov      r3, r6                        
+00605e56: 0546       mov      r5, r0                        
+00605e58: 6068       ldr      r0, [r4, #4]                  
+00605e5a: 49f065fe   bl       #0x64fb28                     
+00605e5e: 35e0       b        #0x605ecc                     
+00605e60: 2368       ldr      r3, [r4]                      
+00605e62: 07f10809   add.w    sb, r7, #8                    
+00605e66: 2046       mov      r0, r4                        
+00605e68: 49f8048d   str      r8, [sb, #-0x4]!              
+00605e6c: d3f8d432   ldr.w    r3, [r3, #0x2d4]              
+00605e70: 9847       blx      r3                            
+00605e72: 2046       mov      r0, r4                        

@@ -1,0 +1,130 @@
+2:# Filtro: solo ldr de literales, bl/blx, comparaciones y saltos. Desensamblado completo en 04b.
+4:000096d0: c3b0       sub       sp, #0x10c                        
+5:000096d2: a748       ldr       r0, [pc, #0x29c]                    ; [00009970]=0001331c
+7:000096d6: a64c       ldr       r4, [pc, #0x298]                    ; [00009970]=0001331c
+8:000096d8: fff7d8fb   bl        #0x8e8c                             ; mount_partition
+9:000096dc: a54d       ldr       r5, [pc, #0x294]                    ; [00009974]=000144c8
+10:000096de: 0028       cmp       r0, #0                            
+11:000096e0: 40f0f781   bne.w     #0x9ad2                           
+13:000096e6: a448       ldr       r0, [pc, #0x290]                    ; [00009978]=0000a1f5 "/proc/snsc_boot_time"
+14:000096e8: fff796e9   blx       #0x8a18                             ; open
+15:000096ec: a34b       ldr       r3, [pc, #0x28c]                    ; [0000997c]=000131e8
+17:000096f0: a348       ldr       r0, [pc, #0x28c]                    ; [00009980]=0000a20a "<<init start>>"
+18:000096f2: fff7fffa   bl        #0x8cf4                             ; profile_entry
+19:000096f6: a348       ldr       r0, [pc, #0x28c]                    ; [00009984]=0000a219 "HOME=/"
+20:000096f8: fff71cea   blx       #0x8b34                             ; putenv
+21:000096fc: a248       ldr       r0, [pc, #0x288]                    ; [00009988]=0000a220 "PATH=/sbin:/bin:/usr/sbin:/usr/bin:/devel/usr/bi"
+22:000096fe: fff71aea   blx       #0x8b34                             ; putenv
+23:00009702: a248       ldr       r0, [pc, #0x288]                    ; [0000998c]=0000a252 "TOPRC=/etc/toprc"
+24:00009704: fff716ea   blx       #0x8b34                             ; putenv
+25:00009708: a148       ldr       r0, [pc, #0x284]                    ; [00009990]=0000a263 "MALLOC_OPTIONS=gfffffffff"
+26:0000970a: fff714ea   blx       #0x8b34                             ; putenv
+27:0000970e: a148       ldr       r0, [pc, #0x284]                    ; [00009994]=0000a27d "LT_ABORTREASON=0"
+28:00009710: fff710ea   blx       #0x8b34                             ; putenv
+29:00009714: fff7a0ff   bl        #0x9658                             ; set_stack_size_to_2MB
+30:00009718: 9f49       ldr       r1, [pc, #0x27c]                    ; [00009998]=00008ff9
+32:0000971c: fff79ae9   blx       #0x8a54                             ; signal
+33:00009720: fff768fe   bl        #0x93f4                             ; check_oreore1
+34:00009724: 9d48       ldr       r0, [pc, #0x274]                    ; [0000999c]=000131ec
+36:00009728: fff7f8fa   bl        #0x8d1c                             ; insmod_drivers
+37:0000972c: 9c4b       ldr       r3, [pc, #0x270]                    ; [000099a0]=000144d4
+39:00009730: 002b       cmp       r3, #0                            
+40:00009732: 40f0c680   bne.w     #0x98c2                           
+41:00009736: 9b4b       ldr       r3, [pc, #0x26c]                    ; [000099a4]=000144d0
+43:0000973a: 002b       cmp       r3, #0                            
+44:0000973c: 40f0a680   bne.w     #0x988c                           
+46:00009744: fff7a2fb   bl        #0x8e8c                             ; mount_partition
+47:00009748: 28b1       cbz       r0, #0x9756                       
+49:0000974e: fff79dfb   bl        #0x8e8c                             ; mount_partition
+50:00009752: 0028       cmp       r0, #0                            
+51:00009754: 79d1       bne       #0x984a                           
+52:00009756: 9448       ldr       r0, [pc, #0x250]                    ; [000099a8]=0000a28e "/rootfs"
+53:00009758: fff712ea   blx       #0x8b80                             ; chdir
+55:0000975e: 9349       ldr       r1, [pc, #0x24c]                    ; [000099ac]=00009f24
+56:00009760: 934a       ldr       r2, [pc, #0x24c]                    ; [000099b0]=0000a296 "initrd"
+57:00009762: fff74cea   blx       #0x8bfc                             ; syscall
+58:00009766: 38b1       cbz       r0, #0x9778                       
+59:00009768: fff75aea   blx       #0x8c20                             ; __errno_location
+60:0000976c: 9149       ldr       r1, [pc, #0x244]                    ; [000099b4]=0000abc4 "main"
+62:00009770: 9148       ldr       r0, [pc, #0x244]                    ; [000099b8]=0000a29d "%s: pivot_root failed: errno = %d
+65:00009774: fff7d8e9   blx       #0x8b28                             ; printf
+66:00009778: 8c48       ldr       r0, [pc, #0x230]                    ; [000099ac]=00009f24
+67:0000977a: fff7cae9   blx       #0x8b10                             ; chroot
+69:00009780: 8e4a       ldr       r2, [pc, #0x238]                    ; [000099bc]=0000a2c0 "/initrd/%s"
+72:00009786: fff72eea   blx       #0x8be4                             ; snprintf
+79:00009798: fff7dae9   blx       #0x8b50                             ; mount
+80:0000979c: 38b1       cbz       r0, #0x97ae                       
+81:0000979e: fff740ea   blx       #0x8c20                             ; __errno_location
+82:000097a2: 8449       ldr       r1, [pc, #0x210]                    ; [000099b4]=0000abc4 "main"
+84:000097a6: 8648       ldr       r0, [pc, #0x218]                    ; [000099c0]=0000a2cb "%s: move_partition failed: errno = %d
+87:000097aa: fff7bee9   blx       #0x8b28                             ; printf
+89:000097b0: fff7c8e9   blx       #0x8b44                             ; close
+91:000097b6: fff7c6e9   blx       #0x8b44                             ; close
+93:000097bc: fff7c2e9   blx       #0x8b44                             ; close
+94:000097c0: fff72eea   blx       #0x8c20                             ; __errno_location
+95:000097c4: 7f49       ldr       r1, [pc, #0x1fc]                    ; [000099c4]=000144dc
+101:000097d0: 1bb1       cbz       r3, #0x97da                       
+102:000097d2: 7d48       ldr       r0, [pc, #0x1f4]                    ; [000099c8]=0000a2f2 "/dev/ttycons"
+104:000097d8: 03e0       b         #0x97e2                             ; main+0x116
+105:000097da: 7c48       ldr       r0, [pc, #0x1f0]                    ; [000099cc]=0000a2ff "/dev/console"
+108:000097e2: fff71ae9   blx       #0x8a18                             ; open
+109:000097e6: 0028       cmp       r0, #0                            
+112:000097ec: 764b       ldr       r3, [pc, #0x1d8]                    ; [000099c8]=0000a2f2 "/dev/ttycons"
+113:000097ee: 7849       ldr       r1, [pc, #0x1e0]                    ; [000099d0]=0000a30c "init %s:(%d): shell_loop: can not open %s: errno"
+114:000097f0: 784a       ldr       r2, [pc, #0x1e0]                    ; [000099d4]=0000abea "reopen_fds"
+118:000097f8: 774b       ldr       r3, [pc, #0x1dc]                    ; [000099d8]=000134b0
+121:00009800: fff7b2e9   blx       #0x8b68                             ; fprintf
+122:00009804: 1ee0       b         #0x9844                             ; main+0x178
+124:00009808: fff7c6e9   blx       #0x8b98                             ; dup2
+126:0000980e: 4846       mov       r0, sb                            
+127:00009810: fff7c2e9   blx       #0x8b98                             ; dup2
+129:00009816: 4846       mov       r0, sb                            
+130:00009818: fff7bee9   blx       #0x8b98                             ; dup2
+131:0000981c: b9f1020f   cmp.w     sb, #2                            
+133:00009822: 4846       mov       r0, sb                            
+134:00009824: fff78ee9   blx       #0x8b44                             ; close
+136:0000982c: 53b1       cbz       r3, #0x9844                       
+140:00009834: fff7bce9   blx       #0x8bb0                             ; fcntl
+144:00009840: fff7b6e9   blx       #0x8bb0                             ; fcntl
+145:00009844: 654b       ldr       r3, [pc, #0x194]                    ; [000099dc]=000144ec
+148:0000984a: 6548       ldr       r0, [pc, #0x194]                    ; [000099e0]=000133a8
+149:0000984c: fff71efb   bl        #0x8e8c                             ; mount_partition
+151:00009852: c0b1       cbz       r0, #0x9886                       
+152:00009854: 5749       ldr       r1, [pc, #0x15c]                    ; [000099b4]=0000abc4 "main"
+153:00009856: 6348       ldr       r0, [pc, #0x18c]                    ; [000099e4]=0000a341 "%s: mounting /usr as ext2 failed(%d), trying no-"
+154:00009858: fff766e9   blx       #0x8b28                             ; printf
+155:0000985c: 6248       ldr       r0, [pc, #0x188]                    ; [000099e8]=0001345c
+156:0000985e: fff715fb   bl        #0x8e8c                             ; mount_partition
+158:00009864: 78b1       cbz       r0, #0x9886                       
+159:00009866: 5349       ldr       r1, [pc, #0x14c]                    ; [000099b4]=0000abc4 "main"
+160:00009868: 6048       ldr       r0, [pc, #0x180]                    ; [000099ec]=0000a37b "%s: mounting /usr as ext2(no-compress) failed(%d"
+161:0000986a: fff75ee9   blx       #0x8b28                             ; printf
+162:0000986e: 6048       ldr       r0, [pc, #0x180]                    ; [000099f0]=00013394
+163:00009870: fff70cfb   bl        #0x8e8c                             ; mount_partition
+165:00009876: 30b1       cbz       r0, #0x9886                       
+166:00009878: 5e48       ldr       r0, [pc, #0x178]                    ; [000099f4]=0000a3bd "%s: mounting /usr as cramfs failed(%d), trying v"
+167:0000987a: 4e49       ldr       r1, [pc, #0x138]                    ; [000099b4]=0000abc4 "main"
+168:0000987c: fff754e9   blx       #0x8b28                             ; printf
+169:00009880: 5d48       ldr       r0, [pc, #0x174]                    ; [000099f8]=000133bc
+170:00009882: fff703fb   bl        #0x8e8c                             ; mount_partition
+171:00009886: 5d48       ldr       r0, [pc, #0x174]                    ; [000099fc]=00013380
+172:00009888: fff700fb   bl        #0x8e8c                             ; mount_partition
+173:0000988c: 5c48       ldr       r0, [pc, #0x170]                    ; [00009a00]=00013358
+174:0000988e: fff7fdfa   bl        #0x8e8c                             ; mount_partition
+176:00009894: 30b1       cbz       r0, #0x98a4                       
+177:00009896: 5b48       ldr       r0, [pc, #0x16c]                    ; [00009a04]=0000a3f2 "%s: mounting compressed /system failed(%d), tryi"
+178:00009898: 4649       ldr       r1, [pc, #0x118]                    ; [000099b4]=0000abc4 "main"
+179:0000989a: fff746e9   blx       #0x8b28                             ; printf
+180:0000989e: 5a48       ldr       r0, [pc, #0x168]                    ; [00009a08]=0001336c
+181:000098a0: fff7f4fa   bl        #0x8e8c                             ; mount_partition
+182:000098a4: 5948       ldr       r0, [pc, #0x164]                    ; [00009a0c]=00013344
+183:000098a6: fff7f1fa   bl        #0x8e8c                             ; mount_partition
+185:000098ac: 18b1       cbz       r0, #0x98b6                       
+186:000098ae: 5848       ldr       r0, [pc, #0x160]                    ; [00009a10]=0000a42b "%s: mounting /setting failed(%d).
+188:000098b0: 4049       ldr       r1, [pc, #0x100]                    ; [000099b4]=0000abc4 "main"
+189:000098b2: fff73ae9   blx       #0x8b28                             ; printf
+190:000098b6: 5748       ldr       r0, [pc, #0x15c]                    ; [00009a14]=00013470
+191:000098b8: fff7e8fa   bl        #0x8e8c                             ; mount_partition
+192:000098bc: 5648       ldr       r0, [pc, #0x158]                    ; [00009a18]=00013448
+193:000098be: fff7e5fa   bl        #0x8e8c                             ; mount_partition
+194:000098c2: fff7a1fd   bl        #0x9408                             ; check_oreore2

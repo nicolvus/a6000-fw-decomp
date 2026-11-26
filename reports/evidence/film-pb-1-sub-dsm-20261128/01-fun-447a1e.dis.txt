@@ -1,0 +1,141 @@
+00447a1e: 90b5       push     {r4, r7, lr}                  
+00447a20: 83b0       sub      sp, #0xc                      
+00447a22: 00af       add      r7, sp, #0                    
+00447a24: 1446       mov      r4, r2                        
+00447a26: 3a1d       adds     r2, r7, #4                    
+00447a28: fff7f2fe   bl       #0x447810                     
+00447a2c: 0028       cmp      r0, #0                        
+00447a2e: 55d1       bne      #0x447adc                     
+00447a30: 14f0010f   tst.w    r4, #1                        
+00447a34: 05d0       beq      #0x447a42                     
+00447a36: 7868       ldr      r0, [r7, #4]                  
+00447a38: 0368       ldr      r3, [r0]                      
+00447a3a: 1b6e       ldr      r3, [r3, #0x60]               
+00447a3c: 9847       blx      r3                            
+00447a3e: 0028       cmp      r0, #0                        
+00447a40: 4fd0       beq      #0x447ae2                     
+00447a42: 14f0020f   tst.w    r4, #2                        
+00447a46: 06d0       beq      #0x447a56                     
+00447a48: 7868       ldr      r0, [r7, #4]                  
+00447a4a: 0621       movs     r1, #6                        
+00447a4c: 0368       ldr      r3, [r0]                      
+00447a4e: db6d       ldr      r3, [r3, #0x5c]               
+00447a50: 9847       blx      r3                            
+00447a52: 0028       cmp      r0, #0                        
+00447a54: 45d0       beq      #0x447ae2                     
+00447a56: 14f0040f   tst.w    r4, #4                        
+00447a5a: 06d0       beq      #0x447a6a                     
+00447a5c: 7868       ldr      r0, [r7, #4]                  
+00447a5e: 0621       movs     r1, #6                        
+00447a60: 0368       ldr      r3, [r0]                      
+00447a62: db6d       ldr      r3, [r3, #0x5c]               
+00447a64: 9847       blx      r3                            
+00447a66: 0028       cmp      r0, #0                        
+00447a68: 3bd0       beq      #0x447ae2                     
+00447a6a: 14f0080f   tst.w    r4, #8                        
+00447a6e: 06d0       beq      #0x447a7e                     
+00447a70: 7868       ldr      r0, [r7, #4]                  
+00447a72: 0821       movs     r1, #8                        
+00447a74: 0368       ldr      r3, [r0]                      
+00447a76: db6d       ldr      r3, [r3, #0x5c]               
+00447a78: 9847       blx      r3                            
+00447a7a: 0028       cmp      r0, #0                        
+00447a7c: 31d0       beq      #0x447ae2                     
+00447a7e: 14f0100f   tst.w    r4, #0x10                     
+00447a82: 05d0       beq      #0x447a90                     
+00447a84: 7868       ldr      r0, [r7, #4]                  
+00447a86: 1021       movs     r1, #0x10                     
+00447a88: 0368       ldr      r3, [r0]                      
+00447a8a: db6d       ldr      r3, [r3, #0x5c]               
+00447a8c: 9847       blx      r3                            
+00447a8e: 40b3       cbz      r0, #0x447ae2                 
+00447a90: 14f0200f   tst.w    r4, #0x20                     
+00447a94: 05d0       beq      #0x447aa2                     
+00447a96: 7868       ldr      r0, [r7, #4]                  
+00447a98: 2021       movs     r1, #0x20                     
+00447a9a: 0368       ldr      r3, [r0]                      
+00447a9c: db6d       ldr      r3, [r3, #0x5c]               
+00447a9e: 9847       blx      r3                            
+00447aa0: f8b1       cbz      r0, #0x447ae2                 
+00447aa2: 14f0800f   tst.w    r4, #0x80                     
+00447aa6: 05d0       beq      #0x447ab4                     
+00447aa8: 7868       ldr      r0, [r7, #4]                  
+00447aaa: 8021       movs     r1, #0x80                     
+00447aac: 0368       ldr      r3, [r0]                      
+00447aae: db6d       ldr      r3, [r3, #0x5c]               
+00447ab0: 9847       blx      r3                            
+00447ab2: b0b1       cbz      r0, #0x447ae2                 
+00447ab4: 14f4807f   tst.w    r4, #0x100                    
+00447ab8: 06d0       beq      #0x447ac8                     
+00447aba: 7868       ldr      r0, [r7, #4]                  
+00447abc: 4ff48071   mov.w    r1, #0x100                    
+00447ac0: 0368       ldr      r3, [r0]                      
+00447ac2: db6d       ldr      r3, [r3, #0x5c]               
+00447ac4: 9847       blx      r3                            
+00447ac6: 60b1       cbz      r0, #0x447ae2                 
+00447ac8: 14f4007f   tst.w    r4, #0x200                    
+00447acc: 08d0       beq      #0x447ae0                     
+00447ace: 7868       ldr      r0, [r7, #4]                  
+00447ad0: 4ff40071   mov.w    r1, #0x200                    
+00447ad4: 0368       ldr      r3, [r0]                      
+00447ad6: db6d       ldr      r3, [r3, #0x5c]               
+00447ad8: 9847       blx      r3                            
+00447ada: 02e0       b        #0x447ae2                     
+00447adc: 0020       movs     r0, #0                        
+00447ade: 00e0       b        #0x447ae2                     
+00447ae0: 0120       movs     r0, #1                        
+00447ae2: 07f10c07   add.w    r7, r7, #0xc                  
+00447ae6: bd46       mov      sp, r7                        
+00447ae8: 90bd       pop      {r4, r7, pc}                  
+00447aea: 90b5       push     {r4, r7, lr}                  
+00447aec: 83b0       sub      sp, #0xc                      
+00447aee: 00af       add      r7, sp, #0                    
+00447af0: 1446       mov      r4, r2                        
+00447af2: 3a1d       adds     r2, r7, #4                    
+00447af4: fff78cfe   bl       #0x447810                     
+00447af8: 28b9       cbnz     r0, #0x447b06                 
+00447afa: 7868       ldr      r0, [r7, #4]                  
+00447afc: 2146       mov      r1, r4                        
+00447afe: 0368       ldr      r3, [r0]                      
+00447b00: db6d       ldr      r3, [r3, #0x5c]               
+00447b02: 9847       blx      r3                            
+00447b04: 00e0       b        #0x447b08                     
+00447b06: 0020       movs     r0, #0                        
+00447b08: 07f10c07   add.w    r7, r7, #0xc                  
+00447b0c: bd46       mov      sp, r7                        
+00447b0e: 90bd       pop      {r4, r7, pc}                  
+00447b10: 80b5       push     {r7, lr}                      
+00447b12: 82b0       sub      sp, #8                        
+00447b14: 00af       add      r7, sp, #0                    
+00447b16: 3a1d       adds     r2, r7, #4                    
+00447b18: fff77afe   bl       #0x447810                     
+00447b1c: 20b9       cbnz     r0, #0x447b28                 
+00447b1e: 7868       ldr      r0, [r7, #4]                  
+00447b20: 0368       ldr      r3, [r0]                      
+00447b22: 1b6e       ldr      r3, [r3, #0x60]               
+00447b24: 9847       blx      r3                            
+00447b26: 00e0       b        #0x447b2a                     
+00447b28: 0120       movs     r0, #1                        
+00447b2a: 07f10807   add.w    r7, r7, #8                    
+00447b2e: bd46       mov      sp, r7                        
+00447b30: 80bd       pop      {r7, pc}                      
+00447b32: 90b5       push     {r4, r7, lr}                  
+00447b34: 83b0       sub      sp, #0xc                      
+00447b36: 00af       add      r7, sp, #0                    
+00447b38: 1446       mov      r4, r2                        
+00447b3a: 3a1d       adds     r2, r7, #4                    
+00447b3c: fff768fe   bl       #0x447810                     
+00447b40: 28b9       cbnz     r0, #0x447b4e                 
+00447b42: 7868       ldr      r0, [r7, #4]                  
+00447b44: 2146       mov      r1, r4                        
+00447b46: 0368       ldr      r3, [r0]                      
+00447b48: 5b6e       ldr      r3, [r3, #0x64]               
+00447b4a: 9847       blx      r3                            
+00447b4c: 00e0       b        #0x447b50                     
+00447b4e: 0120       movs     r0, #1                        
+00447b50: 07f10c07   add.w    r7, r7, #0xc                  
+00447b54: bd46       mov      sp, r7                        
+00447b56: 90bd       pop      {r4, r7, pc}                  
+00447b58: 80b5       push     {r7, lr}                      
+00447b5a: 82b0       sub      sp, #8                        
+00447b5c: 00af       add      r7, sp, #0                    

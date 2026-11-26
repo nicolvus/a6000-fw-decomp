@@ -1,0 +1,33 @@
+0060aa80: 80bd       pop      {r7, pc}                      
+0060aa82: 80b5       push     {r7, lr}                      
+0060aa84: c0f30020   ubfx     r0, r0, #8, #1                
+0060aa88: 00af       add      r7, sp, #0                    
+0060aa8a: 80bd       pop      {r7, pc}                      
+0060aa8c: 80b5       push     {r7, lr}                      
+0060aa8e: c0f34020   ubfx     r0, r0, #9, #1                
+0060aa92: 00af       add      r7, sp, #0                    
+0060aa94: 80bd       pop      {r7, pc}                      
+0060aa96: 0000       movs     r0, r0                        
+0060aa98: 2de9f843   push.w   {r3, r4, r5, r6, r7, r8, sb, lr}
+0060aa9c: 00af       add      r7, sp, #0                    
+0060aa9e: 0546       mov      r5, r0                        
+0060aaa0: 41f0feff   bl       #0x64caa0                     
+0060aaa4: 714b       ldr      r3, [pc, #0x1c4]                ; [0060ac6c]=008e6e58
+0060aaa6: 05f5e069   add.w    sb, r5, #0x700                
+0060aaaa: 09f10c09   add.w    sb, sb, #0xc                  
+0060aaae: 0021       movs     r1, #0                        
+0060aab0: 4846       mov      r0, sb                        
+0060aab2: 2b60       str      r3, [r5]                      
+0060aab4: f2f774fe   bl       #0x5fd7a0                     
+0060aab8: 05f5f868   add.w    r8, r5, #0x7c0                
+0060aabc: 08f10408   add.w    r8, r8, #4                    
+0060aac0: 4046       mov      r0, r8                        
+0060aac2: dff556fc   bl       #0x3ea372                     
+0060aac6: 05f5fc66   add.w    r6, r5, #0x7e0                
+0060aaca: 0436       adds     r6, #4                        
+0060aacc: 3046       mov      r0, r6                        
+0060aace: dff550fc   bl       #0x3ea372                     
+0060aad2: 05f50064   add.w    r4, r5, #0x800                
+0060aad6: 0834       adds     r4, #8                        
+0060aad8: 2046       mov      r0, r4                        
+0060aada: 0ff7ebfb   bl       #0x51a2b4                     

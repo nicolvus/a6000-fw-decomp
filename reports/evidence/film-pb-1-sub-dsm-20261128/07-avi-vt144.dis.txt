@@ -1,0 +1,24 @@
+0061d4ac: 84b0       sub      sp, #0x10                     
+0061d4ae: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+0061d4b2: 9bb0       sub      sp, #0x6c                     
+0061d4b4: 04af       add      r7, sp, #0x10                 
+0061d4b6: 07f17c05   add.w    r5, r7, #0x7c                 
+0061d4ba: 0446       mov      r4, r0                        
+0061d4bc: 4068       ldr      r0, [r0, #4]                  
+0061d4be: 85e80e00   stm.w    r5, {r1, r2, r3}              
+0061d4c2: 40f6ef22   movw     r2, #0xaef                    
+0061d4c6: 40f20331   movw     r1, #0x303                    
+0061d4ca: 32f065fa   bl       #0x64f998                     
+0061d4ce: a34b       ldr      r3, [pc, #0x28c]                ; [0061d75c]=009df25c
+0061d4d0: 9946       mov      sb, r3                        
+0061d4d2: 1a78       ldrb     r2, [r3]                      
+0061d4d4: 8ab1       cbz      r2, #0x61d4fa                 
+0061d4d6: e068       ldr      r0, [r4, #0xc]                
+0061d4d8: 0122       movs     r2, #1                        
+0061d4da: a149       ldr      r1, [pc, #0x284]                ; [0061d760]=008e62a7 "SetContentResume : "
+0061d4dc: 33f031f9   bl       #0x650742                     
+0061d4e0: e068       ldr      r0, [r4, #0xc]                
+0061d4e2: 0121       movs     r1, #1                        
+0061d4e4: 9f4a       ldr      r2, [pc, #0x27c]                ; [0061d764]=00877ac3 "      "
+0061d4e6: 2b46       mov      r3, r5                        
+0061d4e8: 33f04cff   bl       #0x651384                     

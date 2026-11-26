@@ -1,0 +1,811 @@
+# Camino Linux del decodificador de video: libObj (InfDecoder) -> libmpr (MovieDecoderIf/BBControl)
+--- libObj: simbolos InfraMovieDecoder* (secuencias) ---
+
+--- libObj: cadenas [InfDecoder] ---
+[%4d]: [InfDecoder]#########################################################
+[%4d]: [InfDecoder]ackCateId, ackMsgId   = %#x, %#x
+[%4d]: [InfDecoder]ackCateId                   = %#x
+[%4d]: [InfDecoder]ackCateId       =%x
+[%4d]: [InfDecoder]ackMsgId                    = %#x
+[%4d]: [InfDecoder]ackMsgId        =%x
+[%4d]: [InfDecoder]Addr 0x%x, Size 0x%x
+[%4d]: [InfDecoder] aspect, compress  [0x%02x,0x%02x]
+[%4d]: [InfDecoder]aspect          = %#x
+[%4d]: [InfDecoder]aspect       = %#x
+[%4d]: [InfDecoder]author          = %#x
+[%4d]: [InfDecoder]availableFormat = %#x.
+[%4d]: [InfDecoder]AvbbcPhycMem avPhycMem %x
+[%4d]: [InfDecoder]CallbackFuncRsrc Err. mp_msgMgr : NULL
+[%4d]: [InfDecoder]CallbackFuncRsrc GetParameter Err[%x]
+[%4d]: [InfDecoder]CancelSeqDecStart Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]CancelSeqDecStart Destroy. 
+[%4d]: [InfDecoder]CancelSeqStillDecLoop Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]CancelSeqStillDecLoop Destroy. 
+[%4d]: [InfDecoder] canSize           [(%d,%d)]
+[%4d]: [InfDecoder]Cant Read BackupData
+[%4d]: [InfDecoder]canvasSize   = (%#x, %#x)
+[%4d]: [InfDecoder]canvasSizeX     = %#x
+[%4d]: [InfDecoder]canvasSizeY     = %#x
+[%4d]: [InfDecoder]cateId                      = %#x
+[%4d]: [InfDecoder]cateId                = %#x
+[%4d]: [InfDecoder]catId          = %#x
+[%4d]: [InfDecoder]chromaPhase     = %#x
+[%4d]: [InfDecoder] chroma, sline     [0x%02x,0x%02x]
+[%4d]: [InfDecoder]clipMode              = %#x
+[%4d]: [InfDecoder]clipOffset            = (%#x, %#x)
+[%4d]: [InfDecoder]clipOffsetX                 = %#x
+[%4d]: [InfDecoder]clipOffsetY                 = %#x
+[%4d]: [InfDecoder]clipSize              = (%#x, %#x)
+[%4d]: [InfDecoder]clipSizeX                   = %#x
+[%4d]: [InfDecoder]clipSizeY                   = %#x
+[%4d]: [InfDecoder]cmdId                       = %#x
+[%4d]: [InfDecoder]cmdId                 = %#x
+[%4d]: [InfDecoder]cmdId           =%x
+[%4d]: [InfDecoder]cmpCateId, cmpMsgId   = %#x, %#x
+[%4d]: [InfDecoder]cmpCateId                   = %#x
+[%4d]: [InfDecoder]cmpCateId       =%x
+[%4d]: [InfDecoder]cmpCatId       = %#x
+[%4d]: [InfDecoder]cmpMsgId                    = %#x
+[%4d]: [InfDecoder]cmpMsgId        =%x
+[%4d]: [InfDecoder]cmpMsgId       = %#x
+[%4d]: [InfDecoder]colorimetry     = %#x
+[%4d]: [InfDecoder]colorSpaceConv                   [%x]
+[%4d]: [InfDecoder]colorU=%d
+[%4d]: [InfDecoder]colorU                      = %#x
+[%4d]: [InfDecoder]colorV=%d
+[%4d]: [InfDecoder]colorV                      = %#x
+[%4d]: [InfDecoder]colorY=%d
+[%4d]: [InfDecoder]color(Y,U,V)          = (%#x, %#x, %#x)
+[%4d]: [InfDecoder]colorY                      = %#x
+[%4d]: [InfDecoder]ConnectPin
+[%4d]: [InfDecoder]copyAreaSelect              = %#x
+[%4d]: [InfDecoder][COPY_IMAGE_COMMAND_PARAM]------END------
+[%4d]: [InfDecoder][COPY_IMAGE_COMMAND_PARAM]-----START-----
+[%4d]: [InfDecoder]copyProtection  = %#x
+[%4d]: [InfDecoder] createStartOffset [0x%08x]
+[%4d]: [InfDecoder]createStartOffset= %#x
+[%4d]: [InfDecoder] createTime        [0x%08x]
+[%4d]: [InfDecoder]createTime, createStartOffset  = %#x, %#x
+[%4d]: [InfDecoder]createTime       = %#x
+[%4d]: [InfDecoder]dataContent     = %#x
+[%4d]: [InfDecoder]dataContent  = %#x
+[%4d]: [InfDecoder] data cont, scan   [0x%02x,0x%02x]
+[%4d]: [InfDecoder]dataPlacement   = %#x
+[%4d]: [InfDecoder]dataPlace    = %#x
+[%4d]: [InfDecoder]dataScan        = %#x
+[%4d]: [InfDecoder]dataScan     = %#x
+[%4d]: [InfDecoder] dataSite, iib     [0x%02x,0x%02x]
+[%4d]: [InfDecoder]dataSite        = %#x
+[%4d]: [InfDecoder]dataSite     = %#x
+[%4d]: [InfDecoder]dataTransfer    = %#x
+[%4d]: [InfDecoder]dataTransfer = %#x
+[%4d]: [InfDecoder] data trans, place [0x%02x,0x%02x]
+[%4d]: [InfDecoder][DECODE_JPEG_PARAM]------END------
+[%4d]: [InfDecoder][DECODE_JPEG_PARAM]-----START-----
+[%4d]: [InfDecoder]DecodeJpegRss MakeMsgPayload. Err =%d
+[%4d]: [InfDecoder]decodeMode                  = %#x
+[%4d]: [InfDecoder]decodeQuality               = %#x
+[%4d]: [InfDecoder]Decoder ExecuteCommand. osal_id = 0x%x
+[%4d]: [InfDecoder]Decoder ExecutePinCommand
+[%4d]: [InfDecoder]Decoder m_pThread NULL
+[%4d]: [InfDecoder][Decoder] SequenceEnd
+[%4d]: [InfDecoder]Decoder Start. Addr = %p. Seq = %p. Msg = %p
+[%4d]: [InfDecoder]decodeTargetSizeX                [%x]
+[%4d]: [InfDecoder]decodeTargetSizeY                [%x]
+[%4d]: [InfDecoder]decResizeCounter[%x]
+[%4d]: [InfDecoder]DEC_RESIZE fileFormat = %x
+[%4d]: [InfDecoder]dfi_cateId      =%x
+[%4d]: [InfDecoder]dfi_msgId       =%x
+[%4d]: [InfDecoder]dfi_msgLength   =%x
+[%4d]: [InfDecoder]DisconnectPin
+[%4d]: [InfDecoder]endPtm31_0   [%x]
+[%4d]: [InfDecoder]endPtm32 = 1;
+[%4d]: [InfDecoder]endPtm32     [%x]
+[%4d]: [InfDecoder]Entry
+[%4d]: [InfDecoder]error     = 0x%X
+[%4d]: [InfDecoder][Err] RSS_DECODE Comp ErrCd : %x
+[%4d]: [InfDecoder][ERR] STILLDECSTART_PARAM startPauseMode[%x]
+[%4d]: [InfDecoder][ERR] STILL_PI isEnablePtm[%x]
+[%4d]: [InfDecoder][ERR] STILL_PI piType[%x]
+[%4d]: [InfDecoder][ERR] STILL_PI PTM STOP
+[%4d]: [InfDecoder]ExecCmd_FaceSet2_Command ResCmd. MID_MC_REP_FACE_SET_ACK cmnMid : 0x%x
+[%4d]: [InfDecoder]ExecCmd_GMM_Close_usePrmCtrl Alloc Err. 0x%x
+[%4d]: [InfDecoder]ExecCmd_GMM_Close_usePrmCtrl Mid Err. 0x%x 0x%x
+[%4d]: [InfDecoder]ExecCmd_GMM_Open_usePrmCtrl Alloc Err. 0x%x
+[%4d]: [InfDecoder]ExecCmd_GMM_Open_usePrmCtrl Count Warning. 0x%x
+[%4d]: [InfDecoder]ExecCmd_GMM_Open_usePrmCtrl Mid Err. 0x%x 0x%x
+[%4d]: [InfDecoder]ExecCmd_IMAGING_RawDevelop Err. cmnMid : 0x%x
+[%4d]: [InfDecoder]ExecCmd_IMG_RawDevelop Prm Err. error : 0x%x
+[%4d]: [InfDecoder]ExecCmd_MC_DecClose ExecCmd. Msg = %p. osal_id = %#x
+[%4d]: [InfDecoder]ExecCmd_MC_DecClose_rcvComp ExecCmd. Msg = %p. osal_id = %#x
+[%4d]: [InfDecoder]ExecCmd_MC_DecNextThm ExecCmd. Msg = %p. osal_id = 0x%x
+[%4d]: [InfDecoder]ExecCmd_MC_DecOpen ExecCmd. Msg = %p. osal_id = 0x%x
+[%4d]: [InfDecoder]ExecCmd_MC_DecOpen ExecCmd. %p, cid = 0x%x. prmAddr = 0x%x
+[%4d]: [InfDecoder]ExecCmd_MC_DecOpen ExecCmd. prmSize = 0x%x. mid = 0x%x
+[%4d]: [InfDecoder]ExecCmd_MC_DecOpen_rcvComp ExecCmd. %p, cid = 0x%x. prmAddr = 0x%x
+[%4d]: [InfDecoder]ExecCmd_MC_DecOpen_rcvComp ExecCmd. prmSize = 0x%x. mid = 0x%x
+[%4d]: [InfDecoder]ExecCmd_MC_DecStart ExecCmd. Msg = %p. osal_id = 0x%x
+[%4d]: [InfDecoder]ExecCmd_RSRCACSR_Acquire Callback. l_acsrId = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]ExecCmd_RSS_DecodeFirst Create. Addr = %p, MsgMngr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]ExecCmd_RSS_DecodeFirst Destroy.
+[%4d]: [InfDecoder]ExecCmd_RSS_DecodeLoop Create. Addr = %p, MsgMngr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]ExecCmd_RSS_DecodeLoop Destroy.
+[%4d]: [InfDecoder]ExecCmd_RSS_DecodeLoop ExecCmd. Msg = %p
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountPauseCmp Create. Addr = %p, MsgMngr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountPauseCmp Destroy.
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountPause Create. Addr = %p, MsgMngr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountPause Destroy.
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountRestartCmp Create. Addr = %p, MsgMngr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountRestartCmp Destroy.
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountRestart Create. Addr = %p, MsgMngr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountRestart Destroy.
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountStartCmp Create. Addr = %p, MsgMngr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountStartCmp Destroy.
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountStart Create. Addr = %p, MsgMngr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountStart Destroy.
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountStart::SetParameter. p_msg=%p PayLoad Addr=0x%X PhyAdr=0x%X
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountStopComp Create. Addr = %p, MsgMngr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountStopComp Destroy.
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountStop Create. Addr = %p, MsgMngr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]ExecCmd_RSS_PTMCountStop Destroy.
+[%4d]: [InfDecoder]ExecCmd_RSS_StreamEnd Create. Addr = %p, MsgMngr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]ExecCmd_RSS_StreamEnd Destroy.
+[%4d]: [InfDecoder]ExecCmd_SDF_CopyImage_Buf2Res. Addr = 0x%x
+[%4d]: [InfDecoder]ExecCmd_SDF_CopyImage_Buf2Res Err. cmnMid : 0x%x
+[%4d]: [InfDecoder]ExecCmd_SDF_CopyImage_Buf2Res Err. GetLogAddr() : 0x%x
+[%4d]: [InfDecoder]ExecCmd_SDF_CopyImage_Buf2Res Prm Err. error : 0x%x
+[%4d]: [InfDecoder]ExecCmd_SDF_CopyImage_Res2Buf. Addr = 0x%x
+[%4d]: [InfDecoder]ExecCmd_SDF_CopyImage_Res2Buf Err. cmnMid : 0x%x
+[%4d]: [InfDecoder]ExecCmd_SDF_CopyImage_Res2Buf Err. GetLogAddr() : 0x%x
+[%4d]: [InfDecoder]ExecCmd_SDF_CopyImage_Res2Buf Prm Err. error : 0x%x
+[%4d]: [InfDecoder]ExecCmd_SDF_DecodeJpeg Err. cmnMid : 0x%x
+[%4d]: [InfDecoder]ExecCmd_SDF_PaintImage ExecCmd. Err =%d
+[%4d]: [InfDecoder]ExecCmd_SDF_PaintImage ExecCmd msg = %p
+[%4d]: [InfDecoder]ExecCmd_SDF_PaintImage ExecCmd. Msg = %p
+[%4d]: [InfDecoder]ExecCmd_SDF_ResizeRotate Err. cmnMid : 0x%x
+[%4d]: [InfDecoder]ExecCmd_SDF_ResizeRotate Prm Err. error : 0x%x
+[%4d]: [InfDecoder]ExecCmd_SRC_CommandAck_chkErr ResCmd. cmnMid : 0x%x
+[%4d]: [InfDecoder]ExecCmd_SRC_CommandAck_usePrmCtrl ResCmd. cmnMid : 0x%x
+[%4d]: [InfDecoder]ExecCmd_SRC_CommandComp_usePrmCtrl ExecCmd. resid = 0x%x. mid = 0x%x
+[%4d]: [InfDecoder]ExecCmd_SRC_DecNextThmAck ExecCmd. resid = 0x%x. mid = 0x%x
+[%4d]: [InfDecoder]ExecCmd_SRC_DecNextThmAck ResCmd. cmnMid : 0x%x
+[%4d]: [InfDecoder]ExecCmd_SRC_DecNextThmAck ResCmd Err. cmnMid : 0x%x
+[%4d]: [InfDecoder]ExecCmd_SRC_DecNextThmComp ExecCmd. resid = 0x%x. mid = 0x%x
+[%4d]: [InfDecoder]ExecCmd_SRC_DecStartAck ExecCmd. resid = 0x%x. mid = 0x%x
+[%4d]: [InfDecoder]ExecCmd_SRC_DecStartAck ResCmd. cmnMid : 0x%x
+[%4d]: [InfDecoder]ExecCmd_SRC_DecStartAck ResCmd Err. cmnMid : 0x%x
+[%4d]: [InfDecoder]ExecCmd_SRC_DecStartComp ExecCmd. resid = 0x%x. mid = 0x%x
+[%4d]: [InfDecoder]ExecCmd_SRC_SendMsg Err. ResCmd Never Exec!
+[%4d]: [InfDecoder] GET DECODE L_RSS_JPEG_DECODE_WORK  [%x,%x]
+[%4d]: [InfDecoder]GET DECODE STILLINFO_STREAM_ID  [%x]
+[%4d]: [InfDecoder]GetExecCmd Err = %d
+[%4d]: [InfDecoder]GetPin
+[%4d]: [InfDecoder]GetStillInfo Error
+[%4d]: [InfDecoder]GetStillPI Error
+[%4d]: [InfDecoder] id                [0x%08x]
+[%4d]: [InfDecoder]id               = %#x
+[%4d]: [InfDecoder]iibNumber       = %#x
+[%4d]: [InfDecoder]iibNumber    = %#x
+[%4d]: [InfDecoder]imageAttach     = %#x
+[%4d]: [InfDecoder]imageAttach  = %#x
+[%4d]: [InfDecoder]<IMAGE_SIZE_INFO>-----------------
+[%4d]: [InfDecoder] imAttach          [0x%02x]
+[%4d]: [InfDecoder]InfraDecoderSeqConnectPin_Multi####catId:0x%x,   msgId:0x%x####
+[%4d]: [InfDecoder]InfraDecoderSeqConnectPin_Multi####dst.pinNo:0x%x,   dst.osalId:0x%x####
+[%4d]: [InfDecoder]InfraDecoderSeqConnectPin_Multi####dst.pinType:0x%x, dst.pinDir:0x%x####
+[%4d]: [InfDecoder]InfraDecoderSeqConnectPin_Multi####msgLen:0x%x,  version:0x%x####
+[%4d]: [InfDecoder]InfraDecoderSeqConnectPin_Multi####src.pinNo:0x%x,   src.osalId:0x%x####
+[%4d]: [InfDecoder]InfraDecoderSeqConnectPin_Multi####src.pinType:0x%x, src.pinDir:0x%x####
+[%4d]: [InfDecoder]InfraDecoderSeqDisconnectPin_Multi####catId:0x%x,   msgId:0x%x####
+[%4d]: [InfDecoder]InfraDecoderSeqDisconnectPin_Multi####msgLen:0x%x,  version:0x%x####
+[%4d]: [InfDecoder]InfraDecoderSeqDisconnectPin_Multi####pinNo:0x%x####
+[%4d]: [InfDecoder]InfraDecoderSeqDisconnectPin_Multi####pinType:0x%x, pinDir:0x%x####
+[%4d]: [InfDecoder]InfraDecoderSeqGetPin_Multi####catId:0x%x,   msgId:0x%x####
+[%4d]: [InfDecoder]InfraDecoderSeqGetPin_Multi####msgLen:0x%x,  version:0x%x####
+[%4d]: [InfDecoder]InfraDecoderSeqGetPin_Multi####pinNo:0x%x####
+[%4d]: [InfDecoder]InfraDecoderSeqGetPin_Multi####pinType:0x%x, pinDir:0x%x####
+[%4d]: [InfDecoder]InfraDecoderSeqSetInternalDec SetParameter. Err : 0x%x
+[%4d]: [InfDecoder]InfraDecoderSeqSetInternalDec::SetParameter L_DEC_RESIZE_COUNTER = %x.
+[%4d]: [InfDecoder]InfraDecoderSeqStillDecOpen::SetParameter. p_msg=%p PayLoad Addr=0x%X PhyAdr=0x%X
+[%4d]: [InfDecoder]InfraMovieDecoder Create. Addr = %p
+[%4d]: [InfDecoder]InfraMovieDecoder Destroy.
+[%4d]: [InfDecoder]InfraMovieDecoderSeqDecStart Colorimetry = %#x
+[%4d]: [InfDecoder]InfraMovieDecoderSeqDecWfiInternalEvt Create. qid=0x%X MsgManager=%p ParameterControl=%p.
+[%4d]: [InfDecoder]InfraMovieDecoderSeqDecWfiInternalEvt Destroy. 
+[%4d]: [InfDecoder]InfraMovieDecoderSeqDecWfiInternalEvt SetParameter. acquire = %x.
+[%4d]: [InfDecoder]InfraMovieDecoderSeqMultiDecNextThm_Multi SetParameter. Err : 0x%x
+[%4d]: [InfDecoder]InfraMovieDecoderSeqUnexpecedCmd Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]InfraMovieDecoderSeqUnexpecedCmd Destroy. 
+[%4d]: [InfDecoder]InfraMovieDecoderSeqUnexpecedCmd SetParameter. mid = 0x%x. cid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]InfraMovieEncoderSeqEncStop Cannot Release. RetCode : 0x%x
+[%4d]: [InfDecoder]InfraMovieEncoderSeqEncWfiStopReserve ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]InfraMovieEncoderSeqMultiEncStop_Multi Cannot Release. RetCode : 0x%x
+[%4d]: [InfDecoder]InfraStillDecoder Create. Addr = %p
+[%4d]: [InfDecoder]InfraStillDecoder Destroy.
+[%4d]: [InfDecoder][InfraStillDecoder] SequenceEnd
+[%4d]: [InfDecoder][InfraStillDecoder] SequenceEnd Error!! err=0x%X
+[%4d]: [InfDecoder]InfraStillEncoderSeqInternalEncode2 ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]InfraStillEncoderSeqInternalEncode ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]InfraStillEncoderSeqResizeEnc ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]inputDataOffs  = %#x
+[%4d]: [InfDecoder]inputDataSize  = %#x
+[%4d]: [InfDecoder]inputHandle    = %#x
+[%4d]: [InfDecoder]inputJpegStreamId                [%x]
+[%4d]: [InfDecoder]inputStreamMemory phyAddr        [0x%x]
+[%4d]: [InfDecoder]inputStreamMemory unitDataOffset [%x]
+[%4d]: [InfDecoder]inputStreamMemory unitHandle     [%x]
+[%4d]: [InfDecoder]inputStreamMemory unitType       [%x]
+[%4d]: [InfDecoder]inputStreamSize                  [%x]
+[%4d]: [InfDecoder]inputYcSdsUnitDataOffset    = %#x
+[%4d]: [InfDecoder]inputYcSdsUnitDataOffset=%x
+[%4d]: [InfDecoder]inputYcSdsUnitHandle        = %#x
+[%4d]: [InfDecoder]inputYcSdsUnitHandle    =%x
+[%4d]: [InfDecoder]inputYcSdsUnitType          = %#x
+[%4d]: [InfDecoder]inputYcSdsUnitType      =%x
+[%4d]: [InfDecoder]inputYRange                 = %#x
+[%4d]: [InfDecoder]inputYuvColorSpace          = %#x
+[%4d]: [InfDecoder]inYcSdsUnitDataOffs   = %#x
+[%4d]: [InfDecoder]inYcSdsUnitHandle     = %#x
+[%4d]: [InfDecoder]inYcSdsUnitType       = %#x
+[%4d]: [InfDecoder]isEnablePtm  [%x]
+[%4d]: [InfDecoder]jpegImageSizeX              = %#x
+[%4d]: [InfDecoder]jpegImageSizeY              = %#x
+[%4d]: [InfDecoder]L_RSS_DECODEJPEGRSS_COMP_FLG [%x]
+[%4d]: [InfDecoder]L_RSS_START_PAUSE_FLG [%x]
+[%4d]: [InfDecoder]L_RSS_STATE %x
+[%4d]: [InfDecoder]MakerNoteH     = %#x
+[%4d]: [InfDecoder]mp_dmmYcSds = %p
+[%4d]: [InfDecoder]mp_prmCtrl : NULL
+[%4d]: [InfDecoder]mp_prmCtrl NULL
+[%4d]: [InfDecoder]mp_prmCtrl  = %p
+[%4d]: [InfDecoder][MPR] endPtm31_0     [%x]
+[%4d]: [InfDecoder][MPR] endPtm32       [%x]
+[%4d]: [InfDecoder]mp_RsrcAcsrDownconAaLifo NULL
+[%4d]: [InfDecoder]mp_RsrcAcsrEncodeThumbnail NULL
+[%4d]: [InfDecoder][MPR] startPtm31_0   [%x]
+[%4d]: [InfDecoder][MPR] startPtm32     [%x]
+[%4d]: [InfDecoder]mp_stlInfo  = %p
+[%4d]: [InfDecoder]mp_stlPi    = %p
+[%4d]: [InfDecoder]msgId, msgLength      = %#x, %#x
+[%4d]: [InfDecoder]msgId                       = %#x
+[%4d]: [InfDecoder]msgLength                   = %#x
+[%4d]: [InfDecoder]NotifyMessage. cmnMid = 0x%x
+[%4d]: [InfDecoder]Not match UcsState [%x]
+[%4d]: [InfDecoder]outputBgColorCb                  [%x]
+[%4d]: [InfDecoder]outputBgColorCr                  [%x]
+[%4d]: [InfDecoder]outputBgColorY                   [%x]
+[%4d]: [InfDecoder]outputBgMode                = %#x
+[%4d]: [InfDecoder]outputBgMode          = %#x
+[%4d]: [InfDecoder]outputDisplay[%x]
+[%4d]: [InfDecoder]outputYcSdsUnitDataOffset= 0x%X
+[%4d]: [InfDecoder]outputYcSdsUnitDataOffset    = %#x
+[%4d]: [InfDecoder]outputYcSdsUnitDataOffset   = %#x
+[%4d]: [InfDecoder]outputYcSdsUnitHandle    = 0x%X
+[%4d]: [InfDecoder]outputYcSdsUnitHandle        = %#x
+[%4d]: [InfDecoder]outputYcSdsUnitHandle       = %#x
+[%4d]: [InfDecoder]outputYcSdsUnitType      = 0x%X
+[%4d]: [InfDecoder]outputYcSdsUnitType          = %#x
+[%4d]: [InfDecoder]outputYcSdsUnitType         = %#x
+[%4d]: [InfDecoder][OUTPUT_YC_STD_DATA]------END------
+[%4d]: [InfDecoder][OUTPUT_YC_STD_DATA]-----START-----
+[%4d]: [InfDecoder]outStdDataYCH  = %#x
+[%4d]: [InfDecoder]outYcDataH     = %#x
+[%4d]: [InfDecoder]outYcSdsUnitDataOffs  = %#x
+[%4d]: [InfDecoder]outYcSdsUnitHandle    = %#x
+[%4d]: [InfDecoder]outYcSdsUnitType      = %#x
+[%4d]: [InfDecoder]=====PAINT_IMAGE=======SDS============================
+[%4d]: [InfDecoder]ParameterControl NULL
+[%4d]: [InfDecoder]Parameter Err. inputClipFlg = 0x%x
+[%4d]: [InfDecoder]Parameter Err. outputDisplay = 0x%x
+[%4d]: [InfDecoder]ParamInfraDecodeJpegRss::GetMsgPayloadAck. CATID = 0x%X, MSGID = 0x%X
+[%4d]: [InfDecoder]ParamInfraDecodeJpegRss::GetMsgPayloadComp Error!! Err = 0x%X
+[%4d]: [InfDecoder]ParamInfraDecodeJpegRss MakeMsgPayload. Err =%d
+[%4d]: [InfDecoder]ParamInfraDecodeJpegRss::MakeMsgPayload. p_msg = %p
+[%4d]: [InfDecoder]ParamInfraDecodeJpegRss.SetParameter Err[%x]
+[%4d]: [InfDecoder]ParamInfraDecodeJpegYCInfo.MakeRssYcInfo Err[%x]
+[%4d]: [InfDecoder]ParamInfraDecodeJpegYCInfo::MakeRssYcInfo. p_stillInfo = %p
+[%4d]: [InfDecoder]ParamInfraDecodeJpegYCInfo.SetParameter Error
+[%4d]: [InfDecoder]ParamInfraPaintImage::GetMsgPayloadAck. CATID = 0x%X, MSGID = 0x%X
+[%4d]: [InfDecoder]ParamInfraPaintImage::GetMsgPayloadComp.
+[%4d]: [InfDecoder]ParamInfraPaintImage::GetMsgPayloadComp. CATID = 0x%X, MSGID = 0x%X Err = 0x%X
+[%4d]: [InfDecoder]ParamInfraPaintImage::GetMsgPayloadComp Error!! = 0x%X
+[%4d]: [InfDecoder]ParamInfraPaintImage::GetMsgPayloadComp Error!! Err = 0x%X
+[%4d]: [InfDecoder]ParamInfraPaintImage::SetParameter. p_msg = %p
+[%4d]: [InfDecoder]ParamInfraPaintImage::SetParameter. p_msg=%p PayLoad Addr=0x%X PhyAdr=0x%X
+[%4d]: [InfDecoder]ParamInfraStillPI MakeMsgPayload. Err =%d
+[%4d]: [InfDecoder]ParamInfraStillPI::MakePTMStartMsgPayload. p_msg = %p
+[%4d]: [InfDecoder]ParamInfraStillPI MakePTMStopMsgPayload. Err =%d
+[%4d]: [InfDecoder]ParamInfraStillPI::MakePTMStopMsgPayload. p_msg = %p
+[%4d]: [InfDecoder][Particular Size]
+[%4d]: [InfDecoder][Particular Size] X_full Size = (%d, %d)
+[%4d]: [InfDecoder][Particular Size] Y_full Size = (%d, %d)
+[%4d]: [InfDecoder]           phySize NULL
+[%4d]: [InfDecoder]pinConnectIn, Out     = %#x, %#x
+[%4d]: [InfDecoder]pinConnectIn                = %#x
+[%4d]: [InfDecoder]pinConnectOut               = %#x
+[%4d]: [InfDecoder]piType       [%x]
+[%4d]: [InfDecoder]PlayMode : %x
+[%4d]: [InfDecoder]           p_outputYc NULL
+[%4d]: [InfDecoder] protect, author   [0x%02x,0x%02x]
+[%4d]: [InfDecoder]pRSS_StillInfoBufCtrl : NULL
+[%4d]: [InfDecoder]pRSS_StillInfoBufCtrl NULL
+[%4d]: [InfDecoder]pRSS_StillPIBufCtrl   : NULL
+[%4d]: [InfDecoder]pRSS_StillPIBufCtrl   NULL
+[%4d]: [InfDecoder]p_stillInfo NULL
+[%4d]: [InfDecoder]p_stillPI NULL
+[%4d]: [InfDecoder]PTM_COUNT Ack Err[%x]
+[%4d]: [InfDecoder][PTM Count Pause Cmp] : err = [%x]
+[%4d]: [InfDecoder][PTM Count Restart Cmp] : err = [%x]
+[%4d]: [InfDecoder][PTM Count Start Cmp] : err = [%x]
+[%4d]: [InfDecoder][PTM Count Stop Cmp] : err = [%x]
+[%4d]: [InfDecoder]PTM Count Stop Comp Err[%x]
+[%4d]: [InfDecoder]PTM_COUNT STOP. Msg = %p
+[%4d]: [InfDecoder][RAW_DEVELOP_PARAM]-----END-----
+[%4d]: [InfDecoder][RAW_DEVELOP_PARAM]-----START-----
+[%4d]: [InfDecoder]RawMainSrcH    = %#x
+[%4d]: [InfDecoder]Rcv PTM_COUNT_COMP Internal.
+[%4d]: [InfDecoder]Recive Resume Msg
+[%4d]: [InfDecoder]recordSize   = (%#x, %#x)
+[%4d]: [InfDecoder]recordSizeX     = %#x
+[%4d]: [InfDecoder]recordSizeY     = %#x
+[%4d]: [InfDecoder] recSize           [(%d,%d)]
+[%4d]: [InfDecoder]replyOsalId    = %#x
+[%4d]: [InfDecoder][RESIZE_ROTATE_PARAM]------END------
+[%4d]: [InfDecoder][RESIZE_ROTATE_PARAM]-----START-----
+[%4d]: [InfDecoder]rotateDegree                     [%x]
+[%4d]: [InfDecoder]rotateDegree                = %#x
+[%4d]: [InfDecoder]rotateDegree          = %#x
+[%4d]: [InfDecoder]                       : RP[%x]
+[%4d]: [InfDecoder]                     : RP[%x]
+[%4d]: [InfDecoder]RSS_DECODE Ack Err[%x]
+[%4d]: [InfDecoder]RSS_DECODE Comp ErrCd : %x
+[%4d]: [InfDecoder][RSS] endPtm31_0     [%x]
+[%4d]: [InfDecoder][RSS] endPtm32       [%x]
+[%4d]: [InfDecoder]RSS_StillInfoBufCtrl NULL
+[%4d]: [InfDecoder]RSS_StillPIBufCtrl   NULL
+[%4d]: [InfDecoder]scanline, copyProtection, author = %#x, %#x, %#x
+[%4d]: [InfDecoder]scanline        = %#x
+[%4d]: [InfDecoder]SDF_TMP_YC_SDS ID            = %#x
+[%4d]: [InfDecoder]=======================SDS====end=====================
+[%4d]: [InfDecoder]SDS_YCC ImageOutTimInfo is invalid err[%x]
+[%4d]: [InfDecoder]SDS_YCC ImageSizeInfo is invalid err[%x]
+[%4d]: [InfDecoder]SDS_YCC YcStateInfo is invalid err[%x]
+[%4d]: [InfDecoder]Send Ack. Msg = %p. osal_id = 0x%x
+[%4d]: [InfDecoder]Send Comp. Msg = %p. osal_id = 0x%x, errCode = %x
+[%4d]: [InfDecoder]Send Comp to MPR. Msg = %p. osal_id = 0x%x, errCd = 0x%x
+[%4d]: [InfDecoder]Send StillDecErr. Msg = %p. osal_id = 0x%x, errCode = %x
+[%4d]: [InfDecoder]SendTimerMsg.
+[%4d]: [InfDecoder]Send to SDF DecodeJpegRss Msg = %p
+[%4d]: [InfDecoder]Send to SDF PTM Count Msg = %p
+[%4d]: [InfDecoder]SeqBgmChangeSpeed ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqBgmClose ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqBgmOpen ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqBgmStart ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqBgmStop ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqBsClose ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqBsExec ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqBsOpen ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqConnectPin_Multi Create. Addr = %p, src_id = 0x%x, dst_id = 0x%x
+[%4d]: [InfDecoder]SeqConnectPin_Multi Destroy. 
+[%4d]: [InfDecoder]SeqConnectPin_Multi::SetParameter Err. pinType 0x%x, pinDir 0x%x, pinNo 0x%x.
+[%4d]: [InfDecoder]SeqDecChangeSpeed ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqDecChgSpeed Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqDecChgSpeed Destroy. 
+[%4d]: [InfDecoder]SeqDecClose Continue
+[%4d]: [InfDecoder]SeqDecClose Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqDecClose Destroy. 
+[%4d]: [InfDecoder]SeqDecClose ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqDecNextFrm Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqDecNextFrm Destroy. 
+[%4d]: [InfDecoder]SeqDecNextFrm ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqDecNextThm Continue
+[%4d]: [InfDecoder]SeqDecNextThm Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqDecNextThm Destroy. 
+[%4d]: [InfDecoder]SeqDecNextThm ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqDecNextThm SetParameter. Err : 0x%x
+[%4d]: [InfDecoder]SeqDecOpen Continue
+[%4d]: [InfDecoder]SeqDecOpen Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqDecOpen Destroy. 
+[%4d]: [InfDecoder]SeqDecOpen ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder][SeqDecPause] Receive Response from SDF [PTM Count Ack]
+[%4d]: [InfDecoder][SeqDecPause] Receive Response Not match. MsgID[%x]
+[%4d]: [InfDecoder][SeqDecResize] AvbbcPhycMem phyAddr:0x%x, unitDataOffset:0x%x, size:0x%x.
+[%4d]: [InfDecoder][SeqDecResize] Create. qid=0x%X MsgManager=%p
+[%4d]: [InfDecoder][SeqDecResize] Create. qid=0x%X MsgManager=%p ParameterControl=%p.
+[%4d]: [InfDecoder]SeqDecResize Destroy. 
+[%4d]: [InfDecoder][SeqDecResize][%d] ResponceSequence. err =0x%x
+[%4d]: [InfDecoder]SeqDecResize ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder][SeqDecResizeRaw] Create. qid=0x%X MsgManager=%p ParameterControl=%p.
+[%4d]: [InfDecoder]SeqDecResizeRaw Destroy. 
+[%4d]: [InfDecoder]SeqDecResizeRaw ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqDecResizeRaw SetParameter. MID = 0x%x, CID = 0x%x.
+[%4d]: [InfDecoder]SeqDecResize SetParameter. MID = 0x%x, CID = 0x%x.
+[%4d]: [InfDecoder][SeqDecRestart] Receive Response from SDF [PTM Count Ack]
+[%4d]: [InfDecoder][SeqDecRestart] Receive Response Not match. MsgID[%x]
+[%4d]: [InfDecoder]SeqDecStart Continue
+[%4d]: [InfDecoder]SeqDecStart Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqDecStart Destroy. 
+[%4d]: [InfDecoder]SeqDecStartErrorProcessing Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqDecStartErrorProcessing Destroy. 
+[%4d]: [InfDecoder]SeqDecStart ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder][SeqDecStart] Receive Response Err MsgID[%x]
+[%4d]: [InfDecoder][SeqDecStart] Receive Response from SDF [PTM Count Start Ack]
+[%4d]: [InfDecoder]SeqDecStop Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqDecStop Destroy. 
+[%4d]: [InfDecoder]SeqDecStop ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder][SeqDecStop] Receive Response from SDF [PTM Count Ack]
+[%4d]: [InfDecoder][SeqDecStop] Receive Response Not match. MsgID[%x]
+[%4d]: [InfDecoder]SeqDisconnectPin_Multi Create. Addr = %p, src_id = 0x%x, dst_id = 0x%x
+[%4d]: [InfDecoder]SeqDisconnectPin_Multi Destroy. 
+[%4d]: [InfDecoder]SeqDisconnectPin_Multi::SetParameter Err. pinType 0x%x, pinDir 0x%x, pinNo 0x%x.
+[%4d]: [InfDecoder]SeqEncClose2 ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncClose2Proxy ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncClose ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncCloseSpeedup ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncCut ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncdecClose ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncdecOpen ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncdecStart ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncNextfrm ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncOpen2 ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncOpen2Speedup ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncOpen ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncOpenSpeedup ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncStart2 ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncStart ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncStartSpeedup ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncStop2 ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncStop ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncWfiOpen ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqEncWfiStart ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqFaceSet ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqGetPin_Multi Create. Addr = %p, src_id = 0x%x, dst_id = 0x%x
+[%4d]: [InfDecoder]SeqGetPin_Multi Destroy. 
+[%4d]: [InfDecoder]SeqGetPin_Multi::SetParameter Err. pinType 0x%x, pinDir 0x%x, pinNo 0x%x.
+[%4d]: [InfDecoder]SeqHsEncClose ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqInitPinInfo Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqInitPinInfo Destroy. 
+[%4d]: [InfDecoder]SeqInternalEncComp ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqMultiDecChgSpeed_Multi Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqMultiDecChgSpeed_Multi Destroy. 
+[%4d]: [InfDecoder]SeqMultiDecClose_Multi Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqMultiDecClose_Multi Destroy. 
+[%4d]: [InfDecoder]SeqMultiDecClose_Multi ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqMultiDecNextFrm_Multi Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqMultiDecNextFrm_Multi Destroy. 
+[%4d]: [InfDecoder]SeqMultiDecNextThm_Multi Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqMultiDecNextThm_Multi Destroy. 
+[%4d]: [InfDecoder]SeqMultiDecOpen_Multi Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqMultiDecOpen_Multi Destroy. 
+[%4d]: [InfDecoder]SeqMultiDecOpen_Multi ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqMultiDecStart_Multi Colorimetry = %#x
+[%4d]: [InfDecoder]SeqMultiDecStart_Multi Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqMultiDecStart_Multi Destroy. 
+[%4d]: [InfDecoder]SeqMultiDecStart_Multi Err mcMode[%x]
+[%4d]: [InfDecoder]SeqMultiDecStop_Multi Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqMultiDecStop_Multi Destroy. 
+[%4d]: [InfDecoder]SeqMultiDecStop_Multi ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqMultiSetOutputMoviePb_Multi Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqMultiSetOutputMoviePb_Multi Destroy. 
+[%4d]: [InfDecoder]SeqOverlap ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder][SeqPaintImage][ACK] Success. status = 0x%x
+[%4d]: [InfDecoder][SeqPaintImage][COMP] Success. status = 0x%x
+[%4d]: [InfDecoder][SeqPaintImage][%d] ResponceSequence. err status =0x%x
+[%4d]: [InfDecoder][SeqPaintImage][END] Sequnence Process End. Err=%X
+[%4d]: [InfDecoder][SeqPaintImage][ERR] ResponceSequence. status = 0x%x
+[%4d]: [InfDecoder][SeqPaintImage][EXEC] StartSequence. status = 0x%x
+[%4d]: [InfDecoder][SeqPaintImage][MMGOpenComp] Success. extent[0].phy_addr	  [%x]
+[%4d]: [InfDecoder][SeqPaintImage][MMGOpenComp] Success. extent[0].phy_size	  [%x]
+[%4d]: [InfDecoder][SeqPaintImage][MMGOpenComp] Success. msg_id				  [%x]
+[%4d]: [InfDecoder][SeqPaintImage][MMGOpenComp] Success. ret_code			  [%x]
+[%4d]: [InfDecoder][SeqPaintImage] ResponceSequence. err = 0x%x
+[%4d]: [InfDecoder][SeqPaintImage] ResponceSequence. status = 0x%x cmnMid=0x%X
+[%4d]: [InfDecoder][SeqPaintImage] Send Ack. Msg = %p. osal_id = 0x%x
+[%4d]: [InfDecoder][SeqPaintImage] SendComp Send Ack. Msg = %p. osal_id = 0x%x. err = 0x%x
+[%4d]: [InfDecoder][SeqPaintImage] StartSequence. err = 0x%x
+[%4d]: [InfDecoder][SeqPaintImage] StartSequence. status = 0x%x p_msg = %p
+[%4d]: [InfDecoder]SeqSetInternalDec Create. qid=0x%X MsgManager=%p ParameterControl=%p.
+[%4d]: [InfDecoder]SeqSetInternalDec Destroy. 
+[%4d]: [InfDecoder]SeqSetInternalEnc SetParameter. outputDisplay = %x.
+[%4d]: [InfDecoder]SeqSetOutputMoviePb Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqSetOutputMoviePb Destroy. 
+[%4d]: [InfDecoder]SeqSetOutputMoviePb ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqSetOutputMoviePb SetParameter m_SetOutputMoviePbFlg : 0x%x
+[%4d]: [InfDecoder]SeqSetOutputMoviePb SetParameter SDF_CONNECT. mcConnectFlg : 0x%x
+[%4d]: [InfDecoder]SeqSetOutputMoviePb SetParameter STD_CONNECT. mcConnectFlg : 0x%x
+[%4d]: [InfDecoder]SeqSetOutputMoviePb SetParameter Warning. mcConnectFlg : 0x%x
+[%4d]: [InfDecoder]SeqStillDecClose Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqStillDecClose Destroy. 
+[%4d]: [InfDecoder]SeqStillDecClose ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqStillDecLoop Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqStillDecLoop Destroy. 
+[%4d]: [InfDecoder][SeqStillDecLoop] Send STILLDECPAUSE Comp. Msg = %p. osal_id = 0x%x, errCode = %x
+[%4d]: [InfDecoder]SeqStillDecOpen Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqStillDecOpen Destroy. 
+[%4d]: [InfDecoder]SeqStillDecOpen ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqStillDecPause Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqStillDecPause Destroy. 
+[%4d]: [InfDecoder]SeqStillDecPause ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqStillDecRestart Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqStillDecRestart Destroy. 
+[%4d]: [InfDecoder]SeqStillDecRestart ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqStillDecStart Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqStillDecStart Destroy. 
+[%4d]: [InfDecoder]SeqStillDecStart ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SeqStillDecStart SetParameter. 
+[%4d]: [InfDecoder]SeqStillDecStop Create. Addr = %p, src_id = 0x%x
+[%4d]: [InfDecoder]SeqStillDecStop Destroy. 
+[%4d]: [InfDecoder]SeqTransferRect ExecErrorCommand. resid = 0x%x. mid = 0x%x, err = 0x%x
+[%4d]: [InfDecoder]SequenceEnd
+[%4d]: [InfDecoder]Set DEC_USECASE mode = [%d]
+[%4d]: [InfDecoder]SetParameter p_cmd NULL
+[%4d]: [InfDecoder]StartPause
+[%4d]: [InfDecoder]startPtm31_0 [%x]
+[%4d]: [InfDecoder]startPtm32   [%x]
+[%4d]: [InfDecoder][StillDec][%d] SetEntry_ImageSizeInfo. err =0x%x
+[%4d]: [InfDecoder][StillDec][%d] SetEntry_YcStateInfo. err =0x%x
+[%4d]: [InfDecoder][STILL_DEC_ERROR] Send Comp. Msg = %p. osal_id = 0x%x
+[%4d]: [InfDecoder][StillDecLoop] Receive Response from SDF [PTM_COUNT Ack]
+[%4d]: [InfDecoder][StillDecLoop] Receive Response from SDF [RSS_DECODE Ack]
+[%4d]: [InfDecoder][StillDecLoop] Receive Response from SDF [RSS_DECODE Comp]
+[%4d]: [InfDecoder][StillDecLoop] Receive Response Not match. cmnMid[%x]
+[%4d]: [InfDecoder][StillDecLoop] Receive TimerMsg
+[%4d]: [InfDecoder][StillDec] mp_dmmFmt  NULL
+[%4d]: [InfDecoder][StillDecoder]InfraMemMgrAcsr::GetResponseAllocAndOpen
+[%4d]: [InfDecoder][StillDecoder]InfraMemMgrAcsr::GetResponseAllocAndOpen NULL
+[%4d]: [InfDecoder][StillDecoder] InfraMemMgrAcsr::GetResponseClose
+[%4d]: [InfDecoder][StillDecoder] InfraMemMgrAcsr::GetResponseClose NULL
+[%4d]: [InfDecoder][StillDecoder] InfraMemMgrAcsr::GetResponseFreeAndClose
+[%4d]: [InfDecoder][StillDecoder] InfraMemMgrAcsr::GetResponseFreeAndClose NULL
+[%4d]: [InfDecoder][StillDecoder]InfraMemMgrAcsr::GetResponseOpen
+[%4d]: [InfDecoder][StillDecoder]InfraMemMgrAcsr::GetResponseOpen NULL
+[%4d]: [InfDecoder][StillDecoder] InfraMemMgrAcsr::RequestAllocAndOpen
+[%4d]: [InfDecoder][StillDecoder]InfraMemMgrAcsr::RequestAllocAndOpen NULL
+[%4d]: [InfDecoder][StillDecoder]InfraMemMgrAcsr::RequestClose NULL
+[%4d]: [InfDecoder][StillDecoder] InfraMemMgrAcsr::RequestClose unitHandle=%X
+[%4d]: [InfDecoder][StillDecoder]InfraMemMgrAcsr::RequestFreeAndClose NULL
+[%4d]: [InfDecoder][StillDecoder]InfraMemMgrAcsr::RequestFreeAndClose unitHandle=%X
+[%4d]: [InfDecoder][StillDecoder]InfraMemMgrAcsr::RequestOpen NULL
+[%4d]: [InfDecoder][StillDecoder] InfraMemMgrAcsr::RequestOpen unitHandle=0x%X
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_ALLOC_COMP : count               = %04X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_ALLOC_COMP : extent[0].phy_addr  = %08X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_ALLOC_COMP : extent[0].size      = %08X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_ALLOC_COMP : msg_id              = %04X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_ALLOC_COMP : req_id              = %04X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_ALLOC_COMP : ret_code            = %04X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_ALLOC_COMP : unit_handle         = %04X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_CLOSE_COMP : msg_id  = %04X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_CLOSE_COMP : req_id  = %04X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_CLOSE_COMP : ret_code= %04X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_FREE_COMP : msg_id  = %04X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_FREE_COMP : req_id  = %04X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_FREE_COMP : ret_code= %04X 
+[%4d]: [InfDecoder][StillDecoder]InfraMemMgr Ger Addr/Size Error!!
+[%4d]: [InfDecoder][StillDecoder] InfraMemMgr GetResponseClose Error RetCode=%d
+[%4d]: [InfDecoder][StillDecoder] InfraMemMgr GetResponseClose Warning RetCode=%d
+[%4d]: [InfDecoder][StillDecoder] InfraMemMgr GetResponseFreeAndClose Error RetCode=%d
+[%4d]: [InfDecoder][StillDecoder] InfraMemMgr GetResponseFreeAndClose Warning RetCode=%d
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_OPEN_COMP : count                = %04X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_OPEN_COMP : extent[0].phy_addr   = %08X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_OPEN_COMP : extent[0].size       = %08X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_OPEN_COMP : msg_id               = %04X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_OPEN_COMP : req_id               = %04X 
+[%4d]: [InfDecoder][StillDecoder] INFRA_MEMMGR_OPEN_COMP : ret_code             = %04X 
+[%4d]: [InfDecoder][StillDecoder]InfraMemMgr Response Error RetCode=%d
+[%4d]: [InfDecoder][StillDecoder]InfraMemMgr Response Warning RetCode=%d
+[%4d]: [InfDecoder][StillDecoder] Send To MMGR ALLOC_UNIT_NEW Msg CATID:%x msg_id:%x unitType:%X
+[%4d]: [InfDecoder][StillDecoder] Send To MMGR CLOSE_UNIT Msg CATID:%x msg_id:%x
+[%4d]: [InfDecoder][StillDecoder] Send To MMGR FREE_UNIT Msg CATID:%x msg_id:%x
+[%4d]: [InfDecoder][StillDecoder] Send To MMGR OPEN Msg CATID:%x msg_id:%x unitHandle:%X
+[%4d]: [InfDecoder][StillDecoder] StillINFO AvconStatus Address [%p]
+[%4d]: [InfDecoder][StillDecoder] StillINFO HostStatus Address  [%p]
+[%4d]: [InfDecoder][StillDecoder] StillINFO RP Address          [%p]
+[%4d]: [InfDecoder][StillDecoder] StillINFO Table Address       [%p]
+[%4d]: [InfDecoder][StillDecoder] StillINFO WP                  [0x%x]
+[%4d]: [InfDecoder][StillDecoder] StillINFO WP Address          [%p]
+[%4d]: [InfDecoder][StillDecoder] StillPI AvconStatus Address [%p]
+[%4d]: [InfDecoder][StillDecoder] StillPI HostStatus Address  [%p]
+[%4d]: [InfDecoder][StillDecoder] StillPI RP Address          [%p]
+[%4d]: [InfDecoder][StillDecoder] StillPI Table Address       [%p]
+[%4d]: [InfDecoder][StillDecoder] StillPI WP                  [0x%x]
+[%4d]: [InfDecoder][StillDecoder] StillPI WP Address          [%p]
+[%4d]: [InfDecoder]STILL_DECOPEN PARAM avconStatusAddress     [%x]
+[%4d]: [InfDecoder]STILL_DECOPEN PARAM hostStatusAddress      [%x]
+[%4d]: [InfDecoder]STILLDECOPEN_PARAM_PAYLOAD NULL
+[%4d]: [InfDecoder]STILL_DECOPEN PARAM playMode               [%x]
+[%4d]: [InfDecoder]STILL_DECOPEN PARAM StillInfoTableIndexNum [%x]
+[%4d]: [InfDecoder]STILL_DECOPEN PARAM StillInfoTable         [%x]
+[%4d]: [InfDecoder]STILL_DECOPEN PARAM StillPITableIndexNum   [%x]
+[%4d]: [InfDecoder]STILL_DECOPEN PARAM StillPITable           [%x]
+[%4d]: [InfDecoder][StillDecPause] Execute PTMCountComp. (wait Comp from SDF)
+[%4d]: [InfDecoder][StillDecPause] Receive Response from SDF [PTM Count Comp]
+[%4d]: [InfDecoder][StillDecPause] Receive Response Not match. MsgID[%x]
+[%4d]: [InfDecoder][StillDec] phyAddr NULL
+[%4d]: [InfDecoder][StillDecRestart] Execute PTMCountComp. (wait Comp from SDF)
+[%4d]: [InfDecoder][StillDecRestart] Receive Response from SDF [PTM Count Comp]
+[%4d]: [InfDecoder][StillDecRestart] Receive Response Not match. MsgID[%x]
+[%4d]: [InfDecoder][StillDecStart] Execute PTMCountComp. (wait Comp from SDF)
+[%4d]: [InfDecoder]StillDecStart Param : startPauseMode         [%x]
+[%4d]: [InfDecoder]StillDecStart Param : StillPIStartIndexNum   [%x]
+[%4d]: [InfDecoder][StillDecStart] Receive Response Err MsgID[%x]
+[%4d]: [InfDecoder][StillDecStart] Receive Response from SDF [PTM Count Start Comp]
+[%4d]: [InfDecoder][StillDecStart] Receive Response from SDF [RSS_DECODE Ack]
+[%4d]: [InfDecoder][StillDecStart] Receive Response Not match. MsgID[%x]
+[%4d]: [InfDecoder][StillDecStop] Execute PTMCountComp. (wait Comp from SDF)
+[%4d]: [InfDecoder][StillDecStop] Receive Response from SDF [PTM Count Comp]
+[%4d]: [InfDecoder][StillDecStop] Receive Response Not match. MsgID[%x]
+[%4d]: [InfDecoder]===================STILL INFO===================
+[%4d]: [InfDecoder]=================STILL INFO=END=================
+[%4d]: [InfDecoder]STILL_INFO Read IndexNum:%x
+[%4d]: [InfDecoder]                      StillInfoStartIndexNum [%x]
+[%4d]: [InfDecoder]STILL_INFO Table Error : WP[%x]
+[%4d]: [InfDecoder]STILL INFO WP[%x], RP[%x] WP_tmp[%x]
+[%4d]: [InfDecoder]===================STILL PI===================
+[%4d]: [InfDecoder][STILL_PI_COMP] Send Comp. Msg = %p. osal_id = 0x%x
+[%4d]: [InfDecoder]=================STILL PI=END=================
+[%4d]: [InfDecoder]STILL_PI Read IndexNum [%x]
+[%4d]: [InfDecoder]STILL_PI Table Error : WP[%x]
+[%4d]: [InfDecoder]STILL PI WP[%x], RP[%x], WP_tmp[%x]
+[%4d]: [InfDecoder][StillStreamEnd] Execute PTMCountComp. (wait Comp from SDF)
+[%4d]: [InfDecoder][StillStreamEnd] Receive Response from SDF [PTM_COUNT Comp]
+[%4d]: [InfDecoder][StillStreamEnd] Receive Response Not match. MsgID[%x]
+[%4d]: [InfDecoder][StillStreamEnd] Send Response. Msg = %p. osal_id = 0x%x
+[%4d]: [InfDecoder]streamAreaLength            = %#x
+[%4d]: [InfDecoder]streamOffset                = %#x
+[%4d]: [InfDecoder]streamUnitDataOffset        = %#x
+[%4d]: [InfDecoder]streamUnitHandle            = %#x
+[%4d]: [InfDecoder]streamUnitType              = %#x
+[%4d]: [InfDecoder]streamValidLength           = %#x
+[%4d]: [InfDecoder] stripWidth        [0x%04x]
+[%4d]: [InfDecoder]stripWidth      = %#x
+[%4d]: [InfDecoder]stripWidth   = %#x
+[%4d]: [InfDecoder]targetOffsetX =%d
+[%4d]: [InfDecoder]targetOffsetX   = %#x
+[%4d]: [InfDecoder]targetOffsetY =%d
+[%4d]: [InfDecoder]targetOffsetY   = %#x
+[%4d]: [InfDecoder]targetOffsX  = (%#x, %#x)
+[%4d]: [InfDecoder]targetSizeX   =%d
+[%4d]: [InfDecoder]targetSizeX     = %#x
+[%4d]: [InfDecoder]targetSizeX  = (%#x, %#x)
+[%4d]: [InfDecoder]targetSizeY   =%d
+[%4d]: [InfDecoder]targetSizeY     = %#x
+[%4d]: [InfDecoder] tarOff            [(%d,%d)]
+[%4d]: [InfDecoder] tarSize           [(%d,%d)]
+[%4d]: [InfDecoder][*TEST*] InfraMovieEncoderSeqEncStart2Proxy thumbnailID : 0x%x
+[%4d]: [InfDecoder][*TEST*] MC0 prmAddr:0x%x logicAddr:0x%x
+[%4d]: [InfDecoder][*TEST*] MC1 prmAddr:0x%x logicAddr:0x%x
+[%4d]: [InfDecoder][*TEST*] MovieDecoderSeqDecChgSpeed codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieDecoderSeqDecClose codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieDecoderSeqDecNextFrm codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieDecoderSeqDecNextThm codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieDecoderSeqDecOpen codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieDecoderSeqDecStart codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieDecoderSeqDecStop codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieEditorSeqDecClose codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieEditorSeqDecNextThm codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieEditorSeqDecOpen codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieEditorSeqDecStart codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieEditorSeqDecStop codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieEditorSeqEncClose codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieEditorSeqEncNextframe codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieEditorSeqEncOpen codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieEditorSeqEncStart codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieEditorSeqEncStop codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieEncoderSeqEncWfiClose codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieEncoderSeqEncWfiOpe codecID : %x
+[%4d]: [InfDecoder][*TEST*] MovieEncoderSeqEncWfiStart codecID : %x
+[%4d]: [InfDecoder]Timing Err
+[%4d]: [InfDecoder] transStartTime    [0x%08x]
+[%4d]: [InfDecoder]transStartTime, transTime, id  = %#x, %#x, %#x
+[%4d]: [InfDecoder]transStartTime   = %#x
+[%4d]: [InfDecoder] transTime         [0x%08x]
+[%4d]: [InfDecoder]transTime        = %#x
+[%4d]: [InfDecoder]uniqueId  = 0x%X
+[%4d]: [InfDecoder] unitDataOffset    [0x%08x]
+[%4d]: [InfDecoder]unitDataOffset  = %#x
+[%4d]: [InfDecoder]unitDataOffs = %#x
+[%4d]: [InfDecoder] unitHandle        [0x%04x]
+[%4d]: [InfDecoder]unitHandle      = %#x
+[%4d]: [InfDecoder]unitHandle   = %#x
+[%4d]: [InfDecoder] unitType          [0x%08x]
+[%4d]: [InfDecoder]unitType        = %#x
+[%4d]: [InfDecoder]unitType     = %#x
+[%4d]: [InfDecoder]validOffsetX    = %#x
+[%4d]: [InfDecoder]validOffsetY    = %#x
+[%4d]: [InfDecoder]validOffsX   = (%#x, %#x)
+[%4d]: [InfDecoder]validSizeX      = %#x
+[%4d]: [InfDecoder]validSizeX   = (%#x, %#x)
+[%4d]: [InfDecoder]validSizeY      = %#x
+[%4d]: [InfDecoder] valOff            [(%d,%d)]
+[%4d]: [InfDecoder] valSize           [(%d,%d)]
+[%4d]: [InfDecoder]version                     = %#x
+[%4d]: [InfDecoder]version               = %#x
+[%4d]: [InfDecoder]ycCompress      = %#x
+[%4d]: [InfDecoder]ycCompress   = %#x
+[%4d]: [InfDecoder]<YC_IMAGE_OUT_TIM_INFO>-------------------
+[%4d]: [InfDecoder]<YC_STATE_INFO>-------------------
+[%4d]: [InfDecoder] yRange, colori    [0x%02x,0x%02x]
+[%4d]: [InfDecoder]yRange, colorimetry, chromaPhase = %#x, %#x, %#x
+[%4d]: [InfDecoder]yRange          = %#x
+
+--- libmpr: cadenas MovieDecoderIf/BBControl ---
+14MovieDecoderIf
+16BBControlMonCtrl
+  BBControl::DrawPixels : ErrorCode[0x
+BBControl::DrawPixels : imgRegionId 
+BBControl::DrawPixels : regionId 
+BBControl::GetPlayRegionInfo NG (ErrCode:0x
+  BBControl is not supported. (DrawPixels To Specified Memory)
+CALL : [MDEC], [MENC], [SDEC], [SENC], [HS]
+ConvertBBControlErrToCcError() errCode[
+create [MOVIE-DECODER]
+create [MOVIE-DECODER] mp_movieDecoder: 0x
+create [STILL-DECODER] mp_movieDecoder: 0x
+delete [MOVIE-DECODER-IF]
+DUMMYCALL : [MENC], [MDEC], [ADEC], [SDEC], [SENC], [HS], [CONV]
+DUMMYCALL : [MENC], [MDEC], [ADEC], [SENC], [SDEC], [HS], [CONV]
+ENTER, EXIT, MDEC, MENC, SDEC, SENC, HS, CONV
+!!! ERROR !!! CreateMovieDecoder(): mp_movieDecoder->SetCallback: (0x
+!!! ERROR !!! setCallbackToFilter(): mp_movieDecoder->SetCallback: (0x
+EXIT : [ENTER], [MDEC], [MENC], [SDEC], [SENC], [HS], [ALL]
+EXIT : [MDEC], [MENC], [SDEC], [SENC], [HS], [ALL]
+HIDETOSHOW, SHOWTOHIDE, VPI, STREAMEND, MDECERROR, 
+IndexPlayer::DrawPixelsErrImg: BBControl::DrawPixels(): errCd[0x
+  : instance: mp_movieDecoder: (0x
+Issue Cmd: BBControl::GetPlayRegionInfo
+Issue Cmd: mp_movieDecoder->SetBBPlayMovieParam
+Issue Cmd: mp_movieDecoder->SetBBThumbnailBufferParam
+Issue Cmd: mp_movieDecoder->SetBBThumbnailRegionParam
+MDECAVCON
+MDECCHANGESPEED
+MDECCLOSE
+************ MDEC : COMPLETE!!! ************
+MDECCSP
+MDECCTRL
+MDECENTER
+MDECERROR
+MDECHOST
+MDECHOST, MDECAVCON, MENCHOST, MENCAVCON,
+MDEC : [InitTable], [CMD_ENTER], [CMD_FACE_SET], [CMD_RUN], [CMD_NEXT_PHOTO_MOVIE], [CMD_STOP], [CMD_EXIT]
+MDEC : [InitTable], [CMD_ENTER], [CMD_RUN], [CMD_CHANGE_SPEED], [CMD_NEXT_FRAME], [CMD_NEXT_THUMBNAIL], [CMD_STOP], [CMD_EXIT]
+MDEC, MDECENTER, MDECRUN, MDECCSP
+MDECNEXTFRAME
+MDECOPEN
+MDECOPEN, MDECSTART, MDECCHANGESPEED, MDECNEXTFRAME, FASTREC, MDECSTOP, MDECCLOSE, 
+MDECRUN
+MDECSTART
+MDECSTOP
+MOVIE-DECODER has already existed
+MOVIE-DECODER has already existed   mp_movieDecoder : 0x
++ MovieDecoderIf : 
+Movie DECODER instance: mp_movieDecoder: (0x
+ mp_movieDecoder    0x
+mp_movieDecoder->SetBBPlayMovieParam NG (ErrCode:0x
+mp_movieDecoder->SetBBThumbnailBufferParam NG (ErrCode:0x
+mp_movieDecoder->SetBBThumbnailRegionParam NG (ErrCode:0x
+mp_movieDecoder->SetRunParam NG (ErrCode:0x
+Player >>> BBControl : DrawPixels
+PlayJpegThum::DrawPixelErrInfo() : BBControl::DrawPixels ErrImg errCode[
+PlayJpegThum::DrawPixelErrInfo() : BBControl::DrawPixels No ErrImg!!
+PlayJpegThum::DrawPixelErrInfo() : BBControl::DrawPixels No UncfmImg!!
+PlayJpegThum::DrawPixelErrInfo() : BBControl::DrawPixels UncfmImg errCode[
+SetCmdDecordStillDecoder() BBControl::GetPlayRegionInfo errCode[
+
+--- libmpr: cadenas de evento/error de decodificacion ---
+Audio Decoder Error
+Audio Decoder Stream End
+Audio Stream End
+EVENT : "Decode Ready" from MovieDecoder  ----> Ignore
+EVENT : "Decoder Error" from MovieDecoder  ----> Ignore
+EVENT : "Stream End" from MovieDecoder  ----> Ignore
+ ########## Full Frame PB Find Stream End and AudioPI end sampleNo 
+ ########## Full Frame PB Find Stream End and RealTimeMetadataPI end sampleNo 
+Movie Convertor Dec Stream End
+Movie Decoder Stream End
+Still Decoder Stream End
+Still stream end
+ - Stream End
+Stream End
+Stream End.
+Stream End  Illegal Timing
+Stream End with Content No Exist All

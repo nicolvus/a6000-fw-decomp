@@ -1,0 +1,20 @@
+0067b87c: c8f82430   str.w    r3, [r8, #0x24]               
+0067b880: c8f82830   str.w    r3, [r8, #0x28]               
+0067b884: c8f82c30   str.w    r3, [r8, #0x2c]               
+0067b888: c8f83030   str.w    r3, [r8, #0x30]               
+0067b88c: c8f83430   str.w    r3, [r8, #0x34]               
+0067b890: c8f83830   str.w    r3, [r8, #0x38]               
+0067b894: 2046       mov      r0, r4                        
+0067b896: 7421       movs     r1, #0x74                     
+0067b898: 4a46       mov      r2, sb                        
+0067b89a: 40f2df23   movw     r3, #0x2df                    
+0067b89e: 0096       str      r6, [sp]                      
+0067b8a0: 0195       str      r5, [sp, #4]                  
+0067b8a2: fcf774f9   bl       #0x677b8e                     
+0067b8a6: 07f15407   add.w    r7, r7, #0x54                 
+0067b8aa: bd46       mov      sp, r7                        
+0067b8ac: bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}  
+0067b8b0: 8cd1       bne      #0x67b7cc                     
+0067b8b2: 9000       lsls     r0, r2, #2                    
+0067b8b4: 1bd1       bne      #0x67b8ee                     
+0067b8b6: 9000       lsls     r0, r2, #2                    

@@ -1,0 +1,44 @@
+0001a988: 80b5       push     {r7, lr}                      
+0001a98a: 00af       add      r7, sp, #0                    
+0001a98c: 22b1       cbz      r2, #0x1a998                  
+0001a98e: 1146       mov      r1, r2                        
+0001a990: bde88040   pop.w    {r7, lr}                      
+0001a994: f4f78ab9   b.w      #0xecac                       
+0001a998: 6ff06300   mvn      r0, #0x63                     
+0001a99c: 80bd       pop      {r7, pc}                      
+0001a99e: 80b5       push     {r7, lr}                      
+0001a9a0: 0146       mov      r1, r0                        
+0001a9a2: 00af       add      r7, sp, #0                    
+0001a9a4: 22b1       cbz      r2, #0x1a9b0                  
+0001a9a6: c720       movs     r0, #0xc7                     
+0001a9a8: bde88040   pop.w    {r7, lr}                      
+0001a9ac: f4f74abd   b.w      #0xf444                       
+0001a9b0: 6ff06300   mvn      r0, #0x63                     
+0001a9b4: 80bd       pop      {r7, pc}                      
+0001a9b6: 80b5       push     {r7, lr}                      
+0001a9b8: 00af       add      r7, sp, #0                    
+0001a9ba: bde88040   pop.w    {r7, lr}                      
+0001a9be: f5f7b5b8   b.w      #0xfb2c                       
+0001a9c2: 80b5       push     {r7, lr}                      
+0001a9c4: 00af       add      r7, sp, #0                    
+0001a9c6: 40f8041c   str      r1, [r0, #-0x4]               
+0001a9ca: 80bd       pop      {r7, pc}                      
+0001a9cc: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+0001a9d0: 82b0       sub      sp, #8                        
+0001a9d2: 234c       ldr      r4, [pc, #0x8c]                 ; [0001aa60]=0002128c "dth  :%d"
+0001a9d4: 234b       ldr      r3, [pc, #0x8c]                 ; [0001aa64]=000007c8
+0001a9d6: 02af       add      r7, sp, #8                    
+0001a9d8: 7c44       add      r4, pc                        
+0001a9da: 0546       mov      r5, r0                        
+0001a9dc: e358       ldr      r3, [r4, r3]                  
+0001a9de: 9846       mov      r8, r3                        
+0001a9e0: 1a78       ldrb     r2, [r3]                      
+0001a9e2: 5ab1       cbz      r2, #0x1a9fc                  
+0001a9e4: 1c20       movs     r0, #0x1c                     
+0001a9e6: f4f7e8ed   blx      #0xf5b8                         ; _Znwj
+0001a9ea: 0646       mov      r6, r0                        
+0001a9ec: f4f762ec   blx      #0xf2b4                         ; _ZN3MWF7ObjLockC1Ev
+0001a9f0: 1d4b       ldr      r3, [pc, #0x74]                 ; [0001aa68]=00000774
+0001a9f2: e358       ldr      r3, [r4, r3]                  
+0001a9f4: 1e60       str      r6, [r3]                      
+0001a9f6: 0023       movs     r3, #0                        

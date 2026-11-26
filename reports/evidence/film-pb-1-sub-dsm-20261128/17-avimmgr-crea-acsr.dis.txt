@@ -1,0 +1,68 @@
+0060b890: 40f28a53   movw     r3, #0x58a                    
+0060b894: 0193       str      r3, [sp, #4]                  
+0060b896: 6368       ldr      r3, [r4, #4]                  
+0060b898: 0293       str      r3, [sp, #8]                  
+0060b89a: 0123       movs     r3, #1                        
+0060b89c: 0393       str      r3, [sp, #0xc]                
+0060b89e: 504b       ldr      r3, [pc, #0x140]                ; [0060b9e0]=008dd9c0 "avimmgr/AviMMgr.cpp"
+0060b8a0: 42f0ecfc   bl       #0x64e27c                     
+0060b8a4: 6068       ldr      r0, [r4, #4]                  
+0060b8a6: 0221       movs     r1, #2                        
+0060b8a8: 4c4a       ldr      r2, [pc, #0x130]                ; [0060b9dc]=31000006
+0060b8aa: 40f28b53   movw     r3, #0x58b                    
+0060b8ae: 5ee1       b        #0x60bb6e                     
+0060b8b0: 514a       ldr      r2, [pc, #0x144]                ; [0060b9f8]=008e03f2 "AviMMgr : create M2PS Acsr instance    :"
+0060b8b2: e068       ldr      r0, [r4, #0xc]                
+0060b8b4: 3178       ldrb     r1, [r6]                      
+0060b8b6: 44f0b9fe   bl       #0x65062c                     
+0060b8ba: d4f87007   ldr.w    r0, [r4, #0x770]              
+0060b8be: d4f87c17   ldr.w    r1, [r4, #0x77c]              
+0060b8c2: 6cf0e1f9   bl       #0x677c88                     
+0060b8c6: 2046       mov      r0, r4                        
+0060b8c8: 0221       movs     r1, #2                        
+0060b8ca: fff7d3f9   bl       #0x60ac74                     
+0060b8ce: 0346       mov      r3, r0                        
+0060b8d0: c4f88007   str.w    r0, [r4, #0x780]              
+0060b8d4: d0b9       cbnz     r0, #0x60b90c                 
+0060b8d6: 3e4b       ldr      r3, [pc, #0xf8]                 ; [0060b9d0]=009df25a
+0060b8d8: e068       ldr      r0, [r4, #0xc]                
+0060b8da: 484a       ldr      r2, [pc, #0x120]                ; [0060b9fc]=008e0421 "Init : CreateIfoAcsrInstance MMGR_MP4_AC"
+0060b8dc: 1978       ldrb     r1, [r3]                      
+0060b8de: 44f0a5fe   bl       #0x65062c                     
+0060b8e2: 3d4b       ldr      r3, [pc, #0xf4]                 ; [0060b9d8]=008e6ddc "Init"
+0060b8e4: 0220       movs     r0, #2                        
+0060b8e6: 3d4a       ldr      r2, [pc, #0xf4]                 ; [0060b9dc]=31000006
+0060b8e8: 0146       mov      r1, r0                        
+0060b8ea: 0093       str      r3, [sp]                      
+0060b8ec: 40f29b53   movw     r3, #0x59b                    
+0060b8f0: 0193       str      r3, [sp, #4]                  
+0060b8f2: 6368       ldr      r3, [r4, #4]                  
+0060b8f4: 0293       str      r3, [sp, #8]                  
+0060b8f6: 0123       movs     r3, #1                        
+0060b8f8: 0393       str      r3, [sp, #0xc]                
+0060b8fa: 394b       ldr      r3, [pc, #0xe4]                 ; [0060b9e0]=008dd9c0 "avimmgr/AviMMgr.cpp"
+0060b8fc: 42f0befc   bl       #0x64e27c                     
+0060b900: 6068       ldr      r0, [r4, #4]                  
+0060b902: 0221       movs     r1, #2                        
+0060b904: 354a       ldr      r2, [pc, #0xd4]                 ; [0060b9dc]=31000006
+0060b906: 40f29c53   movw     r3, #0x59c                    
+0060b90a: 30e1       b        #0x60bb6e                     
+0060b90c: 3c4a       ldr      r2, [pc, #0xf0]                 ; [0060ba00]=008e0453 "AviMMgr : create MP4 Acsr instance    : "
+0060b90e: e068       ldr      r0, [r4, #0xc]                
+0060b910: 3178       ldrb     r1, [r6]                      
+0060b912: 44f08bfe   bl       #0x65062c                     
+0060b916: d4f87007   ldr.w    r0, [r4, #0x770]              
+0060b91a: d4f88017   ldr.w    r1, [r4, #0x780]              
+0060b91e: 6cf0b7f9   bl       #0x677c90                     
+0060b922: 2046       mov      r0, r4                        
+0060b924: 0421       movs     r1, #4                        
+0060b926: fff7a5f9   bl       #0x60ac74                     
+0060b92a: 0346       mov      r3, r0                        
+0060b92c: c4f88407   str.w    r0, [r4, #0x784]              
+0060b930: d0b9       cbnz     r0, #0x60b968                 
+0060b932: 274b       ldr      r3, [pc, #0x9c]                 ; [0060b9d0]=009df25a
+0060b934: e068       ldr      r0, [r4, #0xc]                
+0060b936: 334a       ldr      r2, [pc, #0xcc]                 ; [0060ba04]=008e0481 "Init : CreateIfoAcsrInstance MMGR_DCF_AC"
+0060b938: 1978       ldrb     r1, [r3]                      
+0060b93a: 44f077fe   bl       #0x65062c                     
+0060b93e: 264b       ldr      r3, [pc, #0x98]                 ; [0060b9d8]=008e6ddc "Init"

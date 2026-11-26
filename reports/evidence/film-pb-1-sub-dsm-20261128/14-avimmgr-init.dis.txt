@@ -1,0 +1,105 @@
+0060b0c4: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+0060b0c8: a5b0       sub      sp, #0x94                     
+0060b0ca: 0446       mov      r4, r0                        
+0060b0cc: 04af       add      r7, sp, #0x10                 
+0060b0ce: 0d46       mov      r5, r1                        
+0060b0d0: d1b9       cbnz     r1, #0x60b108                 
+0060b0d2: a54b       ldr      r3, [pc, #0x294]                ; [0060b368]=008e6ddc "Init"
+0060b0d4: a54a       ldr      r2, [pc, #0x294]                ; [0060b36c]=31000001
+0060b0d6: 0093       str      r3, [sp]                      
+0060b0d8: 4ff45e73   mov.w    r3, #0x378                    
+0060b0dc: 0193       str      r3, [sp, #4]                  
+0060b0de: 4368       ldr      r3, [r0, #4]                  
+0060b0e0: 0220       movs     r0, #2                        
+0060b0e2: 0146       mov      r1, r0                        
+0060b0e4: 0293       str      r3, [sp, #8]                  
+0060b0e6: 0123       movs     r3, #1                        
+0060b0e8: 0393       str      r3, [sp, #0xc]                
+0060b0ea: a14b       ldr      r3, [pc, #0x284]                ; [0060b370]=008dd9c0 "avimmgr/AviMMgr.cpp"
+0060b0ec: 43f0c6f8   bl       #0x64e27c                     
+0060b0f0: 40f27933   movw     r3, #0x379                    
+0060b0f4: 0220       movs     r0, #2                        
+0060b0f6: 0093       str      r3, [sp]                      
+0060b0f8: 4ff44051   mov.w    r1, #0x3000                   
+0060b0fc: f022       movs     r2, #0xf0                     
+0060b0fe: 9b4b       ldr      r3, [pc, #0x26c]                ; [0060b36c]=31000001
+0060b100: 44f0f5fc   bl       #0x64faee                     
+0060b104: 00f04cbd   b.w      #0x60bba0                     
+0060b108: d1f804a0   ldr.w    sl, [r1, #4]                  
+0060b10c: baf1080f   cmp.w    sl, #8                        
+0060b110: 01d1       bne      #0x60b116                     
+0060b112: 0623       movs     r3, #6                        
+0060b114: 4b60       str      r3, [r1, #4]                  
+0060b116: e368       ldr      r3, [r4, #0xc]                
+0060b118: 4bb9       cbnz     r3, #0x60b12e                 
+0060b11a: 0820       movs     r0, #8                        
+0060b11c: 13f742e3   blx      #0x11e7a4                       ; _Znwj
+0060b120: 0221       movs     r1, #2                        
+0060b122: 5246       mov      r2, sl                        
+0060b124: ab68       ldr      r3, [r5, #8]                  
+0060b126: 0646       mov      r6, r0                        
+0060b128: 45f092f8   bl       #0x650250                     
+0060b12c: e660       str      r6, [r4, #0xc]                
+0060b12e: 6368       ldr      r3, [r4, #4]                  
+0060b130: 4bb9       cbnz     r3, #0x60b146                 
+0060b132: 0820       movs     r0, #8                        
+0060b134: 13f736e3   blx      #0x11e7a4                       ; _Znwj
+0060b138: 0221       movs     r1, #2                        
+0060b13a: 6a68       ldr      r2, [r5, #4]                  
+0060b13c: ab68       ldr      r3, [r5, #8]                  
+0060b13e: 0646       mov      r6, r0                        
+0060b140: 44f0bcf8   bl       #0x64f2bc                     
+0060b144: 6660       str      r6, [r4, #4]                  
+0060b146: 6068       ldr      r0, [r4, #4]                  
+0060b148: 0221       movs     r1, #2                        
+0060b14a: 40f29232   movw     r2, #0x392                    
+0060b14e: 44f023fc   bl       #0x64f998                     
+0060b152: 2046       mov      r0, r4                        
+0060b154: 95f82711   ldrb.w   r1, [r5, #0x127]              
+0060b158: 3122       movs     r2, #0x31                     
+0060b15a: 41f015fd   bl       #0x64cb88                     
+0060b15e: 0646       mov      r6, r0                        
+0060b160: d8b1       cbz      r0, #0x60b19a                 
+0060b162: 844b       ldr      r3, [pc, #0x210]                ; [0060b374]=009df25a
+0060b164: e068       ldr      r0, [r4, #0xc]                
+0060b166: 844a       ldr      r2, [pc, #0x210]                ; [0060b378]=008dffa0 "Init : MMgrBaseThread::Init Error
+"
+0060b168: 1978       ldrb     r1, [r3]                      
+0060b16a: 45f05ffa   bl       #0x65062c                     
+0060b16e: 7e4b       ldr      r3, [pc, #0x1f8]                ; [0060b368]=008e6ddc "Init"
+0060b170: 0220       movs     r0, #2                        
+0060b172: 3246       mov      r2, r6                        
+0060b174: 0146       mov      r1, r0                        
+0060b176: 0093       str      r3, [sp]                      
+0060b178: 40f29933   movw     r3, #0x399                    
+0060b17c: 0193       str      r3, [sp, #4]                  
+0060b17e: 6368       ldr      r3, [r4, #4]                  
+0060b180: 0293       str      r3, [sp, #8]                  
+0060b182: 0123       movs     r3, #1                        
+0060b184: 0393       str      r3, [sp, #0xc]                
+0060b186: 7a4b       ldr      r3, [pc, #0x1e8]                ; [0060b370]=008dd9c0 "avimmgr/AviMMgr.cpp"
+0060b188: 43f078f8   bl       #0x64e27c                     
+0060b18c: 6068       ldr      r0, [r4, #4]                  
+0060b18e: 0221       movs     r1, #2                        
+0060b190: 3246       mov      r2, r6                        
+0060b192: 40f29a33   movw     r3, #0x39a                    
+0060b196: 00f0eabc   b.w      #0x60bb6e                     
+0060b19a: 07f18002   add.w    r2, r7, #0x80                 
+0060b19e: 0121       movs     r1, #1                        
+0060b1a0: 02f8010d   strb     r0, [r2, #-0x1]!              
+0060b1a4: 7548       ldr      r0, [pc, #0x1d4]                ; [0060b37c]=003c03e1
+0060b1a6: a6f45ff9   bl       #0x2b1468                     
+0060b1aa: 84f8ac67   strb.w   r6, [r4, #0x7ac]              
+0060b1ae: 28b9       cbnz     r0, #0x60b1bc                 
+0060b1b0: 97f87f30   ldrb.w   r3, [r7, #0x7f]               
+0060b1b4: 012b       cmp      r3, #1                        
+0060b1b6: 08bf       it       eq                            
+0060b1b8: 84f8ac37   strbeq.w r3, [r4, #0x7ac]              
+0060b1bc: 07f18002   add.w    r2, r7, #0x80                 
+0060b1c0: 0026       movs     r6, #0                        
+0060b1c2: 6f48       ldr      r0, [pc, #0x1bc]                ; [0060b380]=003c03f5
+0060b1c4: 0121       movs     r1, #1                        
+0060b1c6: 02f8016d   strb     r6, [r2, #-0x1]!              
+0060b1ca: a6f44df9   bl       #0x2b1468                     
+0060b1ce: 84f8a068   strb.w   r6, [r4, #0x8a0]              
+0060b1d2: 28b9       cbnz     r0, #0x60b1e0                 

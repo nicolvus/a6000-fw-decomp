@@ -1,0 +1,261 @@
+# libmpr.so 3.21 — TU ifoFramework_Semaphore.cpp (0x5BAC40..0x5BAE10)
+# SHA-256 firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so: 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+# Herramienta: .venv/bin/python3 /tmp/elfhelper.py $LIB dis <va> <len>  (capstone THUMB)
+
+==========================================================================
+## A. 0x5BACD0  ctor  IfoSemaphore::IfoSemaphore(module_id, sub_id)   [28 B]
+##    escribe el flag [+4]=1 (LIBRE) y limpia propietario
+==========================================================================
+005bacce: 98bd       pop      {r3, r4, r7, pc}              
+005bacd0: f8b5       push     {r3, r4, r5, r6, r7, lr}      
+005bacd2: 0446       mov      r4, r0                        
+005bacd4: 064b       ldr      r3, [pc, #0x18]                 ; [005bacf0]=008bbcf8
+005bacd6: 00af       add      r7, sp, #0                    
+005bacd8: 0d46       mov      r5, r1                        
+005bacda: 1646       mov      r6, r2                        
+005bacdc: 0360       str      r3, [r0]                      
+005bacde: 0123       movs     r3, #1                        
+005bace0: 0371       strb     r3, [r0, #4]                  
+005bace2: fff7deff   bl       #0x5baca2                     
+005bace6: 6561       str      r5, [r4, #0x14]               
+005bace8: a661       str      r6, [r4, #0x18]               
+005bacea: 2046       mov      r0, r4                        
+005bacec: f8bd       pop      {r3, r4, r5, r6, r7, pc}      
+005bacee: 00bf       nop                                    
+005bacf0: f8bc       pop      {r3, r4, r5, r6, r7}          
+
+==========================================================================
+## B. 0x5BACA2  clear_owner(): +8/+0xC/+0x10 = 0    (solo 2 llamantes: ctor y release)
+==========================================================================
+005baca2: 0023       movs     r3, #0                        
+005baca4: 8360       str      r3, [r0, #8]                  
+005baca6: 80b5       push     {r7, lr}                      
+005baca8: 00af       add      r7, sp, #0                    
+005bacaa: c360       str      r3, [r0, #0xc]                
+005bacac: 0361       str      r3, [r0, #0x10]               
+005bacae: 80bd       pop      {r7, pc}                      
+005bacb0: 98b5       push     {r3, r4, r7, lr}              
+
+==========================================================================
+## C. 0x5BACB0  RELEASE:  flag=1 (LIBRE) -> clear_owner -> return 0
+##    (llamado 809 veces en libmpr; 3 escritores del byte en toda la lib:
+##     0x5BACE0 ctor=1, 0x5BACC6 release=1, 0x5BADC2 acquire=0)
+==========================================================================
+005bacb0: 98b5       push     {r3, r4, r7, lr}              
+005bacb2: 0446       mov      r4, r0                        
+005bacb4: 00af       add      r7, sp, #0                    
+005bacb6: 21b1       cbz      r1, #0x5bacc2                 
+005bacb8: 4069       ldr      r0, [r0, #0x14]               
+005bacba: a169       ldr      r1, [r4, #0x18]               
+005bacbc: 2269       ldr      r2, [r4, #0x10]               
+005bacbe: fff70bfb   bl       #0x5ba2d8                     
+005bacc2: 0123       movs     r3, #1                        
+005bacc4: 2046       mov      r0, r4                        
+005bacc6: 2371       strb     r3, [r4, #4]                  
+005bacc8: fff7ebff   bl       #0x5baca2                     
+005baccc: 0020       movs     r0, #0                        
+005bacce: 98bd       pop      {r3, r4, r7, pc}              
+
+==========================================================================
+## D. 0x5BACF4  set_owner(pid,tid,cmd): +8/+0xC/+0x10 = r1/r2/r3
+##    NO es un unlock: es el grabador de propietario que llama el acquire
+==========================================================================
+005bacf4: 80b5       push     {r7, lr}                      
+005bacf6: 00af       add      r7, sp, #0                    
+005bacf8: 8160       str      r1, [r0, #8]                  
+005bacfa: c260       str      r2, [r0, #0xc]                
+005bacfc: 0361       str      r3, [r0, #0x10]               
+005bacfe: 80bd       pop      {r7, pc}                      
+
+==========================================================================
+## E. 0x5BAD00  ACQUIRE (try-lock, SIN espera, SIN timeout)
+##    r0=obj  r1=cmd  r2=log_on_success ; ret 0 = tomado, 0xCA001001 = rechazado
+==========================================================================
+005bad00: 2de9f047   push.w   {r4, r5, r6, r7, r8, sb, sl, lr}
+005bad04: 82b0       sub      sp, #8                        
+005bad06: 02af       add      r7, sp, #8                    
+005bad08: 0446       mov      r4, r0                        
+005bad0a: 0d46       mov      r5, r1                        
+005bad0c: 9246       mov      sl, r2                        
+005bad0e: 42f00dfd   bl       #0x5fd72c                     
+005bad12: 8046       mov      r8, r0                        
+005bad14: 42f010fd   bl       #0x5fd738                     
+005bad18: 94f80490   ldrb.w   sb, [r4, #4]                  
+005bad1c: 0646       mov      r6, r0                        
+005bad1e: b9f1000f   cmp.w    sb, #0                        
+005bad22: 4bd1       bne      #0x5badbc                     
+005bad24: 324a       ldr      r2, [pc, #0xc8]                 ; [005badf0]=ca001001
+005bad26: 8f21       movs     r1, #0x8f                     
+005bad28: 3248       ldr      r0, [pc, #0xc8]                 ; [005badf4]=008bbb14 "ifoFramework_Semaphore.cpp"
+005bad2a: fff74ffa   bl       #0x5ba1cc                     
+005bad2e: 4846       mov      r0, sb                        
+005bad30: 4146       mov      r1, r8                        
+005bad32: fff7a3fa   bl       #0x5ba27c                     
+005bad36: 0120       movs     r0, #1                        
+005bad38: 3146       mov      r1, r6                        
+005bad3a: fff79ffa   bl       #0x5ba27c                     
+005bad3e: 0220       movs     r0, #2                        
+005bad40: 2946       mov      r1, r5                        
+005bad42: fff79bfa   bl       #0x5ba27c                     
+005bad46: 0320       movs     r0, #3                        
+005bad48: a168       ldr      r1, [r4, #8]                  
+005bad4a: fff797fa   bl       #0x5ba27c                     
+005bad4e: 0420       movs     r0, #4                        
+005bad50: e168       ldr      r1, [r4, #0xc]                
+005bad52: fff793fa   bl       #0x5ba27c                     
+005bad56: 2169       ldr      r1, [r4, #0x10]               
+005bad58: 0520       movs     r0, #5                        
+005bad5a: fff78ffa   bl       #0x5ba27c                     
+005bad5e: 2648       ldr      r0, [pc, #0x98]                 ; [005badf8]=008bbc95
+005bad60: fff7a2fb   bl       #0x5ba4a8                     
+005bad64: 2548       ldr      r0, [pc, #0x94]                 ; [005badfc]=008bbcb3 " ### REJECT PID = "
+005bad66: fff79ffb   bl       #0x5ba4a8                     
+005bad6a: 4046       mov      r0, r8                        
+005bad6c: fff7b2fb   bl       #0x5ba4d4                     
+005bad70: 2348       ldr      r0, [pc, #0x8c]                 ; [005bae00]=008bbcc6 " TID = "
+005bad72: fff799fb   bl       #0x5ba4a8                     
+005bad76: 3046       mov      r0, r6                        
+005bad78: fff7acfb   bl       #0x5ba4d4                     
+005bad7c: 2148       ldr      r0, [pc, #0x84]                 ; [005bae04]=008bbcce " CMD = "
+005bad7e: fff793fb   bl       #0x5ba4a8                     
+005bad82: 2846       mov      r0, r5                        
+005bad84: fff7a6fb   bl       #0x5ba4d4                     
+005bad88: 1f48       ldr      r0, [pc, #0x7c]                 ; [005bae08]=008368e2
+005bad8a: fff78dfb   bl       #0x5ba4a8                     
+005bad8e: 1f48       ldr      r0, [pc, #0x7c]                 ; [005bae0c]=008bbcd6 " ### ACTIVE PID = "
+005bad90: fff78afb   bl       #0x5ba4a8                     
+005bad94: a068       ldr      r0, [r4, #8]                  
+005bad96: fff79dfb   bl       #0x5ba4d4                     
+005bad9a: 1948       ldr      r0, [pc, #0x64]                 ; [005bae00]=008bbcc6 " TID = "
+005bad9c: fff784fb   bl       #0x5ba4a8                     
+005bada0: e068       ldr      r0, [r4, #0xc]                
+005bada2: fff797fb   bl       #0x5ba4d4                     
+005bada6: 1748       ldr      r0, [pc, #0x5c]                 ; [005bae04]=008bbcce " CMD = "
+005bada8: fff77efb   bl       #0x5ba4a8                     
+005badac: 2069       ldr      r0, [r4, #0x10]               
+005badae: fff791fb   bl       #0x5ba4d4                     
+005badb2: 1548       ldr      r0, [pc, #0x54]                 ; [005bae08]=008368e2
+005badb4: fff778fb   bl       #0x5ba4a8                     
+005badb8: 0d48       ldr      r0, [pc, #0x34]                 ; [005badf0]=ca001001
+005badba: 16e0       b        #0x5badea                     
+005badbc: 4ff00009   mov.w    sb, #0                        
+005badc0: 2046       mov      r0, r4                        
+005badc2: 84f80490   strb.w   sb, [r4, #4]                  
+005badc6: 4146       mov      r1, r8                        
+005badc8: 3246       mov      r2, r6                        
+005badca: 2b46       mov      r3, r5                        
+005badcc: fff792ff   bl       #0x5bacf4                     
+005badd0: baf1000f   cmp.w    sl, #0                        
+005badd4: 08d0       beq      #0x5bade8                     
+005badd6: 6069       ldr      r0, [r4, #0x14]               
+005badd8: 2a46       mov      r2, r5                        
+005badda: a169       ldr      r1, [r4, #0x18]               
+005baddc: 4346       mov      r3, r8                        
+005badde: 0096       str      r6, [sp]                      
+005bade0: fff75efa   bl       #0x5ba2a0                     
+005bade4: 4846       mov      r0, sb                        
+005bade6: 00e0       b        #0x5badea                     
+005bade8: 5046       mov      r0, sl                        
+005badea: bd46       mov      sp, r7                        
+005badec: bde8f087   pop.w    {r4, r5, r6, r7, r8, sb, sl, pc}
+005badf0: 0110       asrs     r1, r0, #0x20                 
+
+==========================================================================
+## F. Pool de literales y tabla/vtable
+==========================================================================
+005badf0: ca001001 
+005badf4: 008bbb14 'ifoFramework_Semaphore.cpp'
+005badf8: 008bbc95 
+005badfc: 008bbcb3 ' ### REJECT PID = '
+005bae00: 008bbcc6 ' TID = '
+005bae04: 008bbcce ' CMD = '
+005bae08: 008368e2 
+005bae0c: 008bbcd6 ' ### ACTIVE PID = '
+005bae10: af00b580 
+008bbcec: 00000000 
+008bbcf0: 00000000 
+008bbcf4: 008bbc74 
+008bbcf8: 005bac41 
+008bbcfc: 005bac51 
+008bbd00: 00000008 
+008bbd04: 008bbd18 '8BaseList'
+008bbd08: 00000000 
+008bbd0c: 008bbd00 
+008bbd10: 005baf3d 
+008bbd14: 005baf55 
+008bbd18: 73614238 
+008bbc40: 0090ee18 
+008bbc44: 00000001 
+008bbc48: 464f4649 
+008bbc4c: 4b574d52 
+008bbc50: 72455b00 
+008bbc54: 5d726f72 
+008bbc58: 00783020 
+008bbc5c: 6e75465b 
+008bbc60: 4f205d63 
+008bbc64: 00207475 
+008bbc68: 6e75465b 
+008bbc6c: 49205d63 
+008bbc70: 0020206e 
+008bbc74: 00000008 
+008bbc78: 008bbc7c '22IfoFramework_Semaphore'
+008bbc7c: 66493232 
+008bbc80: 6172466f 
+008bbc84: 6f77656d 
+008bbc88: 535f6b72 
+008bbc8c: 70616d65 
+008bbc90: 65726f68 
+008bbc94: 5f524500 
+008bbc98: 4c494146 
+008bbc9c: 415f4445 
+008bbca0: 49555143 
+008bbca4: 535f4552 
+008bbca8: 50414d45 
+008bbcac: 45524f48 
+008bbcb0: 20000a0d 
+008bbcb4: 20232323 
+008bbcb8: 454a4552 
+008bbcbc: 50205443 
+008bbcc0: 3d204449 
+008bbcc4: 54200020 
+008bbcc8: 3d204449 
+008bbccc: 43200020 
+008bbcd0: 3d20444d 
+008bbcd4: 23200020 
+008bbcd8: 41202323 
+008bbcdc: 56495443 
+008bbce0: 49502045 
+008bbce4: 203d2044 
+008bbce8: 00000000 
+008bbcec: 00000000 
+008bbcf0: 00000000 
+008bbcf4: 008bbc74 
+008bbcf8: 005bac41 
+
+==========================================================================
+## F. Datos: literales, cadenas y vtable
+==========================================================================
+## F1. Pool de literales del acquire (0x5BADF0..0x5BAE10)
+005badf0  01 10 00 ca 14 bb 8b 00 95 bc 8b 00 b3 bc 8b 00  ................
+005bae00  c6 bc 8b 00 ce bc 8b 00 e2 68 83 00 d6 bc 8b 00  .........h......
+
+## F2. Cadenas del modulo (0x8BBC40..0x8BBD00)
+008bbc40  18 ee 90 00 01 00 00 00 49 46 4f 46 52 4d 57 4b  ........IFOFRMWK
+008bbc50  00 5b 45 72 72 6f 72 5d 20 30 78 00 5b 46 75 6e  .[Error] 0x.[Fun
+008bbc60  63 5d 20 4f 75 74 20 00 5b 46 75 6e 63 5d 20 49  c] Out .[Func] I
+008bbc70  6e 20 20 00 08 00 00 00 7c bc 8b 00 32 32 49 66  n  .....|...22If
+008bbc80  6f 46 72 61 6d 65 77 6f 72 6b 5f 53 65 6d 61 70  oFramework_Semap
+008bbc90  68 6f 72 65 00 45 52 5f 46 41 49 4c 45 44 5f 41  hore.ER_FAILED_A
+008bbca0  43 51 55 49 52 45 5f 53 45 4d 41 50 48 4f 52 45  CQUIRE_SEMAPHORE
+008bbcb0  0d 0a 00 20 23 23 23 20 52 45 4a 45 43 54 20 50  ... ### REJECT P
+008bbcc0  49 44 20 3d 20 00 20 54 49 44 20 3d 20 00 20 43  ID = . TID = . C
+008bbcd0  4d 44 20 3d 20 00 20 23 23 23 20 41 43 54 49 56  MD = . ### ACTIV
+008bbce0  45 20 50 49 44 20 3d 20 00 00 00 00 00 00 00 00  E PID = ........
+008bbcf0  00 00 00 00 74 bc 8b 00 41 ac 5b 00 51 ac 5b 00  ....t...A.[.Q.[.
+
+## F3. Descriptor de tipo + vtable del semaforo (0x8BBCF4..0x8BBD00)
+008bbcf4: 008bbc74
+008bbcf8: 005bac41
+008bbcfc: 005bac51
+  0x8BBCF4 -> 0x8BBC74 = {00000008, 008BBC7C}  nombre de tipo '22IfoFramework_Semaphore'
+  0x8BBCF8: slot0 0x5BAC40 (dtor base: fija vptr), slot1 0x5BAC50 (deleting dtor)
