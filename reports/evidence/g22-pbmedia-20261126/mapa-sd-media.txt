@@ -1,0 +1,40 @@
+# G22-PBMEDIA — imagen FAT32 con SD_MEDIA=1 (foto real + índice AV coherente)
+
+ Volume in drive : is A6000SD    
+ Volume Serial Number is 0447-77C4
+Directory for ::/AVF_INFO
+
+.            <DIR>     2026-11-26   7:56 
+..           <DIR>     2026-11-26   7:56 
+STAT0000 BIN         0 2026-11-26   7:56 
+PRV00001 BIN         0 2026-11-26   7:56 
+AVIN0001 INT         0 2026-11-26   7:56 
+AVIN0001 BNP       384 2026-11-26   7:56 
+AVIN0001 INP       384 2026-11-26   7:56 
+        7 files                 768 bytes
+                      4 286 205 952 bytes free
+
+ Volume in drive : is A6000SD    
+ Volume Serial Number is 0447-77C4
+Directory for ::/DCIM/100MSDCF
+
+.            <DIR>     2026-11-26   7:56 
+..           <DIR>     2026-11-26   7:56 
+DSC00001 JPG    294771 2026-11-26   7:56 
+        3 files             294 771 bytes
+                      4 286 205 952 bytes free
+
+sector del file ID del índice (AVIN0001.INP): 16488
+
+== primeros 0x40 B de AVF_INFO/AVIN0001.INP tal como quedan en la imagen ==
+off 0x80d000
+  0x80d000  ff 06 75 81 fa 7b e2 90 45 27 84 b0 5e 61 10 ad  ..u..{..E'..^a..
+  0x80d010  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  0x80d020  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  0x80d030  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+registro @ fichero+0x100:
+  +0x00  44 43 49 4d 2f 31 30 30 4d 53 44 43 46 00 00 00  DCIM/100MSDCF...
+  +0x10  00 00 44 53 43 30 30 30 30 31 2e 4a 50 47 00 00  ..DSC00001.JPG..
+  +0x20  73 7f 04 00 01 00 00 00 50 06 00 00 38 04 00 00  s.......P...8...
+  +0x30  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+  nFileSize @+0x20 = 294771  WxH @+0x28,+0x2c = (1616, 1080)

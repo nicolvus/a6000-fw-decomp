@@ -561,6 +561,10 @@ ssize_t read(int fd, void *b, size_t n) {
 /* SDIMG: traza de E/S sobre la imagen (primeras 80 llamadas) para ver qué lee libInfraFsys */
 static int sd_fd(int fd) { return fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && !strcmp(devname[fd], "/dev/mmca") && getenv("SDIMG"); }
 static void sd_log(const char *op, int fd, long a, long b, long r) { static int n; if (n++ < 80) LOG("SDIO %s fd=%d a=%ld b=%ld -> %ld", op, fd, a, b, r); }
+/* SDIO=1: TODAS las lecturas de sectores de la SD emulada (sector, nº de sectores), para poder mapear qué bytes
+   de qué fichero lee el invitado (G22-PBMEDIA): el sector absoluto de un fichero se conoce del propio generador
+   (firma de 16 B buscada en la cabeza de la imagen), así que la traza da el offset y el paso de lectura. */
+static void sd_io(int fd, unsigned long sec, unsigned long n) { static int m; const char *e = getenv("SDIO"); if (!e) return; int lim = (int)num(e); if (lim && m++ >= lim) return; LOG("SDIO rd sec=%lu n=%lu", sec, n); }
 /* NFTRACE=1: primeras 60 operaciones de E/S sobre /dev/nflasha4 (diagnóstico de FlashLib/DFA) */
 static void nf_log(const char *op, int fd, long a, long b, long r) { static int n; if (getenv("NFTRACE") && n++ < 60) LOG("NFIO %s fd=%d a=%ld b=%ld -> %ld", op, fd, a, b, r); }
 off64_t lseek64(int fd, off64_t o, int w) { static off64_t (*real)(int, off64_t, int); if (!real) real = nextsym("lseek64"); off64_t r = real(fd, o, w); if (nf_fd(fd)) nf_log("lseek64", fd, (long)o, w, (long)r); if (sd_fd(fd)) sd_log("lseek64", fd, (long)(o / 512), w, (long)(r / 512)); return r; }
@@ -780,7 +784,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
         unsigned *a = (unsigned *)arg, tot = sd_sectors();
         if (!strcmp(devname[fd], "/dev/mmca-char") && req == 5) { sd_cardinfo_fill(a, tot); LOG("SDIMG: ioctl 5 -> SD, %u sectores", tot); return 0; }
         if (!strcmp(devname[fd], "/dev/mmca") && (req == 0x10f || req == 0x110)) {  /* E/S de sectores del driver mmc (libInfraMediaCommon+0xec28 leer / +0xeb4c escribir): {estado, búfer, sector, nº de sectores}; INFERENCIA del orden de campos por la llamada de libInfraFsys (búfer, sector, cuenta) */
-            unsigned long n = (unsigned long)a[3] * 512; off_t o = (off_t)a[2] * 512; ssize_t r = req == 0x10f ? pread(fd, (void *)a[1], n, o) : pwrite(fd, (void *)a[1], n, o);
+            unsigned long n = (unsigned long)a[3] * 512; off_t o = (off_t)a[2] * 512; if (req == 0x10f) sd_io(fd, (unsigned long)a[2], (unsigned long)a[3]); ssize_t r = req == 0x10f ? pread(fd, (void *)a[1], n, o) : pwrite(fd, (void *)a[1], n, o);
             a[0] = r == (ssize_t)n ? 0 : 0x80000001u; sd_log(req == 0x10f ? "leer" : "escribir", fd, (long)a[2], (long)a[3], (long)r); return 0; }
         if (!strcmp(devname[fd], "/dev/mmca") && req == 0x104) { sd_partinfo_fill(a, tot); LOG("SDIMG: ioctl 0x104 -> último LBA %u (%u sectores)", tot - 1, tot); return 0; }
     }
@@ -1248,11 +1252,38 @@ static void mwf_nullsafe(void) {
             memcpy(f, sw, 12); __builtin___clear_cache((char *)f, (char *)f + 12); __builtin___clear_cache((char *)t2, (char *)t2 + 32);
             LOG("NULLMWF: +%#x protegida (this NULL = regreso inmediato)", off[i]); } }
 }
+/* MEDIADELAY=n (G22-PBMEDIA): retrasa n s el arranque del objeto de medio (`ObjMedia_Create`, libObj VA 0x93d2cc —
+   dynsym `ObjMedia_Create` = 0x93d2cd, bit Thumb) para que el montaje de la SD (`FsysMount`, ≈ 66 s en los perfiles
+   pbmedia*) ocurra ANTES de `DefObjMedia::onStarting` (≈ 65 s): medido, si onStarting llega primero el medio queda
+   `INH_INVALID_INFO_FS` → `RejectMedia()` y `getModelInfo(model/MEDIA, 0)` se queda en 0. Trampolín: copia los 12 B
+   del prólogo, duerme y vuelve a +0x0c. */
+static void media_delay(unsigned long base) {
+    const char *e = getenv("MEDIADELAY"); if (!e) return;
+    int s = num(e); if (s <= 0 || s > 250) return;
+    unsigned char *fn = (unsigned char *)(base + 0x93d2cc);
+    unsigned char *tr = mmap(0, 4096, PROT_READ | PROT_WRITE | PROT_EXEC, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
+    if (tr == MAP_FAILED) { LOG("MEDIADELAY: mmap falló"); return; }
+    /* 12 B del prólogo original (0x93d2cc..0x93d2d7), copiados tal cual: push {r3-r7,lr}; mov r6,r0; add r7,sp,#0;
+       mov.w r0,#0x3c0; mov r5,r1. Sin el último la función escribe por r5 basura (SEGV medido). */
+    static const unsigned char pro[12] = { 0xb5, 0xf8, 0x06, 0x46, 0x00, 0xaf, 0x4f, 0xf4, 0x70, 0x70, 0x0d, 0x46 };
+    unsigned char code[14] = { 0x0f, 0xb4, (unsigned char)(s & 0xff), 0x20, 0x04, 0x4b, 0x98, 0x47, 0x0f, 0xbc, 0xdf, 0xf8, 0x04, 0xf0 };
+    memcpy(tr, pro, sizeof pro); memcpy(tr + 0x0c, code, sizeof code);
+    unsigned long cont = (unsigned long)(fn + 0x0c) | 1, slp = (unsigned long)sleep;
+    memcpy(tr + 0x1c, &cont, 4); memcpy(tr + 0x24, &slp, 4);
+    unsigned long pg = (unsigned long)fn & ~4095UL;
+    if (mprotect((void *)pg, 8192, PROT_READ | PROT_WRITE | PROT_EXEC)) { LOG("MEDIADELAY: mprotect falló"); return; }
+    unsigned long dst = (unsigned long)tr | 1;
+    unsigned char sw[12] = { 0xdf, 0xf8, 0x00, 0xf0 };            /* ldr.w pc,[pc,#0] ; .word trampolín */
+    memcpy(sw + 4, &dst, 4); sw[8] = sw[10] = 0x00; sw[9] = sw[11] = 0xbf;
+    memcpy(fn, sw, 12); __builtin___clear_cache((char *)fn, (char *)fn + 12); __builtin___clear_cache((char *)tr, (char *)tr + 0x28);
+    LOG("MEDIADELAY: ObjMedia_Create en %p parcheada, %d s de retardo", (void *)fn, s);
+}
 static void skip_fns(void) {
     char ln[256]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");
     while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, "libObj.so")) { base = hexv(ln, 0); break; }
     if (m) fclose(m);
     if (!base) { LOG("SKIPFN: libObj no hallada"); return; }
+    media_delay(base);
     if (getenv("POKE")) {  /* POKE=dir=malloc: escribe la dirección de malloc en libObj+dir (asignador del GPU de DMP, experimento) */
         const char *e = getenv("POKE"); unsigned long a = hexv(e, &e); *(void **)(base + a) = (void *)malloc; LOG("POKE libObj+%#lx = malloc (%p)", a, (void *)malloc);
     }
