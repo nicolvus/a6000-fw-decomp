@@ -56,6 +56,8 @@ for _p in (ROOT / "scripts", ROOT / "references/fwtool", ROOT / "scripts/gui", H
 BLOCK = 1024
 DAT_MAGIC = bytes.fromhex("895546550d0a1a0a")
 N15 = "dev/nflasha15"
+N5 = "dev/nflasha5"  # WBI1: instantánea de RAM de Sony con el TOC y la caché del /usr de Sony (G11 §11)
+WBI_MAGIC = (b"WBI1", b"WBI0")
 PARTICION = 104_857_600  # mount.conf: /dev/nflasha15 /usr raw 104857600
 PUERTO_MIN, PUERTO_MAX = 8630, 8645
 TRABAJO = ROOT / "analysis/gui/g22/harness"
@@ -63,6 +65,7 @@ BASE_SONY = TRABAJO / "audit-base-sony"
 ARCH_CFW = ROOT / "analysis/gui/g22"
 ARCH_DOCS = ROOT / "docs/gui/auditorias"
 NFLASHA15_SONY = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15"
+NFLASHA5_SONY = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha5"
 BK_TBL = TRABAJO / "overlay/cam/usr/share/bk.tbl"
 SYM = {True: "OK", False: "FALLO", None: "NO VERIFICADO"}
 
@@ -325,6 +328,7 @@ def etapa_contenedor(ruta: Path, checks: list[dict[str, Any]], tmp: Path) -> dic
     if nombre is None:
         return {"version": hdr["version"], "miembros": miembros}
     crudo = miembros[nombre]
+    s_img = None
     try:
         img = tpzl.TpzlImage.parse(crudo)
         add(checks, "contenedor.nflasha15_tpzl", True, f"{len(img.entries)} bloques de {img.block_size} B; {len(crudo)} B", 1)
@@ -354,7 +358,88 @@ def etapa_contenedor(ruta: Path, checks: list[dict[str, Any]], tmp: Path) -> dic
     except Exception as e:  # noqa: BLE001 - TPZL dañado
         add(checks, "contenedor.nflasha15_tpzl", False, f"TPZL inválido: {e}", 1)
         return {"version": hdr["version"], "miembros": miembros}
-    return {"version": hdr["version"], "miembros": miembros, "n15": crudo}
+    wbi = analiza_wbi(miembros, img, s_img, checks) if a6000 else {}
+    if not a6000:
+        add(checks, "contenedor.wbi_acoplamiento", None,
+            "modelo distinto de la A6000: el WBI y el reparto de particiones de esta cámara no aplican", 1,
+            evidencia="NO_VERIFICADO")
+    return {"version": hdr["version"], "miembros": miembros, "n15": crudo, "wbi": wbi}
+
+
+# ------------------------------------------------------------------------------------------------ WBI
+def _sony_n5() -> Path | None:
+    env = os.environ.get("AUDITA_SONY_NFLASHA5")
+    for p in ([Path(env)] if env else []) + [NFLASHA5_SONY]:
+        if p.is_file():
+            return p
+    return None
+
+
+def analiza_wbi(miembros: dict[str, bytes], img: Any, sony_img: Any, checks: list[dict[str, Any]]) -> dict[str, Any]:
+    """Acoplamiento WBI (`dev/nflasha5`) ↔ `nflasha15`: la instantánea de Sony guarda el TOC del `/usr` de Sony.
+
+    El arranque normal no carga Linux de `nflasha3`: reanuda la instantánea `WBI1` de `nflasha5`, que lleva dentro el
+    **TOC TPZL completo del `nflasha15` de Sony**, el superbloque del ext2 y páginas del `/usr` en caché (G11 §11).
+    Un paquete que cambia `/usr` y deja la instantánea de Sony es incoherente: si el TOC se mueve, la cámara lee el
+    `/usr` nuevo con los offsets viejos (6/6 fallos de arranque medidos en cámara); si no se mueve, los procesos y la
+    caché de páginas reanudados siguen siendo los de Sony, así que el cambio puede no tener efecto. La forma correcta
+    de cambiar `/usr` es invalidar el WBI (quitar `0700_part_image/dev/nflasha5` y su línea del `part_image.sum`:
+    `build_package_nflasha15.py --sin-wbi`).
+    """
+    nombre = next((n for n in miembros if n == N5 or n.endswith("/" + N5)), None)
+    r: dict[str, Any] = {"miembro": nombre or "", "magic_ok": None, "toc_movido": None, "igual_sony": None,
+                         "toc_primera": None, "entradas": 0, "n15_igual_sony": None}
+    toc_igual = sony_img is not None and img.entries == sony_img.entries
+    if sony_img is not None and not toc_igual:  # primera entrada del TOC que deja de coincidir con Sony 3.21
+        r["toc_primera"] = next((k for k in range(min(len(img.entries), len(sony_img.entries)))
+                                 if img.entries[k] != sony_img.entries[k]), min(len(img.entries), len(sony_img.entries)))
+    r["toc_movido"] = None if sony_img is None else not toc_igual
+    r["entradas"] = len(img.entries)
+    if nombre is None:
+        add(checks, "contenedor.wbi_acoplamiento", True,
+            "el paquete no incluye `dev/nflasha5`: sin instantánea WBI, Loader3 arranca en frío (G11 §11/§12) — "
+            "no hay acoplamiento que romper", 1)
+        return r
+    datos = miembros[nombre]
+    r["magic_ok"] = datos[:4] in WBI_MAGIC
+    if not r["magic_ok"]:
+        add(checks, "contenedor.wbi_acoplamiento", False,
+            f"`{nombre}` ({len(datos)} B) no empieza por WBI1/WBI0 ({datos[:4]!r}): no es una instantánea de arranque", 1)
+        return r
+    sony5 = _sony_n5()
+    r["igual_sony"] = None if sony5 is None else sha256_bytes(datos) == sha256_file(sony5)
+    if sony_img is None or r["igual_sony"] is None:
+        add(checks, "contenedor.wbi_acoplamiento", None,
+            "hay WBI en el paquete y falta el `nflasha5`/`nflasha15` de Sony 3.21 con el que comparar el TOC: "
+            "no se puede demostrar que la instantánea describa este `/usr`", 1, evidencia="NO_VERIFICADO", material=True)
+        return r
+    r["n15_igual_sony"] = img.data == sony_img.data
+    quien = "de Sony byte a byte" if r["igual_sony"] else "del CFW"
+    if r["n15_igual_sony"]:
+        add(checks, "contenedor.wbi_acoplamiento", True,
+            f"`{nombre}` es la instantánea {quien} y el nflasha15 es el de Sony: la instantánea describe exactamente "
+            "el /usr que se instala", 1)
+        return r
+    detalle_toc = (f"TOC movido (primera entrada distinta: {r['toc_primera']} de {len(img.entries)}; "
+                   + ("mismo número de bloques" if len(img.entries) == len(sony_img.entries)
+                      else f"{len(img.entries)} entradas frente a {len(sony_img.entries)} de Sony") + ")")
+    if toc_igual:
+        add(checks, "contenedor.wbi_acoplamiento", True,
+            f"`{nombre}` es la instantánea {quien}: el TOC del nflasha15 no se mueve, pero el /usr SÍ cambia y la "
+            "instantánea reanudada conserva los procesos y la caché de páginas del /usr de Sony → el cambio puede no "
+            "tener efecto (invalidar el WBI para arranque en frío)", 1, evidencia="INFERENCIA", aviso=True)
+        return r
+    if r["igual_sony"]:
+        add(checks, "contenedor.wbi_acoplamiento", False,
+            f"{detalle_toc} y el paquete trae el WBI de Sony byte a byte con el /usr cambiado: la cámara reanudaría la "
+            "instantánea con el TOC y la caché del /usr de Sony (6/6 fallos de arranque medidos, G11 §11) → quitar "
+            "`0700_part_image/dev/nflasha5` y su línea del `part_image.sum` (`--sin-wbi`)", 1)
+        return r
+    add(checks, "contenedor.wbi_acoplamiento", None,
+        f"{detalle_toc} con el /usr cambiado, pero el WBI del paquete NO es el de Sony: su TOC interno no se comprueba "
+        "aquí (descomprimir el WBI no es viable en la etapa 1); un WBI regenerado con el TOC nuevo sería correcto", 1,
+        evidencia="NO_VERIFICADO", material=True)
+    return r
 
 
 # ------------------------------------------------------------------------------------------------ /usr
@@ -1220,6 +1305,7 @@ def audita(ruta: Path, *, completo: bool = True, arranque: bool | None = None, s
                 extra = {}
             r["version"] = extra.get("version", "")
             imagen = extra.get("n15")
+            r["wbi"] = extra.get("wbi", {})
         else:
             add(checks, "contenedor.no_aplica", None,
                 f"{tipo}: no hay contenedor .dat que auditar (se audita el /usr y el arranque)", 1,
@@ -1307,7 +1393,8 @@ def informe_markdown(r: dict[str, Any]) -> str:
               "| Etapa | Comprobación | Resultado | Evidencia | Detalle |", "|---|---|---|---|---|"]
     for c in r["checks"]:
         estado = "AVISO" if c["aviso"] and c["ok"] is not False else SYM[c["ok"]]
-        detalle = str(c["detalle"]).replace("|", "\\|")[:220]
+        # un fallo lleva el motivo completo en el Markdown (el JSON siempre lo lleva sin recortar)
+        detalle = str(c["detalle"]).replace("|", "\\|")[:400 if c["ok"] is False else 220]
         lineas.append(f"| {c['etapa']} | `{c['id']}` | {estado} | {c['evidencia']} | {detalle} |")
     u = r.get("usr") or {}
     if u:
@@ -1315,6 +1402,16 @@ def informe_markdown(r: dict[str, Any]) -> str:
                    f"- Añadidos ({len(u.get('anadidos', []))}): {', '.join(f'`{x}`' for x in u.get('anadidos', [])[:30]) or '—'}",
                    f"- Cambiados ({len(u.get('cambiados', []))}): {', '.join(f'`{x}`' for x in u.get('cambiados', [])[:30]) or '—'}",
                    f"- Quitados ({len(u.get('quitados', []))}): {', '.join(f'`{x}`' for x in u.get('quitados', [])[:30]) or '—'}"]
+    w = r.get("wbi") or {}
+    if w:
+        lineas += ["", "## WBI (`nflasha5`) frente a `nflasha15`", "",
+                   f"- Miembro en el paquete: `{w.get('miembro') or 'ninguno'}` (magia WBI {'sí' if w.get('magic_ok') else 'no'})",
+                   f"- TOC del `nflasha15` movido respecto a Sony 3.21: {w.get('toc_movido')}"
+                   + (f" (primera entrada distinta {w['toc_primera']} de {w.get('entradas')})"
+                      if w.get("toc_primera") is not None else ""),
+                   f"- `nflasha5` idéntico al de Sony 3.21: {w.get('igual_sony')}",
+                   ("- Regla (G11 §11): si el TOC se mueve, el WBI de Sony debe invalidarse (`--sin-wbi`); si no, la "
+                    "cámara reanuda la instantánea con los offsets y la caché del `/usr` de Sony.")]
     if r.get("arranque"):
         a = r["arranque"]
         lineas += ["", "## Arranque en el arnés", "",
@@ -1324,7 +1421,9 @@ def informe_markdown(r: dict[str, Any]) -> str:
     lineas += ["", "## Límites", "",
                "Emulación de la UI con un kernel ajeno y el shim: un OK aquí no demuestra el comportamiento en cámara.",
                "Loader2/3, Darwin, el hardware y las tablas de recursos que no se declaren siguen siendo riesgo de cámara.",
-               "Los ids de Backup/NVRAM solo se comprueban si el CFW los declara; si no, quedan NO VERIFICADOS.", ""]
+               "Los ids de Backup/NVRAM solo se comprueban si el CFW los declara; si no, quedan NO VERIFICADOS.",
+               ("El WBI solo se compara con el de Sony 3.21 (miembro y TOC); el TOC interno de un WBI regenerado no "
+                "se descomprime aquí."), ""]
     return "\n".join(lineas)
 
 

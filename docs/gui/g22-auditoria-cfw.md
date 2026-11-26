@@ -1,15 +1,21 @@
 # G22 — Auditoría de CFW instalables: estática + arranque en el arnés
 
-**Estado (26-11-2026): IMPLEMENTADO Y PROBADO con el `.dat` oficial de Sony 3.21 y con paquetes
-sintéticos sobre el `/usr` real.** No había ningún `.dat` de CFW en este equipo, así que **ningún CFW
-instalable se ha auditado todavía** (ver §7). El CLI es `scripts/gui/harness/audita_cfw.py`; las pruebas
-están en `tests/test_gui_audita_cfw.py`. Se lanza también **desde el configurador** (`lanzador.py`, pestaña
-Firmware: botones, tabla de comprobaciones, informe enlazado e historial) — ver §8.
+**Estado (26-11-2026): IMPLEMENTADO Y PROBADO con un CFW REAL construido aquí y con el `.dat` oficial de
+Sony 3.21.** Los `.dat` de CFW del proyecto no están en este clon, así que el CFW auditado se construyó
+desde el firmware de Sony **sin cámara y sin instalar nada** (`/usr` con un byte distinto, versión 3.40,
+WBI invalidado): `reports/evidence/g22-audit-cfw-20261126/` guarda su JSON, su Markdown, las capturas y la
+receta. El CLI es `scripts/gui/harness/audita_cfw.py`; las pruebas están en `tests/test_gui_audita_cfw.py`.
+Se lanza también **desde el configurador** (`lanzador.py`, pestaña Firmware: botones, tabla de
+comprobaciones, informe enlazado e historial) — ver §8.
 
 Sustituye al auditor específico `scripts/gui/audit_package_nflasha15.py` (atado al CFW Silent y a la base
 3.38) por una auditoría general de cualquier CFW instalable de la A6000: `.dat`, directorio de paquete con
 `nflasha15` o `nflasha15.bin` suelto. Sigue siendo **solo lectura**: no escribe firmware, NVRAM ni MMIO,
 no flashea y no toca la cámara.
+
+Desde esta entrega la etapa 1 comprueba además el **acoplamiento WBI**: un paquete que cambia `/usr` y
+conserva la instantánea `nflasha5` de Sony se rechaza (o se marca con su motivo) en vez de pasar por bueno
+(§2, etapa 1, y §7.4).
 
 ## 1. Uso
 
@@ -68,7 +74,17 @@ sin instalar nada:
   puede cargar el constructor queda `NO_VERIFICADO`, no OK;
 - tar del firmware: miembros, todas las líneas `0,…` de los `.sum`, presencia de `dev/nflasha15`;
 - `nflasha15` TPZL: número de bloques y tamaño, cabe en la partición de 100 MiB, violaciones de la ruta
-  LDEC (`tpzl.hardware_violations`), **bloque 0 idéntico al de Sony 3.21** (R55) y mismo número de bloques.
+  LDEC (`tpzl.hardware_violations`), **bloque 0 idéntico al de Sony 3.21** (R55) y mismo número de bloques;
+- **acoplamiento WBI ↔ `nflasha15`** (`contenedor.wbi_acoplamiento`, NUEVO en esta entrega). El arranque
+  normal no carga Linux de `nflasha3`: reanuda la instantánea `WBI1` de `nflasha5`, que lleva dentro el TOC
+  TPZL del `nflasha15` de Sony, el superbloque del ext2 y parte de su caché de páginas (G11 §11). Reglas:
+  sin `dev/nflasha5` en el paquete → OK (arranque en frío, G11 §12); `nflasha15` idéntico al de Sony → OK;
+  `/usr` cambiado con el TOC movido y el WBI de Sony byte a byte → **FALLO** (es el fallo de arranque
+  medido 6/6 en cámara) con el motivo y la orden que lo arregla; `/usr` cambiado con el TOC intacto → OK con
+  **AVISO** `INFERENCIA` (la instantánea reanudada conserva los procesos y la caché de Sony: el cambio puede
+  no tener efecto); WBI presente pero distinto del de Sony y TOC movido → `NO_VERIFICADO` (descomprimir el
+  WBI no es viable aquí), nunca OK. El WBI de Sony se busca en
+  `firmware/extracted/fw321/…/dev/nflasha5` o en `AUDITA_SONY_NFLASHA5`.
 
 ### Etapa 2 — `/usr` frente al Sony de la misma versión
 
@@ -168,6 +184,9 @@ acepta tal cual.
 | arranque en frío del Sony de serie (medido 26-11-2026) | 145 s de sesión; primera pantalla ≈ 2 min | 3 PNG de 640×480, MENÚ abre, sin IMEXIT; el perfil guarda estado para la siguiente (≈ 7 s) |
 | auditoría completa con la base Sony cacheada (paquete sintético idéntico a Sony) | 209 s | incluye la espera de hueco de QEMU; 9 comprobaciones de arranque OK y comparación de menú 0,0 |
 | primera captura de la base Sony | 120–145 s | queda cacheada en `analysis/gui/g22/harness/audit-base-sony/` |
+| **CFW real 3.40, `--completo --sin-arranque`** | **53 s** | contenedor 170 MB + diff del `/usr` real (2 377 ficheros) + estructura; 38 ok, 0 fallos |
+| **CFW real 3.40, `--completo --arranque`** | **316 s** | incluye 3 min de sesión de QEMU, la espera de hueco (otros agentes ocupaban QEMU) y la captura de la base Sony (cacheada) |
+| construcción del CFW (offline): `build_nflasha15` + `build_package` | 1 min 40 s + 1 min 30 s | descomprimir 155 MB de ext2, `debugfs`, `e2fsck`, recomprimir 4 bloques y cifrar el `.dat` |
 
 ## 5. Qué **no** puede cubrir el arnés (sigue siendo riesgo de cámara)
 
@@ -189,6 +208,11 @@ acepta tal cual.
   conserva (se marca `arranque.quitados` NO_VERIFICADO).
 - **Modelo/región distintos de la A6000** y bases Sony distintas de la 3.21 sin `--usr-sony`: se rechazan
   o quedan sin base; no se generaliza a otras cámaras.
+- **WBI (`nflasha5`) más allá de la comparación estática**: se compara el miembro con el de Sony 3.21 y el
+  TOC del `nflasha15` con el de Sony; **no** se descomprime el WBI (ni el de Sony ni uno regenerado) para
+  leer el TOC que lleva dentro, no se ejecuta Loader3 (así que la elección `BootMode 11` frente al arranque
+  en frío no se observa) y el arnés no usa `nflasha5` para arrancar: un paquete aceptado aquí puede seguir
+  fallando en cámara por esta ruta.
 - **Seguridad/legalidad**: no valida que un CFW sea seguro, solo su coherencia con el firmware de Sony y
   el arranque emulado.
 
@@ -199,24 +223,32 @@ acepta tal cual.
 /home/nicolas/a6000-arnes/.venv/bin/python -m pytest tests/test_gui_harness.py -k "pkg_usr or shimenv" -q
 ```
 
-Las seis primeras pruebas no usan QEMU (detección/rechazo, fichero de Sony quitado → FALLO, parche no
-declarado → AVISO, informe JSON/Markdown, lote y orquestación de la etapa 4 con una sesión simulada). El
-marcador de arranque se omite salvo que existan los artefactos y se pida:
+Medido en esta entrega: **13 passed, 1 skipped** (el marcador de arranque real) en 0,9 s. Las siete pruebas
+nuevas cubren el acoplamiento WBI sin QEMU, llamando a `analiza_wbi` con imágenes TPZL falsas: sin
+`nflasha5` → OK; `nflasha5` de Sony con el `nflasha15` de Sony → OK; **TOC movido + WBI de Sony → FALLO**
+(puerta 1) con el motivo y `--sin-wbi` en el detalle; TOC intacto con el `/usr` cambiado → OK con AVISO;
+WBI regenerado con el TOC movido → `NO_VERIFICADO`/`PARCIAL`; miembro sin magia WBI → FALLO; sin
+`nflasha5` de Sony → `NO_VERIFICADO`. El resto (detección/rechazo, fichero de Sony quitado → FALLO, parche
+no declarado → AVISO, informe JSON/Markdown, lote y orquestación de la etapa 4 con una sesión simulada) no
+usa QEMU. El marcador de arranque se omite salvo que existan los artefactos y se pida:
 
 ```sh
 AUDITA_CFW_ARRANQUE=1 … -m pytest tests/test_gui_audita_cfw.py::test_arranque_real_del_arnes -q
 ```
 
-Variables de entorno: `AUDITA_SONY_NFLASHA15` (base Sony), `AUDITA_BK_TBL` (volcado de ids),
-`AUDITA_WORKERS` (procesos de descompresión TPZL), `AUDITA_ESPERA`, `AUDITA_REINTENTOS`,
-`AUDITA_BASE_RECAPTURA=1` (rehacer la base de Sony), `AUDITA_CONSERVA_PERFIL=1` (no borrar el perfil de la
-auditoría).
+Variables de entorno: `AUDITA_SONY_NFLASHA15` y `AUDITA_SONY_NFLASHA5` (bases Sony), `AUDITA_BK_TBL`
+(volcado de ids), `AUDITA_WORKERS` (procesos de descompresión TPZL), `AUDITA_ESPERA`,
+`AUDITA_REINTENTOS`, `AUDITA_BASE_RECAPTURA=1` (rehacer la base de Sony), `AUDITA_CONSERVA_PERFIL=1` (no
+borrar el perfil de la auditoría).
 
 ## 7. Resultado en este equipo (26-11-2026)
 
+### 7.1 Primera tanda: no había ningún CFW en disco
+
 - **CFW auditables encontrados: ninguno.** No hay ningún `.dat` de CFW en el equipo (los paquetes están en
-  `.gitignore`); `analysis/gui/g22/pkg*` y `pkgdat` no existen. Por eso no se ha podido auditar ningún CFW
-  instalable real y **no se afirma que ninguno funcione**.
+  `.gitignore`); `analysis/gui/g22/pkg*` y `pkgdat` no existen, y tampoco
+  `analysis/e25-27/artifacts-338/firmware.integrated.tar` en este clon. Por eso aquí no se afirmaba que
+  ningún CFW funcionara; §7.2 construye uno y lo audita.
 - **Sí se auditó el `.dat` oficial de Sony 3.21** (`FirmwareData_ILCE6000V321.dat`, sha256 `29aef21a…`):
   etapas 1 y 2 completas, 33 comprobaciones OK, sin fallos ni avisos. Sirve de autocomprobación del
   contenedor, no de CFW.
@@ -246,6 +278,87 @@ auditoría).
   `…/20261126-012422-FirmwareData_ILCE6000V321-dat/` (ignorados por git). El historial listó las dos
   auditorías nuevas (OK, 3.21) y los cuatro `analysis/gui/g22/audit-3.7{6,7,8,9}.json` antiguos con `—` de
   veredicto y la fecha del fichero.
+
+### 7.2 El CFW real: construido offline y auditado (esta entrega)
+
+**Artefacto auditado** (fuera del repo, no se versiona):
+`/home/nicolas/cfwbuild/out-sinwbi/package-3.40/firmware_packed.dat`,
+**sha256 `04f6c18b0b4b782f819aebfc6be9821a5ff911fedce3b25b7a9400bf95e6cdf9`**, 170 528 920 B, versión 3.40,
+modelo A6000 y updater oficial 3.21. Construido en este equipo **sin cámara y sin instalar nada**
+(`CONSTRUIDO OFFLINE — INSTALACIÓN NO AUTORIZADA`).
+
+Receta (scripts y huellas en `reports/evidence/g22-audit-cfw-20261126/construccion/`):
+
+1. base `firmware/extracted/fw321/firmware.tar` (Sony 3.21, 105 miembros): `artifacts-338` no existe en
+   este clon;
+2. `/usr`: `share/app/string_english.uxc`, id `0xE001` «Extra fine» → «Extra Fine» (misma longitud: el
+   fichero sigue en 219 996 B y cambia **1 byte**, el offset 11 950);
+3. `scripts/gui/build_nflasha15.py` → `nflasha15` 84 042 977 → **84 043 264 B**, 4 bloques de 64 KiB
+   recompuestos, CRC-32 `d5da505c`, bloque 0 byte a byte como el de Sony (R55);
+4. `scripts/gui/build_package_nflasha15.py --base-tar … --version 3.40 --sin-wbi` → `.dat` + `.fdat` +
+   `part_image.sum` con la línea nueva y **sin** `dev/nflasha5` (WBI invalidado, G11 §11);
+5. declaración `declara.json`: `parcheados` con el sha256 resultante y `recursos` con la etiqueta nueva.
+
+Coste de construcción: 1 min 40 s (`build_nflasha15`) + 1 min 30 s (`build_package`) por paquete.
+Reproducibilidad: construir con **`LC_ALL=C`**; `build_nflasha15.py` reconoce el resumen de `e2fsck` por
+textos en inglés (`FSCK_ONLY_COUNTS`) y con el locale en español la aserción falla aunque el sistema de
+ficheros esté bien. Ese script no se ha tocado (no es de esta fila).
+
+**Resultado** (`--completo --arranque --declara …`, **316 s**; JSON y Markdown adjuntos en
+`reports/evidence/g22-audit-cfw-20261126/cfw-real-3.40/`): **VEREDICTO OK, 47 ok, 0 fallos, 2 no
+verificados** (código 0).
+
+| Etapa | Comprobaciones | Resultado |
+|---|---|---|
+| 1 contenedor | 30 | todas OK; `contenedor.wbi_acoplamiento` = «el paquete no incluye `dev/nflasha5`: … arranca en frío» |
+| 2 `/usr` | 4 | 1 cambiado (`share/app/string_english.uxc`, declarado), 0 añadidos, 0 quitados |
+| 3 estructura | 6 | ELF, parches declarados, 25 tablas de cadenas y la etiqueta declarada OK; 196 `.uxc` de otro formato y la NVRAM quedan NO_VERIFICADO |
+| 4 arranque | 9 | **arranca**: primera pantalla a los 124,1 s, MENÚ abre, 3 PNG, sin `IMEXIT`, comparación con Sony 0,0 (§7.3) |
+
+Los dos `NO_VERIFICADO` son `estructura.uxc_formato` (196 `.uxc` que no son tablas de cadenas) y
+`estructura.nvram` (el CFW no declara ids de Backup/NVRAM), no el arranque. Sin arranque
+(`--completo --sin-arranque`) tarda 53 s y da 39 ok más el `arranque.no_arrancado` no verificado.
+
+### 7.3 Arranque del CFW real en el arnés (etapa 4)
+
+`--completo --arranque --perfil-dir cfwreal --puerto 8641` (perfil y puerto propios; el auditor esperó hueco
+hasta que bajaron de 2 `qemu-system-arm`, y el 3.40 arrancó en frío porque no lleva WBI):
+
+- `arranque.primera_pantalla` ✓ a los **124,1 s**, `arranque.pantalla_no_negra` ✓, `arranque.capturas` ✓ (3 PNG),
+  `arranque.menu_abre` ✓, `arranque.qemu_vivo` ✓, `arranque.im_elf` ✓ (**0 `IMEXIT`** en la consola del
+  invitado), `contenedor.wbi_acoplamiento` ✓ («sin `dev/nflasha5`: arranca en frío»);
+- capturas en `analysis/gui/g22/audit-04f6c18b/` y copiadas a
+  `reports/evidence/g22-audit-cfw-20261126/cfw-real-3.40/`: `cfw-1-primera.png`, `cfw-2-menu.png` (el MENÚ de
+  la cámara en 640×480, 67 KB) y `cfw-3-disparo.png`;
+- comparación con el Sony de serie capturado igual (`analysis/gui/g22/harness/audit-base-sony/`):
+  `fraccion_distinta 0.0` y **87 845** píxeles con contenido en los dos. Los PNG son **byte a byte iguales** a
+  los de Sony (mismos sha256): el cambio auditado es una cadena de `string_english.uxc` que no se pinta en
+  esas tres pantallas, así que la etapa 4 demuestra que el paquete **arranca**, no que el cambio se vea;
+- al terminar hizo `POST /salir`, esperó el cierre y **no queda ningún QEMU del perfil `cfwreal`**; el perfil
+  se conserva (`--perfil-dir` explícito) con su `consola.log`, copiado al informe.
+
+Esto es emulación (kernel ajeno + shim): **no sustituye a la cámara** y no prueba Loader3/WBI/Darwin (§5).
+
+### 7.4 Puertas G22-CFW-ARRANQUE: el auditor ya distingue los tres casos
+
+Se construyeron tres `.dat` con el mismo `/usr` de partida y solo cambia lo que se indica. Antes de esta
+entrega el auditor daba **el mismo veredicto (AVISO, 34 ok, 0 fallos) a los dos primeros**: no distinguía
+un paquete abortable de uno correcto (línea base preservada en
+`reports/evidence/g22-audit-cfw-20261126/antes-sin-comprobacion/`).
+
+| `.dat` | Configuración | sha256 | Veredicto |
+|---|---|---|---|
+| 3.40 | `/usr` cambiado + **WBI invalidado** (sin `dev/nflasha5`) | `04f6c18b…` | **OK** (47 ok, 0 fallos; arranca en el arnés, §7.3) |
+| 3.39 | mismo `/usr` cambiado + **WBI de Sony**, TOC del `nflasha15` intacto | `833619df…` | **AVISO** con ⚠ `INFERENCIA`: «la instantánea reanudada conserva los procesos y la caché del `/usr` de Sony → el cambio puede no tener efecto» |
+| 3.41 | `/usr` recompuesto distinto (tabla vietnamita refluida) + **WBI de Sony**, TOC movido (973 entradas, primera 1400) | `c19eafb2…` | **FALLO** (código 1): «TOC movido … la cámara reanudaría la instantánea con el TOC y la caché del `/usr` de Sony (6/6 fallos de arranque medidos, G11 §11) → quitar `0700_part_image/dev/nflasha5` … (`--sin-wbi`)» |
+
+**Puerta «rechazar»**: el 3.41 sale ✗ con el motivo y la orden que lo arregla; el 3.39 sale ⚠ con motivo
+(cambio que probablemente no surtiría efecto) y el resto de sus comprobaciones siguen OK.
+**Puerta «aceptar»**: el 3.40, construido con el mismo camino que un CFW instalable (contenedor oficial,
+sumas, `/usr` declarado, bloque 0 de Sony), no pierde ninguna comprobación por el WBI y sus únicos
+`NO_VERIFICADO` son los de siempre (`.uxc` no soportados y NVRAM no declarada).
+**Límite de la comprobación**: solo se compara con el WBI de Sony 3.21; un WBI *regenerado* deja el TOC
+interno sin verificar (`NO_VERIFICADO`, nunca OK) y el arnés no ejecuta Loader3.
 
 ## 8. Desde el configurador (`lanzador.py`, pestaña Firmware)
 
@@ -314,7 +427,7 @@ del arranque si se pidió y los temporales. El auditor **escribe en el informe s
 `markdown` (cambio de esta entrega, antes quedaban vacías en el fichero), así que la página enlaza
 exactamente lo que escribió el proceso: no hay una segunda copia de la regla de nombres.
 
-### Cómo se audita un CFW real (no hay ninguno en este equipo)
+### Cómo se audita un CFW real (el de §7.2 se auditó así)
 
 ```sh
 # 1) configuración del arnés levantada (una vez; escucha en 127.0.0.1:8799)
@@ -330,9 +443,10 @@ curl http://127.0.0.1:8799/api/auditar/estado          # sondeo cada 2 s; codigo
 curl http://127.0.0.1:8799/api/auditar/historial       # veredicto y fecha de cada auditoría
 ```
 
-Con un CFW real se espera: `--rapido` ≈46–49 s y veredicto `AVISO`/`FALLO` mientras la declaración
-(`audit-cfw.json`: nuevos/parcheados/quitados/parches/recursos/nvram) no esté completa; `--completo` añade
-la etapa 3; `--arranque` añade la etapa 4 (≈3 min, 1 QEMU, puede quedar `PARCIAL` si no hay hueco).
+Medido con el CFW real de §7.2: `--completo --sin-arranque` en 53 s; `--arranque` añade la etapa 4 (≈3 min
+de sesión más la espera de hueco: con otros agentes manteniendo 2 `qemu-system-arm` durante 15 min el
+resultado es `PARCIAL` con `arranque.no_arrancado` NO VERIFICADO, nunca un OK falso). La página no pasa
+`--declara`, así que sin declaración junto al `.dat` los cambios salen como AVISO.
 
 ### Límites de esta integración
 
@@ -362,5 +476,6 @@ código 0, informe OK), `?f=` que no permite salir de las carpetas y el historia
 
 | ID | Estado | Descripción | Origen |
 |---|---|---|---|
-| G22-AUDIT-CFW | ABIERTO | Auditar los `.dat` de CFW reales (3.79 y siguientes) con `scripts/gui/harness/audita_cfw.py --completo` y adjuntar su JSON/Markdown; completar la declaración de parches/recursos/NVRAM de cada build para bajar los AVISOS, y ejecutar el arranque en frío con hueco de QEMU. Cierre: al menos un CFW real con veredicto OK/AVISO justificado y capturas comparadas con Sony. | G22 (26-11-2026) |
-| G22-AUDIT-CFW-UI | ABIERTO (implementado; falta la prueba con un CFW real) | Auditoría de CFW desde el configurador: `GET /api/auditar/estado`, `POST /api/auditar` (202/400/409, un trabajo a la vez), `GET /api/auditar/informe?f=` (solo dentro de las carpetas del trabajo) y `GET /api/auditar/historial`; pestaña Firmware con los botones «Auditar el .dat» / «Auditar con arranque», tabla de comprobaciones ✓/✗/?, enlaces al JSON/Markdown, consola en `<pre>`, sondeo cada 2 s y aviso de que el fallo es del CFW y no de la cámara (§8). Probado con el `.dat` oficial 3.21 desde la página (OK, 33 comprobaciones, 45,5 s y 48,8 s) y con `tests/test_gui_lanzador.py` (23 passed, 1 skipped). Cierre: falta el CFW real con su JSON adjunto, que depende de G22-AUDIT-CFW. | G22 (26-11-2026) |
+| G22-AUDIT-CFW | PARCIAL (26-11-2026, esta entrega) | Auditar un CFW instalable real desde el arnés. **Hecho**: CFW 3.40 construido offline (`/usr` con 1 byte distinto, WBI invalidado, sha256 `04f6c18b…`) auditado con `--completo --arranque` → **OK (47 ok, 0 fallos, 2 NO_VERIFICADO)**, arranca en el arnés (primera pantalla 124 s, MENÚ abre, 3 PNG, sin IMEXIT) y comparado con Sony (0,0); JSON, Markdown, capturas, consola y receta en `reports/evidence/g22-audit-cfw-20261126/`. Etapa 1 gana la comprobación `contenedor.wbi_acoplamiento` (§2) y 7 pruebas nuevas (13 passed, 1 skipped). **Queda**: auditar los `.dat` de CFW históricos (3.79 y siguientes, que no están en este clon) con su declaración de parches/recursos/NVRAM completa para bajar los AVISOS, y decidir si el arnés debe montar el WBI real (`nflasha5`) para probar el camino de Loader3. Cierre: todos los CFW instalables del proyecto con su JSON adjunto y veredicto razonado. | G22 (26-11-2026) |
+| G22-CFW-ARRANQUE | PARCIAL (26-11-2026, esta entrega) | **Por qué un CFW no arranca en la cámara y sí en el arnés**: el arranque normal reanuda el WBI de `nflasha5` con el TOC y las cachés del `/usr` de Sony (ver [G11](g11-auditoria-307-nflasha15.md) §11). **Hecho**: el auditor ya lo distingue con `contenedor.wbi_acoplamiento` — `/usr` recompuesto (TOC movido, 973 entradas distintas) + WBI de Sony → **FALLO** con el motivo y la orden `--sin-wbi`; mismo `/usr` con el TOC intacto → AVISO `INFERENCIA` (el cambio puede no surtir efecto); paquete sin `nflasha5` → OK, y ese es el que arranca en QEMU. Antes de esta entrega los dos paquetes daban el mismo AVISO (§7.4). **Queda**: el arnés no ejecuta Loader3 ni lee `nflasha5`, así que la elección de BootMode en cámara sigue sin probarse. Cierre: paquete `--sin-wbi` instalado y arrancando en cámara, con el WBI regenerado o descartado explícitamente. | G22 (26-11-2026) |
+| G22-AUDIT-CFW-UI | PARCIAL (26-11-2026, implementado) | Auditoría de CFW desde el configurador: `GET /api/auditar/estado`, `POST /api/auditar` (202/400/409, un trabajo a la vez), `GET /api/auditar/informe?f=` (solo dentro de las carpetas del trabajo) y `GET /api/auditar/historial`; pestaña Firmware con los botones «Auditar el .dat» / «Auditar con arranque», tabla de comprobaciones ✓/✗/?, enlaces al JSON/Markdown, consola en `<pre>`, sondeo cada 2 s y aviso de que el fallo es del CFW y no de la cámara (§8). Probado con el `.dat` oficial 3.21 (OK, 33 comprobaciones, 45,5 s y 48,8 s) y con `tests/test_gui_lanzador.py` (23 passed, 1 skipped). **Queda**: lanzarlo desde la página con el CFW real de §7.2 (el CLI de esta entrega ya lo audita). | G22 (26-11-2026) |

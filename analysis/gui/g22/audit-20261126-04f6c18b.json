@@ -1,0 +1,568 @@
+{
+ "ruta": "/home/nicolas/cfwbuild/out-sinwbi/package-3.40/firmware_packed.dat",
+ "tipo": "dat",
+ "sha256": "04f6c18b0b4b782f819aebfc6be9821a5ff911fedce3b25b7a9400bf95e6cdf9",
+ "tamano": 170528920,
+ "version": "3.40",
+ "checks": [
+  {
+   "id": "contenedor.magia_dat",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "cabecera DAT de Sony (89 55 46 55 0d 0a 1a 0a)",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.orden_chunks",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "chunks: ['DATV', 'PROV', 'UDID', 'FDAT', 'DEND']",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.sin_cola",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "0 B tras DEND",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.dend_crc",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "almacenado 6fb98be0 / calculado 6fb98be0",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.datv_prov",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "DATV=[256, 0] PROV=256 (isLens=0)",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.fdat_multiplo_1024",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "FDAT cifrado 170528768 B",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.bloques_suma",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "166532 bloques; suma mala en []",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.bloques_ultimo",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "bandera de último bloque mala en []",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.bloques_longitud",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "longitudes anómalas en []",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.bloques_padding",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "relleno del último bloque a 0xFF",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.descifrado_vs_fdat",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "169861632 B frente a firmware_packed.fdat",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.fdat_magica",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "UDTRFIRM / 0100",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.cabecera_crc",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "CRC-32 [12,512): 8f91ac39 / 8f91ac39",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.version_valida",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "versión 3.40 (BCD)",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.modelo_a6000",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "modelo 0x41030035 (A6000 0x41030035)",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.region",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "región 0",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.no_accesorio",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "fuera de la familia 0xA0xxxx",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.modo_luw",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "modo U / LUW N",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.filesystems",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "U@512+143360, P@512+0",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.tar_dentro_fdat",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "tar@143872+169717760 de 169861632 B",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.tar_valido",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "104 miembros, 1024 B de cola",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.updater_oficial",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "updater 143360 B sha256 b6d5175245c8fb26… (oficial 3.21 b6d5175245c8fb26…)",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.tar_sumas",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "65 líneas verificadas; fallan []",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.nflasha15_presente",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "0700_part_image/dev/nflasha15",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.nflasha15_tpzl",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "2373 bloques de 65536 B; 84043264 B",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.nflasha15_cabe_en_particion",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "84043264 B de 104857600 B",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.nflasha15_ldec",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "0 violaciones: []",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.nflasha15_bloque_0_igual_sony",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "bloque TPZL 0 idéntico al de Sony 3.21 (R55: recomponerlo colgó el LZP)",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.nflasha15_mismo_numero_bloques",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "2373 bloques frente a 2373 de Sony",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "contenedor.wbi_acoplamiento",
+   "etapa": 1,
+   "ok": true,
+   "detalle": "el paquete no incluye `dev/nflasha5`: sin instantánea WBI, Loader3 arranca en frío (G11 §11/§12) — no hay acoplamiento que romper",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "usr.base_sony",
+   "etapa": 2,
+   "ok": true,
+   "detalle": "Sony 3.21 extraído de /home/nicolas/h-cfwreal/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "usr.ficheros_quitados",
+   "etapa": 2,
+   "ok": true,
+   "detalle": "0 quitados; sin justificar 0: []",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "usr.cambios_declarados",
+   "etapa": 2,
+   "ok": true,
+   "detalle": "1 cambiados (0 sin declarar), 0 nuevos (0 sin declarar)",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "usr.declaraciones_coherentes",
+   "etapa": 2,
+   "ok": true,
+   "detalle": "1 parcheados declarados; no coinciden []",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "estructura.elf",
+   "etapa": 3,
+   "ok": true,
+   "detalle": "1 ficheros nuevos/cambiados; 0 con problemas: []",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "estructura.parches",
+   "etapa": 3,
+   "ok": true,
+   "detalle": "1 ficheros cambiados; 0 con bytes sin declarar: []",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "estructura.uxc",
+   "etapa": 3,
+   "ok": true,
+   "detalle": "25 ficheros de cadenas UXC verificados; 196 con otro formato; errores: []",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "estructura.uxc_formato",
+   "etapa": 3,
+   "ok": null,
+   "detalle": "uxc no soportados por uxc_strings.py (no son tablas de cadenas): 196, 0 cambiados: ['share/app/IRShooting.uxc', 'share/app/LayoutMaster_Menu.uxc', 'share/app/color_cmn.uxc', 'share/app/lang_cmn.uxc']",
+   "evidencia": "NO_VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "estructura.recursos",
+   "etapa": 3,
+   "ok": true,
+   "detalle": "1 recursos declarados: []",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "estructura.nvram",
+   "etapa": 3,
+   "ok": null,
+   "detalle": "el CFW no declara qué ids de Backup/NVRAM escribe: el arnés no puede demostrarlo",
+   "evidencia": "NO_VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "arranque.artefactos",
+   "etapa": 4,
+   "ok": true,
+   "detalle": "vmlinuz, base.cpio.gz y stage/cam/usr",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "arranque.qemu_vivo",
+   "etapa": 4,
+   "ok": true,
+   "detalle": "QEMU sigue vivo hasta el final",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "arranque.im_elf",
+   "etapa": 4,
+   "ok": true,
+   "detalle": "im.elf no salió con IMEXIT",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "arranque.primera_pantalla",
+   "etapa": 4,
+   "ok": true,
+   "detalle": "primera pantalla a los 124.1 s (más 0.0 s de espera de hueco)",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "arranque.pantalla_no_negra",
+   "etapa": 4,
+   "ok": true,
+   "detalle": "primera pantalla, menú y disparo con contenido",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "arranque.menu_abre",
+   "etapa": 4,
+   "ok": true,
+   "detalle": "MENU cambió la pantalla",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "arranque.capturas",
+   "etapa": 4,
+   "ok": true,
+   "detalle": "3 PNG guardados",
+   "evidencia": "VERIFICADO",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "arranque.menu_frente_sony",
+   "etapa": 4,
+   "ok": true,
+   "detalle": "píxeles con contenido CFW/Sony: [87845, 87845]; distintos 0.0",
+   "evidencia": "INFERENCIA",
+   "aviso": false,
+   "material": false
+  },
+  {
+   "id": "arranque.comparacion_sony",
+   "etapa": 4,
+   "ok": true,
+   "detalle": "{'comparable': True, 'fraccion_distinta': 0.0, 'no_fondo': [87845, 87845]}",
+   "evidencia": "INFERENCIA",
+   "aviso": false,
+   "material": false
+  }
+ ],
+ "veredicto": "OK",
+ "fecha": "2026-11-26T03:41:58-0300",
+ "coste_s": 315.7,
+ "declaracion": "/home/nicolas/cfwbuild/out-sinwbi/package-3.40/declara.json",
+ "json": "/home/nicolas/h-cfwreal/analysis/gui/g22/audit-20261126-04f6c18b.json",
+ "markdown": "/home/nicolas/h-cfwreal/docs/gui/auditorias/04f6c18b.md",
+ "wbi": {
+  "miembro": "",
+  "magic_ok": null,
+  "toc_movido": false,
+  "igual_sony": null,
+  "toc_primera": null,
+  "entradas": 2373,
+  "n15_igual_sony": null
+ },
+ "usr": {
+  "anadidos": [],
+  "cambiados": [
+   "share/app/string_english.uxc"
+  ],
+  "quitados": [],
+  "sin_justificar": [],
+  "hashes": {
+   "share/app/string_english.uxc": "79ca21c8c80ab8aa3fd289431d11498884c9e8dbacb40758e3023f10ee3a3dc7"
+  }
+ },
+ "estructura": {
+  "elf_revisados": [
+   "share/app/string_english.uxc"
+  ],
+  "elf_fallos": [],
+  "sin_declarar": {},
+  "uxc": 25
+ },
+ "arranque": {
+  "etiqueta": "cfw",
+  "perfil": "cfwreal",
+  "puerto": 8641,
+  "pngs": {
+   "primera": "cfw-1-primera.png",
+   "menu": "cfw-2-menu.png",
+   "disparo": "cfw-3-disparo.png"
+  },
+  "metricas": {
+   "primera": {
+    "w": 640,
+    "h": 480,
+    "no_fondo": 863,
+    "colores": 14,
+    "negro": false
+   },
+   "menu": {
+    "w": 640,
+    "h": 480,
+    "no_fondo": 87845,
+    "colores": 185,
+    "negro": false
+   },
+   "disparo": {
+    "w": 640,
+    "h": 480,
+    "no_fondo": 863,
+    "colores": 14,
+    "negro": false
+   }
+  },
+  "im_exit": false,
+  "qemu_murio": false,
+  "error": "",
+  "consola": "/home/nicolas/h-cfwreal/analysis/gui/g22/harness/live/cfwreal/consola.log",
+  "espera_hueco_s": 0.0,
+  "arranque_s": 124.1,
+  "primera": true,
+  "menu_abre": true,
+  "coste_s": 141.6,
+  "live_log": "/home/nicolas/h-cfwreal/analysis/gui/g22/audit-04f6c18b/cfw-live.log",
+  "base_sony": {
+   "pngs": {
+    "primera": "/home/nicolas/h-cfwreal/analysis/gui/g22/harness/audit-base-sony/base-1-primera.png",
+    "menu": "/home/nicolas/h-cfwreal/analysis/gui/g22/harness/audit-base-sony/base-2-menu.png",
+    "disparo": "/home/nicolas/h-cfwreal/analysis/gui/g22/harness/audit-base-sony/base-3-disparo.png"
+   },
+   "cache": false,
+   "metricas": {
+    "primera": {
+     "w": 640,
+     "h": 480,
+     "no_fondo": 863,
+     "colores": 14,
+     "negro": false
+    },
+    "menu": {
+     "w": 640,
+     "h": 480,
+     "no_fondo": 87845,
+     "colores": 185,
+     "negro": false
+    },
+    "disparo": {
+     "w": 640,
+     "h": 480,
+     "no_fondo": 863,
+     "colores": 14,
+     "negro": false
+    }
+   },
+   "coste_s": 136.7,
+   "error": ""
+  },
+  "comparacion": {
+   "comparable": true,
+   "fraccion_distinta": 0.0,
+   "no_fondo": [
+    87845,
+    87845
+   ]
+  }
+ }
+}
