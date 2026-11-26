@@ -11,6 +11,10 @@
 > `nflasha5` en toda instalación (`ud_wbi_drop.elf`), el kernel registra el dispositivo en cada arranque
 > (62 MB > 42 MB), `warm` = `PM_SUSPEND_DISK` con `warm.mode=2`, nada aborta (`chk_opened=`/`warm.errmode`
 > ausentes) y la compuerta `0x9F44` es pura con una sola llamada. No hace falta ningún ajuste de fábrica.
+> **[CORREGIDO 26-11-2026] La regeneración del WBI en cámara NO funciona:** el interruptor entra con **modo 0**
+> en `im.elf` (escribe `"mem"` sin pasar por `0x9F44`), `echo warm` sí llega pero la fabricación corre en
+> `sleep.S:99` tras suspender dispositivos y `warm.errmode=0` **devuelve 0 aunque falle**, y un frío escribe
+> **`prof`**, no `WBI1`. [Informe](../reports/film-pb-1-warm-abort-20261126.md).
 > **Sin inferencias abiertas:** la bandera Silent vive en `av-cam.bin` (base `0x43541000`), no entra en la
 > imagen (0 de 2 200 páginas) y `av-cam` se recarga en cada encendido ⇒ Silent se reactiva en cada sesión;
 > el resto de dudas del hilo quedaron cerradas (informe §8.1 y §9).

@@ -1,0 +1,448 @@
+E1 — OBSERVABILIDAD DEL ABORTO DE "warm" SIN FLASHEAR
+Sesión 2026-11-26 (100% estático; sin cámara, sin flasheo, sin escrituras)
+Pregunta E: cómo VER el motivo del aborto en la próxima prueba.
+Etiquetas: [V] VERIFICADO (código/bytes citados), [I] INFERENCIA, [N] NO VERIFICADO.
+
+Rutas citadas relativas al repo:
+  W    = analysis/session18/main/sony-oss-extracted/linux/arch/arm/common/warm.c (1592 l.)
+  C    = analysis/session18/main/sony-oss-extracted/linux/arch/arm/common/wbi_cmpr.c (1478 l.)
+  H    = analysis/session18/main/sony-oss-extracted/linux/arch/arm/include/asm/mach/warmboot.h
+  WH   = analysis/session18/main/sony-oss-extracted/linux/arch/arm/common/wbi.h
+  PM   = analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/pm.c
+  SL   = analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/sleep.S
+  K    = analysis/session18/codex-g/oss-linux/linux/kernel/printk.c
+  P    = analysis/session18/codex-g/oss-linux/linux/kernel/power/suspend.c
+  PMain= analysis/session18/codex-g/oss-linux/linux/kernel/power/main.c
+  Ppm  = analysis/session18/codex-g/oss-linux/linux/kernel/power/pm.c
+  KL   = analysis/session18/codex-g/oss-linux/linux/kernel/klog.c
+  VML  = firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/vmlinux.bin
+         (kernel de la cámara; 3 478 912 B, cadenas verificadas por offset)
+  CMD  = reports/evidence/film-pb1-sector31-camara-20261126/A-frio/cmdline.txt (cmdline real, /proc/cmdline)
+  KS   = analysis/camera-dumps/senser-shell-20261020-180946/shell.txt (kallsyms + log de arranque reales)
+
+===============================================================================
+0. RESUMEN (lo que hay que hacer)
+===============================================================================
+Los printk de la fase silenciosa NO se pierden: se quedan en el anillo `log_buf` de
+la RAM y se vuelcan a TODAS las consolas en cuanto el suspend se reanuda
+(`resume_console()`), incluida la consola `klog` (0x834E0000 = /proc/klog). Con la
+configuración actual el aborto no reanuda: `do_make_image()` se traga el error
+(`warm.errmode=0`, W:1200-1203) y devuelve 0, así que el suspend sigue hasta el
+apagado y nadie vacía el búfer.
+La palanca es un `module_param` que ya existe: `warm.errmode=1` (W:147) hace que el
+error se propague → `sleep.S` aborta el suspend (SL:99-108) → `resume_console()`
+(P:363) → el log completo aparece en /proc/klog sin flashear y sin reiniciar.
+Dos cautelas estáticas imprescindibles:
+  (a) `CONFIG_EJ_SUSPEND_FREEZE_ERROR` está compilado y su acción por defecto es
+      `BUG()` (`suserr=0`) → hay que poner `pm.suserr=1` (FAIL_ACTION_RESUME) ANTES,
+      o un error de suspend reinicia/mata la cámara (P:517-535, Ppm:34-35).
+  (b) `errmode=1` NO cubre dos ramas que siguen siendo silenciosas: `-ECANCELED`
+      (timeout O cancelación, W:1195-1198) y `-ENOSPC` con compresión (W:1186-1189).
+      El timeout se elimina subiendo `warm.tmo` (W:136, escribible en runtime).
+
+===============================================================================
+1. QUÉ HACE `pmdebug` EN ESTE KERNEL
+===============================================================================
+[V] `pmdebug` NO es un parámetro del PM sino de printk:
+    K:797  static int printk_pmdebug = 0;
+    K:798  module_param_named(pmdebug, printk_pmdebug, int, S_IRUGO | S_IWUSR);
+    → /sys/module/printk/parameters/pmdebug (0644). Es exactamente uno de los dos
+      únicos parámetros que la cámara expone en ese directorio (el otro es `time`).
+[V] Efecto: SOLO mientras `console_suspended` != 0 y con pmdebug != 0, printk
+    refleja el texto por `printascii()`:
+    K:994-1001  #ifdef CONFIG_DEBUG_LL printascii(printk_buf);
+                #else #ifdef CONFIG_ARCH_CXD90014BASED
+                if (console_suspended && printk_pmdebug
+                    && (!resume_phase || printk_pmdebug > 1)) printascii(printk_buf);
+    `resume_phase` vale 1 solo si `suspend_ops->enter()` devolvió 0 (P:284-286), es
+    decir: durante la creación de la imagen (nuestro caso) pmdebug=1 ya imprime.
+[V] `printascii` existe en la cámara: KS:712 `40043be4 T printascii` y el Makefile
+    lo compila siempre para esta mach (`arch/arm/kernel/Makefile:74-78`,
+    `obj-y += debug.o` cuando `ARCH_CXD90014BASED`).
+[V] Sale por el UART de depuración: `addruart` = 0xf2000000 + 0x1000*N
+    (arch/arm/mach-cxd90014/include/mach/debug-macro.S:29-33), NO por
+    /dev/ttyAMx ni por ttynull. La cámara arranca con `console=ttynull` (CMD).
+[I] Sin acceso físico a ese pin/pad, `pmdebug=1` no es observable. No hay en el
+    repo ni en KS ninguna prueba de un conector serie accesible en esta cámara.
+    Coste de probarlo: 1 escritura sysfs (RAM). Riesgo: nulo.
+[V] `pm_test_level` NO existe en la cámara: `suspend_test()` (P:97-106) y el
+    atributo /sys/power/pm_test solo se compilan con CONFIG_PM_DEBUG
+    (PMain:69-131), y la cadena "suspend debug: Waiting for 5 seconds." (P:101)
+    NO está en VML (0 ocurrencias). Consecuencia: se descarta la vía `pm_test`
+    que en un kernel de escritorio serviría para cortar antes de `enter()`.
+[V] Otros usos de `pmdebug`: ninguno. No cambia el volumen de log, no toca el
+    anillo `klog`, no altera el flujo de PM. Es solo un espejo por UART.
+
+===============================================================================
+2. POR QUÉ NO HAY `console_suspend` EN /sys/module/printk/parameters
+===============================================================================
+[V] En este kernel (3.0.27_nl-rt106, KS:11) `console_suspend_enabled` NO es
+    module_param; es una global con `__setup` (solo cmdline, y se procesa en el
+    arranque):
+      K:1240  int console_suspend_enabled = 1;
+      K:1241  EXPORT_SYMBOL(console_suspend_enabled);
+      K:1243-1248  console_suspend_disable() + __setup("no_console_suspend", ...)
+    → no puede aparecer en /sys/module/printk/parameters. (En kernels 3.6+ sí se
+      añadió un module_param homónimo; aquí no existe.) Esto explica el hecho
+      medido de que ese directorio solo tenga `pmdebug` y `time`.
+[V] `suspend_console()` (K:1255-1263) sale sin hacer nada si
+    `console_suspend_enabled == 0`; `resume_console()` (K:1265-1272) igual.
+[V] Cómo se activaría en ESTA versión: única y exclusivamente añadiendo
+    `no_console_suspend` a la línea de comandos del kernel. La cmdline de la
+    cámara la fija Loader3 (CMD es una lista fija; incluye `console=ttynull`,
+    `warm.*`, `wbimem=`, `klog.addr=`, `boottime=`, `pm.sus_error=`...) y no trae
+    `no_console_suspend`. Cambiarla exige tocar el cargador/partición ⇒ FLASH.
+    [V] descartado como método sin flasheo.
+[N] No se ha localizado en el repo la estructura de Loader3 que transporta la
+    cmdline (los RAMCFG `sa_dfdet.bin`/`kemco` se cargan pero su formato no se ha
+    documentado aquí). Aunque se localizara, escribirla sería escribir flash.
+[V] No hay otro sysfs que gobierne el flag (búsqueda exhaustiva de
+    `console_suspend` en ambos árboles: solo K:1240-1272 y console.h:170).
+
+===============================================================================
+3. DÓNDE VAN LOS printk DESPUÉS DE "Suspending console(s)"
+===============================================================================
+[V] Secuencia exacta del flag:
+    K:1255-1263  suspend_console(): printk("Suspending console(s) (use
+                 no_console_suspend to debug)\n"); console_lock();
+                 console_suspended = 1; up(&console_sem);
+    K:1328-1336  console_trylock(): si console_suspended → up(&console_sem) y 0
+    K:1308-1316  console_lock():    si console_suspended → return sin marcar locked
+    K:1389-1392  console_unlock():  si console_suspended → up(&console_sem) y return
+    ⇒ desde ese instante NINGÚN driver de consola recibe un solo byte. `con_start`
+      (K:115) no avanza: todo queda en el anillo `log_buf` (K:152-154,
+      `static char __log_buf[1<<CONFIG_LOG_BUF_SHIFT]`).
+[V] `klog` es una CONSOLA, no un logger aparte:
+    KL:201-208  static struct console klog_console = { .name="klog",
+                .write=klog_console_write, .flags = CON_ENABLED | CON_PRINTBUFFER };
+    KL:366      register_console(&klog_console);
+    KL:126-144  klog_write(): escribe en 0x834E0000 con cabecera magic/offset.
+    ⇒ con `console=ttynull` la consola útil es klog, y por eso el log acaba
+      justo en "Suspending console(s)" (K:1389). NO es un fallo de klog.
+[V] `wb_printk` NO tiene búfer propio: es `vprintk` (mismo log_buf/mismas consolas)
+    W:660-678   int wb_printk(const char *fmt, ...) { if(flag&WBI_SILENT_MODE)
+                return 0; ... len = vprintk(fmt, args); ... }
+    WH:33-38    wb_msg() = printk() con el mismo filtro WBI_SILENT_MODE.
+[V] `wb_printk_init()` NO desvía nada en esta cámara:
+    W:653-658   void wb_printk_init(void) { #ifdef CONFIG_EJ_WBI_DEBUG
+                kslog_init(); #endif }
+    y `CONFIG_EJ_WBI_DEBUG`/`kslog` no están compilados: VML contiene 0
+    ocurrencias de "kslog" (y `arch/arm/Kconfig.ej:41-45,64-68` los deja en n).
+    ⇒ es una función vacía; no hay búfer alternativo (ni RAM ni flash).
+[V] `alog.addr=0x8345ffc0` NO recibe printk: es el logger tipo Android
+    (`logger_init`, misc device, "logger: created %luK log '%s'", VML offset
+    0x2dc2ae-0x2dc357) que usan los procesos de usuario; el kernel no escribe ahí.
+[V] `boottime=0x20000@0x834C0000` SÍ se escribe en la fase silenciosa, pero solo
+    con marcas concretas (`BOOT_TIME_ADD1`, include/linux/snsc_boot_time.h:44-52):
+      W:1363 "B warm_boot_pm_begin"    W:1395 "E warm_boot_pm_begin"
+      W:1520 "B warm_boot_pm_prepare"  W:1528 "E warm_boot_pm_prepare"
+      W:1541/1557 "B/E warm_boot_pm_finish"
+      P:280  "PM: suspend enter"       P:294 "PM: resume start"
+      P:360  "PM: device resumed"       P:512 "PM: resume finished"
+    Interfaz de lectura: /proc/snsc_boot_time (VML: "snsc_boot_time",
+    "boot_time_proc_init", "boot time (%p)"; KS:7980-7981 `boot_time_seq_next`,
+    `proc_boot_time_open`) y también su volcado físico 0x834C0000.
+[V] ALOJAMIENTO Y SUPERVIVENCIA: el volcado medido (hecho 3) demuestra que la
+    región 0x834E0000 (klog) sobrevive al apagado "warm"; 0x834C0000 está en la
+    misma zona y fuera de la imagen del kernel ⇒ [I, alta] el búfer de boottime
+    también sobrevive, siempre que el nuevo arranque no lo reinicialice (el
+    driver no está en el árbol OSS; existe un comando "CLEAR" en su proc, lo que
+    sugiere que NO se limpia solo: VML 0x2d0cb6).
+[V] Vuelco al reanudar: `resume_console()` (K:1265-1272) hace down(console_sem),
+    console_suspended=0, console_unlock() → el bucle de K:1394+ emite TODO el
+    backlog (de con_start a log_end) a todas las consolas, klog incluida. Es
+    decir: el texto de la fase silenciosa aparece al principio del "nuevo" tramo
+    de /proc/klog, con sus marcas de tiempo y niveles (<6>, <3>...).
+
+===============================================================================
+4. CANALES DE LECTURA DISPONIBLES (todos de solo lectura)
+===============================================================================
+[V] /proc/klog (0444; KS:26798) = anillo klog de 0x20000 B en 0x834E0000.
+[V] /dev/mem (root): `dd if=/dev/mem bs=65536 skip=33614 count=2` = klog físico
+    (0x834E0000); `skip=33612 count=2` = boottime (0x834C0000).
+    (skip = dirección/0x10000; 0x83400000/0x10000 = 33600, el que ya usasteis.)
+[V] /proc/snsc_boot_time: marcas con marca de tiempo de todo lo anterior.
+[V] /sys/power/{state,image_mode,image_dev,image_mem,image_drop}: atributos de
+    warm.c (W:197-462; create_warm_boot_proc W:549-573).
+[V] /sys/module/warm/parameters/{mode,mem_dst,mem_work,tmo,cancel,resume_drop,
+    boot_drop,ignore_drop,errmode,chksum,chk_opened} (W:130-149,1473),
+    /sys/module/wbi_cmpr/parameters/{nbuf,cancel_tmo,stamp_addr,stamp_size,
+    waddr,wsize} (C:54-56,100-102,626-627) y /sys/module/pm/parameters/suserr
+    (Ppm:34-35). Nombre del directorio = prefijo antes del punto de
+    `kernel_param->name` = KBUILD_MODNAME (kernel/params.c:776-808) ⇒ "warm",
+    "wbi_cmpr", "pm", "printk"; por eso cuadra con lo que ya veis.
+[V] Ningún canal da el motivo por sí solo: no hay /sys ni /proc con el resultado
+    de `do_make_image()`. `image_drop_show` devuelve 0 (W:440-443) y el "estado"
+    del WBI no se publica.
+
+===============================================================================
+5. MÉTODO PROPUESTO (sin flashear, sin tocar firmware)
+===============================================================================
+--- PASO 0: línea base (solo lecturas) ---------------------------------------
+cat /proc/cmdline | tr ' ' '\n' | grep -E '^(warm|wbi_cmpr|pm|klog|boottime)\.'
+ls /sys/power/ ; ls /sys/module/warm/parameters/
+for p in mode tmo cancel errmode ignore_drop resume_drop boot_drop chksum; do
+    printf '%s=' "$p"; cat /sys/module/warm/parameters/$p; done
+cat /sys/module/pm/parameters/suserr
+cat /sys/power/image_mode; cat /sys/power/image_dev; cat /sys/power/image_mem
+dd if=/dev/nflasha5 bs=512 count=1 2>/dev/null | od -An -tx1 | head -2   # debe ser 00
+cat /proc/snsc_boot_time | tail -5
+Esperado: mode=2, tmo=50000, cancel=255,255 (=WBI_PORT_UNDEF, W:137-138 ⇒
+wbi_is_canceled() siempre 0, W:882-883), errmode=0, suserr=0, image_dev con '*',
+cabecera a cero. Si `image_mode` no fuera 2 o `*` no marcara el dispositivo, el
+problema sería otro (W:1214-1220 `cxd_create_warmbootimage`: WBI_MODE y
+wb_default_device) y no hace falta seguir.
+
+--- PASO 1: hacer visible un fallo (3 escrituras sysfs; TODO en RAM) ----------
+printf 1 > /sys/module/pm/parameters/suserr      # ojo: 'echo' añade \n
+printf 1 > /sys/module/warm/parameters/errmode
+printf 300000 > /sys/module/warm/parameters/tmo  # 300 s en vez de 50 s
+(cat /sys/module/pm/parameters/suserr; cat /sys/module/warm/parameters/errmode;
+ cat /sys/module/warm/parameters/tmo)            # confirmar 1/1/300000
+Por qué cada una:
+  suserr=1   → Ppm:34-35, P:517-535: sin esto el primer error de suspend hace
+               BUG() (FAIL_ACTION_EXCEPTION=0). Es la única de las tres que evita
+               un reinicio no deseado.
+  errmode=1  → W:1200-1206: `do_make_image` devuelve el error en vez de 0.
+  tmo=300000 → W:1066 y W:897: quita de en medio `-ECANCELED` por timeout, la
+               única rama silenciosa que `errmode` NO puede exponer (W:1195-1198).
+Ninguna de las tres toca flash: son variables del kernel (module_param con
+S_IWUSR; W:136,147; Ppm:35). Un reinicio las devuelve a su valor (tmo y
+ignore_drop vienen de la cmdline; errmode y suserr valen 0 por defecto).
+
+--- PASO 2: intento -----------------------------------------------------------
+printf warm > /sys/power/state ; echo "rc=$?"
+Dos desenlaces y ambos son informativos:
+  (A) rc!=0 y la cámara SIGUE ENCENDIDA → el suspend se abortó y la consola se
+      reanudó. Ir al PASO 3A.
+  (B) la cámara se apaga → ir al PASO 3B.
+
+--- PASO 3A: leer el motivo (cámara viva) -------------------------------------
+cat /proc/klog | tr -d '\r' | tail -c 60000 | grep -aE \
+  'PM:|Suspending console|warm|WBI|wbi|section|SUSPNED|canceled|NO SPACE|mumin|Error|error' \
+  | tail -80
+# y para el volcado íntegro:
+cat /proc/klog > /tmp/klog_tras_warm.txt        # /tmp = tmpfs (RAM)
+cat /tmp/klog_tras_warm.txt | tail -c 20000
+Se espera ver, en orden, lo que hoy no se ve: "checking opened files" (W:1480),
+"B/E warm_boot_pm_prepare", el detalle de `wbi_cmpr`, y la línea final de causa
+(tabla §6). Además, con suserr=1 el suspend se reanuda limpiamente y NO se
+reinicia: /proc/snsc_boot_time debe contener "PM: resume start" y
+"PM: resume finished" (P:294,512).
+
+--- PASO 3B: si se apagó igualmente -------------------------------------------
+En el arranque siguiente (solo lecturas):
+dd if=/dev/nflasha5 bs=512 count=1 2>/dev/null | od -An -c | head -1
+  "W B I 1"  → la imagen se creó: el motivo era el timeout de 50 s (o capacidad
+              que solo avisa); el arranque debería ser caliente.
+  todo \0    → sigue sin escribirse ni el primer bloque ⇒ el fallo es anterior al
+              primer flush (ver §7) y el conjunto de causas posibles queda en:
+              (i) timeout > 300 s, (ii) -ENOSPC en el primer flush,
+              (iii) `wb_default_device == NULL` en ese momento, (iv) halt de
+              `pm_suspend_error()`.
+dd if=/dev/mem bs=65536 skip=33612 count=2 2>/dev/null | strings -n 4 | tail -20
+  = marcas de boottime: ¿está "E warm_boot_pm_prepare"? Sin ella, el aborto fue
+  ANTES (udif → pm_suspend_error, PM:247-252); con ella, fue después (imagen).
+  [I] que este búfer sobreviva al apagado (ver §3, misma zona que el klog ya
+  superviviente); si aparece vacío o solo con marcas del arranque nuevo, esta
+  vía queda anulada y hay que quedarse con 3A.
+Discriminación de (i) frente a (ii)/(iii): repetir con tmo aún mayor
+(`printf 900000 > .../tmo`) y volver al PASO 2. Si con 900 s se crea la imagen,
+era el timeout. Si vuelve a apagarse en silencio, el aparato no está escribiendo
+nada en absoluto.
+
+--- PASO 4 (OPCIONAL, y es una escritura real de 512 B) -----------------------
+Solo si 3B sigue mudo y se quiere separar (ii)/(iii) de (iv):
+  printf 1 > /sys/power/image_drop ; echo rc=$?
+  cat /proc/klog | tail -c 4000
+`image_drop_store` (W:449-462) ejecuta EXACTAMENTE el mismo camino
+open→write_sector(512 B, LBA 0)→close que `__wbi_drop` (W:366-389), con la
+consola VIVA:
+  "dropped wbi"                    → open y escritura funcionan ⇒ (ii)/(iii)/(iv)
+                                     ganan peso frente a un fallo del driver;
+  "wb_drop: cannot open ret = -N"  → el dispositivo no abre (W:373);
+  "wb_drop: cannot write = -N"     → el driver rechaza la escritura (W:381).
+AVISO: es una escritura NAND de 512 B en el sector 0 de nflasha5 (bloque lógico
+de 256 KiB con read-modify-write). El contenido resultante es idéntico al actual
+(cabecera ya a cero, hecho 4), pero es una escritura: si el criterio es "cero
+escrituras", omitir este paso.
+
+--- REVERTIR (opcional; el reinicio ya lo hace) ------------------------------
+printf 0 > /sys/module/warm/parameters/errmode
+printf 0 > /sys/module/pm/parameters/suserr
+printf 50000 > /sys/module/warm/parameters/tmo
+
+===============================================================================
+6. TABLA DE FIRMAS: qué se espera ver para cada causa
+===============================================================================
+(Todas las cadenas están verificadas en VML por offset; la rama, en el fuente.)
+
+(a) TIMEOUT de `warm.tmo` (50 s)  [V]
+    C:415-417  if (wbi_is_canceled() || wbi_is_timeout()) { wbi_cmpr_cancel();
+               return -ECANCELED; }            ← mide contra wbi_expire (W:897)
+    W:1066     wbi_expire = now + mach_usecs_to_cycles(wbi_tmo*1000)
+    W:1195-1198 (rama ECANCELED, SIEMPRE devuelve 0, errmode no interviene)
+    Línea esperada:  "do_make_image: canceled to create wbi"      (VML 0x2be9af)
+    NO aparece:      "SUSPNED is aborted" ni ningún código de error.
+    Extra si el compresor no atiende la cancelación en 100 ms (C:55,1219):
+                     "WBI:wbi_cmpr_cancel:timeout"                (VML 0x2bed88)
+    Con tmo=300000 esta causa desaparece (mach_usecs_to_cycles = x2 con
+    SCHED_TICK_RATE=2 MHz, no hay error de escala: timex.h:55-56,75-78).
+
+(b) CANCELACIÓN por GPIO  [V] imposible ahora
+    W:877-890  wbi_is_canceled() lee el puerto/bit de `warm.cancel`;
+               si vale WBI_PORT_UNDEF (0x0FFFFFFF) devuelve 0 (W:882-883).
+    Lo medido, `warm.cancel=255,255`, es precisamente 0x0FFFFFFF impreso como
+    port,bit (W:137-139; param_get_port en
+    analysis/session18/codex-g/oss-linux/linux/arch/arm/mach-cxd90014/params.c:69-80)
+    ⇒ jamás cancelará. Si algún día se cambiara,
+    la firma sería IDÉNTICA a (a) (misma rama, mismo -ECANCELED).
+    `warm.cancel` es S_IRUSR (W:139): no escribible en runtime.
+
+(c) CAPACIDAD del dispositivo  [V] NO aborta en esta build
+    W:1088-1097: el bloque `#ifdef CONFIG_SNSC_SSBOOT` solo imprime
+      "Warning: do_make_image image size may be greater than device capacity!%lu > %lu"
+    y SIGUE. `CONFIG_SNSC_SSBOOT=y` en la cámara: la cadena del `#else`
+    ("error: %s image size greater than device capacity" / "Image too huge!" /
+    "Trying to free %lu pages") NO está en VML (0 ocurrencias) mientras que sí
+    están las variantes SSBOOT y "Freeing memory(use swap parititon)".
+    ⇒ "se quedó sin sitio" no puede ser la causa del apagado silencioso.
+
+(d) -ENOSPC en la ESCRITURA  [V] silencioso incluso con errmode=1
+    W:1186-1189  if (ret == -ENOSPC && (default_flags() & WBI_COMPRESS)) {
+                     wb_msg("NO SPACE error!\n"); ret = 0; }        (VML 0x2be99e)
+    y después W:1191 __wbi_drop + W:1200 `if (!errmode)`… con ret ya a 0.
+    Línea esperada: "NO SPACE error!" (+ el "dropped wbi" de W:383).
+    Para distinguirlo hay que mirar si el sector 0 tiene "invl" (§7) y/o usar el
+    PASO 4: si image_drop escribe bien, un -ENOSPC en el primer flush es raro
+    (cabría solo si el driver calcula capacidad 0 para ese device).
+
+(e) ERROR de apertura del dispositivo  [V] (bug de precedencia conocido)
+    W:1071-1073  if((ret=wb_default_device->open(wb_default_device)<0))
+                     goto send_error;      ← ret vale 0 o 1, no el -errno
+    Firma con errmode=1:  "do_make_image: SUSPNED is aborted - error code (1)!"
+    (VML 0x2be9d7) y el suspend se aborta ⇒ visible en /proc/klog. Código 1 = no
+    es un errno: es el booleano del bug.
+
+(f) ERROR de escritura NAND (driver)  [V]
+    C:793-798  "ERROR:wbi_tsk_wbuf: cannot write = %d" (VML 0x2bee7f)
+    C:736      wbi_wbuf_flush → write_sector (devuelve el errno tal cual)
+    nand.ko    "mumin_ext_write_scts[%d, %d] error: %d"  (kmod/nand.ko @0x1bd3e)
+               "…Error : request=%s, sector = %u, nr_sects = %u…" (@0x1a702)
+    Firma: "do_make_image: SUSPNED is aborted - error code (-5)" (o -EIO/-EINVAL
+    equivalente) + las líneas del driver. Visible con errmode=1.
+
+(g) -ENOMEM / -1 internos de wbi_cmpr  [V]
+    C:465 "ERROR:wbi_exec:%s: %d";  C:1264/1334 "ERROR:%s:size=%lu";
+    C:557-565 "ERROR:%s:%d:idx=%d…";  C:751-763 init del wbuf.
+    Firma: "…SUSPNED is aborted - error code (-1)" (o -12) con errmode=1.
+
+(h) HALT de `pm_suspend_error()` (fallo de un driver udif)  [V]
+    PM:224-232  wbi_drop(); *(u32*)phys_to_virt(pm.sus_error)=1; cxd90014_pm_halt(0)
+    PM:247-252  cxd90014_pm_prepare() → if (udif_driver_suspend()) pm_suspend_error(0)
+    `warm.ignore_drop=1` (CMD) hace que wbi_drop() no escriba nada (W:414-421)
+    ⇒ mismo aspecto externo: apagado sin tocar nflasha5. Es la hipótesis que
+    mejor imita lo medido y NO la cubre `errmode`. Discriminación por marcas de
+    boottime: `.prepare` corre en P:240-244, ANTES de "PM: suspend enter"
+    (P:280), que a su vez va antes de `syscore_suspend()` y de `.enter`
+    (P:281-284). Por tanto:
+      última marca "E warm_boot_pm_begin" y sin "B warm_boot_pm_prepare"
+          ⇒ el halt fue en `.prepare` (udif) — o el bucle infinito de ficheros
+            abiertos (W:1511-1517);
+      "B/E warm_boot_pm_prepare" presentes y última "PM: suspend enter"
+          ⇒ se entró en sleep.S y el fallo es de `do_make_image`.
+    [I] cualquier printk de udif_driver_suspend() queda en log_buf, no en klog.
+    El flag 0x80021060 no sirve a posteriori: se pone a 0 en cada arranque
+    (PM:137-142).
+
+Nota de orden temporal (por qué el volcado actual termina donde termina):
+  P:335 `suspend_ops->begin()` (warm_boot_pm_begin: "Freeing memory…" +
+        "count_sections_p1") ⇒ AÚN con consola viva  ← lo que ya se ve.
+  P:339 `suspend_console()`  ← última línea visible
+  P:240 `.prepare()` (cxd90014_pm_prepare → udif + "checking opened files")
+  P:246 dpm_suspend_noirq
+  P:284 `.enter()` (SL:99 → cxd90014_create_warmbootimage → do_make_image)
+  P:363 `resume_console()`  ← aquí se volcaría todo (solo si hay error).
+  Es decir: la fase que falta es exactamente la que `errmode=1` convierte en
+  visible.
+
+===============================================================================
+7. LO QUE YA SE PUEDE DEDUCIR DEL PROPIO HECHO MEDIDO (acota la causa)
+===============================================================================
+[V] El primer acceso a la flash de `do_make_image` es el flush de la cabecera:
+    W:1127-1133  memcpy(wbheader.fVersion, "invl", 4);
+                 wbi_send_data(&wbheader, sizeof(wbheader));  wbi_flush();
+    C:714-740    wbi_wbuf_flush() → rellena hasta `blksize` (0x40000 = sector_size
+                 del device) y llama write_sector(..., sector=0, 512 sectores);
+    H:56         WBI_INVAL_VER = "invl".
+    ⇒ si el primer flush ocurrió, el sector 0 de nflasha5 empieza por "invl".
+[V] Hecho 4 (medido): el sector 0 y 1/1000/10000/40000/80000 son 0 ⇒ NO se llegó
+    al primer flush. Por tanto la causa está en uno de estos cinco puntos:
+      1. W:1061 wbi_is_canceled()            → imposible (cancel=255,255)
+      2. W:1072 open() del device            → ret=1 (bug), errmode lo expone
+      3. W:1084 count_pages(count_sections_p2) → NO puede fallar: el callback
+         devuelve 0 siempre (W:991-1051); el vmalloc está en p1 y ya consta
+         hecho porque el log muestra "count_sections_p1:3817, 47112", que se
+         imprime DESPUÉS del vmalloc (W:936-945)
+      4. W:1129 wbi_send_data → C:1323-1330 wbi_exec (C:415-417) → -ECANCELED por timeout (o -1)
+      5. W:1132 wbi_flush → write_sector → -ENOSPC (silencioso) u otro errno
+[V] Corroboración del modo ssboot: "Freeing memory(use swap parititon):" (W:735)
+    solo se imprime si `get_ssboot_stat() == SSBOOT_CREATE_MINSSBI` (W:725-729);
+    el log medido la contiene ⇒ en el `.enter` la rama era PM:380-382
+    (`cxd_create_warmbootimage(cpu_resume_profile, 0)`), NO la de SSBOOT_PROFILE
+    (PM:383-385, que solo reescribiría la cabecera: 1 sector; también descartada
+    porque el sector 0 está a cero) ni la de OPTSSBI (PM:386-390, reiniciaría).
+[I, alta] `wb_default_device == NULL` a la hora del enter también daría apagado
+    sin escrituras (W:1214-1218 devuelve 0 sin más), si un driver lo diera de
+    baja durante dpm_suspend; no hay evidencia en el árbol (los drivers WBI son
+    nand.ko, fuera del OSS) ⇒ NO VERIFICADO.
+Combinado con el PASO 1 (tmo=300 s ⇒ fuera el punto 4 por timeout; errmode=1 ⇒
+visibles 2, 4-con--1 y 5-salvo-ENOSPC) el espacio de causas que quedan mudas es
+muy pequeño: {timeout > 300 s, -ENOSPC en el primer flush, device NULL, halt udif}.
+
+===============================================================================
+8. LÍMITES (lo que NO se ha podido comprobar)
+===============================================================================
+[N] No se ha ejecutado nada en la cámara ni en QEMU: todas las firmas son
+    estáticas. Que `printf 1 > /sys/module/warm/parameters/errmode` funcione en
+    la cámara es [V] por código (S_IWUSR + sysfs de params integrados,
+    kernel/params.c:785-808) y por el hecho de que ya leéis esos parámetros,
+    pero no se ha probado la escritura en esta sesión.
+[N] Accesibilidad física del UART de `printascii` (0xf2000000+0x1000*N): no hay
+    dato en el repo. `pmdebug=1` se propone solo como complemento.
+[N] Que el búfer `boottime` (0x834C0000) sobreviva al apagado y no se
+    reinicialice: el driver no está en el árbol OSS. Evidencia indirecta: el
+    klog de la misma zona sobrevive (hecho 3) y existe un comando "CLEAR"
+    explícito en su proc.
+[N] Contenido exacto de "invl" en el sector 0 tras un aborto *después* del
+    primer flush: no hay medida; la deducción de §7 usa solo el caso medido
+    (todo a cero).
+[N] `CONFIG_MODVERSIONS`/vermagic para un módulo propio que pusiera
+    `console_suspend_enabled=0` (símbolo EXPORT_SYMBOL, K:1241): sería la forma
+    limpia de ver la fase silenciosa SIN tocar el flujo (klog seguiría
+    escribiendo en 0x834E0000 y el volcado sobreviviría al apagado), pero exige
+    el .config exacto de la cámara (no está en el repo) y compilar con
+    gcc 4.5.1/Sony CE Linux 8.2.1.1 ⇒ descartado por ahora.
+[N] Escribir `console_suspend_enabled` por /dev/mem queda prohibido por las
+    reglas del proyecto (sin escrituras de RAM), además de que su dirección no
+    está en /proc/kallsyms (la cámara no compila CONFIG_KALLSYMS_ALL: KS solo
+    lista texto y ksymtab; p.ej. `console_suspend_enabled` aparece únicamente
+    como __ksymtab_/__kstrtab_, KS:14597,17997).
+[I] Si el error apareciera DESPUÉS de `wbi_rewrite_header` (W:1168) la imagen ya
+    sería válida y la cámara se quedaría encendida con un WBI bueno escrito: no
+    es un riesgo de datos (la partición solo contiene el WBI) y el siguiente
+    apagado arrancaría en caliente.
+[N] `printf` sin '\n' se propone por no depender del parser (`strict_strtol` en
+    lib/vsprintf.c no está en el árbol extraído); `echo` con '\n' final debería
+    funcionar igual, pero no se ha podido verificar en esta versión.
+
+===============================================================================
+9. VEREDICTO EN UNA LÍNEA
+===============================================================================
+El motivo no se ve porque `klog` es una consola y `suspend_console()` la apaga
+(K:1255-1263, 1389-1392): la fase silenciosa solo existe en `log_buf`. Se saca a
+la luz sin flashear con `pm.suserr=1` + `warm.errmode=1` + `warm.tmo=300000`
+(RAM), que hacen que `do_make_image()` devuelva el error, `sleep.S` (SL:99-108)
+aborte el suspend y `resume_console()` (P:363) vuelque todo el backlog en
+/proc/klog; el timeout y -ENOSPC, que siguen siendo mudos por diseño
+(W:1186-1198), se discriminan con `tmo` grande y con la cabecera de nflasha5.

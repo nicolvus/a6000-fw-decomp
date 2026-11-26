@@ -1,0 +1,405 @@
+X1 — AUDITORÍA ADVERSARIA DEL HILO "warm no deja instantánea"
+================================================================
+Caso   : FILM-PB-1 / apagado "warm" que NO escribe ni un sector de nflasha5 (G22, cámara real
+         con CFW 4.05 = pkg405sony + im.elf 0x9F44 parcheado).
+Tarea  : PREGUNTA X (revisor adversario): auditar hechos e hipótesis del hilo contra bytes y
+         fuentes, y proponer el experimento mínimo y seguro que separa las hipótesis vivas.
+Fecha  : 2026-11-26.   Modo: 100 % ESTÁTICO. Sin cámara, sin flasheo, sin instalación, sin
+         emulador, sin git. Sólo se ha escrito este fichero.
+Método : lectura de fuente (warm.c / wbi_cmpr.c / cmpr.c / params.c / pm.c / sleep.S / resume.S
+         / suspend.c), volcados reales del repo (analysis/camera-dumps/*), tabla de símbolos y
+         reubicaciones de los .ko (readelf/nm) y análisis de bytes propio con Python (decodificador
+         Thumb-2 BL/BLX escrito para esta auditoría). MCP `rea` NO está disponible en este entorno:
+         lo decisivo se verifica contra instrucciones/bytes/líneas concretas, no contra
+         decompilación.
+
+Etiquetas: [V] VERIFICADO (cita comprobada) · [I] INFERENCIA · [N] NO VERIFICADO.
+Abreviaturas de ruta (relativas a la raíz del repo):
+  W   = analysis/session18/main/sony-oss-extracted/linux/arch/arm/common/warm.c(1592 l.)
+  C   = analysis/session18/main/sony-oss-extracted/linux/arch/arm/common/wbi_cmpr.c(1478 l.)
+  WH  = analysis/session18/main/sony-oss-extracted/linux/arch/arm/common/wbi.h
+  WB  = analysis/session18/main/sony-oss-extracted/linux/arch/arm/include/asm/mach/warmboot.h
+  PM  = analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/pm.c
+  SL  = analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/sleep.S
+  RS  = analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/resume.S
+  PRM = analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/params.c
+  CMP = analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/cmpr.c
+  SUS = analysis/session18/codex-g/oss-linux/linux/kernel/power/suspend.c(554 l.)
+  SSB = analysis/session18/codex-g/oss-linux/linux/include/linux/ssboot_stat.h
+  INF = reports/film-pb-1-wbi-silent-20261128.md(390 l.)   [informe que se audita, §8 y §9]
+  NDK = firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/
+        initrd.img_unpacked/kmod/nand.ko            (módulo que registra el dispositivo WBI)
+Nota: W y C son byte-idénticos en los dos árboles del repo (md5 b84eee5f2d1ff3cccfaef50e5c5b5bff
+      y e0ff94afc85e69f00b96023ccf942815), así que las citas valen para ambos [V].
+
+
+================================================================================
+0. RESUMEN EN UNA PÁGINA (lo que cambia el hilo)
+================================================================================
+H1 [V] El hecho medido "apaga pero no escribe ni un sector" NO distingue éxito de fallo, porque en
+   esta configuración el fallo de do_make_image es INVISIBLE POR DISEÑO: con wbi_errmode=0 se
+   devuelve 0 y SL:99-110 trata el 0 igual que un éxito (goto_suspend -> power off). El
+   razonamiento del informe (§8 fila 5 y §9-I2: "nada aborta") confunde "no hay aborto visible"
+   con "no hay fallo". -> REFUTADA la afirmación "no hay inferencias abiertas".
+
+H2 [V] Tres de las cinco hipótesis del enunciado ya están MUERTAS por bytes/fuente, sin cámara:
+   (b) capacidad/-ENOSPC: imposible (CONFIG_SNSC_SSBOOT compilado -> W:1088-1092 sólo avisa; el
+       -ENOSPC exige image_mode=IMAGE_MODE_ADP=3; y el tamaño estimado 38,7 MB < capacidad 62,1 MB).
+   (c) cancel (255,255): imposible (param_ops_port escribe SÓLO 2 bytes y 0x0FFFFFFF ya los tiene
+       a 0xFF,0xFF -> el centinela NO se toca -> wbi_is_canceled() devuelve 0).
+   (d) "otro dispositivo": no hay otro; un único wb_device por arranque y lo registra nand.ko.
+   Quedan VIVAS: (a) timeout (sólo en una variante muy estrecha), (e) NAND/FTL suspendida (o open()
+   rechazado durante .enter) y una nueva (f) "no se llegó a do_make_image" (descartada salvo el
+   caso de .begin/.enter con el device a NULL, que también se descarta con las reubicaciones de
+   nand.ko).
+
+H3 [V] El argumento "el log acaba en Suspending console(s), luego no hubo error" NO es válido:
+   (i) los volcados reales de la cámara demuestran que después de suspend_console() se siguen
+   escribiendo líneas en ese mismo búfer (mem-20261020-log/log.txt:5901-5960 y 6232-6290);
+   (ii) para apagar hay que llegar a platform_enter, lo que exige que .prepare devuelva 0, y
+   warm_boot_pm_prepare imprime SIEMPRE "checking opened files" (W:1480) por una vía (wb_printk,
+   W:660-676) que en esa ejecución no estaba silenciada (se imprimió count_sections_p1).
+   => Si ese volcado no contiene "checking opened files" ni la cadena UDIF, al volcado le falta la
+   cola y no se puede concluir nada del silencio. [N] hoy: el volcado crudo del "warm" no está en
+   el repo (sólo en la respuesta del usuario).
+
+H4 [V] Corrección al criterio de cierre del pendiente: en este kernel la instantánea creada NO
+   empieza por "WBI1" sino por "prof" (WBI_PROF_VER), porque el arranque frío deja
+   cxd90014_ssboot_stat = SSBOOT_CREATE_MINSSBI (=0) y PM:379-382 toma esa rama, que fija
+   fVersion = WBI_PROF_VER (W:1151-1166). "WBI1" es el estado FINAL de una escalera de 4 estados
+   (SSBOOT: resume.S:51-70 + PM:268-278/375-396). Un test que exija ver "WBI1" tras UN apagado
+   fallaría aunque todo funcione.
+
+H5 [V] El parche de im.elf está bien medido: 4 bytes distintos en todo el fichero
+   (0x1F44..0x1F47: 06 4B 80 B5 -> 01 20 70 47), una sola BL a 0x9F44 (en 0x9FF2, ff f7 a7 ff),
+   cero literales 0x9F44/0x9F45, y la compuerta sólo lee dos globales (0x154d4, 0x154b8) y
+   devuelve 0/1 sin escribir. Es seguro, con el límite de las direcciones calculadas (§2.3).
+
+H6 [I] Lo único que separa hoy (a)/(e)/(f) es la COLA DEL LOG (marcadores M3/M4x de §5), no la
+   NAND. Propuesta en §5: re-leer el volcado ya existente con una lista ordenada de marcadores
+   (riesgo cero) y, si se autoriza cámara, UNA escritura en RAM de warm.errmode=1 (parámetro de
+   módulo, no persiste, no toca flash) que convierte el fallo mudo en "el suspender se cancela y
+   la cámara sigue encendida" + mensaje en /log en vivo.
+
+
+================================================================================
+1. AUDITORÍA DE CONTRADICCIONES (contradiction-audit) SOBRE LO QUE SE REUTILIZA
+================================================================================
+1.1 Comandos ejecutados y resultado
+  (a) `python3 scripts/knowledge/search.py claim reports/film-pb-1-wbi-silent-20261128.md`
+      -> 3 relaciones entrantes, TODAS status CONFLICTO_PENDIENTE y todas de filas de
+         docs/PENDIENTES.md (932, 934, 935) que hablan de OTROS subpendientes FILM-PB-1
+         (SUB-FBM31-PARCHE-C, FILM-PB-1, SUB-TRAZA-CAMARA). Ninguna es una corrección del §8/§9.
+  (b) `python3 scripts/knowledge/search.py graph --doc ... --direction out` -> vacío.
+  (c) docs/CORRECTIONS.md:547,552,569 y docs/OPEN-QUESTIONS.md:424,429,446 contienen exactamente
+      esas 3 relaciones y ninguna más sobre WBI/warm/nflasha5.
+  Lectura correcta: NO hay ninguna corrección registrada contra §8/§9, pero ESO NO PRUEBA QUE
+  SEAN CIERTAS. El propio skill lo dice ("una consulta vacía de REA NO prueba ausencia"; el
+  extractor sólo reconoce marcadores y enlaces). El grafo no es evidencia: hay que auditar la
+  fuente. [V]
+
+1.2 Afirmación A: "no hay inferencias abiertas" (§8-§9, repetido en docs/PENDIENTES.md:935)
+  -> REFUTADA. No por el grafo, sino por la fuente:
+  * §8 fila 5 dice "Nada aborta la creación | VERIFICADO | ... warm.errmode ausente => wbi_errmode=0
+    => un fallo sólo se registra". La segunda mitad es cierta (W:1200-1203 imprime y devuelve 0),
+    pero de ahí NO se sigue "nada aborta": errmode=0 es precisamente el mecanismo que convierte
+    cualquier fallo en aparente éxito. Es un non sequitur y contamina §9-I2. [V]
+  * §9-I2 lo repite: "sólo wbi_is_canceled() ... open, count_pages, comprobación de capacidad y
+    escritura" — omite que (i) open() puede fallar y va a send_error (W:1072-1074), (ii) el propio
+    send_error LLAMA A __wbi_drop (W:1191), que deja la cabecera a cero, (iii) con
+    CONFIG_SNSC_SSBOOT la comprobación de capacidad NO aborta (W:1088-1093), y (iv) hay dos
+    salidas silenciosas ANTES de do_make_image (W:1214-1217: WBI_MODE falso o device NULL).
+  * §8.1 (la bandera Silent no viaja en la instantánea) sí se sostiene en lo esencial; su única
+    debilidad es que "0 de 2200 páginas" se apoya en una evidencia del propio hilo que no he
+    recontado (fuera del alcance de esta pregunta). [I]
+  * §8 tabla fila 3 (capacidad 62 128 128 B) es correcta pero irrelevante para el aborto (§3.b).
+
+1.3 Afirmación B: "do_make_image no lee la cabecera previa"
+  -> VERIFICADO para do_make_image: W:1054-1210 sólo llama wbi_is_canceled()/wbi_is_timeout(),
+     device->open/close, count_pages(count_sections_p2), calc_*_image_size, memcpy, wbi_send_data,
+     wbi_flush, wbi_send_sections, wbi_rewrite_header(wbheader en RAM). No hay read_sector. [V]
+  -> MATIZ IMPORTANTE (no está en el informe): en el mismo fichero, cxd_rewrite_wbheader()
+     (W:1223-1245) SÍ lee (wbi_read_header, C:1419-1435) y lo usan las otras ramas de la escalera
+     SSBOOT: PM:383-385 (SSBOOT_PROFILE) y PM:273-276 (SSBOOT_SSBOOT_PRE, en .finish).
+     Consecuencia: "escribir sobre cabecera a cero es el mismo camino que en stock" es cierto
+     para la rama CREATE_MINSSBI (=nuestro caso) y FALSO para las otras dos. [V]
+
+1.4 Afirmación C: "la compuerta 0x9F44 tiene una sola llamada / es pura"
+  -> VERIFICADO con barrido propio de todo el fichero (no con REA):
+     - Bytes 0x9F44 originales: 06 4b 80 b5 00 af 1b 68 33 b1 05 4a 10 68 98 42 8c bf 00 20 01 20 80 bd
+       y en 0x9F5C: 01 20 80 bd. Pools: 0x9F60 -> 0x154d4, 0x9F64 -> 0x154b8 (leídos del fichero).
+       Descodificación: r3 = *(0x154d4); si r3==0 -> return 1; si no, r0 = *(0x154b8);
+       cmp r0,r3; "it cs; movs r0,#0; movs r0,#1" -> return (r0 < r3) ? 1 : 0. Ni un solo store. [V]
+     - BL/BLX (Thumb-32 y ARM) que apunten a 0x9F44/0x9F45: exactamente 1, en VA 0x9FF2
+       (bytes ff f7 a7 ff). [V]
+     - Literales 0x9F44/0x9F45 en el fichero completo: 0. Sin símbolo en .dynsym para 0x9F44. [V]
+     - Diferencia entre im.elf de fábrica y el parcheado: exactamente 4 bytes
+       (`cmp -l` -> posiciones 8005..8008 = offsets 0x1F44..0x1F47), 06 4b 80 b5 -> 01 20 70 47. [V]
+     - LÍMITE [N]: no excluye una dirección calculada con movw/movt ni un BLX de registro; para
+       cerrarlo del todo habría que desensamblar los ~0x2DE8 B de .text y buscar cualquier
+       construcción de la constante 0x9F44 (no lo he hecho: no hay desensamblador ARM en el
+       entorno; capstone está en .venv según B1/C2). El efecto práctico de una llamada oculta, en
+       todo caso, sería mínimo: la compuerta no tiene efectos laterales, así que forzar 1 no rompe
+       nada; lo único que rompería sería que alguien dependiera del 0 para escribir "mem".
+
+1.5 Otras afirmaciones del hilo, comprobadas aquí
+  * "escribir 'warm' apaga": SUS 50-58 (pm_states[PM_SUSPEND_DISK]="warm" con CONFIG_WARM_BOOT_IMAGE)
+    y PM:296-298 (cxd90014_valid acepta MEM y DISK). [V]
+  * "count_sections_p1 sólo se alcanza si WBI_MODE es cierto y hay wb_default_device": W:1353-1365
+    (warm_boot_pm_begin sale con 0 sin imprimir si !WBI_MODE o device NULL) y W:1392. [V]
+    => El log medido PRUEBA que pm_state==PM_SUSPEND_DISK, image_mode!=0 y device != NULL en .begin,
+       y que wbi_setup() (o el bloque de compresión) no devolvió error (si devolviera -EINVAL,
+       suspend.c:334-337 cancela el suspender y la cámara no se apagaría). [V]
+  * "warm.errmode=0, chk_opened ausente, ignore_drop=1": W:1475-1483 (sin chk_opened no se itera,
+    ret=0), W:1510-1518 (_wbi_drop + while(1) sólo si hay ficheros abiertos), W:414-424
+    (ignore_drop NO afecta al __wbi_drop del camino de error: ese se llama directo en W:1191). [V]
+  * "warm.mem_dst/mem_work/wbi_cmpr.* son module_param del kernel": W:130-149, C:53-56, C:100-104. [V]
+
+
+================================================================================
+2. ¿ES COMPATIBLE "apaga pero no escribe ni un sector" CON CADA HIPÓTESIS?
+================================================================================
+2.0 El dato que hace de bisturí (grosor de escritura) [V]
+  El búfer de escritura usa blksize = wb_default_device->sector_size = 0x40000 y n_sector = 0x200
+  (C:757-780: w->blksize, w->n_sector = blksize>>9, w->sector = 0), y escribe SIEMPRE en bloques
+  completos desde el sector 0 (C:735 y C:793). La PRIMERA escritura de una creación es el envío de
+  la cabecera + wbi_flush (W:1129-1133), que vuelca el bloque entero de 256 KiB en el sector 0
+  (C:715-742: rellena con ceros hasta blksize). Y justo antes se pone el magic inválido:
+  memcpy(fVersion,"invl") en W:1128.
+  => Si la creación hubiera empezado a escribir, los sectores 1..511 serían CEROS. El usuario midió
+     el sector 1 IDÉNTICO al WBI de Sony -> el bloque 0 nunca se escribió -> NINGUNA escritura. [V]
+  Corolario: toda hipótesis que exija "escritura empezada y fallida a mitad" (timeout durante la
+  compresión, -ENOSPC al final, error de NAND tras el primer bloque) queda descartada por este
+  dato, sin cámara. [V]
+  Ojo: __wbi_drop (W:366-389) escribe 512 B a cero en el sector 0 en CUALQUIER fallo, así que
+  "cabecera a cero" es compatible con "no se intentó" y con "se intentó y falló". [V]
+
+2.a Aborto por TIMEOUT de compresión — VIVA SÓLO EN UNA VARIANTE ESTRECHA [I]
+  Código: wbi_expire se arma al entrar en do_make_image (W:1066) = ahora + tmo*1000 us; con
+  warm.tmo=50000 son 50 s (mach_usecs_to_cycles = d*2 con SCHED_TICK_RATE=2 MHz,
+  mach/timex.h:71-79); wbi_exec aborta con -ECANCELED si vence (C:426-429) y el error se enmascara
+  (W:1195-1198).
+  Compatibilidad: para no haber escrito NADA, el timeout tenía que vencer ENTRE W:1066 y W:1129,
+  intervalo que sólo contiene open() + count_pages(p2) (W:1079). Es 1 barrido de zonas, el mismo
+  que hace p1 en .begin y que en el log aparece inmediato. Improbable [I].
+  Si venciera más tarde (durante la compresión), el bloque 0 ya estaría escrito -> incompatible
+  con el sector 1 intacto [V].
+  Evidencia que lo distingue: las líneas "count_sections_p2:..." (presente => pasó el punto) y
+  "do_make_image: canceled to create wbi" (W:1196) + "dropped wbi"/"cannot write" (W:381-383).
+  Ya descartado: que el timeout se dispare por unidades mal escaladas (no hay overflow:
+  50000 ms/1000 => 5e7 us => 1e8 ciclos, cabe en 32 bits) [V].
+
+2.b Aborto por CAPACIDAD / -ENOSPC — DESCARTADA (tres veces) [V]
+  (i) El kernel lleva CONFIG_SNSC_SSBOOT compilado, así que la compilación del chequeo es la que
+      SÓLO AVISA: W:1088-1092 ("Warning: %s image size may be greater than device capacity").
+      Prueba doble de que el símbolo está definido: (1) la cadena "Freeing memory(use swap
+      parititon): " existe únicamente dentro de `#if defined (CONFIG_SWAP) && defined
+      (CONFIG_SNSC_SSBOOT)` (W:56 y W:725-749) y está en el kernel EN RAM: 1 ocurrencia en
+      analysis/camera-dumps/ram-servicio-20261020/ram_0x80000000.bin (y en vmlinux.bin); (2) el
+      log medido la imprime en tiempo de ejecución.
+  (ii) El -ENOSPC real (W:1097-1117) exige image_mode == IMAGE_MODE_ADP (=3, enum en W:115-119); medido
+       image_mode=2.
+  (iii) El tamaño estimado ni se acerca: calc_r_image_size con WBI_COMPRESS usa o_data_size/5
+        (W:963-988) = 192 970 752/5 + 122 368 + 512 = 38 717 030 B < capacidad
+        121 344x512 = 62 128 128 B. (El propio código avisa en W:975-982 de que la estimación es
+        optimista: 1/5; eso afectaría a la escritura, no al chequeo.) [V]
+  Evidencia que lo distinguiría: "NO SPACE error!" (W:1187) o el "Warning: ... capacity" (W:1093).
+
+2.c Aborto por CANCEL (warm.cancel=255,255) — DESCARTADA [V]
+  wbi_cancel arranca en el centinela WBI_PORT_UNDEF = 0xfffffff (7 f's!) = 0x0FFFFFFF (W:137-138).
+  El tipo `port` del module_param sólo escribe DOS bytes sobre la variable (PRM:64-65:
+  ((char*)kp->arg)[0]=port; [1]=bit). Escrito "255,255" => bytes 0xFF,0xFF, que son exactamente los
+  dos bytes bajos de 0x0FFFFFFF => el valor NO cambia => W:882-883 devuelve 0 siempre.
+  255,255 es, literalmente, la forma de decir "sin cancelación" para este parámetro. [V]
+  (Y aun si cambiara: port=0xFF/bit=0xFF haría readl de un GPIO inexistente y `1<<255` = 0 en ARM,
+  así que tampoco cancelaría; sólo añadiría riesgo de data abort.) [I]
+  Evidencia que lo distinguiría: "do_make_image: canceled to create wbi" (W:1196).
+
+2.d La escritura va a OTRO dispositivo — DESCARTADA salvo matiz [V]/[N]
+  * wb_default_device lo registra nand.ko: es el único módulo de todo el firmware que importa
+    wb_register_device / wb_unregister_device (nm -u de los 63 .ko de nflasha15 no encuentra
+    ninguno; NDK sí) y también el que imprime "WBI partition[%d]: id=%d, start_secor=%d,
+    num_sectors=%d" (strings NDK @114022). [V]
+  * Sólo hay UN dispositivo: en todos los klogs del repo la línea "wb_default_device: sector_size=
+    0x40000,phys_sector_size=0x200" aparece 1 vez por arranque (p.ej.
+    analysis/camera-dumps/20261109-swd-360/klog.txt:29176, justo tras "nflasha0: p1 p2 ... p23").
+    wb_register_device sólo imprime esa línea cuando def!=0 (W:1279-1301). [V]
+  * "image_dev=*" no redirige nada: el '*' es el MARCADOR de "default" en la lectura
+    (image_dev_show, W:214-231: "%s%s\n" con "*" delante); la escritura (image_dev_store,
+    W:233-262) parsea un ÍNDICE 1..N y con '*' haría simple_strtoul("*")=0 -> -EINVAL. [V]
+  * [N] Que nand.ko escriba en la partición 5 y no en otra zona no se puede leer (módulo binario,
+    sin fuente en el OSS). Mitigante: la línea de arranque "WBI partition[5]" la imprime el propio
+    nand.ko con id=2 (=Warm Boot Image en partinf.conf) y el instalador usa /dev/nflasha5 con el
+    mismo criterio.
+  Evidencia que lo distinguiría: que tras un fallo el __wbi_drop imprimiese "dropped wbi" y aun así
+  la cabecera de nflasha5 siguiera NO nula (probaría que escribe en otro sitio). [N]
+
+2.e La NAND está suspendida cuando se escribe — VIVA [I]
+  El orden es real y está verificado: .enter se ejecuta después de dpm_suspend_start/noirq,
+  disable_nonboot_cpus y arch_suspend_disable_irqs (SUS:240-252 y 253-284); warm.c sólo tiene el
+  hook device->suspend_prepare (W:1520-1522) y ningún mecanismo propio para des-suspender la NAND.
+  Si write_sector falla durante .enter, la primera escritura devuelve error SIN escribir (C:735) =>
+  sector 1 intacto (compatible), y en el log quedan rastros: "ERROR:...cannot write = -N"
+  (C:797, sólo en el camino del task) o, en el camino del flush, "warm.c: cannot write = N"
+  (W:381, dentro de __wbi_drop) y "do_make_image: ret=-N" (W:1201). [V el código; I la causa]
+  Nota: nand.ko NO desregistra el wb_device al suspender (ver 2.f), así que el puntero es válido.
+  Evidencia que distinguiría: "cannot write"/"cannot open" tras "Suspending console(s)". Si en su
+  lugar aparece "dropped wbi", la escritura de 512 B FUNCIONÓ durante .enter y (e) queda muerta.
+
+2.f (NUEVA, del auditor) "No se llegó a do_make_image" — DESCARTADA [V] / su gemela, VIVA [I]
+  Salidas silenciosas antes de crear: W:1214-1217 (WBI_MODE falso o wb_default_device==NULL -> 0 sin
+  imprimir nada). Si el device fuera NULL en .enter, el resultado medido sería EXACTAMENTE el
+  observado (apaga, ni un sector, ni un mensaje de warm.c).
+  Estático: nand.ko sólo llama wb_unregister_device en 2 sitios, y ninguno es de suspensión:
+  .text+0x908 (adyacente a __udif_kfree/kfree: camino de error de init) y .exit.text+0x78
+  (exit_mumin) — readelf -rW NDK, filas 98 y 3377. muminwbi_register se llama sólo en .text+0x918
+  (init). Por tanto el dispositivo sigue registrado durante .enter => la variante "device NULL"
+  está DESCARTADA. [V]
+  La gemela que sigue viva es la de 2.e ("device válido pero open() o write_sector rechazan durante
+  .enter"): mismo síntoma, y se distingue sólo por el mensaje ("cannot open"/"cannot write").
+
+2.g (NUEVA, del auditor) BUG_ON / pánico antes de la primera escritura — DESCARTADA [I]
+  count_sections_p2 hace BUG_ON(sections > header->sections) (W:1005) y header->sections viene de
+  p1 con margen x1,5+64 (ADD_SECTION_MARGIN en W:915), es decir >5725 secciones para p1=3817. La 2.ª medida dio 3515
+  (p1 varía con el estado de memoria), lo que hace el desbordamiento inverosímil: p2 se ejecuta
+  después de liberar memoria, así que tiende a MENOS secciones. Un pánico además dejaría
+  "Kernel panic"/"BUG:" en el log y no apagaría limpiamente. Se descarta por grep en el volcado.
+
+2.h El mecanismo que hace compatibles TODAS las variantes [V]
+  W:1193-1206 (errmode=0 => printk + return 0) + SL:96-110 (cmp r0,#0; beq goto_suspend => power
+  off). Esta es la razón por la que "se apagó" no prueba nada sobre el contenido de nflasha5.
+
+
+================================================================================
+3. AFIRMACIONES QUE CIRCULAN Y NO ESTÁN VERIFICADAS CONTRA BYTES
+================================================================================
+3.1 [N] "La cámara creó/iba a crear la instantánea; el apagado es la prueba". Lo que está
+    verificado es el CAMINO, no la EJECUCIÓN ni el ÉXITO. Cómo verificarlo sin cámara: los
+    marcadores M3/M4 de §5 en el volcado ya existente.
+3.2 [N] "El log de esa prueba acaba en 'Suspending console(s)' y la línea siguiente ya es un
+    arranque frío". El volcado crudo no está en el repo (los dd del usuario no se han versionado).
+    Contra-argumento estático en §0-H3. Cómo verificarlo sin cámara: pedir el .bin completo de
+    19x64 KiB y grepear los marcadores; no hace falta volver a encender la cámara para eso.
+3.3 [N] "La imagen nueva empezaría por WBI1" (INF §8 paso 3 y §6/§7 "esperado: W B I 1"). Es
+    FALSO para la primera creación: magic "prof" (§0-H4). Cómo verificarlo: ya está verificado en
+    fuente (W:1151-1166 + SSB:32-36 + RS:51-70 + PM:375-396); el dato de que el nflasha5 de
+    fábrica empiece por "WBI1" (57 42 49 31 en
+    firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha5, offset 0)
+    corresponde al estado FINAL de la escalera, no al primero.
+3.4 [N] "La imagen de 47 112 páginas cabrá en 62 MB". La estimación del código usa 1/5 (W:975-988)
+    y el comentario del propio Sony avisa de que puede desbordar en la transferencia. No hay
+    medida del tamaño comprimido real de esa configuración (el 42 MB de Sony son 42,3 MB con
+    1164 secciones, no con ~3800). Cómo verificarlo sin cámara: comprimir las mismas páginas
+    offline con el microcódigo H.264 (¿no disponible en el harness?) o, más barato, aceptar el
+    riesgo y mirar el volcado tras la prueba.
+3.5 [N] Que Loader3 acepte "prof" y reanude desde ese vector. No lo he verificado en el binario
+    de Loader3 (no está decompilado aquí). Consecuencia práctica: el criterio de cierre debe ser
+    "arranca caliente", no "magic concreto".
+3.6 [N] Que do_make_image sea la ÚNICA vía de escritura de la cabecera (lo es en el kernel; falta
+    el camino de userland ud_wbi_drop.elf, ya documentado en el hilo).
+3.7 [N] "La compuerta 0x9F44 tiene una sola llamada": verificado contra BL/BLX y literales, NO
+    contra direcciones calculadas (§1.4). Riesgo residual bajo (compuerta sin efectos laterales).
+3.8 [V, corregido] El §9-I6 del informe ("0x9FB4 es el prólogo") es coherente con lo que veo en
+    bytes: en 0x9F44 hay una función Thumb de 0x1A B, y 0x9FB4 es el prólogo de otra función (bytes
+    "b0 b5 90 b0 05 46 00 af" = push {r4,r5,r7,lr}; sub sp,#0x40; mov r5,r0; add r7,sp,#0). No afecta a la conclusión.
+
+
+================================================================================
+4. HIPÓTESIS -> PREDICCIÓN OBSERVABLE -> PRUEBA MÍNIMA (sin ejecutar)
+================================================================================
+| # | Hipótesis (estado)            | Predicción observable (tras "Suspending console(s)") | Prueba mínima |
+|---|-------------------------------|--------------------------------------------------------|----------------|
+| a | timeout de compresión [I viva, improbable] | "count_sections_p2:..." PRESENTE y después "do_make_image: canceled to create wbi"; ninguna línea "WBI: %3d ..." | grep en el volcado existente (gratis) + M3 de §5 |
+| b | capacidad / -ENOSPC [V muerta] | "Warning: ... capacity" o "NO SPACE error!" | grep; no puede aparecer |
+| c | cancel 255,255 [V muerta]      | "canceled to create wbi" sin count_sections_p2 | grep + parámetro (PRM:64-65 contra W:137) |
+| d | otro dispositivo [V muerta, matiz N] | "dropped wbi" y aun así nflasha5 no a cero, o "wb_default_device:" repetido en el log | grep "wb_default_device:" (>=1 por arranque) y leer sector 0 de nflasha5 |
+| e | NAND/FTL suspendida u open() rechazado [I viva] | "warm.c: cannot open ret = N" y/o "warm.c: cannot write = N" + "do_make_image: ret=-N"; NO "dropped wbi" | grep en el volcado; si se autoriza cámara, warm.errmode=1 (ver §5.2) |
+| f | no se llegó a do_make_image [V muerta por reubicaciones de nand.ko] | silencio total tras "checking opened files" | grep; ya descartada |
+| g | pánico (BUG_ON) [I muerta]    | "Kernel panic"/"BUG:" en el volcado | grep |
+| h | ÉXITO [V muerto]              | "WBI:   0 ..." (1164-3817 líneas), "rewrite header for compressed image!", "do_make_image: N [us]", cabecera "prof" | grep; ya incompatible con sector 1 intacto |
+
+
+================================================================================
+5. EXPERIMENTO MÍNIMO Y SEGURO PROPUESTO (no ejecutado)
+================================================================================
+5.1 PASO 0 — coste CERO, sin cámara, riesgo nulo: re-ver el volcado que YA existe.
+    Sobre el .bin de 19x64 KiB (0x83400000) de la prueba del "warm", buscar EN ORDEN estos
+    marcadores (todos son cadenas literales del kernel; cada una decide una rama):
+      M0  "UDIF: suspend start"/"UDIF: suspend end:   unified drivers"   -> prueba que se suspendieron
+                                                                           los dispositivos
+      M1  "PM: late suspend of devices complete"
+      M2  "Disabling non-boot CPUs" / "CPU1: shutdown"
+      M3  "checking opened files"        [W:1480]  -> prueba que .prepare corrió y volvió 0
+      M4a "count_sections_p2:"           [W:1025]  -> do_make_image entró y open() y p2 fueron bien
+      M4b "image size may be greater"    [W:1091]  -> rama de capacidad (no debería estar)
+      M4c "cannot open ret ="            [W:373]   -> open() del dispositivo rechazado
+      M4d "cannot write ="               [W:381]/[C:797] -> escritura rechazada (NAND suspendida)
+      M4e "dropped wbi"                    [W:383]   -> la escritura de 512 B SÍ funcionó en .enter
+      M4f "do_make_image: canceled"      [W:1196]  -> -ECANCELED (timeout; cancel está muerto)
+      M4g "do_make_image: ret="          [W:1201]  -> cualquier otro fallo enmascarado
+      M4h "WBI:   0 " / "rewrite header for compressed image!" / "do_make_image: " + " [us]" [C:1378,
+          W:1151, W:1177]                            -> ÉXITO (imposible con el sector 1 intacto)
+      M5  "Kernel panic" / "BUG:"                  -> pánico
+    Regla de decisión: el PRIMER marcador que falte de la secuencia obligatoria
+    (M0,M1,M2,M3) indica hasta dónde llegó el volcado, no el kernel. Si faltan M0-M3, la cola se
+    perdió (reutilización del búfer por el arranque siguiente) y hay que repetir la captura sin
+    dejar que arranque otro ciclo (o pedir el volcado completo sin recortar).
+    Si M3 está y M4a falta y M4c/M4d faltan -> el hueco sólo puede ser (f) [ya descartada] o un
+    corte del volcado. Si M4a está -> (a) timeout o (e) escritura/open, y lo dice M4c/M4d/M4f/M4g.
+
+5.2 PASO 1 — si se autoriza cámara (NO lo he hecho): convertir el fallo mudo en fallo visible.
+    Escritura en RAM de un parámetro de módulo, reversible y sin flash:
+        echo 1 > /sys/module/warm/parameters/errmode        (ya se ha leído warm.errmode=0 ahí)
+        echo warm > /sys/power/state
+    Con errmode=1, do_make_image devuelve el error real (W:1205-1206) -> sleep.S NO apaga y el
+    suspender se cancela (SL:99-104): la cámara SIGUE ENCENDIDA y su /log queda disponible en vivo
+    con "do_make_image: SUSPNED is aborted - error code (N)".
+    - Si AUN ASÍ se apaga y no escribe -> el 0 vino de la rama -ECANCELED (W:1195) o no se creó
+      imagen pese a errmode=1: señal de que el problema está ANTES de do_make_image.
+    - Si se queda encendida -> fallo real enmascarado; el código de error y las líneas contiguas
+      identifican la rama. Revertir con `echo 0 > .../errmode` (es el valor de fábrica).
+    Por qué es seguro: es un module_param rw (W:147, W:149), no toca flash, no cambia la cabecera
+    (nada más que el __wbi_drop de siempre) y no deja estado persistente: el valor se reinicia en
+    cada arranque desde la cmdline.
+    Alternativa sin escribir nada: NINGUNA. La cámara no expone contadores de do_make_image por
+    sysfs (no hay kobj_attribute equivalente a image_* para errores, W:463-466) y las trazas
+    wbistamp están desactivadas (stamp_addr=0, C:100-127).
+
+5.3 Lo que NO hay que hacer para "separar hipótesis" (descartado razonadamente)
+    * Repetir el apagado con el interruptor / más "warm": no añade información (2 repeticiones ya
+      dieron lo mismo; el log es el que decide).
+    * Tocar warm.tmo: sólo alarga la ventana de (a); no distingue.
+    * Probar warm.cancel=0,0 o similar: (c) ya está muerta por fuente; sería ruido.
+    * Escribir en nflasha5 a mano o "forzar" una cabecera: riesgo de ladrillo y no hace falta.
+
+
+================================================================================
+6. LÍMITES DE ESTA AUDITORÍA
+================================================================================
+[N] MCP `rea` no disponible en este entorno (sólo file_system/self/process). No he usado
+    decompilación; todo va contra fuente, bytes, símbolos y reubicaciones. No he hecho Ghidra.
+[N] El volcado crudo del "warm" y la lectura de nflasha5 no están en el repo: no he podido
+    verificar 3.2 ni la lista M0-M4h. Se audita la INTERPRETACIÓN, no el artefacto.
+[N] nand.ko es binario y su write_sector/open/suspend no se han desensamblado (sólo símbolos y
+    reubicaciones). Por eso (e) queda "viva" en vez de resuelta.
+[N] No he verificado la aceptación de "prof" por Loader3 ni el tamaño comprimido real.
+[N] Unidades de wb_device->capacity (bytes vs sectores) no verificadas en el módulo; el argumento
+    de 2.b no depende de ello (la rama SSBOOT no aborta en ningún caso).
+[V] Todo lo citado como VERIFICADO se ha comprobado en esta sesión con los comandos y lecturas
+    descritos (grep/sed/nm/readelf/cmp + decodificador propio); las cifras de páginas, sectores y
+    capacidades se han recalculado a mano.
+
+
+================================================================================
+7. DIFERENCIAS CON EL INFORME AUDITADO (para que quien lo reutilice sepa qué corregir)
+================================================================================
+1) INF §8 fila 5 y §9-I2: sustituir "nada aborta" por "todo fallo está enmascarado
+   (errmode=0 -> return 0 -> power off)". El apagado no es prueba de creación. [V]
+2) INF §8 paso 3 y §6/§7: el magic esperado tras el primer apagado es "prof", no "WBI1". [V]
+3) INF §8 paso 4 "encender -> caliente con reproducción y Silent": con la escalera SSBOOT
+   (RS:51-70, PM:375-396, PM:268-278) el primer arranque usa el vector *_profile y hacen falta
+   ~3 ciclos apagar/encender para llegar a "WBI1"/resume_ssboot. [V en fuente; I en la práctica]
+4) INF §9-I2 "sólo ... open, count_pages, comprobación de capacidad y escritura": esa lista
+   incluye dos puntos que SÍ abortan y están enmascarados (open() y el timeout de wbi_exec).
+5) Añadir al criterio de cierre: la cola del log (marcadores de §5.1) y, si se puede medir,
+   nflasha5 sector 0 != 0 tras el apagado (con "prof" o "WBI1").

@@ -1,0 +1,348 @@
+D1 — ¿CÓMO CREA SONY EL WBI (FÁBRICA / ACTUALIZACIÓN OFICIAL) Y QUÉ ESTADO PREVIO EXIGE?
+=========================================================================================
+Caso    : FILM-PB-1 / apagado "warm" que no deja instantánea (G22, cámara real con CFW 4.05 e
+          im.elf parcheado en 0x9F44).
+Tarea   : PREGUNTA D, parte 1.
+Fecha   : 2026-11-26 23:50 UTC.
+Método  : 100 % estático. Bytes, instrucciones, líneas de fuente y documentos del repo.
+          Sin cámara, sin flasheo, sin instalación, sin emulador, sin git.
+          Desensamblador: capstone 5.0.7 (.venv) sobre FICHERO (no sobre volcado).
+          MCP `rea` no está disponible en este entorno: lo decisivo se verifica abajo contra
+          bytes/instrucciones concretas (dirección + hex), no contra decompilación.
+Alcance : sólo se ha escrito este fichero. No se ha modificado ninguna otra ruta del repo.
+
+Rutas relativas a la raíz del repo. UP = firmware/extracted/fw321/updater.img_unpacked
+FW = firmware/extracted/fw321/firmware.tar_unpacked
+IMG = FW/0700_part_image/dev/nflasha15_unpacked_unpacked/bin
+K  = analysis/session18/main/sony-oss-extracted/linux
+KC = analysis/session18/codex-g/oss-linux/linux
+
+
+0. RESUMEN EN UNA LÍNEA
+-----------------------
+Sony NO fabrica el WBI durante la actualización: el actualizador **invalida** la cabecera
+(`ud_wbi_drop.elf` = 512 ceros en el sector 0 de nflasha5, incondicional en TODOS los modos) y,
+si el paquete trae el miembro `0700_part_image/dev/nflasha5`, lo **copia** (imagen pre-construida
+en fábrica, no una instantánea del aparato); la instantánea real la fabrica **el propio kernel en
+el primer apagado en caliente** del aparato, y no exige ningún estado "limpio" de usuarios: la
+congelación, el `sync` y la liberación de memoria son del kernel, y la única compuerta de higiene
+que existe (`chk_opened=`) está desactivada en esta cámara.
+
+
+1. ¿SE CREA EL WBI DURANTE EL UPDATE O EN EL PRIMER APAGADO?
+-------------------------------------------------------------
+Respuesta: **ni una cosa ni otra en el sentido de "crearlo":** el update sólo copia una imagen
+pre-construida (cuando el paquete la lleva) después de invalidar la cabecera; la instantánea del
+aparato la crea el kernel en el primer apagado "warm".
+
+1.1 Qué hace exactamente el "drop" del actualizador  [VERIFICADO contra instrucciones]
+-------------------------------------------------------------------------------------
+* Se invoca en `UP/bin/us_mkfs.sh:106`
+      ud_wbi_drop.elf $FILE_PARTINF || { echo "[ERROR] ud_wbi_drop.elf" ; getledval.elf 0x68 ; exit $? ; }
+  y es **incondicional**: va ANTES del único retorno temprano (`:109  test $exit_flag -eq 1 && exit 0`),
+  que es lo que distingue los modos (PRODUCT/LOADER_UPDATER → exit_flag=0; SERVICE/USER/MINOR/MSCRYPT
+  → 1; VERSKIP → 1, `:70-90`). `us_mkfs.sh` se lanza en TODO paquete porque va colgado de
+  `partconf_sum/partconf.sum` (`UP/config/config.xml:23-26`), que es un miembro obligatorio.
+* Semántica del binario (Thumb, `.text` 0x8760..0x8C54). Mapa de PLT resuelto por orden de
+  `.rel.plt` y **validado con 5 llamadas distinguibles** (fopen 0x86AC, fgets 0x86A0, feof 0x86E8,
+  ferror 0x873C, fclose 0x8694 en la función lectora 0x8A5C). Función principal desde 0x87E0:
+    0x87EE  movs r1,#0 ; mov.w r2,#0x200 ; blx 0x86B8   -> memset(pila,0,512)
+    0x880E  bl 0x8A5C                                   -> AnalyzePartitionSettingFile(argv[1], &tabla)
+    0x8824  ldr r3,[r5,#0x28] ; cmp r3,#2 ; bne 0x88DA  -> sólo particiones con campo type == 2
+    0x882A  ldr r1,[r5,#0x24] ; cbnz r1,0x8836          -> size == 0  => "wbi size is zero. skip"
+    0x8836  subs r3,r1,#1 ; cmp.w r3,#0x1FE ; bhi 0x884A-> size < 512 => "too small" + exit(-1)
+    0x884A  snprintf(dst,0x14,"/dev/nflasha%d",i)       -> 0x8D24 = "/dev/nflasha%d"
+    0x886C  movw r1,#0x1002 ; blx 0x8660               -> open(dev, O_RDWR|O_SYNC)   [VERIFICADO]
+    0x8890  memset(pila+4,0,0x200)                      -> 512 ceros
+    0x88A4  blx 0x86C4                                  -> write(fd, pila+4, 0x200)   [VERIFICADO]
+    0x88C8  blx 0x870C                                  -> close(fd)
+    0x88DA  adds r4,#1 ; adds r5,#0x10 ; cmp r4,#0x1F  -> barre i = 1..30
+  Consecuencias duras:
+    - **No hay `lseek`** en todo el binario (imports: sólo open/write/close, fopen/fgets/fseek/
+      strlen/feof/ferror/snprintf/printf/puts/exit/__errno_location). La escritura es, por tanto,
+      **en el offset 0** del dispositivo.
+    - Escribe **exactamente 512 B a cero** = `DEFAULT_SECTOR_SIZE`, la misma operación que
+      `__wbi_drop()` del kernel (`K/arch/arm/common/warm.c:359-388`), que deja `fVersion` a 0 y por
+      tanto la imagen inválida (`WBI_INVAL_VER "invl"` en `K/arch/arm/include/asm/mach/warmboot.h:56`,
+      `WBI_PROF_VER "prof"` en `:57`, `WBI_VER "WBI1"` en `:59`).
+    - **No escribe ni una página de imagen**: no hay ni un solo write de tamaño > 512 ni lectura
+      previa. El "drop" no puede crear un WBI.
+* Requisito de estado previo del binario: que `partinf.conf` declare una partición de **type 0x02
+  con tamaño >= 512 B**. En 3.21 es `FW/0300_partconf/partinf.conf:26`
+  (`0x03B40000,0x03C00000,0x00000002,0xFFFFFFFF`, comentario en `:25` "Warm Boot Image").
+  Si el tamaño fuese 0 el binario **saltaría** ("wbi size is zero. skip"), no fallaría.
+  `us_mkfs.sh` sólo invoca a `edisx.elf` (tabla de particiones) en PRODUCT/LOADER_UPDATER (`:44`);
+  en USER/SERVICE/MINOR no reescribe la tabla: usa la que ya hay.
+
+1.2 Dónde se crea de verdad la instantánea  [VERIFICADO en fuente]
+-------------------------------------------------------------------
+* `warm.mode=2` + estado `PM_SUSPEND_DISK` (="warm", `KC/kernel/power/suspend.c:50-58`) habilitan
+  la ruta WBI (`K/arch/arm/common/warm.c:66` `WBI_MODE(state,mode)`).
+* La imagen la escribe el kernel **dentro del camino de suspensión**, no el actualizador ni userspace:
+    `K/arch/arm/mach-cxd90014/pm.c:291-298`  platform_suspend_ops { .begin=cxd90014_pm_begin,
+      .prepare=cxd90014_pm_prepare, .enter=cxd90014_pm_enter, .finish=cxd90014_pm_finish }
+    `pm.c:242-245`   cxd90014_pm_begin()   -> warm_boot_pm_begin(state)   (free_some_memory +
+                       count_pages(count_sections_p1) + wbi_setup del compresor)
+    `pm.c:247-253`   cxd90014_pm_prepare() -> udif_driver_suspend() + warm_boot_pm_prepare()
+                       (compuerta chk_opened y mapeo de páginas externas)
+    `pm.c:163-200`   _cxd90014_pm_enter()  -> cxd90014_cpu_suspend(mode) -> (asm)
+                       `K/arch/arm/mach-cxd90014/sleep.S:99  bl cxd90014_create_warmbootimage`
+                       -> pm.c:375-396 (switch ssboot) -> cxd_create_warmbootimage ->
+                       do_make_image (`warm.c:1212-1221` y `warm.c:1054`); **y al volver** hace
+                       `clear_logbuf()` (salvo logbuf_noclear) + `printk("WARMBOOT\n")`.
+* Es decir: el orden real es `sync` (kernel, ver §2.1) → congelar usuarios → `.begin`
+  (free_some_memory + recuento) → `suspend_console()` → `dpm_suspend_start()` → `.prepare`
+  (compuerta) → `.enter` (escritura de la imagen). Encaja punto por punto con el log medido del
+  "warm" (free_some_memory y `count_sections_p1` antes de "Suspending console(s)").
+* El `sync` y la liberación de memoria **no** son de userspace:
+    `KC/kernel/power/suspend.c:477-482`  printk("PM: Syncing filesystems ... ") ; sys_sync() ; "done."
+    `K/arch/arm/common/warm.c:723-755`   free_some_memory()  (__shrink_all_memory + ssboot_swapon
+                                          si hay swapfile + drain_all_pages + lru_add_drain_all)
+
+1.3 La imagen que viaja en el paquete es una COPIA, no una creación  [VERIFICADO en bytes]
+------------------------------------------------------------------------------------------
+* El tar de fábrica 3.21 trae `FW/0700_part_image/dev/nflasha5` (42 293 120 B) con cabecera
+  válida: `00: 57 42 49 31 | 8C 04 00 00 | 09 00 00 00 | BC 23 05 80 | 24 02 06 20 | 00 02 00 00 |
+  00 C6 80 02 | ...` = `"WBI1"`, sections=0x48C(1164), flag=9 (COMPRESS|LZ77), resume_vector
+  0x800523BC, dVersion 0x20060224, sector_size 0x200, r_data_size 0x0280C600, kern_start/size 0,
+  kern_cksum 0x0F0F0F0F, o_data_size 0x0A4FC000  [VERIFICADO con od -c / struct wb_header en
+  `K/arch/arm/include/asm/mach/warmboot.h:61-77`].
+* Va declarada en `FW/0701_part_image_sum/part_image.sum` con tamaño `0x02855780` (= 42 293 120) y
+  CRC `9cb10112`, en la línea `dev/nflasha5`. Y `FW/0100_config/mount.conf:17` la describe:
+  `/dev/nflasha5 /wbi wbi 62914560 0` (62 914 560 B de partición).
+* Ese fichero **no se puede generar en el aparato**: es la RAM de un aparato de referencia
+  comprimida con LZ77. Copiarlo no es "crear el WBI"; es restaurar una instantánea ajena.
+
+1.4 Prueba de que la copia ocurre DESPUÉS del drop  [VERIFICADO por medición; orden interno INFERENCIA]
+--------------------------------------------------------------------------------------------------------
+* Loader3 sólo elige el arranque caliente si la cabecera de nflasha5 lleva la firma:
+  `docs/gui/g11-auditoria-307-nflasha15.md:215-216` — `chk ssboot` (`0xc01f20f4`) lee
+  `0xc01f2bc6`/`0xc01f2be6`/`0xc01fbf0e` y con firma `WBI1`/`WBI0` elige **BootMode 11**
+  (`0xc01f212a`).
+* Medición en esta cámara, con dos CFW que sólo difieren en traer o no ese miembro:
+    - 3.48 **conservando** `nflasha5` → `analysis/camera-dumps/20261108-swd-348/loader-log-0xc0060000.txt:75`
+      `BOM:<<BootMode: 11>>`  (caliente)
+    - 3.52 **sin** `nflasha5` (--sin-wbi) → `analysis/camera-dumps/20261108-swd-352/loader-log-0xc0060000.txt:74`
+      `BOM:<<BootMode: 1>>`   (frío)
+  (contexto: `reports/film-pb-1-sub-riesgo-flash-20261126.md:171`, `docs/gui/g11-auditoria-307-nflasha15.md:246-256`.)
+* Como `us_mkfs.sh:106` deja el sector 0 a cero **en toda instalación** y aun así el 3.48 arrancó
+  caliente, la única explicación compatible es que **la escritura del miembro de part_image ocurre
+  después del drop dentro de la misma instalación** (INFERENCIA; no hay log del instalador en el
+  repo: `grep -a "[UD_WBI_DROP]"` sólo aparece en nuestras evidencias, no en una captura de cámara).
+* Efecto neto del paquete oficial: **el aparato queda con un WBI válido pero de fábrica**, y el
+  primer apagado de esa sesión lo reescribe entero con la RAM real (do_make_image escribe secciones
+  y cabecera nuevas; `warm.c:1054-1207`, `count_sections_p2` en `:991`).
+* Los modos de la actualización oficial: `config.xml` sólo ejecuta comprobaciones de suma para
+  `part_image` (`:17-19`); quien escribe las imágenes es el cuerpo del actualizador
+  (`UP/bodylib/libupdaterbody.so`: `PartitionImageKeyTag`, `NewFirmwareImageFile`,
+  `Fsys_Format/Mount/Write`, y `system()`), no los `.sh`. El `.sh` que sí toca el WBI es `us_mkfs.sh`
+  y sólo lo invalida.
+* En fábrica (modo PRODUCT=1) el camino es el mismo `us_mkfs.sh` (con `fmode=full`, `:72-77`): drop
+  y después la copia. Por tanto la cámara sale de fábrica con una instantánea **pre-construida**, y
+  su primer apagado la sustituye. [INFERENCIA; el modo PRODUCT no es observable en el repo, sólo el
+  código que lo distingue.]
+
+
+2. ¿QUÉ PREPARA SONY ANTES (usuarios, sync, cachés, procesos, /usr, swap)?
+----------------------------------------------------------------------------
+2.1 Lo que prepara el kernel: nada delegable  [VERIFICADO en fuente]
+---------------------------------------------------------------------
+* `sys_sync()` explícito (`KC/kernel/power/suspend.c:477-482`).
+* Congelación de toda la userspace y de las tareas congelables
+  (`suspend_prepare()` → `suspend_freeze_processes()`, `KC/kernel/power/suspend.c:161-210`).
+* Reclaim forzado en el propio camino WBI (`free_some_memory`, `warm.c:723-755`), con `drain_all_pages`
+  y `lru_add_drain_all`.
+* `usermodehelper_disable()` (no se pueden lanzar ayudantes durante la suspensión, `suspend.c:179`).
+
+2.2 Lo que prepara la userspace de Sony: apagado ORDENADO por componentes  [VERIFICADO por cadenas]
+---------------------------------------------------------------------------------------------------
+`IMG/../kmod/upm.ko` (Power Manager; `strings -a -t x`, offsets decimales del fichero):
+  13edc "EV OFF SET_TIMEOUT: out"            14347 "EV OFF go acting_app(inacting_app) sending CANCEL to APP"
+  14292 "EV OFF CANCEL NG, waiting I_INV(act_app)"   142bb "EV OFF CANCEL OK, go active(act_app)"
+  142e0/1431d "EV OFF I_INV_CMP go inact_app2(...)"   14201 "EV OFF OFF_CMP go inact_im(inact_app2)"
+  14082 "EV OFF IM_RES_CMP -> ACT_ALL"       1409f "EV OFF ON_CMP -> APP_ON, go active(res)"
+  140d7 "EV OFF KERNEL_SUS_CMP go res(sus)"  14109 "EV OFF OFF_CMP do liro_sus(inact)"
+  1412b "EV OFF LIRO OFF_CMP do im_gi_sus(inact)"      14153 "EV OFF GI_CMP do dmm_pre_suspend()"
+  14176 "EV OFF dmm_pre_suspend() done. go sus(inact)" 141a3 "EV OFF Warm boot"
+  + "UPM_CMD_OFF", "UPM_CMD_OFF_CMP", "UPM_CMD_OFF_CANCEL", "add_off_factor/del_off_factor",
+    "k_upm_off_seq_set_timeout", "ssboot_is_rewriting", "ssboot_is_profiling".
+Lectura: al apagar, UPM **pide** a la app que cancele, espera los ACK, suspende LIRO (decodificador),
+luego IM/GI, luego llama a `dmm_pre_suspend()`, y sólo entonces entra en "Warm boot". Cada paso con
+timeout ("SET_TIMEOUT/UNSET_TIMEOUT"). Eso es el "estado ordenado" de Sony: un protocolo propio con
+ACKs, no un `kill -9`.
+`/usr/bin/im.elf` (la otra mitad del apagado; cadenas del fichero, offsets hex):
+  0x40f8 "EV OFF: inact_cmp: %x, inact_count:%d"  0x412d "EV OFF: act_cmp: %x, act_count:%d"
+  0x411e "EV OFF: CMD_ON"  0x4366 "res_all"  0x4374 "sus_all_u"  0x437e "sus_all_i"  0x4388 "inact_all"
+  0x4332 "killall"  0x414f "sen.elf &"  0x40b7 "/sys/power/state"  0x40c8 "warm"  0x40cd "WARM(...)"
+  tabla de montajes 0x4179-0x4264: /setting(vfat,nflasha2) /system(nflasha3) /tmp(nflasha10)
+  /usr(**cramfs**, nflasha15/dnflasha15) /usr/upgrade /log(nflasha23) /lens(nflasha18) /rootfs
+  0x4044 "/sbin/dosfsck -Y %s"  0x405d "/usr/bin/e2fsck -y %s"
+O sea: la userspace monta, comprueba/repasa sistemas de ficheros y manda `inact_all`/`sus_all_*` a
+cada instancia registrada, contando ACKs. **No es un "matar procesos y limpiar cachés".**
+
+2.3 Lo que NO hace im.elf entre el mensaje de apagado y el write  [VERIFICADO en instrucciones]
+-----------------------------------------------------------------------------------------------
+`reports/evidence/film-pb-1-warm-abort-20261126/B1-imelf-antes-del-write.txt:17-23`: entre el
+mensaje `0x92014F` de upm.ko y el `write("warm")` im.elf sólo compara el id, lee dos globales, abre
+`/sys/power/state`, (opcional) toca Backup `0x940004`, hace un `memset` de 0x40 B, la compuerta
+`0x9F44` y un log. **No** hace `sync`, **no** toca `drop_caches`, **no** mata procesos, **no** escribe
+`/sys/power/image_*`, **no** abre `/dev/nflasha5`. Ninguna de sus acciones es condición para que el
+kernel construya la imagen. (Reproducido en `.../C2-ramas-r5.txt:24-46`.)
+
+2.4 /usr y swap  [VERIFICADO]
+-----------------------------
+* `/usr` se monta **cramfs** (`im.elf` literal 0x41dd; tabla 0x41c9-0x41dd) ⇒ es de sólo lectura por
+  construcción: no existe el problema de "ficheros abiertos para escritura en /usr". En la sesión
+  del 26-11 el montaje medido es `ext2 ro` (informe `reports/film-pb-1-wbi-silent-20261128.md` §9 I4).
+* **No hay swap**: `FW/0300_partconf/partinf.conf:34-35` da a nflasha8 tamaño 0 y
+  `FW/0100_config/mount.conf:20` lo declara `none none 0 0`; `IMG/swap_prepare.sh:10-22`
+  sale con "SwapPartition(/dev/nflasha8) Not Found." y ni siquiera configura compswap. Es coherente
+  con que `free_some_memory` imprima el texto fijo "Freeing memory(use swap parititon)" y no haga
+  `ssboot_swapon()` (la cadena se imprime siempre en esa rama, `warm.c:730-741`).
+  El WBI **no usa swap**: va a nflasha5 (`warm.c:1054-1207`).
+
+
+3. INTENTOS PREVIOS EN EL REPO (¿ya se probó crear el WBI a mano o forzar el apagado?)
+-------------------------------------------------------------------------------------
+| Qué se probó / concluyó | Resultado | Fuente |
+|---|---|---|
+| ¿La cámara regenera el WBI sola tras un --sin-wbi? | **Quedó abierto**: "no se sabe todavía si la cámara regenera el WBI (arranques siguientes más rápidos) o arranca siempre en frío" | `docs/gui/g11-auditoria-307-nflasha15.md:246-256` (§12, cita en :254) |
+| Restaurar el WBI conservándolo en el paquete | **Funciona**: 3.48 → `BootMode 11`; 3.52 sin él → `BootMode 1` | `analysis/camera-dumps/20261108-swd-348/loader-log-0xc0060000.txt:75`; `.../swd-352/...:74` |
+| "Escribir `warm` a mano" / forzar el apagado | **No había ningún intento registrado antes de esta sesión.** Lo más cercano son lecturas propuestas (`dd if=/dev/nflasha5 bs=16 count=1`) y la secuencia planeada "instalar → frío → apagar con el interruptor" | `reports/film-pb-1-busqueda-decodificador-frio-20261128.md:252,287`; `reports/film-pb-1-wbi-silent-20261128.md:249-268` (§6 pasos 5-6) |
+| Parche que fuerza `warm` (compuerta 0x9F44 → `movs r0,#1; bx lr`) | Construido y auditado 23/23; **prueba física pendiente** | `reports/film-pb-1-wbi-silent-20261128.md` §4.1, §5; `reports/evidence/film-pb-1-wbi-silent-20261128/07-garantia-creacion-wbi.txt` |
+| ¿El kernel invalida el WBI en cada arranque? | Se concluyó "**nunca**" por `ignore_drop=1` (upm.ko/backup.ko) | `reports/film-pb-1-sub-arranque-wbi-20261128.md:176-188` — **matizado en §4 de este fichero**: `boot_drop=0` en la cmdline es la razón de fondo, no sólo `ignore_drop` |
+| El arranque caliente es el modo normal de ESTA cámara | **Medido**: "Tras cada [reinicio] aparece `WARMBOOT` (arranque desde la imagen de `nflasha5`, ~3 s)" ⇒ el mecanismo de escritura funcionó con el `/usr` de Sony | `docs/capture/camera-reset-logs.md:11` |
+| Hechos medidos aportados por el usuario en esta sesión (no están en el repo) | 1) el interruptor escribe "mem" (uptime no se reinicia, nflasha5 a cero); 2) `write("warm")` directo apaga y el arranque siguiente es frío; 3) el log llega a `count_sections_p1` + "Suspending console(s)" y nada más; 4) ni un sector escrito, sólo la cabecera que dejó el instalador | contexto de la tarea (2 intentos, 2026-11-26) |
+No se ha encontrado en `docs/capture/camera-reset-logs.md`, `docs/capture/e25-11-r5-bionz-analisis.md` ni
+`docs/capture/e26-r14-ramcfg-bos-analysis.md` ningún intento de crear el WBI a mano ni de forzar el
+apagado. Lo único relevante de `e26-r14` es la descripción del propio `us_mkfs.sh:44,66,93-98`
+(`docs/capture/e26-r14-ramcfg-bos-analysis.md:139`), que coincide con §1.1.
+
+
+4. ¿EXIGE ALGO QUE EL SISTEMA ESTÉ "LIMPIO"?  (contraste con la 2.ª prueba medida)
+-----------------------------------------------------------------------------------
+Todo lo que el código exige está en la cmdline y está desactivado.  [VERIFICADO en fuente + cmdline]
+* `chk_opened=` (la ÚNICA compuerta de higiene que Sony escribió): `warm.c:1471-1473` declara
+  `wbi_mount_points[]`; `warm_boot_pm_prepare` la consulta en `:1503-1518` y, si hay ficheros
+  abiertos, hace `_wbi_drop()` + `while(1);`. En la cmdline medida **no existe `chk_opened=`**
+  (`reports/evidence/film-pb1-sector31-camara-20261126/A-frio/cmdline.txt`) ⇒
+  `wbi_mount_points[0]==NULL` ⇒ la compuerta devuelve 0 y nunca actúa. Además se ejecuta en
+  `.prepare` (`KC/kernel/power/suspend.c:240-241`, dentro de `suspend_enter`), o sea **después** de
+  suspender dispositivos: no puede explicar lo que se ve en el log (donde no aparece su traza
+  "some files are still opened" ni nada después de "Suspending console(s)").
+* `warm.ignore_drop=1` ⇒ `wbi_drop()` es inerte (`warm.c:413-422`: `if (!wbi_ignore_drop)`).
+* `warm.resume_drop=0` ⇒ `wbi_resume_drop()` inerte.
+* `warm.boot_drop=0` ⇒ **el kernel NO borra la cabecera al arrancar**. `wb_register_device()`
+  (`warm.c:1296-1305`) hace `__wbi_drop()` en el primer registro de dispositivo **sólo si**
+  `wbi_boot_drop` (por defecto 1, `warm.c:142-143`, `module_param_named(boot_drop, ..., bool, S_IRUSR)`).
+  Con `=0` no borra. Esto **corrige el matiz** del informe anterior (§3, fila 5): la razón por la que
+  el WBI sobrevive a los arranques en frío no es sólo `ignore_drop` (que no cubre esta llamada
+  directa a `__wbi_drop`), es `boot_drop=0`; el efecto práctico coincide con lo publicado
+  ("el kernel no invalida nunca"), pero por otra vía.
+  Valor comprobado en las dos cmdlines de la sesión del 26-11 (frío y caliente).
+* `warm.errmode` ausente ⇒ `wbi_errmode=0` ⇒ un fallo de creación sólo se registra (`warm.c:1200-1206`).
+* `warm.cancel` ausente ⇒ `wbi_is_canceled()` siempre 0 (GPIO no cancela, `warm.c:877-890`).
+* Capacidad: **no bloquea**. Con `CONFIG_SNSC_SSBOOT` (que es el caso) el exceso de tamaño sobre la
+  partición es sólo un `wb_msg("Warning: ... image size may be greater than device capacity!")`
+  (`warm.c:1087-1095`) y se sigue; el `-ENOSPC` sólo existe en la rama sin SSBOOT.
+* `warm.tmo=50000` sólo fija `wbi_expire` en `do_make_image` (`warm.c:1066`) y `wbi_is_timeout()`
+  (`:895-898`) **no se consulta en `warm.c`**: su único consumidor es el compresor
+  (`wbi_cmpr.c:426`, al comprimir/enviar). No hay, por tanto, un "tiempo máximo de creación" que
+  pueda abortar la fase de recuento.
+
+Contraste con la MEDICIÓN (hechos del usuario, no del repo):
+* 1.ª prueba: `count_sections_p1: 3817, 47112`; 2.ª prueba con apps matadas y `drop_caches`:
+  `3515, 43998`. La poda funcionó (5 608 páginas menos ⇒ ~22 MB) y **el resultado fue el mismo**.
+  Si el problema fuese "no hay memoria / no cabe / hay procesos vivos", la 2.ª prueba habría cambiado
+  algo. Y si fuese "ficheros abiertos en /usr", la compuerta `chk_opened` ni siquiera está armada.
+* Posición en el log: las trazas del kernel sitúan el corte **después** de `free_some_memory()` y de
+  `count_sections_p1` (`warm.c:723-755`, `:917-960`) y **después** de "Suspending console(s)"
+  (`KC/kernel/printk.c:1259`, llamado en `KC/kernel/power/suspend.c:339`), es decir en
+  `dpm_suspend_start()`/`suspend_enter()` (`suspend.c:339-352`), con la userspace **ya congelada desde
+  `suspend.c:190`** y con `usermodehelper_disable()` ya hecho (`:179`). A esa altura ningún estado de
+  usuarios ("apps matadas", "cachés limpias", "tarjeta fuera") puede influir: no queda userspace
+  ejecutando. ⇒ **No hay ningún indicio estático de que la creación exija un sistema "limpio"; la
+  medición lo confirma.**
+* La propia aritmética del log lo respalda: 47 112 páginas × 4 KiB = 193 MB de datos originales, que
+  con compresión (`flag` del WBI de Sony = 9 = COMPRESS|LZ77, `warmboot.h:65-68`) y la estimación
+  `r_data_size` de `calc_r_image_size()` (`warm.c:970-988`) queda muy por debajo de los 62 128 128 B
+  de la partición (`WBI partition[5]: id=2, start_secor=0, num_sectors=121344` en el log real).
+
+
+5. QUÉ ES, ENTONCES, EL ESTADO PREVIO QUE SÍ IMPORTA
+----------------------------------------------------
+Ordenado por "quién lo exige":
+1. [Instalación] `partinf.conf` con una partición type 0x02 y tamaño >= 512 B, si no el drop se salta
+   (no falla).  [VERIFICADO, §1.1]
+2. [Instalación] que el paquete traiga `dev/nflasha5` si se quiere salir con WBI válido; sin él, sale
+   inválido y el primer arranque es frío.  [VERIFICADO por medición 3.48/3.52, §1.4]
+3. [Arranque] `warm.mode=2` y que Loader3 no fuerce un modo que no sea 11 (si la cabecera es válida).
+   [VERIFICADO en fuente + G11 §11.1]
+4. [Kernel] que la suspensión **complete**: `warm_boot_pm_begin` (recuento) → dispositivos →
+   `warm_boot_pm_prepare` → `.enter` → `cxd90014_create_warmbootimage()`. Si algo falla antes de
+   `.enter`, no se escribe ni un sector.  [VERIFICADO en fuente; dónde exactamente falla en la
+   cámara es la pregunta D2/D3, no ésta]
+5. [Nada] No hay requisito de: procesos cerrados, `drop_caches`, `/usr` desmontado, tarjeta fuera,
+   swap configurada.  [VERIFICADO §4]
+
+
+6. LÍMITES (lo que NO se ha podido comprobar)
+---------------------------------------------
+* **Orden interno de la instalación**: no hay en el repo ninguna captura del log del actualizador
+  (`[UD_WBI_DROP]`/`[DETAIL][MKFS]`), así que "la copia de part_image va después del drop" es
+  INFERENCIA apoyada en la medición 3.48/3.52, no en una traza. El propio `config.xml` lista
+  `part_image_sum` (líneas 17-19) ANTES de `partconf_sum` (23-26), lo que sugeriría lo contrario si
+  los `<proc>` se ejecutasen en orden de documento y si `part_image_sum` escribiese imágenes; la
+  medición dice que el resultado final es la imagen válida, que es lo que cuenta.
+* **Valor de `warm.boot_drop` en la sesión del 4.05**: lo verificado es `warm.boot_drop=0` en las
+  cmdlines de la sesión del 26-11 (`reports/evidence/film-pb1-sector31-camara-20261126/{A-frio,B-caliente}/cmdline.txt`).
+  El paquete 4.05 auditado sólo cambia `dev/nflasha15` y `part_image.sum` (informe WBI-Silent §5), y
+  la cmdline la pone el cargador, no `/usr`; por tanto debería ser la misma (INFERENCIA). Si en la
+  unidad fuese `boot_drop=1`, el kernel borraría la cabecera en cada arranque en frío y la medición
+  "cabecera a cero" no distinguiría entre instalador y kernel. Prueba discriminante, de sólo lectura:
+  buscar `dropped wbi` en el log del kernel (`__wbi_drop` lo imprime, `warm.c:383`); el log del
+  17-11 no lo tiene tras `wb_default_device:` (`analysis/camera-dumps/20261117-traza-T2T6/objetivo/log.txt:6475-6477`).
+* **Modo real de fábrica**: PRODUCT=1 se deduce de `us_mkfs.sh`/`common.src`; no hay traza de una
+  instalación de fábrica.
+* **Contenido de la imagen de Sony**: que sea reanudable en un aparato distinto (misma versión, otra
+  unidad) es lo que implica que exista en el paquete; no se ha comprobado que Sony la escriba en
+  modo USER además de en PRODUCT (la medición del 3.48 sí lo sugiere).
+* **No ejecución**: nada de esto se ha probado en cámara ni en el emulador. Que la suspensión real
+  llegue a `.enter` en esta unidad sigue sin medirse (pregunta D2/D3).
+* El sistema de conocimiento no tiene ninguna corrección registrada contra
+  `reports/film-pb-1-sub-arranque-wbi-20261128.md` (`search.py claim` ⇒ "Sin correcciones
+  registradas"); las 3 relaciones entrantes de `reports/film-pb-1-wbi-silent-20261128.md` son filas
+  de `docs/PENDIENTES.md` que lo enlazan, no correcciones de contenido.
+
+
+7. REPRODUCIBILIDAD
+-------------------
+# 1) el drop
+sed -n '39,46p;70,110p' firmware/extracted/fw321/updater.img_unpacked/bin/us_mkfs.sh
+sed -n '17,26p'         firmware/extracted/fw321/updater.img_unpacked/config/config.xml
+strings -a firmware/extracted/fw321/updater.img_unpacked/bin/ud_wbi_drop.elf | head -40
+# desensamblado (capstone 5, Thumb) de .text 0x8760..0x8C54 + resolución de .plt por .rel.plt:
+python3 - <<'EOF'
+from elftools.elf.elffile import ELFFile; import capstone
+e=ELFFile(open('firmware/extracted/fw321/updater.img_unpacked/bin/ud_wbi_drop.elf','rb'))
+t=e.get_section_by_name('.text'); print(t['sh_addr'], t['sh_size'])
+for i in capstone.Cs(capstone.CS_ARCH_ARM,capstone.CS_MODE_THUMB).disasm(t.data(),t['sh_addr']):
+    if 0x87e0 <= i.address <= 0x88e4: print("%08x  %-8s %s"%(i.address,i.mnemonic,i.op_str))
+EOF
+# 2) la imagen de fábrica
+od -A d -c firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha5 | head -3
+sed -n '17p' firmware/extracted/fw321/firmware.tar_unpacked/0100_config/mount.conf
+sed -n '25,26p' firmware/extracted/fw321/firmware.tar_unpacked/0300_partconf/partinf.conf
+grep -n 'nflasha5' firmware/extracted/fw321/firmware.tar_unpacked/0701_part_image_sum/part_image.sum
+# 3) la creación en el kernel
+grep -n 'warm_boot_pm_begin\|warm_boot_pm_prepare\|cxd_create_warmbootimage\|boot_drop' \
+     analysis/session18/main/sony-oss-extracted/linux/arch/arm/common/warm.c
+sed -n '163,200p;240,300p' analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/pm.c
+sed -n '161,200p;234,250p;328,346p;477,482p' analysis/session18/codex-g/oss-linux/linux/kernel/power/suspend.c
+grep -n 'Suspending console' analysis/session18/codex-g/oss-linux/linux/kernel/printk.c
+# 4) la cmdline
+tr ' ' '\n' < reports/evidence/film-pb1-sector31-camara-20261126/A-frio/cmdline.txt | grep warm
+# 5) la userspace de apagado
+strings -a -t x firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/kmod/upm.ko | grep 'EV OFF'
+strings -a -t x firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/bin/im.elf  | sed -n '1,80p'
+cat firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/bin/swap_prepare.sh

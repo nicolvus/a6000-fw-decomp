@@ -1,0 +1,396 @@
+A2 — LA FASE QUE VA DESPUÉS DE "Suspending console(s)": COMPRESOR POR HARDWARE, TIMEOUTS Y ORDEN DE LLAMADAS
+Caso: FILM-PB-1 / apagado "warm" que no deja instantánea (G22, cámara real con CFW 4.05 e im.elf parcheado)
+Fecha: 2026-11-26 (evidencia A2)                 Modo: 100 % estático (sin cámara, sin flasheo, sin emulador)
+Autor: agente de código (rama propia). Sólo se ha escrito este fichero.
+
+Fuentes primarias (rutas relativas a la raíz del repo)
+  [K] analysis/session18/codex-g/oss-linux/linux/...        árbol Sony completo (warm.c, wbi_cmpr.c, cmpr.c,
+                                                            mach-cxd90014/{pm.c,sleep.S}, kernel/power/{suspend.c,
+                                                            main.c,process.c}, kernel/printk.c, kernel/klog.c)
+  [M] analysis/session18/main/sony-oss-extracted/linux/...  copia parcial. warm.c, wbi_cmpr.c, mach-cxd90014/pm.c,
+                                                            sleep.S y cmpr.c son IDÉNTICOS a [K] (diff sin salida);
+                                                            de [M] faltan kernel/power/*, kernel/printk.c y kernel/klog.c.
+  [V] firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/vmlinux.bin
+                                                            kernel de la cámara (fw 3.21, Linux 3.0.27_nl-rt106 según E1; 3 478 912 B) — sirve para
+                                                            probar qué ramas/mensajes están COMPILADOS.
+  [L] analysis/camera-dumps/20261117-traza-T2T6/objetivo/log.txt   log real de la cámara (arranque en frío).
+  [C] reports/evidence/film-pb1-sector31-camara-20261126/A-frio/cmdline.txt   cmdline real medida.
+  [B2] reports/evidence/film-pb-1-warm-abort-20261126/B2-validacion-kernel.txt  evidencia hermana (misma carpeta).
+  [E1] reports/evidence/film-pb-1-warm-abort-20261126/E1-observabilidad.txt      llega por separado a la misma
+       conclusión de observabilidad (klog es consola + console_suspend); aquí se usa como confirmación cruzada.
+  Log del "warm" = el ya medido y entregado en el encargo (no se ha repetido ni se ha tocado la cámara).
+
+Estados: VERIFICADO = leído en fuente/bytes/instrucción; INFERENCIA = deducción razonada; NO VERIFICADO = sin prueba.
+
+
+===================================================================================================
+RESUMEN — las cuatro respuestas, una línea cada una
+===================================================================================================
+1. La PRIMERA escritura al dispositivo es el bloque WBUF completo de 256 KiB (sector_size=0x40000) en LBA 0,
+   que contiene la cabecera con fVersion="invl", y la ejecuta `wbi_wbuf_flush()` ([K] wbi_cmpr.c:715-745, el
+   `write_sector` está en la línea 735) llamada desde `do_make_image()` ([K] warm.c:1132). Antes hay que superar
+   8 condiciones (§2). El primer `wbi_send_data` de la cabecera (warm.c:1129) NO escribe: sólo copia a WBUF.
+
+2. Si el compresor de hardware nunca responde: NO se cuelga. El bucle de tareas comprueba un plazo global
+   (wbi_exec, wbi_cmpr.c:426-428) de `warm.tmo`=50 000 ms (warm.c:1066, [C]) ⇒ `-ECANCELED`; la cancelación
+   espera `wbi_cancel_tmo`=100 000 µs y, si no para, imprime "<3>WBI:wbi_cmpr_cancel:timeout" (wbi_cmpr.c:1216-1219).
+   Si `waddr` no fuese accesible NO hay timeout ni comprobación: el `memcpy` a WBUF (wbi_cmpr.c:664/672) daría
+   data abort con IRQ/FIQ enmascaradas ⇒ oops/reset (cuelgue), no aborto limpio. En esta cámara `waddr`=0x5D000000
+   SÍ es accesible: es lowmem y equivale a phys 0x9D000000 (§3.3).
+
+3. Cada aborto imprime (tabla en §4.1) con `wb_printk`/`wb_msg`, que son `vprintk` a secas ([K] warm.c:660-676 y
+   [M] wbi.h:36-41). NADA de eso aparece en el volcado porque el búfer persistente de 0x83400000 lo alimenta un
+   CONSOLA (`klog`, [K] kernel/klog.c:187-215/366) y `suspend_console()` corta `console_unlock()`
+   ([K] kernel/printk.c:1255-1263, 1389-1392): entre "Suspending console(s)" y el apagado no se escribe ni un byte
+   en 0x834E0000, llegue el código donde llegue. NO es prueba de que el código no llegue ahí (§4.3). Además, si la
+   suspensión hubiera abortado, `resume_console()` (suspend.c:363) habría volcado todo lo pendiente y lo veríamos.
+
+4. Orden (todo con línea en §5): `begin` = warm_boot_pm_begin (compresor + free_some_memory + count_sections_p1)
+   → `suspend_console()` → `dpm_suspend_start` (TODOS los drivers, NAND incluida) → `prepare` = warm_boot_pm_prepare
+   (wb_device->suspend_prepare + ioremap) → `dpm_suspend_noirq` → CPUs no-boot off → IRQs off → syscore → `enter`
+   = cxd90014_pm_enter → cxd90014_cpu_suspend → sleep.S:99 `bl cxd90014_create_warmbootimage` → do_make_image.
+   Es decir: la imagen se crea DESPUÉS de suspender consola y DESPUÉS de suspender los dispositivos (NAND, DMA).
+   Si la escritura falla ahí, el código sí imprime, pero nada llega al volcado (§4) y `warm.errmode=0` convierte
+   el fallo en retorno 0 ⇒ sleep.S apaga la cámara igual (§2, condición C9).
+
+
+===================================================================================================
+1. CADENA DE LLAMADAS EXACTA (extremo a extremo)
+===================================================================================================
+  [C] "warm" (4 B) → /sys/power/state → `state_store` ([K] kernel/power/main.c:170-204). No es "disk" (main.c:186
+      compara con "disk"), así que cae en la tabla `pm_states` (main.c:193-197) → `enter_state(PM_SUSPEND_DISK)`.
+      `pm_states[PM_SUSPEND_DISK] = "warm"` ([K] kernel/power/suspend.c:50-59, la entrada en la 57).
+  enter_state  ([K] suspend.c:468-540)
+    :481-483  printk "PM: Syncing filesystems ... " + sys_sync() + "done."        <-- medida en el log
+    :494      suspend_prepare(state)  (:163-206) → pm_notifier_call_chain(:175) → usermodehelper_disable(:179)
+              → suspend_freeze_processes(:190) = "Freezing user space processes ..." ([K] process.c:176) y
+              "Freezing remaining freezable tasks ..." (process.c:182)                        <-- medidas
+    :506      suspend_devices_and_enter(state)  (:329-427)
+      :334-337  suspend_ops->begin(state) = cxd90014_pm_begin ([K] pm.c:242-245) → warm_boot_pm_begin
+                (warm.c:1353-1405): `pm_state = state` (:1356), compresor (wbi_setup :1373, cmpr->init :1381),
+                `free_some_memory()` (:1386 → :723-748) y `count_pages(count_sections_p1)` (:1392 → :917-961)
+                ⇒ "Freeing memory(use swap parititon)..." y "count_sections_p1:3817, 47112"   <-- medidas
+      :339      suspend_console()  → "Suspending console(s) (use no_console_suspend to debug)"  <-- ÚLTIMA medida
+      :342      dpm_suspend_start(PMSG_SUSPEND)  ← se suspenden TODOS los drivers (NAND incluida)
+      :352      suspend_enter(state)  (:236-320)
+        :241      suspend_ops->prepare() = cxd90014_pm_prepare (pm.c:247-254): udif_driver_suspend() y
+                  warm_boot_pm_prepare() (warm.c:1503-1534): chk_opened (inerte), wb_device->suspend_prepare(),
+                  ioremap_ext_pages()
+        :246      dpm_suspend_noirq(PMSG_SUSPEND)
+        :263-266  drain_all_pages(); lru_add_drain_all()
+        :271      disable_nonboot_cpus()
+        :275      arch_suspend_disable_irqs()          ← a partir de aquí no hay IRQs
+        :281      syscore_suspend()
+        :284      suspend_ops->enter(state) = cxd90014_pm_enter (pm.c:255-258) → _cxd90014_pm_enter(
+                  PM_ENTER_NORMAL) (pm.c:163-186) → cxd90014_cpu_suspend(mode) (pm.c:169)
+                  → [K] arch/arm/mach-cxd90014/sleep.S: ENTRY cxd90014_cpu_suspend (:46), enmascara IRQ/FIQ
+                    (:88-89), `v7_flush_kern_cache_all` (:92), `cmp r0,#PM_ENTER_NORMAL` (:95),
+                    **:99 `bl cxd90014_create_warmbootimage`**, :100-101 `cmp r0,#0 / beq goto_suspend`,
+                    :102-110 (si != 0: restaura contexto y RETORNA), :112 goto_suspend (apagado real).
+                  → pm.c:375-397 cxd90014_create_warmbootimage() → (stat=0, ver B2 §1) cxd_create_warmbootimage(
+                    cxd90014_cpu_resume_profile, 0) (pm.c:382) → warm.c:1212-1221 → do_make_image (warm.c:1054-1210).
+
+  Nota de contexto para G22/QEMU: pm.c:165-167 hace `#ifdef CONFIG_QEMU return 0;` en `_cxd90014_pm_enter`, de modo
+  que un kernel compilado para QEMU NUNCA llega a sleep.S ni crea imagen. El kernel de la cámara no es QEMU (el
+  fenotipo medido lo prueba: se apaga y no escribe).
+
+
+===================================================================================================
+2. PREGUNTA 1 — ¿DÓNDE ESTÁ LA PRIMERA ESCRITURA AL DISPOSITIVO Y QUÉ HAY QUE SUPERAR ANTES?
+===================================================================================================
+2.1 Dónde. (VERIFICADO en fuente)
+  do_make_image (warm.c:1054-1210):
+    :1128  memcpy(wbheader.fVersion, WBI_INVAL_VER, 4)      → "invl" (warmboot.h:56): la cabecera nace INVÁLIDA
+    :1129  wbi_send_data(&wbheader, sizeof(wbheader))       → NO escribe en el dispositivo (ver 2.2)
+    :1132  wbi_flush()                                      → *** PRIMERA ESCRITURA ***
+    :1140  wbi_send_sections(&wbheader, section_data, n)    → comprime y vuelca el cuerpo
+    :1147  wbi_flush()                                      → 2.ª escritura (resto del WBUF)
+    :1168  wbi_rewrite_header(&wbheader)                    → reescribe LBA 0 con la versión buena
+  wbi_flush (wbi_cmpr.c:1344-1347) → wbi_wbuf_flush (wbi_cmpr.c:715-745):
+    :719-720  if (!w->cnt) return 0;
+    :723-724  if (wbi_is_canceled()) return -ECANCELED;
+    :726-731  rellena con ceros hasta `w->blksize` completo
+    :735      ret = wb_default_device->write_sector(wb_default_device, (void *)w->addr + w->get,
+                                                   w->sector, w->n_sector);
+              con `w->sector`=0 (:759) y `w->n_sector` = blksize>>9 = 0x40000>>9 = 512 (:757-758)
+    ⇒ se escribe UN bloque de 256 KiB en LBA 0..511 con la cabecera (44 B = sizeof(struct wb_header),
+      warmboot.h:61-77) al principio y ceros detrás. Ese bloque es el que NO está en la partición (el usuario
+      comprobó que el sector 1 sigue igual al WBI de Sony ⇒ no se escribió el bloque entero).
+
+2.2 Por qué wbi_send_data(header) no escribe. (VERIFICADO)
+  wbi_send_data (wbi_cmpr.c:1321-1337) → wbi_exec (:1328) → wbi_tsk_send (:860-885) → wbi_wbuf_enqueue
+  (:656-699) que hace `memcpy((void *)w->addr + w->put, (void *)p, n)` (:664 y :672) y sólo despierta al
+  escritor si `w->cnt >= w->blksize` (:683). Con 44 B < 0x40000 no se despierta a nadie: la cabecera queda
+  sólo en RAM (0x5D000000). El escritor `wbi_tsk_wbuf` (:782-818, `write_sector` en :793) es el que vacía el
+  anillo durante `wbi_send_sections`, no antes.
+
+2.3 Condiciones que hay que superar para llegar a esa primera escritura. (VERIFICADO el código; el valor real
+    de cada parámetro, [C])
+  C1 `WBI_MODE(pm_state, image_mode)` (warm.c:1214; macro en :66 = (state)==PM_SUSPEND_DISK && (mode)).
+     `pm_state` se fija en warm_boot_pm_begin:1356 con el estado pedido = PM_SUSPEND_DISK ("warm", suspend.c:57);
+     `image_mode` viene de `warm.mode` (warm.c:129-130) = 2 en [C] (=IMAGE_MODE_MAX, warm.c:114-120).
+  C2 `wb_default_device != NULL` (warm.c:1217-1218). Lo registra el driver WBI en cada arranque
+     (`wb_register_device`, warm.c:1267-1310) y el log real lo confirma: "wb_default_device: sector_size=0x40000,
+     phys_sector_size=0x200" y "WBI partition[5]: id=2, start_secor=0, num_sectors=121344".
+  C3 `wbi_is_canceled() == 0` (warm.c:1061-1064; función :877-893). Sólo mira un GPIO y SÓLO si `warm.cancel`
+     está definido; [C] no trae `warm.cancel` ⇒ WBI_PORT_UNDEF ⇒ devuelve 0 siempre.
+  C4 armar el plazo: `wbi_expire = now + wbi_tmo*USEC_PER_MSEC` (warm.c:1066) con `warm.tmo=50000` ([C]) = 50 s.
+  C5 `wb_default_device->open()` == 0 (warm.c:1071-1073). Interno del driver: NO VERIFICADO (cerrado, §6).
+  C6 `count_pages(count_sections_p2, &wbheader)` sin error (warm.c:1084 → :991-1052). Recorre las MISMAS ~47 112
+     páginas que contó la fase 1 (dato del log: "count_sections_p1:3817, 47112"), llamando `saveable()`
+     (:786-816) y `is_head_of_free_region()` (:757-773). No imprime nada hasta el final (END).
+  C7 capacidad: `calc_r_image_size(&wbheader)` (warm.c:970-989) frente a `wb_default_device->capacity`
+     (62 128 128 B, log) (warm.c:1088-1124). En este kernel la rama compilada es la de CONFIG_SNSC_SSBOOT
+     (warm.c:1091-1095), que SÓLO avisa; ver §3.4.
+  C8 que el WBUF sea usable: `wbi_tsk_wbuf_init` (wbi_cmpr.c:746-772) exige addr!=0, size!=0 (:751-754) y
+     size>=blksize (:760-765); `wbi_setup` se llamó en `begin` (warm.c:1373). [C]: `wbi_cmpr.waddr=0x5D000000
+     wbi_cmpr.wsize=0x100000` ⇒ 1 MiB = 4 bloques de 0x40000 (w->end = 0x100000, :769). Accesibilidad: §3.3.
+  C9 (posterior, pero decide el síntoma) si algo falla: `send_error` (warm.c:1182-1206) escribe 512 B a cero en
+     el sector 0 (`__wbi_drop`, warm.c:1191 → :366-390), y como `warm.errmode=0` (no está en [C]; default 0,
+     warm.c:146-147) imprime "do_make_image: ret=%d" (:1201) y **devuelve 0** (:1202). sleep.S:100-101 ve éxito
+     ⇒ goto_suspend (:112) ⇒ la cámara se APAGA aunque no haya imagen. Es la razón de fondo del fenotipo medido.
+
+2.4 Corolario útil (INFERENCIA, encaja con lo medido): como la partición conserva intactos los sectores
+    1..80000, el bloque de 256 KiB de §2.1 NO se escribió con éxito. Por tanto, lo que ocurrió pasó en/antes de
+    la línea 1132, o el propio `write_sector` falló. No puede haber sido un timeout de compresión a mitad del
+    cuerpo (eso dejaría LBA 0..511 escritos con "invl").
+
+
+===================================================================================================
+3. PREGUNTA 2 — COMPRESOR QUE NO RESPONDE / `waddr` INACCESIBLE / -ENOSPC
+===================================================================================================
+3.1 Cómo se usa el compresor de hardware. (VERIFICADO)
+  · Driver: [K] arch/arm/mach-cxd90014/cmpr.c, registrado en `late_initcall` (:482) con `ncore`=3 bloques
+    CMPR3/CMPR1/CMPR2 (:77-105) y microcódigo cargado por `cmpr_init` (:372-416) desde `cmpr.path` y `cmpr.path2`
+    ([C]: /system/sabin/ssboot.bin y ssboot_any.bin) al área `cmpr.mem=0x8000@0x9A000000`.
+  · `deflate` = `cmpr_deflate` (:418-424) = `cmpr_deflate_start` (:222-309): valida alineación y tamaños,
+    programa 4 páginas de MMU del bloque, escribe MBX0/1/3, enciende reloj/reset y escribe XRST (:307).
+    **Arranca y vuelve 0 sin esperar** (no hay bucle dentro).
+  · `deflate_poll` (:426-429) = `cmpr_deflate_is_end` (:328-338) = un único `readl(REG_COR(CMPR_COR_IMSR))`
+    (:333). Si el bloque no contesta, devuelve 0 para siempre.
+  · `deflate_finish` (:431-459): exige ENDFCT_DONE; si no, "<3>cmpr: deflate abort: %d" (:438) y -EFAULT; si el
+    magic del LZPT no es `CMPR_LZPART_MAGIC`, "cmpr: image is broken" (:444) y -ENOEXEC.
+  · en wbi_cmpr: `wbi_tsk_cmpr` (:1069-1121) toma recursos CMPR+OBUF, calcula checksum y llama `deflate`
+    (:1110-1114; error en :1115) y despierta a `wbi_tsk_cmprwait` (:1117); `wbi_tsk_cmprwait` (:1165-1195) sondea
+    `deflate_poll` por núcleo (:1178) y, mientras quede alguno ocupado, devuelve TS_RUN (:1190), lo que reencola
+    la tarea y hace girar a `wbi_exec`.
+
+3.2 Si nunca responde: TIMEOUT, no cuelgue. (VERIFICADO en fuente)
+  · `wbi_exec` (:413-467) comprueba en CADA vuelta `wbi_is_canceled() || wbi_is_timeout()` (:426) y, si vence,
+    `wbi_cmpr_cancel()` y `return -ECANCELED` (:427-428).
+  · `wbi_is_timeout` (warm.c:895-898) compara `mach_read_cycles()` con `wbi_expire`, armado en warm.c:1066 a
+    `warm.tmo`=50 000 ms ([C]; el default del módulo es 10 s, warm.c:135-136).
+  · `wbi_cmpr_cancel` (wbi_cmpr.c:1197-1239): pide cancelar a cada núcleo ocupado (:1212 → cmpr.c:321-326,
+    escribe MBX3) y espera hasta `wbi_cancel_tmo`=100 000 µs (:55-56, :1216) sondeando (:1225); si no paran,
+    imprime "<3>WBI:wbi_cmpr_cancel:timeout" (:1219) y sale; al final `deflate_end` por núcleo (:1236 →
+    cmpr.c:311-319, apaga reloj y reset).
+  ⇒ Camino: `-ECANCELED` → `wbi_send_sections` err1 ("%s: compress error: %d", :1394) o `wbi_send_data`
+    ("ERROR:%s:size=%lu", :1332) → `do_make_image: send_error` (warm.c:1182) → `__wbi_drop` (512 B a cero en
+    LBA 0, :1191) → `wb_printk("%s: canceled to create wbi")` (:1196) → **return 0** (:1197) → sleep.S apaga.
+  · Además el plazo es ÚNICO para toda la imagen (se arma antes de `count_sections_p2`, warm.c:1066): si el
+    barrido de 47 112 páginas (C6) se come los 50 s, el primer `wbi_exec` que se ejecute (el de la cabecera,
+    :1129) aborta ANTES de la primera escritura. Es la única explicación sencilla que deja LBA≥1 intacto y
+    además es coherente con que no se vea ninguna firma de error (§4). INFERENCIA (no medida).
+
+3.3 Si `waddr`=0x5D000000 no fuese accesible. (VERIFICADO que SÍ lo es; el fallo sería cuelgue)
+  · No hay ninguna comprobación de accesibilidad: `wbi_tsk_wbuf_init` sólo mira !=0 y tamaño (wbi_cmpr.c:751-765)
+    y el primer uso es el `memcpy` de :664/:672. Un acceso inválido en ese punto (IRQs ya enmascaradas,
+    suspend.c:275-276 y sleep.S:88-89) es un data abort ⇒ `die()`/panic (la cmdline trae `exception.reboot=1` y
+    el repo documenta `panic_on_oops=1`, docs/capture/camera-reset-logs.md) ⇒ cuelgue o reinicio por WDT, sin
+    timeout ni mensaje de aborto del WBI.
+  · Pero 0x5D000000 es válido en la cámara: el mapa impreso en el arranque dice
+    "lowmem : 0x40000000 - 0x80000000 (1024 MB)" ([L]:6366) y "Memory: 256MB 576MB = 832MB total" ([L]:6359)
+    con `mem=256M@0x80000000` y `mem=576M@0x9C000000` ([C]) ⇒ PAGE_OFFSET=0x40000000 y
+    virt = phys − 0x40000000 ⇒ 0x5D000000 = **phys 0x9D000000**, 1 MiB dentro del 2.º banco y justo detrás de
+    `warm.mem_work` (0x9C000000+0x600000 = 0x9C600000). Con wsize=0x100000 cubre 0x9D000000-0x9E000000, que no
+    pisa `warm.mem_dst` (0x9B000000+0xC00000 = 0x9BC00000) ni `cmpr.mem` (0x9A000000+0x8000). Todo dentro de
+    lowmem ⇒ siempre mapeado.
+  · Coherencia física/virtual del resto: `mem_dst`/`mem_work`/`cmpr.mem` se usan como direcciones FÍSICAS (van a
+    las tablas MMU del compresor, cmpr.c:250-258, y a `CMPR_PADR`), y el CPU las lee por alias no cacheado
+    (`PHYS_TO_NONCACHE`, wbi_cmpr.c:1155). `waddr`, en cambio, es dirección VIRTUAL de kernel (lowmem).
+
+3.4 -ENOSPC. (VERIFICADO)
+  · La comprobación de capacidad tiene dos ramas; en el kernel que corre SÓLO está compilada la de
+    CONFIG_SNSC_SSBOOT: en [V] existe "Warning: %s image size may be greater than device capacity!%lu > %lu"
+    (cadena 9226) y NO existe "error: %s image size greater than device capacity!" (rama sin SSBOOT).
+    Coherente con que free_some_memory imprima la variante SSBOOT "Freeing memory(use swap parititon): "
+    (warm.c:723-748; cadena 9239 de [V]) y no "Freeing memory: ".
+  · ⇒ Con imagen > capacidad el kernel SÓLO avisa (warm.c:1092-1094) y sigue; no hay -ENOSPC por capacidad.
+  · -ENOSPC sólo podría venir del propio driver en `write_sector`; entonces `send_error` lo convierte en éxito:
+    "NO SPACE error!" y `ret=0` (warm.c:1184-1188, cadena 9234 de [V]) ⇒ apagado sin imagen y sin abortar.
+  · Si `cmpr_init` no cargara el microcódigo, `warm_boot_pm_begin` devuelve !=0 (warm.c:1380-1381) →
+    `suspend_devices_and_enter` va a `Close` (suspend.c:334-337) ⇒ NO se apaga y /sys/power/state devuelve error
+    (mensajes "cmpr: vfs_stat/file open error" en consola). Como la cámara SÍ se apaga, el compresor estaba
+    cargado y `wbi_setup()` fue bien. INFERENCIA fuerte (coincide con que "Freeing memory…" sí se imprimió, y va
+    después de init: warm.c:1381 vs 1386).
+
+
+===================================================================================================
+4. PREGUNTA 3 — QUÉ IMPRIME CADA ABORTO Y POR QUÉ NO APARECE NADA TRAS "Suspending console(s)"
+===================================================================================================
+4.1 Inventario de mensajes del camino (todos presentes en el kernel que corre: cadenas de [V]).
+  (wb_msg = `printk` a secas; wb_printk = `vprintk` + condición WBI_SILENT_MODE; [K] warm.c:660-676, [M] wbi.h:36-41)
+
+  | # | sitio                                   | literal (tal cual)                                                   |
+  |---|-----------------------------------------|----------------------------------------------------------------------|
+  | 1 | warm.c:944 (p1 END)                     | "%s:%ld, %ld" → "count_sections_p1:3817, 47112"       (wb_msg)         |
+  | 2 | warm.c:1022 (p2 END, si NOT_KERNEL_RO)  | "%s:%08lx,%08lx -> %08lx"                          (wb_msg)         |
+  | 3 | warm.c:1025-1026 (p2 END)               | "%s:%ld, %ld, %08lx(%08lx)" → "count_sections_p2:N, N, X(Y)" (wb_msg)  |
+  | 4 | warm.c:1093 (capacidad, rama SSBOOT)    | "Warning: %s image size may be greater than device capacity!%lu > %lu" (wb_msg) |
+  | 5 | warm.c:1137-1139                        | "%s: %lu sections, %ld pages, %08lx->%08lx"             (wb_msg)        |
+  | 6 | warm.c:1142                            | "rewrite header for compressed image!"                   (wb_msg)        |
+  | 7 | warm.c:1177                            | "do_make_image: %d [us]"                                 (wb_printk)    |
+  | 8 | warm.c:381-383 (dentro de __wbi_drop)   | "%s: cannot write = %d" / "dropped wbi"                  (printk)       |
+  | 9 | warm.c:1187                            | "NO SPACE error!"                                        (wb_msg)       |
+  |10 | warm.c:1196                            | "%s: canceled to create wbi"                             (wb_printk)    |
+  |11 | warm.c:1201                            | "%s: ret=%d"                                             (wb_printk)    |
+  |12 | warm.c:1205                            | "%s: SUSPNED is aborted - error code (%d)!"              (wb_printk)    |
+  |13 | wbi_cmpr.c:1219                        | "<3>WBI:%s:timeout" (wbi_cmpr_cancel)                    (wb_printk)    |
+  |14 | wbi_cmpr.c:465                         | "ERROR:%s:%s: %d" (wbi_exec err1)                        (wb_printk)    |
+  |15 | wbi_cmpr.c:797                         | "ERROR:%s: cannot write = %d" (wbi_tsk_wbuf)             (wb_printk)    |
+  |16 | wbi_cmpr.c:1115                        | "section%d:deflate error: %d"                            (wb_printk)    |
+  |17 | wbi_cmpr.c:1149                        | "section%d: deflate_finish error: %d"                    (wb_printk)    |
+  |18 | wbi_cmpr.c:1262/1332/1394/1397         | "ERROR:%s:nsect=%d" / "ERROR:%s:size=%lu" / "%s: compress error: %d" / "%s: write meta data error: %d" |
+  |19 | wbi_cmpr.c:751/761/822/942             | errores de inicialización de wbuf / cola vacía            (wb_printk)   |
+  |20 | cmpr.c:438/444                         | "<3>cmpr: deflate abort: %d" / "cmpr: image is broken"    (printk)      |
+  |21 | cmpr.c:229-239                         | "src=%lx,dst=%lx,work=%lx" / "dlen=… wlen=…"             (printk)       |
+
+  Única salida SIN mensaje propio: la rama `ret == -ENOSPC && WBI_COMPRESS` imprime sólo ANTES (:1187) y las
+  rutas que ni se ejecutan por compilación (rama sin SSBOOT).
+
+4.2 Por qué no se ve ninguna. (VERIFICADO en fuente + cadenas)
+  a) El búfer que se volcó en 0x83400000 es la CONSOLA `klog` de Sony: [K] kernel/klog.c — cabecera con magic
+     "klog" (KLOG_MAGIC_VAL) + offset, datos desde KLOG_START=12 (:44-53, :94-121), `klog_write` (:126-142),
+     `struct console klog_console` con `.write = klog_console_write` (:187-215) y `register_console` (:366).
+     Se alimenta EXCLUSIVAMENTE por `con->write` desde `call_console_drivers()`, que sólo se llama dentro de
+     `console_unlock()` ([K] kernel/printk.c:1395-1412, :525-539). En la cámara está activa:
+     "klog: initialize logging buffer: 0x00020000@0x834e0000" y "console [klog0] enabled" ([L]:6409-6410), y la
+     cmdline trae `klog.addr=0x834E0000 klog.size=0x20000` ([C]).
+  b) `suspend_console()` ([K] printk.c:1255-1263) imprime su línea y pone `console_suspended = 1` (:1261); a
+     partir de ahí `console_unlock()` sale sin llamar a los drivers (:1389-1392) y `console_trylock()` falla
+     (:1330-1335). ⇒ **ningún** printk/wb_msg/wb_printk llega a 0x834E0000 entre "Suspending console(s)" y el
+     apagado, independientemente del camino que tome do_make_image.
+  c) `vprintk` sí sigue guardando en `__log_buf` ([K] printk.c:757-768 `emit_log_char`, sin condición de consola),
+     pero ese búfer es el `.bss` del kernel: ".bss : 0x40389580 - 0x403b5228" ([L]:6371) = phys
+     0x80389580-0x803b5228, FUERA de la ventana volcada (0x83400000-0x83530000) y reescrito en el arranque
+     siguiente.
+  d) El espejo `kslog` que sí sobreviviría a la suspensión (`vksprintf` desde `wb_printk`, [K] warm.c:660-676 con
+     kslog.c:48-70) NO está compilado: `strings vmlinux.bin | grep -c kslog` = **0** y la cmdline no trae
+     `kslog.addr`/`kslog.size` (sólo `klog.*`). Por eso wb_printk equivale a printk y punto.
+  e) Prueba negativa independiente: si la suspensión hubiera abortado en cualquier punto entre suspend.c:339 y
+     :284, `resume_console()` (suspend.c:363) habría volcado de golpe TODO lo pendiente de `__log_buf` a la
+     consola klog y veríamos las líneas de la tabla 4.1. El ring de klog es lineal hasta llenarse (sólo pone
+     KLOG_FLAG_LOOPED al dar la vuelta, klog.c:96-102) y en el volcado el texto del arranque anterior aparece
+     inmediatamente seguido del "Kernel command line:" del siguiente ⇒ no hubo ningún volcado intermedio ⇒ no
+     hubo reanudación. La cámara se apagó dentro de `.enter` (o se colgó/reinició por WDT) — eso el volcado no
+     lo puede distinguir.
+  ⇒ Conclusión: la ausencia de mensajes NO indica "el código no llega ahí". Es exactamente lo que predice el
+     código para un apagado dentro de `.enter`. (Confirmación cruzada e independiente: E1 §3, que además propone
+     leer el búfer de boottime 0x834C0000, que sí se escribe durante la fase silenciosa.)
+
+4.3 Corrección a B2 §3.2 (misma carpeta). B2 dejaba abierto "o do_make_image no llegó a imprimir, o no se leyó el
+    tramo final del ring". Ninguna de las dos: el tramo posterior a "Suspending console(s)" no puede existir en
+    ese búfer (§4.2 b), porque klog es una consola y está suspendida. Lo que sí queda abierto es si el fallo fue
+    antes o después de la línea warm.c:1132 (y si fue fallo enmascarado o cuelgue).
+
+4.4 Cómo verlo en una próxima prueba (recetas sacadas del propio código; ninguna ejecutada aquí):
+    · añadir `no_console_suspend` a la cmdline: desactiva `console_suspend_enabled` ([K] printk.c:1243-1248) y
+      entonces klog registra TODO (los `wb_msg` de la tabla 4.1 aparecerían en el arranque siguiente);
+    · o `printk.pmdebug=1` ([K] printk.c:797-798 y :997-999): con la consola suspendida manda el texto por
+      `printascii` (UART), no por klog;
+    · `/proc/klog` (klog.c:212-233, :332-...) sirve para leer el ring por telnet, pero es el mismo contenido y se
+      pisa al arrancar.
+
+
+===================================================================================================
+5. PREGUNTA 4 — ORDEN EXACTO Y PAPEL DE LA NAND SUSPENDIDA
+===================================================================================================
+5.1 Tabla de orden (VERIFICADO; todas las líneas citadas en §1).
+  | paso | quién                                              | qué imprime / hace                                    |
+  |------|----------------------------------------------------|-------------------------------------------------------|
+  | 1 | main.c:170-204 → enter_state (suspend.c:468)          | (nada)                                                |
+  | 2 | suspend.c:481-483                                     | "PM: Syncing filesystems ... done."  (visto)          |
+  | 3 | suspend.c:494 → :190 (process.c:176/182)              | "Freezing user space processes ..." y "remaining ..." (vistos) |
+  | 4 | suspend.c:334 → warm_boot_pm_begin (warm.c:1353-1405) | "Freeing memory(use swap parititon)…", "count_sections_p1:3817, 47112" (vistos) |
+  | 5 | suspend.c:339 suspend_console()                       | "Suspending console(s) (use no_console_suspend to debug)" (visto; ÚLTIMO) |
+  | 6 | suspend.c:342 dpm_suspend_start                       | .suspend de TODOS los drivers (NAND, DMA, …): sin log visible |
+  | 7 | suspend.c:241 → warm_boot_pm_prepare (warm.c:1503-1534)| chk_opened, wb_device->suspend_prepare(), ioremap_ext_pages() |
+  | 8 | suspend.c:246 dpm_suspend_noirq                       | .suspend_noirq de todos: sin log visible               |
+  | 9 | suspend.c:263-266                                     | drain_all_pages + lru_add_drain_all                    |
+  |10 | suspend.c:271 / :275                                  | nonboot CPUs off / IRQs off                            |
+  |11 | suspend.c:281 → :284                                  | syscore_suspend → cxd90014_pm_enter                    |
+  |12 | pm.c:255-258 → :163-186 → sleep.S:99                 | cxd90014_cpu_suspend → cxd90014_create_warmbootimage  |
+  |13 | pm.c:375-397 → warm.c:1212 → :1054-1210              | do_make_image: p2 + PRIMERA ESCRITURA (warm.c:1132)    |
+  |14 | sleep.S:100-101 → :112 (si r0==0)                     | goto_suspend: apagado real (mem_alive=1)               |
+
+5.2 ¿Se llama antes o después de suspender consola y dispositivos? DESPUÉS de las dos cosas, y también después de
+    apagar las CPUs no-boot y de enmascarar IRQs. Es el último paso antes de dormir: `cxd90014_cpu_suspend` limpia
+    e invalida cachés (sleep.S:92) y sólo entonces llama a la creación. Por eso `wbi_send_sections` vuelve a
+    hacer `flush_cache_all()` (wbi_cmpr.c:1362) y lee la salida del compresor con `PHYS_TO_NONCACHE` (:1155):
+    está escrito para funcionar con los drivers de DMA/NAND ya dormidos.
+
+5.3 Si la NAND ya está suspendida, ¿puede fallar la escritura sin log? (INFERENCIA + NO VERIFICADO)
+  · El que escribe es `wb_default_device->write_sector` (warm.c:735), un `struct wb_device` registrado por
+    `wb_register_device` (warm.c:1267): es un driver PROPIO (imprime "WBI partition[5]: …" y
+    "wb_default_device: …"), NO el driver MTD/NAND del árbol OSS. Su código no está en el repo (no hay ninguna
+    llamada a `wb_register_device` fuera de warm.c y no está en kmod/*.ko: los .ko sólo llaman `wbi_drop`
+    — backup.ko, upm.ko). ⇒ Cómo accede al controlador y si necesita re-inicializarlo tras `dpm_suspend`:
+    NO VERIFICADO.
+  · El diseño prevé el problema: hay ganchos `suspend_prepare`/`suspend_finish` en `wb_device` (warmboot.h:46/51)
+    que `warm_boot_pm_prepare`/`warm_boot_pm_finish` llaman justo en `.prepare`/`.finish` (warm.c:1521-1523 y
+    :1550-1551), es decir, después de `.suspend` y antes de `.enter`: ahí es donde el driver puede tomar el
+    control del medio. Que la cámara haya creado imágenes en fábrica demuestra que la secuencia puede funcionar.
+  · Si `write_sector` falla, el código NO es silencioso: `wbi_tsk_wbuf` imprime "ERROR:%s: cannot write = %d"
+    (wbi_cmpr.c:797) y `wbi_wbuf_flush` propaga el error (warm.c:735 → :1132 → send_error). Pero (i) nada de eso
+    llega al volcado (§4.2 b), y (ii) `warm.errmode=0` enmascara el fallo y devuelve 0 ⇒ la cámara se apaga
+    "como si" hubiera ido bien. Es decir: **sí, puede fallar sin dejar rastro visible en 0x83400000**.
+  · Ninguna prueba permite hoy decidir entre "fallo enmascarado antes de la 1.ª escritura" y "cuelgue/reset".
+    La observación de que el bloque de LBA 0..511 no llegó a escribirse (§2.4) acota el momento, no la causa.
+
+
+===================================================================================================
+6. LÍMITES (lo que este informe NO prueba)
+===================================================================================================
+· No hay fuente del driver `wb_device` (open/write_sector/suspend_prepare): qué hace por dentro y si necesita el
+  controlador NAND fuera de su driver: NO VERIFICADO. Todo lo dicho sobre él es de su API y de sus mensajes.
+· No hay `.config` del producto: "CONFIG_SNSC_SSBOOT / WBI_COMPRESS / WARM_BOOT_IMAGE compilados" se demuestra por
+  selección de literales en [V] (§3.4) y por las líneas que sí se imprimieron en [L], no por el config.
+· El volcado no puede decidir si do_make_image llegó a ejecutarse, ni si el final fue apagado ordenado o reset del
+  WDT (la cmdline trae `wdt.mode=1 wdt.timeout=500`; los mensajes del WDT tampoco llegarían a klog).
+· No se ha medido el tiempo real de `count_sections_p2` en la cámara; la hipótesis "el barrido se come los 50 s"
+  es INFERENCIA basada en el código (is_head_of_free_region recorre listas de páginas libres por cada página,
+  warm.c:757-773) y en el tamaño del conjunto (47 112 páginas), no en una medida.
+· Loader3 (quien acepta/rechaza la imagen al arrancar) sigue fuera de alcance: aquí sólo se describe lo que el
+  kernel ESCRIBE y cómo puede no escribir nada.
+
+
+===================================================================================================
+7. REPRODUCIBILIDAD (comandos usados; ninguno toca la cámara)
+===================================================================================================
+# orden de llamadas y consola
+sed -n '329,360p;236,300p;468,512p' analysis/session18/codex-g/oss-linux/linux/kernel/power/suspend.c
+sed -n '163,186p;241,300p;375,397p' analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/pm.c
+sed -n '86,116p'                   analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/sleep.S
+# primera escritura y compuertas
+sed -n '1054,1210p' analysis/session18/main/sony-oss-extracted/linux/arch/arm/common/warm.c
+sed -n '413,470p;656,700p;715,745p;746,818p;1069,1121p;1165,1240p;1321,1337p;1344,1416p' \
+    analysis/session18/main/sony-oss-extracted/linux/arch/arm/common/wbi_cmpr.c
+sed -n '222,338p;418,459p' analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/cmpr.c
+# compresión de ramas por literales presentes/ausentes en el kernel que corre
+V=firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/vmlinux.bin
+strings -a $V | grep -c kslog                                    # 0  -> CONFIG_EJ_WBI_DEBUG no compilado
+strings -a $V | grep -n "may be greater than device capacity"     # si -> rama SSBOOT
+strings -a $V | grep -n "error: %s image size greater"            # no -> rama sin SSBOOT descartada
+strings -a $V | grep -n "Freeing memory(use swap parititon)"       # si
+strings -a $V | grep -n "Suspending console\|dropped wbi\|canceled to create wbi\|WBI:%s:timeout"
+# consola persistente y su silencio
+grep -n "console_suspended" analysis/session18/codex-g/oss-linux/linux/kernel/printk.c
+sed -n '1255,1263p;1385,1412p;757,768p' kernel/printk.c          # (bajo [K])
+grep -n "klog_console\|register_console\|KLOG_START" analysis/session18/codex-g/oss-linux/linux/kernel/klog.c
+sed -n '6409,6410p;6427,6432p;6359,6371p' analysis/camera-dumps/20261117-traza-T2T6/objetivo/log.txt
+# mapa de memoria que valida waddr=0x5D000000
+grep -o 'mem=[^ ]*' reports/evidence/film-pb1-sector31-camara-20261126/A-frio/cmdline.txt
+grep -o 'wbi_cmpr[^ ]*\|warm\.[a-z_]*=[^ ]*\|klog\.[a-z]*=[^ ]*' \
+    reports/evidence/film-pb1-sector31-camara-20261126/A-frio/cmdline.txt
+
+Fin de A2.

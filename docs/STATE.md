@@ -24,7 +24,15 @@
 > (`/log`: `WBI partition[5]: id=2, num_sectors=121344` = 62 MB > 42 MB), `warm` es `PM_SUSPEND_DISK` con
 > `warm.mode=2`, la cmdline no trae `chk_opened=` ni `warm.errmode` (nada aborta) y la compuerta `0x9F44` es
 > una función **pura** con una sola llamada (`0x9FF2`), así que los 4 B no pierden efectos laterales.
-> **Sin inferencias abiertas (28-11-2026):** la bandera `+0x238` **no** viaja en la instantánea —
+> **[CORREGIDO 26-11-2026] «Ninguna inferencia abierta» era falso:** `warm.errmode=0` hace que
+> `do_make_image` **devuelva 0 aunque falle** (`warm.c:1195-1202`), así que «no hay mensaje de error» no
+> significa «no hay fallo». La fabricación corre en `sleep.S:99`, **después** de `suspend_console()` y de
+> `dpm_suspend*`, y su log no llega a la zona persistente (`klog` es una consola). Además el interruptor
+> entra con **modo 0** (`im.elf` `0xA262-0xA280`) y escribe `"mem"` **sin** consultar la compuerta `0x9F44`
+> ⇒ el parche de 4 B es inerte para el interruptor; y un arranque frío escribe **`prof`**, no `WBI1`
+> (`ssboot_stat=0` ⇒ `warm.c:1154`). Informe:
+> [warm abortado](../reports/film-pb-1-warm-abort-20261126.md).
+> **Sin inferencias abiertas (28-11-2026, sólo sobre la bandera):** la bandera `+0x238` **no** viaja en la instantánea —
 > `0x43EDF684`/`0x43804610` son de `av-cam.bin` (base `0x43541000`), su memoria queda fuera de la imagen
 > (0 de 2 200 páginas, en `memrsv=0x13B1000@0x82D90000`, sin `wbimem=` que la cubra) y el RAMCFG `0x4000000`
 > recarga `av-cam.bin` en caliente ⇒ el constructor corre en cada encendido y **Silent se reactiva en cada

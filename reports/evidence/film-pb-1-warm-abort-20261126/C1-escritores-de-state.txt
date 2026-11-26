@@ -1,0 +1,358 @@
+EVIDENCIA C1 — quién escribe /sys/power/state en la cámara
+==========================================================
+Tarea    : PREGUNTA C, parte 1 (pendiente film-pb-1-warm-abort-20261126)
+Fecha    : 2026-11-26 (UTC)
+Método   : 100 % estático. capstone 5.0.7 sobre fichero (Thumb para im.elf y
+           libhardware_legacy.so, ARM para upm.ko/backup.ko). Cadenas por bytes
+           exactos; xrefs por literal de pool (T1 ldr [pc] y ldr+add pc).
+           Ningún proceso ejecutado, cámara no tocada, nada flasheado.
+Ficheros :
+  im.elf ORIGINAL : firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/
+                    dev/nflasha15_unpacked_unpacked/bin/im.elf
+                    md5 a8fe0d3289fe8a392299e7a945a30c1d
+  im.elf PARCHADO : build/wbi_silent/pkg/im.elf
+                    md5 00aa05eac65eaf2225032ff1ad7c1253  (4 B distintos: 0x1F44)
+                    bytes 0x1F44: orig "06 4B 80 B5" -> "01 20 70 47" (movs r0,#1; bx lr)
+  upm.ko          : .../nflasha15_unpacked_unpacked/kmod/upm.ko   (.text file = text+0x34)
+  /system         : .../nflasha16_unpacked_unpacked/  (incluye lib/libhardware_legacy.so)
+  initrd          : .../nflasha15_unpacked_unpacked/bin/ramdisk.img_unpacked_unpacked/
+Mapa VA<->fichero im.elf (readelf -l): VA 0x08000..0x14FFF -> off = VA-0x8000 ;
+                                       VA 0x15000..0x154E4 -> off = VA-0x10000.
+
+
+0. RESUMEN EN CINCO LÍNEAS
+--------------------------
+· En toda la imagen de la cámara hay UN SOLO escritor efectivo de /sys/power/state:
+  im.elf, función 0x9FB4, llamada desde UN único sitio (0xA282) y con UN único
+  literal de la ruta (pool 0xA058 = 0xC0B7).
+· init.rc sólo escribe "on" (onrestart de un servicio). libhardware_legacy.so
+  (Android) tiene la cadena 0x8D33 pero NINGUNA referencia: es código muerto;
+  su set_screen_state() sólo hace LOGI y, bajo QEMU, un comando de tubería.
+· Ninguno de los 53 .ko escribe el nodo (ni la cadena, ni pm_suspend/hibernate).
+  upm.ko no tiene "mem"/"warm"/"disk": no escribe él mismo el estado.
+· El mensaje 0x92014F lo emite upm.ko en un ÚNICO sitio (0xFD94, dentro de
+  k_upm_off_factor_handler_inactive) y lo consume sólo im.elf (0xA258). Va
+  encadenado a un saludo verificado … 0x920144 → 0x920143/0x92014D → 0x92014E
+  → 0x92014F (el disparo inicial, cmd 0x92014B, no se ha verificado).
+· Con la compuerta 0x9F44 parcheada el "mem" medido obliga a que im.elf entrase
+  con MODO 0, que NO consulta la compuerta: modo 1 exige *(0x154D0)==1 (ajuste
+  persistente Backup 0x510023) y *(0x153E0)!=0x27. Ninguna otra ruta estática
+  puede escribir "mem".
+
+
+1. INVENTARIO COMPLETO DE ESCRITORES
+------------------------------------
+1.1 Barrido de la cadena en TODA la imagen (bytes exactos, no strings)
+    $ grep -rl -a "/sys/power/state" firmware/extracted/fw321/firmware.tar_unpacked/
+      .../dev/nflasha15_unpacked                     (partición cruda, contiene /usr)
+      .../dev/nflasha15_unpacked_unpacked/bin/im.elf
+      .../dev/nflasha15_unpacked_unpacked/bin/ramdisk.img_unpacked        (imagen)
+      .../dev/.../bin/ramdisk.img_unpacked_unpacked/init.rc
+      .../dev/nflasha16_unpacked                     (partición cruda = /system)
+      .../dev/nflasha16_unpacked_unpacked/lib/libhardware_legacy.so
+    (barrido más ancho "sys/power" añade sólo libsurfaceflinger.so, que usa
+     /sys/power/wait_for_fb_sleep|wake, NO el fichero de estado).
+    /usr del CFW instalado (analysis/camera-extract/usr) y build/wbi_silent/:
+      sólo usr/bin/im.elf  (+ im.elf de los árboles de trabajo).
+
+1.2 im.elf — ÚNICO escritor de valores ("warm"/"mem")
+    Cadenas (VA = off+0x8000):
+      0xC0B7 "/sys/power/state"   0xC0C8 "warm"   0xC0CD "WARM(warm_count=%d)"
+      0xC0E1 "SUS(warm_count=%d)" 0xC0F4 "mem"
+    Cada literal de 32 bits aparece EXACTAMENTE UNA VEZ en el fichero:
+      0xC0B7 -> off 0x2058 (pool 0xA058)   0xC0C8 -> off 0x2060 (pool 0xA060)
+      0xC0F4 -> off 0x2068 (pool 0xA068)
+    y hay UN solo xref a cada uno (T1 ldr [pc]): 0x9FBC (ruta), 0xA014 ("warm"),
+    0xA034 ("mem"). ⇒ No hay ninguna otra ruta de escritura (ni open/write ni
+    system("echo …")), porque no existe otro literal de la ruta.
+    Función 0x9FB4 (off 0x1FB4) — "power_write(modo)":
+      0x9FB8        mov r5,r0                     ; modo
+      0x9FBC/0x9FC2 open("/sys/power/state", 0x1001)   ; O_WRONLY|O_TRUNC (asm-generic)
+      0x9FCA  cmp r5,#2 ; bne 0x9FD4
+      0x9FCE..0x9FD2  b 0xA012                  ; modo==2 -> escribe "warm" sin compuerta
+      0x9FD4  bl 0x9F68                         ; contador persistente Backup ch 0x940004
+      0x9FD8  bl 0xAB10 ; cbz -> si !=0 cierra SIN escribir
+      0x9FE6  cmp r5,#1 ; bne 0xA030             ; modo==0 -> "mem"
+      0x9FF2  bl 0x9F44                          ; COMPUERTA (única llamada del binario)
+      0x9FF6  cbz r0,0xA01A                      ; 0 -> rama "mem"
+      0xA012..0xA018  write(fd,"warm",4)         ; r1=0xC0C8, r2=4
+      0xA034..0xA03A  write(fd,"mem",3)          ; r1=0xC0F4, r2=3
+      0xA03E  close(fd)
+    Modos efectivos: 2 -> "warm" (sin compuerta) | 1 -> compuerta ? "warm" : "mem"
+                     | 0 (y cualquier otro) -> "mem".
+    El parche 0x9F44 = movs r0,#1; bx lr hace que en modo 1 SIEMPRE salga "warm".
+
+1.3 /usr completo (383 ELF en bin/lib/sabin/scenario/sbin) y /usr real de la
+    cámara: sólo im.elf contiene 0x92014B/0x92014D/0x92014E/0x92014F (en los .ko
+    aparte sólo upm.ko, ver §3.4), y sólo im.elf contiene la ruta.
+    bootin.elf NO (comprobado, no aparece la cadena).
+
+1.4 /system (nflasha16) — libhardware_legacy.so: CADENA MUERTA
+    strings: 0x8C2E "*** set_screen_state %d", 0x8C87 "wake", 0x8C8C "standby",
+             0x8D33 "/sys/power/state", 0x8D4B "power:screen_state:%s".
+    Hechos verificados:
+      · no existe NINGÚN literal de 32 bits con valor 0x8D33 en el fichero
+        (búsqueda de los 4 bytes en todo el fichero: NO);
+      · no hay ningún `movw rX,#0x8D33` (barrido 0xF248/0x?D33: 0 resultados);
+      · no hay ningún `ldr rX,[pc,#…]` + `add rX,pc` que resuelva a 0x8D33
+        (sí los hay para 0x8C87 y 0x8C8C desde 0x6816/0x681A).
+    set_screen_state (0x66D1, Thumb): push; bl qemu_check(0x6C7C); si !=0 ->
+    qemu_set_screen_state(0x68C5); si ==0 sólo __android_log_print(4,"power",
+    "*** set_screen_state %d", on) y return 0. NO abre ni escribe el nodo.
+    qemu_set_screen_state (0x68C5) -> qemu_control_command("power:screen_state:%s",
+    on ? "wake" : "standby") (r1 resuelto a 0x8C87/0x8C8C, r0 = 0x8D4B).
+    ⇒ Android no escribe /sys/power/state en esta cámara (versión AOSP con el
+      write eliminado; la cadena sobrevive sin xref).
+
+1.5 initrd
+    init.rc:270/275/278 sólo hacen chown/chmod del nodo (uid radio:system, 0660).
+    init.rc:370 `onrestart write /sys/power/state on`  ← única escritura de guion,
+    y sólo "on" cuando un servicio se reinicia. /init (binario del initrd) no
+    contiene la cadena.
+
+1.6 kernel modules (53 .ko de .../nflasha15_unpacked_unpacked/kmod/)
+      · ninguno contiene "power/state" ni "sys/power" (grep de bytes en los 53);
+      · ninguno contiene las cadenas exactas "mem"/"warm"/"disk"/"standby"
+        (usbcore.ko tiene "cannot warm reset port %d", ajeno);
+      · ninguno importa pm_suspend / hibernate / enter_state / suspend_devices_and_enter
+        (sí existen imports wbi_drop en upm.ko y backup.ko, pero wbi_drop no
+        escribe el estado, sólo invalida la cabecera WBI; en upm.ko su único
+        llamador es upm_senser_wbi_drop y a éste le llama AdjustCodeRes+0x180,
+        fuera del camino de apagado);
+      · upm.ko no tiene "mem" ni "warm" ni "disk" ni la ruta.
+
+1.7 TABLA RESUMEN
+    #  quién                    cuándo                        escribe
+    1  im.elf 0x9FB4           apagado/suspensión (off-factor) "warm"(4B) o "mem"(3B)
+    2  init.rc:370             onrestart de servicio           "on"
+    3  libhardware_legacy.so   — (sin xref: código muerto)     nada
+    (kernel built-in: no verificable sin vmlinux; ver §6)
+
+    ⇒ Escritores distintos = 2 reales (im.elf y el guion de init), y de ellos
+      sólo UNO escribe "mem": im.elf.
+
+
+2. EL ÚNICO LLAMADOR DE 0x9FB4 Y DE DÓNDE SALE EL MODO
+------------------------------------------------------
+    bl 0x9FB4 en TODO el binario: 1 solo, en 0xA282 (dentro del despachador que
+    empieza en 0xA06C; instalado como cuerpo de hilo con 0xAC08(3, 0xA06D) en
+    0x9ADE/0x9EF0). Caso del mensaje 0x92014F:
+      0xA258  ldr r2,=0x92014F (pool 0xA360) ; cmp r3,r2 ; bne 0xA2A2
+      0xA262  ldr r3,=0x153E0 ; ldr r3,[r3] ; cmp r3,#0x27 ; bne 0xA26E
+      0xA26A  movs r0,#2 ; b 0xA282                     ; MOD0 == 0x27  -> "warm"
+      0xA26E  ldr r3,=0x154D0 ; ldr r3,[r3] ; cmp r3,#1 ; bne 0xA280
+      0xA276  ldr r0,[r4,#4] ; (r0!=0)?1:0 ; b 0xA282     ; MOD1 -> compuerta
+      0xA280  movs r0,#0                                ; MOD0 -> "mem"
+      0xA282  bl 0x9FB4
+    Quién llena esos dos globales:
+      · 0x153E0: ÚNICO escritor 0xA132 (`str r3,[r2]`, r3=[msg+4]) en el caso
+        cmd==0x920143 (cmp en 0xA124, pool 0xA324). Además ese caso guarda
+        [msg+8] en 0x15248 (0xA138) y clasifica en 0x153DC (0xA14A).
+        (Hay otro `cmp #0x920143` en el callback de cola 0x95B0, 0x95F2, que
+         reenvía a 0x91A4; NO toca 0x153E0.)
+      · 0x154D0: ÚNICO escritor el arranque, 0x9C6E..0x9C72:
+          ldr r1,=0x154D0 (pool 0x9DE8) ; ldr r0,=0x510023 (pool 0x9DEC)
+          blx 0x8E80 = Backup_read   ⇒ Backup_read(id 0x510023, &0x154D0)
+        Ningún otro sitio del binario escribe 0x154D0, y 0x510023 (literal)
+        aparece UNA sola vez en todo im.elf.
+    Cola de entrada: en 0x9C96-0x9C9E im.elf llama osal_reg_sync_msg_queue_cb
+    (0x8EA8) con r0=0x920169 y r2=0x95B1 (pools 0x9DF4/0x9DCC).
+
+
+3. upm.ko: QUIÉN EMITE 0x92014F, CUÁNDO Y QUIÉN LO CONSUME
+----------------------------------------------------------
+3.1 Ficha del emisor (el "0xFD94" del enunciado)
+    · El literal 0x0092014F aparece 2 veces en upm.ko: off 0xFD94 (.text, pool
+      0xFD60) y off 0x13608 (.rodata: tabla (id, código de log) 0x92014A..0x92015A).
+    · off 0xFD94 = .text 0xFD60, dentro de k_upm_off_factor_handler_inactive
+      (.text 0xFA18..0xFD7C; el símbolo está en .symtab del módulo).
+    · Código (ARM), caso cmd==0x92014E (cmp en 0xFB80, pool 0xFD48):
+        0xFBA0  ldr r3,=g_upm ; 0xFBA4 mov r2,#0x22 ; str r2,[r3]   ; estado = SUS
+        0xFBBC  str #4,[g_bf+0xC]
+        0xFBC0  bl dmm_pre_suspend
+        0xFBCC  bl 0xE32C ; 0xFBE0 bl 0xE32C ; r5 = r0     ; valor que viaja
+        0xFBF4  osal_valloc_msg_wait(0x920169, &buf, 0x10, 1)
+        0xFC18  r2 = 0x92014F (pool 0xFD60) ; 0xFC24 stm r3,{r2,r5}  ; cmd=[buf]=0x92014F, [buf+4]=r5
+        0xFC2C  osal_snd_sync_msg(0x920169, buf)   ; destino = im.elf
+    ⇒ Un solo emisor y un solo formato: cmd 0x92014F, param1 = r5 (0/1), param2=0,
+      param3=0, origen 0x920021 (upm), destino cola 0x920169 (im.elf).
+    Nota: 0xE32C (helper estático, sin símbolo) devuelve 1 sólo si
+      [g_bf+0x50]!=0 y [g_bf+0x1C]==0x1B y [g_bf+0x18] ∈ {0x17,7,8,9,10,0x1F}
+      (verificado instrucción a instrucción); es el "¿arranque tibio admisible?".
+
+3.2 ¿Sólo al apagar con el interruptor?  →  NO por construcción
+    El envío está condicionado únicamente por la FSM de "off factor" de upm:
+      k_upm_off_factor_handler (0x10C04) despacha por estado de g_upm:
+        0x01 init, 0x02 exit, 0x11 inacting_app, 0x12 inacting_im,
+        0x13 inacting_app2, 0x21 inactive, 0x22 sus, 0x32 acting_app, 0x41 res.
+      0x10C58/0x10C60: estado 0x21 -> k_upm_off_factor_handler_inactive.
+    En ese estado se atienden 4 mensajes (0x920144, 0x920195, 0x92014E,
+    0x920141/0x920142). Sólo el caso 0x92014E emite 0x92014F. Por tanto el
+    mensaje sale en CADA secuencia de apagado que llegue a estado 0x21 y reciba
+    0x92014E, sea cual sea el motivo (interruptor, apagado automático, etc.);
+    el interruptor no aparece en upm como escritor del nodo, sólo como origen de
+    un "off factor" (BF_KEY_POWER* en las cadenas de upm, k_upm_apicb_off_factor
+    0xE388, add_off_factor 0xE930, k_upm_set_off_factor_public 0xE828).
+    (Que TODOS los motivos reales acaben en 0x21 es INFERENCIA: no se han
+     enumerado los invocantes de k_upm_set_off_factor_public.)
+
+3.3 Saludo completo (VERIFICADO instrucción a instrucción)
+      (a) upm handler_init (0x10174, cmd 0x92016E): apunta en g_upm+0x48 qué
+          participantes se registran: param1 ∈ {0x920168, 0x920169, 0x920195}
+          (bits 1,2,4); con bits 0-1 == 3 continúa.
+      (b) upm handler_active (0xEFB4): lee g_bf[+8], g_bf[+0xC], g_bf[+0x10] y
+          envía cmd 0x920143 con param1..3 a la cola 0x920168 (0xF2A0..0xF2E4).
+          0x920168 es de libObj.so (único /usr con ese literal, off 0x41B094).
+      (c) upm handler_inactive, caso cmd 0x920144 (0xFA28..0xFAD8): si
+          [msg+8]==0x920169 y [msg+4]==2, envía cmd 0x920143 con param1=0 a la
+          cola 0x920195 (pool 0xFD34); y caso cmd 0x920195 (0xFAF8..0xFB7C):
+          envía cmd 0x92014D (0x920021+0x12C) con param1=0 a la cola 0x920169.
+      (d) im.elf, caso cmd 0x92014D (0xA22E..0xA256): tras 0xAF7C/0xA5C0,
+          responde a upm (0x920021) con cmd 0x92014E y param2 = resultado.
+      (e) upm, caso 0x92014E -> §3.1 -> cmd 0x92014F a im.elf.
+      (f) im.elf, caso 0x92014F -> §2 -> write("/sys/power/state", …).
+    El caso (c) es el que fija *(0x153E0)=0 (param1=0) si se entrega a im.elf;
+    con ello la rama "0x27 -> warm" queda descartada en ese camino.
+
+3.4 Consumidores / otros emisores de 0x92014F
+    · 0x0092014F como literal: SÓLO en im.elf (pool 0xA360) y en upm.ko
+      (0xFD94 + tabla .rodata 0x13608).
+      - /usr: barrido de 383 ELF (bin, lib, sabin, scenario, sbin) buscando el
+        literal de 32 bits en los segmentos ejecutables: 0 apariciones fuera
+        de im.elf.
+      - .ko: los ET_REL no tienen PT_LOAD, así que se buscó el literal a pelo
+        en los 53 ficheros: sólo upm.ko (0x92014F en 0xFD94 y 0x13608;
+        0x92014E en 0xFD7C/0x13498/0x13600; 0x92014D en 0x135F8; 0x92014B en
+        0xFF8C/0x135E8; 0x920195 en 0xFD68/0x10464).
+      - 0x920169 (cola de im.elf) aparece en im.elf (pools 0x9DF4/0x9F28) y en
+        upm.ko; 0x920168 en libObj.so (0x41B094/0x45EBD4).
+    · Quien compare contra el id: sólo im.elf 0xA258.
+    ⇒ Emisor único = upm.ko; consumidor único = im.elf.
+
+
+4. POR QUÉ EL INTERRUPTOR ACABA EN "mem" CON LA COMPUERTA PARCHEADA
+-------------------------------------------------------------------
+4.1 Tabla de decisión (VERIFICADO en bytes)
+    *(0x153E0)   *(0x154D0)   [msg+4]   modo   resultado con 0x9F44 parcheado
+    ----------   ----------   -------   ----   ---------------------------------
+    0x27         X            X         2      "warm"   (no usa la compuerta)
+    !=0x27       1            1         1      "warm"   (compuerta = 1)
+    !=0x27       1            0         1      "mem"    (compuerta = 1 -> "warm")*
+    !=0x27       !=1          X         0      "mem"    (la compuerta NI SE LLAMA)
+    * con la compuerta parcheada esta fila también daría "warm"; el "mem" medido
+      obliga a que NO se haya entrado por modo 1.
+4.2 Deducción (INFERENCIA fuerte, por eliminación)
+    Como el único escritor de la cadena en toda la imagen es 0x9FB4 (§1) y el
+    "mem" medido se escribió, la cámara entró en modo 0: *(0x153E0)!=0x27 y
+    *(0x154D0)!=1, es decir Backup[0x510023] != 1 en esa cámara. La compuerta
+    0x9F44 nunca se ejecuta en ese camino; por eso el parche de 4 B es inerte.
+    Coherente con la medición #4 (ni un sector escrito en nflasha5): "mem" =
+    PM_SUSPEND_MEM y WBI_MODE(state,mode) = (state==PM_SUSPEND_DISK && mode) es
+    falso ⇒ do_make_image no se llama (warm.c:66).
+4.3 Rutas alternativas de "mem" — descartadas una a una
+    (1) otro proceso escribiendo "mem": no existe ninguno en /usr ni /system
+        con la ruta (§1.1-1.4); bootin.elf tampoco.
+    (2) Android PowerManager por UIPC / libhardware_legacy: su set_screen_state
+        no escribe (§1.4) y la cadena no tiene xref.
+    (3) init.rc: sólo escribe "on" y sólo en onrestart (§1.5).
+    (4) upm escribiendo él mismo "mem": imposible, no tiene la cadena ni la ruta
+        ni importa APIs de suspensión; su papel es mandar 0x92014F (§3).
+    (5) hilo/driver del kernel escribiendo el atributo sysfs: ningún .ko lo hace
+        (§1.6). Un driver *built-in* no es observable sin vmlinux (§6).
+    (6) otra rama de im.elf: la función 0x9FB4 es la única; el "mem" de 0xA034
+        exige modo 0 (o modo 1 con compuerta 0, imposible tras el parche) y
+        además el descarte por 0xAB10 (bit 2) no se activó, porque se escribió
+        algo (si estuviera puesto, no se escribiría NADA).
+4.4 El mensaje 0x920143 que fija *(0x153E0)
+    (a) upm handler_inactive manda a 0x920195 param1=0 ⇒ *(0x153E0)=0.
+    (b) upm handler_active manda a 0x920168 (libObj) param1=g_bf[+8].
+    (c) im.elf no envía 0x920143 a nadie (su pool 0x1658 es del callback 0x95B0,
+        que sólo reenvía a 0x91A4).
+    Nada en estático produce 0x27; 0x27 sería un "off factor" concreto cuyo
+    origen no se ha identificado (§6).
+
+
+5. VEREDICTOS
+-------------
+VERIFICADO
+ V1  "/sys/power/state" sólo tiene 1 literal y 1 xref en im.elf (0x9FBC); la
+     escritura ocurre sólo en 0x9FB4 y ésta tiene 1 único llamador (0xA282).
+ V2  Caso mensaje 0x92014F en 0xA258 y decisión de modo en 0xA262-0xA280.
+ V3  *(0x153E0) sólo lo escribe el caso 0x920143 (0xA132); *(0x154D0) sólo lo
+     escribe Backup_read(0x510023) en 0x9C6E.
+ V4  upm.ko emite 0x92014F en un único punto (off 0xFD94/.text 0xFD60), dentro
+     del caso cmd 0x92014E de k_upm_off_factor_handler_inactive, con param1 =
+     helper 0xE32C y destino 0x920169; despacho por estado en 0x10C04 (0x21).
+ V5  En toda la imagen, escritores distintos de la ruta = im.elf + init.rc
+     (onrestart, "on"). libhardware_legacy.so no escribe (cadena sin xref).
+ V6  Ningún .ko contiene "power/state", "sys/power", ni "mem"/"warm"/"disk";
+     ninguno importa pm_suspend/hibernate.
+ V7  im.elf original vs parcheado: 4 bytes, sólo 0x1F44..0x1F47.
+ V8  El im.elf del arnés G22 (analysis/gui/g22/harness/stage/cam/usr/bin/im.elf)
+     es el ORIGINAL sin parchear (0 difs, bytes 0x1F44 = 06 4B 80 B5).
+
+INFERENCIA
+ I1  El "mem" medido en el apagado por interruptor salió de im.elf con modo 0:
+     *(0x153E0)!=0x27 y Backup[0x510023]!=1 en esa cámara ⇒ la compuerta 0x9F44
+     no se ejecuta y el parche es inerte (encaja con los 0 sectores escritos).
+ I2  0x92014F se emite en cualquier apagado que llegue al estado 0x21 y reciba
+     0x92014E, no sólo con el interruptor.
+ I3  0xA06C es el cuerpo de un hilo creado en el arranque de im.elf con
+     0xAC08(3, 0xA06D) y sirve la cola que recibe 0x92014F (la 0x920169
+     registrada en 0x9C96 con callback 0x95B1 o una equivalente).
+
+NO VERIFICADO
+ N1  Valor real de Backup[0x510023] (NVRAM): no está en el repo; sólo se deduce
+     != 1 del comportamiento medido.
+ N2  Titular de la cola 0x920195: no aparece como literal en ningún ELF de /usr
+     (posible id dinámico o proceso no extraído). libObj.so (0x920168) sí.
+ N3  Qué evento produce un 0x920143 con param1=0x27 (el "warm" incondicional).
+ N4  Un driver built-in del kernel (sin vmlinux en el repo) que llamase a
+     pm_suspend(PM_SUSPEND_MEM) sin pasar por el nodo: no se puede excluir con
+     los binarios del repo.
+ N5  Que el interruptor, en la cámara real, recorra exactamente 0x9201xx →
+     libObj → upm (la FSM está verificada; el disparo físico no).
+
+
+6. LÍMITES DE LO COMPROBADO
+---------------------------
+· Todo el análisis es estático sobre ficheros del repo; no se ha leído RAM ni
+  NVRAM de la cámara. Las conclusiones de runtime (I1) se apoyan en los hechos
+  ya medidos por el usuario (cabecera a cero, cero sectores escritos).
+· No hay vmlinux/BzImage con símbolos: no se puede verificar si algún código
+  *built-in* del kernel escribe /sys/power/state o llama a pm_suspend().
+· El árbol /usr analizado es el de fw321 (Sony) y el del CFW
+  (analysis/camera-extract/usr); un paquete futuro podría añadir otro escritor
+  — el barrido es reproducible (§8) y hoy da exactamente un escritor.
+· La tabla de ids (0x920168/0x920169/0x920195) se ha leído en el código; la
+  asignación 0x920169=im.elf se apoya en que im.elf es quien lo registra, no en
+  documentación de Sony.
+
+
+7. CONSECUENCIAS PARA EL ARNÉS G22 (breve)
+-------------------------------------------
+· Emular el apagado por interruptor = entregar a im.elf cmd 0x92014F con
+  param1 = 0/1 *después* del saludo (0x920143 → 0x920195, 0x92014D, 0x92014E).
+  Sin ese saludo im.elf no escribe nada; con el im.elf del stage (sin parche)
+  y *(0x154D0)==0 escribirá "mem" y no habrá WBI, igual que la cámara.
+· Para reproducir el comportamiento de la cámara NO hay que tocar la compuerta
+  0x9F44: el modo que llega es 0. Si se quiere forzar "warm" en el arnés, hay
+  que poner *(0x154D0)=1 (o hacer que Backup_read(0x510023) devuelva 1) y
+  enviar param1 != 0, o parchear la decisión de modo (0xA262-0xA280), no la
+  compuerta.
+· El arnés debe aceptar que /sys/power/state lo escribe sólo im.elf; el resto
+  de "escritores" del firmware son cadena muerta (libhardware_legacy) o "on"
+  de init.rc.
+
+
+8. COMANDOS REPRODUCIBLES
+-------------------------
+grep -rl -a "/sys/power/state" firmware/extracted/fw321/firmware.tar_unpacked/
+grep -n "power/state" .../ramdisk.img_unpacked_unpacked/init.rc
+strings -a -t x .../nflasha16_unpacked_unpacked/lib/libhardware_legacy.so | grep -n power
+# literales únicos (off en fichero)
+python3 -c "import struct;d=open('.../bin/im.elf','rb').read();print([hex(i) for i in range(len(d)) if d[i:i+4]==struct.pack('<I',0x92014f)])"
+# desensamblado (capstone 5.0.7)
+python3 capstone: CS_ARCH_ARM/CS_MODE_THUMB en VA 0x9F44..0xA060 (off VA-0x8000)
+                  CS_ARCH_ARM/CS_MODE_ARM   en .text 0xFA18..0xFD7C de upm.ko (file = text+0x34)
+# 0xE32C (helper) y 0x10C04 (despachador FSM) en upm.ko

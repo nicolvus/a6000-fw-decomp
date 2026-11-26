@@ -1,0 +1,366 @@
+B2 — VALIDACIÓN DE LA IMAGEN POR EL KERNEL Y DEPENDENCIAS DE USERSPACE
+Caso: FILM-PB-1 / apagado "warm" que no deja instantánea (G22, cámara real con CFW 4.05)
+Fecha: 2026-11-26 (evidencia B2)            Modo: 100 % estático (sin cámara, sin flasheo, sin ejecutar emulador)
+Autor: agente de código (rama propia). Sólo se ha escrito este fichero.
+
+Fuentes primarias (rutas relativas a la raíz del repo)
+  [K] analysis/session18/codex-g/oss-linux/linux/…      (árbol completo: warm.c, wbi_cmpr.c, kernel/power/ssboot/*,
+                                                          include/linux/ssboot*.h, arch/arm/mach-cxd90014/{pm.c,resume.S,
+                                                          sleep.S,cmpr.c})
+  [M] analysis/session18/main/sony-oss-extracted/linux/… (copia parcial; warm.c y wbi_cmpr.c IDÉNTICOS a [K],
+                                                          verificado con diff; le faltan include/linux/ssboot*.h y
+                                                          kernel/power/ssboot/)
+  [H] firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/
+        nflasha3_unpacked_unpacked/vmlinux.bin      (kernel 3.21 que corre la cámara; 3 478 912 B)
+        nflasha3_unpacked_unpacked/sabin/ssboot.bin (11 280 B) y ssboot_any.bin (9 648 B)
+        nflasha5                                    (WBI de fábrica, 42 293 120 B)
+  [C] firmware/extracted/fw321/firmware.tar_unpacked/0800_appli/setting/kemco.txt (cmdline real)
+  [?] reports/film-pb-1-sub-arranque-wbi-20261128.md (informe previo; se corrige un punto en §1.7)
+  Log de cámara citado = el ya medido y aportado en el encargo (no se ha repetido).
+
+Estados: VERIFICADO = leído en fuente/bytes; INFERENCIA = deducción razonada; NO VERIFICADO = sin prueba estática.
+
+
+========================================================================
+RESUMEN (4 respuestas en una línea cada una)
+========================================================================
+1. `cmpr.path` NO influye en `get_ssboot_stat()`: éste devuelve la palabra RAM `cxd90014_ssboot_stat`, inicializada a
+   SSBOOT_CREATE_MINSSBI (0) en `resume.S` y reescrita sólo por el prólogo en ensamblador de la entrada de reanudación
+   que usa el arranque. En el arranque en FRÍO medido vale 0 ⇒ `do_make_image` toma `case SSBOOT_CREATE_MINSSBI` y la
+   cabecera acaba en **"prof"** (WBI_PROF_VER) con `resume_vector = cxd90014_cpu_resume_profile`. **No** "WBI1".
+2. Sí: hay tres ramas del kernel que pueden dejar la partición sin imagen nueva o con cabecera inválida, y una de ellas
+   (OPTSSBI) depende de que userspace haya persistido un perfil del *optimizer*; otra (PROFILE) no crea imagen, sólo
+   reescribe la cabecera; y la rama por defecto (estado SSBOOT) deja `fVersion` en "invl" (imagen escrita pero inválida).
+3. Con WBI_COMPRESS activo, si el compresor no responde: hasta `warm.tmo` (=50 000 ms) de espera y después cancelación
+   (`cancel_tmo`=100 ms) ⇒ `-ECANCELED` ⇒ `__wbi_drop()` (512 B a cero en el sector 0) ⇒ con `warm.errmode=0` la función
+   devuelve **0** (éxito falso) y la cámara se apaga sin imagen. Si el firmware `cmpr.path` no se puede cargar, aborta
+   antes (`-EINVAL` en `pm_begin`) y la cámara NO se apaga.
+4. `resume_drop`/`boot_drop`/`ignore_drop` no intervienen en la creación (ninguno se consulta en `do_make_image`); actúan
+   al registrar el dispositivo (boot_drop), al terminar una reanudación (resume_drop) y como interruptor del
+   `wbi_drop()` exportado que usan `upm.ko`/`backup.ko` y el camino de error de suspensión (ignore_drop). En la A6000
+   los tres están configurados para no invalidar nunca (0/0/1).
+
+
+========================================================================
+1. PREGUNTA 1 — ¿Qué vale `get_ssboot_stat()` y qué versión queda en `fVersion`?
+========================================================================
+
+1.1 Dónde está `ssboot_stat` y cuál es su valor por defecto. (VERIFICADO)
+  · Valores: [K] include/linux/ssboot_stat.h:28-32
+      SSBOOT_CREATE_MINSSBI 0x0 | SSBOOT_PROFILE 0x1 | SSBOOT_CREATE_OPTSSBI 0x2 |
+      SSBOOT_SSBOOT_PRE 0x3 | SSBOOT_SSBOOT 0x4
+  · Definición de la variable (no es una variable de C, es una palabra de datos del bloque de reanudación):
+      [K] arch/arm/mach-cxd90014/resume.S:51-52
+          .globl  cxd90014_ssboot_stat
+          cxd90014_ssboot_stat:  .long SSBOOT_CREATE_MINSSBI        <-- DEFAULT = 0
+  · Quién la escribe: el prólogo en asm de cada entrada de reanudación ([K] resume.S:55-70):
+      cxd90014_cpu_resume_profile   -> mov r1,#SSBOOT_PROFILE (1)
+      cxd90014_cpu_resume_optimize  -> #SSBOOT_CREATE_OPTSSBI (2)
+      cxd90014_cpu_resume_ssboot_pre-> #SSBOOT_SSBOOT_PRE (3)
+      cxd90014_cpu_resume_ssboot    -> #SSBOOT_SSBOOT (4)
+      común: adr r0, cxd90014_ssboot_stat ; str r1,[r0]
+    La entrada llana `cxd90014_cpu_resume` NO toca la palabra ⇒ un arranque en frío la deja en el valor del binario (0).
+  · Getter: [K] arch/arm/mach-cxd90014/pm.c:367-371 (`return cxd90014_ssboot_stat;`, EXPORT_SYMBOL).
+  · Cambio de estado tras reanudar: [K] pm.c:273-277 (si era SSBOOT_SSBOOT_PRE ⇒ reescribe cabecera a "WBI1" + entrada
+    `cpu_resume_ssboot`, pasa la variable a SSBOOT_SSBOOT e imprime "SSBI Create Completed!").
+  · Traducción estado→modo: [K] kernel/power/ssboot/main.c:684-715 (`ssboot_setmode`): MINSSBI = PREPARE/NORMAL/MIN,
+    PROFILE = SNAPSHOT/PROFILE/OPTIMIZE, OPTSSBI = SNAPSHOT/REWRITE/OPTIMIZE, SSBOOT_PRE y SSBOOT = SNAPSHOT/NORMAL/OPTIMIZE.
+
+1.2 Qué hace el kernel con ese valor al crear la imagen. (VERIFICADO)
+  · [K] arch/arm/common/warm.c:1128 escribe primero `WBI_INVAL_VER` ("invl") y luego, al final, el switch SSBOOT:
+      1152 #ifdef CONFIG_SNSC_SSBOOT
+      1153   switch (get_ssboot_stat()) {
+      1154   case SSBOOT_CREATE_MINSSBI: memcpy(fVersion, WBI_PROF_VER,4); break;   // "prof"
+      1157   case SSBOOT_CREATE_OPTSSBI: memcpy(fVersion, WBI_PRE_VER,4);  break;   // "WBI0"
+      1160   default: printk("<3>%s: Warning: unexpected case (%lu).\n"); break;   // NO toca fVersion ⇒ queda "invl"
+      1165 #else  memcpy(fVersion, WBI_VER,4);                                      // "WBI1"
+    Literales: [K] arch/arm/include/asm/mach/warmboot.h:56-59  invl/prof/WBI0/WBI1.
+  · `resume_vector`: [K] warm.c:1069 `wbheader.resume_vector = virt_to_phys((void*)entry)`, con `entry` elegido por el
+    llamante; [K] pm.c:375-397:
+      381 case SSBOOT_CREATE_MINSSBI -> cxd_create_warmbootimage(cxd90014_cpu_resume_profile, 0)   (fVersion "prof")
+      383 case SSBOOT_PROFILE        -> cxd_rewrite_wbheader(WBI_PROF_VER, cxd90014_cpu_resume_optimize)  (NO crea)
+      386 case SSBOOT_CREATE_OPTSSBI -> cxd_create_warmbootimage(cxd90014_cpu_resume_ssboot_pre,0); em_reboot(1)
+      391 default                    -> cxd_create_warmbootimage(cxd90014_cpu_resume, 0)             (fVersion "invl")
+  · Quién llama: `cxd90014_create_warmbootimage()` se invoca desde [K] arch/arm/mach-cxd90014/sleep.S:99 (comentario en
+    mach/pm.h:39 "call from sleep.S"), es decir, dentro de `cxd90014_cpu_suspend`, DESPUÉS de `suspend_console()`
+    ([K] kernel/power/suspend.c:339) y de `dpm_suspend_start`. Si devuelve != 0, sleep.S:100-110 deshace el contexto y
+    retorna ⇒ [K] pm.c:175-178 imprime "suspend error!" y la cámara sigue encendida.
+
+1.3 ¿Estaba compilado el switch SSBOOT en el kernel de la cámara? (VERIFICADO contra bytes)
+  · Cadenas presentes en [H] vmlinux.bin (strings -a -t x):
+      0x2be8fe "invl" · 0x2be954 "prof" · 0x2be959 "WBI0" · 0x2be95e "<3>%s: Warning: unexpected case (%lu)."
+      0x2bea17 "Freeing memory(use swap parititon): " · 0x2bfcf0 "WBI1" · 0x2bfcf5 "SSBI Create Completed!"
+    ⇒ CONFIG_SNSC_SSBOOT=y, CONFIG_WARM_BOOT_IMAGE=y y CONFIG_WBI_COMPRESS=y en el build que corre. La rama #else
+    ("WBI1") NO es la compilada. Prueba directa: el literal "WBI0" (= WBI_PRE_VER) sólo se usa en warm.c:1158, DENTRO
+    del `#ifdef CONFIG_SNSC_SSBOOT`, y está en el binario (grep en todo el árbol: única aparición además del #define
+    de warmboot.h:58) ⇒ lo compilado es el `switch(get_ssboot_stat())`, no el `memcpy(fVersion, WBI_VER, 4)` del #else.
+    (Coherente con los defconfig `arch/arm/configs/cxd90014_*.…`: p. ej. cxd90014_set_defconfig
+    trae CONFIG_SNSC_SSBOOT=y, CONFIG_WBI_COMPRESS=y, CONFIG_WBI_NOT_KERNEL_RO no.)
+  · Además la cadena "use swap parititon" sólo existe en `free_some_memory()` bajo
+    `#if defined(CONFIG_SWAP) && defined(CONFIG_SNSC_SSBOOT)` ([K] warm.c:725-735) y su `__FUNCTION__` imprime
+    "free_some_memory" ⇒ el log medido "Freeing memory(use swap parititon): … (free_some_memory):Active(anon)17175"
+    demuestra a la vez (a) CONFIG_SWAP+SSBOOT compilados y (b) que `get_ssboot_stat()` era **MINSSBI** en ese apagado,
+    porque warm.c:728-729 hace `if (get_ssboot_stat() != SSBOOT_CREATE_MINSSBI) return;` ANTES de imprimir.
+    (No confundir con el mensaje gemelo de `ssboot_basic_optimize`, que imprime "(ssboot_basic_optimize):Active(anon)…",
+    [K] kernel/power/ssboot/optimizer/basic.c:729-731: en el log medido NO aparece ése.)
+
+1.4 Verificación byte a byte del bloque de entradas en el kernel que corre. (VERIFICADO)
+  Base del kernel = **0x80038000** (carga de \vmlinux.bin; coincide con docs/capture/e26-r14-ramcfg-bos-analysis.md:77
+  y con las tablas de RAMCFG de reports/film-pb-1-sub-arranque-wbi-20261128.md). Con esa base, en
+  [H] nflasha3_unpacked_unpacked/vmlinux.bin:
+      0x1a3a0  00000000            cxd90014_ssboot_stat = 0            (VA 0x800523a0)
+      0x1a3a4  e3a01001 ea000005   mov r1,#1 ; b +5                   (VA 0x800523a4 = cpu_resume_profile)
+      0x1a3ac  e3a01002 ea000003   mov r1,#2 ; b +3                   (VA 0x800523ac = cpu_resume_optimize)
+      0x1a3b4  e3a01003 ea000001   mov r1,#3 ; b +1                   (VA 0x800523b4 = cpu_resume_ssboot_pre)
+      0x1a3bc  e3a01004 eaffffff   mov r1,#4 ; b -1                   (VA 0x800523bc = cpu_resume_ssboot)
+      0x1a3c4  e24f002c e5801000   sub r0,pc,#44 (→0x1a3a0) ; str r1,[r0]
+      0x1a3cc  e321f0d3            msr cpsr_c,#0xd3  = ENTRY(cxd90014_cpu_resume)
+    Es la traducción exacta de resume.S:51-74. Coincidencia independiente: la cabecera del WBI de fábrica trae
+    `resume_vector = 0x800523bc`, que con esta base es JUSTAMENTE `cxd90014_cpu_resume_ssboot`.
+
+1.5 Cabecera real de [H] nflasha5 (bytes leídos, 512 B). (VERIFICADO)
+      0x00 "WBI1" | sections 0x48C (1164) | flag 0x09 | resume_vector 0x800523BC | dVersion 0x20060224
+      sector_size 0x200 | r_data_size 0x0280C600 (41 993 728) | kern_start 0 | kern_size 0 |
+      kern_cksum 0x0F0F0F0F (= INIT_CKSUM, wbi.h:35) | o_data_size 0x0A4FC000 (172 998 656)
+    `flag=0x09` = WBI_COMPRESS(0x01)|WBI_LZ77_COMPRESS(0x08): sin WBI_NOT_KERNEL_RO(0x02) y sin WBI_CKSUM(0x04).
+    Coincide con reports/film-pb-1-sub-arranque-wbi-20261128.md:205-207 (mismo parseo, otra sesión).
+    Lectura: esa imagen es el escalón FINAL de la escalera (creada en OPTSSBI y reetiquetada a "WBI1" +
+    `cpu_resume_ssboot` por pm.c:274 al reanudar) ⇒ el de fábrica sí pasó por toda la máquina de estados. (INFERENCIA;
+    los cuatro bytes y el vector son VERIFICADO.)
+
+1.6 Respuesta a "¿con cmpr.path=/system/sabin/ssboot.bin presente qué valor toma?" (VERIFICADO)
+  · `cmpr.path`/`cmpr.path2` son `module_param_string` del driver del compresor por hardware
+    ([K] arch/arm/mach-cxd90014/cmpr.c:44-51) y sólo se usan para volcar el microcódigo a RAM en `cmpr_init()`
+    (cmpr.c:372-416 → cmpr_load_file cmpr.c:107-162). No tocan `ssboot_stat` ni el estado SSBOOT: **el fichero no
+    elige la versión**. Lo único que decide es `cxd90014_ssboot_stat`.
+  · Estado en el apagado medido: 0 (MINSSBI) ⇒ si `do_make_image` hubiera llegado al final, la cabecera habría quedado
+    **"prof"** y `resume_vector=0x800523a4` (= cpu_resume_profile). Con ese valor el siguiente arranque entraría por
+    resume_profile y pondría `cxd90014_ssboot_stat=SSBOOT_PROFILE(1)`; y el SIGUIENTE apagado no crearía imagen, sólo
+    reescribiría la cabecera (pm.c:383-385).
+  · Comprobación indirecta de que el microcódigo es cargable: el fichero existe en la partición del kernel (nflasha3/sabin/ssboot.bin,
+    11 280 B) y esa partición no la toca el CFW (que sólo cambia /usr = nflasha15). INFERENCIA: si faltara,
+    `cmpr_init` fallaría y `warm_boot_pm_begin` devolvería -EINVAL ANTES de `free_some_memory` (warm.c:1380-1383), así que
+    el log medido (que sí llega a "Freeing memory…") implica que la carga del microcódigo funcionó. (INFERENCIA)
+
+1.7 CORRECCIÓN a un informe previo (importante para no esperar "WBI1"). (VERIFICADO)
+  reports/film-pb-1-wbi-silent-20261128.md:316 y :367 esperan "cabecera WBI1 / esperado: W B I 1" tras el primer
+  apagado con el interruptor partiendo de un arranque en frío. Con este kernel (SSBOOT compilado) eso es imposible:
+  el primer apagado tras un frío sale con **"prof"** (warm.c:1154-1156). "WBI1" sólo aparece (a) si
+  CONFIG_SNSC_SSBOOT no estuviera compilado, o (b) tras la reescritura de pm.c:274 en el escalón SSBOOT_PRE→SSBOOT.
+  Consecuencia práctica: la comprobación de §8 de ese informe ("dd if=/dev/nflasha5 | od -c" = W B I 1) fallaría
+  aunque la instantánea se hubiera creado bien. Hay que buscarla como "prof" en el primer apagado.
+  (No se edita ese informe aquí: sólo se deja constancia; requiere fila de PENDIENTES propia si se acepta.)
+
+
+========================================================================
+2. PREGUNTA 2 — Ramas que pueden dejar la imagen SIN escribir o INVÁLIDA por falta de algo de userspace
+========================================================================
+
+2.0 Qué valida y qué no valida el kernel. (VERIFICADO, salvo lo marcado)
+  El kernel **no relee ni verifica** la imagen: `wbi_read_header()` sólo se usa en `cxd_rewrite_wbheader`
+  ([K] warm.c:1231; grep: 1 sola llamada). Sus únicos controles al crearla son:
+    (a) capacidad del dispositivo vs tamaño estimado: `calc_r_image_size()` vs `capacity` ([K] warm.c:1087-1089);
+        con CONFIG_SNSC_SSBOOT sólo AVISA ("image size may be greater than device capacity", warm.c:1090-1092);
+    (b) cksum por sección: sólo si `WBI_CKSUM` (`wbi_recalc_cksum` sale si no está, warm.c:868-873) — en la A6000
+        `warm.chksum` no está en la cmdline ⇒ `wbi_chksum=0` ⇒ flag 0x04 nunca se pone (y el WBI de fábrica no lo trae);
+    (c) `kern_cksum`/`kern_start`/`kern_size`: sólo si `WBI_NOT_KERNEL_RO` (warm.c:1012-1023) — no compilado/configurado
+        (cabecera de fábrica: kern_cksum = INIT_CKSUM 0x0F0F0F0F, kern_size 0 ⇒ coherente);
+    (d) el "cerrojo" real: la cabecera se escribe PRIMERO con "invl" (warm.c:1128) y sólo al final con la versión buena
+        (warm.c:1152-1168, `wbi_rewrite_header` = memset del sector + 44 B + `write_sector(...,0,1)`,
+        [K] arch/arm/common/wbi_cmpr.c:1401-1416). Cualquier corte deja "invl" o ceros ⇒ imagen inválida por diseño.
+  La aceptación en el arranque la hace **Loader3**, no Linux: `chk ssboot` 0xC01F20F4 y los literales
+  0xC01F2BC6/0xC01F2BE6/0xC01FBF0E citados en reports/film-pb-1-sub-arranque-wbi-20261128.md:442-444 (de volcados SWD,
+  binario ausente). NO VERIFICADO aquí; no se ha podido comprobar qué firmas acepta exactamente.
+
+2.1 Rama `SSBOOT_PROFILE` (stat=1): NO crea imagen; sólo reescribe la cabecera. (VERIFICADO)
+  · [K] pm.c:383-385 → `cxd_rewrite_wbheader("prof", cpu_resume_optimize)`; [K] warm.c:1223-1241 lee la cabecera actual,
+    cambia 4 B de versión y el vector y reescribe el sector 0.
+  · Riesgo: si el cuerpo está a cero (p.ej. tras `ud_wbi_drop`) o es de otra versión, el resultado es una cabecera
+    "prof" con sections/o_data_size/data heredados. Con el sector a cero queda una cabecera que dice "prof" con
+    sections=0 y tamaños 0. Efecto kernel: VERIFICADO (así lo escribe); qué hace Loader3 con eso: NO VERIFICADO.
+  · Además esta rama implica que un ciclo de apagado NO refresca la instantánea (el /usr que devuelva el siguiente
+    caliente es el de la imagen vieja).
+
+2.2 Rama `SSBOOT_CREATE_OPTSSBI` (stat=2): depende del OPTIMIZER (y de userspace). (VERIFICADO en código)
+  · [K] kernel/power/suspend.c:109-127 `suspend_prepare_ssboot()`:
+      120  if (get_ssboot_stat() == SSBOOT_CREATE_OPTSSBI) error = ssboot_optimizer_optimize();
+      123  else                                              error = ssboot_prepare();
+      129  if (error) return error;          <-- aborta la suspensión ENTERA (no hay imagen y la cámara no se apaga)
+  · `ssboot_optimizer_optimize()` ([K] ssboot/image.c:1058-1078) devuelve `-ENODEV` si no hay optimizer registrado
+    (cadena en el kernel: "<3>ssboot: image optimizer is not registered") y propaga el error del optimizer.
+  · El optimizer que hay es el "basic" (integrado: cadenas "ssboot_basic_optimizer_init_module",
+    "ssboot_basic_record_file", "ssboot: failed ssboot_basic_read_profile() %d"), y `ssboot_basic_optimize()`
+    ([K] ssboot/optimizer/basic.c:703-761) empieza LEYENDO UN FICHERO de perfil:
+      - ruta: `prof_path`, `module_param_string(prof_path, …)` (basic.c:60-61); la macro PROFILE
+        (CONFIG_SNSC_SSBOOT_BASIC_OPTIMIZER_PROFILE_NAME, basic.c:47) NO se usa en el código
+        (grep: única aparición es el #define) y la cadena "/tmp/ssboot_prof.bin" **no está** en vmlinux.bin ⇒ con la
+        cmdline real (kemco.txt no trae `*.prof_path`) la ruta queda VACÍA.
+      - si el fichero no se puede abrir: "cannot open file: %s" (basic.c:215-222) y `optimize` falla
+        ("failed ssboot_basic_read_profile() %d").
+  · El perfil lo genera el arranque anterior: con stat=PROFILE, tras la reanudación se llama
+    `ssboot_optimizer_start_profiling()` ([K] suspend.c:372-377). El volcado a fichero ocurre en
+    `ssboot_basic_stop_profiling()` (basic.c:776-880, `file_open(O_RDWR|O_CREAT|O_TRUNC)`), que se dispara desde
+    **userspace**: `echo stop > /proc/ssboot/optimizer/operation` ([K] ssboot/proc.c:654-675) o desde `upm.ko`
+    (importa `ssboot_optimizer_stop_profiling`, reports/film-pb-1-sub-arranque-wbi-20261128.md:182).
+  ⇒ Si userspace no pide/guarda el perfil, la rama OPTSSBI aborta la suspensión (cámara encendida, sin imagen).
+    Estado real en la cámara (¿existe perfil? ¿se llama a stop?): NO VERIFICADO (haría falta `cat /proc/ssboot/*`).
+  · Nota: esta rama termina en `em_reboot(1)` ([K] pm.c:388-390) — un RESET forzado, no un apagado normal.
+
+2.3 Rama `SSBOOT_CREATE_MINSSBI` (stat=0, la del caso medido): swapfile opcional. (VERIFICADO en código)
+  · [K] warm.c:723-747 `free_some_memory()`: si stat != MINSSBI sale sin hacer nada; si es MINSSBI y
+    `ssboot_get_swapfile()` != NULL hace `ssboot_swapon()`; luego el bucle `__shrink_all_memory(10 MB,1,1)` y
+    `ssboot_swap_set_ro()`. Las tres funciones de swap salen con 0 si no hay swapfile ([K] ssboot/image.c:941-1011).
+  · El único escritor de ese parámetro en el rootfs es `/bin/swap_prepare.sh`
+    ([H] nflasha15_unpacked_unpacked/bin/swap_prepare.sh: `echo /dev/compswap > /proc/ssboot/swapfile`), y según
+    reports/film-pb-1-sub-arranque-wbi-20261128.md:135 ese script sólo se ejecuta en el camino "BIS".
+  ⇒ Sin swapfile NO se aborta: sólo se libera memoria sin swap (imagen algo mayor). Estado real en el apagado medido:
+    NO VERIFICADO (la línea "Freeing memory(use swap parititon)" se imprime en ambos casos, warm.c:735).
+
+2.4 Rama por defecto (stat=4, SSBOOT): imagen escrita con `fVersion` = "invl". (VERIFICADO en código)
+  · [K] warm.c:1152-1164, `default:` deja la versión que se escribió en 1128 ("invl") e imprime
+    "<3>do_make_image: Warning: unexpected case (4)." ⇒ el cuerpo se escribe entero pero la cabecera queda inválida
+    (salvo que Loader3 ignorase la versión; NO VERIFICADO).
+  · Alcanzable tras la escalera MINSSBI→PROFILE→OPTSSBI→SSBOOT_PRE→SSBOOT (INFERENCIA). Es el único punto donde el
+    kernel escribe a propósito una imagen "inválida".
+
+2.5 Lo que NO depende de userspace (para acotar el problema). (VERIFICADO)
+  · El estado SSBOOT no es escribible: `/proc/ssboot/state` es SSBOOT_PROC_RDONLY ([K] ssboot/proc.c:589) y el valor lo
+    fija `ssboot_setmode(cxd90014_ssboot_stat)` al reanudar ([K] pm.c:190). `/proc/ssboot/mode` (proc.c:279) y
+    `/operation` (proc.c:363) sí son RW, pero `setmode` los reescribe en cada reanudación.
+  · El dispositivo WBI lo registra el driver del kernel en cada arranque ([H] log real: "wb_default_device:
+    sector_size=0x40000,phys_sector_size=0x200" y "WBI partition[5]: … num_sectors=121344"; registro en
+    `wb_register_device`, [K] warm.c:1267-1310). Sin ese registro `cxd_create_warmbootimage` sale en 0 (warm.c:1217).
+  · Los "writers" del subsistema ssboot (sbi.c, page_attr_dump.c) NO están compilados (no hay "sbiname" ni
+    "page_attr_dump" en vmlinux.bin; defconfig "CONFIG_SNSC_SSBOOT_SBI is not set") ⇒ `ssboot_prepare()` sólo prepara
+    bitmaps/swap ([K] ssboot/main.c:200-270) y quien escribe la WBI es siempre `warm.c` desde sleep.S.
+  · Las regiones excluidas de la imagen las registra el propio kernel ([K] arch/arm/mm/init.c:581 y
+    kernel/power/snsc_pmmem.c:82, `ssboot_region_register_discard`), no userspace.
+  · `/log` no interviene en la creación (es sólo diagnóstico).
+
+2.6 Resumen de "sólo puede venir de userspace". (VERIFICADO el mecanismo)
+  (i)   el fichero de perfil del optimizer y la orden de pararlo (ramas PROFILE/OPTSSBI);
+  (ii)  el swapfile `/proc/ssboot/swapfile` (ramas MINSSBI/OPTSSBI vía swap_prepare.sh);
+  (iii) el microcódigo `cmpr.path` (fichero en /system = nflasha3, normalmente no modificable);
+  (iv)  el contenido de /usr que acaba dentro de la instantánea (es lo que el caso persigue).
+
+
+========================================================================
+3. PREGUNTA 3 — WBI_COMPRESS activo y el compresor no responde
+========================================================================
+3.1 Compilado y activo. (VERIFICADO)
+  · `default_flags()` pone WBI_COMPRESS si CONFIG_WBI_COMPRESS ([K] warm.c:680-696); en el kernel que corre lo está
+    (cadena "Freeing memory…" + cabecera de fábrica flag=0x09; defconfig: CONFIG_WBI_COMPRESS=y).
+  · `warm_boot_pm_begin()` ([K] warm.c:1353-1405): si hay compresor registrado
+    (1353 `wbi_default_compressor`, registrado por `late_initcall(cmpr_register_compressor)`, cmpr.c:474-482):
+      1367-1371 exige `deflate`, `get_max_slen` y que `warm.mem_dst/mem_work` parseen (formato "size@phys");
+      1373 `wbi_setup(work,&wlen,dst,&dlen)` (reparte work/12 y dst/12 entre núcleos y buffers, wbi_cmpr.c:1271-1319);
+      1376-1378 `max_slen/get_max_slen` ⇒ `maxnr_page_per_section` (tamaño máximo de sección comprimible);
+      1380-1383 `compressor->init()` = `cmpr_init()` ⇒ **carga /system/sabin/ssboot.bin**; si falla, `return ret`.
+      Sólo después: `free_some_memory()` (1386), `wbheader.flag=default_flags()` (1388) y `count_sections_p1` (1392).
+  · Consecuencia práctica: si el microcódigo no cargara, el apagado se abortaría ANTES de "Freeing memory…"
+    (mensajes "cmpr: vfs_stat error / file open error" y devolución -EINVAL al escribir en /sys/power/state).
+    En el log medido sí aparece "Freeing memory…" ⇒ la carga del compresor funcionó. (INFERENCIA)
+
+3.2 Si el compresor se cuelga. (VERIFICADO en código)
+  · Todo el envío pasa por `wbi_exec()` ([K] wbi_cmpr.c:413-467), que en cada vuelta comprueba
+    `wbi_is_canceled() || wbi_is_timeout()` (426). El plazo lo fija `do_make_image`:
+    `wbi_expire = mach_read_cycles() + wbi_tmo*USEC_PER_MSEC` ([K] warm.c:1066) con `warm.tmo=50000`
+    (kemco.txt:13) ⇒ **50 s** para toda la imagen.
+  · Al expirar: `wbi_cmpr_cancel()` (wbi_cmpr.c:1197-1238) pide cancelación a cada núcleo
+    (`deflate_cancel`) y espera `cancel_tmo`=100 000 µs (wbi_cmpr.c:55-56, 1216); si no contesta imprime
+    "WBI:wbi_cmpr_cancel:timeout" y hace `deflate_end`. `wbi_exec` devuelve **-ECANCELED**.
+  · Camino del error: -ECANCELED → `wbi_send_sections` err1 / `wbi_send_data` → `do_make_image: send_error`
+    → `__wbi_drop()` (**512 B a cero en el sector 0**, warm.c:1191) → `close_error` → como `warm.errmode=0`,
+    `wb_printk("do_make_image: ret=%d")` y **`return 0`** (warm.c:1200-1203). El llamante (sleep.S) ve éxito ⇒ la
+    cámara se apaga, sin imagen. Firmas en el log esperadas: "do_make_image: ret=-125" (ECANCELED) y/o
+    "dropped wbi" (de `__wbi_drop`, warm.c:383) — `-125` es el valor Linux de ECANCELED.
+  · Error del hardware (no cuelgue): `cmpr_deflate_finish` (cmpr.c:431-455) devuelve -EFAULT si ENDFCT != DONE
+    ("cmpr: deflate abort: %d") o -ENOEXEC si la firma no es CMPR_LZPART_MAGIC ("cmpr: image is broken"); sube por
+    `wbi_cmprfinish` → `wbi_exec` err1 ("ERROR:wbi_exec:…") → mismo `send_error` + drop.
+  · Con WBI_COMPRESS pero SIN compresor registrado (`wbi_default_compressor == NULL`), el bloque 1364-1384 se salta,
+    pero `calc_r_image_size` sigue calculando con `/5` (warm.c:981-985) y `wbi_send_*` no tendría tareas inicializadas
+    ⇒ fallo en `wbi_exec` ("ERROR:…empty(prio=…)", wbi_cmpr.c:431-434) ⇒ mismo drop. (INFERENCIA: no ocurre si cmpr
+    está compilado, que es el caso.)
+  · Nota para el caso B1: este mecanismo explica EXACTAMENTE el fenotipo medido (se apaga + no se escribe ni un
+    sector + cabecera a cero + sin mensajes de éxito). Que la causa fuese un timeout/cancelación y no otra cosa es
+    NO VERIFICADO con el log disponible: los `wb_printk` de do_make_image van al mismo buffer
+    (`vprintk`, warm.c:660-678) y en el log medido no aparece ninguno. INFERENCIA: o do_make_image no llegó a
+    imprimir (abortó en `wb_default_device->open`/`count_pages`, que imprimen todos), o el tramo final del ring no se
+    leyó. Queda para B1 con una lectura dirigida (grep de "do_make_image|dropped wbi|WBI:" en /log).
+
+
+========================================================================
+4. PREGUNTA 4 — resume_drop / boot_drop / ignore_drop: creación vs restauración
+========================================================================
+4.1 Dónde se consultan (grep exhaustivo en [K]): (VERIFICADO)
+  · `resume_drop`  → sólo en `wbi_resume_drop()` ([K] warm.c:426-438), llamada desde `cxd90014_pm_finish` ([K] pm.c:280).
+  · `boot_drop`    → sólo en `wb_register_device()` ([K] warm.c:1301-1304).
+  · `ignore_drop`  → sólo en `wbi_drop()` ([K] warm.c:414-422).
+  ⇒ **Ninguno interviene en do_make_image**: la creación no se protege ni se cancela con ellos. Lo que sí puede tocar la
+    partición durante la creación es el `__wbi_drop()` interno del camino de error (warm.c:1191), que NO pasa por
+    `ignore_drop`.
+
+4.2 Efecto de cada uno. (VERIFICADO en código; valor real de la cmdline en [C] kemco.txt)
+  · `warm.boot_drop` (defecto 1; cámara **0**, kemco.txt:15): al registrar el dispositivo WBI, si vale 1 y el
+    dispositivo es distinto del anterior, borra la cabecera (512 B) — es decir, invalida la instantánea **al arrancar**
+    (camino de creación del siguiente ciclo). Con 0 la cámara nunca invalida por esta vía.
+  · `warm.resume_drop` (defecto 0; cámara **0**, kemco.txt:14): al final de cada reanudación borra la cabecera ⇒ el
+    siguiente arranque sería frío (instantánea de un solo uso). Con 0 la imagen **se conserva** tras reanudar y se
+    reutiliza en los arranques siguientes hasta que se regenere o se invalide por otra vía.
+  · `warm.ignore_drop` (defecto 0; cámara **1**, kemco.txt:16): convierte el símbolo exportado `wbi_drop()` en NO-OP.
+    Protege la imagen frente a: `pm_suspend_error()` ([K] pm.c:224-232, que llama `wbi_drop()` y luego para la CPU) y
+    frente a los módulos que lo importan (`upm.ko`, `backup.ko`). NO protege frente a: el `__wbi_drop` del fallo de
+    creación (warm.c:1191), la escritura por sysfs `/sys/power/image_drop` (`image_drop_store` → `_wbi_drop`,
+    warm.c:446-460), `ud_wbi_drop.elf` del actualizador (escribe directo al dispositivo) ni `cxd_rewrite_wbheader`.
+  · Resumen: con la cmdline de la A6000 (0/0/1) el kernel no invalida nunca la instantánea por sí mismo; el único que
+    la deja inválida es el fallo de creación (que la borra) y el actualizador (ud_wbi_drop). Es coherente con el hecho
+    medido de que tras dos "warm" la partición siga siendo el WBI de Sony con la cabecera a cero.
+
+
+========================================================================
+5. QUÉ NO SE HA PODIDO COMPROBAR (límites)
+========================================================================
+· Loader3 (quien acepta/rechaza la imagen) no está en el repo: sus comprobaciones (`chk ssboot` 0xC01F20F4) siguen
+  siendo NO VERIFICADO y vienen de volcados SWD de G11 §11, no de este análisis. Por eso "qué versión acepta" en el
+  arranque queda abierto; lo que sí está cerrado es qué versión ESCRIBE el kernel y cuándo.
+· No hay `.config` del producto: el "está compilado" se ha demostrado con las cadenas del propio vmlinux.bin y con los
+  defconfig de Sony (que difieren entre sí en SNSC_SSBOOT), no con el config real.
+· Estado real en la sesión medida de: `/proc/ssboot/state`, `/proc/ssboot/mode`, `/proc/ssboot/swapfile`,
+  existencia de perfil del optimizer y contenido exacto del final del ring de log: NO VERIFICADO (no se ha tocado la
+  cámara). Con ello se decidiría si el apagado falló en `pm_begin` (compresor), en `do_make_image` (timeout/error) o
+  simplemente no llegó a `sleep.S`.
+· La inferencia "la escalera MINSSBI→PROFILE→OPTSSBI→SSBOOT_PRE→SSBOOT es la que produce el WBI1 de fábrica" encaja con
+  el `resume_vector` medido, pero no se ha trazeado en cámara.
+· Los árboles OSS no traen `include/linux/ssboot*.h` ni `kernel/power/ssboot/` en la extracción `main` (sí en codex-g);
+  `warm.c` y `wbi_cmpr.c` son idénticos byte a byte entre ambos (diff sin salida).
+
+
+========================================================================
+6. REPRODUCIBILIDAD (comandos usados; ninguno toca la cámara)
+========================================================================
+# 1) strings del kernel que corre (compilación SSBOOT / WBI_COMPRESS / mensajes)
+cd firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked
+strings -a -t x vmlinux.bin | grep -E "invl|prof$|WBI0|WBI1|unexpected case|use swap parititon|SSBI Create|sbiname|page_attr_dump"
+
+# 2) cabecera del WBI de fábrica
+python3 - <<'EOF'
+import struct
+d=open('firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha5','rb').read(512)
+print(d[:4], struct.unpack('<10I', d[4:44]))
+EOF
+
+# 3) bloque cxd90014_ssboot_stat + entradas de reanudación (base 0x80038000)
+python3 - <<'EOF'
+import struct
+d=open('firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/vmlinux.bin','rb').read()
+off=0x1a3a4
+for i in range(9):
+    print(hex(off+4*i), hex(struct.unpack('<I', d[off+4*i:off+4*i+4])[0]))
+EOF
+
+# 4) fuentes (líneas citadas)
+sed -n '1128,1170p' analysis/session18/codex-g/oss-linux/linux/arch/arm/common/warm.c
+sed -n '375,397p'   analysis/session18/codex-g/oss-linux/linux/arch/arm/mach-cxd90014/pm.c
+sed -n '51,74p'     analysis/session18/codex-g/oss-linux/linux/arch/arm/mach-cxd90014/resume.S
+sed -n '109,153p;331,355p;370,392p' analysis/session18/codex-g/oss-linux/linux/kernel/power/suspend.c
+sed -n '723,755p;1267,1310p;1353,1405p' analysis/session18/codex-g/oss-linux/linux/arch/arm/common/warm.c

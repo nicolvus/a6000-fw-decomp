@@ -1,0 +1,338 @@
+# B1 — im.elf: del mensaje 0x92014F (upm.ko) al write("warm")   [26-11-2026]
+# 100 % estatico. Solo bytes, instrucciones y tabla de simbolos. Sin camara.
+# Desensamblador: Capstone 5.0.7 (Thumb-2 / ARM), con resolucion de pools literales y de
+#   reubicaciones R_ARM_CALL/ABS32 de upm.ko (modulo CON simbolos: readelf -s).
+#
+# Mapa VA<->fichero en im.elf (PT_LOAD unico, .text 0x9118..0xBEF0):
+#   VA = offset_fichero + 0x8000        (offset < 0x5000)
+#   VA = offset_fichero - 0x5000 + 0x15000 (offset >= 0x5000)
+# Secciones: .text 0x9118+0x2DE8, .rodata 0xBF08..0xC7CB, .data 0x15240..0x154B3,
+#            .bss 0x154B4..0x154E3 (NOBITS).
+# Ficheros: original  firmware/extracted/fw321/.../dev/nflasha15_unpacked_unpacked/bin/im.elf
+#           parcheado build/wbi_silent/pkg/im.elf
+
+==========================================================================================
+0. RESUMEN (una linea)
+==========================================================================================
+Entre 0x92014F y el write("warm") im.elf hace SOLO: comparar el id, leer dos globales de
+RAM, abrir /sys/power/state, (opcional) leer+escribir el elemento de Backup 0x940004,
+memset de una pila de 0x40 B, la compuerta 0x9F44, un snprintf a esa pila y un log. NO
+hace sync, NO toca drop_caches, NO mata procesos, NO escribe /sys/power/image_*, NO hace
+ioctl, NO habla con Darwin/MCU, NO abre /dev/nflasha5 ni ningun nodo WBI y NO espera nada.
+Ninguna de sus acciones es condicion para que el kernel construya/escriba la imagen.
+
+==========================================================================================
+1. QUIEN EMITE 0x92014F Y CON QUE CARGA  (upm.ko)   [VERIFICADO]
+==========================================================================================
+upm.ko: firmware/extracted/fw321/.../dev/nflasha15_unpacked_unpacked/kmod/upm.ko
+.text en fichero 0x34..0x1311C => VA = offset - 0x34. NO esta stripped.
+
+0x92014F aparece 2 veces en el modulo:
+  - offset 0xFD94 (VA 0xFD60): pool literal de la funcion k_upm_off_factor_handler_inactive.
+  - offset 0x13608: tabla .rodata de pares {id, puntero a nombre} (VA 0x1A0). No es codigo.
+
+Emisor: k_upm_off_factor_handler_inactive (0xFA18..0xFD7C), rama 0x92014E en 0xFB80..0xFC38:
+
+  00fb80  ldr  r3,[pc,#0x1c0]   ; [0xfd48] = 0x0092014e
+  00fb84  cmp  r1,r3            ; r1 = msg->id  (ldr r1,[r0] en 0xfa30)
+  00fb88  bne  0xfc3c
+  00fb8c  mvn  r1,#0 ; ldr r0,=0x9200bb ; bl osal_wai_sem_tmo   ; semaforo global
+  00fb98  ldr  r0,=0x9200bb ; bl osal_sig_sem
+  00fba0  ldr  r3,=g_...  ; mov r2,#0x22 ; str r2,[r3]         ; estado = 0x22
+  00fbb4  ldr  r3,=g_...  ; mov r2,#4    ; str r2,[r3,#0xc]    ; estado[3] = 4
+  00fbb0  bl 0xe42c            ; k_upm_apicb_off_factor(...)     ; traza
+  00fbc0  bl dmm_pre_suspend                                    ; <-- modulo DMM
+  00fbcc  bl 0xe32c            ; helper estatico (ver abajo); resultado solo para un log
+  00fbd0  cmp r0,#0 ; beq 0xfbe0 ; si != 0 -> log 0xfbd8
+  00fbe0  bl 0xe32c ; mov r5,r0 ; SEGUNDA llamada: su resultado es w1 del mensaje
+  00fbe4  sub r1,fp,#0x20 ; mov r2,#0x10 ; mov r3,#1
+  00fbf4  ldr r0,=0x00920169
+  00fbf8  bl osal_valloc_msg_wait(0x920169, &buf, 0x10, 1)
+  00fc08  ldr r2,=0x00920021 ; str r2,[buf-4]     ; origen = cola 0x920021
+  00fc18  ldr r2,=0x0092014f ; str r4,[buf+8] ; str r4,[buf+0xc]   ; r4 = 0
+  00fc24  stm  r3,{r2,r5}                          ; buf[0]=0x92014F  buf[4]=r5
+  00fc2c  bl osal_snd_sync_msg(0x920169, buf)      ; ENVIO SINCRONO a la cola 0x920169
+  00fc34  ldr r0,=0x00920169 ; b 0xfb74 -> osal_free_msg
+
+Carga util: { id = 0x92014F, w1 = r5, w2 = 0, w3 = 0 }, origen declarado 0x920021.
+
+Que vale w1 (el selector caliente/frio): helper sin simbolo en 0xE32C..0xE384 (justo
+detras del pool de k_upm_req_c_hot 0xE238+0xF4; nadie mas lo llama):
+  00e338  ldr r3,=g_upm ; ldr r0,[r3,#0x50] ; cmp r0,#0 ; ldmeq ... ; return 0
+  00e34c  cmp r2,#0x1b  (r2 = [g_upm+0x1c]) ; movne r0,#0 ; return 0
+  00e358  r0 = [g_upm+0x18] ; 1 si (r0==0x17 || r0-7 <= 3) || (r0-0x1f != 0), si no 0
+=> w1 = 1 solo si upm tiene [g_upm+0x50]!=0 && [g_upm+0x1c]==0x1B && el "off factor"
+   [g_upm+0x18] en {0x17,7,8,9,10} o distinto de 0x1F.        [VERIFICADO en bytes]
+   El significado de los campos (0x18/0x1c/0x50) no se afirma.  [NO VERIFICADO]
+
+Nota: el texto "0x2C" de 0x92014E y el 0x22/0x4 de 0xFBA8/0xFBBC se escriben en un global
+de upm, no en /sys. upm.ko NO contiene la cadena "/sys/power/state" (grep 0 coincidencias).
+
+==========================================================================================
+2. RECEPCION EN im.elf   [VERIFICADO en bytes; el reparto exacto de colas = INFERENCIA]
+==========================================================================================
+im.elf registra callbacks de cola con osal_reg_sync_msg_queue_cb (PLT 0x8EA8):
+  0x9988  osal_reg_sync_msg_queue_cb(0x940270, &0x154BC, 0x9572, 0)
+  0x9B9E  osal_reg_sync_msg_queue_cb(0x94016A, &tmp_pila, 0x95B0, 0x94016A)
+  0x9C9E  osal_reg_sync_msg_queue_cb(0x920169, &tmp_pila, 0x95B0, 0)  <- la cola de upm
+
+Callback 0x95B0 (0x95B0..0x9664) = "imelf_sync_api_cb":
+  - atiende en firme 0x9400E1/0x940021/0x940022 (0x95B4..0x95F0).
+  - y una lista de PASO: parte de 0x920143 y encadena adds/subs (0x95F2..0x961A):
+        0x920143 -> +0x17 = 0x92015A -> -0x0F = 0x92014B -> +2 = 0x92014D
+                 -> +2 = 0x92014F -> +3 = 0x920152 -> +0x0A = 0x92015C
+    0x92014F cae en esa cadena: 5.a comparacion, `cmp r1,r3` en 0x960C.
+  - accion (0x961C..0x9628): send(0x94016A, id = msg[0], p[4]=msg[1], p[8]=msg[2],
+    p[0xC]=msg[3], origen=0x94016A) via el envoltorio 0x91A4 (= osal_valloc_msg_wait +
+    osal_snd_msg + osal_free_msg si falla). Si el id no esta en la lista:
+    printf("imelf_sync_api_cb: err: cmd:0x%x") y devuelve.
+  => im.elf no ejecuta nada de negocio en el callback: REENVIA el mensaje.
+  En 0x9E8C/0x9E68 el propio proceso se anuncia a 0x94016A con id 0x94001A y el id
+  dinamico obtenido por osal_dynamic_id(0x2A,0x94,&id) (0x92BC).        [VERIFICADO]
+
+Despachador 0xA06C..0xA4C4 (1128 B): unica rutina del binario que trata 0x92014F.
+  - Registrado con AC08(estado, manejador) = *(0x153E4)=r0, *(0x153EC)=r1:
+        0x9ADE  AC08(3, 0xa06d)     <- se instala a si mismo
+        0xA3F6  AC08(1, 0xa06d)     <- se rearma al recibir 0x940001
+        msg[0]=0x00940001 -> movs r0,#1 ; ldr r1,=0xa06d ; bl 0xac08
+  - Bucle receptor en main() 0x9E94..0x9ED0: 0xA580 lee la cola (*(0x153E4+0x2C)),
+    0xAC18 lee el manejador (*(0x153EC)), osal_rcv_msg_tmo(cola,&msg,-1), `blx r5` con
+    r0=msg, osal_free_msg, y si el manejador devuelve != 0 -> sleep(1) (0x9044).
+    No hay ninguna otra accion en el bucle.                              [VERIFICADO]
+  - main() vuelve a escribir el mismo hueco con 0x9339 en 0x9E4E (AC08(5,0x9339)) antes
+    del bucle; 0x9339 atiende 0x940007/0x940001 y engancha el stub 0x9264 (que solo hace
+    `bl 0xaad4`, `movs r0,#0`) + 0xACF4. Que manejador esta vivo cuando llega 0x92014F no
+    se puede cerrar estaticamente (dos escrituras del mismo hueco).       [NO VERIFICADO]
+    Contraprueba fuerte de que SI es 0xA06C: 0x92014F solo existe en 0xA360 (pool de
+    0xA06C), im.elf es el unico escritor de "warm" del firmware (ver §6) y la camara
+    escribio "warm" de verdad => esa rama se ejecuto.                    [INFERENCIA]
+
+==========================================================================================
+3. LA RAMA 0x92014F  (0xA258..0xA2A0)   [VERIFICADO instruccion a instruccion]
+==========================================================================================
+  00a258  ldr r2,[pc,#0x104]   ; [0xa360] = 0x0092014F   (UNICA aparicion en el binario)
+  00a25a  cmp r3,r2            ; r3 = *(u32*)msg
+  00a25c  bne 0xa2a2           ; no es 0x92014F -> siguiente id (0x920152)
+  00a25e  bl  0xaad4           ; lectura pura: (*(u32*)0x153F0) & 1  (ver §5-b)
+  00a262  ldr r3,[pc,#0xc4]    ; [0xa328] = 0x000153E0
+  00a264  ldr r3,[r3]          ; ultima "razon de apagado" (la escribe 0x920143 en 0xA132)
+  00a266  cmp r3,#0x27
+  00a268  bne 0xa26e
+  00a26a  movs r0,#2 ; b 0xa282                       ; MODO 2  (salta contador y compuerta)
+  00a26e  ldr r3,[pc,#0xf4]    ; [0xa364] = 0x000154D0
+  00a270  ldr r3,[r3]          ; bandera .bss cargada de Backup 0x510023 (ver §5)
+  00a272  cmp r3,#1
+  00a274  bne 0xa280
+  00a276  ldr r0,[r4,#4]       ; msg[1] = w1 de upm (0/1)
+  00a278  subs r0,#0 ; it ne ; movne r0,#1            ; MODO 1 si w1!=0
+  00a27e  b 0xa282
+  00a280  movs r0,#0                                  ; MODO 0
+  00a282  bl  0x9fb4           ; write_state(modo)
+  00a286  bl  0xaad4
+  00a28a  bl  0xa5c0           ; r0 = *(u32*)0x15404
+  00a290  cmp r0,#0 ; beq 0xa3a2                       ; si 0 -> return 0xFFFFFC00
+  00a298  ldr r0,=0x920021 ; stm sp,{0,r3} ; ldr r1,=0x920150
+  00a2a0  b 0xa39e -> 0xa440 -> send(0x920021, 0x920150, ...)   ; DESPUES del write
+
+Valores iniciales (.data, leidos del fichero): *(0x153E0)=0x00000006,
+*(0x153DC)=0x00000001, *(0x153E4)=0, *(0x153F0)=0x00000003, *(0x153F8)=0x00000101.
+0x154D0 y 0x154B8/0x154D4 estan en .bss (cero hasta que se cargan).
+
+==========================================================================================
+4. LA FUNCION DE ESCRITURA 0x9FB4..0xA056  (184 B)   [VERIFICADO]
+==========================================================================================
+  009fb4 push {r4,r5,r7,lr} ; sub sp,#0x40 ; mov r5,r0   ; r5 = modo
+  009fbc ldr r0,[pc,#0x98]  ; [0xa058] = 0x0000C0B7 "/sys/power/state"
+  009fbe movw r1,#0x1001    ; O_WRONLY(1) | 0x1000   (en ARM asm-generic: __O_SYNC/O_DSYNC)
+  009fc2 blx 0x8e44         ; open()   <-- PLT 0x8E44 = open@GLIBC_2.4
+  009fc6 subs r4,r0,#0 ; blt 0xa04c                       ; si fd<0 -> return -1
+  009fca cmp r5,#2 ; bne 0x9fd4
+  009fce bl  0xaad4                                      ; (lectura pura)
+  009fd2 b   0xa012                                      ; -> "warm" directo (modo 2)
+  009fd4 bl  0x9f68                                      ; contador Backup (ver abajo)
+  009fd8 bl  0xab10         ; (*(u32*)0x153F0) & 4  -> aborta si != 0 ("dummy_susres")
+  009fdc mov r1,r0 ; cbz r0,0x9fe6
+  009fe0 bl  0xaad4 ; b 0xa03e                           ; NO escribe nada: close y return 0
+  009fe6 cmp r5,#1 ; bne 0xa030                          ; modo != 1 -> "mem"
+  009fea movs r2,#0x40 ; mov r0,r7                       ; (r1 = 0, viene de 0x9fdc)
+  009fee blx 0x8ef8         ; memset(buf,0,0x40)          <-- PLT 0x8EF8 = memset
+  009ff2 bl  0x9f44         ; COMPUERTA (unica llamada; ver §7)
+  009ff6 cbz r0,0xa01a                                   ; 0 -> rama "SUS"
+  009ff8 bl  0xaad4
+  009ffc bl  0x9f34         ; r0 = *(u32*)0x154B8 (contador en RAM)
+  00a000 movs r1,#0x40 ; ldr r2,=0xC0CD "WARM(warm_count=%d)" ; mov r3,r0 ; mov r0,r7
+  00a008 blx 0x909c         ; snprintf(buf,0x40,fmt,count)  <-- PLT 0x909C = snprintf
+  00a00c mov r0,r7 ; bl 0x9800                           ; log (-> /dev/uipc, §5-e)
+  00a012 mov r0,r4         ; fd
+  00a014 ldr r1,[pc,#0x48] ; [0xa060] = 0x0000C0C8 "warm"
+  00a016 movs r2,#4
+  00a018 b   0xa03a
+  00a01a bl  0x9f34 ; movs r1,#0x40 ; ldr r2,=0xC0E1 "SUS(warm_count=%d)"
+  00a026 blx 0x909c         ; snprintf
+  00a02a mov r0,r7 ; bl 0x9800
+  00a030 bl  0xaad4
+  00a034 ldr r1,[pc,#0x30] ; [0xa068] = 0x0000C0F4 "mem"
+  00a036 mov r0,r4 ; movs r2,#3
+  00a03a blx 0x8f68         ; write(fd, "warm"|"mem", 4|3)   <-- PLT 0x8F68 = write@GLIBC
+  00a03e mov r0,r4 ; blx 0x9008                          ; close(fd)
+  00a044 bl  0x9a74                                      ; test puro de la bandera bit0 (x2)
+  00a048 movs r0,#0 ; b 0xa050
+  00a04c mov.w r0,#-1
+  00a050 add r7,#0x40 ; mov sp,r7 ; pop {r4,r5,r7,pc}
+
+  Bytes del parche (unico cambio en todo el fichero; 23108 B identicos byte a byte):
+    original  0x9F44: 06 4B 80 B5   ldr r3,[pc,#0x18] ; push {r7,lr}
+    parcheado 0x9F44: 01 20 70 47   movs r0,#1 ; bx lr
+  El resto de la funcion (incluidos los 4 B del pool 0x9F60/0x9F64) es identico.
+
+==========================================================================================
+5. LISTA CERRADA DE EFECTOS ANTES DEL write  (todo lo que hay, en orden)
+==========================================================================================
+ a) open("/sys/power/state", O_WRONLY|0x1000)           0x9FBC..0x9FC2  [VERIFICADO]
+      Unica apertura. No se abre nada mas en toda la ruta.
+ b) 0xAAD4 = (*(u32*)0x153F0) & 1, LEIDA PURA           0xA25E/0x9FCE/0x9FE0/0x9FF8/
+      Cuerpo 0xAAD4..0xAAE2: `ldr r3,=0x153E4; ldr r0,[r3,#0xc]; and r0,#1; pop`.
+      No escribe, no llama: el resultado se DESCARTA en 0x9FB4 (residuo de compilacion
+      de una traza condicional). No puede ser condicion de nada.  [VERIFICADO]
+ c) Lecturas de RAM: *(0x153E0) (0xA264) y *(0x154D0) (0xA270); msg[1] (0xA276). Idem.
+ d) 0x9F68 (76 B) = Backup_read + Backup_write del contador persistente  [VERIFICADO]
+        if (*(u32*)0x154D4 == 0) return;            ; 0x9F72/0x9F76: el limite es 0
+        Backup_read(0x00940004, &v_local);          ; 0x9F7E  (retorno NO comprobado)
+        if (v_local != *(u32*)0x154B8) bl 0xaad4;   ; 0x9F86 (solo traza)
+        *(u32*)0x154B8 = v_local + 1;
+        Backup_write(0x94, 0x00940004, &0x154B8);   ; 0x9F9A
+      Dos accesos al servicio de Backup (PLT Backup_read/Backup_write -> osal_uipc,
+      atendido por backup.ko). Nada mas. NO se abre ni se escribe /dev/nflasha*.
+ e) snprintf a una pila de 0x40 B + 0x9800(buf) = log      0xA008/0xA00E (y 0xA01A/0xA02A)
+      El unico "efecto externo" es la traza "WARM(warm_count=%d)" / "SUS(...)":
+      0x9800 abre un mensaje con osal_valloc_msg_wait(0x008F013A,&p,0x34,1) y lo envia
+      con formato "%4X %s %s" a esa cola de kernel (servicio de log).
+ f) La compuerta 0x9F44 (52 B): lee *(0x154D4) (limite) y *(0x154B8) (contador) y
+      devuelve 1 si limite==0 o contador<=limite. Funcion pura [VERIFICADO].
+ g) write(fd,"warm",4) / write(fd,"mem",3)                0xA03A  <-- el hecho que cuenta
+ h) close(fd) 0xA040 y 0x9A74 (dos tests puros de la bandera bit0). Despues del write.
+
+ NO HAY (comprobado por busqueda exhaustiva, no por muestreo):
+   - sync()/fsync()/syncfs(): im.elf importa 58 simbolos y NO incluye sync ni fsync
+     (readelf --dyn-syms: open,mmap,abort,__libc_start_main,signal,Backup_read,
+      osal_*, system,strchr,__cxa_atexit,dlclose,memset,statfs,dlopen,IMDB_*,
+      osal_set_cpu,usleep,umount,free,read,write,ioctl,osal_valloc_msg_wait,
+      osal_unreg_msg_queue_cb,osal_sig_sem,Backup_write,osal_snd_msg,waitpid,printf,
+      osal_create_waitable_thread,putenv,close,mount,osal_wai_sem_tmo,malloc,dlerror,
+      sleep,puts,getpid,fork,osal_dynamic_id,munmap,__fxstat,snprintf,strncmp,syscall,
+      osal_snd_sync_direct,strcmp,exit,dlsym,IMDB_get_entries,osal_snd_sync_msg,
+      osal_free_msg). Tampoco hay kill/killall por libc: solo `system` y `fork`.
+   - Cadenas ausentes en TODO el fichero (grep de bytes): "nflasha5" 0, "nflasha4" 0,
+     "wbi"/"WBI" 0, "warm." 0, "image_mode" 0, "image_dev" 0, "image_mem" 0,
+     "image_drop" 0, "drop_caches" 0, "/proc/sys/vm" 0.
+     La unica ruta de /sys/power que existe en el binario es "/sys/power/state" (0xC0B7).
+     Particiones que si nombra: nflasha2/3/7/9/10/11/15/18/23/24/25 y dnflasha3/7/15.
+   - Ningun ioctl en la ruta (ioctl@GLIBC solo se usa en la fase de montaje/arranque).
+   - Ningun mensaje a Darwin/MCU: los unicos envios son OSAL (0x920021, 0x920150/0x153,
+     0x92016E, 0x94016A...) y ocurren ANTES del bucle o DESPUES del write (§3).
+   - Ninguna espera/sleep antes del write (sleep(1) solo en el bucle, 0x9EC6, y solo si
+     el manejador devolvio != 0).
+
+==========================================================================================
+6. QUIEN MAS PODRIA ESCRIBIR "warm"  [VERIFICADO por grep del firmware 3.21]
+==========================================================================================
+grep -rl "/sys/power/state" en firmware/extracted/fw321/ (nflasha3/5/7/15/16 y kmod):
+  - .../dev/nflasha15_unpacked_unpacked/bin/im.elf                      <- el escritor
+  - .../dev/nflasha15_unpacked_unpacked/bin/ramdisk.img_unpacked_unpacked/init.rc
+       (lineas 270/275/278/370: chown/chmod y `onrestart write /sys/power/state on`)
+  - .../dev/nflasha16_unpacked_unpacked/lib/libhardware_legacy.so
+       (HAL Android: escribe "on"/"mem", 0x8D33; NUNCA "warm")
+Ningun .ko (upm.ko, backup.ko, nand.ko...) contiene la cadena. Ningun fichero de nflasha7.
+=> "warm" solo puede salir de im.elf.  [VERIFICADO]
+
+==========================================================================================
+7. CONDICIONES REALES (las tres unicas del lado de im.elf)
+==========================================================================================
+ (1) Hay que RECIBIR 0x92014F (o el mensaje se pierde y no hay suspend). Quien lo manda
+     es upm.ko, y solo en k_upm_off_factor_handler_inactive tras 0x92014E.  [VERIFICADO]
+ (2) MODO != 0. Se toma 2 si *(0x153E0)==0x27 (ultima razon recibida en 0x920143);
+     si no, 1 exige que *(0x154D0)==1 Y w1!=0; *(0x154D0) = Backup_read(0x00510023)
+     hecha UNA vez al arrancar (0x9C6E..0x9C72, dentro de main()).        [VERIFICADO]
+ (3) El bit 4 de *(0x153F0) ("dummy_susres") debe estar a 0. Solo lo pone el parser de
+     argumentos en 0xA9BE (`orr r2,r2,#4`), y su valor inicial es 3 => inactivo en
+     produccion. La compuerta 0x9F44 es la unica otra puerta y el CFW la fuerza a 1.
+     [VERIFICADO]
+ NADA MAS. En particular: no es condicion haber hecho sync, ni drop_caches, ni matar
+ apps, ni escribir /sys/power/image_*, ni hablar con el MCU, ni tocar /dev/nflasha5.
+
+==========================================================================================
+8. CORRECCION A LO PUBLICADO (contador 0x940004)
+==========================================================================================
+reports/film-pb-1-wbi-silent-20261128.md:31 y knowledge/CURRENT.md:7 dicen que la camara
+dejo de crear el WBI porque 0x9F44 compara el contador 0x940004 con un limite y "pasado,
+escribe mem". Leyendo los bytes, eso es INCOMPLETO:
+  - El limite no es 0x940004: 0x9A84 hace Backup_read(0x00940005) -> 0x154D4 (limite) y
+    luego Backup_write(0x94, 0x00940004, 0) => el contador se PONE A CERO en cada
+    arranque de im.elf (0x9A84 se llama desde 0x9C76).
+  - Con el contador a 0 y un solo apagado por sesion, el contador vale 1 antes de la
+    compuerta; 0x9F44 devuelve 1 si limite==0 O si 1<=limite. Es decir: la compuerta
+    PASA en el primer apagado de cada sesion salvo que el limite sea 0xFFFFFFFF (unico
+    valor que hace 1 > limite). Por tanto la compuerta NO es el interruptor principal.
+  - El interruptor principal es el MODO de 0xA258: *(0x154D0) (=Backup 0x510023)==1 y
+    w1!=0, o bien razon 0x27. Si el modo sale 0, se escribe "mem" sin pasar por 0x9F44
+    (el parche de 4 B no cambia nada en ese caso).
+  Estado: VERIFICADO en instrucciones; el valor REAL de los elementos de Backup en la
+  unidad (0x510023, 0x940004, 0x940005) es NO VERIFICADO (hace falta leerlos con el
+  servicio de Backup en marcha).
+
+==========================================================================================
+9. POR QUE NADA DE ESTO EXPLICA EL ABORTO DEL WBI
+==========================================================================================
+Contraste con lo medido en la camara (hechos ya dados, no repetidos aqui):
+  - escribir "warm" a mano desde telnet (sin im.elf) produce el MISMO trozo de log
+    (freezing, free_some_memory, count_sections_p1, Suspending console(s)) y el MISMO
+    resultado (0 sectores escritos en nflasha5, arranque siguiente en frio).
+  => las acciones previas de im.elf (open, contador de Backup, memset, compuerta,
+     snprintf, log) no son condicion: sin ellas el kernel hace exactamente lo mismo.
+  - El propio log demuestra que el kernel SI entro en la construccion de la imagen
+    (cuenta paginas y libera memoria) y murio despues de "Suspending console(s)",
+    que es el ultimo punto de usuario observable. La causa esta en el kernel
+    (warm.c/wbi_cmpr.c/suspend.c), no en la secuencia previa de im.elf. [INFERENCIA]
+
+==========================================================================================
+10. CONSECUENCIA PARA EL ARNES G22  (lo accionable)
+==========================================================================================
+ El arnes no tendra suspend WBI si:
+   (a) nadie entrega a im.elf el mensaje 0x92014F: en QEMU no hay upm.ko, asi que el
+       shim tiene que hacer de upm (enviar {0x92014F, w1=1, 0, 0} a la cola 0x920169,
+       o bien a la cola que el propio im.elf anuncie con 0x94001A); o
+   (b) *(0x154D0) no es 1: el shim de Backup tiene que devolver 1 en el elemento
+       0x510023 (y algo >=1 o 0 en 0x940005) al arrancar im.elf; o
+   (c) no llega la razon 0x27 previa por 0x920143 (solo es necesaria si se quiere el
+       modo 2, que se salta contador y compuerta).
+ Si el arnes prefiere no tocar Backup: basta escribir "warm" en /sys/power/state desde
+ el propio arnes (equivalente medido en la camara), pero entonces no se prueba im.elf.
+
+==========================================================================================
+11. LIMITES (lo que NO se pudo comprobar)
+==========================================================================================
+ - Que manejador esta vivo en el bucle de main() cuando llega 0x92014F: hay dos
+   escrituras del mismo hueco (0x9ADE -> 0xa06d, 0x9E4E -> 0x9339) y el reparto exacto
+   de colas (osal_dynamic_id 0x2A/0x94 en 0x92BC, anuncio 0x94001A a 0x94016A) no se
+   puede resolver estaticamente sin el codigo de osal_uipc.ko.
+ - Significado de los campos g_upm+0x18/+0x1c/+0x50 y de la razon 0x27.
+ - Valores persistentes de Backup (0x510023, 0x940004, 0x940005) en la unidad.
+ - Todo lo del kernel (por que muere tras "Suspending console(s)"): eso es B2 / warm.c.
+ - No se ha usado REA ni Ghidra; solo bytes. Una consulta vacia de REA no se ha hecho.
+
+==========================================================================================
+12. REPRODUCCION
+==========================================================================================
+ # desensamblado con anotacion de pools:
+ #   python3 /tmp/b1work/an.py dis 0x9fb4 0xa06c           (escritor)
+ #   python3 /tmp/b1work/an.py dis 0xa06c 0xa2a8           (despachador, rama 0x92014F)
+ #   python3 /tmp/b1work/an.py dis 0x9f68 0x9fb4           (contador Backup)
+ #   python3 /tmp/b1work/an.py dis 0x95b0 0x9664           (callback de cola)
+ #   python3 /tmp/b1work/an.py xref 0x9fb4 | 0xa06c | 0x154d0 | 0x153e0
+ # upm.ko con simbolos y reubicaciones:
+ #   python3 /tmp/b1work/upmrel.py 0xfa18 0xfd24            (emisor de 0x92014F)
+ #   python3 /tmp/b1work/upmrel.py 0xe238 0xe390            (k_upm_req_c_hot + helper)
+ # diff de los dos im.elf (4 B en 0x9F44):
+ #   cmp -l build/wbi_silent/pkg/im.elf \
+ #     firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/\
+ #     nflasha15_unpacked_unpacked/bin/im.elf
