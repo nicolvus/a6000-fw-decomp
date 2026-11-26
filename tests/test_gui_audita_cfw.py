@@ -277,3 +277,42 @@ def test_wbi_sin_referencia_de_sony_queda_no_verificado(tmp_path: Path, monkeypa
     A.analiza_wbi({"0700_part_image/dev/nflasha5": b"WBI1" + b"\0" * 60}, _Img(CFW_ENTRIES), _Img(SONY_ENTRIES), checks)
     assert checks[0]["ok"] is None and checks[0]["material"] is True
     assert A.veredicto(checks) == "PARCIAL"
+
+
+def _dat_de_ejemplo(destino: Path) -> Path:
+    """Un `.dat` mínimo que pasa el detector y llega a las etapas: cabecera de Sony + un bloque FDAT vacío."""
+    destino.write_bytes(A.DAT_MAGIC + b"\0" * 64 + b"FDAT" + b"\0" * 64)
+    return destino
+
+
+def test_un_dat_truncado_se_audita_y_da_fallo_sin_reventar(tmp_path: Path) -> None:
+    """Un CFW a medio copiar (lo más habitual al bajar/transferir) tiene que salir FALLO, no una excepción.
+
+    Medido 27-11-2026 con el 3.40 real truncado a la mitad: `audita_cfw.py --rapido` dio FALLO (17 ok, 5 fallos).
+    """
+    completo = _dat_de_ejemplo(tmp_path / "completo.dat").read_bytes()
+    roto = tmp_path / "truncado.dat"
+    roto.write_bytes(completo[: len(completo) // 2])
+    r = A.audita(roto, completo=True, arranque=False, salida=tmp_path / "out")
+    assert r["veredicto"] == "FALLO"
+    assert any(not c["ok"] for c in checks(r).values() if c["ok"] is False)
+
+
+def test_un_dat_con_la_cabecera_cambiada_se_rechaza_con_mensaje(tmp_path: Path) -> None:
+    """Si la cabecera no es la de Sony, el auditor lo dice («no es un .dat de Sony») y sale con código 2, sin traza."""
+    malo = tmp_path / "cabecera-mala.dat"
+    malo.write_bytes(b"\xff" * 32 + _dat_de_ejemplo(tmp_path / "base.dat").read_bytes()[32:])
+    with pytest.raises(A.EntradaError):
+        A.detecta_tipo(malo)
+    assert A.main([str(malo)]) == 2
+
+
+def test_un_byte_cambiado_en_el_cuerpo_no_impide_el_informe(tmp_path: Path) -> None:
+    """Un solo byte distinto en el cuerpo (un parche mínimo) se audita igual: informe con veredicto, sin excepción."""
+    datos = bytearray(_dat_de_ejemplo(tmp_path / "base.dat").read_bytes())
+    datos[len(datos) // 2] ^= 0xFF
+    tocado = tmp_path / "byte-medio.dat"
+    tocado.write_bytes(bytes(datos))
+    r = A.audita(tocado, completo=True, arranque=False, salida=tmp_path / "out")
+    assert r["veredicto"] in ("OK", "AVISO", "FALLO")
+    assert (tmp_path / "out").exists()

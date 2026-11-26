@@ -479,3 +479,22 @@ código 0, informe OK), `?f=` que no permite salir de las carpetas y el historia
 | G22-AUDIT-CFW | PARCIAL (26-11-2026, esta entrega) | Auditar un CFW instalable real desde el arnés. **Hecho**: CFW 3.40 construido offline (`/usr` con 1 byte distinto, WBI invalidado, sha256 `04f6c18b…`) auditado con `--completo --arranque` → **OK (47 ok, 0 fallos, 2 NO_VERIFICADO)**, arranca en el arnés (primera pantalla 124 s, MENÚ abre, 3 PNG, sin IMEXIT) y comparado con Sony (0,0); JSON, Markdown, capturas, consola y receta en `reports/evidence/g22-audit-cfw-20261126/`. Etapa 1 gana la comprobación `contenedor.wbi_acoplamiento` (§2) y 7 pruebas nuevas (13 passed, 1 skipped). **Queda**: auditar los `.dat` de CFW históricos (3.79 y siguientes, que no están en este clon) con su declaración de parches/recursos/NVRAM completa para bajar los AVISOS, y decidir si el arnés debe montar el WBI real (`nflasha5`) para probar el camino de Loader3. Cierre: todos los CFW instalables del proyecto con su JSON adjunto y veredicto razonado. | G22 (26-11-2026) |
 | G22-CFW-ARRANQUE | PARCIAL (26-11-2026, esta entrega) | **Por qué un CFW no arranca en la cámara y sí en el arnés**: el arranque normal reanuda el WBI de `nflasha5` con el TOC y las cachés del `/usr` de Sony (ver [G11](g11-auditoria-307-nflasha15.md) §11). **Hecho**: el auditor ya lo distingue con `contenedor.wbi_acoplamiento` — `/usr` recompuesto (TOC movido, 973 entradas distintas) + WBI de Sony → **FALLO** con el motivo y la orden `--sin-wbi`; mismo `/usr` con el TOC intacto → AVISO `INFERENCIA` (el cambio puede no surtir efecto); paquete sin `nflasha5` → OK, y ese es el que arranca en QEMU. Antes de esta entrega los dos paquetes daban el mismo AVISO (§7.4). **Queda**: el arnés no ejecuta Loader3 ni lee `nflasha5`, así que la elección de BootMode en cámara sigue sin probarse. Cierre: paquete `--sin-wbi` instalado y arrancando en cámara, con el WBI regenerado o descartado explícitamente. | G22 (26-11-2026) |
 | G22-AUDIT-CFW-UI | PARCIAL (26-11-2026, implementado) | Auditoría de CFW desde el configurador: `GET /api/auditar/estado`, `POST /api/auditar` (202/400/409, un trabajo a la vez), `GET /api/auditar/informe?f=` (solo dentro de las carpetas del trabajo) y `GET /api/auditar/historial`; pestaña Firmware con los botones «Auditar el .dat» / «Auditar con arranque», tabla de comprobaciones ✓/✗/?, enlaces al JSON/Markdown, consola en `<pre>`, sondeo cada 2 s y aviso de que el fallo es del CFW y no de la cámara (§8). Probado con el `.dat` oficial 3.21 (OK, 33 comprobaciones, 45,5 s y 48,8 s) y con `tests/test_gui_lanzador.py` (23 passed, 1 skipped). **Queda**: lanzarlo desde la página con el CFW real de §7.2 (el CLI de esta entrega ya lo audita). | G22 (26-11-2026) |
+
+## Fuzz del contenedor (27-11-2026): un CFW dañado se identifica, no revienta
+
+El requisito del usuario es que **cualquier** error de un CFW se vea en el arnés y no en la cámara. Se ha
+probado con el 3.40 real (`out-sinwbi/package-3.40/firmware_packed.dat`, 170 528 920 B) estropeado de tres
+maneras, con `audita_cfw.py --rapido --sin-arranque`:
+
+| Variante | Qué se le hizo | Resultado del auditor |
+|---|---|---|
+| `truncado.dat` | cortado a la mitad | **FALLO** (17 ok, 5 fallos) con informe JSON+Markdown |
+| `cabecera-mala.dat` | primeros 32 B a `0xff` | **ERROR** claro: «no es un .dat de Sony, ni un nflasha15 TPZL, ni un directorio de paquete» (código 2) |
+| `byte-medio.dat` | un byte del cuerpo invertido | **FALLO** (31 ok, 3 fallos) con informe |
+
+Ninguna de las tres lanza una excepción ni devuelve un OK falso. Evidencia:
+`reports/evidence/g22-audit-fuzz-20261127/` (informes y la salida del caso de cabecera).
+Los tres casos quedan como test sin QEMU en `tests/test_gui_audita_cfw.py`.
+
+Límite: los CFW históricos (3.79 y siguientes) **no están en este clon**, así que la auditoría de esos
+paquetes sigue pendiente de tener los `.dat` (fila G22-AUDIT-CFW).
