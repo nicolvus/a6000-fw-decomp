@@ -77,8 +77,12 @@ def test_shimenv_del_dial():
 
 
 def test_posiciones_del_dial_verificadas():
-    """Solo los cinco estados con icono comprobado; 3 = P (getExposureMode en viewUnified2+0x18e594 → 0x18e852 `movs r4,#0x15`)."""
-    assert dict(live.POSICIONES_MODO) == {"Auto": 2, "P": 3, "A": 4, "S": 5, "M": 6}
+    """Estados con icono comprobado; 3 = P (getExposureMode en viewUnified2+0x18e594 → 0x18e852 `movs r4,#0x15`).
+
+    G22-DIAL-POS añade película (8) y SCN (0xb), medidos con OPENVIEWDIAL y captura; MR (1) y panorámica (0x10)
+    siguen fuera porque dan la misma pantalla byte a byte y sin indicador de modo (tests/test_g22_dial_pos.py).
+    """
+    assert dict(live.POSICIONES_MODO) == {"Auto": 2, "P": 3, "A": 4, "S": 5, "M": 6, "Película": 8, "SCN": 0xB}
     assert live.DIAL_INICIAL == 3 == live.VISTA_REC
 
 

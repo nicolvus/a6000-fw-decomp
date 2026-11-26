@@ -39,13 +39,17 @@ def test_dial_inicial_p_coherente_con_la_vista_y_keyiniton_vacio():
 
 
 def test_estados_del_dial_coinciden_con_getexposuremode():
-    """E2E-13 (bytes): en viewUnified2 3.21, getExposureMode (+0x18e454) traduce el estado 2 → 0 (auto), 3 → 0x15 (P), 4 → 0x17 (A), 5 → 0x16 (S), 6 → 0x18 (M)."""
+    """E2E-13 (bytes): en viewUnified2 3.21, getExposureMode (+0x18e454) traduce el estado 2 → 0 (auto), 3 → 0x15 (P), 4 → 0x17 (A), 5 → 0x16 (S), 6 → 0x18 (M).
+
+    G22-DIAL-POS: 8 (película) → 0x19 (defecto sin consulta hija, que es lo que da el invitado sin av-cam) y
+    0xb (SCN) → 3 (sin escena, `sxtb` de un 0xff sin escribir: `blt 0x18e7de`).
+    """
     lib = Path(__file__).resolve().parents[1] / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/viewUnified2.so"
     if not lib.exists():
         pytest.skip("firmware 3.21 extraído no disponible")
     b = lib.read_bytes()
-    destino = {2: 0x18E7D2, 3: 0x18E852, 4: 0x18E85A, 5: 0x18E856, 6: 0x18E85E}  # destino del beq de cada `cmp r4, #estado`
-    modo = {2: 0x00, 3: 0x15, 4: 0x17, 5: 0x16, 6: 0x18}
+    destino = {2: 0x18E7D2, 3: 0x18E852, 4: 0x18E85A, 5: 0x18E856, 6: 0x18E85E, 8: 0x18E862, 0xB: 0x18E7DE}  # destino del beq de cada `cmp r4, #estado`
+    modo = {2: 0x00, 3: 0x15, 4: 0x17, 5: 0x16, 6: 0x18, 8: 0x19, 0xB: 0x03}
     for estado, nombre in ((e, n) for n, e in live.POSICIONES_MODO):
         assert b[destino[estado] + 1] == 0x24 and b[destino[estado]] == modo[estado], nombre  # movs r4, #modo
 
@@ -67,7 +71,7 @@ def test_giro_del_dial_informa_la_posicion_y_reabre_la_vista(monkeypatch):
         enviados.clear()
         vm.gira(estado)
         assert enviados == [("K", 0x7025, estado, 0x27), b"O view/ROOT 0\n", b"O view/STLREC\n"], nombre
-    assert dict(live.POSICIONES_MODO) == {"Auto": 2, "P": 3, "A": 4, "S": 5, "M": 6}
+    assert dict(live.POSICIONES_MODO) == {"Auto": 2, "P": 3, "A": 4, "S": 5, "M": 6, "Película": 8, "SCN": 0xB}
 
 
 def test_quita_retira_variables_y_direcciones_de_skipfn():
