@@ -4,6 +4,23 @@
 
 **R6 fase 1, checkpoint:** [BLDR](../docs/capture/e26-r6-recuperacion-bionz.md). PMCA payload local byte a byte igual a upstream 0ce3c7e8, gitlink plataforma 85bcb545. ELF extraído y REA: un safe/cuatro normales, normales die0/plane0, metadatos descartados, error => trama vacía; wrapper rechaza estado 1 de ECC tolerado por Loader2. Mapa condicional de 480 KiB con una trama normal perdida; ID/error desconocidos. Cola INFO6 die0/plane1/block2/pages0–20 sin correspondencia adquirida. Regresión inicial falló por inspector inexistente; implementado, 3 pruebas, ruff/mypy pasan. Sin cámara. Próximo paso exacto: verificar límites del selector en los primeros 43 folios y localizar orientación CN4906 en SIDE A.
 
+## H3 — Eye AF dentro del CFW: 2 bytes en `av-cam`, sin APK (28-11-2026)
+El usuario descartó la app (`ar.eyeaf`) y pidió que el Eye AF «venga directo en el cfw». Se parchea el
+selector de fuente del área de AF: en `0x437b7200` el firmware sólo usa los ojos si el modo de área es 2
+(y el 1 para el ojo izquierdo); `0x437b723a` `022e` (`cmp r6,#2`) + `0x437b723c` `38d1` (`bne`) desvían
+cualquier otro modo al marco de cara. El parche escribe `0x437b723c = 00 bf` (`nop`): todos los modos
+caen en la prioridad ojo2→ojo1→ceros, con el aviso `Eye data is invalid…` intacto y sin tocar el detector
+(`Camera::FC::Drv::ProcessEdt`), la conversión ojo→rectángulo ni `ReplyForTouchShutter`. Nuevo
+`scripts/cfw/eye_af_patch.py` (`apply_bytes`/`restore_bytes`/`allowed_addresses`, CLI `--apply/--check/--revert`,
+SHA y tamaño de la 3.21 fijados, aborta si los bytes no son los esperados) y enganche en
+`scripts/e25_27/build.py::apply_patches` tras selector y C3-B, con comprobaciones de diff autorizado, sin
+solape y reversión exacta; el `nflasha3` del constructor sale ya con Eye AF. Pruebas: 7 en
+`tests/test_eye_af_cfw_patch.py` (desensamblado del sitio, sólo 2 B, idempotencia, reversión con SHA
+idéntico, CLI, tamaños ajenos) y 27 en `tests/test_e25_27_build.py` (cadena, determinismo, emulación);
+el contenedor pasa a cambiar los bloques `{0, 39, 48, 57}`. Límites: sólo cambia **qué** fuente usa el
+área de AF, no **cada cuánto** se pide (la continuidad sigue dependiendo de AF-C; cadencia
+NO_VERIFICADA), el efecto en cámara es NO_VERIFICADO y no se ha instalado nada.
+
 ## FILM-PB-1 — el log real de la cámara: NTSC, IFO sin cargar y lectura del volumen rota (26-11-2026)
 El dump `analysis/camera-dumps/ram-servicio-20261020/ram_0x80000000.bin` (1 GiB, por SWD, **anterior al CFW 3.93 del 24-11**) conserva el anillo de log del proceso MPR en VA `0x82DF9300`–`0x82DFC400` (130 líneas, extraídas y reproducibles con `reports/evidence/film-pb-1-log-real-20261126/extraer_anillo.py`, SHA-256 del dump `f96c6152…fdbf`). Tres pruebas directas: (1) **la cámara es NTSC** — `[AVIMMGR][MS1]SetLoadInfo : TvSystem is NTSC, frameRate 3`, con frameRate 3 = 30000/1001, el de los siete clips: la premisa PAL del «diagnóstico cerrado» es falsa; (2) **ningún IFO se carga** — `MountCmd : Flash Mount Error` en `/dev/mmca`, `GetDeviceInfo : ER_SEQUENCE DEVICE Unmounted`, `[MP4IFO] ### mp4Ifo faild at IF/mp4Ifo_General.cpp(1749|1340) ErrCd: 0xB0800001`, `LoadSub : MP4 Load Error` (AVCHD `0xA0100003`, XAVC `0xB0800005`, MP4 `0xB0800001`), `CreateAndLoad Error` (`0x31000006` → `0x32400001`) y `LoadExec : Flash Load Error`; (3) **no es solo vídeo** — en reproducción de imagen: `[CACHE]BUFFER SIZE TOO SMALL : 00000000`, `Failed to dfs::seek offset=0x0049CE00 errcode=0x0E100001` y `Failed to read errcd=0xC3000101`. El intento de reproducción deja `[AVI]CS_AviAcsr::Unknown Function[0x20]` + `[AVI][PLAY] sources/avi_if/AviSeqPlay.cpp Error=[ER_BADARG] Line:10332`, y la BD de respaldo falla en las tres capas (`CheckSalvageStatus() 0xA0100003`, `Err RcsBackupTblData`), que es justo lo que consulta «Recuperar BD imág.». El `0:02` queda explicado por `[MprCnv] Warning ResumeInfo Structure Size is different! sizeof(MPR::RSMPoint): 64, sizeof(PubResume::ResumeInfo): 60`. **Causa material: el IFO no se carga del volumen**; la guarda A falla por el mismo motivo que la B (`GetInhInfo` devuelve error con el `mp4Ifo_If` sin *loaded*) y el mutex del `mp4Ifo_If` es el eslabón que lo hace visible, no la causa. Antes de flashear nada: miniaturas de foto, otra tarjeta formateada en la cámara y reproducir sin tarjeta. [Informe](../reports/film-pb-1-log-real-20261126.md).
 

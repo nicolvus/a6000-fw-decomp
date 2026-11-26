@@ -20,6 +20,8 @@ from e25_24 import patch_darwin as PD
 from e25_26 import patch_c3b as PC
 from e25_27 import build, emu, fatimg, sums, tarball, tpzl
 
+EA = build.EA
+
 FW_TAR = ROOT / "firmware/extracted/fw321/firmware.tar"
 AV_CAM = ROOT / "analysis/rea-independent/input/av-cam.bin"
 ARTIFACTS = ROOT / "analysis/e25-27/artifacts"
@@ -276,7 +278,8 @@ def test_apply_patches_y_reversion():
     built = build.apply_patches(originals.avcam, originals.darwin)
     assert _sha(built["bionz"]) != PB.SHA256 and _sha(built["darwin"]) != PD.SHA256
     assert PB.restore_bytes(built["selector"]) == originals.avcam
-    assert PC.restore_bytes(built["bionz"]) == built["selector"]
+    assert {d["address"] for d in built["diff_eyeaf"]} == {0x437B723C, 0x437B723D}
+    assert PC.restore_bytes(EA.restore_bytes(built["bionz"])) == built["selector"]
     assert PD.restore_bytes(built["darwin"]) == originals.darwin
     assert not ({d["address"] for d in built["diff_selector"]}
                 & {d["address"] for d in built["diff_c3b"]})
@@ -298,7 +301,8 @@ def test_build_completo_y_determinista(tmp_path: Path):
     assert first["status"] == build.STATUS and first["installable"] is False
     assert first["diff_count"] > 0
     assert first["cave_overlap"]["overlap"] is False
-    assert first["partition"]["changed_blocks"] == [0, 48, 57]
+    # 39 = bloque comprimido que ahora incluye el parche de Eye AF (0x437b723c)
+    assert first["partition"]["changed_blocks"] == [0, 39, 48, 57]
 
     originals = build.load_originals()
     out = tmp_path / "a"

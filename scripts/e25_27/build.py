@@ -32,6 +32,9 @@ from typing import Any
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "scripts"))
 
+sys.path.insert(0, str(ROOT / "scripts" / "cfw"))
+
+import eye_af_patch as EA  # Eye AF nativo (2 B en 0x437b723c), sin APK
 from e25_24 import patch_bionz as PB
 from e25_24 import patch_darwin as PD
 from e25_26 import patch_c3b as PC
@@ -185,15 +188,24 @@ def apply_patches(avcam: bytes, darwin: bytes) -> dict[str, Any]:
             raise BuildError("Darwin cambia bytes no autorizados")
         if PI.restore_bytes(bionz) != avcam or PD.restore_bytes(darwin_out) != darwin:
             raise BuildError("reversión fallida")
-        return {"bionz": bionz, "darwin": darwin_out, "selector": bionz,
-                "diff_selector": diff_inline, "diff_c3b": [], "diff_darwin": diff_darwin}
+        bionz_ojo, diff_eyeaf = EA.apply_bytes(bionz)
+        if not _diff_addresses(diff_eyeaf) <= EA.allowed_addresses():
+            raise BuildError("el Eye AF cambia bytes no autorizados")
+        return {"bionz": bionz_ojo, "darwin": darwin_out, "selector": bionz,
+                "diff_selector": diff_inline, "diff_c3b": [], "diff_darwin": diff_darwin,
+                "diff_eyeaf": diff_eyeaf}
 
     selector, diff_selector = PB.apply_bytes(avcam)
     combined, diff_c3b = PC.apply_bytes(selector)
+    con_ojo, diff_eyeaf = EA.apply_bytes(combined)      # Eye AF: 2 B en 0x437b723c (nop del bne)
     darwin_out, diff_darwin = PD.apply_bytes(darwin)
 
     if _diff_addresses(diff_selector) & _diff_addresses(diff_c3b):
         raise BuildError("selector y C3-B comparten bytes")
+    if not _diff_addresses(diff_eyeaf) <= EA.allowed_addresses():
+        raise BuildError(f"el Eye AF cambia bytes no autorizados: {sorted(_diff_addresses(diff_eyeaf))}")
+    if _diff_addresses(diff_eyeaf) & (_diff_addresses(diff_selector) | _diff_addresses(diff_c3b)):
+        raise BuildError("el Eye AF solapa con el selector o con C3-B")
     if not _diff_addresses(diff_selector) <= PB.allowed_addresses():
         raise BuildError("el selector cambia bytes no autorizados")
     if not _diff_addresses(diff_c3b) <= PC.allowed_addresses():
@@ -214,15 +226,18 @@ def apply_patches(avcam: bytes, darwin: bytes) -> dict[str, Any]:
         raise BuildError("reversión del selector fallida")
     if PC.restore_bytes(combined) != selector:
         raise BuildError("reversión de C3-B fallida")
+    if EA.restore_bytes(con_ojo) != combined:
+        raise BuildError("reversión del Eye AF fallida")
     if PD.restore_bytes(darwin_out) != darwin:
         raise BuildError("reversión de Darwin fallida")
 
     return {
-        "bionz": combined,
+        "bionz": con_ojo,
         "darwin": darwin_out,
         "selector": selector,
         "diff_selector": diff_selector,
         "diff_c3b": diff_c3b,
+        "diff_eyeaf": diff_eyeaf,
         "diff_darwin": diff_darwin,
     }
 
@@ -498,7 +513,7 @@ def restore(out_dir: Path = DEFAULT_OUT) -> dict[str, Any]:
     originals = load_originals()
     bionz = (out_dir / "av-cam.integrated.bin").read_bytes()
     darwin = (out_dir / "darwin_core.integrated.bin").read_bytes()
-    avcam = PI.restore_bytes(bionz) if INLINE else PB.restore_bytes(PC.restore_bytes(bionz))
+    avcam = PI.restore_bytes(bionz) if INLINE else PB.restore_bytes(PC.restore_bytes(EA.restore_bytes(bionz)))
     darwin_orig = PD.restore_bytes(darwin)
     ok = sha256(avcam) == AVCAM_SHA256 and sha256(darwin_orig) == DARWIN_SHA256
     (out_dir / "av-cam.restored.bin").write_bytes(avcam)
