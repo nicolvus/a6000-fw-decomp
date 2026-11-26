@@ -99,7 +99,7 @@ memoria que ese camino reserva y el de foto no.
 
 | Familia | Qué la sostiene | Qué la confirmaría |
 |---|---|---|
-| **M1 — área de memoria del reproductor**: no se reserva y el camino de vídeo no arranca | el tamaño pedido es 0 y el de foto reserva por otra caché | que el fallo dependa del modo de arranque (paquete con WBI) |
+| **M1 — tabla de buffers del modo**: el hueco del área del reproductor vale 0 | ver §5.4: el tamaño **se copia de una tabla estática por modo**, no se pide al DMM | traza nivel 5 (`CMD(SET_AREA)`, `Type2Mode:`) o que dependa del modo de arranque |
 | **M3 — índice/journal AV**: `AVF_INFO\AVIN0001.INP` o el pack `RcsTbl` incoherentes | ver §5.3 | renombrar `AVF_INFO` y dejar que la cámara lo reconstruya, o formatear en la cámara |
 
 El log del 20-10 mostraba las dos a la vez porque el volumen no montaba; con las fotos
@@ -138,6 +138,29 @@ Consecuencia práctica: si el código del log es de la familia `0x10xxxxxx`, **n
 copiado lo arregla**; hay que dejar que la cámara reescriba el pack. Y como «Recuperar BD imág.»
 se apoya en ese mismo journal, el gesto que sí fuerza reconstrucción es **renombrar `AVF_INFO`**
 (y, si eso no basta, formatear en la cámara).
+
+
+### 5.4 Corrección de M1: el área no la da el DMM, la da una tabla estática por modo
+
+Auditado (`reports/film-pb-1-sub-dmm-area-20261126.md`):
+
+- `StreamCache::SetArea` **no calcula** el tamaño: copia `[X+0x138]` (dirección) y `[X+0x140]`
+  (tamaño) de una entrada de 0x18 B (`+0`=vAdrs, `+8`=size) del singleton `.bss` `0xA4F368`.
+  `0x138/0x18 = 13` es el hueco del *still* y `0x108/0x18 = 11` el de *movie*.
+- Las rellena `DistributeBufInfo` (`0x5F703C`) a partir de una **tabla estática por modo**
+  (`mp_modeTblForBufTbl` `0x8D87E8` → «Movie Pb» `0x9DB0E4`, «Still Pb» `0x9DBD20`), elegida en
+  `Type2Mode` (`0x5F699C`) según `m_systemType` (`[0x9DEFE0]`=1).
+- Las direcciones físicas van por `MemConfig::Mmap` (`0x5F6544`) a `/dev/stream` o `/dev/mem`.
+  **El DMM no interviene**: en libmpr solo sirve «units» (`UnitMemAllocate`…).
+
+Tres formas de que el tamaño sea 0: (a) el modo no define ese hueco y el `.bss` nunca se
+escribió; (b) `StreamAreaFree` (`0x5F802C` → `0x5F63CA(entry,0)`) lo puso a cero dejando el
+puntero válido; (c) `setupMode > 5` → `SetArea(0,0,1)` literal (`0x43944E`–`0x43945C`).
+
+Y un límite importante: `dmm.ko` (que sí tiene símbolos) espera `DmmConfig=/setting/DmmConfig.bin`
+o `/usr/share/dmm/DmmConfig.bin`, y **ninguno de los dos está en la imagen `0700`**; si faltara en
+la cámara, `GetConfigData` devolvería −1 y `osal_abort` la pararía. Como la cámara arranca, el
+fichero está: el DMM queda fuera de la ecuación.
 
 ## 6. Reproducibilidad en el arnés
 

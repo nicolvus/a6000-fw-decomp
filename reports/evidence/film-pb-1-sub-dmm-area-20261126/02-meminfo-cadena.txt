@@ -1,0 +1,209 @@
+# Cadena MemInfo: quien construye el descriptor y quien rellena los campos
+
+## GetMemoryInformation (0x4284ac): despacho a StreamAreaAllocate / ChangeAllocate
+004284ac: 0f28       cmp      r0, #0xf                      
+004284ae: 2de9f047   push.w   {r4, r5, r6, r7, r8, sb, sl, lr}
+004284b2: 0446       mov      r4, r0                        
+004284b4: 00af       add      r7, sp, #0                    
+004284b6: 1546       mov      r5, r2                        
+004284b8: 9946       mov      sb, r3                        
+004284ba: 35d8       bhi      #0x428528                     
+004284bc: 0126       movs     r6, #1                        
+004284be: 49f6d573   movw     r3, #0x9fd5                   
+004284c2: 16fa00f2   lsls.w   r2, r6, r0                    
+004284c6: 02ea0303   and.w    r3, r2, r3                    
+004284ca: 002b       cmp      r3, #0                        
+004284cc: 2cd0       beq      #0x428528                     
+004284ce: 1029       cmp      r1, #0x10                     
+004284d0: 2dd0       beq      #0x42852e                     
+004284d2: 06dc       bgt      #0x4284e2                     
+004284d4: 0629       cmp      r1, #6                        
+004284d6: 29d0       beq      #0x42852c                     
+004284d8: 0829       cmp      r1, #8                        
+004284da: 0fd0       beq      #0x4284fc                     
+004284f4: b1f5007f   cmp.w    r1, #0x200                    
+004284f8: 08d1       bne      #0x42850c                     
+004284fa: 17e0       b        #0x42852c                     
+004284fc: 0326       movs     r6, #3                        
+004284fe: 16e0       b        #0x42852e                     
+00428500: 0026       movs     r6, #0                        
+00428502: 14e0       b        #0x42852e                     
+00428504: 0626       movs     r6, #6                        
+00428506: 12e0       b        #0x42852e                     
+00428508: 0726       movs     r6, #7                        
+0042850a: 10e0       b        #0x42852e                     
+0042850c: 224c       ldr      r4, [pc, #0x88]                 ; [00428598]=00a4d378
+0042850e: 0122       movs     r2, #1                        
+00428510: 2249       ldr      r1, [pc, #0x88]                 ; [0042859c]=00857bbd "Parameter is illegal"
+00428512: 2068       ldr      r0, [r4]                      
+00428514: eaf2eef9   bl       #0x7128f4                     
+00428518: 2068       ldr      r0, [r4]                      
+0042851a: 2149       ldr      r1, [pc, #0x84]                 ; [004285a0]=00857bd2 "contentType is M2PS/AVCHD/STILL/DVD/DV/X"
+0042851c: 0122       movs     r2, #1                        
+0042851e: eaf2e9f9   bl       #0x7128f4                     
+00428522: 0020       movs     r0, #0                        
+00428524: bde8f087   pop.w    {r4, r5, r6, r7, r8, sb, sl, pc}
+00428528: 0826       movs     r6, #8                        
+0042852a: 00e0       b        #0x42852e                     
+0042852c: 0426       movs     r6, #4                        
+0042852e: dff88080   ldr.w    r8, [pc, #0x80]                 ; [004285b0]=00a4d374
+00428532: 0022       movs     r2, #0                        
+00428534: 1b49       ldr      r1, [pc, #0x6c]                 ; [004285a4]=00857c02 " GetMemoryInformation, type:"
+00428536: d8f80000   ldr.w    r0, [r8]                      
+0042853a: eaf2dbf9   bl       #0x7128f4                     
+0042853e: 2246       mov      r2, r4                        
+00428540: d8f80000   ldr.w    r0, [r8]                      
+00428544: 0821       movs     r1, #8                        
+00428546: 5af257fe   bl       #0x6831f8                     
+0042854a: d8f80000   ldr.w    r0, [r8]                      
+0042854e: 1649       ldr      r1, [pc, #0x58]                 ; [004285a8]=00857c1f ", sub:"
+00428550: 5af274fe   bl       #0x68323c                     
+00428554: 3246       mov      r2, r6                        
+00428556: d8f80000   ldr.w    r0, [r8]                      
+0042855a: 0821       movs     r1, #8                        
+0042855c: 5af24cfe   bl       #0x6831f8                     
+00428560: d8f80000   ldr.w    r0, [r8]                      
+00428564: 1149       ldr      r1, [pc, #0x44]                 ; [004285ac]=00857c26 ", modeId:"
+00428566: 5af269fe   bl       #0x68323c                     
+0042856a: d8f80000   ldr.w    r0, [r8]                      
+0042856e: 4946       mov      r1, sb                        
+00428570: 5af222fe   bl       #0x6831b8                     
+00428574: d8f80000   ldr.w    r0, [r8]                      
+00428578: 5af2cefd   bl       #0x683118                     
+0042857c: 35b1       cbz      r5, #0x42858c                 
+0042857e: 2046       mov      r0, r4                        
+00428580: 3146       mov      r1, r6                        
+00428582: 4a46       mov      r2, sb                        
+00428584: bde8f047   pop.w    {r4, r5, r6, r7, r8, sb, sl, lr}
+00428588: cff12ebb   b.w      #0x5f7be8                     
+0042858c: 2046       mov      r0, r4                        
+0042858e: 3146       mov      r1, r6                        
+
+## StreamAreaAllocate (0x5f7be8): Type2Mode -> RegistAreaExtList -> SetRamMapArea -> DistributeBufInfo(0xa4f368)
+005f7be8: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+005f7bec: 89b0       sub      sp, #0x24                     
+005f7bee: 04af       add      r7, sp, #0x10                 
+005f7bf0: 0646       mov      r6, r0                        
+005f7bf2: 1446       mov      r4, r2                        
+005f7bf4: 8846       mov      r8, r1                        
+005f7bf6: 4ff00009   mov.w    sb, #0                        
+005f7bfa: c7f80c90   str.w    sb, [r7, #0xc]                
+005f7bfe: c7f80890   str.w    sb, [r7, #8]                  
+005f7c02: 02f01bf9   bl       #0x5f9e3c                     
+005f7c06: 0121       movs     r1, #1                        
+005f7c08: 504a       ldr      r2, [pc, #0x140]                ; [005f7d4c]=008da503 "[MemInfo]StreamAreaAllocate(next):type=%"
+005f7c0a: 3346       mov      r3, r6                        
+005f7c0c: cdf80080   str.w    r8, [sp]                      
+005f7c10: 0194       str      r4, [sp, #4]                  
+005f7c34: 4146       mov      r1, r8                        
+005f7c36: 07f10c02   add.w    r2, r7, #0xc                  
+005f7c3a: 07f10803   add.w    r3, r7, #8                    
+005f7c3e: 3046       mov      r0, r6                        
+005f7c40: fef7acfe   bl       #0x5f699c                     
+005f7c44: 0546       mov      r5, r0                        
+005f7c46: 02f0e1f8   bl       #0x5f9e0c                     
+005f7c4a: fb68       ldr      r3, [r7, #0xc]                
+005f7c4c: 0121       movs     r1, #1                        
+005f7c4e: 414a       ldr      r2, [pc, #0x104]                ; [005f7d54]=008da590 "[MemInfo]StreamAreaAllocate(next) : type"
+005f7c50: cdf80080   str.w    r8, [sp]                      
+005f7c54: 0193       str      r3, [sp, #4]                  
+005f7c56: bb68       ldr      r3, [r7, #8]                  
+005f7c58: 0293       str      r3, [sp, #8]                  
+005f7c5a: 3346       mov      r3, r6                        
+005f7c5c: 02f096f8   bl       #0x5f9d8c                     
+005f7c60: 4db9       cbnz     r5, #0x5f7c76                 
+005f7c62: 02f0d3f8   bl       #0x5f9e0c                     
+005f7c66: 0121       movs     r1, #1                        
+005f7c94: 4846       mov      r0, sb                        
+005f7c96: 391d       adds     r1, r7, #4                    
+005f7c98: 01f024f9   bl       #0x5f8ee4                     
+005f7c9c: 314b       ldr      r3, [pc, #0xc4]                 ; [005f7d64]=00a4f0ac
+005f7c9e: 9a46       mov      sl, r3                        
+005f7ca0: 1868       ldr      r0, [r3]                      
+005f7ca2: 18b1       cbz      r0, #0x5f7cac                 
+005f7ca4: 48f46ff8   bl       #0x23fd86                     
+005f7ca8: caf80090   str.w    sb, [sl]                      
+005f7cac: dff8d4b0   ldr.w    fp, [pc, #0xd4]                 ; [005f7d84]=009dedb8
+005f7cb0: 2088       ldrh     r0, [r4]                      
+005f7cb2: 5946       mov      r1, fp                        
+005f7cb4: 2b4d       ldr      r5, [pc, #0xac]                 ; [005f7d64]=00a4f0ac
+005f7cb6: fff737f9   bl       #0x5f6f28                     
+005f7cba: 8146       mov      sb, r0                        
+005f7cbc: caf80000   str.w    r0, [sl]                      
+005f7cc0: 38b9       cbnz     r0, #0x5f7cd2                 
+005f7cc2: 02f08bf8   bl       #0x5f9ddc                     
+005f7cc6: 0121       movs     r1, #1                        
+005f7cc8: 274a       ldr      r2, [pc, #0x9c]                 ; [005f7d68]=008da67d "[MemInfo]StreamAreaAllocate(next):SetRam"
+005f7cca: 4d46       mov      r5, sb                        
+005f7ccc: 02f05ef8   bl       #0x5f9d8c                     
+005f7cd0: 12e0       b        #0x5f7cf8                     
+005f7cd2: 264b       ldr      r3, [pc, #0x98]                 ; [005f7d6c]=009dedb6
+005f7cd4: 2488       ldrh     r4, [r4]                      
+005f7cd6: 1c80       strh     r4, [r3]                      
+005f7cd8: 02f0b0f8   bl       #0x5f9e3c                     
+005f7cdc: dbf80030   ldr.w    r3, [fp]                      
+005f7ce0: 0121       movs     r1, #1                        
+005f7ce2: 234a       ldr      r2, [pc, #0x8c]                 ; [005f7d70]=008da6b5 "[MemInfo]StreamAreaAllocate(next):MemCon"
+005f7ce4: 0093       str      r3, [sp]                      
+005f7ce6: 2b68       ldr      r3, [r5]                      
+005f7ce8: 02f050f8   bl       #0x5f9d8c                     
+005f7cec: 2a68       ldr      r2, [r5]                      
+005f7cee: b868       ldr      r0, [r7, #8]                  
+005f7cf0: 2049       ldr      r1, [pc, #0x80]                 ; [005f7d74]=00a4f368
+005f7cf2: fff7a3f9   bl       #0x5f703c                     
+005f7cf6: 0546       mov      r5, r0                        
+
+## ChangeAllocate (0x5f7f1c): Type2Mode -> DistributeBufInfo -> devuelve 0xa4f368 (o 0)
+005f7f1c: 2de9f047   push.w   {r4, r5, r6, r7, r8, sb, sl, lr}
+005f7f20: 82b0       sub      sp, #8                        
+005f7f22: 00af       add      r7, sp, #0                    
+005f7f24: 0023       movs     r3, #0                        
+005f7f26: 0c46       mov      r4, r1                        
+005f7f28: 7b60       str      r3, [r7, #4]                  
+005f7f2a: 0546       mov      r5, r0                        
+005f7f2c: 3b60       str      r3, [r7]                      
+005f7f2e: 01f085ff   bl       #0x5f9e3c                     
+005f7f32: 0121       movs     r1, #1                        
+005f7f34: 314a       ldr      r2, [pc, #0xc4]                 ; [005f7ffc]=008da873 "[MemInfo]ChangeAllocate Start!!"
+005f7f36: 01f029ff   bl       #0x5f9d8c                     
+005f7f3a: 2146       mov      r1, r4                        
+005f7f3c: 3a1d       adds     r2, r7, #4                    
+005f7f3e: 3b46       mov      r3, r7                        
+005f7f40: 2846       mov      r0, r5                        
+005f7f42: 2f4e       ldr      r6, [pc, #0xbc]                 ; [005f8000]=009decac
+005f7f44: fef72afd   bl       #0x5f699c                     
+005f7f48: b246       mov      sl, r6                        
+005f7f4a: 8146       mov      sb, r0                        
+005f7f9c: 3868       ldr      r0, [r7]                      
+005f7f9e: 1c49       ldr      r1, [pc, #0x70]                 ; [005f8010]=00a4f368
+005f7fa0: d9f80020   ldr.w    r2, [sb]                      
+005f7fa4: fff74af8   bl       #0x5f703c                     
+005f7fa8: 90b9       cbnz     r0, #0x5f7fd0                 
+005f7faa: 01f017ff   bl       #0x5f9ddc                     
+005f7fae: 194a       ldr      r2, [pc, #0x64]                 ; [005f8014]=008da8f7 "[MemInfo]ChangeAllocate(next):Distribute"
+005f7fb0: 0121       movs     r1, #1                        
+005f7fb2: 01f0ebfe   bl       #0x5f9d8c                     
+005f7fb6: 2023       movs     r3, #0x20                     
+005f7fb8: 1820       movs     r0, #0x18                     
+005f7fba: c8f80030   str.w    r3, [r8]                      
+005f7fbe: a9b2       uxth     r1, r5                        
+005f7fc0: 183b       subs     r3, #0x18                     
+005f7fc2: a2b2       uxth     r2, r4                        
+005f7fc4: 3360       str      r3, [r6]                      
+005f7fc6: 3b88       ldrh     r3, [r7]                      
+005f7fc8: 01f084fd   bl       #0x5f9ad4                     
+005f7fcc: 0020       movs     r0, #0                        
+005f7fce: 0fe0       b        #0x5f7ff0                     
+005f7fd0: 3a68       ldr      r2, [r7]                      
+005f7fd2: 0b4b       ldr      r3, [pc, #0x2c]                 ; [005f8000]=009decac
+005f7fd4: 0e48       ldr      r0, [pc, #0x38]                 ; [005f8010]=00a4f368
+005f7fd6: 3460       str      r4, [r6]                      
+005f7fd8: 1a60       str      r2, [r3]                      
+005f7fda: c8f80050   str.w    r5, [r8]                      
+005f7fde: fff791fd   bl       #0x5f7b04                     
+005f7fe2: 1120       movs     r0, #0x11                     
+005f7fe4: a9b2       uxth     r1, r5                        
+005f7fe6: a2b2       uxth     r2, r4                        
+005f7fe8: 3b88       ldrh     r3, [r7]                      
+005f7fea: 01f073fd   bl       #0x5f9ad4                     
+005f7fee: 0848       ldr      r0, [pc, #0x20]                 ; [005f8010]=00a4f368
