@@ -66,7 +66,7 @@ def test_giro_del_dial_informa_la_posicion_y_reabre_la_vista(monkeypatch):
     for nombre, estado in live.POSICIONES_MODO:
         enviados.clear()
         vm.gira(estado)
-        assert enviados == [("K", 0x7025, estado, 0x27), b"O view/ROOT 0\n", b"O view/STLREC\n"], nombre
+        assert enviados == [("K", 0x7025, estado, 0x27)], nombre  # el repintado lo pide el invitado (shim REDIAL)
     assert dict(live.POSICIONES_MODO) == {"Auto": 2, "P": 3, "A": 4, "S": 5, "M": 6}
 
 

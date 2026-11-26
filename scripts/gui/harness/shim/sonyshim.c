@@ -2115,6 +2115,18 @@ static void *openhot(void *a) {
     char *nm = a, *sp = strchr(nm, ' '); int arg = 0; if (sp) { *sp = 0; arg = (int)hexv(sp + 1, 0); } else arg = modo_caliente(nm);  /* «O vista [modo_hex]»: el modo es el parámetro de apertura; sin él lo da el firmware (OPENVIEWDIAL) */
     int r = ov ? ov(nm, arg) : -99; LOG("OPENHOT %s %#x -> %d", nm, arg, r); free(a); return 0;
 }
+/* REDIAL (G22-OSD-REFRESCO): al llegar la tecla del dial de modo (KEY_POS_MODE_DIAL 0x7025) el propio INVITADO vuelve a activar la vista de
+ * disparo con el modo que da el firmware (OPENVIEWDIAL → CmnViewBigModelUtil::getRecViewFromDial, viewUnified2+0x19f004). Medido/estático: en
+ * la cámara el icono de modo es el parámetro de apertura de la vista (viewUnified2+0x14068c → CmnViewBigModelUtil::setInitForRec, §5.31 del
+ * informe del puente) y el id 0x15070050 NO tiene manejador en viewUnified*: los 12 sitios que lo citan son consultas de ParamList (el estado
+ * del dial) y la conversión de id→constante. Antes la reapertura la hacía el anfitrión (Vm.gira → «O view/ROOT» + «O view/STLREC»); ahora la
+ * pide el invitado al recibir la tecla, así que el anfitrión ya no reabre nada. REDIAL=0 lo apaga; REDIALROOT=1 añade el «O view/ROOT» previo. */
+static int redial_on(void) { const char *r = getenv("REDIAL"); return r ? (*r != '0') : 1; }
+static void *redialhot(void *a) {
+    usleep(300000);  /* el driver de entrada actualiza el estado del dial en su hilo (libObj+0x806f88): consultarlo antes daría el modo anterior */
+    if (getenv("REDIALROOT")) { char *r = strdup("view/ROOT"); openhot(r); usleep(200000); }
+    return openhot(a);  /* openhot libera el nombre */
+}
 static void *sddump(void *a);
 static void *live_keys(void *a) {
     (void)a; static char buf[8192]; int n = 0;
@@ -2148,7 +2160,9 @@ static void *live_keys(void *a) {
             if (ln[0] == 'K') { unsigned m[12] = {0}; static int swallow; m[0] = hexv(ln + 2, &e); m[2] = hexv(e + 1, &e); m[4] = hexv(e + 1, &e);
                 if (m[0] == 0x1ab && m[2] == 1 && !menu_open) { swallow = 1; menu_open = 1; pthread_t th; pthread_create(&th, 0, openhot, strdup("@V00E")); pthread_detach(th); LOG("MENU con el menú cerrado: openView @V00E"); }
                 else if (m[0] == 0x1ab && swallow) { if (m[2] == 0) swallow = 0; }  /* la suelta de la pulsación que abrió el menú no llega a la UI */
-                else { mbx_post_raw(0x7a0020, m); if (wl_on()) wl_key(m[0]); } }
+                else { mbx_post_raw(0x7a0020, m); if (wl_on()) wl_key(m[0]);
+                    /* REDIAL: la tecla del dial de modo hace que el invitado repinte la vista de disparo con el modo del firmware (arriba) */
+                    if (m[0] == 0x7025 && redial_on()) { pthread_t th; char *nm = strdup("view/STLREC"); pthread_create(&th, 0, redialhot, nm); pthread_detach(th); } } }
             /* «U <0|1>» (G22-E): estado del jack USB, como el driver de entrada de la cámara: mensaje {clave 0x7000001, 0, estado, 0, índice 0x177}
              * a 0x7a0020 (la misma vía que KEYINIT=7000001:1:177, §5.18w) para poder cambiarlo en caliente. */
             if (ln[0] == 'U') { unsigned st = (ln[1] == ' ') ? (unsigned)hexv(ln + 2, &e) : 0;

@@ -169,6 +169,15 @@ manejador asociado.
   `tests/test_live_shimenv.py`, los dos ya estaban).
 - El shim compila (`shim/build.sh`) con los mismos 5 avisos de antes.
 
+## 9. Seguimiento (27-11-2026): el repintado lo pide el invitado (G22-OSD-REFRESCO)
+
+[G22-OSD-REFRESCO](g22-osd-refresco.md) cierra el «falta el consumidor» con estático: en `viewUnified2` **no hay** manejador del evento
+`0x15070050` —los 12 sitios son consultas de `ParamList`/el estado del dial, y `ACT_ExposureMode::cast` (`+0x2b6e2c`) es un downcast por el
+discriminador de la vtable (`+0x190`), no una acción de evento—; el icono se pinta al **activar** la vista y su dato es
+`CmnViewModelWrpCameraExposureMode::getExposureModeActVal` (`+0x1c0eb4`: `getModelInfo("@M00B", 0xf, …)` → clave `0x12c`). Por eso el atajo
+de la reapertura se sustituye por lo mismo **hecho por el invitado**: el shim (`REDIAL`, por defecto activo) vuelve a activar `view/STLREC`
+sin modo al ver la tecla `0x7025`, y `Vm.gira()` ya solo manda la tecla. Medición y límites, en el informe nuevo.
+
 ## 7. PARA PENDIENTES.md
 
 ```

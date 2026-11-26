@@ -145,6 +145,20 @@ Para ver las líneas del shim: `POST /linea` con `E WAITLOG=1000` y `E WLALL=1` 
   diciendo lo que el usuario puso.
 - El enganche en `live.py` son dos líneas de backend; la página del lienzo no se ha tocado (otro subagente trabaja ahí).
 
+## 8. Quién pinta la batería y la carga (27-11-2026, estático + medido; G22-OSD-REFRESCO)
+
+Ver [G22-OSD-REFRESCO](g22-osd-refresco.md). Lo que faltaba aquí —«no hay indicador de batería que pueda cambiar»— ya tiene cadena:
+
+- El icono existe y es `ACT_IconBattery` (con `ACT_IconBattery_Rec` y `ACT_IconBatteryLevel_C`). Su actualización es
+  `ACT_IconBattery::WidgetUpdateSync` (`viewUnified2+0x2758b8`) → `b.w 0x275530`, que consulta **`model/POWER` info 0** claves **`0x100`**
+  (tipo de alimentación, el mismo que lee `CmnViewModelWrpPowerState::getPowerType`, `viewUnified2+0x243c50`), **`0x102`** y **`0x104`**, y
+  **`@M084` info 1** clave **`0x101`**.
+- `0x3001` sigue **sin consumidor** en el perfil medido (0 peticiones): `B` alimenta una respuesta que nadie pide. Para que el nivel se
+  pinte sin av-cam hay que rellenar esas claves de `model/POWER` (siguiente paso en la ficha G22-OSD-REFRESCO).
+- El jack USB **no** se consulta al llegar el mensaje: `InputService::getInputEventStatus` con la clave `0x15040010` lo leen los `execCheck`
+  de `ViewRootPowerSw` (`CheckerUSBAndClockReady`, literales en `viewUnified2+0x17083c/0x1708cc/0x171a7c`), que corren **al activar** la
+  vista. Por eso `U 0|1` con la vista abierta da 0 px, y por eso re-activarla (`O view/STLREC`) sí cambia lo que se ve.
+
 ## PARA PENDIENTES.md
 
 | ID | Estado | Qué es | Criterio de cierre | Origen |
