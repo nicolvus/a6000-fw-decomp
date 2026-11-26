@@ -442,6 +442,8 @@ def carga_declaraciones(ruta: Path, tipo: str, extra: Path | None) -> dict[str, 
     """Declaración del CFW (qué cambia): `--declara`, `<ruta>.audit.json`, `audit-cfw.json` o `MANIFEST.json`."""
     candidatos: list[Path] = []
     if extra is not None:
+        if not extra.is_file():
+            raise EntradaError(f"--declara {extra}: no existe o no es un fichero")
         candidatos.append(extra)
     if tipo in ("paquete", "overlay"):
         candidatos += [ruta / "audit-cfw.json", ruta / "MANIFEST.json"]
