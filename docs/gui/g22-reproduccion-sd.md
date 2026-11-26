@@ -6,7 +6,7 @@ el manejador del recuento (`libmpr+0x620028`) se ejecuta y el montaje del sistem
 **No se ha conseguido** que la tecla Reproducción abra la vista ni que el recuento de fotos salga numérico. La sesión G22-REPRO-2 cierra el **grafo estático del camino de la tecla**
 (§7): la clave que manda el arnés es la del firmware (`0x1f7` = `KEY_TACT_PLAY`), la vista la registra con el evento `0x150100f0` y una tabla estática lo manda a la **acción `4`**;
 medido en el invitado, la pulsación llega a la cola del driver y **`viewManagerIf::openView` no se llama ni una vez**, así que el corte está entre la acción y la apertura.
-Lo que falta sigue siendo el **contenido del índice AV** (no hay ningún volcado real en el repo y no se ha inventado) y la vista de reproducción en sí (§7.3).
+Lo que falta sigue siendo el **contenido del índice AV** (no hay ningún volcado real en el repo y no se ha inventado) y la vista de reproducción en sí (§7.4).
 
 Sesión: **26-11-2026** (reloj del anfitrión 02:30–03:30, −03). Cámara física: **no usada** (todo en `qemu-system-arm`, perfiles `repro`, `repro2` y `repro3`, puertos 8660/8661).
 Espacio de direcciones: **VA del ELF** de `libmpr.so`/`libObj.so`/`viewUnified2.so` 3.21 (el primer `PT_LOAD` tiene vaddr 0; el segundo de `viewUnified2.so` lleva +0x8000,
@@ -174,8 +174,8 @@ Con la estructura, el manejador `libmpr+0x620028` corre, pero la OSD **no muestr
 | 16 | Al pulsar Reproducción, `viewManagerIf::openView` **no se llama** (el contador de la traza no sube) | **VERIFICADO** | `TRACEFN=1251fc` + `TRACEDEREF`: 2 pulsaciones, contador 3→3 (§7.2) |
 | 17 | `openView("view/SINGLEPB")` y `openView("view/INDEX_PLAYBACK")` en caliente **entran** pero no vuelven en ≥5 s, y la pantalla queda en blanco (`0 listas`) | **VERIFICADO** | `TRACE 1251fc n=3/n=4` con la cadena en `r0`; sin línea `OPENHOT`; [captura](img/g22-repro2-singlepb.png) (§7.2) |
 | 18 | El modelo, la indexación y la miniatura de la reproducción existen en el firmware (`ModelIndexPbToInstance`, `ModelSinglePbToInstance`…) | **VERIFICADO** | `dynsym` de `libObj.so` (§7.1) |
-| 19 | La tecla `0x1f7` **despierta** al hilo `I-InputRecv` de la cola `0x7a0020`, pero no produce `[INPUTSERVICE] … key_code=0x1f7` ni llega a `DispatchEvent` como `0x150100f0` | **VERIFICADO** | `WAITLOG … tras 42758 ms` en 133.95 vs `tecla 0x1f7` en 133.91; 19 disparos de `libObj+0xf59f0` sin ese evento (§7.2 bis) |
-| 20 | En un arranque sin ciclo de cámara (`av-cam`), el manejador del recuento `libmpr+0x620028` **no se ejecuta** en 630 s del invitado (con la biblioteca cargada a los 37 s y las trampas armadas) | **VERIFICADO** | `TRACELIB libmpr.so base 0xad34d000` en 37.47 y 0 disparos de `620028`/`620262`/`62059c` (§7.2 bis) |
+| 19 | La tecla `0x1f7` **despierta** al hilo `I-InputRecv` de la cola `0x7a0020`, pero no produce `[INPUTSERVICE] … key_code=0x1f7` ni llega a `DispatchEvent` como `0x150100f0` | **VERIFICADO** | `WAITLOG … tras 42758 ms` en 133.95 vs `tecla 0x1f7` en 133.91; 19 disparos de `libObj+0xf59f0` sin ese evento (§7.3) |
+| 20 | En un arranque sin ciclo de cámara (`av-cam`), el manejador del recuento `libmpr+0x620028` **no se ejecuta** en 630 s del invitado (con la biblioteca cargada a los 37 s y las trampas armadas) | **VERIFICADO** | `TRACELIB libmpr.so base 0xad34d000` en 37.47 y 0 disparos de `620028`/`620262`/`62059c` (§7.3) |
 
 ---
 
@@ -199,7 +199,7 @@ y otro se quedó en 2 fotogramas sin av-cam — **INFERENCIA**: sin `--avcam` el
 
 Segunda sesión del pendiente (perfiles `repro2`/`repro3`, puertos 8660/8661). Objetivo: seguir `0x1f7` desde `InputService` hasta la acción que abre la vista de
 reproducción y medir en el invitado dónde se corta. **Resultado**: el grafo estático queda cerrado hasta la **acción `4`** y el corte medido está **entre esa acción y
-`viewManagerIf::openView`**, que no se llama. La vista en sí tampoco pinta en este arnés (§7.3).
+`viewManagerIf::openView`**, que no se llama. La vista en sí tampoco pinta en este arnés (§7.4).
 
 ### 7.1 Estático (VA del ELF; instrucciones leídas de los binarios, no de decompilador)
 
@@ -289,7 +289,7 @@ TRACELIB=libmpr.so TRACEFN2=620028,620262,62059c GMILOG=1 SETLOG=1" \
   de §3; por eso el efecto colateral `AF-S`→`MF` de [film-pb-1-sub-arnes-galeria](../reports/film-pb-1-sub-arnes-galeria-20261126.md) **no se ha reproducido aquí** y
   queda NO_VERIFICADO en esta sesión. La conclusión de (c) no depende de eso: el corte está antes de `openView` en ambos casos.
 
-### 7.2 bis Medido con las tres trampas y `WLALL=1` (perfil `repro3x`, puerto 8665, invitado hasta 630 s)
+### 7.3 Medido con las tres trampas y `WLALL=1` (perfil `repro3x`, puerto 8665, invitado hasta 630 s)
 
 El arranque bueno para diagnóstico es con `TRACEFN=f59f0,11817e,1251fc` (`libObj`: despachador de acciones, `execAction` y `openView`), `TRACELIB=libmpr.so
 TRACEFN2=620028,620262,62059c` (recuento), `TRACEDEREF=d0:0:18 TRACEREP=1 TRACEMAX=16 WLALL=1 GMILOG=1 SETLOG=1`. Lo medido:
@@ -318,7 +318,7 @@ TRACEFN2=620028,620262,62059c` (recuento), `TRACEDEREF=d0:0:18 TRACEREP=1 TRACEM
   (mismo árbol de SD, con ciclo de cámara) `620028` salía a los ≈397 s. Es decir: en este perfil el manejador del recuento **no llega a ejecutarse**; la diferencia
   medida entre los dos arranques es el ciclo de cámara (`av-cam`), que aquí no está (INFERENCIA). Sigue sin medirse si la fórmula `0x620262`/`0x62059c` corre.
 
-### 7.3 La vista de reproducción: qué haría falta (medido + estático)
+### 7.4 La vista de reproducción: qué haría falta (medido + estático)
 
 - `openView("view/INDEX_PLAYBACK")` y `openView("view/SINGLEPB")` **se aceptan** (la llamada entra con el nombre correcto) y la pantalla queda en blanco: la vista no
   llega a pintar ni una lista. Con `GMILOG=1` **no aparece ni una sola petición `getModelInfo`** de esa vista, así que se descarta que se quede esperando un modelo por
@@ -327,7 +327,7 @@ TRACEFN2=620028,620262,62059c` (recuento), `TRACEDEREF=d0:0:18 TRACEREP=1 TRACEM
   cámara no los rellena (§4.2, volcado del disco del invitado). Sin un índice real no hay «contenidos» que listar; **no se ha inventado formato**.
 - Lo que **no** falta: los símbolos de las vistas y los modelos están en el firmware (§7.1d).
 
-### 7.4 Lo que queda por medir (siguiente paso exacto)
+### 7.5 Lo que queda por medir (siguiente paso exacto)
 
 1. **¿Se genera el evento, y qué acción se ejecuta?** Arranque en frío con `TRACEFN=f59f0,11817e,1251fc TRACEDEREF=d0:0:18 TRACEREP=1 TRACEMAX=8` (`TRACEFN` es de
    `libObj`) y pulsar Reproducción. `libObj+0xf59f0` = `DefRootView::ActionEventMapBase::DispatchEvent` (`r0` = evento), `libObj+0x11817e` =
