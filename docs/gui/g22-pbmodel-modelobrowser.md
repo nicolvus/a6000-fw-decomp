@@ -136,8 +136,9 @@ desplazamientos en el objeto salen de las cargas que acompañan a cada línea:
 | `ContentsExist` | **+0x130** | 1 = la tarjeta tiene contenidos |
 | `CreateCond : *`, `FilterCond : StartTime/EndTime`, `ContShotsCond` | — | condiciones de creación y filtros |
 
-Y sus dependencias (símbolos de la PLT que usan las funciones de `libObj+0x47f600..0x482600`) son las de un
-modelo de petición/respuesta:
+Y sus dependencias (símbolos de la PLT que llaman las funciones de `libObj+0x47f600..0x482600`, resueltas
+función a función: [`modelbrowser-dependencias.txt`](../../reports/evidence/g22-pbmodel-20261128/modelbrowser-dependencias.txt))
+son las de un modelo de petición/respuesta — **y ninguna es de `MprIf`**:
 
 ```
 MWF::ObjIf::IssueCommandSync(void*, MWF::ObjMsg*, MWF::ObjMsg*)
@@ -148,9 +149,10 @@ BackupManager::Bkup_Read(int, void*) · BackupManager::Bkup_Write(int, void cons
 ParamList::add · ParamList::~ParamList
 ```
 
-Es decir: **`ModelBrowser` no lee el índice AV ni el sistema de ficheros**; manda `ObjMsg` a un objeto (el del
-medio / la base de contenidos), guarda el resultado en su `ContentInfo` y responde a la vista cuando
-`StsContentInfoReady = 1`. El setter de ese campo es `libObj+0x482248` (`str.w r1,[r0,#0x110]`), que no tiene
+Es decir: **`ModelBrowser` no lee el índice AV, ni el sistema de ficheros, ni llama a `MprIf`**: manda un
+`ObjMsg` (`SetCateIdMsgId` + `AddParam`) a un objeto del framework, guarda el resultado en su `ContentInfo` y
+responde a la vista cuando `StsContentInfoReady = 1`. El setter de ese campo es `libObj+0x482248`
+(`str.w r1,[r0,#0x110]`), que no tiene
 **ningún** `bl` en `.text` (267 567 `bl` T1 contadas): se llega a él por la tabla de métodos del modelo
 (`.data.rel.ro` `0x1000a18..0x1000a50`, 11 punteros a `0x47f6xx..0x47fcfd`), no por llamada directa.
 
@@ -163,6 +165,18 @@ El API de «content info» del índice AV está en `libmpr` y lo envuelve `libIn
 | `MprIf::GetAVIndexContentInfoList(u32,u32,u32,u32,void*,u32)` | `libmpr+0x7203c0` | **petición** de la lista de contenidos del índice |
 | `InfraScalarMprCore::MprCb_GetAVIndexContentInfoList(MWF::ObjMsg*, InfraScalarMprCore::CallerInfo*)` | `libInfraScalarMpr` (exportada) | **callback**: MPR *empuja* la lista a la capa Infra |
 | `InfraScalarMprUtil::CnvAviFileInfo_MprToInfra(MPR::AVIndexFileInfo*, DefInfraScalarMpr::AviFileInfo*)` | `libInfraScalarMpr` | convierte cada registro `AVIndexFileInfo` (los 0x80 B de `AVIN0001.INP`) |
+| `InfraScalarMprCore::Api_GetContentInfo(MWF::ObjMsg*, u32)` | `libInfraScalarMpr` | **entrada Infra** del «content info»: es la que sirve un `ObjMsg` como el que manda `ModelBrowser` |
+
+El **servidor** de ese `ObjMsg` está dentro de `libObj` y sí llama a MPR: la PLT de `libObj` importa casi todo
+`MprIf`, y los stubs que interesan para la traza son
+[`modelbrowser-dependencias.txt`](../../reports/evidence/g22-pbmodel-20261128/modelbrowser-dependencias.txt):
+
+| stub en libObj | símbolo |
+|---|---|
+| `0x0dc504` | `MprIf::GetContentInfo(u32, MPR::EntryCondition, MPR::EntryId, u32)` |
+| `0x0dfa68` / `0x0de518` | `MprIf::GetClusterContentsCountList` / `GetMovieContentExtentCount` |
+| `0x0dc7e8` / `0x0e1b68` | `MprIf::GetMediaInfo` / `MprIf::GetGroupInfo` |
+| `0x0dc144` / `0x0dec0c` | `MWF::ObjIf::IssueCommandAsync` / `IssueCommandSync` (el emisor del `ObjMsg`) |
 
 Comprobaciones de bytes:
 
@@ -195,10 +209,13 @@ del `ContentInfo` que nadie ha servido, porque el lector del índice AV no se ej
 1. **Medir `StsContentInfoReady`**: con el modelo creado, `G @M010 0x17` (orden nueva del shim, §8) devuelve el
    código que responde y cuántos parámetros trae; el código que en la cámara devuelve la lista debe dar 0 aquí.
    Es la medida que separa «no hay lista» de «la lista está vacía».
-2. **Ver si el índice se lee con el medio aceptado**: `TRACELIB=libmpr.so` en el arranque y
-   `E TRACEFN2=7203c0,13e474` en caliente (armar **después** de tener OSD, para no interferir en el arranque),
-   más `SDIO=20000` para ver sectores de datos. Si `Fsys_FindFirst` sigue a 0, el eslabón es el lector del índice
-   y hay que atacarlo en `libmpr` (`CS_AviFileIf`, `smf_avi_*` en `libmpr 0x1d13xx`), no en la UI.
+2. **Ver si el índice se lee con el medio aceptado**: con la OSD ya pintada (armar en caliente, **nunca en el
+   arranque**: alarga y tumba el invitado, medido §7 de abajo), y en este orden:
+   `E TRACEFN=dc504` (la PLT de `MprIf::GetContentInfo` en `libObj`: ¿el servidor de contenidos pregunta a MPR?),
+   `E TRACEFN=dc144` (`MWF::ObjIf::IssueCommandAsync`: ¿emite `ObjMsg` el navegador?),
+   y con `TRACELIB=libmpr.so` en el `SHIMEXTRA`, `E TRACEFN2=7203c0,13e474` (la petición de la lista AV y
+   `Fsys_FindFirst`). Si `13e474` sigue a 0 con el medio aceptado, el eslabón es el lector del índice y hay que
+   atacarlo en `libmpr` (`CS_AviFileIf`, `smf_avi_*` en `libmpr 0x1d13xx`), no en la UI.
 3. **Si el índice se lee y el modelo sigue a 0**: el eslabón es el `ObjMsg` de respuesta al navegador; el
    `IMCMDLOG=1` del shim ya registra categoría, id y llamante de cada `IssueCommandAsync`
    (`docs/gui/g22-respuesta-efcs-objcamera.md`), así que la medida es un arranque con `IMCMDLOG=1` y la tecla.

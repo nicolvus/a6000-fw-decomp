@@ -1,0 +1,84 @@
+# libObj.so 3.21 — de qué depende la clase ModelBrowser (@M010) y qué NO usa
+# funciones de la clase: 0x47f600..0x482600 (.ARM.exidx); llamadas resueltas con el mapa de la PLT
+
+## símbolos de la PLT que llama ModelBrowser:
+     1 funciones   _ZN11EventFilter13attachEventIdEi
+     1 funciones   _ZN13BackupManager10Bkup_WriteEiPKv
+     1 funciones   _ZN13BackupManager9Bkup_ReadEiPv
+     1 funciones   _ZN3MWF17ParamStd_TemplateIjLNS_5Param4TypeE8EEC1Ej
+     1 funciones   _ZN3MWF17ParamStd_TemplateIjLNS_5Param4TypeE8EED1Ev
+     1 funciones   _ZN3MWF5ObjIf16IssueCommandSyncEPvPNS_6ObjMsgES3_
+     1 funciones   _ZN3MWF5ObjIf17IssueCommandAsyncEPvPNS_6ObjMsgE
+     3 funciones   _ZN3MWF6ObjMsg14SetCateIdMsgIdEjj
+     1 funciones   _ZN3MWF6ObjMsg8AddParamEjRKNS_5ParamE
+     3 funciones   _ZN3MWF6ObjMsgC1Ev
+     3 funciones   _ZN3MWF6ObjMsgD1Ev
+     2 funciones   _ZN9ParamList3addEmP9ParamBase
+     1 funciones   _ZN9ParamListC1Ev
+     1 funciones   _ZN9ParamListD1Ev
+     1 funciones   _ZN9PrmObjMsg3GETEPK9ParamListm
+     1 funciones   _ZNK3MWF17ParamStd_TemplateIiLNS_5Param4TypeE7EE8GetValueEv
+     1 funciones   _ZNK3MWF17ParamStd_TemplateIjLNS_5Param4TypeE8EE8GetValueEv
+     5 funciones   _ZNK3MWF6ObjMsg12GetMessageIdEv
+     5 funciones   _ZNK3MWF6ObjMsg13GetCategoryIdEv
+     1 funciones   _ZNK3MWF6ObjMsg8GetParamEjNS_5Param4TypeE
+     1 funciones   _ZNK9PrmObjMsg18getParamTypeObjMsgEv
+     2 funciones   _ZdlPv
+     3 funciones   _Znwj
+     5 funciones   __cxa_end_cleanup
+     1 funciones   testmode_debugPrint
+
+## campos del modelo que imprime su volcado (ActionTestCmdDebugPrint, libObj+0x4802b8):
+    CurrentState                       : %d
+    StatusView                         : %d
+    MedType                            : %d
+    GrpCond                            : %d
+    SortType                           : %d
+    LumpContShots                      : %d
+    HighlightEdited                    : %d
+    FlatRequest                        : %d
+    3DContents                         : %d
+    CreateCond :GrpCond                : %d
+    CreateCond :SortType               : %d
+    CreateCond :LumpContShots          : %d
+    CreateCond :HighlightEdited        : %d
+    CreateCond :FlatRequest            : %d
+    CreateCond :3DContents             : %d
+    CreateCond :ResolutionFiltering    : %d
+    CreateCond :FramerateFiltering     : %d
+    StsContentInfoReady                : %d
+    StsContentInfoResult               : %d
+    RefCntContentInfo                  : %d
+    ContentPos_MedType                 : %d
+    IsNeedOpeGetContentExist           : %d
+    RefCntContentExist                 : %d
+    ContentsExist                      : %d
+    MaxHandleCacheCount            : %d
+    MaxHandleAtrbCacheCount        : %d
+    MaxItemAtrbCacheCount          : %d
+    CreateCond : GrpCond                : %d
+    CreateCond : SortType               : %d
+    CreateCond : LumpContShots          : %d
+    CreateCond : HighlightEdited        : %d
+    CreateCond : FlatRequest            : %d
+    CreateCond : 3DContents             : %d
+    CreateCond : ResolutionFiltering    : %d
+    CreateCond : FramerateFiltering     : %d
+    FilterCond : StartTime         : %04d/%02d/%02d
+    FilterCond : EndTime           : %04d/%02d/%02d
+    ContShotsCond : ContShotsType  : %d
+
+## stubs de MprIf en la PLT de libObj (el servidor de contenidos los usa; la clase NO):
+   0x0dc064  _ZN18MediaConfigWrapper12GetMediaInfoEjPNS_15MediaConfigInfoE
+   0x0e1b68  _ZN5MprIf12GetGroupInfoEmN3MPR14EntryConditionENS0_7EntryIdEm
+   0x0dc7e8  _ZN5MprIf12GetMediaInfoEm
+   0x0dc504  _ZN5MprIf14GetContentInfoEmN3MPR14EntryConditionENS0_7EntryIdEm
+   0x0dfdd8  _ZN5MprIf16GetAVIndexFileIDEmPh
+   0x0e2424  _ZN5MprIf19GetContentTypesSyncEmN3MPR14EntryConditionENS0_7EntryIdEmPmPNS0_16EntryContentTypeE
+   0x0e2180  _ZN5MprIf20GetContentsCountSyncEmN3MPR14EntryConditionENS0_7EntryIdEPm
+
+## quién SÍ importa la lista del índice AV (grep de símbolos en los .so del arnés):
+   libmpr.so             define  _ZN5MprIf25GetAVIndexContentInfoListEmmmmPvm  (libmpr+0x7203c0)
+   libInfraScalarMpr.so  define  _ZN18InfraScalarMprCore31MprCb_GetAVIndexContentInfoListEPN3MWF6ObjMsgEPNS_10CallerInfoE  (callback: MPR empuja la lista)
+   libInfraScalarMpr.so  define  _ZN18InfraScalarMprCore18Api_GetContentInfoEPN3MWF6ObjMsgEj  (entrada Infra de «content info»)
+   libObj.so             NO importa GetAVIndexContentInfoList; sí MprIf::GetContentInfo/GetContentsCountSync (arriba)
