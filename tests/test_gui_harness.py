@@ -689,3 +689,25 @@ def test_arranca_puente_con_la_vm_real_entrega_el_primer_mensaje(tmp_path: Path)
     _, cola, cab, cuerpo = qs[0].decode().split()
     assert int(cola, 16) == 0x550120 and cab.endswith("f9005700")  # la cola de respuesta viaja en la petición (+0)
     assert cuerpo[8:16] == "a0a0a0a0" and cuerpo[40:48] == "00100080"  # dataflow: cate 0x1000, msg 0 ^ 0x8000
+
+
+def test_sin_avcam_el_cierre_no_espera_al_puente(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """G22-ARR2: el cierre espera a que el Puente esté listo antes de parar su hilo, pero sin LIRO VM (`--no-avcam`) no hay nada
+    que esperar: el evento nace puesto y `POST /salir` no se queda 60 s."""
+    import time
+    from types import SimpleNamespace
+
+    live, _ = _live()
+    work = tmp_path / "work"
+    d = work / "live/optA"
+    d.mkdir(parents=True)
+    monkeypatch.setattr(live.run, "qemu_cmd", lambda *a, **k: ["qemu-falso"])
+    monkeypatch.setattr(live.subprocess, "Popen", lambda *a, **k: SimpleNamespace(poll=lambda: None, terminate=lambda: None, wait=lambda: None))
+    shimenv = live.construye_shimenv(True)
+    for f in ("estado.zst", "initrd.gz"):
+        (d / f).write_bytes(b"x")
+    (d / "huella.txt").write_text(live.huella(work, "", shimenv, ""))
+    t = time.monotonic()
+    vm = live.Vm(work, "", "optA", None, False, True, False, "")
+    assert vm.puente is None and vm.avq_cola is None
+    assert vm.puente_listo.is_set() and vm.puente_listo.wait(5) and time.monotonic() - t < 0.5

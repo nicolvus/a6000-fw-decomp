@@ -188,6 +188,8 @@ class Vm:
         self.puente = None
         self.puente_error: BaseException | None = None
         self.puente_listo = threading.Event()  # la LIRO VM arranca en un hilo: al restaurar iba en el camino crítico (el lector esperaba al Puente)
+        if not avcam:
+            self.puente_listo.set()  # sin LIRO VM no hay nada que esperar al cerrar
         self.avq_cola: queue.Queue | None = queue.Queue() if avcam else None  # invitado → av-cam; se encola hasta que la LIRO VM está lista
         mod_puente = None
         if avcam:  # av-cam (LIRO VM, scripts/gui/avcam) atiende las colas de kernel que im.elf le envía; ver puente.py
