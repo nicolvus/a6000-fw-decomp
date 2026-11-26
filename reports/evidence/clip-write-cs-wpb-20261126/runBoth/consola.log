@@ -1,10 +1,29 @@
-[NF4] base libmpr=0xae2e7000 tabla sectores=0xaed1d99c (0xA3699C)
+[NF4] base libmpr=0xae30d000 tabla sectores=0xaed4399c (0xA3699C)
 [NF4] tabla LLENA (nombres 0x10..0xbd)
 [NF4] ===== modo both =====
 [NF4] arranque  handle!=0 = 1/30
 [NF4] arranque [00..14]  00:010=h0/s0/om0 01:011=h0/s0/om0 02:012=h0/s0/om0 03:020=h0/s0/om0 04:021=h0/s0/om0 05:028=h0/s0/om0 06:029=h0/s0/om0 07:02c=h0/s0/om0 08:02d=h0/s0/om0 09:030=h0/s0/om0 10:031=h0/s0/om0 11:038=h0/s0/om0 12:039=h0/s0/om0 13:040=h0/s0/om0 14:060=h0/s0/om0 
 [NF4] arranque [15..29]  15:061=h0/s0/om0 16:068=h0/s0/om0 17:06c=h0/s0/om0 18:062=h0/s0/om0 19:063=h0/s0/om0 20:090=h0/s0/om0 21:091=h0/s0/om0 22:092=h0/s0/om0 23:0a0=h1/s1/om9 24:0b1=h0/s0/om0 25:0b2=h0/s0/om0 26:0b3=h0/s0/om0 27:0b8=h0/s0/om0 28:0bc=h0/s0/om0 29:0bd=h0/s0/om0 
 [NF4] arranque idx10 sec=0x031 handle=0 estado=0 om=0
+[NF4] tabla 0x9D23FC: [00]u10/m1/ft010/om4/fn0/arg0 [01]u02/m1/ft011/om2/fn0/arg0 
+[NF4] tabla 0x9D23FC: [02]u03/m1/ft012/om3/fn0/arg0 [03]u10/m2/ft020/om4/fn0/arg0 
+[NF4] tabla 0x9D23FC: [04]u04/m2/ft021/om6/fn0/arg0 [05]u21/m2/ft021/om6/fn0/arg0 
+[NF4] tabla 0x9D23FC: [06]u10/m5/ft028/om4/fn0/arg0 [07]u04/m5/ft029/om6/fn0/arg0 
+[NF4] tabla 0x9D23FC: [08]u21/m5/ft029/om6/fn0/arg0 [09]u10/m6/ft02c/om4/fn0/arg0 
+[NF4] tabla 0x9D23FC: [10]u04/m6/ft02d/om6/fn0/arg0 [11]u21/m6/ft02d/om6/fn0/arg0 
+[NF4] tabla 0x9D23FC: [12]u10/m3/ft030/om4/fn0/arg0 [13]u04/m3/ft031/om6/fn0/arg0 
+[NF4] tabla 0x9D23FC: [14]u21/m3/ft031/om6/fn0/arg0 [15]u10/m4/ft038/om4/fn0/arg0 
+[NF4] tabla 0x9D23FC: [16]u04/m4/ft039/om6/fn0/arg0 [17]u21/m4/ft039/om6/fn0/arg0 
+[NF4] tabla 0x9D23FC: [18]u01/m1/ft040/om1/fn0/arg0 [19]u30/m1/ft040/om1/fn0/arg0 
+[NF4] tabla 0x9D23FC: [20]u20/m1/ft060/om7/fn0/arg0 [21]u20/m2/ft061/om7/fn0/arg0 
+[NF4] tabla 0x9D23FC: [22]u20/m5/ft068/om7/fn0/arg0 [23]u20/m6/ft06c/om7/fn0/arg0 
+[NF4] tabla 0x9D23FC: [24]u20/m3/ft062/om7/fn0/arg0 [25]u20/m4/ft063/om7/fn0/arg0 
+[NF4] tabla 0x9D23FC: [26]u10/m7/ft090/om4/fn0/arg0 [27]u04/m7/ft091/om6/fn0/arg0 
+[NF4] tabla 0x9D23FC: [28]u21/m7/ft091/om6/fn0/arg0 [29]u20/m7/ft092/om7/fn0/arg0 
+[NF4] tabla 0x9D23FC: [30]u22/m8/ft0a0/om9/fn0/arg0 [31]u23/m2/ft0b1/oma/fn0/arg0 
+[NF4] tabla 0x9D23FC: [32]u23/m3/ft0b2/oma/fn0/arg0 [33]u23/m4/ft0b3/oma/fn0/arg0 
+[NF4] tabla 0x9D23FC: [34]u23/m5/ft0b8/oma/fn0/arg0 [35]u23/m6/ft0bc/oma/fn0/arg0 
+[NF4] tabla 0x9D23FC: [36]u23/m7/ft0bd/oma/fn0/arg0 [37]u00/m0/ftffffffff/omff/fn0/arg0 
 [NF4] imagen(arranque): origen=10485760 B copia=10485760 B; bytes distintos=0; primero=-1 (0xffffffff) ultimo=-1 (0xffffffff)
 [NF4] MON> FBM InitB 6 3   (argc=4, al comando=3)
 [NF4] FBM InitB 6 3 -> 1
@@ -21,13 +40,13 @@
 [NF4]   pack: hdr=000000000000 totalDL=0 curDL=0 hdrDL=0 sector=0 handle=0
 [NF4] imagen(tras-WritePackBegin): origen=10485760 B copia=10485760 B; bytes distintos=0; primero=-1 (0xffffffff) ultimo=-1 (0xffffffff)
 [NF4] no se llama WritePackAdd/End: WritePackBegin devolvió 0x10100001
-[NF4] desglose(4,3)[clip]: 0x2B2B18-> 0 fileType=0x31 ; 0x2B2F48-> 0 idx=0xa ; 0x2B3094-> 0 handle=0
+[NF4] desglose(4,3)[clip]: 0x2B2B18-> 0 fileType=0x31 ; 0x2B2F48-> 0 idx=0xa ; 0x2B3094-> 0 handle=0 ; 0x2B2BCC-> 0 operationMode=0x6 ; 0x2B1DCC(0x6)=0
 [NF4] 0x2B3000(OM=6,media=3,&h) -> 0x10800010 handle=0xdeadbeef  «unknown»
 [NF4] BackupMgr::WriteBaseData(OM=6,media=3) -> 0x10800010  «unknown»
 [NF4] imagen(tras-desglose-6-3): origen=10485760 B copia=10485760 B; bytes distintos=0; primero=-1 (0xffffffff) ultimo=-1 (0xffffffff)
 [NF4] diag FlashLib::GetSectorInfo(0,&info) -> 0x9  «FBS_INVALID_PARAM»
-[NF4] diag info[0..0x27] = ff00000021dd59aeefbeaddec1f759aed8cdb3b69c69a300c1f759aed8cccccccccccccccccccccc
-[NF4] diag info: u16[0]=0xff u16[2]=0 u32[4]=0xae59dd21 u32[8]=0xdeadbeef u32[0xc]=0xae59f7c1 u32[0x10]=0xb6b3cdd8
+[NF4] diag info[0..0x27] = ff000000213d5cae00000000c1575caed82db6b6c8cbaab6c1575caed8cccccccccccccccccccccc
+[NF4] diag info: u16[0]=0xff u16[2]=0 u32[4]=0xae5c3d21 u32[8]=0 u32[0xc]=0xae5c57c1 u32[0x10]=0xb6b62dd8
 [NF4] diag FlashLib::WriteSector(0,0x10,buf,&w) -> 0x9 (CRUDO) written=0xdeadbeef
 [NF4] imagen(tras-diag-WriteSector): origen=10485760 B copia=10485760 B; bytes distintos=0; primero=-1 (0xffffffff) ultimo=-1 (0xffffffff)
 [NF4] fin  handle!=0 = 1/30

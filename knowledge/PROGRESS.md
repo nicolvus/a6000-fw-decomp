@@ -1137,6 +1137,22 @@ entradas) y las dos líneas consumidas por el monitor (A 0→17→31) → idx 10
 Evidencia: `reports/evidence/film-pb-1-sector31-runbook-20261126/` (`2-aplica-escribe.out`). Bloqueado: la cámara no está en
 red (192.168.1.29/30/18 no responden) ⇒ el arreglo y el plan de prueba siguen sin ejecutarse en ella.
 
+**Checkpoint 26-11-2026 (tarde) — el clip nuevo tras crear el sector `0x31`: la ESCRITURA no funciona sin `fn`.**
+Medido en el invitado (QEMU, perfil `nf4`, `NFLASH4=1`, sonda `nf4clip.so` que llama por dirección a `ChangeSector`
+`0x2B41B4` y a `WritePackBegin` `0x2B3D24` / `WritePackAdd` `0x2B3C64` / `WritePackEnd` `0x2B3B94` y mide el diff de
+`/nflasha4.img` tras cada paso). Antes (prístina): `ChangeSector(4,3)=0x10100006`, `WritePackBegin=0x10100001`, 0 B.
+Con el sector `0x31` persistido y `fn=0`: `ChangeSector=0x10800010` (en `0x2B4232`, por `0x2B3000`/`0x2B301A` con
+`fn==0` en la fila `0x9D23FC[13]`), `WritePackBegin=0`, `WritePackAdd=0`, `WritePackEnd=0x10800020`
+(`FBS_UNCERTAIN_WRITE_POINT` `0x11` en `0x2B260A`; `GetSectorInfo` da `validDataSize=0xffffffff`) y **0 B** en
+`nflasha4`. Con `fn` registrado (stub) + sector: `ChangeSector=0`, `WritePackBegin/Add/End=0` y **4 770 B** (payload
+`0x5a` en `0x3A0206`). `ChangeSector` **no** crea el sector (con `fn` y sin él sigue `0x10100006`): el `fn` es lo que
+deja a `WriteBaseData` asentar el punto de escritura. `0x9D23FC` es `.data` de `libmpr` ⇒ el `fn` que registra
+`FBM EWBDFD 4 3 0` **no persiste**; `EWBDFD`+`InitB` y la grabación de prueba tienen que ir en el **mismo** arranque.
+Firma real de `WritePackBegin(userID, mediaID, dataID, dataSize, &pack, —, operationMode)`, llamada del clip en
+`m2psIfo_Backup.cpp:0x48e` (`0x5CA164`) con `(4, [this+0xC], dataID, len, &pack, 0, 0)`. Informe:
+[clip-write-cs-wpb-20261126](../reports/clip-write-cs-wpb-20261126.md) · evidencia:
+`reports/evidence/clip-write-cs-wpb-20261126/`.
+
 **Próximo paso exacto:** no volver a pedirle al arnés que discrimine la guarda A/B: para eso hace falta P1–P4
 (`MprFileIf`/`FindFirst` con el volumen, `AVF_INFO\AVIN0001.INP` legible por libmpr, `@M015` con lista, capa de la
 vista) y, antes, implementar el comando `G <off> a0..a3` del shim (llamar a `libmpr`/`TRACELIB`, hoy `F` sólo alcanza

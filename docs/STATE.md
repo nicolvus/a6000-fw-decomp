@@ -33,6 +33,15 @@
 > `[msv+0x44]=1` y **devuelve 0** → `FlashLoadForMsv` (`0x698EC8`) devuelve **0**, sin el 1749. Antes daba
 > `0x00100001` / `0xB0800001`. Queda una tabla **vacía marcada para salvage**: el firmware la reconstruye y
 > un clip nuevo sí se registra; los viejos no.
+> **Matiz medido el 26-11 sobre la ESCRITURA del clip (26-11):** el camino `m2psIfo_Backup` →
+> `ChangeSector(4,3)` `0x2B41B4` / `WritePackBegin` `0x2B3D24` / `WritePackAdd` `0x2B3C64` /
+> `WritePackEnd` `0x2B3B94` **no** funciona sólo con el sector: sobre la imagen con `0x31` persistido y
+> `fn=0`, `ChangeSector` = `0x10800010` (`0x2B4232` ← `0x2B3000`/`0x2B301A`) y `WritePackEnd` =
+> `0x10800020` = `FBS_UNCERTAIN_WRITE_POINT` (`0x11`; `GetSectorInfo` da `validDataSize=0xffffffff`) y
+> **0 bytes** llegan a `nflasha4`. Con `fn` registrado en `0x9D23FC[13]` en el **mismo arranque**
+> (`FBM EWBDFD 4 3 0`) + sector: `ChangeSector=0`, `WritePackBegin/Add/End=0` y **4 770 B** escritos.
+> `0x9D23FC` es `.data` de `libmpr`: el `fn` **no persiste**, el sector sí. Por eso `EWBDFD`+`InitB` y la
+> prueba de grabación tienen que ir en el **mismo** arranque. [Informe](clip-write-cs-wpb-20261126.md).
 > **Auditoría independiente del 3.97:** `.dat` `69447a27…5cd9`, `libmpr` `831142ae…e378e`, relocaciones y
 > cabeceras intactas, auditor `todo_ok` 22/22; la cueva está en `.rodata` pero se ejecuta por el primer
 > `PT_LOAD` (`R E`) —medido en QEMU— y su alineación de pila no afecta a los tres destinos.
