@@ -202,3 +202,73 @@ def test_la_sd_con_estructura_conserva_la_foto_de_1536x1024(tmp_path: Path) -> N
     for nombre in ("AVIN0001.INP", "AVIN0001.BNP", "AVIN0001.INT", "PRV00001.BIN", "STAT0000.BIN"):
         # mtools pinta los nombres 8.3 con espacio en vez de punto («AVIN0001 INP»)
         assert nombre.replace(".", " ") in avf, f"falta {nombre} en AVF_INFO"
+
+
+# --- G22-REPRO-3: las listas de teclas por grupo y las trampas de la medición ---------------------------------------
+# Medido en el invitado (perfil repro5, puerto 8671, 26-11-2026): InfraInput::SetEventKeyList se llama 17 veces con los
+# grupos 1…0x11 y las cuentas 3, 0x1a, 1, 1, 1, 1, 0xca (202), 8, 5, 6, 1, 1, 1, 1, 4 (0xf = la Reproducción), 1, 1.
+TABLA_LISTAS = 0x4AA59C  # viewUnified2 .data: descriptores {lista, callback, nº de entradas, 0, 0} de 20 B; el índice es el grupo
+CUENTAS_MEDIDAS = {7: 202, 8: 8, 9: 5, 10: 6, 0xF: 4, 0x10: 1, 0x11: 1}
+
+
+def _lista_de_teclas(viewunified2: Elf, grupo: int) -> tuple[int, int, list[tuple[int, int, int]]]:
+    """(callback, nº de entradas, entradas) del grupo `grupo` según la tabla de descriptores de `.data`."""
+    base = TABLA_LISTAS + 20 * grupo
+    lista, callback, cuantas = viewunified2.u32(base), viewunified2.u32(base + 4), viewunified2.u32(base + 8)
+    assert lista is not None and callback is not None and cuantas is not None
+    entradas = []
+    for i in range(cuantas):
+        clave, evento, mascara = (viewunified2.u32(lista + 12 * i + 4 * k) for k in range(3))
+        assert clave is not None and evento is not None and mascara is not None
+        entradas.append((clave, evento, mascara))
+    return callback, cuantas, entradas
+
+
+def test_la_tecla_de_reproduccion_vive_en_el_grupo_0xf(viewunified2: Elf) -> None:
+    """La lista del grupo `0xf` es la de la Reproducción: 4 entradas `{clave, evento, máscara}` y la primera es `0x1f7`."""
+    callback, cuantas, entradas = _lista_de_teclas(viewunified2, 0xF)
+    assert (callback, cuantas) == (0x181A3D, 4)
+    assert entradas[0] == (KEY_TACT_PLAY, EVENTO_REPRODUCCION, 0x7FFFFFFE)
+    assert [e[0] for e in entradas] == [0x1F7, 0x7095, 0x0A000022, 0x0A00001C]
+    assert all(m == 0x7FFFFFFE for _c, _e, m in entradas), "0x7ffffffe = «sin condición», tercera palabra de la entrada"
+
+
+def test_la_vista_de_disparo_registra_una_lista_sin_la_tecla_de_reproduccion(viewunified2: Elf) -> None:
+    """El grupo 7 (202 entradas) es el que registra la vista de disparo: tiene la tecla de encendido y **no** la de reproducción."""
+    callback, cuantas, entradas = _lista_de_teclas(viewunified2, 7)
+    assert (callback, cuantas) == (0x1816D5, 202)
+    assert (0x2, 0x15010010) in [(c, e) for c, e, _m in entradas], "coincide con el log medido `insert key_code=0x2 event_code=0x15010010`"
+    assert KEY_TACT_PLAY not in [c for c, _e, _m in entradas]
+
+
+def test_las_cuentas_de_los_descriptores_coinciden_con_el_invitado(viewunified2: Elf) -> None:
+    """Cada grupo que el invitado registró con su cuenta tiene en `.data` esa misma cuenta (mapea grupo → descriptor)."""
+    for grupo, cuantas in CUENTAS_MEDIDAS.items():
+        assert _lista_de_teclas(viewunified2, grupo)[1] == cuantas, f"grupo {grupo:#x}"
+
+
+def test_dispatch_event_es_un_thunk_virtual(libobj: Elf) -> None:
+    """`ActionEventMapBase::DispatchEvent` (0xf59f0) solo salta a la ranura +8 de la vtable: la conversión no está en libObj."""
+    o = libobj.v2o(0xF59F0)
+    assert o is not None
+    assert struct.unpack_from("<HHH", libobj.d, o) == (0x6803, 0xB580, 0xAF00)  # ldr r3,[r0] · push {r7,lr} · add r7,sp,#0
+    assert struct.unpack_from("<H", libobj.d, o + 6)[0] == 0x689B  # ldr r3,[r3,#8]
+    assert struct.unpack_from("<H", libobj.d, o + 8)[0] == 0x4798  # blx r3
+
+
+def test_las_direcciones_de_las_trampas_son_las_de_la_medicion(libobj: Elf) -> None:
+    """Las direcciones que usó la traza del invitado son las de los símbolos (si cambia el binario, hay que rehacerla)."""
+    simbolos = libobj.dinamicos()
+    esperado = {
+        "_ZN10InfraInput15SetEventKeyListEiP18_InfraInputKeyListi": 0x806140,
+        "_ZN10InfraInput14GetEventStatusEiiP16_InfraInputEvent": 0x805804,
+        "snd_InfraInputEvent_to_InputServant": 0x110138,
+        "_ZN12InputService11createEventEmh": 0x1106B8,
+        "_ZN12InputService15pushFilterEventEP5Event": 0x1117F4,
+        "_ZN11DefRootView18ActionEventMapBase13DispatchEventEm": 0xF59F0,
+        "_ZN11DefRootView21ActionCheckerListBase10execActionEi": 0x11817E,
+        "_ZN13viewManagerIf8openViewEPKci": 0x1251FC,
+    }
+    for nombre, va in esperado.items():
+        assert nombre in simbolos, f"falta {nombre}"
+        assert simbolos[nombre] & ~1 == va, f"{nombre} en {simbolos[nombre]:#x}, se esperaba {va:#x}"
