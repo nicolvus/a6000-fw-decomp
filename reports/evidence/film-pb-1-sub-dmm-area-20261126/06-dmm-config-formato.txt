@@ -1,0 +1,149 @@
+# Formato de la configuracion del DMM y tablas que salen de ella
+## dmm_ext_tbl_Init (0xec90): cabecera de 0x50 B + registros de 0x14 B
+0ec90: 0dc0a0e1   mov     ip, sp                      
+0ec94: f0df2de9   push    {r4, r5, r6, r7, r8, sb, sl, fp, ip, lr, pc}
+0ec98: 04b04ce2   sub     fp, ip, #4                  
+0ec9c: 0cd04de2   sub     sp, sp, #0xc                
+0eca0: 18359fe5   ldr     r3, [pc, #0x518]            
+0eca4: 0060a0e3   mov     r6, #0                      
+0eca8: 14059fe5   ldr     r0, [pc, #0x514]            
+0ecac: 011aa0e3   mov     r1, #0x1000                 
+0ecb0: 10459fe5   ldr     r4, [pc, #0x510]            
+0ecb4: 0680a0e1   mov     r8, r6                      
+0ecb8: 206e83e5   str     r6, [r3, #0xe20]            
+0ecbc: feffffeb   bl      #0xecbc                      ; RELOC28 __memzero idx=216 val=0x0 shndx=0
+0ecc0: 055c84e2   add     r5, r4, #0x500              
+0ecc4: 018088e2   add     r8, r8, #1                  
+0ecc8: 020058e3   cmp     r8, #2                      
+0eccc: 0600009a   bls     #0xecec                     
+0ecd0: 6100a0e3   mov     r0, #0x61                   
+0ecd4: 0010a0e3   mov     r1, #0                      
+0ecd8: 0120a0e3   mov     r2, #1                      
+0ecdc: e8349fe5   ldr     r3, [pc, #0x4e8]            
+0ece0: 00808de5   str     r8, [sp]                    
+0ece4: 85ffffeb   bl      #0xeb00                     
+0ece8: c8ffffeb   bl      #0xec10                     
+0ecec: 5010a0e3   mov     r1, #0x50                   
+0ecf0: 0500a0e1   mov     r0, r5                      
+0ecf4: feffffeb   bl      #0xecf4                      ; RELOC28 dmm_config_GetConfigData idx=76 val=0x5140 shndx=1
+0ecf8: 001050e2   subs    r1, r0, #0                  
+0ecfc: 2701001a   bne     #0xf1a0                     
+0ed00: 083095e5   ldr     r3, [r5, #8]                
+0ed04: 010073e3   cmn     r3, #1                      
+0ed08: 00408515   strne   r4, [r5]                    
+0ed0c: 0b00001a   bne     #0xed40                     
+0ed10: b8349fe5   ldr     r3, [pc, #0x4b8]            
+0ed14: 0070a0e1   mov     r7, r0                      
+0ed18: 000085e5   str     r0, [r5]                    
+0ed1c: 0080a0e1   mov     r8, r0                      
+0ed20: ac449fe5   ldr     r4, [pc, #0x4ac]            
+0ed24: d40103e5   str     r0, [r3, #-0x1d4]           
+0ed28: d00103e5   str     r0, [r3, #-0x1d0]           
+0ed2c: cc0103e5   str     r0, [r3, #-0x1cc]           
+0ed30: c80103e5   str     r0, [r3, #-0x1c8]           
+0ed34: c40103e5   str     r0, [r3, #-0x1c4]           
+0ed38: 98549fe5   ldr     r5, [pc, #0x498]            
+0ed3c: 320000ea   b       #0xee0c                      ; dmm_ext_tbl_Init
+0ed40: 016086e2   add     r6, r6, #1                  
+0ed44: 400056e3   cmp     r6, #0x40                   
+0ed48: 0600009a   bls     #0xed68                     
+0ed4c: 6100a0e3   mov     r0, #0x61                   
+0ed50: 0010a0e3   mov     r1, #0                      
+0ed54: 0120a0e3   mov     r2, #1                      
+0ed58: 7c349fe5   ldr     r3, [pc, #0x47c]            
+0ed5c: 00608de5   str     r6, [sp]                    
+0ed60: 66ffffeb   bl      #0xeb00                     
+0ed64: a9ffffeb   bl      #0xec10                     
+0ed68: 1410a0e3   mov     r1, #0x14                   
+0ed6c: 0400a0e1   mov     r0, r4                      
+0ed70: feffffeb   bl      #0xed70                      ; RELOC28 dmm_config_GetConfigData idx=76 val=0x5140 shndx=1
+0ed74: 001050e2   subs    r1, r0, #0                  
+0ed78: 0801001a   bne     #0xf1a0                     
+0ed7c: 083094e5   ldr     r3, [r4, #8]                
+0ed80: 010073e3   cmn     r3, #1                      
+0ed84: 1d00000a   beq     #0xee00                     
+0ed88: 020b53e3   cmp     r3, #0x800                  
+0ed8c: 0000003a   blo     #0xed94                     
+0ed90: 9effffeb   bl      #0xec10                     
+0ed94: 24249fe5   ldr     r2, [pc, #0x424]            
+0ed98: 203e92e5   ldr     r3, [r2, #0xe20]            
+0ed9c: 020053e3   cmp     r3, #2                      
+0eda0: 0d00008a   bhi     #0xeddc                     
+0eda4: 101094e5   ldr     r1, [r4, #0x10]             
+0eda8: 020411e3   tst     r1, #0x2000000              
+0edac: 1100000a   beq     #0xedf8                     
+0edb0: 18149fe5   ldr     r1, [pc, #0x418]            
+0edb4: 000094e5   ldr     r0, [r4]                    
+0edb8: 831181e0   add     r1, r1, r3, lsl #3          
+0edbc: 013083e2   add     r3, r3, #1                  
+0edc0: c00101e5   str     r0, [r1, #-0x1c0]           
+0edc4: 0cc094e5   ldr     ip, [r4, #0xc]              
+0edc8: 203e82e5   str     r3, [r2, #0xe20]            
+0edcc: 01c04ce2   sub     ip, ip, #1                  
+0edd0: 00008ce0   add     r0, ip, r0                  
+0edd4: bc0101e5   str     r0, [r1, #-0x1bc]           
+0edd8: 060000ea   b       #0xedf8                      ; dmm_ext_tbl_Init
+0eddc: 00308de5   str     r3, [sp]                    
+0ede0: 6100a0e3   mov     r0, #0x61                   
+0ede4: 0010a0e3   mov     r1, #0                      
+0ede8: 0120a0e3   mov     r2, #1                      
+0edec: ec339fe5   ldr     r3, [pc, #0x3ec]            
+0edf0: 42ffffeb   bl      #0xeb00                     
+0edf4: 85ffffeb   bl      #0xec10                     
+0edf8: 144084e2   add     r4, r4, #0x14               
+0edfc: cfffffea   b       #0xed40                      ; dmm_ext_tbl_Init
+0ee00: 505085e2   add     r5, r5, #0x50               
+0ee04: 144084e2   add     r4, r4, #0x14               
+0ee08: adffffea   b       #0xecc4                      ; dmm_ext_tbl_Init
+0ee0c: 018088e2   add     r8, r8, #1                  
+0ee10: 010b58e3   cmp     r8, #0x400                  
+0ee14: 0600009a   bls     #0xee34                     
+0ee18: 6100a0e3   mov     r0, #0x61                   
+0ee1c: 0010a0e3   mov     r1, #0                      
+0ee20: 0120a0e3   mov     r2, #1                      
+0ee24: b8339fe5   ldr     r3, [pc, #0x3b8]            
+0ee28: 00808de5   str     r8, [sp]                    
+0ee2c: 33ffffeb   bl      #0xeb00                     
+0ee30: 76ffffeb   bl      #0xec10                     
+0ee34: 5010a0e3   mov     r1, #0x50                   
+0ee38: 0500a0e1   mov     r0, r5                      
+0ee3c: feffffeb   bl      #0xee3c                      ; RELOC28 dmm_config_GetConfigData idx=76 val=0x5140 shndx=1
+0ee40: 001050e2   subs    r1, r0, #0                  
+0ee44: d500001a   bne     #0xf1a0                     
+0ee48: 083095e5   ldr     r3, [r5, #8]                
+0ee4c: 010073e3   cmn     r3, #1                      
+
+## ConfigData integrada en .rodata (0x184, 63976 B): estadistica
+bytes no nulos: 15867 de 63976; primer no nulo en 0x53; ultimo 0xf9e7
+cabecera 0x00-0x4f (32 palabras):
+00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+cadenas:
+ 0xf9c8 b'for dsc-avip 2011/04/09 19:42:11'
+
+## simbolos de interes
+    76: 00005140   232 FUNC    GLOBAL DEFAULT    1 dmm_config_GetConfigData
+   118: 00000170    20 OBJECT  GLOBAL DEFAULT   10 s_MemplugInfoInit
+   221: 00000184 63976 OBJECT  GLOBAL DEFAULT   10 ConfigData
+   239: 00000214   348 FUNC    GLOBAL DEFAULT    1 dmm_module_GetConfigData
+
+## parametros del modulo (__param)
+
+Hex dump of section '__param':
+ NOTE: This section has relocations against it, but these have NOT been applied to this dump.
+  0x00000000 00000000 00000000 24010000 10000000 ........$.......
+  0x00000010 0a000000 00000000 b4010000 1c000000 ................
+
+Relocation section '.rel__param' at offset 0x286d4 contains 6 entries:
+ Offset     Info    Type                Sym. Value  Symbol's Name
+00000000  00000202 R_ARM_ABS32            00000000   .rodata
+
+## carga: init de nflasha7 y libIMDB
+   2976 /usr/kmod/usb_extcmd.ko
+   298e /usr/kmod/kikilog.ko
+   29a3 /usr/kmod/dmm.ko
+   29b4 DmmConfig=/setting/DmmConfig.bin 
+   29d6 /usr/kmod/upm.ko
+   25a4 IMDB:RE-SUB
+   25b0 /kmod/dmm.ko
+   25bd DmmConfig=/usr/share/dmm/DmmConfig.bin
+   25e8 /kmod/upm.ko

@@ -1,0 +1,237 @@
+0035ea1c: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+0035ea20: 8db0       sub      sp, #0x34                     
+0035ea22: 00f58048   add.w    r8, r0, #0x4000               
+0035ea26: 0aaf       add      r7, sp, #0x28                 
+0035ea28: 0025       movs     r5, #0                        
+0035ea2a: 0446       mov      r4, r0                        
+0035ea2c: 0095       str      r5, [sp]                      
+0035ea2e: 87e80600   stm.w    r7, {r1, r2}                  
+0035ea32: 0126       movs     r6, #1                        
+0035ea34: 0195       str      r5, [sp, #4]                  
+0035ea36: 2a46       mov      r2, r5                        
+0035ea38: 0296       str      r6, [sp, #8]                  
+0035ea3a: 9a46       mov      sl, r3                        
+0035ea3c: d8f88400   ldr.w    r0, [r8, #0x84]               
+0035ea40: 2b46       mov      r3, r5                        
+0035ea42: 9949       ldr      r1, [pc, #0x264]                ; [0035eca8]=0090f1e1
+0035ea44: d7f83090   ldr.w    sb, [r7, #0x30]               
+0035ea48: d7f838b0   ldr.w    fp, [r7, #0x38]               
+0035ea4c: f4f75cfe   bl       #0x353708                     
+0035ea50: 2b46       mov      r3, r5                        
+0035ea52: 8de86000   stm.w    sp, {r5, r6}                  
+0035ea56: 2a46       mov      r2, r5                        
+0035ea58: 0296       str      r6, [sp, #8]                  
+0035ea5a: 9449       ldr      r1, [pc, #0x250]                ; [0035ecac]=0081dfa7 "RcsBackupTblData Start"
+0035ea5c: 04f54255   add.w    r5, r4, #0x3080               
+0035ea60: d8f88400   ldr.w    r0, [r8, #0x84]               
+0035ea64: f4f750fe   bl       #0x353708                     
+0035ea68: 2046       mov      r0, r4                        
+0035ea6a: f5f787f8   bl       #0x353b7c                     
+0035ea6e: ab6c       ldr      r3, [r5, #0x48]               
+0035ea70: 33b9       cbnz     r3, #0x35ea80                 
+0035ea72: 8f48       ldr      r0, [pc, #0x23c]                ; [0035ecb0]=0003171c
+0035ea74: bff596ee   blx      #0x11e7a4                       ; _Znwj
+0035ea78: 0646       mov      r6, r0                        
+0035ea7a: f4f7cdfe   bl       #0x353818                     
+0035ea7e: ae64       str      r6, [r5, #0x48]               
+0035ea80: 04f54255   add.w    r5, r4, #0x3080               
+0035ea84: eb6c       ldr      r3, [r5, #0x4c]               
+0035ea86: 33b9       cbnz     r3, #0x35ea96                 
+0035ea88: 8948       ldr      r0, [pc, #0x224]                ; [0035ecb0]=0003171c
+0035ea8a: bff58cee   blx      #0x11e7a4                       ; _Znwj
+0035ea8e: 0646       mov      r6, r0                        
+0035ea90: f4f7c2fe   bl       #0x353818                     
+0035ea94: ee64       str      r6, [r5, #0x4c]               
+0035ea96: 04f54253   add.w    r3, r4, #0x3080               
+0035ea9a: 7d68       ldr      r5, [r7, #4]                  
+0035ea9c: 7e6b       ldr      r6, [r7, #0x34]               
+0035ea9e: 2046       mov      r0, r4                        
+0035eaa0: da6c       ldr      r2, [r3, #0x4c]               
+0035eaa2: 04f5e471   add.w    r1, r4, #0x1c8                
+0035eaa6: 0295       str      r5, [sp, #8]                  
+0035eaa8: 3d6c       ldr      r5, [r7, #0x40]               
+0035eaaa: 0092       str      r2, [sp]                      
+0035eaac: 3a68       ldr      r2, [r7]                      
+0035eaae: cdf80ca0   str.w    sl, [sp, #0xc]                
+0035eab2: cdf81090   str.w    sb, [sp, #0x10]               
+0035eab6: 0192       str      r2, [sp, #4]                  
+0035eab8: fa6b       ldr      r2, [r7, #0x3c]               
+0035eaba: 0596       str      r6, [sp, #0x14]               
+0035eabc: cdf818b0   str.w    fp, [sp, #0x18]               
+0035eac0: 0792       str      r2, [sp, #0x1c]               
+0035eac2: 7a6c       ldr      r2, [r7, #0x44]               
+0035eac4: 0895       str      r5, [sp, #0x20]               
+0035eac6: 0992       str      r2, [sp, #0x24]               
+0035eac8: 04f57c52   add.w    r2, r4, #0x3f00               
+0035eacc: 7c32       adds     r2, #0x7c                     
+0035eace: 9b6c       ldr      r3, [r3, #0x48]               
+0035ead0: fff7bcfa   bl       #0x35e04c                     
+0035ead4: 7860       str      r0, [r7, #4]                  
+0035ead6: 10b1       cbz      r0, #0x35eade                 
+0035ead8: 2046       mov      r0, r4                        
+0035eada: f5f74ff8   bl       #0x353b7c                     
+0035eade: 3a68       ldr      r2, [r7]                      
+0035eae0: 04f58046   add.w    r6, r4, #0x4000               
+0035eae4: 0125       movs     r5, #1                        
+0035eae6: 7349       ldr      r1, [pc, #0x1cc]                ; [0035ecb4]=0081e76c " p_contFileNo "
+0035eae8: 1388       ldrh     r3, [r2]                      
+0035eaea: 0422       movs     r2, #4                        
+0035eaec: 0195       str      r5, [sp, #4]                  
+0035eaee: 0295       str      r5, [sp, #8]                  
+0035eaf0: 0093       str      r3, [sp]                      
+0035eaf2: 0023       movs     r3, #0                        
+0035eaf4: d6f88400   ldr.w    r0, [r6, #0x84]               
+0035eaf8: f4f706fe   bl       #0x353708                     
+0035eafc: 9af80030   ldrb.w   r3, [sl]                      
+0035eb00: 0295       str      r5, [sp, #8]                  
+0035eb02: 0422       movs     r2, #4                        
+0035eb04: 6c49       ldr      r1, [pc, #0x1b0]                ; [0035ecb8]=0081e77b " p_makeNewDirFlg "
+0035eb06: 8de82800   stm.w    sp, {r3, r5}                  
+0035eb0a: 0023       movs     r3, #0                        
+0035eb0c: d6f88400   ldr.w    r0, [r6, #0x84]               
+0035eb10: f4f7fafd   bl       #0x353708                     
+0035eb14: 9af80050   ldrb.w   r5, [sl]                      
+0035eb18: 012d       cmp      r5, #1                        
+0035eb1a: 30d1       bne      #0x35eb7e                     
+0035eb1c: 4ff00008   mov.w    r8, #0                        
+0035eb20: 0195       str      r5, [sp, #4]                  
+0035eb22: cdf80080   str.w    r8, [sp]                      
+0035eb26: 2a46       mov      r2, r5                        
+0035eb28: 0295       str      r5, [sp, #8]                  
+0035eb2a: 4b46       mov      r3, sb                        
+0035eb2c: d6f88400   ldr.w    r0, [r6, #0x84]               
+0035eb30: 6249       ldr      r1, [pc, #0x188]                ; [0035ecbc]=0081e78d "   rootDirName "
+0035eb32: f4f7e9fd   bl       #0x353708                     
+0035eb36: cdf80080   str.w    r8, [sp]                      
+0035eb3a: 0195       str      r5, [sp, #4]                  
+0035eb3c: 2a46       mov      r2, r5                        
+0035eb3e: 0295       str      r5, [sp, #8]                  
+0035eb40: 09f10803   add.w    r3, sb, #8                    
+0035eb44: d6f88400   ldr.w    r0, [r6, #0x84]               
+0035eb48: 5d49       ldr      r1, [pc, #0x174]                ; [0035ecc0]=0081e79d "   recDirName  "
+0035eb4a: f4f7ddfd   bl       #0x353708                     
+0035eb4e: b9f81230   ldrh.w   r3, [sb, #0x12]               
+0035eb52: 5c49       ldr      r1, [pc, #0x170]                ; [0035ecc4]=0081e7ad "   rsvFileFlg "
+0035eb54: 0222       movs     r2, #2                        
+0035eb56: 0295       str      r5, [sp, #8]                  
+0035eb58: 8de82800   stm.w    sp, {r3, r5}                  
+0035eb5c: 4346       mov      r3, r8                        
+0035eb5e: d6f88400   ldr.w    r0, [r6, #0x84]               
+0035eb62: f4f7d1fd   bl       #0x353708                     
+0035eb66: 99f81430   ldrb.w   r3, [sb, #0x14]               
+0035eb6a: 5749       ldr      r1, [pc, #0x15c]                ; [0035ecc8]=0081e7bc "   isRootDir  "
+0035eb6c: 0222       movs     r2, #2                        
+0035eb6e: 0295       str      r5, [sp, #8]                  
+0035eb70: 8de82800   stm.w    sp, {r3, r5}                  
+0035eb74: 4346       mov      r3, r8                        
+0035eb76: d6f88400   ldr.w    r0, [r6, #0x84]               
+0035eb7a: f4f7c5fd   bl       #0x353708                     
+0035eb7e: 7d6b       ldr      r5, [r7, #0x34]               
+0035eb80: 04f58046   add.w    r6, r4, #0x4000               
+0035eb84: 0422       movs     r2, #4                        
+0035eb86: 5149       ldr      r1, [pc, #0x144]                ; [0035eccc]=0081e7cb " p_preEndRecFileFlg "
+0035eb88: 2b78       ldrb     r3, [r5]                      
+0035eb8a: 0093       str      r3, [sp]                      
+0035eb8c: 0123       movs     r3, #1                        
+0035eb8e: 0193       str      r3, [sp, #4]                  
+0035eb90: 0293       str      r3, [sp, #8]                  
+0035eb92: 013b       subs     r3, #1                        
+0035eb94: d6f88400   ldr.w    r0, [r6, #0x84]               
+0035eb98: f4f7b6fd   bl       #0x353708                     
+0035eb9c: 7a6b       ldr      r2, [r7, #0x34]               
+0035eb9e: 1578       ldrb     r5, [r2]                      
+0035eba0: 012d       cmp      r5, #1                        
+0035eba2: 24d1       bne      #0x35ebee                     
+0035eba4: 4ff00008   mov.w    r8, #0                        
+0035eba8: 0195       str      r5, [sp, #4]                  
+0035ebaa: cdf80080   str.w    r8, [sp]                      
+0035ebae: 2a46       mov      r2, r5                        
+0035ebb0: 0295       str      r5, [sp, #8]                  
+0035ebb2: 5b46       mov      r3, fp                        
+0035ebb4: d6f88400   ldr.w    r0, [r6, #0x84]               
+0035ebb8: 4049       ldr      r1, [pc, #0x100]                ; [0035ecbc]=0081e78d "   rootDirName "
+0035ebba: f4f7a5fd   bl       #0x353708                     
+0035ebbe: cdf80080   str.w    r8, [sp]                      
+0035ebc2: 0195       str      r5, [sp, #4]                  
+0035ebc4: 2a46       mov      r2, r5                        
+0035ebc6: 0295       str      r5, [sp, #8]                  
+0035ebc8: 0bf10803   add.w    r3, fp, #8                    
+0035ebcc: d6f88400   ldr.w    r0, [r6, #0x84]               
+0035ebd0: 3b49       ldr      r1, [pc, #0xec]                 ; [0035ecc0]=0081e79d "   recDirName  "
+0035ebd2: f4f799fd   bl       #0x353708                     
+0035ebd6: cdf80080   str.w    r8, [sp]                      
+0035ebda: 0195       str      r5, [sp, #4]                  
+0035ebdc: 2a46       mov      r2, r5                        
+0035ebde: 0295       str      r5, [sp, #8]                  
+0035ebe0: 0bf11103   add.w    r3, fp, #0x11                 
+0035ebe4: d6f88400   ldr.w    r0, [r6, #0x84]               
+0035ebe8: 3949       ldr      r1, [pc, #0xe4]                 ; [0035ecd0]=0081e7e0 "   recFileName "
+0035ebea: f4f78dfd   bl       #0x353708                     
+0035ebee: fd6b       ldr      r5, [r7, #0x3c]               
+0035ebf0: 04f58049   add.w    sb, r4, #0x4000               
+0035ebf4: 0422       movs     r2, #4                        
+0035ebf6: 3749       ldr      r1, [pc, #0xdc]                 ; [0035ecd4]=0081e7f0 " p_endRecFileFlg "
+0035ebf8: 2b78       ldrb     r3, [r5]                      
+0035ebfa: 0093       str      r3, [sp]                      
+0035ebfc: 0123       movs     r3, #1                        
+0035ebfe: 0193       str      r3, [sp, #4]                  
+0035ec00: 0293       str      r3, [sp, #8]                  
+0035ec02: 013b       subs     r3, #1                        
+0035ec04: d9f88400   ldr.w    r0, [sb, #0x84]               
+0035ec08: f4f77efd   bl       #0x353708                     
+0035ec0c: fe6b       ldr      r6, [r7, #0x3c]               
+0035ec0e: 3578       ldrb     r5, [r6]                      
+0035ec10: 012d       cmp      r5, #1                        
+0035ec12: 25d1       bne      #0x35ec60                     
+0035ec14: 4ff00008   mov.w    r8, #0                        
+0035ec18: 0195       str      r5, [sp, #4]                  
+0035ec1a: cdf80080   str.w    r8, [sp]                      
+0035ec1e: 2a46       mov      r2, r5                        
+0035ec20: 0295       str      r5, [sp, #8]                  
+0035ec22: 2649       ldr      r1, [pc, #0x98]                 ; [0035ecbc]=0081e78d "   rootDirName "
+0035ec24: d9f88400   ldr.w    r0, [sb, #0x84]               
+0035ec28: 3b6c       ldr      r3, [r7, #0x40]               
+0035ec2a: f4f76dfd   bl       #0x353708                     
+0035ec2e: 3e6c       ldr      r6, [r7, #0x40]               
+0035ec30: cdf80080   str.w    r8, [sp]                      
+0035ec34: 2a46       mov      r2, r5                        
+0035ec36: 0195       str      r5, [sp, #4]                  
+0035ec38: 06f10803   add.w    r3, r6, #8                    
+0035ec3c: 0295       str      r5, [sp, #8]                  
+0035ec3e: 2049       ldr      r1, [pc, #0x80]                 ; [0035ecc0]=0081e79d "   recDirName  "
+0035ec40: d9f88400   ldr.w    r0, [sb, #0x84]               
+0035ec44: f4f760fd   bl       #0x353708                     
+0035ec48: cdf80080   str.w    r8, [sp]                      
+0035ec4c: 0195       str      r5, [sp, #4]                  
+0035ec4e: 2a46       mov      r2, r5                        
+0035ec50: 0295       str      r5, [sp, #8]                  
+0035ec52: 06f11103   add.w    r3, r6, #0x11                 
+0035ec56: d9f88400   ldr.w    r0, [sb, #0x84]               
+0035ec5a: 1d49       ldr      r1, [pc, #0x74]                 ; [0035ecd0]=0081e7e0 "   recFileName "
+0035ec5c: f4f754fd   bl       #0x353708                     
+0035ec60: 04f58044   add.w    r4, r4, #0x4000               
+0035ec64: 0025       movs     r5, #0                        
+0035ec66: 0126       movs     r6, #1                        
+0035ec68: 2a46       mov      r2, r5                        
+0035ec6a: 8de86000   stm.w    sp, {r5, r6}                  
+0035ec6e: 2b46       mov      r3, r5                        
+0035ec70: 0296       str      r6, [sp, #8]                  
+0035ec72: 1949       ldr      r1, [pc, #0x64]                 ; [0035ecd8]=0081dfbe "RcsBackupTblData End"
+0035ec74: d4f88400   ldr.w    r0, [r4, #0x84]               
+0035ec78: f4f746fd   bl       #0x353708                     
+0035ec7c: 0095       str      r5, [sp]                      
+0035ec7e: 0195       str      r5, [sp, #4]                  
+0035ec80: 2a46       mov      r2, r5                        
+0035ec82: 0296       str      r6, [sp, #8]                  
+0035ec84: 2b46       mov      r3, r5                        
+0035ec86: d4f88400   ldr.w    r0, [r4, #0x84]               
+0035ec8a: 0749       ldr      r1, [pc, #0x1c]                 ; [0035eca8]=0090f1e1
+0035ec8c: f4f73cfd   bl       #0x353708                     
+0035ec90: 7868       ldr      r0, [r7, #4]                  
+0035ec92: 07f10c07   add.w    r7, r7, #0xc                  
+0035ec96: bd46       mov      sp, r7                        
+0035ec98: bde8f08f   pop.w    {r4, r5, r6, r7, r8, sb, sl, fp, pc}
+0035ec9c: ffe7       b        #0x35ec9e                     
+0035ec9e: 3046       mov      r0, r6                        
+0035eca0: bff58aec   blx      #0x11e5b8                       ; _ZdlPv
+0035eca4: c0f592ed   blx      #0x11f7cc                       ; __cxa_end_cleanup

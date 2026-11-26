@@ -1,0 +1,49 @@
+MMgrMp4IfoAcsr::SetLoadInfo  --  0x67B4B8 .. 0x67B6AC   (fichero mmgrifoacsr/MMgrMp4IfoAcsr.cpp, log de salida en linea 523)
+Reconstruccion a partir de 01-setloadinfo-0x67B4B8.dis.  r4=this, r5=codigo de retorno, r7=base de locales.
+
+prologo: push {r4,r5,r6,r7,r8,sb,lr}; sub sp,#0x1BC; r7=sp+0x20
+------------------------------------------------------------------------------------------------
+S1  0x67B4C2  r3=[this+0x48]                  ; puntero al objeto mp4Ifo_If
+    0x67B4C4  if (r3 == 0):
+    0x67B4CA      log("SetLoadInfo : MP4 No exist.")
+    0x67B4D2      r5 = 0x018000FF            <== SALIDA 1      (literal en 0x67B6B8)
+                  goto EPILOGO
+S2  0x67B4D6  r0=[this+0x0C]; r3=[r0]; r3=[r3+0x154]; blx r3      ; vt[0x154]() "esta cargado?"
+    0x67B4E0  r5 = r0
+    0x67B4E2  if (r0 == 0):
+    0x67B4E6      log("SetLoadInfo : It is not loaded.")
+                  goto EPILOGO                                   <== SALIDA 2  (r5 = 0)
+S3  0x67B4EA  [this+0x0C]->vt[0x28](0x28)
+    0x67B502  0x5FC968(&local_0x15C)                            ; init de struct
+    0x67B51A..0x67B52A  local_0x15C=1, +0x160=0, +0x164=4, +0x168=1, +0x16C=1, +0x170=1
+    0x67B52E  r5 = mp4Ifo_If::GetContentCount([this+0x48], 1, 0, 1, &count_0x190)   [0x6E8C08]
+S4  0x67B534  if (r5 != 0) goto L_NOFRATE                      <== SALIDA 3 (codigo propagado)
+    0x67B53A  if (count == 0) goto L_NOFRATE                    <== SALIDA 4 (r5 = 0)
+S5  0x67B598  r5 = mp4Ifo_If::GetPlayThumbnailInfo([this+0x48], &struct_0x15C, 0, 0x1F,
+                   &l_0x18C,&l_0x188,&l_0x13C,&l_0x174,&l_0x184,&l_0x180,&l_0x17C,&l_0x000) [0x6E8430]
+    0x67B59C  if (byte_0x000 == 0) goto L_NOFRATE               <== SALIDA 5 (r5 = resultado, 0 si ok)
+    0x67B5A4  fr = [r7+0x124]                                   ; enum de cadencia del clip
+    0x67B5A8  if (fr > 9)      goto L_INVALID                   <== SALIDA 6
+    0x67B5AC  m = 1 << fr
+    0x67B5B0  if (m & 0x2A9)   goto L_NTSC                      ; bits 0,3,5,7,9
+    0x67B5BE  if (m & 0x154)   goto L_PAL                       ; bits 2,4,6,8
+    0x67B5C4  if (m & 0x002)   goto L_UNKNOWN                   ; fr == 1
+                                   else L_INVALID               <== SALIDA 7
+L_NTSC   0x67B5E2  [this+0x0C]->vt[0x44](0);  log("SetLoadInfo : TvSystem is NTSC, frameRate %d")   r5=0
+L_PAL    0x67B5CC  [this+0x0C]->vt[0x44](1);  log("SetLoadInfo : TvSystem is PAL, frameRate %d")    r5=0
+L_UNKNOWN 0x67B600 [this+0x0C]->vt[0x44](TvSystem()); log("... TvSystem is %d, Unknown frameRate %d") r5=0
+L_INVALID 0x67B626 [this+0x0C]->vt[0x44](TvSystem()); log("... TvSystem is %d, Invalid frameRate %d") r5=0
+L_NOFRATE 0x67B650 [this+0x0C]->vt[0x44](TvSystem())           ; sin log
+------------------------------------------------------------------------------------------------
+S6  0x67B660  b = 0; 0x6EB9D8([this+0x48], &b)                 ; consulta "necesita salvage"
+    0x67B670  if (b != 0):
+    0x67B676      [this+0x0C]->vt[0x88](1)
+    0x67B684      log("SetLoadInfo : Need salvage")              ; NO toca r5
+S7  0x67B68E  MmgrLog(this, 0x193, r5, linea=0x20B(523), "mmgrifoacsr/MMgrMp4IfoAcsr.cpp", "SetLoadInfo")  [0x677B8E -> 0x64E300]
+    0x67B6AC  return r5
+------------------------------------------------------------------------------------------------
+RESUMEN: SetLoadInfo solo puede devolver != 0 por TRES motivos:
+   (1) 0x018000FF            -> no existe el objeto mp4Ifo_If ([this+0x48]==0)
+   (2) 0xB0100002            -> mutex de mp4Ifo_If ocupado (0x5BAD00; id 0x2f en 0x6E8C08, id 0x23 en 0x6E8430)
+   (3) codigo del dispositivo -> devuelto por GetContentCount(0x54) o GetPlayThumbnailInfo(vt[0x54])
+  Todo lo demas (cadencia desconocida, invalida, conteo 0, "not loaded") devuelve 0.

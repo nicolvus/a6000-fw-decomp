@@ -1,0 +1,127 @@
+# 05 - Escritor #3bis: WarmBootInit 0x2B4624 y su envoltorio 0x2B4AAC
+     (FlashLib::WarmBootInit + FBM::WarmBootInit). Ningun 'bl' en .text llega a 0x2B4AAC:
+     se invoca por puntero (callback registrado con FlashLib::SetBackupMgrCallback 0x11E7A0/0x11E09C).
+
+002b4624: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+002b4628: 8db0       sub      sp, #0x34                     
+002b462a: 02af       add      r7, sp, #8                    
+002b462c: 69f67ae9   blx      #0x11d924                       ; _ZN8FlashLib14InvalidateSyncEv
+002b4630: 5d4c       ldr      r4, [pc, #0x174]                ; [002b47a8]=00a3697c
+002b4632: 5e4b       ldr      r3, [pc, #0x178]                ; [002b47ac]=00a36c20
+002b4634: 5e4a       ldr      r2, [pc, #0x178]                ; [002b47b0]=009e6970
+002b4636: 1a60       str      r2, [r3]                      
+002b4638: 0022       movs     r2, #0                        
+002b463a: 5a60       str      r2, [r3, #4]                  
+002b463c: 9a60       str      r2, [r3, #8]                  
+002b463e: da60       str      r2, [r3, #0xc]                
+002b4640: 2368       ldr      r3, [r4]                      
+002b4642: 33b9       cbnz     r3, #0x2b4652                 
+002b4644: 5020       movs     r0, #0x50                     
+002b4646: 6af6aee8   blx      #0x11e7a4                       ; _Znwj
+002b464a: 0546       mov      r5, r0                        
+002b464c: 8bf784fb   bl       #0x23fd58                     
+002b4650: 2560       str      r5, [r4]                      
+002b4652: 5848       ldr      r0, [pc, #0x160]                ; [002b47b4]=007e7c85 "WarmBootInit"
+002b4654: 0025       movs     r5, #0                        
+002b4656: fdf707fc   bl       #0x2b1e68                     
+002b465a: 5749       ldr      r1, [pc, #0x15c]                ; [002b47b8]=00a36974
+002b465c: 574a       ldr      r2, [pc, #0x15c]                ; [002b47bc]=00a36970
+002b465e: 2c46       mov      r4, r5                        
+002b4660: 574b       ldr      r3, [pc, #0x15c]                ; [002b47c0]=00a36c08
+002b4662: 2e46       mov      r6, r5                        
+002b4664: 0d60       str      r5, [r1]                      
+002b4666: 8a46       mov      sl, r1                        
+002b4668: 1560       str      r5, [r2]                      
+002b466a: 9346       mov      fp, r2                        
+002b466c: 1d60       str      r5, [r3]                      
+002b466e: 62e0       b        #0x2b4736                     
+002b4670: 5448       ldr      r0, [pc, #0x150]                ; [002b47c4]=007e7c92 "[FBM]Init()  [entryNo:%d]"
+002b4672: 2946       mov      r1, r5                        
+002b4674: 0026       movs     r6, #0                        
+002b4676: 7e62       str      r6, [r7, #0x24]               
+002b4678: 00f002fd   bl       #0x2b5080                     
+002b467c: 58f82500   ldr.w    r0, [r8, r5, lsl #2]          
+002b4680: 68f688ef   blx      #0x11d594                       ; _ZN8FlashLib16CheckExistSectorEm
+002b4684: dff85091   ldr.w    sb, [pc, #0x150]                ; [002b47d8]=00a3699c
+002b4688: 4528       cmp      r0, #0x45                     
+002b468a: 45d1       bne      #0x2b4718                     
+002b468c: 3146       mov      r1, r6                        
+002b468e: 07f12402   add.w    r2, r7, #0x24                 
+  ...
+002b46c8: 38f82500   ldrh.w   r0, [r8, r5, lsl #2]          
+002b46cc: 2a46       mov      r2, r5                        
+002b46ce: 796a       ldr      r1, [r7, #0x24]               
+002b46d0: fff76aff   bl       #0x2b45a8                     
+002b46d4: 0446       mov      r4, r0                        
+002b46d6: f8b9       cbnz     r0, #0x2b4718                 
+002b46d8: 1423       movs     r3, #0x14                     
+002b46da: 03fb0593   mla      r3, r3, r5, sb                
+002b46de: d3f80c80   ldr.w    r8, [r3, #0xc]                
+002b46e2: b8f1000f   cmp.w    r8, #0                        
+002b46e6: 24d0       beq      #0x2b4732                     
+002b46e8: 4046       mov      r0, r8                        
+002b46ea: d3f81090   ldr.w    sb, [r3, #0x10]               
+002b46ee: fdf76dfb   bl       #0x2b1dcc                     
+002b46f2: 58b9       cbnz     r0, #0x2b470c                 
+002b46f4: 354b       ldr      r3, [pc, #0xd4]                 ; [002b47cc]=00a36c0c
+002b46f6: b9f1010f   cmp.w    sb, #1                        
+002b46fa: caf80080   str.w    r8, [sl]                      
+002b46fe: c3f80090   str.w    sb, [r3]                      
+002b4702: 16d1       bne      #0x2b4732                     
+002b4704: 2e49       ldr      r1, [pc, #0xb8]                 ; [002b47c0]=00a36c08
+002b4706: c1f80080   str.w    r8, [r1]                      
+002b470a: 12e0       b        #0x2b4732                     
+002b470c: 304b       ldr      r3, [pc, #0xc0]                 ; [002b47d0]=00a36c18
+002b470e: cbf80080   str.w    r8, [fp]                      
+002b4712: c3f80090   str.w    sb, [r3]                      
+002b4716: 0ce0       b        #0x2b4732                     
+002b4718: 58f82510   ldr.w    r1, [r8, r5, lsl #2]          
+002b471c: 1422       movs     r2, #0x14                     
+002b471e: 6a43       muls     r2, r5, r2                    
+002b4720: 09eb0203   add.w    r3, sb, r2                    
+002b4724: 49f80210   str.w    r1, [sb, r2]                  
+002b4728: 0022       movs     r2, #0                        
+002b472a: 9a60       str      r2, [r3, #8]                  
+002b472c: da60       str      r2, [r3, #0xc]                
+002b472e: 7a6a       ldr      r2, [r7, #0x24]               
+002b4730: 5a60       str      r2, [r3, #4]                  
+002b4732: 0135       adds     r5, #1                        
+002b4734: edb2       uxtb     r5, r5                        
+
+== llamantes de WarmBootInit 0x2B4624 ==
+0x2b4ab4 None
+== llamantes de 0x2B4AAC ==
+
+== 0x2B4AAC (envoltorio) ==
+002b4aac: 80b5       push     {r7, lr}                      
+002b4aae: 00af       add      r7, sp, #0                    
+002b4ab0: 69f62cee   blx      #0x11e70c                       ; _ZN8FlashLib12WarmBootInitEv
+002b4ab4: fff7b6fd   bl       #0x2b4624                     
+002b4ab8: 0020       movs     r0, #0                        
+002b4aba: 80bd       pop      {r7, pc}                      
+
+== 0x2B4ABC: hilo que llama ReadFirstPackData(0x21,3) en 0x2B4AEA (unico sitio con userID/mediaID constantes) ==
+002b4abc: b0b5       push     {r4, r5, r7, lr}              
+002b4abe: 90b0       sub      sp, #0x40                     
+002b4ac0: 02af       add      r7, sp, #8                    
+002b4ac2: 154c       ldr      r4, [pc, #0x54]                 ; [002b4b18]=00a36c48
+002b4ac4: 2368       ldr      r3, [r4]                      
+002b4ac6: 632b       cmp      r3, #0x63                     
+002b4ac8: 19d0       beq      #0x2b4afe                     
+002b4aca: b3f1ff3f   cmp.w    r3, #-1                       
+002b4ace: 19d0       beq      #0x2b4b04                     
+002b4ad0: 012b       cmp      r3, #1                        
+002b4ad2: 1ad1       bne      #0x2b4b0a                     
+002b4ad4: 07f12c03   add.w    r3, r7, #0x2c                 
+002b4ad8: 0321       movs     r1, #3                        
+002b4ada: 0093       str      r3, [sp]                      
+002b4adc: 07f13702   add.w    r2, r7, #0x37                 
+002b4ae0: 07f13003   add.w    r3, r7, #0x30                 
+002b4ae4: 2120       movs     r0, #0x21                     
+002b4ae6: 3d1d       adds     r5, r7, #4                    
+002b4ae8: 0195       str      r5, [sp, #4]                  
+002b4aea: fef765ff   bl       #0x2b39b8                     
+002b4aee: 4ff47a70   mov.w    r0, #0x3e8                    
+002b4af2: 48f3f5fd   bl       #0x5fd6e0                     
+002b4af6: 2846       mov      r0, r5                        
+002b4af8: fff744fd   bl       #0x2b4584                     

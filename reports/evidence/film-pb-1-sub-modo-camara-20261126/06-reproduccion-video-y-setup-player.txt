@@ -1,0 +1,122 @@
+# Reproduccion de video: bloque que pide el area de movie (r0=type de la tabla 0x85AA54 = {0x0,0x18})
+# y luego llama a SetUpPlayerInstance (0x43910C). Cadenas del bloque: 0x85AA5C 'EnterMoviePbStillRec', 0x85AA71 'core/feature/player/cam/feaCorePbCaptureApi.cpp'
+
+00437a40: 09b1       cbz      r1, #0x437a46                 
+00437a42: 2b7a       ldrb     r3, [r5, #8]                  
+00437a44: 13b9       cbnz     r3, #0x437a4c                 
+00437a46: 0523       movs     r3, #5                        
+00437a48: 3b60       str      r3, [r7]                      
+00437a4a: 56e0       b        #0x437afa                     
+00437a4c: 6b68       ldr      r3, [r5, #4]                  
+00437a4e: c0f8c01d   str.w    r1, [r0, #0xdc0]              
+00437a52: c0f8b83d   str.w    r3, [r0, #0xdb8]              
+00437a56: d0f8ec01   ldr.w    r0, [r0, #0x1ec]              
+00437a5a: 10f018f9   bl       #0x447c8e                     
+00437a5e: 0028       cmp      r0, #0                        
+00437a60: 48d1       bne      #0x437af4                     
+00437a62: 21f305fd   bl       #0x759470                     
+00437a66: 08b1       cbz      r0, #0x437a6c                 
+00437a68: 1ff390f9   bl       #0x756d8c                     
+00437a6c: d4f8b81d   ldr.w    r1, [r4, #0xdb8]              
+00437a70: 11f0100f   tst.w    r1, #0x10                     
+00437a74: 0ad1       bne      #0x437a8c                     
+00437a76: 11f0800f   tst.w    r1, #0x80                     
+00437a7a: 09d1       bne      #0x437a90                     
+00437a7c: 01f48071   and      r1, r1, #0x100                
+00437a80: 0029       cmp      r1, #0                        
+00437a82: 0cbf       ite      eq                            
+00437a84: 0821       movs     r1, #8                        
+00437a86: 4ff48071   mov.w    r1, #0x100                    
+00437a8a: 02e0       b        #0x437a92                     
+00437a8c: 1021       movs     r1, #0x10                     
+00437a8e: 00e0       b        #0x437a92                     
+00437a90: 8021       movs     r1, #0x80                     
+00437a92: 2b69       ldr      r3, [r5, #0x10]               
+00437a94: 012b       cmp      r3, #1                        
+00437a96: 9abf       itte     ls                            
+00437a98: 244a       ldrls    r2, [pc, #0x90]                 ; [00437b2c]=0085aa54
+00437a9a: 52f82300   ldr.w    r0, [r2, r3, lsl #2]          
+00437a9e: 0020       movs     r0, #0                        
+00437aa0: eb68       ldr      r3, [r5, #0xc]                
+00437aa2: 0122       movs     r2, #1                        
+00437aa4: f0f702fd   bl       #0x4284ac                     
+00437aa8: c4f8ac0d   str.w    r0, [r4, #0xdac]              
+00437aac: 78b1       cbz      r0, #0x437ace                 
+00437aae: 0026       movs     r6, #0                        
+00437ab0: 0390       str      r0, [sp, #0xc]                
+00437ab2: 0121       movs     r1, #1                        
+00437ab4: 2046       mov      r0, r4                        
+00437ab6: 3246       mov      r2, r6                        
+00437ab8: d4f8c03d   ldr.w    r3, [r4, #0xdc0]              
+00437abc: 0096       str      r6, [sp]                      
+00437abe: 0196       str      r6, [sp, #4]                  
+00437ac0: 0296       str      r6, [sp, #8]                  
+00437ac2: 0496       str      r6, [sp, #0x10]               
+00437ac4: 01f022fb   bl       #0x43910c                     
+00437ac8: 18b9       cbnz     r0, #0x437ad2                 
+00437aca: c0f12dfb   bl       #0x5f8128                     
+00437ace: 0823       movs     r3, #8                        
+00437ad0: bae7       b        #0x437a48                     
+00437ad2: 6b7a       ldrb     r3, [r5, #9]                  
+00437ad4: 3246       mov      r2, r6                        
+00437ad6: d4f8940d   ldr.w    r0, [r4, #0xd94]              
+00437ada: 3b71       strb     r3, [r7, #4]                  
+00437adc: ab7a       ldrb     r3, [r5, #0xa]                
+00437ade: 7b71       strb     r3, [r7, #5]                  
+00437ae0: eb7a       ldrb     r3, [r5, #0xb]                
+00437ae2: 0096       str      r6, [sp]                      
+00437ae4: bb71       strb     r3, [r7, #6]                  
+00437ae6: 6b69       ldr      r3, [r5, #0x14]               
+00437ae8: 7968       ldr      r1, [r7, #4]                  
+00437aea: 0193       str      r3, [sp, #4]                  
+00437aec: 2b69       ldr      r3, [r5, #0x10]               
+00437aee: d0f6d9f9   bl       #0x307ea4                     
+00437af2: b0b1       cbz      r0, #0x437b22                 
+00437af4: d9f25cfb   bl       #0x7111b0                     
+00437af8: 3860       str      r0, [r7]                      
+00437afa: 07f10806   add.w    r6, r7, #8                    
+00437afe: 0023       movs     r3, #0                        
+00437b00: a068       ldr      r0, [r4, #8]                  
+
+# SetUpPlayerInstance: setupMode 1 -> lee [+0x108]/[+0x110] (movie); setupMode 2 -> [+0x138]/[+0x140] (still);
+# despacho tbb en 0x4391F0 (setupMode 1..5); si el puntero de tabla es NULL salta a 0x439460 y NO llama a SetArea.
+
+00439240: d4f8940d   ldr.w    r0, [r4, #0xd94]              
+00439244: f968       ldr      r1, [r7, #0xc]                
+00439246: cef61ffe   bl       #0x307e88                     
+0043924a: 002d       cmp      r5, #0                        
+0043924c: 00f00881   beq.w    #0x439460                     
+00439250: d4f8940d   ldr.w    r0, [r4, #0xd94]              
+00439254: 2946       mov      r1, r5                        
+00439256: d5f80891   ldr.w    sb, [r5, #0x108]              
+0043925a: d5f81081   ldr.w    r8, [r5, #0x110]              
+0043925e: cef61afe   bl       #0x307e96                     
+00439262: f8e0       b        #0x439456                     
+00439264: 07f11002   add.w    r2, r7, #0x10                 
+004392c0: 0123       movs     r3, #1                        
+004392c2: e8f631fe   bl       #0x321f28                     
+004392c6: 002d       cmp      r5, #0                        
+004392c8: 00f0ca80   beq.w    #0x439460                     
+004392cc: d4f8980d   ldr.w    r0, [r4, #0xd98]              
+004392d0: 2946       mov      r1, r5                        
+004392d2: d5f83891   ldr.w    sb, [r5, #0x138]              
+004392d6: d5f84081   ldr.w    r8, [r5, #0x140]              
+004392da: e8f63dfe   bl       #0x321f58                     
+004392de: bae0       b        #0x439456                     
+00439444: a00d       lsrs     r0, r4, #0x16                 
+00439446: 2946       mov      r1, r5                        
+00439448: bdf646fb   bl       #0x2f6ad8                     
+0043944c: 03e0       b        #0x439456                     
+0043944e: 3db1       cbz      r5, #0x439460                 
+00439450: 4ff00008   mov.w    r8, #0                        
+00439454: c146       mov      sb, r8                        
+00439456: 4846       mov      r0, sb                        
+00439458: 4146       mov      r1, r8                        
+0043945a: 0122       movs     r2, #1                        
+0043945c: 20f340f8   bl       #0x7594e0                     
+00439460: 7b68       ldr      r3, [r7, #4]                  
+00439462: 4ff00108   mov.w    r8, #1                        
+
+# Tabla 0x85AA54 (type para Movie Pb / Movie Pb 3D) y literales:
+--- type table @ 0085aa54 ---
+0085aa54: 00000000 00000018 65746e45 766f4d72  ........EnterMov

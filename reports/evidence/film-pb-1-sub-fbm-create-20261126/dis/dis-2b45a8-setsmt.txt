@@ -1,0 +1,59 @@
+002b45a8: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+002b45ac: 8eb0       sub      sp, #0x38                     
+002b45ae: 0546       mov      r5, r0                        
+002b45b0: 00af       add      r7, sp, #0                    
+002b45b2: 1a48       ldr      r0, [pc, #0x68]                 ; [002b461c]=007e7c6f "SetSectorManagerTable"
+002b45b4: 0c46       mov      r4, r1                        
+002b45b6: 1646       mov      r6, r2                        
+002b45b8: fdf756fc   bl       #0x2b1e68                     
+002b45bc: 8023       movs     r3, #0x80                     
+002b45be: 381d       adds     r0, r7, #4                    
+002b45c0: fb60       str      r3, [r7, #0xc]                
+002b45c2: 07f13701   add.w    r1, r7, #0x37                 
+002b45c6: 803b       subs     r3, #0x80                     
+002b45c8: 07f13002   add.w    r2, r7, #0x30                 
+002b45cc: 87f82830   strb.w   r3, [r7, #0x28]               
+002b45d0: 7b61       str      r3, [r7, #0x14]               
+002b45d2: fb61       str      r3, [r7, #0x1c]               
+002b45d4: bb61       str      r3, [r7, #0x18]               
+002b45d6: 3b62       str      r3, [r7, #0x20]               
+002b45d8: 07f12c03   add.w    r3, r7, #0x2c                 
+002b45dc: bd80       strh     r5, [r7, #4]                  
+002b45de: bc60       str      r4, [r7, #8]                  
+002b45e0: fff7b2f9   bl       #0x2b3948                     
+002b45e4: 8046       mov      r8, r0                        
+002b45e6: 60b9       cbnz     r0, #0x2b4602                 
+002b45e8: 0d49       ldr      r1, [pc, #0x34]                 ; [002b4620]=00a3699c
+002b45ea: 1423       movs     r3, #0x14                     
+002b45ec: 3a6b       ldr      r2, [r7, #0x30]               
+002b45ee: 5e43       muls     r6, r3, r6                    
+002b45f0: 8b19       adds     r3, r1, r6                    
+002b45f2: 8d51       str      r5, [r1, r6]                  
+002b45f4: 0121       movs     r1, #1                        
+002b45f6: 9960       str      r1, [r3, #8]                  
+002b45f8: 1178       ldrb     r1, [r2]                      
+002b45fa: 5278       ldrb     r2, [r2, #1]                  
+002b45fc: 5c60       str      r4, [r3, #4]                  
+002b45fe: d960       str      r1, [r3, #0xc]                
+002b4600: 1a61       str      r2, [r3, #0x10]               
+002b4602: 381d       adds     r0, r7, #4                    
+002b4604: fff7beff   bl       #0x2b4584                     
+002b4608: 0448       ldr      r0, [pc, #0x10]                 ; [002b461c]=007e7c6f "SetSectorManagerTable"
+002b460a: 4146       mov      r1, r8                        
+002b460c: fdf7a4fc   bl       #0x2b1f58                     
+002b4610: 4046       mov      r0, r8                        
+002b4612: 07f13807   add.w    r7, r7, #0x38                 
+002b4616: bd46       mov      sp, r7                        
+002b4618: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+002b461c: 6f7c       ldrb     r7, [r5, #0x11]               
+002b461e: 7e00       lsls     r6, r7, #1                    
+002b4620: 9c69       ldr      r4, [r3, #0x18]               
+002b4622: a300       lsls     r3, r4, #2                    
+002b4624: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+002b4628: 8db0       sub      sp, #0x34                     
+002b462a: 02af       add      r7, sp, #8                    
+002b462c: 69f67ae9   blx      #0x11d924                       ; _ZN8FlashLib14InvalidateSyncEv
+002b4630: 5d4c       ldr      r4, [pc, #0x174]                ; [002b47a8]=00a3697c
+002b4632: 5e4b       ldr      r3, [pc, #0x178]                ; [002b47ac]=00a36c20
+002b4634: 5e4a       ldr      r2, [pc, #0x178]                ; [002b47b0]=009e6970
+002b4636: 1a60       str      r2, [r3]                      

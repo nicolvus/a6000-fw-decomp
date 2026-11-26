@@ -1,0 +1,68 @@
+# Los 69 emplazamientos de StreamAreaFree(unit, subArea=7) agrupados por la transicion en la que caen.
+# El subArea 7 (=0x1|0x2|0x4) cubre TODAS las areaType 0..0xA -> borra tambien el hueco 11 (areaType 0).
+# "reasigna" = en la MISMA funcion, despues del free, hay una llamada a GetMemoryInformation 0x4284ac
+#              (que es el unico camino a StreamAreaAllocate 0x5f7be8 / ChangeAllocate 0x5f7f1c).
+
+[A] SALIDA DE REPRODUCCION / TEARDOWN  (free SIN reasignacion: el area queda a cero hasta el siguiente Enter*Pb)
+  00437040  PlayerCallback id 0x60  (0x436fcc)         destruye [this+0xd9c] y libera todo
+  0043713a  ExitThumbnailPb      (core 0x4370d4)
+  0043974c  ExitStillPb          (core 0x439710)
+  00439540  ClearPlayerInstance  (0x4394a4)            libera antes de destruir el player
+  0043f6e4  ClearRecorderInstance(0x43f644)
+  0043a710  PlayerCallback id 0x20  (0x43a6d0)         destruye [this+0xd98] y libera todo
+  0043a770  PlayerCallback id 0x21  (0x43a73c)         idem
+  0042987a  SetWaitCoreCtrl (0x429850) msg 0x40000001/2 con [p1]!=0
+  0042988e  SetWaitCoreCtrl (0x429850) msg 0x4000005f   con [p1]!=0
+  0043095c  0x430924                solo en la rama de FALLO de SetUpPlayerInstance
+  0043818c / 004381f0  PlayerCallback id 0x00 (0x438148)  destruye [this+0xd94] y libera todo
+  0042db34  SuspendDriveEventCheck  0042db84  ResumeDriveEventCheck
+  0042b710  (func 0x42b618) callback de divide
+  00428994  envoltorio publico sin argumentos 0x42898c -> b.w free(unit,7)
+  005f8e7e  MEMI "Free" (comando de depuracion 0x5f8e6c)
+
+[B] OPERACIONES SOBRE EL VOLUMEN  (liberan todo, y reasignan con GetMemoryInformation en la misma funcion)
+  003e8550 ExitDubbing   003e85e0 EnterDubbing   0042d3aa / 0042d41e Dubbing
+  0042dea6 / 0042df22 ChangeRotationAngle        0042e1c0 / 0042e238 DeleteHighlightPL
+  0042e2fa / 0042e372 DeleteDirectory            0042e4a0 / 0042e57e Demo Mode Delete
+  0042e6b2 / 0042e732 Copy                       0042e846 / 0042e8c6 Move
+  0042e9c8 / 0042ea2a Divide                     0042eb18 / 0042ebf6 Demo Mode Protect
+  0042eeb2 / 0042ef04 BeginImport                0042ef9e EndImport
+  0042f20a / 0042f28a CheckDpofContents          0042f39a / 0042f40c / 0042f4aa WriteDpofFile
+  0042f50e ChangeRotationAngle                   0042f584 PbStop
+  0042f768 DeleteHighlightPL                     0042f7ee DeleteDirectory
+  0042f8c0 Demo Mode Delete Free                 0042f936 Copy
+  0042f9a6 ProcCbMediaMove                       0042fa32 ProcCbMediaDivide
+  0042fb88 ReceiveCompDivideRecovery             0042fc0e Demo Mode Protect Free
+  0042ffa8 BeginImport                           00430030 EndImport
+  004300f2 CheckDpofContents                     0043016a WriteDpofFile   004301d4 ClearDpofFile
+  00436612 CheckExtDeviceFirmUpConditions        004366ba UpdateExtDeviceFirmware
+  00438cd2 / 00438e96 EnterMoviePbStillRec       00438fd0 ExitMoviePbStillRec
+
+[C] ENTRADA DE MODO DE REPRODUCCION  (free y reasignacion inmediata; el free cae en la rama de ERROR)
+  00436758  EnterThumbnailPb   (0x4366ec)  free solo si SetUpPlayerInstance devuelve 0
+  00436c22  EnterAviThumbnailPb(0x436b90) mismo patron
+  00437aca  EnterMoviePb       (0x437a28) mismo patron
+  004396b2  EnterStillPb       (0x4395f8) mismo patron
+
+[D] Las 12 llamadas a SetUpPlayerInstance 0x43910c y el hueco que cada una lee
+  sitio      funcion                                setupMode  entrada leida   GetMemoryInformation antes?
+  0043094c   0x430924                                   2      idx 13 (+0x138)   NO  <- [this+0xdac] cacheado
+  00431184   DvdEnterFinalize 0x43106c                  3      idx 11 o 13       si  (0x431102)
+  0043530a   0x43525c (BGM: GetMMgrObj/EnterBgmRead)    5      idx 11 (+0x108)   NO  <- [this+0xb0]
+  00436752   EnterThumbnailPb 0x4366ec                  3      idx 11 o 13       si  (0x436730)
+  00436c1c   EnterAviThumbnailPb 0x436b90               3      idx 11 o 13       si  (0x436bfa)
+  00437ac4   EnterMoviePb 0x437a28                      1      idx 11 (+0x108)   si  (0x437aa4)
+  00438e90   EnterMoviePbStillRec 0x438d74              4      idx 11 (+0x108)   si  (0x438e66)
+  004396a6   EnterStillPb 0x4395f8                      2      idx 13 (+0x138)   si  (0x43966c)
+  00439812   SetPreLoadStill 0x439794                   2      NO APLICA        NO, y ademas pasa MemInfo=NULL -> 0x4392c8 salta a 0x439460
+  004463f2   ProcInMakeThumbEnterSPB 0x4463a4           2      idx 13            si  (0x4463d6)
+  00446c1a   ProcInMakeThumbEnterIPB 0x446bcc           3      idx 11 o 13       si  (0x446bfe)
+  00446e02   ProcInMakeThumbEnterMPB 0x446dc0           1      idx 11            si  (0x446de8)
+  (setupMode > 5 -> 0x43944e: SetArea(0,0,1) literal, sin leer la tabla)
+
+[E] 3er argumento de GetMemoryInformation en cada uno de los 33 llamadores
+  r2 = 1 -> StreamAreaAllocate : 0x42d346 0x42ded4 0x42e1ee 0x42e328 0x42e4f6 0x42e6dc 0x42e870 0x42e9ea
+           0x42eb6e 0x42eee0 0x42f234 0x42f3c4 0x42f4d4 0x431102 0x43271a 0x4365e0 0x43669e 0x436730
+           0x436bfa 0x437aa4 0x438e66 0x43966c 0x43e61c 0x442602 0x4427da 0x442872 0x443500
+  r2 = 0 -> ChangeAllocate     : 0x43f004 (EnterRecAtRecovery 0x43ebf8)
+  r2 = byte del parametro     : 0x4463d6 0x446530 0x446658 0x446bfe 0x446de8  (ldrb r?, [r?, #0x64])

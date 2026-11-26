@@ -1,0 +1,139 @@
+002b43f0: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+002b43f4: 9ab0       sub      sp, #0x68                     
+002b43f6: 02af       add      r7, sp, #8                    
+002b43f8: 0646       mov      r6, r0                        
+002b43fa: 0d46       mov      r5, r1                        
+002b43fc: fdf7defc   bl       #0x2b1dbc                     
+002b4400: 18b1       cbz      r0, #0x2b440a                 
+002b4402: 07f15000   add.w    r0, r7, #0x50                 
+002b4406: 4bf377fa   bl       #0x5ff8f8                     
+002b440a: 3146       mov      r1, r6                        
+002b440c: 2a46       mov      r2, r5                        
+002b440e: 5448       ldr      r0, [pc, #0x150]                ; [002b4560]=007e7bee "[FBM] BackupMgr::InitBackupData(operatio"
+002b4410: 00f036fe   bl       #0x2b5080                     
+002b4414: 5348       ldr      r0, [pc, #0x14c]                ; [002b4564]=007e7c2e "InitBackupData"
+002b4416: fdf727fd   bl       #0x2b1e68                     
+002b441a: 69f684ea   blx      #0x11d924                       ; _ZN8FlashLib14InvalidateSyncEv
+002b441e: 3046       mov      r0, r6                        
+002b4420: fdf7d4fc   bl       #0x2b1dcc                     
+002b4424: 0128       cmp      r0, #1                        
+002b4426: 8046       mov      r8, r0                        
+002b4428: 08d0       beq      #0x2b443c                     
+002b442a: 4f4b       ldr      r3, [pc, #0x13c]                ; [002b4568]=00a36974
+002b442c: 012d       cmp      r5, #1                        
+002b442e: 1e60       str      r6, [r3]                      
+002b4430: 4e4b       ldr      r3, [pc, #0x138]                ; [002b456c]=00a36c0c
+002b4432: 1d60       str      r5, [r3]                      
+002b4434: 06d1       bne      #0x2b4444                     
+002b4436: 4e4b       ldr      r3, [pc, #0x138]                ; [002b4570]=00a36c08
+002b4438: 1e60       str      r6, [r3]                      
+002b443a: 03e0       b        #0x2b4444                     
+002b443c: 4d4b       ldr      r3, [pc, #0x134]                ; [002b4574]=00a36970
+002b443e: 1e60       str      r6, [r3]                      
+002b4440: 4d4b       ldr      r3, [pc, #0x134]                ; [002b4578]=00a36c18
+002b4442: 1d60       str      r5, [r3]                      
+002b4444: 3046       mov      r0, r6                        
+002b4446: 2946       mov      r1, r5                        
+002b4448: fff7f2fd   bl       #0x2b4030                     
+002b444c: 0446       mov      r4, r0                        
+002b444e: 60b1       cbz      r0, #0x2b446a                 
+002b4450: b8f1010f   cmp.w    r8, #1                        
+002b4454: 4ff00003   mov.w    r3, #0                        
+002b4458: 05d0       beq      #0x2b4466                     
+002b445a: 434a       ldr      r2, [pc, #0x10c]                ; [002b4568]=00a36974
+002b445c: 012d       cmp      r5, #1                        
+002b445e: 1360       str      r3, [r2]                      
+002b4460: 03d1       bne      #0x2b446a                     
+002b4462: 434a       ldr      r2, [pc, #0x10c]                ; [002b4570]=00a36c08
+002b4464: 00e0       b        #0x2b4468                     
+002b4466: 434a       ldr      r2, [pc, #0x10c]                ; [002b4574]=00a36970
+002b4468: 1360       str      r3, [r2]                      
+002b446a: fdf7a7fc   bl       #0x2b1dbc                     
+002b446e: 78b1       cbz      r0, #0x2b4490                 
+002b4470: 07f15000   add.w    r0, r7, #0x50                 
+002b4474: 4ff00108   mov.w    r8, #1                        
+002b4478: 4bf360fa   bl       #0x5ff93c                     
+002b447c: 07f15000   add.w    r0, r7, #0x50                 
+002b4480: 0221       movs     r1, #2                        
+002b4482: 4bf371fa   bl       #0x5ff968                     
+002b4486: 40f23933   movw     r3, #0x339                    
+002b448a: 7b60       str      r3, [r7, #4]                  
+002b448c: 3860       str      r0, [r7]                      
+002b448e: 00e0       b        #0x2b4492                     
+002b4490: 8046       mov      r8, r0                        
+002b4492: 6bf6a6ee   blx      #0x1201e0                       ; _ZN8FlashLib12ValidateSyncEv
+002b4496: 6af6b8ec   blx      #0x11ee08                       ; _ZN8FlashLib4SyncEv
+002b449a: fdf78ffc   bl       #0x2b1dbc                     
+002b449e: a0b1       cbz      r0, #0x2b44ca                 
+002b44a0: 07f15000   add.w    r0, r7, #0x50                 
+002b44a4: 4bf34afa   bl       #0x5ff93c                     
+002b44a8: 07f15000   add.w    r0, r7, #0x50                 
+002b44ac: 0221       movs     r1, #2                        
+002b44ae: 4bf35bfa   bl       #0x5ff968                     
+002b44b2: 07f16002   add.w    r2, r7, #0x60                 
+002b44b6: 02ebc803   add.w    r3, r2, r8, lsl #3            
+002b44ba: 08f10108   add.w    r8, r8, #1                    
+002b44be: 40f24632   movw     r2, #0x346                    
+002b44c2: 43f85c2c   str      r2, [r3, #-0x5c]              
+002b44c6: 43f8600c   str      r0, [r3, #-0x60]              
+002b44ca: 2c4b       ldr      r3, [pc, #0xb0]                 ; [002b457c]=00a36c14
+002b44cc: 1b78       ldrb     r3, [r3]                      
+002b44ce: 0bb1       cbz      r3, #0x2b44d4                 
+002b44d0: fef7c6fe   bl       #0x2b3260                     
+002b44d4: 2348       ldr      r0, [pc, #0x8c]                 ; [002b4564]=007e7c2e "InitBackupData"
+002b44d6: 2146       mov      r1, r4                        
+002b44d8: fdf73efd   bl       #0x2b1f58                     
+002b44dc: 0220       movs     r0, #2                        
+002b44de: 1f21       movs     r1, #0x1f                     
+002b44e0: 42f21002   movw     r2, #0x2010                   
+002b44e4: b3b2       uxth     r3, r6                        
+002b44e6: adb2       uxth     r5, r5                        
+002b44e8: 0095       str      r5, [sp]                      
+002b44ea: 0025       movs     r5, #0                        
+002b44ec: 0195       str      r5, [sp, #4]                  
+002b44ee: 07f3a5f9   bl       #0x5bb83c                     
+002b44f2: 4cb1       cbz      r4, #0x2b4508                 
+002b44f4: a3b2       uxth     r3, r4                        
+002b44f6: 0220       movs     r0, #2                        
+002b44f8: 8de82800   stm.w    sp, {r3, r5}                  
+002b44fc: 1f21       movs     r1, #0x1f                     
+002b44fe: 42f21102   movw     r2, #0x2011                   
+002b4502: 230c       lsrs     r3, r4, #0x10                 
+002b4504: 07f39af9   bl       #0x5bb83c                     
+002b4508: fdf758fc   bl       #0x2b1dbc                     
+002b450c: 10b3       cbz      r0, #0x2b4554                 
+002b450e: 07f15000   add.w    r0, r7, #0x50                 
+002b4512: a7f10805   sub.w    r5, r7, #8                    
+002b4516: 4bf311fa   bl       #0x5ff93c                     
+002b451a: 07f15000   add.w    r0, r7, #0x50                 
+002b451e: 0221       movs     r1, #2                        
+002b4520: 0026       movs     r6, #0                        
+002b4522: 4bf321fa   bl       #0x5ff968                     
+002b4526: 07f16002   add.w    r2, r7, #0x60                 
+002b452a: 02ebc803   add.w    r3, r2, r8, lsl #3            
+002b452e: 08f10108   add.w    r8, r8, #1                    
+002b4532: 40f26b32   movw     r2, #0x36b                    
+002b4536: 43f85c2c   str      r2, [r3, #-0x5c]              
+002b453a: 43f8600c   str      r0, [r3, #-0x60]              
+002b453e: aa68       ldr      r2, [r5, #8]                  
+002b4540: 0136       adds     r6, #1                        
+002b4542: 2b68       ldr      r3, [r5]                      
+002b4544: e968       ldr      r1, [r5, #0xc]                
+002b4546: 0835       adds     r5, #8                        
+002b4548: 0d48       ldr      r0, [pc, #0x34]                 ; [002b4580]=007e7c3d "line=%d, time=%d, diff=%d"
+002b454a: d31a       subs     r3, r2, r3                    
+002b454c: 00f0d6fd   bl       #0x2b50fc                     
+002b4550: 4645       cmp      r6, r8                        
+002b4552: f4d3       blo      #0x2b453e                     
+002b4554: 2046       mov      r0, r4                        
+002b4556: 07f16007   add.w    r7, r7, #0x60                 
+002b455a: bd46       mov      sp, r7                        
+002b455c: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+002b4560: ee7b       ldrb     r6, [r5, #0xf]                
+002b4562: 7e00       lsls     r6, r7, #1                    
+002b4564: 2e7c       ldrb     r6, [r5, #0x10]               
+002b4566: 7e00       lsls     r6, r7, #1                    
+002b4568: 7469       ldr      r4, [r6, #0x14]               
+002b456a: a300       lsls     r3, r4, #2                    
+002b456c: 0c6c       ldr      r4, [r1, #0x40]               
+002b456e: a300       lsls     r3, r4, #2                    

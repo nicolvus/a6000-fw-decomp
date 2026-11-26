@@ -1,0 +1,137 @@
+003afa94: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+003afa98: a2b0       sub      sp, #0x88                     
+003afa9a: 0446       mov      r4, r0                        
+003afa9c: 0025       movs     r5, #0                        
+003afa9e: 06af       add      r7, sp, #0x18                 
+003afaa0: 2a46       mov      r2, r5                        
+003afaa2: 2b46       mov      r3, r5                        
+003afaa4: 4ff40051   mov.w    r1, #0x2000                   
+003afaa8: 4f20       movs     r0, #0x4f                     
+003afaaa: 04f10e06   add.w    r6, r4, #0xe                  
+003afaae: 87f86c50   strb.w   r5, [r7, #0x6c]               
+003afab2: 9ef7d9fc   bl       #0x34e468                     
+003afab6: 206d       ldr      r0, [r4, #0x50]               
+003afab8: 84f84450   strb.w   r5, [r4, #0x44]               
+003afabc: a4f75ef8   bl       #0x353b7c                     
+003afac0: 3046       mov      r0, r6                        
+003afac2: 1021       movs     r1, #0x10                     
+003afac4: a4f85850   strh.w   r5, [r4, #0x58]               
+003afac8: fff70afe   bl       #0x3af6e0                     
+003afacc: 07f14403   add.w    r3, r7, #0x44                 
+003afad0: 3246       mov      r2, r6                        
+003afad2: 0093       str      r3, [sp]                      
+003afad4: 206d       ldr      r0, [r4, #0x50]               
+003afad6: 07f16e03   add.w    r3, r7, #0x6e                 
+003afada: 07f16a01   add.w    r1, r7, #0x6a                 
+003afade: 0193       str      r3, [sp, #4]                  
+003afae0: 07f12403   add.w    r3, r7, #0x24                 
+003afae4: 0293       str      r3, [sp, #8]                  
+003afae6: 07f16d03   add.w    r3, r7, #0x6d                 
+003afaea: 0393       str      r3, [sp, #0xc]                
+003afaec: 3b1d       adds     r3, r7, #4                    
+003afaee: 0493       str      r3, [sp, #0x10]               
+003afaf0: 07f16f03   add.w    r3, r7, #0x6f                 
+003afaf4: 0595       str      r5, [sp, #0x14]               
+003afaf6: aef791ff   bl       #0x35ea1c                     
+003afafa: 0646       mov      r6, r0                        
+003afafc: 10b3       cbz      r0, #0x3afb44                 
+003afafe: 00f07f43   and      r3, r0, #0xff000000           
+003afb02: 4ff00108   mov.w    r8, #1                        
+003afb06: b3f1805f   cmp.w    r3, #0x10000000               
+003afb0a: 0dd0       beq      #0x3afb28                     
+003afb0c: a06b       ldr      r0, [r4, #0x38]               
+003afb0e: 2a46       mov      r2, r5                        
+003afb10: 2e49       ldr      r1, [pc, #0xb8]                 ; [003afbcc]=008bcc33 " Need Salvage"
+003afb12: 2b46       mov      r3, r5                        
+003afb14: 8de82001   stm.w    sp, {r5, r8}                  
+003afb18: 2e46       mov      r6, r5                        
+003afb1a: cdf80880   str.w    r8, [sp, #8]                  
+003afb1e: a3f7ddfd   bl       #0x3536dc                     
+003afb22: 84f84480   strb.w   r8, [r4, #0x44]               
+003afb26: 09e0       b        #0x3afb3c                     
+003afb28: a06b       ldr      r0, [r4, #0x38]               
+003afb2a: 2a46       mov      r2, r5                        
+003afb2c: 2849       ldr      r1, [pc, #0xa0]                 ; [003afbd0]=00823999 "Err RcsBackupTblData"
+003afb2e: 2b46       mov      r3, r5                        
+003afb30: 8de82001   stm.w    sp, {r5, r8}                  
+003afb34: cdf80880   str.w    r8, [sp, #8]                  
+003afb38: a3f7d0fd   bl       #0x3536dc                     
+003afb3c: 206d       ldr      r0, [r4, #0x50]               
+003afb3e: a4f71df8   bl       #0x353b7c                     
+003afb42: 32e0       b        #0x3afbaa                     
+003afb44: b7f86a30   ldrh.w   r3, [r7, #0x6a]               
+003afb48: 0422       movs     r2, #4                        
+003afb4a: a06b       ldr      r0, [r4, #0x38]               
+003afb4c: 0125       movs     r5, #1                        
+003afb4e: 2149       ldr      r1, [pc, #0x84]                 ; [003afbd4]=008239ae "  contFileNo"
+003afb50: 0093       str      r3, [sp]                      
+003afb52: 3346       mov      r3, r6                        
+003afb54: 0195       str      r5, [sp, #4]                  
+003afb56: 0295       str      r5, [sp, #8]                  
+003afb58: a3f7d6fd   bl       #0x353708                     
+003afb5c: e06b       ldr      r0, [r4, #0x3c]               
+003afb5e: 07f16c02   add.w    r2, r7, #0x6c                 
+003afb62: 216c       ldr      r1, [r4, #0x40]               
+003afb64: 9ef736fd   bl       #0x34e5d4                     
+003afb68: 0646       mov      r6, r0                        
+003afb6a: f0b9       cbnz     r0, #0x3afbaa                 
+003afb6c: 97f86c30   ldrb.w   r3, [r7, #0x6c]               
+003afb70: 13b1       cbz      r3, #0x3afb78                 
+003afb72: 84f84450   strb.w   r5, [r4, #0x44]               
+003afb76: 18e0       b        #0x3afbaa                     
+003afb78: 97f86f30   ldrb.w   r3, [r7, #0x6f]               
+003afb7c: 012b       cmp      r3, #1                        
+003afb7e: 02d1       bne      #0x3afb86                     
+003afb80: 206d       ldr      r0, [r4, #0x50]               
+003afb82: cbf705f9   bl       #0x37ad90                     
+003afb86: 2368       ldr      r3, [r4]                      
+003afb88: 2046       mov      r0, r4                        
+003afb8a: 07f15c01   add.w    r1, r7, #0x5c                 
+003afb8e: 9b6f       ldr      r3, [r3, #0x78]               
+003afb90: 9847       blx      r3                            
+003afb92: 50b9       cbnz     r0, #0x3afbaa                 
+003afb94: 2368       ldr      r3, [r4]                      
+003afb96: 2046       mov      r0, r4                        
+003afb98: b7f86410   ldrh.w   r1, [r7, #0x64]               
+003afb9c: 1b6e       ldr      r3, [r3, #0x60]               
+003afb9e: 9847       blx      r3                            
+003afba0: 0146       mov      r1, r0                        
+003afba2: 10b1       cbz      r0, #0x3afbaa                 
+003afba4: 2046       mov      r0, r4                        
+003afba6: 9ff79dfd   bl       #0x34f6e4                     
+003afbaa: 0022       movs     r2, #0                        
+003afbac: 4f20       movs     r0, #0x4f                     
+003afbae: 42f20101   movw     r1, #0x2001                   
+003afbb2: 1346       mov      r3, r2                        
+003afbb4: 9ef758fc   bl       #0x34e468                     
+003afbb8: 2046       mov      r0, r4                        
+003afbba: 3146       mov      r1, r6                        
+003afbbc: a0f785fb   bl       #0x3502ca                     
+003afbc0: 07f17007   add.w    r7, r7, #0x70                 
+003afbc4: bd46       mov      sp, r7                        
+003afbc6: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+003afbca: 00bf       nop                                    
+003afbcc: 33cc       ldm      r4, {r0, r1, r4, r5}          
+003afbce: 8b00       lsls     r3, r1, #2                    
+003afbd0: 9939       subs     r1, #0x99                     
+003afbd2: 8200       lsls     r2, r0, #2                    
+003afbd4: ae39       subs     r1, #0xae                     
+003afbd6: 8200       lsls     r2, r0, #2                    
+003afbd8: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+003afbdc: c5b0       sub      sp, #0x114                    
+003afbde: 0025       movs     r5, #0                        
+003afbe0: 0446       mov      r4, r0                        
+003afbe2: 06af       add      r7, sp, #0x18                 
+003afbe4: 0d22       movs     r2, #0xd                      
+003afbe6: 2946       mov      r1, r5                        
+003afbe8: 07f1bc00   add.w    r0, r7, #0xbc                 
+003afbec: 07f1e809   add.w    sb, r7, #0xe8                 
+003afbf0: c7f8e850   str.w    r5, [r7, #0xe8]               
+003afbf4: 07f1dc08   add.w    r8, r7, #0xdc                 
+003afbf8: c7f8ec50   str.w    r5, [r7, #0xec]               
+003afbfc: 07f1b806   add.w    r6, r7, #0xb8                 
+003afc00: c7f8dc50   str.w    r5, [r7, #0xdc]               
+003afc04: c7f8e050   str.w    r5, [r7, #0xe0]               
+003afc08: 87f8e450   strb.w   r5, [r7, #0xe4]               
+003afc0c: c7f8b850   str.w    r5, [r7, #0xb8]               
+003afc10: 6ff57ced   blx      #0x11f70c                       ; memset

@@ -1,0 +1,42 @@
+002b05b0: 0023       movs     r3, #0                        
+002b05b2: b0b5       push     {r4, r5, r7, lr}              
+002b05b4: 1a46       mov      r2, r3                        
+002b05b6: 00af       add      r7, sp, #0                    
+002b05b8: 1846       mov      r0, r3                        
+002b05ba: cc5c       ldrb     r4, [r1, r3]                  
+002b05bc: 03f00305   and      r5, r3, #3                    
+002b05c0: 0133       adds     r3, #1                        
+002b05c2: 6240       eors     r2, r4                        
+002b05c4: 14fa05f5   lsls.w   r5, r4, r5                    
+002b05c8: b3f57f7f   cmp.w    r3, #0x3fc                    
+002b05cc: 2844       add      r0, r5                        
+002b05ce: f4d1       bne      #0x2b05ba                     
+002b05d0: 20f07f40   bic      r0, r0, #0xff000000           
+002b05d4: 40ea0260   orr.w    r0, r0, r2, lsl #24           
+002b05d8: b0bd       pop      {r4, r5, r7, pc}              
+002b05da: 98b5       push     {r3, r4, r7, lr}              
+002b05dc: 0023       movs     r3, #0                        
+002b05de: 0468       ldr      r4, [r0]                      
+002b05e0: 00af       add      r7, sp, #0                    
+002b05e2: 2370       strb     r3, [r4]                      
+002b05e4: 6370       strb     r3, [r4, #1]                  
+002b05e6: a370       strb     r3, [r4, #2]                  
+002b05e8: e370       strb     r3, [r4, #3]                  
+002b05ea: 0b0a       lsrs     r3, r1, #8                    
+002b05ec: 84f8f813   strb.w   r1, [r4, #0x3f8]              
+002b05f0: 84f8f933   strb.w   r3, [r4, #0x3f9]              
+002b05f4: 0b0c       lsrs     r3, r1, #0x10                 
+002b05f6: 090e       lsrs     r1, r1, #0x18                 
+002b05f8: 84f8fa33   strb.w   r3, [r4, #0x3fa]              
+002b05fc: 84f8fb13   strb.w   r1, [r4, #0x3fb]              
+002b0600: 2146       mov      r1, r4                        
+002b0602: fff7d5ff   bl       #0x2b05b0                     
+002b0606: 030a       lsrs     r3, r0, #8                    
+002b0608: 84f8fc03   strb.w   r0, [r4, #0x3fc]              
+002b060c: 84f8fd33   strb.w   r3, [r4, #0x3fd]              
+002b0610: 030c       lsrs     r3, r0, #0x10                 
+002b0612: 000e       lsrs     r0, r0, #0x18                 
+002b0614: 84f8fe33   strb.w   r3, [r4, #0x3fe]              
+002b0618: 84f8ff03   strb.w   r0, [r4, #0x3ff]              
+002b061c: 98bd       pop      {r3, r4, r7, pc}              
+002b061e: 0368       ldr      r3, [r0]                      

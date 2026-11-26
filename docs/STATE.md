@@ -1,6 +1,67 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+## Reproducción de vídeo — FILM-PB-1, causa raíz FBM (26-11-2026, cerrada)
+
+> **Arreglo identificado y verificado en el arnés (26-11-2026).** El sector que falta es **uno solo**:
+> `0x31`, idx **10** de `0xA3699C`, compartido por `userID 0x04` y `0x21` (**OM 6 = M2PS**) con
+> **mediaID 3 (MS1, la tarjeta)**. Tabla de pares `0x9D23FC` volcada del propio ELF
+> (`reports/evidence/film-pb-1-causa-fbm-20261126/tabla_pares_om.txt`): los otros tres pares del media 3
+> ya tienen handle (`0x10` OM 4 → `0x30`, `0x20` OM 7 → `0x62`, `0x23` OM 10 → `0xB2`), y `0x90/0x91/0x92`
+> son de **media 7 (USB)**, no de la tarjeta. El cerrojo es `0x2B3000` (`0x2B301A cbz r2`): salta las 37
+> filas de `0x9D23FC` con `fn == 0`, y las 37 lo están; el único escritor de `fn` es
+> `BackupMgr::EntryWriteBaseDataFunction` (`0x2B1DEC`), expuesto en consola como `EWBDFD` y como test de
+> fábrica **`LTC`**.
+> **Vía de consola, sin flashear y persistente (1 300 B en `nflasha4`):** `FBM LTC 1` (o `FBM EWBDFD 4 3 0`)
+> y después **`FBM InitB 6 3`** → idx 10 = `0x31 / h3 / +8=1 / om6` y `BkRead(0x04,3)` pasa de
+> `0x10100001` a `0`; persiste tras reiniciar porque `FBM::Init` la reabre. El monitor se alimenta por un
+> anillo en memoria (`X = u32 en libmpr+0xA4FD88`, cabecera `[X]`=lectura `[X+4]`=escritura, datos en
+> `X+0x10`, 0x400 B, terminador CR), y desde la cámara se deposita con `tools/camera-ptrace/ptcall`
+> (`sh tools/camera-ptrace/fbm_ring.sh "FBM InitB 6 3"`). La vía `EWBDFD`/`ChgSec`/`CRFB`/`WBI` por sí
+> solas no crean nada. [Informe](film-pb-1-sub-consola-sector31-20261126.md) · [anillo](film-pb-1-sub-consola-fbm-anillo-20261127.md).
+> **Vía CFW (alternativa, sin depender del telnet):** parche de 68 B en `libmpr.so` (gancho en `0x7126E6`
+> → cueva en `0x93B000`: `FBM::Init` + `CreateSector32(0x31)` + alta manual de la entrada) medido en el
+> arnés (`idx10 h2 válido1`, `BkRead` `0x10100003`, que el llamante tolera). Paquete **3.95**
+> `build/cfw_fbm31_pkg395/pkg-3.95/package-3.95/firmware_packed.dat`
+> (sha256 `61bfcb79…b442a`, auditoría `todo_ok` 22/22, solo cambia `/lib/libmpr.so` de 715 ficheros) y
+> vuelta atrás **3.96** (`f5283bf9…6c47`). No persiste entre arranques con `libmpr` de fábrica y rota una
+> página de control de 1 KiB por arranque. [Informe](film-pb-1-sub-fbm-sector31-20261126.md) ·
+> [paquete](film-pb-1-sub-paquete-cfw395-fbm31-20261126.md).
+> **Aviso:** crear el sector **no rellena** la base de datos; después hay que dejar que la cámara la
+> reconstruya (grabar un clip nuevo o el menú de recuperación) y solo entonces probar la reproducción.
+
+
+> **La tabla de sectores del backup FBM está vacía y nada la recrea.** `0xA3699C` (30 entradas × 0x14,
+> `+4` = handle de sector de `FlashLib`) solo tiene **4 entradas con handle** en el volcado de RAM del
+> 20-10 (`0x30`, `0x62`, `0xA0`, `0xB2`); las de foto (`0x90/0x91/0x92`) y las de vídeo (idx 24…29) están
+> a 0. `ReadFirstPackData` (`0x2B3948`) devuelve `0x10100001` en `0x2B3A28` cuando `[entrada+4]==0`; con
+> eso `RcsBackupTblData` falla, `mp4Ifo` imprime `0xB0800001` por su fallback (`0x6F0D4C`), el IFO no queda
+> cargado y la guarda A (`0x447810`, « Pb Disable!! ref) dsm get») deja **`0x1A`** en `0x437C0A` ⇒ «No se
+> puede visualizar.». `FBM::Init` (`0x2B4820`) solo registra sectores que **ya existen**
+> (`CheckExistSector == 0x45`) y **no crea ninguno**; el anillo de `nflasha4` nunca tuvo más de cinco
+> `fileType` en ninguno de los tres volcados. **Correcciones a lo publicado el 26-11:**
+> `FlashLib::Init` **sí** tiene llamante (`0x7126E2`, antes de `BackupMgr::Init`) y el log de arranque
+> trae `[DFB] partition start sector = 100864`, así que el flash arranca bien; `ExecMprUtility(1)` no es
+> la vía de arranque. **Arreglo:** `BackupMgr::InitBackupData(OM, mediaID)` (`0x2B43F0`) o su consola
+> `InitB [OM] [MediaID]` (`0x2B5B5A`), y después reiniciar MPR (la tabla es un snapshot de
+> `MprIf::Create`). **La consola sola no basta (medido 26-11-2026):** `0x2B3000` salta las filas de
+> `0x9D23FC` con `fn==0` (las 37 están a 0) y el único escritor de `fn` es `BackupMgr::EntryWriteBaseDataFunction`
+> (`0x2B1DEC`), que la consola expone como `EWBDFD`/`CWBDF` — y como el test de fábrica **`LTC 1`**.
+> Secuencia que funciona en el arnés (`NFLASH4=1`): `FBM LTC 1` (o `FBM EWBDFD 4 3 0`) + `FBM InitB 6 3`
+> ⇒ idx 10 de `0xA3699C` = `0x31`/handle válido/`+8=1`, `BkRead(0x04,3)` = `0` (`0x10100003` con el dummy)
+> y **persiste** al reiniciar (1 300 B en `nflasha4`: páginas `0x9D400`, `0xBD780` y `0x380000`).
+> No escribir `nflasha4` a mano sin rollback.
+> [Informe causa](../reports/film-pb-1-causa-fbm-20261126.md) ·
+> [informe consola/0x31](../reports/film-pb-1-sub-consola-sector31-20261126.md).
+
+
 ## Reproducción de vídeo — FILM-PB-1 (26-11-2026)
+
+> **Descartado el 26-11-2026: el «modo con movie = 0».** `Type2Mode` (`0x5F699C`) decide solo con
+> `(type, subType)` y `m_systemType` (constante 1, escrita solo en `0x5F755C`); no intervienen HDMI, tarjeta,
+> batería ni ajustes. Los cinco modos con movie = 0 son trabajos de foto (`Still Rec`→0x03, `Still Pb`→0x06,
+> `Still Dubbing`→0x12, `Still Pb RAW`→0x20; 0x13 no se alcanza) y la entrada en reproducción de vídeo
+> (`0x437A40`–`0x437AC4`) pide `Movie Pb` y cambia a **0x0E con 20 MiB**. Medida en cámara pendiente: leer
+> `0x9DECAC`, `0xA4F478` y `0xA4F4A8` al pulsar play. [Informe](../reports/film-pb-1-sub-modo-camara-20261126.md).
 
 > **Reencuadre del 26-11-2026: la cadencia NO es la causa.** Dos pruebas del usuario con la cámara en mano lo
 > cierran: un clip convertido a 25p (`scripts/filmpb1_convertir_clips.py`) da «No se puede visualizar.», y **un clip
@@ -59,7 +120,10 @@
 > BD/catálogo (la guarda es *fail-open* si falta el registro y recuperar la BD no cambia nada); el decodificador
 > H.264 (está **fuera de Linux**, en `av-cam` con microcódigo `ZM_AVCD*` de `/usr/sabin`; su fallo sería posterior a
 > `PbStart` y las miniaturas JPEG seguirían saliendo); el `av-cam` del paquete (**no es un binario 3.38**: es el de
-> 3.21 con 40 B integrados y 34 KB de tablas de curvas; `vmlinux.bin` e `initrd.img` son byte a byte los de 3.21);
+> 3.21 + **233 B** de parches integrados (tres estados y Silent r5) + **33 780 B** de PP/S-Log3/B&N
+> —32 437 B de curvas, 1 164 B de cuevas, 72 B de ganchos y 107 B de tablas—; `vmlinux.bin` e `initrd.img` son byte
+> a byte los de 3.21 y ninguno de sus 25 parches de código cae en códec, muxer, decodificador ni IFO
+> ([informe](../reports/film-pb-1-sub-avcam-parches-20261126.md)));
 > la NVRAM (64 volcados, sistema de TV fijo); y los parches de código en la ruta de reproducción (auditoría del
 > paquete 3.93 `pp`).
 >
@@ -69,7 +133,9 @@
 > (2) paquete **con WBI** (arranque caliente, un flag: `build_package_nflasha15.py` sin `--sin-wbi`) — comando y
 > dry-run 20/20 en [arranque/WBI](../reports/film-pb-1-sub-arranque-wbi-20261128.md); (3) restauración del 3.21
 > oficial verificado (`scripts/camera_reflash_fw321.sh`, SHA-256
-> `29aef21ab9b5c2e98388974ac9749c2cbfb1815273b444e62f2e41398aa8892f`).
+> `29aef21ab9b5c2e98388974ac9749c2cbfb1815273b444e62f2e41398aa8892f`); (4) paquete **3.94 con el `av-cam` de
+> fábrica 3.21** (núcleo de Sony + el `/usr` del 3.93; `.dat` sha256
+> `2a6fd62ff4ed0e63af31a73a2dfb0b261700515147c421f8026b9463dd284c1c`) — [informe](../reports/film-pb-1-sub-paquete-avcam-limpio-20261126.md).
 >
 > **Prueba de campo decisiva (gratis, 30 s):** encender y pulsar reproducción **lo antes posible**, sin dar tiempo a
 > que la galería genere miniaturas. Si así reproduce y luego deja de hacerlo, el mutex se filtra al generar
@@ -138,10 +204,14 @@ el nombre que `MMgrAvcHdIfoAcsr::CheckSalvageStatus` (`0x671DAC`) registra en la
 códigos «esperados» de `0x5215AC`, de ahí el banner). **Orden obligado:** estado de dispositivo → `FlashMount`/DFS
 (`0x3BB220`; éxito ⇒ `[this+0x140]=4` vía `0x64C5DC` en `0x626960`) → `CheckSalvageStatus` (estado AVI ∈ {2,3,4,6}) →
 gate `0x64C298` con `state==4` → `CreateAndLoad` → `CreateSub` → `LoadSub` → `Load` → `mp4Ifo_General::Load` (FLASH) →
-`FlashLoadForMsv` → `RcsBackupTblData` (única lectura real del volumen). **Consecuencia:** `0xB0800001` y `0x31000006`
-son códigos por defecto y no identifican causa; la huella de «volumen ilegible» es `Err RcsBackupTblData → 0xB0800001 →
-0x31000006`, mientras que un IFO corrupto pero legible daría un código específico (`0xB0400005`, `0xB0510001`,
-`0xB0F30001`…). **No verificado:** identidad de las virtuales `vtbl[0x140]`/`[0x60]`/`[0x168]`, cuál de las dos vías de
+`FlashLoadForMsv` → `RcsBackupTblData`. **Corrección 26-11-2026 (bytes):** `RcsBackupTblData` (`0x35EA1C` → `0x35E04C`)
+**no abre ningún fichero**: hace un `BkRead` de un pack de sectores por `(userId, backupId)` (`0x2B39B8` → `0x2B2F48`
+→ `0x2B3948`) y devuelve `0x10xxxxxx` cuando esa entrada no tiene reader (`0x2B39EE` → `0x2B3A28`); **no** prueba
+«volumen ilegible» ni ausencia de `AVF_INFO`. **Consecuencia:** `0xB0800001` y `0x31000006` son códigos por defecto y no
+identifican causa; el desajuste lógico del journal es `" Need Salvage"` (`0x00500003`), y el `INP` ausente se ve por la
+reconstrucción del índice, no por `Err RcsBackupTblData`; un IFO corrupto pero legible daría un código específico
+(`0xB0400005`, `0xB0510001`, `0xB0F30001`…). Los ficheros del índice son `AVF_INFO\AVIN0001.INP` (primario), `.BNP`
+(respaldo) y `.INT` (tabla interna); `PRV00001.BIN` es propiedades. [sub-rcsbackup](../reports/film-pb-1-sub-rcsbackup-20261126.md). **No verificado:** identidad de las virtuales `vtbl[0x140]`/`[0x60]`/`[0x168]`, cuál de las dos vías de
 `MountCmd` disparó la línea del anillo (el anillo no es transcripción completa: falta `MountCmd : `) y semántica nominal
 de la cabecera `0x10`. [Informe de montaje/IFO](../reports/film-pb-1-sub-mount-ifo-20261126.md).
 
@@ -419,6 +489,21 @@ Informe: [G114](gui/g114-lut-propios-especificacion.md); validador `scripts/lut/
 - **Medido:** de 75 `.cube`, solo las 6 de `luts/peliculas` son aptas para el hardware (0,22–0,67 ΔE medio; 0–28 nodos recortados). Las
   69 de `sosang/` son de una Panasonic S1II (TITLE `S1II Standard - NNNNVLOG`): salen planas y recortan 31–384/405 nodos; las 29 `vlog`
   esperan V-Log y no aplican. Pack: portra400, pro400h, gold200, ektachrome_e100, kodachrome64, velvia50.
-- **Bloqueo grave (ZONA-1):** la cueva/tablas del ajuste LUT están dentro de la tabla T1 de estabilización y de las BOKS del YC de captura
-  (G107); el CFW 3.86 instalado las lleva ahí. `LUT-C` se reabre y LUT-SD-2/LUT-T-2 quedan bloqueados hasta reubicar. Nada del pipeline se
-  ha probado nunca en cámara: todos los ΔE son del modelo del PC.
+- **Bloqueo grave (ZONA-1), resuelto offline en G116:** la cueva/tablas históricas estaban dentro de la tabla T1 de estabilización y de las
+  BOKS del YC de captura (G107); el CFW 3.86 instalado las lleva ahí. `LUT-C` se cierra en estático: cueva, máquina de estados y curva viven
+  ahora en la cola libre del hueco G18 (`ZONA_L18` `0x43FB8800…0x43FB8EE0`, `ZONA_T18` desde `0x43FB8360`) y **las tablas ya no van en el
+  `.dat`**: salen del blob de la SD (`.cube` o `.LUT`). `scripts/lut/zonas.py` verifica que esas zonas no tienen referencias (y encuentra las
+  de T1/BOKS como control positivo). Sin tarjeta el ajuste queda en fábrica. LUT-SD-2/LUT-T-2 quedan como pruebas de cámara con un build
+  nuevo: **no usar LUT con el CFW 3.86 instalado**. Nada del pipeline se ha probado en cámara: todos los ΔE son del modelo del PC.
+
+## App web y cierre estático de la LUT (G116, 26-11-2026)
+
+Informe: [G116](gui/g116-lut-solo-sd-y-app-web.md).
+
+- **App**: `site/lut/` (GitHub Pages). Importa `.cube` 2³…64³, replica el muestreo del firmware (`lutsd.c`), descarga `LUT1.LUT`…`LUT6.LUT`
+  (paquete v1 `A6LT` + CRC32) y previsualiza la foto del usuario con la cadena del proyecto. El `.LUT` que genera es **byte a byte** el del
+  ARM (comprobado con Node frente a `lut_sd_userland.referencia` en 2³, 5³ y 33³).
+- **Qué no es**: demosaico, NR y gamma propia del JPEG no se modelan; la previsualización es el modelo del PC, no una medida en cámara.
+- **Cierre**: `LUT-C` cerrado en estático; `LUT-T-1` ya no está bloqueado (curva por ranura desde el blob); `LUT-INT-2` cerrado con el modelo
+  conservador «ambos»; siguen abiertos `LUT-A` (M), `LUT-OPT-1` (necesita fotos), `LUT-DE-1` (métrica de ΔE, no cambia bytes), `LUT-2C-1`
+  (segunda curva de 512 puntos) y las pruebas de cámara `LUT-SD-2`/`LUT-T-2`.

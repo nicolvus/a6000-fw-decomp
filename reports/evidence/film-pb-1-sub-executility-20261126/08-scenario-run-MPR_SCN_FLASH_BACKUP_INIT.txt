@@ -1,0 +1,81 @@
+00000654: 034b       ldr       r3, [pc, #0xc]                  ; [00000664]=0000837c
+00000656: 044a       ldr       r2, [pc, #0x10]                 ; [00000668]=00000030
+00000658: 7b44       add       r3, pc                        
+0000065a: 80b5       push      {r7, lr}                      
+0000065c: 00af       add       r7, sp, #0                    
+0000065e: 9b58       ldr       r3, [r3, r2]                  
+00000660: 1868       ldr       r0, [r3]                      
+00000662: 80bd       pop       {r7, pc}                      
+00000664: 7c83       strh      r4, [r7, #0x1a]               
+00000666: 0000       movs      r0, r0                        
+00000668: 3000       movs      r0, r6                        
+0000066a: 0000       movs      r0, r0                        
+0000066c: f8b5       push      {r3, r4, r5, r6, r7, lr}      
+0000066e: 0446       mov       r4, r0                        
+00000670: 2648       ldr       r0, [pc, #0x98]                 ; [0000070c]=000000be
+00000672: 00af       add       r7, sp, #0                    
+00000674: 0e46       mov       r6, r1                        
+00000676: 1546       mov       r5, r2                        
+00000678: 7844       add       r0, pc                        
+0000067a: fff79cef   blx       #0x5b4                          ; _init+0x54
+0000067e: 2448       ldr       r0, [pc, #0x90]                 ; [00000710]=000000c3
+00000680: 7844       add       r0, pc                        
+00000682: fff798ef   blx       #0x5b4                          ; _init+0x54
+00000686: 2348       ldr       r0, [pc, #0x8c]                 ; [00000714]=000000d3
+00000688: 3246       mov       r2, r6                        
+0000068a: 2146       mov       r1, r4                        
+0000068c: 7844       add       r0, pc                        
+0000068e: 2b46       mov       r3, r5                        
+00000690: fff78aef   blx       #0x5a8                          ; _init+0x48
+00000694: 0026       movs      r6, #0                        
+00000696: 05e0       b         #0x6a4                          ; scenario_run+0x38
+00000698: 1f48       ldr       r0, [pc, #0x7c]                 ; [00000718]=000000ed
+0000069a: a15d       ldrb      r1, [r4, r6]                  
+0000069c: 0136       adds      r6, #1                        
+0000069e: 7844       add       r0, pc                        
+000006a0: fff782ef   blx       #0x5a8                          ; _init+0x48
+000006a4: ae42       cmp       r6, r5                        
+000006a6: f7d3       blo       #0x698                        
+000006a8: 0a20       movs      r0, #0xa                      
+000006aa: fff778ef   blx       #0x59c                          ; _init+0x3c
+000006ae: 032d       cmp       r5, #3                        
+000006b0: 06d8       bhi       #0x6c0                          ; scenario_run+0x54
+000006b2: 1a48       ldr       r0, [pc, #0x68]                 ; [0000071c]=000000dc
+000006b4: 7844       add       r0, pc                        
+000006b6: fff77eef   blx       #0x5b4                          ; _init+0x54
+000006ba: 4ff0ff30   mov.w     r0, #-1                       
+000006be: f8bd       pop       {r3, r4, r5, r6, r7, pc}      
+000006c0: fff75eef   blx       #0x580                          ; _init+0x20
+000006c4: 0546       mov       r5, r0                        
+000006c6: 1648       ldr       r0, [pc, #0x58]                 ; [00000720]=000000f9
+000006c8: 2946       mov       r1, r5                        
+000006ca: 7844       add       r0, pc                        
+000006cc: fff76cef   blx       #0x5a8                          ; _init+0x48
+000006d0: 1448       ldr       r0, [pc, #0x50]                 ; [00000724]=000000ff
+000006d2: 7844       add       r0, pc                        
+000006d4: fff76eef   blx       #0x5b4                          ; _init+0x54
+000006d8: 2846       mov       r0, r5                        
+000006da: 0121       movs      r1, #1                        
+000006dc: 0022       movs      r2, #0                        
+000006de: fff770ef   blx       #0x5c0                          ; _init+0x60
+000006e2: 0546       mov       r5, r0                        
+000006e4: 1048       ldr       r0, [pc, #0x40]                 ; [00000728]=0000010a
+000006e6: 7844       add       r0, pc                        
+000006e8: fff764ef   blx       #0x5b4                          ; _init+0x54
+000006ec: 3db1       cbz       r5, #0x6fe                    
+000006ee: 0f48       ldr       r0, [pc, #0x3c]                 ; [0000072c]=0000011b
+000006f0: 2946       mov       r1, r5                        
+000006f2: 7844       add       r0, pc                        
+000006f4: fff758ef   blx       #0x5a8                          ; _init+0x48
+000006f8: 2560       str       r5, [r4]                      
+000006fa: 0420       movs      r0, #4                        
+000006fc: f8bd       pop       {r3, r4, r5, r6, r7, pc}      
+000006fe: 0c48       ldr       r0, [pc, #0x30]                 ; [00000730]=0000012f
+00000700: 2560       str       r5, [r4]                      
+00000702: 7844       add       r0, pc                        
+00000704: fff756ef   blx       #0x5b4                          ; _init+0x54
+00000708: 0420       movs      r0, #4                        
+0000070a: f8bd       pop       {r3, r4, r5, r6, r7, pc}      
+0000070c: be00       lsls      r6, r7, #2                    
+0000070e: 0000       movs      r0, r0                        
+00000710: c300       lsls      r3, r0, #3                    

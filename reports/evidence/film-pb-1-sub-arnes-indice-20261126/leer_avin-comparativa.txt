@@ -1,0 +1,61 @@
+### 1) .INP que usaba el arnes hasta hoy (copia del sintetico del 27-11)
+fichero : /tmp/fpb1/backup-avin/AVIN0001_sintetico-20261125.INP
+tamano  : 1408 B (0x580)
+
+file-ID del descriptor (16 B): LE@0x0, LE[4:]@0x4
+
+registros de clip (base = nombre - 0x12):
+  #  base    nombre         nFileSize   WxH         dur_ms          dur_90kHz       bValid?
+  -----------------------------------------------------------------------------------------
+  0  000100  MAH04198.MP4   24641536    1440x1080   9510=9.510s     855900=9.510s   0x01
+  1  000180  MAH04200.MP4   12984320    1440x1080   5005=5.005s     450450=5.005s   0x01
+  2  000200  MAH04201.MP4   63606784    1440x1080   24525=24.525s   2207250=24.525s 0x01
+  3  000280  MAH04202.MP4   81805312    1440x1080   31532=31.532s   2837880=31.532s 0x01
+  4  000300  MAH04203.MP4   89587712    1440x1080   34535=34.535s   3108150=34.535s 0x01
+  5  000380  MAH04204.MP4   136306688   1440x1080   52553=52.553s   4729770=52.553s 0x01
+  6  000400  MAH04205.MP4   188227584   1440x1080   72573=72.573s   6531570=72.573s 0x01
+  7  000480  MAH04199.MP4   24641536    1440x1080   2000=2.000s     180000=2.000s   0x00
+
+campos del registro (base = offset del nombre - 0x12):
+  +0x00  char[18] cDirPath
+  +0x12  char[14] cFileName
+  +0x20  u32     nFileSize
+  +0x24  u8      bValid?
+  +0x28  u32     nWidth
+  +0x2C  u32     nHeight
+  +0x30  u32     nDuration_ms
+  +0x34  u32     nDuration90kHz?
+  +0x38  u32     emVideoCodec
+
+
+### 2) .INP nuevo (1 registro MAH04198, cabecera 0x100)
+fichero : reports/evidence/film-pb-1-sub-arnes-indice-20261126/AVIN0001_MAH04198.INP
+tamano  : 384 B (0x180)
+
+file-ID del descriptor (16 B): LE@0x0, LE[4:]@0x4
+
+registros de clip (base = nombre - 0x12):
+  #  base    nombre         nFileSize   WxH         dur_ms          dur_90kHz       bValid?
+  -----------------------------------------------------------------------------------------
+  0  000100  MAH04198.MP4   14545696    1440x1080   9510=9.510s     855900=9.510s   0x01
+
+campos del registro (base = offset del nombre - 0x12):
+  +0x00  char[18] cDirPath
+  +0x12  char[14] cFileName
+  +0x20  u32     nFileSize
+  +0x24  u8      bValid?
+  +0x28  u32     nWidth
+  +0x2C  u32     nHeight
+  +0x30  u32     nDuration_ms
+  +0x34  u32     nDuration90kHz?
+  +0x38  u32     emVideoCodec
+
+volcado de MAH04198.MP4 (base 0x100):
+    0000  2f 4d 50 5f 52 4f 4f 54 2f 31 30 33 41 4e 56 30 |/MP_ROOT/103ANV0|
+    0010  31 00 4d 41 48 30 34 31 39 38 2e 4d 50 34 00 00 |1.MAH04198.MP4..|
+    0020  20 f3 dd 00 01 00 00 00 a0 05 00 00 38 04 00 00 | ...........8...|
+    0030  26 25 00 00 5c 0f 0d 00 04 00 00 00 02 00 00 00 |&%..\...........|
+    0040  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |................|
+    0050  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |................|
+    0060  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |................|
+    0070  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |................|

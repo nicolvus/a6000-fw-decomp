@@ -1,0 +1,30 @@
+=== 438c82ce..438c8332
+438c82ce    321 5436       adds     r6, #0x54                                  | cfw 5436       adds     r6, #0x54
+438c82d0    321 04f59643   add.w    r3, r4, #0x4b00                            | cfw 04f59643   add.w    r3, r4, #0x4b00
+438c82d4    321 d3f89c60   ldr.w    r6, [r3, #0x9c]                            | cfw d3f89c60   ldr.w    r6, [r3, #0x9c]
+438c82d8    321 7ebb       cbnz     r6, #0x438c833a                            | cfw 7ebb       cbnz     r6, #0x438c833a
+438c82da    321 2046       mov      r0, r4                                     | cfw 2046       mov      r0, r4
+438c82dc    321 56f220f9   bl       #0x43b1e520  ; ->43b1e520                  | cfw 56f220f9   bl       #0x43b1e520  ; ->43b1e520
+438c82e0    321 d4f80435   ldr.w    r3, [r4, #0x504]                           | cfw d4f80435   ldr.w    r3, [r4, #0x504]
+438c82e4    321 b4f85076   ldrh.w   r7, [r4, #0x650]                           | cfw b4f85076   ldrh.w   r7, [r4, #0x650]
+438c82e8    321 012b       cmp      r3, #1                                     | cfw 012b       cmp      r3, #1
+438c82ea    321 04f59653   add.w    r3, r4, #0x12c0                            | cfw 04f59653   add.w    r3, r4, #0x12c0
+438c82ee    321 08bf       it       eq                                         | cfw 08bf       it       eq
+438c82f0    321 a4f85066   strheq.w r6, [r4, #0x650]                           | cfw a4f85066   strheq.w r6, [r4, #0x650]
+438c82f4    321 04f59646   add.w    r6, r4, #0x4b00                            | cfw 04f59646   add.w    r6, r4, #0x4b00
+438c82f8    321 1b8f       ldrh     r3, [r3, #0x38]                            | cfw 1b8f       ldrh     r3, [r3, #0x38]
+438c82fa    321 a4f8b836   strh.w   r3, [r4, #0x6b8]                           | cfw a4f8b836   strh.w   r3, [r4, #0x6b8]
+438c82fe  * 321 0df60bff   bl       #0x436d6118  ; ->436d6118                  | cfw eff27ff5   bl       #0x43fb7e00  ; ->43fb7e00
+438c8302    321 04f5c861   add.w    r1, r4, #0x640                             | cfw 04f5c861   add.w    r1, r4, #0x640
+438c8306    321 0c31       adds     r1, #0xc                                   | cfw 0c31       adds     r1, #0xc
+438c8308    321 b6f89c20   ldrh.w   r2, [r6, #0x9c]                            | cfw b6f89c20   ldrh.w   r2, [r6, #0x9c]
+438c830c    321 0ef608f8   bl       #0x436d6320  ; ->436d6320                  | cfw 0ef608f8   bl       #0x436d6320  ; ->436d6320
+438c8310    321 0df602ff   bl       #0x436d6118  ; ->436d6118                  | cfw 0df602ff   bl       #0x436d6118  ; ->436d6118
+438c8314    321 04f5d661   add.w    r1, r4, #0x6b0                             | cfw 04f5d661   add.w    r1, r4, #0x6b0
+438c8318    321 0c31       adds     r1, #0xc                                   | cfw 0c31       adds     r1, #0xc
+438c831a    321 b6f89c20   ldrh.w   r2, [r6, #0x9c]                            | cfw b6f89c20   ldrh.w   r2, [r6, #0x9c]
+438c831e    321 0ef63bf8   bl       #0x436d6398  ; ->436d6398                  | cfw 0ef63bf8   bl       #0x436d6398  ; ->436d6398
+438c8322    321 0df6f9fe   bl       #0x436d6118  ; ->436d6118                  | cfw 0df6f9fe   bl       #0x436d6118  ; ->436d6118
+438c8326    321 10f2f6fe   bl       #0x43ad9116  ; ->43ad9116                  | cfw 10f2f6fe   bl       #0x43ad9116  ; ->43ad9116
+438c832a    321 0df6f5fe   bl       #0x436d6118  ; ->436d6118                  | cfw 0df6f5fe   bl       #0x436d6118  ; ->436d6118
+438c832e    321 0121       movs     r1, #1                                     | cfw 0121       movs     r1, #1

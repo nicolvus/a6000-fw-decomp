@@ -1,0 +1,541 @@
+0035e04c: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+0035e050: bbb0       sub      sp, #0xec                     
+0035e052: 00f5804a   add.w    sl, r0, #0x4000               
+0035e056: 04af       add      r7, sp, #0x10                 
+0035e058: 4ff00008   mov.w    r8, #0                        
+0035e05c: 4ff00109   mov.w    sb, #1                        
+0035e060: cdf80080   str.w    r8, [sp]                      
+0035e064: f962       str      r1, [r7, #0x2c]               
+0035e066: 0446       mov      r4, r0                        
+0035e068: fa61       str      r2, [r7, #0x1c]               
+0035e06a: 4246       mov      r2, r8                        
+0035e06c: 3b60       str      r3, [r7]                      
+0035e06e: 4346       mov      r3, r8                        
+0035e070: 87f8d780   strb.w   r8, [r7, #0xd7]               
+0035e074: 87f8d680   strb.w   r8, [r7, #0xd6]               
+0035e078: 87f8d580   strb.w   r8, [r7, #0xd5]               
+0035e07c: cdf80490   str.w    sb, [sp, #4]                  
+0035e080: cdf80890   str.w    sb, [sp, #8]                  
+0035e084: bb49       ldr      r1, [pc, #0x2ec]                ; [0035e374]=0081c85e "BKUP RcsTbl Start"
+0035e086: daf88400   ldr.w    r0, [sl, #0x84]               
+0035e08a: d7f800b1   ldr.w    fp, [r7, #0x100]              
+0035e08e: d7f82461   ldr.w    r6, [r7, #0x124]              
+0035e092: c7f8c880   str.w    r8, [r7, #0xc8]               
+0035e096: f5f737fb   bl       #0x353708                     
+0035e09a: daf88830   ldr.w    r3, [sl, #0x88]               
+0035e09e: 0422       movs     r2, #4                        
+0035e0a0: cdf80890   str.w    sb, [sp, #8]                  
+0035e0a4: cdf80c90   str.w    sb, [sp, #0xc]                
+0035e0a8: 8de80802   stm.w    sp, {r3, sb}                  
+0035e0ac: 4346       mov      r3, r8                        
+0035e0ae: daf88400   ldr.w    r0, [sl, #0x84]               
+0035e0b2: b149       ldr      r1, [pc, #0x2c4]                ; [0035e378]=0081e6b6 "BKUP userId"
+0035e0b4: f5f75afb   bl       #0x35376c                     
+0035e0b8: d7f80401   ldr.w    r0, [r7, #0x104]              
+0035e0bc: d7f80c11   ldr.w    r1, [r7, #0x10c]              
+0035e0c0: a0f80080   strh.w   r8, [r0]                      
+0035e0c4: 07f13000   add.w    r0, r7, #0x30                 
+0035e0c8: 81f80080   strb.w   r8, [r1]                      
+0035e0cc: d7f81421   ldr.w    r2, [r7, #0x114]              
+0035e0d0: 82f80080   strb.w   r8, [r2]                      
+0035e0d4: 07f1d702   add.w    r2, r7, #0xd7                 
+0035e0d8: d7f81c31   ldr.w    r3, [r7, #0x11c]              
+0035e0dc: 83f80080   strb.w   r8, [r3]                      
+0035e0e0: 07f1c803   add.w    r3, r7, #0xc8                 
+0035e0e4: 0190       str      r0, [sp, #4]                  
+0035e0e6: 0093       str      r3, [sp]                      
+0035e0e8: 07f1cc03   add.w    r3, r7, #0xcc                 
+0035e0ec: daf88800   ldr.w    r0, [sl, #0x88]               
+0035e0f0: daf88c10   ldr.w    r1, [sl, #0x8c]               
+0035e0f4: 55f760fc   bl       #0x2b39b8                     
+0035e0f8: 0546       mov      r5, r0                        
+0035e0fa: 68b1       cbz      r0, #0x35e118                 
+0035e0fc: 9f4b       ldr      r3, [pc, #0x27c]                ; [0035e37c]=10100003
+0035e0fe: 9842       cmp      r0, r3                        
+0035e100: 0ad0       beq      #0x35e118                     
+0035e102: 8de82002   stm.w    sp, {r5, sb}                  
+0035e106: 0222       movs     r2, #2                        
+0035e108: cdf80890   str.w    sb, [sp, #8]                  
+0035e10c: 4346       mov      r3, r8                        
+0035e10e: daf88400   ldr.w    r0, [sl, #0x84]               
+0035e112: 9b49       ldr      r1, [pc, #0x26c]                ; [0035e380]=0081c870 "BKUP Err ReadFirstPackData ec"
+0035e114: 00f01bbc   b.w      #0x35e94e                     
+0035e118: 2368       ldr      r3, [r4]                      
+0035e11a: 4ff00008   mov.w    r8, #0                        
+0035e11e: 2046       mov      r0, r4                        
+0035e120: 07f1d501   add.w    r1, r7, #0xd5                 
+0035e124: c146       mov      sb, r8                        
+0035e126: d3f8b830   ldr.w    r3, [r3, #0xb8]               
+0035e12a: 9847       blx      r3                            
+0035e12c: 2846       mov      r0, r5                        
+0035e12e: c7f80480   str.w    r8, [r7, #4]                  
+0035e132: c7f80880   str.w    r8, [r7, #8]                  
+0035e136: c7f80c80   str.w    r8, [r7, #0xc]                
+0035e13a: c7f81080   str.w    r8, [r7, #0x10]               
+0035e13e: c7f82080   str.w    r8, [r7, #0x20]               
+0035e142: c7f81480   str.w    r8, [r7, #0x14]               
+0035e146: c7f82480   str.w    r8, [r7, #0x24]               
+0035e14a: c7f81880   str.w    r8, [r7, #0x18]               
+0035e14e: c7f82880   str.w    r8, [r7, #0x28]               
+0035e152: 8a4b       ldr      r3, [pc, #0x228]                ; [0035e37c]=10100003
+0035e154: 9842       cmp      r0, r3                        
+0035e156: 08d1       bne      #0x35e16a                     
+0035e158: 97f8d620   ldrb.w   r2, [r7, #0xd6]               
+0035e15c: 97f8d530   ldrb.w   r3, [r7, #0xd5]               
+0035e160: 9342       cmp      r3, r2                        
+0035e162: 40f0f783   bne.w    #0x35e954                     
+0035e166: 00f029bc   b.w      #0x35e9bc                     
+0035e16a: 97f8d730   ldrb.w   r3, [r7, #0xd7]               
+0035e16e: 04f58048   add.w    r8, r4, #0x4000               
+0035e172: 0125       movs     r5, #1                        
+0035e174: 8349       ldr      r1, [pc, #0x20c]                ; [0035e384]=0081c88e "BKUP backupId"
+0035e176: 0195       str      r5, [sp, #4]                  
+0035e178: 0422       movs     r2, #4                        
+0035e17a: 0093       str      r3, [sp]                      
+0035e17c: 0023       movs     r3, #0                        
+0035e17e: 0295       str      r5, [sp, #8]                  
+0035e180: 0395       str      r5, [sp, #0xc]                
+0035e182: d8f88400   ldr.w    r0, [r8, #0x84]               
+0035e186: f5f7f1fa   bl       #0x35376c                     
+0035e18a: d7f8c830   ldr.w    r3, [r7, #0xc8]               
+0035e18e: 0295       str      r5, [sp, #8]                  
+0035e190: 0422       movs     r2, #4                        
+0035e192: 0395       str      r5, [sp, #0xc]                
+0035e194: 8de82800   stm.w    sp, {r3, r5}                  
+0035e198: 0023       movs     r3, #0                        
+0035e19a: d8f88400   ldr.w    r0, [r8, #0x84]               
+0035e19e: 7a49       ldr      r1, [pc, #0x1e8]                ; [0035e388]=0081c89c "BKUP backupLen"
+0035e1a0: f5f7e4fa   bl       #0x35376c                     
+0035e1a4: d7f8cc30   ldr.w    r3, [r7, #0xcc]               
+0035e1a8: 7849       ldr      r1, [pc, #0x1e0]                ; [0035e38c]=0081c8ca "BKUP p_backup1"
+0035e1aa: 0222       movs     r2, #2                        
+0035e1ac: 1b68       ldr      r3, [r3]                      
+0035e1ae: 0295       str      r5, [sp, #8]                  
+0035e1b0: 0395       str      r5, [sp, #0xc]                
+0035e1b2: 8de82800   stm.w    sp, {r3, r5}                  
+0035e1b6: 0023       movs     r3, #0                        
+0035e1b8: d8f88400   ldr.w    r0, [r8, #0x84]               
+0035e1bc: f5f7d6fa   bl       #0x35376c                     
+0035e1c0: 97f8d730   ldrb.w   r3, [r7, #0xd7]               
+0035e1c4: 192b       cmp      r3, #0x19                     
+0035e1c6: 00f29083   bhi.w    #0x35e8ea                     
+0035e1ca: dfe813f0   tbh      [pc, r3, lsl #1]              
+0035e1ce: 1a00       movs     r2, r3                        
+0035e1d0: 4100       lsls     r1, r0, #1                    
+0035e1d2: 8800       lsls     r0, r1, #2                    
+0035e1d4: e300       lsls     r3, r4, #3                    
+0035e1d6: 6300       lsls     r3, r4, #1                    
+0035e1d8: ad00       lsls     r5, r5, #2                    
+0035e1da: 0701       lsls     r7, r0, #4                    
+0035e1dc: 2901       lsls     r1, r5, #4                    
+0035e1de: 2a03       lsls     r2, r5, #0xc                  
+0035e1e0: 4803       lsls     r0, r1, #0xd                  
+0035e1e2: 8e03       lsls     r6, r1, #0xe                  
+0035e1e4: 8e03       lsls     r6, r1, #0xe                  
+0035e1e6: 8e03       lsls     r6, r1, #0xe                  
+0035e1e8: 4b01       lsls     r3, r1, #5                    
+0035e1ea: 5a01       lsls     r2, r3, #5                    
+0035e1ec: fc01       lsls     r4, r7, #7                    
+0035e1ee: 3202       lsls     r2, r6, #8                    
+0035e1f0: 6302       lsls     r3, r4, #9                    
+0035e1f2: 6603       lsls     r6, r4, #0xd                  
+0035e1f4: 7202       lsls     r2, r6, #9                    
+0035e1f6: 8e03       lsls     r6, r1, #0xe                  
+0035e1f8: 8e03       lsls     r6, r1, #0xe                  
+0035e1fa: a002       lsls     r0, r4, #0xa                  
+0035e1fc: bb02       lsls     r3, r7, #0xa                  
+0035e1fe: ff02       lsls     r7, r7, #0xb                  
+0035e200: 8e03       lsls     r6, r1, #0xe                  
+0035e202: d7f8c820   ldr.w    r2, [r7, #0xc8]               
+0035e206: b2f53c5f   cmp.w    r2, #0x2f00                   
+0035e20a: 03d9       bls      #0x35e214                     
+0035e20c: ff23       movs     r3, #0xff                     
+0035e20e: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e212: 04e0       b        #0x35e21e                     
+0035e214: f86a       ldr      r0, [r7, #0x2c]               
+0035e216: d7f8cc10   ldr.w    r1, [r7, #0xcc]               
+0035e21a: c2f57fff   bl       #0x12111c                     
+0035e21e: ba6a       ldr      r2, [r7, #0x28]               
+0035e220: 002a       cmp      r2, #0                        
+0035e222: 40f06283   bne.w    #0x35e8ea                     
+0035e226: 97f8d630   ldrb.w   r3, [r7, #0xd6]               
+0035e22a: 97f8d520   ldrb.w   r2, [r7, #0xd5]               
+0035e22e: 9a42       cmp      r2, r3                        
+0035e230: 40f25b83   bls.w    #0x35e8ea                     
+0035e234: ff2b       cmp      r3, #0xff                     
+0035e236: 00f05883   beq.w    #0x35e8ea                     
+0035e23a: 0133       adds     r3, #1                        
+0035e23c: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e240: 0123       movs     r3, #1                        
+0035e242: 84f83c30   strb.w   r3, [r4, #0x3c]               
+0035e246: b86a       ldr      r0, [r7, #0x28]               
+0035e248: bb62       str      r3, [r7, #0x28]               
+0035e24a: 84f83f00   strb.w   r0, [r4, #0x3f]               
+0035e24e: 4fe3       b        #0x35e8f0                     
+0035e250: d7f8c820   ldr.w    r2, [r7, #0xc8]               
+0035e254: b2f5827f   cmp.w    r2, #0x104                    
+0035e258: 03d9       bls      #0x35e262                     
+0035e25a: ff23       movs     r3, #0xff                     
+0035e25c: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e260: 04e0       b        #0x35e26c                     
+0035e262: f869       ldr      r0, [r7, #0x1c]               
+0035e264: d7f8cc10   ldr.w    r1, [r7, #0xcc]               
+0035e268: c2f558ff   bl       #0x12111c                     
+0035e26c: b969       ldr      r1, [r7, #0x18]               
+0035e26e: 0029       cmp      r1, #0                        
+0035e270: 40f03b83   bne.w    #0x35e8ea                     
+0035e274: 97f8d630   ldrb.w   r3, [r7, #0xd6]               
+0035e278: 97f8d520   ldrb.w   r2, [r7, #0xd5]               
+0035e27c: 9a42       cmp      r2, r3                        
+0035e27e: 40f23483   bls.w    #0x35e8ea                     
+0035e282: ff2b       cmp      r3, #0xff                     
+0035e284: 00f03183   beq.w    #0x35e8ea                     
+0035e288: 0133       adds     r3, #1                        
+0035e28a: 0122       movs     r2, #1                        
+0035e28c: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e290: ba61       str      r2, [r7, #0x18]               
+0035e292: 2de3       b        #0x35e8f0                     
+0035e294: d7f8c820   ldr.w    r2, [r7, #0xc8]               
+0035e298: 3d4b       ldr      r3, [pc, #0xf4]                 ; [0035e390]=00030d54
+0035e29a: 9a42       cmp      r2, r3                        
+0035e29c: 03d9       bls      #0x35e2a6                     
+0035e29e: ff23       movs     r3, #0xff                     
+0035e2a0: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e2a4: 04e0       b        #0x35e2b0                     
+0035e2a6: 3868       ldr      r0, [r7]                      
+0035e2a8: d7f8cc10   ldr.w    r1, [r7, #0xcc]               
+0035e2ac: c2f536ff   bl       #0x12111c                     
+0035e2b0: 7b6a       ldr      r3, [r7, #0x24]               
+0035e2b2: 002b       cmp      r3, #0                        
+0035e2b4: 40f01983   bne.w    #0x35e8ea                     
+0035e2b8: 97f8d630   ldrb.w   r3, [r7, #0xd6]               
+0035e2bc: 97f8d520   ldrb.w   r2, [r7, #0xd5]               
+0035e2c0: 9a42       cmp      r2, r3                        
+0035e2c2: 40f21283   bls.w    #0x35e8ea                     
+0035e2c6: ff2b       cmp      r3, #0xff                     
+0035e2c8: 00f00f83   beq.w    #0x35e8ea                     
+0035e2cc: 786a       ldr      r0, [r7, #0x24]               
+0035e2ce: 0133       adds     r3, #1                        
+0035e2d0: 0121       movs     r1, #1                        
+0035e2d2: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e2d6: 7962       str      r1, [r7, #0x24]               
+0035e2d8: 84f84100   strb.w   r0, [r4, #0x41]               
+0035e2dc: 08e3       b        #0x35e8f0                     
+0035e2de: d7f8c820   ldr.w    r2, [r7, #0xc8]               
+0035e2e2: 2b4b       ldr      r3, [pc, #0xac]                 ; [0035e390]=00030d54
+0035e2e4: 9a42       cmp      r2, r3                        
+0035e2e6: 03d9       bls      #0x35e2f0                     
+0035e2e8: ff23       movs     r3, #0xff                     
+0035e2ea: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e2ee: 04e0       b        #0x35e2fa                     
+0035e2f0: 5846       mov      r0, fp                        
+0035e2f2: d7f8cc10   ldr.w    r1, [r7, #0xcc]               
+0035e2f6: c2f511ff   bl       #0x12111c                     
+0035e2fa: 3a6a       ldr      r2, [r7, #0x20]               
+0035e2fc: 002a       cmp      r2, #0                        
+0035e2fe: 40f0f482   bne.w    #0x35e8ea                     
+0035e302: 97f8d630   ldrb.w   r3, [r7, #0xd6]               
+0035e306: 97f8d520   ldrb.w   r2, [r7, #0xd5]               
+0035e30a: 9a42       cmp      r2, r3                        
+0035e30c: 40f2ed82   bls.w    #0x35e8ea                     
+0035e310: ff2b       cmp      r3, #0xff                     
+0035e312: 00f0ea82   beq.w    #0x35e8ea                     
+0035e316: 0133       adds     r3, #1                        
+0035e318: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e31c: 3b6a       ldr      r3, [r7, #0x20]               
+0035e31e: 0120       movs     r0, #1                        
+0035e320: 3862       str      r0, [r7, #0x20]               
+0035e322: 84f84030   strb.w   r3, [r4, #0x40]               
+0035e326: e3e2       b        #0x35e8f0                     
+0035e328: d7f8c820   ldr.w    r2, [r7, #0xc8]               
+0035e32c: 40f6c613   movw     r3, #0x9c6                    
+0035e330: 9a42       cmp      r2, r3                        
+0035e332: 03d9       bls      #0x35e33c                     
+0035e334: ff23       movs     r3, #0xff                     
+0035e336: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e33a: 06e0       b        #0x35e34a                     
+0035e33c: 3968       ldr      r1, [r7]                      
+0035e33e: 1448       ldr      r0, [pc, #0x50]                 ; [0035e390]=00030d54
+0035e340: 0818       adds     r0, r1, r0                    
+0035e342: d7f8cc10   ldr.w    r1, [r7, #0xcc]               
+0035e346: c2f5e9fe   bl       #0x12111c                     
+0035e34a: 7a69       ldr      r2, [r7, #0x14]               
+0035e34c: 002a       cmp      r2, #0                        
+0035e34e: 40f0cc82   bne.w    #0x35e8ea                     
+0035e352: 97f8d630   ldrb.w   r3, [r7, #0xd6]               
+0035e356: 97f8d520   ldrb.w   r2, [r7, #0xd5]               
+0035e35a: 9a42       cmp      r2, r3                        
+0035e35c: 40f2c582   bls.w    #0x35e8ea                     
+0035e360: ff2b       cmp      r3, #0xff                     
+0035e362: 00f0c282   beq.w    #0x35e8ea                     
+0035e366: 0133       adds     r3, #1                        
+0035e368: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e36c: 0123       movs     r3, #1                        
+0035e36e: 7b61       str      r3, [r7, #0x14]               
+0035e370: bee2       b        #0x35e8f0                     
+0035e372: 00bf       nop                                    
+0035e374: 5ec8       ldm      r0!, {r1, r2, r3, r4, r6}     
+0035e376: 8100       lsls     r1, r0, #2                    
+0035e378: b6e6       b        #0x35e0e8                     
+0035e37a: 8100       lsls     r1, r0, #2                    
+0035e37c: 0300       movs     r3, r0                        
+0035e37e: 1010       asrs     r0, r2, #0x20                 
+0035e380: 70c8       ldm      r0!, {r4, r5, r6}             
+0035e382: 8100       lsls     r1, r0, #2                    
+0035e384: 8ec8       ldm      r0!, {r1, r2, r3, r7}         
+0035e386: 8100       lsls     r1, r0, #2                    
+0035e388: 9cc8       ldm      r0!, {r2, r3, r4, r7}         
+0035e38a: 8100       lsls     r1, r0, #2                    
+0035e38c: cac8       ldm      r0!, {r1, r3, r6, r7}         
+0035e38e: 8100       lsls     r1, r0, #2                    
+0035e390: 540d       lsrs     r4, r2, #0x15                 
+0035e392: 0300       movs     r3, r0                        
+0035e394: d7f8c820   ldr.w    r2, [r7, #0xc8]               
+0035e398: 40f6c613   movw     r3, #0x9c6                    
+0035e39c: 9a42       cmp      r2, r3                        
+0035e39e: 03d9       bls      #0x35e3a8                     
+0035e3a0: ff23       movs     r3, #0xff                     
+0035e3a2: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e3a6: 05e0       b        #0x35e3b4                     
+0035e3a8: b348       ldr      r0, [pc, #0x2cc]                ; [0035e678]=00030d54
+0035e3aa: d7f8cc10   ldr.w    r1, [r7, #0xcc]               
+0035e3ae: 5844       add      r0, fp                        
+0035e3b0: c2f5b4fe   bl       #0x12111c                     
+0035e3b4: 3869       ldr      r0, [r7, #0x10]               
+0035e3b6: 0028       cmp      r0, #0                        
+0035e3b8: 40f09782   bne.w    #0x35e8ea                     
+0035e3bc: 97f8d630   ldrb.w   r3, [r7, #0xd6]               
+0035e3c0: 97f8d520   ldrb.w   r2, [r7, #0xd5]               
+0035e3c4: 9a42       cmp      r2, r3                        
+0035e3c6: 40f29082   bls.w    #0x35e8ea                     
+0035e3ca: ff2b       cmp      r3, #0xff                     
+0035e3cc: 00f08d82   beq.w    #0x35e8ea                     
+0035e3d0: 0133       adds     r3, #1                        
+0035e3d2: 0121       movs     r1, #1                        
+0035e3d4: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e3d8: 3961       str      r1, [r7, #0x10]               
+0035e3da: 89e2       b        #0x35e8f0                     
+0035e3dc: d7f8c820   ldr.w    r2, [r7, #0xc8]               
+0035e3e0: 022a       cmp      r2, #2                        
+0035e3e2: 03d9       bls      #0x35e3ec                     
+0035e3e4: ff23       movs     r3, #0xff                     
+0035e3e6: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e3ea: 05e0       b        #0x35e3f8                     
+0035e3ec: d7f80401   ldr.w    r0, [r7, #0x104]              
+0035e3f0: d7f8cc10   ldr.w    r1, [r7, #0xcc]               
+0035e3f4: c2f592fe   bl       #0x12111c                     
+0035e3f8: fa68       ldr      r2, [r7, #0xc]                
+0035e3fa: 002a       cmp      r2, #0                        
+0035e3fc: 40f07582   bne.w    #0x35e8ea                     
+0035e400: 97f8d630   ldrb.w   r3, [r7, #0xd6]               
+0035e404: 97f8d520   ldrb.w   r2, [r7, #0xd5]               
+0035e408: 9a42       cmp      r2, r3                        
+0035e40a: 40f26e82   bls.w    #0x35e8ea                     
+0035e40e: ff2b       cmp      r3, #0xff                     
+0035e410: 00f06b82   beq.w    #0x35e8ea                     
+0035e414: 0133       adds     r3, #1                        
+0035e416: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e41a: 0123       movs     r3, #1                        
+0035e41c: fb60       str      r3, [r7, #0xc]                
+0035e41e: 67e2       b        #0x35e8f0                     
+0035e420: d7f8c820   ldr.w    r2, [r7, #0xc8]               
+0035e424: 102a       cmp      r2, #0x10                     
+0035e426: 03d0       beq      #0x35e430                     
+0035e428: ff23       movs     r3, #0xff                     
+0035e42a: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e42e: 05e0       b        #0x35e43c                     
+0035e430: d7f80801   ldr.w    r0, [r7, #0x108]              
+0035e434: d7f8cc10   ldr.w    r1, [r7, #0xcc]               
+0035e438: c2f570fe   bl       #0x12111c                     
+0035e43c: b868       ldr      r0, [r7, #8]                  
+0035e43e: 0028       cmp      r0, #0                        
+0035e440: 40f05382   bne.w    #0x35e8ea                     
+0035e444: 97f8d630   ldrb.w   r3, [r7, #0xd6]               
+0035e448: 97f8d520   ldrb.w   r2, [r7, #0xd5]               
+0035e44c: 9a42       cmp      r2, r3                        
+0035e44e: 40f24c82   bls.w    #0x35e8ea                     
+0035e452: ff2b       cmp      r3, #0xff                     
+0035e454: 00f04982   beq.w    #0x35e8ea                     
+0035e458: 0133       adds     r3, #1                        
+0035e45a: 0121       movs     r1, #1                        
+0035e45c: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e460: b960       str      r1, [r7, #8]                  
+0035e462: 45e2       b        #0x35e8f0                     
+0035e464: 97f8d620   ldrb.w   r2, [r7, #0xd6]               
+0035e468: 97f8d530   ldrb.w   r3, [r7, #0xd5]               
+0035e46c: 9342       cmp      r3, r2                        
+0035e46e: 03d0       beq      #0x35e478                     
+0035e470: 112a       cmp      r2, #0x11                     
+0035e472: 40f03a82   bne.w    #0x35e8ea                     
+0035e476: 02e0       b        #0x35e47e                     
+0035e478: ff2b       cmp      r3, #0xff                     
+0035e47a: 00f03682   beq.w    #0x35e8ea                     
+0035e47e: 0d23       movs     r3, #0xd                      
+0035e480: 34e2       b        #0x35e8ec                     
+0035e482: d7f8c820   ldr.w    r2, [r7, #0xc8]               
+0035e486: 162a       cmp      r2, #0x16                     
+0035e488: 03d9       bls      #0x35e492                     
+0035e48a: ff23       movs     r3, #0xff                     
+0035e48c: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e490: 05e0       b        #0x35e49e                     
+0035e492: d7f81001   ldr.w    r0, [r7, #0x110]              
+0035e496: d7f8cc10   ldr.w    r1, [r7, #0xcc]               
+0035e49a: c2f53ffe   bl       #0x12111c                     
+0035e49e: 97f8d630   ldrb.w   r3, [r7, #0xd6]               
+0035e4a2: 0d2b       cmp      r3, #0xd                      
+0035e4a4: 40f02182   bne.w    #0x35e8ea                     
+0035e4a8: d7f81021   ldr.w    r2, [r7, #0x110]              
+0035e4ac: 137d       ldrb     r3, [r2, #0x14]               
+0035e4ae: 43b9       cbnz     r3, #0x35e4c2                 
+0035e4b0: fb6a       ldr      r3, [r7, #0x2c]               
+0035e4b2: 1146       mov      r1, r2                        
+0035e4b4: 0822       movs     r2, #8                        
+0035e4b6: 181d       adds     r0, r3, #4                    
+0035e4b8: c2f530fe   bl       #0x12111c                     
+0035e4bc: 0123       movs     r3, #1                        
+0035e4be: 84f8c831   strb.w   r3, [r4, #0x1c8]              
+0035e4c2: 2046       mov      r0, r4                        
+0035e4c4: fbf7ceff   bl       #0x35a464                     
+0035e4c8: 2046       mov      r0, r4                        
+0035e4ca: faf773fb   bl       #0x358bb4                     
+0035e4ce: f86a       ldr      r0, [r7, #0x2c]               
+0035e4d0: d7f81011   ldr.w    r1, [r7, #0x110]              
+0035e4d4: 0022       movs     r2, #0                        
+0035e4d6: 07f1d203   add.w    r3, r7, #0xd2                 
+0035e4da: 8589       ldrh     r5, [r0, #0xc]                
+0035e4dc: 01f1080a   add.w    sl, r1, #8                    
+0035e4e0: 2046       mov      r0, r4                        
+0035e4e2: 5146       mov      r1, sl                        
+0035e4e4: fff700fc   bl       #0x35dce8                     
+0035e4e8: 65b3       cbz      r5, #0x35e544                 
+0035e4ea: fa69       ldr      r2, [r7, #0x1c]               
+0035e4ec: 04f58048   add.w    r8, r4, #0x4000               
+0035e4f0: 0125       movs     r5, #1                        
+0035e4f2: 6249       ldr      r1, [pc, #0x188]                ; [0035e67c]=0081e6c2 "org p_dirNoTbl->recDirId"
+0035e4f4: b2f90030   ldrsh.w  r3, [r2]                      
+0035e4f8: 0422       movs     r2, #4                        
+0035e4fa: 0195       str      r5, [sp, #4]                  
+0035e4fc: 0295       str      r5, [sp, #8]                  
+0035e4fe: 0093       str      r3, [sp]                      
+0035e500: 0023       movs     r3, #0                        
+0035e502: d8f88400   ldr.w    r0, [r8, #0x84]               
+0035e506: f5f7fff8   bl       #0x353708                     
+0035e50a: f86a       ldr      r0, [r7, #0x2c]               
+0035e50c: 5c49       ldr      r1, [pc, #0x170]                ; [0035e680]=0081e6db "p_dirTbl->dirCnt"
+0035e50e: 0422       movs     r2, #4                        
+0035e510: 8389       ldrh     r3, [r0, #0xc]                
+0035e512: 0295       str      r5, [sp, #8]                  
+0035e514: 8de82800   stm.w    sp, {r3, r5}                  
+0035e518: 0023       movs     r3, #0                        
+0035e51a: d8f88400   ldr.w    r0, [r8, #0x84]               
+0035e51e: f5f7f3f8   bl       #0x353708                     
+0035e522: f96a       ldr      r1, [r7, #0x2c]               
+0035e524: fa69       ldr      r2, [r7, #0x1c]               
+0035e526: 8b89       ldrh     r3, [r1, #0xc]                
+0035e528: 5649       ldr      r1, [pc, #0x158]                ; [0035e684]=0081e6ec "new p_dirNoTbl->recDirId"
+0035e52a: 013b       subs     r3, #1                        
+0035e52c: 9bb2       uxth     r3, r3                        
+0035e52e: 1380       strh     r3, [r2]                      
+0035e530: 0295       str      r5, [sp, #8]                  
+0035e532: 0422       movs     r2, #4                        
+0035e534: 1bb2       sxth     r3, r3                        
+0035e536: 8de82800   stm.w    sp, {r3, r5}                  
+0035e53a: 0023       movs     r3, #0                        
+0035e53c: d8f88400   ldr.w    r0, [r8, #0x84]               
+0035e540: f5f7e2f8   bl       #0x353708                     
+0035e544: 0025       movs     r5, #0                        
+0035e546: 0922       movs     r2, #9                        
+0035e548: abf80050   strh.w   r5, [fp]                      
+0035e54c: 0bf10800   add.w    r0, fp, #8                    
+0035e550: cbf80450   str.w    r5, [fp, #4]                  
+0035e554: 5146       mov      r1, sl                        
+0035e556: c2f5e1fd   bl       #0x12111c                     
+0035e55a: 5a46       mov      r2, fp                        
+0035e55c: 1423       movs     r3, #0x14                     
+0035e55e: 03fb05b3   mla      r3, r3, r5, fp                
+0035e562: 0135       adds     r5, #1                        
+0035e564: 2033       adds     r3, #0x20                     
+0035e566: 9978       ldrb     r1, [r3, #2]                  
+0035e568: 6ff3c401   bfc      r1, #3, #2                    
+0035e56c: 9970       strb     r1, [r3, #2]                  
+0035e56e: 1979       ldrb     r1, [r3, #4]                  
+0035e570: 6ff34701   bfc      r1, #1, #7                    
+0035e574: 1971       strb     r1, [r3, #4]                  
+0035e576: 42f21071   movw     r1, #0x2710                   
+0035e57a: 0023       movs     r3, #0                        
+0035e57c: 82f82530   strb.w   r3, [r2, #0x25]               
+0035e580: 1432       adds     r2, #0x14                     
+0035e582: 8d42       cmp      r5, r1                        
+0035e584: ead1       bne      #0x35e55c                     
+0035e586: 3c4a       ldr      r2, [pc, #0xf0]                 ; [0035e678]=00030d54
+0035e588: 5a44       add      r2, fp                        
+0035e58a: 1380       strh     r3, [r2]                      
+0035e58c: 3e4a       ldr      r2, [pc, #0xf8]                 ; [0035e688]=00030d56
+0035e58e: 0beb0300   add.w    r0, fp, r3                    
+0035e592: 0021       movs     r1, #0                        
+0035e594: 0133       adds     r3, #1                        
+0035e596: 8218       adds     r2, r0, r2                    
+0035e598: 00f54430   add.w    r0, r0, #0x31000              
+0035e59c: 00f50e70   add.w    r0, r0, #0x238                
+0035e5a0: 1170       strb     r1, [r2]                      
+0035e5a2: 40f2e242   movw     r2, #0x4e2                    
+0035e5a6: 9342       cmp      r3, r2                        
+0035e5a8: 0170       strb     r1, [r0]                      
+0035e5aa: efd1       bne      #0x35e58c                     
+0035e5ac: 374b       ldr      r3, [pc, #0xdc]                 ; [0035e68c]=00031237
+0035e5ae: 8022       movs     r2, #0x80                     
+0035e5b0: 5b44       add      r3, fp                        
+0035e5b2: 1a70       strb     r2, [r3]                      
+0035e5b4: 364b       ldr      r3, [pc, #0xd8]                 ; [0035e690]=00031719
+0035e5b6: 5b44       add      r3, fp                        
+0035e5b8: 1a70       strb     r2, [r3]                      
+0035e5ba: 0123       movs     r3, #1                        
+0035e5bc: d7f80c01   ldr.w    r0, [r7, #0x10c]              
+0035e5c0: 0370       strb     r3, [r0]                      
+0035e5c2: 0d33       adds     r3, #0xd                      
+0035e5c4: 92e1       b        #0x35e8ec                     
+0035e5c6: d7f8c830   ldr.w    r3, [r7, #0xc8]               
+0035e5ca: 1e2b       cmp      r3, #0x1e                     
+0035e5cc: 03d9       bls      #0x35e5d6                     
+0035e5ce: ff23       movs     r3, #0xff                     
+0035e5d0: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e5d4: 1ae0       b        #0x35e60c                     
+0035e5d6: d7f81c11   ldr.w    r1, [r7, #0x11c]              
+0035e5da: 0d78       ldrb     r5, [r1]                      
+0035e5dc: 012d       cmp      r5, #1                        
+0035e5de: 09d1       bne      #0x35e5f4                     
+0035e5e0: 1e22       movs     r2, #0x1e                     
+0035e5e2: d7f81801   ldr.w    r0, [r7, #0x118]              
+0035e5e6: d7f82011   ldr.w    r1, [r7, #0x120]              
+0035e5ea: c2f597fd   bl       #0x12111c                     
+0035e5ee: d7f81421   ldr.w    r2, [r7, #0x114]              
+0035e5f2: 1570       strb     r5, [r2]                      
+0035e5f4: d7f82001   ldr.w    r0, [r7, #0x120]              
+0035e5f8: d7f8cc10   ldr.w    r1, [r7, #0xcc]               
+0035e5fc: d7f8c820   ldr.w    r2, [r7, #0xc8]               
+0035e600: c2f58cfd   bl       #0x12111c                     
+0035e604: d7f81c01   ldr.w    r0, [r7, #0x11c]              
+0035e608: 0123       movs     r3, #1                        
+0035e60a: 0370       strb     r3, [r0]                      
+0035e60c: 97f8d630   ldrb.w   r3, [r7, #0xd6]               
+0035e610: 0d2b       cmp      r3, #0xd                      
+0035e612: 04d0       beq      #0x35e61e                     
+0035e614: 0f2b       cmp      r3, #0xf                      
+0035e616: 02d0       beq      #0x35e61e                     
+0035e618: 0e2b       cmp      r3, #0xe                      
+0035e61a: 40f06681   bne.w    #0x35e8ea                     
+0035e61e: d7f82021   ldr.w    r2, [r7, #0x120]              
+0035e622: 2046       mov      r0, r4                        
+0035e624: 02f11101   add.w    r1, r2, #0x11                 
+0035e628: 0122       movs     r2, #1                        
+0035e62a: fcf711fa   bl       #0x35aa50                     
+0035e62e: 0f23       movs     r3, #0xf                      
+0035e630: 5ce1       b        #0x35e8ec                     
+0035e632: d7f8c820   ldr.w    r2, [r7, #0xc8]               
+0035e636: 182a       cmp      r2, #0x18                     
+0035e638: 03d9       bls      #0x35e642                     
+0035e63a: ff23       movs     r3, #0xff                     
+0035e63c: 87f8d630   strb.w   r3, [r7, #0xd6]               
+0035e640: 05e0       b        #0x35e64e                     
+0035e642: 07f17800   add.w    r0, r7, #0x78                 
+0035e646: d7f8cc10   ldr.w    r1, [r7, #0xcc]               

@@ -44,9 +44,8 @@ BK_T_OFF = 16 + D.SD_RANURAS * D.LUT_BYTES             # 0x1900: justo detrás d
 # Verificación: G107 §3 da el hueco G18 por libre con 0 referencias relativas al PC ni `adr`, y los bytes están a cero en
 # el fichero (lo comprueba `apply_bytes`); NO se ha re-hecho aquí un barrido independiente de `ldr/add pc` (límite del informe).
 ZONA_T18 = (0x43FB8360, 0x43FB8EE0)
-T_TABLAS = ZONA_T18[0]                                  # 3 registros de 68 B (0x43FB8360…0x43FB842C)
-T_CELDA = T_TABLAS + 3 * REC                            # celda de 4 B con el búfer de la curva expandida
-T_CODIGO = (T_CELDA + 4 + 3) & ~3                       # cueva de la curva (0x43FB8430)
+T_CELDA = ZONA_T18[0]                                   # celda de 4 B con el búfer de la curva expandida
+T_CODIGO = (T_CELDA + 4 + 3) & ~3                       # cueva de la curva (0x43FB8368)
 AJ = cfw.POR_ID["lut"]
 
 
@@ -90,91 +89,37 @@ def lee_registro(b: bytes) -> list[int] | None:
     return n if k == NN else None
 
 
-_T_DEFECTO: list[bytes] = []
-
-
-def t_por_defecto() -> list[bytes]:
-    """Registros de las 3 tablas del `.dat`: solo la película lleva curva (medido: teal&orange 0,065→0,201 e identidad 0,027→0,072 empeoran)."""
-    if not _T_DEFECTO:
-        import cube_a6000 as C
-        import tono_post as P
-        ch = C.descompone(C.lut_pelicula, usa_M=False, usa_T=True, usa_L=True)
-        _T_DEFECTO.extend([registro(None), registro(nodos(P.curva_post(ch))), registro(None)])
-    return list(_T_DEFECTO)
-
-
 # ---------- cueva ----------
 def _c(r: str, v: int) -> str:
     return f"movw {r}, #{v & 0xFFFF:#x}\n    movt {r}, #{v >> 16:#x}\n"
 
 
-def asm(inicio: int, sd: bool = False, ajuste=None) -> str:
-    """Fuente Thumb de la cueva. `sd`: la curva se busca antes en el blob de Backup `0x150005` (G89, ranuras 1…6) que en el `.dat`."""
-    ajuste = ajuste or AJ                 # el build con SD pasa `lut_patch.AJ_SD` (7 opciones)
-    blob = f"""
-blob_lut:
-    push {{r3, r4, r5, lr}}
-    {_c('r4', D.LUT_CELDA)}
-    ldr r5, [r4, #4]
-    cmp r5, #0
-    bne.w bl_leer
-    movw r0, #{D.BK_TAM}
-    {_c('r1', D.MALLOC | 1)}
-    blx r1
-    cmp r0, #0
-    beq.w bl_no
-    str r0, [r4, #4]
-    mov r5, r0
-bl_leer:
-    {_c('r0', D.BK_ID)}
-    mov r1, r5
-    bl #{cfw.BACKUP_READ:#x}
-    ldr r0, [r5]
-    {_c('r1', D.BK_MAGIC)}
-    cmp r0, r1
-    bne.w bl_no
-    mov r0, r5
-    pop {{r3, r4, r5, lr}}
-    bx lr
-bl_no:
-    movs r0, #0
-    pop {{r3, r4, r5, lr}}
-    bx lr
-""" if sd else ""
-    sd_src = f"""
-    bl blob_lut
-    cmp r0, #0
-    beq.w c_dat
-    subs r1, r8, #1
-    cmp r1, #{D.SD_RANURAS}
-    bhs.w c_dat
-    add r2, r0, r1
-    ldrb r2, [r2, #8]
-    cmp r2, #1
-    bne.w c_dat
-    movw r3, #{REC}
-    mul r1, r1, r3
-    add r0, r0, r1
-    {_c('r5', BK_T_OFF)}
-    add r5, r5, r0
-    b.w c_nodos
-""" if sd else ""
+def asm(inicio: int, ajuste=None) -> str:
+    """Fuente Thumb de la cueva: la curva de la ranura sale del blob de Backup `0x150005` (G89; ranura s en `BK_T_OFF + (s-1)·REC`)."""
+    ajuste = ajuste or AJ                 # `lut_patch` pasa `AJ_SD` (7 opciones)
     return f"""
 t_curva:
     push {{r4-r8, lr}}
     mov r4, r0
     bl lee_lut
-    mov r8, r0
     cmp r0, #0
     beq.w c_off
-{sd_src}c_dat:
+    mov r8, r0
+    bl blob_lut
+    cmp r0, #0
+    beq.w c_off
     subs r1, r8, #1
-    cmp r1, #3
+    cmp r1, #{D.SD_RANURAS}
     bhs.w c_off
+    add r2, r0, r1
+    ldrb r2, [r2, #8]
+    cmp r2, #1
+    bne.w c_off
     movw r3, #{REC}
     mul r1, r1, r3
-    {_c('r2', T_TABLAS)}
-    add r5, r2, r1
+    add r0, r0, r1
+    {_c('r5', BK_T_OFF)}
+    add r5, r5, r0
 c_nodos:
     ldrh r0, [r5]
     cmp r0, #{NN}
@@ -237,7 +182,35 @@ c_fin:
     mov r0, r4
     pop {{r4-r8, lr}}
     b.w #{F_PREP:#x}
-{blob}lee_lut:
+blob_lut:
+    push {{r3, r4, r5, lr}}
+    {_c('r4', D.LUT_CELDA)}
+    ldr r5, [r4, #4]
+    cmp r5, #0
+    bne.w bl_leer
+    movw r0, #{D.BK_TAM}
+    {_c('r1', D.MALLOC | 1)}
+    blx r1
+    cmp r0, #0
+    beq.w bl_no
+    str r0, [r4, #4]
+    mov r5, r0
+bl_leer:
+    {_c('r0', D.BK_ID)}
+    mov r1, r5
+    bl #{cfw.BACKUP_READ:#x}
+    ldr r0, [r5]
+    {_c('r1', D.BK_MAGIC)}
+    cmp r0, r1
+    bne.w bl_no
+    mov r0, r5
+    pop {{r3, r4, r5, lr}}
+    bx lr
+bl_no:
+    movs r0, #0
+    pop {{r3, r4, r5, lr}}
+    bx lr
+lee_lut:
     push {{lr}}
 {cfw.leer_asm(ajuste, "tl")}
     pop {{r3}}
@@ -246,19 +219,17 @@ c_fin:
 """
 
 
-def cueva(sd: bool = False, ajuste=None) -> tuple[list[tuple[int, bytes]], int]:
+def cueva(ajuste=None) -> tuple[list[tuple[int, bytes]], int]:
     """(escrituras (va, bytes), entrada) de la cueva de la curva, en `T_CODIGO` (ventana de G18; no toca ZONA_A/ZONA_B)."""
-    c = cfw.ensamblar(asm(T_CODIGO, sd, ajuste), T_CODIGO)
+    c = cfw.ensamblar(asm(T_CODIGO, ajuste), T_CODIGO)
     assert T_CODIGO + len(c) <= ZONA_T18[1], hex(T_CODIGO + len(c))
     return [(T_CODIGO, c)], T_CODIGO
 
 
-def escrituras(sd: bool = False, curvas: list[bytes] | None = None, ajuste=None) -> tuple[list[tuple[int, bytes]], int]:
-    """Todo lo que añade la curva: 3 registros (68 B) + celda + código, en `ZONA_T18`. → (escrituras, entrada)."""
-    curvas = curvas if curvas is not None else t_por_defecto()
-    assert len(curvas) == 3 and all(len(x) == REC for x in curvas)
-    esc, ent = cueva(sd, ajuste)
-    return [(T_TABLAS, b"".join(curvas)), (T_CELDA, bytes(4))] + esc, ent
+def escrituras(ajuste=None) -> tuple[list[tuple[int, bytes]], int]:
+    """Todo lo que añade la curva: celda + código, en `ZONA_T18`. → (escrituras, entrada)."""
+    esc, ent = cueva(ajuste)
+    return [(T_CELDA, bytes(4))] + esc, ent
 
 
 # ---------- emulación (Unicorn) ----------

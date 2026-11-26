@@ -1,0 +1,90 @@
+002b385c: f8b5       push     {r3, r4, r5, r6, r7, lr}      
+002b385e: 0446       mov      r4, r0                        
+002b3860: 00af       add      r7, sp, #0                    
+002b3862: 1148       ldr      r0, [pc, #0x44]                 ; [002b38a8]=007e75a7 "GetUserIDFromOperationModeAndMediaID"
+002b3864: 0d46       mov      r5, r1                        
+002b3866: 1646       mov      r6, r2                        
+002b3868: fef7fefa   bl       #0x2b1e68                     
+002b386c: 0f4b       ldr      r3, [pc, #0x3c]                 ; [002b38ac]=009d23fc
+002b386e: 0022       movs     r2, #0                        
+002b3870: 1946       mov      r1, r3                        
+002b3872: 0de0       b        #0x2b3890                     
+002b3874: d868       ldr      r0, [r3, #0xc]                
+002b3876: a042       cmp      r0, r4                        
+002b3878: 08d1       bne      #0x2b388c                     
+002b387a: 5868       ldr      r0, [r3, #4]                  
+002b387c: a842       cmp      r0, r5                        
+002b387e: 05d1       bne      #0x2b388c                     
+002b3880: 1823       movs     r3, #0x18                     
+002b3882: 5a43       muls     r2, r3, r2                    
+002b3884: 8b58       ldr      r3, [r1, r2]                  
+002b3886: 0024       movs     r4, #0                        
+002b3888: 3360       str      r3, [r6]                      
+002b388a: 06e0       b        #0x2b389a                     
+002b388c: 0132       adds     r2, #1                        
+002b388e: 1833       adds     r3, #0x18                     
+002b3890: 9868       ldr      r0, [r3, #8]                  
+002b3892: b0f1ff3f   cmp.w    r0, #-1                       
+002b3896: edd1       bne      #0x2b3874                     
+002b3898: 054c       ldr      r4, [pc, #0x14]                 ; [002b38b0]=10800010
+002b389a: 0348       ldr      r0, [pc, #0xc]                  ; [002b38a8]=007e75a7 "GetUserIDFromOperationModeAndMediaID"
+002b389c: 2146       mov      r1, r4                        
+002b389e: fef75bfb   bl       #0x2b1f58                     
+002b38a2: 2046       mov      r0, r4                        
+002b38a4: f8bd       pop      {r3, r4, r5, r6, r7, pc}      
+002b38a6: 00bf       nop                                    
+002b38a8: a775       strb     r7, [r4, #0x16]               
+002b38aa: 7e00       lsls     r6, r7, #1                    
+002b38ac: fc23       movs     r3, #0xfc                     
+002b38ae: 9d00       lsls     r5, r3, #2                    
+002b38b0: 1000       movs     r0, r2                        
+002b38b2: 8010       asrs     r0, r0, #2                    
+002b38b4: 90b5       push     {r4, r7, lr}                  
+002b38b6: 83b0       sub      sp, #0xc                      
+002b38b8: 0446       mov      r4, r0                        
+002b38ba: 1d48       ldr      r0, [pc, #0x74]                 ; [002b3930]=009e691c
+002b38bc: 02af       add      r7, sp, #8                    
+002b38be: 22f7bffd   bl       #0x1d6440                     
+002b38c2: 211d       adds     r1, r4, #4                    
+002b38c4: 4ff0ff33   mov.w    r3, #-1                       
+002b38c8: 0094       str      r4, [sp]                      
+002b38ca: 6384       strh     r3, [r4, #0x22]               
+002b38cc: 1948       ldr      r0, [pc, #0x64]                 ; [002b3934]=007e75cc "[FBM]<RWB>GetRWBuffer search start handl"
+002b38ce: 0ec9       ldm      r1, {r1, r2, r3}              
+002b38d0: 01f0c0fb   bl       #0x2b5054                     
+002b38d4: 184b       ldr      r3, [pc, #0x60]                 ; [002b3938]=00a36c20
+002b38d6: 1946       mov      r1, r3                        
+002b38d8: 1a68       ldr      r2, [r3]                      
+002b38da: 0ab1       cbz      r2, #0x2b38e0                 
+002b38dc: 5a68       ldr      r2, [r3, #4]                  
+002b38de: 32b1       cbz      r2, #0x2b38ee                 
+002b38e0: 9b68       ldr      r3, [r3, #8]                  
+002b38e2: 4bb1       cbz      r3, #0x2b38f8                 
+002b38e4: 144b       ldr      r3, [pc, #0x50]                 ; [002b3938]=00a36c20
+002b38e6: db68       ldr      r3, [r3, #0xc]                
+002b38e8: 33b9       cbnz     r3, #0x2b38f8                 
+002b38ea: 0133       adds     r3, #1                        
+002b38ec: 00e0       b        #0x2b38f0                     
+002b38ee: 1346       mov      r3, r2                        
+002b38f0: 6384       strh     r3, [r4, #0x22]               
+002b38f2: 01ebc303   add.w    r3, r1, r3, lsl #3            
+002b38f6: 5c60       str      r4, [r3, #4]                  
+002b38f8: 618c       ldrh     r1, [r4, #0x22]               
+002b38fa: 4ff6ff73   movw     r3, #0xffff                   
+002b38fe: 9942       cmp      r1, r3                        
+002b3900: 0ad1       bne      #0x2b3918                     
+002b3902: 2146       mov      r1, r4                        
+002b3904: 0d48       ldr      r0, [pc, #0x34]                 ; [002b393c]=007e761f "[FBM]<RWB>GetRWBuffer wait handle[0x%x]"
+002b3906: 01f0a5fb   bl       #0x2b5054                     
+002b390a: 0d4b       ldr      r3, [pc, #0x34]                 ; [002b3940]=00a3697c
+002b390c: 4ff0ff31   mov.w    r1, #-1                       
+002b3910: 1868       ldr      r0, [r3]                      
+002b3912: 4af33afe   bl       #0x5fe58a                     
+002b3916: dde7       b        #0x2b38d4                     
+002b3918: 0a48       ldr      r0, [pc, #0x28]                 ; [002b3944]=007e7647 "[FBM]<RWB>GetRWBuffer find bufferIndex[%"
+002b391a: 2246       mov      r2, r4                        
+002b391c: 01f09afb   bl       #0x2b5054                     
+002b3920: 0348       ldr      r0, [pc, #0xc]                  ; [002b3930]=009e691c
+002b3922: 07f10407   add.w    r7, r7, #4                    
+002b3926: bd46       mov      sp, r7                        
+002b3928: bde89040   pop.w    {r4, r7, lr}                  

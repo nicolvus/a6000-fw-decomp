@@ -1,0 +1,11 @@
+002b8b7c: 98b5       push     {r3, r4, r7, lr}              
+002b8b7e: 00af       add      r7, sp, #0                    
+002b8b80: 66f69ee9   blx      #0x11eec0                       ; _ZN8FlashLib9MutexLockEv
+002b8b84: f8f735fc   bl       #0x2b13f2                     
+002b8b88: 0446       mov      r4, r0                        
+002b8b8a: 65f608ed   blx      #0x11e59c                       ; _ZN8FlashLib11MutexUnLockEv
+002b8b8e: 2046       mov      r0, r4                        
+002b8b90: 98bd       pop      {r3, r4, r7, pc}              
+002b8b92: 98b5       push     {r3, r4, r7, lr}              
+002b8b94: 00af       add      r7, sp, #0                    
+002b8b96: 66f694e9   blx      #0x11eec0                       ; _ZN8FlashLib9MutexLockEv

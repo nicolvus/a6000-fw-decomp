@@ -1,0 +1,39 @@
+00000a8c: 2de9f043   push.w    {r4, r5, r6, r7, r8, sb, lr}  
+00000a90: 83b0       sub       sp, #0xc                      
+00000a92: 8021       movs      r1, #0x80                     
+00000a94: 02af       add       r7, sp, #8                    
+00000a96: 0646       mov       r6, r0                        
+00000a98: fff726ef   blx       #0x8e8                          ; _init+0xe8
+00000a9c: dff81481   ldr.w     r8, [pc, #0x114]                ; [00000bb4]=00000426
+00000aa0: 8021       movs      r1, #0x80                     
+00000aa2: dff81491   ldr.w     sb, [pc, #0x114]                ; [00000bb8]=00000433 "_msg_wait"
+00000aa6: f844       add       r8, pc                        
+00000aa8: f944       add       sb, pc                        
+00000aaa: 0446       mov       r4, r0                        
+00000aac: 4046       mov       r0, r8                        
+00000aae: fff71cef   blx       #0x8e8                          ; _init+0xe8
+00000ab2: 8021       movs      r1, #0x80                     
+00000ab4: 0546       mov       r5, r0                        
+00000ab6: 4846       mov       r0, sb                        
+00000ab8: fff716ef   blx       #0x8e8                          ; _init+0xe8
+00000abc: 2d19       adds      r5, r5, r4                    
+00000abe: 2d18       adds      r5, r5, r0                    
+00000ac0: 0135       adds      r5, #1                        
+00000ac2: 2846       mov       r0, r5                        
+00000ac4: fff704ef   blx       #0x8d0                          ; _init+0xd0
+00000ac8: 0446       mov       r4, r0                        
+00000aca: 30b9       cbnz      r0, #0xada                    
+00000acc: 3b4b       ldr       r3, [pc, #0xec]                 ; [00000bbc]=00000409 "nd_cpp_pr1"
+00000ace: dc30       adds      r0, #0xdc                     
+00000ad0: 0095       str       r5, [sp]                      
+00000ad2: 2146       mov       r1, r4                        
+00000ad4: 0122       movs      r2, #1                        
+00000ad6: 7b44       add       r3, pc                        
+00000ad8: 53e0       b         #0xb82                          ; testcmd_scn_open+0xf6
+00000ada: 394a       ldr       r2, [pc, #0xe4]                 ; [00000bc0]=0000040d "pp_pr1"
+00000adc: 2946       mov       r1, r5                        
+00000ade: 4346       mov       r3, r8                        
+00000ae0: 8de84002   stm.w     sp, {r6, sb}                  
+00000ae4: 7a44       add       r2, pc                        
+00000ae6: fff712ef   blx       #0x90c                          ; _init+0x10c
+00000aea: 0028       cmp       r0, #0                        

@@ -1,0 +1,11 @@
+# Sonda de estado: viewManagerIf::getCurrentFuncEventMode (libObj+0x125104) por «F 125104»
+# La función (libObj+0x7f25a4) recorre la pila de vistas de arriba abajo ([pVM]=n, [pVM+0x24]=array,
+# 0x10 B por entrada) y devuelve el modo de la PRIMERA vista viva: sirve para saber qué vista está arriba.
+
+  174.34 863.88 F libObj+0x125104(0,0,0,0) ...
+  174.35 863.88 F -> 0x15          # view/INDEX_PLAYBACK abierta 560 s antes y aún ARRIBA (la cautela ya se fue)
+  180.80 870.34 F libObj+0x125104(0,0,0,0) ...
+  180.82 870.35 F -> 0x1           # se abre view/STLREC encima (OPENHOT view/STLREC 0x3) → manda STLREC
+
+# Lectura NO concluyente (se conserva para no sesgar): a 309.90 el valor era 0x1, después de
+# «O view/SINGLEPB 0»; no se repitió la sonda en ese instante con la vista aún arriba.

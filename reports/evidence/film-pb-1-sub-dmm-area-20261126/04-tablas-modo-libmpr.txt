@@ -1,0 +1,63 @@
+# Tablas estaticas de libmpr que alimentan la tabla de buffers
+
+## Tabla de nombres de modo (0x9df090), pares {char*, modeId}
+009df090 ptr=0090f1e1 modeId=0  ''
+009df098 ptr=008db4af modeId=1  'Movie Pb'
+009df0a0 ptr=008db4b8 modeId=2  'Still Pb'
+009df0a8 ptr=0093b6e5 modeId=3  'Movie Rec'
+009df0b0 ptr=008db4c1 modeId=4  'Still Rec'
+009df0b8 ptr=008db4cb modeId=5  'Index Pb'
+009df0c0 ptr=008db4d4 modeId=6  'I-Pic Rec'
+009df0c8 ptr=008db4de modeId=7  'Dual Rec'
+009df0d0 ptr=008db4e7 modeId=8  'Dmy Dual'
+009df0d8 ptr=008db4f0 modeId=9  'Pb Capture'
+009df0e0 ptr=008db4fb modeId=10  'File Copy Dubbing'
+009df0e8 ptr=008db50d modeId=11  'Re-Mux Dubbing'
+009df0f0 ptr=008db51c modeId=12  'Still Dubbing'
+009df0f8 ptr=008db52a modeId=13  'Down Convert'
+009df100 ptr=008db537 modeId=14  'Thumb Rec'
+009df108 ptr=008db541 modeId=15  'Content Edit'
+009df110 ptr=008db54e modeId=16  'Highlight Pb'
+009df118 ptr=00844fb0 modeId=17  'Create'
+009df120 ptr=008db55b modeId=18  'Multi Rec HDHD'
+009df128 ptr=008db56a modeId=19  'Multi Rec HDSD'
+009df130 ptr=008db579 modeId=20  'Smth Slow'
+009df138 ptr=008db583 modeId=21  'Mass Strage'
+
+## mp_modeTblForBufTbl (0x8d87e8, .rodata): {ptr a def, modeId}  <- MemInfo::Init [0xa4f0a4]=0x8d87e8
+008d87e8 def=009de6f0 modeId=0
+008d87f0 def=009dbd20 modeId=2
+008d87f8 def=009db0e4 modeId=1
+008d8800 def=009db444 modeId=3
+008d8808 def=009da8e0 modeId=4
+008d8810 def=009dbe4c modeId=5
+008d8818 def=009db75c modeId=6
+008d8820 def=009daf7c modeId=7
+008d8828 def=009da994 modeId=8
+
+## Type2Mode: m_systemType = [0x9defe0] = 1 ; tablas por sistema
+### sysType0 0x9de7c8
+   type= 1 sub= 8 areaTblMode=0x07 ramMapMode= 4
+   type= 2 sub= 1 areaTblMode=0x02 ramMapMode= 9
+   type= 3 sub= 8 areaTblMode=0x03 ramMapMode= 7
+   (fin)
+### sysType1 0x9de898
+   type=16 sub= 8 areaTblMode=0x11 ramMapMode= 0
+   type= 1 sub= 8 areaTblMode=0x06 ramMapMode= 4
+   type= 2 sub= 1 areaTblMode=0x01 ramMapMode= 6
+   type= 2 sub= 3 areaTblMode=0x01 ramMapMode= 6
+   type= 2 sub= 2 areaTblMode=0x01 ramMapMode= 6
+   type= 2 sub= 4 areaTblMode=0x01 ramMapMode= 6
+   type= 2 sub= 6 areaTblMode=0x01 ramMapMode= 6
+   type= 2 sub= 7 areaTblMode=0x21 ramMapMode= 6
+   type= 3 sub= 8 areaTblMode=0x03 ramMapMode= 7
+   (fin)
+### sysType2 0x9dedc0
+   type=16 sub= 8 areaTblMode=0x14 ramMapMode= 0
+   type= 1 sub= 8 areaTblMode=0x0a ramMapMode= 4
+   type= 2 sub= 1 areaTblMode=0x05 ramMapMode= 5
+   type= 2 sub= 2 areaTblMode=0x04 ramMapMode= 6
+   type= 2 sub= 3 areaTblMode=0x04 ramMapMode= 6
+   type= 3 sub= 8 areaTblMode=0x0a ramMapMode= 9
+   type= 3 sub= 8 areaTblMode=0x0a ramMapMode= 9
+   (fin)

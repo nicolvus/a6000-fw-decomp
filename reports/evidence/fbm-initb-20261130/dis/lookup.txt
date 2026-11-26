@@ -1,0 +1,123 @@
+002b3000: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+002b3004: 85b0       sub      sp, #0x14                     
+002b3006: 8046       mov      r8, r0                        
+002b3008: 02af       add      r7, sp, #8                    
+002b300a: 1d48       ldr      r0, [pc, #0x74]                 ; [002b3080]=007e70f7 "GetSectorHandleFromOperatioModeAndMediaI"
+002b300c: 0e46       mov      r6, r1                        
+002b300e: 9146       mov      sb, r2                        
+002b3010: fef72aff   bl       #0x2b1e68                     
+002b3014: 1b4b       ldr      r3, [pc, #0x6c]                 ; [002b3084]=009d2408
+002b3016: 09e0       b        #0x2b302c                     
+002b3018: 5a68       ldr      r2, [r3, #4]                  
+002b301a: 32b1       cbz      r2, #0x2b302a                 
+002b301c: 1a68       ldr      r2, [r3]                      
+002b301e: 4245       cmp      r2, r8                        
+002b3020: 03d1       bne      #0x2b302a                     
+002b3022: 53f8082c   ldr      r2, [r3, #-0x8]               
+002b3026: b242       cmp      r2, r6                        
+002b3028: 21d0       beq      #0x2b306e                     
+002b302a: 1833       adds     r3, #0x18                     
+002b302c: 53f80c5c   ldr      r5, [r3, #-0xc]               
+002b3030: 002d       cmp      r5, #0                        
+002b3032: f1d1       bne      #0x2b3018                     
+002b3034: 144c       ldr      r4, [pc, #0x50]                 ; [002b3088]=10800010
+002b3036: 07e0       b        #0x2b3048                     
+002b3038: fb79       ldrb     r3, [r7, #7]                  
+002b303a: 1421       movs     r1, #0x14                     
+002b303c: 134a       ldr      r2, [pc, #0x4c]                 ; [002b308c]=00a3699c
+002b303e: 01fb0323   mla      r3, r1, r3, r2                
+002b3042: 5b68       ldr      r3, [r3, #4]                  
+002b3044: c9f80030   str.w    r3, [sb]                      
+002b3048: d9f80030   ldr.w    r3, [sb]                      
+002b304c: 4146       mov      r1, r8                        
+002b304e: 3246       mov      r2, r6                        
+002b3050: 0f48       ldr      r0, [pc, #0x3c]                 ; [002b3090]=007e7121 "[FBM]GetSectorHandleFromOperatioModeAndM"
+002b3052: 0093       str      r3, [sp]                      
+002b3054: 2b46       mov      r3, r5                        
+002b3056: 02f013f8   bl       #0x2b5080                     
+002b305a: 0948       ldr      r0, [pc, #0x24]                 ; [002b3080]=007e70f7 "GetSectorHandleFromOperatioModeAndMediaI"
+002b305c: 2146       mov      r1, r4                        
+002b305e: fef77bff   bl       #0x2b1f58                     
+002b3062: 2046       mov      r0, r4                        
+002b3064: 07f10c07   add.w    r7, r7, #0xc                  
+002b3068: bd46       mov      sp, r7                        
+002b306a: bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}  
+002b306e: 2846       mov      r0, r5                        
+002b3070: 3146       mov      r1, r6                        
+002b3072: fa1d       adds     r2, r7, #7                    
+002b3074: fff768ff   bl       #0x2b2f48                     
+002b3078: 0446       mov      r4, r0                        
+002b307a: 0028       cmp      r0, #0                        
+002b307c: dcd0       beq      #0x2b3038                     
+002b307e: e3e7       b        #0x2b3048                     
+002b3080: f770       strb     r7, [r6, #3]                  
+002b3082: 7e00       lsls     r6, r7, #1                    
+002b3084: 0824       movs     r4, #8                        
+002b3086: 9d00       lsls     r5, r3, #2                    
+002b3088: 1000       movs     r0, r2                        
+002b308a: 8010       asrs     r0, r0, #2                    
+002b308c: 9c69       ldr      r4, [r3, #0x18]               
+002b308e: a300       lsls     r3, r4, #2                    
+002b3090: 2171       strb     r1, [r4, #4]                  
+002b3092: 7e00       lsls     r6, r7, #1                    
+002b3094: 90b5       push     {r4, r7, lr}                  
+002b3096: 83b0       sub      sp, #0xc                      
+002b3098: 00af       add      r7, sp, #0                    
+002b309a: 1446       mov      r4, r2                        
+002b309c: fa1d       adds     r2, r7, #7                    
+002b309e: fff753ff   bl       #0x2b2f48                     
+002b30a2: 30b9       cbnz     r0, #0x2b30b2                 
+002b30a4: fb79       ldrb     r3, [r7, #7]                  
+002b30a6: 1421       movs     r1, #0x14                     
+002b30a8: 054a       ldr      r2, [pc, #0x14]                 ; [002b30c0]=00a3699c
+002b30aa: 01fb0323   mla      r3, r1, r3, r2                
+002b30ae: 5b68       ldr      r3, [r3, #4]                  
+002b30b0: 00e0       b        #0x2b30b4                     
+002b30b2: 0023       movs     r3, #0                        
+002b30b4: 2360       str      r3, [r4]                      
+002b30b6: 07f10c07   add.w    r7, r7, #0xc                  
+002b30ba: bd46       mov      sp, r7                        
+002b30bc: 90bd       pop      {r4, r7, pc}                  
+002b30be: 00bf       nop                                    
+002b30c0: 9c69       ldr      r4, [r3, #0x18]               
+002b30c2: a300       lsls     r3, r4, #2                    
+002b30c4: f0b5       push     {r4, r5, r6, r7, lr}          
+002b30c6: 8bb0       sub      sp, #0x2c                     
+002b30c8: 00af       add      r7, sp, #0                    
+002b30ca: 07f12804   add.w    r4, r7, #0x28                 
+002b30ce: 0023       movs     r3, #0                        
+002b30d0: 0546       mov      r5, r0                        
+002b30d2: 0e46       mov      r6, r1                        
+002b30d4: 44f8043d   str      r3, [r4, #-0x4]!              
+002b30d8: 1448       ldr      r0, [pc, #0x50]                 ; [002b312c]=007e717f "GetSectorStatus(USERID,MEDIAID)"
+002b30da: fef7c5fe   bl       #0x2b1e68                     
+002b30de: 2246       mov      r2, r4                        
+002b30e0: 2846       mov      r0, r5                        
+002b30e2: 3146       mov      r1, r6                        
+002b30e4: fff7d6ff   bl       #0x2b3094                     
+002b30e8: 0246       mov      r2, r0                        
+002b30ea: 98b9       cbnz     r0, #0x2b3114                 
+002b30ec: 786a       ldr      r0, [r7, #0x24]               
+002b30ee: 88b1       cbz      r0, #0x2b3114                 
+002b30f0: 391d       adds     r1, r7, #4                    
+002b30f2: fff7c5f9   bl       #0x2b2480                     
+002b30f6: b8b9       cbnz     r0, #0x2b3128                 
+002b30f8: fb88       ldrh     r3, [r7, #6]                  
+002b30fa: 022b       cmp      r3, #2                        
+002b30fc: 03d0       beq      #0x2b3106                     
+002b30fe: 042b       cmp      r3, #4                        
+002b3100: 01d0       beq      #0x2b3106                     
+002b3102: 032b       cmp      r3, #3                        
+002b3104: 10d1       bne      #0x2b3128                     
+002b3106: 0a4b       ldr      r3, [pc, #0x28]                 ; [002b3130]=10100002
+002b3108: 7c69       ldr      r4, [r7, #0x14]               
+002b310a: 002c       cmp      r4, #0                        
+002b310c: 14bf       ite      ne                            
+002b310e: 1c46       movne    r4, r3                        
+002b3110: 0024       moveq    r4, #0                        
+002b3112: 00e0       b        #0x2b3116                     
+002b3114: 074c       ldr      r4, [pc, #0x1c]                 ; [002b3134]=10100001
+002b3116: 0548       ldr      r0, [pc, #0x14]                 ; [002b312c]=007e717f "GetSectorStatus(USERID,MEDIAID)"
+002b3118: 2146       mov      r1, r4                        
+002b311a: fef71dff   bl       #0x2b1f58                     
+002b311e: 2046       mov      r0, r4                        

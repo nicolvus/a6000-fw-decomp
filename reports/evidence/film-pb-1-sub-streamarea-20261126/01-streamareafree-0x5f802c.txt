@@ -1,0 +1,79 @@
+# StreamAreaFree 0x5f802c  (libmpr.so, fw 3.21, .text=0x120228..0x7a3e84)
+# VA = offset de fichero en el primer LOAD (VirtAddr 0 == Offset 0)
+005f802c: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+005f8030: 83b0       sub      sp, #0xc                      
+005f8032: 2c4e       ldr      r6, [pc, #0xb0]                 ; [005f80e4]=009decac
+005f8034: 0546       mov      r5, r0                        
+005f8036: 02af       add      r7, sp, #8                    
+005f8038: 0c46       mov      r4, r1                        
+005f803a: dff8d080   ldr.w    r8, [pc, #0xd0]                 ; [005f810c]=00a4f264
+005f803e: 01f0e5fe   bl       #0x5f9e0c                     
+005f8042: 2b46       mov      r3, r5                        
+005f8044: 0121       movs     r1, #1                        
+005f8046: 284a       ldr      r2, [pc, #0xa0]                 ; [005f80e8]=008da930 "[MemInfo]StreamAreaFree(next) unitHandle"
+005f8048: 0094       str      r4, [sp]                      
+005f804a: 01f09ffe   bl       #0x5f9d8c                     
+005f804e: 3068       ldr      r0, [r6]                      
+005f8050: 2246       mov      r2, r4                        
+005f8052: 2649       ldr      r1, [pc, #0x98]                 ; [005f80ec]=00a4f368
+005f8054: fff728ff   bl       #0x5f7ea8                     
+005f8058: 2846       mov      r0, r5                        
+005f805a: 2146       mov      r1, r4                        
+005f805c: fef70afc   bl       #0x5f6874                     
+005f8060: d8f80030   ldr.w    r3, [r8]                      
+005f8064: 8bb1       cbz      r3, #0x5f808a                 
+005f8066: 2148       ldr      r0, [pc, #0x84]                 ; [005f80ec]=00a4f368
+005f8068: fff78efe   bl       #0x5f7d88                     
+005f806c: 8146       mov      sb, r0                        
+005f806e: 60b9       cbnz     r0, #0x5f808a                 
+005f8070: 04f0c8fa   bl       #0x5fc604                     
+005f8074: 1e4b       ldr      r3, [pc, #0x78]                 ; [005f80f0]=00a4f2d0
+005f8076: c8f80090   str.w    sb, [r8]                      
+005f807a: c3f80090   str.w    sb, [r3]                      
+005f807e: 01f0c5fe   bl       #0x5f9e0c                     
+005f8082: 0121       movs     r1, #1                        
+005f8084: 1b4a       ldr      r2, [pc, #0x6c]                 ; [005f80f4]=008da972 "[MemInfo]StreamAreaFree(next) Mem_NonCac"
+005f8086: 01f081fe   bl       #0x5f9d8c                     
+005f808a: 2846       mov      r0, r5                        
+005f808c: fef7ccfb   bl       #0x5f6828                     
+005f8090: 8046       mov      r8, r0                        
+005f8092: 80b9       cbnz     r0, #0x5f80b6                 
+005f8094: 184b       ldr      r3, [pc, #0x60]                 ; [005f80f8]=009dedbc
+005f8096: 2022       movs     r2, #0x20                     
+005f8098: 1a60       str      r2, [r3]                      
+005f809a: 183a       subs     r2, #0x18                     
+005f809c: 174b       ldr      r3, [pc, #0x5c]                 ; [005f80fc]=009dec30
+005f809e: 1a60       str      r2, [r3]                      
+005f80a0: 4ff0ff33   mov.w    r3, #-1                       
+005f80a4: 3360       str      r3, [r6]                      
+005f80a6: 164e       ldr      r6, [pc, #0x58]                 ; [005f8100]=00a4f0ac
+005f80a8: 3068       ldr      r0, [r6]                      
+005f80aa: 50b1       cbz      r0, #0x5f80c2                 
+005f80ac: 47f46bfe   bl       #0x23fd86                     
+005f80b0: c6f80080   str.w    r8, [r6]                      
+005f80b4: 05e0       b        #0x5f80c2                     
+005f80b6: 01f0a9fe   bl       #0x5f9e0c                     
+005f80ba: 0121       movs     r1, #1                        
+005f80bc: 114a       ldr      r2, [pc, #0x44]                 ; [005f8104]=008da9ad "[MemInfo]StreamAreaFree(next) Registered"
+005f80be: 01f065fe   bl       #0x5f9d8c                     
+005f80c2: 01f0a3fe   bl       #0x5f9e0c                     
+005f80c6: 0121       movs     r1, #1                        
+005f80c8: 0f4a       ldr      r2, [pc, #0x3c]                 ; [005f8108]=008da9ea "[MemInfo]StreamAreaFree(next) complite"
+005f80ca: 01f05ffe   bl       #0x5f9d8c                     
+005f80ce: 2120       movs     r0, #0x21                     
+005f80d0: 2946       mov      r1, r5                        
+005f80d2: 220c       lsrs     r2, r4, #0x10                 
+005f80d4: a3b2       uxth     r3, r4                        
+005f80d6: 07f10407   add.w    r7, r7, #4                    
+005f80da: bd46       mov      sp, r7                        
+005f80dc: bde8f043   pop.w    {r4, r5, r6, r7, r8, sb, lr}  
+005f80e0: 01f0f8bc   b.w      #0x5f9ad4                     
+005f80e4: acec9d00   stc      p0, c0, [ip], #0x274          
+005f80e8: 30a9       add      r1, sp, #0xc0                 
+005f80ea: 8d00       lsls     r5, r1, #2                    
+
+# cadenas que identifican la funcion (referencias ldr rX,=...)
+008da930  [MemInfo]StreamAreaFree(next) unitHandle =%08x, subArea = %08x !!
+008da972  [MemInfo]StreamAreaFree(next) Mem_NonCache unregistered !!
+008da9ad  [MemInfo]StreamAreaFree(next) RegisteredMemory still remain.
+008da9ea  [MemInfo]StreamAreaFree(next) complite

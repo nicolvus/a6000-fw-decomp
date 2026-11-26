@@ -1,0 +1,45 @@
+002b385c: f8b5       push     {r3, r4, r5, r6, r7, lr}      
+002b385e: 0446       mov      r4, r0                        
+002b3860: 00af       add      r7, sp, #0                    
+002b3862: 1148       ldr      r0, [pc, #0x44]                 ; [002b38a8]=007e75a7 "GetUserIDFromOperationModeAndMediaID"
+002b3864: 0d46       mov      r5, r1                        
+002b3866: 1646       mov      r6, r2                        
+002b3868: fef7fefa   bl       #0x2b1e68                     
+002b386c: 0f4b       ldr      r3, [pc, #0x3c]                 ; [002b38ac]=009d23fc
+002b386e: 0022       movs     r2, #0                        
+002b3870: 1946       mov      r1, r3                        
+002b3872: 0de0       b        #0x2b3890                     
+002b3874: d868       ldr      r0, [r3, #0xc]                
+002b3876: a042       cmp      r0, r4                        
+002b3878: 08d1       bne      #0x2b388c                     
+002b387a: 5868       ldr      r0, [r3, #4]                  
+002b387c: a842       cmp      r0, r5                        
+002b387e: 05d1       bne      #0x2b388c                     
+002b3880: 1823       movs     r3, #0x18                     
+002b3882: 5a43       muls     r2, r3, r2                    
+002b3884: 8b58       ldr      r3, [r1, r2]                  
+002b3886: 0024       movs     r4, #0                        
+002b3888: 3360       str      r3, [r6]                      
+002b388a: 06e0       b        #0x2b389a                     
+002b388c: 0132       adds     r2, #1                        
+002b388e: 1833       adds     r3, #0x18                     
+002b3890: 9868       ldr      r0, [r3, #8]                  
+002b3892: b0f1ff3f   cmp.w    r0, #-1                       
+002b3896: edd1       bne      #0x2b3874                     
+002b3898: 054c       ldr      r4, [pc, #0x14]                 ; [002b38b0]=10800010
+002b389a: 0348       ldr      r0, [pc, #0xc]                  ; [002b38a8]=007e75a7 "GetUserIDFromOperationModeAndMediaID"
+002b389c: 2146       mov      r1, r4                        
+002b389e: fef75bfb   bl       #0x2b1f58                     
+002b38a2: 2046       mov      r0, r4                        
+002b38a4: f8bd       pop      {r3, r4, r5, r6, r7, pc}      
+002b38a6: 00bf       nop                                    
+002b38a8: a775       strb     r7, [r4, #0x16]               
+002b38aa: 7e00       lsls     r6, r7, #1                    
+002b38ac: fc23       movs     r3, #0xfc                     
+002b38ae: 9d00       lsls     r5, r3, #2                    
+002b38b0: 1000       movs     r0, r2                        
+002b38b2: 8010       asrs     r0, r0, #2                    
+002b38b4: 90b5       push     {r4, r7, lr}                  
+002b38b6: 83b0       sub      sp, #0xc                      
+002b38b8: 0446       mov      r4, r0                        
+002b38ba: 1d48       ldr      r0, [pc, #0x74]                 ; [002b3930]=009e691c

@@ -1,0 +1,64 @@
+# valores literales (VA==offset) leidos con struct
+tabla TvSystem->0x2180C: (1, 0)
+lit @0x11f1c = 0x003C0368
+lit @0x11f20 = 0x003C036C
+lit @0x11f24 = 0x003C036D
+lit @0x11f28 = 0x003C0409
+lit @0x11f2c = 0x003C044D
+lit @0x11f30 = 0x003C0408
+lit @0x120f4 = 0x003C0368
+lit @0x120f8 = 0x003C036C
+lit @0x120fc = 0x003C036D
+lit @0x12100 = 0x003C0409
+lit @0x12104 = 0x003C044D
+lit @0x12108 = 0x00029C8E
+lit @0x1210c = 0x0000F99A
+lit @0x12110 = 0x0000076C
+
+# libmpr.so — IsSupport(bits) 0x3EC00E: (bits & ~[0xAD28E4]) == 0
+003ec00e: 0000       movs     r0, r0                        
+003ec010: 044b       ldr      r3, [pc, #0x10]                 ; [003ec024]=00ad28e4
+003ec012: 80b5       push     {r7, lr}                      
+003ec014: 00af       add      r7, sp, #0                    
+003ec016: 1b68       ldr      r3, [r3]                      
+003ec018: 30ea0303   bics.w   r3, r0, r3                    
+003ec01c: 14bf       ite      ne                            
+003ec01e: 0020       movne    r0, #0                        
+003ec020: 0120       moveq    r0, #1                        
+003ec022: 80bd       pop      {r7, pc}                      
+003ec024: e428       cmp      r0, #0xe4                     
+# libmpr.so — getter del word 0x3E52C0
+003e52c0: 024b       ldr      r3, [pc, #8]                  
+003e52c2: 80b5       push     {r7, lr}                      
+003e52c4: 00af       add      r7, sp, #0                    
+003e52c6: 1868       ldr      r0, [r3]                      
+003e52c8: 80bd       pop      {r7, pc}                      
+003e52ca: 00bf       nop                                    
+
+# libmpr.so — extractores por tipo (bit) usados por el comando de debug
+# 0x3CD67C AVCHD bit3 | 0x3CD686 MP4AVC bit2 | 0x3CD690 MP4MPEG4 bit1
+# 0x3CD69A M2PS bit4     | 0x3CD6A4 DCF bit0    | 0x3CD6AE DVD bit5
+003cd67c: 80b5       push     {r7, lr}                      
+003cd67e: c0f3c000   ubfx     r0, r0, #3, #1                
+003cd682: 00af       add      r7, sp, #0                    
+003cd684: 80bd       pop      {r7, pc}                      
+003cd686: 80b5       push     {r7, lr}                      
+003cd688: c0f38000   ubfx     r0, r0, #2, #1                
+003cd68c: 00af       add      r7, sp, #0                    
+003cd68e: 80bd       pop      {r7, pc}                      
+003cd690: 80b5       push     {r7, lr}                      
+003cd692: c0f34000   ubfx     r0, r0, #1, #1                
+003cd696: 00af       add      r7, sp, #0                    
+003cd698: 80bd       pop      {r7, pc}                      
+003cd69a: 80b5       push     {r7, lr}                      
+003cd69c: c0f30010   ubfx     r0, r0, #4, #1                
+003cd6a0: 00af       add      r7, sp, #0                    
+003cd6a2: 80bd       pop      {r7, pc}                      
+003cd6a4: 80b5       push     {r7, lr}                      
+003cd6a6: 00f00100   and      r0, r0, #1                    
+003cd6aa: 00af       add      r7, sp, #0                    
+003cd6ac: 80bd       pop      {r7, pc}                      
+003cd6ae: 80b5       push     {r7, lr}                      
+003cd6b0: c0f34010   ubfx     r0, r0, #5, #1                
+003cd6b4: 00af       add      r7, sp, #0                    
+003cd6b6: 80bd       pop      {r7, pc}                      

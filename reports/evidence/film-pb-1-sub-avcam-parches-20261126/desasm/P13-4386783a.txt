@@ -1,0 +1,42 @@
+=== 4386780a..4386786c
+4386780a    321 192d       cmp      r5, #0x19                                  | cfw 192d       cmp      r5, #0x19
+4386780c    321 17d0       beq      #0x4386783e                                | cfw 17d0       beq      #0x4386783e
+4386780e    321 1a2d       cmp      r5, #0x1a                                  | cfw 1a2d       cmp      r5, #0x1a
+43867810    321 15d0       beq      #0x4386783e                                | cfw 15d0       beq      #0x4386783e
+43867812    321 1b2d       cmp      r5, #0x1b                                  | cfw 1b2d       cmp      r5, #0x1b
+43867814    321 1ad1       bne      #0x4386784c                                | cfw 1ad1       bne      #0x4386784c
+43867816    321 12e0       b        #0x4386783e  ; ->4386783e                  | cfw 12e0       b        #0x4386783e  ; ->4386783e
+43867818    321 022b       cmp      r3, #2                                     | cfw 022b       cmp      r3, #2
+4386781a    321 1cd1       bne      #0x43867856                                | cfw 1cd1       bne      #0x43867856
+4386781c    321 a1f200fe   bl       #0x43b09420  ; ->43b09420                  | cfw a1f200fe   bl       #0x43b09420  ; ->43b09420
+43867820    321 48b1       cbz      r0, #0x43867836                            | cfw 48b1       cbz      r0, #0x43867836
+43867822    321 0a2d       cmp      r5, #0xa                                   | cfw 0a2d       cmp      r5, #0xa
+43867824    321 00d0       beq      #0x43867828                                | cfw 00d0       beq      #0x43867828
+43867826    321 1dbb       cbnz     r5, #0x43867870                            | cfw 1dbb       cbnz     r5, #0x43867870
+43867828    321 2302       lsls     r3, r4, #8                                 | cfw 2302       lsls     r3, r4, #8
+4386782a    321 1c48       ldr      r0, [pc, #0x70]                            | cfw 1c48       ldr      r0, [pc, #0x70]
+4386782c    321 1c1b       subs     r4, r3, r4                                 | cfw 1c1b       subs     r4, r3, r4
+4386782e    321 04f55a41   add.w    r1, r4, #0xda00                            | cfw 04f55a41   add.w    r1, r4, #0xda00
+43867832    321 2531       adds     r1, #0x25                                  | cfw 2531       adds     r1, #0x25
+43867834    321 25e0       b        #0x43867882  ; ->43867882                  | cfw 25e0       b        #0x43867882  ; ->43867882
+43867836    321 143d       subs     r5, #0x14                                  | cfw 143d       subs     r5, #0x14
+43867838    321 edb2       uxtb     r5, r5                                     | cfw edb2       uxtb     r5, r5
+4386783a  * 321 022d       cmp      r5, #2                                     | cfw 032d       cmp      r5, #3
+4386783c    321 06d8       bhi      #0x4386784c                                | cfw 06d8       bhi      #0x4386784c
+4386783e    321 ef23       movs     r3, #0xef                                  | cfw ef23       movs     r3, #0xef
+43867840    321 5c43       muls     r4, r3, r4                                 | cfw 5c43       muls     r4, r3, r4
+43867842    321 04f56e41   add.w    r1, r4, #0xee00                            | cfw 04f56e41   add.w    r1, r4, #0xee00
+43867846    321 1648       ldr      r0, [pc, #0x58]                            | cfw 1648       ldr      r0, [pc, #0x58]
+43867848    321 1131       adds     r1, #0x11                                  | cfw 1131       adds     r1, #0x11
+4386784a    321 1ae0       b        #0x43867882  ; ->43867882                  | cfw 1ae0       b        #0x43867882  ; ->43867882
+4386784c    321 4ff4ff40   mov.w    r0, #0x7f80                                | cfw 4ff4ff40   mov.w    r0, #0x7f80
+43867850    321 04f1ff01   add.w    r1, r4, #0xff                              | cfw 04f1ff01   add.w    r1, r4, #0xff
+43867854    321 15e0       b        #0x43867882  ; ->43867882                  | cfw 15e0       b        #0x43867882  ; ->43867882
+43867856    321 a1f2e3fd   bl       #0x43b09420  ; ->43b09420                  | cfw a1f2e3fd   bl       #0x43b09420  ; ->43b09420
+4386785a    321 b0b1       cbz      r0, #0x4386788a                            | cfw b0b1       cbz      r0, #0x4386788a
+4386785c    321 143d       subs     r5, #0x14                                  | cfw 143d       subs     r5, #0x14
+4386785e    321 3368       ldr      r3, [r6]                                   | cfw 3368       ldr      r3, [r6]
+43867860    321 edb2       uxtb     r5, r5                                     | cfw edb2       uxtb     r5, r5
+43867862    321 012d       cmp      r5, #1                                     | cfw 012d       cmp      r5, #1
+43867864    321 94bf       ite      ls                                         | cfw 94bf       ite      ls
+43867866    321 93f8cb31   ldrbls.w r3, [r3, #0x1cb]                           | cfw 93f8cb31   ldrbls.w r3, [r3, #0x1cb]

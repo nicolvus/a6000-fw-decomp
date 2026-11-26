@@ -31,6 +31,8 @@ Si el script falla, **no improvises parches al repo**: lee el mensaje `FALLO:`/`
 
 ## 3. Orientarse (en este orden, sin releer todo el repo)
 
+0. `bash scripts/agent/sync_rules.sh`: reglas de orden vigentes, desde la copia de lectura del repo
+   privado `a6000-handoff-context` (`estado/ORDEN.md`). Manda `ORDEN.md` del repositorio (§12).
 1. `knowledge/CURRENT.md` (estado operativo) → `docs/STATE.md` (restricciones y política de RE).
 2. `docs/OPEN-QUESTIONS.md` y los «Próximo» al final de `knowledge/PROGRESS.md`: qué falta.
 3. Buscar con las skills `knowledge-navigation` / MCP `sony-a6000-knowledge` antes de explorar a mano.

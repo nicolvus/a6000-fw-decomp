@@ -1,0 +1,15 @@
+[NF4] base libmpr=0xae2f2000 tabla sectores=0xaed2899c (0xA3699C)
+[NF4] tabla LLENA (nombres 0x10..0xbd)
+[NF4] antes  handle!=0 = 1/30
+[NF4] antes [00..14] idx:sec=h<handle>/s<estado>/om<OM>  00:010=h0/s0/om0 01:011=h0/s0/om0 02:012=h0/s0/om0 03:020=h0/s0/om0 04:021=h0/s0/om0 05:028=h0/s0/om0 06:029=h0/s0/om0 07:02c=h0/s0/om0 08:02d=h0/s0/om0 09:030=h0/s0/om0 10:031=h0/s0/om0 11:038=h0/s0/om0 12:039=h0/s0/om0 13:040=h0/s0/om0 14:060=h0/s0/om0 
+[NF4] antes [15..29] idx:sec=h<handle>/s<estado>/om<OM>  15:061=h0/s0/om0 16:068=h0/s0/om0 17:06c=h0/s0/om0 18:062=h0/s0/om0 19:063=h0/s0/om0 20:090=h0/s0/om0 21:091=h0/s0/om0 22:092=h0/s0/om0 23:0a0=h1/s1/om9 24:0b1=h0/s0/om0 25:0b2=h0/s0/om0 26:0b3=h0/s0/om0 27:0b8=h0/s0/om0 28:0bc=h0/s0/om0 29:0bd=h0/s0/om0 
+[NF4] MON> FBM View   (argc=2, al comando=1)
+[NF4] FBM View -> 1
+[NF4] MON> FBM InitB 6 3   (argc=4, al comando=3)
+[NF4] FBM InitB 6 3 -> 1
+[NF4] despues-InitB-6-3  handle!=0 = 1/30
+[NF4] despues-InitB-6-3 [00..14] idx:sec=h<handle>/s<estado>/om<OM>  00:010=h0/s0/om0 01:011=h0/s0/om0 02:012=h0/s0/om0 03:020=h0/s0/om0 04:021=h0/s0/om0 05:028=h0/s0/om0 06:029=h0/s0/om0 07:02c=h0/s0/om0 08:02d=h0/s0/om0 09:030=h0/s0/om0 10:031=h0/s0/om0 11:038=h0/s0/om0 12:039=h0/s0/om0 13:040=h0/s0/om0 14:060=h0/s0/om0 
+[NF4] despues-InitB-6-3 [15..29] idx:sec=h<handle>/s<estado>/om<OM>  15:061=h0/s0/om0 16:068=h0/s0/om0 17:06c=h0/s0/om0 18:062=h0/s0/om0 19:063=h0/s0/om0 20:090=h0/s0/om0 21:091=h0/s0/om0 22:092=h0/s0/om0 23:0a0=h1/s1/om9 24:0b1=h0/s0/om0 25:0b2=h0/s0/om0 26:0b3=h0/s0/om0 27:0b8=h0/s0/om0 28:0bc=h0/s0/om0 29:0bd=h0/s0/om0 
+[NF4] CRITERIO idx10 sec=0x31 handle=0 +8=0 => FALLA
+[NF4] CreateSector32(0x31, 0) -> ret=0 id=0x3 handle=0x31  «unknown»
+[NF4] BkRead(0x04,3) -> 0x10100001   entrada: sec=0xccc h=0xcccccccc est=0x4 om=0x3

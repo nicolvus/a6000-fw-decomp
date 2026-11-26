@@ -1,0 +1,55 @@
+=== 437a26f8..437a2774
+437a26f8    321 8720       movs     r0, #0x87                                  | cfw 8720       movs     r0, #0x87
+437a26fa    321 b7f8d830   ldrh.w   r3, [r7, #0xd8]                            | cfw b7f8d830   ldrh.w   r3, [r7, #0xd8]
+437a26fe    321 23b9       cbnz     r3, #0x437a270a                            | cfw 23b9       cbnz     r3, #0x437a270a
+437a2700    321 2268       ldr      r2, [r4]                                   | cfw 2268       ldr      r2, [r4]
+437a2702    321 92f82920   ldrb.w   r2, [r2, #0x29]                            | cfw 92f82920   ldrb.w   r2, [r2, #0x29]
+437a2706    321 012a       cmp      r2, #1                                     | cfw 012a       cmp      r2, #1
+437a2708    321 04d1       bne      #0x437a2714                                | cfw 04d1       bne      #0x437a2714
+437a270a    321 a368       ldr      r3, [r4, #8]                               | cfw a368       ldr      r3, [r4, #8]
+437a270c    321 0122       movs     r2, #1                                     | cfw 0122       movs     r2, #1
+437a270e    321 83f88420   strb.w   r2, [r3, #0x84]                            | cfw 83f88420   strb.w   r2, [r3, #0x84]
+437a2712    321 02e0       b        #0x437a271a  ; ->437a271a                  | cfw 02e0       b        #0x437a271a  ; ->437a271a
+437a2714    321 a268       ldr      r2, [r4, #8]                               | cfw a268       ldr      r2, [r4, #8]
+437a2716    321 82f88430   strb.w   r3, [r2, #0x84]                            | cfw 82f88430   strb.w   r3, [r2, #0x84]
+437a271a    321 2e4b       ldr      r3, [pc, #0xb8]                            | cfw 2e4b       ldr      r3, [pc, #0xb8]
+437a271c    321 7b44       add      r3, pc                                     | cfw 7b44       add      r3, pc
+437a271e    321 1b78       ldrb     r3, [r3]                                   | cfw 1b78       ldrb     r3, [r3]
+437a2720    321 13b9       cbnz     r3, #0x437a2728                            | cfw 13b9       cbnz     r3, #0x437a2728
+437a2722    321 a268       ldr      r2, [r4, #8]                               | cfw a268       ldr      r2, [r4, #8]
+437a2724    321 82f88430   strb.w   r3, [r2, #0x84]                            | cfw 82f88430   strb.w   r3, [r2, #0x84]
+437a2728    321 2368       ldr      r3, [r4]                                   | cfw 2368       ldr      r3, [r4]
+437a272a    321 0121       movs     r1, #1                                     | cfw 0121       movs     r1, #1
+437a272c  * 321 e878       ldrb     r0, [r5, #3]                               | cfw 93f82470   ldrb.w   r7, [r3, #0x24]
+437a272e  * 321 93f82470   ldrb.w   r7, [r3, #0x24]                            | cfw 
+437a2730  * 321                                                                | cfw 93f83100   ldrb.w   r0, [r3, #0x31]
+437a2732  * 321 48f3cbfc   bl       #0x43aeb0cc  ; ->43aeb0cc                  | cfw 
+437a2734  * 321                                                                | cfw a368       ldr      r3, [r4, #8]
+437a2736  * 321 a368       ldr      r3, [r4, #8]                               | cfw 0828       cmp      r0, #8
+437a2738  * 321 0128       cmp      r0, #1                                     | cfw 30d1       bne      #0x437a279c
+437a273a  * 321 2fd1       bne      #0x437a279c                                | cfw 0120       movs     r0, #1
+437a273c  * 321 7fb2       sxtb     r7, r7                                     | cfw 00bf       nop      
+437a273e  * 321 17f1070f   cmn.w    r7, #7                                     | cfw 00bf       nop      
+437a2740  * 321                                                                | cfw 00bf       nop      
+437a2742  * 321 2bda       bge      #0x437a279c                                | cfw 00bf       nop      
+437a2744    321 83f88800   strb.w   r0, [r3, #0x88]                            | cfw 83f88800   strb.w   r0, [r3, #0x88]
+437a2748    321 2368       ldr      r3, [r4]                                   | cfw 2368       ldr      r3, [r4]
+437a274a    321 db78       ldrb     r3, [r3, #3]                               | cfw db78       ldrb     r3, [r3, #3]
+437a274c    321 43b1       cbz      r3, #0x437a2760                            | cfw 43b1       cbz      r3, #0x437a2760
+437a274e    321 3eb1       cbz      r6, #0x437a2760                            | cfw 3eb1       cbz      r6, #0x437a2760
+437a2750    321 a668       ldr      r6, [r4, #8]                               | cfw a668       ldr      r6, [r4, #8]
+437a2752    321 6569       ldr      r5, [r4, #0x14]                            | cfw 6569       ldr      r5, [r4, #0x14]
+437a2754    321 8436       adds     r6, #0x84                                  | cfw 8436       adds     r6, #0x84
+437a2756    321 3c35       adds     r5, #0x3c                                  | cfw 3c35       adds     r5, #0x3c
+437a2758    321 0fce       ldm      r6!, {r0, r1, r2, r3}                      | cfw 0fce       ldm      r6!, {r0, r1, r2, r3}
+437a275a    321 0fc5       stm      r5!, {r0, r1, r2, r3}                      | cfw 0fc5       stm      r5!, {r0, r1, r2, r3}
+437a275c    321 3368       ldr      r3, [r6]                                   | cfw 3368       ldr      r3, [r6]
+437a275e    321 2b60       str      r3, [r5]                                   | cfw 2b60       str      r3, [r5]
+437a2760    321 2268       ldr      r2, [r4]                                   | cfw 2268       ldr      r2, [r4]
+437a2762    321 d378       ldrb     r3, [r2, #3]                               | cfw d378       ldrb     r3, [r2, #3]
+437a2764    321 002b       cmp      r3, #0                                     | cfw 002b       cmp      r3, #0
+437a2766    321 23d0       beq      #0x437a27b0                                | cfw 23d0       beq      #0x437a27b0
+437a2768    321 e368       ldr      r3, [r4, #0xc]                             | cfw e368       ldr      r3, [r4, #0xc]
+437a276a    321 93f8a038   ldrb.w   r3, [r3, #0x8a0]                           | cfw 93f8a038   ldrb.w   r3, [r3, #0x8a0]
+437a276e    321 fbb1       cbz      r3, #0x437a27b0                            | cfw fbb1       cbz      r3, #0x437a27b0
+437a2770    321 92f89920   ldrb.w   r2, [r2, #0x99]                            | cfw 92f89920   ldrb.w   r2, [r2, #0x99]

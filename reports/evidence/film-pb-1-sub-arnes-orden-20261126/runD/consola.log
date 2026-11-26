@@ -1,0 +1,21 @@
+[shim] PBINJ t=30s dir_feaCore=0xaedc589c dir_mprIf=0xaedc4d90 dir_owner=0xaedc5000
+[shim] PBINJ core=0x94ad9008 mprIf=0x8f865458 [mprIf]=0x8f865468 [feaIf+4]=0x94ad9008 owner=0x8f829ce8 [owner]=0xaee08a88
+[shim] PBINJ core: estado=0x2 ent=0x8f865510 id=0 mask=0 motor=0
+[shim] PBINJ ctrl estatico 0xad3cb4: 00000001 00000000 00000001 00000000 00000000 00000000 00000000 00000001 00000000 00000000
+[shim] PBINJ FeaIf::PlayMovie=0xae73fe9d feaIf=0x8f865468 region=0 EntryId=0 rsm=0 ctrl=0xb6a90d60
+[shim] TRACE 44ee9c n=1 r0=8f865468 r1=0 r2=0 r3=0 lr=b6de37e4
+[shim] PBINJ FeaIf::PlayMovie -> 0
+[shim] TRACE 437bc0 n=1 r0=94ad9008 r1=0 r2=0 r3=0 lr=ae71b37f
+[shim] TRACE 437d1a n=1 r0=aedc4f98 r1=aeb4f965 r2=a r3=a lr=ae71b37f
+[shim] TRACE 437d2c n=1 r0=0 r1=0 r2=8f82dd3c r3=1 lr=b6d70d3d
+[shim] PBINJ tras 2 s: estado=2
+[shim] PBINJ: estado 2 -> 5 (precondición de las guardas)
+[shim] PBINJ directa 0x437BC0 (libmpr base=0xae2f1000) core=0x94ad9008 region=0 EntryId=0 rsm=0 ctrl=0xb6a90d60
+[shim] TRACE 437bc0 n=2 r0=94ad9008 r1=0 r2=0 r3=0 lr=b6de38bc
+[shim] TRACE 437bfa n=1 r0=8f865510 r1=0 r2=0 r3=5 lr=b6de38bc
+[shim] TRACE 447810 n=1 r0=8f865510 r1=0 r2=b6a90c6c r3=5 lr=ae738a2d
+[shim] TRACE 437c0a n=1 r0=0 r1=bdf r2=7bf0 r3=aed43630 lr=ae974e53
+[shim] TRACE 437d1a n=2 r0=aedc4f98 r1=aeb4f965 r2=1a r3=1a lr=ae974e53
+[shim] TRACE 437d2c n=2 r0=0 r1=0 r2=8f82dd3c r3=1 lr=b6d70d3d
+[shim] PBINJ: 0x437BC0 retornó (estado=5)
+[shim] PBINJ FIN core=0x94ad9008 estado=5

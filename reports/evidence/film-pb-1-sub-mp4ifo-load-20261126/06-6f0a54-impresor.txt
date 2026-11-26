@@ -1,0 +1,40 @@
+# 06 — impresor 0x6F0A54(fichero, linea, codigo): piezas del formato
+006f0a54  2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}   ; .text      
+006f0a58  83b0       sub      sp, #0xc                       ; .text      
+006f0a5a  0646       mov      r6, r0                         ; .text      
+006f0a5c  02af       add      r7, sp, #8                     ; .text      
+006f0a5e  0d46       mov      r5, r1                         ; .text      
+006f0a60  1446       mov      r4, r2                         ; .text      
+006f0a62  002a       cmp      r2, #0                         ; .text      
+006f0a64  40d0       beq      #0x6f0ae8                      ; .text      
+006f0a66  dff89c90   ldr.w    sb, [pc, #0x9c]                ; .text      
+006f0a6a  4ff00008   mov.w    r8, #0                         ; .text      
+006f0a6e  59f8040f   ldr      r0, [sb, #4]!                  ; .text      
+006f0a72  08b3       cbz      r0, #0x6f0ab8                  ; .text      
+006f0a74  3146       mov      r1, r6                         ; .text      
+006f0a76  a5f7acfc   bl       #0x6963d2                      ; .text      
+006f0a7a  e8b1       cbz      r0, #0x6f0ab8                  ; .text      
+006f0a7c  08f10108   add.w    r8, r8, #1                     ; .text      
+006f0a80  f5e7       b        #0x6f0a6e                      ; .text      
+006f0a82  a4f713ff   bl       #0x6958ac                      ; .text      
+006f0a86  1b48       ldr      r0, [pc, #0x6c]                ; .text      [006f0af4]=0091c945 " ### mp4Ifo faild at "
+006f0a88  a4f756fe   bl       #0x695738                      ; .text      
+006f0a8c  3046       mov      r0, r6                         ; .text      
+006f0a8e  a4f753fe   bl       #0x695738                      ; .text      
+006f0a92  1948       ldr      r0, [pc, #0x64]                ; .text      [006f0af8]=008dd35e
+006f0a94  a4f750fe   bl       #0x695738                      ; .text      
+006f0a98  2946       mov      r1, r5                         ; .text      
+006f0a9a  0420       movs     r0, #4                         ; .text      
+006f0a9c  a4f772fe   bl       #0x695784                      ; .text      
+006f0aa0  1648       ldr      r0, [pc, #0x58]                ; .text      [006f0afc]=008bba44 ") ErrCd: 0x"
+006f0aa2  a4f749fe   bl       #0x695738                      ; .text      
+006f0aa6  0820       movs     r0, #8                         ; .text      
+006f0aa8  2146       mov      r1, r4                         ; .text      
+006f0aaa  07f10407   add.w    r7, r7, #4                     ; .text      
+006f0aae  bd46       mov      sp, r7                         ; .text      
+006f0ab0  bde8f043   pop.w    {r4, r5, r6, r7, r8, sb, lr}   ; .text      
+
+# pool 0x6F0AF4..0x6F0B00
+006f0af4  0091c945
+006f0af8  008dd35e
+006f0afc  008bba44

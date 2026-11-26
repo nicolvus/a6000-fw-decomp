@@ -94,7 +94,7 @@ def construido(tmp_path_factory):
 
 @needs
 def test_nodo_lut_en_caution_con_pid_y_opciones(construido):
-    """El nodo que cuelga del hijo 39 existe en CautionConfig: mismo pid que el ajuste CFW «LUT», 4 opciones con 0xf = índice y textos nuevos."""
+    """G116: el nodo del hijo 39 existe en CautionConfig con el pid del ajuste «LUT», 7 opciones (Off + 6 ranuras de la SD) y textos nuevos."""
     cau = (construido / "lib/CautionConfig.so").read_bytes()
     vu4 = (construido / "lib/viewUnified4.so").read_bytes()
     import build_pp_gamma_menu as G
@@ -109,16 +109,16 @@ def test_nodo_lut_en_caution_con_pid_y_opciones(construido):
     _, kids, n, props = rd(nodo, 4)
     lst, ntri = rd(props, 2)
     tri = [rd(lst + 12 * i, 3) for i in range(ntri)]
-    assert n == 4 and (0xE, 1, cfw.POR_ID["lut"].pid) in tri
+    assert n == 7 and (0xE, 1, cfw.POR_ID["lut"].pid) in tri
     ops = []
-    for k in rd(kids, 4):
+    for k in rd(kids, n):
         p = rd(k, 4)[3]
         l2, nt2 = rd(p, 2)
         t = {a: v for a, _, v in (rd(l2 + 12 * i, 3) for i in range(nt2))}
         ops.append((t[0], t[0xF]))
-    assert [v for _, v in ops] == [0, 1, 2, 3]
+    assert [v for _, v in ops] == list(range(7))
     en = uxc_strings.parse((construido / "share/app/string_english.uxc").read_bytes())[2]
-    assert [en[t & 0xFFFF] for t, _ in ops] == ["Off", "Teal&Orange", "Película", "Neutro"]
+    assert [en[t & 0xFFFF] for t, _ in ops] == ["Off"] + [f"LUT {i}" for i in range(1, 7)]
     assert en[tri[0][2] & 0xFFFF] == "LUT"
 
 
@@ -129,15 +129,16 @@ def test_ajuste_lut_pid_y_backup_unicos():
 
 
 def test_cambio_en_caliente_rearma_la_tabla_correcta():
-    """Girar la rueda = la UI escribe el índice en el Backup `0x1070211`; la cueva lo lee en CADA escritura al hardware, sin caché de selección: la 2.ª escritura ya entrega el look nuevo."""
+    """Girar la rueda = la UI escribe el índice en el Backup `0x1070211`; la cueva lo lee en CADA escritura al hardware, sin caché de selección: la 2.ª escritura ya entrega el look nuevo (tabla del blob de la SD, G116)."""
     import lut_patch as L
+    import lut_sd_userland as U
     img = L.apply_bytes(L.C.BIN.read_bytes())
-    tablas = L.tablas_por_defecto()
-    orig = 0x11223344
+    tablas = {k: bytes((i * 37 + k) % 256 for i in range(L.D.LUT_BYTES)) for k in range(1, 4)}
+    blob = U.blob_tablas(tablas)
     bufs = []
     for opcion in (1, 2, 3, 1, 0):
-        r = L.emular(img, 0, opcion, orig=orig)
-        bufs.append(r if opcion == 0 else L.emular.mem)
-    assert bufs[0] == tablas[0] and bufs[1] == tablas[1] and bufs[2] == tablas[2] and bufs[3] == tablas[0]
-    assert bufs[4] == orig                                    # Off = puntero de fábrica
-    assert tablas[0] != tablas[1] != tablas[2]
+        r, hw, _ = L.emular(img, 0, opcion, blob)
+        bufs.append(hw if opcion else r)
+    assert bufs[0] != bufs[1] != bufs[2] and bufs[3] == bufs[0]
+    assert bufs[4] == 0x11223344                              # Off = puntero de fábrica
+    assert [L.D.desempaqueta_21(t, list(struct.unpack_from("<405H", img, L.D.PERM - L.BASE))) for t in tablas.values()] == bufs[:3]

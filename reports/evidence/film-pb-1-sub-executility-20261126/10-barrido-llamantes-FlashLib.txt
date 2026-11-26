@@ -1,0 +1,40 @@
+### a6000 fw3.21  firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+  _ZN8FlashLib4InitEN3MPR10SystemTypeE  VA=002b696c  dynsym[865]  bind/type=GLOBAL/FUNC
+    (a) bl/b.w directos a esa VA      : []
+    (b) literal u32 002b696c en el fichero: ninguno
+    (b) literal u32 002b696d en el fichero: ['0x6138']
+  _ZN8FlashLib12WarmBootInitEv  VA=002b6788  dynsym[1180]  bind/type=GLOBAL/FUNC
+    (a) bl/b.w directos a esa VA      : []
+    (b) literal u32 002b6788 en el fichero: ninguno
+    (b) literal u32 002b6789 en el fichero: ['0x74e8']
+  (c) entradas .rel.plt/.plt para los dos simbolos:
+      _ZN8FlashLib4InitEN3MPR10SystemTypeE          GOT=009c37f0 stub=0x11dfe8 callers=[]
+      _ZN8FlashLib12WarmBootInitEv                  GOT=009c3a28 stub=0x11e70c callers=[('0x2b4ab0', 'bl'), ('0x2b6894', 'bl')]
+  (d) ningun .so/.elf de las 3 firmwares importa el simbolo (grep "8FlashLib"): solo libmpr.so
+
+### a6300 fw2.01  firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+  _ZN8FlashLib4InitEN3MPR10SystemTypeE  VA=002e06d4  dynsym[988]  bind/type=GLOBAL/FUNC
+    (a) bl/b.w directos a esa VA      : [('0x7897d6', 'bl')]
+    (b) literal u32 002e06d4 en el fichero: ninguno
+    (b) literal u32 002e06d5 en el fichero: ['0x6a60']
+  _ZN8FlashLib12WarmBootInitEv  VA=002e04f0  dynsym[1319]  bind/type=GLOBAL/FUNC
+    (a) bl/b.w directos a esa VA      : [('0x2ce42c', 'bl'), ('0x2e05fc', 'bl')]
+    (b) literal u32 002e04f0 en el fichero: ninguno
+    (b) literal u32 002e04f1 en el fichero: ['0x7f10']
+  (c) entradas .rel.plt/.plt para los dos simbolos:
+  (d) ningun .so/.elf de las 3 firmwares importa el simbolo (grep "8FlashLib"): solo libmpr.so
+
+### a7s fw3.20  firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+  _ZN8FlashLib4InitEN3MPR10SystemTypeE  VA=002b6160  dynsym[865]  bind/type=GLOBAL/FUNC
+    (a) bl/b.w directos a esa VA      : []
+    (b) literal u32 002b6160 en el fichero: ninguno
+    (b) literal u32 002b6161 en el fichero: ['0x6138']
+  _ZN8FlashLib12WarmBootInitEv  VA=002b5f7c  dynsym[1180]  bind/type=GLOBAL/FUNC
+    (a) bl/b.w directos a esa VA      : []
+    (b) literal u32 002b5f7c en el fichero: ninguno
+    (b) literal u32 002b5f7d en el fichero: ['0x74e8']
+  (c) entradas .rel.plt/.plt para los dos simbolos:
+      _ZN8FlashLib4InitEN3MPR10SystemTypeE          GOT=009c3890 stub=0x11dff0 callers=[]
+      _ZN8FlashLib12WarmBootInitEv                  GOT=009c3ac8 stub=0x11e714 callers=[('0x2a3f28', 'bl'), ('0x2b6088', 'bl')]
+  (d) ningun .so/.elf de las 3 firmwares importa el simbolo (grep "8FlashLib"): solo libmpr.so
+

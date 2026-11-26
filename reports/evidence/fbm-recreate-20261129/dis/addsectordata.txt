@@ -1,0 +1,329 @@
+002b825c: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+002b8260: 89b0       sub      sp, #0x24                     
+002b8262: 02af       add      r7, sp, #8                    
+002b8264: 0546       mov      r5, r0                        
+002b8266: 0c46       mov      r4, r1                        
+002b8268: fa60       str      r2, [r7, #0xc]                
+002b826a: 9846       mov      r8, r3                        
+002b826c: d7f84090   ldr.w    sb, [r7, #0x40]               
+002b8270: 97f844a0   ldrb.w   sl, [r7, #0x44]               
+002b8274: 002b       cmp      r3, #0                        
+002b8276: 00f07181   beq.w    #0x2b855c                     
+002b827a: 4ff40040   mov.w    r0, #0x8000                   
+002b827e: a9b2       uxth     r1, r5                        
+002b8280: 0022       movs     r2, #0                        
+002b8282: a3b2       uxth     r3, r4                        
+002b8284: f7f7f2ff   bl       #0x2b026c                     
+002b8288: baf1000f   cmp.w    sl, #0                        
+002b828c: 17d0       beq      #0x2b82be                     
+002b828e: 914b       ldr      r3, [pc, #0x244]                ; [002b84d4]=00a36c91
+002b8290: 05eb0511   add.w    r1, r5, r5, lsl #4            
+002b8294: 48f20100   movw     r0, #0x8001                   
+002b8298: c918       adds     r1, r1, r3                    
+002b829a: 8a79       ldrb     r2, [r1, #6]                  
+002b829c: 4b79       ldrb     r3, [r1, #5]                  
+002b829e: 43ea0223   orr.w    r3, r3, r2, lsl #8            
+002b82a2: ca79       ldrb     r2, [r1, #7]                  
+002b82a4: 43ea0243   orr.w    r3, r3, r2, lsl #16           
+002b82a8: 0a7a       ldrb     r2, [r1, #8]                  
+002b82aa: 43ea0263   orr.w    r3, r3, r2, lsl #24           
+002b82ae: 4a78       ldrb     r2, [r1, #1]                  
+002b82b0: 8978       ldrb     r1, [r1, #2]                  
+002b82b2: 42ea0121   orr.w    r1, r2, r1, lsl #8            
+002b82b6: 1a0c       lsrs     r2, r3, #0x10                 
+002b82b8: 9bb2       uxth     r3, r3                        
+002b82ba: f7f7d7ff   bl       #0x2b026c                     
+002b82be: 6b1e       subs     r3, r5, #1                    
+002b82c0: 2f2b       cmp      r3, #0x2f                     
+002b82c2: 00f24b81   bhi.w    #0x2b855c                     
+002b82c6: 2846       mov      r0, r5                        
+002b82c8: 4946       mov      r1, sb                        
+002b82ca: f8f7d1ff   bl       #0x2b1270                     
+002b82ce: 0646       mov      r6, r0                        
+002b82d0: 0028       cmp      r0, #0                        
+002b82d2: 40f04481   bne.w    #0x2b855e                     
+002b82d6: dff81cb2   ldr.w    fp, [pc, #0x21c]                ; [002b84f4]=00a36c89
+002b82da: 2b01       lsls     r3, r5, #4                    
+002b82dc: baf1000f   cmp.w    sl, #0                        
+002b82e0: 67d0       beq      #0x2b83b2                     
+002b82e2: 5b19       adds     r3, r3, r5                    
+002b82e4: 5b44       add      r3, fp                        
+002b82e6: 0833       adds     r3, #8                        
+002b82e8: 9979       ldrb     r1, [r3, #6]                  
+002b82ea: 5a79       ldrb     r2, [r3, #5]                  
+002b82ec: 42ea0122   orr.w    r2, r2, r1, lsl #8            
+002b82f0: d979       ldrb     r1, [r3, #7]                  
+002b82f2: 42ea0142   orr.w    r2, r2, r1, lsl #16           
+002b82f6: 197a       ldrb     r1, [r3, #8]                  
+002b82f8: 52ea0161   orrs.w   r1, r2, r1, lsl #24           
+002b82fc: 2cd1       bne      #0x2b8358                     
+002b82fe: dff8e0a1   ldr.w    sl, [pc, #0x1e0]                ; [002b84e0]=00a36c80
+002b8302: daf80000   ldr.w    r0, [sl]                      
+002b8306: 7b60       str      r3, [r7, #4]                  
+002b8308: 87f737fd   bl       #0x23fd7a                     
+002b830c: 7b68       ldr      r3, [r7, #4]                  
+002b830e: 020a       lsrs     r2, r0, #8                    
+002b8310: 5871       strb     r0, [r3, #5]                  
+002b8312: 9a71       strb     r2, [r3, #6]                  
+002b8314: 020c       lsrs     r2, r0, #0x10                 
+002b8316: da71       strb     r2, [r3, #7]                  
+002b8318: 020e       lsrs     r2, r0, #0x18                 
+002b831a: 1a72       strb     r2, [r3, #8]                  
+002b831c: e0b1       cbz      r0, #0x2b8358                 
+002b831e: 7b60       str      r3, [r7, #4]                  
+002b8320: edf7f4fa   bl       #0x2a590c                     
+002b8324: 7b68       ldr      r3, [r7, #4]                  
+002b8326: 70b9       cbnz     r0, #0x2b8346                 
+002b8328: 9979       ldrb     r1, [r3, #6]                  
+002b832a: 5a79       ldrb     r2, [r3, #5]                  
+002b832c: 187a       ldrb     r0, [r3, #8]                  
+002b832e: 42ea0122   orr.w    r2, r2, r1, lsl #8            
+002b8332: d979       ldrb     r1, [r3, #7]                  
+002b8334: 42ea0142   orr.w    r2, r2, r1, lsl #16           
+002b8338: 3146       mov      r1, r6                        
+002b833a: 42ea0060   orr.w    r0, r2, r0, lsl #24           
+002b833e: daf80020   ldr.w    r2, [sl]                      
+002b8342: 67f6ceff   bl       #0x1202e2                     
+002b8346: 05eb0513   add.w    r3, r5, r5, lsl #4            
+002b834a: 0022       movs     r2, #0                        
+002b834c: 5b44       add      r3, fp                        
+002b834e: 0833       adds     r3, #8                        
+002b8350: 5a70       strb     r2, [r3, #1]                  
+002b8352: 9a70       strb     r2, [r3, #2]                  
+002b8354: da70       strb     r2, [r3, #3]                  
+002b8356: 1a71       strb     r2, [r3, #4]                  
+002b8358: 05eb051a   add.w    sl, r5, r5, lsl #4            
+002b835c: da44       add      sl, fp                        
+002b835e: 0af10803   add.w    r3, sl, #8                    
+002b8362: 9979       ldrb     r1, [r3, #6]                  
+002b8364: 5a79       ldrb     r2, [r3, #5]                  
+002b8366: 42ea0122   orr.w    r2, r2, r1, lsl #8            
+002b836a: d979       ldrb     r1, [r3, #7]                  
+002b836c: 42ea0142   orr.w    r2, r2, r1, lsl #16           
+002b8370: 197a       ldrb     r1, [r3, #8]                  
+002b8372: 52ea0161   orrs.w   r1, r2, r1, lsl #24           
+002b8376: 5ed0       beq      #0x2b8436                     
+002b8378: 9978       ldrb     r1, [r3, #2]                  
+002b837a: 2846       mov      r0, r5                        
+002b837c: 5a78       ldrb     r2, [r3, #1]                  
+002b837e: 42ea0122   orr.w    r2, r2, r1, lsl #8            
+002b8382: d978       ldrb     r1, [r3, #3]                  
+002b8384: 1b79       ldrb     r3, [r3, #4]                  
+002b8386: 42ea0142   orr.w    r2, r2, r1, lsl #16           
+002b838a: 2146       mov      r1, r4                        
+002b838c: 42ea0363   orr.w    r3, r2, r3, lsl #24           
+002b8390: d9f80020   ldr.w    r2, [sb]                      
+002b8394: d318       adds     r3, r2, r3                    
+002b8396: fa68       ldr      r2, [r7, #0xc]                
+002b8398: c9f80030   str.w    r3, [sb]                      
+002b839c: 4346       mov      r3, r8                        
+002b839e: 67f694ea   blx      #0x11f8c8                       ; _ZN8FlashLib12WritePackAddEmmPhPm
+002b83a2: 0646       mov      r6, r0                        
+002b83a4: 0028       cmp      r0, #0                        
+002b83a6: 40f0da80   bne.w    #0x2b855e                     
+002b83aa: 0123       movs     r3, #1                        
+002b83ac: 8af80830   strb.w   r3, [sl, #8]                  
+002b83b0: d5e0       b        #0x2b855e                     
+002b83b2: 5b19       adds     r3, r3, r5                    
+002b83b4: 5b44       add      r3, fp                        
+002b83b6: 0833       adds     r3, #8                        
+002b83b8: 9979       ldrb     r1, [r3, #6]                  
+002b83ba: 5a79       ldrb     r2, [r3, #5]                  
+002b83bc: 42ea0122   orr.w    r2, r2, r1, lsl #8            
+002b83c0: d979       ldrb     r1, [r3, #7]                  
+002b83c2: 42ea0142   orr.w    r2, r2, r1, lsl #16           
+002b83c6: 197a       ldrb     r1, [r3, #8]                  
+002b83c8: 52ea0161   orrs.w   r1, r2, r1, lsl #24           
+002b83cc: 33d0       beq      #0x2b8436                     
+002b83ce: 9978       ldrb     r1, [r3, #2]                  
+002b83d0: 2846       mov      r0, r5                        
+002b83d2: 5a78       ldrb     r2, [r3, #1]                  
+002b83d4: 42ea0122   orr.w    r2, r2, r1, lsl #8            
+002b83d8: d978       ldrb     r1, [r3, #3]                  
+002b83da: 1b79       ldrb     r3, [r3, #4]                  
+002b83dc: 42ea0142   orr.w    r2, r2, r1, lsl #16           
+002b83e0: 2146       mov      r1, r4                        
+002b83e2: 42ea0363   orr.w    r3, r2, r3, lsl #24           
+002b83e6: d9f80020   ldr.w    r2, [sb]                      
+002b83ea: d318       adds     r3, r2, r3                    
+002b83ec: fa68       ldr      r2, [r7, #0xc]                
+002b83ee: c9f80030   str.w    r3, [sb]                      
+002b83f2: 4346       mov      r3, r8                        
+002b83f4: 67f63ee9   blx      #0x11f674                       ; _ZN8FlashLib14WritePackFlushEmmPhPm
+002b83f8: 0646       mov      r6, r0                        
+002b83fa: a8b1       cbz      r0, #0x2b8428                 
+002b83fc: 4928       cmp      r0, #0x49                     
+002b83fe: 13d0       beq      #0x2b8428                     
+002b8400: 5346       mov      r3, sl                        
+002b8402: 3548       ldr      r0, [pc, #0xd4]                 ; [002b84d8]=007e91a8 "WritePackFlush(in AddSectorData_Body)"
+002b8404: 3146       mov      r1, r6                        
+002b8406: 5246       mov      r2, sl                        
+002b8408: cdf800a0   str.w    sl, [sp]                      
+002b840c: cdf804a0   str.w    sl, [sp, #4]                  
+002b8410: 65f65eed   blx      #0x11ded0                       ; _ZN8FlashLib11ConPutErrorEPKcmS1_mS1_m
+002b8414: 314b       ldr      r3, [pc, #0xc4]                 ; [002b84dc]=009d2790
+002b8416: 1b78       ldrb     r3, [r3]                      
+002b8418: 33b1       cbz      r3, #0x2b8428                 
+002b841a: 882e       cmp      r6, #0x88                     
+002b841c: 04d0       beq      #0x2b8428                     
+002b841e: 892e       cmp      r6, #0x89                     
+002b8420: 02d0       beq      #0x2b8428                     
+002b8422: f0b2       uxtb     r0, r6                        
+002b8424: 49f3d2f9   bl       #0x6017cc                     
+002b8428: 2846       mov      r0, r5                        
+002b842a: 65f654ef   blx      #0x11e2d4                       ; _ZN8FlashLib13WritePackFreeEm
+002b842e: 002e       cmp      r6, #0                        
+002b8430: 40f09580   bne.w    #0x2b855e                     
+002b8434: 8ce0       b        #0x2b8550                     
+002b8436: 14b9       cbnz     r4, #0x2b843e                 
+002b8438: c8f80040   str.w    r4, [r8]                      
+002b843c: 88e0       b        #0x2b8550                     
+002b843e: 0023       movs     r3, #0                        
+002b8440: c8f80030   str.w    r3, [r8]                      
+002b8444: 264b       ldr      r3, [pc, #0x98]                 ; [002b84e0]=00a36c80
+002b8446: 2046       mov      r0, r4                        
+002b8448: 1a68       ldr      r2, [r3]                      
+002b844a: 7b60       str      r3, [r7, #4]                  
+002b844c: 1146       mov      r1, r2                        
+002b844e: ba60       str      r2, [r7, #8]                  
+002b8450: 67f6c4ec   blx      #0x11fddc                       ; __aeabi_uidivmod
+002b8454: b4eb010a   subs.w   sl, r4, r1                    
+002b8458: 8946       mov      sb, r1                        
+002b845a: 16d0       beq      #0x2b848a                     
+002b845c: 07f11003   add.w    r3, r7, #0x10                 
+002b8460: 2846       mov      r0, r5                        
+002b8462: 0093       str      r3, [sp]                      
+002b8464: 5146       mov      r1, sl                        
+002b8466: fa68       ldr      r2, [r7, #0xc]                
+002b8468: 4346       mov      r3, r8                        
+002b846a: f8f770fe   bl       #0x2b114e                     
+002b846e: 0446       mov      r4, r0                        
+002b8470: 58b1       cbz      r0, #0x2b848a                 
+002b8472: 4928       cmp      r0, #0x49                     
+002b8474: 57d0       beq      #0x2b8526                     
+002b8476: 1b4b       ldr      r3, [pc, #0x6c]                 ; [002b84e4]=007e8eb2 "completeSize"
+002b8478: 2146       mov      r1, r4                        
+002b847a: 1b48       ldr      r0, [pc, #0x6c]                 ; [002b84e8]=007e9234 "AddSectorData"
+002b847c: 1b4a       ldr      r2, [pc, #0x6c]                 ; [002b84ec]=007e91ce "writeSizeRoundDownSectorSize"
+002b847e: 0093       str      r3, [sp]                      
+002b8480: d8f80030   ldr.w    r3, [r8]                      
+002b8484: 0193       str      r3, [sp, #4]                  
+002b8486: 5346       mov      r3, sl                        
+002b8488: 40e0       b        #0x2b850c                     
+002b848a: b9f1000f   cmp.w    sb, #0                        
+002b848e: 5fd0       beq      #0x2b8550                     
+002b8490: 174c       ldr      r4, [pc, #0x5c]                 ; [002b84f0]=00a36c84
+002b8492: fa68       ldr      r2, [r7, #0xc]                
+002b8494: 2068       ldr      r0, [r4]                      
+002b8496: 02eb0a01   add.w    r1, r2, sl                    
+002b849a: 4a46       mov      r2, sb                        
+002b849c: 68f63efe   bl       #0x12111c                     
+002b84a0: 2068       ldr      r0, [r4]                      
+002b84a2: bb68       ldr      r3, [r7, #8]                  
+002b84a4: 4844       add      r0, sb                        
+002b84a6: c9eb0301   rsb      r1, sb, r3                    
+002b84aa: 66f684ea   blx      #0x11e9b4                       ; _ZN8FlashLib14SetPaddingDataEPhm
+002b84ae: 0c4b       ldr      r3, [pc, #0x30]                 ; [002b84e0]=00a36c80
+002b84b0: 07f11002   add.w    r2, r7, #0x10                 
+002b84b4: 2846       mov      r0, r5                        
+002b84b6: 0092       str      r2, [sp]                      
+002b84b8: 1968       ldr      r1, [r3]                      
+002b84ba: 07f11403   add.w    r3, r7, #0x14                 
+002b84be: 2268       ldr      r2, [r4]                      
+002b84c0: f8f745fe   bl       #0x2b114e                     
+002b84c4: 0446       mov      r4, r0                        
+002b84c6: b8b9       cbnz     r0, #0x2b84f8                 
+002b84c8: d8f80030   ldr.w    r3, [r8]                      
+002b84cc: 4b44       add      r3, sb                        
+002b84ce: c8f80030   str.w    r3, [r8]                      
+002b84d2: 3de0       b        #0x2b8550                     
+002b84d4: 916c       ldr      r1, [r2, #0x48]               
+002b84d6: a300       lsls     r3, r4, #2                    
+002b84d8: a891       str      r1, [sp, #0x2a0]              
+002b84da: 7e00       lsls     r6, r7, #1                    
+002b84dc: 9027       movs     r7, #0x90                     
+002b84de: 9d00       lsls     r5, r3, #2                    
+002b84e0: 806c       ldr      r0, [r0, #0x48]               
+002b84e2: a300       lsls     r3, r4, #2                    
+002b84e4: b28e       ldrh     r2, [r6, #0x34]               
+002b84e6: 7e00       lsls     r6, r7, #1                    
+002b84e8: 3492       str      r2, [sp, #0xd0]               
+002b84ea: 7e00       lsls     r6, r7, #1                    
+002b84ec: ce91       str      r1, [sp, #0x338]              
+002b84ee: 7e00       lsls     r6, r7, #1                    
+002b84f0: 846c       ldr      r4, [r0, #0x48]               
+002b84f2: a300       lsls     r3, r4, #2                    
+002b84f4: 896c       ldr      r1, [r1, #0x48]               
+002b84f6: a300       lsls     r3, r4, #2                    
+002b84f8: 4928       cmp      r0, #0x49                     
+002b84fa: 14d0       beq      #0x2b8526                     
+002b84fc: 1d4b       ldr      r3, [pc, #0x74]                 ; [002b8574]=007e8eb2 "completeSize"
+002b84fe: 2146       mov      r1, r4                        
+002b8500: 1d48       ldr      r0, [pc, #0x74]                 ; [002b8578]=007e9234 "AddSectorData"
+002b8502: 1e4a       ldr      r2, [pc, #0x78]                 ; [002b857c]=007e90a0 "writeSizeModSectorSize"
+002b8504: 0093       str      r3, [sp]                      
+002b8506: 7b69       ldr      r3, [r7, #0x14]               
+002b8508: 0193       str      r3, [sp, #4]                  
+002b850a: 4b46       mov      r3, sb                        
+002b850c: 65f6e0ec   blx      #0x11ded0                       ; _ZN8FlashLib11ConPutErrorEPKcmS1_mS1_m
+002b8510: 1b4b       ldr      r3, [pc, #0x6c]                 ; [002b8580]=009d2790
+002b8512: 1b78       ldrb     r3, [r3]                      
+002b8514: 002b       cmp      r3, #0                        
+002b8516: 28d0       beq      #0x2b856a                     
+002b8518: 882c       cmp      r4, #0x88                     
+002b851a: 28d0       beq      #0x2b856e                     
+002b851c: 892c       cmp      r4, #0x89                     
+002b851e: 26d0       beq      #0x2b856e                     
+002b8520: e0b2       uxtb     r0, r4                        
+002b8522: 49f353f9   bl       #0x6017cc                     
+002b8526: 892c       cmp      r4, #0x89                     
+002b8528: 21d0       beq      #0x2b856e                     
+002b852a: 164d       ldr      r5, [pc, #0x58]                 ; [002b8584]=00a36c88
+002b852c: 2b78       ldrb     r3, [r5]                      
+002b852e: 202b       cmp      r3, #0x20                     
+002b8530: 1dd8       bhi      #0x2b856e                     
+002b8532: 1020       movs     r0, #0x10                     
+002b8534: a2b2       uxth     r2, r4                        
+002b8536: 7821       movs     r1, #0x78                     
+002b8538: 8de80c00   stm.w    sp, {r2, r3}                  
+002b853c: 34fa00f3   lsrs.w   r3, r4, r0                    
+002b8540: 41f21202   movw     r2, #0x1012                   
+002b8544: 03f37af9   bl       #0x5bb83c                     
+002b8548: 2b78       ldrb     r3, [r5]                      
+002b854a: 0133       adds     r3, #1                        
+002b854c: 2b70       strb     r3, [r5]                      
+002b854e: 0ee0       b        #0x2b856e                     
+002b8550: 05eb0515   add.w    r5, r5, r5, lsl #4            
+002b8554: 0123       movs     r3, #1                        
+002b8556: 5d44       add      r5, fp                        
+002b8558: 2b72       strb     r3, [r5, #8]                  
+002b855a: 00e0       b        #0x2b855e                     
+002b855c: 0926       movs     r6, #9                        
+002b855e: 3046       mov      r0, r6                        
+002b8560: 07f11c07   add.w    r7, r7, #0x1c                 
+002b8564: bd46       mov      sp, r7                        
+002b8566: bde8f08f   pop.w    {r4, r5, r6, r7, r8, sb, sl, fp, pc}
+002b856a: 882c       cmp      r4, #0x88                     
+002b856c: dbd1       bne      #0x2b8526                     
+002b856e: 2646       mov      r6, r4                        
+002b8570: f5e7       b        #0x2b855e                     
+002b8572: 00bf       nop                                    
+002b8574: b28e       ldrh     r2, [r6, #0x34]               
+002b8576: 7e00       lsls     r6, r7, #1                    
+002b8578: 3492       str      r2, [sp, #0xd0]               
+002b857a: 7e00       lsls     r6, r7, #1                    
+002b857c: a090       str      r0, [sp, #0x280]              
+002b857e: 7e00       lsls     r6, r7, #1                    
+002b8580: 9027       movs     r7, #0x90                     
+002b8582: 9d00       lsls     r5, r3, #2                    
+002b8584: 886c       ldr      r0, [r1, #0x48]               
+002b8586: a300       lsls     r3, r4, #2                    
+002b8588: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+002b858c: 1c46       mov      r4, r3                        
+002b858e: 83b0       sub      sp, #0xc                      
+002b8590: 1b4b       ldr      r3, [pc, #0x6c]                 ; [002b8600]=00a36c78
+002b8592: 02af       add      r7, sp, #8                    
+002b8594: 8046       mov      r8, r0                        
+002b8596: 0e46       mov      r6, r1                        
+002b8598: 1b78       ldrb     r3, [r3]                      
+002b859a: 1546       mov      r5, r2                        

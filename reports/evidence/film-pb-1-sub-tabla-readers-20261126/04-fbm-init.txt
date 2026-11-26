@@ -1,0 +1,193 @@
+# 04 - Escritor #3 (inline): el bucle de Init 0x2B4820 / WarmBootInit 0x2B4624
+     y quien lo dispara: MprIf::Create 0x71CC20 -> 0x712530 -> FlashLib::Init + FBM::Init
+
+== 0x2B4820 Init (completo) ==
+002b4820: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+002b4824: 8db0       sub      sp, #0x34                     
+002b4826: 02af       add      r7, sp, #8                    
+002b4828: 69f67ce8   blx      #0x11d924                       ; _ZN8FlashLib14InvalidateSyncEv
+002b482c: 604c       ldr      r4, [pc, #0x180]                ; [002b49b0]=00a3697c
+002b482e: 614b       ldr      r3, [pc, #0x184]                ; [002b49b4]=00a36c20
+002b4830: 614a       ldr      r2, [pc, #0x184]                ; [002b49b8]=009e6970
+002b4832: 1a60       str      r2, [r3]                      
+002b4834: 0022       movs     r2, #0                        
+002b4836: 5a60       str      r2, [r3, #4]                  
+002b4838: 9a60       str      r2, [r3, #8]                  
+002b483a: da60       str      r2, [r3, #0xc]                
+002b483c: 2368       ldr      r3, [r4]                      
+002b483e: 33b9       cbnz     r3, #0x2b484e                 
+002b4840: 5020       movs     r0, #0x50                     
+002b4842: 69f6b0ef   blx      #0x11e7a4                       ; _Znwj
+002b4846: 0546       mov      r5, r0                        
+002b4848: 8bf786fa   bl       #0x23fd58                     
+002b484c: 2560       str      r5, [r4]                      
+002b484e: 00f08ffa   bl       #0x2b4d70                     
+002b4852: 5a48       ldr      r0, [pc, #0x168]                ; [002b49bc]=0083b4ea "Init"
+002b4854: fdf708fb   bl       #0x2b1e68                     
+002b4858: 5949       ldr      r1, [pc, #0x164]                ; [002b49c0]=00a36974
+002b485a: 5a4a       ldr      r2, [pc, #0x168]                ; [002b49c4]=00a36970
+002b485c: 0025       movs     r5, #0                        
+002b485e: 5a4b       ldr      r3, [pc, #0x168]                ; [002b49c8]=00a36c08
+002b4860: 2c46       mov      r4, r5                        
+002b4862: 0d60       str      r5, [r1]                      
+002b4864: 2e46       mov      r6, r5                        
+002b4866: 1560       str      r5, [r2]                      
+002b4868: 8a46       mov      sl, r1                        
+002b486a: 1d60       str      r5, [r3]                      
+002b486c: 9346       mov      fp, r2                        
+002b486e: 62e0       b        #0x2b4936                     
+002b4870: 5648       ldr      r0, [pc, #0x158]                ; [002b49cc]=007e7c92 "[FBM]Init()  [entryNo:%d]"
+002b4872: 2946       mov      r1, r5                        
+002b4874: 0026       movs     r6, #0                        
+002b4876: 7e62       str      r6, [r7, #0x24]               
+002b4878: 00f002fc   bl       #0x2b5080                     
+002b487c: 58f82500   ldr.w    r0, [r8, r5, lsl #2]          
+002b4880: 68f688ee   blx      #0x11d594                       ; _ZN8FlashLib16CheckExistSectorEm
+002b4884: dff85c91   ldr.w    sb, [pc, #0x15c]                ; [002b49e4]=00a3699c
+002b4888: 4528       cmp      r0, #0x45                     
+002b488a: 45d1       bne      #0x2b4918                     
+002b488c: 3146       mov      r1, r6                        
+002b488e: 07f12402   add.w    r2, r7, #0x24                 
+002b4892: 58f82500   ldr.w    r0, [r8, r5, lsl #2]          
+002b4896: 69f626ea   blx      #0x11dce4                       ; _ZN8FlashLib12OpenSector32Em12FBS_MOVEFLAGPm
+002b489a: 7a6a       ldr      r2, [r7, #0x24]               
+002b489c: 0646       mov      r6, r0                        
+002b489e: 4c48       ldr      r0, [pc, #0x130]                ; [002b49d0]=007e7cac "[FBM]--Init()-OpenSector32()[errorFBS:%d"
+002b48a0: 3146       mov      r1, r6                        
+002b48a2: 00f0edfb   bl       #0x2b5080                     
+002b48a6: 0eb9       cbnz     r6, #0x2b48ac                 
+002b48a8: 786a       ldr      r0, [r7, #0x24]               
+002b48aa: 10b9       cbnz     r0, #0x2b48b2                 
+002b48ac: 0023       movs     r3, #0                        
+002b48ae: 7b62       str      r3, [r7, #0x24]               
+002b48b0: 32e0       b        #0x2b4918                     
+002b48b2: 391d       adds     r1, r7, #4                    
+002b48b4: 3246       mov      r2, r6                        
+002b48b6: fdf7e3fd   bl       #0x2b2480                     
+002b48ba: 0446       mov      r4, r0                        
+002b48bc: 60bb       cbnz     r0, #0x2b4918                 
+002b48be: fb88       ldrh     r3, [r7, #6]                  
+002b48c0: 033b       subs     r3, #3                        
+002b48c2: 9bb2       uxth     r3, r3                        
+002b48c4: 012b       cmp      r3, #1                        
+002b48c6: 27d8       bhi      #0x2b4918                     
+002b48c8: 38f82500   ldrh.w   r0, [r8, r5, lsl #2]          
+002b48cc: 2a46       mov      r2, r5                        
+002b48ce: 796a       ldr      r1, [r7, #0x24]               
+002b48d0: fff76afe   bl       #0x2b45a8                     
+002b48d4: 0446       mov      r4, r0                        
+002b48d6: f8b9       cbnz     r0, #0x2b4918                 
+002b48d8: 1423       movs     r3, #0x14                     
+002b48da: 03fb0593   mla      r3, r3, r5, sb                
+002b48de: d3f80c80   ldr.w    r8, [r3, #0xc]                
+002b48e2: b8f1000f   cmp.w    r8, #0                        
+002b48e6: 24d0       beq      #0x2b4932                     
+002b48e8: 4046       mov      r0, r8                        
+002b48ea: d3f81090   ldr.w    sb, [r3, #0x10]               
+002b48ee: fdf76dfa   bl       #0x2b1dcc                     
+002b48f2: 58b9       cbnz     r0, #0x2b490c                 
+002b48f4: 374b       ldr      r3, [pc, #0xdc]                 ; [002b49d4]=00a36c0c
+002b48f6: b9f1010f   cmp.w    sb, #1                        
+002b48fa: caf80080   str.w    r8, [sl]                      
+002b48fe: c3f80090   str.w    sb, [r3]                      
+002b4902: 16d1       bne      #0x2b4932                     
+002b4904: 3049       ldr      r1, [pc, #0xc0]                 ; [002b49c8]=00a36c08
+002b4906: c1f80080   str.w    r8, [r1]                      
+002b490a: 12e0       b        #0x2b4932                     
+002b490c: 324b       ldr      r3, [pc, #0xc8]                 ; [002b49d8]=00a36c18
+002b490e: cbf80080   str.w    r8, [fp]                      
+002b4912: c3f80090   str.w    sb, [r3]                      
+002b4916: 0ce0       b        #0x2b4932                     
+002b4918: 58f82510   ldr.w    r1, [r8, r5, lsl #2]          
+002b491c: 1422       movs     r2, #0x14                     
+002b491e: 6a43       muls     r2, r5, r2                    
+002b4920: 09eb0203   add.w    r3, sb, r2                    
+002b4924: 49f80210   str.w    r1, [sb, r2]                  
+002b4928: 0022       movs     r2, #0                        
+002b492a: 9a60       str      r2, [r3, #8]                  
+002b492c: da60       str      r2, [r3, #0xc]                
+002b492e: 7a6a       ldr      r2, [r7, #0x24]               
+002b4930: 5a60       str      r2, [r3, #4]                  
+002b4932: 0135       adds     r5, #1                        
+002b4934: edb2       uxtb     r5, r5                        
+002b4936: dff8b080   ldr.w    r8, [pc, #0xb0]                 ; [002b49e8]=009d2380
+002b493a: 58f82530   ldr.w    r3, [r8, r5, lsl #2]          
+002b493e: b3f1ff3f   cmp.w    r3, #-1                       
+002b4942: 95d1       bne      #0x2b4870                     
+002b4944: 2548       ldr      r0, [pc, #0x94]                 ; [002b49dc]=002b47e1
+002b4946: 6bf6aaeb   blx      #0x12009c                       ; _ZN8FlashLib20SetBackupMgrCallbackEPFvmE
+002b494a: 1cb9       cbnz     r4, #0x2b4954                 
+002b494c: 3046       mov      r0, r6                        
+
+== llamantes de Init ==
+0x7126e6 None
+
+== 0x7126DE..0x7126F2: secuencia de arranque del MPR ==
+007126de: a069       ldr      r0, [r4, #0x18]               
+007126e0: 504c       ldr      r4, [pc, #0x140]                ; [00712824]=00ad28e8
+007126e2: 0bf682e4   blx      #0x11dfe8                       ; _ZN8FlashLib4InitEN3MPR10SystemTypeE
+007126e6: a2f79bf0   bl       #0x2b4820                     
+007126ea: 96f5bbf8   bl       #0x4a8864                     
+007126ee: 72f515fa   bl       #0x484b1c                     
+007126f2: 5df509fa   bl       #0x46fb08                     
+
+  FlashLib::Init(SystemType) 0x11DFE8 ; FBM::Init 0x2B4820 ; luego 0x4A8864 0x484B1C 0x46FB08 ...
+
+  llamante de 0x712530:
+0x71cc7a _ZN5MprIf6CreateEPNS_11CreateParamEPPS_b+0x5a
+  => MprIf::Create(CreateParam*, MprIf**, bool) en 0x71CC20, llamada en 0x71CC7A.
+
+== rama de fallo por sector (0x2B4918..0x2B4930): deja +4 = handle (o 0) y +8 = +0xc = 0 ==
+002b4918: 58f82510   ldr.w    r1, [r8, r5, lsl #2]          
+002b491c: 1422       movs     r2, #0x14                     
+002b491e: 6a43       muls     r2, r5, r2                    
+002b4920: 09eb0203   add.w    r3, sb, r2                    
+002b4924: 49f80210   str.w    r1, [sb, r2]                  
+002b4928: 0022       movs     r2, #0                        
+002b492a: 9a60       str      r2, [r3, #8]                  
+002b492c: da60       str      r2, [r3, #0xc]                
+002b492e: 7a6a       ldr      r2, [r7, #0x24]               
+002b4930: 5a60       str      r2, [r3, #4]                  
+002b4932: 0135       adds     r5, #1                        
+002b4934: edb2       uxtb     r5, r5                        
+
+== Comprobacion de que NO hay constructor estatico que rellene la tabla ==
+  .init_array (0x009C31C8, 76 entradas): la unica en el rango FBM es la [02] = 0x2B4A39.
+002b4a38: b0b5       push     {r4, r5, r7, lr}              
+002b4a3a: 0021       movs     r1, #0                        
+002b4a3c: 154d       ldr      r5, [pc, #0x54]                 ; [002b4a94]=00a36980
+002b4a3e: 00af       add      r7, sp, #0                    
+002b4a40: 154c       ldr      r4, [pc, #0x54]                 ; [002b4a98]=005fd5a1
+002b4a42: 2846       mov      r0, r5                        
+002b4a44: 48f3acfe   bl       #0x5fd7a0                     
+002b4a48: 2846       mov      r0, r5                        
+002b4a4a: 144d       ldr      r5, [pc, #0x50]                 ; [002b4a9c]=009e691c
+002b4a4c: 2146       mov      r1, r4                        
+002b4a4e: 144a       ldr      r2, [pc, #0x50]                 ; [002b4aa0]=009c42e8
+002b4a50: 6af608eb   blx      #0x11f064                       ; __aeabi_atexit
+002b4a54: 0021       movs     r1, #0                        
+002b4a56: 2846       mov      r0, r5                        
+002b4a58: 48f3a2fe   bl       #0x5fd7a0                     
+002b4a5c: 2846       mov      r0, r5                        
+002b4a5e: 114d       ldr      r5, [pc, #0x44]                 ; [002b4aa4]=009e6938
+002b4a60: 2146       mov      r1, r4                        
+002b4a62: 0f4a       ldr      r2, [pc, #0x3c]                 ; [002b4aa0]=009c42e8
+002b4a64: 6af6feea   blx      #0x11f064                       ; __aeabi_atexit
+002b4a68: 0021       movs     r1, #0                        
+002b4a6a: 2846       mov      r0, r5                        
+002b4a6c: 48f398fe   bl       #0x5fd7a0                     
+002b4a70: 2846       mov      r0, r5                        
+002b4a72: 0d4d       ldr      r5, [pc, #0x34]                 ; [002b4aa8]=009e6954
+002b4a74: 2146       mov      r1, r4                        
+002b4a76: 0a4a       ldr      r2, [pc, #0x28]                 ; [002b4aa0]=009c42e8
+002b4a78: 6af6f4ea   blx      #0x11f064                       ; __aeabi_atexit
+002b4a7c: 0021       movs     r1, #0                        
+002b4a7e: 2846       mov      r0, r5                        
+002b4a80: 48f38efe   bl       #0x5fd7a0                     
+002b4a84: 2846       mov      r0, r5                        
+002b4a86: 2146       mov      r1, r4                        
+002b4a88: 054a       ldr      r2, [pc, #0x14]                 ; [002b4aa0]=009c42e8
+002b4a8a: bde8b040   pop.w    {r4, r5, r7, lr}              
+
+  => solo construye semaforos RWB (0xA36980, 0x9E691C, 0x9E6938, 0x9E6954) con __aeabi_atexit.
+     Ninguna escritura a 0xA3699C. El llenado es siempre explicito (Init / WarmBootInit).

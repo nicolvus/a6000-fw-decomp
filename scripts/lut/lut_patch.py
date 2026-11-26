@@ -27,7 +27,7 @@ from e25_24.thumb import bl
 
 BASE = 0x43541000
 SIZE = 11_427_236
-AJ = cfw.POR_ID["lut"]
+AJ = cfw.POR_ID["lut"]          # id/backup del ajuste (Backup 0x1070211 guarda el índice de ranura)
 SD_RANURAS = 6                                                             # G89: Off + 6 ranuras = 7 opciones (tope medido de la fila, G36)
 AJ_SD = dataclasses.replace(AJ, opciones=(("Off", 0),) + tuple((f"LUT {i}", i) for i in range(1, SD_RANURAS + 1)))
 HOOKS = ((0x4381D2FE, bytes.fromhex("d5f8c430"), "r3", "r0, r1, r2"),     # ldr.w r3,[r5,#0xc4]
@@ -37,67 +37,44 @@ TAM = 0x654
 FUENTES = ("teal_orange", "pelicula", "identidad")                         # LUT1…3 por defecto; `--cube` de cube_a6000 las sustituye
 
 
-_DEFECTO: list[bytes] = []                                                 # G90: el ajuste en ΔE2000 tarda ~15 s por tabla; se calcula una vez por proceso
-
-
-def curvas_por_defecto() -> list[bytes]:
-    """Registros de 68 B de la curva T de cada tabla del `.dat` (0 nodos = sin curva); `lut_t` elige solo la película."""
-    return TT.t_por_defecto()
-
-
-def tablas_por_defecto() -> list[bytes]:
-    if not _DEFECTO:
-        img = C.BIN.read_bytes()
-        _DEFECTO.extend(C.empaqueta_hw(C.descompone(C.SINT[n], False, False, True).q, img) for n in FUENTES)
-    return list(_DEFECTO)
-
-
-MODO_SD = False                                                            # G89: los builds (build_fn_lut/build_cfw_objetivos) lo activan con sd=True; `apply_bytes` lo usa por defecto
-
-
-def entradas(sd: bool = False) -> list[int]:
+def entradas() -> list[int]:
     """Direcciones de f0/f1 (SA/r3, MOV/r1)."""
-    return D.lut_codigo(AJ_SD if sd else AJ, HOOKS, sd)[1]
+    return D.lut_codigo(AJ_SD, HOOKS)[1]
 
 
-def cueva_maquina(sd: bool = False) -> tuple[int, list[tuple[int, bytes]]]:
-    """(entrada, escrituras) de la cueva del gancho de la máquina; va tras el código de la LUT en la zona A."""
-    cueva, _ = D.lut_codigo(AJ_SD if sd else AJ, HOOKS, sd)
+def cueva_maquina() -> tuple[int, list[tuple[int, bytes]]]:
+    """(entrada, escrituras) de la cueva del gancho de la máquina; va tras el código de la LUT en `ZONA_L18` (G18)."""
+    cueva, _ = D.lut_codigo(AJ_SD, HOOKS)
     fin = max(a + len(b) for a, b in cueva)
-    esc, entrada = D.lut_maquina_codigo(AJ_SD if sd else AJ, (fin + 3) & ~3)
+    esc, entrada = D.lut_maquina_codigo(AJ_SD, (fin + 3) & ~3)
     return entrada, esc
 
 
-def entrada_t(sd: bool = False) -> int:
-    """Entrada de la cueva de la curva (`lut_t`) en la disposición que monta `apply_bytes` (los tamaños de las escrituras son los del parche)."""
-    return TT.escrituras(sd, None, AJ_SD if sd else AJ)[1]
+def entrada_t() -> int:
+    """Entrada de la cueva de la curva (`lut_t`) en la disposición que monta `apply_bytes`."""
+    return TT.escrituras(AJ_SD)[1]
 
 
-def apply_bytes(data: bytes, tablas: list[bytes] | None = None, sd: bool | None = None,
-                curvas: list[bytes] | None = None) -> bytes:
-    sd = MODO_SD if sd is None else sd
+def apply_bytes(data: bytes) -> bytes:
+    """Parche `av-cam` del ajuste LUT (G116): cueva, máquina y curva en `ZONA_L18`/`ZONA_T18` (hueco G18); tablas y curvas salen del blob de la SD.
+    Sin tarjeta no hay tabla ni curva y el ajuste queda en fábrica."""
     if len(data) != SIZE:
         raise ValueError("tamaño inesperado")
-    tablas = tablas or tablas_por_defecto()
-    curvas = curvas if curvas is not None else curvas_por_defecto()
-    assert len(tablas) == 3 and all(len(t) == TAM for t in tablas)
-    assert len(curvas) == 3 and all(len(c) == TT.REC for c in curvas)
     for va, old, _, _ in HOOKS:
         if data[va - BASE:va - BASE + 4] != old:
             raise ValueError(f"gancho {va:#x} distinto del original")
-    perm = list(struct.unpack_from("<405H", data, D.PERM - BASE))
-    cueva, ent = D.lut_codigo(AJ_SD if sd else AJ, HOOKS, sd)
-    esc = list(cueva) + [(D.LUT_TABLAS, b"".join(D.empaqueta_21(t, perm) for t in tablas)), (D.LUT_CELDA, bytes(8 if sd else 4))]
-    entrada, maq = cueva_maquina(sd)
+    cueva, ent = D.lut_codigo(AJ_SD, HOOKS)
+    esc = list(cueva) + [(D.LUT_CELDA, bytes(8))]
+    entrada, maq = cueva_maquina()
     if data[HOOK_MAQ[0] - BASE:HOOK_MAQ[0] - BASE + 4] != HOOK_MAQ[1]:
         raise ValueError(f"gancho {HOOK_MAQ[0]:#x} distinto del original")
     esc += maq
-    t_esc, t_ent = TT.escrituras(sd, curvas, AJ_SD if sd else AJ)     # la curva va a G18, no a ZONA_A/ZONA_B (G107)
+    t_esc, t_ent = TT.escrituras(AJ_SD)                   # la curva va a G18, no a ZONA_A/ZONA_B (G107)
     esc += t_esc
     for h in TT.SITIOS_T:
         if data[h - BASE:h - BASE + 4] != bl(h, TT.F_PREP):
             raise ValueError(f"gancho de curva {h:#x} distinto del original (¿build con la curva de Film?)")
-    D.comprobar_zonas([(a, a + len(b)) for a, b in esc], (D.ZONA_A, D.ZONA_B, TT.ZONA_T18))
+    D.comprobar_zonas([(a, a + len(b)) for a, b in esc], (D.ZONA_L18, TT.ZONA_T18))
     out = bytearray(data)
     for a, b in esc:
         if any(data[a - BASE:a + len(b) - BASE]):
@@ -111,12 +88,15 @@ def apply_bytes(data: bytes, tablas: list[bytes] | None = None, sd: bool | None 
     return bytes(out)
 
 
-def emular(img: bytes, k: int, opcion: int, orig: int = 0x11223344, malloc: int | None = 0x30001000, cuenta: list | None = None) -> int:
-    """Ejecuta la cueva `k` (0 = SA/r3, 1 = MOV/r1) con el Backup simulado = `opcion`, `[r5+0xc4]` = `orig` y un `malloc` simulado (devuelve `malloc`, 0 = fallo); devuelve el registro destino.
-    `cuenta` (lista de 1 elemento) recibe el nº de llamadas a `malloc`; el búfer simulado se deja en `emular.mem`."""
-    from unicorn import UC_ARCH_ARM, UC_MODE_THUMB, Uc
+def emular(img: bytes, k: int, opcion: int, blob: bytes, orig: int = 0x11223344,
+           malloc_falla_en: int | None = None) -> tuple[int, bytes | None, dict]:
+    """Ejecuta la cueva `k` (0 = SA/r3, 1 = MOV/r1) con el Backup simulado: `[Ajustes]` = `opcion` y el blob de la SD (id `BK_ID`) = `blob`.
+    Devuelve (registro destino, búfer del ISP de 0x654 B o None si quedó el puntero original, estado con `mallocs`/`lecturas`)."""
+    from unicorn import UC_ARCH_ARM, UC_HOOK_CODE, UC_MODE_THUMB, Uc
     from unicorn.arm_const import (
         UC_ARM_REG_LR,
+        UC_ARM_REG_PC,
+        UC_ARM_REG_R0,
         UC_ARM_REG_R1,
         UC_ARM_REG_R3,
         UC_ARM_REG_R5,
@@ -126,27 +106,46 @@ def emular(img: bytes, k: int, opcion: int, orig: int = 0x11223344, malloc: int 
     mu.mem_map(BASE & ~0xFFF, ((len(img) + (BASE & 0xFFF)) + 0x200000) & ~0xFFF)
     mu.mem_write(BASE, img)
     mu.mem_write(0x435613B0, bytes([opcion, 0x22, 0x0A, 0x70, 0x00, 0x20, 0x70, 0x47]))
-    stack, obj, end, heap, cnt = 0x10000000, 0x20000000, 0x30000000, 0x30001000, 0x30100000
-    for a, s in ((stack - 0x10000, 0x20000), (obj, 0x1000), (end, 0x1000), (heap, 0x2000), (cnt, 0x1000)):
-        mu.mem_map(a, s)
-    mu.mem_write(D.MALLOC, D.malloc_simulado(cnt))
-    mu.mem_write(cnt + 4, struct.pack("<I", malloc or 0))
+    stack, obj, end, heap = 0x10000000, 0x20000000, 0x30000000, 0x31000000
+    for a, t in ((stack - 0x10000, 0x20000), (obj, 0x1000), (end, 0x1000), (heap, 0x100000)):
+        mu.mem_map(a, t)
     mu.mem_write(obj + 0xC4, struct.pack("<I", orig))
+    est = {"mallocs": [], "lecturas": []}
+    brk = [heap]
+
+    def hook(mu, a, _s, _):
+        if a == D.MALLOC & ~1:
+            n = mu.reg_read(UC_ARM_REG_R0)
+            est["mallocs"].append(n)
+            r = 0 if malloc_falla_en == len(est["mallocs"]) else brk[0]
+            brk[0] += (n + 15) & ~15
+            mu.reg_write(UC_ARM_REG_R0, r)
+        elif a == cfw.BACKUP_READ:
+            i = mu.reg_read(UC_ARM_REG_R0)
+            est["lecturas"].append(i)
+            mu.mem_write(mu.reg_read(UC_ARM_REG_R1), bytes([opcion]) if i == AJ.backup else blob)
+            mu.reg_write(UC_ARM_REG_R0, 0)
+        else:
+            return
+        mu.reg_write(UC_ARM_REG_PC, mu.reg_read(UC_ARM_REG_LR) | 1)
+
+    mu.hook_add(UC_HOOK_CODE, hook, begin=D.MALLOC & ~1, end=(D.MALLOC & ~1) + 1)
+    mu.hook_add(UC_HOOK_CODE, hook, begin=0x435613B0, end=0x435613B1)
     mu.reg_write(UC_ARM_REG_SP, stack)
     mu.reg_write(UC_ARM_REG_R5, obj)
     mu.reg_write(UC_ARM_REG_LR, end | 1)
-    mu.emu_start(entradas()[k] | 1, end, count=200000)
-    if cuenta is not None:
-        cuenta[0] = struct.unpack("<I", mu.mem_read(cnt, 4))[0]
-    emular.mem = bytes(mu.mem_read(heap, TAM))
-    return mu.reg_read(UC_ARM_REG_R3 if k == 0 else UC_ARM_REG_R1)
+    mu.emu_start(entradas()[k] | 1, end, count=500000)
+    r = mu.reg_read(UC_ARM_REG_R3 if k == 0 else UC_ARM_REG_R1)
+    return r, (bytes(mu.mem_read(r, TAM)) if r != orig else None), est
 
 
 if __name__ == "__main__":
+    import lut_sd_userland as U
     img = C.BIN.read_bytes()
     p = apply_bytes(img)
     fin = max(a + len(b) for a, b in cueva_maquina()[1])
     print("código", [hex(e) for e in entradas()], "curva", hex(TT.cueva((fin + 3) & ~3)[1]),
           "diff", sum(a != b for a, b in zip(img, p)), "B")
+    blob = bytes(U.BK_TAM)                                                   # sin tabla válida: siempre el puntero de fábrica
     for k in (0, 1):
-        print(k, [hex(emular(p, k, o)) for o in range(5)])
+        print(k, [hex(emular(p, k, o, blob)[0]) for o in range(5)])

@@ -1,0 +1,38 @@
+=== 438d0172..438d01d6
+438d0172    321 1b6f       ldr      r3, [r3, #0x70]                            | cfw 1b6f       ldr      r3, [r3, #0x70]
+438d0174    321 abb9       cbnz     r3, #0x438d01a2                            | cfw abb9       cbnz     r3, #0x438d01a2
+438d0176    321 2046       mov      r0, r4                                     | cfw 2046       mov      r0, r4
+438d0178    321 17f266fa   bl       #0x43ae7648  ; ->43ae7648                  | cfw 17f266fa   bl       #0x43ae7648  ; ->43ae7648
+438d017c    321 0128       cmp      r0, #1                                     | cfw 0128       cmp      r0, #1
+438d017e    321 10d0       beq      #0x438d01a2                                | cfw 10d0       beq      #0x438d01a2
+438d0180    321 d4f8d831   ldr.w    r3, [r4, #0x1d8]                           | cfw d4f8d831   ldr.w    r3, [r4, #0x1d8]
+438d0184    321 1bb1       cbz      r3, #0x438d018e                            | cfw 1bb1       cbz      r3, #0x438d018e
+438d0186    321 d4f8e031   ldr.w    r3, [r4, #0x1e0]                           | cfw d4f8e031   ldr.w    r3, [r4, #0x1e0]
+438d018a    321 172b       cmp      r3, #0x17                                  | cfw 172b       cmp      r3, #0x17
+438d018c    321 09d1       bne      #0x438d01a2                                | cfw 09d1       bne      #0x438d01a2
+438d018e    321 04f59443   add.w    r3, r4, #0x4a00                            | cfw 04f59443   add.w    r3, r4, #0x4a00
+438d0192    321 d3f8d830   ldr.w    r3, [r3, #0xd8]                            | cfw d3f8d830   ldr.w    r3, [r3, #0xd8]
+438d0196    321 93f84d20   ldrb.w   r2, [r3, #0x4d]                            | cfw 93f84d20   ldrb.w   r2, [r3, #0x4d]
+438d019a    321 42f00202   orr      r2, r2, #2                                 | cfw 42f00202   orr      r2, r2, #2
+438d019e    321 83f84d20   strb.w   r2, [r3, #0x4d]                            | cfw 83f84d20   strb.w   r2, [r3, #0x4d]
+438d01a2  * 321 26b9       cbnz     r6, #0x438d01ae                            | cfw 16b9       cbnz     r6, #0x438d01aa
+438d01a4    321 0123       movs     r3, #1                                     | cfw 0123       movs     r3, #1
+438d01a6    321 84f86837   strb.w   r3, [r4, #0x768]                           | cfw 84f86837   strb.w   r3, [r4, #0x768]
+438d01aa  * 321 3346       mov      r3, r6                                     | cfw 044a       ldr      r2, [pc, #0x10]
+438d01ac  * 321 0ce0       b        #0x438d01c8  ; ->438d01c8                  | cfw d2f81032   ldr.w    r3, [r2, #0x210]
+438d01ae  * 321 04f59643   add.w    r3, r4, #0x4b00                            | cfw 
+438d01b0  * 321                                                                | cfw d2f83822   ldr.w    r2, [r2, #0x238]
+438d01b2  * 321 9b6e       ldr      r3, [r3, #0x68]                            | cfw 
+438d01b4  * 321 23b1       cbz      r3, #0x438d01c0                            | cfw 1346       mov      r3, r2
+438d01b6  * 321 d4f8d821   ldr.w    r2, [r4, #0x1d8]                           | cfw 3eb1       cbz      r6, #0x438d01c8
+438d01b8  * 321                                                                | cfw 03e0       b        #0x438d01c2  ; ->438d01c2
+438d01ba  * 321 9b1a       subs     r3, r3, r2                                 | cfw 00bf       nop      
+438d01bc  * 321 dbb2       uxtb     r3, r3                                     | cfw 
+438d01be  * 321 00e0       b        #0x438d01c2  ; ->438d01c2                  | cfw 
+438d01c0  * 321 ff23       movs     r3, #0xff                                  | cfw 
+438d01c2  * 321 0022       movs     r2, #0                                     | cfw 
+438d01c4  * 321 84f86827   strb.w   r2, [r4, #0x768]                           | cfw 
+438d01c8  * 321 04f59445   add.w    r5, r4, #0x4a00                            | cfw 
+438d01cc  * 321 d5f8d820   ldr.w    r2, [r5, #0xd8]                            | cfw 
+438d01d0  * 321 116a       ldr      r1, [r2, #0x20]                            | cfw 
+438d01d2  * 321 0978       ldrb     r1, [r1]                                   | cfw 

@@ -1,0 +1,52 @@
+002aae24: 2de9f047   push.w   {r4, r5, r6, r7, r8, sb, sl, lr}
+002aae28: 82b0       sub      sp, #8                        
+002aae2a: 284c       ldr      r4, [pc, #0xa0]                 ; [002aaecc]=009e5588
+002aae2c: 00af       add      r7, sp, #0                    
+002aae2e: a046       mov      r8, r4                        
+002aae30: 2068       ldr      r0, [r4]                      
+002aae32: 94f7a2ff   bl       #0x23fd7a                     
+002aae36: 0546       mov      r5, r0                        
+002aae38: 0028       cmp      r0, #0                        
+002aae3a: 39d0       beq      #0x2aaeb0                     
+002aae3c: 0026       movs     r6, #0                        
+002aae3e: 0124       movs     r4, #1                        
+002aae40: 1be0       b        #0x2aae7a                     
+002aae42: 2348       ldr      r0, [pc, #0x8c]                 ; [002aaed0]=007dfa7b "[DFB]IsFlashAllCleared FlashRead failed."
+002aae44: 4946       mov      r1, sb                        
+002aae46: 7a68       ldr      r2, [r7, #4]                  
+002aae48: 0024       movs     r4, #0                        
+002aae4a: 00f035fa   bl       #0x2ab2b8                     
+002aae4e: 13e0       b        #0x2aae78                     
+002aae50: 2048       ldr      r0, [pc, #0x80]                 ; [002aaed4]=007dfabb "[DFB]IsFlashAllCleared compaire failed.b"
+002aae52: 3146       mov      r1, r6                        
+002aae54: 4a46       mov      r2, sb                        
+002aae56: 0024       movs     r4, #0                        
+002aae58: 00f02efa   bl       #0x2ab2b8                     
+002aae5c: 09f10109   add.w    sb, sb, #1                    
+002aae60: d8f80030   ldr.w    r3, [r8]                      
+002aae64: b9eb930f   cmp.w    sb, r3, lsr #2                
+002aae68: 06d2       bhs      #0x2aae78                     
+002aae6a: 2cb1       cbz      r4, #0x2aae78                 
+002aae6c: 5af8043b   ldr      r3, [sl], #4                  
+002aae70: b3f1ff3f   cmp.w    r3, #-1                       
+002aae74: ecd1       bne      #0x2aae50                     
+002aae76: f1e7       b        #0x2aae5c                     
+002aae78: 0136       adds     r6, #1                        
+002aae7a: 174b       ldr      r3, [pc, #0x5c]                 ; [002aaed8]=009e5580
+002aae7c: 1a68       ldr      r2, [r3]                      
+002aae7e: 174b       ldr      r3, [pc, #0x5c]                 ; [002aaedc]=009e4a88
+002aae80: 1b68       ldr      r3, [r3]                      
+002aae82: d318       adds     r3, r2, r3                    
+002aae84: 9e42       cmp      r6, r3                        
+002aae86: 0ed2       bhs      #0x2aaea6                     
+002aae88: 6cb1       cbz      r4, #0x2aaea6                 
+002aae8a: d8f80020   ldr.w    r2, [r8]                      
+002aae8e: 2946       mov      r1, r5                        
+002aae90: 3b1d       adds     r3, r7, #4                    
+002aae92: 02fb06f9   mul      sb, r2, r6                    
+002aae96: 4846       mov      r0, sb                        
+002aae98: f9f748fb   bl       #0x2a452c                     
+002aae9c: 0028       cmp      r0, #0                        
+002aae9e: d0d1       bne      #0x2aae42                     
+002aaea0: aa46       mov      sl, r5                        
+002aaea2: 8146       mov      sb, r0                        

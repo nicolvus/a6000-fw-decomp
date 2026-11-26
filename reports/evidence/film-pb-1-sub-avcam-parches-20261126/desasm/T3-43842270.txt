@@ -1,0 +1,44 @@
+=== 43842240..438422a4
+43842240    321 03d1       bne      #0x4384224a                                | cfw 03d1       bne      #0x4384224a
+43842242    321 514a       ldr      r2, [pc, #0x144]                           | cfw 514a       ldr      r2, [pc, #0x144]
+43842244    321 0621       movs     r1, #6                                     | cfw 0621       movs     r1, #6
+43842246    321 7a44       add      r2, pc                                     | cfw 7a44       add      r2, pc
+43842248    321 08e0       b        #0x4384225c  ; ->4384225c                  | cfw 08e0       b        #0x4384225c  ; ->4384225c
+4384224a    321 082a       cmp      r2, #8                                     | cfw 082a       cmp      r2, #8
+4384224c    321 03d1       bne      #0x43842256                                | cfw 03d1       bne      #0x43842256
+4384224e    321 4f4a       ldr      r2, [pc, #0x13c]                           | cfw 4f4a       ldr      r2, [pc, #0x13c]
+43842250    321 0721       movs     r1, #7                                     | cfw 0721       movs     r1, #7
+43842252    321 7a44       add      r2, pc                                     | cfw 7a44       add      r2, pc
+43842254    321 02e0       b        #0x4384225c  ; ->4384225c                  | cfw 02e0       b        #0x4384225c  ; ->4384225c
+43842256    321 4e4a       ldr      r2, [pc, #0x138]                           | cfw 4e4a       ldr      r2, [pc, #0x138]
+43842258    321 7a44       add      r2, pc                                     | cfw 7a44       add      r2, pc
+4384225a    321 0121       movs     r1, #1                                     | cfw 0121       movs     r1, #1
+4384225c    321 1166       str      r1, [r2, #0x60]                            | cfw 1166       str      r1, [r2, #0x60]
+4384225e    321 9878       ldrb     r0, [r3, #2]                               | cfw 9878       ldrb     r0, [r3, #2]
+43842260    321 0128       cmp      r0, #1                                     | cfw 0128       cmp      r0, #1
+43842262    321 02d1       bne      #0x4384226a                                | cfw 02d1       bne      #0x4384226a
+43842264    321 97f88c33   ldrb.w   r3, [r7, #0x38c]                           | cfw 97f88c33   ldrb.w   r3, [r7, #0x38c]
+43842268    321 03b1       cbz      r3, #0x4384226c                            | cfw 03b1       cbz      r3, #0x4384226c
+4384226a    321 0020       movs     r0, #0                                     | cfw 0020       movs     r0, #0
+4384226c    321 fff71efc   bl       #0x43841aac  ; ->43841aac                  | cfw fff71efc   bl       #0x43841aac  ; ->43841aac
+43842270  * 321 d7f81c24   ldr.w    r2, [r7, #0x41c]                           | cfw 97f81c24   ldrb.w   r2, [r7, #0x41c]
+43842274    321 012a       cmp      r2, #1                                     | cfw 012a       cmp      r2, #1
+43842276    321 02d1       bne      #0x4384227e                                | cfw 02d1       bne      #0x4384227e
+43842278    321 464b       ldr      r3, [pc, #0x118]                           | cfw 464b       ldr      r3, [pc, #0x118]
+4384227a    321 7b44       add      r3, pc                                     | cfw 7b44       add      r3, pc
+4384227c    321 08e0       b        #0x43842290  ; ->43842290                  | cfw 08e0       b        #0x43842290  ; ->43842290
+4384227e    321 464b       ldr      r3, [pc, #0x118]                           | cfw 464b       ldr      r3, [pc, #0x118]
+43842280    321 0022       movs     r2, #0                                     | cfw 0022       movs     r2, #0
+43842282    321 7b44       add      r3, pc                                     | cfw 7b44       add      r3, pc
+43842284    321 83f86420   strb.w   r2, [r3, #0x64]                            | cfw 83f86420   strb.w   r2, [r3, #0x64]
+43842288    321 98f80f21   ldrb.w   r2, [r8, #0x10f]                           | cfw 98f80f21   ldrb.w   r2, [r8, #0x10f]
+4384228c    321 012a       cmp      r2, #1                                     | cfw 012a       cmp      r2, #1
+4384228e    321 01d1       bne      #0x43842294                                | cfw 01d1       bne      #0x43842294
+43842290    321 83f86420   strb.w   r2, [r3, #0x64]                            | cfw 83f86420   strb.w   r2, [r3, #0x64]
+43842294    321 98f8f920   ldrb.w   r2, [r8, #0xf9]                            | cfw 98f8f920   ldrb.w   r2, [r8, #0xf9]
+43842298    321 012a       cmp      r2, #1                                     | cfw 012a       cmp      r2, #1
+4384229a    321 0ad1       bne      #0x438422b2                                | cfw 0ad1       bne      #0x438422b2
+4384229c    321 3f4b       ldr      r3, [pc, #0xfc]                            | cfw 3f4b       ldr      r3, [pc, #0xfc]
+4384229e    321 7b44       add      r3, pc                                     | cfw 7b44       add      r3, pc
+438422a0    321 196e       ldr      r1, [r3, #0x60]                            | cfw 196e       ldr      r1, [r3, #0x60]
+438422a2    321 0329       cmp      r1, #3                                     | cfw 0329       cmp      r1, #3

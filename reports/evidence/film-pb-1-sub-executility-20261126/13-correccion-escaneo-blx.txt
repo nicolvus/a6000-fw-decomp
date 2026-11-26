@@ -1,0 +1,26 @@
+BUG del escaneo previo (y de /tmp/tools/elftool.py calls()): para BLX inmediato
+el destino es Align(PC,4)+imm; al no enmascarar los dos bits bajos, todo
+'blx <stub PLT>' quedaba invisible. Toda llamada que va por PLT con BLX
+desaparecia del recuento de llamantes. Tabla corregida (con mascara &~3):
+
+### a6000 fw3.21
+  _ZN8FlashLib4Init...                          directo=[]  via_PLT=["stub 0x11dfe8 <- [('0x7126e2', 'bl')]"]
+  _ZN8FlashLib12WarmBootInit...                 directo=[]  via_PLT=["stub 0x11e70c <- [('0x2b4ab0', 'bl'), ('0x2b6894', 'bl')]"]
+  _ZN8FlashLib6Resume...                        directo=[]  via_PLT=["stub 0x11e334 <- [('0x664382', 'bl')]"]
+  _ZN5MprIf14...                                directo=[]  via_PLT=["stub 0x11f134 <- [('0x72de24', 'bl')]"]
+  _ZN5MprIf6Create...                           directo=[]  via_PLT=["stub 0x11e460 <- [('0x727f4c', 'bl')]"]
+
+### a6300 fw2.01
+  _ZN8FlashLib4Init...                          directo=[('0x7897d6', 'bl')]  via_PLT=sin .rel.plt
+  _ZN8FlashLib12WarmBootInit...                 directo=[('0x2ce42c', 'bl'), ('0x2e05fc', 'bl')]  via_PLT=sin .rel.plt
+  _ZN8FlashLib6Resume...                        directo=[('0x6cb98e', 'bl')]  via_PLT=sin .rel.plt
+  _ZN5MprIf14...                                directo=[('0x79d05c', 'bl')]  via_PLT=sin .rel.plt
+  _ZN5MprIf6Create...                           directo=[('0x7a791c', 'bl')]  via_PLT=sin .rel.plt
+
+### a7s fw3.20
+  _ZN8FlashLib4Init...                          directo=[]  via_PLT=["stub 0x11dff0 <- [('0x712786', 'bl')]"]
+  _ZN8FlashLib12WarmBootInit...                 directo=[]  via_PLT=["stub 0x11e714 <- [('0x2a3f28', 'bl'), ('0x2b6088', 'bl')]"]
+  _ZN8FlashLib6Resume...                        directo=[]  via_PLT=["stub 0x11e33c <- [('0x6630b2', 'bl')]"]
+  _ZN5MprIf14...                                directo=[]  via_PLT=["stub 0x11f13c <- [('0x724230', 'bl')]"]
+  _ZN5MprIf6Create...                           directo=[]  via_PLT=["stub 0x11e468 <- [('0x72ce30', 'bl')]"]
+

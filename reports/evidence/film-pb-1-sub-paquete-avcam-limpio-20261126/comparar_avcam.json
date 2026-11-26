@@ -1,0 +1,164 @@
+{
+ "binarios": {
+  "fabrica_321": {
+   "bytes": 11427236,
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+  },
+  "base338": {
+   "bytes": 11427236,
+   "sha256": "2e9a56a5cbcccbd26a08a4c153b5c1378fd19d770b6d3c30b2dc03bbb70f782e"
+  },
+  "instalado_393": {
+   "bytes": 11427236,
+   "sha256": "be11ee6f2dc7181b445fcb817dcda871933b4eb5d29194d38696526feb842fb0"
+  },
+  "limpio_394": {
+   "bytes": 11427236,
+   "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+  }
+ },
+ "diferencias": {
+  "fabrica_321_vs_base338": {
+   "bytes": 40,
+   "tramos_contiguos": 4,
+   "tramos_con_hueco_16B": 2,
+   "mayores": [
+    {
+     "inicio": "0x0038f1aa",
+     "fin": "0x0038f1c2",
+     "bytes": 24
+    },
+    {
+     "inicio": "0x00300480",
+     "fin": "0x00300488",
+     "bytes": 8
+    },
+    {
+     "inicio": "0x00300472",
+     "fin": "0x00300476",
+     "bytes": 4
+    },
+    {
+     "inicio": "0x00300478",
+     "fin": "0x0030047c",
+     "bytes": 4
+    }
+   ]
+  },
+  "base338_vs_instalado_393": {
+   "bytes": 33992,
+   "tramos_contiguos": 659,
+   "tramos_con_hueco_16B": 33,
+   "mayores": [
+    {
+     "inicio": "0x00a7457b",
+     "fin": "0x00a753c1",
+     "bytes": 3654
+    },
+    {
+     "inicio": "0x00a727a3",
+     "fin": "0x00a73381",
+     "bytes": 3038
+    },
+    {
+     "inicio": "0x00a71839",
+     "fin": "0x00a72361",
+     "bytes": 2856
+    },
+    {
+     "inicio": "0x00a6f889",
+     "fin": "0x00a70321",
+     "bytes": 2712
+    },
+    {
+     "inicio": "0x00a75519",
+     "fin": "0x00a75f94",
+     "bytes": 2683
+    },
+    {
+     "inicio": "0x00a73a07",
+     "fin": "0x00a743a1",
+     "bytes": 2458
+    },
+    {
+     "inicio": "0x00a70a8b",
+     "fin": "0x00a71341",
+     "bytes": 2230
+    },
+    {
+     "inicio": "0x00a734ed",
+     "fin": "0x00a739fe",
+     "bytes": 1297
+    }
+   ]
+  },
+  "fabrica_321_vs_instalado_393": {
+   "bytes": 34013,
+   "tramos_contiguos": 659,
+   "tramos_con_hueco_16B": 33,
+   "mayores": [
+    {
+     "inicio": "0x00a7457b",
+     "fin": "0x00a753c1",
+     "bytes": 3654
+    },
+    {
+     "inicio": "0x00a727a3",
+     "fin": "0x00a73381",
+     "bytes": 3038
+    },
+    {
+     "inicio": "0x00a71839",
+     "fin": "0x00a72361",
+     "bytes": 2856
+    },
+    {
+     "inicio": "0x00a6f889",
+     "fin": "0x00a70321",
+     "bytes": 2712
+    },
+    {
+     "inicio": "0x00a75519",
+     "fin": "0x00a75f94",
+     "bytes": 2683
+    },
+    {
+     "inicio": "0x00a73a07",
+     "fin": "0x00a743a1",
+     "bytes": 2458
+    },
+    {
+     "inicio": "0x00a70a8b",
+     "fin": "0x00a71341",
+     "bytes": 2230
+    },
+    {
+     "inicio": "0x00a734ed",
+     "fin": "0x00a739fe",
+     "bytes": 1297
+    }
+   ]
+  },
+  "fabrica_321_vs_limpio_394": {
+   "bytes": 0,
+   "tramos_contiguos": 0,
+   "tramos_con_hueco_16B": 0,
+   "mayores": []
+  }
+ },
+ "atribucion": {
+  "A_parches_3_38": 40,
+  "B_anadidos_del_paquete_393": 33992,
+  "A_unido_B": 34013,
+  "A_interseccion_B": 19,
+  "instalado_vs_fabrica": 34013,
+  "tramos_A_con_hueco_16B": 2,
+  "tramos_B_con_hueco_16B": 33
+ },
+ "limpio_394": {
+  "bytes_distintos_del_avcam_de_fabrica": 0,
+  "es_el_de_fabrica": true,
+  "deshace_A": true,
+  "avcam_sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9"
+ }
+}

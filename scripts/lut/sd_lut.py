@@ -1,5 +1,5 @@
 """G88 — LUTs propios desde ficheros `.cube` (cualquier tamaño: 17/32/33/64…): convierte a las 3 tablas del ISP (5×9×9) y pone sus nombres en la opción «LUT».
-Ruta PC (la cámara NO lee la SD: g88 §1). Uso: `sd_lut.py CARPETA_CUBE [--medir]` imprime nombres y ΔE; `build_fn_lut.py --cubes CARPETA` los integra en el build.
+Ruta PC de los `.cube` (la cámara los lee del userland de la SD desde G89; el build ya no empotra tablas, G116). Uso: `sd_lut.py CARPETA_CUBE [--medir]` imprime nombres y ΔE.
 """
 import dataclasses
 import hashlib

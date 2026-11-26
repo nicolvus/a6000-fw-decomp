@@ -1,0 +1,119 @@
+002b39b8: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+002b39bc: 85b0       sub      sp, #0x14                     
+002b39be: 00af       add      r7, sp, #0                    
+002b39c0: 9846       mov      r8, r3                        
+002b39c2: 0546       mov      r5, r0                        
+002b39c4: 7b6b       ldr      r3, [r7, #0x34]               
+002b39c6: 0c46       mov      r4, r1                        
+002b39c8: 2048       ldr      r0, [pc, #0x80]                 ; [002b3a4c]=007e7690 "ReadFirstPackData"
+002b39ca: 1646       mov      r6, r2                        
+002b39cc: 7b60       str      r3, [r7, #4]                  
+002b39ce: fef74bfa   bl       #0x2b1e68                     
+002b39d2: 2146       mov      r1, r4                        
+002b39d4: 07f10f02   add.w    r2, r7, #0xf                  
+002b39d8: 2846       mov      r0, r5                        
+002b39da: fff7b5fa   bl       #0x2b2f48                     
+002b39de: fa7b       ldrb     r2, [r7, #0xf]                
+002b39e0: 1421       movs     r1, #0x14                     
+002b39e2: 5143       muls     r1, r2, r1                    
+002b39e4: 7b68       ldr      r3, [r7, #4]                  
+002b39e6: 8146       mov      sb, r0                        
+002b39e8: 1948       ldr      r0, [pc, #0x64]                 ; [002b3a50]=00a3699c
+002b39ea: 4218       adds     r2, r0, r1                    
+002b39ec: 5268       ldr      r2, [r2, #4]                  
+002b39ee: dab1       cbz      r2, #0x2b3a28                 
+002b39f0: b9f1000f   cmp.w    sb, #0                        
+002b39f4: 1ad1       bne      #0x2b3a2c                     
+002b39f6: 415a       ldrh     r1, [r0, r1]                  
+002b39f8: 1846       mov      r0, r3                        
+002b39fa: 83f82490   strb.w   sb, [r3, #0x24]               
+002b39fe: 5a60       str      r2, [r3, #4]                  
+002b3a00: 4246       mov      r2, r8                        
+002b3a02: 1980       strh     r1, [r3]                      
+002b3a04: 3146       mov      r1, r6                        
+002b3a06: c3f81090   str.w    sb, [r3, #0x10]               
+002b3a0a: c3f81890   str.w    sb, [r3, #0x18]               
+002b3a0e: c3f81490   str.w    sb, [r3, #0x14]               
+002b3a12: c3f81c90   str.w    sb, [r3, #0x1c]               
+002b3a16: a3f82090   strh.w   sb, [r3, #0x20]               
+002b3a1a: 9d60       str      r5, [r3, #8]                  
+002b3a1c: dc60       str      r4, [r3, #0xc]                
+002b3a1e: 3b6b       ldr      r3, [r7, #0x30]               
+002b3a20: fff792ff   bl       #0x2b3948                     
+002b3a24: 8146       mov      sb, r0                        
+002b3a26: 06e0       b        #0x2b3a36                     
+002b3a28: dff82890   ldr.w    sb, [pc, #0x28]                 ; [002b3a54]=10100001
+002b3a2c: 9d60       str      r5, [r3, #8]                  
+002b3a2e: 1846       mov      r0, r3                        
+002b3a30: dc60       str      r4, [r3, #0xc]                
+002b3a32: fff73fff   bl       #0x2b38b4                     
+002b3a36: 0548       ldr      r0, [pc, #0x14]                 ; [002b3a4c]=007e7690 "ReadFirstPackData"
+002b3a38: 4946       mov      r1, sb                        
+002b3a3a: fef78dfa   bl       #0x2b1f58                     
+002b3a3e: 4846       mov      r0, sb                        
+002b3a40: 07f11407   add.w    r7, r7, #0x14                 
+002b3a44: bd46       mov      sp, r7                        
+002b3a46: bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}  
+002b3a4a: 00bf       nop                                    
+002b3a4c: 9076       strb     r0, [r2, #0x1a]               
+002b3a4e: 7e00       lsls     r6, r7, #1                    
+002b3a50: 9c69       ldr      r4, [r3, #0x18]               
+002b3a52: a300       lsls     r3, r4, #2                    
+002b3a54: 0100       movs     r1, r0                        
+002b3a56: 1010       asrs     r0, r2, #0x20                 
+002b3a58: b0b5       push     {r4, r5, r7, lr}              
+002b3a5a: 82b0       sub      sp, #8                        
+002b3a5c: 02af       add      r7, sp, #8                    
+002b3a5e: 418c       ldrh     r1, [r0, #0x22]               
+002b3a60: 0129       cmp      r1, #1                        
+002b3a62: 1dd8       bhi      #0x2b3aa0                     
+002b3a64: 104d       ldr      r5, [pc, #0x40]                 ; [002b3aa8]=00a36c20
+002b3a66: 05ebc103   add.w    r3, r5, r1, lsl #3            
+002b3a6a: 5c68       ldr      r4, [r3, #4]                  
+002b3a6c: 8442       cmp      r4, r0                        
+002b3a6e: 17d1       bne      #0x2b3aa0                     
+002b3a70: e368       ldr      r3, [r4, #0xc]                
+002b3a72: 0e48       ldr      r0, [pc, #0x38]                 ; [002b3aac]=007e76a2 "[FBM]<RWB>FreeRWBuffer free bufferIndex["
+002b3a74: 0093       str      r3, [sp]                      
+002b3a76: a368       ldr      r3, [r4, #8]                  
+002b3a78: 6268       ldr      r2, [r4, #4]                  
+002b3a7a: 01f0ebfa   bl       #0x2b5054                     
+002b3a7e: 0c48       ldr      r0, [pc, #0x30]                 ; [002b3ab0]=007e76f1 "     <RWB>handleAdrs[0x%x]"
+002b3a80: 2146       mov      r1, r4                        
+002b3a82: 01f0e7fa   bl       #0x2b5054                     
+002b3a86: 638c       ldrh     r3, [r4, #0x22]               
+002b3a88: 0121       movs     r1, #1                        
+002b3a8a: 05ebc305   add.w    r5, r5, r3, lsl #3            
+002b3a8e: 0023       movs     r3, #0                        
+002b3a90: 6b60       str      r3, [r5, #4]                  
+002b3a92: 4ff0ff33   mov.w    r3, #-1                       
+002b3a96: 6384       strh     r3, [r4, #0x22]               
+002b3a98: 064b       ldr      r3, [pc, #0x18]                 ; [002b3ab4]=00a3697c
+002b3a9a: 1868       ldr      r0, [r3]                      
+002b3a9c: 4af3f2f8   bl       #0x5fdc84                     
+002b3aa0: 0020       movs     r0, #0                        
+002b3aa2: bd46       mov      sp, r7                        
+002b3aa4: b0bd       pop      {r4, r5, r7, pc}              
+002b3aa6: 00bf       nop                                    
+002b3aa8: 206c       ldr      r0, [r4, #0x40]               
+002b3aaa: a300       lsls     r3, r4, #2                    
+002b3aac: a276       strb     r2, [r4, #0x1a]               
+002b3aae: 7e00       lsls     r6, r7, #1                    
+002b3ab0: f176       strb     r1, [r6, #0x1b]               
+002b3ab2: 7e00       lsls     r6, r7, #1                    
+002b3ab4: 7c69       ldr      r4, [r7, #0x14]               
+002b3ab6: a300       lsls     r3, r4, #2                    
+002b3ab8: f0b5       push     {r4, r5, r6, r7, lr}          
+002b3aba: 0023       movs     r3, #0                        
+002b3abc: 95b0       sub      sp, #0x54                     
+002b3abe: 1946       mov      r1, r3                        
+002b3ac0: 04af       add      r7, sp, #0x10                 
+002b3ac2: 264a       ldr      r2, [pc, #0x98]                 ; [002b3b5c]=00a3699c
+002b3ac4: d458       ldr      r4, [r2, r3]                  
+002b3ac6: 8442       cmp      r4, r0                        
+002b3ac8: 09d1       bne      #0x2b3ade                     
+002b3aca: 1423       movs     r3, #0x14                     
+002b3acc: 2448       ldr      r0, [pc, #0x90]                 ; [002b3b60]=007e770c "  Detect! index:%d handle:0x%x"
+002b3ace: 03fb0122   mla      r2, r3, r1, r2                
+002b3ad2: 5568       ldr      r5, [r2, #4]                  
+002b3ad4: 2a46       mov      r2, r5                        

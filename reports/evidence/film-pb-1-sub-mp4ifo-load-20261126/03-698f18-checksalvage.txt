@@ -1,0 +1,58 @@
+# 03 — mp4Ifo_General::CheckSalvageStatus (0x698F18). Emite 0x536, 0x53C (=1340) y 0x547.
+00698f18  f8b5       push     {r3, r4, r5, r6, r7, lr}       ; .text      
+00698f1a  0546       mov      r5, r0                         ; .text      
+00698f1c  0e46       mov      r6, r1                         ; .text      
+00698f1e  00af       add      r7, sp, #0                     ; .text      
+00698f20  fcf740fb   bl       #0x6955a4                      ; .text      
+00698f24  1d48       ldr      r0, [pc, #0x74]                ; .text      [00698f9c]=00914f40 " mp4Ifo_General::CheckSalvageStatus IN"
+00698f26  fcf7e1fa   bl       #0x6954ec                      ; .text      
+00698f2a  0023       movs     r3, #0                         ; .text      
+00698f2c  3370       strb     r3, [r6]                       ; .text      
+00698f2e  95f82330   ldrb.w   r3, [r5, #0x23]                ; .text      
+00698f32  3bb1       cbz      r3, #0x698f44                  ; .text      
+00698f34  1a48       ldr      r0, [pc, #0x68]                ; .text      [00698fa0]=0091443d "IF/mp4Ifo_General.cpp"
+00698f36  40f23651   movw     r1, #0x536                     ; .text      
+00698f3a  1a4a       ldr      r2, [pc, #0x68]                ; .text      [00698fa4]=b0100006
+00698f3c  57f08afd   bl       #0x6f0a54                      ; .text      
+00698f40  184c       ldr      r4, [pc, #0x60]                ; .text      [00698fa4]=b0100006
+00698f42  18e0       b        #0x698f76                      ; .text      
+00698f44  2846       mov      r0, r5                         ; .text      
+00698f46  fff7bfff   bl       #0x698ec8                      ; .text      
+00698f4a  40f23c51   movw     r1, #0x53c                     ; .text      
+00698f4e  0446       mov      r4, r0                         ; .text      
+00698f50  1348       ldr      r0, [pc, #0x4c]                ; .text      [00698fa0]=0091443d "IF/mp4Ifo_General.cpp"
+00698f52  2246       mov      r2, r4                         ; .text      
+00698f54  57f07efd   bl       #0x6f0a54                      ; .text      
+00698f58  6cb9       cbnz     r4, #0x698f76                  ; .text      
+00698f5a  2846       mov      r0, r5                         ; .text      
+00698f5c  fff7effd   bl       #0x698b3e                      ; .text      
+00698f60  3070       strb     r0, [r6]                       ; .text      
+00698f62  2846       mov      r0, r5                         ; .text      
+00698f64  fef704ff   bl       #0x697d70                      ; .text      
+00698f68  40f24751   movw     r1, #0x547                     ; .text      
+00698f6c  0446       mov      r4, r0                         ; .text      
+00698f6e  0c48       ldr      r0, [pc, #0x30]                ; .text      [00698fa0]=0091443d "IF/mp4Ifo_General.cpp"
+00698f70  2246       mov      r2, r4                         ; .text      
+00698f72  57f06ffd   bl       #0x6f0a54                      ; .text      
+00698f76  fcf715fb   bl       #0x6955a4                      ; .text      
+00698f7a  0b48       ldr      r0, [pc, #0x2c]                ; .text      [00698fa8]=00914f67 " mp4Ifo_General::CheckSalvageStatus OUT"
+00698f7c  fcf7b6fa   bl       #0x6954ec                      ; .text      
+00698f80  fcf710fb   bl       #0x6955a4                      ; .text      
+00698f84  0948       ldr      r0, [pc, #0x24]                ; .text      [00698fac]=00914f8f " *pbIsNeedSalvage   : "
+00698f86  fcf753fa   bl       #0x695430                      ; .text      
+00698f8a  3378       ldrb     r3, [r6]                       ; .text      
+00698f8c  0bb1       cbz      r3, #0x698f92                  ; .text      
+00698f8e  0848       ldr      r0, [pc, #0x20]                ; .text      [00698fb0]=0094b097 "true"
+00698f90  00e0       b        #0x698f94                      ; .text      
+00698f92  0848       ldr      r0, [pc, #0x20]                ; .text      [00698fb4]=00917f78 "false"
+00698f94  fcf7aafa   bl       #0x6954ec                      ; .text      
+00698f98  2046       mov      r0, r4                         ; .text      
+00698f9a  f8bd       pop      {r3, r4, r5, r6, r7, pc}       ; .text      
+
+# pool 0x698FA0..0x698FB8
+00698fa0  0091443d
+00698fa4  b0100006
+00698fa8  00914f67
+00698fac  00914f8f
+00698fb0  0094b097
+00698fb4  00917f78

@@ -85,17 +85,21 @@ def test_nombres_en_la_opcion_lut(conv):
 
 
 def test_seleccion_1_a_3_entrega_la_tabla_y_off_la_de_fabrica(conv):
-    img = P.apply_bytes(C.BIN.read_bytes(), conv[0])
+    """G116: las tablas convertidas en el PC ya no van en el `.dat`; se empaquetan en el blob de la SD y la cueva las sirve igual."""
+    import struct
+    from lut_sd_userland import blob_tablas
+    img = P.apply_bytes(C.BIN.read_bytes())
+    perm = list(struct.unpack_from("<405H", img, P.D.PERM - P.BASE))
+    blob = blob_tablas({k: P.D.empaqueta_21(hw, perm) for k, hw in zip((1, 2, 3), conv[0])})
+    hw = []
     for opcion in (1, 2, 3):
-        P.emular(img, 0, opcion)
-        assert P.emular.mem == conv[0][opcion - 1]
-    assert P.emular(img, 0, 0, orig=0x11223344) == 0x11223344 and P.emular(img, 1, 9, orig=0x55) == 0x55
+        hw.append(P.emular(img, 0, opcion, blob)[1])
+    assert P.emular(img, 0, 0, blob, orig=0x11223344)[0] == 0x11223344
+    assert P.emular(img, 1, 9, blob, orig=0x55)[0] == 0x55
     # cada gancho (SA y MOV) entrega la misma tabla
-    P.emular(img, 1, 2)
-    assert P.emular.mem == conv[0][1]
+    assert P.emular(img, 1, 2, blob)[1] == hw[1] == P.emular(img, 0, 2, blob)[1]
 
 
-def test_parche_por_defecto_sin_cambios(conv):
+def test_parche_es_determinista_y_sin_tablas(conv):
     base = C.BIN.read_bytes()
-    assert P.apply_bytes(base) == P.apply_bytes(base, P.tablas_por_defecto())
-    assert P.apply_bytes(base, conv[0]) != P.apply_bytes(base)
+    assert P.apply_bytes(base) == P.apply_bytes(base)

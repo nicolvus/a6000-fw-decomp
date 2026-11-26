@@ -1,0 +1,55 @@
+original : /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+sha256   : 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+gancho   : 007126e6  a2 f7 9b f0 -> 28 f2 8b fc   bl 0x0093b000  (antes: bl 0x002b4820)
+cueva    : 0093b000  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+        -> 0093b000  10 b5 79 f5 0d f4 82 b0 00 20 00 90 01 90 0a 4c 60 68 70 b9 31 20 00 21 6a 46 01 ab 7c f5 30 f0 38 b9 00 99 01 9a 22 60 61 60 01 21 a1 60 06 21 e1 60 02 b0 10 bd 00 00 64 6a a3 00
+original : 007126e6 = bl 0x002b4820 (FBM::Init) · 007126ea = 96 f5 bb f8 (no se toca)
+cueva    : 25 instrucciones verificadas; literal en 0093b038 = 0xa36a64 (&0xA3699C[10])
+vuelta   : pop {r4,pc} usa el lr del bl del gancho -> continua en 007126ea (96 f5 bb f8)
+sitio    : 007126e6 en .text, PT_LOAD R+X off=00000000
+sitio    : 0093b000 en .rodata, PT_LOAD R+X off=00000000
+reloc    : 132021 entradas en .rel*; en los sitios parcheados: NINGUNA
+refs     : ldr/adr pc-relativos que leen la cueva: NINGUNO
+punteros : u32 iguales a una dirección de la cueva: NINGUNO
+           descartados por caer dentro de una instrucción: ['00495390=0x0093b014(.text)']
+diff     : 64 bytes escritos en 2 rangos (007126e6..007126e9, 0093b000..0093b03b); 57 de ellos cambian de valor (7 ya eran 0x00); tamaño 10321204 B sin cambios
+ELF      : cabecera, 5 PT_* y 25 secciones idénticas byte a byte
+desasm   : cueva 0093b000
+   0093b000: 10b5       push     {r4, lr}
+   0093b002: 79f50df4   bl       #0x2b4820
+   0093b006: 82b0       sub      sp, #8
+   0093b008: 0020       movs     r0, #0
+   0093b00a: 0090       str      r0, [sp]
+   0093b00c: 0190       str      r0, [sp, #4]
+   0093b00e: 0a4c       ldr      r4, [pc, #0x28]
+   0093b010: 6068       ldr      r0, [r4, #4]
+   0093b012: 70b9       cbnz     r0, #0x93b032
+   0093b014: 3120       movs     r0, #0x31
+   0093b016: 0021       movs     r1, #0
+   0093b018: 6a46       mov      r2, sp
+   0093b01a: 01ab       add      r3, sp, #4
+   0093b01c: 7cf530f0   bl       #0x2b7080
+   0093b020: 38b9       cbnz     r0, #0x93b032
+   0093b022: 0099       ldr      r1, [sp]
+   0093b024: 019a       ldr      r2, [sp, #4]
+   0093b026: 2260       str      r2, [r4]
+   0093b028: 6160       str      r1, [r4, #4]
+   0093b02a: 0121       movs     r1, #1
+   0093b02c: a160       str      r1, [r4, #8]
+   0093b02e: 0621       movs     r1, #6
+   0093b030: e160       str      r1, [r4, #0xc]
+   0093b032: 02b0       add      sp, #8
+   0093b034: 10bd       pop      {r4, pc}
+   0093b036: 0000       movs     r0, r0
+   0093b038: 646a       ldr      r4, [r4, #0x24]
+   0093b03a: a300       lsls     r3, r4, #2
+desasm   : gancho 0x7126DE..0x7126F2
+   007126de: a069       ldr      r0, [r4, #0x18]
+   007126e0: 504c       ldr      r4, [pc, #0x140]
+   007126e2: 0bf682e4   blx      #0x11dfe8
+   007126e6: 28f28bfc   bl       #0x93b000
+   007126ea: 96f5bbf8   bl       #0x4a8864
+   007126ee: 72f515fa   bl       #0x484b1c
+salida   : /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/build/cfw_fbm_sector31_v2/libmpr.so
+sha256   : 678bb6b8e7b4c3f12dd1cb61b12797fbc16d6738d079059327f603804a334f98
+original intacto: 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30

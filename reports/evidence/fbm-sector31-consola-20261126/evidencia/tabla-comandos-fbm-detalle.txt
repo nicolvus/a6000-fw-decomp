@@ -1,0 +1,179 @@
+#  # nombre     handler     len argc>=  ayuda / traza / destinos
+[00] Destroy    0x2b5ea0   0x300         parsers=['DEC', 'HEX', 'HEX', 'HEX', 'HEX', 'HEX']
+       desc='Flash Backup All Sector Clear'
+       str: '%s %s'
+       str: 'type 2 Destroy(mediaID) > Destroy 2 [mediaID(HEX)]'
+       str: '%s %s %s'
+       str: 'type 3 Destroy(mediaID , operationMode) > Destroy 3 [mediaID(HEX)] [operationMode(HEX)] '
+       str: '%s %s %s %s'
+       str: 'type 4 Destroy(userID , mediaID) > Destroy 4 [userID(HEX)] [mediaID(HEX)]'
+       str: '%s %s %s %s'
+       str: 'Destroy type select failed:%02d'
+       str: 'Destroy need type select'
+       str: 'type 1 Destroy(void) > Destroy 1'
+       str: 'type 2 Destroy(mediaID) > Destroy 2 [mediaID(HEX)]'
+       str: 'type 3 Destroy(mediaID , operationMode) > Destroy 3 [mediaID(HEX)] [operationMode(HEX)] '
+       str: 'type 4 Destroy(userID , mediaID) > Destroy 4 [userID(HEX)] [mediaID(HEX)]'
+       bl: ['0x2b50fc', '0x2b50fc', '0x2b3794', '0x2b50fc', '0x2b50fc', '0x2b50fc', '0x2b361c', '0x2b50fc', '0x2b34d8', '0x2b50fc', '0x2b50fc', '0x2b50fc', '0x2b50fc', '0x2b50fc', '0x2b50fc', '0x1202e2', 'PLT:_ZN8FlashLib9MutexLockEv', 'PLT:__aeabi_uidiv', 'PLT:_ZN8FlashLib11MutexUnLockEv']
+[01] Close      0x2b5e6c    0x34      2  parsers=['DEC']
+       desc='Close Sector'
+       str: '%s %s'
+       str: 'Close [index]'
+       bl: ['0x2b50fc', '0x2b2a6c', '0x2b50fc']
+[02] Delete     0x2b5e38    0x34      2  parsers=['DEC']
+       desc='Delete Sector'
+       str: '%s %s'
+       str: 'Delete [index]'
+       bl: ['0x2b50fc', '0x2b2a2c', '0x2b50fc']
+[03] DeleteAll  0x2b5e20    0x18         parsers=[]
+       desc='Delete All Sectors'
+       str: '%s'
+       bl: ['0x2b50fc', '0x2b29cc']
+[04] ReadAllPD  0x2b5d30    0x34      2  parsers=['HEX']
+       desc='Read all pack data in Sector'
+       str: '%s %s'
+       str: 'ReadAllPD [Sec name]'
+       bl: ['0x2b50fc', '0x2b3ab8', '0x2b50fc']
+[05] ReadPD     0x2b5c6c    0xc4      3  parsers=['HEX', 'HEX']
+       desc='Read pack data in Sector'
+       str: '%s %s %s'
+       str: '   [SeekPoint][UserID][DataID]  [Length]    [Data]'
+       str: 'ReadPD [UserID][MediaID]'
+       bl: ['0x2b50fc', '0x2b39b8', '0x2b50fc', '0x2b2138', '0x2b4584', '0x2b2138', '0x2b4584', '0x2b3948', '0x2b4584', '0x2b50fc']
+[06] WritePack  0x2b5b74    0xf8         parsers=['HEX', 'HEX', 'HEX', 'DEC']
+       desc='Write pack'
+       str: '%s %s %s %s %s'
+       str: 'WritePack complete'
+       str: 'WritePack error'
+       str: 'WritePack [USER_ID] [MEDIA_ID] [DATA_ID] [Data length]'
+       str: 'buffer alloc(128*1024) failed'
+       bl: ['0x23fd7a', '0x2b50fc', '0x2b3d24', '0x12111c', '0x2b3c64', '0x2b3b94', '0x2b4ffc', '0x2b50fc', '0x23fd86', '0x2b50fc']
+[07] InitB      0x2b5b34    0x40      3  parsers=['DEC', 'DEC']
+       desc='Init backup data'
+       str: '%s %s %s'
+       str: 'InitB [Operation Mode] [MediaID]'
+       bl: ['0x2b50fc', '0x2b43f0', '0x2b50fc']
+[08] ChgSec     0x2b5af4    0x40      3  parsers=['HEX', 'HEX']
+       desc='Change sector'
+       str: '%s %s %s'
+       str: 'ChangeSector[userID(HEX),mediaID(HEX)]'
+       bl: ['0x2b50fc', '0x2b41b4', '0x2b50fc']
+[09] SetOM      0x2b5a60    0x48      3  parsers=['DEC', 'DEC']
+       desc='Set operation mode'
+       str: '%s %s %s'
+       str: 'InitB [Operation Mode]'
+       bl: ['0x2b50fc', '0x1202d4', '0x2b1ee8', '0x2b50fc']
+[10] SetSMI     0x2b59dc    0x84      6  parsers=['DEC', 'HEX', 'DEC', 'DEC', 'DEC']
+       desc='Set Sector Managet Information'
+       str: '%s %s %s %s %s %s'
+       str: 'SetSMI [index] [SectorName(Hex)] [handle] [status] [OM]'
+       bl: ['0x2b50fc', '0x2b208c', '0x2b3260', '0x2b50fc']
+[11] View       0x2b59ca    0x12         parsers=[]
+       desc='Display Sector Managet Information'
+       bl: ['0x2b50fc', '0x2b3260']
+[12] ASV        0x2b59b8    0x12         parsers=[]
+       desc='Display All Sector Status'
+       bl: ['0x2b50fc', 'PLT:_ZN8FlashLib12ConPutStatusEv']
+[13] GASI       0x2b5aa8    0x18         parsers=[]
+       desc='Get All Sector Information'
+       str: '%s'
+       bl: ['0x2b50fc', '0x2b2520']
+[14] WDS        0x2b5e08    0x18         parsers=[]
+       desc='Wait Delete Sector'
+       str: '%s'
+       bl: ['0x2b50fc', '0x2b2ac8']
+[15] Flush      0x2b5df0    0x18         parsers=[]
+       desc='Flush Buffer'
+       str: '%s'
+       bl: ['0x2b50fc', '0x2b2af0']
+[16] SSS        0x2b5db0    0x40      3  parsers=['DEC', 'HEX']
+       desc='Set Sector Status'
+       str: '%s %s %s'
+       str: 'SSS [SectorNo] [Status]'
+       bl: ['0x2b50fc', 'PLT:_ZN8FlashLib18DbgSetSectorStatusEht', '0x2b50fc']
+[17] GSS        0x2b5d64    0x4c      3  parsers=['HEX', 'HEX']
+       desc='Get Sector Status'
+       str: 'GSS ret = [%x]'
+       str: 'GSS  or GSS [UserID(Hex)] [MediaID(Hex)]'
+       bl: ['0x2b2564', '0x2b30c4', '0x2b50fc', '0x2b50fc']
+[18] ARB        0x2b5ac0    0x34         parsers=[]
+       desc='All Delete Ring Buffer'
+       str: '%s'
+       str: 'AllDeleteRingBuffer complete'
+       str: 'AllDeleteRingBuffer error'
+       bl: ['0x2b50fc', 'PLT:_ZN8FlashLib19AllDeleteRingBufferEv', '0x2b4ffc', '0x2b4ffc']
+[19] Quit       0x2b598c    0x2c         parsers=[]
+       desc='Quit DVD FLASH Backup Library'
+       str: '%s'
+       str: 'Quit complete'
+       str: 'Quit error'
+       bl: ['0x2b50fc', 'PLT:_ZN8FlashLib4QuitEv', '0x2b4ffc']
+[20] GetAlignSize 0x2b5924    0x68      2  parsers=['DEC']
+       desc='Get Alignment Size'
+       str: '%s %s'
+       str: '[%s]aligned[%d]'
+       str: 'GetAlignSize [Original Data Size]'
+       str: '%s'
+       str: 'GetFBLLog complete'
+       bl: ['0x2b50fc', '0x2b20d4', '0x2b50fc', '0x2b50fc', '0x2b50fc', '0x2b4ffc']
+[21] INRFB      0x2b5904    0x20         parsers=[]
+       desc='Is Need Repair Flash Backup'
+       str: 'need repair FlashBackup'
+       str: 'NO need repair FlashBackup'
+       bl: ['PLT:_ZN8FlashLib23IsNeedRepairFlashBackupEv', '0x2b50fc']
+[22] CRFB       0x2b58ec    0x18         parsers=[]
+       desc='Check and Repair Flash Backup'
+       str: 'call CheckAndRepairFlashBackup()'
+       bl: ['0x2b50fc', 'PLT:_ZN8FlashLib25CheckAndRepairFlashBackupEv']
+[23] DFT        0x2b58d4    0x18         parsers=[]
+       desc='Display User Function Table'
+       str: '%s'
+       bl: ['0x2b50fc', '0x2b23a0']
+[24] DRWBI      0x2b58bc    0x18         parsers=[]
+       desc='Display Read/Write buffer information'
+       str: '%s'
+       bl: ['0x2b50fc', '0x2b49ec']
+[25] LTC        0x2b57f0    0xcc         parsers=['DEC']
+       desc='Local test function call'
+       str: '%s %s'
+       str: '[LocalTestCall()]not found call module'
+       str: 'fbm ltc [module number] [parameter1]....'
+       bl: ['0x2b50fc', '0x2b5598', '0x2b5538', '0x2b54f0', '0x2b54d0', '0x2b54bc', '0x2b54a4', '0x2b548c', '0x2b53bc', '0x2b5308', '0x2b523c', '0x2b5228', '0x2b5214', '0x2b50fc', '0x2b50fc']
+[26] EWBDFD     0x2b5198   0x300      4  parsers=['HEX', 'HEX', 'HEX', 'DEC']
+       desc='EntryWriteBaseDataFunction to Dummy'
+       str: '%s %s %s %s'
+       str: 'EWBDFD OK'
+       str: 'EWBDFD ERROR[0x%x]'
+       str: 'EWBDFD [UserID(HEX)][MediaID(HEX)][FunctionDataAdrs(HEX)++AdrsDummy OK]'
+       str: 'LTC_12 '
+       str: 'LTC_11 '
+       str: 'LTC_10 '
+       str: '[FBM] LocalTest9 => rw buffer test[%d]'
+       str: ' 3 users ReadFirstPackData -> 1000msec sleep -> FreeReadPackbuffer 3 '
+       str: ' FreeReadPackBuffer 1 2'
+       str: ' ReadNextPackData 1 2 3'
+       str: ' EndDoubleCache'
+       str: '      LocalTest9 => Unknown Number'
+       str: 'LTC_09 '
+       str: 'LTC_08 Read Write Buffer test Thread start'
+       str: 'LTC_08 '
+       str: 'Err Dummy EntryWriteBaseDataFunction for [M2PS Application ::Media MS] '
+       str: 'LTC_07 "EndDoubleCache"[%d]'
+       bl: ['0x2b50fc', '0x2b1dec', '0x2b50fc', '0x2b50fc', '0x2b50fc', '0x5fe254', '0x5fe1ea', 'PLT:_ZdlPv', '0x5fe254', '0x5fe1ea', 'PLT:_ZdlPv', '0x5fe254', '0x5fe1ea', 'PLT:_ZdlPv', '0x5fe254', '0x5fe1ea', 'PLT:_ZdlPv', '0x2b50fc', '0x2b50fc', '0x2b50fc', '0x2b50fc', '0x2b50fc', '0x2b50fc', '0x2b50fc', 'PLT:_Znwj', '0x5fe1be', '0x5fe200', 'PLT:_Znwj', '0x5fe1be', '0x5fe200', 'PLT:_Znwj', '0x5fe1be', '0x5fe200', 'PLT:_Znwj', '0x5fe1be', '0x5fe200', 'PLT:_ZdlPv', 'PLT:__cxa_end_cleanup', '0x2b1f84']
+[27] CWBDF      0x2b5128    0x70      3  parsers=['HEX', 'HEX']
+       desc='ClearWriteBaseDataFunction'
+       str: '%s %s %s'
+       str: 'CWBDF OK'
+       str: 'CWBDF ERROR'
+       str: 'CWBDF [UserID(HEX)][MediaID(HEX)]'
+       str: 'callback DummyEntryWriteBaseDataFunction p_arg(0x%0x)'
+       bl: ['0x2b50fc', '0x2b1e34', '0x2b50fc', '0x2b50fc', '0x2b50fc', '0x2b50fc']
+[28] WBI        0x2b4aac   0x300         parsers=[]
+       desc='WarmBootInit'
+       str: 'FBM: '
+       str: 'FBM'
+       str: 'FBM'
+       str: 'Debug'
+       str: 'FBM'
+       str: 'Debug2'
+       bl: ['PLT:_ZN8FlashLib12WarmBootInitEv', '0x2b4624', '0x2b39b8', '0x5fd6e0', '0x2b4584', '0x2b1f84', 'PLT:pthread_exit', '0x5fd6e0', '0x2b39b8', '0x5fd6e0', '0x2b4584', '0x2b3948', '0x2b2138', '0x2b4584', 'PLT:pthread_exit', '0x5fd6e0', '0x2b39b8', '0x2b2138', '0x2b4584', '0x2b3948', '0x2b2138', '0x2b4584', 'PLT:pthread_exit', '0x5fd6e0', '0x2b39b8', '0x2b4584', '0x2b3948', '0x2b2138', '0x2b4584', 'PLT:pthread_exit', '0x5fd6e0', '0x684940', '0x684a18', '0x2b1468', '0x684a24']

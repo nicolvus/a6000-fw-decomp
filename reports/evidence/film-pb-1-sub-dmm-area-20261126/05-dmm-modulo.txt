@@ -1,0 +1,353 @@
+# dmm.ko (fw 3.21, ELF32 ARM relocatable, CON simbolos)
+## init_module (.init.text 0x0)
+00000: 0dc0a0e1   mov     ip, sp                      
+00004: 00d82de9   push    {fp, ip, lr, pc}            
+00008: 04b04ce2   sub     fp, ip, #4                  
+0000c: 08d04de2   sub     sp, sp, #8                  
+00010: 14309fe5   ldr     r3, [pc, #0x14]             
+00014: 0c004be2   sub     r0, fp, #0xc                
+00018: 0110a0e3   mov     r1, #1                      
+0001c: 043020e5   str     r3, [r0, #-4]!              
+00020: feffffeb   bl      #0x20                        ; RELOC28 udif_driver_register idx=134 val=0x0 shndx=0
+00024: 0cd04be2   sub     sp, fp, #0xc                
+00028: 00a89de8   ldm     sp, {fp, sp, pc}            
+0002c: 00000000   andeq   r0, r0, r0                   ; RELOC2  idx=5 val=0x0 shndx=17
+00030: 0dc0a0e1   mov     ip, sp                      
+00034: 18d82de9   push    {r3, r4, fp, ip, lr, pc}    
+00038: 04b04ce2   sub     fp, ip, #4                  
+0003c: e4309fe5   ldr     r3, [pc, #0xe4]             
+00040: 0020e0e3   mvn     r2, #0                      
+00044: 642083e5   str     r2, [r3, #0x64]             
+00048: dc309fe5   ldr     r3, [pc, #0xdc]             
+0004c: 003093e5   ldr     r3, [r3]                    
+00050: 000053e3   cmp     r3, #0                      
+00054: 0400000a   beq     #0x6c                       
+00058: 191aa0e3   mov     r1, #0x19000                
+0005c: d12082e2   add     r2, r2, #0xd1               
+00060: c8009fe5   ldr     r0, [pc, #0xc8]             
+00064: feffffeb   bl      #0x64                        ; RELOC28 __udif_kmalloc idx=172 val=0x0 shndx=0
+00068: 080000ea   b       #0x90                        ; dmm_module_InitModule
+0006c: c0309fe5   ldr     r3, [pc, #0xc0]             
+00070: d010a0e3   mov     r1, #0xd0                   
+00074: 740093e5   ldr     r0, [r3, #0x74]             
+00078: feffffeb   bl      #0x78                        ; RELOC28 kmem_cache_alloc idx=163 val=0x0 shndx=0
+0007c: 191aa0e3   mov     r1, #0x19000                
+00080: d020a0e3   mov     r2, #0xd0                   
+00084: 0040a0e1   mov     r4, r0                      
+00088: feffffeb   bl      #0x88                        ; RELOC28 kmalloc_add_trace idx=122 val=0x0 shndx=0
+0008c: 0400a0e1   mov     r0, r4                      
+00090: a0409fe5   ldr     r4, [pc, #0xa0]             
+00094: 000050e3   cmp     r0, #0                      
+00098: 140084e5   str     r0, [r4, #0x14]             
+0009c: 0000001a   bne     #0xa4                       
+000a0: feffffeb   bl      #0xa0                        ; RELOC28 osal_abort.clone.1 idx=11 val=0x194 shndx=1
+000a4: 140094e5   ldr     r0, [r4, #0x14]             
+000a8: 191aa0e3   mov     r1, #0x19000                
+000ac: feffffeb   bl      #0xac                        ; RELOC28 dmm_module_GetConfigData idx=239 val=0x214 shndx=1
+000b0: 000050e3   cmp     r0, #0                      
+000b4: 0000000a   beq     #0xbc                       
+000b8: feffffeb   bl      #0xb8                        ; RELOC28 osal_abort.clone.1 idx=11 val=0x194 shndx=1
+000bc: 0100a0e3   mov     r0, #1                      
+000c0: feffffeb   bl      #0xc0                        ; RELOC28 dmm_ctrl_Init idx=285 val=0x7590 shndx=1
+000c4: feffffeb   bl      #0xc4                        ; RELOC28 dmm_log_lkm_CreateArea idx=217 val=0x3a14 shndx=1
+000c8: 000050e3   cmp     r0, #0                      
+000cc: 0b40e0b3   mvnlt   r4, #0xb                    
+000d0: 090000ba   blt     #0xfc                       
+000d4: feffffeb   bl      #0xd4                        ; RELOC28 dmm_udm_procfs_CreateProcfs idx=126 val=0x3334 shndx=1
+000d8: 000050e3   cmp     r0, #0                      
+000dc: 0f40e0b3   mvnlt   r4, #0xf                    
+000e0: 050000ba   blt     #0xfc                       
+000e4: 4c009fe5   ldr     r0, [pc, #0x4c]             
+000e8: 4c109fe5   ldr     r1, [pc, #0x4c]             
+000ec: feffffeb   bl      #0xec                        ; RELOC28 dmm_utm_EntryThread idx=181 val=0x3954 shndx=1
+000f0: 004050e2   subs    r4, r0, #0                  
+000f4: 000000ba   blt     #0xfc                       
+000f8: feffffeb   bl      #0xf8                        ; RELOC28 dmm_log_lkm_SetLoadTime idx=77 val=0x3ae0 shndx=1
+000fc: 34309fe5   ldr     r3, [pc, #0x34]             
+00100: 140093e5   ldr     r0, [r3, #0x14]             
+00104: 20309fe5   ldr     r3, [pc, #0x20]             
+00108: 003093e5   ldr     r3, [r3]                    
+0010c: 000053e3   cmp     r3, #0                      
+00110: 0100000a   beq     #0x11c                      
+00114: feffffeb   bl      #0x114                       ; RELOC28 __udif_kfree idx=66 val=0x0 shndx=0
+00118: 000000ea   b       #0x120                       ; dmm_module_InitModule
+0011c: feffffeb   bl      #0x11c                       ; RELOC28 kfree idx=116 val=0x0 shndx=0
+00120: 0400a0e1   mov     r0, r4                      
+00124: 18a89de8   ldm     sp, {r3, r4, fp, sp, pc}    
+
+## dmm_module_GetConfigData (0x214): filp_open(DmmConfig) + vfs_read
+00214: 0dc0a0e1   mov     ip, sp                      
+00218: f0df2de9   push    {r4, r5, r6, r7, r8, sb, sl, fp, ip, lr, pc}
+0021c: 04b04ce2   sub     fp, ip, #4                  
+00220: 0cd04de2   sub     sp, sp, #0xc                
+00224: 38519fe5   ldr     r5, [pc, #0x138]            
+00228: 0d20a0e1   mov     r2, sp                      
+0022c: 7f3dc2e3   bic     r3, r2, #0x1fc0             
+00230: 0070a0e1   mov     r7, r0                      
+00234: 3f30c3e3   bic     r3, r3, #0x3f               
+00238: 0160a0e1   mov     r6, r1                      
+0023c: 14c095e5   ldr     ip, [r5, #0x14]             
+00240: 0040a0e3   mov     r4, #0                      
+00244: 108095e5   ldr     r8, [r5, #0x10]             
+00248: 0c0050e1   cmp     r0, ip                      
+0024c: 089093e5   ldr     sb, [r3, #8]                
+00250: 0b00001a   bne     #0x284                      
+00254: 0e0000ea   b       #0x294                       ; dmm_module_GetConfigData
+00258: 04519fe5   ldr     r5, [pc, #0x104]            
+0025c: 0100a0e3   mov     r0, #1                      
+00260: 0010a0e3   mov     r1, #0                      
+00264: 083095e5   ldr     r3, [r5, #8]                
+00268: 0330dce7   ldrb    r3, [ip, r3]                
+0026c: 0430c7e7   strb    r3, [r7, r4]                
+00270: 014084e2   add     r4, r4, #1                  
+00274: d820c5e1   ldrd    r2, r3, [r5, #8]            
+00278: 002092e0   adds    r2, r2, r0                  
+0027c: 0130a3e0   adc     r3, r3, r1                  
+00280: f820c5e1   strd    r2, r3, [r5, #8]            
+00284: 060054e1   cmp     r4, r6                      
+00288: f2ffff3a   blo     #0x258                      
+0028c: 0040a0e3   mov     r4, #0                      
+00290: 300000ea   b       #0x358                       ; dmm_module_GetConfigData
+00294: 000058e3   cmp     r8, #0                      
+00298: 084083e5   str     r4, [r3, #8]                
+0029c: 2400000a   beq     #0x334                      
+002a0: 0800a0e1   mov     r0, r8                      
+002a4: 0410a0e1   mov     r1, r4                      
+002a8: 0420a0e1   mov     r2, r4                      
+002ac: feffffeb   bl      #0x2ac                       ; RELOC28 filp_open idx=65 val=0x0 shndx=0
+002b0: 010a70e3   cmn     r0, #0x1000                 
+002b4: 00a0a0e1   mov     sl, r0                      
+002b8: 0700009a   bls     #0x2dc                      
+002bc: 6100a0e3   mov     r0, #0x61                   
+002c0: 0410a0e1   mov     r1, r4                      
+002c4: 0120a0e3   mov     r2, #1                      
+002c8: 98309fe5   ldr     r3, [pc, #0x98]             
+002cc: 00808de5   str     r8, [sp]                    
+002d0: 6bffffeb   bl      #0x84                        ; dmm_module_InitModule
+002d4: 104085e5   str     r4, [r5, #0x10]             
+002d8: 150000ea   b       #0x334                       ; dmm_module_GetConfigData
+002dc: 0710a0e1   mov     r1, r7                      
+002e0: 0620a0e1   mov     r2, r6                      
+002e4: 083085e2   add     r3, r5, #8                  
+002e8: feffffeb   bl      #0x2e8                       ; RELOC28 vfs_read idx=218 val=0x0 shndx=0
+002ec: 000050e3   cmp     r0, #0                      
+002f0: 0000a0c3   movgt   r0, #0                      
+002f4: 0100a0d3   movle   r0, #1                      
+002f8: 000056e3   cmp     r6, #0                      
+002fc: 0000a003   moveq   r0, #0                      
+00300: 000050e3   cmp     r0, #0                      
+00304: 0040a001   moveq   r4, r0                      
+00308: 0500000a   beq     #0x324                      
+0030c: 0410a0e1   mov     r1, r4                      
+00310: 6100a0e3   mov     r0, #0x61                   
+00314: 0120a0e3   mov     r2, #1                      
+00318: 4c309fe5   ldr     r3, [pc, #0x4c]             
+0031c: 58ffffeb   bl      #0x84                        ; dmm_module_InitModule
+00320: ff4f0fe3   movw    r4, #0xffff                 
+00324: 0a00a0e1   mov     r0, sl                      
+00328: 0010a0e3   mov     r1, #0                      
+0032c: feffffeb   bl      #0x32c                       ; RELOC28 filp_close idx=251 val=0x0 shndx=0
+00330: 000000ea   b       #0x338                       ; dmm_module_GetConfigData
+00334: ff4f0fe3   movw    r4, #0xffff                 
+00338: 0d20a0e1   mov     r2, sp                      
+0033c: 20109fe5   ldr     r1, [pc, #0x20]             
+00340: 7f3dc2e3   bic     r3, r2, #0x1fc0             
+00344: 0020a0e3   mov     r2, #0                      
+00348: 3f30c3e3   bic     r3, r3, #0x3f               
+0034c: 089083e5   str     sb, [r3, #8]                
+00350: 0030a0e3   mov     r3, #0                      
+00354: f820c1e1   strd    r2, r3, [r1, #8]            
+00358: 7400bfe6   sxth    r0, r4                      
+0035c: 28d04be2   sub     sp, fp, #0x28               
+00360: f0af9de8   ldm     sp, {r4, r5, r6, r7, r8, sb, sl, fp, sp, pc}
+
+## dmm_module_LoadConfigBuf (0x3ec): fichero EXTRA (DmmConfigExtra) + crc32
+003ec: 0dc0a0e1   mov     ip, sp                      
+003f0: f0df2de9   push    {r4, r5, r6, r7, r8, sb, sl, fp, ip, lr, pc}
+003f4: 04b04ce2   sub     fp, ip, #4                  
+003f8: 14d04de2   sub     sp, sp, #0x14               
+003fc: 190aa0e3   mov     r0, #0x19000                
+00400: 40519fe5   ldr     r5, [pc, #0x140]            
+00404: feffffeb   bl      #0x404                       ; RELOC28 vmalloc idx=286 val=0x0 shndx=0
+00408: 000050e3   cmp     r0, #0                      
+0040c: 140085e5   str     r0, [r5, #0x14]             
+00410: 0000e003   mvneq   r0, #0                      
+00414: 4900000a   beq     #0x540                      
+00418: 0530a0e1   mov     r3, r5                      
+0041c: 28219fe5   ldr     r2, [pc, #0x128]            
+00420: 0040a0e3   mov     r4, #0                      
+00424: 1860f3e5   ldrb    r6, [r3, #0x18]!            
+00428: 0410a0e1   mov     r1, r4                      
+0042c: 000056e3   cmp     r6, #0                      
+00430: 0260a001   moveq   r6, r2                      
+00434: 0d20a0e1   mov     r2, sp                      
+00438: 0360a011   movne   r6, r3                      
+0043c: 7f3dc2e3   bic     r3, r2, #0x1fc0             
+00440: 3f30c3e3   bic     r3, r3, #0x3f               
+00444: 0600a0e1   mov     r0, r6                      
+00448: 0420a0e1   mov     r2, r4                      
+0044c: 08a093e5   ldr     sl, [r3, #8]                
+00450: 084083e5   str     r4, [r3, #8]                
+00454: feffffeb   bl      #0x454                       ; RELOC28 filp_open idx=65 val=0x0 shndx=0
+00458: 010a70e3   cmn     r0, #0x1000                 
+0045c: 0070a0e1   mov     r7, r0                      
+00460: 0700009a   bls     #0x484                      
+00464: 0410a0e1   mov     r1, r4                      
+00468: 6100a0e3   mov     r0, #0x61                   
+0046c: 0120a0e3   mov     r2, #1                      
+00470: d8309fe5   ldr     r3, [pc, #0xd8]             
+00474: 00608de5   str     r6, [sp]                    
+00478: f44f0fe3   movw    r4, #0xfff4                 
+0047c: 00ffffeb   bl      #0x84                        ; dmm_module_InitModule
+00480: 210000ea   b       #0x50c                       ; dmm_module_LoadConfigBuf
+00484: 2c304be2   sub     r3, fp, #0x2c               
+00488: 141095e5   ldr     r1, [r5, #0x14]             
+0048c: 0080a0e3   mov     r8, #0                      
+00490: 0090a0e3   mov     sb, #0                      
+00494: 192aa0e3   mov     r2, #0x19000                
+00498: f88063e1   strd    r8, sb, [r3, #-8]!          
+0049c: feffffeb   bl      #0x49c                       ; RELOC28 vfs_read idx=218 val=0x0 shndx=0
+004a0: 005050e2   subs    r5, r0, #0                  
+004a4: 060000ca   bgt     #0x4c4                      
+004a8: 0410a0e1   mov     r1, r4                      
+004ac: 6100a0e3   mov     r0, #0x61                   
+004b0: 0120a0e3   mov     r2, #1                      
+004b4: 98309fe5   ldr     r3, [pc, #0x98]             
+004b8: 00608de5   str     r6, [sp]                    
+004bc: f0feffeb   bl      #0x84                        ; dmm_module_InitModule
+004c0: f44f0fe3   movw    r4, #0xfff4                 
+004c4: 7c609fe5   ldr     r6, [pc, #0x7c]             
+004c8: 0010a0e3   mov     r1, #0                      
+004cc: 0700a0e1   mov     r0, r7                      
+004d0: feffffeb   bl      #0x4d0                       ; RELOC28 filp_close idx=251 val=0x0 shndx=0
+004d4: 0510a0e1   mov     r1, r5                      
+004d8: 140096e5   ldr     r0, [r6, #0x14]             
+004dc: feffffeb   bl      #0x4dc                       ; RELOC28 crc32 idx=186 val=0x370 shndx=1
+004e0: 70309fe5   ldr     r3, [pc, #0x70]             
+004e4: 642093e5   ldr     r2, [r3, #0x64]             
+004e8: 050052e1   cmp     r2, r5                      
+004ec: 0620a0e1   mov     r2, r6                      
+004f0: 0300001a   bne     #0x504                      
+004f4: 981096e5   ldr     r1, [r6, #0x98]             
+004f8: 000051e1   cmp     r1, r0                      
+004fc: 0740a003   moveq   r4, #7                      
+00500: 0100000a   beq     #0x50c                      
+00504: 645083e5   str     r5, [r3, #0x64]             
+00508: 980082e5   str     r0, [r2, #0x98]             
+0050c: 0d90a0e1   mov     sb, sp                      
+00510: 070054e3   cmp     r4, #7                      
+00514: 00005413   cmpne   r4, #0                      
+00518: 7f3dc9e3   bic     r3, sb, #0x1fc0             
+0051c: 3f30c3e3   bic     r3, r3, #0x3f               
+00520: 08a083e5   str     sl, [r3, #8]                
+00524: 0000000a   beq     #0x52c                      
+00528: feffffeb   bl      #0x528                       ; RELOC28 dmm_module_FreeConfigBuf idx=257 val=0x3bc shndx=1
+0052c: 14109fe5   ldr     r1, [pc, #0x14]             
+00530: 7400bfe6   sxth    r0, r4                      
+00534: 0020a0e3   mov     r2, #0                      
+00538: 0030a0e3   mov     r3, #0                      
+
+## dmm_config_GetConfigData (0x5140): estado 0/1(integrada)/2(fichero)
+05140: 0dc0a0e1   mov     ip, sp                      
+05144: f0d82de9   push    {r4, r5, r6, r7, fp, ip, lr, pc}
+05148: 04b04ce2   sub     fp, ip, #4                  
+0514c: cc409fe5   ldr     r4, [pc, #0xcc]             
+05150: 0060a0e1   mov     r6, r0                      
+05154: 0170a0e1   mov     r7, r1                      
+05158: 0430a0e1   mov     r3, r4                      
+0515c: f450d4e1   ldrsh   r5, [r4, #4]                
+05160: 010055e3   cmp     r5, #1                      
+05164: 0400000a   beq     #0x517c                     
+05168: 020055e3   cmp     r5, #2                      
+0516c: 2600000a   beq     #0x520c                     
+05170: 000055e3   cmp     r5, #0                      
+05174: 0400000a   beq     #0x518c                     
+05178: 250000ea   b       #0x5214                      ; dmm_config_GetConfigData
+0517c: 000094e5   ldr     r0, [r4]                    
+05180: 0020a0e3   mov     r2, #0                      
+05184: 0010a0e1   mov     r1, r0                      
+05188: 190000ea   b       #0x51f4                      ; dmm_config_GetConfigData
+0518c: feffffeb   bl      #0x518c                      ; RELOC28 dmm_module_GetConfigData idx=239 val=0x214 shndx=1
+05190: 000050e3   cmp     r0, #0                      
+05194: 0230a003   moveq   r3, #2                      
+05198: b430c401   strheq  r3, [r4, #4]                
+0519c: 1d00000a   beq     #0x5218                     
+051a0: 002094e5   ldr     r2, [r4]                    
+051a4: 0130a0e3   mov     r3, #1                      
+051a8: b430c4e1   strh    r3, [r4, #4]                
+051ac: 0230a0e1   mov     r3, r2                      
+051b0: 040000ea   b       #0x51c8                      ; dmm_config_GetConfigData
+051b4: 68109fe5   ldr     r1, [pc, #0x68]             
+051b8: 0310d1e7   ldrb    r1, [r1, r3]                
+051bc: 013083e2   add     r3, r3, #1                  
+051c0: 0510c6e7   strb    r1, [r6, r5]                
+051c4: 015085e2   add     r5, r5, #1                  
+051c8: 070055e1   cmp     r5, r7                      
+051cc: f8ffff1a   bne     #0x51b4                     
+051d0: 48309fe5   ldr     r3, [pc, #0x48]             
+051d4: 025085e0   add     r5, r5, r2                  
+051d8: 005083e5   str     r5, [r3]                    
+051dc: 080000ea   b       #0x5204                      ; dmm_config_GetConfigData
+051e0: 3cc09fe5   ldr     ip, [pc, #0x3c]             
+051e4: 01c0dce7   ldrb    ip, [ip, r1]                
+051e8: 011081e2   add     r1, r1, #1                  
+051ec: 02c0c6e7   strb    ip, [r6, r2]                
+051f0: 012082e2   add     r2, r2, #1                  
+051f4: 070052e1   cmp     r2, r7                      
+051f8: f8ffff1a   bne     #0x51e0                     
+051fc: 002082e0   add     r2, r2, r0                  
+05200: 002083e5   str     r2, [r3]                    
+05204: 0000a0e3   mov     r0, #0                      
+05208: 020000ea   b       #0x5218                      ; dmm_config_GetConfigData
+0520c: feffffeb   bl      #0x520c                      ; RELOC28 dmm_module_GetConfigData idx=239 val=0x214 shndx=1
+05210: 000000ea   b       #0x5218                      ; dmm_config_GetConfigData
+05214: ff0f0fe3   movw    r0, #0xffff                 
+05218: 7000bfe6   sxth    r0, r0                      
+0521c: f0a89de8   ldm     sp, {r4, r5, r6, r7, fp, sp, pc}
+05220: f40f0300   strdeq  r0, r1, [r3], -r4            ; RELOC2  idx=6 val=0x0 shndx=21
+05224: 84010000   andeq   r0, r0, r4, lsl #3           ; RELOC2  idx=2 val=0x0 shndx=10
+05228: 0dc0a0e1   mov     ip, sp                      
+0522c: 00d82de9   push    {fp, ip, lr, pc}            
+
+## dmm_config_Init (0x511c)
+0511c: 0dc0a0e1   mov     ip, sp                      
+05120: 00d82de9   push    {fp, ip, lr, pc}            
+05124: 04b04ce2   sub     fp, ip, #4                  
+05128: 0c309fe5   ldr     r3, [pc, #0xc]              
+0512c: 0020a0e3   mov     r2, #0                      
+05130: 002083e5   str     r2, [r3]                    
+05134: b420c3e1   strh    r2, [r3, #4]                
+05138: 00a89de8   ldm     sp, {fp, sp, pc}            
+0513c: f40f0300   strdeq  r0, r1, [r3], -r4            ; RELOC2  idx=6 val=0x0 shndx=21
+
+## osal_abort (0x194): mensaje cmd 0xe + escritura a NULL
+00194: 0dc0a0e1   mov     ip, sp                      
+00198: 30d82de9   push    {r4, r5, fp, ip, lr, pc}    
+0019c: 04b04ce2   sub     fp, ip, #4                  
+001a0: 08d04de2   sub     sp, sp, #8                  
+001a4: 64009fe5   ldr     r0, [pc, #0x64]             
+001a8: 18104be2   sub     r1, fp, #0x18               
+001ac: 0420a0e3   mov     r2, #4                      
+001b0: 0130a0e3   mov     r3, #1                      
+001b4: feffffeb   bl      #0x1b4                       ; RELOC28 osal_valloc_msg_wait idx=226 val=0x0 shndx=0
+001b8: 000050e3   cmp     r0, #0                      
+001bc: 1100001a   bne     #0x208                      
+001c0: 18401be5   ldr     r4, [fp, #-0x18]            
+001c4: 0e30a0e3   mov     r3, #0xe                    
+001c8: 40509fe5   ldr     r5, [pc, #0x40]             
+001cc: 0200c4e5   strb    r0, [r4, #2]                
+001d0: 0500a0e1   mov     r0, r5                      
+001d4: b030c4e1   strh    r3, [r4]                    
+001d8: 18301be5   ldr     r3, [fp, #-0x18]            
+001dc: 045003e5   str     r5, [r3, #-4]               
+001e0: 18101be5   ldr     r1, [fp, #-0x18]            
+001e4: feffffeb   bl      #0x1e4                       ; RELOC28 osal_snd_sync_msg idx=161 val=0x0 shndx=0
+001e8: 18101be5   ldr     r1, [fp, #-0x18]            
+001ec: 0240d4e5   ldrb    r4, [r4, #2]                
+001f0: 000051e3   cmp     r1, #0                      
+001f4: 0100000a   beq     #0x200                      
+001f8: 0500a0e1   mov     r0, r5                      
+001fc: feffffeb   bl      #0x1fc                       ; RELOC28 osal_free_msg idx=297 val=0x0 shndx=0
+00200: 000054e3   cmp     r4, #0                      
+00204: 0040c405   strbeq  r4, [r4]                    
+00208: 14d04be2   sub     sp, fp, #0x14               

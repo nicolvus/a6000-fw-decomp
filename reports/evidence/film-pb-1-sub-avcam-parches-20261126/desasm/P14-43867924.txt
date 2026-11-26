@@ -1,0 +1,48 @@
+=== 438678f4..43867956
+438678f4    321 c301       lsls     r3, r0, #7                                 | cfw c301       lsls     r3, r0, #7
+438678f6    321 9df82400   ldrb.w   r0, [sp, #0x24]                            | cfw 9df82400   ldrb.w   r0, [sp, #0x24]
+438678fa    321 012d       cmp      r5, #1                                     | cfw 012d       cmp      r5, #1
+438678fc    321 06d1       bne      #0x4386790c                                | cfw 06d1       bne      #0x4386790c
+438678fe    321 1b2a       cmp      r2, #0x1b                                  | cfw 1b2a       cmp      r2, #0x1b
+43867900    321 34d8       bhi      #0x4386796c                                | cfw 34d8       bhi      #0x4386796c
+43867902    321 704b       ldr      r3, [pc, #0x1c0]                           | cfw 704b       ldr      r3, [pc, #0x1c0]
+43867904    321 7b44       add      r3, pc                                     | cfw 7b44       add      r3, pc
+43867906    321 53f82270   ldr.w    r7, [r3, r2, lsl #2]                       | cfw 53f82270   ldr.w    r7, [r3, r2, lsl #2]
+4386790a    321 38e0       b        #0x4386797e  ; ->4386797e                  | cfw 38e0       b        #0x4386797e  ; ->4386797e
+4386790c    321 1f2b       cmp      r3, #0x1f                                  | cfw 1f2b       cmp      r3, #0x1f
+4386790e    321 2fd0       beq      #0x43867970                                | cfw 2fd0       beq      #0x43867970
+43867910    321 162a       cmp      r2, #0x16                                  | cfw 162a       cmp      r2, #0x16
+43867912    321 2bd0       beq      #0x4386796c                                | cfw 2bd0       beq      #0x4386796c
+43867914    321 05d8       bhi      #0x43867922                                | cfw 05d8       bhi      #0x43867922
+43867916    321 142a       cmp      r2, #0x14                                  | cfw 142a       cmp      r2, #0x14
+43867918    321 0bd0       beq      #0x43867932                                | cfw 0bd0       beq      #0x43867932
+4386791a    321 2bd8       bhi      #0x43867974                                | cfw 2bd8       bhi      #0x43867974
+4386791c    321 002a       cmp      r2, #0                                     | cfw 002a       cmp      r2, #0
+4386791e    321 25d0       beq      #0x4386796c                                | cfw 25d0       beq      #0x4386796c
+43867920    321 14e0       b        #0x4386794c  ; ->4386794c                  | cfw 14e0       b        #0x4386794c  ; ->4386794c
+43867922    321 182a       cmp      r2, #0x18                                  | cfw 182a       cmp      r2, #0x18
+43867924  * 321 12d3       blo      #0x4386794c                                | cfw 05d3       blo      #0x43867932
+43867926    321 1b2a       cmp      r2, #0x1b                                  | cfw 1b2a       cmp      r2, #0x1b
+43867928    321 20d9       bls      #0x4386796c                                | cfw 20d9       bls      #0x4386796c
+4386792a    321 1e2a       cmp      r2, #0x1e                                  | cfw 1e2a       cmp      r2, #0x1e
+4386792c    321 0ed1       bne      #0x4386794c                                | cfw 0ed1       bne      #0x4386794c
+4386792e    321 0d27       movs     r7, #0xd                                   | cfw 0d27       movs     r7, #0xd
+43867930    321 25e0       b        #0x4386797e  ; ->4386797e                  | cfw 25e0       b        #0x4386797e  ; ->4386797e
+43867932    321 202b       cmp      r3, #0x20                                  | cfw 202b       cmp      r3, #0x20
+43867934    321 20d0       beq      #0x43867978                                | cfw 20d0       beq      #0x43867978
+43867936    321 262b       cmp      r3, #0x26                                  | cfw 262b       cmp      r3, #0x26
+43867938    321 1ed0       beq      #0x43867978                                | cfw 1ed0       beq      #0x43867978
+4386793a    321 272b       cmp      r3, #0x27                                  | cfw 272b       cmp      r3, #0x27
+4386793c    321 1cd0       beq      #0x43867978                                | cfw 1cd0       beq      #0x43867978
+4386793e    321 282b       cmp      r3, #0x28                                  | cfw 282b       cmp      r3, #0x28
+43867940    321 1ad0       beq      #0x43867978                                | cfw 1ad0       beq      #0x43867978
+43867942    321 292b       cmp      r3, #0x29                                  | cfw 292b       cmp      r3, #0x29
+43867944    321 14bf       ite      ne                                         | cfw 14bf       ite      ne
+43867946    321 0827       movne    r7, #8                                     | cfw 0827       movne    r7, #8
+43867948    321 0927       moveq    r7, #9                                     | cfw 0927       moveq    r7, #9
+4386794a    321 18e0       b        #0x4386797e  ; ->4386797e                  | cfw 18e0       b        #0x4386797e  ; ->4386797e
+4386794c    321 202b       cmp      r3, #0x20                                  | cfw 202b       cmp      r3, #0x20
+4386794e    321 15d0       beq      #0x4386797c                                | cfw 15d0       beq      #0x4386797c
+43867950    321 262b       cmp      r3, #0x26                                  | cfw 262b       cmp      r3, #0x26
+43867952    321 13d0       beq      #0x4386797c                                | cfw 13d0       beq      #0x4386797c
+43867954    321 272b       cmp      r3, #0x27                                  | cfw 272b       cmp      r3, #0x27

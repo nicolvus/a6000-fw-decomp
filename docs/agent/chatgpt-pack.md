@@ -1,7 +1,9 @@
 # Pack para ChatGPT web (pegar al inicio del chat)
 
 > Copia portátil de las reglas y del estado. Fuente: `AGENTS.md`, `.claude/skills/*`,
-> `knowledge/CURRENT.md`. Si hay conflicto, manda el repo.
+> `knowledge/CURRENT.md`. Si hay conflicto, manda el repo. Las reglas de **orden** están en
+> `ORDEN.md` y su copia de lectura, `estado/ORDEN.md` del repo privado `a6000-handoff-context`
+> (`ORDEN.md` §12).
 
 ## Reglas
 

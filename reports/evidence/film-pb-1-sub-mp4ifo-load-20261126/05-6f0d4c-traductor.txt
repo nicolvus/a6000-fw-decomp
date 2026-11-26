@@ -1,0 +1,196 @@
+# 05 — mp4libErr: traductor de codigos 0x6F0D4C(status, porDefecto, fichero, linea) -> codigo final + log
+# Llama al impresor 0x6F0A54(fichero, linea, codigo).
+006f0d4c  2de9f84f   push.w   {r3, r4, r5, r6, r7, r8, sb, sl, fp, lr} ; .text      
+006f0d50  8c46       mov      ip, r1                         ; .text      
+006f0d52  00af       add      r7, sp, #0                     ; .text      
+006f0d54  1646       mov      r6, r2                         ; .text      
+006f0d56  1946       mov      r1, r3                         ; .text      
+006f0d58  0028       cmp      r0, #0                         ; .text      
+006f0d5a  00f0a380   beq.w    #0x6f0ea4                      ; .text      
+006f0d5e  584b       ldr      r3, [pc, #0x160]               ; .text      [006f0ec0]=13810001
+006f0d60  9842       cmp      r0, r3                         ; .text      
+006f0d62  00f0a580   beq.w    #0x6f0eb0                      ; .text      
+006f0d66  574b       ldr      r3, [pc, #0x15c]               ; .text      [006f0ec4]=1340000e
+006f0d68  9842       cmp      r0, r3                         ; .text      
+006f0d6a  00f0a380   beq.w    #0x6f0eb4                      ; .text      
+006f0d6e  0c3b       subs     r3, #0xc                       ; .text      
+006f0d70  9842       cmp      r0, r3                         ; .text      
+006f0d72  00f09f80   beq.w    #0x6f0eb4                      ; .text      
+006f0d76  0333       adds     r3, #3                         ; .text      
+006f0d78  9842       cmp      r0, r3                         ; .text      
+006f0d7a  00f09b80   beq.w    #0x6f0eb4                      ; .text      
+006f0d7e  0133       adds     r3, #1                         ; .text      
+006f0d80  9842       cmp      r0, r3                         ; .text      
+006f0d82  00f09780   beq.w    #0x6f0eb4                      ; .text      
+006f0d86  0133       adds     r3, #1                         ; .text      
+006f0d88  9842       cmp      r0, r3                         ; .text      
+006f0d8a  00f09380   beq.w    #0x6f0eb4                      ; .text      
+006f0d8e  4ff47f04   mov.w    r4, #0xff0000                  ; .text      
+006f0d92  0025       movs     r5, #0                         ; .text      
+006f0d94  0440       ands     r4, r0                         ; .text      
+006f0d96  4ff40008   mov.w    r8, #0x800000                  ; .text      
+006f0d9a  4ff00009   mov.w    sb, #0                         ; .text      
+006f0d9e  84ea080a   eor.w    sl, r4, r8                     ; .text      
+006f0da2  85ea090b   eor.w    fp, r5, sb                     ; .text      
+006f0da6  5aea0b03   orrs.w   r3, sl, fp                     ; .text      
+006f0daa  62d0       beq      #0x6f0e72                      ; .text      
+006f0dac  a045       cmp      r8, r4                         ; .text      
+006f0dae  79eb050a   sbcs.w   sl, sb, r5                     ; .text      
+006f0db2  27db       blt      #0x6f0e04                      ; .text      
+006f0db4  4ff40018   mov.w    r8, #0x200000                  ; .text      
+006f0db8  4ff00009   mov.w    sb, #0                         ; .text      
+006f0dbc  84ea080a   eor.w    sl, r4, r8                     ; .text      
+006f0dc0  85ea090b   eor.w    fp, r5, sb                     ; .text      
+006f0dc4  5aea0b03   orrs.w   r3, sl, fp                     ; .text      
+006f0dc8  76d0       beq      #0x6f0eb8                      ; .text      
+006f0dca  a045       cmp      r8, r4                         ; .text      
+006f0dcc  79eb050a   sbcs.w   sl, sb, r5                     ; .text      
+006f0dd0  07db       blt      #0x6f0de2                      ; .text      
+006f0dd2  0023       movs     r3, #0                         ; .text      
+006f0dd4  4ff48012   mov.w    r2, #0x100000                  ; .text      
+006f0dd8  5440       eors     r4, r2                         ; .text      
+006f0dda  5d40       eors     r5, r3                         ; .text      
+006f0ddc  54ea0500   orrs.w   r0, r4, r5                     ; .text      
+006f0de0  2ee0       b        #0x6f0e40                      ; .text      
+006f0de2  0023       movs     r3, #0                         ; .text      
+006f0de4  4ff48002   mov.w    r2, #0x400000                  ; .text      
+006f0de8  6240       eors     r2, r4                         ; .text      
+006f0dea  6b40       eors     r3, r5                         ; .text      
+006f0dec  52ea0308   orrs.w   r8, r2, r3                     ; .text      
+006f0df0  39d0       beq      #0x6f0e66                      ; .text      
+006f0df2  0023       movs     r3, #0                         ; .text      
+006f0df4  4ff4a002   mov.w    r2, #0x500000                  ; .text      
+006f0df8  5440       eors     r4, r2                         ; .text      
+006f0dfa  5d40       eors     r5, r3                         ; .text      
+006f0dfc  54ea050a   orrs.w   sl, r4, r5                     ; .text      
+006f0e00  33d0       beq      #0x6f0e6a                      ; .text      
+006f0e02  48e0       b        #0x6f0e96                      ; .text      
+006f0e04  4ff47108   mov.w    r8, #0xf10000                  ; .text      
+006f0e08  4ff00009   mov.w    sb, #0                         ; .text      
+006f0e0c  84ea0802   eor.w    r2, r4, r8                     ; .text      
+006f0e10  85ea0903   eor.w    r3, r5, sb                     ; .text      
+006f0e14  52ea030a   orrs.w   sl, r2, r3                     ; .text      
+006f0e18  33d0       beq      #0x6f0e82                      ; .text      
+006f0e1a  a045       cmp      r8, r4                         ; .text      
+006f0e1c  79eb0500   sbcs.w   r0, sb, r5                     ; .text      
+006f0e20  10db       blt      #0x6f0e44                      ; .text      
+006f0e22  0023       movs     r3, #0                         ; .text      
+006f0e24  4ff40102   mov.w    r2, #0x810000                  ; .text      
+006f0e28  6240       eors     r2, r4                         ; .text      
+006f0e2a  6b40       eors     r3, r5                         ; .text      
+006f0e2c  52ea0308   orrs.w   r8, r2, r3                     ; .text      
+006f0e30  3ed0       beq      #0x6f0eb0                      ; .text      
+006f0e32  0023       movs     r3, #0                         ; .text      
+006f0e34  4ff47002   mov.w    r2, #0xf00000                  ; .text      
+006f0e38  5440       eors     r4, r2                         ; .text      
+006f0e3a  5d40       eors     r5, r3                         ; .text      
+006f0e3c  54ea050a   orrs.w   sl, r4, r5                     ; .text      
+006f0e40  3cd0       beq      #0x6f0ebc                      ; .text      
+006f0e42  28e0       b        #0x6f0e96                      ; .text      
+006f0e44  0023       movs     r3, #0                         ; .text      
+006f0e46  4ff47202   mov.w    r2, #0xf20000                  ; .text      
+006f0e4a  6240       eors     r2, r4                         ; .text      
+006f0e4c  6b40       eors     r3, r5                         ; .text      
+006f0e4e  52ea0300   orrs.w   r0, r2, r3                     ; .text      
+006f0e52  29d0       beq      #0x6f0ea8                      ; .text      
+006f0e54  0023       movs     r3, #0                         ; .text      
+006f0e56  4ff47302   mov.w    r2, #0xf30000                  ; .text      
+006f0e5a  5440       eors     r4, r2                         ; .text      
+006f0e5c  5d40       eors     r5, r3                         ; .text      
+006f0e5e  54ea0503   orrs.w   r3, r4, r5                     ; .text      
+006f0e62  16d0       beq      #0x6f0e92                      ; .text      
+006f0e64  17e0       b        #0x6f0e96                      ; .text      
+006f0e66  184c       ldr      r4, [pc, #0x60]                ; .text      [006f0ec8]=b0400001
+006f0e68  17e0       b        #0x6f0e9a                      ; .text      
+006f0e6a  184b       ldr      r3, [pc, #0x60]                ; .text      [006f0ecc]=b0510001
+006f0e6c  184a       ldr      r2, [pc, #0x60]                ; .text      [006f0ed0]=b0400006
+006f0e6e  194c       ldr      r4, [pc, #0x64]                ; .text      [006f0ed4]=13500002
+006f0e70  02e0       b        #0x6f0e78                      ; .text      
+006f0e72  194b       ldr      r3, [pc, #0x64]                ; .text      [006f0ed8]=b0800001
+006f0e74  154a       ldr      r2, [pc, #0x54]                ; .text      [006f0ecc]=b0510001
+006f0e76  194c       ldr      r4, [pc, #0x64]                ; .text      [006f0edc]=1380000a
+006f0e78  a042       cmp      r0, r4                         ; .text      
+006f0e7a  0cbf       ite      eq                             ; .text      
+006f0e7c  1446       mov      r4, r2                         ; .text      
+006f0e7e  1c46       mov      r4, r3                         ; .text      
+006f0e80  0be0       b        #0x6f0e9a                      ; .text      
+006f0e82  174b       ldr      r3, [pc, #0x5c]                ; .text      [006f0ee0]=ec0efffc
+006f0e84  c318       adds     r3, r0, r3                     ; .text      
+006f0e86  232b       cmp      r3, #0x23                      ; .text      
+006f0e88  18d8       bhi      #0x6f0ebc                      ; .text      
+006f0e8a  164a       ldr      r2, [pc, #0x58]                ; .text      [006f0ee4]=0091cad0
+006f0e8c  52f82340   ldr.w    r4, [r2, r3, lsl #2]           ; .text      
+006f0e90  02e0       b        #0x6f0e98                      ; .text      
+006f0e92  154c       ldr      r4, [pc, #0x54]                ; .text      [006f0ee8]=b0f30001
+006f0e94  01e0       b        #0x6f0e9a                      ; .text      
+006f0e96  6446       mov      r4, ip                         ; .text      
+006f0e98  3cb1       cbz      r4, #0x6f0eaa                  ; .text      
+006f0e9a  3046       mov      r0, r6                         ; .text      
+006f0e9c  2246       mov      r2, r4                         ; .text      
+006f0e9e  fff7d9fd   bl       #0x6f0a54                      ; .text      
+006f0ea2  02e0       b        #0x6f0eaa                      ; .text      
+006f0ea4  0446       mov      r4, r0                         ; .text      
+006f0ea6  00e0       b        #0x6f0eaa                      ; .text      
+006f0ea8  0024       movs     r4, #0                         ; .text      
+006f0eaa  2046       mov      r0, r4                         ; .text      
+006f0eac  bde8f88f   pop.w    {r3, r4, r5, r6, r7, r8, sb, sl, fp, pc} ; .text      
+006f0eb0  0e4c       ldr      r4, [pc, #0x38]                ; .text      [006f0eec]=b0810001
+006f0eb2  f2e7       b        #0x6f0e9a                      ; .text      
+006f0eb4  0e4c       ldr      r4, [pc, #0x38]                ; .text      [006f0ef0]=b0400005
+006f0eb6  f0e7       b        #0x6f0e9a                      ; .text      
+006f0eb8  0e4c       ldr      r4, [pc, #0x38]                ; .text      [006f0ef4]=b0200001
+006f0eba  eee7       b        #0x6f0e9a                      ; .text      
+
+# pool 0x6F0EC0..0x6F0EF8
+006f0ec0  13810001
+006f0ec4  1340000e
+006f0ec8  b0400001
+006f0ecc  b0510001
+006f0ed0  b0400006
+006f0ed4  13500002
+006f0ed8  b0800001
+006f0edc  1380000a
+006f0ee0  ec0efffc
+006f0ee4  0091cad0
+006f0ee8  b0f30001
+006f0eec  b0810001
+006f0ef0  b0400005
+006f0ef4  b0200001
+
+# tabla de salto 0x91CAD0 para codigos 0x13F10004..0x13F10027
+0x13F10004 -> 0xB0520002
+0x13F10005 -> 0xB0520003
+0x13F10006 -> 0xB0510003
+0x13F10007 -> 0xB0800001
+0x13F10008 -> 0xB0800001
+0x13F10009 -> 0xB0520003
+0x13F1000A -> 0xB0520003
+0x13F1000B -> 0xB0520003
+0x13F1000C -> 0xB0800001
+0x13F1000D -> 0xB0800001
+0x13F1000E -> 0xB0800001
+0x13F1000F -> 0xB0800001
+0x13F10010 -> 0xB0800001
+0x13F10011 -> 0xB0800001
+0x13F10012 -> 0xB0800001
+0x13F10013 -> 0xB0800001
+0x13F10014 -> 0xB0800001
+0x13F10015 -> 0xB0800001
+0x13F10016 -> 0xB0800001
+0x13F10017 -> 0xB0800001
+0x13F10018 -> 0xB0800001
+0x13F10019 -> 0xB0520003
+0x13F1001A -> 0xB0520003
+0x13F1001B -> 0xB0520003
+0x13F1001C -> 0xB0510003
+0x13F1001D -> 0xB0510003
+0x13F1001E -> 0xB0510002
+0x13F1001F -> 0xB0510002
+0x13F10020 -> 0xB0510003
+0x13F10021 -> 0xB0800001
+0x13F10022 -> 0xB0810001
+0x13F10023 -> 0xB0520003
+0x13F10024 -> 0xB0520003
+0x13F10025 -> 0xB0520003
+0x13F10026 -> 0xB0510001
+0x13F10027 -> 0xB0510004

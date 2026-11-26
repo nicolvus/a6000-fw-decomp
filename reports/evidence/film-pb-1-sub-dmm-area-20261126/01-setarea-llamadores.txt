@@ -1,0 +1,63 @@
+# Llamadores de StreamCache::SetArea (0x7594e0) y origen del descriptor
+0x330128 None
+0x42d38e None
+0x42d7d2 None
+0x42d894 None
+0x43945c None
+0x43f3d0 None
+0x43f472 None
+0x442562 None
+0x44329c None
+0x759ab4 None
+
+## SetMemoryTable (0x33009c): size = [ChangeAllocate(tipo)+0x140]
+00330104: 1348       ldr      r0, [pc, #0x4c]                 ; [00330154]=00a4b5e8
+00330106: 0122       movs     r2, #1                        
+00330108: 1949       ldr      r1, [pc, #0x64]                 ; [00330170]=00812b84 " type = MemInfo::MEM_TBL_STILL_REC;"
+0033010a: 0324       movs     r4, #3                        
+0033010c: fef70cff   bl       #0x32ef28                     
+00330110: 00e0       b        #0x330114                     
+00330112: 0224       movs     r4, #2                        
+00330114: 2946       mov      r1, r5                        
+00330116: 2046       mov      r0, r4                        
+00330118: c7f282ff   bl       #0x5f8020                     
+0033011c: 0122       movs     r2, #1                        
+0033011e: 0546       mov      r5, r0                        
+00330120: d0f83801   ldr.w    r0, [r0, #0x138]              
+00330124: d5f84011   ldr.w    r1, [r5, #0x140]              
+00330128: 29f0daf1   bl       #0x7594e0                     
+0033012c: 114b       ldr      r3, [pc, #0x44]                 ; [00330174]=00a4b5f4
+0033012e: 1a68       ldr      r2, [r3]                      
+
+## SetUpPlayerInstance (0x43910c): sb=[arg8+0x138], r8=[arg8+0x140], SetArea(sb,r8,1)
+0043924a: 002d       cmp      r5, #0                        
+0043924c: 00f00881   beq.w    #0x439460                     
+00439250: d4f8940d   ldr.w    r0, [r4, #0xd94]              
+00439254: 2946       mov      r1, r5                        
+00439256: d5f80891   ldr.w    sb, [r5, #0x108]              
+0043925a: d5f81081   ldr.w    r8, [r5, #0x110]              
+0043925e: cef61afe   bl       #0x307e96                     
+00439262: f8e0       b        #0x439456                     
+00439264: 07f11002   add.w    r2, r7, #0x10                 
+00439268: 0026       movs     r6, #0                        
+0043926a: d4f8ec01   ldr.w    r0, [r4, #0x1ec]              
+0043926e: 5946       mov      r1, fp                        
+00439270: 42f8046d   str      r6, [r2, #-0x4]!              
+00439274: 0ef0ccfa   bl       #0x447810                     
+00439278: 0028       cmp      r0, #0                        
+004392c6: 002d       cmp      r5, #0                        
+004392c8: 00f0ca80   beq.w    #0x439460                     
+004392cc: d4f8980d   ldr.w    r0, [r4, #0xd98]              
+004392d0: 2946       mov      r1, r5                        
+004392d2: d5f83891   ldr.w    sb, [r5, #0x138]              
+004392d6: d5f84081   ldr.w    r8, [r5, #0x140]              
+004392da: e8f63dfe   bl       #0x321f58                     
+004392de: bae0       b        #0x439456                     
+0043944e: 3db1       cbz      r5, #0x439460                 
+00439450: 4ff00008   mov.w    r8, #0                        
+00439454: c146       mov      sb, r8                        
+00439456: 4846       mov      r0, sb                        
+00439458: 4146       mov      r1, r8                        
+0043945a: 0122       movs     r2, #1                        
+0043945c: 20f340f8   bl       #0x7594e0                     
+00439460: 7b68       ldr      r3, [r7, #4]                  

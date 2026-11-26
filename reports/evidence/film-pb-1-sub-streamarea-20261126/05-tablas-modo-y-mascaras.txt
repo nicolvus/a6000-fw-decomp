@@ -1,0 +1,381 @@
+# Tablas de modo de MemInfo en libmpr.so 3.21. Todas las direcciones de .rodata/.data verificadas con readelf.
+#
+# m_systemType [0x9defe0] = 1 (valor de fichero) -> tabla de Type2Mode = 0x9de898
+# [0xA4F0A4] lo fija MemInfo::Init (0x5f7566) a 0x8d87e8: lista de pares {ptr lista de areas, modeId}, terminada en ptr==0
+# lista de areas: entradas de 0xC  {+0 = tamano, +4 = areaType, +8 = indice en la tabla 0xA4F368}, fin [+8]==-1
+# mascara por areaType (0x5f685c, tabla 0x8d9030, indice 0..0xA):
+#   t0=0x2  t1=0x2  t2=0x2  t3=0x1  t4=0x1  t5=0x1  t6=0x4  t7=0x4  t8=0x4  t9=0x1  t10=0x4
+#   => subArea=7 cubre 0x1|0x2|0x4 = TODAS las areaType definidas; subArea=2 solo areaType 0,1,2
+
+### lista de modos 0x8d87e8 (+) y su lista de areas
+[ 0] areas=009de6f0 modeId= 0
+       + 0 tam=0x00008000 areaType= 2 idx=  0
+       + 1 tam=0x00000200 areaType= 2 idx=  1
+       + 2 tam=0x00038000 areaType= 2 idx=  2
+       + 3 tam=0x00008000 areaType= 2 idx=  3
+       + 4 tam=0x00008000 areaType= 2 idx=  4
+       + 5 tam=0x00000400 areaType= 2 idx=  5
+       + 6 tam=0x00000200 areaType= 2 idx=  6
+       + 7 tam=0x00000400 areaType= 2 idx=  7
+       + 8 tam=0x00002800 areaType= 2 idx=  8
+       + 9 tam=0x00008000 areaType= 2 idx=  9
+       +10 tam=0x00020c00 areaType= 2 idx= 10
+       fin en +11
+[ 1] areas=009dbd20 modeId= 2
+       + 0 tam=0x01800000 areaType= 0 idx= 11 <== HUECO 11
+       + 1 tam=0x00500000 areaType= 3 idx=  7
+       + 2 tam=0x00080000 areaType= 3 idx=  9
+       + 3 tam=0x00600000 areaType= 1 idx= 13
+       + 4 tam=0x00003000 areaType= 6 idx=  8
+       + 5 tam=0x00001000 areaType= 6 idx= 10
+       + 6 tam=0x00092000 areaType= 6 idx= 14
+       + 7 tam=0x00000400 areaType= 6 idx= 16
+       + 8 tam=0x00000c00 areaType= 6 idx= 89
+       + 9 tam=0x00000400 areaType= 6 idx= 17
+       +10 tam=0x00000c00 areaType= 6 idx= 89
+       +11 tam=0x00018000 areaType= 6 idx= 30
+       +12 tam=0x00000400 areaType= 6 idx= 31
+       +13 tam=0x00000c00 areaType= 6 idx= 89
+       +14 tam=0x00000400 areaType= 6 idx= 32
+       +15 tam=0x00000c00 areaType= 6 idx= 89
+       +16 tam=0x00002000 areaType= 6 idx= 33
+       +17 tam=0x00000400 areaType= 6 idx= 18
+       +18 tam=0x00000c00 areaType= 6 idx= 89
+       +19 tam=0x00000400 areaType= 6 idx= 19
+       +20 tam=0x00000c00 areaType= 6 idx= 89
+       +21 tam=0x00002000 areaType= 6 idx= 12
+       +22 tam=0x00001000 areaType= 6 idx= 37
+       +23 tam=0x00001000 areaType= 6 idx= 38
+       fin en +24
+[ 2] areas=009db0e4 modeId= 1
+       + 0 tam=0x01c00000 areaType= 0 idx= 11 <== HUECO 11
+       + 1 tam=0x00500000 areaType= 3 idx=  7
+       + 2 tam=0x00080000 areaType= 4 idx=  9
+       + 3 tam=0x0000c000 areaType= 6 idx=  8
+       + 4 tam=0x00001000 areaType= 6 idx= 10
+       + 5 tam=0x00092000 areaType= 6 idx= 14
+       + 6 tam=0x00000400 areaType= 6 idx= 16
+       + 7 tam=0x00000c00 areaType= 6 idx= 89
+       + 8 tam=0x00000400 areaType= 6 idx= 17
+       + 9 tam=0x00000c00 areaType= 6 idx= 89
+       +10 tam=0x00018000 areaType= 6 idx= 30
+       +11 tam=0x00000400 areaType= 6 idx= 33
+       +12 tam=0x00000c00 areaType= 6 idx= 89
+       +13 tam=0x00000400 areaType= 6 idx= 75
+       +14 tam=0x00000c00 areaType= 6 idx= 89
+       +15 tam=0x00000400 areaType= 6 idx= 18
+       +16 tam=0x00000c00 areaType= 6 idx= 89
+       +17 tam=0x00000400 areaType= 6 idx= 19
+       +18 tam=0x00000c00 areaType= 6 idx= 89
+       +19 tam=0x00002000 areaType= 6 idx= 12
+       +20 tam=0x00002000 areaType= 6 idx= 37
+       +21 tam=0x00001000 areaType= 6 idx= 38
+       fin en +22
+[ 3] areas=009db444 modeId= 3
+       + 0 tam=0x01800000 areaType= 0 idx= 13
+       + 1 tam=0x00000400 areaType= 6 idx= 18
+       + 2 tam=0x00000c00 areaType= 6 idx= 89
+       + 3 tam=0x00000400 areaType= 6 idx= 19
+       + 4 tam=0x00000c00 areaType= 6 idx= 89
+       + 5 tam=0x00002000 areaType= 6 idx= 12
+       fin en +6
+[ 4] areas=009da8e0 modeId= 4
+       + 0 tam=0x00200000 areaType= 0 idx= 84
+       + 1 tam=0x01200000 areaType= 0 idx= 11 <== HUECO 11
+       + 2 tam=0x00500000 areaType= 3 idx=  0
+       + 3 tam=0x000a0000 areaType= 6 idx= 28
+       + 4 tam=0x00001800 areaType= 6 idx=  1
+       + 5 tam=0x00000800 areaType= 6 idx= 89
+       + 6 tam=0x00008000 areaType= 6 idx=  2
+       + 7 tam=0x00000800 areaType= 6 idx=  6
+       + 8 tam=0x00000800 areaType= 6 idx= 89
+       + 9 tam=0x00092000 areaType= 6 idx= 15
+       +10 tam=0x00000400 areaType= 6 idx= 22
+       +11 tam=0x00000c00 areaType= 6 idx= 89
+       +12 tam=0x00000400 areaType= 6 idx= 23
+       +13 tam=0x00000c00 areaType= 6 idx= 89
+       fin en +14
+[ 5] areas=009dbe4c modeId= 5
+       + 0 tam=0x00200000 areaType= 0 idx= 84
+       + 1 tam=0x01200000 areaType= 0 idx= 11 <== HUECO 11
+       + 2 tam=0x00500000 areaType= 3 idx=  0
+       + 3 tam=0x000a0000 areaType= 6 idx= 28
+       + 4 tam=0x00001800 areaType= 6 idx=  1
+       + 5 tam=0x00000800 areaType= 6 idx= 89
+       + 6 tam=0x00008000 areaType= 6 idx=  2
+       + 7 tam=0x00000800 areaType= 6 idx=  6
+       + 8 tam=0x00000800 areaType= 6 idx= 89
+       + 9 tam=0x00092000 areaType= 6 idx= 15
+       +10 tam=0x00000400 areaType= 6 idx= 22
+       +11 tam=0x00000c00 areaType= 6 idx= 89
+       +12 tam=0x00000400 areaType= 6 idx= 23
+       +13 tam=0x00000c00 areaType= 6 idx= 89
+       fin en +14
+[ 6] areas=009db75c modeId= 6
+       + 0 tam=0x01600000 areaType= 0 idx= 13
+       + 1 tam=0x00200000 areaType= 0 idx= 84
+       + 2 tam=0x00018000 areaType= 6 idx= 30
+       + 3 tam=0x00000400 areaType= 6 idx= 24
+       + 4 tam=0x00000c00 areaType= 6 idx= 89
+       + 5 tam=0x00000400 areaType= 6 idx= 25
+       + 6 tam=0x00000c00 areaType= 6 idx= 89
+       + 7 tam=0x00000800 areaType= 6 idx= 74
+       + 8 tam=0x00000800 areaType= 6 idx= 89
+       fin en +9
+[ 7] areas=009daf7c modeId= 7
+       + 0 tam=0x01400000 areaType= 0 idx= 11 <== HUECO 11
+       + 1 tam=0x00800000 areaType= 3 idx=  0
+       + 2 tam=0x00080000 areaType= 4 idx=  3
+       + 3 tam=0x00500000 areaType= 5 idx= 40
+       + 4 tam=0x00000000 areaType= 6 idx= 28
+       + 5 tam=0x00001800 areaType= 6 idx=  1
+       + 6 tam=0x00000800 areaType= 6 idx= 89
+       + 7 tam=0x00001000 areaType= 6 idx=  4
+       + 8 tam=0x00008000 areaType= 6 idx=  2
+       + 9 tam=0x00002000 areaType= 6 idx=  5
+       +10 tam=0x00000800 areaType= 6 idx=  6
+       +11 tam=0x00000800 areaType= 6 idx= 89
+       +12 tam=0x00092000 areaType= 6 idx= 15
+       +13 tam=0x00000400 areaType= 6 idx= 22
+       +14 tam=0x00000c00 areaType= 6 idx= 89
+       +15 tam=0x00000400 areaType= 6 idx= 23
+       +16 tam=0x00000c00 areaType= 6 idx= 89
+       +17 tam=0x00001000 areaType= 6 idx= 41
+       +18 tam=0x00002000 areaType= 6 idx= 42
+       +19 tam=0x00000400 areaType= 6 idx= 20
+       +20 tam=0x00000c00 areaType= 6 idx= 89
+       +21 tam=0x00000400 areaType= 6 idx= 21
+       +22 tam=0x00000c00 areaType= 6 idx= 89
+       +23 tam=0x00008000 areaType= 6 idx= 43
+       +24 tam=0x00002000 areaType= 6 idx= 44
+       +25 tam=0x00000400 areaType= 6 idx= 45
+       +26 tam=0x00000c00 areaType= 6 idx= 89
+       +27 tam=0x00000400 areaType= 6 idx= 46
+       +28 tam=0x00000c00 areaType= 6 idx= 89
+       fin en +29
+[ 8] areas=009da994 modeId= 8
+       + 0 tam=0x01800000 areaType= 0 idx= 11 <== HUECO 11
+       + 1 tam=0x000a0000 areaType= 6 idx= 28
+       + 2 tam=0x00018000 areaType= 6 idx= 30
+       + 3 tam=0x00000400 areaType= 6 idx= 24
+       + 4 tam=0x00000c00 areaType= 6 idx= 89
+       + 5 tam=0x00000400 areaType= 6 idx= 25
+       + 6 tam=0x00000c00 areaType= 6 idx= 89
+       + 7 tam=0x000bb800 areaType= 7 idx= 35
+       + 8 tam=0x00000800 areaType= 7 idx= 89
+       fin en +9
+[ 9] areas=009db348 modeId= 9
+       + 0 tam=0x00a00000 areaType= 1 idx= 11 <== HUECO 11
+       + 1 tam=0x00500000 areaType= 3 idx=  0
+       + 2 tam=0x00080000 areaType= 4 idx=  3
+       + 3 tam=0x017f8000 areaType= 0 idx= 27
+       + 4 tam=0x00008000 areaType= 0 idx= 47
+       + 5 tam=0x000a0000 areaType= 6 idx= 28
+       + 6 tam=0x00008000 areaType= 6 idx=  2
+       + 7 tam=0x00002000 areaType= 6 idx=  5
+       + 8 tam=0x00038800 areaType= 6 idx= 14
+       + 9 tam=0x00000800 areaType= 6 idx= 89
+       +10 tam=0x00000400 areaType= 6 idx= 16
+       +11 tam=0x00000c00 areaType= 6 idx= 89
+       +12 tam=0x00000400 areaType= 6 idx= 17
+       +13 tam=0x00000c00 areaType= 6 idx= 89
+       +14 tam=0x00002800 areaType= 6 idx= 29
+       +15 tam=0x00000800 areaType= 6 idx= 89
+       +16 tam=0x00003000 areaType= 6 idx=  8
+       +17 tam=0x00001000 areaType= 6 idx= 10
+       +18 tam=0x0003e800 areaType= 6 idx= 15
+       +19 tam=0x00000800 areaType= 6 idx= 89
+       fin en +20
+[10] areas=009dae44 modeId=10
+       + 0 tam=0x00800000 areaType= 3 idx=  0
+       + 1 tam=0x00080000 areaType= 4 idx=  3
+       + 2 tam=0x00480000 areaType= 5 idx=  7
+       + 3 tam=0x00080000 areaType= 5 idx=  9
+       + 4 tam=0x01200000 areaType= 0 idx= 11 <== HUECO 11
+       + 5 tam=0x02000000 areaType= 1 idx= 27
+       + 6 tam=0x00001800 areaType= 6 idx=  1
+       + 7 tam=0x00000800 areaType= 6 idx= 89
+       + 8 tam=0x00001000 areaType= 6 idx=  4
+       + 9 tam=0x00008000 areaType= 6 idx=  2
+       +10 tam=0x00002000 areaType= 6 idx=  5
+       +11 tam=0x00000800 areaType= 6 idx=  6
+       +12 tam=0x00000800 areaType= 6 idx= 89
+       +13 tam=0x00092000 areaType= 6 idx= 15
+       +14 tam=0x00000400 areaType= 6 idx= 22
+       +15 tam=0x00000c00 areaType= 6 idx= 89
+       +16 tam=0x00000400 areaType= 6 idx= 23
+       +17 tam=0x00000c00 areaType= 6 idx= 89
+       +18 tam=0x00003000 areaType= 6 idx=  8
+       +19 tam=0x00001000 areaType= 6 idx= 10
+       +20 tam=0x0007d000 areaType= 6 idx= 14
+       +21 tam=0x00000400 areaType= 6 idx= 16
+       +22 tam=0x00000c00 areaType= 6 idx= 89
+       +23 tam=0x00000400 areaType= 6 idx= 17
+       +24 tam=0x00000c00 areaType= 6 idx= 89
+       fin en +25
+[11] areas=009dc23c modeId=11
+       + 0 tam=0x00500000 areaType= 3 idx=  0
+       + 1 tam=0x00500000 areaType= 4 idx=  7
+       + 2 tam=0x00900000 areaType= 0 idx= 11 <== HUECO 11
+       + 3 tam=0x00400000 areaType= 0 idx= 13
+       + 4 tam=0x004c0000 areaType= 0 idx= 26
+       + 5 tam=0x00001800 areaType= 6 idx=  1
+       + 6 tam=0x00000800 areaType= 6 idx= 89
+       + 7 tam=0x00008000 areaType= 6 idx=  2
+       + 8 tam=0x00000800 areaType= 6 idx=  6
+       + 9 tam=0x00000800 areaType= 6 idx= 89
+       +10 tam=0x00092000 areaType= 6 idx= 15
+       +11 tam=0x00000400 areaType= 6 idx= 22
+       +12 tam=0x00000c00 areaType= 6 idx= 89
+       +13 tam=0x00000400 areaType= 6 idx= 23
+       +14 tam=0x00000c00 areaType= 6 idx= 89
+       +15 tam=0x00000400 areaType= 6 idx= 24
+       +16 tam=0x00000c00 areaType= 6 idx= 89
+       +17 tam=0x00000400 areaType= 6 idx= 25
+       +18 tam=0x00000c00 areaType= 6 idx= 89
+       +19 tam=0x0000c000 areaType= 6 idx=  8
+       +20 tam=0x00092000 areaType= 6 idx= 14
+       +21 tam=0x00000400 areaType= 6 idx= 16
+       +22 tam=0x00000c00 areaType= 6 idx= 89
+       +23 tam=0x00000400 areaType= 6 idx= 17
+       +24 tam=0x00000c00 areaType= 6 idx= 89
+       fin en +25
+[12] areas=009dba14 modeId=12
+       + 0 tam=0x01c00000 areaType= 0 idx= 11 <== HUECO 11
+       + 1 tam=0x00500000 areaType= 3 idx=  7
+       + 2 tam=0x00080000 areaType= 3 idx=  9
+       + 3 tam=0x0000c000 areaType= 6 idx=  8
+       + 4 tam=0x00001000 areaType= 6 idx= 10
+       + 5 tam=0x00092000 areaType= 6 idx= 14
+       + 6 tam=0x00000400 areaType= 6 idx= 16
+       + 7 tam=0x00000c00 areaType= 6 idx= 89
+       + 8 tam=0x00000400 areaType= 6 idx= 17
+       + 9 tam=0x00000c00 areaType= 6 idx= 89
+       +10 tam=0x00008000 areaType= 6 idx= 30
+       +11 tam=0x00000400 areaType= 6 idx= 31
+       +12 tam=0x00000c00 areaType= 6 idx= 89
+       +13 tam=0x00000400 areaType= 6 idx= 32
+       +14 tam=0x00000c00 areaType= 6 idx= 89
+       +15 tam=0x00002000 areaType= 6 idx= 33
+       +16 tam=0x00000400 areaType= 6 idx= 18
+       +17 tam=0x00000c00 areaType= 6 idx= 89
+       +18 tam=0x00000400 areaType= 6 idx= 19
+       +19 tam=0x00000c00 areaType= 6 idx= 89
+       +20 tam=0x00002000 areaType= 6 idx= 12
+       +21 tam=0x00001000 areaType= 6 idx= 37
+       +22 tam=0x00001000 areaType= 6 idx= 38
+       fin en +23
+[13] areas=009dc11c modeId=13
+       + 0 tam=0x00c00000 areaType= 0 idx= 11 <== HUECO 11
+       + 1 tam=0x00500000 areaType= 3 idx=  0
+       + 2 tam=0x00080000 areaType= 4 idx=  3
+       + 3 tam=0x000a0000 areaType= 6 idx= 28
+       + 4 tam=0x00001800 areaType= 6 idx=  1
+       + 5 tam=0x00000800 areaType= 6 idx= 89
+       + 6 tam=0x00001000 areaType= 6 idx=  4
+       + 7 tam=0x00008000 areaType= 6 idx=  2
+       + 8 tam=0x00002000 areaType= 6 idx=  5
+       + 9 tam=0x00000800 areaType= 6 idx=  6
+       +10 tam=0x00000800 areaType= 6 idx= 89
+       +11 tam=0x00092000 areaType= 6 idx= 15
+       +12 tam=0x00000400 areaType= 6 idx= 22
+       +13 tam=0x00000c00 areaType= 6 idx= 89
+       +14 tam=0x00000400 areaType= 6 idx= 23
+       +15 tam=0x00000c00 areaType= 6 idx= 89
+       +16 tam=0x00000400 areaType= 6 idx= 18
+       +17 tam=0x00000c00 areaType= 6 idx= 89
+       +18 tam=0x00000400 areaType= 6 idx= 19
+       +19 tam=0x00000c00 areaType= 6 idx= 89
+       +20 tam=0x00002000 areaType= 6 idx= 12
+       +21 tam=0x00000800 areaType= 6 idx= 74
+       +22 tam=0x00000800 areaType= 6 idx= 89
+       fin en +23
+[14] areas=009db8f4 modeId=14
+       + 0 tam=0x01400000 areaType= 0 idx= 11 <== HUECO 11
+       + 1 tam=0x00800000 areaType= 3 idx=  0
+       + 2 tam=0x00080000 areaType= 4 idx=  3
+       + 3 tam=0x000a0000 areaType= 6 idx= 28
+       + 4 tam=0x00001800 areaType= 6 idx=  1
+       + 5 tam=0x00000800 areaType= 6 idx= 89
+       + 6 tam=0x00001000 areaType= 6 idx=  4
+       + 7 tam=0x00008000 areaType= 6 idx=  2
+       + 8 tam=0x00002000 areaType= 6 idx=  5
+       + 9 tam=0x00000800 areaType= 6 idx=  6
+       +10 tam=0x00000800 areaType= 6 idx= 89
+       +11 tam=0x00092000 areaType= 6 idx= 15
+       +12 tam=0x00000400 areaType= 6 idx= 22
+       +13 tam=0x00000c00 areaType= 6 idx= 89
+       +14 tam=0x00000400 areaType= 6 idx= 23
+       +15 tam=0x00000c00 areaType= 6 idx= 89
+       +16 tam=0x00000400 areaType= 6 idx= 18
+       +17 tam=0x00000c00 areaType= 6 idx= 89
+       +18 tam=0x00000400 areaType= 6 idx= 19
+       +19 tam=0x00000c00 areaType= 6 idx= 89
+       +20 tam=0x00002000 areaType= 6 idx= 12
+       +21 tam=0x00000800 areaType= 6 idx= 74
+       +22 tam=0x00000800 areaType= 6 idx= 89
+       fin en +23
+[15] areas=009db1f8 modeId=17
+       + 0 tam=0x00200000 areaType= 0 idx= 83
+       + 1 tam=0x00200000 areaType= 0 idx= 84
+       + 2 tam=0x000bb800 areaType= 7 idx= 35
+       + 3 tam=0x00000800 areaType= 7 idx= 89
+       fin en +4
+
+### tabla Type2Mode para m_systemType=1 (0x9de898), stride 0x10, fin [0]==0x20
+    {type, sub(8=cualquiera), m_bufTblMode(=modeId de la lista), m_ramMapAreaMode}
+    type=16  sub=8   bufTblMode=17  ramMapAreaMode=0  
+    type=1   sub=8   bufTblMode=6   ramMapAreaMode=4  
+    type=2   sub=1   bufTblMode=1   ramMapAreaMode=6  
+    type=2   sub=3   bufTblMode=1   ramMapAreaMode=6  
+    type=2   sub=2   bufTblMode=1   ramMapAreaMode=6  
+    type=2   sub=4   bufTblMode=1   ramMapAreaMode=6  
+    type=2   sub=6   bufTblMode=1   ramMapAreaMode=6  
+    type=2   sub=7   bufTblMode=33  ramMapAreaMode=6  
+    type=17  sub=8   bufTblMode=1   ramMapAreaMode=6  
+    type=28  sub=8   bufTblMode=1   ramMapAreaMode=6  
+    type=3   sub=8   bufTblMode=3   ramMapAreaMode=7  
+    type=4   sub=0   bufTblMode=5   ramMapAreaMode=8  
+    type=4   sub=1   bufTblMode=5   ramMapAreaMode=8  
+    type=4   sub=2   bufTblMode=5   ramMapAreaMode=8  
+    type=4   sub=3   bufTblMode=5   ramMapAreaMode=8  
+    type=4   sub=4   bufTblMode=5   ramMapAreaMode=8  
+    type=4   sub=6   bufTblMode=5   ramMapAreaMode=8  
+    type=4   sub=7   bufTblMode=5   ramMapAreaMode=8  
+    type=6   sub=1   bufTblMode=12  ramMapAreaMode=9  
+    type=6   sub=3   bufTblMode=12  ramMapAreaMode=10 
+    type=6   sub=2   bufTblMode=12  ramMapAreaMode=10 
+    type=6   sub=4   bufTblMode=12  ramMapAreaMode=10 
+    type=6   sub=6   bufTblMode=12  ramMapAreaMode=10 
+    type=0   sub=0   bufTblMode=14  ramMapAreaMode=3  
+    type=0   sub=1   bufTblMode=14  ramMapAreaMode=3  
+    type=0   sub=2   bufTblMode=14  ramMapAreaMode=3  
+    type=0   sub=3   bufTblMode=14  ramMapAreaMode=3  
+    type=0   sub=4   bufTblMode=14  ramMapAreaMode=3  
+    type=0   sub=6   bufTblMode=14  ramMapAreaMode=3  
+    type=0   sub=7   bufTblMode=34  ramMapAreaMode=3  
+    type=8   sub=0   bufTblMode=14  ramMapAreaMode=3  
+    type=8   sub=1   bufTblMode=14  ramMapAreaMode=3  
+    type=8   sub=2   bufTblMode=14  ramMapAreaMode=3  
+    type=8   sub=3   bufTblMode=14  ramMapAreaMode=3  
+    type=8   sub=4   bufTblMode=14  ramMapAreaMode=3  
+    type=8   sub=6   bufTblMode=14  ramMapAreaMode=3  
+    type=5   sub=8   bufTblMode=11  ramMapAreaMode=12 
+    type=9   sub=8   bufTblMode=8   ramMapAreaMode=14 
+    type=10  sub=8   bufTblMode=9   ramMapAreaMode=14 
+    type=11  sub=8   bufTblMode=18  ramMapAreaMode=14 
+    type=13  sub=8   bufTblMode=15  ramMapAreaMode=8  
+    type=14  sub=8   bufTblMode=23  ramMapAreaMode=8  
+    type=15  sub=2   bufTblMode=7   ramMapAreaMode=15 
+    type=15  sub=3   bufTblMode=7   ramMapAreaMode=15 
+    type=12  sub=8   bufTblMode=10  ramMapAreaMode=16 
+    type=22  sub=8   bufTblMode=27  ramMapAreaMode=17 
+    type=23  sub=8   bufTblMode=28  ramMapAreaMode=18 
+    type=24  sub=8   bufTblMode=29  ramMapAreaMode=19 
+    type=25  sub=8   bufTblMode=30  ramMapAreaMode=20 
+    type=26  sub=8   bufTblMode=31  ramMapAreaMode=21 
+    type=27  sub=8   bufTblMode=32  ramMapAreaMode=22 
+    type=21  sub=8   bufTblMode=17  ramMapAreaMode=0  
+    type=29  sub=8   bufTblMode=35  ramMapAreaMode=23 
+    type=30  sub=8   bufTblMode=36  ramMapAreaMode=23 
+    fin

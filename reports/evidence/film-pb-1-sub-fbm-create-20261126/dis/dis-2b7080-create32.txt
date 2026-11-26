@@ -1,0 +1,18 @@
+002b7080: 80b5       push     {r7, lr}                      
+002b7082: 00af       add      r7, sp, #0                    
+002b7084: bde88040   pop.w    {r7, lr}                      
+002b7088: 66f6babf   b.w      #0x11e000                     
+002b708c: b0b5       push     {r4, r5, r7, lr}              
+002b708e: 82b0       sub      sp, #8                        
+002b7090: 00af       add      r7, sp, #0                    
+002b7092: 1c46       mov      r4, r3                        
+002b7094: 07f10803   add.w    r3, r7, #8                    
+002b7098: 0025       movs     r5, #0                        
+002b709a: 43f8045d   str      r5, [r3, #-0x4]!              
+002b709e: 66f6b2ef   blx      #0x11e004                       ; _ZN8FlashLib17CreateSector_BodyEm12FBS_MOVEFLAGPmS1_
+002b70a2: 0cb1       cbz      r4, #0x2b70a8                 
+002b70a4: bb88       ldrh     r3, [r7, #4]                  
+002b70a6: 2380       strh     r3, [r4]                      
+002b70a8: 07f10807   add.w    r7, r7, #8                    
+002b70ac: bd46       mov      sp, r7                        
+002b70ae: b0bd       pop      {r4, r5, r7, pc}              

@@ -1,0 +1,33 @@
+=== 438b333e..438b33a2
+438b333e    321 ca50       str      r2, [r1, r3]                               | cfw ca50       str      r2, [r1, r3]
+438b3340    321 00fb0bfb   mul      fp, r0, fp                                 | cfw 00fb0bfb   mul      fp, r0, fp
+438b3344    321 0bf5c860   add.w    r0, fp, #0x640                             | cfw 0bf5c860   add.w    r0, fp, #0x640
+438b3348    321 00fb0af0   mul      r0, r0, sl                                 | cfw 00fb0af0   mul      r0, r0, sl
+438b334c    321 acf40cfd   bl       #0x4355fd68  ; ->4355fd68                  | cfw acf40cfd   bl       #0x4355fd68  ; ->4355fd68
+438b3350    321 adf8ce40   strh.w   r4, [sp, #0xce]                            | cfw adf8ce40   strh.w   r4, [sp, #0xce]
+438b3354    321 adf8d250   strh.w   r5, [sp, #0xd2]                            | cfw adf8d250   strh.w   r5, [sp, #0xd2]
+438b3358    321 adf8d640   strh.w   r4, [sp, #0xd6]                            | cfw adf8d640   strh.w   r4, [sp, #0xd6]
+438b335c    321 80b2       uxth     r0, r0                                     | cfw 80b2       uxth     r0, r0
+438b335e    321 adf8cc00   strh.w   r0, [sp, #0xcc]                            | cfw adf8cc00   strh.w   r0, [sp, #0xcc]
+438b3362    321 adf8d400   strh.w   r0, [sp, #0xd4]                            | cfw adf8d400   strh.w   r0, [sp, #0xd4]
+438b3366    321 bdf8c820   ldrh.w   r2, [sp, #0xc8]                            | cfw bdf8c820   ldrh.w   r2, [sp, #0xc8]
+438b336a    321 40f2ff13   movw     r3, #0x1ff                                 | cfw 40f2ff13   movw     r3, #0x1ff
+438b336e  * 321 07f5ec64   add.w    r4, r7, #0x760                             | cfw 04f317f1   bl       #0x43fb75a0  ; ->43fb75a0
+438b3372    321 9a42       cmp      r2, r3                                     | cfw 9a42       cmp      r2, r3
+438b3374    321 bdf8d020   ldrh.w   r2, [sp, #0xd0]                            | cfw bdf8d020   ldrh.w   r2, [sp, #0xd0]
+438b3378    321 88bf       it       hi                                         | cfw 88bf       it       hi
+438b337a    321 adf8c830   strhhi.w r3, [sp, #0xc8]                            | cfw adf8c830   strhhi.w r3, [sp, #0xc8]
+438b337e    321 9a42       cmp      r2, r3                                     | cfw 9a42       cmp      r2, r3
+438b3380    321 84bf       itt      hi                                         | cfw 84bf       itt      hi
+438b3382    321 40f2ff13   movwhi   r3, #0x1ff                                 | cfw 40f2ff13   movwhi   r3, #0x1ff
+438b3386    321 adf8d030   strhhi.w r3, [sp, #0xd0]                            | cfw adf8d030   strhhi.w r3, [sp, #0xd0]
+438b338a    321 0434       adds     r4, #4                                     | cfw 0434       adds     r4, #4
+438b338c    321 2046       mov      r0, r4                                     | cfw 2046       mov      r0, r4
+438b338e    321 3bf25cff   bl       #0x43aef24a  ; ->43aef24a                  | cfw 3bf25cff   bl       #0x43aef24a  ; ->43aef24a
+438b3392    321 0146       mov      r1, r0                                     | cfw 0146       mov      r1, r0
+438b3394    321 10b1       cbz      r0, #0x438b339c                            | cfw 10b1       cbz      r0, #0x438b339c
+438b3396    321 2046       mov      r0, r4                                     | cfw 2046       mov      r0, r4
+438b3398    321 0221       movs     r1, #2                                     | cfw 0221       movs     r1, #2
+438b339a    321 00e0       b        #0x438b339e  ; ->438b339e                  | cfw 00e0       b        #0x438b339e  ; ->438b339e
+438b339c    321 2046       mov      r0, r4                                     | cfw 2046       mov      r0, r4
+438b339e    321 62f203fe   bl       #0x43b15fa8  ; ->43b15fa8                  | cfw 62f203fe   bl       #0x43b15fa8  ; ->43b15fa8

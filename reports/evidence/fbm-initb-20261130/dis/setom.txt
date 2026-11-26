@@ -1,0 +1,39 @@
+002b5a60: 0228       cmp      r0, #2                        
+002b5a62: b0b5       push     {r4, r5, r7, lr}              
+002b5a64: 0c46       mov      r4, r1                        
+002b5a66: 00af       add      r7, sp, #0                    
+002b5a68: 14dd       ble      #0x2b5a94                     
+002b5a6a: 0d1d       adds     r5, r1, #4                    
+002b5a6c: 0c48       ldr      r0, [pc, #0x30]                 ; [002b5aa0]=007e8890 "%s %s %s"
+002b5a6e: 0ec9       ldm      r1, {r1, r2, r3}              
+002b5a70: fff744fb   bl       #0x2b50fc                     
+002b5a74: 6068       ldr      r0, [r4, #4]                  
+002b5a76: 6af62dfc   bl       #0x1202d4                     
+002b5a7a: 6068       ldr      r0, [r4, #4]                  
+002b5a7c: 4af3f7f9   bl       #0x5ffe6e                     
+002b5a80: 0446       mov      r4, r0                        
+002b5a82: 6868       ldr      r0, [r5, #4]                  
+002b5a84: 4af3f3f9   bl       #0x5ffe6e                     
+002b5a88: 0146       mov      r1, r0                        
+002b5a8a: 2046       mov      r0, r4                        
+002b5a8c: fcf72cfa   bl       #0x2b1ee8                     
+002b5a90: 0120       movs     r0, #1                        
+002b5a92: b0bd       pop      {r4, r5, r7, pc}              
+002b5a94: 0348       ldr      r0, [pc, #0xc]                  ; [002b5aa4]=007e88d1 "InitB [Operation Mode]"
+002b5a96: fff731fb   bl       #0x2b50fc                     
+002b5a9a: 0020       movs     r0, #0                        
+002b5a9c: b0bd       pop      {r4, r5, r7, pc}              
+002b5a9e: 00bf       nop                                    
+002b5aa0: 9088       ldrh     r0, [r2, #4]                  
+002b5aa2: 7e00       lsls     r6, r7, #1                    
+002b5aa4: d188       ldrh     r1, [r2, #6]                  
+002b5aa6: 7e00       lsls     r6, r7, #1                    
+002b5aa8: 80b5       push     {r7, lr}                      
+002b5aaa: 00af       add      r7, sp, #0                    
+002b5aac: 0348       ldr      r0, [pc, #0xc]                  ; [002b5abc]=007aedc7
+002b5aae: 0968       ldr      r1, [r1]                      
+002b5ab0: fff724fb   bl       #0x2b50fc                     
+002b5ab4: fcf734fd   bl       #0x2b2520                     
+002b5ab8: 0120       movs     r0, #1                        
+002b5aba: 80bd       pop      {r7, pc}                      
+002b5abc: c7ed7a00   stcl     p0, c0, [r7, #0x1e8]          

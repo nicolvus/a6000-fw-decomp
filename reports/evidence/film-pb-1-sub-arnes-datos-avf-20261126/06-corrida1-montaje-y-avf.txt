@@ -1,0 +1,35 @@
+# Corrida 1 (perfil datos-avf, tarjeta con SOLO AVIN0001.INP, sin .BNP ni PRV00001.BIN)
+# 1) montaje del volumen en el invitado
+6991:471.84 110.39 LOG   31 B  MediaMount /dev/mmca
+7137:474.38 112.81 LOG   31 E  MediaMount /dev/mmca
+7139:474.38 112.83 TRAZA 1   - [ObjMedia]Fsys_GetDeviceInfo("/dev/mmca") OK 
+7188:474.45 112.99 LOG   31 B  FsysMount /dev/mmca
+7268:474.86 113.41 LOG   31 E  FsysMount /dev/mmca
+7280:474.90 113.45 TRAZA ] \ & fufsys_SetDeviceInformation() ans = 0 
+7284:474.91 113.46 TRAZA 1 < $ [ObjMedia]Fsys_GetDriveInfo('A') OK 
+7301:474.94 113.50 TRAZA 1 _ [ObjMedia]FsysMountNotify() 
+7568:483.33 121.29 TRAZA 1 : [ObjMedia]FsysMountNotify() 
+
+# 2) el invitado abre/consulta rutas de AVF_INFO (volumen A = /dev/mmca)
+
+# 3) SDIO: lecturas de sector de libInfraFsys sobre la imagen
+37
+7206:474.50 113.05 SDIO leer fd=55 a=0 b=1 -> 512
+7212:474.52 113.07 SDIO leer fd=55 a=0 b=1 -> 512
+7223:474.58 113.13 SDIO leer fd=55 a=32 b=256 -> 131072
+
+# 4) trampas
+15893:542.83 [shim] TRACE 5bad00 n=1 r0=14f3d80 r1=1 r2=1 r3=0 lr=ad78e90f
+15950:543.33 [shim] TRACE 5bad00 n=2 r0=14f3d80 r1=5e r2=1 r3=adb27ce7 lr=ad793385
+15952:543.38 [shim] TRACE 5bad00 n=3 r0=14f3d80 r1=4b r2=1 r3=adb27ce7 lr=ad79279b
+17164:559.15 [shim] TRACE 5bad00 n=4 r0=14f3d80 r1=55 r2=1 r3=adb27ce7 lr=ad792e87
+17282:560.99 [shim] TRACE 5bad00 n=5 r0=14f3d80 r1=53 r2=1 r3=ffffffff lr=ad792c07
+17493:564.56 [shim] TRACE 5bad00 n=6 r0=14f3d80 r1=5 r2=1 r3=adb27ce7 lr=ad78ea63
+17498:564.58 [shim] TRACE 6e80a4 n=1 r0=11e2cb0 r1=1243b10 r2=123df38 r3=62aabbf4 lr=ada6867b
+17500:564.61 [shim] TRACE 5bad00 n=7 r0=1596f28 r1=21 r2=1 r3=0 lr=adad4359
+17503:564.63 [shim] TRACE 5bad00 n=8 r0=1596f28 r1=10 r2=1 r3=0 lr=adad4263
+17523:564.85 [shim] TRACE 6e80a4 n=2 r0=15c9490 r1=1243b10 r2=123df38 r3=62aabbe4 lr=ada6867b
+18728:572.44 [shim] TRACE 5bad00 n=16 r0=14f3d80 r1=53 r2=1 r3=ffffffff lr=ad792c07
+
+# 5) NI UNA línea de mp4Ifo / CreateAndLoad / LoadSub / RcsBackup / FlashLoad / CheckSalvage / MMgr
+0

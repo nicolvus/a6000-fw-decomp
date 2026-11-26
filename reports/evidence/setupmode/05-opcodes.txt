@@ -1,0 +1,45 @@
+# Opcodes MPR de las APIs que acaban en SetUpPlayerInstance (literal leido en el stub MprIf::<Api>)
+# y funcion FeaIf/handler + setupMode resultante.
+
+00722578     36 _ZN5MprIf12EnterDubbingEm
+00722e38    100 _ZN5MprIf16EnterHighlightPbEmN3MPR11ContentTypeEmPNS0_10VMuteColorEm
+007230f0     64 _ZN5MprIf21EnterMovieThumbnailPbEmN3MPR11ContentTypeEm
+00723130     64 _ZN5MprIf19EnterAviThumbnailPbEmN3MPR11ContentTypeEm
+00723170     64 _ZN5MprIf16EnterThumbnailPbEmN3MPR11ContentTypeEm
+007231b0    100 _ZN5MprIf12EnterMoviePbEmmPN3MPR10VMuteColorEmNS0_11MoviePbTypeENS0_19StillPlayOutputModeE
+00723214    140 _ZN5MprIf12EnterMoviePbEmN3MPR11ContentTypeEPNS0_10VMuteColorEmNS0_19StillPlayOutputModeE
+00723e1c    108 _ZN5MprIf16EnterHighlightPbEmmN3MPR8PlayModeEmPNS0_10VMuteColorEm
+00723e88    112 _ZN5MprIf16EnterHighlightPbEmmN3MPR8PlayModeEmPNS0_10VMuteColorEmNS0_11MoviePbTypeE
+00723f68     48 _ZN5MprIf16DvdEnterFinalizeEmm
+00723fc4     52 _ZN5MprIf12EnterStillPbEmmb
+00723ff8     14 _ZN5MprIf12EnterStillPbEmm
+00724008    104 _ZN5MprIf20EnterMoviePbStillRecEmN3MPR11ContentTypeEmPNS0_10VMuteColorEm
+
+# stubs MprIf::* (lectura del literal con la cadena del opcode)
+-- 0x7231B0
+007231d8: 0d48       ldr      r0, [pc, #0x34]                 ; [00723210]=40000017
+007231e2: 0b48       ldr      r0, [pc, #0x2c]                 ; [00723210]=40000017
+007231ec: 0848       ldr      r0, [pc, #0x20]                 ; [00723210]=40000017
+-- 0x724008
+0072402a: 0f48       ldr      r0, [pc, #0x3c]                 ; [00724068]=40000019
+0072403c: 0a48       ldr      r0, [pc, #0x28]                 ; [00724068]=40000019
+-- 0x723FC4
+00723fde: 0548       ldr      r0, [pc, #0x14]                 ; [00723ff4]=4000001b
+00723ff0: 2bf51ab8   b.w      #0x44f028                     
+00724002: faf573b1   b.w      #0x11e2ec                     
+-- 0x723170
+00723190: 0648       ldr      r0, [pc, #0x18]                 ; [007231ac]=4000002e
+007231a6: 2af511be   b.w      #0x44ddcc                     
+-- 0x7230F0
+00723110: 0648       ldr      r0, [pc, #0x18]                 ; [0072312c]=40000034
+00723126: 2af5d5ba   b.w      #0x44d6d4                     
+-- 0x723130
+00723150: 0648       ldr      r0, [pc, #0x18]                 ; [0072316c]=40000031
+00723166: 2af5c3bc   b.w      #0x44daf0                     
+-- 0x723F68
+00723f80: 0448       ldr      r0, [pc, #0x10]                 ; [00723f94]=40000039
+00723f90: 28f59abe   b.w      #0x44ccc8                     
+00723fa8: 0548       ldr      r0, [pc, #0x14]                 ; [00723fc0]=40000025
+-- 0x722E38
+00722e62: 0d48       ldr      r0, [pc, #0x34]                 ; [00722e98]=40000062
+00722e6e: 0a48       ldr      r0, [pc, #0x28]                 ; [00722e98]=40000062

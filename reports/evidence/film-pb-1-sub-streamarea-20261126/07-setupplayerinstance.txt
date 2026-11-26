@@ -1,0 +1,96 @@
+# SetUpPlayerInstance 0x43910c(this, setupMode, bIsFinalize, mmgrIdForMovie, mmgrIdForStill, mmgrIdForIndex, mmgrIdForAudio, cmdId, MemInfo*)
+# 8o argumento = [sp+0x44] -> r5 = puntero MemInfo (0xa4f368). 9o = [sp+0x48] -> r8
+# despacho: 0x4391e6 subs r3,r2,#1 ; cmp r3,#4 ; bhi.w 0x43944e (SetArea(0,0) literal)
+# tabla tbb en 0x4391f4 = 03 38 76 03 c2:
+#   setupMode 1 -> 0x4391fa   setupMode 2 -> 0x439264   setupMode 3 -> 0x4392e0
+#   setupMode 4 -> 0x4391fa   setupMode 5 -> 0x439378   >5 -> 0x43944e  (SetArea(0,0,1))
+004391e6: 7a68       ldr      r2, [r7, #4]                  
+004391e8: 531e       subs     r3, r2, #1                    
+004391ea: 042b       cmp      r3, #4                        
+004391ec: 00f22f81   bhi.w    #0x43944e                     
+004391f0: dfe803f0   tbb      [pc, r3]                      
+004391f4: 0338       subs     r0, #3                        
+004391f6: 7603       lsls     r6, r6, #0xd                  
+004391f8: c200       lsls     r2, r0, #3                    
+
+## setupMode 1/4: lee [+0x108] (direccion) y [+0x110] (tamano) = HUECO 11
+0043924a: 002d       cmp      r5, #0                        
+0043924c: 00f00881   beq.w    #0x439460                     
+00439250: d4f8940d   ldr.w    r0, [r4, #0xd94]              
+00439254: 2946       mov      r1, r5                        
+00439256: d5f80891   ldr.w    sb, [r5, #0x108]              
+0043925a: d5f81081   ldr.w    r8, [r5, #0x110]              
+0043925e: cef61afe   bl       #0x307e96                     
+00439262: f8e0       b        #0x439456                     
+
+## setupMode 2: lee [+0x138] y [+0x140] = HUECO 13
+004392c6: 002d       cmp      r5, #0                        
+004392c8: 00f0ca80   beq.w    #0x439460                     
+004392cc: d4f8980d   ldr.w    r0, [r4, #0xd98]              
+004392d0: 2946       mov      r1, r5                        
+004392d2: d5f83891   ldr.w    sb, [r5, #0x138]              
+004392d6: d5f84081   ldr.w    r8, [r5, #0x140]              
+004392da: e8f63dfe   bl       #0x321f58                     
+004392de: bae0       b        #0x439456                     
+
+## denominador comun: SetArea(addr, size, 1) en 0x439456
+00439456: 4846       mov      r0, sb                        
+00439458: 4146       mov      r1, r8                        
+0043945a: 0122       movs     r2, #1                        
+0043945c: 20f340f8   bl       #0x7594e0                     
+
+## las 12 llamadas a SetUpPlayerInstance con su setupMode (resuelto hacia atras)
+### callers of 0043910c
+0043094c OK   bl     func=00430924  
+00431184 OK   bl     func=0043106c  DvdEnterFinalize()
+0043530a OK   bl     func=0043525c  GetMMgrObj(for BGM) | EnterBgmRead(for BGM) | GetMoviePlayer | GetAudioPlayer
+00436752 OK   bl     func=004366ec  EnterThumbnailPb() | EnterMovieThumbnailPb()
+00436c1c OK   bl     func=00436b90  EnterAviThumbnailPb()
+00437ac4 OK   bl     func=00437a28  EnterMoviePb()
+00438e90 OK   bl     func=00438d74  EnterMoviePbStillRec() | core/feature/player/cam/feaCorePbCaptureApi.cpp | EnterMoviePbStillRec
+004396a6 OK   bl     func=004395f8  EnterStillPb()
+00439812 OK   bl     func=00439794  ### SetPreLoadStill() is disable ### |  because DubMgr instance is exist | SetPreLoadStill()
+004463f2 OK   bl     func=004463a4   Call ProcInMakeThumbEnterSPB() | ProcInMakeThumbEnterSPB() |  Call ProcInMakeThumbWaitCbThumbRec() | ProcInMakeThumbWaitCbThumbRec()
+00446c1a OK   bl     func=00446bcc   Call ProcInMakeThumbEnterIPB() | ProcInMakeThumbEnterIPB()
+00446e02 OK   bl     func=00446dc0   Call ProcInMakeThumbEnterMPB() | ProcInMakeThumbEnterMPB()
+total 12
+
+## y el unico contrato de area del cache: StreamCache::SetArea 0x7594e0 exige size >= [0xad4f68]
+0075955c: 704b       ldr      r3, [pc, #0x1c0]                ; [00759720]=00ad4f68
+0075955e: d3f80090   ldr.w    sb, [r3]                      
+00759562: 4c45       cmp      r4, sb                        
+00759564: 0fd2       bhs      #0x759586                     
+00759566: 00f0b3f9   bl       #0x7598d0                     
+0075956a: 0021       movs     r1, #0                        
+0075956c: 6d48       ldr      r0, [pc, #0x1b4]                ; [00759724]=0093e866 "BUFFER SIZE TOO SMALL : "
+0075956e: 00f0dbf9   bl       #0x759928                     
+00759572: 2146       mov      r1, r4                        
+00759574: 0122       movs     r2, #1                        
+00759576: 0820       movs     r0, #8                        
+00759578: 00f0f2ff   bl       #0x75a560                     
+0075957c: 0120       movs     r0, #1                        
+0075957e: 0221       movs     r1, #2                        
+00759580: 0022       movs     r2, #0                        
+00759582: 2346       mov      r3, r4                        
+00759584: 12e0       b        #0x7595ac                     
+00759586: 04eb0508   add.w    r8, r4, r5                    
+0075958a: a045       cmp      r8, r4                        
+0075958c: 12d2       bhs      #0x7595b4                     
+0075958e: 00f09ff9   bl       #0x7598d0                     
+00759592: 0021       movs     r1, #0                        
+00759594: 6448       ldr      r0, [pc, #0x190]                ; [00759728]=0093e87f "BUFFER ADDRESS OVERFLOW : "
+00759596: 00f0c7f9   bl       #0x759928                     
+0075959a: 4146       mov      r1, r8                        
+0075959c: 0122       movs     r2, #1                        
+0075959e: 0820       movs     r0, #8                        
+007595a0: 00f0deff   bl       #0x75a560                     
+007595a4: 0220       movs     r0, #2                        
+007595a6: 0146       mov      r1, r0                        
+007595a8: 0022       movs     r2, #0                        
+007595aa: 4346       mov      r3, r8                        
+007595ac: 00f0d2f8   bl       #0x759754                     
+007595b0: 5e4e       ldr      r6, [pc, #0x178]                ; [0075972c]=c1000002
+007595b2: 99e0       b        #0x7596e8                     
+007595b4: 5e4b       ldr      r3, [pc, #0x178]                ; [00759730]=00ad4f84
+007595b6: 2846       mov      r0, r5                        
+007595b8: d3f80080   ldr.w    r8, [r3]                      

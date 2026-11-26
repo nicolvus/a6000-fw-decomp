@@ -1,0 +1,91 @@
+### libmpr.so -> analysis/camera-extract/usr/lib/libmpr.so (ARM, base VA 0, offset == VA en el 1er PT_LOAD)
+### Desensamblado con capstone en modo Thumb-2; simbolos reales de .dynsym (no hay tabla de simbolos local).
+
+## 1. Simbolos FlashLib relevantes (de .dynsym)
+  0x002b696c   560  FlashLib::Init(MPR::SystemType)
+  0x00a36c7c     4  FlashLib::m_blockNum
+  0x00a36c74     4  FlashLib::m_sectorNum
+  0x00a36c80     4  FlashLib::m_sectorSize
+  0x002b8b48    52  FlashLib::CheckExistSector(u64)
+  0x00a36c89   833  FlashLib::m_packWriteInfo
+  0x009d2794   624  FlashLib::m_fileTypeSizeInfo
+
+## 2. FlashLib::Init: la geometria son PARAMETROS DE SALIDA de DFB::Init (no una tabla por modelo)
+   002b69b6  ldr      r1, [pc, #0x1b8]                     ; [0x2b6b70]=0xa36c7c
+   002b69b8  ldr      r2, [pc, #0x1b8]                     ; [0x2b6b74]=0xa36c74
+   002b69ba  ldr      r3, [pc, #0x1bc]                     ; [0x2b6b78]=0xa36c80
+   002b69bc  bl       #0x2b0ffc                         
+   002b6a7a  bl       #0x1202e2                         
+   002b6a80  ldr      r3, [pc, #0xf4]                      ; [0x2b6b78]=0xa36c80
+   002b6a84  bl       #0x23fd7a                         
+
+   => r1=&m_blockNum(0xA36C7C) r2=&m_sectorNum(0xA36C74) r3=&m_sectorSize(0xA36C80) hacia 0x2B0FFC
+   => despues: malloc(m_sectorSize) en 0x2B6A80-0x2B6A8C (buffer de alineamiento de sector)
+
+## 3. 0x2B0FFC es un thunk a 0x2A9AD8 = DvdFlashBackupLib::Init
+   002b0ffc  push {r7,lr} ; 002b1000 pop.w {r7,lr} ; 002b1004 b.w 0x2A9AD8
+
+## 4. DFB::Init: de donde salen los tres valores (globlos proxy en .bss)
+   002a9c2a  ldr      r3, [pc, #0x144]                     ; [0x2a9d70]=0x9e3bf4
+   002a9c2c  ldr      r5, [pc, #0x144]                     ; [0x2a9d74]=0x9e4d64
+   002a9c2e  ldr      r0, [pc, #0x148]                     ; [0x2a9d78]=0x9e4874
+   002a9c38  ldr.w    lr, [pc, #0x16c]                     ; [0x2a9da8]=0x9e3c04
+   002a9c3e  ldr      r3, [pc, #0x140]                     ; [0x2a9d80]=0x9e3cb0
+   002a9c48  ldr      r4, [pc, #0x138]                     ; [0x2a9d84]=0x9e4128
+   002a9c4c  ldr      r2, [pc, #0x138]                     ; [0x2a9d88]=0x9e5588
+   002a9c50  ldr      r3, [pc, #0x138]                     ; [0x2a9d8c]=0x9e3ce8
+   002a9c54  ldr      r5, [pc, #0x138]                     ; [0x2a9d90]=0x9e5580
+   002a9c68  ldr      r6, [pc, #0x12c]                     ; [0x2a9d98]=0x9e4840
+   002a9cc4  ldr      r2, [pc, #0xbc]                      ; [0x2a9d84]=0x9e4128
+   002a9cf0  ldr      r3, [pc, #0x94]                      ; [0x2a9d88]=0x9e5588
+   002a9db8  ldr      r0, [pc, #0x290]                     ; [0x2aa04c]=0x9e3c04
+   002a9e5a  ldr.w    sl, [pc, #0x23c]                     ; [0x2aa098]=0x9e5580
+   002aa2d4  ldr      r0, [pc, #0x70]                      ; [0x2aa348]=0x9e5588
+
+## 5. CtrlInfoBlockNum: heuristica por numero total de bloques (0x2A9C4A-0x2A9C7E)
+   002a9c4a  cmp r1, #0x30
+   002a9c70  movs r3, #2
+   002a9c74  cmp r1, #0x50
+   002a9c78  movs r3, #6
+   002a9c7c  movs r3, #8
+   002a9c7e  str r3,[r5]     ; CtrlInfoBlockNum
+   002a9c80  log "[DFB]AllBlockNum:%d / CtrlInfoBlockNum:%d"
+   allBlockNum = 10 MiB / 128 KiB = 80  ->  0x30 < 80 <= 0x50  ->  CtrlInfoBlockNum = 6
+   (los tres volcados usan exactamente 6 bloques FBS: 0..5)
+
+## 6. Direccionamiento de sector = indice << 10  (sectorSize = 1024, constante de compilacion)
+   002a9c64  lsr.w    ip, ip, #0xa                      
+   002aa2f0  lsls     r0, r0, #0xa                      
+
+## 7. Test de sector en blanco: 0x2B061E (unico test a nivel de sector en libmpr)
+   === 0x2b061e : 14 instrs, 0x2b061e..0x2b0642
+   002b061e  ldr      r3, [r0]                          
+   002b0620  push     {r7, lr}                          
+   002b0622  add      r7, sp, #0                        
+   002b0624  ldrb     r0, [r3, #1]                      
+   002b0626  ldrb     r2, [r3]                          
+   002b0628  orr.w    r0, r2, r0, lsl #8                
+   002b062c  ldrb     r2, [r3, #2]                      
+   002b062e  ldrb     r3, [r3, #3]                      
+   002b0630  orr.w    r0, r0, r2, lsl #16               
+   002b0634  orr.w    r0, r0, r3, lsl #24               
+   002b0638  sub.w    r3, r0, #-1                       
+   002b063c  rsbs     r0, r3, #0                        
+   002b063e  adc.w    r0, r0, r3                        
+   002b0642  pop      {r7, pc}                          
+   => lee los 4 primeros bytes como u32 LE y devuelve 0 solo si valen 0xFFFFFFFF
+
+## 8. Cadenas relevantes de libmpr.so
+   0x007dd572  /sys/block/nflasha0/nflasha0p4/start
+   0x007e3cce  [DFB]call api (DvdFlashBackupLib::Init) result:blockNum[%d],sectorNum[%d],sectorSize[%d]
+   0x007e003b   m_blockNum      [%8d]
+   0x007e0052   m_sectorNum     [%8d]
+   0x007e0069   m_sectorSize    [%8d]
+   0x007e0080   m_blockSize     [%8d]
+   0x007e0097   m_pageSize      [%8d]
+   0x007e0139   BadBlock CautionThreshold [%d]
+
+## 9. Lo que NO esta en libmpr.so
+   patron b'J\x00J\x00' : 3 apariciones ['0x4245e6', '0x4245fc', '0x42461a']
+   patron b'draCNV'     : 0 apariciones []
+   (las tres de 4a004a00 caen dentro de la tabla de saltos 'tbh' de 0x4245DA; no es una constante)

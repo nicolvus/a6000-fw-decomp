@@ -1,0 +1,224 @@
+# 07 - Las 27 referencias al literal 0x00A3699C en .text (barrido de ldr/literal pool)
+     Metodo: buscar todo u32 == 0xA3699C en el fichero (pool) y luego TODA instruccion
+     'ldr rX,[pc,#imm]' (formas 0x48xx y 0xF8DF) que resuelva a esos pools.
+     Ninguna referencia por movw/movt (barrido de inmediatos).
+
+VA         reg  funcion    nombre                       6 instrucciones desde la carga
+---
+002b20a4  r2   func=002b208c
+      002b20a4  ldr     r2, [pc, #0x28]
+      002b20a6  movs    r3, #0x14
+      002b20a8  muls    r4, r3, r4
+      002b20aa  adds    r3, r2, r4
+      002b20ac  str     r5, [r2, r4]
+      002b20ae  movs    r4, #0
+      002b20b0  ldr     r2, [r7, #0x18]
+---
+002b252e  r3   func=002b2520
+      002b252e  ldr     r3, [pc, #0x2c]
+      002b2530  adds    r2, r3, r4
+      002b2532  ldr     r0, [r2, #4]
+      002b2534  cbz     r0, #0x2b2540
+      002b2536  mov     r1, r7
+      002b2538  movs    r2, #1
+      002b253a  bl      #0x2b2480
+---
+002b2574  r2   func=002b2564
+      002b2574  ldr     r2, [pc, #0x4c]
+      002b2576  adds    r2, r2, r4
+      002b2578  ldr     r0, [r2, #4]
+      002b257a  cbz     r0, #0x2b259a
+      002b257c  mov     r1, r7
+      002b257e  movs    r2, #0
+      002b2580  bl      #0x2b2480
+---
+002b297e  r3   func=002b2974
+      002b297e  ldr     r3, [pc, #0x38]
+      002b2980  add.w   r2, r3, #0x26c
+      002b2984  movs    r0, #0
+      002b2986  str     r0, [r3, #8]
+      002b2988  str     r0, [r3, #0xc]
+      002b298a  str     r0, [r3, #4]
+---
+002b29da  r3   func=002b29cc
+      002b29da  ldr     r3, [pc, #0x44]
+      002b29dc  adds    r3, r3, r4
+      002b29de  ldr     r6, [r3, #4]
+      002b29e0  cbz     r6, #0x2b29f8
+      002b29e2  ldr     r3, [pc, #0x40]
+      002b29e4  mov     r2, r6
+      002b29e6  ldr     r0, [pc, #0x40]
+---
+002b2a30  r5   func=002b2a2c
+      002b2a30  ldr     r5, [pc, #0x2c]
+      002b2a32  add     r7, sp, #0
+      002b2a34  ldr     r0, [pc, #0x2c]
+      002b2a36  bl      #0x2b1e68
+      002b2a3a  movs    r3, #0x14
+      002b2a3c  ldr     r0, [pc, #0x28]
+---
+002b2a70  r6   func=002b2a6c
+      002b2a70  ldr     r6, [pc, #0x44]
+      002b2a72  movs    r5, #0x14
+      002b2a74  add     r7, sp, #0
+      002b2a76  ldr     r0, [pc, #0x44]
+      002b2a78  bl      #0x2b1e68
+      002b2a7c  mla     r5, r5, r4, r6
+---
+002b2ea2  r2   func=002b2e54
+      002b2ea2  ldr     r2, [pc, #0x8c]
+      002b2ea4  movs    r3, #0x14
+      002b2ea6  muls    r3, r5, r3
+      002b2ea8  adds    r6, r2, r3
+      002b2eaa  ldr     r3, [r2, r3]
+      002b2eac  cmp     r3, r1
+      002b2eae  bne     #0x2b2ec2
+---
+002b2ed0  r2   func=002b2e54
+      002b2ed0  ldr     r2, [pc, #0x5c]
+      002b2ed2  movs    r3, #0x14
+      002b2ed4  muls    r3, r5, r3
+      002b2ed6  adds    r0, r2, r3
+      002b2ed8  ldr     r3, [r2, r3]
+      002b2eda  cmp     r3, r1
+      002b2edc  bne     #0x2b2eec
+---
+002b2f8e  r2   func=002b2e54
+      002b2f8e  ldr     r2, [pc, #0x5c]
+      002b2f90  movs    r3, #0x14
+      002b2f92  muls    r3, r5, r3
+      002b2f94  adds    r6, r2, r3
+      002b2f96  ldr     r3, [r2, r3]
+      002b2f98  cmp     r3, r1
+      002b2f9a  bne     #0x2b2faa
+---
+002b303c  r2   func=002b3000
+      002b303c  ldr     r2, [pc, #0x4c]
+      002b303e  mla     r3, r1, r3, r2
+      002b3042  ldr     r3, [r3, #4]
+      002b3044  str.w   r3, [sb]
+      002b3048  ldr.w   r3, [sb]
+---
+002b30a8  r2   func=002b3094
+      002b30a8  ldr     r2, [pc, #0x14]
+      002b30aa  mla     r3, r1, r3, r2
+      002b30ae  ldr     r3, [r3, #4]
+      002b30b0  b       #0x2b30b4
+      002b30b2  movs    r3, #0
+      002b30b4  str     r3, [r4]
+---
+002b3160  r2   func=002b30c4
+      002b3160  ldr     r2, [pc, #0x48]
+      002b3162  mla     r3, r1, r3, r2
+      002b3166  mov     r2, r5
+      002b3168  adds    r1, r7, #4
+      002b316a  ldr     r0, [r3, #4]
+      002b316c  bl      #0x2b2480
+---
+002b31e8  r2   func=002b31b8
+      002b31e8  ldr     r2, [pc, #0x64]
+      002b31ea  mla     r3, r1, r3, r2
+      002b31ee  ldr     r0, [r3, #4]
+      002b31f0  cmp     r0, #0
+      002b31f2  bne     #0x2b323c
+      002b31f4  ldr     r5, [pc, #0x5c]
+---
+002b32d2  r5   func=002b3260
+      002b32d2  ldr     r5, [pc, #0x1c0]
+      002b32d4  movs    r2, #0x14
+      002b32d6  muls    r3, r2, r3
+      002b32d8  adds    r6, r5, r3
+      002b32da  mov     sb, r5
+      002b32dc  ldr     r0, [r5, r3]
+      002b32de  bl      #0x2b21e4
+---
+002b3518  r3   func=002b34d8
+      002b3518  ldr     r3, [pc, #0xe0]
+      002b351a  ldr     r2, [r7, #4]
+      002b351c  ldr.w   r3, [r3, sb]
+      002b3520  cmp     r3, r2
+      002b3522  bne     #0x2b3592
+      002b3524  uxtb.w  r4, r8
+---
+002b3668  r3   func=002b361c
+      002b3668  ldr     r3, [pc, #0x104]
+      002b366a  ldr.w   r3, [r3, sl]
+      002b366e  cmp     r3, fp
+      002b3670  bne     #0x2b36a8
+      002b3672  uxtb.w  r6, sb
+---
+002b37a4  r6   func=002b3794
+      002b37a4  ldr     r6, [pc, #0x9c]
+      002b37a6  blx     #0x11d924
+      002b37aa  mov     r4, r5
+      002b37ac  ldr     r3, [r6, #8]
+      002b37ae  uxtb.w  r8, r5
+---
+002b39e8  r0   func=002b3948
+      002b39e8  ldr     r0, [pc, #0x64]
+      002b39ea  adds    r2, r0, r1
+      002b39ec  ldr     r2, [r2, #4]
+      002b39ee  cbz     r2, #0x2b3a28
+      002b39f0  cmp.w   sb, #0
+      002b39f4  bne     #0x2b3a2c
+---
+002b3ac2  r2   func=002b3ab8
+      002b3ac2  ldr     r2, [pc, #0x98]
+      002b3ac4  ldr     r4, [r2, r3]
+      002b3ac6  cmp     r4, r0
+      002b3ac8  bne     #0x2b3ade
+      002b3aca  movs    r3, #0x14
+      002b3acc  ldr     r0, [pc, #0x90]
+      002b3ace  mla     r2, r3, r1, r2
+---
+002b3d7c  r3   func=002b3d24
+      002b3d7c  ldr     r3, [pc, #0x154]
+      002b3d7e  movs    r1, #0x14
+      002b3d80  ldrb.w  r2, [r7, #0x3f]
+      002b3d84  mla     r2, r1, r2, r3
+      002b3d88  ldr     r2, [r2, #4]
+---
+002b3e76  r1   func=002b3d24
+      002b3e76  ldr     r1, [pc, #0x5c]
+      002b3e78  uxth    r3, r3
+      002b3e7a  strh    r6, [r7, #0x30]
+      002b3e7c  mul     r2, fp, r2
+      002b3e80  ldrh    r2, [r1, r2]
+      002b3e82  ldrh    r1, [r4, #0x22]
+---
+002b3ea0  r1   func=002b3d24
+      002b3ea0  ldr     r1, [pc, #0x30]
+      002b3ea2  mul     fp, fp, r2
+      002b3ea6  movs    r2, #0
+      002b3ea8  ldrh.w  fp, [r1, fp]
+      002b3eac  strb.w  sl, [r4, #0x24]
+---
+002b40b6  r8   func=002b4030
+      002b40b6  ldr.w   r8, [pc, #0xf8]
+      002b40ba  mov     r1, r4
+      002b40bc  mov     r2, r7
+      002b40be  mul     r3, sl, r3
+      002b40c2  ldr.w   r0, [r8, r3]
+---
+002b45e8  r1   func=002b45a8
+      002b45e8  ldr     r1, [pc, #0x34]
+      002b45ea  movs    r3, #0x14
+      002b45ec  ldr     r2, [r7, #0x30]
+      002b45ee  muls    r6, r3, r6
+      002b45f0  adds    r3, r1, r6
+      002b45f2  str     r5, [r1, r6]
+      002b45f4  movs    r1, #1
+---
+002b4684  r9   func=002b4624
+      002b4684  ldr.w   sb, [pc, #0x150]
+      002b4688  cmp     r0, #0x45
+      002b468a  bne     #0x2b4718
+      002b468c  mov     r1, r6
+      002b468e  add.w   r2, r7, #0x24
+---
+002b4884  r9   func=002b4820
+      002b4884  ldr.w   sb, [pc, #0x15c]
+      002b4888  cmp     r0, #0x45
+      002b488a  bne     #0x2b4918
+      002b488c  mov     r1, r6
+      002b488e  add.w   r2, r7, #0x24

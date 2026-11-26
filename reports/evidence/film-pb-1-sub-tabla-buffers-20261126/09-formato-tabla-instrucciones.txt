@@ -1,0 +1,167 @@
+# FORMATO de la tabla FUENTE por modo y de la tabla DESTINO (0xA4F368)
+# todas las VA de .text (< 0x7A3E84) y .rodata (< 0x956750); en .data la VA no es el offset (VA-0x8000)
+
+## 1) seleccion de tabla por modo: la lista {ptr, modeId} de 8 B esta en 0x8D87E8;
+##    el puntero a esa lista se guarda en 0xA4F0A4 al inicializar (0x5F7560-0x5F7566)
+005f7058: 0121       movs     r1, #1                        
+005f705a: 02f097fe   bl       #0x5f9d8c                     
+005f705e: 9c4b       ldr      r3, [pc, #0x270]                ; [005f72d0]=00a4f0a4
+005f7060: 1a68       ldr      r2, [r3]                      
+005f7062: 0023       movs     r3, #0                        
+005f7064: 09e0       b        #0x5f707a                     
+005f7066: d018       adds     r0, r2, r3                    
+005f7068: 7c6b       ldr      r4, [r7, #0x34]               
+005f706a: 0833       adds     r3, #8                        
+005f706c: 4068       ldr      r0, [r0, #4]                  
+005f706e: a042       cmp      r0, r4                        
+005f7070: 03d1       bne      #0x5f707a                     
+005f7072: 7964       str      r1, [r7, #0x44]               
+005f7074: 0b46       mov      r3, r1                        
+005f7076: f960       str      r1, [r7, #0xc]                
+005f7078: 26e0       b        #0x5f70c8                     
+
+## 2) bucle de recorrido de la tabla fuente: cursor += 0xC ; terminador [cursor+8] == 0xFFFFFFFF
+005f70c4: ecd1       bne      #0x5f70a0                     
+005f70c6: 04e0       b        #0x5f70d2                     
+005f70c8: 9a68       ldr      r2, [r3, #8]                  
+005f70ca: 1c46       mov      r4, r3                        
+005f70cc: b2f1ff3f   cmp.w    r2, #-1                       
+005f70d0: e0d1       bne      #0x5f7094                     
+005f70d2: 7e6b       ldr      r6, [r7, #0x34]               
+005f7124: 0c34       adds     r4, #0xc                      
+005f7126: 00e0       b        #0x5f712a                     
+005f7128: 7c6c       ldr      r4, [r7, #0x44]               
+005f712a: a368       ldr      r3, [r4, #8]                  
+005f712c: b3f1ff3f   cmp.w    r3, #-1                       
+005f7130: ded1       bne      #0x5f70f0                     
+005f7132: d5e7       b        #0x5f70e0                     
+
+## 3) por entrada: key=[src+8] ; mt_order=[src+4] ; dst = p_bufInfoTbl + key*0x18
+005f719e: 7d6c       ldr      r5, [r7, #0x44]               
+005f71a0: 7b6c       ldr      r3, [r7, #0x44]               
+005f71a2: 0c33       adds     r3, #0xc                      
+005f71a4: bb61       str      r3, [r7, #0x18]               
+005f71a6: ab68       ldr      r3, [r5, #8]                  
+005f71a8: b3f1ff3f   cmp.w    r3, #-1                       
+005f71ac: 13d1       bne      #0x5f71d6                     
+005f71ae: 02f045fe   bl       #0x5f9e3c                     
+005f71b2: 0021       movs     r1, #0                        
+005f71b4: 4c4a       ldr      r2, [pc, #0x130]                ; [005f72e8]=008d9999 "[MemInfo]DistributeBufInfo() area end status:"
+005f71b6: 02f0e9fd   bl       #0x5f9d8c                     
+005f71ba: 02f03ffe   bl       #0x5f9e3c                     
+005f71be: bc68       ldr      r4, [r7, #8]                  
+005f71c0: 0121       movs     r1, #1                        
+005f71c2: 4a4a       ldr      r2, [pc, #0x128]                ; [005f72ec]=008d99c7 "area=%ld/logicalAddr=0x%08lx/physicalAddr=0x%08l"
+005f71c4: 3b69       ldr      r3, [r7, #0x10]               
+005f71c6: cdf800b0   str.w    fp, [sp]                      
+005f71ca: cdf80480   str.w    r8, [sp, #4]                  
+005f71ce: 0294       str      r4, [sp, #8]                  
+005f71d0: 02f0dcfd   bl       #0x5f9d8c                     
+005f71d4: aee7       b        #0x5f7134                     
+005f71d6: 3e6c       ldr      r6, [r7, #0x40]               
+005f71d8: 6a68       ldr      r2, [r5, #4]                  
+005f71da: b168       ldr      r1, [r6, #8]                  
+005f71dc: 9142       cmp      r1, r2                        
+005f71de: 40f03181   bne.w    #0x5f7444                     
+005f71e2: 386b       ldr      r0, [r7, #0x30]               
+005f71e4: 1822       movs     r2, #0x18                     
+005f71e6: 5a43       muls     r2, r3, r2                    
+005f71e8: ba62       str      r2, [r7, #0x28]               
+
+## 4) escritura del destino: +0 = vAdrs, +4 = pAdrs, +8 = SIZE (=[src+0]), +0x10 = offset 64b
+005f73a8: 7cb1       cbz      r4, #0x5f73ca                 
+005f73aa: b96a       ldr      r1, [r7, #0x28]               
+005f73ac: 0bf57e6b   add.w    fp, fp, #0xfe0                
+005f73b0: 3a6b       ldr      r2, [r7, #0x30]               
+005f73b2: 0bf11f0b   add.w    fp, fp, #0x1f                 
+005f73b6: 2bf47e6b   bic      fp, fp, #0xfe0                
+005f73ba: 2bf01f0b   bic      fp, fp, #0x1f                 
+005f73be: 5450       str      r4, [r2, r1]                  
+005f73c0: d7e90e01   ldrd     r0, r1, [r7, #0x38]           
+005f73c4: cae90401   strd     r0, r1, [sl, #0x10]           
+005f73c8: 07e0       b        #0x5f73da                     
+005f73ca: b96a       ldr      r1, [r7, #0x28]               
+005f73cc: 3a6b       ldr      r2, [r7, #0x30]               
+005f73ce: 42f801b0   str.w    fp, [r2, r1]                  
+005f73d2: d7e90801   ldrd     r0, r1, [r7, #0x20]           
+005f73d6: cae90401   strd     r0, r1, [sl, #0x10]           
+005f73da: 2b68       ldr      r3, [r5]                      
+005f73dc: caf80480   str.w    r8, [sl, #4]                  
+005f73e0: caf80830   str.w    r3, [sl, #8]                  
+
+## 5) 'bufTbl item count = %d / defined count = %d' (cuenta las entradas hasta el terminador)
+005f744e: fb68       ldr      r3, [r7, #0xc]                
+005f7450: 00e0       b        #0x5f7454                     
+005f7452: 0134       adds     r4, #1                        
+005f7454: 9a68       ldr      r2, [r3, #8]                  
+005f7456: 0c33       adds     r3, #0xc                      
+005f7458: b2f1ff3f   cmp.w    r2, #-1                       
+005f745c: f9d1       bne      #0x5f7452                     
+005f745e: 02f0d5fc   bl       #0x5f9e0c                     
+005f7462: fa6a       ldr      r2, [r7, #0x2c]               
+005f7464: 0121       movs     r1, #1                        
+005f7466: 2346       mov      r3, r4                        
+005f7468: 0092       str      r2, [sp]                      
+005f746a: 174a       ldr      r2, [pc, #0x5c]                 ; [005f74c8]=008d9e64 "[MemInfo]**DistributeBufInfo --bufTbl item count"
+005f746c: 02f08efc   bl       #0x5f9d8c                     
+005f7470: fb6a       ldr      r3, [r7, #0x2c]               
+005f7472: a342       cmp      r3, r4                        
+005f7474: 12d0       beq      #0x5f749c                     
+005f7476: 7c6b       ldr      r4, [r7, #0x34]               
+
+## 6) unica excepcion: en los modos 0x21/0x22/0x24 el tamano de las claves 11, 7 y 0 se
+##    sobreescribe con el valor del RamMapAreaInfo ([rammap+0xC]); log 'Movie Stream or ES size'
+005f70d0: e0d1       bne      #0x5f7094                     
+005f70d2: 7e6b       ldr      r6, [r7, #0x34]               
+005f70d4: a6f12103   sub.w    r3, r6, #0x21                 
+005f70d8: 012b       cmp      r3, #1                        
+005f70da: 25d9       bls      #0x5f7128                     
+005f70dc: 242e       cmp      r6, #0x24                     
+005f70de: 23d0       beq      #0x5f7128                     
+005f70e0: 4ff00108   mov.w    r8, #1                        
+005f70e4: 0020       movs     r0, #0                        
+005f70e6: 3d64       str      r5, [r7, #0x40]               
+005f70e8: c7f81c80   str.w    r8, [r7, #0x1c]               
+005f70ec: f862       str      r0, [r7, #0x2c]               
+005f70ee: 27e0       b        #0x5f7140                     
+005f70fc: 9068       ldr      r0, [r2, #8]                  
+005f70fe: 1033       adds     r3, #0x10                     
+005f7100: 6168       ldr      r1, [r4, #4]                  
+005f7102: 8842       cmp      r0, r1                        
+005f7104: 0ad1       bne      #0x5f711c                     
+005f7106: d368       ldr      r3, [r2, #0xc]                
+005f7108: 2360       str      r3, [r4]                      
+005f710a: 02f097fe   bl       #0x5f9e3c                     
+005f710e: 0121       movs     r1, #1                        
+005f7110: 724a       ldr      r2, [pc, #0x1c8]                ; [005f72dc]=008d98e7 "[MemInfo]**DistributeBufInfo -- Movie Stream or "
+005f7112: 2368       ldr      r3, [r4]                      
+005f7114: 02f03afe   bl       #0x5f9d8c                     
+005f7118: 04e0       b        #0x5f7124                     
+005f711a: 2b46       mov      r3, r5                        
+005f711c: 1968       ldr      r1, [r3]                      
+005f711e: 1a46       mov      r2, r3                        
+005f7120: 0029       cmp      r1, #0                        
+005f7122: ebd1       bne      #0x5f70fc                     
+
+## 7) volcado crudo de la tabla fuente del modo 0x02 (Still Pb) y del modo 0x01 (Movie Pb)
+##    entrada = 0xC B: {+0 size, +4 mt_order, +8 indice en 0xA4F368}
+--- 0x9DBD20 modo 0x02 @ 009dbd20 ---
+009dbd20: 01800000 00000000 0000000b 00500000  ..............P.
+009dbd30: 00000003 00000007 00080000 00000003  ................
+009dbd40: 00000009 00600000 00000001 0000000d  ......`.........
+009dbd50: 00003000 00000006 00000008 00001000  .0..............
+009dbd60: 00000006 0000000a 00092000 00000006  ......... ......
+009dbd70: 0000000e 00000400 00000006 00000010  ................
+
+--- 0x9DB0E4 modo 0x01 @ 009db0e4 ---
+009db0e4: 01c00000 00000000 0000000b 00500000  ..............P.
+009db0f4: 00000003 00000007 00080000 00000004  ................
+009db104: 00000009 0000c000 00000006 00000008  ................
+009db114: 00001000 00000006 0000000a 00092000  ............. ..
+009db124: 00000006 0000000e 00000400 00000006  ................
+009db134: 00000010 00000c00 00000006 00000059  ............Y...
+
+## 8) tabla destino en .bss (NO esta en el fichero): layout deducido de las escrituras
+#   0xA4F368 + i*0x18 :  +0x00 vAdrs | +0x04 pAdrs | +0x08 size | +0x0C (no escrito aqui) | +0x10 offset (64b)
+#   i=11 (movie): 0xA4F368+0x108 = 0xA4F470 ; size en 0xA4F478
+#   i=13 (still): 0xA4F368+0x138 = 0xA4F4A0 ; size en 0xA4F4A8

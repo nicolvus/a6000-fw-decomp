@@ -1,0 +1,120 @@
+--- store @0x0036d948
+    0x0036d934 str        r2, [r3, #0x48]
+    0x0036d936 cbz        r1, #0x36d96c
+    0x0036d938 movs       r5, #4
+    0x0036d93a movs       r4, #0xfe
+    0x0036d93c strh.w     r5, [r3, #0x82]
+    0x0036d940 movw       r6, #0x103
+    0x0036d944 strh       r4, [r2]
+    0x0036d946 movs       r2, #0
+    0x0036d948 str.w      r2, [r3, #0x88]
+    0x0036d94c mov.w      r8, #3
+    0x0036d950 str.w      r2, [r3, #0x84]
+--- store @0x0036d95a
+    0x0036d940 movw       r6, #0x103
+    0x0036d944 strh       r4, [r2]
+    0x0036d946 movs       r2, #0
+    0x0036d948 str.w      r2, [r3, #0x88]
+    0x0036d94c mov.w      r8, #3
+    0x0036d950 str.w      r2, [r3, #0x84]
+    0x0036d954 add.w      r3, r0, #0x5c00
+    0x0036d958 movs       r5, #2
+    0x0036d95a strh.w     r6, [r3, #0x88]
+    0x0036d95e strh.w     r8, [r3, #0x8a]
+    0x0036d962 str.w      r2, [r3, #0x8c]
+--- store @0x0036d962
+    0x0036d946 movs       r2, #0
+    0x0036d948 str.w      r2, [r3, #0x88]
+    0x0036d94c mov.w      r8, #3
+    0x0036d950 str.w      r2, [r3, #0x84]
+    0x0036d954 add.w      r3, r0, #0x5c00
+    0x0036d958 movs       r5, #2
+    0x0036d95a strh.w     r6, [r3, #0x88]
+    0x0036d95e strh.w     r8, [r3, #0x8a]
+    0x0036d962 str.w      r2, [r3, #0x8c]
+    0x0036d966 str.w      r2, [r3, #0x90]
+    0x0036d96a b          #0x36d96e
+--- store @0x0036e226
+    0x0036e210 strh       r6, [r4]
+    0x0036e212 movw       r6, #0xa402
+    0x0036e216 str        r3, [r4, #8]
+    0x0036e218 strh       r5, [r4, #2]
+    0x0036e21a ldr        r5, [r2, #0x54]
+    0x0036e21c str        r3, [r4, #4]
+    0x0036e21e add.w      r5, r5, #0x9400
+    0x0036e222 add.w      r4, r5, #0x88
+    0x0036e226 strh.w     r8, [r5, #0x88]
+    0x0036e22a movs       r5, #3
+    0x0036e22c str        r3, [r4, #8]
+--- store @0x0036e46a
+    0x0036e44c str        r3, [r4, #4]
+    0x0036e44e add.w      r4, r0, #0x17c00
+    0x0036e452 add.w      r5, r4, #0x80
+    0x0036e456 strh.w     r8, [r2, #0x50]
+    0x0036e45a strh.w     r3, [r4, #0x80]
+    0x0036e45e mov.w      r8, #5
+    0x0036e462 strh.w     ip, [r4, #0x82]
+    0x0036e466 str.w      r3, [r4, #0x84]
+    0x0036e46a str.w      r3, [r4, #0x88]
+    0x0036e46e add.w      r4, r4, #0x388
+    0x0036e472 str        r5, [r2, #0x60]
+--- store @0x0036e7e8
+    0x0036e7ce add.w      r4, r0, #0x1dc00
+    0x0036e7d2 add.w      r4, r4, #0x188
+    0x0036e7d6 strh.w     sb, [r5]
+    0x0036e7da str        r5, [r2, #0x6c]
+    0x0036e7dc movw       sb, #0x1001
+    0x0036e7e0 str        r3, [r4]
+    0x0036e7e2 add.w      r4, r0, #0x1e000
+    0x0036e7e6 str        r3, [r2, #0x64]
+    0x0036e7e8 strh.w     ip, [r4, #0x88]
+    0x0036e7ec strh.w     r6, [r4, #0x8a]
+    0x0036e7f0 movs       r6, #0x16
+--- store @0x0036e7f2
+    0x0036e7da str        r5, [r2, #0x6c]
+    0x0036e7dc movw       sb, #0x1001
+    0x0036e7e0 str        r3, [r4]
+    0x0036e7e2 add.w      r4, r0, #0x1e000
+    0x0036e7e6 str        r3, [r2, #0x64]
+    0x0036e7e8 strh.w     ip, [r4, #0x88]
+    0x0036e7ec strh.w     r6, [r4, #0x8a]
+    0x0036e7f0 movs       r6, #0x16
+    0x0036e7f2 str.w      r3, [r4, #0x8c]
+    0x0036e7f6 str.w      r3, [r4, #0x90]
+    0x0036e7fa add.w      r4, r4, #0x390
+--- store @0x00377ac8
+    0x00377aa8 strb.w     r3, [r1, #0x48]
+    0x00377aac strb.w     r3, [r1, #0x54]
+    0x00377ab0 strb.w     r3, [r1, #0x60]
+    0x00377ab4 strb.w     r3, [r1, #0x64]
+    0x00377ab8 strb.w     r3, [r1, #0x68]
+    0x00377abc strb.w     r3, [r1, #0x6c]
+    0x00377ac0 strb.w     r3, [r1, #0x70]
+    0x00377ac4 strb.w     r3, [r1, #0x7c]
+    0x00377ac8 strb.w     r3, [r1, #0x88]
+    0x00377acc strb.w     r3, [r1, #0x8c]
+    0x00377ad0 strb.w     r3, [r1, #0x8e]
+--- store @0x00377acc
+    0x00377aac strb.w     r3, [r1, #0x54]
+    0x00377ab0 strb.w     r3, [r1, #0x60]
+    0x00377ab4 strb.w     r3, [r1, #0x64]
+    0x00377ab8 strb.w     r3, [r1, #0x68]
+    0x00377abc strb.w     r3, [r1, #0x6c]
+    0x00377ac0 strb.w     r3, [r1, #0x70]
+    0x00377ac4 strb.w     r3, [r1, #0x7c]
+    0x00377ac8 strb.w     r3, [r1, #0x88]
+    0x00377acc strb.w     r3, [r1, #0x8c]
+    0x00377ad0 strb.w     r3, [r1, #0x8e]
+    0x00377ad4 strb.w     r3, [r1, #0x90]
+--- store @0x00377eca
+    0x00377eb2 bne        #0x377ed2
+    0x00377eb4 ldr.w      r3, [r8, #4]
+    0x00377eb8 cbz        r3, #0x377ed2
+    0x00377eba ldrb.w     r1, [r5, #0x74]
+    0x00377ebe mov        r0, r5
+    0x00377ec0 ldr.w      r2, [r8, #8]
+    0x00377ec4 bl         #0x36f924
+    0x00377ec8 movs       r3, #1
+    0x00377eca strb.w     r3, [r4, #0x88]
+    0x00377ece strh.w     r0, [r4, #0x8a]
+    0x00377ed2 ldrh.w     r2, [r8]

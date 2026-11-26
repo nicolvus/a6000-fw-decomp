@@ -1,0 +1,90 @@
+0072dd98: f0b5       push      {r4, r5, r6, r7, lr}          
+0072dd9a: 83b0       sub       sp, #0xc                      
+0072dd9c: 274d       ldr       r5, [pc, #0x9c]                 ; [0072de3c]=00000000
+0072dd9e: 0646       mov       r6, r0                        
+0072dda0: 00af       add       r7, sp, #0                    
+0072dda2: 0c46       mov       r4, r1                        
+0072dda4: 2b68       ldr       r3, [r5]                      
+0072dda6: 1bb9       cbnz      r3, #0x72ddb0                 
+0072dda8: 2548       ldr       r0, [pc, #0x94]                 ; [0072de40]=00000000
+0072ddaa: e6f73dfd   bl        #0x714828                     
+0072ddae: 40e0       b         #0x72de32                       ; _ZN9MprIfMcmd14ExecMprUtilityElPPc+0x9a
+0072ddb0: 0228       cmp       r0, #2                        
+0072ddb2: 18d1       bne       #0x72dde6                       ; _ZN9MprIfMcmd14ExecMprUtilityElPPc+0x4e
+0072ddb4: 4868       ldr       r0, [r1, #4]                  
+0072ddb6: 2349       ldr       r1, [pc, #0x8c]                 ; [0072de44]=0092caba "quickFormat"
+0072ddb8: d1f6f9ff   bl        #0x5ffdae                     
+0072ddbc: c8b1       cbz       r0, #0x72ddf2                 
+0072ddbe: 6068       ldr       r0, [r4, #4]                  
+0072ddc0: 2149       ldr       r1, [pc, #0x84]                 ; [0072de48]=0092cac6 "fullFormat"
+0072ddc2: d1f6f4ff   bl        #0x5ffdae                     
+0072ddc6: b0b1       cbz       r0, #0x72ddf6                 
+0072ddc8: 6068       ldr       r0, [r4, #4]                  
+0072ddca: 2049       ldr       r1, [pc, #0x80]                 ; [0072de4c]=0092cad1 "flush"
+0072ddcc: d1f6efff   bl        #0x5ffdae                     
+0072ddd0: 98b1       cbz       r0, #0x72ddfa                 
+0072ddd2: 6068       ldr       r0, [r4, #4]                  
+0072ddd4: 1e49       ldr       r1, [pc, #0x78]                 ; [0072de50]=009370bd "init"
+0072ddd6: d1f6eaff   bl        #0x5ffdae                     
+0072ddda: 80b1       cbz       r0, #0x72ddfe                 
+0072dddc: 6068       ldr       r0, [r4, #4]                  
+0072ddde: 1d49       ldr       r1, [pc, #0x74]                 ; [0072de54]=0092cad7 "check"
+0072dde0: d1f6e5ff   bl        #0x5ffdae                     
+0072dde4: 68b1       cbz       r0, #0x72de02                 
+0072dde6: 1648       ldr       r0, [pc, #0x58]                 ; [0072de40]=00000000
+0072dde8: 0122       movs      r2, #1                        
+0072ddea: 1b49       ldr       r1, [pc, #0x6c]                 ; [0072de58]=0092ca61 "ex) MPR FUNCRECOVERY ExecMprUtility [commandId(quickFormat/f"
+0072ddec: e4f782fd   bl        #0x7128f4                     
+0072ddf0: 1fe0       b         #0x72de32                       ; _ZN9MprIfMcmd14ExecMprUtilityElPPc+0x9a
+0072ddf2: 0146       mov       r1, r0                        
+0072ddf4: 06e0       b         #0x72de04                       ; _ZN9MprIfMcmd14ExecMprUtilityElPPc+0x6c
+0072ddf6: 0321       movs      r1, #3                        
+0072ddf8: 04e0       b         #0x72de04                       ; _ZN9MprIfMcmd14ExecMprUtilityElPPc+0x6c
+0072ddfa: 3146       mov       r1, r6                        
+0072ddfc: 02e0       b         #0x72de04                       ; _ZN9MprIfMcmd14ExecMprUtilityElPPc+0x6c
+0072ddfe: 0121       movs      r1, #1                        
+0072de00: 00e0       b         #0x72de04                       ; _ZN9MprIfMcmd14ExecMprUtilityElPPc+0x6c
+0072de02: 0421       movs      r1, #4                        
+0072de04: 5c23       movs      r3, #0x5c                     
+0072de06: 3b71       strb      r3, [r7, #4]                  
+0072de08: 8433       adds      r3, #0x84                     
+0072de0a: 7b71       strb      r3, [r7, #5]                  
+0072de0c: 1b3b       subs      r3, #0x1b                     
+0072de0e: bb71       strb      r3, [r7, #6]                  
+0072de10: 4c3b       subs      r3, #0x4c                     
+0072de12: fb71       strb      r3, [r7, #7]                  
+0072de14: 09b1       cbz       r1, #0x72de1a                 
+0072de16: 0329       cmp       r1, #3                        
+0072de18: 02d1       bne       #0x72de20                       ; _ZN9MprIfMcmd14ExecMprUtilityElPPc+0x88
+0072de1a: 2868       ldr       r0, [r5]                      
+0072de1c: 3a1d       adds      r2, r7, #4                    
+0072de1e: 01e0       b         #0x72de24                       ; _ZN9MprIfMcmd14ExecMprUtilityElPPc+0x8c
+0072de20: 2868       ldr       r0, [r5]                      
+0072de22: 0022       movs      r2, #0                        
+0072de24: f1f586e1   blx       #0x11f134                     
+0072de28: 0146       mov       r1, r0                        
+0072de2a: 10b1       cbz       r0, #0x72de32                 
+0072de2c: 0448       ldr       r0, [pc, #0x10]                 ; [0072de40]=00000000
+0072de2e: e6f70ffd   bl        #0x714850                     
+0072de32: 0120       movs      r0, #1                        
+0072de34: 07f10c07   add.w     r7, r7, #0xc                  
+0072de38: bd46       mov       sp, r7                        
+0072de3a: f0bd       pop       {r4, r5, r6, r7, pc}          
+0072de3c: 0000       movs      r0, r0                        
+0072de3e: 0000       movs      r0, r0                        
+0072de40: 0000       movs      r0, r0                        
+0072de42: 0000       movs      r0, r0                        
+0072de44: baca       ldm       r2!, {r1, r3, r4, r5, r7}     
+0072de46: 9200       lsls      r2, r2, #2                    
+0072de48: c6ca       ldm       r2, {r1, r2, r6, r7}          
+0072de4a: 9200       lsls      r2, r2, #2                    
+0072de4c: d1ca       ldm       r2!, {r0, r4, r6, r7}         
+0072de4e: 9200       lsls      r2, r2, #2                    
+0072de50: bd70       strb      r5, [r7, #2]                  
+0072de52: 9300       lsls      r3, r2, #2                    
+0072de54: d7ca       ldm       r2, {r0, r1, r2, r4, r6, r7}  
+0072de56: 9200       lsls      r2, r2, #2                    
+0072de58: 61ca       ldm       r2!, {r0, r5, r6}             
+0072de5a: 9200       lsls      r2, r2, #2                    
+0072de5c: 084b       ldr       r3, [pc, #0x20]                 ; [0072de80]=00000000
+0072de5e: 80b5       push      {r7, lr}                      

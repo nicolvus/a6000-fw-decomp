@@ -1,0 +1,209 @@
+002b5900: ed87       strh      r5, [r5, #0x3e]             
+002b5902: 7e00       lsls      r6, r7, #1                  
+002b5904: 80b5       push      {r7, lr}                    
+002b5906: 00af       add       r7, sp, #0                  
+002b5908: 69f6deed   blx       #0x11f4c8                   
+002b590c: 08b1       cbz       r0, #0x2b5912               
+002b590e: 0348       ldr       r0, [pc, #0xc]                ; [002b591c]=007e8811 "need repair FlashBackup"
+002b5910: 00e0       b         #0x2b5914                   
+002b5912: 0348       ldr       r0, [pc, #0xc]                ; [002b5920]=007e880e "NO need repair FlashBackup"
+002b5914: fff7f2fb   bl        #0x2b50fc                   
+002b5918: 0120       movs      r0, #1                      
+002b591a: 80bd       pop       {r7, pc}                    
+002b591c: 1188       ldrh      r1, [r2]                    
+002b591e: 7e00       lsls      r6, r7, #1                  
+002b5920: 0e88       ldrh      r6, [r1]                    
+002b5922: 7e00       lsls      r6, r7, #1                  
+002b5924: 0128       cmp       r0, #1                      
+002b5926: 90b5       push      {r4, r7, lr}                
+002b5928: 83b0       sub       sp, #0xc                    
+002b592a: 0c46       mov       r4, r1                      
+002b592c: 00af       add       r7, sp, #0                  
+002b592e: 0fdd       ble       #0x2b5950                   
+002b5930: 06c9       ldm       r1, {r1, r2}                
+002b5932: 0b48       ldr       r0, [pc, #0x2c]               ; [002b5960]=008d1866 "%s %s"
+002b5934: fff7e2fb   bl        #0x2b50fc                   
+002b5938: 6068       ldr       r0, [r4, #4]                
+002b593a: 4af398fa   bl        #0x5ffe6e                   
+002b593e: 391d       adds      r1, r7, #4                  
+002b5940: fcf7c8fb   bl        #0x2b20d4                   
+002b5944: 0748       ldr       r0, [pc, #0x1c]               ; [002b5964]=007e8829 "[%s]aligned[%d]"
+002b5946: 6168       ldr       r1, [r4, #4]                
+002b5948: 7a68       ldr       r2, [r7, #4]                
+002b594a: fff7d7fb   bl        #0x2b50fc                   
+002b594e: 02e0       b         #0x2b5956                   
+002b5950: 0548       ldr       r0, [pc, #0x14]               ; [002b5968]=007e8839 "GetAlignSize [Original Data Size]"
+002b5952: fff7d3fb   bl        #0x2b50fc                   
+002b5956: 0120       movs      r0, #1                      
+002b5958: 07f10c07   add.w     r7, r7, #0xc                
+002b595c: bd46       mov       sp, r7                      
+002b595e: 90bd       pop       {r4, r7, pc}                
+002b5960: 6618       adds      r6, r4, r1                  
+002b5962: 8d00       lsls      r5, r1, #2                  
+002b5964: 2988       ldrh      r1, [r5]                    
+002b5966: 7e00       lsls      r6, r7, #1                  
+002b5968: 3988       ldrh      r1, [r7]                    
+002b596a: 7e00       lsls      r6, r7, #1                  
+002b596c: 80b5       push      {r7, lr}                    
+002b596e: 00af       add       r7, sp, #0                  
+002b5970: 0968       ldr       r1, [r1]                    
+002b5972: 0448       ldr       r0, [pc, #0x10]               ; [002b5984]=007aedc7
+002b5974: fff7c2fb   bl        #0x2b50fc                   
+002b5978: 0348       ldr       r0, [pc, #0xc]                ; [002b5988]=007e885b "GetFBLLog complete"
+002b597a: fff73ffb   bl        #0x2b4ffc                   
+002b597e: 0120       movs      r0, #1                      
+002b5980: 80bd       pop       {r7, pc}                    
+002b5982: 00bf       nop                                   
+002b5984: c7ed7a00   stcl      p0, c0, [r7, #0x1e8]        
+002b5988: 5b88       ldrh      r3, [r3, #2]                
+002b598a: 7e00       lsls      r6, r7, #1                  
+002b598c: 80b5       push      {r7, lr}                    
+002b598e: 00af       add       r7, sp, #0                  
+002b5990: 0648       ldr       r0, [pc, #0x18]               ; [002b59ac]=007aedc7
+002b5992: 0968       ldr       r1, [r1]                    
+002b5994: fff7b2fb   bl        #0x2b50fc                   
+002b5998: 69f6a0eb   blx       #0x11f0dc                   
+002b599c: 08b9       cbnz      r0, #0x2b59a2               
+002b599e: 0448       ldr       r0, [pc, #0x10]               ; [002b59b0]=007e886e "Quit complete"
+002b59a0: 00e0       b         #0x2b59a4                   
+002b59a2: 0448       ldr       r0, [pc, #0x10]               ; [002b59b4]=007e887c "Quit error"
+002b59a4: fff72afb   bl        #0x2b4ffc                   
+002b59a8: 0120       movs      r0, #1                      
+002b59aa: 80bd       pop       {r7, pc}                    
+002b59ac: c7ed7a00   stcl      p0, c0, [r7, #0x1e8]        
+002b59b0: 6e88       ldrh      r6, [r5, #2]                
+002b59b2: 7e00       lsls      r6, r7, #1                  
+002b59b4: 7c88       ldrh      r4, [r7, #2]                
+002b59b6: 7e00       lsls      r6, r7, #1                  
+002b59b8: 80b5       push      {r7, lr}                    
+002b59ba: 00af       add       r7, sp, #0                  
+002b59bc: 0868       ldr       r0, [r1]                    
+002b59be: fff79dfb   bl        #0x2b50fc                   
+002b59c2: 68f64eee   blx       #0x11e660                   
+002b59c6: 0120       movs      r0, #1                      
+002b59c8: 80bd       pop       {r7, pc}                    
+002b59ca: 80b5       push      {r7, lr}                    
+002b59cc: 00af       add       r7, sp, #0                  
+002b59ce: 0868       ldr       r0, [r1]                    
+002b59d0: fff794fb   bl        #0x2b50fc                   
+002b59d4: fdf744fc   bl        #0x2b3260                   
+002b59d8: 0120       movs      r0, #1                      
+002b59da: 80bd       pop       {r7, pc}                    
+002b59dc: 0528       cmp       r0, #5                      
+002b59de: 2de9f043   push.w    {r4, r5, r6, r7, r8, sb, lr}
+002b59e2: 85b0       sub       sp, #0x14                   
+002b59e4: 0c46       mov       r4, r1                      
+002b59e6: 04af       add       r7, sp, #0x10               
+002b59e8: 2ddd       ble       #0x2b5a46                   
+002b59ea: cb68       ldr       r3, [r1, #0xc]              
+002b59ec: 0d1d       adds      r5, r1, #4                  
+002b59ee: 1a48       ldr       r0, [pc, #0x68]               ; [002b5a58]=007e8887 "%s %s %s %s %s %s"
+002b59f0: 2e1d       adds      r6, r5, #4                  
+002b59f2: 0093       str       r3, [sp]                    
+002b59f4: 0b69       ldr       r3, [r1, #0x10]             
+002b59f6: 0193       str       r3, [sp, #4]                
+002b59f8: 4b69       ldr       r3, [r1, #0x14]             
+002b59fa: 0293       str       r3, [sp, #8]                
+002b59fc: 0ec9       ldm       r1, {r1, r2, r3}            
+002b59fe: fff77dfb   bl        #0x2b50fc                   
+002b5a02: 6068       ldr       r0, [r4, #4]                
+002b5a04: 341d       adds      r4, r6, #4                  
+002b5a06: 4af332fa   bl        #0x5ffe6e                   
+002b5a0a: 8146       mov       sb, r0                      
+002b5a0c: 6868       ldr       r0, [r5, #4]                
+002b5a0e: 4af304fa   bl        #0x5ffe1a                   
+002b5a12: 8046       mov       r8, r0                      
+002b5a14: 7068       ldr       r0, [r6, #4]                
+002b5a16: 4af32afa   bl        #0x5ffe6e                   
+002b5a1a: 261d       adds      r6, r4, #4                  
+002b5a1c: 0546       mov       r5, r0                      
+002b5a1e: 6068       ldr       r0, [r4, #4]                
+002b5a20: 4af325fa   bl        #0x5ffe6e                   
+002b5a24: 0446       mov       r4, r0                      
+002b5a26: 7068       ldr       r0, [r6, #4]                
+002b5a28: 4af321fa   bl        #0x5ffe6e                   
+002b5a2c: 1ffa88f1   uxth.w    r1, r8                      
+002b5a30: 2a46       mov       r2, r5                      
+002b5a32: 2346       mov       r3, r4                      
+002b5a34: 0090       str       r0, [sp]                    
+002b5a36: 5ffa89f0   uxtb.w    r0, sb                      
+002b5a3a: fcf727fb   bl        #0x2b208c                   
+002b5a3e: fdf70ffc   bl        #0x2b3260                   
+002b5a42: 0120       movs      r0, #1                      
+002b5a44: 03e0       b         #0x2b5a4e                   
+002b5a46: 0548       ldr       r0, [pc, #0x14]               ; [002b5a5c]=007e8899 "SetSMI [index] [SectorName(Hex)] [handle] [sta"
+002b5a48: fff758fb   bl        #0x2b50fc                   
+002b5a4c: 0020       movs      r0, #0                      
+002b5a4e: 07f10407   add.w     r7, r7, #4                  
+002b5a52: bd46       mov       sp, r7                      
+002b5a54: bde8f083   pop.w     {r4, r5, r6, r7, r8, sb, pc}
+002b5a58: 8788       ldrh      r7, [r0, #4]                
+002b5a5a: 7e00       lsls      r6, r7, #1                  
+002b5a5c: 9988       ldrh      r1, [r3, #4]                
+002b5a5e: 7e00       lsls      r6, r7, #1                  
+002b5a60: 0228       cmp       r0, #2                      
+002b5a62: b0b5       push      {r4, r5, r7, lr}            
+002b5a64: 0c46       mov       r4, r1                      
+002b5a66: 00af       add       r7, sp, #0                  
+002b5a68: 14dd       ble       #0x2b5a94                   
+002b5a6a: 0d1d       adds      r5, r1, #4                  
+002b5a6c: 0c48       ldr       r0, [pc, #0x30]               ; [002b5aa0]=007e8890 "%s %s %s"
+002b5a6e: 0ec9       ldm       r1, {r1, r2, r3}            
+002b5a70: fff744fb   bl        #0x2b50fc                   
+002b5a74: 6068       ldr       r0, [r4, #4]                
+002b5a76: 6af62dfc   bl        #0x1202d4                   
+002b5a7a: 6068       ldr       r0, [r4, #4]                
+002b5a7c: 4af3f7f9   bl        #0x5ffe6e                   
+002b5a80: 0446       mov       r4, r0                      
+002b5a82: 6868       ldr       r0, [r5, #4]                
+002b5a84: 4af3f3f9   bl        #0x5ffe6e                   
+002b5a88: 0146       mov       r1, r0                      
+002b5a8a: 2046       mov       r0, r4                      
+002b5a8c: fcf72cfa   bl        #0x2b1ee8                   
+002b5a90: 0120       movs      r0, #1                      
+002b5a92: b0bd       pop       {r4, r5, r7, pc}            
+002b5a94: 0348       ldr       r0, [pc, #0xc]                ; [002b5aa4]=007e88d1 "InitB [Operation Mode]"
+002b5a96: fff731fb   bl        #0x2b50fc                   
+002b5a9a: 0020       movs      r0, #0                      
+002b5a9c: b0bd       pop       {r4, r5, r7, pc}            
+002b5a9e: 00bf       nop                                   
+002b5aa0: 9088       ldrh      r0, [r2, #4]                
+002b5aa2: 7e00       lsls      r6, r7, #1                  
+002b5aa4: d188       ldrh      r1, [r2, #6]                
+002b5aa6: 7e00       lsls      r6, r7, #1                  
+002b5aa8: 80b5       push      {r7, lr}                    
+002b5aaa: 00af       add       r7, sp, #0                  
+002b5aac: 0348       ldr       r0, [pc, #0xc]                ; [002b5abc]=007aedc7
+002b5aae: 0968       ldr       r1, [r1]                    
+002b5ab0: fff724fb   bl        #0x2b50fc                   
+002b5ab4: fcf734fd   bl        #0x2b2520                   
+002b5ab8: 0120       movs      r0, #1                      
+002b5aba: 80bd       pop       {r7, pc}                    
+002b5abc: c7ed7a00   stcl      p0, c0, [r7, #0x1e8]        
+002b5ac0: 80b5       push      {r7, lr}                    
+002b5ac2: 00af       add       r7, sp, #0                  
+002b5ac4: 0848       ldr       r0, [pc, #0x20]               ; [002b5ae8]=007aedc7
+002b5ac6: 0968       ldr       r1, [r1]                    
+002b5ac8: fff718fb   bl        #0x2b50fc                   
+002b5acc: 67f688ed   blx       #0x11d5e0                   
+002b5ad0: 20b9       cbnz      r0, #0x2b5adc               
+002b5ad2: 0648       ldr       r0, [pc, #0x18]               ; [002b5aec]=007e88e8 "AllDeleteRingBuffer complete"
+002b5ad4: fff792fa   bl        #0x2b4ffc                   
+002b5ad8: 0120       movs      r0, #1                      
+002b5ada: 80bd       pop       {r7, pc}                    
+002b5adc: 0448       ldr       r0, [pc, #0x10]               ; [002b5af0]=007e8905 "AllDeleteRingBuffer error"
+002b5ade: fff78dfa   bl        #0x2b4ffc                   
+002b5ae2: 0020       movs      r0, #0                      
+002b5ae4: 80bd       pop       {r7, pc}                    
+002b5ae6: 00bf       nop                                   
+002b5ae8: c7ed7a00   stcl      p0, c0, [r7, #0x1e8]        
+002b5aec: e888       ldrh      r0, [r5, #6]                
+002b5aee: 7e00       lsls      r6, r7, #1                  
+002b5af0: 0589       ldrh      r5, [r0, #8]                
+002b5af2: 7e00       lsls      r6, r7, #1                  
+002b5af4: 0228       cmp       r0, #2                      
+002b5af6: b0b5       push      {r4, r5, r7, lr}            
+002b5af8: 0c46       mov       r4, r1                      
+002b5afa: 00af       add       r7, sp, #0                  
+002b5afc: 11dd       ble       #0x2b5b22                   
+002b5afe: 0d1d       adds      r5, r1, #4                  

@@ -1,0 +1,60 @@
+002b6788: b0b5       push      {r4, r5, r7, lr}              
+002b678a: 82b0       sub       sp, #8                        
+002b678c: 02af       add       r7, sp, #8                    
+002b678e: 68f698eb   blx       #0x11eec0                     
+002b6792: faf739fc   bl        #0x2b1008                     
+002b6796: 0446       mov       r4, r0                        
+002b6798: 0028       cmp       r0, #0                        
+002b679a: 29d0       beq       #0x2b67f0                       ; _ZN8FlashLib12WarmBootInitEv+0x68
+002b679c: 4928       cmp       r0, #0x49                     
+002b679e: 12d0       beq       #0x2b67c6                       ; _ZN8FlashLib12WarmBootInitEv+0x3e
+002b67a0: 0022       movs      r2, #0                        
+002b67a2: 2f48       ldr       r0, [pc, #0xbc]                 ; [002b6860]=007e7c85 "WarmBootInit"
+002b67a4: 1346       mov       r3, r2                        
+002b67a6: 2146       mov       r1, r4                        
+002b67a8: 0092       str       r2, [sp]                      
+002b67aa: 0192       str       r2, [sp, #4]                  
+002b67ac: 67f690eb   blx       #0x11ded0                     
+002b67b0: 2c4b       ldr       r3, [pc, #0xb0]                 ; [002b6864]=009d2790
+002b67b2: 1b78       ldrb      r3, [r3]                      
+002b67b4: 002b       cmp       r3, #0                        
+002b67b6: 4dd0       beq       #0x2b6854                       ; _ZN8FlashLib12WarmBootInitEv+0xcc
+002b67b8: 882c       cmp       r4, #0x88                     
+002b67ba: 2ed0       beq       #0x2b681a                       ; _ZN8FlashLib12WarmBootInitEv+0x92
+002b67bc: 892c       cmp       r4, #0x89                     
+002b67be: 2cd0       beq       #0x2b681a                       ; _ZN8FlashLib12WarmBootInitEv+0x92
+002b67c0: e0b2       uxtb      r0, r4                        
+002b67c2: 4bf303f8   bl        #0x6017cc                     
+002b67c6: 892c       cmp       r4, #0x89                     
+002b67c8: 27d0       beq       #0x2b681a                       ; _ZN8FlashLib12WarmBootInitEv+0x92
+002b67ca: 274d       ldr       r5, [pc, #0x9c]                 ; [002b6868]=00a36c88
+002b67cc: 2b78       ldrb      r3, [r5]                      
+002b67ce: 202b       cmp       r3, #0x20                     
+002b67d0: 43d8       bhi       #0x2b685a                       ; _ZN8FlashLib12WarmBootInitEv+0xd2
+002b67d2: 1020       movs      r0, #0x10                     
+002b67d4: a2b2       uxth      r2, r4                        
+002b67d6: 7821       movs      r1, #0x78                     
+002b67d8: 8de80c00   stm.w     sp, {r2, r3}                  
+002b67dc: 34fa00f3   lsrs.w    r3, r4, r0                    
+002b67e0: 41f20d02   movw      r2, #0x100d                   
+002b67e4: 05f32af8   bl        #0x5bb83c                     
+002b67e8: 2b78       ldrb      r3, [r5]                      
+002b67ea: 0133       adds      r3, #1                        
+002b67ec: 2b70       strb      r3, [r5]                      
+002b67ee: 34e0       b         #0x2b685a                       ; _ZN8FlashLib12WarmBootInitEv+0xd2
+002b67f0: 1e48       ldr       r0, [pc, #0x78]                 ; [002b686c]=00a36fca
+002b67f2: faf78dfd   bl        #0x2b1310                     
+002b67f6: 10bb       cbnz      r0, #0x2b683e                 
+002b67f8: 1d4b       ldr       r3, [pc, #0x74]                 ; [002b6870]=00a36c6c
+002b67fa: 0122       movs      r2, #1                        
+002b67fc: 1a70       strb      r2, [r3]                      
+002b67fe: 2246       mov       r2, r4                        
+002b6800: 1c4b       ldr       r3, [pc, #0x70]                 ; [002b6874]=009d2a08
+002b6802: 05e0       b         #0x2b6810                       ; _ZN8FlashLib12WarmBootInitEv+0x88
+002b6804: 13f8061c   ldrb      r1, [r3, #-0x6]               
+002b6808: 5218       adds      r2, r2, r1                    
+002b680a: d2b2       uxtb      r2, r2                        
+002b680c: 03f8022c   strb      r2, [r3, #-0x2]               
+002b6810: 13f8031b   ldrb      r1, [r3], #3                  
+002b6814: 0029       cmp       r1, #0                        
+002b6816: f5d1       bne       #0x2b6804                       ; _ZN8FlashLib12WarmBootInitEv+0x7c

@@ -1,0 +1,56 @@
+002b3ef8: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+002b3efc: 91b0       sub      sp, #0x44                     
+002b3efe: 8146       mov      sb, r0                        
+002b3f00: 04af       add      r7, sp, #0x10                 
+002b3f02: 1d48       ldr      r0, [pc, #0x74]                 ; [002b3f78]=007e795f "WriteSectorManagerInfo"
+002b3f04: 1646       mov      r6, r2                        
+002b3f06: 8846       mov      r8, r1                        
+002b3f08: 0224       movs     r4, #2                        
+002b3f0a: fdf7adff   bl       #0x2b1e68                     
+002b3f0e: 0021       movs     r1, #0                        
+002b3f10: 0222       movs     r2, #2                        
+002b3f12: 07f12c00   add.w    r0, r7, #0x2c                 
+002b3f16: 3d1d       adds     r5, r7, #4                    
+002b3f18: 6cf6e3f9   bl       #0x1202e2                     
+002b3f1c: 0022       movs     r2, #0                        
+002b3f1e: 8023       movs     r3, #0x80                     
+002b3f20: 3146       mov      r1, r6                        
+002b3f22: bb80       strh     r3, [r7, #4]                  
+002b3f24: 8020       movs     r0, #0x80                     
+002b3f26: 2346       mov      r3, r4                        
+002b3f28: 87f82d60   strb.w   r6, [r7, #0x2d]               
+002b3f2c: 87f82c80   strb.w   r8, [r7, #0x2c]               
+002b3f30: 7a61       str      r2, [r7, #0x14]               
+002b3f32: fc61       str      r4, [r7, #0x1c]               
+002b3f34: bc61       str      r4, [r7, #0x18]               
+002b3f36: 3a62       str      r2, [r7, #0x20]               
+002b3f38: ba84       strh     r2, [r7, #0x24]               
+002b3f3a: 8de82002   stm.w    sp, {r5, sb}                  
+002b3f3e: cdf80880   str.w    r8, [sp, #8]                  
+002b3f42: fff7effe   bl       #0x2b3d24                     
+002b3f46: 0646       mov      r6, r0                        
+002b3f48: 58b9       cbnz     r0, #0x2b3f62                 
+002b3f4a: 2846       mov      r0, r5                        
+002b3f4c: 07f12c01   add.w    r1, r7, #0x2c                 
+002b3f50: 2246       mov      r2, r4                        
+002b3f52: fff787fe   bl       #0x2b3c64                     
+002b3f56: 0646       mov      r6, r0                        
+002b3f58: 18b9       cbnz     r0, #0x2b3f62                 
+002b3f5a: 2846       mov      r0, r5                        
+002b3f5c: fff71afe   bl       #0x2b3b94                     
+002b3f60: 0646       mov      r6, r0                        
+002b3f62: 0548       ldr      r0, [pc, #0x14]                 ; [002b3f78]=007e795f "WriteSectorManagerInfo"
+002b3f64: 3146       mov      r1, r6                        
+002b3f66: fdf7f7ff   bl       #0x2b1f58                     
+002b3f6a: 3046       mov      r0, r6                        
+002b3f6c: 07f13407   add.w    r7, r7, #0x34                 
+002b3f70: bd46       mov      sp, r7                        
+002b3f72: bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}  
+002b3f76: 00bf       nop                                    
+002b3f78: 5f79       ldrb     r7, [r3, #5]                  
+002b3f7a: 7e00       lsls     r6, r7, #1                    
+002b3f7c: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+002b3f80: 83b0       sub      sp, #0xc                      
+002b3f82: 8046       mov      r8, r0                        
+002b3f84: 02af       add      r7, sp, #8                    
+002b3f86: 2648       ldr      r0, [pc, #0x98]                 ; [002b4020]=007e7976 "CallUserFuncWriteBaseDataRequest"

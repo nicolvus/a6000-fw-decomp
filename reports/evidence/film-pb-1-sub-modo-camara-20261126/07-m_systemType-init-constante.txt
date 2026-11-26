@@ -1,0 +1,26 @@
+# MemInfo::Init (0x5F74D4): unico escritor de m_systemType [0x009DEFE0] = 1, constante de compilacion
+
+005f7540: 25fc02f0   stc2     p0, c15, [r5], #-8            
+005f7544: 4bfc0121   mcrr2    p1, #0, r2, fp, c1            
+005f7548: 584a       ldr      r2, [pc, #0x160]                ; [005f76ac]=008da04a
+005f754a: 4346       mov      r3, r8                        
+005f754c: 02f01efc   bl       #0x5f9d8c                     
+005f7550: 574b       ldr      r3, [pc, #0x15c]                ; [005f76b0]=009defe0
+005f7552: 0122       movs     r2, #1                        
+005f7554: 8eb0       sub      sp, #0x38                     
+005f7556: 0021       movs     r1, #0                        
+005f7558: 02ad       add      r5, sp, #8                    
+005f755a: 0026       movs     r6, #0                        
+005f755c: 1a60       str      r2, [r3]                      
+005f755e: 2846       mov      r0, r5                        
+005f7560: 544b       ldr      r3, [pc, #0x150]                ; [005f76b4]=00a4f0a4
+005f7562: b246       mov      sl, r6                        
+005f7564: 544a       ldr      r2, [pc, #0x150]                ; [005f76b8]=008d87e8
+005f7566: 1a60       str      r2, [r3]                      
+005f7568: 3022       movs     r2, #0x30                     
+005f756a: 28f7baf6   bl       #0x1202e2                     
+005f756e: 534b       ldr      r3, [pc, #0x14c]                ; [005f76bc]=00a4fbd8
+005f7570: 9946       mov      sb, r3                        
+
+# Type2Mode lo lee en 0x5F69B4 (ldr r3,[r6], r6=0x9DEFE0) y lo usa como selector de tabla (0x5F69BE..0x5F69E6)
+# Otros lectores: 0x5F7D9A/0x5F7D9C, 0x5F7E0A/0x5F7E0C, 0x5F7E4A/0x5F7E4C, 0x5F9468 (todos 'ldr r3,[rX]; cmp r3,#2')

@@ -1,0 +1,128 @@
+002b267c: 2de9f04f   push.w    {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+002b2680: 89b0       sub       sp, #0x24                   
+002b2682: 02af       add       r7, sp, #8                  
+002b2684: 0546       mov       r5, r0                      
+002b2686: a448       ldr       r0, [pc, #0x290]              ; [002b2918]=009e6938
+002b2688: 7b60       str       r3, [r7, #4]                
+002b268a: 8a46       mov       sl, r1                      
+002b268c: a34b       ldr       r3, [pc, #0x28c]              ; [002b291c]=00a36c20
+002b268e: 53f83290   ldr.w     sb, [r3, r2, lsl #3]        
+002b2692: 23f7d5fe   bl        #0x1d6440                   
+002b2696: a248       ldr       r0, [pc, #0x288]              ; [002b2920]=007e6cee "ReadPack"
+002b2698: fff7e6fb   bl        #0x2b1e68                   
+002b269c: a148       ldr       r0, [pc, #0x284]              ; [002b2924]=007e6cf7 "  seekPoint:0x%x"
+002b269e: 2946       mov       r1, r5                      
+002b26a0: 02f0eefc   bl        #0x2b5080                   
+002b26a4: 5046       mov       r0, sl                      
+002b26a6: 0021       movs      r1, #0                      
+002b26a8: 2a46       mov       r2, r5                      
+002b26aa: 6cf612e9   blx       #0x11e8d0                   
+002b26ae: 8046       mov       r8, r0                      
+002b26b0: 0028       cmp       r0, #0                      
+002b26b2: 40f02681   bne.w     #0x2b2902                   
+002b26b6: 0621       movs      r1, #6                      
+002b26b8: 07f10c02   add.w     r2, r7, #0xc                
+002b26bc: 07f11403   add.w     r3, r7, #0x14               
+002b26c0: 5046       mov       r0, sl                      
+002b26c2: 6bf646ec   blx       #0x11df50                   
+002b26c6: 984c       ldr       r4, [pc, #0x260]              ; [002b2928]=009d278c
+002b26c8: fb89       ldrh      r3, [r7, #0xe]              
+002b26ca: 3e8a       ldrh      r6, [r7, #0x10]             
+002b26cc: a346       mov       fp, r4                      
+002b26ce: 397b       ldrb      r1, [r7, #0xc]              
+002b26d0: 1b04       lsls      r3, r3, #0x10               
+002b26d2: 7a7b       ldrb      r2, [r7, #0xd]              
+002b26d4: 9b19       adds      r3, r3, r6                  
+002b26d6: 8046       mov       r8, r0                      
+002b26d8: 2068       ldr       r0, [r4]                    
+002b26da: 0090       str       r0, [sp]                    
+002b26dc: 9348       ldr       r0, [pc, #0x24c]              ; [002b292c]=007e6d08 "  userID:0x%02x,  dataID:0x%02x, length:0x%08x"
+002b26de: 02f0cffc   bl        #0x2b5080                   
+002b26e2: b8f1000f   cmp.w     r8, #0                      
+002b26e6: 40f00c81   bne.w     #0x2b2902                   
+002b26ea: 2368       ldr       r3, [r4]                    
+002b26ec: 05f10802   add.w     r2, r5, #8                  
+002b26f0: 9a42       cmp       r2, r3                      
+002b26f2: 05d9       bls       #0x2b2700                   
+002b26f4: 5046       mov       r0, sl                      
+002b26f6: 2946       mov       r1, r5                      
+002b26f8: 6cf6a8ea   blx       #0x11ec4c                   
+002b26fc: 8c4c       ldr       r4, [pc, #0x230]              ; [002b2930]=10100003
+002b26fe: 00e0       b         #0x2b2702                   
+002b2700: 4446       mov       r4, r8                      
+002b2702: 3b7b       ldrb      r3, [r7, #0xc]              
+002b2704: f02b       cmp       r3, #0xf0                   
+002b2706: 17d1       bne       #0x2b2738                   
+002b2708: 8a48       ldr       r0, [pc, #0x228]              ; [002b2934]=007e6d4c "  PaddingDataLength:0x%02x"
+002b270a: 797b       ldrb      r1, [r7, #0xd]              
+002b270c: 02f0b8fc   bl        #0x2b5080                   
+002b2710: 3b7b       ldrb      r3, [r7, #0xc]              
+002b2712: 7868       ldr       r0, [r7, #4]                
+002b2714: 3a6c       ldr       r2, [r7, #0x40]             
+002b2716: 0360       str       r3, [r0]                    
+002b2718: 7b7b       ldrb      r3, [r7, #0xd]              
+002b271a: 1370       strb      r3, [r2]                    
+002b271c: b86c       ldr       r0, [r7, #0x48]             
+002b271e: fa6c       ldr       r2, [r7, #0x4c]             
+002b2720: 0360       str       r3, [r0]                    
+002b2722: 05eb4303   add.w     r3, r5, r3, lsl #1          
+002b2726: 0233       adds      r3, #2                      
+002b2728: 1360       str       r3, [r2]                    
+002b272a: 7b6c       ldr       r3, [r7, #0x44]             
+002b272c: c3f80090   str.w     sb, [r3]                    
+002b2730: 002c       cmp       r4, #0                      
+002b2732: 40f0cb80   bne.w     #0x2b28cc                   
+002b2736: ede0       b         #0x2b2914                   
+002b2738: ff2b       cmp       r3, #0xff                   
+002b273a: 21d1       bne       #0x2b2780                   
+002b273c: 7b7b       ldrb      r3, [r7, #0xd]              
+002b273e: ff2b       cmp       r3, #0xff                   
+002b2740: 1ed1       bne       #0x2b2780                   
+002b2742: fb89       ldrh      r3, [r7, #0xe]              
+002b2744: 4ff6ff72   movw      r2, #0xffff                 
+002b2748: 9342       cmp       r3, r2                      
+002b274a: 19d1       bne       #0x2b2780                   
+002b274c: 3a8a       ldrh      r2, [r7, #0x10]             
+002b274e: 9a42       cmp       r2, r3                      
+002b2750: 16d1       bne       #0x2b2780                   
+002b2752: 5046       mov       r0, sl                      
+002b2754: 2946       mov       r1, r5                      
+002b2756: 6cf67aea   blx       #0x11ec4c                   
+002b275a: 0446       mov       r4, r0                      
+002b275c: 0028       cmp       r0, #0                      
+002b275e: 00f0d780   beq.w     #0x2b2910                   
+002b2762: 85b2       uxth      r5, r0                      
+002b2764: 7448       ldr       r0, [pc, #0x1d0]              ; [002b2938]=007e6d67 "AppointSectorEnd error. errorFBS 0x%04x"
+002b2766: 2946       mov       r1, r5                      
+002b2768: 240c       lsrs      r4, r4, #0x10               
+002b276a: 02f047fc   bl        #0x2b4ffc                   
+002b276e: 8de83000   stm.w     sp, {r4, r5}                
+002b2772: 0220       movs      r0, #2                      
+002b2774: 1f21       movs      r1, #0x1f                   
+002b2776: 4ff4c042   mov.w     r2, #0x6000                 
+002b277a: 4ff6f073   movw      r3, #0xfff0                 
+002b277e: 39e0       b         #0x2b27f4                   
+002b2780: 002c       cmp       r4, #0                      
+002b2782: 40f0a380   bne.w     #0x2b28cc                   
+002b2786: fe89       ldrh      r6, [r7, #0xe]              
+002b2788: 3b8a       ldrh      r3, [r7, #0x10]             
+002b278a: dbf80020   ldr.w     r2, [fp]                    
+002b278e: 3604       lsls      r6, r6, #0x10               
+002b2790: f618       adds      r6, r6, r3                  
+002b2792: 0236       adds      r6, #2                      
+002b2794: 7119       adds      r1, r6, r5                  
+002b2796: 9142       cmp       r1, r2                      
+002b2798: 2fd9       bls       #0x2b27fa                   
+002b279a: 6848       ldr       r0, [pc, #0x1a0]              ; [002b293c]=007e6d8f "packSize error. (seekPoint + packLength) 0x%08"
+002b279c: 02f02efc   bl        #0x2b4ffc                   
+002b27a0: 2946       mov       r1, r5                      
+002b27a2: 3246       mov       r2, r6                      
+002b27a4: 6648       ldr       r0, [pc, #0x198]              ; [002b2940]=007e6dd3 "                 seekPoint 0x%08x: packLength "
+002b27a6: 0223       movs      r3, #2                      
+002b27a8: 02f028fc   bl        #0x2b4ffc                   
+002b27ac: 2b0c       lsrs      r3, r5, #0x10               
+002b27ae: 0220       movs      r0, #2                      
+002b27b0: 0093       str       r3, [sp]                    
+002b27b2: 1f21       movs      r1, #0x1f                   
+002b27b4: 4ff4c042   mov.w     r2, #0x6000                 
+002b27b8: 4ff6f173   movw      r3, #0xfff1                 

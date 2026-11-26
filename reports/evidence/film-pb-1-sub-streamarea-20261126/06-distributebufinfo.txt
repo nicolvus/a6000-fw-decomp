@@ -1,0 +1,52 @@
+# DistributeBufInfo 0x5f703c: UNICO escritor de la tabla 0xa4f368
+# - recorre la lista de areas del modo (arg0) y, por cada entrada, busca en el ramMapAreaInfo (arg2)
+#   una entrada con la MISMA areaType; si no la encuentra, NO escribe la entrada (0x5f71de -> 0x5f7444)
+# - escribe en tabla + 0x18*indice:
+#     0x5f73be/0x5f73ce  [+0x00] direccion (vAdrs mapeada, o la alineada)
+#     0x5f73dc           [+0x04] direccion fisica
+#     0x5f73e0           [+0x08] TAMANO  (viene de la tabla de modo, no del ramMap)
+#     0x5f73c4/0x5f73d6  [+0x10] offset 64 bits
+# - si el area del ramMap es menor que el tamano declarado -> 'area size failed' (0x8d9e2c)
+
+005f71d6: 3e6c       ldr      r6, [r7, #0x40]               
+005f71d8: 6a68       ldr      r2, [r5, #4]                  
+005f71da: b168       ldr      r1, [r6, #8]                  
+005f71dc: 9142       cmp      r1, r2                        
+005f71de: 40f03181   bne.w    #0x5f7444                     
+005f71e2: 386b       ldr      r0, [r7, #0x30]               
+005f71e4: 1822       movs     r2, #0x18                     
+005f71e6: 5a43       muls     r2, r3, r2                    
+005f71e8: ba62       str      r2, [r7, #0x28]               
+005f71ea: 00eb020a   add.w    sl, r0, r2                    
+005f71ee: 02f025fe   bl       #0x5f9e3c                     
+005f71f2: ab68       ldr      r3, [r5, #8]                  
+005f71f4: 0121       movs     r1, #1                        
+   ...
+005f73a8: 7cb1       cbz      r4, #0x5f73ca                 
+005f73aa: b96a       ldr      r1, [r7, #0x28]               
+005f73ac: 0bf57e6b   add.w    fp, fp, #0xfe0                
+005f73b0: 3a6b       ldr      r2, [r7, #0x30]               
+005f73b2: 0bf11f0b   add.w    fp, fp, #0x1f                 
+005f73b6: 2bf47e6b   bic      fp, fp, #0xfe0                
+005f73ba: 2bf01f0b   bic      fp, fp, #0x1f                 
+005f73be: 5450       str      r4, [r2, r1]                  
+005f73c0: d7e90e01   ldrd     r0, r1, [r7, #0x38]           
+005f73c4: cae90401   strd     r0, r1, [sl, #0x10]           
+005f73c8: 07e0       b        #0x5f73da                     
+005f73ca: b96a       ldr      r1, [r7, #0x28]               
+005f73cc: 3a6b       ldr      r2, [r7, #0x30]               
+005f73ce: 42f801b0   str.w    fp, [r2, r1]                  
+005f73d2: d7e90801   ldrd     r0, r1, [r7, #0x20]           
+005f73d6: cae90401   strd     r0, r1, [sl, #0x10]           
+005f73da: 2b68       ldr      r3, [r5]                      
+005f73dc: caf80480   str.w    r8, [sl, #4]                  
+005f73e0: caf80830   str.w    r3, [sl, #8]                  
+005f73e4: 02f02afd   bl       #0x5f9e3c                     
+
+# llamadores de DistributeBufInfo (2, uno por cada via de asignacion)
+### callers of 005f703c
+005f7654 OK   bl     func=005f74d4  memInfo::Init  insmod"stream2 driver" | [MemInfo]**Init() -- BEFORE sttream2Driver open | /dev/stream2 | [MemInfo]**Init() -- stream2 driver open error.
+005f7cf2 OK   bl     func=005f7be8  [MemInfo]StreamAreaAllocate(next):type=%d sub=%d extListPack | [MemInfo]StreamAreaAllocate(next):pExtListPackHeader is NULL | [MemInfo]StreamAreaAllocate(next) : type=%ld /subType=%ld /m | [MemInfo]StreamAreaAllocate(next) : Type2Mode falied...type=
+005f7fa4 OK   bl     func=005f7f1c  [MemInfo]ChangeAllocate Start!! | [MemInfo]ChangeAllocate(next): | [MemInfo]ChangeAllocate(next):RamMapAreaInfo is NULL. cannot | [MemInfo]ChangeAllocate(next):DistributeBufInfo failed! 
+005f819e OK   bl     func=005f8140  [MemInfo]ExtraStreamAreaAllocate() | [MemInfo]ExtraStreamAreaAllocate:RegistAreaExtList failed... | [MemInfo]ExtraStreamAreaAllocate:SetRamMapArea failed.
+total 4

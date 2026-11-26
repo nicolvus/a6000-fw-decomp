@@ -1,0 +1,22 @@
+LLAMADORES DE MMgrMp4IfoAcsr::SetLoadInfo (0x67B4B8)
+
+- No hay ninguna referencia a su direccion como dato (buscado 0x67B4B8 y 0x67B4B9 en todo
+  el fichero: 0 apariciones) => no esta en ninguna vtable estatica.
+- Llamadas directas (bl, barrido capstone de .text): solo dos
+     0x627C6C  en funcion 0x627BEC  (AviMMgrCmd: camino "FlashLoadMp4")
+     0x628676  en funcion 0x628594  (AviMMgrCmd: camino "DiscLoadMp4")
+- AMBOS DESCARTAN EL RETORNO:
+     0x627C68  ldr.w r0,[r4,#0x780]
+     0x627C6C  bl    0x67B4B8          ; SetLoadInfo(acsr)
+     0x627C70  movs  r1,#1             ; <-- r0 se sobrescribe aqui
+     0x627C72  ldr.w r0,[r4,#0x764]
+     0x627C78  bl    0x366EB0
+  y en el segundo:
+     0x628672  ldr.w r0,[r4,#0x780]
+     0x628676  bl    0x67B4B8
+     0x62867A  movs  r1,#6             ; <-- r0 se sobrescribe aqui
+     0x62867C  mov   r0,r4
+  => el codigo de SetLoadInfo no se comprueba en ningun sitio; solo cuenta su efecto
+     (fija TvSystem en el objeto de dispositivo via vt[0x44]).
+
+- Gemelo XAVC: MMgrXavcIfoAcsr::SetLoadInfo 0x67E4F0 (linea 501), llamadores 0x6281D6 y 0x628E4A.

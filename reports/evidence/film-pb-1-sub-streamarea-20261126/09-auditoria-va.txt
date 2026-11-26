@@ -1,0 +1,63 @@
+# Auditoria de VA. ELF: fichero = 0x9D7D34 B; .text = 0x120228..0x7A3E84 ; .rodata = 0x7A3E90..0x956750 ; .data = 0x9C42E8..0x9DF808 ; .bss = 0x9DF808..0xADBB04 (NOBITS)
+# Primer LOAD: Offset 0x0 == VirtAddr 0x0 -> en ese segmento VA == offset de fichero (por eso 0x5f802c se puede leer tal cual).
+# Segundo LOAD: Offset 0x9bb1c8 vs VirtAddr 0x9c31c8 -> +0x8000 (solo .init_array/.data/.got)
+
+VA         seccion        nombre                   valor/cadena
+0x5f802c   .text          StreamAreaFree           
+0x5f63ca   .text          pone-a-cero-entrada      
+0x5f7ea8   .text          limpia-por-mascara       
+0x5f7be8   .text          StreamAreaAllocate       
+0x5f7f1c   .text          ChangeAllocate           
+0x5f8020   .text          thunk-ChangeAllocate     
+0x5f8110   .text          envoltorio-free(subArea) 
+0x5f8128   .text          envoltorio-free(7)       
+0x5f81e8   .text          ExtraStreamAreaFree      
+0x5f8140   .text          ExtraStreamAreaAllocate  
+0x5f703c   .text          DistributeBufInfo        
+0x5f699c   .text          Type2Mode                
+0x5f685c   .text          areaType2mask            
+0x5f6874   .text          RemoveAreaExtList        
+0x5f6f28   .text          SetRamMapArea            
+0x5f74d4   .text          MemInfo::Init            
+0x5f6544   .text          MemConfig::Mmap          
+0x4284ac   .text          GetMemoryInformation     
+0x43910c   .text          SetUpPlayerInstance      
+0x4394a4   .text          ClearPlayerInstance      
+0x4395f8   .text          EnterStillPb(core)       
+0x439710   .text          ExitStillPb(core)        
+0x437a28   .text          EnterMoviePb(core)       
+0x4366ec   .text          EnterThumbnailPb(core)   
+0x436fcc   .text          EnterMovieThumbnailPb(core) 
+0x4370d4   .text          ExitThumbnailPb(core)    
+0x43f644   .text          ClearRecorderInstance    
+0x7594e0   .text          StreamCache::SetArea     
+0x759470   .text          StreamCache::IsSetArea   
+0x756d8c   .text          StreamCache::UnsetArea   
+0x8d87e8   .rodata        lista-de-modos           
+0x8d9030   .rodata        tabla-mascaras           
+0x8d90c0   .rodata        "Type2Mode:"             '[MemInfo]Type2Mode: type=%d /subType=%d / ramMapAreaMode=%ld'
+0x8da930   .rodata        "StreamAreaFree"         '[MemInfo]StreamAreaFree(next) unitHandle =%08x, subArea = %0'
+0x9db0e4   .data          areas-modovie            
+0x9dbd20   .data          areas-modostill          
+0x9da8e0   .data          areas-modorec            
+0x9de898   .data          tabla-Type2Mode-sys1     
+0x9de7c8   .data          tabla-Type2Mode-sys0     
+0x9dedc0   .data          tabla-Type2Mode-sys2     
+0x9defe0   .data          m_systemType             
+0x9decac   .data          modo-actual              
+0x9dedb6   .data          unitHandle               
+0x9dedb8   .data          pRamMapAreaInfo          
+0x9dedbc   .data          last-type                
+0x9dec30   .data          last-sub                 
+0xa4f368   .bss           tabla-0x18               
+0xa4f0a4   .bss           lista-modos-ptr          
+0xa4f0a8   .bss           lista-units-ptr          
+0xa4f0ac   .bss           ramMapAreaInfo-ptr       
+0xad4f68   .bss           tamano-minimo-cache      
+0xad4f90   .bss           estado-cache             
+
+# Referencias erroneas conocidas de otros informes: ninguna de las de arriba cae fuera; si alguna fuente las da
+# desplazadas +0x10000 es porque vienen del decompilador (REA/Ghidra), que carga el ELF con imagebase distinto.
+
+# Repaso automatico del informe previo reports/film-pb-1-sub-dmm-area-20261126.md:
+#   VAs citados: 148 ; fuera de toda seccion: 6 -> 0x0, 0xb, 0x1800000, 0x2000000, 0x82df9300, 0x82dfc400

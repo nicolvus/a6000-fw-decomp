@@ -1,0 +1,169 @@
+0061db40: 9847       blx       r3                          
+0061db42: 0928       cmp       r0, #9                      
+0061db44: 04d0       beq       #0x61db50                   
+0061db46: d4f89407   ldr.w     r0, [r4, #0x794]            
+0061db4a: 2946       mov       r1, r5                      
+0061db4c: 43f080ff   bl        #0x661a50                   
+0061db50: 0020       movs      r0, #0                      
+0061db52: b0bd       pop       {r4, r5, r7, pc}            
+0061db54: f0b5       push      {r4, r5, r6, r7, lr}        
+0061db56: 83b0       sub       sp, #0xc                    
+0061db58: 454b       ldr       r3, [pc, #0x114]              ; [0061dc70]=009df25c
+0061db5a: 0646       mov       r6, r0                      
+0061db5c: 00af       add       r7, sp, #0                  
+0061db5e: c068       ldr       r0, [r0, #0xc]              
+0061db60: 4449       ldr       r1, [pc, #0x110]              ; [0061dc74]=008e6577 "FlashBackupCheckAndDestroy
+"
+0061db62: 1a78       ldrb      r2, [r3]                    
+0061db64: 32f0edfd   bl        #0x650742                   
+0061db68: 3046       mov       r0, r6                      
+0061db6a: fff7b1fe   bl        #0x61d8d0                   
+0061db6e: 0446       mov       r4, r0                      
+0061db70: 0028       cmp       r0, #0                      
+0061db72: 77d0       beq       #0x61dc64                   
+0061db74: 07f10801   add.w     r1, r7, #8                  
+0061db78: 0023       movs      r3, #0                      
+0061db7a: d6f89407   ldr.w     r0, [r6, #0x794]            
+0061db7e: 21f8023d   strh      r3, [r1, #-0x2]!            
+0061db82: 43f041ff   bl        #0x661a08                   
+0061db86: 1020       movs      r0, #0x10                   
+0061db88: 2146       mov       r1, r4                      
+0061db8a: 95f49bfa   bl        #0x2b30c4                   
+0061db8e: 3a4b       ldr       r3, [pc, #0xe8]               ; [0061dc78]=10100002
+0061db90: 9842       cmp       r0, r3                      
+0061db92: 12d1       bne       #0x61dbba                   
+0061db94: 394b       ldr       r3, [pc, #0xe4]               ; [0061dc7c]=009df25a
+0061db96: f068       ldr       r0, [r6, #0xc]              
+0061db98: 3949       ldr       r1, [pc, #0xe4]               ; [0061dc80]=008e6593 "FlashBackupCheckAndDestroy : AVCHD BackupClear"
+0061db9a: 1a78       ldrb      r2, [r3]                    
+0061db9c: 32f0d1fd   bl        #0x650742                   
+0061dba0: 1020       movs      r0, #0x10                   
+0061dba2: 2146       mov       r1, r4                      
+0061dba4: 95f498fc   bl        #0x2b34d8                   
+0061dba8: fb88       ldrh      r3, [r7, #6]                
+0061dbaa: 13f00205   ands      r5, r3, #2                  
+0061dbae: 05d0       beq       #0x61dbbc                   
+0061dbb0: 83f00203   eor       r3, r3, #2                  
+0061dbb4: 0125       movs      r5, #1                      
+0061dbb6: fb80       strh      r3, [r7, #6]                
+0061dbb8: 00e0       b         #0x61dbbc                   
+0061dbba: 0025       movs      r5, #0                      
+0061dbbc: 0420       movs      r0, #4                      
+0061dbbe: 2146       mov       r1, r4                      
+0061dbc0: 95f480fa   bl        #0x2b30c4                   
+0061dbc4: 2c4b       ldr       r3, [pc, #0xb0]               ; [0061dc78]=10100002
+0061dbc6: 9842       cmp       r0, r3                      
+0061dbc8: 11d1       bne       #0x61dbee                   
+0061dbca: 2c4b       ldr       r3, [pc, #0xb0]               ; [0061dc7c]=009df25a
+0061dbcc: f068       ldr       r0, [r6, #0xc]              
+0061dbce: 2d49       ldr       r1, [pc, #0xb4]               ; [0061dc84]=008e65c4 "FlashBackupCheckAndDestroy : M2PS BackupClear!"
+0061dbd0: 1a78       ldrb      r2, [r3]                    
+0061dbd2: 32f0b6fd   bl        #0x650742                   
+0061dbd6: 0420       movs      r0, #4                      
+0061dbd8: 2146       mov       r1, r4                      
+0061dbda: 95f47dfc   bl        #0x2b34d8                   
+0061dbde: fb88       ldrh      r3, [r7, #6]                
+0061dbe0: 13f0040f   tst.w     r3, #4                      
+0061dbe4: 03d0       beq       #0x61dbee                   
+0061dbe6: 0125       movs      r5, #1                      
+0061dbe8: 83f00403   eor       r3, r3, #4                  
+0061dbec: fb80       strh      r3, [r7, #6]                
+0061dbee: 2320       movs      r0, #0x23                   
+0061dbf0: 2146       mov       r1, r4                      
+0061dbf2: 95f467fa   bl        #0x2b30c4                   
+0061dbf6: 204b       ldr       r3, [pc, #0x80]               ; [0061dc78]=10100002
+0061dbf8: 9842       cmp       r0, r3                      
+0061dbfa: 11d1       bne       #0x61dc20                   
+0061dbfc: 1f4b       ldr       r3, [pc, #0x7c]               ; [0061dc7c]=009df25a
+0061dbfe: f068       ldr       r0, [r6, #0xc]              
+0061dc00: 2149       ldr       r1, [pc, #0x84]               ; [0061dc88]=008e65f4 "FlashBackupCheckAndDestroy : MP4 BackupClear!!"
+0061dc02: 1a78       ldrb      r2, [r3]                    
+0061dc04: 32f09dfd   bl        #0x650742                   
+0061dc08: 2320       movs      r0, #0x23                   
+0061dc0a: 2146       mov       r1, r4                      
+0061dc0c: 95f464fc   bl        #0x2b34d8                   
+0061dc10: fb88       ldrh      r3, [r7, #6]                
+0061dc12: 13f0100f   tst.w     r3, #0x10                   
+0061dc16: 03d0       beq       #0x61dc20                   
+0061dc18: 0125       movs      r5, #1                      
+0061dc1a: 83f01003   eor       r3, r3, #0x10               
+0061dc1e: fb80       strh      r3, [r7, #6]                
+0061dc20: 2020       movs      r0, #0x20                   
+0061dc22: 2146       mov       r1, r4                      
+0061dc24: 95f44efa   bl        #0x2b30c4                   
+0061dc28: 134b       ldr       r3, [pc, #0x4c]               ; [0061dc78]=10100002
+0061dc2a: 9842       cmp       r0, r3                      
+0061dc2c: 12d1       bne       #0x61dc54                   
+0061dc2e: 134b       ldr       r3, [pc, #0x4c]               ; [0061dc7c]=009df25a
+0061dc30: f068       ldr       r0, [r6, #0xc]              
+0061dc32: 1649       ldr       r1, [pc, #0x58]               ; [0061dc8c]=008e6623 "FlashBackupCheckAndDestroy : DCF BackupClear!!"
+0061dc34: 1a78       ldrb      r2, [r3]                    
+0061dc36: 32f084fd   bl        #0x650742                   
+0061dc3a: 2020       movs      r0, #0x20                   
+0061dc3c: 2146       mov       r1, r4                      
+0061dc3e: 95f44bfc   bl        #0x2b34d8                   
+0061dc42: fb88       ldrh      r3, [r7, #6]                
+0061dc44: 13f0080f   tst.w     r3, #8                      
+0061dc48: 04d0       beq       #0x61dc54                   
+0061dc4a: 83f00803   eor       r3, r3, #8                  
+0061dc4e: 0125       movs      r5, #1                      
+0061dc50: fb80       strh      r3, [r7, #6]                
+0061dc52: 00e0       b         #0x61dc56                   
+0061dc54: 3db1       cbz       r5, #0x61dc66               
+0061dc56: f988       ldrh      r1, [r7, #6]                
+0061dc58: 3046       mov       r0, r6                      
+0061dc5a: fff769ff   bl        #0x61db30                   
+0061dc5e: 43f0abfd   bl        #0x6617b8                   
+0061dc62: 00e0       b         #0x61dc66                   
+0061dc64: 0546       mov       r5, r0                      
+0061dc66: 2846       mov       r0, r5                      
+0061dc68: 07f10c07   add.w     r7, r7, #0xc                
+0061dc6c: bd46       mov       sp, r7                      
+0061dc6e: f0bd       pop       {r4, r5, r6, r7, pc}        
+0061dc70: ??
+0061dc72: 9d00       lsls      r5, r3, #2                  
+0061dc74: 7765       str       r7, [r6, #0x54]             
+0061dc76: 8e00       lsls      r6, r1, #2                  
+0061dc78: 0200       movs      r2, r0                      
+0061dc7a: 1010       asrs      r0, r2, #0x20               
+0061dc7c: ??
+0061dc7e: 9d00       lsls      r5, r3, #2                  
+0061dc80: 9365       str       r3, [r2, #0x58]             
+0061dc82: 8e00       lsls      r6, r1, #2                  
+0061dc84: c465       str       r4, [r0, #0x5c]             
+0061dc86: 8e00       lsls      r6, r1, #2                  
+0061dc88: f465       str       r4, [r6, #0x5c]             
+0061dc8a: 8e00       lsls      r6, r1, #2                  
+0061dc8c: 2366       str       r3, [r4, #0x60]             
+0061dc8e: 8e00       lsls      r6, r1, #2                  
+0061dc90: 2de9f047   push.w    {r4, r5, r6, r7, r8, sb, sl, lr}
+0061dc94: 86b0       sub       sp, #0x18                   
+0061dc96: 04af       add       r7, sp, #0x10               
+0061dc98: 0446       mov       r4, r0                      
+0061dc9a: 9846       mov       r8, r3                      
+0061dc9c: d7f828a0   ldr.w     sl, [r7, #0x28]             
+0061dca0: 0023       movs      r3, #0                      
+0061dca2: d7f82c90   ldr.w     sb, [r7, #0x2c]             
+0061dca6: 0d46       mov       r5, r1                      
+0061dca8: 8068       ldr       r0, [r0, #8]                
+0061dcaa: 1646       mov       r6, r2                      
+0061dcac: fb71       strb      r3, [r7, #7]                
+0061dcae: 0b70       strb      r3, [r1]                    
+0061dcb0: 1370       strb      r3, [r2]                    
+0061dcb2: 88f80030   strb.w    r3, [r8]                    
+0061dcb6: 8af80030   strb.w    r3, [sl]                    
+0061dcba: 89f80030   strb.w    r3, [sb]                    
+0061dcbe: 0368       ldr       r3, [r0]                    
+0061dcc0: d3f89431   ldr.w     r3, [r3, #0x194]            
+0061dcc4: 9847       blx       r3                          
+0061dcc6: 28b9       cbnz      r0, #0x61dcd4               
+0061dcc8: a068       ldr       r0, [r4, #8]                
+0061dcca: 0368       ldr       r3, [r0]                    
+0061dccc: d3f89031   ldr.w     r3, [r3, #0x190]            
+0061dcd0: 9847       blx       r3                          
+0061dcd2: 58b1       cbz       r0, #0x61dcec               
+0061dcd4: d1f78af1   bl        #0x1eefec                   
+0061dcd8: 2a46       mov       r2, r5                      
+0061dcda: fb1d       adds      r3, r7, #7                  
+0061dcdc: 41b2       sxtb      r1, r0                      
+0061dcde: ??

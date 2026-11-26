@@ -1,0 +1,282 @@
+002b62e4: 2de9f04f   push.w    {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+002b62e8: 1e46       mov       r6, r3                      
+002b62ea: 8db0       sub       sp, #0x34                   
+002b62ec: 934b       ldr       r3, [pc, #0x24c]              ; [002b653c]=00a36c78
+002b62ee: 8046       mov       r8, r0                      
+002b62f0: 02af       add       r7, sp, #8                  
+002b62f2: 8946       mov       sb, r1                      
+002b62f4: 1b78       ldrb      r3, [r3]                    
+002b62f6: 9346       mov       fp, r2                      
+002b62f8: 002b       cmp       r3, #0                      
+002b62fa: 00f01581   beq.w     #0x2b6528                   
+002b62fe: 00f1ff33   add.w     r3, r0, #-1                 
+002b6302: 2f2b       cmp       r3, #0x2f                   
+002b6304: 00f21381   bhi.w     #0x2b652e                   
+002b6308: 68f6daed   blx       #0x11eec0                     ; _ZN8FlashLib9MutexLockEv
+002b630c: 8c4b       ldr       r3, [pc, #0x230]              ; [002b6540]=00a36c89
+002b630e: 08eb0815   add.w     r5, r8, r8, lsl #4          
+002b6312: 5d19       adds      r5, r3, r5                  
+002b6314: 0835       adds      r5, #8                      
+002b6316: a979       ldrb      r1, [r5, #6]                
+002b6318: 6a79       ldrb      r2, [r5, #5]                
+002b631a: 42ea0122   orr.w     r2, r2, r1, lsl #8          
+002b631e: e979       ldrb      r1, [r5, #7]                
+002b6320: 42ea0142   orr.w     r2, r2, r1, lsl #16         
+002b6324: 297a       ldrb      r1, [r5, #8]                
+002b6326: 52ea0161   orrs.w    r1, r2, r1, lsl #24         
+002b632a: 00f09e80   beq.w     #0x2b646a                   
+002b632e: 4046       mov       r0, r8                      
+002b6330: 391d       adds      r1, r7, #4                  
+002b6332: faf786ff   bl        #0x2b1242                   
+002b6336: 0446       mov       r4, r0                      
+002b6338: 38b1       cbz       r0, #0x2b634a               
+002b633a: 4928       cmp       r0, #0x49                   
+002b633c: 00f0dd80   beq.w     #0x2b64fa                   
+002b6340: 0023       movs      r3, #0                      
+002b6342: 8048       ldr       r0, [pc, #0x200]              ; [002b6544]=007e8e95 "ReadSector-GetSectorInfo err"
+002b6344: 0093       str       r3, [sp]                    
+002b6346: 0193       str       r3, [sp, #4]                
+002b6348: 8be0       b         #0x2b6462                   
+002b634a: 7b69       ldr       r3, [r7, #0x14]             
+002b634c: b3f1ff3f   cmp.w     r3, #-1                     
+002b6350: 1bd1       bne       #0x2b638a                   
+002b6352: 0090       str       r0, [sp]                    
+002b6354: 0721       movs      r1, #7                      
+002b6356: 0190       str       r0, [sp, #4]                
+002b6358: 7b4a       ldr       r2, [pc, #0x1ec]              ; [002b6548]=0081ddc9 "validDataSize"
+002b635a: 7a48       ldr       r0, [pc, #0x1e8]              ; [002b6544]=007e8e95 "ReadSector-GetSectorInfo err"
+002b635c: 67f6b8ed   blx       #0x11ded0                     ; _ZN8FlashLib11ConPutErrorEPKcmS1_mS1_m
+002b6360: 7a4b       ldr       r3, [pc, #0x1e8]              ; [002b654c]=009d2790
+002b6362: 1b78       ldrb      r3, [r3]                    
+002b6364: 13b1       cbz       r3, #0x2b636c               
+002b6366: 0720       movs      r0, #7                      
+002b6368: 4bf330fa   bl        #0x6017cc                   
+002b636c: 784d       ldr       r5, [pc, #0x1e0]              ; [002b6550]=00a36c88
+002b636e: 4ff00704   mov.w     r4, #7                      
+002b6372: 2b78       ldrb      r3, [r5]                    
+002b6374: 202b       cmp       r3, #0x20                   
+002b6376: 00f2d480   bhi.w     #0x2b6522                   
+002b637a: 0193       str       r3, [sp, #4]                
+002b637c: 1020       movs      r0, #0x10                   
+002b637e: 0094       str       r4, [sp]                    
+002b6380: 7821       movs      r1, #0x78                   
+002b6382: 41f21002   movw      r2, #0x1010                 
+002b6386: 0023       movs      r3, #0                      
+002b6388: c6e0       b         #0x2b6518                   
+002b638a: fa69       ldr       r2, [r7, #0x1c]             
+002b638c: 9a42       cmp       r2, r3                      
+002b638e: 27d2       bhs       #0x2b63e0                   
+002b6390: 09eb020a   add.w     sl, sb, r2                  
+002b6394: 5345       cmp       r3, sl                      
+002b6396: 11d2       bhs       #0x2b63bc                   
+002b6398: aa78       ldrb      r2, [r5, #2]                
+002b639a: c3eb0a0a   rsb       sl, r3, sl                  
+002b639e: 6b78       ldrb      r3, [r5, #1]                
+002b63a0: 43ea0223   orr.w     r3, r3, r2, lsl #8          
+002b63a4: ea78       ldrb      r2, [r5, #3]                
+002b63a6: 43ea0243   orr.w     r3, r3, r2, lsl #16         
+002b63aa: 2a79       ldrb      r2, [r5, #4]                
+002b63ac: 43ea0263   orr.w     r3, r3, r2, lsl #24         
+002b63b0: 5345       cmp       r3, sl                      
+002b63b2: 06d2       bhs       #0x2b63c2                   
+002b63b4: c3eb0a05   rsb       r5, r3, sl                  
+002b63b8: 9a46       mov       sl, r3                      
+002b63ba: 03e0       b         #0x2b63c4                   
+002b63bc: 0546       mov       r5, r0                      
+002b63be: 8246       mov       sl, r0                      
+002b63c0: 00e0       b         #0x2b63c4                   
+002b63c2: 0546       mov       r5, r0                      
+002b63c4: caeb0901   rsb       r1, sl, sb                  
+002b63c8: 4046       mov       r0, r8                      
+002b63ca: 491b       subs      r1, r1, r5                  
+002b63cc: 5a46       mov       r2, fp                      
+002b63ce: 3346       mov       r3, r6                      
+002b63d0: faf790fe   bl        #0x2b10f4                   
+002b63d4: 0446       mov       r4, r0                      
+002b63d6: 0028       cmp       r0, #0                      
+002b63d8: 76d1       bne       #0x2b64c8                   
+002b63da: 3068       ldr       r0, [r6]                    
+002b63dc: 2346       mov       r3, r4                      
+002b63de: c6e0       b         #0x2b656e                   
+002b63e0: ff21       movs      r1, #0xff                   
+002b63e2: 4a46       mov       r2, sb                      
+002b63e4: 5846       mov       r0, fp                      
+002b63e6: 69f67cff   bl        #0x1202e2                   
+002b63ea: fa69       ldr       r2, [r7, #0x1c]             
+002b63ec: 7b69       ldr       r3, [r7, #0x14]             
+002b63ee: 95f802a0   ldrb.w    sl, [r5, #2]                
+002b63f2: d31a       subs      r3, r2, r3                  
+002b63f4: 6a78       ldrb      r2, [r5, #1]                
+002b63f6: 42ea0a2a   orr.w     sl, r2, sl, lsl #8          
+002b63fa: ea78       ldrb      r2, [r5, #3]                
+002b63fc: 4aea024a   orr.w     sl, sl, r2, lsl #16         
+002b6400: 2a79       ldrb      r2, [r5, #4]                
+002b6402: 4aea026a   orr.w     sl, sl, r2, lsl #24         
+002b6406: 5345       cmp       r3, sl                      
+002b6408: 80f0b880   bhs.w     #0x2b657c                   
+002b640c: 09eb0302   add.w     r2, sb, r3                  
+002b6410: 5245       cmp       r2, sl                      
+002b6412: 40f2a980   bls.w     #0x2b6568                   
+002b6416: c3eb0a0a   rsb       sl, r3, sl                  
+002b641a: a6e0       b         #0x2b656a                   
+002b641c: 4849       ldr       r1, [pc, #0x120]              ; [002b6540]=00a36c89
+002b641e: 08eb0812   add.w     r2, r8, r8, lsl #4          
+002b6422: 5844       add       r0, fp                      
+002b6424: 8a18       adds      r2, r1, r2                  
+002b6426: 0832       adds      r2, #8                      
+002b6428: 9479       ldrb      r4, [r2, #6]                
+002b642a: 5179       ldrb      r1, [r2, #5]                
+002b642c: 41ea0421   orr.w     r1, r1, r4, lsl #8          
+002b6430: d479       ldrb      r4, [r2, #7]                
+002b6432: 127a       ldrb      r2, [r2, #8]                
+002b6434: 41ea0441   orr.w     r1, r1, r4, lsl #16         
+002b6438: 41ea0261   orr.w     r1, r1, r2, lsl #24         
+002b643c: 5246       mov       r2, sl                      
+002b643e: c918       adds      r1, r1, r3                  
+002b6440: 6af66cfe   bl        #0x12111c                   
+002b6444: 97e0       b         #0x2b6576                   
+002b6446: c5eb0900   rsb       r0, r5, sb                  
+002b644a: ff21       movs      r1, #0xff                   
+002b644c: 5844       add       r0, fp                      
+002b644e: 2a46       mov       r2, r5                      
+002b6450: 69f647ff   bl        #0x1202e2                   
+002b6454: 92e0       b         #0x2b657c                   
+002b6456: 492c       cmp       r4, #0x49                   
+002b6458: 4fd0       beq       #0x2b64fa                   
+002b645a: 3e48       ldr       r0, [pc, #0xf8]               ; [002b6554]=007e8ebf "ReadSector-ChangeSeekPoint err"
+002b645c: 0023       movs      r3, #0                      
+002b645e: 0093       str       r3, [sp]                    
+002b6460: 0193       str       r3, [sp, #4]                
+002b6462: 2146       mov       r1, r4                      
+002b6464: 3c4a       ldr       r2, [pc, #0xf0]               ; [002b6558]=007e7dcd "handle"
+002b6466: 4346       mov       r3, r8                      
+002b6468: 38e0       b         #0x2b64dc                   
+002b646a: 4046       mov       r0, r8                      
+002b646c: 4946       mov       r1, sb                      
+002b646e: 5a46       mov       r2, fp                      
+002b6470: 3346       mov       r3, r6                      
+002b6472: faf73ffe   bl        #0x2b10f4                   
+002b6476: 0446       mov       r4, r0                      
+002b6478: 0028       cmp       r0, #0                      
+002b647a: 52d0       beq       #0x2b6522                   
+002b647c: 26bb       cbnz      r6, #0x2b64c8               
+002b647e: 4928       cmp       r0, #0x49                   
+002b6480: 14d0       beq       #0x2b64ac                   
+002b6482: 3346       mov       r3, r6                      
+002b6484: 3548       ldr       r0, [pc, #0xd4]               ; [002b655c]=007e46d5 "ReadSector"
+002b6486: 2146       mov       r1, r4                      
+002b6488: 3246       mov       r2, r6                      
+002b648a: 0096       str       r6, [sp]                    
+002b648c: 0196       str       r6, [sp, #4]                
+002b648e: 67f620ed   blx       #0x11ded0                     ; _ZN8FlashLib11ConPutErrorEPKcmS1_mS1_m
+002b6492: 2e4b       ldr       r3, [pc, #0xb8]               ; [002b654c]=009d2790
+002b6494: 1b78       ldrb      r3, [r3]                    
+002b6496: 3bb1       cbz       r3, #0x2b64a8               
+002b6498: 882c       cmp       r4, #0x88                   
+002b649a: 42d0       beq       #0x2b6522                   
+002b649c: 892c       cmp       r4, #0x89                   
+002b649e: 40d0       beq       #0x2b6522                   
+002b64a0: e0b2       uxtb      r0, r4                      
+002b64a2: 4bf393f9   bl        #0x6017cc                   
+002b64a6: 01e0       b         #0x2b64ac                   
+002b64a8: 882c       cmp       r4, #0x88                   
+002b64aa: 3ad0       beq       #0x2b6522                   
+002b64ac: 892c       cmp       r4, #0x89                   
+002b64ae: 38d0       beq       #0x2b6522                   
+002b64b0: 274d       ldr       r5, [pc, #0x9c]               ; [002b6550]=00a36c88
+002b64b2: 2b78       ldrb      r3, [r5]                    
+002b64b4: 202b       cmp       r3, #0x20                   
+002b64b6: 34d8       bhi       #0x2b6522                   
+002b64b8: a2b2       uxth      r2, r4                      
+002b64ba: 1020       movs      r0, #0x10                   
+002b64bc: 8de80c00   stm.w     sp, {r2, r3}                
+002b64c0: 7821       movs      r1, #0x78                   
+002b64c2: 41f21102   movw      r2, #0x1011                 
+002b64c6: 25e0       b         #0x2b6514                   
+002b64c8: 492c       cmp       r4, #0x49                   
+002b64ca: 16d0       beq       #0x2b64fa                   
+002b64cc: 244b       ldr       r3, [pc, #0x90]               ; [002b6560]=007e8eb2 "completeSize"
+002b64ce: 2146       mov       r1, r4                      
+002b64d0: 2248       ldr       r0, [pc, #0x88]               ; [002b655c]=007e46d5 "ReadSector"
+002b64d2: 244a       ldr       r2, [pc, #0x90]               ; [002b6564]=00879b5c "size"
+002b64d4: 0093       str       r3, [sp]                    
+002b64d6: 3368       ldr       r3, [r6]                    
+002b64d8: 0193       str       r3, [sp, #4]                
+002b64da: 4b46       mov       r3, sb                      
+002b64dc: 67f6f8ec   blx       #0x11ded0                     ; _ZN8FlashLib11ConPutErrorEPKcmS1_mS1_m
+002b64e0: 1a4b       ldr       r3, [pc, #0x68]               ; [002b654c]=009d2790
+002b64e2: 1b78       ldrb      r3, [r3]                    
+002b64e4: 3bb1       cbz       r3, #0x2b64f6               
+002b64e6: 882c       cmp       r4, #0x88                   
+002b64e8: 1bd0       beq       #0x2b6522                   
+002b64ea: 892c       cmp       r4, #0x89                   
+002b64ec: 19d0       beq       #0x2b6522                   
+002b64ee: e0b2       uxtb      r0, r4                      
+002b64f0: 4bf36cf9   bl        #0x6017cc                   
+002b64f4: 01e0       b         #0x2b64fa                   
+002b64f6: 882c       cmp       r4, #0x88                   
+002b64f8: 13d0       beq       #0x2b6522                   
+002b64fa: 892c       cmp       r4, #0x89                   
+002b64fc: 11d0       beq       #0x2b6522                   
+002b64fe: 144d       ldr       r5, [pc, #0x50]               ; [002b6550]=00a36c88
+002b6500: 2b78       ldrb      r3, [r5]                    
+002b6502: 202b       cmp       r3, #0x20                   
+002b6504: 0dd8       bhi       #0x2b6522                   
+002b6506: a2b2       uxth      r2, r4                      
+002b6508: 1020       movs      r0, #0x10                   
+002b650a: 8de80c00   stm.w     sp, {r2, r3}                
+002b650e: 7821       movs      r1, #0x78                   
+002b6510: 41f21002   movw      r2, #0x1010                 
+002b6514: 34fa00f3   lsrs.w    r3, r4, r0                  
+002b6518: 05f390f9   bl        #0x5bb83c                   
+002b651c: 2b78       ldrb      r3, [r5]                    
+002b651e: 0133       adds      r3, #1                      
+002b6520: 2b70       strb      r3, [r5]                    
+002b6522: 68f63ce8   blx       #0x11e59c                     ; _ZN8FlashLib11MutexUnLockEv
+002b6526: 03e0       b         #0x2b6530                   
+002b6528: 4ff0ff34   mov.w     r4, #-1                     
+002b652c: 00e0       b         #0x2b6530                   
+002b652e: 0924       movs      r4, #9                      
+002b6530: 2046       mov       r0, r4                      
+002b6532: 07f12c07   add.w     r7, r7, #0x2c               
+002b6536: bd46       mov       sp, r7                      
+002b6538: bde8f08f   pop.w     {r4, r5, r6, r7, r8, sb, sl, fp, pc}
+002b653c: 786c       ldr       r0, [r7, #0x44]             
+002b653e: a300       lsls      r3, r4, #2                  
+002b6540: 896c       ldr       r1, [r1, #0x48]             
+002b6542: a300       lsls      r3, r4, #2                  
+002b6544: 958e       ldrh      r5, [r2, #0x34]             
+002b6546: 7e00       lsls      r6, r7, #1                  
+002b6548: c9dd       ble       #0x2b64de                   
+002b654a: 8100       lsls      r1, r0, #2                  
+002b654c: 9027       movs      r7, #0x90                   
+002b654e: 9d00       lsls      r5, r3, #2                  
+002b6550: 886c       ldr       r0, [r1, #0x48]             
+002b6552: a300       lsls      r3, r4, #2                  
+002b6554: bf8e       ldrh      r7, [r7, #0x34]             
+002b6556: 7e00       lsls      r6, r7, #1                  
+002b6558: cd7d       ldrb      r5, [r1, #0x17]             
+002b655a: 7e00       lsls      r6, r7, #1                  
+002b655c: d546       mov       sp, sl                      
+002b655e: 7e00       lsls      r6, r7, #1                  
+002b6560: b28e       ldrh      r2, [r6, #0x34]             
+002b6562: 7e00       lsls      r6, r7, #1                  
+002b6564: 5c9b       ldr       r3, [sp, #0x170]            
+002b6566: 8700       lsls      r7, r0, #2                  
+002b6568: ca46       mov       sl, sb                      
+002b656a: 2546       mov       r5, r4                      
+002b656c: 2046       mov       r0, r4                      
+002b656e: baf1000f   cmp.w     sl, #0                      
+002b6572: 7ff453af   bne.w     #0x2b641c                   
+002b6576: 002d       cmp       r5, #0                      
+002b6578: 7ff465af   bne.w     #0x2b6446                   
+002b657c: fa69       ldr       r2, [r7, #0x1c]             
+002b657e: 4046       mov       r0, r8                      
+002b6580: 0021       movs      r1, #0                      
+002b6582: 4a44       add       r2, sb                      
+002b6584: faf7b0fd   bl        #0x2b10e8                   
+002b6588: 0446       mov       r4, r0                      
+002b658a: 0028       cmp       r0, #0                      
+002b658c: 7ff463af   bne.w     #0x2b6456                   
+002b6590: c7e7       b         #0x2b6522                   
+002b6592: 00bf       nop                                   

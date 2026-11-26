@@ -1,0 +1,39 @@
+002b084e: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+002b0852: 0546       mov      r5, r0                        
+002b0854: 00af       add      r7, sp, #0                    
+002b0856: 0c46       mov      r4, r1                        
+002b0858: 9046       mov      r8, r2                        
+002b085a: 0026       movs     r6, #0                        
+002b085c: 2846       mov      r0, r5                        
+002b085e: 3146       mov      r1, r6                        
+002b0860: fff7b9ff   bl       #0x2b07d6                     
+002b0864: a042       cmp      r0, r4                        
+002b0866: 05d0       beq      #0x2b0874                     
+002b0868: 0136       adds     r6, #1                        
+002b086a: 122e       cmp      r6, #0x12                     
+002b086c: f6d1       bne      #0x2b085c                     
+002b086e: 4820       movs     r0, #0x48                     
+002b0870: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+002b0874: c8f80060   str.w    r6, [r8]                      
+002b0878: 0020       movs     r0, #0                        
+002b087a: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+002b087e: b0b5       push     {r4, r5, r7, lr}              
+002b0880: 0446       mov      r4, r0                        
+002b0882: 0068       ldr      r0, [r0]                      
+002b0884: 9021       movs     r1, #0x90                     
+002b0886: 00af       add      r7, sp, #0                    
+002b0888: 0830       adds     r0, #8                        
+002b088a: fff767fe   bl       #0x2b055c                     
+002b088e: 2068       ldr      r0, [r4]                      
+002b0890: 9021       movs     r1, #0x90                     
+002b0892: 9830       adds     r0, #0x98                     
+002b0894: bde8b040   pop.w    {r4, r5, r7, lr}              
+002b0898: fff760be   b.w      #0x2b055c                     
+002b089c: 80b5       push     {r7, lr}                      
+002b089e: 4808       lsrs     r0, r1, #1                    
+002b08a0: 00af       add      r7, sp, #0                    
+002b08a2: 80bd       pop      {r7, pc}                      
+002b08a4: 80b5       push     {r7, lr}                      
+002b08a6: 01f00100   and      r0, r1, #1                    
+002b08aa: 00af       add      r7, sp, #0                    
+002b08ac: 80bd       pop      {r7, pc}                      

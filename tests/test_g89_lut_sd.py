@@ -9,7 +9,6 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / "scripts"), str(ROOT / "scripts/lut"), str(ROOT / "scripts/gui")]
 import avcam_dinamico as D
-import cfw_ajustes
 import cube_a6000 as C
 import lut_patch as P
 import lut_sd_userland as U
@@ -209,107 +208,42 @@ def test_vu2_se_compone_con_pid_space_sin_pisar_relocaciones(compilado):
 
 # ---------- av-cam: lectura del blob de Backup (bytes reales) ----------
 def _hw_esperado(tabla21: bytes, img: bytes) -> bytes:
-    perm = struct.unpack_from("<405H", img, D.PERM - D.BASE)
-    bits = int.from_bytes(tabla21, "little")
-    out = bytearray(0x654)
-    for i in range(405):
-        w = bits >> (21 * i) & 0x1FFFFF
-        struct.pack_into("<I", out, 4 * perm[i], (w >> 14) << 16 | (w >> 7 & 127) << 8 | (w & 127))
-    return bytes(out)
-
-
-def corre_avcam(img, k, opcion, blob, orig=0x11223344, malloc_falla_en=None):
-    from unicorn import UC_ARCH_ARM, UC_HOOK_CODE, UC_MODE_THUMB, Uc
-    from unicorn.arm_const import (
-        UC_ARM_REG_LR,
-        UC_ARM_REG_PC,
-        UC_ARM_REG_R0,
-        UC_ARM_REG_R1,
-        UC_ARM_REG_R3,
-        UC_ARM_REG_R5,
-        UC_ARM_REG_SP,
-    )
-    mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
-    mu.mem_map(P.BASE & ~0xFFF, ((len(img) + (P.BASE & 0xFFF)) + 0x200000) & ~0xFFF)
-    mu.mem_write(P.BASE, img)
-    stack, obj, end, heap = 0x10000000, 0x20000000, 0x30000000, 0x31000000
-    for a, s in ((stack - 0x10000, 0x20000), (obj, 0x1000), (end, 0x1000), (heap, 0x100000)):
-        mu.map = mu.mem_map(a, s)
-    mu.mem_write(obj + 0xC4, struct.pack("<I", orig))
-    est = {"brk": heap, "mallocs": [], "lecturas": []}
-
-    def hook(mu, a, s, _):
-        if a == D.MALLOC & ~1:
-            n = mu.reg_read(UC_ARM_REG_R0)
-            est["mallocs"].append(n)
-            r = 0 if malloc_falla_en == len(est["mallocs"]) else est["brk"]
-            est["brk"] += (n + 15) & ~15
-            mu.reg_write(UC_ARM_REG_R0, r)
-        elif a == cfw_ajustes.BACKUP_READ:
-            i = mu.reg_read(UC_ARM_REG_R0)
-            est["lecturas"].append(i)
-            if i == P.AJ.backup:
-                mu.mem_write(mu.reg_read(UC_ARM_REG_R1), bytes([opcion]))
-            else:
-                assert i == D.BK_ID
-                mu.mem_write(mu.reg_read(UC_ARM_REG_R1), blob)
-            mu.reg_write(UC_ARM_REG_R0, 0)
-        else:
-            return
-        mu.reg_write(UC_ARM_REG_PC, mu.reg_read(UC_ARM_REG_LR) | 1)
-    mu.hook_add(UC_HOOK_CODE, hook, begin=0x435613B0, end=0x435613B1)
-    mu.hook_add(UC_HOOK_CODE, hook, begin=D.MALLOC & ~1, end=(D.MALLOC & ~1) + 1)
-    mu.reg_write(UC_ARM_REG_SP, stack)
-    mu.reg_write(UC_ARM_REG_R5, obj)
-    mu.reg_write(UC_ARM_REG_LR, end | 1)
-    mu.emu_start(P.entradas(True)[0] | 1, end, count=500000)
-    r3 = mu.reg_read(UC_ARM_REG_R3)
-    return r3, (bytes(mu.mem_read(r3, 0x654)) if r3 != orig else None), est
+    return D.desempaqueta_21(tabla21, list(struct.unpack_from("<405H", img, D.PERM - D.BASE)))
 
 
 @needs_av
-def test_avcam_usa_la_ranura_del_blob_y_cae_al_dat_o_a_fabrica(tmp_path):
+def test_avcam_usa_la_ranura_del_blob_y_sin_tabla_cae_a_fabrica(tmp_path):
     img = C.BIN.read_bytes()
-    p = P.apply_bytes(img, None, True)
+    p = P.apply_bytes(img)
     txt = {1: cubo(tmp_path, 17), 4: cubo(tmp_path, 33, C.SINT["pelicula"]), 6: cubo(tmp_path, 17, C.SINT["identidad"])}
     blob = U.blob_esperado(txt)
     for k, valida in ((1, True), (2, False), (3, False), (4, True), (5, False), (6, True)):
-        r, hw, _ = corre_avcam(p, k, k, blob)
+        r, hw, _ = P.emular(p, 0, k, blob)
         if valida:
             assert hw == _hw_esperado(blob[16 + (k - 1) * U.TAM_TABLA:16 + k * U.TAM_TABLA], p), k
-        elif k <= 3:                                                                          # ranura sin fichero: la tabla del .dat (looks de fábrica del CFW)
-            assert hw == _hw_esperado(p[D.LUT_TABLAS - D.BASE + (k - 1) * D.LUT_BYTES:][:D.LUT_BYTES], p), k
-        else:
-            assert hw is None and r == 0x11223344, k                                           # sin tabla: el puntero de fábrica
+        else:                                                                                  # ranura sin fichero: puntero de fábrica (G116: no hay tabla en el .dat)
+            assert hw is None and r == 0x11223344, k
 
 
 @needs_av
 def test_avcam_off_blob_invalido_y_sin_memoria_no_cambian_la_ruta(tmp_path):
     img = C.BIN.read_bytes()
-    p = P.apply_bytes(img, None, True)
+    p = P.apply_bytes(img)
     blob = U.blob_esperado({1: cubo(tmp_path, 17)})
-    assert corre_avcam(p, 1, 0, blob)[0] == 0x11223344                                        # Off = fábrica, sin leer el Backup del blob
-    assert D.BK_ID not in corre_avcam(p, 1, 0, blob)[2]["lecturas"]
-    malo = bytes(U.BK_TAM)                                                                    # Backup vacío (sin SD nunca): .dat para 1…3, fábrica para 4…6
-    assert corre_avcam(p, 2, 2, malo)[1] == _hw_esperado(p[D.LUT_TABLAS - D.BASE + D.LUT_BYTES:][:D.LUT_BYTES], p)
-    assert corre_avcam(p, 5, 5, malo)[0] == 0x11223344
-    sin_mem = corre_avcam(p, 1, 1, blob, malloc_falla_en=2)                                   # falla la reserva de 16 KB: tabla 1 del .dat
-    assert sin_mem[1] == _hw_esperado(p[D.LUT_TABLAS - D.BASE:][:D.LUT_BYTES], p)
-    est = corre_avcam(p, 1, 1, blob)[2]
-    assert est["mallocs"] == [0x654, U.BK_TAM]                                               # una reserva de cada, ninguna por llamada posterior
-
-
-@needs_av
-def test_sin_modo_sd_el_parche_es_el_de_siempre():
-    img = C.BIN.read_bytes()
-    assert P.apply_bytes(img, None, False) == P.apply_bytes(img) and P.apply_bytes(img) != P.apply_bytes(img, None, True)
+    assert P.emular(p, 1, 0, blob)[0] == 0x11223344                                           # Off = fábrica, sin leer el Backup del blob
+    assert D.BK_ID not in P.emular(p, 1, 0, blob)[2]["lecturas"]
+    malo = bytes(U.BK_TAM)                                                                    # Backup vacío (sin SD nunca): fábrica
+    assert P.emular(p, 0, 2, malo)[0] == 0x11223344 and P.emular(p, 1, 5, malo)[0] == 0x11223344
+    assert P.emular(p, 1, 1, blob, malloc_falla_en=2)[0] == 0x11223344                        # falla la reserva de 16 KB: fábrica
+    est = P.emular(p, 1, 1, blob)[2]
+    assert est["mallocs"] == [0x654, U.BK_TAM]                                                # una reserva de cada, ninguna por llamada posterior
 
 
 # ---------- build ----------
 @pytest.mark.skipif(not (DEV_A / "nflasha15_unpacked_unpacked/lib/viewUnified4.so").is_file() or not DEV_B.is_dir(), reason="firmware de Sony ausente")
 def test_build_sd_emite_userland_y_siete_opciones(tmp_path, compilado):
     import build_fn_lut
-    d = build_fn_lut.main(DEV_A, DEV_B, tmp_path, sd=True)
+    d = build_fn_lut.main(DEV_A, DEV_B, tmp_path)
     vu2 = (d / "lib/viewUnified2.so").read_bytes()
     segs = V.A._segments(vu2)
     assert segs[-1][0] == 1 and compilado[0][:16] in vu2                                       # el blob ARM compilado va dentro
@@ -324,8 +258,8 @@ def build_pp_menu_sd():
 
 
 @pytest.mark.skipif(not (DEV_A / "nflasha15_unpacked_unpacked/lib/viewUnified4.so").is_file() or not DEV_B.is_dir(), reason="firmware de Sony ausente")
-def test_build_files_del_cfw_objetivos_con_sd_lut(tmp_path):
-    """El CFW de objetivos con `sd_lut_cubes` lleva el userland en viewUnified2.so y 7 opciones en «LUT» (solo ficheros; no construye CFW)."""
+def test_build_files_del_cfw_objetivos_lleva_el_userland_y_siete_opciones(tmp_path):
+    """G116: el CFW de objetivos lleva SIEMPRE el userland en viewUnified2.so y 7 opciones en «LUT» (solo ficheros; no construye CFW)."""
     sys.path.insert(0, str(ROOT / "tests"))
     import build_cfw_objetivos as O
     import build_pp_menu
@@ -333,11 +267,11 @@ def test_build_files_del_cfw_objetivos_con_sd_lut(tmp_path):
     with _spec_intacta():
         O._cuevas_fuera_del_bloque_0()
         build_pp_menu.configurar = O._configurar_con_cfw
-        P.MODO_SD = build_pp_menu.SD_USERLAND = True
+        build_pp_menu.SD_USERLAND = True
         try:
             files = O.C.build_files(tmp_path)
         finally:
-            P.MODO_SD = build_pp_menu.SD_USERLAND = False
+            build_pp_menu.SD_USERLAND = False
     vu2 = (files / "lib/viewUnified2.so").read_bytes()
     assert V.A._segments(vu2)[-1][0] == 1 and b"pthread_create\0" in vu2
     assert b"LUT 6" in (files / "share/app/string_english.uxc").read_bytes() or "LUT 6".encode("utf-16-le") in (files / "share/app/string_english.uxc").read_bytes()

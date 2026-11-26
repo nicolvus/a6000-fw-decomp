@@ -18,6 +18,7 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path[:0] = [str(ROOT / "scripts"), str(ROOT / "scripts/gui"), str(Path(__file__).parent)]
 SRC = Path(__file__).parent / "userland/lutsd.c"
 SLOTS, TAM_TABLA, BK_TAM, BK_ID, MAGIC = 6, 1064, 16384, 0x150005, 0x5354554C
+T_OFF = 16 + SLOTS * TAM_TABLA  # 0x1900: registros de curva de 68 B (G115)
 DIAG_OFF = 0x2000          # diagnóstico del hilo (ignorado por av-cam): 6×4 i32 de Fsys_Open por variante de ruta, 6 i32 del primer Fsys_Read ≤ 0; cabecera[14] = letra de unidad
 BASE_COMPILADO = 0x10000
 
@@ -184,6 +185,22 @@ def blob_esperado(cubes: dict[int, str], letra: str = "E") -> bytes:
         if t:
             b[8 + s] = 1
             b[16 + s * TAM_TABLA:16 + (s + 1) * TAM_TABLA] = t
+    return bytes(b)
+
+
+def blob_tablas(tablas: dict[int, bytes], letra: str = "E", curvas: dict[int, bytes] | None = None) -> bytes:
+    """Blob de Backup a partir de tablas de 1064 B YA empaquetadas (`{ranura 1…6: bytes}`) y, si las hay, curvas de 68 B en `T_OFF`.
+    Sin compilar ni medir nada: es la referencia del contrato del userland, no el userland."""
+    assert all(1 <= k <= SLOTS and len(t) == TAM_TABLA for k, t in tablas.items())
+    b = bytearray(BK_TAM)
+    struct.pack_into("<I", b, 0, MAGIC)
+    b[4], b[6], b[14] = 1, SLOTS, ord(letra)
+    for k, t in tablas.items():
+        b[8 + k - 1] = 1
+        b[16 + (k - 1) * TAM_TABLA:16 + k * TAM_TABLA] = t
+    for k, c in (curvas or {}).items():
+        assert 1 <= k <= SLOTS and len(c) == 68
+        b[T_OFF + (k - 1) * 68:T_OFF + k * 68] = c
     return bytes(b)
 
 

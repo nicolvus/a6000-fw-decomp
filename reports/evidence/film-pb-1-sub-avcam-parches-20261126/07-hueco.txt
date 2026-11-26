@@ -1,0 +1,16 @@
+Tramos a cero (>=1 KiB) de av-cam 3.21 — el parche escribe en el de 40 020 B:
+  0x435410D5..0x435418D8  (2052 B)
+  0x43B873A7..0x43B877A7  (1025 B)
+  0x43BE3B28..0x43BE432F  (2056 B)
+  0x43BE4F2C..0x43BE5331  (1030 B)
+  0x43C1FF21..0x43C20C8B  (3435 B)
+  0x43D620D9..0x43FA8EFF  (2387495 B)
+  0x43FAF28C..0x43FB8EDF  (40020 B)
+
+Referencias de 32 bits (alineadas a 2) dentro de 0x43FAF28C..0x43FB8EE0 en 3.21:
+  en 4365F814 -> 43FAF640
+  en 436E2CDE -> 43FB0079
+  en 439EE6FA -> 43FB0030
+  en 43FCFF7A -> 43FB439A
+  en 43FF0012 -> 43FB0000
+  total: 5 (las 5 son bytes de datos/código mal alineados, no referencias: ver desasm del informe)

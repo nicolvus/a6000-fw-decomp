@@ -1,0 +1,829 @@
+gviewSalvageRestore.uxc
+InfraSalvageSta
+ViewSalvageRestoreToInstance
+ModelSalvageToInstance
+[shim] LOG   94 B  Ii 0ae_libInfraSalvageStatus.so
+ActionSetSalvageInfo
+[shim] TRAZA ) ActionSetSalvageInfo
+[AVIMMGR][MS1]CheckMSId : MS IDs are not same!
+[AVIMMGR][MS1]MountCmd : Flash Mount Error
+err = MPR::ER_DISABLED[AVIMMGR][MS1]ReserveEntryNumbersCmd : DCF Unloaded [31000007]
+[AVIMMGR][MS1]ReserveEntryNumbersCmd : MP4 Unloaded [31000007]
+[AVIMMGR][MS1]LoadExec : Flash Load Error
+[MMGR][AVI] ## ERROR(AVI):0x32000002 ## avimmgr/AviMMgrCmd.cpp(2197) LoadExec()
+[AVI][PLAY]     sources/avi_if/AviSeqPlay.cpp Error=[ER_INTERNAL] Line:12476
+[MP4IFO] ### mp4Ifo faild at IF/mp4Ifo_General.cpp(1749) ErrCd: 0xB0800001
+[AVIMMGR][MS1]LoadSub : MP4 Load Error.
+[MMGR][MMGR_ACSR] ## ERROR(MMGR):0xB0800001 ## mmgrifoacsr/MMgrMp4IfoAcsr.cpp(2319) LoadSub()
+[MMGR][MMGR_ACSR] ## ERROR(MMGR):0x31000006 ## mmgrifoacsr/MMgrMp4IfoAcsr.cpp(246) CreateAndLoad()
+[AVIMMGR][MS1]FlashLoadMp4 : CreateAndLoad Error
+[AVI][PLAY]     sources/avi_if/AviSeqPlay.cpp Error=[ER_AVI_FORMAT] Line:10234
+[MP4IFO] ### mp4Ifo faild at mp4Ifo_AVISequence.cpp(3646) ErrCd: 0xB0510007
+[MP4IFO] ### mp4Ifo faild at mp4Ifo_AVISequence.cpp(0889) ErrCd: 0xB0510007
+[MMGR][MMGR_ACSR] ## ERROR(MMGR):0xB0510007 ## mmgrifoacsr/MMgrMp4IfoAcsr.cpp(523) SetLoadInfo()
+[shim] TRAZA M- ActionSetSalvageInfo
+m2psIfo_If::SetForceSalvageReset() Error.
+[IFO]Start hdAvcIfo_If::Salvage()
+[IFO]End  hdAvcIfo_If::Salvage() errcode =
+[IFO]Start hdAvcIfo_If::IsNeedSalvage()
+[IFO]End  hdAvcIfo_If::IsNeedSalvage() errcode =
+[IFO]Start hdAvcIfo_If::GetSalvageInfo()
+[IFO]End  hdAvcIfo_If::GetSalvageInfo() errcode =
+[IFO]Start IfoFramework_BaseIf::IsNeedSalvage()
+[IFO]End IfoFramework_BaseIf::IsNeedSalvage() errcode =
+[IFO]Start IfoFramework_BaseIf::GetSalvageInfo()
+[IFO]End IfoFramework_BaseIf::GetSalvageInfo() errcode =
+[IFO]Start IfoFramework_BaseIf::CheckSalvageStatus()
+[IFO]End IfoFramework_BaseIf::CheckSalvageStatus() errcode =
+[IFO]Start IfoFramework_BaseIf::Salvage()
+[IFO]End IfoFramework_BaseIf::Salvage() errcode =
+ifoFramework_SalvageSequence.cpp
+[SEQ]m2psIfo_AVISequence::IsNeedSalvage()
+[SEQ]m2psIfo_AVISequence::GetSalvageInfo()
+[SEQ]m2psIfo_AVISequence::GetSalvageType Call !
+[SEQ]AviIf::GetSalvageType Error !
+[IFO] IsNeedSalvage : AVI Need Salvage
+[SEQ]Need Salvage !
+[SEQ]Not Need Salvage !
+[SEQ]m2psIfo_AVISequence::GetSalvageInfo Error !
+Recovery/Salvage (Movie Divide) Start!!
+Recovery/Salvage (Movie Divide) END!!
+Recovery/Salvage (Remove File) Start!!
+Recovery/Salvage (Remove File) END!!
+Recovery/Salvage (Movie Rec) Start!!
+Recovery/Salvage (Movie Rec) END!!
+[SEQ]m2psIfo_CommonSequence::CheckSalvageStatus()
+[M2PS]m2psIfo_If::Salvage()
+[M2PS]m2psIfo_If::IsNeedSalvage()
+[M2PS]m2psIfo_If::GetSalvageInfo()
+[M2PS]m2psIfo_If::SetForceSalvageReset()
+[M2PS]m2psIfo_If::CheckSalvageStatus()
+[IFO] IsNeedSalvage : IFO = %d, HDM = %d
+|-isNeedSalvage       :
+m2psIfo_dummySequence::CheckSalvageStatus()
+m2psIfo_dummySequence::GetSalvageInfo()
+m2psIfo_dummySequence::IsNeedSalvage()
+m2psIfo_dummySequence::Salvage()
+[IFO]Recovery/Salvage [BeforeLast][FolderName = %s], [FileName = %s]
+[IFO]Recovery/Salvage Delete 0byte File :
+MP4IFO List
+XAVCIFO List
+IsNeedSalvage() : Need salvage or Need salvage reset
+SetForcedSalvageReset : True!!
+SetForcedSalvageReset : False!!
+IsNeedSalvageReset
+LoadExec
+GetRestoreStatus : AVI Need Salvage
+aviSalvageInfoCount = %d
+aviSalvageInfo[%d]  = %d
+GetRestoreStatus : AVI says 'I need salvage' And AVCHD says 'I need 2nd Salvage'
+GetRestoreStatus : AVI says 'I No need salvage' And AVCHD says 'I need 2nd Salvage'
+[MMGR_ACSR]
+CheckSalvageStatus
+CreateAndLoad
+SetLoadInfo
+SetLoadInfo : AVCHD No exist.
+SetLoadInfo : It is not loaded.
+SetLoadInfo : Need restructure.
+SetLoadInfo : Need restart restructure
+SetLoadInfo : Need salvage
+SetLoadInfo : Need repair
+LoadSub : Media type is illegal.
+LoadSub : AVCHD IFO Load() Error.
+LoadSub : AVCHD IFO WriteDatabaseFiles() Error.
+CreateAndLoad : loadType[%x] bFlashLoad[%x] bDbCheck[%x]
+CreateAndLoad : AVCHD already created.
+LoadAvi :  Load OK
+SetLoadInfo : DCF No exist.
+CheckSalvageStatus : It is loaded.
+LoadSub : DCF Load() Error.
+CreateAndLoad : loadType[%x] bFlashLoad[%x]
+CreateAndLoad : DCF already created.
+SetLoadInfo : DVAVI No exist.
+CheckSalvageStatus : DVAVI already created.
+LoadSub : loadType[%x] bFlashLoad[%x]
+LoadSub : DVAVI Load Error.
+CreateAndLoad : DVAVI already created.
+SetLoadInfo : Need reconstruct
+SetLoadInfo : M2PS No exist.
+LoadSub : M2PS Load Error.
+CreateAndLoad : M2PS already created.
+SetLoadInfo : MP4 No exist.
+SetLoadInfo : TvSystem is PAL, frameRate %d
+SetLoadInfo : TvSystem is NTSC, frameRate %d
+SetLoadInfo : TvSystem is %d, Unknown frameRate %d
+SetLoadInfo : TvSystem is %d, Invalid frameRate %d
+LoadSub : MP4 Load Error.
+CreateAndLoad : MP4 already created.
+SetLoadInfo : WAV Not exist.
+CheckSalvageStatus : Wav already created.
+LoadSub : WAV Load Error.
+CreateAndLoad : WAV already created.
+SetLoadInfo : XAVC No exist.
+LoadSub : XAVC Load Error.
+CreateAndLoad : XAVC already created.
+MP4IFO|DEBUG
+MP4IFO|LOG
+MP4IFO|MCMD
+MP4IFO|FUNC
+mp4Ifo_AVISequence::IsNeedSalvage OUT
+*pbIsNeedSalvage  = true
+*pbIsNeedSalvage  = false
+IsNeedSalvage
+GetSalvageInfo
+SetForceSalvageReset
+mp4Ifo_Lib::IsNeedSalvage (
+MprIf::Salvage()
+Is need Salvage -----
+SalvageReset --------
+SalvageReset msm set salvageReset <flag> :[1:set,  0:clear]
+14CStillCacheDef
+10StillCache
+StillCache::Free
+StillCache::FreeCacheAll
+StillCache::PreloadStart
+StillCache::GetNextPreloadInfo
+StillCache::FreeCache
+StillCache::GetCachedStillInfo
+StillCache::SearchFreeFile
+StillCache::ClearFreeableFile
+StillCache::CompareDcfFile
+StillCache::DestroyFartestFile
+StillCache::CreateFile
+StillCache::PreLoad
+StillCache::Read
+StillCache::SlidePreloadInfo
+StillCache::AddPreloadInfo
+)P)		[StillCache]
+14StillCacheF
+StillCacheFile::ReturnAddress
+StillCacheFile::Read
+14StillCachePage
+StillCachePage::GetInstance
+StillCachePage::SetProtect
+StillCachePage::Free
+StillCachePage::Clear
+StillCachePage::~StillCachePage
+StillCachePage::EraseNewlyPage
+StillCachePage::GetNewPage
+StillCachePage::Reuse
+StillCachePage::SetValidParam
+StillCachePage::Ensure
+P	P#	StillCacheRead::StartRead
+14StillCacheRead
+dvAviIfo_If::SetForceSalvageReset()
+XAVCIFO|DEBUG
+XAVCIFO|LOG
+XAVCIFO|MCMD
+XAVCIFO|FUNC
+xavcIfo_General::CheckSalvageStatus IN
+xavcIfo_General::CheckSalvageStatus OUT
+xavcIfo_AVISequence::IsNeedSalvage OUT
+xavcIfo_AVISequence::GetSalvageInfo OUT
+xavcIfo_AVISequence::SalvageDelete Call AviIf::PrepareDeleteMp4Content
+xavcIfo_AVISequence::SalvageDubbing Call AviIf::PrepareDubbingSalvage
+xavcIfo_AVISequence::SalvageRec Call AviIf::PrepareRegisterXavcContent
+xavcIfo_AVISequence::Salvage Call AviIf::GetSalvageType
+P (::IsNeedSalvage (
+wavIfo_AVISequence::IsNeedSalvage OUT
+wavIfo_AVISequence::GetSalvageInfo OUT
+bIsNeedSalvage   = true
+bIsNeedSalvage   = false
+bIsNeedSalvage = true
+bIsNeedSalvage = false
+setSystemErrorByObjSalvageErrCode
+[WRPPR_SLVG_STATUS] SalvageInfo[0x%X]
+[WRPPR_SLVG_STATUS] newSalvageInfo() m_pInfo==NULL
+[WRPPR_SLVG_STATUS] getSalvageStatus() call osal_snd_sync_msg() NG l_err:0x%04X
+[WRPPR_SLVG_STATUS] getSalvageStatus() l_pSndBuff==NULL
+[WRPPR_SLVG_STATUS] getSalvageStatus() call osal_valloc_msg() l_err:0x%04X
+ObjSalvage
+[shim] TRAZA F ActionSalvageStatusC
+[shim] TRAZA U ActionSalvageStatusC
+InfraSalvageStatus
+94 E  Ii 0ae_libInfraSalvageStatus.so
+[shim] LOG   94 E  Ii 0ae_libInfraSalvageStatus.so
+viewSalvageRestore.uxc
+ActionSalvageStatusC
+[SCN] Create ObjSalvage
+NG:Create ObjSalvage
+[SCN] Create ObjSalvage ERROR  line:%d
+InfraSalvageStatus INFO
+b_ObjSalvage
+libInfraSalvageStatus.so
+InfraSalvageStatus_Init
+modelSalvage.so
+[M_BRO_REPAIR] setSystemErrorByObjSalvageErrCode(0x%X)
+ActionEndSalvageCmp
+ActionBeginSalvage
+ActionEndSalvage
+[M_BRO_REPAIR] ActionBeginSalvage() IssueCommandAsync Error:0x%X
+[M_BRO_REPAIR] ActionBeginSalvage() (l_pObjIns == NULL)
+[M_BRO_REPAIR] ActionBeginSalvage() (l_pParamList == NULL)
+[M_BRO_REPAIR] ActionBeginSalvageCmp() Complete(NG):0x%X
+[M_BRO_REPAIR] ActionBeginSalvageCmp() ParamType Error:0x%X
+[M_BRO_REPAIR] ActionBeginSalvageCmp() Error l_pMwfParam==NULL
+[M_BRO_REPAIR] ActionBeginSalvageCmp() Error l_pObjMsg==NULL
+[M_BRO_REPAIR] ActionBeginSalvageCmp() Error l_pPrmObjMsg==NULL
+[M_BRO_REPAIR] ActionBeginSalvageCmp() Error l_pParamList==NULL
+[M_BRO_REPAIR] ActionEndSalvage() IssueCommandAsync Error:0x%X
+[M_BRO_REPAIR] ActionEndSalvage() (l_pObjIns == NULL)
+[M_BRO_REPAIR] ActionEndSalvage() (l_pParamList == NULL)
+[M_BRO_REPAIR] ActionEndSalvageCmp() Complete(NG):0x%X
+[M_BRO_REPAIR] ActionEndSalvageCmp() ParamType Error:0x%X
+[M_BRO_REPAIR] ActionEndSalvageCmp() Error l_pMwfParam==NULL
+[M_BRO_REPAIR] ActionEndSalvageCmp() Error l_pObjMsg==NULL
+[M_BRO_REPAIR] ActionEndSalvageCmp() Error l_pPrmObjMsg==NULL
+[M_BRO_REPAIR] ActionEndSalvageCmp() Error l_pParamList==NULL
+ActionBeginSalvageCmp
+ActionClearSalvageInfo
+ActionSalvageCmp
+ActionClearWaitSalvageInfoStable
+ActionMemoriseWaitSalvageInfoStable
+acquireSetStatusNeedSalvageIfNecessary
+[M_MEDIA] testGetNeedSalvageList() in
+[M_MEDIA] testGetNeedSalvageList() length:0x%X
+[M_MEDIA] testGetNeedSalvageList() PARAMID_NEED_SALVAGE_LIST[0x%X]:0x%X
+[M_MEDIA] testGetNeedSalvageList() l_pPrmNumList NULL[PARAMID_NEED_SALVAGE_LIST]
+[M_MEDIA] testGetNeedSalvageList() out
+[M_MEDIA] testSetNeedSalvage() in
+[M_MEDIA] testSetNeedSalvage() l_pNumber[3] NULL
+[M_MEDIA] testSetNeedSalvage() l_pNumber[2] NULL
+[M_MEDIA] testSetNeedSalvage() out
+[M_MEDIA] testSetNeedSalvage() Set Salvage Status Failed... Type:0x%X
+[M_REPAIR] setSystemErrorByObjSalvageErrCode(0x%X)
+[M_REPAIR] ActionBeginSalvage() IssueCommandAsync Error:0x%X
+[M_REPAIR] ActionBeginSalvage() (l_pObjIns == NULL)
+[M_REPAIR] ActionBeginSalvage() (l_pParamList == NULL)
+[M_REPAIR] ActionBeginSalvageCmp() Complete(NG):0x%X
+[M_REPAIR] ActionBeginSalvageCmp() ParamType Error:0x%X
+[M_REPAIR] ActionBeginSalvageCmp() Error l_pMwfParam==NULL
+[M_REPAIR] ActionBeginSalvageCmp() Error l_pObjMsg==NULL
+[M_REPAIR] ActionBeginSalvageCmp() Error l_pPrmObjMsg==NULL
+[M_REPAIR] ActionBeginSalvageCmp() Error l_pParamList==NULL
+[M_REPAIR] ActionEndSalvage() IssueCommandAsync Error:0x%X
+[M_REPAIR] ActionEndSalvage() (l_pObjIns == NULL)
+[M_REPAIR] ActionEndSalvage() (l_pParamList == NULL)
+[M_REPAIR] ActionEndSalvageCmp() Complete(NG):0x%X
+[M_REPAIR] ActionEndSalvageCmp() ParamType Error:0x%X
+[M_REPAIR] ActionEndSalvageCmp() Error l_pMwfParam==NULL
+[M_REPAIR] ActionEndSalvageCmp() Error l_pObjMsg==NULL
+[M_REPAIR] ActionEndSalvageCmp() Error l_pPrmObjMsg==NULL
+[M_REPAIR] ActionEndSalvageCmp() Error l_pParamList==NULL
+ActionSalvageStatusChanged
+[M_ROOT] ActionSalvageStatusChanged() call getMedIdFromIndex(0x%X) error
+[M_ROOT] ActionSalvageStatusChanged() Salvage Count Decrease 0x%X to 0x%X
+[M_ROOT] ActionSalvageStatusChanged() Salvage Count Increase 0x%X to 0x%X
+[M_ROOT] ActionSalvageStatusChanged() Restore Count Decrease 0x%X to 0x%X
+[M_ROOT] ActionSalvageStatusChanged() Restore Count Increase 0x%X to 0x%X
+[M_ROOT] ActionSalvageStatusChanged() Unknown Status 0x%X
+[M_ROOT] testGetSalvageInfo() in
+[M_ROOT] testGetSalvageInfo() PARAMID_SALVAGE_INFO:0x%X
+[M_ROOT] testGetSalvageInfo() l_pNumber==NULL
+[M_ROOT] testGetSalvageInfo() out
+[M_SLVG] setSystemErrorByObjSalvageErrCode(0x%X)
+[M_SLVG] chkExecStatusAfterSalvageCmp() Erase from l_detectSlvg:0x%X
+[M_SLVG] chkExecStatusAfterSalvageCmp() Erase from l_detectRstr:0x%X
+[M_SLVG] chkExecStatusAfterSalvageCmp() l_pList[0x%X]==NULL(set)
+[M_SLVG] chkExecStatusAfterSalvageCmp() Unkonwn SalvageType:0x%X
+[M_SLVG] chkExecStatusAfterSalvageCmp() Salvage Flag to false(With Failure) 0x%X
+[M_SLVG] chkExecStatusAfterSalvageCmp() Restore Flag to false(With Failure) 0x%X
+[M_SLVG] chkExecStatusAfterSalvageCmp() l_pList[0x%X]==NULL(check)
+[M_SLVG] chkExecStatusAfterSalvageCmp() l_pList[0x%X]==NULL(delete)
+[M_SLVG] chkExecStatusAfterSalvageCmp() Error l_pResult==NULL
+[M_SLVG] chkExecStatusAfterSalvageCmp() Error ParamType:0x%X[PARAMID_MEDIATYPE]
+[M_SLVG] chkExecStatusAfterSalvageCmp() Error l_pMwfParam[PARAMID_MEDIATYPE]==NULL
+[M_SLVG] chkExecStatusAfterSalvageCmp() Error SalvageComp:0x%X
+[M_SLVG] chkExecStatusAfterSalvageCmp() Error ParamType:0x%X[PARAMI
+[M_SLVG] chkExecStatusAfterSalvageCmp() Error l_pMwfParam[PARAMID_ERR_CD]==NULL
+[M_SLVG] chkExecStatusAfterSalvageCmp() Error l_pObjMsg==NULL
+[M_SLVG] chkExecStatusAfterSalvageCmp() Error l_pPrmObjMsg==NULL
+[M_SLVG] chkExecStatusAfterSalvageCmp() Error l_pParamList==NULL
+chkExecStatusAfterSalvageCmp
+[M_SLVG] testGetGetSalvageOrRestore() in
+[M_SLVG] testGetGetSalvageOrRestore() PARAMID_NEXT_MEDIA_EXIST:0x%X
+[M_SLVG] testGetGetSalvageOrRestore() l_pExist NULL[PARAMID_NEXT_MEDIA_EXIST]
+[M_SLVG] testGetGetSalvageOrRestore() PARAMID_NEED_SALVAGE:0x%X
+[M_SLVG] testGetGetSalvageOrRestore() l_pExist NULL[PARAMID_NEED_SALVAGE]
+[M_SLVG] testGetGetSalvageOrRestore() PARAMID_NEED_RESTORE:0x%X
+[M_SLVG] testGetGetSalvageOrRestore() l_pExist NULL[PARAMID_NEED_RESTORE]
+[M_SLVG] testGetGetSalvageOrRestore() PARAMID_EXEC_MEDIA:0x%X
+[M_SLVG] testGetGetSalvageOrRestore() l_pExist NULL[PARAMID_EXEC_MEDIA]
+[M_SLVG] testGetGetSalvageOrRestore() out
+[M_SLVG] testShowInformation() SalvageList:0x%X
+ActionExeSalvage
+[M_SLVG] ActionBeginSalvage() IssueCommandAsync Error:0x%X
+[M_SLVG] ActionBeginSalvage() (l_pObjIns == NULL)
+[M_SLVG] ActionBeginSalvage() (l_pParamList == NULL)
+[M_SLVG] ActionEndSalvage() IssueCommandAsync Error:0x%X
+[M_SLVG] ActionEndSalvage() (l_pObjIns == NULL)
+[M_SLVG] ActionEndSalvage() (l_pParamList == NULL)
+[M_SLVG] ActionBeginSalvageCmp() Complete(NG):0x%X
+[M_SLVG] ActionBeginSalvageCmp() ParamType Error:0x%X
+[M_SLVG] ActionBeginSalvageCmp() Error l_pMwfParam==NULL
+[M_SLVG] ActionBeginSalvageCmp() Error l_pObjMsg==NULL
+[M_SLVG] ActionBeginSalvageCmp() Error l_pPrmObjMsg==NULL
+[M_SLVG] ActionBeginSalvageCmp() Error l_pParamList==NULL
+[M_SLVG] ActionEndSalvageCmp() Complete(NG):0x%X
+[M_SLVG] ActionEndSalvageCmp() ParamType Error:0x%X
+[M_SLVG] ActionEndSalvageCmp() Error l_pMwfParam==NULL
+[M_SLVG] ActionEndSalvageCmp() Error l_pObjMsg==NULL
+[M_SLVG] ActionEndSalvageCmp() Error l_pPrmObjMsg==NULL
+[M_SLVG] ActionEndSalvageCmp() Error l_pParamList==NULL
+[M_SLVG] ActionSalvageCmp() Erase from m_detectSlvg:0x%X
+[M_SLVG] ActionSalvageCmp() Erase from m_detectRstr:0x%X
+[M_SLVG] ActionSalvageCmp() Unkonwn SalvageType:0x%X
+[M_SLVG] ActionSalvageCmp() errCd      [0x%X][0x%X]:0x%X
+[M_SLVG] ActionSalvageCmp() contentType[0x%X][0x%X]:0x%X
+[M_SLVG] ActionSalvageCmp() Salvage Flag to false(With Failure) 0x%X
+[M_SLVG] ActionSalvageCmp() Restore Flag to false(With Failure) 0x%X
+[M_SLVG] ActionSalvageCmp() Failed!!
+[M_SLVG] ActionSalvageCmp() Error l_pResult==NULL
+[M_SLVG] ActionSalvageCmp() Error ParamType:0x%X[PARAMID_MEDIATYPE]
+[M_SLVG] ActionSalvageCmp() Error l_pMwfParam[PARAMID_MEDIATYPE]==NULL
+[M_SLVG] ActionSalvageCmp() Error PARAMID_ERR_CD:0x%X
+[M_SLVG] ActionSalvageCmp() Error ParamType:0x%X[PARAMID_ERR_CD]
+[M_SLVG] ActionSalvageCmp() Error l_pMwfParam[PARAMID_ERR_CD]==NULL
+[M_SLVG] ActionSalvageCmp() Error l_pObjMsg==NULL
+[M_SLVG] ActionSalvageCmp() Error l_pPrmObjMsg==NULL
+[M_SLVG] ActionSalvageCmp() Error l_pParamList==NULL
+[M_SLVG] ActionExeSalvage() IssueCommandAsync Error:0x%X
+[M_SLVG] ActionExeSalvage() (l_pObjIns == NULL)
+[M_SLVG] ActionExeSalvage() Instance Error
+[M_SLVG] ActionExeSalvage() l_pMedType:0x%X
+[M_SLVG] ActionExeSalvage() l_pExeType:0x%X
+[M_SLVG] ActionExeSalvage() l_pParamList==NULL
+[M_SLVG] ActionExeSalvage() l_hit==false
+[M_SLVG] ActionCntMediaInfo() Unknown SalvageStatus:0x%X
+12ModelSalvage
+DefInfraSalvageStatus::ER_OK
+DefInfraSalvageStatus::ER_BAD_ARG
+DefInfraSalvageStatus::ER_SEQUENCE
+DefInfraSalvageStatus::ER_NONSUPPORTED
+DefInfraSalvageStatus::ER_NO_MEMORY
+DefInfraSalvageStatus::ER_INTERNAL
+DefInfraSalvageStatus::ER_OTHER
+DefInfraSalvageStatus::ER_FAILED
+25InfraSalvageStatusMonCtrl
+18InfraSalvageStatus
+~InfraSalvageStatus() :
+InfraSalvageStatus() :
+InfraSalvageStatus() UPM Error [%x]
+[InfraSalvageStatus] CallbackPoint() :
++ SalvageInfo[%d]
++ SalvageDetailInfo[%d]
+[InfraSalvageStatus]    +- contentType :
+[InfraSalvageStatus] Callback() :
+[InfraSalvageStatus]
+[InfraSalvageStatus]         - [DVD]                :
+[InfraSalvageStatus]         - [AVCHD]              :
+[InfraSalvageStatus]         - [M2PS]               :
+[InfraSalvageStatus]         - [MP4]                :
+[InfraSalvageStatus]         - [STILL]              :
+[InfraSalvageStatus]         - [XAVC]                :
+[InfraSalvageStatus]         - [WAV]              :
+[InfraSalvageStatus]         - [INVALID]            :
+InfraSalvageStatus/InfraSalvageStatus.cpp
+InfraSalvageStatus/InfraCacheMgrCore.cpp
+InfraSalvageStatus/Acsr/FsysAcsr.cpp
+InfraSalvageStatus/Acsr/MediaConfigAcsr.cpp
+InfraSalvageStatus/Acsr/MediaDetectAcsr.cpp
+InfraSalvageStatus/Acsr/MediaMountAcsr.cpp
+InfraSalvageStatus/Acsr/MprCtrlAcsr.cpp
+ClearSalvageInfo
+GetSalvageDetailInfo
+GetPreSalvageInfo
+GetPreSalvageInfo() :
+InfraSalvageStatusCore.cpp
+GetPreSalvageInfo : [%dms]
+GetSalvageInfo() :
+GetSalvageInfo : [%dms]
+GetSalvageDetailInfo() :
+GetSalvageDetailInfo : [%dms]
+ClearSalvageInfo() :
+W@(rSalvageInfo : [%dms]
+UpdateSalvageInfo() :
+UpdateSalvageInfo : [%dms]
+[InfraSalvageStatus] DispatchCommand() :
+UpdateSalvageInfo
+ISS_GetSalvageDetailInfo
+ISS_UpdateSalvageInfo
+ISS_ClearSalvageInfo
+InfraSalvageStatus][ERR
+InfraSalvageStatus][TIME
+InfraSalvageStatus][PARAM
+Infra SalvageStatus Command
+InfraSalvageStatusMcmd.cpp
+UpdateSalvageInfo <media_id> <SALVAGE/RESTORE/INVALID> <DVD/AVCHD/M2PS/MP4/STILL/XAVC/WAV>...
+ClearSalvageInfo <media_id> <DVD/AVCHD/M2PS/MP4/STILL/XAVC/WAV>...
+ISS_GetSalvageInfo
+ChkAllSalvageReset
+ChkSalvageReset
+IsNeedSalvageRestore
+SendCmdToInfraSalvageStatus
+needSalvage     = 0x%x
+SendCmdToInfraSalvageStatus()
++ isNeedSalvageReset  = %s
+### SalvageReset!!
++ needSalvage                     = %s
++ isNeedSalvage       = %s
+## MSGID_LOAD_EVT: b_isNeedSalvage = 0x%x
+ClearStillCache
+[ObjSalvage] ObjSalvage instance is not exist
+Usage : SALVAGE Salvage <MEDIA>
+SALVAGE Salvage -Dispose <MEDIA>
+ex.) SALVAGE Salvage FLASH -Dispose MS1
+[Salvage] : err=0x%x
+[EndSalvage] : err=0x%x
+Usage : SALVAGE Begin -o <ExecMode>[0:Salvage, 1:Repair]
+[BeginSalvage] : Param (execMode=%d)
+[BeginSalvage] : err=0x%x
+[ObjSalvage] ------------------------------------------------------------------------------
+[ObjSalvage]
+ObjSalvage Monitor Command
+Salvage : Few argument(s).
+ObjSalvage/ObjSalvage.cpp
+ObjSalvage/ObjSalvageCore.cpp
+ObjSalvage/ObjSalvageParse.cpp
+ObjSalvage/ObjSalvageCommon.cpp
+SalvageMprCmd
+[BeginSalvageCmd] Call
+[BeginSalvageCmp] Call
+[EndSalvageCmd] Call
+[ProcCbGetSalvageInfoCmp] Call
+[SalvageMprCmd] Call
+[ProcCbSalvageMprCmp] Call
+[SalvageCmp] Call
+[EndSalvageCmp] Call
+[GetSalvageInfoCmd] Call
+[SalvageCmd] Call
+Salvage MediaId
+10ObjSalvage
+remain:0 validNumSalvageInfo, validNumRestoreInfo
+remain:0 validNumSalvageInfo
+[CheckSalvageInh] Call cmdId=0x%08x mediaId=0x%08x
+SalvageInh true! factor=%d
+[ClearSalvageInfoOfISS] Call salvageType:0x%08x, mediaId:0x%08x, contType:0x%08x
+validNumSalvageInfo              : %d
+--- PrintSalvageResult --- :
+validNumSalvageInfo          : %d
+DefObjSalvage::RepairType = %s
+[ObjSalvage][ERR] %s -> %s
+[ObjSalvage][ERR] 0x%08x(%s)
+DefObjSalvage::ER_OK
+DefObjSalvage::ER_MSG_OTHER
+DefObjSalvage::ER_SEQUENCE
+DefObjSalvage::ER_BAD_ARG
+DefObjSalvage::ER_NONSUPPORTED
+DefObjSalvage::ER_TIMEOUT
+DefObjSalvage::ER_NO_MEMORY
+DefObjSalvage::ER_UNDEFINED_SYMBOL
+DefObjSalvage::ER_NOTFOUND_LIB
+DefObjSalvage::ER_QUEUE_FULL
+DefObjSalvage::ER_MSG_ADD_PARAM
+DefObjSalvage::ER_PARAM_TYPE_UNMATCH
+DefObjSalvage::ER_PIN_TYPE_UNMATCH
+DefObjSalvage::ER_PIN_NOT_CONNECTED
+DefObjSalvage::ER_PIN_UNSET_SENDER
+DefObjSalvage::ER_PIN_DIR_UNMATCH
+DefObjSalvage::ER_PIN_NOT_EXIST
+DefObjSalvage::ER_EXEC_LATER
+DefObjSalvage::ER_EXEC_LIFO
+DefObjSalvage::ER_BUSY
+DefObjSalvage::ER_ACQUIRED
+DefObjSalvage::ER_NOT_ACQUIRED
+DefObjSalvage::ER_EXEC_LIFO_OVERLAP
+DefObjSalvage::ER_INTERNAL
+DefObjSalvage::ER_FAILED
+DefObjSalvage::ER_NO_EXIST
+DefObjSalvage::ER_NOT_SUPPORT
+DefObjSalvage::ER_EXCEPTION
+DefObjSalvage::ER_COMMUNICATE_FAILED
+DefObjSalvage::ER_CANCELED
+DefObjSalvage::ER_NOT_CONNECTED
+DefObjSalvage::ER_INFRA_FAILED
+DefObjSalvage::ER_PIN_SEQUENCE
+DefObjSalvage::ER_ACCESS
+DefObjSalvage::ER_MEDIUM
+DefObjSalvage::ER_NO_MEDIUM
+DefObjSalvage::ER_UNSUPPORTED_MEDIUM
+DefObjSalvage::ER_WRITE_PROTECTED
+DefObjSalvage::ER_MEDIA_FULL
+DefObjSalvage::ER_NEED_SALVAGE
+DefObjSalvage::ER_UNRECOGNIZED
+DefObjSalvage::ER_OVER_MAX
+DefObjSalvage::ER_RESTRICTION
+[MprAcsr] ClearStillCache
+|  needSalvage                     : [0x%x]
+InfraSalvageStatus_Exit
+_ZN5MprIf18IsNeedSalvageResetEmPb
+_ZN7MprCtrl19IsStillCacheSupportEv
+_ZN7MprCtrl24GetStillCacheReleaseTypeEv
+_ZN5MprIf15ClearStillCacheEv
+_ZN5MprIf7SalvageEmm
+ObjSalvage_Init
+ObjSalvage_Exit
+ObjSalvage_Create
+ObjSalvage_Destroy
+ObjSalvage_RegisterCommand
+ObjSalvage_UnregisterCommand
+_ZN27CmnForUseMultipleViewStatus21setSalvageWorkingFlagEb
+18ViewSalvageRestore
+FAILED : [WAV]SalvageRescue()
+SUCCESS : [WAV]SalvageRescue()
+[AVI][MON] *** CompleteDubbingSalvage execute
+FAILED : CompleteDubbingSalvage
+SalvageMode	:
+m_bIsSalvage                  : %d
+SimpleWavSalvageRescue
+SimpleWavSalvageRescueCmd [none]
+PrepareDubbingSalvage
+CompleteDubbingSalvage
+GetAvcHdContentCountForSalvage
+GetSalvageOrderInfo
+DetachForSalvage
+sources/avi_if/AviSeqPlay.cpp
+Salvage is not supported.
+IsDualRecSalvageAndOrderIsStill2Movie
+[OUT] *pDualRecSalvageAndOrderIsStill2Movie : %d
+BeginSalvage
+sources/avi_if/AviSeqSalvage.cpp
+GetSalvageType
+EndSalvage
+SalvageRescue
+Unknown SalvageInfo
+CS_FlashAcsr::GetSalvageInfo([O] pSalvageInfo = %p, [O] pMarkType = %p) IN
+CS_FlashAcsr::GetSalvageInfo() OUT:
+[O] *pSalvageInfo = %s : 0x%x
+CS_FlashAcsr::NotifyNeedSalvage() IN
+CS_FlashAcsr::NotifyNeedSalvage() OUT:
+CS_FlashAcsr::GetSalvageInfoList([I] maxGetListCount = %ld, [O] pSalvageInfo = %p, [O] pOutputListCount = %p, [O] pMarkTypeInfoList = %p) IN
+CS_FlashAcsr::GetSalvageInfoList() OUT:
+CS_FlashAcsr::GetFirstSalvageInfoList([I] maxGetListCount = %ld, [O] pSalvageInfo = %p, [O] pOutputListCount = %p, [O] pMarkTypeInfoList = %p) IN
+CS_FlashAcsr::GetFirstSalvageInfoList() OUT:
+avi flash GetSalvageInfoList
+ID : curFlash:     State : Media         : MarkType         : SalvageInfo  : pFlashAcsr
+FlashGetSalvageInfoList : avi flash getsalvageinfolist
+Err GetDirName Need Salvage
+Err GetDirIdInfo Need Salvage
+Err GetNextDirName Need Salvage
+Err GetContentsCount Need Salvage
+Err StillCache::Preload BufferFull ec
+Err StillCache::Preload	ec
+Err StillCache::Read Cancel ec
+Err StillCache::Read	ec
+[Disp Salvage Stat]
+Salvage Stat = [
+[DCF MCMD]Err dcf_If::Salvage ec = [
+[DCF MCMD]OK dcf_If::Salvage
+[DCF MCMD] Salvage
+Dcf Salvage
+DCF Need Salvage !
+Err AVI::GetSalvageType LINE
+AVI Need Salvage !
+RegisterContentForSalvage Start
+RegisterContentForSalvage End
+Err AVI::PrepareDubbingSalvage LINE
+AVI::GetSalvageType SalvageType
+AVI::GetSalvageType IsNeedThumbnail
+AVI::GetSalvageType IsNeedRescue
+Err AVI::GetSalvageType Invalid Type
+Err CheckSalvageStatus() Collision
+Err IsNeedSalvage() Collision
+Err GetSalvageInfo() Collision
+Err Salvage() Collision
+Err Not Supported : Salvage()
+Err Not Supported : GetSalvageInfo()
+Err Not Supported : IsNeedSalvage()
+Err Not Supported : CheckSalvageStatus()
+Salvage Start !!
+## Salvage Start ...
+- SalvageStatus         =
+ssNotNeedSalvage
+ssNeedSalvage
+ssNeedSalvageFsOnly
+ssFailedInSalvage
+DubbingLoadExec
+FeaSalvage Init...
+ChangeSalvageState() to
+Call ProcInSalvageError()
+Call SalvageStateControl()
+SalvageState :
+ProcInSalvageWaitEndRepairCb()
+ProcInSalvageWaitBeginRepairCb()
+ProcInSalvageWaitRepairCb()
+ProcInSalvageWaitMakeThumbCb()
+ProcInSalvageWaitSalvageCb()
+ProcInSalvageStandby()
+Warning CStillCacheIf::Free
+Err CStillCacheIf::Free
+SetForceSalvageReset : SUCCESS
+Salvage Status      :
+Need Salvage      :
+13.needRepair/14.needRecovery/15.needSalvage/16.needRestructure
+13.multiFormats/14.needRepair/15.needRecovery/16.needSalvage
+Divide Salvage Info
+Start SalvageCmd()
+End SalvageCmd :
+Start IsNeedSalvageCmd()
+End IsNeedSalvageCmd :
+Start CheckSalvageStatusCmd(
+End CheckSalvageStatusCmd :
+[IFO|AviSeq]Start GetNextSalvageContent
+[IFO|AviSeq]End GetNextSalvageContent =
+[IFO|AviSeq]Start RegisterContentForSalvage
+[IFO|AviSeq]End RegisterContentForSalvage =
+[IFO|AviSeq]Start SalvageDivideOriginalChapter
+[IFO|AviSeq]End SalvageDivideOriginalChapter =
+[IFO|AviSeq]Start SalvageDeleteOriginalChapter
+[IFO|AviSeq]GetAvcHdContentCountForSalvage =
+[IFO|AviSeq]End SalvageDeleteOriginalChapter =
+[IFO|AviSeq]Start SalvageRec
+[IFO|AviSeq]End SalvageRec errCode =
+[IFO|AviSeq]*pb_isNeedSalvage =
+[IFO|AviSeq]Lib::IsNeedSalvage *pb_isNeedSalvage =
+[IFO|AviSeq]GetSalvageType salvageType =
+[IFO]Start hdAvcIfo_If::CheckSalvageStatus()
+[IFO]End  hdAvcIfo_If::CheckSalvageStatus() errcode =
+[IFO]hdAvcIfo_If::SetForceSalvageReset()
+[SEQ]m2psIfo_AVISequence::BeginSalvage()
+[SEQ]AviIf::BeginSalvage Call !
+[SEQ]AviIf::EndSalvage Call !
+[SEQ]m2psIfo_AVISequence::RegisterContentForSalvageDivide()
+[SEQ]m2psIfo_AVISequence::SalvageRec()
+[SEQ]m2psIfo_AVISequence::SalvageRec Error !
+[SEQ]m2psIfo_AVISequence::SalvageDubbing()
+[SEQ]AviIf::PrepareDubbingSalvage Call !
+[SEQ]AviIf::PrepareDubbingSalvage Error !
+[SEQ]isNeedDubbingSalvage : %d
+[SEQ]m2psIfo_AVISequence::SalvageDubbing Error !
+[SEQ]m2psIfo_AVISequence::SalvageDivide()
+[SEQ]m2psIfo_AVISequence::SalvageDivide Error !
+[SEQ]m2psIfo_AVISequence::GetNextRegisterContentForSalvageRec()
+[SEQ]m2psIfo_AVISequence::SalvageDelete()
+[SEQ]m2psIfo_AVISequence::SalvageDelete Error !
+[SEQ]m2psIfo_AVISequence::Salvage()
+[SEQ]AviIf::GetSalvageType Call !
+[SEQ]AviIf::SalvageRescue Call !
+[SEQ]AviIf::SalvageRescue Error !
+[SEQ]m2psIfo_AVISequence::RegisterContentForSalvageRec()
+[SEQ]m2psIfo_AVISequence::RegisterContentForSalvageRec Error !
+[IFO][I]CheckSalvageStatus
+[IFO]hdmIf::IsNeedSalvage() Call !
+[IFO]Need Salvage !
+[IFO]Not Need Salvage !
+[IFO][O]CheckSalvageStatus: bIsNeedSalvage=%d
+CheckSalvage [mediaId 0:HDD 1:FLASH 2:MS1 3:MS2 4:SSD 5:EXT]
+Check Salvage
+Get Salvage Info
+Need Salvage ?
+Salvage :
+Salvage : ER_OK
+Salvage : ER_CMD_CONFLICT
+GetSalvageOrderInfo :
+GetSalvageOrderInfo : listCount[%x]
+SetSalvageResultInfo :
+SetSalvageResultInfo : RestoreStatus Clear
+- SalvageOrderInfo
+IsNeedSalvageReset :
+IsNeedSalvageReset : ER_SEQUENCE
+IsNeedSalvageReset : NEED Salvage Reset!!
+IsNeedSalvageReset : NO NEED Salvage Reset
+IsNeedSalvageReset : ER_OK
+Recovery : Dcf Re-Load Success
+CheckSalvageStatus : AVCHD already created.
+CheckSalvageStatus : M2PS already created.
+CheckSalvageStatus : MP4 already created.
+CheckSalvageStatus : DCF already created.
+CheckSalvageStatus : XAVC already created.
+CheckSalvageStatus : WAV already created.
+CheckMSId : DFS:GetDeviceInfo Error
+CheckMSId : Backup[%s], Current[%s]
+CheckMSId : MS IDs are same.
+CheckMSId : MS IDs are not same!
+MountCmd : FlashMount->NeedSalvage.PullOutMedia.SameMS
+MountCmd : FlashMount->NeedSalvage.PullOutMedia.DifferentMS
+MountCmd : FlashMount->NeedSalvage
+FlashLoadAvcHd : CreateAndLoad Error
+FlashLoadM2ps : CreateAndLoad Error
+FlashLoadMp4 : CreateAndLoad Error
+FlashLoadDcf : DCF Flash Load Success.
+FlashLoadDcf : CreateAndLoad Error
+FlashLoadDvAvi : CreateAndLoad Error
+FlashLoadXavc : CreateAndLoad Error
+FlashLoadWav : CreateAndLoad Error
+DiscLoadM2ps : CreateAndLoad Error
+DiscLoadMp4 : CreateAndLoad Error
+DiscLoadDcf : DCF Disc Load Success.
+DiscLoadDcf : CreateAndLoad Error
+DiscLoadDvAvi : CreateAndLoad Error
+DiscLoadXavc : CreateAndLoad Error
+DiscLoadWav : CreateAndLoad Error
+DiscLoadAvcHd : CreateAndLoad Error
+LoadExec : ER_INVALID_PARAM
+LoadExec : Flash Load Error
+LoadExec : Cancel
+LoadExec : AVCHD Repair Stutas INVALID
+LoadExec : AVCHD Repair Stutas INCONSISTENCY
+LoadExec : AVCHD Repair Stutas CONSISTENCY
+LoadExec : AVCHD Need Repair
+LoadExec : AVCHD No Need Repair
+LoadForMMgrControl : LoadExec Failed
+AVI GetSalvageOrderInfo Time :
+FirstMountExec : Need 2nd Salvage -> Destroy BackupData(AVCHD)
+FirstMountExec : AVI says 'I need salvage' And AVCHD says 'I need 2nd Salvage'
+FirstMountExec : AVI says 'I No need salvage' And AVCHD says 'I need 2nd Salvage'
+AVCHD CheckSalvageStatus Time :
+M2PS CheckSalvageStatus Time :
+MP4 CheckSalvageStatus Time :
+DCF CheckSalvageStatus Time :
+XAVC CheckSalvageStatus Time :
+WAV CheckSalvageStatus Time :
+SalvageExec :
+SalvageExec : Restructure AVCHD Success.
+SalvageExec : Restructure AVCHD Failed.
+SalvageExec : Salvage AVCHD Success.
+SalvageExec : Salvage AVCHD Success(Need thumbnail or Need repair).
+SalvageExec : Salvage AVCHD Failed.
+SalvageExec : Salvage M2PS Success.
+SalvageExec : Salvage M2PS Success(Need thumbnail or Need repair).
+SalvageExec : Salvage M2PS Failed.
+SalvageExec : Salvage MP4 Success.
+SalvageExec : Salvage MP4 Success(Need thumbnail or Need repair).
+SalvageExec : Salvage MP4 Failed.
+SalvageExec : Salvage DCF Success.
+SalvageExec : Salvage DCF Success(Need thumbnail or Need repair).
+SalvageExec : Salvage DCF Failed.
+SalvageExec : Salvage XAVC Success.
+SalvageExec : Salvage XAVC Success(Need thumbnail or Need repair).
+SalvageExec : Salvage XAVC Failed.
+SalvageExec : Salvage WAV Success.
+SalvageExec : Salvage WAV Success(Need thumbnail or Need repair).
+SalvageExec : Salvage WAV Failed.
+SalvageCmd : MS no exist. Error: NO_MEDIUM.
+SalvageExec : Salvage Completed
+SalvageCmd : AVI DetachForSalvage Failed
+SalvageCmd : Salvage FS Failed
+SalvageCmd : Salvage FS OK
+SalvageCmd : FS No need salvage
+SalvageCmd : Salvage Completed
+PowerOffExec : Need Salvage/Salvage reset
+SalvageExec
+SalvageCmd
+[AVIMMGR][HDD]
+[AVIMMGR][MS1]
+[AVIMMGR][MS2]
+[AVIMMGR][SSD]
+[AVIMMGR][FLASH]
+[AVIMMGR][NAND]
+[AVIMMGR][USB]
+[AVIMMGR]
+NeedSalvage             :
+needSalvage      = [%x]
+Need Reset for Salvage
+No need Reset for Salvage
+Salvage Error = [%s]
+MMgrCtrlState::IsNeedSalvage() : isNeedSalvage [%x]
+mp4Ifo_General::CheckSalvageStatus IN
+mp4Ifo_General::CheckSalvageStatus OUT
+*pbIsNeedSalvage   :
+mp4Ifo_AVISequence::GetSalvageInfo OUT
+AVI SalvageType   = RECOVERY_SALVAGE_TYPE_NONE
+AVI SalvageType   = RECOVERY_SALVAGE_TYPE_REC
+AVI SalvageType   = RECOVERY_SALVAGE_TYPE_DELETE_ORG
+AVI SalvageType   = RECOVERY_SALVAGE_TYPE_DIVIDE_ORG
+mp4Ifo_AVISequence::SalvageDelete Call AviIf::PrepareDeleteMp4Content
+mp4Ifo_AVISequence::SalvageDubbing Call AviIf::PrepareDubbingSalvage
+AVI bIsNeedDubbingSalvage = true
+AVI bIsNeedDubbingSalvage = false
+mp4Ifo_AVISequence::SalvageRec Call AviIf::PrepareRegisterMp4Content
+mp4Ifo_AVISequence::Salvage Call AviIf::GetSalvageType
+AVI SalvageType   = RECOVERY_SALVAGE_TYPE_DUBBING
+AVI SalvageType   = RECOVERY_SALVAGE_TYPE_OTHER
+IsNeedSalvageReset : bReset =
+MprIf::IsNeedSalvageReset() Done
+Salvage      msm set salvage <flag>      :[1:need,  0:no_need]
+SalvageReset msm set salvagereset <flag>:[1:set,  0:clear]
+[StillCache]
+StillCacheRead::StartRead
+Y"0(::IsNeedSalvage (
+wavIfo_AVISequence::SalvageRec IN
+wavIfo_AVISequence::SalvageRec Call AviIf::PrepareRegisterWavContent
+wavIfo_AVISequence::SalvageRec OUT
+wavIfo_AVISequence::SalvageDelete IN
+wavIfo_AVISequence::SalvageDelete Call AviIf::PrepareDeleteWavContent
+wavIfo_AVISequence::Salvage Call AviIf::GetSalvageType
+_ZN9DmmAccess16mb_useStillCacheE
+[GetStillCacheReleaseType] Call
+GetStillCacheReleaseType() : type = %x
+mb_useStillCache : %d
+N11DefRootView29ActionSetPreStableViewSalvageE
+N11DefRootView18CheckerNeedSalvageE
+N11DefRootView17ActionOpenSalvageE
+viewSalvageRestore.so
+[IMPR]mb_useStillCache : 1
+_ZN5MprIf7SalvageEmmmm
+_ZN5MprIf7SalvageEmmm
+_ZN9MprIfMcmd7SalvageElPPc
+_ZN9MprIfMcmd18IsNeedSalvageResetElPPc
+a FeaSalvage Init...

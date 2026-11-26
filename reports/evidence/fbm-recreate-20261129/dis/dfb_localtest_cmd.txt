@@ -1,0 +1,69 @@
+002af35a: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+002af35e: 0546       mov      r5, r0                        
+002af360: 1e78       ldrb     r6, [r3]                      
+002af362: 00af       add      r7, sp, #0                    
+002af364: 0c46       mov      r4, r1                        
+002af366: 2eb9       cbnz     r6, #0x2af374                 
+002af368: 2848       ldr      r0, [pc, #0xa0]                 ; [002af40c]=007e0159 "[DFB]cannot use DVDFlashBackupService <<"
+002af36a: fcf72ffa   bl       #0x2ab7cc                     
+002af36e: 3046       mov      r0, r6                        
+002af370: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+002af374: 2648       ldr      r0, [pc, #0x98]                 ; [002af410]=0090f1e1
+002af376: a046       mov      r8, r4                        
+002af378: fcf74afc   bl       #0x2abc10                     
+002af37c: 0026       movs     r6, #0                        
+002af37e: 05e0       b        #0x2af38c                     
+002af380: 2448       ldr      r0, [pc, #0x90]                 ; [002af414]=009407c1
+002af382: 0136       adds     r6, #1                        
+002af384: 58f8041b   ldr      r1, [r8], #4                  
+002af388: fcf742fc   bl       #0x2abc10                     
+002af38c: ae42       cmp      r6, r5                        
+002af38e: f7db       blt      #0x2af380                     
+002af390: 1f48       ldr      r0, [pc, #0x7c]                 ; [002af410]=0090f1e1
+002af392: fcf73dfc   bl       #0x2abc10                     
+002af396: 012d       cmp      r5, #1                        
+002af398: 32dd       ble      #0x2af400                     
+002af39a: 6068       ldr      r0, [r4, #4]                  
+002af39c: 50f367fd   bl       #0x5ffe6e                     
+002af3a0: 04f10801   add.w    r1, r4, #8                    
+002af3a4: 0346       mov      r3, r0                        
+002af3a6: a81e       subs     r0, r5, #2                    
+002af3a8: 5a1e       subs     r2, r3, #1                    
+002af3aa: 082a       cmp      r2, #8                        
+002af3ac: 21d8       bhi      #0x2af3f2                     
+002af3ae: dfe802f0   tbb      [pc, r2]                      
+002af3b2: 0508       lsrs     r5, r0, #0x20                 
+002af3b4: 0b0e       lsrs     r3, r1, #0x18                 
+002af3b6: 1114       asrs     r1, r2, #0x10                 
+002af3b8: 171a       subs     r7, r2, r0                    
+002af3ba: 1d00       movs     r5, r3                        
+002af3bc: fff704fc   bl       #0x2aebc8                     
+002af3c0: 1be0       b        #0x2af3fa                     
+002af3c2: fff7e9fe   bl       #0x2af198                     
+002af3c6: 18e0       b        #0x2af3fa                     
+002af3c8: fef7aefa   bl       #0x2ad928                     
+002af3cc: 15e0       b        #0x2af3fa                     
+002af3ce: fef7a5fb   bl       #0x2adb1c                     
+002af3d2: 12e0       b        #0x2af3fa                     
+002af3d4: fef7d2fc   bl       #0x2add7c                     
+002af3d8: 0fe0       b        #0x2af3fa                     
+002af3da: fef7b7fe   bl       #0x2ae14c                     
+002af3de: 0ce0       b        #0x2af3fa                     
+002af3e0: fff73ef8   bl       #0x2ae460                     
+002af3e4: 09e0       b        #0x2af3fa                     
+002af3e6: fff79ff8   bl       #0x2ae528                     
+002af3ea: 06e0       b        #0x2af3fa                     
+002af3ec: fff7acf8   bl       #0x2ae548                     
+002af3f0: 03e0       b        #0x2af3fa                     
+002af3f2: 0948       ldr      r0, [pc, #0x24]                 ; [002af418]=007e3636 "not found cmd[%d]"
+002af3f4: 1946       mov      r1, r3                        
+002af3f6: fcf7e9f9   bl       #0x2ab7cc                     
+002af3fa: 0120       movs     r0, #1                        
+002af3fc: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+002af400: 0120       movs     r0, #1                        
+002af402: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+002af406: 00bf       nop                                    
+002af408: 4c48       ldr      r0, [pc, #0x130]                ; [002af53c]=fc30f7fc
+002af40a: 9e00       lsls     r6, r3, #2                    
+002af40c: 5901       lsls     r1, r3, #5                    
+002af40e: 7e00       lsls     r6, r7, #1                    

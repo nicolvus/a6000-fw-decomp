@@ -1,0 +1,17 @@
+== CreateSector32 -> 0 (éxito), handle 3, sector 0x31 ==
+   llamadas      : FBM::Init · CreateSector32(fileType=0x31, flag=0x0, p2=0x7ffffff0, p3=0x7ffffff4)
+   PC final      : 0x7126ea (vuelve a 0x7126EA)
+   idx10         : sector=0x0031 handle=0x00000003 valido=1 om=6 b10=0x0
+   otras entradas tocadas: NINGUNA
+== CreateSector32 -> 0x7 (FBS_INVALID_PROCESS) ==
+   llamadas      : FBM::Init · CreateSector32(fileType=0x31, flag=0x0, p2=0x7ffffff0, p3=0x7ffffff4)
+   PC final      : 0x7126ea (vuelve a 0x7126EA)
+   idx10         : sector=0x0000 handle=0x00000000 valido=0 om=0 b10=0x0
+   otras entradas tocadas: NINGUNA
+== CreateSector32 -> 0, handle 0x55 (no debe hardcodear 3) ==
+   llamadas      : FBM::Init · CreateSector32(fileType=0x31, flag=0x0, p2=0x7ffffff0, p3=0x7ffffff4)
+   PC final      : 0x7126ea (vuelve a 0x7126EA)
+   idx10         : sector=0x0031 handle=0x00000055 valido=1 om=6 b10=0x0
+   otras entradas tocadas: NINGUNA
+
+VEREDICTO: OK

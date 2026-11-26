@@ -1,0 +1,151 @@
+# 09 — 0x3502CA -> 0x3502B8 -> 0x350124: OR del codigo con [objeto+0x24] (base de modulo)
+003502b8  0346       mov      r3, r0                         ; .text      
+003502ba  0846       mov      r0, r1                         ; .text      
+003502bc  80b5       push     {r7, lr}                       ; .text      
+003502be  00af       add      r7, sp, #0                     ; .text      
+003502c0  596a       ldr      r1, [r3, #0x24]                ; .text      
+003502c2  bde88040   pop.w    {r7, lr}                       ; .text      
+003502c6  fff72dbf   b.w      #0x350124                      ; .text      
+003502ca  80b5       push     {r7, lr}                       ; .text      
+003502cc  00af       add      r7, sp, #0                     ; .text      
+003502ce  bde88040   pop.w    {r7, lr}                       ; .text      
+
+00350124  f0b5       push     {r4, r5, r6, r7, lr}           ; .text      
+00350126  00af       add      r7, sp, #0                     ; .text      
+00350128  0028       cmp      r0, #0                         ; .text      
+0035012a  00f08a80   beq.w    #0x350242                      ; .text      
+0035012e  454b       ldr      r3, [pc, #0x114]               ; .text      [00350244]=c1000005
+00350130  9842       cmp      r0, r3                         ; .text      
+00350132  1fd8       bhi      #0x350174                      ; .text      
+00350134  013b       subs     r3, #1                         ; .text      
+00350136  9842       cmp      r0, r3                         ; .text      
+00350138  50d2       bhs      #0x3501dc                      ; .text      
+0035013a  434b       ldr      r3, [pc, #0x10c]               ; .text      [00350248]=0ef0000e
+0035013c  9842       cmp      r0, r3                         ; .text      
+0035013e  47d0       beq      #0x3501d0                      ; .text      
+00350140  0cd8       bhi      #0x35015c                      ; .text      
+00350142  424b       ldr      r3, [pc, #0x108]               ; .text      [0035024c]=0e400002
+00350144  9842       cmp      r0, r3                         ; .text      
+00350146  76d0       beq      #0x350236                      ; .text      
+00350148  01d8       bhi      #0x35014e                      ; .text      
+0035014a  414b       ldr      r3, [pc, #0x104]               ; .text      [00350250]=0e200001
+0035014c  30e0       b        #0x3501b0                      ; .text      
+0035014e  414b       ldr      r3, [pc, #0x104]               ; .text      [00350254]=0e800006
+00350150  9842       cmp      r0, r3                         ; .text      
+00350152  3bd0       beq      #0x3501cc                      ; .text      
+00350154  0133       adds     r3, #1                         ; .text      
+00350156  9842       cmp      r0, r3                         ; .text      
+00350158  42d1       bne      #0x3501e0                      ; .text      
+0035015a  35e0       b        #0x3501c8                      ; .text      
+0035015c  3e4b       ldr      r3, [pc, #0xf8]                ; .text      [00350258]=48400002
+0035015e  9842       cmp      r0, r3                         ; .text      
+00350160  36d0       beq      #0x3501d0                      ; .text      
+00350162  94bf       ite      ls                             ; .text      
+00350164  3d4b       ldr      r3, [pc, #0xf4]                ; .text      [0035025c]=0ef0000f
+00350166  3e4b       ldr      r3, [pc, #0xf8]                ; .text      [00350260]=48400003
+00350168  9842       cmp      r0, r3                         ; .text      
+0035016a  33d0       beq      #0x3501d4                      ; .text      
+0035016c  0133       adds     r3, #1                         ; .text      
+0035016e  9842       cmp      r0, r3                         ; .text      
+00350170  36d1       bne      #0x3501e0                      ; .text      
+00350172  31e0       b        #0x3501d8                      ; .text      
+00350174  3b4b       ldr      r3, [pc, #0xec]                ; .text      [00350264]=c1000203
+00350176  9842       cmp      r0, r3                         ; .text      
+00350178  2cd0       beq      #0x3501d4                      ; .text      
+0035017a  11d8       bhi      #0x3501a0                      ; .text      
+0035017c  3a4b       ldr      r3, [pc, #0xe8]                ; .text      [00350268]=c1000103
+0035017e  9842       cmp      r0, r3                         ; .text      
+00350180  22d0       beq      #0x3501c8                      ; .text      
+00350182  06d8       bhi      #0x350192                      ; .text      
+00350184  023b       subs     r3, #2                         ; .text      
+00350186  9842       cmp      r0, r3                         ; .text      
+00350188  1cd0       beq      #0x3501c4                      ; .text      
+0035018a  0133       adds     r3, #1                         ; .text      
+0035018c  9842       cmp      r0, r3                         ; .text      
+0035018e  27d1       bne      #0x3501e0                      ; .text      
+00350190  51e0       b        #0x350236                      ; .text      
+00350192  364b       ldr      r3, [pc, #0xd8]                ; .text      [0035026c]=c1000104
+00350194  9842       cmp      r0, r3                         ; .text      
+00350196  19d0       beq      #0x3501cc                      ; .text      
+00350198  fe33       adds     r3, #0xfe                      ; .text      
+0035019a  9842       cmp      r0, r3                         ; .text      
+0035019c  20d1       bne      #0x3501e0                      ; .text      
+0035019e  17e0       b        #0x3501d0                      ; .text      
+003501a0  334b       ldr      r3, [pc, #0xcc]                ; .text      [00350270]=f6810003
+003501a2  9842       cmp      r0, r3                         ; .text      
+003501a4  47d0       beq      #0x350236                      ; .text      
+003501a6  06d8       bhi      #0x3501b6                      ; .text      
+003501a8  324b       ldr      r3, [pc, #0xc8]                ; .text      [00350274]=c1000204
+003501aa  9842       cmp      r0, r3                         ; .text      
+003501ac  14d0       beq      #0x3501d8                      ; .text      
+003501ae  324b       ldr      r3, [pc, #0xc8]                ; .text      [00350278]=f6810002
+003501b0  9842       cmp      r0, r3                         ; .text      
+003501b2  15d1       bne      #0x3501e0                      ; .text      
+003501b4  06e0       b        #0x3501c4                      ; .text      
+003501b6  314b       ldr      r3, [pc, #0xc4]                ; .text      [0035027c]=f6810004
+003501b8  9842       cmp      r0, r3                         ; .text      
+003501ba  05d0       beq      #0x3501c8                      ; .text      
+003501bc  0133       adds     r3, #1                         ; .text      
+003501be  9842       cmp      r0, r3                         ; .text      
+003501c0  0ed1       bne      #0x3501e0                      ; .text      
+003501c2  03e0       b        #0x3501cc                      ; .text      
+003501c4  2e48       ldr      r0, [pc, #0xb8]                ; .text      [00350280]=00200002
+003501c6  3be0       b        #0x350240                      ; .text      
+003501c8  2e48       ldr      r0, [pc, #0xb8]                ; .text      [00350284]=00500002
+003501ca  39e0       b        #0x350240                      ; .text      
+003501cc  2e48       ldr      r0, [pc, #0xb8]                ; .text      [00350288]=00800009
+003501ce  37e0       b        #0x350240                      ; .text      
+003501d0  2e48       ldr      r0, [pc, #0xb8]                ; .text      [0035028c]=00400006
+003501d2  35e0       b        #0x350240                      ; .text      
+003501d4  2e48       ldr      r0, [pc, #0xb8]                ; .text      [00350290]=00400007
+003501d6  33e0       b        #0x350240                      ; .text      
+003501d8  2e48       ldr      r0, [pc, #0xb8]                ; .text      [00350294]=00400005
+003501da  31e0       b        #0x350240                      ; .text      
+003501dc  2e48       ldr      r0, [pc, #0xb8]                ; .text      [00350298]=00f1003a
+003501de  2fe0       b        #0x350240                      ; .text      
+003501e0  4ff07f42   mov.w    r2, #-0x1000000                ; .text      
+003501e4  0023       movs     r3, #0                         ; .text      
+003501e6  0025       movs     r5, #0                         ; .text      
+003501e8  0240       ands     r2, r0                         ; .text      
+003501ea  4ff06064   mov.w    r4, #0xe000000                 ; .text      
+003501ee  5d40       eors     r5, r3                         ; .text      
+003501f0  5440       eors     r4, r2                         ; .text      
+003501f2  54ea0506   orrs.w   r6, r4, r5                     ; .text      
+003501f6  03d0       beq      #0x350200                      ; .text      
+003501f8  284c       ldr      r4, [pc, #0xa0]                ; .text      [0035029c]=48f00001
+003501fa  a042       cmp      r0, r4                         ; .text      
+003501fc  08d1       bne      #0x350210                      ; .text      
+003501fe  1ce0       b        #0x35023a                      ; .text      
+00350200  274b       ldr      r3, [pc, #0x9c]                ; .text      [003502a0]=00f30001
+00350202  284a       ldr      r2, [pc, #0xa0]                ; .text      [003502a4]=00400001
+00350204  284c       ldr      r4, [pc, #0xa0]                ; .text      [003502a8]=0ef30001
+00350206  a042       cmp      r0, r4                         ; .text      
+00350208  14bf       ite      ne                             ; .text      
+0035020a  1046       mov      r0, r2                         ; .text      
+0035020c  1846       mov      r0, r3                         ; .text      
+0035020e  17e0       b        #0x350240                      ; .text      
+00350210  0025       movs     r5, #0                         ; .text      
+00350212  4ff08054   mov.w    r4, #0x10000000                ; .text      
+00350216  5440       eors     r4, r2                         ; .text      
+00350218  5d40       eors     r5, r3                         ; .text      
+0035021a  54ea0506   orrs.w   r6, r4, r5                     ; .text      
+0035021e  0ed0       beq      #0x35023e                      ; .text      
+00350220  4ff04144   mov.w    r4, #-0x3f000000               ; .text      
+00350224  0025       movs     r5, #0                         ; .text      
+00350226  6b40       eors     r3, r5                         ; .text      
+00350228  6240       eors     r2, r4                         ; .text      
+0035022a  52ea0304   orrs.w   r4, r2, r3                     ; .text      
+0035022e  1f4b       ldr      r3, [pc, #0x7c]                ; .text      [003502ac]=00800008
+00350230  08bf       it       eq                             ; .text      
+00350232  1846       mov      r0, r3                         ; .text      
+00350234  04e0       b        #0x350240                      ; .text      
+00350236  1e48       ldr      r0, [pc, #0x78]                ; .text      [003502b0]=00400002
+00350238  02e0       b        #0x350240                      ; .text      
+0035023a  1a48       ldr      r0, [pc, #0x68]                ; .text      [003502a4]=00400001
+0035023c  00e0       b        #0x350240                      ; .text      
+0035023e  1d48       ldr      r0, [pc, #0x74]                ; .text      [003502b4]=00100001
+00350240  0843       orrs     r0, r1                         ; .text      
+00350242  f0bd       pop      {r4, r5, r6, r7, pc}           ; .text      
+00350244  0500       movs     r5, r0                         ; .text      
+00350246  00c1     .hword   0xc100
+00350248  0e00       movs     r6, r1                         ; .text      

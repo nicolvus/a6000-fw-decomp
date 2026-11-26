@@ -27,13 +27,16 @@ PROHIBIDAS = ((0x43D620D9, 0x43FA8F00), (0x43FAF28C, 0x43FB9000))   # zona viva 
 # arnés). Film e ISO van a la cola del hueco G18 (G109): PP llena 0x43faf290…0x43fb7981 y Silent usa 0x43fb7e00…+0x6a; de 0x43fb7e80 a 0x43fb8ee0
 # no hay referencias (huecos.py) ni bytes vivos distintos de cero → caben junto con PP.
 ZONA_G18 = (0x43FB7E80, 0x43FB8EE0)
+# G116: la cueva y las tablas de la LUT salen de ZONA_A/ZONA_B (T1/BOKS, G107). Sin tablas en el `.dat`, el ajuste LUT es solo SD:
+# su cueva, la de la máquina y sus celdas caben en la cola libre de G18, detrás de la curva T (`lut_t.ZONA_T18` acaba en 0x43FB8800).
+ZONA_L18 = (0x43FB8800, 0x43FB8EE0)
 CURVE, STRIDE_BUF = 0x101A, 0x101A
 TAB_PTR, SEL, SLOG3_COLA = 0x44001404, 0x43CB56E6, None
 HOOK_HLG = (0x43853ECE, bytes.fromhex("93f8ca37"))   # ldrb.w r3,[r3,#0x7ca] en la selección de gamma 0x43853ec0 (primer uso de la gamma de PP)
 V0 = 12237                                            # 16·(64 + 876·0,8): rodilla de HLG en unidades de 1/16 de código
 MUL = {1: round((H.NIVEL[1] - .8) / .2 * 256), 2: round((H.NIVEL[2] - .8) / .2 * 256), 3: 256}
 PERM, TAM = 0x43BEF2AC, 0x654
-LUT_CODE, LUT_TABLAS, LUT_BYTES = ZONA_A[0] + 0x400, ZONA_B[0], 1064
+LUT_CODE, LUT_BYTES = ZONA_L18[0], 1064
 HLG_CELDA, LUT_CELDA = ZONA_A[0], LUT_CODE
 
 
@@ -192,68 +195,22 @@ def empaqueta_21(tabla: bytes, perm: list[int]) -> bytes:
     return bits.to_bytes(LUT_BYTES, "little")
 
 
-def lut_unpack_asm(celda: int, tablas: int) -> str:
-    c = lambda r, v: f"movw {r}, #{v & 0xFFFF:#x}\n movt {r}, #{v >> 16:#x}\n"
-    return f"""
-    push {{r4-r8, lr}}
-    mov r4, r0
-    {c('r5', celda)}
-    ldr r6, [r5]
-    cmp r6, #0
-    bne.w tengo
-    movw r0, #{TAM:#x}
-    {c('r1', MALLOC | 1)}
-    blx r1
-    cmp r0, #0
-    beq.w fallo
-    str r0, [r5]
-    mov r6, r0
-tengo:
-    subs r4, r4, #1
-    movw r1, #{LUT_BYTES}
-    mul r4, r4, r1
-    {c('r1', tablas)}
-    adds r4, r4, r1
-    {c('r7', PERM)}
-    movs r5, #0
-    movs r3, #0
-bucle:
-    lsrs r0, r5, #3
-    adds r0, r4, r0
-    ldrb r1, [r0]
-    ldrb r2, [r0, #1]
-    orr.w r1, r1, r2, lsl #8
-    ldrb r2, [r0, #2]
-    orr.w r1, r1, r2, lsl #16
-    ldrb r2, [r0, #3]
-    orr.w r1, r1, r2, lsl #24
-    and r2, r5, #7
-    lsrs r1, r1, r2
-    and r2, r1, #0x7f
-    ubfx r0, r1, #7, #7
-    orr.w r2, r2, r0, lsl #8
-    ubfx r0, r1, #14, #7
-    orr.w r2, r2, r0, lsl #16
-    ldrh.w r0, [r7, r3, lsl #1]
-    str.w r2, [r6, r0, lsl #2]
-    adds r5, #21
-    adds r3, #1
-    movw r1, #405
-    cmp r3, r1
-    blo.w bucle
-    mov r0, r6
-    pop {{r4-r8, pc}}
-fallo:
-    movs r0, #0
-    pop {{r4-r8, pc}}
-"""
+def desempaqueta_21(tabla: bytes, perm: list[int]) -> bytes:
+    """Inversa de `empaqueta_21`: 405 × 21 bits → los 0x654 B del ISP en el orden de hardware `perm` (para comparar con la salida emulada)."""
+    bits = int.from_bytes(tabla, "little")
+    out = bytearray(TAM)
+    for i in range(405):
+        w = bits >> (21 * i) & 0x1FFFFF
+        struct.pack_into("<I", out, 4 * perm[i], (w >> 14) << 16 | (w >> 7 & 127) << 8 | (w & 127))
+    return bytes(out)
+
 
 BK_ID, BK_TAM, BK_MAGIC, SD_RANURAS = 0x150005, 16384, 0x5354554C, 6
 
 
-def lut_unpack_sd_asm(celda: int, tablas: int) -> str:
-    """Como `lut_unpack_asm` pero la tabla k sale del blob de Backup (id `BK_ID`, escrito por el userland desde la SD, G89) si su ranura es válida; si no, de las 3 tablas del `.dat` (k ≤ 3) o 0 (fábrica).
-    Celda de 8 B: [+0] búfer del ISP (0x654 B), [+4] búfer de lectura del blob (16 KB, una sola reserva); si falta memoria para el blob se usa el `.dat`."""
+def lut_unpack_sd_asm(celda: int) -> str:
+    """La tabla k sale del blob de Backup (id `BK_ID`, escrito por el userland desde la SD, G89) si su ranura es válida; si no, 0 (fábrica).
+    Celda de 8 B: [+0] búfer del ISP (0x654 B), [+4] búfer de lectura del blob (16 KB, una sola reserva). G116: sin tablas en el `.dat`."""
     c = lambda r, v: f"movw {r}, #{v & 0xFFFF:#x}\n movt {r}, #{v >> 16:#x}\n"
     return f"""
     push {{r4-r8, lr}}
@@ -301,13 +258,7 @@ leer:
     adds r4, #16
     b.w convierte
 sin_blob:
-    subs r4, r4, #1
-    cmp r4, #3
-    bhs.w fallo
-    movw r1, #{LUT_BYTES}
-    mul r4, r4, r1
-    {c('r1', tablas)}
-    adds r4, r4, r1
+    b.w fallo
 convierte:
     {c('r7', PERM)}
     movs r5, #0
@@ -370,11 +321,12 @@ def hlg_parches(a6300: bytes, tab_a6300: int, slog3: int) -> list[tuple[int, byt
     return [(a, bytes(datos) + cueva, "dato cueva HLG (zona A)"), (HOOK_HLG[0], bl(HOOK_HLG[0], code), "gancho HLG init")]
 
 
-def lut_codigo(ajuste, hooks, sd: bool = False) -> tuple[list[tuple[int, bytes]], list[int]]:
-    """(escrituras (va, bytes) de la cueva de la LUT, entradas f0/f1). `hooks` = (va, original, registro destino, registros a guardar) de `lut_patch`. `sd`: tablas desde el Backup (G89, celda de 8 B)."""
-    ini = LUT_CODE + (8 if sd else 4)
+def lut_codigo(ajuste, hooks) -> tuple[list[tuple[int, bytes]], list[int]]:
+    """(escrituras (va, bytes) de la cueva de la LUT, entradas f0/f1). `hooks` = (va, original, registro destino, registros a guardar) de `lut_patch`.
+    G116: la tabla sale siempre del blob de la SD (G89); sin blob, la cueva devuelve 0 y el gancho deja el puntero de fábrica."""
+    ini = LUT_CODE + 8
     a, out = ini, []
-    unp = _ens((lut_unpack_sd_asm if sd else lut_unpack_asm)(LUT_CELDA, LUT_TABLAS), a)
+    unp = _ens(lut_unpack_sd_asm(LUT_CELDA), a)
     out.append((a, unp))
     a = (a + len(unp) + 3) & ~3
     entradas = []
@@ -400,7 +352,7 @@ o{k}:
         out.append((a, c))
         entradas.append(a)
         a = (a + len(c) + 3) & ~3
-    assert a <= ZONA_A[1], hex(a)
+    assert a <= ZONA_L18[1], hex(a)
     return out, entradas
 
 
@@ -438,7 +390,7 @@ sal:
     .align 2
 """
     c = _ens(src, a)
-    assert a + len(c) <= ZONA_A[1], hex(a + len(c))
+    assert a + len(c) <= ZONA_L18[1], hex(a + len(c))
     return [(celda, bytes(4)), (a, c)], a
 
 

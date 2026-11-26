@@ -1,0 +1,62 @@
+002b43f0: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+002b43f4: 9ab0       sub      sp, #0x68                     
+002b43f6: 02af       add      r7, sp, #8                    
+002b43f8: 0646       mov      r6, r0                        
+002b43fa: 0d46       mov      r5, r1                        
+002b43fc: fdf7defc   bl       #0x2b1dbc                     
+002b4400: 18b1       cbz      r0, #0x2b440a                 
+002b4402: 07f15000   add.w    r0, r7, #0x50                 
+002b4406: 4bf377fa   bl       #0x5ff8f8                     
+002b440a: 3146       mov      r1, r6                        
+002b440c: 2a46       mov      r2, r5                        
+002b440e: 5448       ldr      r0, [pc, #0x150]                ; [002b4560]=007e7bee "[FBM] BackupMgr::InitBackupData(operatio"
+002b4410: 00f036fe   bl       #0x2b5080                     
+002b4414: 5348       ldr      r0, [pc, #0x14c]                ; [002b4564]=007e7c2e "InitBackupData"
+002b4416: fdf727fd   bl       #0x2b1e68                     
+002b441a: 69f684ea   blx      #0x11d924                       ; _ZN8FlashLib14InvalidateSyncEv
+002b441e: 3046       mov      r0, r6                        
+002b4420: fdf7d4fc   bl       #0x2b1dcc                     
+002b4424: 0128       cmp      r0, #1                        
+002b4426: 8046       mov      r8, r0                        
+002b4428: 08d0       beq      #0x2b443c                     
+002b442a: 4f4b       ldr      r3, [pc, #0x13c]                ; [002b4568]=00a36974
+002b442c: 012d       cmp      r5, #1                        
+002b442e: 1e60       str      r6, [r3]                      
+002b4430: 4e4b       ldr      r3, [pc, #0x138]                ; [002b456c]=00a36c0c
+002b4432: 1d60       str      r5, [r3]                      
+002b4434: 06d1       bne      #0x2b4444                     
+002b4436: 4e4b       ldr      r3, [pc, #0x138]                ; [002b4570]=00a36c08
+002b4438: 1e60       str      r6, [r3]                      
+002b443a: 03e0       b        #0x2b4444                     
+002b443c: 4d4b       ldr      r3, [pc, #0x134]                ; [002b4574]=00a36970
+002b443e: 1e60       str      r6, [r3]                      
+002b4440: 4d4b       ldr      r3, [pc, #0x134]                ; [002b4578]=00a36c18
+002b4442: 1d60       str      r5, [r3]                      
+002b4444: 3046       mov      r0, r6                        
+002b4446: 2946       mov      r1, r5                        
+002b4448: fff7f2fd   bl       #0x2b4030                     
+002b444c: 0446       mov      r4, r0                        
+002b444e: 60b1       cbz      r0, #0x2b446a                 
+002b4450: b8f1010f   cmp.w    r8, #1                        
+002b4454: 4ff00003   mov.w    r3, #0                        
+002b4458: 05d0       beq      #0x2b4466                     
+002b445a: 434a       ldr      r2, [pc, #0x10c]                ; [002b4568]=00a36974
+002b445c: 012d       cmp      r5, #1                        
+002b445e: 1360       str      r3, [r2]                      
+002b4460: 03d1       bne      #0x2b446a                     
+002b4462: 434a       ldr      r2, [pc, #0x10c]                ; [002b4570]=00a36c08
+002b4464: 00e0       b        #0x2b4468                     
+002b4466: 434a       ldr      r2, [pc, #0x10c]                ; [002b4574]=00a36970
+002b4468: 1360       str      r3, [r2]                      
+002b446a: fdf7a7fc   bl       #0x2b1dbc                     
+002b446e: 78b1       cbz      r0, #0x2b4490                 
+002b4470: 07f15000   add.w    r0, r7, #0x50                 
+002b4474: 4ff00108   mov.w    r8, #1                        
+002b4478: 4bf360fa   bl       #0x5ff93c                     
+002b447c: 07f15000   add.w    r0, r7, #0x50                 
+002b4480: 0221       movs     r1, #2                        
+002b4482: 4bf371fa   bl       #0x5ff968                     
+002b4486: 40f23933   movw     r3, #0x339                    
+002b448a: 7b60       str      r3, [r7, #4]                  
+002b448c: 3860       str      r0, [r7]                      
+002b448e: 00e0       b        #0x2b4492                     

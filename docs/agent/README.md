@@ -1,10 +1,12 @@
 # Uso del agente (Claude Code, Codex/ChatGPT y DeepSeek Harness)
 
 Este repositorio es la fuente de reglas y skills para cualquier agente que trabaje en la
-investigación. Las reglas **nuevas sobre el orden del repo** se publican primero en
-[`a6000-handoff-context`](https://github.com/nicolvus/a6000-handoff-context) (privado) y se traen
-con `scripts/agent/sync_rules.sh`; si GitHub y la copia local difieren, manda GitHub. Nada de configuración vive solo en la máquina de un
-agente: si algo no está aquí, no es reproducible.
+investigación. `ORDEN.md` manda en todo lo relativo al orden del repo; el repositorio privado
+[`a6000-handoff-context`](https://github.com/nicolvus/a6000-handoff-context) guarda una **copia de
+lectura** en `estado/ORDEN.md` y `estado/ORDER.md` para los agentes que no tienen este repo a mano
+(`ORDEN.md` §12), y se trae con `scripts/agent/sync_rules.sh`: si difieren, manda `ORDEN.md` y la
+copia se actualiza en el mismo cambio. Nada de configuración vive solo en la máquina de un agente:
+si algo no está aquí, no es reproducible.
 
 ## Quién lee qué
 
@@ -27,8 +29,9 @@ falla si se separan: editar siempre `.claude/skills/<name>/SKILL.md` y copiar.
 
 ## Arranque de una sesión
 
-0. `bash scripts/agent/sync_rules.sh` — reglas vigentes desde `a6000-handoff-context`
-   (privado, requiere `gh auth switch -u nicolvus`). Lista qué difiere de la copia local.
+0. `bash scripts/agent/sync_rules.sh` — trae la copia de lectura de las reglas desde
+   `a6000-handoff-context` (privado, requiere `gh auth switch -u nicolvus`) y lista qué difiere de
+   este repo. Manda `ORDEN.md` (`§12`).
 1. Leer `knowledge/CURRENT.md` (resumen operativo), luego los pendientes relevantes de `docs/PENDIENTES.md` y solo los
    informes necesarios (por tema: `docs/INDEX.md`). `knowledge/PROGRESS.md` solo para el detalle histórico.
 2. Comprobar entorno: `python scripts/agent/check_env.py` (con `--json` para agentes).

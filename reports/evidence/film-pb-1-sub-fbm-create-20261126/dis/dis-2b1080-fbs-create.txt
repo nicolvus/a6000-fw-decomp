@@ -1,0 +1,76 @@
+002b1080: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+002b1084: 82b0       sub      sp, #8                        
+002b1086: 02af       add      r7, sp, #8                    
+002b1088: 0446       mov      r4, r0                        
+002b108a: 0120       movs     r0, #1                        
+002b108c: 1d46       mov      r5, r3                        
+002b108e: 8846       mov      r8, r1                        
+002b1090: 1646       mov      r6, r2                        
+002b1092: f6f715f8   bl       #0x2a70c0                     
+002b1096: bb69       ldr      r3, [r7, #0x18]               
+002b1098: 4146       mov      r1, r8                        
+002b109a: 3246       mov      r2, r6                        
+002b109c: 2046       mov      r0, r4                        
+002b109e: 0093       str      r3, [sp]                      
+002b10a0: fb69       ldr      r3, [r7, #0x1c]               
+002b10a2: 0193       str      r3, [sp, #4]                  
+002b10a4: 2b46       mov      r3, r5                        
+002b10a6: f7f753fb   bl       #0x2a8750                     
+002b10aa: 0446       mov      r4, r0                        
+002b10ac: 0120       movs     r0, #1                        
+002b10ae: f6f717f8   bl       #0x2a70e0                     
+002b10b2: 2046       mov      r0, r4                        
+002b10b4: bd46       mov      sp, r7                        
+002b10b6: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+002b10ba: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+002b10be: 0446       mov      r4, r0                        
+002b10c0: 00af       add      r7, sp, #0                    
+002b10c2: 8846       mov      r8, r1                        
+002b10c4: 1646       mov      r6, r2                        
+002b10c6: 1d46       mov      r5, r3                        
+002b10c8: 0120       movs     r0, #1                        
+002b10ca: f5f7f9ff   bl       #0x2a70c0                     
+002b10ce: 4146       mov      r1, r8                        
+002b10d0: 3246       mov      r2, r6                        
+002b10d2: 2b46       mov      r3, r5                        
+002b10d4: 2046       mov      r0, r4                        
+002b10d6: f7f787f8   bl       #0x2a81e8                     
+002b10da: 0446       mov      r4, r0                        
+002b10dc: 0120       movs     r0, #1                        
+002b10de: f5f7ffff   bl       #0x2a70e0                     
+002b10e2: 2046       mov      r0, r4                        
+002b10e4: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+002b10e8: 80b5       push     {r7, lr}                      
+002b10ea: 00af       add      r7, sp, #0                    
+002b10ec: bde88040   pop.w    {r7, lr}                      
+002b10f0: f5f7c8bd   b.w      #0x2a6c84                     
+002b10f4: 80b5       push     {r7, lr}                      
+002b10f6: 00af       add      r7, sp, #0                    
+002b10f8: bde88040   pop.w    {r7, lr}                      
+002b10fc: f6f77abf   b.w      #0x2a7ff4                     
+002b1100: 80b5       push     {r7, lr}                      
+002b1102: 00af       add      r7, sp, #0                    
+002b1104: bde88040   pop.w    {r7, lr}                      
+002b1108: f5f79abc   b.w      #0x2a6a40                     
+002b110c: 80b5       push     {r7, lr}                      
+002b110e: 4e20       movs     r0, #0x4e                     
+002b1110: 00af       add      r7, sp, #0                    
+002b1112: 80bd       pop      {r7, pc}                      
+002b1114: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+002b1118: 84b0       sub      sp, #0x10                     
+002b111a: 1d46       mov      r5, r3                        
+002b111c: 0446       mov      r4, r0                        
+002b111e: 02af       add      r7, sp, #8                    
+002b1120: 8846       mov      r8, r1                        
+002b1122: 1646       mov      r6, r2                        
+002b1124: 0120       movs     r0, #1                        
+002b1126: f5f7cbff   bl       #0x2a70c0                     
+002b112a: 3b1d       adds     r3, r7, #4                    
+002b112c: 4146       mov      r1, r8                        
+002b112e: 0093       str      r3, [sp]                      
+002b1130: 3246       mov      r2, r6                        
+002b1132: 2b46       mov      r3, r5                        
+002b1134: 2046       mov      r0, r4                        
+002b1136: f9f72bfb   bl       #0x2aa790                     
+002b113a: 0446       mov      r4, r0                        
+002b113c: 0120       movs     r0, #1                        

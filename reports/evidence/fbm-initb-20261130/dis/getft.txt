@@ -1,0 +1,81 @@
+002b2b18: f8b5       push     {r3, r4, r5, r6, r7, lr}      
+002b2b1a: 0446       mov      r4, r0                        
+002b2b1c: 00af       add      r7, sp, #0                    
+002b2b1e: 1148       ldr      r0, [pc, #0x44]                 ; [002b2b64]=007e6ede "GetFileType"
+002b2b20: 0d46       mov      r5, r1                        
+002b2b22: 1646       mov      r6, r2                        
+002b2b24: fff7a0f9   bl       #0x2b1e68                     
+002b2b28: 0023       movs     r3, #0                        
+002b2b2a: 1946       mov      r1, r3                        
+002b2b2c: 0ee0       b        #0x2b2b4c                     
+002b2b2e: a042       cmp      r0, r4                        
+002b2b30: 0ad1       bne      #0x2b2b48                     
+002b2b32: d018       adds     r0, r2, r3                    
+002b2b34: 4068       ldr      r0, [r0, #4]                  
+002b2b36: a842       cmp      r0, r5                        
+002b2b38: 06d1       bne      #0x2b2b48                     
+002b2b3a: 1823       movs     r3, #0x18                     
+002b2b3c: 0024       movs     r4, #0                        
+002b2b3e: 03fb0122   mla      r2, r3, r1, r2                
+002b2b42: 9368       ldr      r3, [r2, #8]                  
+002b2b44: 3360       str      r3, [r6]                      
+002b2b46: 06e0       b        #0x2b2b56                     
+002b2b48: 0131       adds     r1, #1                        
+002b2b4a: 1833       adds     r3, #0x18                     
+002b2b4c: 064a       ldr      r2, [pc, #0x18]                 ; [002b2b68]=009d23fc
+002b2b4e: d058       ldr      r0, [r2, r3]                  
+002b2b50: 0028       cmp      r0, #0                        
+002b2b52: ecd1       bne      #0x2b2b2e                     
+002b2b54: 054c       ldr      r4, [pc, #0x14]                 ; [002b2b6c]=10800010
+002b2b56: 0348       ldr      r0, [pc, #0xc]                  ; [002b2b64]=007e6ede "GetFileType"
+002b2b58: 2146       mov      r1, r4                        
+002b2b5a: fff7fdf9   bl       #0x2b1f58                     
+002b2b5e: 2046       mov      r0, r4                        
+002b2b60: f8bd       pop      {r3, r4, r5, r6, r7, pc}      
+002b2b62: 00bf       nop                                    
+002b2b64: de6e       ldr      r6, [r3, #0x6c]               
+002b2b66: 7e00       lsls     r6, r7, #1                    
+002b2b68: fc23       movs     r3, #0xfc                     
+002b2b6a: 9d00       lsls     r5, r3, #2                    
+002b2b6c: 1000       movs     r0, r2                        
+002b2b6e: 8010       asrs     r0, r0, #2                    
+002b2b70: f8b5       push     {r3, r4, r5, r6, r7, lr}      
+002b2b72: 0446       mov      r4, r0                        
+002b2b74: 00af       add      r7, sp, #0                    
+002b2b76: 1248       ldr      r0, [pc, #0x48]                 ; [002b2bc0]=007e6eea "GetFileTypeSizeInfo"
+002b2b78: 0d46       mov      r5, r1                        
+002b2b7a: 1646       mov      r6, r2                        
+002b2b7c: fff774f9   bl       #0x2b1e68                     
+002b2b80: 0023       movs     r3, #0                        
+002b2b82: 07e0       b        #0x2b2b94                     
+002b2b84: a042       cmp      r0, r4                        
+002b2b86: 04d1       bne      #0x2b2b92                     
+002b2b88: 8868       ldr      r0, [r1, #8]                  
+002b2b8a: 2860       str      r0, [r5]                      
+002b2b8c: c968       ldr      r1, [r1, #0xc]                
+002b2b8e: 3160       str      r1, [r6]                      
+002b2b90: 07e0       b        #0x2b2ba2                     
+002b2b92: 0133       adds     r3, #1                        
+002b2b94: 0b4a       ldr      r2, [pc, #0x2c]                 ; [002b2bc4]=00000000
+002b2b96: 1801       lsls     r0, r3, #4                    
+002b2b98: 8118       adds     r1, r0, r2                    
+002b2b9a: 8058       ldr      r0, [r0, r2]                  
+002b2b9c: b0f1ff3f   cmp.w    r0, #-1                       
+002b2ba0: f0d1       bne      #0x2b2b84                     
+002b2ba2: 1b01       lsls     r3, r3, #4                    
+002b2ba4: 0648       ldr      r0, [pc, #0x18]                 ; [002b2bc0]=007e6eea "GetFileTypeSizeInfo"
+002b2ba6: d458       ldr      r4, [r2, r3]                  
+002b2ba8: 074b       ldr      r3, [pc, #0x1c]                 ; [002b2bc8]=10800010
+002b2baa: b4f1ff3f   cmp.w    r4, #-1                       
+002b2bae: 0cbf       ite      eq                            
+002b2bb0: 1c46       moveq    r4, r3                        
+002b2bb2: 0024       movne    r4, #0                        
+002b2bb4: 2146       mov      r1, r4                        
+002b2bb6: fff7cff9   bl       #0x2b1f58                     
+002b2bba: 2046       mov      r0, r4                        
+002b2bbc: f8bd       pop      {r3, r4, r5, r6, r7, pc}      
+002b2bbe: 00bf       nop                                    
+002b2bc0: ea6e       ldr      r2, [r5, #0x6c]               
+002b2bc2: 7e00       lsls     r6, r7, #1                    
+002b2bc4: 0000       movs     r0, r0                        
+002b2bc6: 0000       movs     r0, r0                        
