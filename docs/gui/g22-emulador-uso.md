@@ -66,3 +66,13 @@ Solo escritorio con navegador; el disparo/MOVIE de la UI emulada (firmware) no e
 
 ## ISP emulado (T9, Picture Profile en la ventana en vivo)
 Panel «ISP (BIONZ X emulado)» bajo la fuente de sensor: «aplicar» procesa con un shader WebGL2 lo que se ve, la foto (`/sd/foto`) y el vídeo (`/sd/video`); el mensaje de guardado indica qué etapas son reales. Elige perfil (PP1–PP10, «Off»), gamma, color mode, black level, saturación, fase, color depth, detail y el modo de obturador medido (Mecánico/EFCS/Silent por bandas, R87). Cada cambio escribe los mismos ids de Backup que `libObj` (1 B por ajuste) en el `nvram.json` del perfil (se aplica en el siguiente arranque en frío; el cambio por menú sigue pendiente). Pipeline, fuentes y calibración: [G23-ISP](g23-isp-bionz-emulado.md). Comprobación sin QEMU: `.venv/bin/python scripts/gui/isp/prueba_shader.py --captura x.png`.
+
+## Reconstruirlo en otro equipo (26-11-2026)
+La rama `harness/arnes-completo` del paquete privado
+[`a6000-handoff-context`](https://github.com/nicolvus/a6000-handoff-context/tree/harness/arnes-completo)
+lleva lo que el arnés necesita y no está en Git: rootfs y `/usr` de Sony 3.21 ya extraídos, kernel
+e initrd de Debian fijados, cabeceras del shim, volcado NVRAM de `bk.tbl`, `AV-CAM.BIN`/`IDT_CAM.BIN`/`liro.ko`
+y la config del configurador; el código va pinneado al commit del momento. `restore.sh --repo <clon> --verificar`
+deja cada artefacto en su ruta, comprueba SHA-256, ejecuta `setup.sh` y los tests del arnés. Medido
+desde un clon y un venv limpios: primera pantalla 152 s, restauración 3 s, 48 tests pasan y 7 saltan.
+Qué queda fuera y cómo se regenera: `README.md` y `MANIFIESTO.md` de esa rama.

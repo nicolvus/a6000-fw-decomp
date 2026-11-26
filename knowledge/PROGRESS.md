@@ -859,3 +859,14 @@ de fw3.21 y la cámara está en 3.93. Entregables: [informe](../docs/capture/eye
 [orb_touchaf](../analysis/eyeaf/orb_touchaf.md), [orb_liveview](../analysis/eyeaf/orb_liveview.md),
 `tools/eye-af/README.md`, `tools/eye-af/BENCH.md`. Pendientes H1–H3 en `docs/PENDIENTES.md`.
 Cero escrituras en cámara o firmware.
+
+## 26-11-2026 — paquete reconstruible del arnés (R10)
+
+Publicado en la rama `harness/arnes-completo` del repo privado de handoff (100 MB): rootfs y `/usr`
+de Sony 3.21 ya extraídos (53 MB), kernel/initrd de Debian fijados y cabeceras del shim (34 MB),
+volcado NVRAM del que sale `bk.tbl`, `AV-CAM.BIN`/`IDT_CAM.BIN`/`liro.ko` (12 MB) y la config del
+configurador; el código del arnés queda pinneado a `46372a10`. `restore.sh` comprueba SHA-256, coloca
+cada artefacto en su ruta y con `--verificar` ejecuta `setup.sh` y los tests. Verificado desde un clon
+y un venv limpios: SHA ok, initramfs, shim y `bk.tbl` construidos, 48 tests pasan y 7 saltan, primera
+pantalla 152 s y restauración 3 s. Detalle en [PENDIENTES](../docs/PENDIENTES.md) R10 y en
+[G22-E](../docs/gui/g22-emulador-uso.md#reconstruirlo-en-otro-equipo-26112026).
