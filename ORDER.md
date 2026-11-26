@@ -39,7 +39,8 @@ Duplicating content is forbidden: write it in its single source and **link** fro
 | Derived document | `docs/CORRECTIONS.md`, `docs/OPEN-QUESTIONS.md`, `docs/INDEX.md` (generated section), `knowledge/audit/*.json` | scripts only |
 
 Prefixes in use: `s<N>` session, `e<NN>` static phase, `e25-`/`e26-` shutter and recovery, `e26-r<NN>` recovery report,
-`g<NNN>` GUI lane, `p<NN>` physical plan, `og-` open gate, `usb-carga-` USB charging, `cam-` camera incidents.
+`g<NNN>` GUI lane, `p<NN>` physical plan, `og-` open gate, `usb-carga-` USB charging, `cam-` camera incidents,
+`eye-af-` Eye AF lane (eye tracking through the remote API).
 
 ## 3. Names
 

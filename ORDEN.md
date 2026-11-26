@@ -39,7 +39,8 @@ Prohibido duplicar contenido: se escribe en su fuente única y el resto **enlaza
 | Documento derivado | `docs/CORRECTIONS.md`, `docs/OPEN-QUESTIONS.md`, `docs/INDEX.md` (§ generado), `knowledge/audit/*.json` | solo por script |
 
 Prefijos en uso: `s<N>` sesión, `e<NN>` fase estática, `e25-`/`e26-` obturador y recuperación, `e26-r<NN>` informe de recuperación,
-`g<NNN>` carril GUI, `p<NN>` plan físico, `og-` open gate, `usb-carga-` carga USB, `cam-` incidencias de cámara.
+`g<NNN>` carril GUI, `p<NN>` plan físico, `og-` open gate, `usb-carga-` carga USB, `cam-` incidencias de cámara,
+`eye-af-` carril Eye AF (seguimiento del ojo por la API remota).
 
 ## 3. Nombres
 
