@@ -1,18 +1,20 @@
 # G22-REPRO — La cámara emulada y las fotos de la SD: árbol `AVF_INFO` y reproducción
 
-**Estado (26-11-2026, sesión G22-REPRO-2): PARCIAL.** Con `SD_ESTRUCTURA=1` la SD emulada trae ya la estructura que el firmware nombra (`AVF_INFO` con sus ficheros,
-`MP_ROOT/100ANV01`) y **el volumen deja de fallar por «no hay `AVF_INFO`»**: medido, `libmpr` consulta `ms:/AVF_INFO` y sigue con los ficheros del índice,
+**Estado (26-11-2026, sesión G22-REPRO-3): PARCIAL, corte localizado un tramo más adelante.** Con `SD_ESTRUCTURA=1` la SD emulada trae la estructura que el firmware nombra
+(`AVF_INFO` con sus ficheros, `MP_ROOT/100ANV01`) y **el volumen deja de fallar por «no hay `AVF_INFO`»**: medido, `libmpr` consulta `ms:/AVF_INFO` y sigue con los ficheros del índice,
 el manejador del recuento (`libmpr+0x620028`) se ejecuta y el montaje del sistema de ficheros termina `OK`.
-**No se ha conseguido** que la tecla Reproducción abra la vista ni que el recuento de fotos salga numérico. La sesión G22-REPRO-2 cierra el **grafo estático del camino de la tecla**
-(§7): la clave que manda el arnés es la del firmware (`0x1f7` = `KEY_TACT_PLAY`), la vista la registra con el evento `0x150100f0` y una tabla estática lo manda a la **acción `4`**;
-medido en el invitado, la pulsación llega a la cola del driver y **`viewManagerIf::openView` no se llama ni una vez**, así que el corte está entre la acción y la apertura.
-Lo que falta sigue siendo el **contenido del índice AV** (no hay ningún volcado real en el repo y no se ha inventado) y la vista de reproducción en sí (§7.4).
+**No se ha conseguido** que la tecla Reproducción abra la vista ni que el recuento de fotos salga numérico.
+La sesión G22-REPRO-3 **corrige y avanza el corte** (§8): la tecla **sí** sale del driver — `0x1f7` → `InfraInput` → `snd_InfraInputEvent_to_InputServant` →
+`InputService::createEvent(0x150100f2 pulsación / 0x150100f1 suelta)` → `InputService::pushFilterEvent` — y lo que no ocurre **ni para la Reproducción ni para ninguna otra tecla**
+es el paso siguiente: `ActionEventMapBase::DispatchEvent` (`libObj+0xf59f0`) no recibe **ningún** evento `0x1501xxxx` y `ActionCheckerListBase::execAction` no se ejecuta nunca.
+El invitado lo dice él mismo: `[FMWK] EventQueue pile count: 100` en el mismo instante de la pulsación (§8.3). Abrir la vista por la ruta del arnés sigue siendo posible pero **no pinta miniatura** (§8.4).
 
-Sesión: **26-11-2026** (reloj del anfitrión 02:30–03:30, −03). Cámara física: **no usada** (todo en `qemu-system-arm`, perfiles `repro`, `repro2` y `repro3`, puertos 8660/8661).
+Sesión: **26-11-2026** (reloj del anfitrión 02:30–05:30, −03). Cámara física: **no usada** (todo en `qemu-system-arm`, perfiles `repro`, `repro2`, `repro3`, `repro4` y `repro5`, puertos 8660/8661/8670/8671).
 Espacio de direcciones: **VA del ELF** de `libmpr.so`/`libObj.so`/`viewUnified2.so` 3.21 (el primer `PT_LOAD` tiene vaddr 0; el segundo de `viewUnified2.so` lleva +0x8000,
 por eso `.data` se cita por VA y no por desplazamiento de fichero); `TRACELIB`/`TRACEFN2` del shim usan el desplazamiento respecto a la base de la biblioteca.
 Capturas: [disparo](img/g22-repro-disparo.png) · [tras pulsar Reproducción](img/g22-repro-tras-reproduccion.png) · [G22-REPRO-2 sin av-cam](img/g22-repro2-disparo.png) ·
-[tras `O view/SINGLEPB`](img/g22-repro2-singlepb.png).
+[tras `O view/SINGLEPB`](img/g22-repro2-singlepb.png) · **G22-REPRO-3** [disparo con av-cam y la foto en la SD](img/g22-repro3-disparo.png) ·
+[`O view/INDEX_PLAYBACK` en blanco](img/g22-repro3-indexpb-en-blanco.png).
 
 ---
 
@@ -346,8 +348,128 @@ TRACEFN2=620028,620262,62059c` (recuento), `TRACEDEREF=d0:0:18 TRACEREP=1 TRACEM
 
 ---
 
+## 8. G22-REPRO-3: la tecla sale del driver y muere en la cola de eventos de `InputService`
+
+Tercera sesión (perfiles `repro4`/`repro5`, puertos 8670/8671; `--avcam` **activo**: el worktree enlaza `analysis/rea-independent/input/av-cam.bin` y
+`analysis/camera-extract/usr/kmod/liro.ko`, que no se versionan). Objetivo: cerrar el tramo que §7.3 dejaba abierto. **Resultado**: el corte medido se mueve **un eslabón más adelante**
+y deja de ser específico de la Reproducción; la vista de reproducción se abre por la ruta del arnés pero **no pinta**.
+
+### 8.1 Estático nuevo (VA del ELF, leído de los binarios)
+
+**(a) Las listas de teclas y sus grupos.** `viewUnified2.so` describe sus listas de `_InfraInputKeyList` en una tabla de descriptores de **20 B** en `.data` VA **`0x4aa59c`**:
+`{puntero a la lista, callback, nº de entradas, 0, 0}`. El **índice** de esa tabla es el *grupo* que se pasa como primer argumento de
+`InfraInput::SetEventKeyList(int grupo, _InfraInputKeyList*, int n)` (`libObj+0x806140`):
+
+| grupo | lista | callback | entradas | contenido (12 B por entrada) |
+|---|---|---|---|---|
+| 7 | `0x4aa914` | `0x1816d5` | 202 | lista de la vista de disparo: `[0]={0xa7,0x15010030}`, `[1]={0x2,0x15010010}`, `[2]={0x1f1,0x15010020}` … **sin `0x1f7`** |
+| 8 | `0x4aa87c` | `0x1816b5` | 8 | teclas de mando: `{0x708d,0x15060010}`, `{0x18000001,0x150700c0}` … |
+| 0xf | `0x4aa848` | `0x181a3d` | 4 | **grupo de la Reproducción**: `{0x1f7,0x150100f0,0x7ffffffe}`, `{0x7095,0x15010120,…}`, `{0xa000022,0x150100f0,…}`, `{0xa00001c,0x15010120,…}` |
+
+La cuenta de los descriptores coincide **una a una** con las llamadas medidas en el invitado (§8.2): grupos 7→202, 8→8, 9→5, 0xa→6, 0xb…0xe→1, 0xf→4, 0x10→1, 0x11→1.
+
+**(b) CORRECCIÓN de §7.1(b).** La entrada de `_InfraInputKeyList` es **`{clave, evento, máscara}`** (12 B), no `{máscara, clave, evento}`. El triplete `{0x7ffffffe, 0x1f7, 0x150100f0}` que cita §7.1 está
+desplazado una palabra: `0x7ffffffe` es la **máscara final de la entrada anterior** (lista del grupo 8, en `0x4aa844`) y la entrada de la Reproducción empieza en `0x4aa848`, con la máscara `0x7ffffffe` en
+la **tercera** palabra. `0x7ffffffe` = «sin condición» y lo llevan las cuatro entradas del grupo `0xf`.
+
+**(c) CORRECCIÓN de §7.1(e)/§7.3.** `DefRootView::ActionEventMapBase::DispatchEvent(unsigned long)` (`libObj+0xf59f0`) es un **thunk virtual de 12 B**: la conversión evento → acción **no** está en
+`libObj`, la hace la implementación virtual que registra la biblioteca de la vista (`evento` en `r1`, `this` en `r0`):
+
+```
+f59f0  ldr r3,[r0]        ; vtable del objeto
+f59f2  push {r7, lr} / add r7, sp, #0
+f59f6  ldr r3,[r3,#8]     ; ranura +8
+f59f8  blx r3             ; implementación real (viewUnified2/viewUnified3)
+```
+
+**(d) El log `insert key_code=…` no es por pulsación.** `InputService::UpdateInputTable` (cuerpo en `0x113718`) llama a `SetEventKeyList` en `0x113c1c` y recorre las entradas de la lista; la línea
+`[INPUTSERVICE] toActive:3515 insert key_code=0x%08x event_code=0x%08x` (`0x113c72`) **solo se imprime para entradas cuyo primer campo vale 2** (`cmp r3,#2` en `0x113c46`) y se emite **al registrar** la
+lista. Su ausencia con `0x1f7` (§7.3) **no** prueba que la tecla no llegue.
+
+### 8.2 Medido: la tecla SÍ sale del driver y llega a `InputService` (VERIFICADO)
+
+Perfil `repro5`, puerto 8671, SD con `AVF_INFO` y `DSC00001.JPG` (1536×1024, 51 356 B), arranque en frío 132 s hasta la primera pantalla, 4,5 fps:
+
+```sh
+HOME=/tmp/g22r3/home SD_ESTRUCTURA=1 SHIMEXTRA="WAITLOG=5000 \
+TRACEFN=806140,805804,110138,1106b8,110a04,110b14,1117f4,f59f0,11817e,1251fc TRACEREP=1 TRACEMAX=12 WLALL=1 GMILOG=1 SETLOG=1" \
+  .venv/bin/python scripts/gui/harness/live.py analysis/gui/g22/harness --perfil-dir repro5 --puerto 8671 --config /tmp/g22r3/config.json
+```
+
+```
+616.10 TRACE 806140 n=7  r1=7 r3=ca       <- grupo 7, 202 entradas (desde libObj+0x113c20 = UpdateInputTable)
+616.11 TRACE 806140 n=8…n=10 r1=8,9,a  r3=8,5,6
+616.14 TRACE 806140 n=11…n=14 r1=b,c,d,e r3=1,1,1,1
+616.25 TRACE 806140 n=15 r1=f r3=4        <- ¡el grupo 0xf (la Reproducción) SÍ queda registrado!
+616.28 TRACE 806140 n=16,n=17 r1=10,11 r3=1,1
+668.71 WAITLOG 135.24 tecla 0x1f7         <- pulsación Reproducción
+668.71 TRACE 110138 n=2 r1=0 r2=4   lr=libObj+0x11303c   <- snd_InfraInputEvent_to_InputServant
+668.71 TRACE 1106b8 n=2 r1=150100f2 r2=4                 <- InputService::createEvent (pulsación, estado 2)
+668.71 TRACE 1117f4 n=2 r1=…                             <- InputService::pushFilterEvent
+668.72 135.79 TRAZA # [FMWK] EventQueue pile  count: 100  <- el propio invitado: cola de eventos llena
+668.72 WAITLOG 135.75 tecla 0x1f7         <- suelta
+668.72 TRACE 110138 n=3 · TRACE 1106b8 n=3 r1=150100f1 (suelta) · TRACE 1117f4 n=3
+```
+
+Con `O view/INDEX_PLAYBACK` abierta la pulsación se repite igual (755.34 → `0x150100f2`, 755.73 → `0x150100f1`). **Control con otras teclas** (misma sesión): `arriba` (`0x3`) → `createEvent 0x15010072` y
+`0x15010071`; `menu` (`0x1ab`) → `0x15010074`. La conversión clave → evento funciona para todas y el evento es `0x150100f0 + estado` (`…f1` suelta, `…f2` pulsación; `…71/72` para `0x3`).
+
+Extractos versionados de estas dos medidas (el `shim.log` completo son 2,3 MB y no se versiona):
+[`trazas-tecla-repro5.txt`](../../reports/evidence/g22-repro3-20261126/trazas-tecla-repro5.txt) y
+[`registro-listas-repro5.txt`](../../reports/evidence/g22-repro3-20261126/registro-listas-repro5.txt).
+
+### 8.3 Dónde se corta ahora (VERIFICADO)
+
+- `DispatchEvent` (`f59f0`) se dispara 64+ veces en 800 s y **ninguna** con un evento `0x1501xxxx`: `r1` = `0x42,0x43,0x44,0x45,0x46,0x47,0x54,0x5a` (identificadores pequeños, de la vista),
+  `0x2,0x23,0x2a` y `0x11012001,0x11012007,0x11014001`, siempre desde `viewUnified2.so+0x198450` (una vez desde `viewUnified2.so+0x17e068`). A `DispatchEvent` le llegan
+  **identificadores internos de la vista**, no eventos de `InputService`.
+- `ActionCheckerListBase::execAction` (`libObj+0x11817e`): **0 disparos** con cualquier tecla.
+- El corte medido está **entre `InputService::pushFilterEvent` (`0x1117f4`) y la vista**: el evento se construye (`createEvent`) y se encola, y no hay quien lo despache. El invitado lo dice él mismo
+  (`[FMWK] EventQueue pile count: 100`, cadena en `libObj` VA `0xd8810a`) en el mismo instante de la pulsación — **INFERENCIA**: la cola del framework está saturada y el alta se descarta.
+- **CORRECCIÓN de §7.3**: no es cierto que la tecla muera «entre el hilo de entrada y el despachador»; el hilo `I-InputRecv` la entrega, `InfraInput` la convierte y `InputService` la encola. Y **no es
+  específico de la Reproducción**: ninguna tecla llega al mapa de acciones.
+
+### 8.4 La vista de reproducción por la ruta del arnés (abre; no pinta)
+
+`O view/INDEX_PLAYBACK` en caliente: `TRACE 1251fc n=3` (entra en `viewManagerIf::openView`) y la pantalla pasa a **0 listas** y un PNG de **un solo color**
+([captura](img/g22-repro3-indexpb-en-blanco.png)). `O view/SINGLEPB`: `OPENHOT view/SINGLEPB 0 -> 33156776` (**esta vez sí vuelve**, al contrario que en §7.2) y también queda en blanco. En los dos casos,
+con `GMILOG=1`, la vista **no pide ni un `getModelInfo`**: no se queda esperando un modelo por nombre, no llega a pintar. **Conviene decirlo claro: este camino es del arnés** (`openhot` llama a
+`viewManagerIf::openView` desde un hilo del shim), **no de la cámara**. La miniatura de `DSC00001.JPG` **no se ha conseguido**; el candidato sigue siendo el contenido del índice AV (§4.2, §7.4), del que no
+hay ni un byte real en el repo.
+
+### 8.5 Trampa de medición que hay que evitar (VERIFICADO)
+
+`TRACEDEREF` vuelca palabras desde un registro **sin comprobar que sea un puntero**. En el perfil `repro4` se armó `E TRACEDEREF=d2:0:27` y la traza siguiente fue `110138` con `r2=4`: el volcado leyó en la
+dirección 4 dentro del manejador de SIGILL, el invitado quedó congelado (`sig 11 tid 476 I-InputEvent`, 9 fotogramas y el `shim.log` sin una línea más) y hubo que repetir el arranque en frío.
+Regla para esta ruta: **sin `TRACEDEREF`**, o con un registro que siempre sea un objeto (`r0` = `this`).
+
+### 8.6 Afirmaciones nuevas
+
+| # | Afirmación | Etiqueta | Evidencia |
+|---|---|---|---|
+| 21 | `_InfraInputKeyList` es `{clave, evento, máscara}` de 12 B y el grupo `0xf` de `viewUnified2.so` es la lista de la Reproducción (`0x1f7`→`0x150100f0`) | **VERIFICADO** | tabla de descriptores `.data` VA `0x4aa59c` (§8.1a) |
+| 22 | El invitado **registra** el grupo `0xf` y los demás (17 llamadas, grupos 1…0x11) y las cuentas coinciden con los descriptores | **VERIFICADO** | `TRACE 806140 n=7…n=17` (§8.2) frente a §8.1a |
+| 23 | Pulsar Reproducción produce `InputService::createEvent(0x150100f2)` + `pushFilterEvent`; la suelta, `0x150100f1` | **VERIFICADO** | `TRACE 1106b8`/`1117f4` en 668.71/668.72 y 755.34/755.73 (§8.2) |
+| 24 | `DispatchEvent` no recibe **ningún** evento `0x1501xxxx` y `execAction` no se ejecuta nunca, tampoco con otras teclas | **VERIFICADO** | 64+ disparos de `f59f0` con ids internos; 0 de `11817e` (§8.3) |
+| 25 | El invitado avisa de la cola de eventos llena en el instante de la pulsación | **VERIFICADO** | `[FMWK] EventQueue pile count: 100` (§8.3) |
+| 26 | Quién vacía esa cola y por qué no lo hace en este arnés | **NO VERIFICADO** | — |
+| 27 | `DispatchEvent` es un thunk virtual de 12 B: la conversión evento→acción vive en la biblioteca de la vista | **VERIFICADO** | desensamblado `libObj+0xf59f0…0xf59fa` (§8.1c) |
+| 28 | `O view/INDEX_PLAYBACK` y `O view/SINGLEPB` abren pero no pintan ni piden modelo | **VERIFICADO** | PNG de un color, `OPENHOT … -> 33156776`, 0 `getModelInfo` (§8.4) |
+| 29 | La miniatura de la foto de la SD pintada por la vista de reproducción | **NO VERIFICADO** | no se ha logrado por ninguna de las dos rutas (§8.3, §8.4) |
+
+### 8.7 Siguiente paso exacto
+
+1. **Quién vacía la cola de eventos.** `pushFilterEvent` (`0x1117f4`) encola con `bl 0x127bb6` y notifica con `0x127bc4`; el consumidor está al otro lado. Medir con
+   `TRACEFN=127bb6,127bc4,1114b0,11113e,f59f0` (sin `TRACEDEREF`) y comprobar si el consumidor se ejecuta; si no, identificarlo por el nombre de hilo en los `WAITLOG` con `WLALL=1`
+   (en el informe de pila de §8.5 aparece `I-InputEvent`) y ver en qué cola espera.
+2. **La cola llena.** Localizar el código de `[FMWK] EventQueue pile count: %d` (cadena en `libObj` VA `0xd8810a`, **sin** xref literal: se llega por tabla; usar REA o `TRACEFN` sobre el
+   framework de eventos) y leer el máximo (100) y qué condición la descarga.
+3. Cuando drene, repetir la pulsación y leer `TRACE f59f0 … r1=150100f0` y `TRACE 1251fc` con `r0` = `view/INDEX_PLAYBACK`: eso cierra el tramo de la tecla.
+
+---
+
 ## PARA PENDIENTES.md
 
 | ID | Estado | Resumen | Criterio de cierre |
 |---|---|---|---|
-| G22-REPRO | EN CURSO (abierto 26-11-2026; **2.ª sesión G22-REPRO-2, 26-11-2026**) | **Árbol de la SD con `AVF_INFO` (opt-in `SD_ESTRUCTURA=1`)**: `sd_image.py` crea `AVF_INFO/{AVIN0001.INP,AVIN0001.BNP,AVIN0001.INT,PRV00001.BIN,STAT0000.BIN}` (0 B, contenido no inventado) y `MP_ROOT/100ANV01`; tests en `tests/test_gui_sd_image.py`. **MEDIDO (1.ª sesión)**: `libmpr` consulta `ms:/AVF_INFO` y el manejador del recuento `libmpr+0x620028` se ejecuta con la UI sana (`Fsys_MountAsync OK`). **NUEVO (2.ª sesión, estático VERIFICADO)**: el camino de la tecla queda cerrado hasta la acción: `0x1f7` = `KEY_TACT_PLAY` (`libObj` VA `0x10a6054`) → evento `0x150100f0` (`viewUnified2.so` `.data` VA `0x4aa844`) → **acción 4** (tabla `.rodata` `0x3a03d4`, búsqueda `viewUnified2+0x1906a8`); el `ViewManager` da `view/INDEX_PLAYBACK` → `viewIndexPb.so` + `ViewIndexPbToInstance` (símbolo exportado solo por `viewUnified3.so`; los 102 nombres de biblioteca de la tabla **no** son ficheros de `/usr/lib`, resolución NO_VERIFICADA) y los modelos están en `libObj` (`ModelIndexPbToInstance`, `ModelSinglePbToInstance`). **MEDIDO (2.ª sesión, invitado)**: la tecla llega a la cola `0x7a0020` (2 líneas `tecla 0x1f7`) y **`viewManagerIf::openView` no se llama** (contador `TRACE 1251fc` 3→3); `O view/SINGLEPB` y `O view/INDEX_PLAYBACK` **entran** en `openView` con la cadena correcta pero **no vuelven** en ≥5 s (sin línea `OPENHOT`) y la pantalla queda en blanco (`0 listas`). En este worktree no hay `av-cam.bin`/`liro.ko`: el OSD sale con 2 listas y el efecto `AF-S`→`MF` no se ha reproducido (no comparable con §3). **Sigue fallando**: (a) el tramo acción 4 → `openView` (no localizado el llamador; no hay referencia literal a las cadenas del `ViewManager` desde `.text`); (b) el recuento de fotos sin número y el aviso `ERROR` de tarjeta; falta medir si `0x620028` llega a la fórmula (`0x620262`/`0x62059c`) con `TRACEFN2` armado en el arranque; (c) el contenido real del índice AV. **MEDIDO (3.ª pasada, `repro3x`, `WLALL=1`, tres trampas)**: la tecla **despierta** al hilo `I-InputRecv` de `0x7a0020` (`WAITLOG … tras 42758 ms` en 133.95 vs `tecla 0x1f7` en 133.91) pero **no** produce `[INPUTSERVICE] … key_code=0x1f7` ni llega a `DispatchEvent` (`libObj+0xf59f0`, 19 disparos con eventos internos, ninguno `0x150100f0`; el evento va en `r1`), así que el corte medido está **entre el hilo de entrada y el despachador**, antes de la acción 4; `execAction` (`libObj+0x11817e`) no se llama en ese arranque. Sin ciclo de cámara el recuento **no llega a ejecutarse**: `620028`/`620262`/`62059c` armadas a los 37 s y 0 disparos en 630 s, frente a los ≈397 s del arranque de §3 (la diferencia medida es `av-cam`, sin verificar). Tests nuevos sin QEMU: `tests/test_g22_repro.py` (8 casos). | PNG de `view/INDEX_PLAYBACK` (o `SINGLEPB`) con la miniatura de `DSC00001.JPG` de la SD emulada **y** OSD de disparo con recuento numérico (sin `ERROR`); si el índice es imprescindible, con un `AVIN0001.INP` cuyo contenido venga de una tarjeta real (o generado por el propio MPR, p. ej. arreglando «Formatear»/`FormatCmd`, §5.46/§5.50) y no inventado |
+| G22-REPRO | EN CURSO (abierto 26-11-2026; **2.ª sesión G22-REPRO-2 y 3.ª G22-REPRO-3, 26-11-2026**) | **Árbol de la SD con `AVF_INFO` (opt-in `SD_ESTRUCTURA=1`)**: `sd_image.py` crea `AVF_INFO/{AVIN0001.INP,AVIN0001.BNP,AVIN0001.INT,PRV00001.BIN,STAT0000.BIN}` (0 B, contenido no inventado) y `MP_ROOT/100ANV01`; tests en `tests/test_gui_sd_image.py`. **MEDIDO (1.ª sesión)**: `libmpr` consulta `ms:/AVF_INFO` y el manejador del recuento `libmpr+0x620028` se ejecuta con la UI sana (`Fsys_MountAsync OK`). **NUEVO (2.ª sesión, estático VERIFICADO)**: el camino de la tecla queda cerrado hasta la acción: `0x1f7` = `KEY_TACT_PLAY` (`libObj` VA `0x10a6054`) → evento `0x150100f0` (`viewUnified2.so` `.data` VA `0x4aa844`) → **acción 4** (tabla `.rodata` `0x3a03d4`, búsqueda `viewUnified2+0x1906a8`); el `ViewManager` da `view/INDEX_PLAYBACK` → `viewIndexPb.so` + `ViewIndexPbToInstance` (símbolo exportado solo por `viewUnified3.so`; los 102 nombres de biblioteca de la tabla **no** son ficheros de `/usr/lib`, resolución NO_VERIFICADA) y los modelos están en `libObj` (`ModelIndexPbToInstance`, `ModelSinglePbToInstance`). **MEDIDO (2.ª sesión, invitado)**: la tecla llega a la cola `0x7a0020` (2 líneas `tecla 0x1f7`) y **`viewManagerIf::openView` no se llama** (contador `TRACE 1251fc` 3→3); `O view/SINGLEPB` y `O view/INDEX_PLAYBACK` **entran** en `openView` con la cadena correcta pero **no vuelven** en ≥5 s (sin línea `OPENHOT`) y la pantalla queda en blanco (`0 listas`). En este worktree no hay `av-cam.bin`/`liro.ko`: el OSD sale con 2 listas y el efecto `AF-S`→`MF` no se ha reproducido (no comparable con §3). **Sigue fallando**: (a) el tramo acción 4 → `openView` (no localizado el llamador; no hay referencia literal a las cadenas del `ViewManager` desde `.text`); (b) el recuento de fotos sin número y el aviso `ERROR` de tarjeta; falta medir si `0x620028` llega a la fórmula (`0x620262`/`0x62059c`) con `TRACEFN2` armado en el arranque; (c) el contenido real del índice AV. **MEDIDO (3.ª pasada, `repro3x`, `WLALL=1`, tres trampas)**: la tecla **despierta** al hilo `I-InputRecv` de `0x7a0020` (`WAITLOG … tras 42758 ms` en 133.95 vs `tecla 0x1f7` en 133.91) pero **no** produce `[INPUTSERVICE] … key_code=0x1f7` ni llega a `DispatchEvent` (`libObj+0xf59f0`, 19 disparos con eventos internos, ninguno `0x150100f0`; el evento va en `r1`), así que el corte medido está **entre el hilo de entrada y el despachador**, antes de la acción 4; `execAction` (`libObj+0x11817e`) no se llama en ese arranque. Sin ciclo de cámara el recuento **no llega a ejecutarse**: `620028`/`620262`/`62059c` armadas a los 37 s y 0 disparos en 630 s, frente a los ≈397 s del arranque de §3 (la diferencia medida es `av-cam`, sin verificar). Tests nuevos sin QEMU: `tests/test_g22_repro.py` (8 casos). **MEDIDO (3.ª sesión, `repro5`, puerto 8671, con `av-cam`)**: la tecla **sí** sale del driver — `0x1f7` → `InfraInput` → `snd_InfraInputEvent_to_InputServant` → `InputService::createEvent(0x150100f2)` / `(0x150100f1)` → `pushFilterEvent` — y el corte medido está **después** de `InputService`: `DispatchEvent` (`libObj+0xf59f0`) 64+ disparos, **ninguno** con evento `0x1501xxxx`, y `execAction` (`+0x11817e`) **0** disparos, igual con `arriba` y `menu` (no es específico de la Reproducción); el invitado registra el grupo de teclas `0xf` (`TRACE 806140 n=15 r1=f r3=4`) y avisa `[FMWK] EventQueue pile count: 100` en el instante de la pulsación. **Estático nuevo**: la tabla de descriptores de `_InfraInputKeyList` de `viewUnified2.so` está en `.data` VA `0x4aa59c` (20 B por entrada, el índice es el grupo; grupo 7 = 202 entradas de la vista de disparo, grupo `0xf` = 4 entradas con `{0x1f7,0x150100f0,0x7ffffffe}`) y la entrada es **`{clave, evento, máscara}`** (corrige §7.1b); `DispatchEvent` es un thunk virtual de 12 B (corrige §7.1e); el log `insert key_code=…` se emite al **registrar** la lista y solo para entradas con primer campo 2 (corrige §7.3). `O view/INDEX_PLAYBACK` y `O view/SINGLEPB` abren por la ruta del arnés (`OPENHOT … -> 33156776`) y **no pintan** (PNG de un color, 0 `getModelInfo`): ese camino es del arnés, no de la cámara. Tests nuevos sin QEMU: `tests/test_g22_repro.py` (13 casos). | PNG de `view/INDEX_PLAYBACK` (o `SINGLEPB`) con la miniatura de `DSC00001.JPG` de la SD emulada **y** OSD de disparo con recuento numérico (sin `ERROR`); si el índice es imprescindible, con un `AVIN0001.INP` cuyo contenido venga de una tarjeta real (o generado por el propio MPR, p. ej. arreglando «Formatear»/`FormatCmd`, §5.46/§5.50) y no inventado |
