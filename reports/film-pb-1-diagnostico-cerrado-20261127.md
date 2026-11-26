@@ -75,6 +75,13 @@ Copiar `prueba-MAH04198-25p.mp4` (generado en `~/Documents/a6000/`) a la tarjeta
 | Se reproduce (y los de 30p no) | **Objetivo cumplido**: pasar el reescritor a los siete clips |
 | No se reproduce | El rechazo no es la cadencia: toca la traza (`scripts/camera_filmpb1_trace.py`) para ver qué guarda salta y con qué valor |
 
+**Detalle del ensayo que importa:** copiar el fichero con **nombre nuevo** (`MAH04200.MP4`) para que
+la cámara cree una entrada de índice limpia. El fichero convertido conserva el tamaño (14 545 696 B)
+pero su duración pasa a 11,40 s, y el índice `AVF_INFO\AVIN0001.INP` guarda `nDuration` y `nFileSize`:
+si se sobrescribe el original, la entrada queda descuadrada. Si al insertar la tarjeta el clip nuevo
+no aparece en la lista, ejecutar «Recuperar BD imág.» (reconstruye el índice, `CreateAVIndexFile`
+`0x7A7E7C`) y volver a mirar.
+
 ## 5. Límites
 
 - **NO_VERIFICADO en cámara**: que `TvSystem()` valga 1 hoy (se deduce de que falle el 100 % de
