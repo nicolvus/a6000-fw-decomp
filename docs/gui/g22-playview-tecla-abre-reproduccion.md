@@ -100,3 +100,26 @@ en el perfil `md2`.
 2. Con la rejilla pintada, medir el diff de PNG contra la pantalla de disparo y cerrar G22-REPRO.
 3. Repetir con el índice real de la cámara cuando haya un `AVF_INFO` de fábrica para comparar el registro
    (geometría, fechas, códec) con el que genera `sd_media.py`.
+
+## 8. `@M010` es un modelo con nombre propio y se puede precrear (medido en `md3`)
+
+La orden de diagnóstico `M <nombre>` del shim llama a `ModelManager` por la ruta de *precreación*
+(`PRECREATE`) con el id que `IdGenerator::Get(nombre)` da a ese nombre:
+
+```
+[shim] PRECREATE id=0x15 -> -1     # M model/INDEX_PB
+[shim] PRECREATE id=0x10 ->  0     # M @M010   (se crea)
+[shim] PRECREATE id=0x2f -> -1     # M model/CONT_SHOTS_PB
+```
+
+Es decir: **`@M010` no es `model/INDEX_PB`** (ese es `0x15`), y el modelo `0x10` **sí se deja crear**
+(`PRECREATE -> 0`). Aun así, con el modelo creado, al abrir la vista la petición sigue devolviendo 0:
+
+```
+595.33 274.99 getModelInfo(@M010, 1) -> 0   (x5)
+```
+
+y el fotograma queda vacío (0 listas, opacos 0,0). Conclusión: el modelo existe pero `info = 1` no tiene
+nada que devolver porque **nadie le ha cargado la lista de contenidos**; el siguiente paso es encontrar
+quién llena ese modelo (el mismo `GetAVIndexContentInfoList` de `libmpr` que alimenta `model/MEDIA`), no
+crearlo.
