@@ -379,6 +379,25 @@ o en la tabla `{evento, acción}` (`viewUnified2+0x1906a8`, sin llamantes estát
 (`TRACEFN=f59f0,11817e` + una pulsación); el intento de hacerla con `DESTKEY=1 TRACEFN=…` se quedó en el cuelgue de
 arranque de G22-CUELGUE («2 listas», 478 s, 2 fotogramas), así que **queda pendiente**.
 
+### 7.2 Medido con `EQTRACE` (26-11-2026): el destino sale `4`, no `0xc`
+
+Con el estado guardado de `dest1` (que ya arrancó con `DESTKEY=1`, registro `DESTKEY: libObj+0x111972 movs r2,#4 -> #0xc`),
+`E EQTRACE=1` y una pulsación de Reproducción:
+
+```
+EQTRACE 1 code=15070010 dest=4 clase=1 notify=0 lr=libObj.so+0x111841
+EQTRACE 2 code=150701a0 dest=4 clase=1 notify=0 lr=libObj.so+0x111841
+EQTRACE 3 code=150100f2 dest=4 clase=1 notify=0 lr=libObj.so+0x111841   <- la tecla
+EQTRACE 5 code=150100f1 dest=4 clase=1 notify=0 lr=libObj.so+0x111841   <- la suelta
+```
+
+Los tres eventos del camino salen con **destino 4** aunque el parche de `0x111972` está aplicado: **ese `movs` no es el que fija
+el destino de esta ruta** (el `push` llega desde `libObj+0x111841`, no desde `0x11197c`), así que la hipótesis del §7 hay que
+moverla: el destino de la tecla lo pone el llamante de `InputService::createEvent` que termina en ese `push`, y los dos eventos
+sintéticos los fija el filtro de la vista (`viewUnified2+0x18201c`/`+0x182042`, los dos `dest=4` del listado). Siguiente medida
+concreta: parchear esos dos literales a `0x0c` y repetir `EQTRACE` (debe salir `dest=c`) **y** `TRACEFN=f59f0,11817e` con la
+pulsación en la misma pasada; sin `dest=c` en `EQTRACE`, no tiene sentido mirar la vista.
+
 ## 8. Siguiente paso medible
 
 **Paso 1 (decisivo, 2 bytes, molde `EVQNOTIFY`, en el arnés y no en la cámara).** Cambiar sólo el destino de la
