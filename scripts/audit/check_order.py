@@ -25,6 +25,22 @@ def word(slug: str) -> str:
     return plano.lower()
 
 
+def numeracion_secciones(texto: str) -> list[int]:
+    """Numeros de los encabezados '## N.' en el orden en que aparecen."""
+    return [int(m) for m in re.findall(r"^## (\d+)\.", texto, re.M)]
+
+
+def fallos_numeracion(texto: str) -> list[str]:
+    """Secciones numeradas 1..N, sin repetidas ni saltos."""
+    nums = numeracion_secciones(texto)
+    repetidas = sorted({n for n in nums if nums.count(n) > 1})
+    if repetidas:
+        return [f"seccion {n} repetida" for n in repetidas]
+    if nums != list(range(1, len(nums) + 1)):
+        return [f"secciones {nums} no son 1..{len(nums)}"]
+    return []
+
+
 def chequeos() -> list[str]:
     fallos: list[str] = []
 
@@ -94,6 +110,11 @@ def chequeos() -> list[str]:
                 fallos.append(f"{sub}/{p.name}: nombre con acentos")
             if " " in p.name:
                 fallos.append(f"{sub}/{p.name}: nombre con espacios")
+
+    # 9. ORDEN.md y ORDER.md numeran sus secciones 1..N, sin repetir ni saltar
+    for f in ("ORDEN.md", "ORDER.md"):
+        if (ROOT / f).exists():
+            fallos += [f"{f}: {m}" for m in fallos_numeracion((ROOT / f).read_text(encoding="utf-8"))]
     return fallos
 
 

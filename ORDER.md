@@ -112,18 +112,16 @@ python -m pytest tests/knowledge tests/test_order.py -q
 CI=1 python -m pytest tests -q          # no firmware
 ```
 
-## 11. Current rules: fetched from `a6000-handoff-context`
+## 12. Copy of the rules in `a6000-handoff-context`
 
-**New rules about repository order** are published in the private repository
-[`nicolvus/a6000-handoff-context`](https://github.com/nicolvus/a6000-handoff-context) before they reach
-this document. At the start of every session, and always before deciding anything about repository order:
+This document is the single source for repository order (§1). The private repository
+[`nicolvus/a6000-handoff-context`](https://github.com/nicolvus/a6000-handoff-context) keeps a **read-only copy**
+in `estado/ORDEN.md` and `estado/ORDER.md`, for agents without this repository at hand.
 
 ```sh
-bash scripts/agent/sync_rules.sh   # fetches the current rules and lists what differs from the local copy
+bash scripts/agent/sync_rules.sh   # fetches that copy and lists what differs from this document
 ```
 
-- **GitHub wins**: whatever it brings is applied in the session and, if the local copy fell behind, it is
-  updated in the same commit.
-- An older snapshot never deletes a local rule: if GitHub does not have a rule yet, it stays in force.
-- To change a rule: the handoff repository first, then this document, and the rest of the change behind it,
-  as with any order rule.
+- If the copy and this document differ, **this document wins** and the copy is updated in the same commit.
+- An older snapshot never deletes a local rule: if the copy does not have a rule, it stays in force.
+- To change a rule: its own commit in this document, the handoff copy behind it, and the rest of the change after.
