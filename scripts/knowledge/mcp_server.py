@@ -11,6 +11,7 @@ Ejecutar (stdio, el transporte que ambos clientes MCP usan localmente):
 
 import contextlib
 import io
+import sqlite3
 import sys
 from pathlib import Path
 
@@ -57,6 +58,9 @@ def _captured(fn, *args, **kwargs) -> str:
             fn(*args, **kwargs)
         except SystemExit as exc:
             return str(exc)
+        except (sqlite3.OperationalError, FileNotFoundError) as exc:
+            return (f"Índice no disponible ({exc}). Ejecuta `python scripts/knowledge/index_docs.py` "
+                    "y `python scripts/knowledge/build_graph.py`.")
     return _cap_chars(buf.getvalue() or "Sin resultados.")
 
 
