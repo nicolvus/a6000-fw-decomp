@@ -1,0 +1,11 @@
+# Copia extraída de la imagen con mtools (mcopy -s -m ::/AVF_INFO ::/MP_ROOT ::/DCIM ::/PRIVATE) y auditoría
+$ MTOOLS_SKIP_CHECK=1 mcopy -i /tmp/fpb1-datos/img/sd.head -s -m -Q ::/AVF_INFO ::/MP_ROOT ::/DCIM ::/PRIVATE copia/
+      384  /tmp/fpb1-datos/copia/AVF_INFO/AVIN0001.INP
+ 14540590  /tmp/fpb1-datos/copia/MP_ROOT/100ANV01/MAH04198.MP4
+
+$ .venv/bin/python3 scripts/filmpb1_audita_tarjeta.py /tmp/fpb1-datos/copia
+raíz: /tmp/fpb1-datos/copia
+AVF_INFO: ['AVIN0001.INP']
+  MAH04198.MP4   dir=MP_ROOT/100ANV01 indice=   9510 ms mvhd=9.51 s tam=14540590 disco=14540590 bValid=1
+avisos: 0
+salida=0

@@ -1,0 +1,67 @@
+# Mapeo (type, subType) -> areaTblMode de la tabla ACTIVA (m_systemType=1, 0x009DE898)
+# Nombres de 'type' de la tabla 0x009DF094 {id,ptr}; nombres de 'subType' de 0x009DF054 {id,ptr}
+# size movie = hueco 11 (0xA4F368+11*0x18+8 = 0xA4F478); size still = hueco 13 (0xA4F4A8)
+# AUSENTE = la tabla del modo no tiene esa clave => la posicion no se escribe (queda 0)
+
+type sub    nombre type                    nombre sub   mode   movie(11)        still(13)       
+0x10 8(DC)  Create                         (DontCare)   0x11   AUSENTE          AUSENTE         
+0x01 8(DC)  Still Pb                       (DontCare)   0x06   AUSENTE          0x01600000      
+0x02 1      Movie Rec                      (M2PS)       0x01   0x01c00000       AUSENTE         
+0x02 3      Movie Rec                      (HD+AVI)     0x01   0x01c00000       AUSENTE         
+0x02 2      Movie Rec                      (HD)         0x01   0x01c00000       AUSENTE         
+0x02 4      Movie Rec                      (AVC.MP4)    0x01   0x01c00000       AUSENTE         
+0x02 6      Movie Rec                      6            0x01   0x01c00000       AUSENTE         
+0x02 7      Movie Rec                      7            0x21   0                AUSENTE         
+0x11 8(DC)  Multi Rec HDHD                 (DontCare)   0x01   0x01c00000       AUSENTE         
+0x1c 8(DC)  Multi Rec DVDV                 (DontCare)   0x01   0x01c00000       AUSENTE         
+0x03 8(DC)  Still Rec                      (DontCare)   0x03   AUSENTE          0x01800000      
+0x04 0      Index Pb                       (DVD)        0x05   0x01200000       AUSENTE         
+0x04 1      Index Pb                       (M2PS)       0x05   0x01200000       AUSENTE         
+0x04 2      Index Pb                       (HD)         0x05   0x01200000       AUSENTE         
+0x04 3      Index Pb                       (HD+AVI)     0x05   0x01200000       AUSENTE         
+0x04 4      Index Pb                       (AVC.MP4)    0x05   0x01200000       AUSENTE         
+0x04 6      Index Pb                       6            0x05   0x01200000       AUSENTE         
+0x04 7      Index Pb                       7            0x05   0x01200000       AUSENTE         
+0x06 1      Dual Rec                       (M2PS)       0x0c   0x01c00000       AUSENTE         
+0x06 3      Dual Rec                       (HD+AVI)     0x0c   0x01c00000       AUSENTE         
+0x06 2      Dual Rec                       (HD)         0x0c   0x01c00000       AUSENTE         
+0x06 4      Dual Rec                       (AVC.MP4)    0x0c   0x01c00000       AUSENTE         
+0x06 6      Dual Rec                       6            0x0c   0x01c00000       AUSENTE         
+0x00 0      Movie Pb                       (DVD)        0x0e   0x01400000       AUSENTE         
+0x00 1      Movie Pb                       (M2PS)       0x0e   0x01400000       AUSENTE         
+0x00 2      Movie Pb                       (HD)         0x0e   0x01400000       AUSENTE         
+0x00 3      Movie Pb                       (HD+AVI)     0x0e   0x01400000       AUSENTE         
+0x00 4      Movie Pb                       (AVC.MP4)    0x0e   0x01400000       AUSENTE         
+0x00 6      Movie Pb                       6            0x0e   0x01400000       AUSENTE         
+0x00 7      Movie Pb                       7            0x22   0                AUSENTE         
+0x08 0      Pb Capture                     (DVD)        0x0e   0x01400000       AUSENTE         
+0x08 1      Pb Capture                     (M2PS)       0x0e   0x01400000       AUSENTE         
+0x08 2      Pb Capture                     (HD)         0x0e   0x01400000       AUSENTE         
+0x08 3      Pb Capture                     (HD+AVI)     0x0e   0x01400000       AUSENTE         
+0x08 4      Pb Capture                     (AVC.MP4)    0x0e   0x01400000       AUSENTE         
+0x08 6      Pb Capture                     6            0x0e   0x01400000       AUSENTE         
+0x05 8(DC)  I-Pic Rec                      (DontCare)   0x0b   0x00900000       0x00400000      
+0x09 8(DC)  File Copy Dubbing              (DontCare)   0x08   0x01800000       AUSENTE         
+0x0a 8(DC)  Re-Mux Dubbing                 (DontCare)   0x09   0x00a00000       AUSENTE         
+0x0b 8(DC)  Still Dubbing                  (DontCare)   0x12   AUSENTE          0x01800000      
+0x0d 8(DC)  Thumb Rec                      (DontCare)   0x0f   AUSENTE          AUSENTE         
+0x0e 8(DC)  Content Edit                   (DontCare)   0x17   AUSENTE          AUSENTE         
+0x0f 2      Highlight Pb                   (HD)         0x07   0x01400000       AUSENTE         
+0x0f 3      Highlight Pb                   (HD+AVI)     0x07   0x01400000       AUSENTE         
+0x0c 8(DC)  Down Convert                   (DontCare)   0x0a   0x01200000       AUSENTE         
+0x16 8(DC)  Create Movie                   (DontCare)   0x1b   0x01000000       AUSENTE         
+0x17 8(DC)  Movie Rec 3D                   (DontCare)   0x1c   0x01c00000       AUSENTE         
+0x18 8(DC)  Movie Pb 3D                    (DontCare)   0x1d   0x01400000       AUSENTE         
+0x19 8(DC)  Highlight Pb 3D                (DontCare)   0x1e   0x01400000       AUSENTE         
+0x1a 8(DC)  OUCranc Rec                    (DontCare)   0x1f   0x03000000       AUSENTE         
+0x1b 8(DC)  Still Pb RAW                   (DontCare)   0x20   AUSENTE          0x00300000      
+0x15 8(DC)  Idle                           (DontCare)   0x11   AUSENTE          AUSENTE         
+0x1d 8(DC)  Multi Rec AVCHDMP4             (DontCare)   0x23   0x01c00000       AUSENTE         
+0x1e 8(DC)  Multi Rec XAVCMP4              (DontCare)   0x24   0                AUSENTE         
+
+# Los cinco modos con movie=0 y still>0 y quien los pide:
+modo 0x03: movie=AUSENTE still=0x01800000  <- [('0x03', 'Still Rec', 8)]
+modo 0x06: movie=AUSENTE still=0x01600000  <- [('0x01', 'Still Pb', 8)]
+modo 0x12: movie=AUSENTE still=0x01800000  <- [('0x0b', 'Still Dubbing', 8)]
+modo 0x13: movie=AUSENTE still=0x01000000  <- []
+modo 0x20: movie=AUSENTE still=0x00300000  <- [('0x1b', 'Still Pb RAW', 8)]

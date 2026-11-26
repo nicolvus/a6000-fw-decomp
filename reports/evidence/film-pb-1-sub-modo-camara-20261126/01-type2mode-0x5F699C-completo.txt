@@ -1,0 +1,95 @@
+# MemInfo::Type2Mode  VA 0x005F699C .. 0x005F6A3E (Thumb-2, libmpr.so fw 3.21)
+# Firma: int Type2Mode(int type /*r0*/, int subType /*r1*/, int* pRamMapAreaMode /*r2*/, int* pAreaTblMode /*r3*/)
+# Fichero: firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+# VA==offset en LOAD1 (0x000000..0x9BB1C8): .text 0x120228..0x7A3E84
+
+005f699c: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+005f69a0: 85b0       sub      sp, #0x14                     
+005f69a2: 284e       ldr      r6, [pc, #0xa0]                 ; [005f6a44]=009defe0
+005f69a4: 04af       add      r7, sp, #0x10                 
+005f69a6: 8846       mov      r8, r1                        
+005f69a8: 1446       mov      r4, r2                        
+005f69aa: 1d46       mov      r5, r3                        
+005f69ac: 8146       mov      sb, r0                        
+005f69ae: 03f02dfa   bl       #0x5f9e0c                     
+005f69b2: 0121       movs     r1, #1                        
+005f69b4: 3368       ldr      r3, [r6]                      
+005f69b6: 244a       ldr      r2, [pc, #0x90]                 ; [005f6a48]=008d908c "[MemInfo]Type2Mode()   ** m_systemType = [%ld]!!"
+005f69b8: 03f0e8f9   bl       #0x5f9d8c                     
+005f69bc: 3368       ldr      r3, [r6]                      
+005f69be: 012b       cmp      r3, #1                        
+005f69c0: 07d0       beq      #0x5f69d2                     
+005f69c2: 022b       cmp      r3, #2                        
+005f69c4: 0bd0       beq      #0x5f69de                     
+005f69c6: 0bbb       cbnz     r3, #0x5f6a0c                 
+005f69c8: 2360       str      r3, [r4]                      
+005f69ca: 0e33       adds     r3, #0xe                      
+005f69cc: 2b60       str      r3, [r5]                      
+005f69ce: 1f4b       ldr      r3, [pc, #0x7c]                 ; [005f6a4c]=009de7c8
+005f69d0: 19e0       b        #0x5f6a06                     
+005f69d2: 0023       movs     r3, #0                        
+005f69d4: 2360       str      r3, [r4]                      
+005f69d6: 1133       adds     r3, #0x11                     
+005f69d8: 2b60       str      r3, [r5]                      
+005f69da: 1d4b       ldr      r3, [pc, #0x74]                 ; [005f6a50]=009de898
+005f69dc: 13e0       b        #0x5f6a06                     
+005f69de: 0023       movs     r3, #0                        
+005f69e0: 2360       str      r3, [r4]                      
+005f69e2: 1133       adds     r3, #0x11                     
+005f69e4: 2b60       str      r3, [r5]                      
+005f69e6: 1b4b       ldr      r3, [pc, #0x6c]                 ; [005f6a54]=009dedc0
+005f69e8: 0de0       b        #0x5f6a06                     
+005f69ea: 9145       cmp      sb, r2                        
+005f69ec: 0ad1       bne      #0x5f6a04                     
+005f69ee: 5a68       ldr      r2, [r3, #4]                  
+005f69f0: 082a       cmp      r2, #8                        
+005f69f2: 01d0       beq      #0x5f69f8                     
+005f69f4: 9045       cmp      r8, r2                        
+005f69f6: 05d1       bne      #0x5f6a04                     
+005f69f8: da68       ldr      r2, [r3, #0xc]                
+005f69fa: 0126       movs     r6, #1                        
+005f69fc: 2260       str      r2, [r4]                      
+005f69fe: 9b68       ldr      r3, [r3, #8]                  
+005f6a00: 2b60       str      r3, [r5]                      
+005f6a02: 04e0       b        #0x5f6a0e                     
+005f6a04: 1033       adds     r3, #0x10                     
+005f6a06: 1a68       ldr      r2, [r3]                      
+005f6a08: 202a       cmp      r2, #0x20                     
+005f6a0a: eed1       bne      #0x5f69ea                     
+005f6a0c: 0026       movs     r6, #0                        
+005f6a0e: 03f0fdf9   bl       #0x5f9e0c                     
+005f6a12: 2368       ldr      r3, [r4]                      
+005f6a14: 0121       movs     r1, #1                        
+005f6a16: 104a       ldr      r2, [pc, #0x40]                 ; [005f6a58]=008d90c0 "[MemInfo]Type2Mode: type=%d /subType=%d / ramMap"
+005f6a18: cdf80080   str.w    r8, [sp]                      
+005f6a1c: 0193       str      r3, [sp, #4]                  
+005f6a1e: 2b68       ldr      r3, [r5]                      
+005f6a20: 0293       str      r3, [sp, #8]                  
+005f6a22: 4b46       mov      r3, sb                        
+005f6a24: 03f0b2f9   bl       #0x5f9d8c                     
+005f6a28: 2eb9       cbnz     r6, #0x5f6a36                 
+005f6a2a: 03f0d7f9   bl       #0x5f9ddc                     
+005f6a2e: 0121       movs     r1, #1                        
+005f6a30: 0a4a       ldr      r2, [pc, #0x28]                 ; [005f6a5c]=008d910f "[MemInfo]not found mode"
+005f6a32: 03f0abf9   bl       #0x5f9d8c                     
+005f6a36: 3046       mov      r0, r6                        
+005f6a38: 07f10407   add.w    r7, r7, #4                    
+005f6a3c: bd46       mov      sp, r7                        
+005f6a3e: bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}  
+005f6a42: 00bf       nop                                    
+005f6a44: e0ef9d00   vshr.s64 d16, d13, #0x20               
+005f6a48: 8c90       str      r0, [sp, #0x230]              
+005f6a4a: 8d00       lsls     r5, r1, #2                    
+005f6a4c: c8e7       b        #0x5f69e0                     
+005f6a4e: 9d00       lsls     r5, r3, #2                    
+005f6a50: 98e89d00   ldm.w    r8, {r0, r2, r3, r4, r7}      
+005f6a54: c0ed9d00   stcl     p0, c0, [r0, #0x274]          
+005f6a58: c090       str      r0, [sp, #0x300]              
+005f6a5a: 8d00       lsls     r5, r1, #2                    
+005f6a5c: 0f91       str      r1, [sp, #0x3c]               
+005f6a5e: 8d00       lsls     r5, r1, #2                    
+
+# Pool de literales de la funcion (0x5F6A44..0x5F6A60)
+--- literal pool Type2Mode @ 005f6a44 ---
+005f6a44: 009defe0 008d908c 009de7c8 009de898  ................
+005f6a54: 009dedc0 008d90c0 008d910f b083b5f0  ................

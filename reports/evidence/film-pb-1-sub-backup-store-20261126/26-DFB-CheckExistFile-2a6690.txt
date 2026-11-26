@@ -1,0 +1,37 @@
+002a6690: 2de9f047   push.w    {r4, r5, r6, r7, r8, sb, sl, lr}
+002a6694: 8046       mov       r8, r0                      
+002a6696: 00af       add       r7, sp, #0                  
+002a6698: 8946       mov       sb, r1                      
+002a669a: 2748       ldr       r0, [pc, #0x9c]               ; [002a6738]=007de105 "[DFB]CheckExistFile--start[%d]"
+002a669c: 4146       mov       r1, r8                      
+002a669e: 04f00bfe   bl        #0x2ab2b8                   
+002a66a2: 264b       ldr       r3, [pc, #0x98]               ; [002a673c]=009e484c
+002a66a4: 1b78       ldrb      r3, [r3]                    
+002a66a6: 3bb9       cbnz      r3, #0x2a66b8               
+002a66a8: 2548       ldr       r0, [pc, #0x94]               ; [002a6740]=007de124 "[DFB]not initialized yet:CheckExistFile()"
+002a66aa: 04f081fe   bl        #0x2ab3b0                   
+002a66ae: 4f20       movs      r0, #0x4f                   
+002a66b0: bde8f047   pop.w     {r4, r5, r6, r7, r8, sb, sl, lr}
+002a66b4: fff754ba   b.w       #0x2a5b60                   
+002a66b8: 2248       ldr       r0, [pc, #0x88]               ; [002a6744]=009e3d08
+002a66ba: 2349       ldr       r1, [pc, #0x8c]               ; [002a6748]=009e5178
+002a66bc: 09f074ff   bl        #0x2b05a8                   
+002a66c0: 08f1ff33   add.w     r3, r8, #-1                 
+002a66c4: 13f1030f   cmn.w     r3, #3                      
+002a66c8: 2fd8       bhi       #0x2a672a                   
+002a66ca: 4824       movs      r4, #0x48                   
+002a66cc: 0025       movs      r5, #0                      
+002a66ce: 1d48       ldr       r0, [pc, #0x74]               ; [002a6744]=009e3d08
+002a66d0: 2946       mov       r1, r5                      
+002a66d2: 0af080f8   bl        #0x2b07d6                   
+002a66d6: 4045       cmp       r0, r8                      
+002a66d8: 23d1       bne       #0x2a6722                   
+002a66da: 1c48       ldr       r0, [pc, #0x70]               ; [002a674c]=007de14e "[DFB]CheckExistFile--exist[%x]"
+002a66dc: 4146       mov       r1, r8                      
+002a66de: 04f0ebfd   bl        #0x2ab2b8                   
+002a66e2: b9f1000f   cmp.w     sb, #0                      
+002a66e6: 22d0       beq       #0x2a672e                   
+002a66e8: 0026       movs      r6, #0                      
+002a66ea: 2946       mov       r1, r5                      
+002a66ec: 3246       mov       r2, r6                      
+002a66ee: 1548       ldr       r0, [pc, #0x54]               ; [002a6744]=009e3d08

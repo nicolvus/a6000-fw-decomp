@@ -1,0 +1,18 @@
+# chequea_trampas.py sobre libmpr.so 3.21 — los 5 de la receta
+# firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so: 5 desplazamiento(s); .text 6831196 B; 30603 destinos de bl
+0x5bad00 ENTRADA  llamadores=809 punteros=  0 previo=0xbd80 prologo=si — bl desde 0x2ba768, 0x2ba7a8, 0x2ba80c
+0x6e8430 ENTRADA  llamadores=  4 punteros=  0 previo=0x0086 prologo=si — bl desde 0x4d37e0, 0x61a9e4, 0x67b598
+0x6e80a4 ENTRADA  llamadores=  2 punteros=  0 previo=0x0091 prologo=si — bl desde 0x67c676, 0x6f1bec
+0x61a8f0 ENTRADA  llamadores=  0 punteros=  1 previo=0x3100 prologo=si — puntero en 0x8e6eb0 + prólogo
+0x608698 ENTRADA  llamadores=  0 punteros=  1 previo=0x008d prologo=si — puntero en 0x8e6f0c + prólogo
+exit=0
+
+# los que cuelgan el arranque (medidos por otro subagente) y media instrucción
+NO ARMAR en caliente: no todos son entrada de función demostrada (ver informe §3). Si aun así hace falta, FUERZA=1 en estable.sh asume el riesgo de IMEXIT 139.
+# firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so: 5 desplazamiento(s); .text 6831196 B; 30603 destinos de bl
+0x60c9ee NO       llamadores=  0 punteros=  0 previo=0xf89d prologo=no — sin bl, sin puntero, previo 0xf89d no cierra función y no hay prólogo
+0x60c9f4 DUDOSA   llamadores=  0 punteros=  0 previo=0xe017 prologo=no — solo frontera (previo 0xe017 = pop/b)
+0x6e8432 NO       llamadores=  0 punteros=  0 previo=0xe92d prologo=no — sin bl, sin puntero, previo 0xe92d no cierra función y no hay prólogo
+0x6e8434 DUDOSA   llamadores=  0 punteros=  0 previo=0x43f0 prologo=si — prólogo pero sin bl ni puntero (previo 0x43f0)
+0x6e80a8 DUDOSA   llamadores=  0 punteros=  0 previo=0x43f0 prologo=si — prólogo pero sin bl ni puntero (previo 0x43f0)
+exit=1

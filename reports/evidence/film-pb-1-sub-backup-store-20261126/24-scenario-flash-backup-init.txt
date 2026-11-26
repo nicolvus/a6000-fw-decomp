@@ -1,0 +1,158 @@
+000005d8: 034b       ldr       r3, [pc, #0xc]                ; [000005e8]=000083f8
+000005da: 044a       ldr       r2, [pc, #0x10]               ; [000005ec]=00000028
+000005dc: 7b44       add       r3, pc                      
+000005de: 9b58       ldr       r3, [r3, r2]                
+000005e0: 0bb1       cbz       r3, #0x5e6                  
+000005e2: fff7d3bf   b.w       #0x58c                        ; _init+0x2c
+000005e6: 7047       bx        lr                          
+000005e8: f883       strh      r0, [r7, #0x1e]             
+000005ea: 0000       movs      r0, r0                      
+000005ec: 2800       movs      r0, r5                      
+000005ee: 0000       movs      r0, r0                      
+000005f0: 0a48       ldr       r0, [pc, #0x28]               ; [0000061c]=0000841c
+000005f2: 08b5       push      {r3, lr}                    
+000005f4: 7844       add       r0, pc                      
+000005f6: 0a4b       ldr       r3, [pc, #0x28]               ; [00000620]=000083da
+000005f8: 0278       ldrb      r2, [r0]                    
+000005fa: 7b44       add       r3, pc                      
+000005fc: 6ab9       cbnz      r2, #0x61a                  
+000005fe: 0949       ldr       r1, [pc, #0x24]               ; [00000624]=00000034
+00000600: 5b58       ldr       r3, [r3, r1]                
+00000602: 23b1       cbz       r3, #0x60e                  
+00000604: 0848       ldr       r0, [pc, #0x20]               ; [00000628]=00008406
+00000606: 7844       add       r0, pc                      
+00000608: 0068       ldr       r0, [r0]                    
+0000060a: fff7e0ef   blx       #0x5cc                        ; __cxa_finalize
+0000060e: dff81cc0   ldr.w     ip, [pc, #0x1c]               ; [0000062c]=000083fc
+00000612: 0122       movs      r2, #1                      
+00000614: fc44       add       ip, pc                      
+00000616: 8cf80020   strb.w    r2, [ip]                    
+0000061a: 08bd       pop       {r3, pc}                    
+0000061c: 1c84       strh      r4, [r3, #0x20]             
+0000061e: 0000       movs      r0, r0                      
+00000620: da83       strh      r2, [r3, #0x1e]             
+00000622: 0000       movs      r0, r0                      
+00000624: 3400       movs      r4, r6                      
+00000626: 0000       movs      r0, r0                      
+00000628: 0684       strh      r6, [r0, #0x20]             
+0000062a: 0000       movs      r0, r0                      
+0000062c: fc83       strh      r4, [r7, #0x1e]             
+0000062e: 0000       movs      r0, r0                      
+00000630: 0548       ldr       r0, [pc, #0x14]               ; [00000648]=0000826c
+00000632: 08b5       push      {r3, lr}                    
+00000634: 7844       add       r0, pc                      
+00000636: 054b       ldr       r3, [pc, #0x14]               ; [0000064c]=0000839a
+00000638: 0268       ldr       r2, [r0]                    
+0000063a: 7b44       add       r3, pc                      
+0000063c: 1ab1       cbz       r2, #0x646                  
+0000063e: 0449       ldr       r1, [pc, #0x10]               ; [00000650]=0000002c
+00000640: 5b58       ldr       r3, [r3, r1]                
+00000642: 03b1       cbz       r3, #0x646                  
+00000644: 9847       blx       r3                          
+00000646: 08bd       pop       {r3, pc}                    
+00000648: 6c82       strh      r4, [r5, #0x12]             
+0000064a: 0000       movs      r0, r0                      
+0000064c: 9a83       strh      r2, [r3, #0x1c]             
+0000064e: 0000       movs      r0, r0                      
+00000650: 2c00       movs      r4, r5                      
+00000652: 0000       movs      r0, r0                      
+00000654: 034b       ldr       r3, [pc, #0xc]                ; [00000664]=0000837c
+00000656: 044a       ldr       r2, [pc, #0x10]               ; [00000668]=00000030
+00000658: 7b44       add       r3, pc                      
+0000065a: 80b5       push      {r7, lr}                    
+0000065c: 00af       add       r7, sp, #0                  
+0000065e: 9b58       ldr       r3, [r3, r2]                
+00000660: 1868       ldr       r0, [r3]                    
+00000662: 80bd       pop       {r7, pc}                    
+00000664: 7c83       strh      r4, [r7, #0x1a]             
+00000666: 0000       movs      r0, r0                      
+00000668: 3000       movs      r0, r6                      
+0000066a: 0000       movs      r0, r0                      
+0000066c: f8b5       push      {r3, r4, r5, r6, r7, lr}    
+0000066e: 0446       mov       r4, r0                      
+00000670: 2648       ldr       r0, [pc, #0x98]               ; [0000070c]=000000be
+00000672: 00af       add       r7, sp, #0                  
+00000674: 0e46       mov       r6, r1                      
+00000676: 1546       mov       r5, r2                      
+00000678: 7844       add       r0, pc                      
+0000067a: fff79cef   blx       #0x5b4                        ; puts
+0000067e: 2448       ldr       r0, [pc, #0x90]               ; [00000710]=000000c3
+00000680: 7844       add       r0, pc                      
+00000682: fff798ef   blx       #0x5b4                        ; puts
+00000686: 2348       ldr       r0, [pc, #0x8c]               ; [00000714]=000000d3
+00000688: 3246       mov       r2, r6                      
+0000068a: 2146       mov       r1, r4                      
+0000068c: 7844       add       r0, pc                      
+0000068e: 2b46       mov       r3, r5                      
+00000690: fff78aef   blx       #0x5a8                        ; printf
+00000694: 0026       movs      r6, #0                      
+00000696: 05e0       b         #0x6a4                      
+00000698: 1f48       ldr       r0, [pc, #0x7c]               ; [00000718]=000000ed
+0000069a: a15d       ldrb      r1, [r4, r6]                
+0000069c: 0136       adds      r6, #1                      
+0000069e: 7844       add       r0, pc                      
+000006a0: fff782ef   blx       #0x5a8                        ; printf
+000006a4: ae42       cmp       r6, r5                      
+000006a6: f7d3       blo       #0x698                      
+000006a8: 0a20       movs      r0, #0xa                    
+000006aa: fff778ef   blx       #0x59c                        ; putchar
+000006ae: 032d       cmp       r5, #3                      
+000006b0: 06d8       bhi       #0x6c0                      
+000006b2: 1a48       ldr       r0, [pc, #0x68]               ; [0000071c]=000000dc
+000006b4: 7844       add       r0, pc                      
+000006b6: fff77eef   blx       #0x5b4                        ; puts
+000006ba: 4ff0ff30   mov.w     r0, #-1                     
+000006be: f8bd       pop       {r3, r4, r5, r6, r7, pc}    
+000006c0: fff75eef   blx       #0x580                        ; _init+0x20
+000006c4: 0546       mov       r5, r0                      
+000006c6: 1648       ldr       r0, [pc, #0x58]               ; [00000720]=000000f9
+000006c8: 2946       mov       r1, r5                      
+000006ca: 7844       add       r0, pc                      
+000006cc: fff76cef   blx       #0x5a8                        ; printf
+000006d0: 1448       ldr       r0, [pc, #0x50]               ; [00000724]=000000ff
+000006d2: 7844       add       r0, pc                      
+000006d4: fff76eef   blx       #0x5b4                        ; puts
+000006d8: 2846       mov       r0, r5                      
+000006da: 0121       movs      r1, #1                      
+000006dc: 0022       movs      r2, #0                      
+000006de: fff770ef   blx       #0x5c0                        ; _ZN5MprIf14ExecMprUtilityEN3MPR12UtilityCmdIdEPv
+000006e2: 0546       mov       r5, r0                      
+000006e4: 1048       ldr       r0, [pc, #0x40]               ; [00000728]=0000010a
+000006e6: 7844       add       r0, pc                      
+000006e8: fff764ef   blx       #0x5b4                        ; puts
+000006ec: 3db1       cbz       r5, #0x6fe                  
+000006ee: 0f48       ldr       r0, [pc, #0x3c]               ; [0000072c]=0000011b
+000006f0: 2946       mov       r1, r5                      
+000006f2: 7844       add       r0, pc                      
+000006f4: fff758ef   blx       #0x5a8                        ; printf
+000006f8: 2560       str       r5, [r4]                    
+000006fa: 0420       movs      r0, #4                      
+000006fc: f8bd       pop       {r3, r4, r5, r6, r7, pc}    
+000006fe: 0c48       ldr       r0, [pc, #0x30]               ; [00000730]=0000012f
+00000700: 2560       str       r5, [r4]                    
+00000702: 7844       add       r0, pc                      
+00000704: fff756ef   blx       #0x5b4                        ; puts
+00000708: 0420       movs      r0, #4                      
+0000070a: f8bd       pop       {r3, r4, r5, r6, r7, pc}    
+0000070c: be00       lsls      r6, r7, #2                  
+0000070e: 0000       movs      r0, r0                      
+00000710: c300       lsls      r3, r0, #3                  
+00000712: 0000       movs      r0, r0                      
+00000714: d300       lsls      r3, r2, #3                  
+00000716: 0000       movs      r0, r0                      
+00000718: ed00       lsls      r5, r5, #3                  
+0000071a: 0000       movs      r0, r0                      
+0000071c: dc00       lsls      r4, r3, #3                  
+0000071e: 0000       movs      r0, r0                      
+00000720: f900       lsls      r1, r7, #3                  
+00000722: 0000       movs      r0, r0                      
+00000724: ff00       lsls      r7, r7, #3                  
+00000726: 0000       movs      r0, r0                      
+00000728: 0a01       lsls      r2, r1, #4                  
+0000072a: 0000       movs      r0, r0                      
+0000072c: 1b01       lsls      r3, r3, #4                  
+0000072e: 0000       movs      r0, r0                      
+00000730: 2f01       lsls      r7, r5, #4                  
+00000732: 0000       movs      r0, r0                      
+00000734: 08b5       push      {r3, lr}                    
+00000736: 00bf       nop                                   

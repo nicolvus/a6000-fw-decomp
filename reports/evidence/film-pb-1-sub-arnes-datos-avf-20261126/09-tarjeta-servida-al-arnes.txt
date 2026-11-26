@@ -1,0 +1,112 @@
+# TARJETA SERVIDA AL ARNÉS — raíz por omisión $HOME/A6000-SD (sd_emu.SD_DEFECTO), 26-11-2026
+
+## contenido (se AÑADE a los 3 JPG que ya había; no se borra nada)
+       512  /home/nicolas/A6000-SD/AVF_INFO/AVIN0001.BNP
+       512  /home/nicolas/A6000-SD/AVF_INFO/AVIN0001.INP
+       256  /home/nicolas/A6000-SD/AVF_INFO/AVIN0001.INT
+       256  /home/nicolas/A6000-SD/AVF_INFO/PRV00001.BIN
+    645863  /home/nicolas/A6000-SD/DCIM/100MSDCF/DSC00001.JPG
+    645863  /home/nicolas/A6000-SD/DCIM/100MSDCF/DSC00002.JPG
+    645863  /home/nicolas/A6000-SD/DCIM/100MSDCF/DSC00003.JPG
+  14540590  /home/nicolas/A6000-SD/MP_ROOT/100ANV01/MAH04198.MP4
+  14545696  /home/nicolas/A6000-SD/MP_ROOT/103ANV01/MAH04198.MP4
+  14540590  /home/nicolas/A6000-SD/PRIVATE/M4ROOT/CLIP/C0001.MP4
+
+## sha256
+ebae5cfa6c1803f66ec378e19e2606e17bd9b352f4ccb99e9afc1da8135366ba  /home/nicolas/A6000-SD/AVF_INFO/AVIN0001.BNP
+ebae5cfa6c1803f66ec378e19e2606e17bd9b352f4ccb99e9afc1da8135366ba  /home/nicolas/A6000-SD/AVF_INFO/AVIN0001.INP
+e73285556a47b10c21cb32d01da723134a69c7f3430510e2cf9af50c9ee86499  /home/nicolas/A6000-SD/AVF_INFO/AVIN0001.INT
+e73285556a47b10c21cb32d01da723134a69c7f3430510e2cf9af50c9ee86499  /home/nicolas/A6000-SD/AVF_INFO/PRV00001.BIN
+6e66e43d3b987c2482a7d3373ec1fffd18c790fe02638ac84264a38d00245d8d  /home/nicolas/A6000-SD/MP_ROOT/100ANV01/MAH04198.MP4
+148c204cdea843ebafee0ffc9123b1614a493c083a931e5e499489ce27b7dba6  /home/nicolas/A6000-SD/MP_ROOT/103ANV01/MAH04198.MP4
+6e66e43d3b987c2482a7d3373ec1fffd18c790fe02638ac84264a38d00245d8d  /home/nicolas/A6000-SD/PRIVATE/M4ROOT/CLIP/C0001.MP4
+
+## imagen que construye sd_image.py con esa carpeta (misma función y 4 GiB que live.py)
+raíz de la tarjeta: /home/nicolas/A6000-SD
+sectores 8388608
+10e8e4539bf9f0020d6368c04e51287b33a9cc1a8b5db472cfddb37d2e81693c  /tmp/fpb1-final/img/sd.head
+
+## mdir de la cabeza
+--- ::/
+ Volume in drive : is A6000SD    
+ Volume Serial Number is 4240-42A0
+Directory for ::/
+
+DCIM         <DIR>     2026-11-26   0:14 
+PRIVATE      <DIR>     2026-11-26   0:14 
+AVF_INFO     <DIR>     2026-11-26   0:13 
+MP_ROOT      <DIR>     2026-11-26   0:14 
+        4 files                   0 bytes
+                      4 240 916 480 bytes free
+
+--- ::/AVF_INFO
+ Volume in drive : is A6000SD    
+ Volume Serial Number is 4240-42A0
+Directory for ::/AVF_INFO
+
+.            <DIR>     2026-11-26   0:13 
+..           <DIR>     2026-11-26   0:13 
+AVIN0001 INP       512 2026-11-26   0:14 
+AVIN0001 BNP       512 2026-11-26   0:14 
+AVIN0001 INT       256 2026-11-26   0:14 
+PRV00001 BIN       256 2026-11-26   0:14 
+        6 files               1 536 bytes
+                      4 240 916 480 bytes free
+
+--- ::/MP_ROOT/100ANV01
+ Volume in drive : is A6000SD    
+ Volume Serial Number is 4240-42A0
+Directory for ::/MP_ROOT/100ANV01
+
+.            <DIR>     2026-11-26   0:13 
+..           <DIR>     2026-11-26   0:13 
+MAH04198 MP4  14540590 2026-11-26   0:14 
+        3 files          14 540 590 bytes
+                      4 240 916 480 bytes free
+
+--- ::/MP_ROOT/103ANV01
+ Volume in drive : is A6000SD    
+ Volume Serial Number is 4240-42A0
+Directory for ::/MP_ROOT/103ANV01
+
+.            <DIR>     2026-11-26   0:14 
+..           <DIR>     2026-11-26   0:14 
+MAH04198 MP4  14545696 2026-11-26   0:14 
+        3 files          14 545 696 bytes
+                      4 240 916 480 bytes free
+
+--- ::/PRIVATE/M4ROOT/CLIP
+ Volume in drive : is A6000SD    
+ Volume Serial Number is 4240-42A0
+Directory for ::/PRIVATE/M4ROOT/CLIP
+
+.            <DIR>     2026-11-26   0:14 
+..           <DIR>     2026-11-26   0:14 
+C0001    MP4  14540590 2026-11-26   0:13 
+        3 files          14 540 590 bytes
+                      4 240 916 480 bytes free
+
+
+## registro del .INP (cabecera 0x100 + 2 registros de 0x80)
+INP 512 B; count@0x1C = 2
+ rec0 dir='MP_ROOT/100ANV01' name='MAH04198.MP4' size=14540590 1440x1080 ms=9510 90k=855900 codec=4 prof=2 bValid=1
+ rec1 dir='MP_ROOT/103ANV01' name='MAH04198.MP4' size=14545696 1920x1080 ms=9510 90k=855900 codec=4 prof=2 bValid=1
+
+## auditoría sobre la copia EXTRAÍDA de la imagen
+raíz: /tmp/fpb1-final/copia
+AVF_INFO: ['AVIN0001.BNP', 'AVIN0001.INP', 'AVIN0001.INT', 'PRV00001.BIN']
+  MAH04198.MP4   dir=MP_ROOT/100ANV01 indice=   9510 ms mvhd=9.51 s tam=14540590 disco=14540590 bValid=1
+  MAH04198.MP4   dir=MP_ROOT/103ANV01 indice=   9510 ms mvhd=9.5095 s tam=14545696 disco=14545696 bValid=1
+avisos: 0
+salida=0
+
+## auditoría sobre la carpeta de origen
+raíz: /home/nicolas/A6000-SD
+AVF_INFO: ['AVIN0001.BNP', 'AVIN0001.INP', 'AVIN0001.INT', 'PRV00001.BIN']
+  MAH04198.MP4   dir=MP_ROOT/100ANV01 indice=   9510 ms mvhd=9.51 s tam=14540590 disco=14540590 bValid=1
+  MAH04198.MP4   dir=MP_ROOT/103ANV01 indice=   9510 ms mvhd=9.5095 s tam=14545696 disco=14545696 bValid=1
+avisos: 0
+salida=0
+
+# NOTA: con más de un fichero en AVF_INFO, scripts/filmpb1_audita_tarjeta.py del repo revienta (sorted sobre
+#       dicts); por eso se usa la copia con sorted(key=…). diff en 07-corrida2-tarjeta-coherente.txt

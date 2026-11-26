@@ -1,0 +1,72 @@
+# Cadenas de llamada (escaneo de BL/B.W de 32 bits con brscan.py)
+
+== llamadores de 0x005F699C
+BL at 005f7c40
+BL at 005f7f44
+
+== llamadores de 0x005F7BE8
+B.W at 00428588
+BL at 005f98a6
+
+== llamadores de 0x005F7F1C
+B.W at 00428594
+B.W at 005f8028
+
+== llamadores de 0x005F8020
+BL at 003300ac
+BL at 00330118
+BL at 003e85e8
+
+== llamadores de 0x004284AC
+BL at 0042d346
+BL at 0042ded4
+BL at 0042e1ee
+BL at 0042e328
+BL at 0042e4f6
+BL at 0042e6dc
+BL at 0042e870
+BL at 0042e9ea
+BL at 0042eb6e
+BL at 0042eee0
+BL at 0042f234
+BL at 0042f3c4
+BL at 0042f4d4
+BL at 00431102
+BL at 0043271a
+BL at 004365e0
+BL at 0043669e
+BL at 00436730
+BL at 00436bfa
+BL at 00437aa4
+BL at 00438e66
+BL at 0043966c
+BL at 0043e61c
+BL at 0043f004
+BL at 00442602
+BL at 004427da
+BL at 00442872
+BL at 00443500
+BL at 004463d6
+BL at 00446530
+BL at 00446658
+BL at 00446bfe
+BL at 00446de8
+
+== llamadores de 0x0043910C
+BL at 0043094c
+BL at 00431184
+BL at 0043530a
+BL at 00436752
+BL at 00436c1c
+BL at 00437ac4
+BL at 00438e90
+BL at 004396a6
+BL at 00439812
+BL at 004463f2
+BL at 00446c1a
+BL at 00446e02
+
+# Thunks de cola (b.w) hacia StreamAreaAllocate/ChangeAllocate:
+#  0x00428588  pop.w {...} ; b.w 0x5F7BE8   (dentro de GetMemoryInformation 0x4284AC, r2!=0)
+#  0x00428594  pop.w {...} ; b.w 0x5F7F1C   (dentro de GetMemoryInformation 0x4284AC, r2==0)
+#  0x005F8028  pop.w {r7,lr} ; b.w 0x5F7F1C (envoltorio ChangeAllocate, entrada 0x5F8020)

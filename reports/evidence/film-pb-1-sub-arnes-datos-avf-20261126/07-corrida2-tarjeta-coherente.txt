@@ -1,0 +1,55 @@
+# Corrida 2 (perfil datos-avf2): tarjeta con AVF_INFO COHERENTE = AVIN0001.INP + .BNP (idénticos) + .INT + PRV00001.BIN
+
+## Árbol de AVF_INFO
+      384 /tmp/fpb1-datos2/A6000-SD/AVF_INFO/AVIN0001.BNP
+      384 /tmp/fpb1-datos2/A6000-SD/AVF_INFO/AVIN0001.INP
+      256 /tmp/fpb1-datos2/A6000-SD/AVF_INFO/AVIN0001.INT
+      256 /tmp/fpb1-datos2/A6000-SD/AVF_INFO/PRV00001.BIN
+7693b1ee708ca623f2e68315a3edeadbaae1a64381981fd4f4a62556a56f4f0a  /tmp/fpb1-datos2/A6000-SD/AVF_INFO/AVIN0001.BNP
+7693b1ee708ca623f2e68315a3edeadbaae1a64381981fd4f4a62556a56f4f0a  /tmp/fpb1-datos2/A6000-SD/AVF_INFO/AVIN0001.INP
+e73285556a47b10c21cb32d01da723134a69c7f3430510e2cf9af50c9ee86499  /tmp/fpb1-datos2/A6000-SD/AVF_INFO/AVIN0001.INT
+e73285556a47b10c21cb32d01da723134a69c7f3430510e2cf9af50c9ee86499  /tmp/fpb1-datos2/A6000-SD/AVF_INFO/PRV00001.BIN
+94887a71e14b58597a9f124c5f3dfd1538cf137c56c1d31f6f733c92f5b7e65b  /tmp/fpb1-datos2/img/sd.head
+
+## mdir de la imagen
+--- ::/AVF_INFO
+ Volume in drive : is A6000SD    
+ Volume Serial Number is CA74-1DFB
+Directory for ::/AVF_INFO
+
+.            <DIR>     2026-11-25  23:42 
+..           <DIR>     2026-11-25  23:42 
+PRV00001 BIN       256 2026-11-25  23:42 
+AVIN0001 INT       256 2026-11-25  23:42 
+AVIN0001 BNP       384 2026-11-25  23:42 
+AVIN0001 INP       384 2026-11-25  23:42 
+        6 files               1 280 bytes
+                      4 271 951 872 bytes free
+
+--- ::/MP_ROOT/100ANV01
+ Volume in drive : is A6000SD    
+ Volume Serial Number is CA74-1DFB
+Directory for ::/MP_ROOT/100ANV01
+
+.            <DIR>     2026-11-25  23:42 
+..           <DIR>     2026-11-25  23:42 
+MAH04198 MP4  14540590 2026-11-25  23:42 
+        3 files          14 540 590 bytes
+                      4 271 951 872 bytes free
+
+
+## Copia extraída + auditoría
+      384 /tmp/fpb1-datos2/copia/AVF_INFO/AVIN0001.BNP
+      384 /tmp/fpb1-datos2/copia/AVF_INFO/AVIN0001.INP
+      256 /tmp/fpb1-datos2/copia/AVF_INFO/AVIN0001.INT
+      256 /tmp/fpb1-datos2/copia/AVF_INFO/PRV00001.BIN
+ 14540590 /tmp/fpb1-datos2/copia/MP_ROOT/100ANV01/MAH04198.MP4
+
+$ .venv/bin/python3 reports/evidence/film-pb-1-sub-arnes-datos-avf-20261126/audita_tarjeta_copia.py /tmp/fpb1-datos2/copia
+raíz: /tmp/fpb1-datos2/copia
+AVF_INFO: ['AVIN0001.BNP', 'AVIN0001.INP', 'AVIN0001.INT', 'PRV00001.BIN']
+  MAH04198.MP4   dir=MP_ROOT/100ANV01 indice=   9510 ms mvhd=9.51 s tam=14540590 disco=14540590 bValid=1
+avisos: 0
+salida=0
+
+# (la copia solo cambia el sorted del listado de AVF_INFO: con más de un fichero el original revienta)

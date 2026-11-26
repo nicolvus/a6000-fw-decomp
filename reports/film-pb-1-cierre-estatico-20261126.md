@@ -298,3 +298,47 @@ Todo lo que sigue es sin flashear y sin abrir la cámara.
 Si en algún momento hay acceso a la cámara (red o USB), la traza de nivel 5 con
 `CMD(SET_AREA)`, `Type2Mode:` y `StreamAreaFree` cierra M1 en un minuto, y el breakpoint en
 `0x437C0A`/`0x437C3C` dice qué guarda dispara.
+
+## 11. Causa raíz: los readers del backup viven en `nflasha4` y están a cero
+
+Convergencia de tres auditorías independientes del 26-11:
+
+1. **El fallo concreto es `0x10100001`**, y sale de `0x2B39B8` cuando
+   `[0xA3699C + 0x14*idx + 4] == 0`: la entrada de la tabla de readers **no tiene handle**.
+   `ReadFirstPackData` (`0x2B3948`) ni se ejecuta. `0xB0800001` era solo el `default` del
+   traductor ([mp4ifo-load](film-pb-1-sub-mp4ifo-load-20261126.md)).
+2. **Esa tabla es el backup del NAND interno.** El pack `RcsTbl` no está en la tarjeta: es un
+   sector FBS de **`nflasha4`** («MPR», 10 MiB), leído por `FlashLib` sobre `/dev/nflasha4` y
+   `/dev/cnflasha4`. La tabla (`0xA3699C`, **30 entradas × 0x14 B**, `+4` = handle FBS) se rellena
+   en `BackupMgr::WarmBootInit` (`0x2B4624`) y `BackupMgr::Init` (`0x2B4820`) con
+   `SetSectorManagerTable` (`0x2B45A8`), y solo si `FlashLib::CheckExistSector` devuelve `0x45`;
+   con `m_enableFlag` (`0xA36C78`) a 0 devuelve `-1` y los 30 handles quedan a 0
+   ([backup-store](film-pb-1-sub-backup-store-20261126.md)).
+3. **La geometría la da la partición**: `FlashLib::Init` la obtiene de la capa DFB, que abre
+   `/dev/(c)nflasha4` y lee `start` de `/sys/block/nflasha0/nflasha0p4/start`. Si `nflasha0p4`
+   no cuadra o la geometría sale 0, los 30 handles quedan a 0 **toda la sesión**
+   (`BackupMgr::Init` deja `Event` como callback para rehacer el bucle; si no llega, nada).
+
+Y esto explica, por fin, el cuadro completo sin excepciones: falla la carga de **los tres**
+formatos (MSV, DCF y XAVC) a la vez, la tarjeta recién formateada no cambia nada, el formato del
+fichero es irrelevante, y la miniatura de foto se salva porque va por `DCIM`/EXIF sin pasar por
+ese almacén.
+
+El proyecto ya había visto moverse esta partición: en la comparación de NAND del 05-11,
+`nflasha4` («MPR», base de datos de contenidos de `libmpr`: miniaturas/DCF) aparece como «datos
+reubicados» ([R57 §12](../docs/capture/e26-r57-paquete-336-darwin-eq1.md)). Hay **tres volcados**
+en el repo y los tres difieren:
+
+| Volcado | SHA-256 |
+|---|---|
+| `nand-20261020/dev_nflasha4.bin` | `a5ab15ca…ac7247` |
+| `nand-20261105/dev_nflasha4.bin` | `d5510bcb…f56931` |
+| `nand-20261105-total/dev_nflasha4.bin` | `bbe0ae1f…3909fcf` |
+
+Que cambie con el uso es esperable (es la base de datos de contenidos), así que la pregunta
+abierta es si alguno de los tres está **estructurado** o si la geometría FBS ya no cuadra. Eso es
+lo que está en curso (`reports/film-pb-1-sub-nflasha4-20261126.md`).
+
+Y una consecuencia práctica: **el firmware oficial no reescribe `nflasha4`** (el DAT 3.21 trae
+`nflasha3/5/7/15/16`, no la 4), así que ni restaurar Sony ni el CFW la arreglan por sí solos: si
+está corrupta hay que escribirla, como se hizo en R48.

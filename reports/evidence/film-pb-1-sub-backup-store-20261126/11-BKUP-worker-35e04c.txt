@@ -1,0 +1,88 @@
+0035e04c: 2de9f04f   push.w    {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+0035e050: bbb0       sub       sp, #0xec                   
+0035e052: 00f5804a   add.w     sl, r0, #0x4000             
+0035e056: 04af       add       r7, sp, #0x10               
+0035e058: 4ff00008   mov.w     r8, #0                      
+0035e05c: 4ff00109   mov.w     sb, #1                      
+0035e060: cdf80080   str.w     r8, [sp]                    
+0035e064: f962       str       r1, [r7, #0x2c]             
+0035e066: 0446       mov       r4, r0                      
+0035e068: fa61       str       r2, [r7, #0x1c]             
+0035e06a: 4246       mov       r2, r8                      
+0035e06c: 3b60       str       r3, [r7]                    
+0035e06e: 4346       mov       r3, r8                      
+0035e070: 87f8d780   strb.w    r8, [r7, #0xd7]             
+0035e074: 87f8d680   strb.w    r8, [r7, #0xd6]             
+0035e078: 87f8d580   strb.w    r8, [r7, #0xd5]             
+0035e07c: cdf80490   str.w     sb, [sp, #4]                
+0035e080: cdf80890   str.w     sb, [sp, #8]                
+0035e084: bb49       ldr       r1, [pc, #0x2ec]              ; [0035e374]=0081c85e "BKUP RcsTbl Start"
+0035e086: daf88400   ldr.w     r0, [sl, #0x84]             
+0035e08a: d7f800b1   ldr.w     fp, [r7, #0x100]            
+0035e08e: d7f82461   ldr.w     r6, [r7, #0x124]            
+0035e092: c7f8c880   str.w     r8, [r7, #0xc8]             
+0035e096: f5f737fb   bl        #0x353708                   
+0035e09a: daf88830   ldr.w     r3, [sl, #0x88]             
+0035e09e: 0422       movs      r2, #4                      
+0035e0a0: cdf80890   str.w     sb, [sp, #8]                
+0035e0a4: cdf80c90   str.w     sb, [sp, #0xc]              
+0035e0a8: 8de80802   stm.w     sp, {r3, sb}                
+0035e0ac: 4346       mov       r3, r8                      
+0035e0ae: daf88400   ldr.w     r0, [sl, #0x84]             
+0035e0b2: b149       ldr       r1, [pc, #0x2c4]              ; [0035e378]=0081e6b6 "BKUP userId"
+0035e0b4: f5f75afb   bl        #0x35376c                   
+0035e0b8: d7f80401   ldr.w     r0, [r7, #0x104]            
+0035e0bc: d7f80c11   ldr.w     r1, [r7, #0x10c]            
+0035e0c0: a0f80080   strh.w    r8, [r0]                    
+0035e0c4: 07f13000   add.w     r0, r7, #0x30               
+0035e0c8: 81f80080   strb.w    r8, [r1]                    
+0035e0cc: d7f81421   ldr.w     r2, [r7, #0x114]            
+0035e0d0: 82f80080   strb.w    r8, [r2]                    
+0035e0d4: 07f1d702   add.w     r2, r7, #0xd7               
+0035e0d8: d7f81c31   ldr.w     r3, [r7, #0x11c]            
+0035e0dc: 83f80080   strb.w    r8, [r3]                    
+0035e0e0: 07f1c803   add.w     r3, r7, #0xc8               
+0035e0e4: 0190       str       r0, [sp, #4]                
+0035e0e6: 0093       str       r3, [sp]                    
+0035e0e8: 07f1cc03   add.w     r3, r7, #0xcc               
+0035e0ec: daf88800   ldr.w     r0, [sl, #0x88]             
+0035e0f0: daf88c10   ldr.w     r1, [sl, #0x8c]             
+0035e0f4: 55f760fc   bl        #0x2b39b8                   
+0035e0f8: 0546       mov       r5, r0                      
+0035e0fa: 68b1       cbz       r0, #0x35e118               
+0035e0fc: 9f4b       ldr       r3, [pc, #0x27c]              ; [0035e37c]=10100003
+0035e0fe: 9842       cmp       r0, r3                      
+0035e100: 0ad0       beq       #0x35e118                   
+0035e102: 8de82002   stm.w     sp, {r5, sb}                
+0035e106: 0222       movs      r2, #2                      
+0035e108: cdf80890   str.w     sb, [sp, #8]                
+0035e10c: 4346       mov       r3, r8                      
+0035e10e: daf88400   ldr.w     r0, [sl, #0x84]             
+0035e112: 9b49       ldr       r1, [pc, #0x26c]              ; [0035e380]=0081c870 "BKUP Err ReadFirstPackData ec"
+0035e114: 00f01bbc   b.w       #0x35e94e                   
+0035e118: 2368       ldr       r3, [r4]                    
+0035e11a: 4ff00008   mov.w     r8, #0                      
+0035e11e: 2046       mov       r0, r4                      
+0035e120: 07f1d501   add.w     r1, r7, #0xd5               
+0035e124: c146       mov       sb, r8                      
+0035e126: d3f8b830   ldr.w     r3, [r3, #0xb8]             
+0035e12a: 9847       blx       r3                          
+0035e12c: 2846       mov       r0, r5                      
+0035e12e: c7f80480   str.w     r8, [r7, #4]                
+0035e132: c7f80880   str.w     r8, [r7, #8]                
+0035e136: c7f80c80   str.w     r8, [r7, #0xc]              
+0035e13a: c7f81080   str.w     r8, [r7, #0x10]             
+0035e13e: c7f82080   str.w     r8, [r7, #0x20]             
+0035e142: c7f81480   str.w     r8, [r7, #0x14]             
+0035e146: c7f82480   str.w     r8, [r7, #0x24]             
+0035e14a: c7f81880   str.w     r8, [r7, #0x18]             
+0035e14e: c7f82880   str.w     r8, [r7, #0x28]             
+0035e152: 8a4b       ldr       r3, [pc, #0x228]              ; [0035e37c]=10100003
+0035e154: 9842       cmp       r0, r3                      
+0035e156: 08d1       bne       #0x35e16a                   
+0035e158: 97f8d620   ldrb.w    r2, [r7, #0xd6]             
+0035e15c: 97f8d530   ldrb.w    r3, [r7, #0xd5]             
+0035e160: 9342       cmp       r3, r2                      
+0035e162: 40f0f783   bne.w     #0x35e954                   
+0035e166: 00f029bc   b.w       #0x35e9bc                   
+0035e16a: ??
