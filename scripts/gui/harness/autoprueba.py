@@ -219,23 +219,27 @@ def main() -> int:
         a.config = str(_config(tmp))
     cfg = json.loads(Path(a.config).read_text())
     raiz_sd = Path(cfg["sd"]["carpeta"])
-    def _pantalla(arrancada: bool) -> float:
-        """Contenido de la pantalla inicial: tras restaurar puede no haber repintado (G22-ARR2) y DISP la fuerza."""
+    def _pantalla(arrancada: bool) -> tuple[float, float]:
+        """(contenido, opacos) de la pantalla inicial: tras restaurar puede no haber repintado (G22-ARR2) y DISP la fuerza.
+
+        La OSD de disparo de verdad deja ≈ 0,09 de píxeles opacos; un invitado que solo pinta el marco o nada se queda en ≈ 0,003
+        (es el cuelgue de G22-CUELGUE), así que el paso exige las dos cosas y no solo «hay algo dibujado».
+        """
         if not arrancada:
-            return 0.0
+            return 0.0, 0.0
         destino = p.dir / "01b-pantalla.png"
         _post(f"{base}/refrescar")
         _fotograma(f"{base}/eventos", destino, None, 15)
-        contenido = _vacia(destino)
-        if contenido < 0.002:
+        contenido, opacos = _vacia(destino), _opaco(destino)
+        if contenido < 0.002 or opacos < 0.02:
             _post(f"{base}/tecla", b'{"k":"disp","v":1}')
             time.sleep(0.6)
             _post(f"{base}/tecla", b'{"k":"disp","v":0}')
             _fotograma(f"{base}/eventos", destino, None, 20)
-            contenido = _vacia(destino)
-        return contenido
+            contenido, opacos = _vacia(destino), _opaco(destino)
+        return contenido, opacos
 
-    def arranca() -> tuple[subprocess.Popen, bool, float, dict, float]:
+    def arranca() -> tuple[subprocess.Popen, bool, float, dict, tuple[float, float]]:
         """Arranca live.py y espera a que el invitado PINTE: (proceso, listo, segundos, /estado, contenido dibujado).
 
         El cuelgue de «0 listas» (G22-CUELGUE) es intermitente: el invitado responde pero no llega a componer la pantalla, y no se arregla
@@ -250,22 +254,24 @@ def main() -> int:
         _png(f"{base}/eventos", png, 25) if listo else None
         return pr, listo, t, estado, _pantalla(listo)
 
-    proc, listo, t, estado, contenido = arranca()
+    proc, listo, t, estado, (contenido, opacos) = arranca()
     p.paso("arranque", listo, f"primera pantalla en {t:.1f} s · {estado.get('texto', 'sin /estado')}", "01-pantalla.png" if listo else "")
     for intento in range(2, a.intentos + 1):  # el invitado que no pinta no se arregla esperando: se vuelve a arrancar en frío
-        if not listo or contenido >= 0.002:
+        if not listo or (contenido >= 0.002 and opacos >= 0.02):
             break
         _post(f"{base}/salir")
         proc.wait(timeout=90)
         shutil.rmtree(work / "live" / a.perfil_dir, ignore_errors=True)
-        proc, listo, t, estado, contenido = arranca()
-        p.paso("arranque-reintento", listo and contenido >= 0.002,
-               f"intento {intento}: primera pantalla en {t:.1f} s, contenido {contenido:.3f}", "01b-pantalla.png" if listo else "")
+        proc, listo, t, estado, (contenido, opacos) = arranca()
+        p.paso("arranque-reintento", listo and contenido >= 0.002 and opacos >= 0.02,
+               f"intento {intento}: primera pantalla en {t:.1f} s, contenido {contenido:.3f}, opacos {opacos:.3f}",
+               "01b-pantalla.png" if listo else "")
     try:
         if not listo:
             return 1
         pantalla = p.dir / "01b-pantalla.png"
-        p.paso("pantalla", contenido > 0.002, f"contenido dibujado: {contenido:.3f} (0 = no repintó)", pantalla.name)
+        p.paso("pantalla", contenido > 0.002 and opacos >= 0.02,
+               f"contenido dibujado {contenido:.3f}, píxeles opacos {opacos:.3f} (OSD de la cámara ≈ 0,09; 0,003 = no compuso)", pantalla.name)
 
         # teclas: MENU es un interruptor de una pulsación (G22-MENU): abre el menú (pantalla oscura) y lo cierra (disparo, clara)
         def menu() -> None:
@@ -280,7 +286,8 @@ def main() -> int:
         menu()
         vuelta = _asienta(f"{base}/eventos", p.dir / "03c-cerrado.png", 4.0)
         p.paso("teclas-MENU", abierto_px > 0.9 > vuelta,
-               f"opacos: disparo {disparo:.2f} → menú {abierto_px:.2f} → disparo {vuelta:.2f} (una pulsación por cambio)", "03-menu.png")
+               f"opacos: disparo {disparo:.2f} → menú {abierto_px:.2f} → disparo {vuelta:.2f} "
+               f"(menú ≥ 0,9 y vuelta ≤ 0,5: una pulsación por cambio)")
 
         # dial de modos: el modo lo da el firmware (OPENVIEWDIAL); la pantalla se repinta
         _post(f"{base}/modo", b'{"p":4}')
