@@ -1308,6 +1308,25 @@ static void efcs_patch(void) {  /* la carga de ranuras al crear ModelStillRec (e
  * píxeles opacos) y con `NOEVQNOTIFY=1` el primero pintó (0,074, 90 fotogramas). Como además NO consigue que la tecla llegue a
  * `DispatchEvent` (sigue en 0), se apaga hasta que haya una razón medida para encenderlo.
  * Ver docs/gui/g22-cola-eventos.md. */
+/* DESTKEY=1 (G22-DISPATCH; APAGADO por omisión): la tecla de reproducción se publica con destino 4 y la vista solo recibe
+ * `dest & 8` (`AppSystem::dispatch` `libObj+0x7eed0c`: bit1 → +8, bit2 → +4, bit4 → *this —donde el conmutador no conoce
+ * 0x1501xxxx— y bit8 → [AppSystem+0x1c]->vtable[+8] = ActionEventMapBase::DispatchEvent). El destino se fija con un `movs`
+ * de 2 bytes en `InputService` (`libObj+0x111972`, `04 22` = movs r2,#4) y los 21 llamantes usan 0, 1 o 4: aquí se le suma el
+ * bit 8 (`0c 22`) para que la pulsación llegue también a la vista. Es una HIPÓTESIS estática (docs/gui/g22-reproduccion-dispatch.md
+ * §7): la medida que la cierra es `TRACEFN=f59f0,11817e` con una pulsación de Reproducción. */
+static void destkey(void) {
+    const char *e = getenv("DESTKEY"); if (!e || *e == '0') return;
+    static int hecho; if (hecho) return; hecho = 1;
+    unsigned long base = 0; char ln[256]; FILE *m = fopen("/proc/self/maps", "r");
+    while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, "libObj.so")) { base = hexv(ln, 0); break; }
+    if (m) fclose(m);
+    if (!base) { LOG("DESTKEY: libObj no hallada"); return; }
+    unsigned short *p = (unsigned short *)(base + 0x111972);
+    if (*p != 0x2204) { LOG("DESTKEY: libObj distinta (%#x en +0x111972): sin parche", *p); return; }
+    mprotect((void *)((unsigned long)p & ~4095UL), 8192, PROT_READ | PROT_WRITE | PROT_EXEC);
+    *p = 0x220c; __builtin___clear_cache((char *)p, (char *)p + 2);
+    LOG("DESTKEY: libObj+0x111972 movs r2,#4 -> #0xc (la tecla también va a la vista)");
+}
 static void evqnotify(void) {
     static int hecho; const char *e = getenv("EVQNOTIFY"); if (hecho || !e || *e == '0') return;
     hecho = 1;
@@ -1343,7 +1362,7 @@ void *dlopen(const char *f, int fl) {
     if (f && strstr(f, "viewUnified")) gpu_live = 1;
     LOG("dlopen(%s) ...", f ? f : "(null)");
     void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
-    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lrm_arranque(); lobj_h = h; mwf_nullsafe(); evqnotify(); }
+    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lrm_arranque(); lobj_h = h; mwf_nullsafe(); evqnotify(); destkey(); }
     if (h && f && getenv("TRACELIB") && (strstr(f, getenv("TRACELIB")) || strstr(f, "viewUnified")) && !trc_lib_done) {  /* la biblioteca puede entrar como dependencia de viewUnified*: se busca en /proc/self/maps tras cada dlopen hasta hallarla */
         char ln[256]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");
         while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, getenv("TRACELIB"))) { base = hexv(ln, 0); break; }

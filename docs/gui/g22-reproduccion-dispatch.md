@@ -365,6 +365,20 @@ abre el paso siguiente; estáticamente **ningún producto de entrada del firmwar
 8**, así que, si la cámara enciende la vista con una tecla, o cambia el destino después de `createEvent`, o la
 vista no se entera por esta vía.
 
+
+### 7.1 Medido con `DESTKEY=1` (26-11-2026): el destino `4|8` no basta
+
+Se implementó el parche en el shim (`DESTKEY=1`, `libObj+0x111972` `04 22` → `0c 22`, comprobando los bytes antes de
+escribir; registro `DESTKEY: libObj+0x111972 movs r2,#4 -> #0xc`). Arranque en frío con `DESTKEY=1` (perfil `dest1`,
+puerto 8665, 284 s hasta la primera pantalla, 79 fotogramas, OSD pintada) y **una pulsación de Reproducción no cambia la
+pantalla**: píxeles opacos 0,10 antes y 0,10 después, y el fotograma sigue siendo la OSD de disparo (misma imagen). Es
+decir: sumar el bit 8 al destino **no abre la vista de reproducción**.
+
+Consecuencia: o el evento sigue sin llegar a `DispatchEvent`, o llega y la vista lo descarta en el mapa `[View+0x28]+0x1c`
+o en la tabla `{evento, acción}` (`viewUnified2+0x1906a8`, sin llamantes estáticos). La medida que lo separa es la del §7
+(`TRACEFN=f59f0,11817e` + una pulsación); el intento de hacerla con `DESTKEY=1 TRACEFN=…` se quedó en el cuelgue de
+arranque de G22-CUELGUE («2 listas», 478 s, 2 fotogramas), así que **queda pendiente**.
+
 ## 8. Siguiente paso medible
 
 **Paso 1 (decisivo, 2 bytes, molde `EVQNOTIFY`, en el arnés y no en la cámara).** Cambiar sólo el destino de la
