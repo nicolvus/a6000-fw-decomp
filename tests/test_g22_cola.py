@@ -13,7 +13,8 @@ Fija lo que el informe `docs/gui/g22-cola-eventos.md` da por VERIFICADO:
 4. `InputService::pushFilterEvent` (`+0x1117f4`) entrega el evento al filtro registrado en `libObj+0x10a8c50`
    —en el invitado, `viewUnified2.so+0x181fb9`— y el resto lo encola llamando a `libObj+0x7f0adc`, que invoca
    `EventManager::push` con **notify = 0** (`movs r2,#0` en `+0x7f0ade`): la tecla no despierta al consumidor.
-5. El shim trae la medida (`EQTRACE`) y el arreglo (`EVQNOTIFY`, quitarlo con `NOEVQNOTIFY=1`).
+5. El shim trae la medida (`EQTRACE`) y el arreglo, apagado por omisión (`EVQNOTIFY=1` lo enciende: con él puesto el arranque
+   en frío dejó de componer la OSD y la tecla seguía sin llegar al despachador).
 
 Los binarios viven en `analysis/gui/g22/harness/stage/cam/usr/lib` (no versionados): si faltan, el módulo se
 salta. No arranca la VM; el comportamiento en el invitado está en el informe.
@@ -138,6 +139,7 @@ def test_pushfilterevent_encola_sin_avisar(libobj: Elf, viewunified2: Elf) -> No
 def test_shim_trae_medida_y_arreglo() -> None:
     src = SHIM.read_text()
     assert "EQTRACE" in src and '"EQMAX"' in src, "EQTRACE/EQMAX: cada publicación en la cola del framework"
-    assert "static void evqnotify(void)" in src and '"NOEVQNOTIFY"' in src, "EVQNOTIFY con escape NOEVQNOTIFY"
+    # medido: con el parche puesto, 3 de 3 arranques en frío no compusieron la OSD y con él apagado pintó; queda opt-in
+    assert "static void evqnotify(void)" in src and 'getenv("EVQNOTIFY")' in src, "EVQNOTIFY=1 lo enciende"
     assert "*p = 0x2201" in src, "el arreglo escribe movs r2,#1 en libObj+0x7f0ade"
     assert "mwf_nullsafe(); evqnotify(); }" in src, "se arma al cargar libObj"

@@ -1294,7 +1294,7 @@ static void efcs_patch(void) {  /* la carga de ranuras al crear ModelStillRec (e
     mprotect((void *)((unsigned long)p & ~4095UL), 8192, PROT_READ | PROT_WRITE | PROT_EXEC); *p = 0xde00; __builtin___clear_cache((char *)p, (char *)p + 2);
     struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_trace; sa.sa_flags = SA_SIGINFO | SA_NODEFER; sigaction(SIGILL, &sa, 0);
 }
-/* EVQNOTIFY (G22-COLA, por omisión; NOEVQNOTIFY=1 lo quita): avisa al consumidor al encolar un evento de entrada.
+/* EVQNOTIFY=1 (G22-COLA; APAGADO por omisión): avisa al consumidor al encolar un evento de entrada.
  * `InputService::pushFilterEvent` vacía su lista filtrada llamando a libObj+0x7f0adc → PLT 0xdf270 =
  * EventManager::push(evento, notify=**0**), así que la tecla entra en la cola 1 (clase 1) SIN despertar al hilo
  * Appframework: solo la recoge en su siguiente vuelta (medido 26-11-2026: 43 eventos de clase 1 y 32 trasvases
@@ -1304,9 +1304,12 @@ static void efcs_patch(void) {  /* la carga de ranuras al crear ModelStillRec (e
  * mprotect+clear_cache que efcs_patch/NULLMWF). shortcut: no se sabe si la cámara avisa en este punto concreto
  * (INFERENCIA: sí, o tendría el mismo retardo); el resto del camino (trasvase 0x7ef910, pop 0x7ef940,
  * AppSystem::dispatch 0x7eed0c) es el del firmware, sin tocar.
+ * Medido el 26-11-2026 con el mismo `.so`: con el parche puesto, 3 de 3 arranques en frío no compusieron la OSD (0,002 de
+ * píxeles opacos) y con `NOEVQNOTIFY=1` el primero pintó (0,074, 90 fotogramas). Como además NO consigue que la tecla llegue a
+ * `DispatchEvent` (sigue en 0), se apaga hasta que haya una razón medida para encenderlo.
  * Ver docs/gui/g22-cola-eventos.md. */
 static void evqnotify(void) {
-    static int hecho; if (hecho || getenv("NOEVQNOTIFY")) return;
+    static int hecho; const char *e = getenv("EVQNOTIFY"); if (hecho || !e || *e == '0') return;
     hecho = 1;
     unsigned long base = 0; char ln[256]; FILE *m = fopen("/proc/self/maps", "r");
     while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, "libObj.so")) { base = hexv(ln, 0); break; }
