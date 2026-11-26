@@ -272,3 +272,9 @@ El usuario reprodujo `MAH04204.MP4` y grabó otro clip de 6 s: ambos dan «No se
 `E_AVCON_MOVIE_CODEC_STOP (2003h)`, `Dec start complete error`, `ER_MOVIE_DECODE_FAILED (1600F101h)`, `STATE_RESTART`.
 El sector 0x31 sigue con handle 0 (`film_pb1_sector31.py --verifica`). **Conclusión: las 233 B de AV-CAM no causan el fallo.**
 No se probó el arreglo FBM sobre esta base. Evidencia: `evidence/film-pb1-sector31-camara-20261126/6-control-av-tras-reproducir.out`, `7-anillo-control-av.txt`.
+
+### Bisecta (26-11-2026)
+Paquetes en `build/cfw_bisect/{A,B}` (logs `analysis/gui/install-bisect-{A,B}.log`). Frente al 3.21 de Sony, el CFW difiere solo en `darwin_core` (EFCS), `nflasha15` (Silent) y la ausencia de `nflasha5`.
+A (sin Silent, sin WBI): no reproduce; anillo `0xB051000B` → `ER_MOVIE_DECODE_FAILED` (`evidence/film-pb1-sector31-camara-20261126/8-anillo-variante-A.txt`), sector 0x31 sin registro.
+B (3.21 idéntico, con WBI): reproduce vídeos (observación del usuario). Sin medición por telnet tras B.
+Conclusión: la rotura viene de quitar `nflasha5` (`--sin-wbi`), no de Silent. Límite: B no aísla el procedimiento de instalación.
