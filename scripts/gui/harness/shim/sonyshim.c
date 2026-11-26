@@ -2115,6 +2115,14 @@ static void *openhot(void *a) {
     char *nm = a, *sp = strchr(nm, ' '); int arg = 0; if (sp) { *sp = 0; arg = (int)hexv(sp + 1, 0); } else arg = modo_caliente(nm);  /* «O vista [modo_hex]»: el modo es el parámetro de apertura; sin él lo da el firmware (OPENVIEWDIAL) */
     int r = ov ? ov(nm, arg) : -99; LOG("OPENHOT %s %#x -> %d", nm, arg, r); free(a); return 0;
 }
+/* MENU con un solo interruptor (G22-MENU): abrir el menú lo hace el shim (openView «@V00E»), porque con la vista de disparo activa el
+ * driver entrega la tecla y la UI no lo abre. Cerrar lo hacía la UI al recibir la tecla, pero eso dependía de a quién llegase la pulsación
+ * (medido 26-11-2026: la pulsación posterior a la apertura se perdía y hacía falta una tercera), así que también lo hace el shim: vuelve a
+ * la vista de disparo con el modo del firmware (misma ruta que REDIAL). Una pulsación = un cambio, sin estado escondido en la UI. */
+static void *menuhot(void *a) {
+    if (a) { openhot(strdup("@V00E")); return 0; }  /* abre el menú (BASE_MENU 0x0E → SETTINGMENUX 0x7C) */
+    openhot(strdup("view/ROOT")); usleep(250000); openhot(strdup("view/STLREC")); return 0;  /* lo cierra: vista de disparo, como el cierre medido */
+}
 /* REDIAL (G22-OSD-REFRESCO): al llegar la tecla del dial de modo (KEY_POS_MODE_DIAL 0x7025) el propio INVITADO vuelve a activar la vista de
  * disparo con el modo que da el firmware (OPENVIEWDIAL → CmnViewBigModelUtil::getRecViewFromDial, viewUnified2+0x19f004). Medido/estático: en
  * la cámara el icono de modo es el parámetro de apertura de la vista (viewUnified2+0x14068c → CmnViewBigModelUtil::setInitForRec, §5.31 del
@@ -2157,9 +2165,10 @@ static void *live_keys(void *a) {
             if (ln[0] == 'Z' && ln[1] == ' ') { pthread_t th; char *nm = strdup(ln + 2); pthread_create(&th, 0, msghot, nm); pthread_detach(th); }
             if (ln[0] == 'D' && !ln[1]) { pthread_t th; pthread_create(&th, 0, sddump, 0); pthread_detach(th); }
             if (ln[0] == 'R') live_force = 1;  /* el anfitrión se acaba de conectar (p. ej. tras restaurar el estado): reenviar el fotograma actual */
+            if (ln[0] == 'N') menu_open = 0;  /* «N»: el menú no está abierto (el anfitrión lo manda al conectar o al restaurar) */
             if (ln[0] == 'K') { unsigned m[12] = {0}; static int swallow; m[0] = hexv(ln + 2, &e); m[2] = hexv(e + 1, &e); m[4] = hexv(e + 1, &e);
-                if (m[0] == 0x1ab && m[2] == 1 && !menu_open) { swallow = 1; menu_open = 1; pthread_t th; pthread_create(&th, 0, openhot, strdup("@V00E")); pthread_detach(th); LOG("MENU con el menú cerrado: openView @V00E"); }
-                else if (m[0] == 0x1ab && swallow) { if (m[2] == 0) swallow = 0; }  /* la suelta de la pulsación que abrió el menú no llega a la UI */
+                if (m[0] == 0x1ab && m[2] == 1) { swallow = 1; menu_open = !menu_open; pthread_t th; pthread_create(&th, 0, menuhot, menu_open ? (void *)1 : 0); pthread_detach(th); LOG("MENU: %s", menu_open ? "openView @V00E" : "cierra a la vista de disparo"); }
+                else if (m[0] == 0x1ab && swallow) { if (m[2] == 0) swallow = 0; }  /* la suelta de la pulsación del MENU no llega a la UI */
                 else { mbx_post_raw(0x7a0020, m); if (wl_on()) wl_key(m[0]);
                     /* REDIAL: la tecla del dial de modo hace que el invitado repinte la vista de disparo con el modo del firmware (arriba) */
                     if (m[0] == 0x7025 && redial_on()) { pthread_t th; char *nm = strdup("view/STLREC"); pthread_create(&th, 0, redialhot, nm); pthread_detach(th); } } }

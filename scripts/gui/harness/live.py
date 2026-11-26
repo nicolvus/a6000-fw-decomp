@@ -322,6 +322,7 @@ class Vm:
         if self.puente and not self.restaurado:
             self.sock = s
             self.puente.reenvia_arranque()
+        s.sendall(b"N\n")  # el menú no está abierto al conectar (G22-MENU: el interruptor vive en el shim y se restauraba desincronizado)
         s.sendall(b"R\n")  # tras restaurar, el invitado reenvía la pantalla actual aunque no haya cambiado
         self.sock, buf, marcas, prev = s, b"", [], None
         while True:

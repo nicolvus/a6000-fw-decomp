@@ -80,9 +80,15 @@ def test_gpu_draw_no_descarta_listas_de_mas_de_64_vertices() -> None:
 
 
 def test_menu_se_reabre_con_la_ruta_real_de_la_camara() -> None:
-    """§5.18z⁷: MENU con el menú cerrado abre «@V00E» (DefRootView::ActionOpenSettingMenu) y el shim sigue su estado por las trazas Vn/Vd."""
+    """§5.18z⁷ + G22-MENU: MENU abre «@V00E» (DefRootView::ActionOpenSettingMenu) y lo cierra el shim volviendo a la vista de disparo.
+
+    Medido 26-11-2026: dejar el cierre a la UI hacía falta una tercera pulsación (la siguiente al openView se perdía), así que el
+    interruptor y las dos ramas viven en el shim; `menu_track` sigue corrigiéndolo con las trazas Vn/Vd si la UI cambia de vista.
+    """
     src = (HARNESS / "shim/sonyshim.c").read_text()
-    assert 'strncmp(p + 4, "07C_", 4)' in src and '"@V00E"' in src and "m[0] == 0x1ab && m[2] == 1 && !menu_open" in src
+    assert 'strncmp(p + 4, "07C_", 4)' in src and '"@V00E"' in src
+    assert "m[0] == 0x1ab && m[2] == 1) { swallow = 1; menu_open = !menu_open;" in src and "view/STLREC" in src
+    assert 'ln[0] == \'N\') menu_open = 0' in src  # el anfitrión avisa al conectar: el menú no está abierto
 
 
 def test_arranca_en_la_pantalla_de_disparo() -> None:
@@ -101,7 +107,7 @@ def test_botones_y_diales_de_la_a6000_con_indices_del_driver() -> None:
     assert t["semipulsacion"] == (0x1F1, 0x1B) and t["c1"] == (0x66, 0xD) and t["reproduccion"] == (0x1F7, 0x1F)
     assert t["rueda_der"] == (0x10000015, 0x1E5, 1) and t["rueda_izq"] == (0x10000015, 0x1E5, -1)
     assert t["dial_der"] == (0x10000014, 0x1E4, 1) and t["dial_izq"] == (0x10000014, 0x1E4, -1)
-    assert live.DIAL_MODO == (0x7025, 0x27) and len(live.POSICIONES_MODO) == 5  # E2E-13: solo los estados verificados
+    assert live.DIAL_MODO == (0x7025, 0x27) and len(live.POSICIONES_MODO) == 7  # E2E-13 + G22-DIAL-POS: solo los estados verificados
     sent = []
     vm = type("V", (), {"tecla": lambda self, k, v, i: sent.append((k, v, i))})()
     live.pulsa(vm, "rueda_izq", 1); live.pulsa(vm, "rueda_izq", 0); live.pulsa(vm, "fn", 1); live.pulsa(vm, "fn", 0)

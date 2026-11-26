@@ -116,6 +116,21 @@ def _vacia(png: Path) -> float:
     return sum(1 for c in px if sum(abs(a - b) for a, b in zip(c, fondo, strict=True)) > 60) / len(px)
 
 
+def _brillo(png: Path) -> float:
+    """Brillo medio 0–255: la pantalla de disparo es clara (fondo blanco, ≈ 240) y el menú oscuro (fondo negro, ≈ 15).
+
+    Es lo que distingue «MENU abrió el menú» de «MENU no hizo nada»: el contenido dibujado es parecido en las dos (0,06 y 0,03), así que
+    contar píxeles no sirve.
+    """
+    try:
+        from PIL import Image
+        im = Image.open(png).convert("L")
+    except (OSError, ValueError):
+        return 0.0
+    d = im.tobytes()
+    return sum(d) / len(d) if d else 0.0
+
+
 class Prueba:
     """Un paso de la autoprueba: nombre, si pasó, evidencia legible y PNG opcional."""
 
@@ -206,27 +221,23 @@ def main() -> int:
             contenido = _vacia(pantalla)
         p.paso("pantalla", contenido > 0.002, f"contenido dibujado: {contenido:.3f} (0 = no repintó)", pantalla.name)
 
-        # teclas: MENU tiene que abrir el menú (varios intentos: un estado restaurado puede traer menu_open inconsistente)
-        intentos, frac = 0, 0.0
-        for intento in range(3):
+        # teclas: MENU es un interruptor de una pulsación (G22-MENU): abre el menú (pantalla oscura) y lo cierra (disparo, clara)
+        def menu() -> None:
             _post(f"{base}/tecla", b'{"k":"menu","v":1}')
             time.sleep(0.8)
             _post(f"{base}/tecla", b'{"k":"menu","v":0}')
-            destino = p.dir / f"03-menu-{intento}.png"
-            _, frac = _fotograma_con_contenido(f"{base}/eventos", destino, 0.05, 20)
-            intentos = intento + 1
-            if frac >= 0.05:
-                (p.dir / "03-menu.png").write_bytes(destino.read_bytes())
-                break
-            _post(f"{base}/tecla", b'{"k":"menu","v":1}')  # cerrar lo que haya quedado abierto
-            time.sleep(0.8)
-            _post(f"{base}/tecla", b'{"k":"menu","v":0}')
-            _fotograma_con_contenido(f"{base}/eventos", p.dir / f"03b-tras-menu-{intento}.png", 0.002, 15)
-        p.paso("teclas-MENU", frac >= 0.05, f"contenido con MENU: {frac:.3f} tras {intentos} intento(s) (disparo ≈ 0,01; menú ≳ 0,25)", "03-menu.png" if frac >= 0.05 else "")
-        _post(f"{base}/tecla", b'{"k":"menu","v":1}')
-        time.sleep(0.8)
-        _post(f"{base}/tecla", b'{"k":"menu","v":0}')
-        _fotograma_con_contenido(f"{base}/eventos", p.dir / "03c-final.png", 0.002, 20)
+            time.sleep(1.2)
+
+        claro = _brillo(pantalla)
+        menu()
+        _, _ = _fotograma_con_contenido(f"{base}/eventos", p.dir / "03-menu.png", 0.002, 25)
+        oscuro = _brillo(p.dir / "03-menu.png")
+        abierto = oscuro < claro / 2  # el menú ocupa casi toda la pantalla con fondo negro
+        menu()
+        _fotograma_con_contenido(f"{base}/eventos", p.dir / "03c-cerrado.png", 0.002, 25)
+        vuelta = _brillo(p.dir / "03c-cerrado.png")
+        p.paso("teclas-MENU", abierto and vuelta > oscuro * 2,
+               f"brillo disparo {claro:.0f} → menú {oscuro:.0f} → disparo {vuelta:.0f} (una pulsación por cambio)", "03-menu.png")
 
         # dial de modos: el modo lo da el firmware (OPENVIEWDIAL); la pantalla se repinta
         _post(f"{base}/modo", b'{"p":4}')
