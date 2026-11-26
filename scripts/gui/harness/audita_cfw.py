@@ -1371,7 +1371,7 @@ def audita_lote(directorio: Path, *, completo: bool, arranque: bool | None, sali
     index: dict[str, Any] = {"fecha": ahora(), "directorio": str(directorio), "items": []}
     for p in items:
         try:
-            r = audita(p, completo=completo, arranque=arranque, salida=destino, puerto=puerto, teclas=teclas,
+            r = audita(p, completo=completo, arranque=arranque, salida=salida, puerto=puerto, teclas=teclas,
                        declara=declara, usr_sony=usr_sony, espera=espera)
             index["items"].append({"ruta": r["ruta"], "sha256": r["sha256"], "sha8": r["sha256"][:8],
                                    "version": r["version"], "veredicto": r["veredicto"], "coste_s": r["coste_s"],
