@@ -36,6 +36,11 @@
 > **Auditoría independiente del 3.97:** `.dat` `69447a27…5cd9`, `libmpr` `831142ae…e378e`, relocaciones y
 > cabeceras intactas, auditor `todo_ok` 22/22; la cueva está en `.rodata` pero se ejecuta por el primer
 > `PT_LOAD` (`R E`) —medido en QEMU— y su alineación de pila no afecta a los tres destinos.
+> **Camino de escritura (medido en el invitado):** con el sector `0x31` **y** el `fn` de `0x9D23FC[13]`,
+> `ChangeSector(4,3)` = `0`, `WritePackBegin/Add/End` = `0` y un clip nuevo deja **4 770 B** en `nflasha4`;
+> sin uno de los dos, `WritePackEnd` = `0x10800020` o `ChangeSector` = `0x10800010`/`0x10100006`. Es decir:
+> el arreglo completo son las dos cosas, y eso es justo lo que hacen `EWBDFD 4 3 0` + `InitB 6 3` y el
+> parche C.
 
 
 > **La tabla de sectores del backup FBM está vacía y nada la recrea.** `0xA3699C` (30 entradas × 0x14,

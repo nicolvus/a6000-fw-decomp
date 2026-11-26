@@ -241,6 +241,22 @@ auditor con `--base-dat` (`todo_ok`, 22/22). Dos observaciones no bloqueantes: l
 QEMU—, y su `push {r4,r5,lr}` deja `SP ≡ 4 (mod 8)` en las llamadas, fuera de AAPCS, sin que ninguno de los
 tres destinos use `ldrd/strd/vldr/vstr` en sus primeros `0x300` B.
 
+### 6.6 El camino de escritura, medido con el sector y con `fn`
+
+En el invitado, sobre copias de la imagen (`nf4` + `NFLASH4=1`):
+
+| llamada | antes (imagen prístina) | sólo sector `0x31` | sector + `fn` |
+|---|---|---|---|
+| `ChangeSector(4,3)` `0x2B41B4` | `0x10100006` | `0x10800010` | **0** |
+| `WritePackBegin` `0x2B3D24` | `0x10100001` | 0 | **0** |
+| `WritePackAdd` `0x2B3C64` | — | 0 | **0** |
+| `WritePackEnd` `0x2B3B94` | — | `0x10800020` (`FBS_UNCERTAIN_WRITE_POINT`) | **0** |
+| bytes escritos en `nflasha4` | 0 | 0 | **4 770** |
+
+Es decir: **hacen falta las dos cosas**, el sector y el `fn` de la fila `0x9D23FC[13]` (`u04 / m3 /
+ft031 / om6`) — exactamente lo que hacen `FBM EWBDFD 4 3 0` + `FBM InitB 6 3` y lo que hace el parche C.
+Con las dos, un clip nuevo queda registrado en la BD.
+
 ## 7. Cómo verificarlo sin cámara y cómo comprobarlo en cámara
 
 - **Arnés**: `InitB` sobre el MPR real y lectura de `base+0xA3699C`; el sector debe quedar con `+4 != 0`
