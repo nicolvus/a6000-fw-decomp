@@ -301,15 +301,19 @@ def etapa_contenedor(ruta: Path, checks: list[dict[str, Any]], tmp: Path) -> dic
     except Exception as e:  # noqa: BLE001 - el tar puede fallar de muchas formas y queremos el mensaje
         add(checks, "contenedor.tar_valido", False, f"tar inválido: {e}", 1)
         return {"version": hdr["version"]}
+    a6000 = hdr["model"] == 0x41030035
     upd = fdat[user["offset"]:user["offset"] + user["size"]]
     try:
         from e25_27 import build
         oficial = build.UPDATER_SHA256
     except Exception:  # noqa: BLE001 - sin el constructor no se puede afirmar que sea el oficial
         oficial = ""
-    if oficial:
+    if oficial and a6000:
         add(checks, "contenedor.updater_oficial", sha256_bytes(upd) == oficial,
             f"updater {len(upd)} B sha256 {sha256_bytes(upd)[:16]}… (oficial 3.21 {oficial[:16]}…)", 1)
+    elif oficial:
+        add(checks, "contenedor.updater_oficial", None, "modelo distinto de la A6000: no hay hash de referencia", 1,
+            evidencia="NO_VERIFICADO")
     else:
         add(checks, "contenedor.updater_oficial", None, "no se pudo cargar build.UPDATER_SHA256", 1, evidencia="NO_VERIFICADO")
     sumas = verifica_sumas(miembros, sums)
@@ -323,17 +327,26 @@ def etapa_contenedor(ruta: Path, checks: list[dict[str, Any]], tmp: Path) -> dic
     try:
         img = tpzl.TpzlImage.parse(crudo)
         add(checks, "contenedor.nflasha15_tpzl", True, f"{len(img.entries)} bloques de {img.block_size} B; {len(crudo)} B", 1)
-        add(checks, "contenedor.nflasha15_cabe_en_particion", len(crudo) <= PARTICION,
-            f"{len(crudo)} B de {PARTICION} B", 1)
+        if a6000:
+            add(checks, "contenedor.nflasha15_cabe_en_particion", len(crudo) <= PARTICION,
+                f"{len(crudo)} B de {PARTICION} B", 1)
+        else:
+            add(checks, "contenedor.nflasha15_cabe_en_particion", None,
+                "modelo distinto de la A6000: la partición de 100 MiB es la de esta cámara", 1, evidencia="NO_VERIFICADO")
         viol = tpzl.hardware_violations(img)
         add(checks, "contenedor.nflasha15_ldec", not viol, f"{len(viol)} violaciones: {viol[:3]}", 1)
         sony = _sony_n15()
-        if sony:
+        if sony and a6000:
             s_img = tpzl.TpzlImage.parse(sony.read_bytes())
             add(checks, "contenedor.nflasha15_bloque_0_igual_sony", img.block(0) == s_img.block(0),
                 "bloque TPZL 0 idéntico al de Sony 3.21 (R55: recomponerlo colgó el LZP)", 1)
             add(checks, "contenedor.nflasha15_mismo_numero_bloques", len(img.entries) == len(s_img.entries),
                 f"{len(img.entries)} bloques frente a {len(s_img.entries)} de Sony", 1)
+        elif sony:
+            add(checks, "contenedor.nflasha15_bloque_0_igual_sony", None,
+                "modelo distinto de la A6000: no se compara con el nflasha15 de Sony 3.21", 1, evidencia="NO_VERIFICADO")
+            add(checks, "contenedor.nflasha15_mismo_numero_bloques", None, "modelo distinto de la A6000", 1,
+                evidencia="NO_VERIFICADO")
         else:
             add(checks, "contenedor.nflasha15_bloque_0_igual_sony", None,
                 "falta el nflasha15 de Sony para comparar el bloque 0", 1, evidencia="NO_VERIFICADO", material=True)
@@ -940,7 +953,7 @@ def compara_png(cfw: bytes, sony: bytes) -> dict[str, Any]:
 
 
 def sesion_arranque(overlay: Path | None, perfil: str, puerto: int, salida: Path, etiqueta: str,
-                    teclas: str, espera_max: float) -> dict[str, Any]:
+                    teclas: str, espera_max: float, hueco_max: float = 900.0) -> dict[str, Any]:
     """Arranca live.py (perfil y puerto propios), espera la primera pantalla y captura 3 PNG + secuencia opcional."""
     live = HERE / "live.py"
     env = {**os.environ, "LIVE_REINTENTOS": os.environ.get("AUDITA_REINTENTOS", "2"),
@@ -949,14 +962,17 @@ def sesion_arranque(overlay: Path | None, perfil: str, puerto: int, salida: Path
     if overlay is not None:
         argv += ["--pkg", str(overlay)]
     log = salida / f"{etiqueta}-live.log"
-    t0 = time.time()
+    t_inicio = time.time()
+    t0 = t_inicio
     vm: subprocess.Popen | None = None
     frames: Frames | None = None
     res: dict[str, Any] = {"etiqueta": etiqueta, "perfil": perfil, "puerto": puerto, "pngs": {}, "metricas": {},
                            "im_exit": False, "qemu_murio": False, "error": "",
                            "consola": str(TRABAJO / "live" / perfil / "consola.log")}
     try:
-        espera_hueco_qemu()
+        espera_hueco_qemu(hueco_max)
+        t0 = time.time()  # el tope de arranque cuenta desde que hay hueco de QEMU, no desde la espera
+        res["espera_hueco_s"] = round(t0 - t_inicio, 1)
         with log.open("wb") as out:
             vm = subprocess.Popen(argv, stdout=out, stderr=subprocess.STDOUT, stdin=subprocess.DEVNULL, env=env)
         frames = Frames(puerto)
@@ -969,6 +985,7 @@ def sesion_arranque(overlay: Path | None, perfil: str, puerto: int, salida: Path
             except (OSError, ValueError):
                 st = None
             if isinstance(st, dict) and int(st.get("fotogramas", 0)) > 0:
+                res["arranque_s"] = round(time.time() - t0, 1)
                 break
             time.sleep(2)
         consola = Path(res["consola"])
@@ -1011,13 +1028,16 @@ def sesion_arranque(overlay: Path | None, perfil: str, puerto: int, salida: Path
                     (salida / f"{etiqueta}-4-teclas.png").write_bytes(frames.ultimo)
                     res["pngs"]["teclas"] = f"{etiqueta}-4-teclas.png"
                     res["metricas"]["teclas"] = analiza_png(frames.ultimo)
+    except EntradaError:
+        raise  # sin hueco de QEMU o entorno incompleto: no es un fallo del CFW
     except Exception as e:  # noqa: BLE001 - la sesión nunca debe tumbar el informe
         res["error"] = f"{type(e).__name__}: {e}"
     finally:
         if frames:
             frames.cierra()
         para_sesion(vm, puerto, perfil)
-        res["coste_s"] = round(time.time() - t0, 1)
+        res["primera"] = bool(res.get("primera"))  # los bytes no van al informe; el PNG queda en `pngs`
+        res["coste_s"] = round(time.time() - t_inicio, 1)
         res["live_log"] = str(log)
     return res
 
@@ -1036,8 +1056,12 @@ def base_sony(salida: Path, teclas: str, espera_max: float, puerto: int) -> dict
     if not os.environ.get("AUDITA_BASE_RECAPTURA") and previo.get("firma") == firma and all(p.is_file() for p in pngs.values()):
         return {"pngs": {k: str(p) for k, p in pngs.items()}, "cache": True, "metricas": previo.get("metricas", {})}
     p = puerto_libre({puerto})
-    r = sesion_arranque(None, "audit-base-sony", p, BASE_SONY, "base", teclas, espera_max)
-    meta.write_text(json.dumps({"firma": firma, "teclas": teclas, "metricas": r["metricas"], "coste_s": r["coste_s"]}))
+    try:
+        r = sesion_arranque(None, "audit-base-sony", p, BASE_SONY, "base", teclas, espera_max, hueco_max=120)
+    except EntradaError as e:
+        return {"pngs": {}, "cache": False, "metricas": {}, "error": str(e)}
+    if r["pngs"]:
+        meta.write_text(json.dumps({"firma": firma, "teclas": teclas, "metricas": r["metricas"], "coste_s": r["coste_s"]}))
     return {"pngs": {k: str(BASE_SONY / v) for k, v in r["pngs"].items()}, "cache": False,
             "metricas": r["metricas"], "coste_s": r["coste_s"], "error": r.get("error", "")}
 
@@ -1056,6 +1080,7 @@ def etapa_arranque(usr: dict[str, Any] | None, checks: list[dict[str, Any]], sal
         return {}
     overlay = salida / f"overlay-{perfil}"
     shutil.rmtree(overlay, ignore_errors=True)
+    (overlay / "cam/usr").mkdir(parents=True)  # un CFW sin cambios también debe dar un overlay válido a live.py
     for rel in usr["anadidos"] + usr["cambiados"]:
         destino = overlay / "cam/usr" / rel
         destino.parent.mkdir(parents=True, exist_ok=True)
@@ -1065,7 +1090,12 @@ def etapa_arranque(usr: dict[str, Any] | None, checks: list[dict[str, Any]], sal
             f"el overlay no puede borrar {len(usr['quitados'])} ficheros de Sony: en QEMU seguirán presentes", 4,
             evidencia="NO_VERIFICADO")
     puerto_cfw = puerto or puerto_libre()
-    r = sesion_arranque(overlay, perfil, puerto_cfw, salida, "cfw", teclas, espera_max)
+    try:
+        r = sesion_arranque(overlay, perfil, puerto_cfw, salida, "cfw", teclas, espera_max)
+    except EntradaError as e:
+        add(checks, "arranque.no_arrancado", None, f"no se pudo arrancar (entorno): {e}", 4,
+            evidencia="NO_VERIFICADO", material=True)
+        return {}
     base = base_sony(salida, teclas, espera_max, puerto_cfw)
     r["base_sony"] = base
     if r.get("error"):
@@ -1074,9 +1104,11 @@ def etapa_arranque(usr: dict[str, Any] | None, checks: list[dict[str, Any]], sal
         else "QEMU terminó antes de tiempo", 4)
     add(checks, "arranque.im_elf", not r["im_exit"], "im.elf no salió con IMEXIT" if not r["im_exit"]
         else "im.elf abortó (IMEXIT en consola.log)", 4)
-    frames_ok = bool(r.get("primera"))
+    frames_ok = bool(r.get("primera") or r.get("pngs", {}).get("primera"))
+    segundos = r.get("arranque_s", r.get("coste_s"))
     add(checks, "arranque.primera_pantalla", frames_ok,
-        f"primera pantalla a los {r.get('coste_s')} s" if frames_ok else f"0 fotogramas en {espera_max:.0f} s", 4)
+        f"primera pantalla a los {segundos} s (más {r.get('espera_hueco_s', 0)} s de espera de hueco)"
+        if frames_ok else f"0 fotogramas en {espera_max:.0f} s", 4)
     negro = [k for k, m in r.get("metricas", {}).items() if m["negro"]]
     add(checks, "arranque.pantalla_no_negra", frames_ok and not negro,
         f"capturas negras: {negro}" if negro else ("primera pantalla, menú y disparo con contenido" if frames_ok
@@ -1155,6 +1187,8 @@ def audita(ruta: Path, *, completo: bool = True, arranque: bool | None = None, s
         desconocidas = sorted({t.strip() for t in teclas.split(",") if t.strip()} - nombres_teclas())
         if desconocidas:
             raise EntradaError(f"teclas desconocidas en --teclas: {desconocidas}")
+    if shutil.which("debugfs") is None:
+        raise EntradaError("falta debugfs (e2fsprogs): sin él no se puede extraer el /usr del nflasha15")
     sha, tam = huella(ruta, tipo)
     s8 = sha[:8]
     checks: list[dict[str, Any]] = []
@@ -1168,7 +1202,7 @@ def audita(ruta: Path, *, completo: bool = True, arranque: bool | None = None, s
     if not completo:
         add(checks, "modo.rapido", True, "solo contenedor y /USR (sin estructura ni arranque)", 0, evidencia="INFERENCIA")
     usr: dict[str, Any] = {}
-    with tempfile.TemporaryDirectory(prefix="audita-cfw-") as t:
+    with tempfile.TemporaryDirectory(prefix=".tmp-audita-cfw-", dir=destino) as t:
         tmp = Path(t)
         imagen: bytes | None = None
         if tipo == "dat":
@@ -1189,8 +1223,13 @@ def audita(ruta: Path, *, completo: bool = True, arranque: bool | None = None, s
             if tipo in ("nflasha15", "paquete"):
                 p = ruta_imagen(ruta, tipo)
                 imagen = p.read_bytes() if p is not None else None
+        otro_modelo = any(c["id"] == "contenedor.modelo_a6000" and c["ok"] is False for c in checks)
         if tipo == "overlay":
             usr = prepara_overlay(ruta, usr_sony, checks, tmp, decl)
+        elif otro_modelo:
+            add(checks, "usr.no_aplica", None,
+                "el .dat no es de la A6000: comparar su /usr con el de Sony 3.21 no diría nada", 2,
+                evidencia="NO_VERIFICADO")
         elif imagen is not None:
             try:
                 usr = etapa_usr(imagen, usr_sony, checks, tmp, decl)

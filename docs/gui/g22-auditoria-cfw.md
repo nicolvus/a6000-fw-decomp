@@ -161,8 +161,9 @@ acepta tal cual.
 |---|---|---|
 | `.dat` oficial 3.21, `--rapido` | ≈ 46 s | descifrar 200 MB (≈ 8 s) + extraer CFW y Sony (≈ 2 × 10 s) + sumas |
 | CFW sintético sobre el `/usr` real, `--completo --sin-arranque` | ≈ 2,8 s | `/usr` ya extraído; diff de `libObj.so` (17 MB) incluido |
-| arranque en frío | ≈ 3 min | primera pantalla; después el perfil guarda estado (≈ 7 s) |
-| primera captura de la base Sony | ≈ 3 min | queda cacheada para siguientes auditorías |
+| arranque en frío del Sony de serie (medido 26-11-2026) | 145 s de sesión; primera pantalla ≈ 2 min | 3 PNG de 640×480, MENÚ abre, sin IMEXIT; el perfil guarda estado para la siguiente (≈ 7 s) |
+| auditoría completa con la base Sony cacheada (paquete sintético idéntico a Sony) | 209 s | incluye la espera de hueco de QEMU; 9 comprobaciones de arranque OK y comparación de menú 0,0 |
+| primera captura de la base Sony | 120–145 s | queda cacheada en `analysis/gui/g22/harness/audit-base-sony/` |
 
 ## 5. Qué **no** puede cubrir el arnés (sigue siendo riesgo de cámara)
 
@@ -194,9 +195,9 @@ acepta tal cual.
 /home/nicolas/a6000-arnes/.venv/bin/python -m pytest tests/test_gui_harness.py -k "pkg_usr or shimenv" -q
 ```
 
-Las cinco primeras pruebas no usan QEMU (detección/rechazo, fichero de Sony quitado → FALLO, parche no
-declarado → AVISO, informe JSON/Markdown, lote). El marcador de arranque se omite salvo que existan los
-artefactos y se pida:
+Las seis primeras pruebas no usan QEMU (detección/rechazo, fichero de Sony quitado → FALLO, parche no
+declarado → AVISO, informe JSON/Markdown, lote y orquestación de la etapa 4 con una sesión simulada). El
+marcador de arranque se omite salvo que existan los artefactos y se pida:
 
 ```sh
 AUDITA_CFW_ARRANQUE=1 … -m pytest tests/test_gui_audita_cfw.py::test_arranque_real_del_arnes -q
@@ -214,14 +215,22 @@ Variables de entorno: `AUDITA_SONY_NFLASHA15` (base Sony), `AUDITA_BK_TBL` (volc
 - **Sí se auditó el `.dat` oficial de Sony 3.21** (`FirmwareData_ILCE6000V321.dat`, sha256 `29aef21a…`):
   etapas 1 y 2 completas, 33 comprobaciones OK, sin fallos ni avisos. Sirve de autocomprobación del
   contenedor, no de CFW.
-- **Se rechazan** los `.dat` de otros modelos (`ILCE6300`, `ILCE7S`) por modelo/región, y cualquier fichero
-  que no sea `.dat`/`nflasha15`/paquete sale con error claro (código 2).
+- **Se rechaza** el `.dat` de la A6300 2.01 (`FirmwareData_ILCE6300.dat`): modelo `0x61030034` y versión
+  2.01 → **FALLO** (2 fallos, sin comparar su `/usr` con el de la A6000); cualquier fichero que no sea
+  `.dat`/`nflasha15`/paquete sale con error claro (código 2).
 - **Paquete sintético sobre el `/usr` real**: se modificó `libObj.so` (un byte), una tabla
   `string_english.uxc` (etiqueta nueva) y se quitó un fichero de Sony; con declaración completa las etapas
   1–3 dan OK, sin declaración el quitado da FALLO y los cambios AVISO. Los 25 `string_*.uxc` reales se
   validan; 195 `.uxc` de otros formatos quedan NO_VERIFICADO.
-- **Arranque en el arnés**: ver §4; se ejecutó la prueba real cuando hubo hueco de QEMU (máximo 2 en el
-  sistema) y la base de Sony quedó cacheada.
+- **Arranque real: SÍ, con el Sony de serie y con la etapa 4 completa sobre un paquete sintético idéntico
+  a Sony.** El Sony de serie arrancó por el mismo camino (`live.py`, perfil y puerto propios): primera
+  pantalla en ≈ 2 min, 3 PNG de 640×480, MENÚ abre (87.845 píxeles con contenido), sin IMEXIT, y QEMU
+  cerrado al acabar (sesión de 145 s). Después, la auditoría completa de un paquete sintético idéntico a
+  Sony reutilizó la base cacheada: 9 comprobaciones de arranque OK, comparación de menú con diferencia 0,0
+  y veredicto OK en 209 s (incluida la espera de hueco: otros agentes mantenían 2–3 QEMU y el auditor solo
+  arranca con menos de 2). **No es un CFW**: sirve para probar la etapa 4 de punta a punta.
+- El marcador `test_arranque_real_del_arnes` sigue disponible (`AUDITA_CFW_ARRANQUE=1`); no se ejecutó en
+  pytest para no dejar QEMU colgados en la suite, pero el mismo código se ejecutó a mano con el Sony real.
 
 ## PARA PENDIENTES.md
 

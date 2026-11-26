@@ -147,3 +147,43 @@ def test_arranque_real_del_arnes(tmp_path: Path) -> None:
     assert r["primera"] and not r["im_exit"] and not r["qemu_murio"], r.get("error")
     assert (tmp_path / "cfw-1-primera.png").is_file()
     assert not [q for q in A.qemu_activos() if "live/audit-test-marcador/" in q]
+
+
+def test_etapa_arranque_orquesta_overlay_y_comparacion(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    base = sony(tmp_path, {"lib/a.so": b"AAAA"})
+    cfw = overlay(tmp_path / "cfw", {"lib/a.so": b"AAAB"})
+    usr = {"dir_cfw": cfw / "cam/usr", "dir_sony": base, "anadidos": [], "cambiados": ["lib/a.so"], "quitados": []}
+    base_png = tmp_path / "base-menu.png"
+    base_png.write_bytes(b"png")
+
+    def falsa_sesion(overlay, perfil, puerto, salida, etiqueta, teclas, espera, hueco_max=900.0):
+        assert (overlay / "cam/usr/lib/a.so").read_bytes() == b"AAAB"  # el overlay lleva solo lo cambiado
+        for n, nombre in ((1, "primera"), (2, "menu"), (3, "disparo")):
+            (salida / f"{etiqueta}-{n}-{nombre}.png").write_bytes(b"png")
+        return {"perfil": perfil, "puerto": puerto, "pngs": {"primera": f"{etiqueta}-1-primera.png",
+                "menu": f"{etiqueta}-2-menu.png", "disparo": f"{etiqueta}-3-disparo.png"},
+                "metricas": {k: {"negro": False} for k in ("primera", "menu", "disparo")},
+                "im_exit": False, "qemu_murio": False, "menu_abre": True, "error": "", "coste_s": 1.0,
+                "live_log": str(salida / "x.log")}
+
+    monkeypatch.setattr(A, "sesion_arranque", falsa_sesion)
+    monkeypatch.setattr(A, "base_sony", lambda *a, **k: {"pngs": {"menu": str(base_png)}, "metricas": {}})
+    monkeypatch.setattr(A, "compara_png", lambda *a, **k: {"comparable": True, "fraccion_distinta": 0.1,
+                                                           "no_fondo": [500, 600]})
+    checks: list[dict] = []
+    A.etapa_arranque(usr, checks, tmp_path, "perfil-test", 8635, "", 10)
+    c = {x["id"]: x for x in checks}
+    assert c["arranque.primera_pantalla"]["ok"] is True
+    assert c["arranque.menu_abre"]["ok"] is True
+    assert c["arranque.menu_frente_sony"]["ok"] is True
+    assert not [x for x in checks if x["ok"] is False]
+
+    def sin_hueco(*a, **k):
+        raise A.EntradaError("hay 2 qemu-system-arm y no se libera un hueco")
+
+    monkeypatch.setattr(A, "sesion_arranque", sin_hueco)
+    checks2: list[dict] = []
+    A.etapa_arranque(usr, checks2, tmp_path, "perfil-test", 8635, "", 10)
+    c2 = {x["id"]: x for x in checks2}
+    assert c2["arranque.no_arrancado"]["ok"] is None and c2["arranque.no_arrancado"]["material"] is True
+    assert A.veredicto(checks2) == "PARCIAL"  # falta de QEMU no es un fallo del CFW
