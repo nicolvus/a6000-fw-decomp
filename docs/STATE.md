@@ -12,9 +12,11 @@ guarda de contenido no soportado («Detect UnSupported Content », `0x437C3C`) y
 `FUN_007211B0` (seis sitios devuelven 0x1A; p. ej. `0x1C00001A`). **No es timeout, RAM ni demux**: si falla una guarda
 no se llama al motor. Estado del core obligado: `[core+0x1F0]==5` (si no, el código habría sido `0x0A`).
 Falta discriminar el camino (log de MPR o breakpoints de un solo uso en `0x437C0A`/`0x437C3C`/`0x437CFC`).
-`0:02`: el modelo `M_SinglePbBase_Utils` (modelo+0x90) lleva `m_durationOfContent` en modelo+0x108 y
-`m_pbTimeInContent` en modelo+0xF0 (h/m/s); el catálogo expone `contentsDuration` por
-`MprIf::GetMovieContentProperty` (API `0x41000067`), pero **no se ha demostrado** que el texto salga de ahí.
+`0:02` (**corregido el 27-11**): el bloque `PbTimeInfo` está en modelo+**0x534**; `m_durationOfContent` en
+modelo+0x5AC/0x5B0/0x5B4, `m_pbTimeInContent` en modelo+0x594/0x598/0x59C y `m_framesOfContent` en 0x5CC (lo de
+0x90…0x108 era `PbStatus`, estado y no tiempos). El catálogo queda **descartado** como fuente
+(`GetMovieContentProperty` solo lo usa el volcado `0x7258F8` y `libObj` no importa `GetContentDuration`); la
+hipótesis viva es que el `0:02` sea el **punto de reanudación** (`Get/SetContentResumePoint` `0x8CAE60`/`0x8CB4B2`).
 El MP4 no contiene ningún campo de ~2 s (ffprobe y parser propio). No hay prueba de causa DMM; los mapas externos
 históricos contienen los cinco tipos AVC (conservar [G111 §14.5](gui/g111-film-receta-gui-iconos.md#145-mapa-externo-recuperado-y-selector-de-tipo-avc)).
 [Informe de cierre estático](../reports/film-pb-1-productor-mpr-20261126.md) · [traspaso físico](../reports/film-pb-1-traspaso-20261125.md).
@@ -29,6 +31,18 @@ Quedan dos hipótesis: estado de arranque (el paquete quita `nflasha5`/WBI ⇒ a
 (el firmware documenta que la base de datos de imágenes gobierna la reproducción de películas). Discriminación:
 breakpoints en `0x437C0A`/`0x437C3C`/`0x437CFC`, «Recuperar BD imág.» y, si no, restaurar el 3.21 oficial.
 [Informe de auditoría](../reports/film-pb-1-auditoria-cfw-20261127.md).
+
+**Nueve investigaciones en paralelo (27-11-2026): el diagnóstico queda en tres hipótesis medidas.** Quedan dos
+guardas reales (A: `GetPlayMovieStatus` `0x60945C`/`dsm`; B: `isSupportContent` `0x61A8F0` → `vtable+0x58` sobre el
+objeto de medios) y el motor (`AviMMgr::MovieReadStart` `0x608698`); el traductor es ELF `0x7111B0`, no `0x7211B0`,
+y solo 6 de 65 536 entradas dan `0x1A`. `PbStart` (`0x307F54`) devuelve 0 siempre según el análisis del motor, así
+que la rama `0x437CFC` sería muerta y el `bl` vivo es `0x437C7E`. El índice de películas está en la **raíz del
+volumen**: `AVF_INFO\AVIN0001.INP` (+ `.BNP`, `.INT`), con `nDuration` en ms y `Duration90kHz`; `M4ROOT\MEDIAPRO.XML`
+es la BD XAVC. El MP4 es **conforme** al grabador (MSNV minor `0x015A0070`, uuid PROF/USMT/MTDT, `moov` al final,
+1440×1080 anamórfico): reempaquetar no ayuda. El arranque en frío pierde fuerza (el WBI no cubre `av-cam` y el
+manejador no consulta el modo). Los logs son 4 líneas incondicionales a stdout de `im.elf` (búfer `0x83400000`), con
+regla de decisión por línea. Kit de medida listo y probado en seco: `scripts/camera_filmpb1_trace.py`.
+[Camino final y plan P0–P3](../reports/film-pb-1-camino-final-20261127.md).
 
 ## Estado global (actualizado 03-11-2026)
 

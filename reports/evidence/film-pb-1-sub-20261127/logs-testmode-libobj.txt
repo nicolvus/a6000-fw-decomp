@@ -1,0 +1,29 @@
+# libObj.so 3.21 testmode_debugPrint
+007f0ca8: 024b       ldr      r3, [pc, #8]                  
+007f0caa: 80b5       push     {r7, lr}                      
+007f0cac: 7b44       add      r3, pc                        
+007f0cae: 00af       add      r7, sp, #0                    
+007f0cb0: 1870       strb     r0, [r3]                      
+007f0cb2: 80bd       pop      {r7, pc}                      
+007f0cb4: ccee8e00   cdp      p0, #0xc, c0, c12, c14, #4    
+007f0cb8: 08b4       push     {r3}                          
+007f0cba: 1e4b       ldr      r3, [pc, #0x78]                 ; [007f0d34]=008eeeb6
+007f0cbc: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+007f0cc0: a3b0       sub      sp, #0x8c                     
+007f0cc2: 7b44       add      r3, pc                        
+007f0cc4: 00af       add      r7, sp, #0                    
+007f0cc6: 0446       mov      r4, r0                        
+007f0cc8: 1b78       ldrb     r3, [r3]                      
+007f0cca: 8846       mov      r8, r1                        
+007f0ccc: 23b9       cbnz     r3, #0x7f0cd8                 
+007f0cce: 0128       cmp      r0, #1                        
+007f0cd0: 02d0       beq      #0x7f0cd8                     
+007f0cd2: b0f1ff3f   cmp.w    r0, #-1                       
+007f0cd6: 25d1       bne      #0x7f0d24                     
+007f0cd8: 621e       subs     r2, r4, #1                    
+007f0cda: 032a       cmp      r2, #3                        
+007f0cdc: 04d8       bhi      #0x7f0ce8                     
+007f0cde: 164b       ldr      r3, [pc, #0x58]                 ; [007f0d38]=00597510
+007f0ce0: 7b44       add      r3, pc                        
+007f0ce2: 53f82260   ldr.w    r6, [r3, r2, lsl #2]          
+007f0ce6: 00e0       b        #0x7f0cea                     

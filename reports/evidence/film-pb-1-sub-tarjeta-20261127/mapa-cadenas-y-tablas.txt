@@ -1,0 +1,179 @@
+# libmpr.so (fw 3.21). TODAS las direcciones son VA del ELF (base 0); REA/Ghidra = ELF + 0x10000
+
+== A. Tabla de rutas M4ROOT en pool de .text 0x779FBC (variante \PRIVATE\...) ==
+ 00779fbc -> 00947c8a \PRIVATE\M4ROOT
+ 00779fc0 -> 00947c9a \PRIVATE\M4ROOT\CLIP
+ 00779fc4 -> 00947caf \PRIVATE\M4ROOT\SUB
+ 00779fc8 -> 00947cc3 \PRIVATE\M4ROOT\THMBNL
+ 00779fcc -> 00947cda \PRIVATE\M4ROOT\GENERAL
+ 00779fd0 -> 00947cf2 \PRIVATE\M4ROOT\MEDIAPRO.XML
+ 00779fd4 -> 00947d0f \PRIVATE\M4ROOT\MEDIAPRO.BAK
+ 00779fd8 -> 00947d2c \PRIVATE\M4ROOT\CUEUP.XML
+ 00779fdc -> 00947d46 \PRIVATE\M4ROOT\DISCMETA.XML
+ 0x779fe0 -> 00947d63 " DeviceType MMC"
+== A2. variante \M4ROOT\ (0x779FE4) ==
+ 00779fe4 -> 00947c92 \M4ROOT
+ 00779fe8 -> 00947ca2 \M4ROOT\CLIP
+ 00779fec -> 00947cb7 \M4ROOT\SUB
+ 00779ff0 -> 00947ccb \M4ROOT\THMBNL
+ 00779ff4 -> 00947ce2 \M4ROOT\GENERAL
+ 00779ff8 -> 00947cfa \M4ROOT\MEDIAPRO.XML
+ 00779ffc -> 00947d17 \M4ROOT\MEDIAPRO.BAK
+ 0077a000 -> 00947d34 \M4ROOT\CUEUP.XML
+ 0077a004 -> 00947d4e \M4ROOT\DISCMETA.XML
+ 0x77a008 -> 00947d73 " DeviceType MS"
+
+== B. Tabla de nombres XML 0x7825D0 (A) / 0x7825E0 (B) ==
+ 007825d0 -> 0094a26e \PRIVATE\M4ROOT\MEDIAPRO.xml
+ 007825d4 -> 00947d46 \PRIVATE\M4ROOT\DISCMETA.XML
+ 007825d8 -> 00947d2c \PRIVATE\M4ROOT\CUEUP.XML
+ 007825dc -> 0094a28b \PRIVATE\M4ROOT\NRTMETA.xml
+ 007825e0 -> 0094a276 \M4ROOT\MEDIAPRO.xml
+ 007825e4 -> 00947d4e \M4ROOT\DISCMETA.XML
+ 007825e8 -> 00947d34 \M4ROOT\CUEUP.XML
+ 007825ec -> 0094a293 \M4ROOT\NRTMETA.xml
+
+== C. Cadenas clave: VA + palabras que la contienen (xrefs) ==
+ 007a637f AVF_INFO                                                         xrefs=['0x12c6a4', '0x139494', '0x13c0f0', '0x14494c', '0x1449d4', '0x144ab4', '0x14b980', '0x14bbe0']
+ 007a65f4 IsExistAVIndexDirectory                                          xrefs=['0x13c0e8']
+ 007a7367 AVIndex Accesser is not exist.                                   xrefs=['0x1404a0']
+ 007a7bd4 Error CreateAVIndex                                              xrefs=['0x14300c']
+ 007a912c AVIN0001.INP                                                     xrefs=[]
+ 007a9139 AVIN0001.BNP                                                     xrefs=[]
+ 007a9160 AVIN0001.INT                                                     xrefs=[]
+ 007a91c0 OTDISCBN.IND                                                     xrefs=['0x1447e4', '0x1449d8']
+ 007a91cd MODELCFG.IND                                                     xrefs=['0x144894', '0x144ab8']
+ 007abdae *.MP4                                                            xrefs=['0x1c6d68', '0x1c7194', '0x1c7434', '0x780584', '0x7806fc']
+ 007abdb4 MAH0                                                             xrefs=['0x1c7178', '0x3b1d88']
+ 007abdbe MAF0                                                             xrefs=['0x1c7180', '0x3b1d84']
+ 007abdd2 M4V0                                                             xrefs=['0x1c7448', '0x1c7714']
+ 007acaec /MP_ROOT/100ANV01/MAH%05ld.MP4                                   xrefs=['0x1d9b38', '0x1dd1b0', '0x1dd378', '0x1e3afc', '0x1e883c', '0x1e8c50', '0x1e8f14', '0x1e9164']
+ 007adb04 RunInconsistencyAvcMp4Register                                   xrefs=['0x1d93cc']
+ 007af2e3 DiskLoad [bIsSd 0/1]                                             xrefs=['0x1dc4a8']
+ 007af307 FlashLoad [AVCHD/M2PS/DCF/MP4_AVC/MP4_MPEG4/WAV/XAVC]            xrefs=['0x1dc518']
+ 008127eb ms:                                                              xrefs=['0x32fbbc', '0x734d44']
+ 009002ba BeginRepair <AVINDEX/AVCHD_NEW/AVCHD/M2PS/STILL/XAVC_RECONST/XAVC/WAV> xrefs=['0x65d1c4']
+ 00947cf2 \PRIVATE\M4ROOT\MEDIAPRO.XML                                     xrefs=['0x779fd0']
+ 0094a28b \PRIVATE\M4ROOT\NRTMETA.xml                                      xrefs=['0x7825dc']
+ 0094e518 \PRIVATE\M4ROOT\STATUS.BIN                                       xrefs=['0x78bfdc']
+
+== D. Constructor de rutas xavcIfo_DbDirMngr (ELF 0x779EAC) ==
+00779eac: 98b5       push     {r3, r4, r7, lr}              
+00779eae: 0446       mov      r4, r0                        
+00779eb0: 00af       add      r7, sp, #0                    
+00779eb2: 4068       ldr      r0, [r0, #4]                  
+00779eb4: fff70efe   bl       #0x779ad4                     
+00779eb8: 0b28       cmp      r0, #0xb                      
+00779eba: 3dd8       bhi      #0x779f38                     
+00779ebc: 0123       movs     r3, #1                        
+00779ebe: 13fa00f0   lsls.w   r0, r3, r0                    
+00779ec2: 10f4036f   tst.w    r0, #0x830                    
+00779ec6: 37d0       beq      #0x779f38                     
+00779ec8: 3c49       ldr      r1, [pc, #0xf0]                 ; [00779fbc]=00947c8a "\PRIVATE\M4ROOT"
+00779eca: 1022       movs     r2, #0x10                     
+00779ecc: 04f10c00   add.w    r0, r4, #0xc                  
+00779ed0: a7f5aef4   bl       #0x121830                     
+00779ed4: 3a49       ldr      r1, [pc, #0xe8]                 ; [00779fc0]=00947c9a "\PRIVATE\M4ROOT\CLIP"
+00779ed6: 1d22       movs     r2, #0x1d                     
+00779ed8: 04f11c00   add.w    r0, r4, #0x1c                 
+00779edc: a7f5a8f4   bl       #0x121830                     
+00779ee0: 3849       ldr      r1, [pc, #0xe0]                 ; [00779fc4]=00947caf "\PRIVATE\M4ROOT\SUB"
+00779ee2: 1d22       movs     r2, #0x1d                     
+00779ee4: 04f13900   add.w    r0, r4, #0x39                 
+00779ee8: a7f5a2f4   bl       #0x121830                     
+00779eec: 3649       ldr      r1, [pc, #0xd8]                 ; [00779fc8]=00947cc3 "\PRIVATE\M4ROOT\THMBNL"
+00779eee: 1d22       movs     r2, #0x1d                     
+00779ef0: 04f15600   add.w    r0, r4, #0x56                 
+00779ef4: a7f59cf4   bl       #0x121830                     
+00779ef8: 3449       ldr      r1, [pc, #0xd0]                 ; [00779fcc]=00947cda "\PRIVATE\M4ROOT\GENERAL"
+00779efa: 1d22       movs     r2, #0x1d                     
+00779efc: 04f17300   add.w    r0, r4, #0x73                 
+00779f00: a7f596f4   bl       #0x121830                     
+00779f04: 3249       ldr      r1, [pc, #0xc8]                 ; [00779fd0]=00947cf2 "\PRIVATE\M4ROOT\MEDIAPRO.XML"
+00779f06: 1d22       movs     r2, #0x1d                     
+00779f08: 04f19000   add.w    r0, r4, #0x90                 
+00779f0c: a7f590f4   bl       #0x121830                     
+00779f10: 3049       ldr      r1, [pc, #0xc0]                 ; [00779fd4]=00947d0f "\PRIVATE\M4ROOT\MEDIAPRO.BAK"
+00779f12: 1d22       movs     r2, #0x1d                     
+00779f14: 04f1ad00   add.w    r0, r4, #0xad                 
+00779f18: a7f58af4   bl       #0x121830                     
+00779f1c: 2e49       ldr      r1, [pc, #0xb8]                 ; [00779fd8]=00947d2c "\PRIVATE\M4ROOT\CUEUP.XML"
+00779f1e: 1d22       movs     r2, #0x1d                     
+00779f20: 04f1ca00   add.w    r0, r4, #0xca                 
+00779f24: a7f584f4   bl       #0x121830                     
+00779f28: 04f1e700   add.w    r0, r4, #0xe7                 
+00779f2c: 2b49       ldr      r1, [pc, #0xac]                 ; [00779fdc]=00947d46 "\PRIVATE\M4ROOT\DISCMETA.XML"
+00779f2e: 1d22       movs     r2, #0x1d                     
+00779f30: a7f57ef4   bl       #0x121830                     
+00779f34: 2a48       ldr      r0, [pc, #0xa8]                 ; [00779fe0]=00947d63 " DeviceType MMC"
+00779f36: 36e0       b        #0x779fa6                     
+00779f38: 2a49       ldr      r1, [pc, #0xa8]                 ; [00779fe4]=00947c92 "\M4ROOT"
+00779f3a: 1022       movs     r2, #0x10                     
+00779f3c: 04f10c00   add.w    r0, r4, #0xc                  
+00779f40: a7f576f4   bl       #0x121830                     
+00779f44: 2849       ldr      r1, [pc, #0xa0]                 ; [00779fe8]=00947ca2 "\M4ROOT\CLIP"
+00779f46: 1d22       movs     r2, #0x1d                     
+00779f48: 04f11c00   add.w    r0, r4, #0x1c                 
+00779f4c: a7f570f4   bl       #0x121830                     
+00779f50: 2649       ldr      r1, [pc, #0x98]                 ; [00779fec]=00947cb7 "\M4ROOT\SUB"
+00779f52: 1d22       movs     r2, #0x1d                     
+00779f54: 04f13900   add.w    r0, r4, #0x39                 
+00779f58: a7f56af4   bl       #0x121830                     
+00779f5c: 2449       ldr      r1, [pc, #0x90]                 ; [00779ff0]=00947ccb "\M4ROOT\THMBNL"
+00779f5e: 1d22       movs     r2, #0x1d                     
+00779f60: 04f15600   add.w    r0, r4, #0x56                 
+00779f64: a7f564f4   bl       #0x121830                     
+00779f68: 2249       ldr      r1, [pc, #0x88]                 ; [00779ff4]=00947ce2 "\M4ROOT\GENERAL"
+00779f6a: 1d22       movs     r2, #0x1d                     
+00779f6c: 04f17300   add.w    r0, r4, #0x73                 
+00779f70: a7f55ef4   bl       #0x121830                     
+00779f74: 2049       ldr      r1, [pc, #0x80]                 ; [00779ff8]=00947cfa "\M4ROOT\MEDIAPRO.XML"
+00779f76: 1d22       movs     r2, #0x1d                     
+00779f78: 04f19000   add.w    r0, r4, #0x90                 
+00779f7c: a7f558f4   bl       #0x121830                     
+00779f80: 1e49       ldr      r1, [pc, #0x78]                 ; [00779ffc]=00947d17 "\M4ROOT\MEDIAPRO.BAK"
+00779f82: 1d22       movs     r2, #0x1d                     
+00779f84: 04f1ad00   add.w    r0, r4, #0xad                 
+00779f88: a7f552f4   bl       #0x121830                     
+00779f8c: 1c49       ldr      r1, [pc, #0x70]                 ; [0077a000]=00947d34 "\M4ROOT\CUEUP.XML"
+00779f8e: 1d22       movs     r2, #0x1d                     
+00779f90: 04f1ca00   add.w    r0, r4, #0xca                 
+00779f94: a7f54cf4   bl       #0x121830                     
+00779f98: 04f1e700   add.w    r0, r4, #0xe7                 
+00779f9c: 1949       ldr      r1, [pc, #0x64]                 ; [0077a004]=00947d4e "\M4ROOT\DISCMETA.XML"
+00779f9e: 1d22       movs     r2, #0x1d                     
+00779fa0: a7f546f4   bl       #0x121830                     
+00779fa4: 1848       ldr      r0, [pc, #0x60]                 ; [0077a008]=00947d73 " DeviceType MS"
+00779fa6: f1f79bf8   bl       #0x76b0e0                     
+00779faa: 1848       ldr      r0, [pc, #0x60]                 ; [0077a00c]=00947d82 " m_rootDirPath = "
+
+== E. avi_man_NewAviFileManager (ELF 0x14B660): rutas de AVF_INFO ==
+0014b8a0: 1c34       adds     r4, #0x1c                     
+0014b8a2: 2046       mov      r0, r4                        
+0014b8a4: d3f726eb   blx      #0x11eef4                       ; strlen
+0014b8a8: 4946       mov      r1, sb                        
+0014b8aa: c0f16302   rsb.w    r2, r0, #0x63                 
+0014b8ae: 2046       mov      r0, r4                        
+0014b8b0: d2f77ced   blx      #0x11e3ac                       ; strncat
+0014b8b4: 3c69       ldr      r4, [r7, #0x10]               
+0014b8b6: 1c34       adds     r4, #0x1c                     
+0014b8b8: 2046       mov      r0, r4                        
+0014b8ba: d3f71ceb   blx      #0x11eef4                       ; strlen
+0014b8be: 07f11401   add.w    r1, r7, #0x14                 
+0014b8c2: c0f16302   rsb.w    r2, r0, #0x63                 
+0014b8c6: 2046       mov      r0, r4                        
+0014b8c8: d2f770ed   blx      #0x11e3ac                       ; strncat
+0014b8cc: 3c69       ldr      r4, [r7, #0x10]               
+0014b8ce: 1c34       adds     r4, #0x1c                     
+0014b8d0: 2046       mov      r0, r4                        
+0014b8d2: d3f710eb   blx      #0x11eef4                       ; strlen
+0014b8d6: 2a49       ldr      r1, [pc, #0xa8]                 ; [0014b980]=007a637f "AVF_INFO"
+0014b8d8: c0f16302   rsb.w    r2, r0, #0x63                 
+0014b8dc: 2046       mov      r0, r4                        
+0014b8de: d2f766ed   blx      #0x11e3ac                       ; strncat
+0014b8e2: 3969       ldr      r1, [r7, #0x10]               
+0014b8e4: c868       ldr      r0, [r1, #0xc]                
+0014b8e6: 1c31       adds     r1, #0x1c                     
+0014b8e8: 02f0fcfa   bl       #0x14dee4                     
+0014b8ec: 0446       mov      r4, r0                        
+0014b8ee: 58b1       cbz      r0, #0x14b908                 

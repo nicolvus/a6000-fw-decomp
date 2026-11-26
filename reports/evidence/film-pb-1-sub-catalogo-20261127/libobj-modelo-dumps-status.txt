@@ -1,0 +1,93 @@
+# libObj.so fw3.21 SHA-256 8e8a937a... — dumps del modelo de reproduccion (VA ELF, sin desplazamiento).
+# 0x432240: dump de test del modelo (testmode_debugPrint); r4 = modelo.
+00432240: b0b5       push     {r4, r5, r7, lr}              
+00432242: 82b0       sub      sp, #8                        
+00432244: 1c4d       ldr      r5, [pc, #0x70]                 ; [004322b8]=00cc9cec "ActionTestCmdDebugPrint"
+00432246: 0221       movs     r1, #2                        
+00432248: 0022       movs     r2, #0                        
+0043224a: 0446       mov      r4, r0                        
+0043224c: 1b4b       ldr      r3, [pc, #0x6c]                 ; [004322bc]=00cc9efc "[M_SinglePbBase                         "
+0043224e: 0120       movs     r0, #1                        
+00432250: 02af       add      r7, sp, #8                    
+00432252: 0095       str      r5, [sp]                      
+00432254: aaf446ec   blx      #0xdcae4                        ; testmode_debugPrint
+00432258: 2046       mov      r0, r4                        
+0043225a: fbf7ddfb   bl       #0x42da18                       ; _init+0x352660
+0043225e: 04f58470   add.w    r0, r4, #0x108                
+00432262: dcf7cbff   bl       #0x40f1fc                       ; _init+0x333e44
+00432266: 04f5e270   add.w    r0, r4, #0x1c4                
+0043226a: ddf79dfa   bl       #0x40f7a8                       ; _init+0x3343f0
+0043226e: 04f58260   add.w    r0, r4, #0x410                
+00432272: 0c30       adds     r0, #0xc                      
+00432274: dcf706fe   bl       #0x40ee84                       ; _init+0x333acc
+00432278: 04f59260   add.w    r0, r4, #0x490                
+0043227c: 0c30       adds     r0, #0xc                      
+0043227e: dcf765fc   bl       #0x40eb4c                       ; _init+0x333794
+00432282: 04f5a660   add.w    r0, r4, #0x530                
+00432286: 0430       adds     r0, #4                        
+00432288: dcf762fb   bl       #0x40e950                       ; _init+0x333598
+0043228c: 04f19000   add.w    r0, r4, #0x90                 
+00432290: dcf7e4fa   bl       #0x40e85c                       ; _init+0x3334a4
+00432294: 04f5be60   add.w    r0, r4, #0x5f0                
+00432298: 16f0b2fa   bl       #0x448800                       ; _init+0x36d448
+0043229c: 04f5cc60   add.w    r0, r4, #0x660                
+004322a0: 0c30       adds     r0, #0xc                      
+004322a2: 16f03bfd   bl       #0x448d1c                       ; _init+0x36d964
+004322a6: 0120       movs     r0, #1                        
+004322a8: 0221       movs     r1, #2                        
+004322aa: 0022       movs     r2, #0                        
+004322ac: 044b       ldr      r3, [pc, #0x10]                 ; [004322c0]=00cc9f31 "[M_SinglePbBase                         "
+004322ae: 0095       str      r5, [sp]                      
+004322b0: aaf418ec   blx      #0xdcae4                        ; testmode_debugPrint
+004322b4: bd46       mov      sp, r7                        
+004322b6: b0bd       pop      {r4, r5, r7, pc}              
+004322b8: ec9c       ldr      r4, [sp, #0x3b0]              
+004322ba: cc00       lsls     r4, r1, #3                    
+004322bc: fc9e       ldr      r6, [sp, #0x3f0]              
+004322be: cc00       lsls     r4, r1, #3                    
+
+# 0x40E85C: dump del bloque situado en modelo+0x90 (PbStatus). Campos: +0x60..+0x6C = m_pbStatus*.
+0040e85c: f0b5       push     {r4, r5, r6, r7, lr}          
+0040e85e: 85b0       sub      sp, #0x14                     
+0040e860: 324d       ldr      r5, [pc, #0xc8]                 ; [0040e92c]=00cc25c6 "debugPrint"
+0040e862: 0446       mov      r4, r0                        
+0040e864: 061d       adds     r6, r0, #4                    
+0040e866: 0120       movs     r0, #1                        
+0040e868: 04af       add      r7, sp, #0x10                 
+0040e86a: 0221       movs     r1, #2                        
+0040e86c: 0022       movs     r2, #0                        
+0040e86e: 304b       ldr      r3, [pc, #0xc0]                 ; [0040e930]=00cc068c "[M_SinglePbBase_Utils: %-20s] %s() ====="
+0040e870: 0096       str      r6, [sp]                      
+0040e872: 0195       str      r5, [sp, #4]                  
+0040e874: cef436e9   blx      #0xdcae4                        ; testmode_debugPrint
+0040e878: 0120       movs     r0, #1                        
+0040e87a: 0221       movs     r1, #2                        
+0040e87c: 0022       movs     r2, #0                        
+0040e87e: 2d4b       ldr      r3, [pc, #0xb4]                 ; [0040e934]=00cc06d4 "[M_SinglePbBase_Utils: %-20s] %s() PbSta"
+0040e880: 0096       str      r6, [sp]                      
+0040e882: 0195       str      r5, [sp, #4]                  
+0040e884: cef42ee9   blx      #0xdcae4                        ; testmode_debugPrint
+0040e888: 0120       movs     r0, #1                        
+0040e88a: 0221       movs     r1, #2                        
+0040e88c: 0022       movs     r2, #0                        
+0040e88e: 284b       ldr      r3, [pc, #0xa0]                 ; [0040e930]=00cc068c "[M_SinglePbBase_Utils: %-20s] %s() ====="
+0040e890: 0096       str      r6, [sp]                      
+0040e892: 0195       str      r5, [sp, #4]                  
+0040e894: cef426e9   blx      #0xdcae4                        ; testmode_debugPrint
+0040e898: 236e       ldr      r3, [r4, #0x60]               
+0040e89a: 0120       movs     r0, #1                        
+0040e89c: 0221       movs     r1, #2                        
+0040e89e: 0022       movs     r2, #0                        
+0040e8a0: 0096       str      r6, [sp]                      
+0040e8a2: 0293       str      r3, [sp, #8]                  
+0040e8a4: 244b       ldr      r3, [pc, #0x90]                 ; [0040e938]=00cc0700 "[M_SinglePbBase_Utils: %-20s] %s() m_pbS"
+0040e8a6: 0195       str      r5, [sp, #4]                  
+0040e8a8: cef41ce9   blx      #0xdcae4                        ; testmode_debugPrint
+0040e8ac: 636e       ldr      r3, [r4, #0x64]               
+0040e8ae: 0120       movs     r0, #1                        
+0040e8b0: 0221       movs     r1, #2                        
+0040e8b2: 0022       movs     r2, #0                        
+0040e8b4: 0096       str      r6, [sp]                      
+0040e8b6: 0293       str      r3, [sp, #8]                  
+0040e8b8: 204b       ldr      r3, [pc, #0x80]                 ; [0040e93c]=00cc0744 "[M_SinglePbBase_Utils: %-20s] %s() m_pbS"
+0040e8ba: 0195       str      r5, [sp, #4]                  

@@ -1,0 +1,83 @@
+00437bfa: 0ff010ff   bl       #0x447a1e                     
+00437bfe: 38b9       cbnz     r0, #0x437c10                 
+00437c00: a068       ldr      r0, [r4, #8]                  
+00437c02: 0122       movs     r2, #1                        
+00437c04: 4d49       ldr      r1, [pc, #0x134]                ; [00437d3c]=0085a51c " Pb Disable!! ref) dsm get"
+00437c06: daf297fe   bl       #0x712938                     
+00437c0a: 1a23       movs     r3, #0x1a                     
+00437c0c: fb63       str      r3, [r7, #0x3c]               
+00437c0e: 7ee0       b        #0x437d0e                     
+00437c10: 07f16806   add.w    r6, r7, #0x68                 
+00437c14: 96e80f00   ldm.w    r6, {r0, r1, r2, r3}          
+00437c18: 8de80f00   stm.w    sp, {r0, r1, r2, r3}          
+00437c1c: 07f16001   add.w    r1, r7, #0x60                 
+00437c20: d4f8ec01   ldr.w    r0, [r4, #0x1ec]              
+00437c24: 91e80c00   ldm.w    r1, {r2, r3}                  
+00437d0e: 07f14006   add.w    r6, r7, #0x40                 
+00437d12: a068       ldr      r0, [r4, #8]                  
+00437d14: 0c49       ldr      r1, [pc, #0x30]                 ; [00437d48]=0085e965 "PlayMovie()"
+00437d16: 56f8042d   ldr      r2, [r6, #-0x4]!              
+00437d1a: daf221fe   bl       #0x712960                     
+00437d1e: 2368       ldr      r3, [r4]                      
+00437d20: 2046       mov      r0, r4                        
+00437d22: 0a49       ldr      r1, [pc, #0x28]                 ; [00437d4c]=4000001d
+00437d24: 3246       mov      r2, r6                        
+00437d26: dd69       ldr      r5, [r3, #0x1c]               
+00437d28: 0423       movs     r3, #4                        
+00437d2a: a847       blx      r5                            
+00712938: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+0071293c: 0446       mov      r4, r0                        
+0071293e: 0e46       mov      r6, r1                        
+00712940: 00af       add      r7, sp, #0                    
+00712942: 1546       mov      r5, r2                        
+00712944: fff7eaff   bl       #0x71291c                     
+00712948: 2046       mov      r0, r4                        
+0071294a: 3146       mov      r1, r6                        
+0071294c: 70f776fc   bl       #0x68323c                     
+00712950: 25b1       cbz      r5, #0x71295c                 
+00712952: 2046       mov      r0, r4                        
+00712954: bde8f041   pop.w    {r4, r5, r6, r7, r8, lr}      
+00712958: 70f7debb   b.w      #0x683118                     
+0071295c: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+00712960: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+00712964: 0446       mov      r4, r0                        
+00712966: 00af       add      r7, sp, #0                    
+00712968: 0e46       mov      r6, r1                        
+0071296a: 1546       mov      r5, r2                        
+0071296c: fff7d6ff   bl       #0x71291c                     
+00712970: 2046       mov      r0, r4                        
+00712972: 3146       mov      r1, r6                        
+00712974: 70f762fc   bl       #0x68323c                     
+00712978: 2046       mov      r0, r4                        
+0071297a: 0649       ldr      r1, [pc, #0x18]                 ; [00712994]=00920d04 ", ErrorCode = "
+0071297c: 70f75efc   bl       #0x68323c                     
+00712980: 2046       mov      r0, r4                        
+00712982: 2946       mov      r1, r5                        
+00712984: fff798ff   bl       #0x7128b8                     
+00683e1c: b0b5       push     {r4, r5, r7, lr}              
+00683e1e: 0546       mov      r5, r0                        
+00683e20: 00af       add      r7, sp, #0                    
+00683e22: 06e0       b        #0x683e32                     
+00683e24: 2046       mov      r0, r4                        
+00683e26: fff7a5ff   bl       #0x683d74                     
+00683e2a: 02e0       b        #0x683e32                     
+00683e2c: 2046       mov      r0, r4                        
+00683e2e: 9af664e0   blx      #0x11def8                       ; putchar
+00683e32: 15f8014b   ldrb     r4, [r5], #1                  
+00683e36: 54b1       cbz      r4, #0x683e4e                 
+00683e38: fff70cff   bl       #0x683c54                     
+00683e3c: 0028       cmp      r0, #0                        
+00683e3e: f1d0       beq      #0x683e24                     
+00683e40: f4e7       b        #0x683e2c                     
+00683e42: 054b       ldr      r3, [pc, #0x14]                 ; [00683e58]=00000000
+00683e44: 1868       ldr      r0, [r3]                      
+00683df8: 2046       mov      r0, r4                        
+00683dfa: bde8b040   pop.w    {r4, r5, r7, lr}              
+00683dfe: fff7b9bf   b.w      #0x683d74                     
+00683e02: 2046       mov      r0, r4                        
+00683e04: 9af678e0   blx      #0x11def8                       ; putchar
+00683e08: 034b       ldr      r3, [pc, #0xc]                  ; [00683e18]=00000000
+00683e0a: 0446       mov      r4, r0                        
+00683e0c: 1868       ldr      r0, [r3]                      
+00683e0e: 9bf6fae2   blx      #0x11f404                       ; fflush
+00683e12: 2046       mov      r0, r4                        

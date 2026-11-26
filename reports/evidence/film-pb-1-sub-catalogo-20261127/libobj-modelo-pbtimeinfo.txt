@@ -1,0 +1,137 @@
+# libObj.so — 0x40E950 = dump del bloque PbTimeInfo, invocado con r0 = modelo+0x534 (ver 0x432282-0x432290).
+0040e950: f0b5       push     {r4, r5, r6, r7, lr}          
+0040e952: 87b0       sub      sp, #0x1c                     
+0040e954: 704d       ldr      r5, [pc, #0x1c0]                ; [0040eb18]=00cc0534 "debugPrint"
+0040e956: 0446       mov      r4, r0                        
+0040e958: 061d       adds     r6, r0, #4                    
+0040e95a: 0120       movs     r0, #1                        
+0040e95c: 06af       add      r7, sp, #0x18                 
+0040e95e: 0221       movs     r1, #2                        
+0040e960: 0022       movs     r2, #0                        
+0040e962: 6e4b       ldr      r3, [pc, #0x1b8]                ; [0040eb1c]=00cc068c "[M_SinglePbBase_Utils: %-20s] %s() ====="
+0040e964: 0195       str      r5, [sp, #4]                  
+0040e966: 0096       str      r6, [sp]                      
+0040e968: cef4bce8   blx      #0xdcae4                        ; testmode_debugPrint
+0040e96c: 0120       movs     r0, #1                        
+0040e96e: 0221       movs     r1, #2                        
+0040e970: 0022       movs     r2, #0                        
+0040e972: 6b4b       ldr      r3, [pc, #0x1ac]                ; [0040eb20]=00cc0828 "[M_SinglePbBase_Utils: %-20s] %s() PbTim"
+0040e974: 0195       str      r5, [sp, #4]                  
+0040e976: 0096       str      r6, [sp]                      
+0040e978: cef4b4e8   blx      #0xdcae4                        ; testmode_debugPrint
+0040e97c: 0120       movs     r0, #1                        
+0040e97e: 0221       movs     r1, #2                        
+0040e980: 0022       movs     r2, #0                        
+0040e982: 664b       ldr      r3, [pc, #0x198]                ; [0040eb1c]=00cc068c "[M_SinglePbBase_Utils: %-20s] %s() ====="
+0040e984: 0195       str      r5, [sp, #4]                  
+0040e986: 0096       str      r6, [sp]                      
+0040e988: cef4ace8   blx      #0xdcae4                        ; testmode_debugPrint
+0040e98c: 236e       ldr      r3, [r4, #0x60]               
+0040e98e: 0120       movs     r0, #1                        
+0040e990: 0221       movs     r1, #2                        
+0040e992: 0022       movs     r2, #0                        
+0040e994: 0195       str      r5, [sp, #4]                  
+0040e996: 0293       str      r3, [sp, #8]                  
+0040e998: 636e       ldr      r3, [r4, #0x64]               
+0040e99a: 0096       str      r6, [sp]                      
+0040e99c: 0393       str      r3, [sp, #0xc]                
+0040e99e: a36e       ldr      r3, [r4, #0x68]               
+0040e9a0: 0493       str      r3, [sp, #0x10]               
+0040e9a2: 604b       ldr      r3, [pc, #0x180]                ; [0040eb24]=00cc0852 "[M_SinglePbBase_Utils: %-20s] %s() m_pbT"
+0040e9a4: cef49ee8   blx      #0xdcae4                        ; testmode_debugPrint
+0040e9a8: e36e       ldr      r3, [r4, #0x6c]               
+0040e9aa: 0120       movs     r0, #1                        
+0040e9ac: 0221       movs     r1, #2                        
+0040e9ae: 0022       movs     r2, #0                        
+0040e9b0: 0195       str      r5, [sp, #4]                  
+0040e9b2: 0293       str      r3, [sp, #8]                  
+0040e9b4: 236f       ldr      r3, [r4, #0x70]               
+0040e9b6: 0096       str      r6, [sp]                      
+0040e9b8: 0393       str      r3, [sp, #0xc]                
+0040e9ba: 636f       ldr      r3, [r4, #0x74]               
+0040e9bc: 0493       str      r3, [sp, #0x10]               
+0040e9be: 5a4b       ldr      r3, [pc, #0x168]                ; [0040eb28]=00cc08a2 "[M_SinglePbBase_Utils: %-20s] %s() m_pbT"
+0040e9c0: cef490e8   blx      #0xdcae4                        ; testmode_debugPrint
+0040e9c4: a36f       ldr      r3, [r4, #0x78]               
+0040e9c6: 0120       movs     r0, #1                        
+0040e9c8: 0221       movs     r1, #2                        
+0040e9ca: 0022       movs     r2, #0                        
+0040e9cc: 0195       str      r5, [sp, #4]                  
+0040e9ce: 0293       str      r3, [sp, #8]                  
+0040e9d0: e36f       ldr      r3, [r4, #0x7c]               
+0040e9d2: 0096       str      r6, [sp]                      
+0040e9d4: 0393       str      r3, [sp, #0xc]                
+0040e9d6: d4f88030   ldr.w    r3, [r4, #0x80]               
+0040e9da: 0493       str      r3, [sp, #0x10]               
+0040e9dc: 534b       ldr      r3, [pc, #0x14c]                ; [0040eb2c]=00cc08f2 "[M_SinglePbBase_Utils: %-20s] %s() m_dur"
+0040e9de: cef482e8   blx      #0xdcae4                        ; testmode_debugPrint
+0040e9e2: d4f88430   ldr.w    r3, [r4, #0x84]               
+0040e9e6: 0120       movs     r0, #1                        
+0040e9e8: 0221       movs     r1, #2                        
+0040e9ea: 0022       movs     r2, #0                        
+0040e9ec: 0195       str      r5, [sp, #4]                  
+0040e9ee: 0293       str      r3, [sp, #8]                  
+0040e9f0: d4f88830   ldr.w    r3, [r4, #0x88]               
+0040e9f4: 0096       str      r6, [sp]                      
+0040e9f6: 0393       str      r3, [sp, #0xc]                
+0040e9f8: d4f88c30   ldr.w    r3, [r4, #0x8c]               
+0040e9fc: 0493       str      r3, [sp, #0x10]               
+0040e9fe: 4c4b       ldr      r3, [pc, #0x130]                ; [0040eb30]=00cc0942 "[M_SinglePbBase_Utils: %-20s] %s() m_dur"
+0040ea00: cef470e8   blx      #0xdcae4                        ; testmode_debugPrint
+0040ea04: d4f89030   ldr.w    r3, [r4, #0x90]               
+0040ea08: 0221       movs     r1, #2                        
+0040ea0a: 0022       movs     r2, #0                        
+0040ea0c: 0120       movs     r0, #1                        
+0040ea0e: 0195       str      r5, [sp, #4]                  
+
+# inicializador del modelo: unico escritor de [modelo+0x5ac]/[+0x594]... detectado (escritura de ceros, magic 0x05001033)
+00812420: c0f83035   str.w    r3, [r0, #0x530]              
+00812424: c0f83435   str.w    r3, [r0, #0x534]              
+00812428: c0f83835   str.w    r3, [r0, #0x538]              
+0081242c: c0f83c35   str.w    r3, [r0, #0x53c]              
+00812430: 3049       ldr      r1, [pc, #0xc0]                 ; [008124f4]=05001033
+00812432: c0f84035   str.w    r3, [r0, #0x540]              
+00812436: c0f8ac25   str.w    r2, [r0, #0x5ac]              
+0081243a: 0c3a       subs     r2, #0xc                      
+0081243c: c0f84435   str.w    r3, [r0, #0x544]              
+00812440: c0f84835   str.w    r3, [r0, #0x548]              
+00812444: c0f84c35   str.w    r3, [r0, #0x54c]              
+00812448: c0f85035   str.w    r3, [r0, #0x550]              
+0081244c: c0f85435   str.w    r3, [r0, #0x554]              
+00812450: c0f85835   str.w    r3, [r0, #0x558]              
+00812454: c0f85c35   str.w    r3, [r0, #0x55c]              
+00812458: c0f86035   str.w    r3, [r0, #0x560]              
+0081245c: c0f86435   str.w    r3, [r0, #0x564]              
+00812460: c0f86835   str.w    r3, [r0, #0x568]              
+00812464: c0f86c35   str.w    r3, [r0, #0x56c]              
+00812468: c0f87035   str.w    r3, [r0, #0x570]              
+0081246c: c0f87435   str.w    r3, [r0, #0x574]              
+00812470: c0f87835   str.w    r3, [r0, #0x578]              
+00812474: c0f87c35   str.w    r3, [r0, #0x57c]              
+00812478: c0f88035   str.w    r3, [r0, #0x580]              
+0081247c: c0f88435   str.w    r3, [r0, #0x584]              
+00812480: c0f88835   str.w    r3, [r0, #0x588]              
+00812484: c0f88c35   str.w    r3, [r0, #0x58c]              
+00812488: c0f89035   str.w    r3, [r0, #0x590]              
+0081248c: c0f89435   str.w    r3, [r0, #0x594]              
+00812490: c0f89835   str.w    r3, [r0, #0x598]              
+00812494: c0f89c35   str.w    r3, [r0, #0x59c]              
+00812498: c0f8a035   str.w    r3, [r0, #0x5a0]              
+0081249c: c0f8a435   str.w    r3, [r0, #0x5a4]              
+008124a0: c0f8a835   str.w    r3, [r0, #0x5a8]              
+008124a4: c0f8b035   str.w    r3, [r0, #0x5b0]              
+008124a8: c0f8b435   str.w    r3, [r0, #0x5b4]              
+008124ac: c0f8b835   str.w    r3, [r0, #0x5b8]              
+008124b0: c0f8bc35   str.w    r3, [r0, #0x5bc]              
+008124b4: c0f8c035   str.w    r3, [r0, #0x5c0]              
+008124b8: c0f8c435   str.w    r3, [r0, #0x5c4]              
+008124bc: c0f8c835   str.w    r3, [r0, #0x5c8]              
+008124c0: c0f81c26   str.w    r2, [r0, #0x61c]              
+008124c4: 0232       adds     r2, #2                        
+008124c6: c0f82c26   str.w    r2, [r0, #0x62c]              
+008124ca: 00f58052   add.w    r2, r0, #0x1000               
+008124ce: c0f8cc35   str.w    r3, [r0, #0x5cc]              
+008124d2: c0f8d035   str.w    r3, [r0, #0x5d0]              
+008124d6: c0f8d435   str.w    r3, [r0, #0x5d4]              
+008124da: c0f8d835   str.w    r3, [r0, #0x5d8]              
+008124de: 0be0       b        #0x8124f8                     

@@ -1,0 +1,128 @@
+$ python3 scripts/camera_filmpb1_trace.py --simular=analysis/camera-dumps/20261117-traza-T1/im_elf_maps.txt
+FILM-PB-1 · kit de captura: cuál de los tres productores de MPR::ER_FAILED (0x1A) dispara
+modo: --dry-run (todo menos escribir en la cámara)   host: 192.168.1.30   ventana armada: 30 s
+
+1) comprobación local de los .so auditados
+libmpr   /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+         10321204 B  sha256 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+         sha256 = el auditado (3.21 de fábrica)  OK
+
+puntos (VA del ELF de libmpr.so, base 0) y 16 B esperados en memoria:
+  pto  VA ELF     instrucción               md5(16 B)  bytes
+  A    0x00437C0A movs r3, #0x1a            d2423e981a5092d38e9f0a7d570bc347  1a 23 fb 63 7e e0 07 f1 68 06 96 e8 0f 00 8d e8
+  B    0x00437C3C movs r3, #0x1a            80f5cd83d2494617c83021cf6ead3beb  1a 23 fb 63 95 f8 24 30 00 2b 62 d0 96 e8 0f 00
+  T    0x007111B0 and r3, r0, #0xff000000   9e1207b1f661414e3333b964e1403e9c  00 f0 7f 43 b3 f1 e0 5f 80 b5 00 af 40 f0 f2 80
+  C1   0x00437C7E bl #0x7111b0              645f8ec5ad1f275f12cdd89127e40291  d9 f2 97 fa f8 63 43 e0 b8 f1 00 0f 06 d0 38 46
+  C2   0x00437CFC bl #0x7111b0              a1fabafbea6cf09f88c8f9ecd9ac0627  d9 f2 58 fa d4 f8 c0 1d f8 63 d4 f8 ec 01 10 f0
+
+libObj   17436172 B  sha256 8e8a937aed23c278…
+  testigo  0x008E95B0 (ObjPlayerCore::PlayMovieCmp) md5 ad74756f686bbbdbd4c3cbf8f8e0945c  e3 f7 16 fc 05 f5 3e 43 04 46 03 f5 dc 73 1b 68
+  el libObj del CFW 3.93 tiene los mismos 16 B ahí: sí (prueba la base, no la variante)
+
+   qué mide cada punto:
+     A    0x00437C0A  guarda de capacidades (« Pb Disable!! ref) dsm get»): si se ejecuta, el 0x1A lo pone la guarda A
+     B    0x00437C3C  guarda de contenido (« Detect UnSupported Content »): si se ejecuta, el 0x1A lo pone la guarda B
+     T    0x007111B0  entrada de la traducción de error interna→MPR llamada tras PbStart (0x437CFC) o por su precondición (0x437C7E)
+
+2) binario auxiliar (se compila aquí; solo se sube en la traza real)
+   receta de tools/camera-ptrace/build.sh, extendida de trazar syscalls a plantar UDF 0xde00
+  binario auxiliar /tmp/filmpb1bp: 6244 B, ELF32 ARM estático, sha256 9fdfed46d9002b57…
+
+3) cámara
+   MODO SIMULADO: mapas de analysis/camera-dumps/20261117-traza-T1/im_elf_maps.txt + bytes de los .so locales; sin red y sin cámara
+   simulado: no se usa la red
+   PID de im.elf = 143  (por pidof (toybox))
+   /proc/143/maps: 684 líneas
+   libmpr.so: base 0x06c7e000  (3 mapeos, el de código en 0x06c7e000)
+   pto  VA ELF      ejecución   16 B en cámara                    md5 cam    md5 local  ¿igual?
+   A    0x00437C0A  0x070B5C0A  1a 23 fb 63 7e e0 07 f1 68 06 96 e8 0f 00 8d e8  d2423e981a5092d38e9f0a7d570bc347  d2423e981a5092d38e9f0a7d570bc347  SÍ
+   B    0x00437C3C  0x070B5C3C  1a 23 fb 63 95 f8 24 30 00 2b 62 d0 96 e8 0f 00  80f5cd83d2494617c83021cf6ead3beb  80f5cd83d2494617c83021cf6ead3beb  SÍ
+   T    0x007111B0  0x0738F1B0  00 f0 7f 43 b3 f1 e0 5f 80 b5 00 af 40 f0 f2 80  9e1207b1f661414e3333b964e1403e9c  9e1207b1f661414e3333b964e1403e9c  SÍ
+   libObj.so: base 0x05b9b000  (4 mapeos, el de código en 0x05b9b000)
+   pto  VA ELF      ejecución   16 B en cámara                    md5 cam    md5 local  ¿igual?
+   OBJ  0x008E95B0  0x064845B0  e3 f7 16 fc 05 f5 3e 43 04 46 03 f5 dc 73 1b 68  ad74756f686bbbdbd4c3cbf8f8e0945c  ad74756f686bbbdbd4c3cbf8f8e0945c  SÍ
+
+4) traza: 3 puntos, 4 hilos de im.elf
+   se subiría el auxiliar en 96 B por `echo -ne` y se ejecutaría:
+     /tmp/filmpb1bp 30 143 143,144,145,146 0x070b5c0a:0x231a,0x070b5c3c:0x231a,0x0738f1b0:0xf000 > /tmp/filmpb1.log 2>&1 &
+   y al terminar: cat del registro, comprobación de los 16 B y `rm -f` del auxiliar y del registro.
+   (bases de esta sesión: libmpr=0x06c7e000 libObj=0x05b9b000)
+
+DRY-RUN: nada escrito en la cámara; el kit (binario + direcciones verificadas) está listo.
+EXIT=0
+
+$ ... --simular-hit=A
+   [simulado: no se envía] killall filmpb1bp 2>/dev/null
+
+5) estado del código en memoria tras la traza
+   A    0x070B5C0A intacto
+   B    0x070B5C3C intacto
+   T    0x0738F1B0 intacto
+   [simulado: no se envía] rm -f /tmp/filmpb1bp /tmp/filmpb1.log
+
+resultado
+   productores que dispararon: ['A']
+   1º  A  0x00437C0A  ms=33 tid=0x8f pc=0x70b5c0a lr=0x437d0e r0=0x1c00001a r1=0x0
+   nota E ms=0x22 left=0x0
+   código en memoria: restaurado
+
+VEREDICTO: GUARDA A · capacidades/«dsm»  ⇒ H1 (estado de arranque, WBI/nflasha5)
+   orden de impacto: A. El 0x1A es el de la guarda A: una capacidad exigida por el bitmap [core+0xDB8] está deshabilitada. Contrastar con «Recuperar BD imág.» y con el 3.21 oficial (E2/E3 del informe de auditoría).
+EXIT=0
+
+$ ... --simular-hit=B
+   [simulado: no se envía] killall filmpb1bp 2>/dev/null
+
+5) estado del código en memoria tras la traza
+   A    0x070B5C0A intacto
+   B    0x070B5C3C intacto
+   T    0x0738F1B0 intacto
+   [simulado: no se envía] rm -f /tmp/filmpb1bp /tmp/filmpb1.log
+
+resultado
+   productores que dispararon: ['B']
+   1º  B  0x00437C3C  ms=33 tid=0x8f pc=0x70b5c3c lr=0x437c40 r0=0x1c00001a r1=0x0
+   nota E ms=0x22 left=0x0
+   código en memoria: restaurado
+
+VEREDICTO: GUARDA B · contenido no soportado  ⇒ H2 (contenido / base de datos de imágenes)
+   orden de impacto: B. El 0x1A es el de «Detect UnSupported Content»: el contenido no está soportado para la entidad (catálogo/entrada de la tarjeta). Contrastar con «Recuperar BD imág.» antes de tocar el firmware.
+EXIT=0
+
+$ ... --simular-hit=T
+   [simulado: no se envía] killall filmpb1bp 2>/dev/null
+
+5) estado del código en memoria tras la traza
+   A    0x070B5C0A intacto
+   B    0x070B5C3C intacto
+   T    0x0738F1B0 intacto
+   [simulado: no se envía] rm -f /tmp/filmpb1bp /tmp/filmpb1.log
+
+resultado
+   productores que dispararon: ['T']
+   1º  T  0x007111B0  ms=33 tid=0x8f pc=0x738f1b0 lr=0x437d00 r0=0x1c00001a r1=0x0
+   nota E ms=0x22 left=0x0
+   código en memoria: restaurado
+
+VEREDICTO: MOTOR · MoviePlayerIf::PbStart (traducción de error, 0x7111B0)
+   orden de impacto: T. El 0x1A sale de la traducción de un error interno de PbStart (seis sitios de 0x7111B0 devuelven 0x1A); lr=0x437d00 ⇒ llamada desde 0x00437cfc (C2 fallo de PbStart). Mirar el motor y el clip, no las guardas.
+EXIT=0
+
+$ ... --simular-hit=none
+   > E ms=0x22 left=0x0
+   [simulado: no se envía] killall filmpb1bp 2>/dev/null
+
+5) estado del código en memoria tras la traza
+   A    0x070B5C0A intacto
+   B    0x070B5C3C intacto
+   T    0x0738F1B0 intacto
+   [simulado: no se envía] rm -f /tmp/filmpb1bp /tmp/filmpb1.log
+
+resultado
+   productores que dispararon: ninguno
+   nota E ms=0x22 left=0x0
+   código en memoria: restaurado
+
+VEREDICTO: SIN GOLPES
+   ningún punto se ejecutó: o no se reprodujo el vídeo durante la ventana armada, o el manejador 0x437BC0 no llegó a esas ramas. Se puede repetir con --secs mayor.
+EXIT=5

@@ -1,0 +1,64 @@
+# libmpr.so — fijacion y borrado de [core+0xdc0] (entidad de contenido) y [core+0xdb8] (mascara de capacidades).
+00437a28: f0b5       push     {r4, r5, r6, r7, lr}        
+00437a2a: 89b0       sub      sp, #0x24                   
+00437a2c: 0446       mov      r4, r0                      
+00437a2e: 06af       add      r7, sp, #0x18               
+00437a30: 0d46       mov      r5, r1                      
+00437a32: d0f8f031   ldr.w    r3, [r0, #0x1f0]            
+00437a36: 022b       cmp      r3, #2                      
+00437a38: 01d0       beq      #0x437a3e                   
+00437a3a: 0a23       movs     r3, #0xa                    
+00437a3c: 04e0       b        #0x437a48                   
+00437a3e: 0968       ldr      r1, [r1]                    
+00437a40: 09b1       cbz      r1, #0x437a46               
+00437a42: 2b7a       ldrb     r3, [r5, #8]                
+00437a44: 13b9       cbnz     r3, #0x437a4c               
+00437a46: 0523       movs     r3, #5                      
+00437a48: 3b60       str      r3, [r7]                    
+00437a4a: 56e0       b        #0x437afa                   
+00437a4c: 6b68       ldr      r3, [r5, #4]                
+00437a4e: c0f8c01d   str.w    r1, [r0, #0xdc0]            
+00437a52: c0f8b83d   str.w    r3, [r0, #0xdb8]            
+00437a56: d0f8ec01   ldr.w    r0, [r0, #0x1ec]            
+00437a5a: 10f018f9   bl       #0x447c8e                   
+00437a5e: 0028       cmp      r0, #0                      
+00437a60: 48d1       bne      #0x437af4                   
+00437a62: 21f305fd   bl       #0x759470                   
+00437a66: 08b1       cbz      r0, #0x437a6c               
+00437a68: 1ff390f9   bl       #0x756d8c                   
+00437a6c: d4f8b81d   ldr.w    r1, [r4, #0xdb8]            
+00437a70: 11f0100f   tst.w    r1, #0x10                   
+00437a74: 0ad1       bne      #0x437a8c                   
+00437a76: 11f0800f   tst.w    r1, #0x80                   
+00437a7a: 09d1       bne      #0x437a90                   
+00437a7c: 01f48071   and      r1, r1, #0x100              
+00437a80: 0029       cmp      r1, #0                      
+00437a82: 0cbf       ite      eq                          
+00437a84: 0821       moveq    r1, #8                      
+
+# borrado en el stop: 0x437b64/0x437b68
+00437b38: b0b5       push     {r4, r5, r7, lr}            
+00437b3a: 82b0       sub      sp, #8                      
+00437b3c: 0546       mov      r5, r0                      
+00437b3e: 00af       add      r7, sp, #0                  
+00437b40: d0f8f031   ldr.w    r3, [r0, #0x1f0]            
+00437b44: 052b       cmp      r3, #5                      
+00437b46: 02d0       beq      #0x437b4e                   
+00437b48: 0a23       movs     r3, #0xa                    
+00437b4a: 7b60       str      r3, [r7, #4]                
+00437b4c: 08e0       b        #0x437b60                   
+00437b4e: d0f8940d   ldr.w    r0, [r0, #0xd94]            
+00437b52: 20b1       cbz      r0, #0x437b5e               
+00437b54: d0f6f0f9   bl       #0x307f38                   
+00437b58: a0b1       cbz      r0, #0x437b84               
+00437b5a: d9f229fb   bl       #0x7111b0                   
+00437b5e: 7860       str      r0, [r7, #4]                
+00437b60: 7a68       ldr      r2, [r7, #4]                
+00437b62: 0023       movs     r3, #0                      
+00437b64: c5f8c03d   str.w    r3, [r5, #0xdc0]            
+00437b68: c5f8b83d   str.w    r3, [r5, #0xdb8]            
+00437b6c: 1ab1       cbz      r2, #0x437b76               
+00437b6e: a868       ldr      r0, [r5, #8]                
+00437b70: 0649       ldr      r1, [pc, #0x18]               ; [00437b8c]=0085a7b9
+00437b72: daf2f5fe   bl       #0x712960                   
+00437b76: 2b68       ldr      r3, [r5]                    

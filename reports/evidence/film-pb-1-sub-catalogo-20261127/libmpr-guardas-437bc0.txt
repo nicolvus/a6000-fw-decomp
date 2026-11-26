@@ -1,0 +1,107 @@
+# libmpr.so fw3.21 SHA-256 9a74a3bb...4c30 — guardas del manejador 0x437BC0 y entidad [core+0xdc0] (VA ELF; REA = ELF+0x10000).
+00437bec: 75b1       cbz      r5, #0x437c0c               
+00437bee: d4f8ec01   ldr.w    r0, [r4, #0x1ec]            
+00437bf2: d4f8c01d   ldr.w    r1, [r4, #0xdc0]            
+00437bf6: d4f8b82d   ldr.w    r2, [r4, #0xdb8]            
+00437bfa: 0ff010ff   bl       #0x447a1e                   
+00437bfe: 38b9       cbnz     r0, #0x437c10               
+00437c00: a068       ldr      r0, [r4, #8]                
+00437c02: 0122       movs     r2, #1                      
+00437c04: 4d49       ldr      r1, [pc, #0x134]              ; [00437d3c]=0085a51c
+00437c06: daf297fe   bl       #0x712938                   
+00437c0a: 1a23       movs     r3, #0x1a                   
+00437c0c: fb63       str      r3, [r7, #0x3c]             
+00437c0e: 7ee0       b        #0x437d0e                   
+00437c10: 07f16806   add.w    r6, r7, #0x68               
+00437c14: 96e80f00   ldm.w    r6, {r0, r1, r2, r3}        
+00437c18: 8de80f00   stm.w    sp, {r0, r1, r2, r3}        
+00437c1c: 07f16001   add.w    r1, r7, #0x60               
+00437c20: d4f8ec01   ldr.w    r0, [r4, #0x1ec]            
+00437c24: 91e80c00   ldm.w    r1, {r2, r3}                
+00437c28: d4f8c01d   ldr.w    r1, [r4, #0xdc0]            
+00437c2c: 10f07bf9   bl       #0x447f26                   
+00437c30: f0b9       cbnz     r0, #0x437c70               
+00437c32: a068       ldr      r0, [r4, #8]                
+00437c34: 0122       movs     r2, #1                      
+00437c36: 4249       ldr      r1, [pc, #0x108]              ; [00437d40]=0085a7d8
+00437c38: daf27efe   bl       #0x712938                   
+
+# 0x447F26 (guarda B): 0x447810 -> entidad; vtable+0x58(this, msg[0],msg[4],msg[8],msg[0xC],msg[0x10],msg[0x14])
+00447f26: 82b0       sub      sp, #8                      
+00447f28: b0b5       push     {r4, r5, r7, lr}            
+00447f2a: 86b0       sub      sp, #0x18                   
+00447f2c: 04af       add      r7, sp, #0x10               
+00447f2e: 07f11804   add.w    r4, r7, #0x18               
+00447f32: 84e80c00   stm.w    r4, {r2, r3}                
+00447f36: 3a1d       adds     r2, r7, #4                  
+00447f38: fff76afc   bl       #0x447810                   
+00447f3c: 78b9       cbnz     r0, #0x447f5e               
+00447f3e: 07f12403   add.w    r3, r7, #0x24               
+00447f42: 7d68       ldr      r5, [r7, #4]                
+00447f44: 93e80700   ldm.w    r3, {r0, r1, r2}            
+00447f48: 2c68       ldr      r4, [r5]                    
+00447f4a: 8de80700   stm.w    sp, {r0, r1, r2}            
+00447f4e: 07f11800   add.w    r0, r7, #0x18               
+00447f52: a46d       ldr      r4, [r4, #0x58]             
+00447f54: 90e80e00   ldm.w    r0, {r1, r2, r3}            
+00447f58: 2846       mov      r0, r5                      
+00447f5a: a047       blx      r4                          
+00447f5c: 00e0       b        #0x447f60                   
+00447f5e: 0120       movs     r0, #1                      
+00447f60: 07f10807   add.w    r7, r7, #8                  
+00447f64: bd46       mov      sp, r7                      
+00447f66: bde8b040   pop.w    {r4, r5, r7, lr}            
+00447f6a: 02b0       add      sp, #8                      
+00447f6c: 7047       bx       lr                          
+00447f6e: b0b5       push     {r4, r5, r7, lr}            
+00447f70: 82b0       sub      sp, #8                      
+00447f72: 00af       add      r7, sp, #0                  
+00447f74: 1446       mov      r4, r2                      
+
+# 0x447A1E (guarda A): vtable+0x60() y vtable+0x5C(kind) sobre la misma entidad
+00447a1e: 90b5       push     {r4, r7, lr}                
+00447a20: 83b0       sub      sp, #0xc                    
+00447a22: 00af       add      r7, sp, #0                  
+00447a24: 1446       mov      r4, r2                      
+00447a26: 3a1d       adds     r2, r7, #4                  
+00447a28: fff7f2fe   bl       #0x447810                   
+00447a2c: 0028       cmp      r0, #0                      
+00447a2e: 55d1       bne      #0x447adc                   
+00447a30: 14f0010f   tst.w    r4, #1                      
+00447a34: 05d0       beq      #0x447a42                   
+00447a36: 7868       ldr      r0, [r7, #4]                
+00447a38: 0368       ldr      r3, [r0]                    
+00447a3a: 1b6e       ldr      r3, [r3, #0x60]             
+00447a3c: 9847       blx      r3                          
+00447a3e: 0028       cmp      r0, #0                      
+00447a40: 4fd0       beq      #0x447ae2                   
+00447a42: 14f0020f   tst.w    r4, #2                      
+00447a46: 06d0       beq      #0x447a56                   
+00447a48: 7868       ldr      r0, [r7, #4]                
+00447a4a: 0621       movs     r1, #6                      
+00447a4c: 0368       ldr      r3, [r0]                    
+00447a4e: db6d       ldr      r3, [r3, #0x5c]             
+00447a50: 9847       blx      r3                          
+00447a52: 0028       cmp      r0, #0                      
+00447a54: 45d0       beq      #0x447ae2                   
+00447a56: 14f0040f   tst.w    r4, #4                      
+00447a5a: 06d0       beq      #0x447a6a                   
+00447a5c: 7868       ldr      r0, [r7, #4]                
+00447a5e: 0621       movs     r1, #6                      
+00447a60: 0368       ldr      r3, [r0]                    
+00447a62: db6d       ldr      r3, [r3, #0x5c]             
+00447a64: 9847       blx      r3                          
+00447a66: 0028       cmp      r0, #0                      
+00447a68: 3bd0       beq      #0x447ae2                   
+00447a6a: 14f0080f   tst.w    r4, #8                      
+
+# 0x66D0C8: entidad = (*(mediaObj+0x24))->vtable[6]()  [ldr r0,[r0,#0x24]; ldr r3,[r0]; ldr r3,[r3,#0x18]; blx r3]
+406a80b500af03689b69984780bd406a
+0066d0c8: 406a       ldr      r0, [r0, #0x24]             
+0066d0ca: 80b5       push     {r7, lr}                    
+0066d0cc: 00af       add      r7, sp, #0                  
+0066d0ce: 0368       ldr      r3, [r0]                    
+0066d0d0: 9b69       ldr      r3, [r3, #0x18]             
+0066d0d2: 9847       blx      r3                          
+0066d0d4: 80bd       pop      {r7, pc}                    
+0066d0d6: 406a       ldr      r0, [r0, #0x24]             

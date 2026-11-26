@@ -1,0 +1,9 @@
+$ python3 scripts/camera_filmpb1_trace.py --autotest
+autotest de la interpretación (líneas sintéticas del auxiliar)
+   A: OK  GUARDA A · capacidades/«dsm»  ⇒ H1 (estado de arranque, WBI/nflasha5)
+   B: OK  GUARDA B · contenido no soportado  ⇒ H2 (contenido / base de datos de imágenes)
+   T: OK  MOTOR · MoviePlayerIf::PbStart (traducción de error, 0x7111B0)
+       orden de impacto: T. El 0x1A sale de la traducción de un error interno de PbStart (seis sitios de 0x7111B0 devuelven 0x1A); lr=0x437d00 ⇒ llamada desde 0x00437cfc (C2 fallo de PbStart). Mirar el motor y el clip, no las guardas.
+   sin golpes: OK  SIN GOLPES
+autotest: OK
+EXIT=0

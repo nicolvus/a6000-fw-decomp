@@ -1,0 +1,11 @@
+$ qemu-arm ./filmpb1bp     # binario auxiliar ARM (sin cámara)
+uso: filmpb1bp SEGUNDOS PID TIDS PUNTOS
+  TIDS 143,144,145   PUNTOS 0x437c0a:0x231a,0x437c3c:0x231a
+rc=1
+$ qemu-arm ./filmpb1bp 10 143 "" 0x1000:0x1234
+E args
+rc=1
+$ qemu-arm ./filmpb1bp 10 999999 999999 0x1000:0x1234
+X tid=0xf423f err=0x26
+E attach fallido (no se arma nada)
+rc=1

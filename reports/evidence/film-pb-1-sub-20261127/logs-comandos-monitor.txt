@@ -1,0 +1,39 @@
+# comandos de monitor (VA ELF libmpr 3.21)
+0x85bb91 [ShortRec] please execute "mpr debug ExitShortRec"
+
+0x9295cb  ex) mpr debug FileIfTrace [on/off]
+
+0x92960c  ex) mpr debug BBTrace [on/off]
+
+0x92964b  ex) mpr debug TimeTrace [on/off]
+
+0x929684  ex) mpr debug ApiTrace [on/off]
+
+0x9296a7  ex) mpr debug ZanteiMode [on/off]
+
+0x929727  ex) mpr debug IllegalParamMode [on/off]
+
+0x929752  ex) mpr debug IllegalParamMode [ntsc/pal]
+
+0x9297aa  ex) mpr debug RecParamDisable [on/off]
+
+0x9297fa  ex) mpr debug InitParamEnable [on/off]
+
+0x92988d  ex) mpr debug InstanceClear [on/off]
+
+0x92a01e  ex) mpr debug SetWaitCoreCtrl <TYPE> [on/off]
+
+0x92a090  ex) mpr debug SelfCheckClear [num]
+0x92a0d0  ex) mpr debug SelfCheckIssue [num]
+0x92a1e7 ex) mpr debug pbSpeed
+ex) mpr debug pbSpeed [val(dec)]
+
+0x92a1e7 ex) mpr debug pbSpeed
+ex) mpr debug pbSpeed [val(dec)]
+
+
+# grupo registrado
+00728328: 0549       ldr      r1, [pc, #0x14]                 ; [00728340]=00000000
+0072832a: 064a       ldr      r2, [pc, #0x18]                 ; [00728344]=00928120 "Media Player Recorder Monitor Command"
+0072832c: 0648       ldr      r0, [pc, #0x18]                 ; [00728348]=0090232a
+0072832e: 5cf707fb   bl       #0x684940                     

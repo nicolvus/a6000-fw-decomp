@@ -1,0 +1,32 @@
+# FILM-PB-1 — transcripción del escenario mínimo (27-11-2026)
+# libmpr.so 3.21 sha256: 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+# VA del ELF (base 0); REA = ELF + 0x10000
+
+$ .venv/bin/python reports/evidence/film-pb-1-sub-arnes-20261127/mpr_pb.py
+estado≠5     ramas=[] final={'orden': 1073741853, 'tam': 4, 'status': 10} err=None
+guarda A     ramas=['guarda A'] final={'orden': 1073741853, 'tam': 4, 'status': 26} err=None
+guarda B     ramas=['guarda A', 'guarda B'] final={'orden': 1073741853, 'tam': 4, 'status': 26} err=None
+motor falla  ramas=['guarda A', 'guarda B'] final={'orden': 1073741853, 'tam': 4, 'status': 26} err=None
+todo bien    ramas=['guarda A', 'guarda B'] final=None err=None
+
+$ .venv/bin/python -m pytest reports/evidence/film-pb-1-sub-arnes-20261127 -q
+........                                                                 [100%]
+8 passed in 0.39s
+
+# mensaje real de FeaIf::PlayMovie (0x44EE9C): 0x8C bytes
+longitud 140 0x8c
+0000 2a 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0010 00 00 00 00 00 00 00 00 00 00 00 00 01 00 00 00
+0020 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0030 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0040 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0050 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0060 01 00 00 00 01 00 00 00 11 00 00 00 22 00 00 00
+0070 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0080 00 00 00 00 00 00 00 00 00 00 00 00
+
+# traductor FUN_007211B0 (real) sobre códigos internos
+0x1c00001a -> 0x1a
+0x1c00001b -> 0x8
+0x1c000013 -> 0x22
+0x0 -> 0x0
