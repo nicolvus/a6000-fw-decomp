@@ -121,6 +121,9 @@ antes de consultar el índice.
 - **Siguiente paso concreto (G22-REPRO-2)**: `TRACEFN2` sobre el despachador de acciones de `viewUnified2` (`ViewStlrec` usa el mismo patrón que §5.6:
   `+0x147fd4`, `switch` de ranuras) y sobre `viewManagerIf::openView`, pulsando `0x1f7`, para leer qué acción/índice sale; y comparar con el volcado de la
   tabla de teclas que el shim ya registra al arrancar (`InfraInput`, §5.18z¹²). Sin ese dato no se toca el mapa de teclas.
+- **Actualizado en G22-REPRO-2 (§7)**: medido, la clave `0x1f7` **sí** es la del firmware (`KEY_TACT_PLAY`) y su evento `0x150100f0` sale de la tabla de la vista;
+  el mapa de teclas del arnés es correcto y el corte está **después** (acción 4 → `viewManagerIf::openView`, que no se llama). La inferencia de arriba sobre el
+  índice de teclas queda **descartada**; la de que el recuento depende del índice AV sigue en pie.
 
 ### 4.2 El recuento de fotos no sale numérico (PARCIAL: la comprobación de medio pasa, falta el dato del índice)
 
@@ -297,6 +300,10 @@ TRACELIB=libmpr.so TRACEFN2=620028,620262,62059c GMILOG=1 SETLOG=1" \
    (`FormatCmd`/«Formatear», §5.46/§5.50). Con eso se repite `O view/INDEX_PLAYBACK` y se compara.
 3. **`openView` que no vuelve**: repetir `O view/SINGLEPB` con `WATCH=1251fc`/`DUMPAT` y `RCVSTACK=1` para ver en qué cola se queda (la orden «O» se lanza en su propio
    hilo, así que el bloqueo no rompe la UI).
+4. **El recuento (`0x620262`/`0x62059c`)**: en la sesión `repro2` se armaron `TRACEFN2=620028,620262,62059c` con `TRACELIB=libmpr.so`, pero **`libmpr.so` no llegó a
+   mapearse**: no hay línea de armado `TRACELIB … base …` ni ningún disparo, porque la sesión terminó a los ≈230 s del invitado y las consultas de `libmpr` empiezan a los
+   ≈348 s (§3). No es un negativo: es una medición **no hecha**. El arranque que la cierra es el mismo de §7.2 con `WLALL=1` (para ver la línea de armado) y dejándolo correr
+   hasta los ≈450 s del invitado.
 
 ---
 
