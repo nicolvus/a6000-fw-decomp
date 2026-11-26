@@ -72,3 +72,31 @@ en caliente `linea=P 1106b8 2` debe devolver `00de` (la `UDF` de la trampa), no 
    diff de PNG contra el fotograma de disparo.
 3. `PLAYVIEW` sigue **apagado por omisión**: es un interruptor del arnés (pone fuera del firmware el
    llamante que a 3.21 le falta), no un cambio de la cámara.
+
+## 6. El medio se acepta: el índice va **sin** la cabecera de 0x100 (medido 27-11-2026)
+
+Con `SD_MEDIA=1` (foto JPEG real + `AVF_INFO/AVIN0001.INP` coherente) y `INSHORT=1`, el montaje deja de
+llegar tarde (`FsysMount /dev/mmca` a 64,98 s y `ClearInhStatus` a 64,99 s), pero el medio seguía
+rechazándose más tarde con `SetInhStatus() [INH_INVALID_INFO_FS]` a los 74 s. La causa era el **formato del
+índice**: `AVIN0001.INP` es un **vector puro de registros de 0x80 B**, sin la cabecera de 0x100 B que se le
+suponía (el descriptor de `libmpr` `0x9d1270` da como tamaño máximo `0x138800` = 10 000 × 0x80 exacto).
+
+| Tarjeta | `getModelInfo(model/MEDIA, 0)` | Pantalla al abrir la reproducción |
+|---|---|---|
+| índice con cabecera `0x100` (perfil `md1`) | **0** | 0 listas (en blanco) |
+| índice sin cabecera (`SD_MEDIA_CAB=0`, perfil `md2`) | **1** (a los 82,86 s) | 0 listas (en blanco) |
+
+Con el medio aceptado, al abrir `view/INDEX_PLAYBACK` la vista pide **`@M010`** (id de `model/INDEX_PB`,
+que solo aparece en `viewUnified3.so` y `viewUnified2.so`) y recibe **0**: ese modelo no lo ha creado
+nadie, y por eso la vista sigue sin pintar (0 listas, opacos 0,0, fotograma vacío). Medido con `GMILOG=1`
+en el perfil `md2`.
+
+## 7. Lo que queda, en orden
+
+1. **Crear `model/INDEX_PB`** (y `model/CONT_SHOTS_PB`) para que la rejilla tenga contenido: es el único
+   eslabón que separa «la vista se abre» de «la vista pinta». Candidatos: los modelos se crean al arrancar
+   por un evento del `ModelManager` (como `POSTROOTEV` hizo con `ModelStillRec`), o los crea la propia
+   cadena de reproducción cuando el medio cambia (evento de inserción, `INSHORT`).
+2. Con la rejilla pintada, medir el diff de PNG contra la pantalla de disparo y cerrar G22-REPRO.
+3. Repetir con el índice real de la cámara cuando haya un `AVF_INFO` de fábrica para comparar el registro
+   (geometría, fechas, códec) con el que genera `sd_media.py`.

@@ -1,0 +1,18 @@
+== SD_MEDIA_CAB=0 (indice sin cabecera) ==
+20.72 60.10 getModelInfo(model/MEDIA, 0) -> 0
+43.47 82.86 getModelInfo(model/MEDIA, 0) -> 1
+59.61 98.99 getModelInfo(model/MEDIA, 0) -> 1
+== vista de reproduccion pedida ==
+180.04 [shim] PLAYVIEW n=1 convertViewEventToAB(0x150100f2) -> 1 accion=4 (tabla libScalarDaemon+0x19db0c)
+180.04 [shim] PLAYVIEW n=1 openView(view/INDEX_PLAYBACK,0) -> 8070168
+180.20 216.57 LOG   83 B  Vn 03F_viewUnified3.so
+180.20 216.59 LOG   83 E  Vn 03F_viewUnified3.so
+191.61 228.00 getModelInfo(@M010, 1) -> 0
+191.62 228.00 getModelInfo(@M010, 1) -> 0
+191.62 228.01 getModelInfo(@M010, 1) -> 0
+191.85 228.24 getModelInfo(@M010, 1) -> 0
+== sin cabecera 0x100 el medio se acepta; con cabecera (md1) se rechaza ==
+20.59 59.98 TRAZA 1 A $ / [ObjMedia]SetInhStatus() [INH_INVALID_INFO_FS] 
+20.62 60.00 TRAZA 1 A n + [ObjMedia]SetInhStatus() [INH_MEDIA_MOUNT] 
+20.70 60.09 TRAZA 1 / [ObjMedia]SetInhStatus() [INH_INVALID_INFO_FS] 
+20.71 60.10 TRAZA 1 @ / [ObjMedia]SetInhStatus() [INH_INVALID_INFO_FS] 
