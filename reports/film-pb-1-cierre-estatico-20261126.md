@@ -133,10 +133,11 @@ resto de la sesión. Parche mínimo propuesto: `0x6E81E0: 20 B1 → 80 B9`
 | # | Acción | Riesgo | Qué decide |
 |---|---|---|---|
 | 1 | ¿Aparecen las **miniaturas de las fotos**? | nulo | si el fallo es del volumen/almacenamiento o solo del vídeo |
-| 2 | Copiar `AVF_INFO\AVIN0001.INP` al PC y pasarlo por `reports/evidence/film-pb-1-sub-avin-20261127/leer_avin.py` | nulo | si el índice miente (duración 2 s, entradas huérfanas) |
+| 2 | Copiar `AVF_INFO\` y `MP_ROOT\` de la tarjeta a una carpeta del PC y ejecutar `scripts/filmpb1_audita_tarjeta.py <carpeta>` | nulo | si el índice miente: compara por clip la duración del índice con la del `mvhd`, el tamaño del índice con el de disco, y avisa de entradas huérfanas o con `bValid=0` |
 | 3 | **Otra tarjeta formateada en la cámara**: grabar un clip y reproducirlo | nulo | tarjeta/volumen contra cámara |
 | 4 | **Formatear la tarjeta actual** en la cámara (con los clips copiados) | nulo (se pierde el contenido, no la cámara) | arreglo real si el volumen está incoherente |
 | 5 | Encender **sin tarjeta** | nulo | si el montaje y el aviso funcionan (la A6000 **no tiene memoria interna**: no hay nada que reproducir) |
+| 5b | **Renombrar `AVF_INFO`** en el PC (`AVF_INFO_bak`) y poner la tarjeta: la cámara debe reconstruirlo | nulo y reversible | si el índice AV era el problema (M3) sin perder los clips |
 | 6 | Flashear **A2** (todo Sony, versión > instalada, conservando `nflasha5`) | bajo | si el firmware tiene algo que ver; es el único flasheo que discrimina con contenido coherente. **Ya está construido y verificado**: `build/sony_puro_con_wbi_404/package-4.04/firmware_packed.dat` (`e45c502c…dc627`), cuyo `firmware.tar` tiene el **mismo SHA-256 que el de Sony 3.21** (`97024649…d5a8`), es decir payload byte a byte oficial con `nflasha5` dentro (`sin_wbi: false`) |
 | 7 | Flashear **C** (`libmpr` con las guardas anuladas) | medio-bajo | solo discrimina las guardas; si el IFO no carga, cambiará el código de error |
 
