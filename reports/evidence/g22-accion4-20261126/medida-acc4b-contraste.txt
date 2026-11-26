@@ -1,0 +1,27 @@
+# Contraste en el invitado — perfil `acc4b`, puerto 8698 (26-11-2026), SIN PLAYVIEW (condiciones de la cámara)
+#
+# SHIMEXTRA='WAITLOG=3000 WLALL=1 TRACELIB=libScalarDaemon.so TRACEFN2=13a704,da20c,d5655 \
+#            TRACEFN=116bd0,1170e8 TRACEMAX=8'
+# .venv/bin/python scripts/gui/harness/live.py analysis/gui/g22/harness --perfil-dir acc4b --puerto 8698 --config /tmp/final/cfg.json
+#
+# Arranque en frío: a los 230 s seguía en «2 listas · opacos 0,0046» (la firma de G22-CUELGUE), así que se midió
+# igual: el reparto del despacho funciona en ese estado (docs/gui/g22-reproduccion-dispatch.md §7.3).
+#
+# --- extracto de live/acc4b/shim.log ---
+223.28 79.73 TRACELIB libScalarDaemon.so base 0x8792c000        <- trampas armadas (libObj + libScalarDaemon)
+366.50 [shim] WAITLOG 220.67 tecla 0x1f7                         <- la tecla LLEGA al firmware
+366.50 [shim] WAITLOG 220.67 tecla 0x1f7
+   (ninguna línea TRACE)
+#
+# Cero disparos en las cinco trampas, con la tecla pulsada y el evento circulando:
+#   libObj+0x116bd0 be    ScalarView::EventHandler(Event*, unsigned long)   -> el único puente al daemon
+#   libObj+0x1170e8 be    ScalarView::TriggerTableEvent(unsigned int)       -> el único llamante del traductor
+#   libScalarDaemon+0x13a704  convertViewEventToAB(unsigned int, unsigned&) -> el traductor {código -> acción}
+#   libScalarDaemon+0xda20c   InputServantObserver::notifyKeyEventCallback  -> la vía de tecla del daemon
+#   libScalarDaemon+0xd5655   EventDispatcher::dispatchKeyEvent             -> el reparto KEY_CODE del daemon
+#
+# Es decir: en 3.21 el pulsador de Reproducción no llega NI al traductor de acciones NI a la vía de tecla del
+# daemon. La cadena está en el firmware, pero no hay nadie que la llame desde el evento.
+#
+# /estado tras la pulsación: {"texto":"arranque en frío, 230 s · 2 fotogramas ...","fotogramas":2,"listas":2,
+#                             "listas_total":2,"opacos":0.0046}  (sin cambio de pantalla; OSD a medio componer)

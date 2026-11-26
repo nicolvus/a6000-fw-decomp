@@ -1,0 +1,260 @@
+== 1. la tabla {código -> acción}: 19 pares de 8 B, idénticos en las dos copias ==
+libScalarDaemon.so+0x19db0c (VIVA, leída por convertViewEventToAB) y viewUnified2.so+0x3a03d4 (MUERTA, leída por 0x1906a8): iguales = True
+  0x150100f0 ->   4    |    0x150100f0 ->   4
+  0x15040010 ->   8    |    0x15040010 ->   8
+  0x15010020 ->   1    |    0x15010020 ->   1
+  0x150102b0 ->   2    |    0x150102b0 ->   2
+  0x15010030 ->   3    |    0x15010030 ->   3
+  0x15010110 ->   7    |    0x15010110 ->   7
+  0x15010050 ->   6    |    0x15010050 ->   6
+  0x15090010 -> 152    |    0x15090010 -> 152
+  0x15050010 -> 153    |    0x15050010 -> 153
+  0x15070050 ->   5    |    0x15070050 ->   5
+  0x15020080 -> 155    |    0x15020080 -> 155
+  0x150200c0 -> 156    |    0x150200c0 -> 156
+  0x15020030 -> 157    |    0x15020030 -> 157
+  0x15020090 -> 158    |    0x15020090 -> 158
+  0x15030100 ->  11    |    0x15030100 ->  11
+  0x150300e0 ->   9    |    0x150300e0 ->   9
+  0x150300f0 ->  10    |    0x150300f0 ->  10
+  0x15050040 ->  12    |    0x15050040 ->  12
+  0x15050050 ->  12    |    0x15050050 ->  12
+  (fin de tabla: la entrada 20 ya no es un par; el lector corta en 19, `cmp r3,#0x13`)
+
+== 2. convertViewEventToAB (libScalarDaemon+0x13a704, 48 B, símbolo _Z21convertViewEventToABTjRj) ==
+  0013a704  f0b5       push     {r4, r5, r6, r7, lr}
+  0013a706  0023       movs     r3, #0
+  0013a708  00af       add      r7, sp, #0
+  0013a70a  094a       ldr      r2, [pc, #0x24]
+  0013a70c  20f00f05   bic      r5, r0, #0xf
+  0013a710  dc00       lsls     r4, r3, #3
+  0013a712  7a44       add      r2, pc
+  0013a714  52f83360   ldr.w    r6, [r2, r3, lsl #3]
+  0013a718  ae42       cmp      r6, r5
+  0013a71a  04d1       bne      #0x13a726
+  0013a71c  1219       adds     r2, r2, r4
+  0013a71e  0120       movs     r0, #1
+  0013a720  5368       ldr      r3, [r2, #4]
+  0013a722  0b60       str      r3, [r1]
+  0013a724  f0bd       pop      {r4, r5, r6, r7, pc}
+  0013a726  0133       adds     r3, #1
+  0013a728  132b       cmp      r3, #0x13
+  0013a72a  eed1       bne      #0x13a70a
+  0013a72c  0020       movs     r0, #0
+  0013a72e  f0bd       pop      {r4, r5, r6, r7, pc}
+  0013a730  f633       adds     r3, #0xf6
+  0013a732  0600       movs     r6, r0
+  literal PIC en 0x13a730 = 0x000633f6 -> tabla = 0x19db0c
+  máscara: 0x150100f2 & ~0xf = 0x150100f0 ; 0x150100f1 & ~0xf = 0x150100f0 -> fila {0x150100f0 -> 4} -> ACCIÓN 4
+
+== 3. el lector de la copia MUERTA (viewUnified2+0x1906a8) y sus consumidores ==
+  001906a8  b0b5       push     {r4, r5, r7, lr}
+  001906aa  0023       movs     r3, #0
+  001906ac  00af       add      r7, sp, #0
+  001906ae  084a       ldr      r2, [pc, #0x20]
+  001906b0  dc00       lsls     r4, r3, #3
+  001906b2  7a44       add      r2, pc
+  001906b4  52f83350   ldr.w    r5, [r2, r3, lsl #3]
+  001906b8  8542       cmp      r5, r0
+  001906ba  04d1       bne      #0x1906c6
+  001906bc  1219       adds     r2, r2, r4
+  001906be  0120       movs     r0, #1
+  001906c0  5368       ldr      r3, [r2, #4]
+  001906c2  0b60       str      r3, [r1]
+  001906c4  b0bd       pop      {r4, r5, r7, pc}
+  001906c6  0133       adds     r3, #1
+  001906c8  132b       cmp      r3, #0x13
+  001906ca  f0d1       bne      #0x1906ae
+  001906cc  0020       movs     r0, #0
+  001906ce  b0bd       pop      {r4, r5, r7, pc}
+  001906d0  1efd2000   ldc2     p0, c0, [lr, #-0x80]
+  mismo esquema que el vivo pero sobre 0x3a03d4; 0 ramas y 0 punteros en las 8 vistas y libObj
+
+== 4. el consumo en la capa de vista (libObj) ==
+-- ScalarView::TriggerTableEvent(unsigned)  libObj+0x1170e8
+  001170e8  2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}
+  001170ec  85b0       sub      sp, #0x14
+  001170ee  02af       add      r7, sp, #8
+  001170f0  391d       adds     r1, r7, #4
+  001170f2  0446       mov      r4, r0
+  001170f4  c6f72cee   blx      #0xddd50
+  001170f8  48b3       cbz      r0, #0x11714e
+  001170fa  1a4d       ldr      r5, [pc, #0x68]
+  001170fc  4ff0ff31   mov.w    r1, #-1
+  00117100  7d44       add      r5, pc
+  00117102  2868       ldr      r0, [r5]
+  00117104  c9f798ee   blx      #0xe0e38
+  00117108  b8b9       cbnz     r0, #0x11713a
+  0011710a  7a68       ldr      r2, [r7, #4]
+  0011710c  0121       movs     r1, #1
+  0011710e  dff85880   ldr.w    r8, [pc, #0x58]
+  00117112  02f01f03   and      r3, r2, #0x1f
+  00117116  124e       ldr      r6, [pc, #0x48]
+  00117118  9940       lsls     r1, r3
+  0011711a  144b       ldr      r3, [pc, #0x50]
+  0011711c  5209       lsrs     r2, r2, #5
+  0011711e  2868       ldr      r0, [r5]
+  00117120  7b44       add      r3, pc
+  00117122  53f82230   ldr.w    r3, [r3, r2, lsl #2]
+  00117126  1942       tst      r1, r3
+  00117128  14bf       ite      ne
+  0011712a  b146       movne    sb, r6
+  0011712c  c146       moveq    sb, r8
+  0011712e  caf78eed   blx      #0xe1c4c
+  00117132  c145       cmp      sb, r8
+  00117134  0bd0       beq      #0x11714e
+  00117136  3046       mov      r0, r6
+  00117138  0ce0       b        #0x117154
+  0011713a  4ff49363   mov.w    r3, #0x498
+  0011713e  0093       str      r3, [sp]
+  00117140  0b4b       ldr      r3, [pc, #0x2c]
+  00117142  0120       movs     r0, #1
+  00117144  0721       movs     r1, #7
+  00117146  0022       movs     r2, #0
+  00117148  7b44       add      r3, pc
+  0011714a  c5f7ccec   blx      #0xdcae4
+  0011714e  2046       mov      r0, r4
+  00117150  c5f72aeb   blx      #0xdc7a8
+  00117154  07f10c07   add.w    r7, r7, #0xc
+  00117158  bd46       mov      sp, r7
+  0011715a  bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}
+  0011715e  00bf       nop      
+  00117160  0420       movs     r0, #4
+  00117162  0111       asrs     r1, r0, #4
+  00117164  3c1e       subs     r4, r7, #0
+  00117166  f900       lsls     r1, r7, #3
+  00117168  0520       movs     r0, #5
+  0011716a  0111       asrs     r1, r0, #4
+  0011716c  201e       subs     r0, r4, #0
+  0011716e  f900       lsls     r1, r7, #3
+  00117170  866b       ldr      r6, [r0, #0x38]
+  00117172  ab00       lsls     r3, r5, #2
+-- compone el id de vista (getView()<<12)+id+0x13000000  libObj+0x1208d2
+  001208d2  21f47e63   bic      r3, r1, #0xfe0
+  001208d6  23f01f03   bic      r3, r3, #0x1f
+  001208da  80b5       push     {r7, lr}
+  001208dc  00af       add      r7, sp, #0
+  001208de  1bb9       cbnz     r3, #0x1208e8
+  001208e0  0003       lsls     r0, r0, #0xc
+  001208e2  0918       adds     r1, r1, r0
+  001208e4  01f19851   add.w    r1, r1, #0x13000000
+  001208e8  0846       mov      r0, r1
+  001208ea  80bd       pop      {r7, pc}
+-- ViewBase::transformByTriggerTable  libObj+0x1208ec
+  001208ec  2de9f041   push.w   {r4, r5, r6, r7, r8, lr}
+  001208f0  00af       add      r7, sp, #0
+  001208f2  0446       mov      r4, r0
+  001208f4  0e46       mov      r6, r1
+  001208f6  bcf75cea   blx      #0xdcdb0
+  001208fa  0546       mov      r5, r0
+  001208fc  a8b1       cbz      r0, #0x12092a
+  001208fe  2368       ldr      r3, [r4]
+  00120900  2046       mov      r0, r4
+  00120902  d3f8c430   ldr.w    r3, [r3, #0xc4]
+  00120906  9847       blx      r3
+  00120908  0146       mov      r1, r0
+  0012090a  3046       mov      r0, r6
+  0012090c  f0f7a2fb   bl       #0x111054
+  00120910  0646       mov      r6, r0
+  00120912  2046       mov      r0, r4
+  00120914  bcf73ae8   blx      #0xdc98c
+  00120918  0446       mov      r4, r0
+  0012091a  3046       mov      r0, r6
+  0012091c  a847       blx      r5
+  0012091e  0146       mov      r1, r0
+  00120920  2046       mov      r0, r4
+  00120922  bde8f041   pop.w    {r4, r5, r6, r7, r8, lr}
+  00120926  fff7d4bf   b.w      #0x1208d2
+  0012092a  0148       ldr      r0, [pc, #4]
+  0012092c  bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}
+  00120930  0520       movs     r0, #5
+  00120932  0111       asrs     r1, r0, #4
+-- ViewBase::transformByTriggerTableForFuncEvent  libObj+0x120935
+
+== 5. el puente al daemon: ScalarView::EventHandler(Event*, m) (libObj+0x116bd0) ==
+  00116c00  020f       lsrs     r2, r0, #0x1c
+  00116c02  0fd0       beq      #0x116c24
+  00116c04  a44b       ldr      r3, [pc, #0x290]
+  00116c06  9845       cmp      r8, r3
+  00116c08  11d1       bne      #0x116c2e
+  00116c0a  2846       mov      r0, r5
+  00116c0c  1d21       movs     r1, #0x1d
+  00116c0e  0122       movs     r2, #1
+  00116c10  c9f7beea   blx      #0xe0190
+  00116c14  0028       cmp      r0, #0
+  00116c16  00f0ed81   beq.w    #0x116ff4
+  00116c1a  cef77dff   bl       #0xe5b18
+  00116c1e  0128       cmp      r0, #1
+  00116c20  40f0e881   bne.w    #0x116ff4
+  00116c24  2846       mov      r0, r5
+  00116c26  7168       ldr      r1, [r6, #4]
+  00116c28  cbf7ace9   blx      #0xe1f84
+  00116c2c  e2e1       b        #0x116ff4
+  00116c2e  9b4b       ldr      r3, [pc, #0x26c]
+  00116c30  9845       cmp      r8, r3
+  00116c32  00f0df81   beq.w    #0x116ff4
+  00116c36  b8f1030f   cmp.w    r8, #3
+  00116c3a  08d1       bne      #0x116c4e
+  00116c3c  3046       mov      r0, r6
+  en 0x116c28: blx ScalarDaemonIf::onSystemEventReceived(Event&, ViewBase*)  (PLT 0xddd4c)
+
+== 6. la vía de tecla del daemon (no usa 0x1501xxxx: usa KEY_CODE) ==
+-- InputServantObserver::notifyKeyEventCallback  libScalarDaemon+0xda20c
+  000da20c  2f4b       ldr      r3, [pc, #0xbc]
+  000da20e  0021       movs     r1, #0
+  000da210  2de9f041   push.w   {r4, r5, r6, r7, r8, lr}
+  000da214  82b0       sub      sp, #8
+  000da216  0446       mov      r4, r0
+  000da218  4ff4aa70   mov.w    r0, #0x154
+  000da21c  02af       add      r7, sp, #8
+  000da21e  0422       movs     r2, #4
+  000da220  7b44       add      r3, pc
+  000da222  fff7a9fe   bl       #0xd9f78
+  000da226  54b9       cbnz     r4, #0xda23e
+  000da228  294b       ldr      r3, [pc, #0xa4]
+  000da22a  4ff4aa70   mov.w    r0, #0x154
+  000da22e  2146       mov      r1, r4
+  000da230  0122       movs     r2, #1
+  000da232  7b44       add      r3, pc
+  000da234  bd46       mov      sp, r7
+  000da236  bde8f041   pop.w    {r4, r5, r6, r7, r8, lr}
+  000da23a  fff79dbe   b.w      #0xd9f78
+  000da23e  2368       ldr      r3, [r4]
+  000da240  204a       ldr      r2, [pc, #0x80]
+  000da242  9342       cmp      r3, r2
+  000da244  06d0       beq      #0xda254
+  000da246  0132       adds     r2, #1
+  000da248  9342       cmp      r3, r2
+  000da24a  22d0       beq      #0xda292
+-- ScalarDaemon::onKeyEventReceived(KEY_CODE, KEY_STATE)  libScalarDaemon+0xd37b8
+  000d37b8  80b5       push     {r7, lr}
+  000d37ba  00af       add      r7, sp, #0
+  000d37bc  0068       ldr      r0, [r0]
+  000d37be  bde88040   pop.w    {r7, lr}
+  000d37c2  fbf739bc   b.w      #0xcf038
+-- EventDispatcher::dispatchKeyEvent(KEY_CODE, KEY_STATE)  libScalarDaemon+0xd5654
+  000d5654  90b5       push     {r4, r7, lr}
+  000d5656  83b0       sub      sp, #0xc
+  000d5658  02af       add      r7, sp, #8
+  000d565a  0c46       mov      r4, r1
+  000d565c  fdf7eeed   blx      #0xd323c
+  000d5660  fbf77cef   blx      #0xd155c
+  000d5664  022c       cmp      r4, #2
+  000d5666  05d8       bhi      #0xd5674
+  000d5668  41f22c01   movw     r1, #0x102c
+  000d566c  fdf764e8   blx      #0xd2738
+  000d5670  0020       movs     r0, #0
+  000d5672  09e0       b        #0xd5688
+  000d5674  064b       ldr      r3, [pc, #0x18]
+  000d5676  4ff4aa70   mov.w    r0, #0x154
+  000d567a  0021       movs     r1, #0
+  000d567c  0122       movs     r2, #1
+  000d567e  7b44       add      r3, pc
+  000d5680  0094       str      r4, [sp]
+  000d5682  fff76dff   bl       #0xd5560
+  000d5686  0220       movs     r0, #2
+  000d5688  07f10407   add.w    r7, r7, #4
+  000d568c  bd46       mov      sp, r7
+  000d568e  90bd       pop      {r4, r7, pc}
+  000d5690  2260       str      r2, [r4]
+  000d5692  0600       movs     r6, r0

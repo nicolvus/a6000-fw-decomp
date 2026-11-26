@@ -1,0 +1,31 @@
+# Medida en el invitado — perfil `acc4a`, puerto 8697 (26-11-2026), con PLAYVIEW=1
+#
+# SHIMEXTRA='DESTKEYV=1 WAITLOG=3000 WLALL=1 PLAYVIEW=1 TRACELIB=libScalarDaemon.so \
+#            TRACEFN2=13a704,da20c,d5655 TRACEFN=116bd0,1170e8 TRACEMAX=8'
+# .venv/bin/python scripts/gui/harness/live.py analysis/gui/g22/harness --perfil-dir acc4a --puerto 8697 --config /tmp/final/cfg.json
+#
+# Arranque: el primero en frío se dio por fallido a los 262 s (3 listas) y el supervisor reanudó desde el estado
+# guardado (117 MiB) -> `restaurado`. Todo lo de abajo es de ese invitado ya restaurado:
+# /estado antes de la pulsación: {"texto":"restaurado, 165 s · 1 fotogramas ...","fotogramas":1,"listas":0,"opacos":0.0191}
+#
+# Pulsación: KEYWAIT=3 .venv/bin/python scripts/gui/harness/e2e_drv.py 8697 reproduccion esp=12 png=.../10-repro-playview.png
+#
+# --- extracto de live/acc4a/shim.log (líneas 317.22-317.36) ---
+317.22 [shim] WAITLOG 684.75 tecla 0x1f7
+317.27 [shim] WAITLOG 684.79 tecla 0x1f7
+317.34 [shim] PLAYVIEW n=2 convertViewEventToAB(0x150100f2) -> 1 accion=4 (tabla libScalarDaemon+0x19db0c)
+317.36 [shim] PLAYVIEW n=2 openView(view/INDEX_PLAYBACK,0) -> 26358096
+#
+# /estado después: {"texto":"restaurado, 200 s · 2 fotogramas ...","fotogramas":2,"listas":0,"opacos":0.0191}
+#
+# Lectura:
+#  * la tecla llega al driver (WAITLOG «tecla 0x1f7», el mismo camino de G22-TECLA);
+#  * el traductor DEL FIRMWARE (libScalarDaemon+0x13a704, tabla 0x19db0c) devuelve 1 (=encontrado) y
+#    acción 4 para el código de la pulsación 0x150100f2 — la cadena «código de entrada -> acción» queda cerrada
+#    con las funciones y la tabla de la cámara, no con una reconstrucción;
+#  * `viewManagerIf::openView("view/INDEX_PLAYBACK", 0)` se llama y devuelve 26358096 (0x1923b90), pero en este
+#    invitado NO se ve el `dlopen(viewUnified3.so)` ni `Vn 03F_viewUnified3.so` que sí midió G22-PBVISTA en un
+#    arranque completo: la vista no llega a instanciarse (ver §10.7 del informe; la orden de consola
+#    `O view/INDEX_PLAYBACK 0` tampoco lo consigue en este mismo invitado).
+#
+# La misma pulsación repetida tras el reinicio del supervisor dio n=2 con idéntico resultado (1 / acción 4).

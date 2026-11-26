@@ -1,0 +1,36 @@
+# Comandos reproducibles de G22-ACCION4 (26-11-2026)
+
+# --- estático (sin VM) ---
+cd analysis/gui/g22/harness/stage/cam/usr/lib
+python3 <repo>/reports/evidence/g22-accion4-20261126/gen_estatico.py     # vuelca estatico.txt
+cd <repo> && python3 -m pytest tests/test_g22_accion4.py -q              # 11 casos
+
+# --- interruptor nuevo del shim ---
+# PLAYVIEW=1: UDF repetible en libObj+0x1106b8 (InputService::createEvent, `f8 b5` = push {r3,r4,r5,r6,r7,lr},
+# emulado en el manejador); sólo para r1 == 0x150100f2 llama, desde un hilo, a
+#   _Z21convertViewEventToABTjRj            (libScalarDaemon.so, el traductor vivo)
+#   _ZN13viewManagerIf8openViewEPKci        (libObj.so, el abridor de la cámara)
+sh scripts/gui/harness/shim/build.sh analysis/gui/g22/harness/sysroot \
+   firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha7_unpacked_unpacked/lib \
+   analysis/gui/g22/harness/overlay/cam/usr/lib/sonyshim.so
+
+# --- medido (dos invitados, perfiles y puertos propios) ---
+SHIMEXTRA='DESTKEYV=1 WAITLOG=3000 WLALL=1 PLAYVIEW=1 TRACELIB=libScalarDaemon.so \
+           TRACEFN2=13a704,da20c,d5655 TRACEFN=116bd0,1170e8 TRACEMAX=8' \
+  .venv/bin/python scripts/gui/harness/live.py analysis/gui/g22/harness --perfil-dir acc4a --puerto 8697 \
+  --config /tmp/final/cfg.json &
+KEYWAIT=3 .venv/bin/python scripts/gui/harness/e2e_drv.py 8697 reproduccion esp=12 png=png/10-repro-playview.png
+grep -a "PLAYVIEW\|tecla 0x1f7" analysis/gui/g22/harness/live/acc4a/shim.log
+
+SHIMEXTRA='WAITLOG=3000 WLALL=1 TRACELIB=libScalarDaemon.so TRACEFN2=13a704,da20c,d5655 \
+           TRACEFN=116bd0,1170e8 TRACEMAX=8' \
+  .venv/bin/python scripts/gui/harness/live.py analysis/gui/g22/harness --perfil-dir acc4b --puerto 8698 \
+  --config /tmp/final/cfg.json &
+KEYWAIT=3 .venv/bin/python scripts/gui/harness/e2e_drv.py 8698 reproduccion esp=10 png=png/20-contraste-sin-playview.png
+grep -a "TRACELIB\|TRACE \|tecla 0x1f7" analysis/gui/g22/harness/live/acc4b/shim.log   # 0 TRACE
+
+# cierre de los invitados
+curl -s -X POST http://127.0.0.1:8697/salir ; curl -s -X POST http://127.0.0.1:8698/salir
+
+# --- diff de PNG ---
+python3 -c "from PIL import Image; import numpy as np; ..."   # ver png/diff-png.txt (0,000 % en acc4a)

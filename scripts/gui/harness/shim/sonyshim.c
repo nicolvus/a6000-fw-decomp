@@ -1134,6 +1134,7 @@ static void *injector(void *a) {
 /* SEMSIG: semáforos que en la cámara señala otro procesador (av-cam) y aquí nadie; se dejan señalados al arrancar.
    0x83037a: el main de im.elf (antes de crear el hilo de aplicación appFw.so → UI) y luego el hilo Appframework esperan en él; se señala 4 veces. Lista hex separada por comas; vacío = ninguno. */
 static void live_init(void);
+static void *playviewer(void *a);   /* PLAYVIEW */
 static void keyq_init(void) {  /* KEYQ=qid_hex[,…]: colas del kernel que un hilo de usuario lee con rcv_msg: se les da buzón (para INJECT) */
     for (const char *s = getenv("SYNCMBX"); s && *s; ) { const char *n; unsigned v = hexv(s, &n); if (n == s) break; dynq_add(v); s = *n == ',' ? n + 1 : n; }  /* el hilo lector ya espera en rcv_msg al arrancar: el buzón debe existir desde el principio */
     const char *p = getenv("KEYQ"); while (p && *p) { const char *q; unsigned id = hexv(p, &q); if (q == p) break; dynq_add(id); p = *q == ',' ? q + 1 : q; }
@@ -1142,7 +1143,7 @@ static void presignal(void) {
     const char *e = getenv("SEMSIG"), *p = e ? e : "83037a,83037a,83037a,83037a";
     while (*p) { const char *q; unsigned id = hexv(p, &q); if (q == p) break; sem_sig(id); p = *q == ',' ? q + 1 : q; }
 }
-__attribute__((constructor)) static void shim_init(void) { for (unsigned i = 0; i < sizeof nx_names / sizeof *nx_names; i++) nx_ptr[i] = dlsym(RTLD_NEXT, nx_names[i]); if (getenv("CPUWATCH")) { pthread_t tw; pthread_create(&tw, 0, cpu_watch, 0); } presignal(); keyq_init(); live_init(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("OPENVIEW")) { pthread_t th; pthread_create(&th, 0, openviewer, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
+__attribute__((constructor)) static void shim_init(void) { for (unsigned i = 0; i < sizeof nx_names / sizeof *nx_names; i++) nx_ptr[i] = dlsym(RTLD_NEXT, nx_names[i]); if (getenv("CPUWATCH")) { pthread_t tw; pthread_create(&tw, 0, cpu_watch, 0); } presignal(); keyq_init(); live_init(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("OPENVIEW")) { pthread_t th; pthread_create(&th, 0, openviewer, 0); } if (getenv("PLAYVIEW")) { pthread_t th; pthread_create(&th, 0, playviewer, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
     if (getenv("ALTSTK")) { stack_t ss; ss.ss_size = 65536; ss.ss_sp = malloc(ss.ss_size); ss.ss_flags = 0; if (ss.ss_sp) sigaltstack(&ss, 0); }
     sa.sa_flags = SA_SIGINFO | (getenv("ALTSTK") ? SA_ONSTACK : 0) | ((getenv("NULLMWF") || getenv("TABLE0")) ? 0 : SA_RESETHAND); sigaction(SIGSEGV, &sa, 0);  /* con NULLMWF el manejador sobrevive a las recuperaciones (antes SA_RESETHAND lo quitaba y el siguiente SEGV mataba im.elf: EXIT=139); on_usr1 lo restablece solo si el fallo no es recuperable */ sigaction(SIGBUS, &sa, 0); sigaction(SIGILL, &sa, 0); sigaction(SIGABRT, &sa, 0); }  /* un fallo imprime la pila y se reintenta por defecto (core) */
 
@@ -1164,9 +1165,12 @@ static void gpu_exec(unsigned off, unsigned val);
  * para que la trampa sea repetible sin tocar la instrucción siguiente (TRACEREP parchea 0x10e916, que también ejecutan
  * otros hilos). Ver oyd_arm()/oyd_hit() más abajo. */
 static unsigned long oyd_base; static unsigned oyd_n;
+static unsigned long pv_base; static volatile unsigned pv_req, pv_seen, pv_n; static void *pv_sd;  /* PLAYVIEW */
 static void oyd_hit(mcontext_t *c);
+static void playview_hit(mcontext_t *c);   /* PLAYVIEW: createEvent de la tecla reproducido con sus funciones */
 static void on_trace(int sig, siginfo_t *si, void *u) {
     mcontext_t *c = &((ucontext_t *)u)->uc_mcontext; unsigned long pc = c->arm_pc & ~1UL; int i;
+    if (pv_base && pc == pv_base + 0x1106b8) { playview_hit(c); return; }   /* PLAYVIEW: se emula el `push` de createEvent */
     if (oyd_base && pc == oyd_base + 0x10e914) { oyd_hit(c); return; }  /* OYD: el oyente va en r0 y el evento en r1; se emula `ldr r3,[r0]` */
     if (efcs_pc && pc == efcs_pc) {  /* se restaura la instrucción y se reejecuta; solo valores 1/2 del registro (av-cam 0x2d9e7c acepta esos) */
         unsigned len = 0, *d = bk_find(0x107086e, &len), v = d && len ? *(unsigned char *)d : 0; unsigned *prop = *(unsigned **)(c->arm_r4 + 0x428);
@@ -1422,6 +1426,64 @@ static void destkeyv(void) {
     dest4_a_c(vu, 0x18201c, "viewUnified2");                        /* Event(0x15070010, 4, 1) del filtro */
     dest4_a_c(vu, 0x182042, "viewUnified2");                        /* Event(0x150701a0, 4, 1) del filtro */
 }
+/* PLAYVIEW=1 (G22-ACCION4; APAGADO por omisión): el eslabón «código de entrada → acción de vista» que el firmware SÍ
+ * tiene, ejecutado con sus propias funciones cuando se pulsa Reproducción en el arnés.
+ * Medido/verificado en bytes (docs/gui/g22-reproduccion-dispatch.md §10):
+ *  - el traductor VIVO es `convertViewEventToAB(unsigned int code, unsigned int &accion)` en
+ *    `libScalarDaemon.so+0x13a704` (símbolo `_Z21convertViewEventToABTjRj`, 48 B, exportado): recorre la tabla de 19
+ *    pares de `libScalarDaemon.so+0x19db0c` comparando contra `code & ~0xf` (`13a70c  bic r5,r0,#0xf`), así que
+ *    `0x150100f2` (pulsación) y `0x150100f1` (suelta) caen en la fila `{0x150100f0 → 4}`;
+ *  - la copia de esa misma tabla en `viewUnified2.so+0x3a03d4` y su lector `viewUnified2+0x1906a8` son código muerto
+ *    (0 ramas y 0 punteros en los ocho `viewUnified*` y en `libObj`);
+ *  - quien abre la vista de reproducción es `viewManagerIf::openView("view/INDEX_PLAYBACK", modo)` (`libObj+0x1251fd`,
+ *    thunk de `libObj+0xdc3a4`), la misma función que usa la orden de consola `O view/INDEX_PLAYBACK 0`.
+ * Lo que el firmware 3.21 NO tiene es el llamante que une las dos cosas: `ScalarView::TriggerTableEvent`
+ * (`libObj+0x1170e8`, el único llamante de `convertViewEventToAB`) y `ViewBase::transformByTriggerTable`
+ * (`libObj+0x1208ec`) tienen 0 llamantes en las ocho bibliotecas de vista y en `libObj`. Este interruptor pone ese
+ * llamante fuera del firmware (en el arnés) y NO toca ni una instrucción del traductor ni del abridor.
+ * Enganche: `InputService::createEvent(código, destino)` (`libObj+0x1106b8`, `f8 b5` = `push {r3,r4,r5,r6,r7,lr}`) por
+ * UDF repetible — la instrucción se emula en el manejador, como OYD — y solo actúa si el código es `0x150100f2`
+ * (la pulsación). El trabajo (dlsym + dos llamadas al firmware) lo hace un hilo, no el manejador de señal. */
+static void playview_hit(mcontext_t *c) {
+    unsigned long pc = c->arm_pc & ~1UL;
+    unsigned long sp = c->arm_sp - 24; unsigned long *w = (unsigned long *)sp;   /* se emula `push {r3,r4,r5,r6,r7,lr}` */
+    w[0] = c->arm_r3; w[1] = c->arm_r4; w[2] = c->arm_r5; w[3] = c->arm_r6; w[4] = c->arm_r7; w[5] = c->arm_lr;
+    c->arm_sp = sp; c->arm_pc = pc + 2;
+    pv_seen++;
+    if (c->arm_r1 == 0x150100f2) pv_req++;                                       /* solo la pulsación de Reproducción */
+}
+static void playview_arm(void) {
+    const char *e = getenv("PLAYVIEW"); if (!e || *e == '0' || pv_base) return;
+    unsigned long base = libbase_de("libObj.so");
+    if (!base) { LOG("PLAYVIEW: libObj no hallada"); return; }
+    unsigned short *p = (unsigned short *)(base + 0x1106b8);
+    if (*p != 0xb5f8) { LOG("PLAYVIEW: libObj distinta (%#x en +0x1106b8, se esperaba b5f8): sin trampa", *p); return; }
+    struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_trace; sa.sa_flags = SA_SIGINFO | SA_NODEFER; sigaction(SIGILL, &sa, 0);
+    mprotect((void *)((unsigned long)p & ~4095UL), 8192, PROT_READ | PROT_WRITE | PROT_EXEC);
+    *p = 0xde00; __builtin___clear_cache((char *)p, (char *)p + 2);
+    pv_base = base;
+    LOG("PLAYVIEW: trampa en libObj+0x1106b8 (InputService::createEvent; el codigo va en r1)");
+}
+static void *playviewer(void *a) {
+    (void)a;
+#ifndef RTLD_NOLOAD
+#define RTLD_NOLOAD 4
+#endif
+    for (;;) {
+        if (!pv_req) { usleep(20000); continue; }
+        pv_req = 0;
+        { void **pv2 = lobj_h ? dlsym(lobj_h, "pViewManager") : 0; for (int k = 0; pv2 && !*pv2 && k < 600; k++) usleep(100000); }  /* openView con ViewManager NULL = SIGSEGV */
+        unsigned acc = 0, nr = ++pv_n;
+        if (!pv_sd) pv_sd = dlopen("libScalarDaemon.so", RTLD_LAZY | RTLD_NOLOAD);
+        int (*cv)(unsigned, unsigned *) = pv_sd ? dlsym(pv_sd, "_Z21convertViewEventToABTjRj") : 0;
+        int r = cv ? cv(0x150100f2, &acc) : -1;
+        efp("[shim] PLAYVIEW n=%u convertViewEventToAB(0x150100f2) -> %d accion=%u (tabla libScalarDaemon+0x19db0c)\n", nr, r, acc);
+        int (*ov)(const char *, int) = lobj_h ? dlsym(lobj_h, "_ZN13viewManagerIf8openViewEPKci") : 0;
+        int rr = ov ? ov("view/INDEX_PLAYBACK", 0) : -99;
+        efp("[shim] PLAYVIEW n=%u openView(view/INDEX_PLAYBACK,0) -> %d\n", nr, rr);
+    }
+    return 0;
+}
 static void evqnotify(void) {
     static int hecho; const char *e = getenv("EVQNOTIFY"); if (hecho || !e || *e == '0') return;
     hecho = 1;
@@ -1457,7 +1519,7 @@ void *dlopen(const char *f, int fl) {
     if (f && strstr(f, "viewUnified")) gpu_live = 1;
     LOG("dlopen(%s) ...", f ? f : "(null)");
     void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
-    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lrm_arranque(); lobj_h = h; mwf_nullsafe(); evqnotify(); destkey(); destkeyv(); oyd_arm(); }
+    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lrm_arranque(); lobj_h = h; mwf_nullsafe(); evqnotify(); destkey(); destkeyv(); oyd_arm(); playview_arm(); }
     if (h && f && strstr(f, "viewUnified")) destkeyv();  /* DESTKEYV: viewUnified2 entra por dlopen DESPUÉS de libObj; el parche de sus dos literales se hace aquí (idempotente) */
     if (h && f && getenv("TRACELIB") && (strstr(f, getenv("TRACELIB")) || strstr(f, "viewUnified")) && !trc_lib_done) {  /* la biblioteca puede entrar como dependencia de viewUnified*: se busca en /proc/self/maps tras cada dlopen hasta hallarla */
         char ln[256]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");
