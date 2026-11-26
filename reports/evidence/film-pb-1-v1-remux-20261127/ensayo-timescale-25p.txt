@@ -1,0 +1,24 @@
+# Ensayo V1b: reescritura del timescale conservando las cajas (27-11-2026)
+
+## Comando
+scripts/mp4_set_framerate.py orig198.mp4 conv198-25p.mp4 --fps 25
+
+## Salida
+vídeo: timescale 30000 -> 25025 (delta 1001, 25 fps); duration 285285 queda igual y el clip dura 11.400 s
+escrito conv198-25p.mp4 (14545696 B, mismas cajas)
+
+## ffprobe del resultado
+width=1440
+height=1080
+r_frame_rate=25/1
+avg_frame_rate=25/1
+nb_frames=285
+
+## Cajas propietarias
+orig198.mp4 uuid=4 MSNV=2 PROF=1 USMT=3 MTDT=3 bytes=14545696
+conv198-25p.mp4 uuid=4 MSNV=2 PROF=1 USMT=3 MTDT=3 bytes=14545696
+
+## Decodificación completa
+sin errores
+
+## Bytes distintos frente al original: 2 (solo el timescale)

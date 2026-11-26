@@ -85,7 +85,7 @@ Dato que decide cuál: si la cámara graba hoy en **50p/25p/50i** está en PAL (
 
 | Vía | Qué se hace | Riesgo | Cuándo elegirla |
 |---|---|---|---|
-| **V1 · Convertir los clips a la cadencia de la cámara** | **Probado y descartado con ffmpeg**: `-r 25 -c copy` deja el `r_frame_rate` en `30000/1001` y **borra las cuatro cajas `uuid`, `MSNV`, `PROF`, `USMT` y `MTDT`** ([evidencia](evidence/film-pb-1-v1-remux-20261127/ensayo-remux-25p.txt)), que es justo lo que el lector de Sony verifica primero. Solo valdría un parche binario del `moov` (timescale + `stts` + `elst`) conservando esas cajas | Medio: hay que escribir el reescritor y probarlo | Si la cámara está en PAL y se quiere ver **estos** clips |
+| **V1 · Cambiar la cadencia declarada del clip** | **Hecho y probado**: `scripts/mp4_set_framerate.py` reescribe el `mdhd.timescale` de la pista de vídeo y deja **intactas** las cajas `uuid`, `MSNV`, `PROF`, `USMT` y `MTDT` (2 bytes distintos, mismo tamaño, decodifica sin errores, `r_frame_rate 25/1`). Con `ffmpeg -r 25 -c copy` **no** vale: deja `30000/1001` y borra las cajas ([evidencia](evidence/film-pb-1-v1-remux-20261127/ensayo-remux-25p.txt)) | Nulo para la cámara; el clip resultante se reproduce un 20 % más lento (11,4 s) | **Primer ensayo**: distingue PAL de NTSC en un solo clip |
 | **V2 · Desbloquear el ajuste NTSC/PAL en el menú** | Parche de interfaz para exponer `viewNtscPalSEL_D` (mismo tipo de trabajo que G13/G14 con otros ajustes ocultos) | Medio: es un parche nuevo, sin probar en cámara | Si se prefiere arreglar la causa y seguir grabando en NTSC |
 | **V3 · Traza y reparación de la otra rama** | `scripts/camera_filmpb1_trace.py` para ver si salta A, B o el motor; si es la miniatura, «Recuperar BD imág.» o renombrar `AVF_INFO` | Nulo | Si la cámara ya graba en NTSC (hipótesis caída) |
 
@@ -97,7 +97,19 @@ Dato que decide cuál: si la cámara graba hoy en **50p/25p/50i** está en PAL (
 | La cámara graba en 60p/30p (está en NTSC) | La guarda B no rechaza por TvSystem; seguir con V3 |
 | La cámara graba en 50p/25p y tras convertir un clip a 25p sigue fallando | El rechazo es por `GetPlayThumbnailInfo` o por el motor; seguir con V3 |
 
-## 6. Límites
+## 6. Ensayo listo: un clip de 25p en la tarjeta
+
+Preparado `prueba-MAH04198-25p.mp4` (junto al original, en `~/Documents/a6000/`): es el
+mismo clip con la cadencia declarada a 25 y todas sus cajas de Sony. Se copia a la tarjeta como
+`MP_ROOT/103ANV01/MAH04200.MP4` (nombre nuevo, sin tocar los originales) y se reproduce:
+
+| Resultado | Conclusión |
+|---|---|
+| El clip de 25p **se reproduce** y los de 30p no | La cámara está en PAL y la causa es la cadencia: confirmado. Para ver los vídeos viejos, este mismo reescritor sirve para todos (a 20 % más lento) o se reencodean a 25p |
+| **Ninguno** se reproduce (tampoco el de 25p) | La cadencia no es la causa: toca la traza (A frente a B) y la otra rama de la guarda |
+| Los dos se reproducen | Imposible con el síntoma actual: revisar que el fichero copiado es el de 25p |
+
+## 7. Límites
 
 - **NO_VERIFICADO** el valor actual del ajuste en la cámara y el mapeo exacto `frameRate`→cadencia
   (solo la partición par/impar está verificada por bytes y por el caso 24p).

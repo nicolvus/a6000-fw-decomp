@@ -10,8 +10,10 @@
 > `1-1-2014`, señal de ajustes reseteados. **El ajuste no está expuesto en el menú de esta cámara** (verificado:
 > `viewNtscPalSEL_D.uxc`, `global.xdb` y `SettingSetupNtscPalSEL` existen en el firmware, pero la configuración del
 > modelo no lo muestra), así que el arreglo por menú no está disponible. Vías: convertir los clips a la cadencia de
-> la cámara (ffmpeg `-r` pierde las cajas `uuid`/`MSNV`: descartado; haría falta un reescritor del `moov`),
-> desbloquear el ajuste en la interfaz, o trazar con el kit si la cámara ya graba en NTSC.
+> la cámara (ya existe `scripts/mp4_set_framerate.py`, que cambia solo el `mdhd.timescale` y conserva las cajas
+> `uuid`/`MSNV`/`PROF`/`USMT`/`MTDT`; ffmpeg `-r` no sirve porque las borra), desbloquear el ajuste en la interfaz,
+> o trazar con el kit. **Ensayo listo:** `prueba-MAH04198-25p.mp4` copiado a la tarjeta distingue PAL de NTSC en
+> un solo clip.
 > [Informe](../reports/film-pb-1-causa-sistema-tv-20261127.md).
 
 Mecanismo de la finalización fallida **cerrado estáticamente**; causa raíz física, abierta. La traza enlaza
