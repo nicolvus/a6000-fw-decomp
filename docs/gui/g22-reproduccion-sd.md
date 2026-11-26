@@ -243,10 +243,16 @@ faltaba en §4.1.
   el propio `viewUnified2.so`. Los modelos, en `libObj.so`: `ModelIndexPbToInstance`, `ModelSinglePbToInstance`, `ModelScrollSinglePbToInstance`, `ModelDlnaSinglePbToInstance`.
   Es decir, **no falta código del firmware**: falta saber quién llama a `openView` con esos nombres y con qué condición.
 
-**(e) Quién debería abrirla.** El candidato estático es el consumidor de la acción 4 en la vista activa (`ViewStlrec`/`DefRootView`, la que registra el evento), que tendría
-que llamar a `openView("view/INDEX_PLAYBACK")` (o `@V0xx`). **No se ha localizado el llamador**: no hay referencia literal (ni `ldr` de pool, ni `movw/movt`, ni `add pc`)
-desde `.text` a las cadenas del `ViewManager`, así que la tabla se consume por índice/estructura (probablemente a través de `initializeViewConfig`), y la función `0x1906a8`
-no recibe ningún `bl` directo. Ese tramo queda **NO_VERIFICADO** (§7.4, siguiente medición).
+**(e) Quién debería abrirla.** Por partes, con lo medido:
+
+- `viewUnified2.so` **no llama nunca** a `viewManagerIf::openView` ni a `ViewBase::openView`: de 59 182 llamadas a la PLT (1 478 destinos distintos, mapa
+  `.rel.plt` → stub verificado), **cero** van a los stubs `0xe6724` (`openView(const char*, int)`) y `0xe5cc8` (`ViewBase::openView`). La vista **no** abre por su cuenta.
+- El despachador está en `libObj.so` y sí tiene símbolos: `DefRootView::ActionEventMapBase::DispatchEvent(unsigned long)` = `libObj+0xf59f0` y
+  `DefRootView::ActionCheckerListBase::execAction(int)` = `libObj+0x11817e` (`dynsym`, Thumb). El camino esperado es **evento → `DispatchEvent` → acción (4) →
+  `execAction` → acción concreta de la vista → `openView` con el nombre del mapa**, y la condición para llegar es que la acción 4 esté registrada/en disposición
+  (`IsReadyExec`) en la vista activa. Este tramo es **INFERENCIA** con el despachador **VERIFICADO como símbolo**, no como flujo.
+- El llamador concreto de `openView` **no se ha localizado**: no hay referencia literal (ni `ldr` de pool, ni `movw/movt`, ni `add pc`) desde `.text` a las cadenas del
+  `ViewManager`, así que la tabla se consume por índice/estructura (probablemente desde `initializeViewConfig`), y la función `0x1906a8` no recibe ningún `bl` directo.
 
 ### 7.2 Medido en el invitado (perfil `repro2`, puerto 8660, arranque en frío 155 s)
 
@@ -292,10 +298,12 @@ TRACELIB=libmpr.so TRACEFN2=620028,620262,62059c GMILOG=1 SETLOG=1" \
 
 ### 7.4 Lo que queda por medir (siguiente paso exacto)
 
-1. **¿Se genera el evento?** Arranque en frío con `TRACELIB=viewUnified2.so TRACEFN2=1906a8 TRACEDEREF=d0:0:18 TRACEREP=1` y pulsar Reproducción: si `1906a8` recibe
-   `r0=0x150100f0`, el evento se genera y el corte está en el consumidor de la acción 4; si no se dispara, el corte está en `InfraInput`/`InputService`
-   (`libObj+0x114104`, `+0x113d2c` `activate`, `+0x113c1c` `UpdateInputTable`). En esta sesión se intentó **en caliente** (`E TRACELIB`/`E TRACEFN2`) y no hubo
-   confirmación de armado (el `LOG` del rearme no se reenvía sin `WLALL`), así que el intento **no cuenta como medición**.
+1. **¿Se genera el evento, y qué acción se ejecuta?** Arranque en frío con `TRACEFN=f59f0,11817e,1251fc TRACEDEREF=d0:0:18 TRACEREP=1 TRACEMAX=8` (`TRACEFN` es de
+   `libObj`) y pulsar Reproducción. `libObj+0xf59f0` = `DefRootView::ActionEventMapBase::DispatchEvent` (`r0` = evento), `libObj+0x11817e` =
+   `ActionCheckerListBase::execAction` (`r0` = acción) y `libObj+0x1251fc` = `viewManagerIf::openView` (`r0` = nombre). Los tres juntos dicen en una sola pasada si el
+   evento llega a la vista, qué acción sale y si se acaba abriendo; si `DispatchEvent` no recibe `0x150100f0`, el corte está antes, en `InfraInput`/`InputService`
+   (`libObj+0x114104`, `+0x113d2c` `activate`, `+0x113c1c` `UpdateInputTable`). En esta sesión se intentó **en caliente** (`E TRACELIB`/`E TRACEFN2` sobre
+   `viewUnified2+0x1906a8`) y no hubo confirmación de armado (el `LOG` del rearme no se reenvía sin `WLALL`), así que el intento **no cuenta como medición**.
 2. **Contenido del índice AV**: hace falta un `AVIN0001.INP` de una tarjeta real de A6000 (no hay ni un byte en el repo) o que el propio MPR lo genere
    (`FormatCmd`/«Formatear», §5.46/§5.50). Con eso se repite `O view/INDEX_PLAYBACK` y se compara.
 3. **`openView` que no vuelve**: repetir `O view/SINGLEPB` con `WATCH=1251fc`/`DUMPAT` y `RCVSTACK=1` para ver en qué cola se queda (la orden «O» se lanza en su propio
