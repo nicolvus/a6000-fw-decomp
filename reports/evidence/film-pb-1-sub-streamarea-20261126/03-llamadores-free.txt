@@ -1,0 +1,108 @@
+# Llamadores de StreamAreaFree 0x5f802c  (barrido de bl/blx/b.w en .text completo, 0x120228..0x7a3e84)
+# cada sitio re-verificado con capstone (columna OK = el destino decodificado coincide)
+
+## llamadores directos (solo 2, y son colas b.w desde dos envoltorios)
+### callers of 005f802c
+005f811e OK   b.w    func=005f8110  
+005f8136 OK   b.w    func=005f8110  
+total 2
+
+## envoltorio A: 0x5f8110 -> pasa r1 = su argumento (mascara de subArea) y r0 = *(u16*)0x9dedb6
+005f8110: 044b       ldr      r3, [pc, #0x10]                 ; [005f8124]=009dedb6
+005f8112: 0146       mov      r1, r0                        
+005f8114: 80b5       push     {r7, lr}                      
+005f8116: 00af       add      r7, sp, #0                    
+005f8118: 1888       ldrh     r0, [r3]                      
+005f811a: bde88040   pop.w    {r7, lr}                      
+005f811e: fff785bf   b.w      #0x5f802c                     
+005f8122: 00bf       nop                                    
+005f8124: b6ed9d00   ldc      p0, c0, [r6, #0x274]!         
+
+## envoltorio B: 0x5f8128 -> fija r1 = 7 (todas las areaType: ver 05) y r0 = *(u16*)0x9dedb6
+005f8128: 044b       ldr      r3, [pc, #0x10]                 ; [005f813c]=009dedb6
+005f812a: 0721       movs     r1, #7                        
+005f812c: 80b5       push     {r7, lr}                      
+005f812e: 00af       add      r7, sp, #0                    
+005f8130: 1888       ldrh     r0, [r3]                      
+005f8132: bde88040   pop.w    {r7, lr}                      
+005f8136: fff779bf   b.w      #0x5f802c                     
+005f813a: 00bf       nop                                    
+
+## llamadores de A (2)
+### callers of 005f8110
+0043c688 OK   bl     func=0043c674  
+005f8e88 OK   bl     func=005f8e6c   MEMI  |  Free  |  [AreaType]
+total 2
+
+## llamadores de B (69) con cadenas de la funcion contenedora
+### callers of 005f8128
+003e8550 OK   bl     func=003e8514  DubMgr instance is not exists. | ExitDubbing | ExitDubbing | DubMgr instance is not exists.
+003e85e0 OK   bl     func=003e85b0  DubMgr instance is not exists. | EnterDubbing | EnterDubbing
+00428994 OK   b.w    func=0042898c  
+0042987a OK   bl     func=00429850  
+0042988e OK   bl     func=00429850  
+0042b710 OK   bl     func=0042b618   Call CallbackPointForDivide() |    cmdID   : |    errStat :
+0042d3aa OK   bl     func=0042d2d0  EnterDubbing() | EnterDubbing() | ExitDubbing() | Call ResumeDriveEventCheck()
+0042d41e OK   bl     func=0042d2d0  EnterDubbing() | EnterDubbing() | ExitDubbing() | Call ResumeDriveEventCheck()
+0042db34 OK   bl     func=0042db08  Call SuspendDriveEventCheck() | EnterDubbing()
+0042db84 OK   bl     func=0042db78  Call ResumeDriveEventCheck() | ExitDubbing()
+0042dea6 OK   bl     func=0042de30  ChangeRotationAngle()
+0042df22 OK   bl     func=0042de30  ChangeRotationAngle()
+0042e1c0 OK   bl     func=0042e14c  DeleteHighlightPL()
+0042e238 OK   bl     func=0042e14c  DeleteHighlightPL()
+0042e2fa OK   bl     func=0042e288  DeleteDirectory()
+0042e372 OK   bl     func=0042e288  DeleteDirectory()
+0042e4a0 OK   bl     func=0042e3e4   Demo Mode Delete malloc !!! |  Demo Mode Delete !!! |  Demo Mode Delete Error Free !!! | Delete()
+0042e57e OK   bl     func=0042e3e4   Demo Mode Delete malloc !!! |  Demo Mode Delete !!! |  Demo Mode Delete Error Free !!! | Delete()
+0042e6b2 OK   bl     func=0042e5f8  Copy()
+0042e732 OK   bl     func=0042e5f8  Copy()
+0042e846 OK   bl     func=0042e7a0  Move()
+0042e8c6 OK   bl     func=0042e7a0  Move()
+0042e9c8 OK   bl     func=0042e934  Divide()
+0042ea2a OK   bl     func=0042e934  Divide()
+0042eb18 OK   bl     func=0042ea70   Demo Mode Protect malloc !!! |  Demo Mode Protect !!! |  Demo Mode Protect Error Free !!! | Protect()
+0042ebf6 OK   bl     func=0042ea70   Demo Mode Protect malloc !!! |  Demo Mode Protect !!! |  Demo Mode Protect Error Free !!! | Protect()
+0042eeb2 OK   bl     func=0042ee5c  BeginImport()
+0042ef04 OK   bl     func=0042ee5c  BeginImport()
+0042ef9e OK   bl     func=0042ef44  EndImport()
+0042f20a OK   bl     func=0042f1a0  CheckDpofContents()
+0042f28a OK   bl     func=0042f1a0  CheckDpofContents()
+0042f39a OK   bl     func=0042f2d4  WriteDpofFile()
+0042f40c OK   bl     func=0042f2d4  WriteDpofFile()
+0042f4aa OK   bl     func=0042f454  WriteDpofFile()
+0042f50e OK   bl     func=0042f454  WriteDpofFile()
+0042f584 OK   bl     func=0042f554  ChangeRotationAngle()
+0042f768 OK   bl     func=0042f738  DeleteHighlightPL()
+0042f7ee OK   bl     func=0042f7b0  DeleteDirectory()
+0042f8c0 OK   bl     func=0042f834   Demo Mode Delete Free !!! | Delete()
+0042f936 OK   bl     func=0042f90c  Copy()
+0042f9a6 OK   bl     func=0042f97c  ProcCbMediaMove()
+0042fa32 OK   bl     func=0042f9ec  Not Need Make Thumbnail | Divide is Complete ! | ProcCbMediaDivide()
+0042fb88 OK   bl     func=0042fb80  ReceiveCompDivideRecovery()
+0042fc0e OK   bl     func=0042fbc0   Demo Mode Protect Free !!! | Protect()
+0042ffa8 OK   bl     func=0042ff8c  BeginImport()
+00430030 OK   bl     func=0042ffe0  EndImport()
+004300f2 OK   bl     func=004300d8  CheckDpofContents()
+0043016a OK   bl     func=00430130  WriteDpofFile()
+004301d4 OK   bl     func=004301a8  ClearDpofFile()
+0043095c OK   b.w    func=00430924  
+00436612 OK   bl     func=00436580  CheckExtDeviceFirmUpConditions()
+004366ba OK   bl     func=00436640  UpdateExtDeviceFirmware()
+00436758 OK   bl     func=004366ec  EnterThumbnailPb() | EnterMovieThumbnailPb()
+00436c22 OK   bl     func=00436b90  EnterAviThumbnailPb()
+00437040 OK   bl     func=00436fcc  EnterThumbnailPb() | EnterAviThumbnailPb() | EnterMovieThumbnailPb()
+0043713a OK   bl     func=004370d4  ExitThumbnailPb() | ExitAviThumbnailPb() | ExitMovieThumbnailPb()
+00437aca OK   bl     func=00437a28  EnterMoviePb()
+0043818c OK   bl     func=00438148  
+004381f0 OK   bl     func=00438148  
+00438cd2 OK   bl     func=00438bf8  Call SuspendDriveEventCheck() | EnterMoviePbStillRec()
+00438e96 OK   bl     func=00438d74  EnterMoviePbStillRec() | core/feature/player/cam/feaCorePbCaptureApi.cpp | EnterMoviePbStillRec
+00438fd0 OK   bl     func=00438f38  Call ResumeDriveEventCheck()
+00439540 OK   bl     func=004394a4   ClearPlayerInstance ... mode: |  Are you ClearPlayerInstance ???
+004396b2 OK   bl     func=004395f8  EnterStillPb()
+0043974c OK   bl     func=00439710  ExitStillPb()
+0043a710 OK   bl     func=0043a6d0  
+0043a770 OK   bl     func=0043a6d0  
+0043f6e4 OK   bl     func=0043f644   ClearRecorderInstance ... mode: |  Are you ClearRecorderInstance ??? |  Change me_recMode Recovery -> REC_MODE_DUAL_REC !!! |  Keep me_recMode:
+005f8e7e OK   bl     func=005f8e6c   MEMI  |  Free  |  [AreaType]
+total 69

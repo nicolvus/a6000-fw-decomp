@@ -1,0 +1,43 @@
+# Asignacion/reasignacion del descriptor 0xa4f368 (entradas de 0x18; hueco 11 = +0x108 direccion / +0x110 tamano)
+
+## StreamAreaAllocate 0x5f7be8 (b.w desde 0x428588) y ChangeAllocate 0x5f7f1c (b.w desde 0x428594)
+### callers of 005f7be8
+00428588 OK   b.w    func=004284ac  Parameter is illegal | contentType is M2PS/AVCHD/STILL/DVD/DV/XAVC/WAV |  GetMemoryInformation, type: | , sub:
+005f98a6 OK   bl     func=005f986c   MEMI  |  Alloc  |  [main(0- | )] [sub(0-
+total 2
+### callers of 005f7f1c
+00428594 OK   b.w    func=004284ac  Parameter is illegal | contentType is M2PS/AVCHD/STILL/DVD/DV/XAVC/WAV |  GetMemoryInformation, type: | , sub:
+005f8028 OK   b.w    func=005f8020  
+total 2
+
+## envoltorio 0x5f8020 = cola a ChangeAllocate (lo usa ThumbnailRecorder::SetMemoryTable 0x330118)
+005f8020: 80b5       push     {r7, lr}                      
+005f8022: 00af       add      r7, sp, #0                    
+005f8024: bde88040   pop.w    {r7, lr}                      
+005f8028: fff778bf   b.w      #0x5f7f1c                     
+005f802c: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+
+## GetMemoryInformation 0x4284ac: el 3er argumento decide Allocate (r2!=0) o ChangeAllocate (r2==0)
+0042857c: 35b1       cbz      r5, #0x42858c                 
+0042857e: 2046       mov      r0, r4                        
+00428580: 3146       mov      r1, r6                        
+00428582: 4a46       mov      r2, sb                        
+00428584: bde8f047   pop.w    {r4, r5, r6, r7, r8, sb, sl, lr}
+00428588: cff12ebb   b.w      #0x5f7be8                     
+0042858c: 2046       mov      r0, r4                        
+0042858e: 3146       mov      r1, r6                        
+00428590: bde8f047   pop.w    {r4, r5, r6, r7, r8, sb, sl, lr}
+00428594: cff1c2bc   b.w      #0x5f7f1c                     
+
+## quien referencia la tabla 0xa4f368 (literal pools): solo Allocate/ChangeAllocate escriben, via DistributeBufInfo
+== refs to data 00a4f368 ==
+005f6b40 val=00a4f368 func=005f6a60
+005f6c10 val=00a4f368 func=005f6b50
+005f7d74 val=00a4f368 func=005f7be8
+005f8010 val=00a4f368 func=005f7f1c
+005f80ec val=00a4f368 func=005f802c
+005f81c4 val=00a4f368 func=005f8140
+005f81e4 val=00a4f368 func=005f81c8
+005f8224 val=00a4f368 func=005f81e8
+005f95b4 val=00a4f368 func=005f937c
+005f9868 val=00a4f368 func=005f937c

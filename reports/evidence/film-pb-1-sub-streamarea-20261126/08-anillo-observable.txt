@@ -1,0 +1,32 @@
+# Anillo de log real del 20-10 (reports/evidence/film-pb-1-log-real-20261126/anillo-mpr-20261020.txt), lineas 104-121
+# con la lectura estatica de cada linea
+       1	[MMGR][AVI] ## ERROR(MMGR):0x31000006 ## avimmgr/AviMMgrCmd.cpp(13247) FlashLoadMp4()
+       2	[AVIMMGR][MS1]LoadExec : Flash Load Error
+       3	[AVIMMGR][MS1]SetLoadInfo : TvSystem is NTSC, frameRate 3
+       4	line=825, time=4030, diff=4027
+       5	line=838, time=21376, diff=17346
+       6	line=875, time=21448, diff=72
+       7	[AVIMMGR][MS1]GetContentFocusPointCmd : GetResumeInfo Error [47000003]
+       8	[MMGR][AVI] ## ERROR(MMGR):0x47000003 ## avimmgr/AviMMgrDBIf.cpp(1945) GetContentFocusPointCmd()
+       9	[CACHE]BUFFER SIZE TOO SMALL : 00000000
+      10	[CACHE]ERROR(C1000002h)
+      11	[MprIf] Callback EnterStillPb
+      12	[MprIf] Callback GetStillAttrInfo
+      13	[CACHE]ERROR(C1000010h)
+      14	[StillCache]ERROR:StillCacheRead::StartRead> Failed to dfs::seek offset=0x0049CE00 errcode=0x0E100001
+      15	[StillCache]ERROR:StillCacheFile::Read> Failed to read errcd=0xC3000101
+      16	[StillCache]ERROR:StillCache::Read> Failed to Read errcd=C3000101
+      17	[DCF][MS1]ReadScreenNailImage pAddr = [117AE000]
+      18	[DCF][MS1]ReadScreenNailImage readSize = [000605EC]
+
+# Lectura:
+#  112 [CACHE]BUFFER SIZE TOO SMALL : 00000000   <- StreamCache::SetArea (0x7594e0) con size=0
+#                                                    (0x759562 cmp r4(size),sb([0xad4f68]) -> 0x759566 .. 0x7595b0)
+#  113 [CACHE]ERROR(C1000002h)                    <- retorno de ese SetArea; el area NO queda puesta
+#  114 [MprIf] Callback EnterStillPb               <- el callback se entrega DESPUES del SetArea
+#  116 [CACHE]ERROR(C1000010h)                    <- GetArea (0x7594??) con el area sin poner
+#  117..126                                       <- secuelas: dfs::seek / read del StillCache
+#  136 [MprIf] Callback ExitStillPb
+#
+# No hay ninguna linea [CACHE]CMD(IS_SET_AREA) / CMD(UNSET_AREA) / CMD(SET_AREA) ni [MemInfo]StreamArea*:
+# esas trazas van por otra funcion de log (0x75a810/0x75a82c, flag propio) y en este anillo no estan.

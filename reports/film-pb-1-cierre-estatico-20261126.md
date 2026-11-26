@@ -73,7 +73,12 @@ El dump `analysis/camera-dumps/ram-servicio-20261020/ram_0x80000000.bin` (1 GiB,
 en la tarjeta.
 
 Y hay una segunda lectura del mismo log, que apunta más arriba: `[CACHE]BUFFER SIZE TOO SMALL :
-00000000` **no es un fallo de lectura**, es un **área de memoria sin reservar**. Lo emite
+00000000` **no es un fallo de lectura**, es un **área de memoria sin reservar**. Ojo, corregido el
+26-11 (`reports/film-pb-1-sub-streamarea-20261126.md`): **ese `SetArea(0)` es del camino de FOTO**
+(hueco 13), no del de vídeo — llega antes del callback `EnterStillPb` y el `C1000010h` lo emite el
+`GetArea` del `StillCache`. El hueco 11 (movie) lo asigna siempre `EnterMoviePb` con
+`StreamAreaAllocate` (`r2=1`) y con `m_systemType = 1` el modo alcanzable es el **14**
+(`0x01400000`, 20 MiB), no el 1. Lo emite
 `StreamCache::SetArea` (`0x7594E0`), que compara el tamaño **pedido** contra el mínimo
 `GetEepData(0x3C0057) << 10`; el `0` que imprime es el pedido, que sale del descriptor
 `MemInfo[+0x140]` — es decir, el reproductor pidió un área de tamaño 0. El `0xC1000010` que
