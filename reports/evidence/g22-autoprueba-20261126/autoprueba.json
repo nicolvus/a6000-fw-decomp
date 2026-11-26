@@ -1,0 +1,99 @@
+{
+ "fecha": "2026-11-26 04:06:14",
+ "ok": true,
+ "pasos": [
+  {
+   "paso": "arranque",
+   "ok": true,
+   "evidencia": "primera pantalla en 1.5 s · restaurado, 1 s · 1 fotogramas · 0.5 fps · último: ",
+   "png": "01-pantalla.png"
+  },
+  {
+   "paso": "pantalla",
+   "ok": true,
+   "evidencia": "contenido dibujado: 0.013 (0 = no repintó)",
+   "png": "01b-pantalla.png"
+  },
+  {
+   "paso": "teclas-MENU",
+   "ok": true,
+   "evidencia": "opacos: disparo 0.02 → menú 1.00 → disparo 0.02 (una pulsación por cambio)",
+   "png": "03-menu.png"
+  },
+  {
+   "paso": "dial-de-modos",
+   "ok": true,
+   "evidencia": "pantalla con contenido tras girar a M (0.013)",
+   "png": "04-dial.png"
+  },
+  {
+   "paso": "foto-disparador",
+   "ok": true,
+   "evidencia": "1 foto(s) nueva(s), modelo EXIF ILCE-6000",
+   "png": ""
+  },
+  {
+   "paso": "movie-grabando",
+   "ok": true,
+   "evidencia": "el anfitrión está grabando",
+   "png": ""
+  },
+  {
+   "paso": "movie-clip",
+   "ok": true,
+   "evidencia": "1 clip(s) nuevo(s) MP4",
+   "png": ""
+  },
+  {
+   "paso": "sd-lista",
+   "ok": true,
+   "evidencia": "2 ficheros: ['PRIVATE/M4ROOT/CLIP/C0001.MP4', 'DCIM/100MSDCF/DSC00001.JPG']",
+   "png": ""
+  },
+  {
+   "paso": "sd-fichero",
+   "ok": true,
+   "evidencia": "HTTP 200, 29510 B",
+   "png": ""
+  },
+  {
+   "paso": "sd-importar",
+   "ok": true,
+   "evidencia": "HTTP 200 → DCIM/100MSDCF/DSC00002.JPG",
+   "png": ""
+  },
+  {
+   "paso": "sd-borrar",
+   "ok": true,
+   "evidencia": "HTTP 200 → DCIM/100MSDCF/DSC00002.JPG",
+   "png": ""
+  },
+  {
+   "paso": "sd-formatear",
+   "ok": true,
+   "evidencia": "HTTP 200 → {'ok': True, 'borrados': 2}",
+   "png": ""
+  },
+  {
+   "paso": "camara-bateria",
+   "ok": true,
+   "evidencia": "modelo 5 % → enviado ['B 5']",
+   "png": ""
+  },
+  {
+   "paso": "camara-usb",
+   "ok": true,
+   "evidencia": "HTTP 200 → ['U 1']",
+   "png": ""
+  },
+  {
+   "paso": "cierre",
+   "ok": true,
+   "evidencia": "código 0, estado guardado 118 MiB",
+   "png": ""
+  }
+ ],
+ "perfil": "menu7",
+ "puerto": 8645,
+ "work": "/home/nicolas/hv/harness"
+}
