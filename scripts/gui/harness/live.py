@@ -44,6 +44,7 @@ import run
 import sd_emu
 import sd_image
 import sensor_web
+import camara_web  # G22-E: batería y jack USB del invitado (modelo del anfitrión + órdenes del shim)
 
 # Posición inicial del dial de modo (KEY_POS_MODE_DIAL 0x7025, índice físico 0x27) que el driver informa a InputService al activarse (se envía con el toActive: antes se perdía).
 # VERIFICADO (E2E-13): getExposureMode (viewUnified2+0x18e454) convierte el estado 2 → auto (0), 3 → P (0x15), 4 → A (0x17), 5 → S (0x16), 6 → M (0x18); MEDIDO (§5.31 e icono): el mismo número es el modo de la vista (2 = iAUTO+, 3 = P, 4 = A, 5 = S, 6 = M).
@@ -498,6 +499,8 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
                 return
             if isp_web.maneja(self, "GET", self.path, b"", vm):  # ISP emulado (T9)
                 return
+            if camara_web.maneja(self, "GET", self.path, b"", vm):  # batería, jack USB y HDMI (G22-E)
+                return
             if self.path == "/":
                 self.responde(PAGINA.replace("<!--SENSOR-->", sensor_web.HTML).replace("/*SENSORJS*/", sensor_web.JS).replace("__MODOS__", json.dumps([n for n, _ in POSICIONES_MODO], ensure_ascii=False)).replace("__MODO0__", str([e for _, e in POSICIONES_MODO].index(DIAL_INICIAL))).encode(), "text/html; charset=utf-8")
             elif self.path == "/estado":
@@ -547,6 +550,8 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
             if sensor_web.maneja(self, "POST", self.path, cuerpo, CONFIG["ruta"]):
                 return
             if isp_web.maneja(self, "POST", self.path, cuerpo, vm):
+                return
+            if camara_web.maneja(self, "POST", self.path, cuerpo, vm):  # batería, jack USB y HDMI (G22-E)
                 return
             if self.path == "/tecla":
                 d = json.loads(cuerpo)

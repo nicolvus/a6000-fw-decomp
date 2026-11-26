@@ -345,10 +345,24 @@ static void vdf_reply(unsigned q, const unsigned char *req) {
  * Se envían una vez a 0x7a0020 al ver KEYINITON=texto en el registro de libObj (por defecto, con el toActive de InputService). */
 /* KEYINITON vacío = como si no estuviera (SHIMEXTRA no puede quitar una variable del entorno por defecto): el envío ocurre con el toActive de InputService */
 static const char *keyiniton(void) { const char *t = getenv("KEYINITON"); return t && *t ? t : 0; }
+/* G22-E: batería y jack USB del arnés. «U <0|1>» y «B <0..100>» llegan por el puerto LIVE (live_keys). */
+#define CLAVE_JACK_USB 0x7000001u  /* clave del driver de entrada para el jack USB; evento 0x15040010, índice físico 0x177 (§5.18w) */
+#define IDX_JACK_USB   0x177u
+/* Mensaje del driver de entrada ({clave, 0, estado, 0, índice físico}) a la cola 0x7a0020: la MISMA construcción que KEYINIT, reutilizada
+ * para el estado inicial (keyinit_send) y para el cambio en caliente del jack. */
+static void entrada_estado(unsigned clave, unsigned estado, unsigned idx) {
+    if (!is_dynq(0x7a0020)) return;
+    unsigned km[12] = { 0 }; km[0] = clave; km[2] = estado; km[4] = idx;
+    mbx_post_raw(0x7a0020, km);
+}
+/* Nivel de batería de la respuesta emulada de CamMgr (CAMGREMU, 0x30001): por omisión 100 %. Es el modelo del ANFITRIÓN; con el puente
+ * AVQ activo responde el av-cam real y este valor no se usa (límite documentado en docs/gui/g22-estado-camara.md). */
+static volatile int cam_bateria = -1;
+static unsigned bateria_pct(void) { int v = cam_bateria; return v < 0 ? 100u : (unsigned)v; }
 static void keyinit_send(void) {
     static int done; if (done || !is_dynq(0x7a0020)) return; done = 1;
     for (const char *e = getenv("KEYINIT"); e && *e; ) { unsigned km[12] = { 0 }; km[0] = hexv(e, &e); if (*e == ':') km[2] = hexv(e + 1, &e); if (*e == ':') km[4] = hexv(e + 1, &e);
-        mbx_post_raw(0x7a0020, km); LOG("KEYINIT key=%#x status=%#x idx=%#x", km[0], km[2], km[4]); while (*e == ',') e++; }
+        entrada_estado(km[0], km[2], km[4]); LOG("KEYINIT key=%#x status=%#x idx=%#x", km[0], km[2], km[4]); while (*e == ',') e++; }
 }
 static int mbx_take(unsigned q, int tmo, void **out) {  /* 0 = recibido, 1 = cola sin buzón (no dinámica), E_TMOUT = nada en tmo ms */
     int k, r = 1; struct timespec ts;
@@ -696,7 +710,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
                  * NO_VERIFICADO: el layout real de cada respuesta y los valores dependen de av-cam.bin (pendiente de REA/ejecución). */
                 if (msg_id == 0x3001) {           /* probablemente estado general / modo */
                     ((unsigned *)m)[2] = 0x0003;   /* modo P (ver DIAL_INICIAL=3 en live.py) */
-                    ((unsigned *)m)[3] = 0x0064;   /* batería 100 % */
+                    ((unsigned *)m)[3] = bateria_pct();   /* batería: 100 % por omisión, «B <0..100>» del puerto LIVE (G22-E) */
                 } else if (msg_id == 0x3006) {     /* posiblemente fotos restantes */
                     ((unsigned *)m)[2] = 0x03e7;   /* 999 fotos restantes */
                 } else if (msg_id == 0x3007) {     /* posiblemente exposición / velocidad */
@@ -1521,7 +1535,7 @@ int _ZN12ModelManager11checkStatusEi(void *th, int st) {
 /* Prioridades RT (§5.37): la cámara usa CONFIG_MAX_USER_RT_PRIO=160 (prioridades 1..159, sin traducción en libosal_utm); el kernel del invitado solo 1..99. rtprio.h las mapea de forma
  * monótona (RTMAP=0 la desactiva y deja pasar el valor tal cual, §5.36: los hilos de libmpr con 117/120/123 fallarían con EINVAL). sched_get_priority_max informa 159 como la cámara. */
 static int rt_pol(int policy) { return policy == SCHED_FIFO || policy == SCHED_RR; }
-static int rt_on(void) { return !getenv("RTMAP") || atoi(getenv("RTMAP")); }
+static int rt_on(void) { return !getenv("RTMAP") || num(getenv("RTMAP")); }  /* num() y no atoi(): el sysroot nuevo enlaza __isoc23_strtol (atoi pasa por ahí) y la glibc 2.11 del invitado no lo tiene → im.elf moría con EXIT=127 al primer uso (medido, G22-E) */
 static int rt_host_max(int policy) { static int (*real)(int); if (!real) real = nextsym("sched_get_priority_max"); return real(policy); }
 static int rt_conv(int policy, int p) { if (!rt_on() || !rt_pol(policy)) return p; int m = rtprio_map(p, rt_host_max(policy)); if (m != p) LOG("RTMAP prioridad %d -> %d (policy %d)", p, m, policy); return m; }
 int sched_get_priority_max(int policy) { return rt_on() && rt_pol(policy) ? CAM_RT_PRIO_MAX : rt_host_max(policy); }
@@ -2027,6 +2041,13 @@ static void *live_keys(void *a) {
                 if (m[0] == 0x1ab && m[2] == 1 && !menu_open) { swallow = 1; menu_open = 1; pthread_t th; pthread_create(&th, 0, openhot, strdup("@V00E")); pthread_detach(th); LOG("MENU con el menú cerrado: openView @V00E"); }
                 else if (m[0] == 0x1ab && swallow) { if (m[2] == 0) swallow = 0; }  /* la suelta de la pulsación que abrió el menú no llega a la UI */
                 else { mbx_post_raw(0x7a0020, m); if (wl_on()) wl_key(m[0]); } }
+            /* «U <0|1>» (G22-E): estado del jack USB, como el driver de entrada de la cámara: mensaje {clave 0x7000001, 0, estado, 0, índice 0x177}
+             * a 0x7a0020 (la misma vía que KEYINIT=7000001:1:177, §5.18w) para poder cambiarlo en caliente. */
+            if (ln[0] == 'U') { unsigned st = (ln[1] == ' ') ? (unsigned)hexv(ln + 2, &e) : 0;
+                entrada_estado(CLAVE_JACK_USB, st ? 1u : 0u, IDX_JACK_USB); LOG("JACK USB estado=%u (LIVE, driver de entrada 0x7a0020)", st ? 1u : 0u); }
+            /* «B <0..100>» (G22-E): nivel de batería de la respuesta emulada de CamMgr (CAMGREMU); DECIMAL, no hex, porque «100» tiene que valer cien */
+            if (ln[0] == 'B' && ln[1] == ' ') { unsigned bv = 0; for (const char *p = ln + 2; *p >= '0' && *p <= '9' && bv <= 1000; p++) bv = bv * 10 + (unsigned)(*p - '0');
+                if (bv > 100) bv = 100; cam_bateria = (int)bv; LOG("BATERIA %u %% (LIVE, respuesta emulada de CamMgr)", bv); }
             ln = nl + 1;
         }
         n = strlen(ln); memmove(buf, ln, n);
