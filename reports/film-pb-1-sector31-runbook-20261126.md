@@ -10,8 +10,8 @@
 > `ChangeSector = 0x10800010` / `WritePackEnd = 0x10800020` y **0 B escritos**; con `fn` en la misma
 > sesión, `ChangeSector / WritePackBegin / Add / End = 0` y **4 770 B** (payload `0x5a` en `0x3A0206`).
 > Por eso la secuencia es: aplicar → **sin apagar** → grabar el clip nuevo → reproducirlo. Si se reinicia
-> antes de grabar, hay que repetir `FBM EWBDFD 4 3 0` (el `InitB` ya no hace falta). El paquete 3.97 no
-> tiene este problema: su cueva registra el `fn` en cada arranque.
+> antes de grabar se pierde el registro transitorio de `fn`. El paquete 3.97 también omite el alta
+> de `fn` si `FBM::Init` ya encontró el sector. [Auditoría del 3.97](fbm-sector31-c-pkg397-20261126.md).
 
 ## Resumen (18 líneas)
 

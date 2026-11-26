@@ -1,5 +1,9 @@
 # FILM-PB-1 — traza en la cámara real: el manejador de PlayMovie corre y no produce el 0x1A (26-11-2026)
 
+> **Revisión de la evidencia:** la captura con golpes quedó incompleta. Confirmó entrada al manejador
+> y una traducción con `r0=0`. Para el alcance de esos resultados y los pasos vigentes,
+> véase [el resultado auditado](film-pb-1-sector31-resultado-20261126.md#3-traza-física-entrada-observada-origen-del-0x1a-abierto).
+
 Cámara: `192.168.1.30` (telnet root del Tweak + adb 5555), fw instalado 3.93 (`pp`).
 Kit: `scripts/camera_filmpb1_trace.py` (puntos UDF 0xde00 por ptrace). Arreglo del sector:
 `scripts/film_pb1_sector31.py`.

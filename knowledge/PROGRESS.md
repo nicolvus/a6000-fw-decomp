@@ -2,6 +2,10 @@
 
 ## FILM-PB-1 — causa raíz FBM y arreglo identificado (26-11-2026)
 
+### FILM-PB-1 — revisión y corrección del diagnóstico físico (26-11-2026)
+
+El verificador exige los bytes de la tabla, el sector y el OM correctos. El clasificador distingue captura incompleta, traducción de éxito y origen observado. La captura física queda pendiente de correlación por PID y tiempo. Próximo paso en sesión autorizada: verificar `fn`, registrar un clip normal y contrastar sus datos FBM con la reproducción antes de medir persistencia. [Resultado auditado](../reports/film-pb-1-sector31-resultado-20261126.md).
+
 ### FILM-PB-1 — arreglo del sector FBM `0x31` (26-11-2026, verificado en arnés)
 
 El sector que falta es el `0x31` (idx 10), de `userID 0x04/0x21` con **OM 6 (M2PS)** y **media 3 (MS1)**.

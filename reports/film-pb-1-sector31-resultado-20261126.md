@@ -17,16 +17,16 @@ dar error. Falta comprobar el `fn` de `0x9D23FC[13]` y capturar el log en el mom
 | 2 | Tras `PTRACE_ATTACH` el `PEEK` seguía fallando | Falta `wait4` para recoger el `SIGSTOP` antes de `PEEK/POKE` | attach estable en 161-166 hilos |
 | 3 | `lectura corta en 0x... (0 B)` al releer memoria | El `hd` dentro del `chroot` pedía `/android/dev/fpb1` en vez de `/dev/fpb1` | lecturas OK |
 | 4 | La subida del auxiliar (68 conexiones `echo -ne`) se atascaba al reproducir | `adb push` a `/data/local/tmp` + `cp` a `/tmp` | subida en 1 s |
-| 5 | 34 de 166 hilos sin trazar | `MAXT` 128 → 256 | todos los hilos cubiertos |
+| 5 | La lista de hilos se truncaba | `MAXT` 128 → 256 | La pasada con golpes registró 161 hilos al armar. Falta comprobar la cobertura durante la ventana |
 | 6 | El veredicto decía «SIN GOLPES» habiendo golpes | La última lectura del registro (vacía) sobrescribía la acumulada | veredicto correcto |
-| 7 | `ptcall` no imprime nada y **deja el proceso trazado** (`TracerPid` apuntando a un `ptcall` colgado); todo `ATTACH` posterior falla | Accesor nuevo `camrw` (attach + `wait4` + peek/poke/call + detach) | acceso estable |
+| 7 | `ptcall` no imprime nada y **deja el proceso trazado** (`TracerPid` apuntando a un `ptcall` colgado); todo `ATTACH` posterior falla | Accesor nuevo `camrw` (attach + `wait4` + peek/poke/call + detach) | Se obtuvieron lecturas. La revisión detectó paradas y errores de escritura sin validar |
 | 8 | El anillo no se podía leer con ptrace (`EFAULT`) | Vive en un mapeo `rw-s /dev/mem` (`0ac60000… 82df9000`): se lee por `dd if=/dev/mem` | lectura del anillo OK |
 | 9 | **El monitor no consumía** (`A` seguía en 0) | Dos límites del busybox: **no hay `printf`** y **`dd` no acepta `seek` > 2³¹** (el anillo está en `0x82df9000`): las escrituras no se ejecutaban. Nuevo `ringput`, que hace `mmap(/dev/mem)` y deposita la línea | `A=17 B=17` tras `FBM EWBDFD 4 3 0`; `A=31 B=31` tras `FBM InitB 6 3` |
-| 10 | Vía alternativa por ptrace (`camrw call`): `EntryWriteBaseDataFunction` devuelve `-22`, `InitBackupData(6,3)` devuelve `-25` y no tocan nada | Descartada; el firmware rechaza la llamada fuera de su contexto | se usa el anillo |
+| 10 | Vía alternativa por ptrace (`camrw call`): se imprimieron `-22` y `-25` | La primera llamada omitía un argumento y el accesor no validaba el retorno | Los valores son inconcluyentes |
 
-## 3. Traza: el `0x1A` no nace en el manejador
+## 3. Traza física: entrada observada, origen del `0x1A` abierto
 
-6 puntos UDF (`0xde00`) en `im.elf`, dos reproducciones del clip:
+La transcripción con golpes registra 6 puntos armados y 161 hilos en `im.elf`:
 
 | pto | VA | golpes |
 |---|---|---|
@@ -35,8 +35,11 @@ dar error. Falta comprobar el `fn` de `0x9D23FC[13]` y capturar el log en el mom
 | C1 `0x437C7E`, C2 `0x437CFC` | | 0 |
 | T `0x7111B0` | | 1, **con `r0=0`** (un éxito), desde `0x438192` |
 
-⇒ El manejador corre y **no** produce el `0x1A`; encaja con el motor AVI (`AviSeqPlay.cpp
-ER_BADARG`) por el IFO sin cargar. Informe completo: [traza](film-pb1-traza-camara-20261126.md).
+La transcripción termina sin marcador de cierre y las seis relecturas devuelven 0 B. Las otras
+dos transcripciones locales tienen cero puntos armados. Los golpes confirman la entrada al
+manejador y una traducción de éxito desde otro llamador. Los ceros de A/B/C1/C2 no permiten excluir
+esas rutas. El error de AVI y los fallos del IFO proceden del log histórico del 20-10.
+[Traza original](film-pb1-traza-camara-20261126.md).
 
 ## 4. Aplicación del sector (lo que sí se hizo)
 
@@ -57,22 +60,25 @@ Evidencia: `reports/evidence/film-pb1-sector31-camara-20261126/1-verifica-tras-a
 3. «Recuperar BD imág.»: **sin error** (igual que antes de crear el sector).
 
 Búfer de log del firmware (`/dev/mem` 0x83400000, 1 245 184 B): 2 559 tramos imprimibles y
-**ninguna** línea de `mp4Ifo` / `AVI` / `RcsBackup` ⇒ ese búfer ya no conserva el intento (el
-proceso MPR se reinició; hay que capturarlo justo después de reproducir, antes del reinicio).
+**ninguna** línea de `mp4Ifo` / `AVI` / `RcsBackup`. Quedó sin verificar la cobertura temporal del
+volcado y si se reinició el MPR.
 
 ## 6. Siguiente paso exacto
 
-1. **Comprobar el `fn`**: leer 0x18 B en `base+0x9D23FC+13*0x18` con `camrw peek`. La fila es
-   `{userID, mediaID, sector, OM, +0x10=fn, +0x14=val}` y el `fn` **debe** ser `0x2B5185` tras
-   `EWBDFD`. Si sigue 0, el `EWBDFD` no hizo efecto y hay que repetirlo (o investigar por qué el
-   handler no escribe: el `fn` es lo que permite que el clip nuevo se registre; sin él, la
-   escritura da `WritePackEnd=0x10800020` y 0 B, ya medido).
-2. Verificar `BkRead(0x04,3)`: debe pasar de `0x10100001` a `0` (`0x10100003` con el dummy).
-3. Reiniciar la cámara y releer idx 10: debe seguir (`FBM::Init` reabre el sector; `CheckExistSector==0x45`).
-4. Capturar el log **inmediatamente** tras reproducir (antes de que el MPR se reinicie) y buscar
-   `mp4Ifo faild` / `Err RcsBackupTblData` / `AviSeqPlay`.
-5. Solo si el log sigue diciendo que el IFO no se carga: probar el paquete CFW con el parche C
-   (3.95/3.96/3.97 ya construidos y auditados), que hace lo mismo en cada arranque sin consola.
+1. En una sesión física autorizada, adquirir una línea base con el firmware actual. Registrar PID,
+   mapa, modo de grabación y estado del medio. Verificar por lectura la fila de sector y la fila
+   `(4,3)`; el campo `fn` está en `base+0x9D2544`, y el dummy de consola es un puntero Thumb
+   reubicado (`base+0x2B5185` para ese ELF). Un cero indica que la fila carece de escritor en
+   ese instante. Registrar el arranque antes de atribuirlo a un comando anterior.
+2. Grabar un clip normal y comprobar el archivo, el resultado de FBM y la reproducción del mismo
+   clip. En el arnés, `0x10100001` indica sector ausente y `0x10100003` se observó con un sector
+   vacío. Para comprobar el registro del clip se requiere una lectura satisfactoria con sus datos.
+   Guardar el log antes y después, con marcas de tiempo y PID, y controlar que la ruta de adquisición
+   siga disponible durante la reproducción.
+3. Evaluar la persistencia en un arranque aparte. Verificar sector y datos del clip otra vez.
+   El `fn` es volátil. El paquete 3.97 sale antes de registrar su función si el sector ya existe;
+   3.95 contiene otra variante y 3.96 restaura la 3.94. Ninguno acredita una reparación física.
+   [Parche C empaquetado](fbm-sector31-c-pkg397-20261126.md).
 
 ## 7. Rollback y riesgos
 

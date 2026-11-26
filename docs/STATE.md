@@ -57,8 +57,8 @@
 > 20-10 (`0x30`, `0x62`, `0xA0`, `0xB2`); las de foto (`0x90/0x91/0x92`) y las de vídeo (idx 24…29) están
 > a 0. `ReadFirstPackData` (`0x2B3948`) devuelve `0x10100001` en `0x2B3A28` cuando `[entrada+4]==0`; con
 > eso `RcsBackupTblData` falla, `mp4Ifo` imprime `0xB0800001` por su fallback (`0x6F0D4C`), el IFO no queda
-> cargado y la guarda A (`0x447810`, « Pb Disable!! ref) dsm get») deja **`0x1A`** en `0x437C0A` ⇒ «No se
-> puede visualizar.». `FBM::Init` (`0x2B4820`) solo registra sectores que **ya existen**
+> cargado. La guarda A puede producir `0x1A` en `0x437C0A`; falta demostrar que produjo el de esa sesión.
+> `FBM::Init` (`0x2B4820`) solo registra sectores que **ya existen**
 > (`CheckExistSector == 0x45`) y **no crea ninguno**; el anillo de `nflasha4` nunca tuvo más de cinco
 > `fileType` en ninguno de los tres volcados. **Correcciones a lo publicado el 26-11:**
 > `FlashLib::Init` **sí** tiene llamante (`0x7126E2`, antes de `BackupMgr::Init`) y el log de arranque
@@ -84,37 +84,19 @@
 > [informe parche C](../reports/fbm-sector31-c-persistente-20261126.md).
 
 
-## Reproducción de vídeo — traza en la cámara real: el manejador no produce el 0x1A (26-11-2026)
+## Reproducción de vídeo — revisión de la traza física (26-11-2026)
 
-> **Medido en la cámara (192.168.1.30, telnet + adb), sin flashear.** Con 6 puntos UDF en `im.elf`
-> (161-166 hilos, PID 143 y 145, dos reproducciones del clip que da «No se puede visualizar»):
-> **el manejador `FUN_00437BC0` se ejecuta** (punto E `0x437BC0`, llamado por `bl` en `0x42A37A`,
-> el despachador del hilo FeaCore) y **no dispara ninguna de sus ramas productoras del `0x1A`**:
-> A `0x437C0A`, B `0x437C3C`, C1 `0x437C7E` y C2 `0x437CFC` quedaron a 0. El único otro golpe fue
-> la traducción `0x7111B0` con **`r0=0`** (un éxito) desde `0x438192`, 124 ms antes. Conclusión: el
-> `0x1A` que recibe `ObjPlayerCore::PlayMovieCmp` **no nace en el manejador**, sino en el motor AVI
-> (`[AVI][PLAY] AviSeqPlay.cpp Error=[ER_BADARG]`) por el IFO sin cargar; las guardas A/B del 26-11
-> no son la vía. **Confirmado en la cámara el diagnóstico FBM**, entrada por entrada: tabla
-> `base+0xA3699C` con **4/30** entradas con handle (idx 9 `0x30` h4, 18 `0x62` h1, 23 `0xA0` h3,
-> 25 `0xB2` h2) e **idx 10 (`0x31`, OM 6, mediaID 3) a `handle=0 valid=0 OM=0`**; anillo del monitor
-> `X=0x0ac60000 A=0 B=0` (vacío, 1023 B libres). **Arreglo: sin aplicar.** El depósito de
-> `FBM EWBDFD 4 3 0` no fue consumido (`A` siguió en 0) y el script aborta sin escribir; el volcado
-> de rollback de `nflasha4` sí está hecho y verificado (10 485 760 B,
-> `5ec6c2a779781e6531f09f64eb472345`, en `/tmp` y en `/android/data`). El shell del Tweak se cuelga
-> al reproducir y vuelve al salir del modo reproducción. Accesor nuevo `tools/camera-ptrace/camrw`
-> porque `ptcall` se queda en `wait_stop` y deja `TracerPid` colgado; los mapeos de `/dev/mem` no se
-> leen con ptrace (el anillo se toca por `dd` sobre la física `0x82df9000`).
-> [Informe](film-pb1-traza-camara-20261126.md).
-
-> **Aplicado en la cámara el 26-11-2026: el sector `0x31` YA EXISTE** (`idx 10 = 0x31 handle=6
-> valido=1 OM=6`, 5/30 con handle, `A=31 B=31` en el anillo) tras `FBM EWBDFD 4 3 0` y
-> `FBM InitB 6 3`. El transporte que faltaba es `ringput` (`mmap` de `/dev/mem`): ni ptrace
-> (`EFAULT` en los mapeos de `/dev/mem`) ni `dd` (este busybox **no trae `printf`** y no acepta
-> `seek` > 2³¹) escribían, por eso el monitor no consumía y `A` seguía en 0. **La reproducción
-> sigue fallando**: ni un clip nuevo de 5 s ni los antiguos se reproducen, y «Recuperar BD imág.»
-> sigue sin error. Pendiente comprobar el `fn` de `0x9D23FC[13]` (debe ser `0x2B5185`; sin él el
-> clip nuevo no se registra), `BkRead(0x04,3)` y la persistencia tras reiniciar.
-> [Informe](film-pb-1-sector31-resultado-20261126.md).
+> La pasada con 6 puntos armados y 161 hilos observó la entrada al manejador `0x437BC0` y una
+> traducción con `r0=0`, 124 ms antes y desde otro llamador. La captura carece de cierre y las
+> seis relecturas devolvieron 0 B. Dos pasadas adicionales quedaron con cero puntos armados.
+> El origen del `0x1A` de esa sesión sigue abierto. El error de AVI y el fallo del IFO proceden
+> del log histórico del 20-10.
+>
+> Se obtuvo en RAM `idx 10 = 0x31 handle=6 valido=1 OM=6` (5/30 con handle) y `A=B=31`.
+> Falló la reproducción de un clip nuevo y de uno antiguo. Falta comprobar el `fn` reubicado,
+> el registro del clip nuevo y su persistencia. El paquete 3.97 conserva la guarda que omite
+> el alta de `fn` si el sector ya existe.
+> [Resultado auditado](../reports/film-pb-1-sector31-resultado-20261126.md).
 
 ## Reproducción de vídeo — FILM-PB-1 (26-11-2026)
 

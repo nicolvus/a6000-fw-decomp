@@ -83,8 +83,15 @@ def _adb() -> str:
     return ""
 
 
+def bytes_leidos(mem: dict[int, int], addr: int, n: int) -> bytes:
+    try:
+        return bytes(mem[i] for i in range(addr, addr + n))
+    except KeyError as e:
+        raise Fallo(f"lectura incompleta en {addr:#x} ({n} B): falta {e.args[0]:#x}") from None
+
+
 def u32(mem: dict[int, int], addr: int) -> int:
-    return sum(mem.get(addr + i, 0) << (8 * i) for i in range(4))
+    return int.from_bytes(bytes_leidos(mem, addr, 4), "little")
 
 
 def lee_peek(texto: str) -> dict[int, int]:
@@ -349,6 +356,7 @@ class Camara:
 # ---------------------------------------------------------------------------------------------
 def estado(cam: Camara, pid: int, base: int, etiqueta: str) -> dict:
     mem = cam.tabla(pid, base)
+    bytes_leidos(mem, base + OFF_TABLA, N_ENTRADAS * TAM_ENTRADA)
     idx10 = entrada(mem, base + OFF_TABLA, IDX_SECTOR31)
     con_handle = [entrada(mem, base + OFF_TABLA, i) for i in range(N_ENTRADAS)
                   if u32(mem, base + OFF_TABLA + i * TAM_ENTRADA + 4) != 0]
@@ -356,14 +364,15 @@ def estado(cam: Camara, pid: int, base: int, etiqueta: str) -> dict:
     print(f"  {etiqueta}: con handle != 0: {len(con_handle)}/{N_ENTRADAS}"
           + (" -> " + ", ".join(f"idx {e['idx']}(0x{e['sector']:02x} h{e['handle']})" for e in con_handle)
              if con_handle else " (ninguna)"))
-    print(f"  {etiqueta}: DFB/FBS (diagnóstico) "
-          f"[{OFF_FBS_INIT:#x}]={cam.peek(pid, base + OFF_FBS_INIT, 1).get(base + OFF_FBS_INIT, 0):#04x} "
-          f"[{OFF_REPARACION:#x}]={cam.peek(pid, base + OFF_REPARACION, 1).get(base + OFF_REPARACION, 0):#04x}")
+    fbs = bytes_leidos(cam.peek(pid, base + OFF_FBS_INIT, 1), base + OFF_FBS_INIT, 1)[0]
+    reparacion = bytes_leidos(cam.peek(pid, base + OFF_REPARACION, 1), base + OFF_REPARACION, 1)[0]
+    print(f"  {etiqueta}: DFB/FBS (diagnóstico) [{OFF_FBS_INIT:#x}]={fbs:#04x} "
+          f"[{OFF_REPARACION:#x}]={reparacion:#04x}")
     return {"idx10": idx10, "con_handle": con_handle}
 
 
 def existe(e: dict) -> bool:
-    return e["handle"] != 0 and e["valido"] == 1
+    return e["sector"] == SECTOR and e["om"] == 6 and e["handle"] != 0 and e["valido"] == 1
 
 
 def resumen(e: dict) -> str:
@@ -376,18 +385,19 @@ def veredicto(antes: dict, despues: dict | None) -> bool:
     if e["sector"] not in (SECTOR, 0):
         print(f"  AVISO: el idx {IDX_SECTOR31} no es el sector 0x{SECTOR:02x} (dice 0x{e['sector']:02x})")
     print()
-    print(f"  ANTES  : {resumen(antes['idx10'])}   ({len(antes['con_handle'])}/30 con handle)")
+    etiqueta = "AHORA  " if despues is None else "ANTES  "
+    print(f"  {etiqueta}: {resumen(antes['idx10'])}   ({len(antes['con_handle'])}/30 con handle)")
     if despues is not None:
         print(f"  DESPUÉS: {resumen(despues['idx10'])}   ({len(despues['con_handle'])}/30 con handle)")
     print()
     ok = existe(e)
     if despues is None:
         print(f"  VEREDICTO: sector 0x{SECTOR:02x} " + ("EXISTE" if ok
-                                                       else "NO EXISTE -> falta --aplica --escribe"))
+                                                       else "SIN REGISTRO VÁLIDO"))
     else:
         print(f"  VEREDICTO: {'OK' if ok else 'NO'} — sector 0x{SECTOR:02x} en el idx {IDX_SECTOR31} "
               + (f"con handle={e['handle']} y valido={e['valido']}" if ok
-                 else "sin handle: el arreglo no ha cuajado (mira el log de FBM del MPR)"))
+                 else "fila sin registro válido (mira el log de FBM del MPR)"))
     print()
     return ok
 
@@ -568,7 +578,7 @@ def main() -> int:
             return pasa_aplica(cam, a)
         return pasa_verifica(cam, a)
     except Fallo as e:
-        print(f"\nABORTADO (no se escribe nada): {e}")
+        print(f"\nABORTADO: {e}")
         return 1
 
 

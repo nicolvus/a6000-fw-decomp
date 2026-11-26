@@ -36,7 +36,8 @@ Modos:
                   los hashes; implica --dry-run).
   --autotest    prueba las reglas de interpretación con líneas sintéticas del auxiliar.
   --callsites   añade 0x437C7E y 0x437CFC (los dos `bl` a 0x7111B0) para separar precondición de PbStart.
-Salidas: 0 correcto · 2 error local · 3 cámara no accesible · 4 mapas/hash no cuadran · 5 sin golpes.
+Salidas: 0 origen observado · 2 error local · 3 cámara no accesible · 4 mapas/hash no cuadran
+         5 captura completa sin golpes · 6 captura incompleta o sin origen confirmado.
 
 Riesgo conocido y NO VERIFICADO (docs/capture/camera-reset-logs.md:14): trazar con ptrace hilos de
 `im.elf` puede coincidir con una petición de reset de la cámara; `sctrace` se compiló pero nunca se
@@ -72,6 +73,7 @@ HELPER_REMOTO = "/tmp/filmpb1bp"      # /tmp del sistema Linux de la cámara
 LOG_REMOTO = "/tmp/filmpb1.log"
 
 COD_OK, COD_LOCAL, COD_SIN_CAMARA, COD_HASH, COD_SIN_GOLPE = 0, 2, 3, 4, 5
+COD_INCONCLUSA = 6
 
 
 @dataclass(frozen=True)
@@ -92,7 +94,7 @@ PUNTOS_BASE = (
 )
 PUNTOS_LLAMADAS = (
     Punto("E", 0x437BC0, "sub sp, #8",
-          "entrada del manejador de PlayMovie: si no dispara, el 0x1A no sale de aquí"),
+          "entrada del manejador de PlayMovie"),
     Punto("C1", 0x437C7E, "bl #0x7111b0",
           "llamada a la traducción desde la PRECONDICIÓN (FUN_00457DA8 != 0), sin llegar a PbStart"),
     Punto("C2", 0x437CFC, "bl #0x7111b0",
@@ -715,22 +717,30 @@ def parsea_eventos(salida: str, puntos) -> tuple[list[dict], list[str]]:
         m = re.match(r"H\s+(.*)$", t)
         if m:
             kv = dict(re.findall(r"(\w+)=(0x[0-9a-f]+)", m.group(1)))
-            i = int(kv.get("i", "0x0"), 16)
-            if i < len(puntos):
-                evs.append({"i": i, "punto": puntos[i], "ms": int(kv.get("ms", "0x0"), 16),
-                            "tid": kv.get("tid"), "pc": kv.get("pc"),
-                            "lr": kv.get("lr"), "r0": kv.get("r0"), "r1": kv.get("r1"),
-                            "r2": kv.get("r2"), "r3": kv.get("r3")})
-        elif t.startswith(("X ", "R ", "E ")):
+            i = int(kv.get("i", "0xff"), 16)
+            if i >= len(puntos) or not {"ms", "tid", "pc", "lr", "r0", "r1", "left"} <= kv.keys():
+                notas.append(f"X evento incompleto: {t}")
+                continue
+            evs.append({**kv, "i": i, "punto": puntos[i], "ms": int(kv["ms"], 16)})
+        elif t.startswith(("A ", "X ", "R ", "E ")):
             notas.append(t)
     return evs, notas
 
 
-def interpreta(evs: list[dict]) -> tuple[str, str, int]:
+def interpreta(
+    evs: list[dict], notas: list[str], n_puntos: int, base: int, restaurado: bool
+) -> tuple[str, str, int]:
+    armado = any(re.fullmatch(rf"A ms=0x0 armados=0x{n_puntos:x} hilos=0x[1-9a-f][0-9a-f]* pid=0x[0-9a-f]+",
+                              nota) for nota in notas)
+    restantes = n_puntos - len(evs)
+    fin = any(re.fullmatch(rf"E ms=0x[0-9a-f]+ left=0x{restantes:x}", nota) for nota in notas)
+    errores = any(n.startswith("X ") or n.startswith("R ") and " FALLA " in n for n in notas)
+    if not armado or not fin or not restaurado or errores:
+        return ("CAPTURA INCOMPLETA",
+                "Requiere armado completo, cierre coherente y restauración verificada.", COD_INCONCLUSA)
     if not evs:
         return ("SIN GOLPES",
-                ("ningún punto se ejecutó: o no se reprodujo el vídeo durante la ventana armada, o el "
-                "manejador 0x437BC0 no llegó a esas ramas. Se puede repetir con --secs mayor."),
+                "No se registraron golpes durante la ventana de captura.",
                 COD_SIN_GOLPE)
     claves = [e["punto"].clave for e in evs]
     orden = " → ".join(claves)
@@ -744,27 +754,17 @@ def interpreta(evs: list[dict]) -> tuple[str, str, int]:
                 (f"orden de impacto: {orden}. El 0x1A es el de «Detect UnSupported Content»: el contenido "
                 "no está soportado para la entidad (catálogo/entrada de la tarjeta). Contrastar con "
                 "«Recuperar BD imág.» antes de tocar el firmware."), COD_OK)
-    if "C2" in claves:
-        return ("MOTOR · fallo de MoviePlayerIf::PbStart (bl 0x437CFC)",
-                (f"orden de impacto: {orden}. Se llegó a PbStart y devolvió error: el 0x1A es la "
-                "traducción de ese error interno. Mirar el motor y el clip."), COD_OK)
-    if "C1" in claves:
-        return ("PRECONDICIÓN del manejador (bl 0x437C7E) sin llegar a PbStart",
-                (f"orden de impacto: {orden}. El 0x1A sale de FUN_00457DA8 != 0, antes del motor."), COD_OK)
-    sitio = ""
-    for e in evs:
-        if e["punto"].clave == "T" and e.get("lr"):
-            lr = int(e["lr"], 16) & ~1
-            for va, nombre in LLAMADAS_CONOCIDAS.items():
-                if lr - 4 == va:
-                    sitio = f"; lr={e['lr']} ⇒ llamada desde 0x{va:08x} ({nombre})"
+    t = next((e for e in evs if e["punto"].clave == "T"), None)
+    if t is not None:
+        llamada = (int(t["lr"], 16) & ~1) - base - 4
+        if int(t["r0"], 16) == 0x1C00001A and llamada in LLAMADAS_CONOCIDAS:
+            origen = "MOTOR" if llamada == 0x437CFC else "PRECONDICIÓN"
+            return (origen, f"{LLAMADAS_CONOCIDAS[llamada]} entró al traductor con 0x1C00001A.", COD_OK)
     if "E" in claves:
-        return ("MANEJADOR EJECUTADO · entrada 0x437BC0 (y ninguna guarda: el 0x1A sale de otra rama)" + sitio,
-                (f"orden de impacto: {orden}. El manejador sí corre, pero ni la guarda A, ni la B, ni las "
-                 "llamadas a la traducción dispararon."), COD_OK)
-    return ("MOTOR · MoviePlayerIf::PbStart (traducción de error, 0x7111B0)" + sitio,
-            (f"orden de impacto: {orden}. El 0x1A sale de la traducción de un error interno de "
-             "PbStart (seis sitios de 0x7111B0 devuelven 0x1A), sin pasar por las guardas."), COD_OK)
+        return ("MANEJADOR EJECUTADO", f"Orden de impacto: {orden}. Origen del 0x1A pendiente.", COD_INCONCLUSA)
+    if t is not None and int(t["r0"], 16) == 0:
+        return ("TRADUCCIÓN DE UN ÉXITO", "El traductor recibió r0=0.", COD_INCONCLUSA)
+    return ("ORIGEN SIN CONFIRMAR", f"Orden de impacto: {orden}.", COD_INCONCLUSA)
 
 
 # ---------------------------------------------------------------- modos
@@ -792,6 +792,7 @@ def ejecuta(args) -> int:
 
     say("")
     paso("cámara")
+    cam: Camara
     if args.simular:
         mpr_p, obj_p = rutas_libs()
         bm, sm = segmentos_ptload(mpr_p)
@@ -827,16 +828,17 @@ def ejecuta(args) -> int:
             "punto idénticos a los .so locales; no se ha trazado ni escrito código.")
         return COD_OK
 
-    if args.simular_hit:
+    if isinstance(cam, CamaraSimulada) and args.simular_hit:
         claves = [p.clave for p in activos]
         i = claves.index(args.simular_hit) if args.simular_hit in claves else -1
-        lr = {"A": 0x437D0E, "B": 0x437C40, "T": 0x437D00}.get(args.simular_hit, 0x437D0E)
+        lr = base_mpr + {"A": 0x437D0E, "B": 0x437C40, "T": 0x437D00}.get(args.simular_hit, 0x437D0E)
+        restantes = len(activos) - int(i >= 0)
         cam.log_forzado = f"A ms=0x0 armados=0x{len(activos):x} hilos=0x{len(cam.tids):x} pid=0x8f\n"
         if i >= 0:
             cam.log_forzado += (f"H ms=0x21 i=0x{i:x} tid=0x8f pc=0x{dir_mpr[activos[i].clave]:x} "
                                 f"r0=0x1c00001a r1=0x0 r2=0x0 r3=0x1c000000 lr=0x{lr:x} "
-                                f"left=0x{max(len(activos) - i - 1, 0):x}\n")
-        cam.log_forzado += "E ms=0x22 left=0x0\n"
+                                f"left=0x{restantes:x}\n")
+        cam.log_forzado += f"E ms=0x22 left=0x{restantes:x}\n"
         say("   ENSAYO: el golpe que se simula es el del punto " + (args.simular_hit or "ninguno"))
 
     tids = hilos(cam, pid)
@@ -869,7 +871,7 @@ def ejecuta(args) -> int:
         for ln in lineas[vistos:]:
             say("   > " + ln)
             acumuladas.append(ln)
-        vistos = len(lineas)
+        vistos = max(vistos, len(lineas))
         salida = "\n".join(acumuladas)   # acumula: una lectura vacía al final no borra los golpes
         if any(ln.startswith("E ") for ln in lineas):
             break
@@ -878,7 +880,7 @@ def ejecuta(args) -> int:
     cam.escribe(f"rm -f {HELPER_REMOTO}")   # el registro se conserva para releerlo
 
     evs, notas = parsea_eventos(salida, activos)
-    veredicto, detalle, codigo = interpreta(evs)
+    veredicto, detalle, codigo = interpreta(evs, notas, len(activos), base_mpr, sano)
     say("")
     say("resultado")
     say(f"   productores que dispararon: {[ev['punto'].clave for ev in evs] or 'ninguno'}")
@@ -888,7 +890,7 @@ def ejecuta(args) -> int:
                 f"pc={ev['pc']} lr={ev['lr']} r0={ev['r0']} r1={ev['r1']}")
     for nota in notas:
         say(f"   nota {nota}")
-    say(f"   código en memoria: {'restaurado' if sano else 'NO restaurado (revisar X/R arriba)'}")
+    say(f"   código en memoria: {'verificado' if sano else 'integridad sin verificar'}")
     say("")
     say(f"VEREDICTO: {veredicto}")
     say(f"   {detalle}")
@@ -896,7 +898,7 @@ def ejecuta(args) -> int:
 
 
 def autotest() -> int:
-    """Comprueba sin cámara las tres reglas de interpretación con líneas del binario auxiliar."""
+    """Comprueba los resultados y la calidad de la captura con líneas del auxiliar."""
     say("autotest de la interpretación (líneas sintéticas del auxiliar)")
     casos = [
         ("A", "H ms=0x1f i=0x0 tid=0x8f pc=0x70f5c0a r0=0x1 r1=0x2 r2=0x3 r3=0x4 lr=0x437d0e left=0x2",
@@ -905,22 +907,34 @@ def autotest() -> int:
          "GUARDA B"),
         ("T", ("H ms=0x21 i=0x2 tid=0x8f pc=0x70f611b0 r0=0x1c00001a r1=0x0 r2=0x0 r3=0x1c000000 "
                "lr=0x437d00 left=0x0"), "MOTOR"),
+        ("T", ("H ms=0x21 i=0x2 tid=0x8f pc=0x728d1b0 r0=0x0 r1=0x0 r2=0x0 r3=0x0 "
+               "lr=0x6fb4197 left=0x2"), "TRADUCCIÓN DE UN ÉXITO"),
     ]
     activos = tuple(PUNTOS_BASE)
     mal = 0
+    cabecera = "A ms=0x0 armados=0x3 hilos=0x1 pid=0x8f"
     for clave, linea, esperado in casos:
-        evs, _notas = parsea_eventos(f"A ms=0x0 armados=0x1 hilos=0x1 pid=0x8f\n{linea}\nE ms=0x30 left=0x0", activos)
-        veredicto, detalle, codigo = interpreta(evs)
-        ok = esperado in veredicto and codigo == COD_OK and evs and evs[0]["punto"].clave == clave
+        evs, notas = parsea_eventos(f"{cabecera}\n{linea}\nE ms=0x30 left=0x2", activos)
+        veredicto, detalle, codigo = interpreta(evs, notas, len(activos), 0, True)
+        esperado_codigo = COD_INCONCLUSA if esperado == "TRADUCCIÓN DE UN ÉXITO" else COD_OK
+        ok = esperado in veredicto and codigo == esperado_codigo and evs and evs[0]["punto"].clave == clave
         say(f"   {clave}: {'OK' if ok else 'MAL'}  {veredicto}")
         if clave == "T":
             say(f"       {detalle}")
         mal += 0 if ok else 1
-    evs, _ = parsea_eventos("A ms=0x0 armados=0x3 hilos=0x1 pid=0x8f\nE ms=0x30 left=0x3", activos)
-    veredicto, _d, codigo = interpreta(evs)
-    ok = codigo == COD_SIN_GOLPE and "SIN GOLPES" in veredicto
-    say(f"   sin golpes: {'OK' if ok else 'MAL'}  {veredicto}")
-    mal += 0 if ok else 1
+    fin = "E ms=0x30 left=0x3"
+    for etiqueta, log, limpio, esperado_codigo in (
+        ("sin golpes", f"{cabecera}\n{fin}", True, COD_SIN_GOLPE),
+        ("sin armar", f"{cabecera.replace('armados=0x3', 'armados=0x0')}\nE ms=0xe left=0x0", True, COD_INCONCLUSA),
+        ("sin cierre", f"{cabecera}\n{casos[-1][1]}", True, COD_INCONCLUSA),
+        ("restauración no verificada", f"{cabecera}\n{fin}", False, COD_INCONCLUSA),
+        ("evento truncado", f"{cabecera}\nH ms=0x21\n{fin}", True, COD_INCONCLUSA),
+    ):
+        evs, notas = parsea_eventos(log, activos)
+        veredicto, _, codigo = interpreta(evs, notas, len(activos), 0, limpio)
+        ok = codigo == esperado_codigo
+        say(f"   {etiqueta}: {'OK' if ok else 'MAL'}  {veredicto}")
+        mal += 0 if ok else 1
     say(f"autotest: {'OK' if not mal else f'{mal} fallo(s)'}")
     return COD_OK if not mal else COD_LOCAL
 
