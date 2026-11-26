@@ -97,6 +97,7 @@ def construye_shimenv(tarjeta: bool = True, extra: str | None = None, quita: str
 SHIMENV = construye_shimenv()
 # {clave KEY_*, índice físico[, paso del dial]}: tabla del driver de InfraInput volcada en el arranque (§5.18z¹²; las 7 primeras, también §5.18z′).
 # Los diales no tienen suelta: cada pulsación es un paso con signo (callback_dial_signed_speed); dial = 0x15070030, rueda = 0x15070040.
+# reproduccion: 0x1f7 = KEY_TACT_PLAY (libObj VA 0x10a6054) → evento 0x150100f0 (viewUnified2 .data VA 0x4aa844) → acción 4 (tabla .rodata 0x3a03d4, búsqueda 0x1906a8); G22-REPRO-2.
 TECLAS = {"arriba": (0x3, 0x1), "abajo": (0x30, 0x5), "izquierda": (0x15, 0x3), "derecha": (0x1AF, 0x14), "menu": (0x1AB, 0x11),
           "intro": (0xE000000, 0x1BC), "disparador": (0xA7, 0xE), "semipulsacion": (0x1F1, 0x1B), "movie": (0x1F0, 0x1A),
           "fn": (0x70A1, 0x95), "disp": (0x1F9, 0x21), "c1": (0x66, 0xD), "ael": (0x7090, 0x84), "reproduccion": (0x1F7, 0x1F),
