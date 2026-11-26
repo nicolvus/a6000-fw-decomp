@@ -83,11 +83,9 @@ def main() -> int:
             continue
         version = datos[cuerpo]
         off_ts = cuerpo + (4 + 16 if version == 1 else 4 + 8)
-        off_dur = off_ts + 4
         ts_viejo = struct.unpack_from(">I", datos, off_ts)[0]
-        dur_vieja = struct.unpack_from(">I" if version == 0 else ">Q", datos, off_dur)[0]
-        del off_dur
-        ts_nuevo = int(round(delta * args.fps))
+        dur_vieja = struct.unpack_from(">I" if version == 0 else ">Q", datos, off_ts + 4)[0]
+        ts_nuevo = round(delta * args.fps)
         if not 0 < ts_nuevo <= 0xFFFFFFFF:
             print(f"error: timescale fuera de rango ({ts_nuevo})", file=sys.stderr)
             return 2
