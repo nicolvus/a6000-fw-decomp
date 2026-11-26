@@ -1,0 +1,26 @@
+# Medida sobre RAM real de la cámara en marcha (arranque normal/caliente, fw 3.21)
+# Volcado: analysis/camera-dumps/ram-servicio-20261020/ram_0x80000000.bin (1 GiB desde 0x80000000)
+# Fichero comparado: nflasha3:/sabin/sa_dfdet.bin (155780 B, sha256 de la imagen de fábrica)
+
+## 1. Ventana 0x96600000-0x96800000 (wbimem=0x200000@0x96600000): bloques no nulos
+  96600000 - 96627000  (159744 B)
+  966e8000 - 966eb000  (12288 B)
+  967e8000 - 967e9000  (4096 B)
+
+## 2. Coincidencias de sa_dfdet.bin dentro de la RAM (buscando tramos de 64 B del fichero)
+  sa_dfdet[0x00000:+64] -> 0x96600000
+  sa_dfdet[0x00400:+64] -> 0x842e5148, 0x8c45c100, 0x96600100, 0x96600280, 0x96600400
+  sa_dfdet[0x02000:+64] -> 0x96602000
+  sa_dfdet[0x08000:+64] -> 0x96601b80, 0x96608000
+  sa_dfdet[0x20000:+64] -> 0x96620000
+
+## 3. Región de carga declarada por RAMCFG: 0x96800000 (ventana 0x30000)
+  primeros 256 B en RAM: 00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+  todos ceros: True
+
+## 4. Conclusiones de la medida
+  - En un arranque NORMAL (caliente) el contenido de sa_dfdet.bin está íntegro en 0x96600000,
+    no en la dirección de RAMCFG (0x96800000), que está a cero.
+  - 0x96600000-0x96800000 es una de las 12 regiones wbimem= que la instantánea guarda y restaura.
+  - El arranque en frío escribe sa_dfdet.bin en 0x96800000 (log de Loader3, modo 0x1000000) y
+    no deja nada en 0x96600000: esa copia sólo existe si se restaura el WBI.

@@ -1,5 +1,21 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## FILM-PB-1 — la rotura es del arranque en frío, no del CFW (28-11-2026)
+
+Diez investigaciones estáticas (init del initrd, módulos, `av-cam`/`idt_cam`, ruta del decodificador
+en `libmpr`, WBI, diff fino A/B, historial de builds, alternativa «con WBI», memoria/DMA y un revisor
+adversario) cierran el encuadre: **A y B no difieren en ningún parche** (A es el tar de fábrica 3.21 sin
+`0700_part_image/dev/nflasha5`; los otros 71 miembros, idénticos). El fallo se localiza en el core AV —
+mensaje `0x2003` «movie decoder start» con estado ≠ 0 → `0x1600F101` → `ER_MOVIE_DECODE_FAILED` — y lo
+que cambia en frío es el estado, no el código: Loader3 carga 6 ficheros RAMCFG en vez de 2, no se
+restaura la instantánea (estado de MPR + 12 regiones `wbimem=`) e `im.elf` recarga `av-cam.bin`; en
+cambio `av-cam.bin` **no** está en el WBI (0/2 200 páginas). Corrección: el `00002003h` del anillo es el
+id del mensaje, no un código. Medición nueva: `sa_dfdet.bin` vive íntegro en `0x96600000` (región
+`wbimem`) y `0x96800000` —la dirección de RAMCFG— está a cero. Queda una hipótesis triple y un
+experimento de 4 bytes que la separa.
+[Informe](../reports/film-pb-1-busqueda-decodificador-frio-20261128.md) ·
+[evidencia](../reports/evidence/film-pb-1-busqueda-decodificador-frio-20261128/).
+
 ## FILM-PB-1 — base del control AV identificada (26-11-2026)
 
 Se verificó en la A6000 el MD5 de `nflasha15` comprimida y de `/system` lógico.

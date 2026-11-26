@@ -1,0 +1,140 @@
+# Cadena del arranque del decodificador en libmpr.so del 3.21 (VA = offset de fichero, primer LOAD a base 0)
+# Desensamblado: Capstone 5.0.7, Thumb. Literales PC-relativos resueltos a mano.
+
+## 1. Cadenas (rodata)
+ 7ed455 Dec start complete error!!
+ 7f2f2b ER_MOVIE_DECODE_FAILED
+ 7f325a E_AVCON_MOVIE_CODEC_STOP
+ 8e93e1 AVI Warm boot Init
+ 9003f6  SnapShot mode
+ 905579 bootType = [%x]
+
+## 2. Manejador de fin de arranque del decodificador (mensaje con estado en +8)
+#  0x2c1b14  cmp r2,#0 / bne 0x2c1b74     -> si [msg+8]!=0 va a la rama de error
+#  0x2c1b18  str r2,[r1,#8]               -> si 0, limpia el estado
+#  0x2c1b74  add.w r0,r1,#8 ; bl 0x2c0e88 -> traduce el codigo original
+#  0x2c1b88  ldr r0,[pc,#0x1c4] = 0x7ed455 -> 'Dec start complete error!!' (literal en 0x2c1b4c)
+#  (la misma estructura se repite para los mensajes 0x1005/0x1006/0x1008/0x1011/0x1012/0x1016/0x1017)
+002c1b10  b.w      #0x2c0c70
+002c1b14  cmp      r2, #0
+002c1b16  bne      #0x2c1b74
+002c1b18  str      r2, [r1, #8]
+002c1b1a  movs     r3, #1
+002c1b1c  movs     r0, #4
+002c1b1e  movw     r1, #0x1016
+002c1b22  bl       #0x2d7a00
+002c1b26  bl       #0x2c0bf0
+002c1b2a  mov      r1, r0
+002c1b2c  movs     r0, #4
+002c1b2e  bl       #0x2d0c40
+002c1b32  bl       #0x2c0bf0
+002c1b36  mov      r1, r0
+002c1b38  ldr      r0, [pc, #0x34]
+002c1b3a  bl       #0x2b8bc6
+002c1b3e  bl       #0x2c0bf0
+002c1b42  pop.w    {r4, r5, r6, r7, r8, lr}
+002c1b46  b.w      #0x2c0c70
+002c1b4a  nop      
+002c1b4c  bmi      #0x2c1bfa
+002c1b4e  lsls     r6, r7, #1
+002c1b50  bmi      #0x2c1c34
+002c1b52  lsls     r6, r7, #1
+002c1b54  bmi      #0x2c1a76
+002c1b56  lsls     r6, r7, #1
+002c1b58  bmi      #0x2c1ac8
+002c1b5a  lsls     r6, r7, #1
+002c1b5c  bmi      #0x2c1af2
+002c1b5e  lsls     r6, r7, #1
+
+## 3. Traductor de codigos del AV-Codec (0x2c0e88)
+#  Búsqueda binaria sobre constantes del pool 0x2c1040..0x2c109c; remite a los codigos ER_* del pool 0x2c10c0..
+002c0e88  ldr      r2, [r0]
+002c0e8a  push     {r3, r4, r7, lr}
+002c0e8c  mov      r4, r0
+002c0e8e  add      r7, sp, #0
+002c0e90  cbz      r2, #0x2c0e9c
+002c0e92  movs     r0, #4
+002c0e94  movs     r1, #0
+002c0e96  movs     r3, #1
+002c0e98  bl       #0x2d7a00
+002c0e9c  ldr      r3, [r4]
+002c0e9e  ldr      r2, [pc, #0x1a0]
+002c0ea0  cmp      r3, r2
+002c0ea2  bhi      #0x2c0f28
+002c0ea4  subs     r2, #1
+002c0ea6  cmp      r3, r2
+002c0ea8  bhs.w    #0x2c0fc8
+002c0eac  ldr      r2, [pc, #0x194]
+002c0eae  cmp      r3, r2
+002c0eb0  beq.w    #0x2c0fc8
+002c0eb4  bhi      #0x2c0ee4
+002c0eb6  ldr      r2, [pc, #0x190]
+002c0eb8  cmp      r3, r2
+002c0eba  beq      #0x2c0fb4
+002c0ebc  bhi      #0x2c0ed2
+002c0ebe  cmp.w    r3, #-0x10000000
+002c0ec2  beq      #0x2c0fac
+002c0ec4  subs     r2, #1
+002c0ec6  cmp      r3, r2
+002c0ec8  beq      #0x2c0fb0
+002c0eca  cmp      r3, #0
+002c0ecc  beq.w    #0x2c103a
+002c0ed0  b        #0x2c0fe8
+002c0ed2  ldr      r2, [pc, #0x178]
+002c0ed4  cmp      r3, r2
+002c0ed6  beq      #0x2c0fbc
+
+## 4. Pool de constantes comparadas (0x2c1040..0x2c109c)
+  0x002c1040 0xfa030008
+  0x002c1044 0xf2000001
+  0x002c1048 0xf1000002
+  0x002c104c 0xf1000004
+  0x002c1050 0xf1010001
+  0x002c1054 0xf7000001
+  0x002c1058 0xf3010001
+  0x002c105c 0xf3000001
+  0x002c1060 0xf4000001
+  0x002c1064 0xf6000001
+  0x002c1068 0xf8000001
+  0x002c106c 0xf7000002
+  0x002c1070 0xf9050004
+  0x002c1074 0xf9080120
+  0x002c1078 0xfb050007
+  0x002c107c 0xfb03000b
+  0x002c1080 0xfa080122
+  0x002c1084 0xfb030005
+  0x002c1088 0xfa080121
+  0x002c108c 0xfb050001
+  0x002c1090 0x04fcfff2
+  0x002c1094 0xfb050006
+  0x002c1098 0xfc050000
+  0x002c109c 0xfb050009
+
+# MATIZ RESUELTO: el pool trae 0xF1000002 (0x2c1048) porque la comparación es
+#  'subs r2,#1 ; cmp r3,r2' (0x2c0ec4-0x2c0ec8): equivale a comparar con 0xF1000001 y salta
+#  a 0x2c0fb0 (literal 0x2c10c4 = 0x1600f101). Y 0xFB050001 (slot 0x2c108c) salta al mismo
+#  0x2c0fb0 (0x2c0f50). Ambas palabras se traducen a 0x1600F101 y la traducción SOBRESCRIBE
+#  el estado en +8, así que el log no permite saber cuál llegó: hay que capturarla en cámara.
+
+## 5. El core AV no aporta estas cadenas: no están en av-cam.bin
+  strings -a analysis/rea-independent/input/av-cam.bin | grep -c CodecDrv      -> 0
+  strings -a analysis/rea-independent/input/av-cam.bin | grep -c E_AVCON       -> 0
+  => '[CodecDrv][Error] E_AVCON_MOVIE_CODEC_STOP (00002003h)' lo imprime libmpr (lado Linux).
+
+## 6. Tabla de nombres de errores (punteros, paso 8 B) en 0x2d0ac8..
+  0x002d0ad0  0x7f2f2b  0x7f2f42 | ER_MOVIE_DECODE_FAILED / ER_MOVIE_DECODER_HW_ERROR
+  0x002d0ad8  0x7f2f5c  0x7f2f80 | ER_MOVIE_DECODER_DEMUX_ERROR_STREAM / ER_JPEG_DECODE_FAILED
+  0x002d0ae0  0x7f2f96  0x7f2fac | ER_PICTURE_SIZE_ERROR / ER_STILL_DECODER_HW_ERROR
+  0x002d0ae8  0x7f2fc6  0x7f2fe4 | ER_PICTURE_SIZE_WAS_TOO_LARGE / ER_PICTURE_SIZE_TABLE_IS_NOT_DEFINED
+  0x002d0af0  0x7f3009  0x7f3028 | ER_STILL_INFO_WAS_UNACQUIRABLE / ER_MOVIE_ENCODE_FAILED
+  0x002d0af8  0x7f303f  0x7f3059 | ER_MOVIE_ENCODER_HW_ERROR / ER_MOVIE_ENCODER_CANCEL_WITHOUT_THM
+  0x002d0b00  0x7f307d  0x7f309e | ER_MOVIE_ENCODER_CANCEL_WITH_THM / ER_ENCODER_WRITE_POINTER_WAS_TOO_BIG
+  0x002d0b08  0x7f30c3  0x7f30ec | ER_READ_POINTER_WAS_NOT_ABLE_TO_PROGRESS / ER_AUDIO_DECODE_FAILED
+  0x002d0b10  0x7f3103  0x7f311d | ER_AUDIO_DECODER_HW_ERROR / ER_HEADER_SEARCH_FAILED
+  0x002d0b18  0x7f3135  0x7f314f | ER_HEADER_SEARCH_HW_ERROR / ER_HEADER_SEARCH_PICTURE_ERROR
+  0x002d0b20  0x7f316e  0x7f3194 | ER_HEADER_SEARCH_TIME_STAMP_OVER_FLOW / ER_HEADER_SEARCH_AUDIO_ERROR
+  0x002d0b28  0x7f31b1  0x7f31cd | ER_HEADER_SEARCH_FACE_ERROR / ER_MOVIE_CONVERTOR_FAILED
+  0x002d0b30  0x7f31e7  0x7f3203 | ER_MOVIE_CONVERTOR_HW_ERROR / E_AVM_DRIVER_ERROR
+  0x002d0b38  0x7f3216  0x7f322a | E_AVM_INVALID_PARAM / E_AVM_BASEBAND_NG
+  0x002d0b40  0x7f323c  0x7f325a | E_AVCON_MOVIE_CODEC_EMERGENCY / E_AVCON_MOVIE_CODEC_STOP
+  0x002d0b48  0x7f3273  0x7f3290 | E_AVCON_MOVIE_CODEC_CMD_BUSY / E_AVCON_MOVIE_CODEC_ILLEGAL

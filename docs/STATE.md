@@ -1,5 +1,25 @@
 # Estado vigente — Sony A6000 reverse engineering
 
+## Reproducción de vídeo — la rotura es del arranque EN FRÍO del propio 3.21 (28-11-2026)
+
+> **Cambio de conclusión, medido.** El par A/B de la bisecta no aísla un parche: A es el tar de fábrica
+> 3.21 con **un solo miembro menos** (`0700_part_image/dev/nflasha5`) y los otros 71 son idénticos byte a
+> byte; B es ese mismo tar íntegro. A no reproduce y B sí ⇒ **la causa no es ningún cambio del CFW, sino
+> el camino de arranque en frío (Loader3 `BootMode 1`) del 3.21 de Sony**. En el campo ese camino casi no
+> se recorre: `ud_wbi_drop.elf` invalida el WBI y el propio paquete oficial lo reescribe acto seguido.
+> **Dónde falla (VERIFICADO contra bytes):** el core AV contesta al mensaje `0x2003` («movie decoder
+> start») con estado ≠ 0; `libmpr` lo traduce en `0x2C0E88` a `0x1600F101` (`E_AVCON_MOVIE_CODEC_STOP`,
+> nombre de la tabla `0x2D0B44`) y `MDecI/F` (`0x462E2C`) lo convierte en `0x16001001`
+> = `ER_MOVIE_DECODE_FAILED` → `libObj` `ER_FAILED`. **Corrección:** el `00002003h` del anillo es el **id
+> del mensaje**, no un código de error. **Qué cambia en frío:** Loader3 carga 6 ficheros RAMCFG en vez de
+> 2 (`sa_dfdet.bin`, `kemco.txt`, `initrd.img`, `vmlinux.bin` de más) y **no se restaura la instantánea**
+> (estado de MPR/`libmpr`/`libObj` + 12 regiones `wbimem=`); `im.elf` vuelve a pedir la carga de
+> `av-cam.bin`. **Qué no cambia:** `av-cam.bin` tiene **0 de 2 200 páginas** dentro del WBI ⇒ la imagen
+> del core AV es la misma en ambos modos; cmdline, módulos, montajes y `DmmConfig.bin`, iguales.
+> **Causa última: NO DEMOSTRADA** (tres mecanismos vivos y un experimento de 4 bytes que los separa).
+> [Informe](../reports/film-pb-1-busqueda-decodificador-frio-20261128.md) ·
+> [evidencia](../reports/evidence/film-pb-1-busqueda-decodificador-frio-20261128/)
+
 ## Reproducción de vídeo — FILM-PB-1, estado de FBM (26-11-2026)
 
 > **Arreglo identificado y verificado en el arnés (26-11-2026).** El sector que falta es **uno solo**:

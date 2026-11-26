@@ -1,0 +1,54 @@
+# Qué cambia de verdad entre arranque en FRÍO y CALIENTE (medido y citado)
+
+## A. La única diferencia entre los paquetes A y B (bisecta)
+  A: build/cfw_bisect/A/pkg/container.json  -> "sin_wbi": true  (sin 0700_part_image/dev/nflasha5)
+  B: build/cfw_bisect/B/pkg/container.json  -> "sin_wbi": false (tar de fábrica 3.21 íntegro)
+  Resto de miembros del tar: idénticos byte a byte (71 ficheros).
+
+## B. Loader3: lo que carga en cada modo (RAMCFG)
+  frío   (BootMode 1,  modo RAMCFG 0x1000000): idt_cam, sa_dfdet, av-cam, kemco, initrd, vmlinux
+  caliente (BootMode 11, modo RAMCFG 0x4000000): idt_cam, av-cam
+  => sa_dfdet.bin SOLO se carga en frío; el kernel/initrd sólo en frío.
+  Log en frío: analysis/camera-dumps/20261108-swd-352/loader-log-0xc0060000.txt (ver 01-…)
+
+## C. El WBI es una suspensión de RAM, no un volcado de subsistemas
+  Cabecera WBI1 de dev/nflasha5: numSections=0x48C (1164), flag=9 (WBI+LZ77),
+  dataSize=0x0280C600 (41 993 728 B), oDataSize=0x0A4FC000 (172 998 656 B).
+  Cada sección son chorros LZ77 de 4096 B exactos (42 236 páginas descomprimidas).
+  Cobertura: páginas EN USO del nodo 0 (kernel, page cache de /usr, memoria de los
+  procesos MPR/libmpr/libObj) + las 12 regiones wbimem= de la cmdline.
+  NO cubre av-cam.bin: 0 de 2200 páginas del WBI coinciden con av-cam.bin
+  => la imagen del core AV es la MISMA en frío y en caliente (se recarga del flash).
+  Sí cubre: libObj.so 994/4254 páginas, im.elf 5/5, viewUnified2 50/1209,
+  CautionConfig 12/409, y el TOC TPZL de /usr materializado en 0x8D3B8000.
+  Ventana del core AV excluida del WBI: 0x834C0000-0x84141000
+  (boottime 0x834C0000 + klog 0x834E0000 + idt_cam 0x83501000 + av-cam 0x83541000).
+
+## D. Entrega del core AV: doble en frío, simple en caliente
+  Loader3 copia av-cam.bin en 0x83541000 en AMBOS modos (RAMCFG).
+  im.elf (sólo corre en frío, desde /sbin/init -> bootin.elf) vuelve a pedir la carga:
+     strings -a -t x .../bin/im.elf | grep av-cam
+     -> 43b3  fn=/system/av-cam.bin load=1 debug=1   (+ ' adr=0x%x' construido en 0xB3DC)
+     im.elf 0xB368: Backup_read(0x00fa007c) -> snprintf("fn=/system/av-cam.bin load=1 ...")
+                    -> mmap + syscall(0x80)  (mismo mecanismo que usa init para los .ko)
+  En caliente im.elf NO se ejecuta: nadie pide esa segunda carga.
+
+## E. Estado que sólo existe si se restaura la instantánea (medido)
+  - sa_dfdet.bin íntegro en 0x96600000 (región wbimem) y CERO en 0x96800000 (la de RAMCFG).
+    Ver 02-ram-medida-96600000.txt. En frío ocurre al revés por construcción.
+  - Anillo de log del MPR en 0x82DF9000 (wbimem=0xE5000@0x82D90000) conserva líneas de la
+    sesión anterior en B; en A empieza con '**** EX-PC Monitor Program ****'.
+
+## F. Plataforma de medios: tiene un camino explícito de reanudación
+  readelf -sW libmpr.so | grep -i 'snapshot|warmboot|boottype'
+  1096: 00722ba5    40 FUNC    GLOBAL DEFAULT   10 _ZN5MprIf6ResumeEbN3MPR8BootTypeE
+  1180: 002b6789   248 FUNC    GLOBAL DEFAULT   10 _ZN8FlashLib12WarmBootInitEv
+  1626: 0071ce65    36 FUNC    GLOBAL DEFAULT   10 _ZN5MprIf16SnapShotBootInitEPNS_21SnapShotBootInitParamE
+  strings -a libObj.so | grep 'Usage : Resume'  -> Armadura de consola con [cold/hot/ssb]
+  strings -a libmpr.so | grep -E 'bootType = |AVI Warm boot Init|SnapShot mode'
+ 8e93e1 AVI Warm boot Init
+ 9003f6  SnapShot mode
+ 905579 bootType = [%x]
+  => la plataforma distingue 'ssb' (snapshot boot) de cold/hot en su API pública, y libObj
+     llama a MprIf::SnapShotBootInit (0x7E6ED6) al reanudar.
+  LÍMITE: no se ha verificado que esa rama sea la que inicializa el decodificador.
