@@ -1,8 +1,9 @@
 # G22-CUELGUE — el cuelgue de la navegación: la UI deja de repintar («0 listas»)
 
-**Estado (26-11-2026): REPRODUCIDO y ACOTADO a un hilo; causa última abierta.** La secuencia de teclas de
-abajo deja al invitado sin fotogramas nuevos a las **38 pulsaciones** (≈ 2,5 min de navegación por el menú):
-las teclas siguen llegando al hilo de entrada, el motor de presentación sigue girando y **la GPU deja de
+**Estado (26-11-2026): REPRODUCIDO 3 de 3 tandas y ACOTADO al cierre del MENU; la espera concreta sigue
+abierta. Descartada la inanición del anfitrión como causa (§3).** La secuencia de teclas de
+abajo deja al invitado sin fotogramas nuevos entre la **pulsación 22 y la 38** (≈ 1,5–2,5 min de navegación
+por el menú; 3 de 3 tandas): las teclas siguen llegando al hilo de entrada, el motor de presentación sigue girando y **la GPU deja de
 recibir listas**. No hay SIGSEGV, ni aborto, ni cola descartada, ni cerrojo del cargador.
 
 Se añadió lo necesario para medirlo sin mirar a ojo: `GET /estado` da `listas`/`listas_total` en números,
@@ -132,7 +133,8 @@ en el arranque (2 de 2), así que **no sirve tal cual para cazar el de la navega
 
 ### 2.3 Respuestas a las tres preguntas
 
-1. **¿Qué variable separa los arranques que pintan de los que no?** En estas medidas **ninguna**: el
+1. **¿Qué variable separa los arranques que pintan de los que no?** En estas medidas **ninguna** (y la
+   contención del anfitrión tampoco: ver §3, donde con 2 vCPU en vez de 8 se cuelga igual). El
    cuelgue salió con el `SHIMENV` de `live.py` sin `LIVE_QUITA` (perfil `hangkeys`, 38 pulsaciones) y en un
    arranque en frío sin teclas el invitado no se cuelga, se queda **ocioso** (sigue registrando
    `UpdateStatusMonitor` y el camino de entrada sigue vivo: en `hangbase`, sin teclas mías, llegó una
@@ -140,10 +142,10 @@ en el arranque (2 de 2), así que **no sirve tal cual para cazar el de la navega
    `RELOJEMU` no deja **ni una** línea `G22-FECHA` (ninguna vista pide `@M018`/`model/CLOCK`), `ZOOM` solo
    actúa sobre `IssueCommandAsync` con `0x7612/0x7614` (no hay ninguna) y `OPENVIEWDIAL` solo en la
    apertura en caliente `O view/STLREC`. El cuelgue es **intermitente y de carrera**, no de configuración.
-2. **¿Termina solo?** En la tanda medida, la UI no volvió a pintar en los 53 s que duró la ventana de
-   observación (y el registro del invitado se apaga del todo a los 48 s de la última copia). Un estado
-   guardado en el cuelgue se restaura colgado. Con los datos de `menu5` (255 s seguidos con 0 listas) el
-   orden de magnitud es minutos, no segundos; **no se ha medido una ventana de 10 min**.
+2. **¿Termina solo?** No en la ventana medida: §5 restaura un estado guardado ya colgado y lo vigila
+   8 minutos con teclas; sigue en `fotogramas: 1`, `0 listas`, alfa opaco 0,0046 y sordo a las flechas.
+   En las tandas en vivo el invitado dejó de copiar a pantalla para siempre (70–90 s de margen tras la
+   última pulsación) y su registro se apaga del todo ~48 s después de la última copia (§2).
 3. **¿Qué hilo espera?** El que deja de escribir primero es el que despacha las vistas (destruye `07C` y
    no vuelve a tocar ninguna vista); el ciclo de presentación (`UpdateStatusMonitor` + vdf 1/3, que corre
    en hilos de `libObj`/`libosal_uipc`) sigue 48 s más y luego también para. La espera concreta no está
@@ -151,33 +153,99 @@ en el arranque (2 de 2), así que **no sirve tal cual para cazar el de la navega
    de `Appframework` terminan); queda un cerrojo o una escritura bloqueante, que es lo que hay que
    capturar con `MUTEXWATCH` en el instante del cuelgue.
 
-## 3. Cambios en el arnés (instrumentación, no silencian nada)
+## 3. ¿Cuelgue del invitado o inanición del anfitrión? (A/B medido)
+
+La duda planteada el 26-11-2026: cada `qemu-system-arm` es `-smp 8` en una máquina de 8 vCPU, así que dos
+VMs ya compiten; con dos, el invitado tarda 240–380 s en pintar e incluso se queda en «0 listas» más de
+500 s, y al matar la segunda VM un arranque de 108 s pintó de golpe. Si el cuelgue fuese solo eso, bajar
+la presión del anfitrión lo quitaría. Medido con la misma rama y el mismo `.so` (el de `main`), perfil
+nuevo en cada tanda y `SHIMEXTRA="FULLLOG=1 WAITLOG=3000"` — **sin `WLALL` ni `PMWAIT`**, para no cargar
+al invitado con la propia instrumentación (la tanda anterior, `hangkeys`, los llevaba):
+
+| perfil | vCPU del invitado | qemu en el sistema | 1.ª pantalla | pulsaciones hasta «0 listas» | fotogramas | listas | alfa opaco final | veredicto |
+|---|---|---|---|---|---|---|---|---|
+| `hangkeys` | 8 | 2–3 | 179 s | 38 (150 s de navegación) | 30 | 750 | 0,0046 | CUELGUE |
+| `smp8` | 8 | 2 | 141 s | 31 (98 s) | 29 | 756 | 0,0046 | CUELGUE |
+| `smp2` | **2** (`QEMU_SMP=2`) | 2 | 90 s | 22 (83 s) | 21 | 484 | 0,0046 | CUELGUE |
+
+Carga del anfitrión durante `smp8` y `smp2` (muestra cada 10 s de `/proc/<pid>/stat` y `/proc/loadavg`):
+2 `qemu-system-arm`, loadavg 5–9 sobre 8 vCPU, 1,3–2,4 núcleos por VM.
+
+**No es inanición del anfitrión.** Quitarle 6 de sus 8 vCPU al invitado *acelera* el arranque (141 → 90 s,
+que es justo lo que hace la contención: alargarlo) pero **no evita el cuelgue**; se cuelga igual y antes en
+pulsaciones porque cada vuelta del menú se recorre más rápido. Y las tres tandas se paran **en el mismo
+fotograma**, que es lo que delata un fallo del invitado y no una simple falta de tiempo de CPU:
+
+| pulsación | tecla | listas nuevas | alfa opaco | qué es |
+|---|---|---|---|---|
+| … | (menú abierto) | 28–39 cada una | **1,0** | el menú llena la pantalla (opaco) |
+| 25 (`smp8`) / 16 (`smp2`) | menu (cerrar) | 30 / 39 | 1,0 | último fotograma bueno |
+| 26 / 17 | derecha | **2** | **0,0046** | el menú ya no está y **la OSD de disparo no vuelve** |
+| 27 / 18 | abajo | **0** | 0,0046 | ni una lista más |
+| 28-31 / 19-22 | derecha, izquierda, abajo, Intro | 0 | 0,0046 | teclas que ya no responden |
+
+El fotograma que sigue a cerrar el MENU lleva **2 listas** (el fondo y los dos iconos de estado) y alfa
+opaco 0,0046: la composición de la pantalla de disparo no se rehace. A partir de ahí no llega ninguna lista
+y la UI deja de responder, con el invitado todavía ejecutando su ciclo de presentación (§2). Si fuese
+inanición, el invitado acabaría pintando tarde o temprano (el conductor espera 10 s por pulsación y luego
+20 s más antes de la captura final: 70 s de margen en `smp8`, 90 s en `smp2`); no pinta.
+
+Lo que **sí** explica la contención es el otro síntoma, el de los arranques **sin teclas** (tus `menu5`/
+`auto2`: «0 listas» durante 255–500 s): ahí el invitado no ha llegado a componer la pantalla de disparo y
+solo compite por CPU, así que un arranque lento parece colgado. Son dos cosas distintas y esta página
+separa la una de la otra: **navegar el menú cuelga la UI de forma reproducible** (3 de 3 tandas, mismo
+fotograma), y **la contención solo alarga el arranque**.
+
+## 4. Cambios en el arnés (instrumentación, no silencian nada)
 
 - `live.py`: `GET /estado` añade `listas` (listas de GPU del último fotograma) y `listas_total`; el JSON se
   construye en `estado_json(vm)` para poder probarlo sin QEMU. **No se toca** `PAGINA` ni el HTML/JS.
 - `secuencia_cuelgue.py`: conductor de la secuencia (pulsación + espera de fotograma + CSV + PNG antes y
-  después + `resumen.json`), con `cuelga(historial, ventana)` como regla de parada.
+  después + `resumen.json`), con `cuelga(historial, ventana)` como regla de parada y un **`veredicto`** con
+  las dos medidas que hacen falta para la autoprueba: `PASS` (aguantó y alfa opaco ≥ `--min-opacos`, 0,05
+  por defecto), `CUELGUE` (dejó de pintar) o `SIN-OSD` (pintó con la pantalla vacía). Códigos de salida:
+  0 PASS · 1 CUELGUE · 2 SIN-OSD. Con `QEMU_SMP=2` se repite la tanda con menos vCPU (experimento de §3).
 - `im.sh`: `PMROUNDS` (nº de volcados `PMWAIT`, por defecto 3 como antes) y `PMFILTER` (regex sobre `comm`:
   im.elf tiene ~300 hilos y leer `stat`/`wchan`/`syscall` de todos con procesos de busybox tarda minutos,
   así que el volcado no cabía entre dos cuelgues).
 - `sonyshim.c`: con `TIDLOG=1`, las líneas que `WLALL` reenvía al anfitrión llevan el `tid` delante
   (antes cada línea se sabía de qué hilo era solo por el registro del invitado).
 
-## 4. Limites
+## 5. Límites
 
 - La causa última (qué cerrojo/condición deja de llegar) queda **abierta**; lo cerrado es el eslabón
   visible: la UI deja de despachar acciones de vista después de cerrar el menú y la GPU se queda sin listas.
-- `WLALL=1` cambia los tiempos (el invitado va 2–3× más lento) y el cuelgue aparece igual; no se ha
-  medido la secuencia sin `WLALL`.
-- Un estado guardado durante el cuelgue se restaura colgado (útil para reproducir, inservible para seguir
-  navegando): hay que borrar `estado.zst` del perfil antes de cada tanda.
+- `WLALL=1` cambia los tiempos (el invitado va 2–3× más lento) y el cuelgue aparece igual: también sin
+  `WLALL` ni `PMWAIT` (§3, perfiles `smp8` y `smp2`), así que la instrumentación no lo provoca.
+- Un estado guardado durante el cuelgue se restaura colgado (útil para reproducir y para medir la espera,
+  inservible para seguir navegando): hay que borrar `estado.zst` del perfil antes de cada tanda. Restaurar
+  exige el **mismo `SHIMEXTRA`** con el que se guardó; si no, `live.py` invalida el estado y arranca en frío.
 - El rango de puertos 8660–8690 lo comparten las ramas: en una tanda llegó a mi VM una tecla de otra
   sesión (0x1f7). Las medidas de esta página se apoyan en el registro del invitado, no en el contador de
   teclas propio, así que la contaminación no cambia las conclusiones; aun así, conviene comprobar el
   puerto con `ss -tln` antes de arrancar.
 
+## 5. ¿Se recupera solo? (estado colgado restaurado y vigilado 8 minutos)
+
+Se guarda el estado de `smp8` justo después del cuelgue (`live/smp8/estado.zst`, 118 MiB) y se restaura en
+un perfil nuevo (`hangrep`, puerto 8660) copiando `estado.zst`, `huella.txt`, `initrd.gz` y `nvram.json`
+del mismo perfil y arrancando con el **mismo `SHIMEXTRA`** (si cambia, `live.py` invalida el estado y
+arranca en frío). Restaurar tarda ~20 s frente a los 141 s del arranque en frío.
+
+| t desde la restauración | fotogramas | listas | listas total | alfa opaco |
+|---|---|---|---|---|
+| 35 s | 1 | 0 | 0 | 0,0046 |
+| 105 s | 1 | 0 | 0 | 0,0046 |
+| 480 s (fin de la ventana) | 1 | 0 | 0 | 0,0046 |
+
+- **No se recupera**: 8 minutos sin un solo fotograma nuevo ni una lista.
+- **Sigue sordo a las teclas**: una pulsación de `derecha` a los 92 s no produce fotograma (9 s de espera).
+- **No está bloqueado**: el `qemu` del invitado consume ≈2,4 núcleos de forma sostenida (`/proc/<pid>/stat`
+  cada 10 s) mientras no produce ni una lista: el invitado gira (el ciclo de presentación de §2) pero la
+  composición no avanza. Un interbloqueo clásico dejaría el proceso a ~0.
+
 ## PARA PENDIENTES.md
 
-| G22-CUELGUE | ABIERTO (26-11-2026) | **La UI deja de repintar al navegar el menú («0 listas»), reproducido con una secuencia fija.** Secuencia: MENU · derecha · abajo · derecha · izquierda · abajo · Intro · MENU en bucle, 8 pulsaciones por vuelta ([`secuencia_cuelgue.py`](../../scripts/gui/harness/secuencia_cuelgue.py)). MEDIDO (perfil `hangkeys`, puerto 8660, arranque en frío, `SHIMEXTRA="FULLLOG=1 WAITLOG=3000 WAITINF=1 WLALL=1 PMWAIT=140 PMEVERY=25"`): **cuelga a la pulsación 38** (2,5 min); hasta la 25 cada pulsación produce 1 fotograma con 16–39 listas de GPU; después, 5 pulsaciones seguidas sin fotograma. Las teclas **sí llegan** (`I-InputRecv`, `rcv_msg qid=0x7a0020`, t=284…303) y el firmware las procesa, pero tras `Vd 07C_viewUnified2.so` (cierre del menú, 3,5 s, t=273,6–277,1) **no hay ninguna operación de vista más** (ni `Vn/Vd/Vo`, ni `open(*.uxc)`, ni listas): 750 listas acumuladas y último fotograma con 2 listas y **alfa opaco 0,0046** (OSD sana ≈0,09). El ciclo de presentación (`UpdateStatusMonitor` + vdf 1/3) sigue 48 s y luego también para. Descartado: cola de kernel descartada después de t=270, `dlv`/`mbx` llenos, SIGSEGV/abort, cerrojo del cargador, y las colas `0x59000e`/`0x80003b`/`0x7a0020`/`0x8f0139` (responden todo el rato). Las variables recientes del shim no intervienen en esta traza: `RELOJEMU` no deja ni una línea `G22-FECHA`, `ZOOM` solo actúa en `IssueCommandAsync` `0x7612/0x7614` y `OPENVIEWDIAL` solo en la apertura en caliente. Cierre: capturar la espera concreta en el instante del cuelgue y que la secuencia aguante **300 pulsaciones o 5 min** con alfa opaco > 0,05 y sin `0 listas`. | [g22-cuelgue-navegacion](gui/g22-cuelgue-navegacion.md) |
-
+| G22-CUELGUE | ABIERTO (26-11-2026) | **La UI deja de repintar al navegar el menú («0 listas»), reproducido 3 de 3 tandas en el mismo fotograma.** Secuencia: MENU · derecha · abajo · derecha · izquierda · abajo · Intro · MENU en bucle, 8 pulsaciones por vuelta ([`secuencia_cuelgue.py`](../../scripts/gui/harness/secuencia_cuelgue.py), `resumen.json` da `veredicto` PASS/CUELGUE/SIN-OSD con el alfa opaco). MEDIDO: perfil `hangkeys` 8 vCPU, `WLALL`+`PMWAIT` → cuelga a la pulsación **38**; perfil `smp8` 8 vCPU, instrumentación mínima (`SHIMEXTRA="FULLLOG=1 WAITLOG=3000"`) → **31**; perfil `smp2` **2 vCPU** (`QEMU_SMP=2`) → **22**. En las tres, el último fotograma bueno es el de **cerrar el MENU** (30–39 listas, alfa opaco 1,0) y el siguiente trae **2 listas y alfa opaco 0,0046** (fondo + iconos): la pantalla de disparo **no se recompone** y después no llega ninguna lista más (las teclas siguen entrando a `I-InputRecv` y el ciclo de presentación sigue 48 s). **Descartada la inanición del anfitrión** (§3): bajar de 8 a 2 vCPU acelera el arranque (141 → 90 s) pero no evita el cuelgue. **No se recupera solo** (§5): estado guardado en el cuelgue, restaurado y vigilado 8 min → 1 fotograma, 0 listas, alfa 0,0046, sordo a las flechas, con el `qemu` gastando ≈2,4 núcleos (gira, no está bloqueado). Descartado además: cola de kernel descartada después de t=270, `dlv`/`mbx` llenos, SIGSEGV/abort, cerrojo del cargador y las colas `0x59000e`/`0x80003b`/`0x7a0020`/`0x8f0139` (responden todo el rato); `RELOJEMU` no deja ni una línea `G22-FECHA`, `ZOOM` solo actúa en `IssueCommandAsync` `0x7612/0x7614` y `OPENVIEWDIAL` solo en la apertura en caliente. Cierre: capturar con pila el hilo que deja de despachar vistas al destruir `07C` y que la secuencia aguante **300 pulsaciones o 5 min** con `veredicto: PASS` (alfa opaco ≥ 0,05). | [g22-cuelgue-navegacion](gui/g22-cuelgue-navegacion.md) |
+| G22-CUELGUE-CONTENCION | MEDIDO (26-11-2026) | **La contención del anfitrión alarga el arranque, no es la causa del cuelgue.** Con 2 `qemu-system-arm` (`-smp 8` en 8 vCPU) el invitado tarda 141–380 s en la primera pantalla y puede quedarse en «0 listas» sin que se haya tocado una tecla (tus `menu5`/`auto2`: 255–500 s); **no** lo explica el cuelgue de la navegación, que se reproduce igual con 2 vCPU. Regla práctica: un `qemu` a la vez para medir tiempos de arranque, y `QEMU_SMP` menor solo si se van a solapar VMs (sirve para que arranque antes, no para evitar G22-CUELGUE). | [g22-cuelgue-navegacion §3](gui/g22-cuelgue-navegacion.md) |
 | G22-CUELGUE-PROXY | ABIERTO (26-11-2026) | **Interbloqueo de la OSAL emulada con pila capturada**: con `MUTEXWATCH=5` el arranque en frío se queda en «esperando la primera pantalla» y el registro da `MUTEXWATCH im.elf (tid 212) espera cerrojo 0xb6e89730 > 5 s; dueño tid 221 (uipc_proxy_0)` con la pila del dueño: `libpthread+0xad5f` → `sonyshim.so+0x29954` (`issue_cmd`, `MWF::ObjIf::IssueCommandAsync`) → `sonyshim.so+0xa384` (bucle del proxy). Un **hilo proxy de la OSAL ejecuta un callback de la UI y se queda con un cerrojo del shim tomado**, mientras el hilo principal lo espera. Cierre: que los callbacks de la UI no puedan re-entrar en `issue_cmd` (o que el cerrojo no se tenga al llamar al callback) y que `MUTEXWATCH` deje de romper el arranque, para poder usarlo en caliente en G22-CUELGUE. | [g22-cuelgue-navegacion §2.2](gui/g22-cuelgue-navegacion.md) |
