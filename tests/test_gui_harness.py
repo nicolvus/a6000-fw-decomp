@@ -657,3 +657,35 @@ def test_configuracion_se_cachea_por_mtime(tmp_path: Path, monkeypatch: pytest.M
     otro = {**CONFIG_DEFECTO, "sensor": {"fuente": "video", "ruta": "/tmp/x.png"}}
     f.write_text(json.dumps(otro))
     assert live.configuracion()["sensor"]["fuente"] == "video"  # mtime nuevo: se relee
+
+
+def test_arranca_puente_con_la_vm_real_entrega_el_primer_mensaje(tmp_path: Path) -> None:
+    """G22-ARR2, cadena completa: `Vm.arranca_puente` en un hilo con el `puente` real (LIRO VM con av-cam.bin) deja el Puente
+    listo y `avq_hilo` entrega en orden lo que el invitado mandó antes, recibiendo la respuesta real de av-cam (petición capturada
+    en el arnés el 13-11-2026). Sin QEMU."""
+    import queue
+    import sys as _sys
+    import threading
+    import time
+
+    live, _ = _live()
+    _sys.path.insert(0, str(ROOT / "scripts/gui/avcam"))
+    puente = pytest.importorskip("puente")
+    if not puente.L.AVCAM.exists() or not puente.L.LIRO_KO.exists():
+        pytest.skip("faltan av-cam.bin o liro.ko (no versionados)")
+    salida: list[bytes] = []
+    v = live.Vm.__new__(live.Vm)
+    v.envia, v.dir, v.nvram, v.avcam_ruta = salida.append, tmp_path, {}, None
+    v.puente, v.puente_error, v.puente_listo, v.avq_cola = None, None, threading.Event(), queue.Queue()
+    threading.Thread(target=v.arranca_puente, args=(puente, False), daemon=True).start()
+    assert v.puente_listo.wait(90) and v.puente is not None and v.puente_error is None
+    v.avq_cola.put(("AVQ", ("5700f9 28 000000000000000020015500 "  # petición dataflow capturada en el arnés
+                            "20015500a0a0a0a0010028001400000028000000001000001400020000000000020000000000000000000000")))
+    t0 = time.time()
+    while not any(x.startswith(b"Q ") for x in salida) and time.time() - t0 < 5:
+        time.sleep(0.05)
+    v.puente.cierra()
+    qs = [x for x in salida if x.startswith(b"Q ")]
+    _, cola, cab, cuerpo = qs[0].decode().split()
+    assert int(cola, 16) == 0x550120 and cab.endswith("f9005700")  # la cola de respuesta viaja en la petición (+0)
+    assert cuerpo[8:16] == "a0a0a0a0" and cuerpo[40:48] == "00100080"  # dataflow: cate 0x1000, msg 0 ^ 0x8000
