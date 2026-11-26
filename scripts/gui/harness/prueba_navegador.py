@@ -16,6 +16,7 @@ import argparse
 import json
 import sys
 import time
+import urllib.request
 from pathlib import Path
 
 PESTANAS = (("tab-firmware", "p-firmware"), ("tab-teclas", "p-teclas"), ("tab-sensor", "p-sensor"),
@@ -48,6 +49,9 @@ def main() -> int:
     try:
         nav.set_window_size(1280, 1000)
         nav.get(a.url)
+        # Firefox no expone el registro de la consola por WebDriver: se recogen los errores con un oyente en la página, así que
+        # cubre la interacción (no la carga inicial, que se comprueba por lo que se ve: título y pestañas).
+        nav.execute_script("window.__errores = []; window.addEventListener('error', e => window.__errores.push(String(e.message)));")
         titulo = nav.title
         paso("carga", "A6000" in titulo or "emulador" in titulo.lower(), f"título «{titulo}», URL {nav.current_url}")
 
@@ -83,29 +87,40 @@ def main() -> int:
             if not casilla.is_selected():
                 casilla.click()
             nav.find_element(By.ID, "aud1").click()
+            # la espera va por la API del propio configurador: el veredicto del panel se repite entre auditorías y el texto no
+            # sirve para saber si la de ahora ha terminado (medido: dos ejecuciones seguidas dan el mismo «Veredicto AVISO»).
+            uri = a.url.rstrip("/") + "/api/auditar/estado"
             fin = time.time() + a.espera_auditoria
-            veredicto = ""
+            visto_corriendo = False
             while time.time() < fin:
                 time.sleep(2)
-                veredicto = nav.find_element(By.ID, "audver").text.strip()
-                if veredicto and veredicto != "—":
+                try:
+                    with urllib.request.urlopen(uri, timeout=10) as r:
+                        estado = json.loads(r.read())
+                except (OSError, ValueError):
+                    estado = {}
+                visto_corriendo = visto_corriendo or bool(estado.get("corriendo"))
+                if visto_corriendo and not estado.get("corriendo"):
                     break
+            time.sleep(1.5)  # el panel se pinta cuando el sondeo de la página lo ve
+            veredicto = nav.find_element(By.ID, "audver").text.strip()
             filas = len(nav.find_elements(By.CSS_SELECTOR, "#audtab tr"))
+            detalle = nav.find_element(By.ID, "auddet").text.strip()
             png = "08-auditoria.png"
             nav.save_screenshot(str(a.salida / png))
             paso("auditoria-desde-la-pagina", bool(veredicto) and filas > 3,
-                 f"veredicto «{veredicto}», {filas} filas en la tabla, consola {len(nav.find_element(By.ID, 'audlog').text)} B", png)
+                 f"veredicto «{veredicto}» · {detalle[:90]} · {filas} filas · consola "
+                 f"{len(nav.find_element(By.ID, 'audlog').text)} B", png)
             enlaces = nav.find_elements(By.CSS_SELECTOR, "#audlinks a")
             paso("enlaces-informe", len(enlaces) >= 1, f"{len(enlaces)} enlace(s) al JSON/Markdown")
     finally:
-        registro = []
         try:
-            registro = nav.get_log("browser")  # errores de JavaScript de la propia página
-        except Exception as e:  # noqa: BLE001 — el registro es diagnóstico: no debe tumbar la prueba
-            print(f"aviso: sin registro de consola ({e})", flush=True)
-        errores = [r["message"] for r in registro if str(r.get("level", "")).upper() in ("SEVERE", "ERROR")]
+            errores = nav.execute_script("return window.__errores || []")
+        except Exception as e:  # noqa: BLE001 — el diagnóstico no debe tumbar la prueba
+            errores = [f"sin oyente de errores ({e})"]
         nav.quit()
-        paso("consola", not errores, f"{len(errores)} error(es) de JavaScript" + (f": {errores[0][:160]}" if errores else ""))
+        paso("consola", not errores, f"{len(errores)} error(es) de JavaScript tras cargar"
+             + (f": {errores[0][:160]}" if errores else ""))
 
     ok = all(p["ok"] for p in pasos)
     (a.salida / "navegador.json").write_text(json.dumps({"url": a.url, "dat": a.dat, "ok": ok, "pasos": pasos},
