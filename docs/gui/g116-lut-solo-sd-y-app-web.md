@@ -93,3 +93,22 @@ firmware.
 - LUT-A (matriz M), LUT-2C-1 (segunda curva de 512 puntos) y LUT-OPT-1 (pesos de entrenamiento) siguen como estaban: son
   mejoras del ajuste en el PC, no bloquean esta vía. LUT-DE-1 (ΔE con `C2'`) tampoco cambia la tabla que consume la cámara.
 - La previsualización no sustituye a revelar el RAW; el JPEG de la cámara ya trae su propia gamma y nitidez.
+
+## 7. Auditoría de la previsualización (27-11-2026)
+
+Petición: la página debe entregar **el LUT final que va a la SD** y la previsualización debe ser la de ese fichero, no la de un
+paso intermedio. Auditoría del código anterior y correcciones:
+
+| Hallazgo | Por qué importaba | Corrección |
+|---|---|---|
+| La previsualización usaba la tabla en memoria (`convierte().nodos`), no la del fichero | dos fuentes podían divergir (cuantización, recorte o un futuro cambio en el empaquetado) y lo visto no sería lo guardado | `leeLut(bytes)` lee el paquete (`desempaqueta`) y de ahí saca tabla y nodos; la app solo previsualiza `leeLut(pkg)`. Test: `leeLut(convierte(cube).pkg).nodos == tablaANodos(tabla)` |
+| El paquete v2 (tabla ajustada en ΔE + curva 1D, el que genera `lut_pkg.py`) se rechazaba o se ignoraba su curva | es la vía recomendada en G114; sin curva la vista no era la del fichero | `desempaqueta` ya aceptaba v2; ahora `leeLut` devuelve la curva (`Uint16Array`, `usa_T`) y la cadena la aplica **antes** de YCbCr, como la ranura `c68[8]` del firmware |
+| No había forma de ver el fichero final si venía del PC | el `.LUT` de `lut_pkg.py` no se podía comprobar antes de copiarlo | la entrada acepta `.cube` **o** `.LUT` v1/v2; el `.LUT` se previsualiza y se descarga **sin tocar un byte**. Se muestra su `sha256` para comparar con la tarjeta |
+
+**Lo que la web no hace (a propósito):** no reajusta la tabla 3D en ΔE2000. El `.LUT` que genera desde un `.cube` es el del propio
+firmware (`referencia()`, idéntico byte a byte a `lutsd.c`). El ajuste en ΔE con curva es el de `scripts/lut/lut_pkg.py`; esa curva
+está calculada **contra esa tabla** y emparejarla con la tabla del muestreo directo aplicaría el tono dos veces. Por eso la web
+genera v1 sin curva e ingiere v2 tal cual, en vez de inventar una curva.
+
+Pruebas: `tests/test_g116_web.py` (6) comprueba el `.LUT` v1 igual al firmware, la lectura byte a byte de un v2 con curva y que
+`usa_T = 0` no aplica curva; `site/lut/lut.test.mjs` (6) cubre la fuente única, el CRC y la curva.

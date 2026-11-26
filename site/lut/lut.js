@@ -167,6 +167,18 @@ export function desempaqueta(bytes) {
   return null;
 }
 
+/**
+ * Fichero `.LUT` ya generado (v1 o v2) → `{pkg, tabla, nodos, curva}`. Es la única fuente de la previsualización:
+ * lo que se ve es lo que se guarda en la tarjeta, con la curva del paquete si la lleva (v2 y `usa_T` = 1).
+ */
+export function leeLut(bytes) {
+  const pkg = bytes instanceof Uint8Array ? bytes : new Uint8Array(bytes);
+  const r = desempaqueta(pkg);
+  if (!r) return null;
+  const curva = r.curva ? new Uint16Array(r.curva.buffer, r.curva.byteOffset, 1024) : null;
+  return { pkg, tabla: r.tabla, nodos: tablaANodos(r.tabla), curva };
+}
+
 // ---------- previsualización (cadena de la cámara) ----------
 /** 1064 B (21 bits/nodo) → 405 deltas s7 `[ΔY, ΔCb, ΔCr]`. */
 export function tablaANodos(tabla) {
@@ -206,8 +218,14 @@ function pesos(y, cb, cr) {
   return { idx, w };
 }
 
-/** Un color sRGB (0…1) → el mismo color tras la cadena de la cámara con la tabla dada. */
-export function aplicaColor(r, g, b, nodos) {
+const clamp01 = (v) => (v < 0 ? 0 : v > 1 ? 1 : v);
+
+/** Un color sRGB (0…1) → el mismo color tras la cadena de la cámara: curva 1D (si la hay) → YCbCr → LUT → RGB. */
+export function aplicaColor(r, g, b, nodos, curva = null) {
+  if (curva) {
+    const c = (v) => curva[Math.round(clamp01(v) * 1023)] / 1023;
+    r = c(r); g = c(g); b = c(b);
+  }
   const y = 0.299 * r + 0.587 * g + 0.114 * b;
   const cb = (b - y) / 1.772, cr = (r - y) / 1.402;
   const { idx, w } = pesos(y, cb, cr);
@@ -223,10 +241,10 @@ export function aplicaColor(r, g, b, nodos) {
 }
 
 /** Aplica la tabla a un `ImageData` (sRGB) y devuelve otro `ImageData` con el resultado. */
-export function aplicaImagen(imagen, nodos) {
+export function aplicaImagen(imagen, nodos, curva = null) {
   const src = imagen.data, out = new Uint8ClampedArray(src.length);
   for (let o = 0; o < src.length; o += 4) {
-    const [r, g, b] = aplicaColor(src[o] / 255, src[o + 1] / 255, src[o + 2] / 255, nodos);
+    const [r, g, b] = aplicaColor(src[o] / 255, src[o + 1] / 255, src[o + 2] / 255, nodos, curva);
     out[o] = Math.round(Math.min(Math.max(r, 0), 1) * 255);
     out[o + 1] = Math.round(Math.min(Math.max(g, 0), 1) * 255);
     out[o + 2] = Math.round(Math.min(Math.max(b, 0), 1) * 255);
@@ -260,9 +278,9 @@ export function aplicaCube(c, r, g, b) {
   return out;
 }
 
-/** Un `.cube` (texto) → `{tabla, pkg, nodos, n, titulo}`. Lanza Error con el motivo si no vale. */
+/** Un `.cube` (texto) → `{tabla, pkg, n, titulo}`. El paquete es el fichero final; la previsualización se saca de él con `leeLut`. */
 export function convierte(texto) {
-  const c = parseCube(texto);
+  const c = typeof texto === "string" ? parseCube(texto) : texto;
   const tabla = referencia(c);
-  return { tabla, pkg: paquete(tabla), nodos: tablaANodos(tabla), n: c.n, titulo: c.titulo };
+  return { tabla, pkg: paquete(tabla), n: c.n, titulo: c.titulo };
 }

@@ -1,7 +1,7 @@
 // Pruebas del conversor web: node --test site/lut/
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { aplicaColor, crc32, convierte, desempaqueta, paquete, parseCube, referencia, tablaANodos } from "./lut.js";
+import { aplicaColor, convierte, crc32, desempaqueta, leeLut, parseCube, referencia, tablaANodos } from "./lut.js";
 
 function cuboTexto(n, f) {
   const filas = [];
@@ -37,6 +37,14 @@ test("la tabla es de 1064 B y la identidad deja los grises donde estaban", () =>
   }
 });
 
+test("la previsualización sale del fichero que se descarga", () => {
+  const { pkg, tabla } = convierte(calido);
+  const leido = leeLut(pkg);
+  assert.deepEqual([...leido.tabla], [...tabla]);
+  assert.deepEqual([...leido.nodos], [...tablaANodos(tabla)]);
+  assert.equal(leido.curva, null);
+});
+
 test("el paquete v1 lleva CRC válido y se vuelve a leer", () => {
   const { tabla, pkg } = convierte(calido);
   assert.equal(pkg.length, 1080);
@@ -48,18 +56,29 @@ test("el paquete v1 lleva CRC válido y se vuelve a leer", () => {
   const roto = pkg.slice();
   roto[100] ^= 1;
   assert.equal(desempaqueta(roto), null);
+  assert.equal(leeLut(roto), null);
 });
 
-test("una LUT cálida produce deltas y la previsualización los usa", () => {
-  const { nodos } = convierte(calido);
-  assert.ok(nodos.some((v) => v !== 0));
-  const n = nodos.length;
-  assert.equal(n, 405 * 3);
-  assert.ok(nodos.every((v) => v >= -64 && v <= 63));
+test("un LUT v2 con curva se lee y la curva se aplica antes de la tabla", () => {
+  const { tabla } = convierte(identidad);
+  const curva = new Uint8Array(2048);
+  const dv = new DataView(curva.buffer);
+  for (let i = 0; i < 1024; i++) dv.setUint16(2 * i, Math.round(i * 0.8), true);   // 0,8·x: oscurece los medios tonos
+  const v2 = new Uint8Array(16 + 1064 + 2048);
+  const dv2 = new DataView(v2.buffer);
+  dv2.setUint32(0, 0x544c3641, true); dv2.setUint8(4, 2); dv2.setUint8(5, 1); dv2.setUint16(6, 1064, true);
+  v2.set(tabla, 16); v2.set(curva, 16 + 1064);
+  const todo = new Uint8Array(tabla.length + curva.length);
+  todo.set(tabla); todo.set(curva, tabla.length);
+  dv2.setUint32(8, crc32(todo), true);
+  const leido = leeLut(v2);
+  assert.ok(leido && leido.curva instanceof Uint16Array && leido.curva[512] === Math.round(512 * 0.8));
+  const [r] = aplicaColor(0.5, 0.5, 0.5, leido.nodos, leido.curva);
+  assert.ok(Math.abs(r - Math.round(0.5 * 1023) * 0.8 / 1023) < 3 / 255, String(r));
 });
 
 test("convierte() no depende del paquete para la previsualización", () => {
-  const a = convierte(identidad), b = convierte(calido);
+  const a = leeLut(convierte(identidad).pkg), b = leeLut(convierte(calido).pkg);
   assert.notDeepEqual([...a.nodos], [...b.nodos]);
-  assert.deepEqual([...paquete(a.tabla)], [...a.pkg]);
+  assert.deepEqual([...leeLut(convierte(identidad).pkg).pkg], [...convierte(identidad).pkg]);
 });

@@ -15,9 +15,11 @@
 
 <main>
   <section class="tarjeta">
-    <h2>1 · Tus LUT (.cube 3D)</h2>
-    <p class="nota">Se admiten 2³…64³. Los 6 primeros van a las ranuras 1…6 de la tarjeta.</p>
-    <input id="cubes" type="file" accept=".cube,text/plain" multiple>
+    <h2>1 · Tu LUT (.cube 3D o ya generado)</h2>
+    <p class="nota">Se admiten <code>.cube</code> 3D de 2³…64³ y ficheros <code>.LUT</code> v1/v2 ya generados (por ejemplo con
+    <code>scripts/lut/lut_pkg.py</code>): el <code>.LUT</code> se previsualiza y se descarga <strong>sin tocar un byte</strong>, con su curva si la lleva.
+    Los 6 primeros van a las ranuras 1…6 de la tarjeta. Aquí no se sube nada: todo ocurre en tu navegador.</p>
+    <input id="cubes" type="file" accept=".cube,.lut,.LUT,text/plain,application/octet-stream" multiple>
     <p id="error" class="error" hidden></p>
     <ol id="lista"></ol>
   </section>
@@ -29,7 +31,7 @@
     <p class="nota" id="sin-foto">Sube una foto y elige una LUT de la lista.</p>
     <div id="lienzos" hidden>
       <figure><canvas id="antes"></canvas><figcaption>Original</figcaption></figure>
-      <figure><canvas id="despues"></canvas><figcaption id="titulo-despues">Cámara · tabla 5×9×9</figcaption></figure>
+      <figure><canvas id="despues"></canvas><figcaption id="titulo-despues">Fichero LUT1.LUT · tabla 5×9×9</figcaption></figure>
     </div>
     <label id="opcion-exacta" hidden><input id="exacto" type="checkbox"> comparar con el <code>.cube</code> exacto (sin la tabla de la cámara)</label>
     <p class="nota" id="detalle"></p>
@@ -42,14 +44,16 @@
       <li>En la tarjeta, crea la carpeta <code>LUT</code> en la raíz y copia dentro <code>LUT1.LUT</code> … <code>LUT6.LUT</code>.</li>
       <li>En la cámara: menú Fn → <strong>LUT</strong> → <code>LUT n</code>. Con <code>Off</code> (o sin tarjeta) no se aplica nada.</li>
     </ol>
-    <p class="nota">El formato es el paquete v1 <code>A6LT</code> (16 B de cabecera + 405 nodos × 21 bits + CRC32), el que valida el
-    hilo de la cámara antes de copiarlo. Sin curva 1D: la curva es la de fábrica.</p>
+    <p class="nota">De un <code>.cube</code> se genera el paquete v1 <code>A6LT</code> (16 B de cabecera + 405 nodos × 21 bits + CRC32), que es
+    exactamente la tabla que calcularía el hilo de la cámara; sin curva 1D. Un <code>.LUT</code> cargado conserva su versión y su curva.
+    Cada fichero muestra su <strong>sha256</strong>: compara el de la tarjeta con el de la lista para saber que has copiado el mismo.</p>
   </section>
 
   <section class="tarjeta aviso">
     <h2>Qué es idéntico y qué no</h2>
     <p>La tabla y el paquete son <strong>byte a byte</strong> los del firmware (mismo redondeo entero y misma corrección Δ² que
-    <code>lutsd.c</code>), y la previsualización aplica la cadena modelada de la cámara: sRGB → YCbCr BT.601 → LUT 5×9×9 de deltas s7 → RGB.</p>
+    <code>lutsd.c</code>). La previsualización se calcula <strong>leyendo el propio fichero</strong> que se descarga (tabla y curva incluidas) y aplica
+    la cadena modelada de la cámara: curva 1D si la hay → YCbCr BT.601 → LUT 5×9×9 de deltas s7 → RGB.</p>
     <p>No se modelan demosaico, reducción de ruido ni la gamma propia del JPEG de la cámara: son ajustes de imagen que la LUT no toca
     y que pueden cambiar el aspecto del original. El resultado es el del modelo del proyecto, no una medida en la cámara.</p>
   </section>
