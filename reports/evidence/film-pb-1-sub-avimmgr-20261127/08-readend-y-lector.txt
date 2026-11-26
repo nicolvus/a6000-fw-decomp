@@ -1,0 +1,44 @@
+# MovieReadEnd 0x608e1c (mask 0x20, --[this+0x148])
+00608e1c: b0b5       push     {r4, r5, r7, lr}              
+00608e1e: 84b0       sub      sp, #0x10                     
+00608e20: 0446       mov      r4, r0                        
+00608e22: dd21       movs     r1, #0xdd                     
+00608e24: 04af       add      r7, sp, #0x10                 
+00608e26: 4068       ldr      r0, [r0, #4]                  
+00608e28: 42f61832   movw     r2, #0x2b18                   
+00608e2c: 46f0b4fd   bl       #0x64f998                     
+00608e30: 2046       mov      r0, r4                        
+00608e32: 2021       movs     r1, #0x20                     
+00608e34: 43f030fa   bl       #0x64c298                     
+00608e38: 38b9       cbnz     r0, #0x608e4a                 
+00608e3a: 1e4b       ldr      r3, [pc, #0x78]                 ; [00608eb4]=009df25a
+00608e3c: e068       ldr      r0, [r4, #0xc]                
+00608e3e: 1e49       ldr      r1, [pc, #0x78]                 ; [00608eb8]=008dee83 "MovieReadEnd : ER_SEQUENCE"
+00608e40: 1a78       ldrb     r2, [r3]                      
+00608e42: 47f07efc   bl       #0x650742                     
+00608e46: 1d4d       ldr      r5, [pc, #0x74]                 ; [00608ebc]=31000007
+00608e48: 1be0       b        #0x608e82                     
+00608e4a: 04f59275   add.w    r5, r4, #0x124                
+00608e4e: 2846       mov      r0, r5                        
+00608e50: cdf7f6f2   bl       #0x1d6440                     
+00608e54: d4f84831   ldr.w    r3, [r4, #0x148]              
+00608e58: 2846       mov      r0, r5                        
+00608e5a: 04f50065   add.w    r5, r4, #0x800                
+00608e5e: 013b       subs     r3, #1                        
+00608e60: 0835       adds     r5, #8                        
+00608e62: c4f84831   str.w    r3, [r4, #0x148]              
+00608e66: cdf7f2f2   bl       #0x1d644e                     
+
+# readyMovieReaderFilter: ilegal bEntryId/mediaType -> 0x1c000003 (0x3042a0)
+00304284: 0a48       ldr      r0, [pc, #0x28]                 ; [003042b0]=008160a0 "########################################"
+00304286: faf707fd   bl       #0x2fec98                     
+0030428a: 0a48       ldr      r0, [pc, #0x28]                 ; [003042b4]=00804d81 "Error!!! readyMovieReaderFilter():Illega"
+0030428c: 03e0       b        #0x304296                     
+0030428e: 0848       ldr      r0, [pc, #0x20]                 ; [003042b0]=008160a0 "########################################"
+00304290: faf702fd   bl       #0x2fec98                     
+00304294: 0848       ldr      r0, [pc, #0x20]                 ; [003042b8]=00804de1 "Error!!! readyMovieReaderFilter():Illega"
+00304296: faf7fffc   bl       #0x2fec98                     
+0030429a: 0548       ldr      r0, [pc, #0x14]                 ; [003042b0]=008160a0 "########################################"
+0030429c: faf7fcfc   bl       #0x2fec98                     
+003042a0: 0648       ldr      r0, [pc, #0x18]                 ; [003042bc]=1c000003
+003042a2: bd46       mov      sp, r7                        

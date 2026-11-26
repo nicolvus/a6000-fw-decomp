@@ -1,0 +1,65 @@
+# Transcripcion de la prueba (27-11-2026) - generada, no editada a mano
+# 1) construccion del fichero sintetico con la estructura DEDUCIDA
+$ python3 sintetico_avin.py AVIN0001_sintetico.INP
+escrito AVIN0001_sintetico.INP: 1408 B (cabecera 0x100 + 9 registros de 0x80)
+
+$ sha256sum AVIN0001_sintetico.INP
+7f10bc8024b921b4504799ab88f0d66981cb7624fb64ca8c3cbf55d4a144573b  AVIN0001_sintetico.INP
+
+# 2) lectura del sintetico
+$ python3 leer_avin.py AVIN0001_sintetico.INP --header 0x100
+fichero : AVIN0001_sintetico.INP
+tamano  : 1408 B (0x580)
+
+file-ID del descriptor (16 B): LE@0x0, LE[4:]@0x4
+
+registros de clip (base = nombre - 0x12):
+  #  base    nombre         nFileSize   WxH         dur_ms          dur_90kHz       bValid?
+  -----------------------------------------------------------------------------------------
+  0  000100  MAH04198.MP4   24641536    1440x1080   9510=9.510s     855900=9.510s   0x01
+       rejilla: cabecera 0x100 + registro 0 * 0x80 = 0x100
+  1  000180  MAH04200.MP4   12984320    1440x1080   5005=5.005s     450450=5.005s   0x01
+       rejilla: cabecera 0x100 + registro 1 * 0x80 = 0x180
+  2  000200  MAH04201.MP4   63606784    1440x1080   24525=24.525s   2207250=24.525s 0x01
+       rejilla: cabecera 0x100 + registro 2 * 0x80 = 0x200
+  3  000280  MAH04202.MP4   81805312    1440x1080   31532=31.532s   2837880=31.532s 0x01
+       rejilla: cabecera 0x100 + registro 3 * 0x80 = 0x280
+  4  000300  MAH04203.MP4   89587712    1440x1080   34535=34.535s   3108150=34.535s 0x01
+       rejilla: cabecera 0x100 + registro 4 * 0x80 = 0x300
+  5  000380  MAH04204.MP4   136306688   1440x1080   52553=52.553s   4729770=52.553s 0x01
+       rejilla: cabecera 0x100 + registro 5 * 0x80 = 0x380
+  6  000400  MAH04205.MP4   188227584   1440x1080   72573=72.573s   6531570=72.573s 0x01
+       rejilla: cabecera 0x100 + registro 6 * 0x80 = 0x400
+  7  000480  MAH04199.MP4   24641536    1440x1080   2000=2.000s     180000=2.000s   0x00
+       rejilla: cabecera 0x100 + registro 7 * 0x80 = 0x480
+
+campos del registro (base = offset del nombre - 0x12):
+  +0x00  char[18] cDirPath
+  +0x12  char[14] cFileName
+  +0x20  u32     nFileSize
+  +0x24  u8      bValid?
+  +0x28  u32     nWidth
+  +0x2C  u32     nHeight
+  +0x30  u32     nDuration_ms
+  +0x34  u32     nDuration90kHz?
+  +0x38  u32     emVideoCodec
+
+
+# 3) volcado hex del registro de MAH04198
+$ python3 leer_avin.py AVIN0001_sintetico.INP --raw MAH04198
+  +0x24  u8      bValid?
+  +0x28  u32     nWidth
+  +0x2C  u32     nHeight
+  +0x30  u32     nDuration_ms
+  +0x34  u32     nDuration90kHz?
+  +0x38  u32     emVideoCodec
+
+volcado de MAH04198.MP4 (base 0x100):
+    0000  4d 50 5f 52 4f 4f 54 2f 31 30 30 41 4e 56 30 31 |MP_ROOT/100ANV01|
+    0010  00 00 4d 41 48 30 34 31 39 38 2e 4d 50 34 00 00 |..MAH04198.MP4..|
+    0020  00 00 78 01 01 00 00 00 a0 05 00 00 38 04 00 00 |..x.........8...|
+    0030  26 25 00 00 5c 0f 0d 00 04 00 00 00 02 00 00 00 |&%..\...........|
+    0040  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |................|
+    0050  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |................|
+    0060  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |................|
+    0070  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 |................|

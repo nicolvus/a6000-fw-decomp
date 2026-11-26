@@ -1,0 +1,15 @@
+# Barrido de vtables con RTTI en libmpr.so (fw 3.21): criterio = V tal que
+#   u32(V-8)==0 (offset_to_top), u32(V-4)=>typeinfo en .rodata con nombre valido,
+#   u32(V) puntero impar a .text.  Candidatas: 608
+
+# Vtables cuyo +0x58/+0x5C/+0x60/+0xB4 coincide con el cuarteto de la guarda:
+  0x008e6e58  7AviMMgr                 +0x58=0061a8f1 +0x5c=0060945d +0x60=00603dbd +0xb4=00608699
+
+# AviMMgr: vtable 0x8E6E58, typeinfo 0x8E69E4 nombre "7AviMMgr"; tipo base -> "14MMgrBaseThread"
+# AviMMgrIf: vtable 0x9067A8, nombre "9AviMMgrIf"; tipo base -> "6MMgrIf"
+# MMgrBaseThread: vtable 0x8F60A0, nombre "14MMgrBaseThread"
+
+# Subclases de AviMMgr (typeinfo+8 == 0x8E69E4) en libmpr: ninguna
+
+# Vtables cuyo slot +0x18 == 0x603BE1 (metodo "self" no-op):
+  0x008e6e58  7AviMMgr

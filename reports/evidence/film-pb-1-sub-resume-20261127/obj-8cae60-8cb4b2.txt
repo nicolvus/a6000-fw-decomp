@@ -1,0 +1,330 @@
+# libObj: envoltorios Get/SetContentResumePoint y sus llamadores
+# libObj/libmpr 3.21  VA del ELF (base 0). Capstone 5, Thumb.
+
+== libObj 0x8CADF0  M_...::GetContentResumeInfo (envoltorio; blx PLT 0xE1814 = MprIf::GetContentResumePoint)
+008cadf0: 82b0       sub      sp, #8                        
+008cadf2: f0b5       push     {r4, r5, r6, r7, lr}          
+008cadf4: 95b0       sub      sp, #0x54                     
+008cadf6: 12af       add      r7, sp, #0x48                 
+008cadf8: 0e46       mov      r6, r1                        
+008cadfa: 07f12001   add.w    r1, r7, #0x20                 
+008cadfe: 0446       mov      r4, r0                        
+008cae00: 006a       ldr      r0, [r0, #0x20]               
+008cae02: 81e80c00   stm.w    r1, {r2, r3}                  
+008cae06: 0122       movs     r2, #1                        
+008cae08: 4b49       ldr      r1, [pc, #0x12c]                ; [008caf38]=00504919<code 504919>
+008cae0a: bd6e       ldr      r5, [r7, #0x68]               
+008cae0c: 7944       add      r1, pc                        
+008cae0e: ddf7ebfb   bl       #0x8a85e8                       ; _init+0x7cd230
+008cae12: 0021       movs     r1, #0                        
+008cae14: 3846       mov      r0, r7                        
+008cae16: 0a46       mov      r2, r1                        
+008cae18: 13f492e3   blx      #0xde540                        ; _ZN3MWF6ObjMsgC1Ejj
+008cae1c: 2046       mov      r0, r4                        
+008cae1e: fff7e1fd   bl       #0x8ca9e4                       ; _init+0x7ef62c
+008cae22: 07f1200c   add.w    ip, r7, #0x20                 
+008cae26: 0123       movs     r3, #1                        
+008cae28: 2377       strb     r3, [r4, #0x1c]               
+008cae2a: 0df1300e   add.w    lr, sp, #0x30                 
+008cae2e: 9ce80f00   ldm.w    ip, {r0, r1, r2, r3}          
+008cae32: ec46       mov      ip, sp                        
+008cae34: 8ee80f00   stm.w    lr, {r0, r1, r2, r3}          
+008cae38: 07f1380e   add.w    lr, r7, #0x38                 
+008cae3c: 1094       str      r4, [sp, #0x40]               
+008cae3e: bee80f00   ldm.w    lr!, {r0, r1, r2, r3}         
+008cae42: ace80f00   stm.w    ip!, {r0, r1, r2, r3}         
+008cae46: bee80f00   ldm.w    lr!, {r0, r1, r2, r3}         
+008cae4a: ace80f00   stm.w    ip!, {r0, r1, r2, r3}         
+008cae4e: 9ee80f00   ldm.w    lr, {r0, r1, r2, r3}          
+008cae52: 8ce80f00   stm.w    ip, {r0, r1, r2, r3}          
+008cae56: 07f13003   add.w    r3, r7, #0x30                 
+008cae5a: 2068       ldr      r0, [r4]                      
+008cae5c: 3146       mov      r1, r6                        
+008cae5e: 0ccb       ldm      r3, {r2, r3}                  
+008cae60: 16f4d8e4   blx      #0xe1814                        ; _ZN5MprIf21GetContentResumePointEmN3MPR14EntryConditionENS0_7EntryIdEm
+008cae64: 0146       mov      r1, r0                        
+008cae66: 68b1       cbz      r0, #0x8cae84                 
+008cae68: 40f6de53   movw     r3, #0xdde                    
+008cae6c: 334a       ldr      r2, [pc, #0xcc]                 ; [008caf3c]=00503ab5<code 503ab5>
+008cae6e: 0093       str      r3, [sp]                      
+008cae70: 5c20       movs     r0, #0x5c                     
+008cae72: 334b       ldr      r3, [pc, #0xcc]                 ; [008caf40]=00503e81<code 503e81>
+008cae74: 7a44       add      r2, pc                        
+008cae76: 7b44       add      r3, pc                        
+008cae78: 01f0b2ff   bl       #0x8ccde0                       ; _init+0x7f1a28
+008cae7c: 0023       movs     r3, #0                        
+008cae7e: 0546       mov      r5, r0                        
+008cae80: 2377       strb     r3, [r4, #0x1c]               
+008cae82: 49e0       b        #0x8caf18                     
+008cae84: 2046       mov      r0, r4                        
+008cae86: 4ff42041   mov.w    r1, #0xa000                   
+008cae8a: 3a46       mov      r2, r7                        
+008cae8c: fef72efd   bl       #0x8c98ec                       ; _init+0x7ee534
+008cae90: 0021       movs     r1, #0                        
+008cae92: 3846       mov      r0, r7                        
+008cae94: 2177       strb     r1, [r4, #0x1c]               
+008cae96: 2822       movs     r2, #0x28                     
+008cae98: 13f4f6e3   blx      #0xde688                        ; _ZNK3MWF6ObjMsg8GetParamEjNS_5Param4TypeE
+008cae9c: 0028       cmp      r0, #0                        
+008cae9e: 37d0       beq      #0x8caf10                     
+008caea0: 10f484e5   blx      #0xdb9ac                        ; _ZNK3MWF6Struct8GetValueEv
+008caea4: d0f800e0   ldr.w    lr, [r0]                      
+008caea8: bef1000f   cmp.w    lr, #0                        
+008caeac: 0cd0       beq      #0x8caec8                     
+008caeae: 40f6f453   movw     r3, #0xdf4                    
+008caeb2: 244a       ldr      r2, [pc, #0x90]                 ; [008caf44]=00503a6d<code 503a6d>
+008caeb4: 0093       str      r3, [sp]                      
+008caeb6: 5c20       movs     r0, #0x5c                     
+008caeb8: 234b       ldr      r3, [pc, #0x8c]                 ; [008caf48]=00503e39<code 503e39>
+008caeba: 7146       mov      r1, lr                        
+008caebc: 7a44       add      r2, pc                        
+008caebe: 7b44       add      r3, pc                        
+008caec0: 01f08eff   bl       #0x8ccde0                       ; _init+0x7f1a28
+008caec4: 0546       mov      r5, r0                        
+008caec6: 27e0       b        #0x8caf18                     
+008caec8: 037a       ldrb     r3, [r0, #8]                  
+008caeca: 23b3       cbz      r3, #0x8caf16                 
+008caecc: 00f12006   add.w    r6, r0, #0x20                 
+008caed0: 2c46       mov      r4, r5                        
+008caed2: 05f1400c   add.w    ip, r5, #0x40                 
+008caed6: 0fce       ldm      r6!, {r0, r1, r2, r3}         
+008caed8: 0fc4       stm      r4!, {r0, r1, r2, r3}         
+008caeda: 0fce       ldm      r6!, {r0, r1, r2, r3}         
+008caedc: 0fc4       stm      r4!, {r0, r1, r2, r3}         
+008caede: 0fce       ldm      r6!, {r0, r1, r2, r3}         
+
+== libObj 0x8CB448  M_...::SetContentResumeInfo (blx PLT 0xDFAB4 = MprIf::SetContentResumePoint)
+008cb448: 82b0       sub      sp, #8                        
+008cb44a: f0b5       push     {r4, r5, r6, r7, lr}          
+008cb44c: 95b0       sub      sp, #0x54                     
+008cb44e: 12af       add      r7, sp, #0x48                 
+008cb450: 0d46       mov      r5, r1                        
+008cb452: 07f12001   add.w    r1, r7, #0x20                 
+008cb456: 0446       mov      r4, r0                        
+008cb458: 006a       ldr      r0, [r0, #0x20]               
+008cb45a: 81e80c00   stm.w    r1, {r2, r3}                  
+008cb45e: 0122       movs     r2, #1                        
+008cb460: 3649       ldr      r1, [pc, #0xd8]                 ; [008cb53c]=00504356<code 504356>
+008cb462: 7944       add      r1, pc                        
+008cb464: ddf7c0f8   bl       #0x8a85e8                       ; _init+0x7cd230
+008cb468: 0021       movs     r1, #0                        
+008cb46a: 3846       mov      r0, r7                        
+008cb46c: 0a46       mov      r2, r1                        
+008cb46e: 13f468e0   blx      #0xde540                        ; _ZN3MWF6ObjMsgC1Ejj
+008cb472: 2046       mov      r0, r4                        
+008cb474: fff7b6fa   bl       #0x8ca9e4                       ; _init+0x7ef62c
+008cb478: 0123       movs     r3, #1                        
+008cb47a: 2377       strb     r3, [r4, #0x1c]               
+008cb47c: 07f15803   add.w    r3, r7, #0x58                 
+008cb480: 0cae       add      r6, sp, #0x30                 
+008cb482: ee46       mov      lr, sp                        
+008cb484: 0fcb       ldm      r3, {r0, r1, r2, r3}          
+008cb486: 86e80f00   stm.w    r6, {r0, r1, r2, r3}          
+008cb48a: 07f12806   add.w    r6, r7, #0x28                 
+008cb48e: 0023       movs     r3, #0                        
+008cb490: 1093       str      r3, [sp, #0x40]               
+008cb492: 0fce       ldm      r6!, {r0, r1, r2, r3}         
+008cb494: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+008cb498: 0fce       ldm      r6!, {r0, r1, r2, r3}         
+008cb49a: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+008cb49e: 96e80f00   ldm.w    r6, {r0, r1, r2, r3}          
+008cb4a2: 8ee80f00   stm.w    lr, {r0, r1, r2, r3}          
+008cb4a6: 07f12001   add.w    r1, r7, #0x20                 
+008cb4aa: 2068       ldr      r0, [r4]                      
+008cb4ac: 91e80c00   ldm.w    r1, {r2, r3}                  
+008cb4b0: 2946       mov      r1, r5                        
+008cb4b2: 14f400e3   blx      #0xdfab4                        ; _ZN5MprIf21SetContentResumePointEmN3MPR14EntryConditionENS0_7EntryIdEm
+008cb4b6: 0146       mov      r1, r0                        
+008cb4b8: 68b1       cbz      r0, #0x8cb4d6                 
+008cb4ba: 40f66943   movw     r3, #0xc69                    
+008cb4be: 204a       ldr      r2, [pc, #0x80]                 ; [008cb540]=00503463<code 503463>
+008cb4c0: 0093       str      r3, [sp]                      
+008cb4c2: 7020       movs     r0, #0x70                     
+008cb4c4: 1f4b       ldr      r3, [pc, #0x7c]                 ; [008cb544]=005039d1<code 5039d1>
+008cb4c6: 7a44       add      r2, pc                        
+008cb4c8: 7b44       add      r3, pc                        
+008cb4ca: 01f089fc   bl       #0x8ccde0                       ; _init+0x7f1a28
+008cb4ce: 0023       movs     r3, #0                        
+008cb4d0: 0546       mov      r5, r0                        
+008cb4d2: 2377       strb     r3, [r4, #0x1c]               
+008cb4d4: 21e0       b        #0x8cb51a                     
+008cb4d6: 2046       mov      r0, r4                        
+008cb4d8: 4af21801   movw     r1, #0xa018                   
+008cb4dc: 3a46       mov      r2, r7                        
+008cb4de: fef705fa   bl       #0x8c98ec                       ; _init+0x7ee534
+008cb4e2: 0023       movs     r3, #0                        
+008cb4e4: 3846       mov      r0, r7                        
+008cb4e6: 2377       strb     r3, [r4, #0x1c]               
+
+== libObj 0x8B241C  unico llamador del GET (destino = this+0x1314; estado en this+0x138C)
+008b241c: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+008b2420: 92b0       sub      sp, #0x48                     
+008b2422: 00f50856   add.w    r6, r0, #0x2200               
+008b2426: 2349       ldr      r1, [pc, #0x8c]                 ; [008b24b4]=00518ffd<code 518ffd>
+008b2428: 0446       mov      r4, r0                        
+008b242a: 12af       add      r7, sp, #0x48                 
+008b242c: 306b       ldr      r0, [r6, #0x30]               
+008b242e: 7944       add      r1, pc                        
+008b2430: 0122       movs     r2, #1                        
+008b2432: f6f7d9f8   bl       #0x8a85e8                       ; _init+0x7cd230
+008b2436: 04f1280c   add.w    ip, r4, #0x28                 
+008b243a: 0df1080e   add.w    lr, sp, #8                    
+008b243e: 04f59855   add.w    r5, r4, #0x1300               
+008b2442: bce80f00   ldm.w    ip!, {r0, r1, r2, r3}         
+008b2446: 1435       adds     r5, #0x14                     
+008b2448: 04f50958   add.w    r8, r4, #0x2240               
+008b244c: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+008b2450: bce80f00   ldm.w    ip!, {r0, r1, r2, r3}         
+008b2454: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+008b2458: bce80f00   ldm.w    ip!, {r0, r1, r2, r3}         
+008b245c: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+008b2460: 04f12003   add.w    r3, r4, #0x20                 
+008b2464: 9ce80300   ldm.w    ip, {r0, r1}                  
+008b2468: 8ee80300   stm.w    lr, {r0, r1}                  
+008b246c: 1095       str      r5, [sp, #0x40]               
+008b246e: 93e80300   ldm.w    r3, {r0, r1}                  
+008b2472: 04f11803   add.w    r3, r4, #0x18                 
+008b2476: 8de80300   stm.w    sp, {r0, r1}                  
+008b247a: d8f80000   ldr.w    r0, [r8]                      
+008b247e: d4f8ac10   ldr.w    r1, [r4, #0xac]               
+008b2482: 04f59c54   add.w    r4, r4, #0x1380               
+008b2486: 0ccb       ldm      r3, {r2, r3}                  
+008b2488: 18f0b2fc   bl       #0x8cadf0                       ; _init+0x7efa38
+008b248c: 8046       mov      r8, r0                        
+008b248e: e060       str      r0, [r4, #0xc]                
+008b2490: 30b9       cbnz     r0, #0x8b24a0                 
+008b2492: 0949       ldr      r1, [pc, #0x24]                 ; [008b24b8]=00518204<code 518204>
+008b2494: 2a46       mov      r2, r5                        
+008b2496: 306b       ldr      r0, [r6, #0x30]               
+008b2498: 7944       add      r1, pc                        
+008b249a: 2ef4cae7   blx      #0xe1430                        ; _ZNK7MonCtrl9ConPrintfEPKcz
+008b249e: 05e0       b        #0x8b24ac                     
+008b24a0: 0649       ldr      r1, [pc, #0x18]                 ; [008b24bc]=00518226<code 518226>
+008b24a2: 0122       movs     r2, #1                        
+008b24a4: 706b       ldr      r0, [r6, #0x34]               
+008b24a6: 7944       add      r1, pc                        
+008b24a8: f6f79ef8   bl       #0x8a85e8                       ; _init+0x7cd230
+008b24ac: 4046       mov      r0, r8                        
+008b24ae: bd46       mov      sp, r7                        
+008b24b0: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+008b24b4: fd8f       ldrh     r5, [r7, #0x3e]               
+008b24b6: 5100       lsls     r1, r2, #1                    
+008b24b8: 0482       strh     r4, [r0, #0x10]               
+008b24ba: 5100       lsls     r1, r2, #1                    
+008b24bc: 2682       strh     r6, [r4, #0x10]               
+008b24be: 5100       lsls     r1, r2, #1                    
+008b24c0: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+008b24c4: 92b0       sub      sp, #0x48                     
+008b24c6: 00f50853   add.w    r3, r0, #0x2200               
+008b24ca: 0e46       mov      r6, r1                        
+008b24cc: 1949       ldr      r1, [pc, #0x64]                 ; [008b2534]=00518f76<code 518f76>
+008b24ce: 0446       mov      r4, r0                        
+008b24d0: 1546       mov      r5, r2                        
+008b24d2: 186b       ldr      r0, [r3, #0x30]               
+008b24d4: 7944       add      r1, pc                        
+008b24d6: 0122       movs     r2, #1                        
+008b24d8: 12af       add      r7, sp, #0x48                 
+008b24da: f6f785f8   bl       #0x8a85e8                       ; _init+0x7cd230
+008b24de: 04f11803   add.w    r3, r4, #0x18                 
+008b24e2: 0df1300e   add.w    lr, sp, #0x30                 
+008b24e6: ec46       mov      ip, sp                        
+008b24e8: 0fcb       ldm      r3, {r0, r1, r2, r3}          
+008b24ea: 04f50958   add.w    r8, r4, #0x2240               
+008b24ee: 8ee80f00   stm.w    lr, {r0, r1, r2, r3}          
+008b24f2: 04f1300e   add.w    lr, r4, #0x30                 
+008b24f6: 1096       str      r6, [sp, #0x40]               
+008b24f8: 1195       str      r5, [sp, #0x44]               
+008b24fa: bee80f00   ldm.w    lr!, {r0, r1, r2, r3}         
+008b24fe: ace80f00   stm.w    ip!, {r0, r1, r2, r3}         
+008b2502: bee80f00   ldm.w    lr!, {r0, r1, r2, r3}         
+008b2506: ace80f00   stm.w    ip!, {r0, r1, r2, r3}         
+008b250a: 9ee80f00   ldm.w    lr, {r0, r1, r2, r3}          
+008b250e: 8ce80f00   stm.w    ip, {r0, r1, r2, r3}          
+008b2512: 04f12803   add.w    r3, r4, #0x28                 
+008b2516: d8f80000   ldr.w    r0, [r8]                      
+008b251a: 0ccb       ldm      r3, {r2, r3}                  
+008b251c: d4f8ac10   ldr.w    r1, [r4, #0xac]               
+008b2520: 18f0ccfb   bl       #0x8cacbc                       ; _init+0x7ef904
+008b2524: 10b1       cbz      r0, #0x8b252c                 
+008b2526: 0023       movs     r3, #0                        
+008b2528: 3370       strb     r3, [r6]                      
+008b252a: 2b70       strb     r3, [r5]                      
+008b252c: bd46       mov      sp, r7                        
+008b252e: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+008b2532: 00bf       nop                                    
+008b2534: 768f       ldrh     r6, [r6, #0x3a]               
+008b2536: 5100       lsls     r1, r2, #1                    
+
+== libObj 0x8B125C  unico llamador del SET (origen = this+0x18 / this+0x30; EntryId en this+0x28)
+008b125c: f0b5       push     {r4, r5, r6, r7, lr}          
+008b125e: 91b0       sub      sp, #0x44                     
+008b1260: 00f50853   add.w    r3, r0, #0x2200               
+008b1264: 1549       ldr      r1, [pc, #0x54]                 ; [008b12bc]=0051a021<code 51a021>
+008b1266: 0446       mov      r4, r0                        
+008b1268: 10af       add      r7, sp, #0x40                 
+008b126a: 186b       ldr      r0, [r3, #0x30]               
+008b126c: 7944       add      r1, pc                        
+008b126e: 0122       movs     r2, #1                        
+008b1270: f7f7baf9   bl       #0x8a85e8                       ; _init+0x7cd230
+008b1274: 04f59053   add.w    r3, r4, #0x1200               
+008b1278: 187e       ldrb     r0, [r3, #0x18]               
+008b127a: d8b1       cbz      r0, #0x8b12b4                 
+008b127c: 04f11803   add.w    r3, r4, #0x18                 
+008b1280: 0cad       add      r5, sp, #0x30                 
+008b1282: 6e46       mov      r6, sp                        
+008b1284: 04f5095e   add.w    lr, r4, #0x2240               
+008b1288: 0fcb       ldm      r3, {r0, r1, r2, r3}          
+008b128a: 85e80f00   stm.w    r5, {r0, r1, r2, r3}          
+008b128e: 04f13005   add.w    r5, r4, #0x30                 
+008b1292: 0fcd       ldm      r5!, {r0, r1, r2, r3}         
+008b1294: 0fc6       stm      r6!, {r0, r1, r2, r3}         
+008b1296: 0fcd       ldm      r5!, {r0, r1, r2, r3}         
+008b1298: 0fc6       stm      r6!, {r0, r1, r2, r3}         
+008b129a: 95e80f00   ldm.w    r5, {r0, r1, r2, r3}          
+008b129e: 86e80f00   stm.w    r6, {r0, r1, r2, r3}          
+008b12a2: 04f12803   add.w    r3, r4, #0x28                 
+008b12a6: def80000   ldr.w    r0, [lr]                      
+008b12aa: 0ccb       ldm      r3, {r2, r3}                  
+008b12ac: d4f8ac10   ldr.w    r1, [r4, #0xac]               
+008b12b0: 1af0caf8   bl       #0x8cb448                       ; _init+0x7f0090
+008b12b4: 07f10407   add.w    r7, r7, #4                    
+008b12b8: bd46       mov      sp, r7                        
+008b12ba: f0bd       pop      {r4, r5, r6, r7, pc}          
+008b12bc: 21a0       adr      r0, #0x84                     
+008b12be: 5100       lsls     r1, r2, #1                    
+008b12c0: f0b5       push     {r4, r5, r6, r7, lr}          
+008b12c2: 91b0       sub      sp, #0x44                     
+008b12c4: 00f50853   add.w    r3, r0, #0x2200               
+008b12c8: 1549       ldr      r1, [pc, #0x54]                 ; [008b1320]=00519fda<code 519fda>
+008b12ca: 0446       mov      r4, r0                        
+008b12cc: 10af       add      r7, sp, #0x40                 
+008b12ce: 186b       ldr      r0, [r3, #0x30]               
+008b12d0: 7944       add      r1, pc                        
+008b12d2: 0122       movs     r2, #1                        
+008b12d4: f7f788f9   bl       #0x8a85e8                       ; _init+0x7cd230
+008b12d8: 04f59053   add.w    r3, r4, #0x1200               
+008b12dc: 187e       ldrb     r0, [r3, #0x18]               
+008b12de: d8b1       cbz      r0, #0x8b1318                 
+008b12e0: 04f11803   add.w    r3, r4, #0x18                 
+008b12e4: 0cad       add      r5, sp, #0x30                 
+008b12e6: 6e46       mov      r6, sp                        
+008b12e8: 04f5095e   add.w    lr, r4, #0x2240               
+008b12ec: 0fcb       ldm      r3, {r0, r1, r2, r3}          
+008b12ee: 85e80f00   stm.w    r5, {r0, r1, r2, r3}          
+008b12f2: 04f13005   add.w    r5, r4, #0x30                 
+008b12f6: 0fcd       ldm      r5!, {r0, r1, r2, r3}         
+008b12f8: 0fc6       stm      r6!, {r0, r1, r2, r3}         
+008b12fa: 0fcd       ldm      r5!, {r0, r1, r2, r3}         
+008b12fc: 0fc6       stm      r6!, {r0, r1, r2, r3}         
+008b12fe: 95e80f00   ldm.w    r5, {r0, r1, r2, r3}          
+008b1302: 86e80f00   stm.w    r6, {r0, r1, r2, r3}          
+008b1306: 04f12803   add.w    r3, r4, #0x28                 
+008b130a: def80000   ldr.w    r0, [lr]                      
+008b130e: 0ccb       ldm      r3, {r2, r3}                  
+008b1310: d4f8ac10   ldr.w    r1, [r4, #0xac]               
+008b1314: 1af016f8   bl       #0x8cb344                       ; _init+0x7eff8c
+008b1318: 07f10407   add.w    r7, r7, #4                    
+008b131c: bd46       mov      sp, r7                        
+008b131e: f0bd       pop      {r4, r5, r6, r7, pc}          
+008b1320: da9f       ldr      r7, [sp, #0x368]              
+008b1322: 5100       lsls     r1, r2, #1                    

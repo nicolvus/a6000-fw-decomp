@@ -1,0 +1,129 @@
+# 0x64c298(this,mask=0x24) — test de estado de AviMMgr
+0064c298: 2de9f843   push.w   {r3, r4, r5, r6, r7, r8, sb, lr}
+0064c29c: 00f59279   add.w    sb, r0, #0x124                
+0064c2a0: 0446       mov      r4, r0                        
+0064c2a2: 00af       add      r7, sp, #0                    
+0064c2a4: 4846       mov      r0, sb                        
+0064c2a6: 0d46       mov      r5, r1                        
+0064c2a8: 8af7caf0   bl       #0x1d6440                     
+0064c2ac: 4846       mov      r0, sb                        
+0064c2ae: d4f84081   ldr.w    r8, [r4, #0x140]              
+0064c2b2: d4f84861   ldr.w    r6, [r4, #0x148]              
+0064c2b6: d4f84c41   ldr.w    r4, [r4, #0x14c]              
+0064c2ba: 8af7c8f0   bl       #0x1d644e                     
+0064c2be: 15f0020f   tst.w    r5, #2                        
+0064c2c2: 05d0       beq      #0x64c2d0                     
+0064c2c4: b8f1020f   cmp.w    r8, #2                        
+0064c2c8: 02d1       bne      #0x64c2d0                     
+0064c2ca: 0eb9       cbnz     r6, #0x64c2d0                 
+0064c2cc: 002c       cmp      r4, #0                        
+0064c2ce: 4fd0       beq      #0x64c370                     
+0064c2d0: 15f0040f   tst.w    r5, #4                        
+0064c2d4: 05d0       beq      #0x64c2e2                     
+0064c2d6: b8f1040f   cmp.w    r8, #4                        
+0064c2da: 02d1       bne      #0x64c2e2                     
+0064c2dc: 0eb9       cbnz     r6, #0x64c2e2                 
+0064c2de: 002c       cmp      r4, #0                        
+0064c2e0: 46d0       beq      #0x64c370                     
+0064c2e2: 15f0080f   tst.w    r5, #8                        
+0064c2e6: 05d0       beq      #0x64c2f4                     
+0064c2e8: b8f1080f   cmp.w    r8, #8                        
+0064c2ec: 02d1       bne      #0x64c2f4                     
+0064c2ee: 0eb9       cbnz     r6, #0x64c2f4                 
+0064c2f0: 002c       cmp      r4, #0                        
+0064c2f2: 3dd0       beq      #0x64c370                     
+0064c2f4: 15f0100f   tst.w    r5, #0x10                     
+0064c2f8: 05d0       beq      #0x64c306                     
+0064c2fa: b8f1100f   cmp.w    r8, #0x10                     
+0064c2fe: 02d1       bne      #0x64c306                     
+0064c300: 0eb9       cbnz     r6, #0x64c306                 
+0064c302: 002c       cmp      r4, #0                        
+0064c304: 34d0       beq      #0x64c370                     
+0064c306: 15f0200f   tst.w    r5, #0x20                     
+0064c30a: 04d0       beq      #0x64c316                     
+0064c30c: b8f1040f   cmp.w    r8, #4                        
+0064c310: 01d1       bne      #0x64c316                     
+0064c312: 06b1       cbz      r6, #0x64c316                 
+0064c314: 64b3       cbz      r4, #0x64c370                 
+0064c316: 15f0400f   tst.w    r5, #0x40                     
+0064c31a: 04d0       beq      #0x64c326                     
+0064c31c: b8f1040f   cmp.w    r8, #4                        
+0064c320: 01d1       bne      #0x64c326                     
+0064c322: 06b9       cbnz     r6, #0x64c326                 
+0064c324: 24bb       cbnz     r4, #0x64c370                 
+0064c326: 15f0800f   tst.w    r5, #0x80                     
+0064c32a: 04d0       beq      #0x64c336                     
+0064c32c: b8f1800f   cmp.w    r8, #0x80                     
+0064c330: 01d1       bne      #0x64c336                     
+0064c332: 06b9       cbnz     r6, #0x64c336                 
+0064c334: e4b1       cbz      r4, #0x64c370                 
+0064c336: 15f4807f   tst.w    r5, #0x100                    
+0064c33a: 04d0       beq      #0x64c346                     
+0064c33c: b8f5807f   cmp.w    r8, #0x100                    
+0064c340: 01d1       bne      #0x64c346                     
+0064c342: 06b9       cbnz     r6, #0x64c346                 
+0064c344: a4b1       cbz      r4, #0x64c370                 
+0064c346: 15f4007f   tst.w    r5, #0x200                    
+0064c34a: 04d0       beq      #0x64c356                     
+0064c34c: b8f5007f   cmp.w    r8, #0x200                    
+0064c350: 01d1       bne      #0x64c356                     
+0064c352: 06b9       cbnz     r6, #0x64c356                 
+0064c354: 64b1       cbz      r4, #0x64c370                 
+0064c356: 15f48060   ands     r0, r5, #0x400                
+0064c35a: 10d0       beq      #0x64c37e                     
+0064c35c: b8f5806f   cmp.w    r8, #0x400                    
+0064c360: 09d1       bne      #0x64c376                     
+0064c362: 5eb9       cbnz     r6, #0x64c37c                 
+0064c364: d4f10100   rsbs.w   r0, r4, #1                    
+0064c368: 38bf       it       lo                            
+0064c36a: 0020       movlo    r0, #0                        
+0064c36c: bde8f883   pop.w    {r3, r4, r5, r6, r7, r8, sb, pc}
+0064c370: 0120       movs     r0, #1                        
+0064c372: bde8f883   pop.w    {r3, r4, r5, r6, r7, r8, sb, pc}
+0064c376: 0020       movs     r0, #0                        
+
+# setter 0x64c5dc(this,id,state)
+0064c5dc: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+0064c5e0: 0446       mov      r4, r0                        
+0064c5e2: 82b0       sub      sp, #8                        
+0064c5e4: 00f59275   add.w    r5, r0, #0x124                
+0064c5e8: 2846       mov      r0, r5                        
+0064c5ea: 02af       add      r7, sp, #8                    
+0064c5ec: 8846       mov      r8, r1                        
+0064c5ee: 1646       mov      r6, r2                        
+0064c5f0: 89f726f7   bl       #0x1d6440                     
+0064c5f4: 6068       ldr      r0, [r4, #4]                  
+0064c5f6: 38b1       cbz      r0, #0x64c608                 
+0064c5f8: 0023       movs     r3, #0                        
+0064c5fa: 4146       mov      r1, r8                        
+0064c5fc: 0093       str      r3, [sp]                      
+0064c5fe: 3346       mov      r3, r6                        
+0064c600: d4f84021   ldr.w    r2, [r4, #0x140]              
+0064c604: 03f099f9   bl       #0x64f93a                     
+0064c608: 2846       mov      r0, r5                        
+0064c60a: c4f84061   str.w    r6, [r4, #0x140]              
+0064c60e: 89f71ef7   bl       #0x1d644e                     
+0064c612: 0020       movs     r0, #0                        
+0064c614: bd46       mov      sp, r7                        
+0064c616: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+0064c61a: b0b5       push     {r4, r5, r7, lr}              
+
+# init: 0x60ab92 y 0x60b592 escriben estado 2 y ceros; 0x60b5ac -> 0x3ea35a
+0060ab8c: 0223       movs     r3, #2                        
+0060ab8e: 85f8a048   strb.w   r4, [r5, #0x8a0]              
+0060ab92: c5f84031   str.w    r3, [r5, #0x140]              
+0060ab96: c5f84441   str.w    r4, [r5, #0x144]              
+0060ab9a: c5f84841   str.w    r4, [r5, #0x148]              
+0060ab9e: c5f89847   str.w    r4, [r5, #0x798]              
+0060aba2: c5f84c41   str.w    r4, [r5, #0x14c]              
+0060b58a: 04f5fc60   add.w    r0, r4, #0x7e0                
+0060b58e: 0223       movs     r3, #2                        
+0060b590: 0430       adds     r0, #4                        
+0060b592: c4f84031   str.w    r3, [r4, #0x140]              
+0060b596: 3146       mov      r1, r6                        
+0060b598: c4f84461   str.w    r6, [r4, #0x144]              
+0060b59c: c4f84861   str.w    r6, [r4, #0x148]              
+0060b5a0: c4f89867   str.w    r6, [r4, #0x798]              
+0060b5a4: c4f84c61   str.w    r6, [r4, #0x14c]              
+0060b5a8: 84f8d961   strb.w   r6, [r4, #0x1d9]              
+0060b5ac: def5d5fe   bl       #0x3ea35a                     

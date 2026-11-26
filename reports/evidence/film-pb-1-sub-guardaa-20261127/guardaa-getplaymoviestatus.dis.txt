@@ -1,0 +1,272 @@
+== libmpr.so 3.21 sha256 ==
+9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30  firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+== libObj.so ==
+8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a  firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so
+
+== A. GetPlayMovieStatus FUN_0060945C (VA ELF; REA=+0x10000) ==
+0060945c: f0b5       push     {r4, r5, r6, r7, lr}          
+0060945e: e3b0       sub      sp, #0x18c                    
+00609460: a44b       ldr      r3, [pc, #0x290]                ; [006096f4]=009df25c
+00609462: 0d46       mov      r5, r1                        
+00609464: 04af       add      r7, sp, #0x10                 
+00609466: 0446       mov      r4, r0                        
+00609468: a34a       ldr      r2, [pc, #0x28c]                ; [006096f8]=008def1d "GetPlayMovieStatus : contentType[%x]
+"
+0060946a: 1978       ldrb     r1, [r3]                      
+0060946c: 2b46       mov      r3, r5                        
+0060946e: c068       ldr      r0, [r0, #0xc]                
+00609470: 47f0dcf8   bl       #0x65062c                     
+00609474: 082d       cmp      r5, #8                        
+00609476: 1cd0       beq      #0x6094b2                     
+00609478: 102d       cmp      r5, #0x10                     
+0060947a: 00f08a81   beq.w    #0x609792                     
+0060947e: 062d       cmp      r5, #6                        
+00609480: 66d0       beq      #0x609550                     
+00609482: 802d       cmp      r5, #0x80                     
+00609484: 00f07781   beq.w    #0x609776                     
+00609488: b5f5807f   cmp.w    r5, #0x100                    
+0060948c: 00f08a81   beq.w    #0x6097a4                     
+00609490: b5f5007f   cmp.w    r5, #0x200                    
+00609494: 00f06f81   beq.w    #0x609776                     
+00609498: 984b       ldr      r3, [pc, #0x260]                ; [006096fc]=008e76f8 "GetPlayMovieStatus"
+0060949a: 0220       movs     r0, #2                        
+0060949c: c421       movs     r1, #0xc4                     
+0060949e: 984a       ldr      r2, [pc, #0x260]                ; [00609700]=31000001
+006094a0: 0093       str      r3, [sp]                      
+006094a2: 42f21063   movw     r3, #0x2610                   
+006094a6: 0193       str      r3, [sp, #4]                  
+006094a8: 6368       ldr      r3, [r4, #4]                  
+006094aa: 0293       str      r3, [sp, #8]                  
+006094ac: 0123       movs     r3, #1                        
+006094ae: 0393       str      r3, [sp, #0xc]                
+006094b0: 21e0       b        #0x6094f6                     
+006094b2: a068       ldr      r0, [r4, #8]                  
+006094b4: 0368       ldr      r3, [r0]                      
+006094b6: d3f84431   ldr.w    r3, [r3, #0x144]              
+006094ba: 9847       blx      r3                            
+006094bc: 78b1       cbz      r0, #0x6094de                 
+006094be: a068       ldr      r0, [r4, #8]                  
+006094c0: 0368       ldr      r3, [r0]                      
+006094c2: d3f86431   ldr.w    r3, [r3, #0x164]              
+006094c6: 9847       blx      r3                            
+006094c8: 0028       cmp      r0, #0                        
+006094ca: 40f08d80   bne.w    #0x6095e8                     
+006094ce: a068       ldr      r0, [r4, #8]                  
+006094d0: 0368       ldr      r3, [r0]                      
+006094d2: d3f87431   ldr.w    r3, [r3, #0x174]              
+006094d6: 9847       blx      r3                            
+006094d8: 0028       cmp      r0, #0                        
+006094da: 00f08580   beq.w    #0x6095e8                     
+006094de: 874b       ldr      r3, [pc, #0x21c]                ; [006096fc]=008e76f8 "GetPlayMovieStatus"
+006094e0: 0093       str      r3, [sp]                      
+006094e2: 42f21a63   movw     r3, #0x261a                   
+006094e6: 0193       str      r3, [sp, #4]                  
+006094e8: 0220       movs     r0, #2                        
+006094ea: 6368       ldr      r3, [r4, #4]                  
+006094ec: c421       movs     r1, #0xc4                     
+006094ee: 854a       ldr      r2, [pc, #0x214]                ; [00609704]=31000003
+006094f0: 0293       str      r3, [sp, #8]                  
+006094f2: 0123       movs     r3, #1                        
+006094f4: 0393       str      r3, [sp, #0xc]                
+006094f6: 844b       ldr      r3, [pc, #0x210]                ; [00609708]=008dd9c0 "avimmgr/AviMMgr.cpp"
+006094f8: 44f0c0fe   bl       #0x64e27c                     
+006094fc: 33e1       b        #0x609766                     
+006094fe: a068       ldr      r0, [r4, #8]                  
+00609500: 0368       ldr      r3, [r0]                      
+00609502: d3f86431   ldr.w    r3, [r3, #0x164]              
+00609506: 9847       blx      r3                            
+00609508: 0028       cmp      r0, #0                        
+0060950a: 40f08580   bne.w    #0x609618                     
+0060950e: a068       ldr      r0, [r4, #8]                  
+00609510: 0368       ldr      r3, [r0]                      
+00609512: d3f87831   ldr.w    r3, [r3, #0x178]              
+00609516: 9847       blx      r3                            
+00609518: 0028       cmp      r0, #0                        
+0060951a: 7dd0       beq      #0x609618                     
+0060951c: 774b       ldr      r3, [pc, #0x1dc]                ; [006096fc]=008e76f8 "GetPlayMovieStatus"
+0060951e: 0093       str      r3, [sp]                      
+00609520: 42f22163   movw     r3, #0x2621                   
+00609524: dfe7       b        #0x6094e6                     
+00609526: a068       ldr      r0, [r4, #8]                  
+00609528: 0368       ldr      r3, [r0]                      
+0060952a: d3f86431   ldr.w    r3, [r3, #0x164]              
+0060952e: 9847       blx      r3                            
+00609530: 0028       cmp      r0, #0                        
+00609532: 40f0c780   bne.w    #0x6096c4                     
+00609536: a068       ldr      r0, [r4, #8]                  
+00609538: 0368       ldr      r3, [r0]                      
+0060953a: d3f88831   ldr.w    r3, [r3, #0x188]              
+0060953e: 9847       blx      r3                            
+00609540: 0028       cmp      r0, #0                        
+00609542: 00f0bf80   beq.w    #0x6096c4                     
+00609546: 6d4b       ldr      r3, [pc, #0x1b4]                ; [006096fc]=008e76f8 "GetPlayMovieStatus"
+00609548: 0093       str      r3, [sp]                      
+0060954a: 42f22863   movw     r3, #0x2628                   
+0060954e: cae7       b        #0x6094e6                     
+00609550: a068       ldr      r0, [r4, #8]                  
+00609552: 0368       ldr      r3, [r0]                      
+00609554: d3f85431   ldr.w    r3, [r3, #0x154]              
+00609558: 9847       blx      r3                            
+0060955a: 0646       mov      r6, r0                        
+0060955c: 0028       cmp      r0, #0                        
+0060955e: 59d1       bne      #0x609614                     
+00609560: 664b       ldr      r3, [pc, #0x198]                ; [006096fc]=008e76f8 "GetPlayMovieStatus"
+00609562: 0220       movs     r0, #2                        
+00609564: c421       movs     r1, #0xc4                     
+00609566: 674a       ldr      r2, [pc, #0x19c]                ; [00609704]=31000003
+00609568: 0093       str      r3, [sp]                      
+0060956a: 42f22f63   movw     r3, #0x262f                   
+0060956e: 0193       str      r3, [sp, #4]                  
+00609570: 6368       ldr      r3, [r4, #4]                  
+00609572: 0293       str      r3, [sp, #8]                  
+00609574: 0123       movs     r3, #1                        
+00609576: 0393       str      r3, [sp, #0xc]                
+00609578: 634b       ldr      r3, [pc, #0x18c]                ; [00609708]=008dd9c0 "avimmgr/AviMMgr.cpp"
+0060957a: 44f07ffe   bl       #0x64e27c                     
+0060957e: f5e0       b        #0x60976c                     
+00609580: a068       ldr      r0, [r4, #8]                  
+00609582: 0368       ldr      r3, [r0]                      
+00609584: d3f85831   ldr.w    r3, [r3, #0x158]              
+00609588: 9847       blx      r3                            
+0060958a: 68b1       cbz      r0, #0x6095a8                 
+0060958c: a068       ldr      r0, [r4, #8]                  
+0060958e: 0368       ldr      r3, [r0]                      
+00609590: d3f86431   ldr.w    r3, [r3, #0x164]              
+00609594: 9847       blx      r3                            
+00609596: 0028       cmp      r0, #0                        
+00609598: 79d1       bne      #0x60968e                     
+0060959a: a068       ldr      r0, [r4, #8]                  
+0060959c: 0368       ldr      r3, [r0]                      
+0060959e: d3f88431   ldr.w    r3, [r3, #0x184]              
+006095a2: 9847       blx      r3                            
+006095a4: 0028       cmp      r0, #0                        
+006095a6: 72d0       beq      #0x60968e                     
+006095a8: 544b       ldr      r3, [pc, #0x150]                ; [006096fc]=008e76f8 "GetPlayMovieStatus"
+006095aa: 0093       str      r3, [sp]                      
+006095ac: 42f23663   movw     r3, #0x2636                   
+006095b0: 99e7       b        #0x6094e6                     
+006095b2: a068       ldr      r0, [r4, #8]                  
+006095b4: 0368       ldr      r3, [r0]                      
+006095b6: d3f86031   ldr.w    r3, [r3, #0x160]              
+006095ba: 9847       blx      r3                            
+006095bc: 78b1       cbz      r0, #0x6095de                 
+006095be: a068       ldr      r0, [r4, #8]                  
+006095c0: 0368       ldr      r3, [r0]                      
+006095c2: d3f86431   ldr.w    r3, [r3, #0x164]              
+006095c6: 9847       blx      r3                            
+006095c8: 0028       cmp      r0, #0                        
+006095ca: 40f0a280   bne.w    #0x609712                     
+006095ce: a068       ldr      r0, [r4, #8]                  
+006095d0: 0368       ldr      r3, [r0]                      
+006095d2: d3f88c31   ldr.w    r3, [r3, #0x18c]              
+006095d6: 9847       blx      r3                            
+006095d8: 0028       cmp      r0, #0                        
+006095da: 00f09a80   beq.w    #0x609712                     
+006095de: 474b       ldr      r3, [pc, #0x11c]                ; [006096fc]=008e76f8 "GetPlayMovieStatus"
+006095e0: 0093       str      r3, [sp]                      
+006095e2: 42f23d63   movw     r3, #0x263d                   
+006095e6: 7ee7       b        #0x6094e6                     
+006095e8: a068       ldr      r0, [r4, #8]                  
+006095ea: 1421       movs     r1, #0x14                     
+006095ec: 0368       ldr      r3, [r0]                      
+006095ee: d3f8e031   ldr.w    r3, [r3, #0x1e0]              
+006095f2: 9847       blx      r3                            
+006095f4: 0021       movs     r1, #0                        
+006095f6: 4c22       movs     r2, #0x4c                     
+006095f8: 0546       mov      r5, r0                        
+006095fa: 3846       mov      r0, r7                        
+006095fc: 16f771f6   bl       #0x1202e2                     
+00609600: d4f87807   ldr.w    r0, [r4, #0x778]              
+00609604: 3946       mov      r1, r7                        
+00609606: 67f071fb   bl       #0x670cec                     
+0060960a: 0028       cmp      r0, #0                        
+0060960c: 40f0ab80   bne.w    #0x609766                     
+00609610: 7b68       ldr      r3, [r7, #4]                  
+00609612: 93e0       b        #0x60973c                     
+00609614: 102d       cmp      r5, #0x10                     
+00609616: 18d1       bne      #0x60964a                     
+00609618: a068       ldr      r0, [r4, #8]                  
+0060961a: 1e21       movs     r1, #0x1e                     
+0060961c: 0368       ldr      r3, [r0]                      
+0060961e: d3f8e031   ldr.w    r3, [r3, #0x1e0]              
+00609622: 9847       blx      r3                            
+00609624: 0021       movs     r1, #0                        
+00609626: 3c22       movs     r2, #0x3c                     
+00609628: 0546       mov      r5, r0                        
+0060962a: 07f59e70   add.w    r0, r7, #0x13c                
+0060962e: 16f758f6   bl       #0x1202e2                     
+00609632: d4f87c07   ldr.w    r0, [r4, #0x77c]              
+00609636: 07f59e71   add.w    r1, r7, #0x13c                
+0060963a: 70f079fa   bl       #0x679b30                     
+0060963e: 0028       cmp      r0, #0                        
+00609640: 40f09180   bne.w    #0x609766                     
+00609644: d7f84031   ldr.w    r3, [r7, #0x140]              
+00609648: 78e0       b        #0x60973c                     
+0060964a: 062d       cmp      r5, #6                        
+0060964c: 1dd1       bne      #0x60968a                     
+0060964e: a068       ldr      r0, [r4, #8]                  
+00609650: 2821       movs     r1, #0x28                     
+00609652: 0368       ldr      r3, [r0]                      
+00609654: d3f8e031   ldr.w    r3, [r3, #0x1e0]              
+00609658: 9847       blx      r3                            
+0060965a: 0021       movs     r1, #0                        
+0060965c: 3c22       movs     r2, #0x3c                     
+0060965e: 0646       mov      r6, r0                        
+00609660: 07f58070   add.w    r0, r7, #0x100                
+00609664: 16f73df6   bl       #0x1202e2                     
+00609668: d4f88007   ldr.w    r0, [r4, #0x780]              
+0060966c: d4f8b017   ldr.w    r1, [r4, #0x7b0]              
+00609670: 07f58072   add.w    r2, r7, #0x100                
+00609674: 72f034f8   bl       #0x67b6e0                     
+00609678: 0028       cmp      r0, #0                        
+0060967a: 74d1       bne      #0x609766                     
+0060967c: d7f80451   ldr.w    r5, [r7, #0x104]              
+00609680: 25f08045   bic      r5, r5, #0x40000000           
+00609684: 46ea0505   orr.w    r5, r6, r5                    
+00609688: 59e0       b        #0x60973e                     
+0060968a: 802d       cmp      r5, #0x80                     
+0060968c: 17d1       bne      #0x6096be                     
+0060968e: a068       ldr      r0, [r4, #8]                  
+00609690: 3221       movs     r1, #0x32                     
+00609692: 0368       ldr      r3, [r0]                      
+00609694: d3f8e031   ldr.w    r3, [r3, #0x1e0]              
+00609698: 9847       blx      r3                            
+0060969a: 0021       movs     r1, #0                        
+0060969c: 3c22       movs     r2, #0x3c                     
+0060969e: 0546       mov      r5, r0                        
+006096a0: 07f1c400   add.w    r0, r7, #0xc4                 
+006096a4: 16f71df6   bl       #0x1202e2                     
+006096a8: d4f88807   ldr.w    r0, [r4, #0x788]              
+006096ac: 07f1c401   add.w    r1, r7, #0xc4                 
+006096b0: 6cf08afc   bl       #0x675fc8                     
+006096b4: 0028       cmp      r0, #0                        
+006096b6: 56d1       bne      #0x609766                     
+006096b8: d7f8c830   ldr.w    r3, [r7, #0xc8]               
+006096bc: 3ee0       b        #0x60973c                     
+006096be: b5f5807f   cmp.w    r5, #0x100                    
+006096c2: 23d1       bne      #0x60970c                     
+006096c4: a068       ldr      r0, [r4, #8]                  
+006096c6: 3c21       movs     r1, #0x3c                     
+006096c8: 0368       ldr      r3, [r0]                      
+006096ca: d3f8e031   ldr.w    r3, [r3, #0x1e0]              
+006096ce: 9847       blx      r3                            
+006096d0: 0021       movs     r1, #0                        
+006096d2: 3c22       movs     r2, #0x3c                     
+006096d4: 0546       mov      r5, r0                        
+006096d6: 07f18800   add.w    r0, r7, #0x88                 
+006096da: 16f702f6   bl       #0x1202e2                     
+006096de: d4f88c07   ldr.w    r0, [r4, #0x78c]              
+006096e2: 07f18801   add.w    r1, r7, #0x88                 
+006096e6: 75f01ff8   bl       #0x67e728                     
+006096ea: 0028       cmp      r0, #0                        
+006096ec: 3bd1       bne      #0x609766                     
+006096ee: d7f88c30   ldr.w    r3, [r7, #0x8c]               
+006096f2: 23e0       b        #0x60973c                     
+
+== B. literal pool 0x6096F4..0x609708 ==
+0x6096f4 0x9df25c
+0x6096f8 0x8def1d
+0x6096fc 0x8e76f8
+0x609700 0x31000001
+0x609704 0x31000003
+0x609708 0x8dd9c0

@@ -1,0 +1,80 @@
+# AviMMgr state test 0x64c298(this, mask) ; 0x64c228(this) ; 0x3ea344(this+0x7e4)
+0064c228: b0b5       push     {r4, r5, r7, lr}              
+0064c22a: 00f59274   add.w    r4, r0, #0x124                
+0064c22e: 0546       mov      r5, r0                        
+0064c230: 00af       add      r7, sp, #0                    
+0064c232: 2046       mov      r0, r4                        
+0064c234: 8af704f1   bl       #0x1d6440                     
+0064c238: d5f84451   ldr.w    r5, [r5, #0x144]              
+0064c23c: 2046       mov      r0, r4                        
+0064c23e: 003d       subs     r5, #0                        
+0064c240: 18bf       it       ne                            
+0064c242: 0125       movne    r5, #1                        
+0064c244: 8af703f1   bl       #0x1d644e                     
+0064c248: 2846       mov      r0, r5                        
+0064c24a: b0bd       pop      {r4, r5, r7, pc}              
+0064c24c: f8b5       push     {r3, r4, r5, r6, r7, lr}      
+0064c24e: 0446       mov      r4, r0                        
+0064c250: 00af       add      r7, sp, #0                    
+0064c252: 0d46       mov      r5, r1                        
+0064c254: e1b1       cbz      r1, #0x64c290                 
+
+003ea344: b0b5       push     {r4, r5, r7, lr}              
+003ea346: 0446       mov      r4, r0                        
+003ea348: 00af       add      r7, sp, #0                    
+003ea34a: ecf579f8   bl       #0x1d6440                     
+003ea34e: e569       ldr      r5, [r4, #0x1c]               
+003ea350: 2046       mov      r0, r4                        
+003ea352: ecf57cf8   bl       #0x1d644e                     
+003ea356: 2846       mov      r0, r5                        
+003ea358: b0bd       pop      {r4, r5, r7, pc}              
+003ea35a: b0b5       push     {r4, r5, r7, lr}              
+003ea35c: 0446       mov      r4, r0                        
+003ea35e: 00af       add      r7, sp, #0                    
+
+# Entity resolution 0x447810 -> 0x66d0c8 (GetById) ; 0x447da8 calls vtable+0xb4
+00447810: 98b5       push     {r3, r4, r7, lr}              
+00447812: 0023       movs     r3, #0                        
+00447814: 1360       str      r3, [r2]                      
+00447816: 4b1e       subs     r3, r1, #1                    
+00447818: 13f1030f   cmn.w    r3, #3                        
+0044781c: 00af       add      r7, sp, #0                    
+0044781e: 1446       mov      r4, r2                        
+00447820: 09d8       bhi      #0x447836                     
+00447822: 0846       mov      r0, r1                        
+00447824: 25f250fc   bl       #0x66d0c8                     
+00447828: 044b       ldr      r3, [pc, #0x10]                 ; [0044783c]=31000006
+0044782a: 2060       str      r0, [r4]                      
+0044782c: 0028       cmp      r0, #0                        
+0044782e: 0cbf       ite      eq                            
+00447830: 1846       moveq    r0, r3                        
+00447832: 0020       movne    r0, #0                        
+00447834: 98bd       pop      {r3, r4, r7, pc}              
+00447836: 0148       ldr      r0, [pc, #4]                  
+00447838: 98bd       pop      {r3, r4, r7, pc}              
+0044783a: 00bf       nop                                    
+0044783c: 0600       movs     r6, r0                        
+0044783e: 0031       adds     r1, #0                        
+00447840: 90b5       push     {r4, r7, lr}                  
+00447842: 83b0       sub      sp, #0xc                      
+00447844: 00af       add      r7, sp, #0                    
+00447846: 3a1d       adds     r2, r7, #4                    
+00447848: fff7e2ff   bl       #0x447810                     
+0044784c: 0446       mov      r4, r0                        
+0044784e: 50b9       cbnz     r0, #0x447866                 
+
+00447da8: 80b5       push     {r7, lr}                      
+00447daa: 82b0       sub      sp, #8                        
+00447dac: 00af       add      r7, sp, #0                    
+00447dae: 3a1d       adds     r2, r7, #4                    
+00447db0: fff72efd   bl       #0x447810                     
+00447db4: 20b9       cbnz     r0, #0x447dc0                 
+00447db6: 7868       ldr      r0, [r7, #4]                  
+00447db8: 0368       ldr      r3, [r0]                      
+00447dba: d3f8b430   ldr.w    r3, [r3, #0xb4]               
+00447dbe: 9847       blx      r3                            
+00447dc0: 07f10807   add.w    r7, r7, #8                    
+00447dc4: bd46       mov      sp, r7                        
+00447dc6: 80bd       pop      {r7, pc}                      
+00447dc8: 90b5       push     {r4, r7, lr}                  
+00447dca: 83b0       sub      sp, #0xc                      

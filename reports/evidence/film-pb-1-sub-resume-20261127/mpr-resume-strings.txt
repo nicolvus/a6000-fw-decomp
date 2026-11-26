@@ -1,0 +1,32 @@
+# libmpr: tablas de API, cadenas de error y tabla 0x1A de la familia 0x31
+# libObj/libmpr 3.21  VA del ELF (base 0). Capstone 5, Thumb.
+
+== tabla .rodata 0x66F25C: pares {ptr a nombre, apiId} (volcado 0x66F25C..0x66F2A4)
+  0x0066f25c  api=0x41000060      [MMgrtoMprIf] CB_GET_CONSISTENCY_INFO: 
+  0x0066f264  api=0x41000062      [MMgrtoMprIf] CB_GET_CONTENT_PROTECT_INFO: 
+  0x0066f26c  api=0x4100004c      [MMgrtoMprIf] CB_GET_CONTENT_DURATION: 
+  0x0066f274  api=0x4100004d      [MMgrtoMprIf] CB_GET_FACE_COUNT: 
+  0x0066f27c  api=0x41000045      [MMgrtoMprIf] CB_SET_CONTENT_RESUMEPOINT: 
+  0x0066f284  api=0x41000046      [MMgrtoMprIf] CB_GET_CONTENT_RESUMEPOINT: 
+  0x0066f28c  api=0x41000047      [MMgrtoMprIf] CB_CLEAR_CONTENT_RESUMEPOINT: 
+  0x0066f294  api=0x41000064      [MMgrtoMprIf] CB_SET_CONTENT_FOCUSPOINT: 
+  0x0066f29c  api=0x41000065      [MMgrtoMprIf] CB_GET_CONTENT_FOCUSPOINT: 
+  0x0066f2a4  api=0x41000066      [MMgrtoMprIf] CB_CLEAR_CONTENT_FOCUSPOINT: 
+
+== cadenas clave (VA / texto)
+  0x008e26d1  SetContentResumePoint :   [leido: 'SetContentResumePoint : ']
+  0x008e2730  GetContentResumePoint :   [leido: 'GetContentResumePoint : ']
+  0x008e2767  ... ER_CMD_CONFLICT   [leido: 'GetContentResumePoint : ER_CMD_CONFLICT']
+  0x008ee8f5  GetContentResumePointCmd : contentType missmatch   [leido: 'GetContentResumePointCmd : contentType missmatch\n']
+  0x008ee9ad  GetContentResumePointCmd : EntryId Unmatch   [leido: 'GetContentResumePointCmd : EntryId Unmatch']
+  0x008ee8b5  ... ResumeInfoToPlayPosition Error   [leido: 'GetContentResumePointCmd : ResumeInfoToPlayPosition Error [%x]\n']
+  0x008ee927  ... GetLocationClusterIndexFromContent Error   [leido: 'GetContentResumePointCmd : GetLocationClusterIndexFromContent Error [%x]\n']
+  0x008ee971  ... ConvEntryIdPostToPre Error   [leido: 'GetContentResumePointCmd : ConvEntryIdPostToPre Error [%x]\n']
+  0x008ee880  ... GetResumeInfo Error   [leido: 'GetContentResumePointCmd : GetResumeInfo Error [%x]\n']
+  0x007be74e  ResumeFlushAVIndexFile (tabla de fuentes/avi_if/AviSeqFlush.cpp)   [leido: 'ResumeFlushAVIndexFile']
+  0x0084e2b3  *** Movie Play Resume Information ***   [leido: '*** Movie Play Resume Information ***']
+  0x00941cc4  9ResumeMgr   [leido: '9ResumeMgr']
+  0x00806e60  [MoviePlayerIf] ResumePbStart Param   [leido: '[MoviePlayerIf] ResumePbStart Param\r\n']
+
+== familia 0x31 del traductor 0x7111B0 (de reports/evidence/film-pb-1-sub-motor-20261127-tabla-0x1a.txt)
+  31000001 -> 0x05   31000002 -> 0x1a   31000003 -> 0x2c   31000005 -> 0x06   31000007 -> 0x0a   31000009 -> 0x2a

@@ -2,6 +2,15 @@
 
 ## Reproducción de vídeo — FILM-PB-1 (26-11-2026)
 
+> **Causa probable localizada el 27-11-2026: el ajuste «Selector PAL/NTSC» de la cámara no coincide con la
+> cadencia de los clips.** `AviMMgr::isSupportContent` (ELF `0x61A8F0`) compara `TvSystem()` (`0x1EEFDC`) con el
+> `frameRate` del contenido (`[msg+0x124]`, 0..9): con `TvSystem == 1` acepta 24p y las cadencias **pares**;
+> con `TvSystem != 1` acepta 24p y las **impares**; en el resto devuelve 0 «Invalid TvSystem detect» → `0x437C3C`
+> → `0x1A` → caution `0x135` → «No se puede visualizar.». Los clips son 30p (par, NTSC) y la cámara muestra
+> `1-1-2014`, señal de ajustes reseteados. **Arreglo sin flashear: copiar los vídeos al PC, poner «Selector
+> PAL/NTSC» en el sistema contrario al actual (NTSC para clips de 30p) y reproducir.** Riesgo bajo; el formateo
+> que menciona el menú no es necesario para reproducir. [Informe](../reports/film-pb-1-causa-sistema-tv-20261127.md).
+
 Mecanismo de la finalización fallida **cerrado estáticamente**; causa raíz física, abierta. La traza enlaza
 `PlayMovieCmp` (`MPR::ER_FAILED=0x1A`) → `DefObjPlayer::ER_FAILED=7` → bloqueo → caution `0x135` → «No se puede
 visualizar». Cadena completa: `MprIf::PlayMovie` (`0x7229E0`, solo log) → `FeaIf::PlayMovie` (`0x44EE9C`, encola la

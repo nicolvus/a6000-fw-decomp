@@ -1,0 +1,631 @@
+# libmpr: cadena MprIf -> API -> AviMMgr -> AviMMgrDBIf (validacion)
+# libObj/libmpr 3.21  VA del ELF (base 0). Capstone 5, Thumb.
+
+== MprIf::GetContentResumePoint 0x721684 (API 0x41000046 CB_GET_CONTENT_RESUMEPOINT)
+00721684: 82b0       sub      sp, #8                        
+00721686: f0b5       push     {r4, r5, r6, r7, lr}          
+00721688: 93b0       sub      sp, #0x4c                     
+0072168a: 12af       add      r7, sp, #0x48                 
+0072168c: 0c46       mov      r4, r1                        
+0072168e: 07f11801   add.w    r1, r7, #0x18                 
+00721692: 0546       mov      r5, r0                        
+00721694: 2046       mov      r0, r4                        
+00721696: 81e80c00   stm.w    r1, {r2, r3}                  
+0072169a: 0cae       add      r6, sp, #0x30                 
+0072169c: fdf542e3   blx      #0x11ed24                       ; _ZN8MprIfLog10GetMediaIdEm
+007216a0: 0021       movs     r1, #0                        
+007216a2: 0246       mov      r2, r0                        
+007216a4: 1348       ldr      r0, [pc, #0x4c]                 ; [007216f4]=41000046
+007216a6: fef566e2   blx      #0x11fb74                       ; _ZN8MprIfLog12AsyncApiCallItEEvmtT_
+007216aa: 07f15003   add.w    r3, r7, #0x50                 
+007216ae: ee46       mov      lr, sp                        
+007216b0: 0fcb       ldm      r3, {r0, r1, r2, r3}          
+007216b2: 86e80f00   stm.w    r6, {r0, r1, r2, r3}          
+007216b6: 0023       movs     r3, #0                        
+007216b8: 1093       str      r3, [sp, #0x40]               
+007216ba: 07f12006   add.w    r6, r7, #0x20                 
+007216be: 3b6e       ldr      r3, [r7, #0x60]               
+007216c0: 1193       str      r3, [sp, #0x44]               
+007216c2: 0fce       ldm      r6!, {r0, r1, r2, r3}         
+007216c4: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+007216c8: 0fce       ldm      r6!, {r0, r1, r2, r3}         
+007216ca: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+007216ce: 96e80f00   ldm.w    r6, {r0, r1, r2, r3}          
+007216d2: 8ee80f00   stm.w    lr, {r0, r1, r2, r3}          
+007216d6: 07f11801   add.w    r1, r7, #0x18                 
+007216da: 2868       ldr      r0, [r5]                      
+007216dc: 91e80c00   ldm.w    r1, {r2, r3}                  
+007216e0: 2146       mov      r1, r4                        
+007216e2: 31f5dbff   bl       #0x45369c                       ; 
+007216e6: 07f10407   add.w    r7, r7, #4                    
+007216ea: bd46       mov      sp, r7                        
+007216ec: bde8f040   pop.w    {r4, r5, r6, r7, lr}          
+007216f0: 02b0       add      sp, #8                        
+007216f2: 7047       bx       lr                            
+007216f4: 4600       lsls     r6, r0, #1                    
+007216f6: 0041       asrs     r0, r0                        
+
+== MprIf::SetContentResumePoint 0x7216F8 (API 0x41000045 CB_SET_CONTENT_RESUMEPOINT)
+007216f8: 82b0       sub      sp, #8                        
+007216fa: f0b5       push     {r4, r5, r6, r7, lr}          
+007216fc: 93b0       sub      sp, #0x4c                     
+007216fe: 12af       add      r7, sp, #0x48                 
+00721700: 0c46       mov      r4, r1                        
+00721702: 07f11801   add.w    r1, r7, #0x18                 
+00721706: 0546       mov      r5, r0                        
+00721708: 2046       mov      r0, r4                        
+0072170a: 81e80c00   stm.w    r1, {r2, r3}                  
+0072170e: 0cae       add      r6, sp, #0x30                 
+00721710: fdf508e3   blx      #0x11ed24                       ; _ZN8MprIfLog10GetMediaIdEm
+00721714: 0021       movs     r1, #0                        
+00721716: 0246       mov      r2, r0                        
+00721718: 1248       ldr      r0, [pc, #0x48]                 ; [00721764]=41000045
+0072171a: fef52ce2   blx      #0x11fb74                       ; _ZN8MprIfLog12AsyncApiCallItEEvmtT_
+0072171e: 07f15003   add.w    r3, r7, #0x50                 
+00721722: ee46       mov      lr, sp                        
+00721724: 0fcb       ldm      r3, {r0, r1, r2, r3}          
+00721726: 86e80f00   stm.w    r6, {r0, r1, r2, r3}          
+0072172a: 07f12006   add.w    r6, r7, #0x20                 
+0072172e: 3b6e       ldr      r3, [r7, #0x60]               
+00721730: 1093       str      r3, [sp, #0x40]               
+00721732: 0fce       ldm      r6!, {r0, r1, r2, r3}         
+00721734: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+00721738: 0fce       ldm      r6!, {r0, r1, r2, r3}         
+0072173a: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+0072173e: 96e80f00   ldm.w    r6, {r0, r1, r2, r3}          
+00721742: 8ee80f00   stm.w    lr, {r0, r1, r2, r3}          
+00721746: 07f11801   add.w    r1, r7, #0x18                 
+0072174a: 2868       ldr      r0, [r5]                      
+0072174c: 91e80c00   ldm.w    r1, {r2, r3}                  
+00721750: 2146       mov      r1, r4                        
+00721752: 31f562ff   bl       #0x45361a                       ; 
+00721756: 07f10407   add.w    r7, r7, #4                    
+0072175a: bd46       mov      sp, r7                        
+0072175c: bde8f040   pop.w    {r4, r5, r6, r7, lr}          
+00721760: 02b0       add      sp, #8                        
+00721762: 7047       bx       lr                            
+00721764: 4500       lsls     r5, r0, #1                    
+00721766: 0041       asrs     r0, r0                        
+
+== AviMMgr::GetContentResumePoint 0x612280 (sub-orden 0x23000043 al gestor de BD)
+00612280: 84b0       sub      sp, #0x10                     
+00612282: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+00612286: 9ab0       sub      sp, #0x68                     
+00612288: 04af       add      r7, sp, #0x10                 
+0061228a: 07f17408   add.w    r8, r7, #0x74                 
+0061228e: 464e       ldr      r6, [pc, #0x118]                ; [006123a8]=009df25c
+00612290: 0446       mov      r4, r0                        
+00612292: 4068       ldr      r0, [r0, #4]                  
+00612294: 88e80e00   stm.w    r8, {r1, r2, r3}              
+00612298: 4ff44171   mov.w    r1, #0x304                    
+0061229c: 41f6bf52   movw     r2, #0x1dbf                   
+006122a0: 3df07afb   bl       #0x64f998                       ; 
+006122a4: e068       ldr      r0, [r4, #0xc]                
+006122a6: 4149       ldr      r1, [pc, #0x104]                ; [006123ac]=008e2730 "GetContentResumePoint : "
+006122a8: 3278       ldrb     r2, [r6]                      
+006122aa: 3ef04afa   bl       #0x650742                       ; 
+006122ae: 2046       mov      r0, r4                        
+006122b0: 3af058f9   bl       #0x64c564                       ; 
+006122b4: 0546       mov      r5, r0                        
+006122b6: c0b1       cbz      r0, #0x6122ea                 
+006122b8: 3d4b       ldr      r3, [pc, #0xf4]                 ; [006123b0]=008dd7bc "GetContentResumePoint"
+006122ba: 0220       movs     r0, #2                        
+006122bc: 4ff44171   mov.w    r1, #0x304                    
+006122c0: 3c4a       ldr      r2, [pc, #0xf0]                 ; [006123b4]=31000005
+006122c2: 41f6bf56   movw     r6, #0x1dbf                   
+006122c6: 0196       str      r6, [sp, #4]                  
+006122c8: 0093       str      r3, [sp]                      
+006122ca: 6368       ldr      r3, [r4, #4]                  
+006122cc: 0293       str      r3, [sp, #8]                  
+006122ce: 0123       movs     r3, #1                        
+006122d0: 0393       str      r3, [sp, #0xc]                
+006122d2: 394b       ldr      r3, [pc, #0xe4]                 ; [006123b8]=008dd9c0 "avimmgr/AviMMgr.cpp"
+006122d4: 3bf0d2ff   bl       #0x64e27c                       ; 
+006122d8: 4ff44171   mov.w    r1, #0x304                    
+006122dc: 354a       ldr      r2, [pc, #0xd4]                 ; [006123b4]=31000005
+006122de: 3346       mov      r3, r6                        
+006122e0: 0546       mov      r5, r0                        
+006122e2: 6068       ldr      r0, [r4, #4]                  
+006122e4: 3df020fc   bl       #0x64fb28                       ; 
+006122e8: 56e0       b        #0x612398                     
+006122ea: 07f1ac0c   add.w    ip, r7, #0xac                 
+006122ee: 07f13c0e   add.w    lr, r7, #0x3c                 
+006122f2: bce80f00   ldm.w    ip!, {r0, r1, r2, r3}         
+006122f6: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+006122fa: 9ce80300   ldm.w    ip, {r0, r1}                  
+006122fe: 8ee80300   stm.w    lr, {r0, r1}                  
+00612302: 07f1040e   add.w    lr, r7, #4                    
+00612306: b8e80f00   ldm.w    r8!, {r0, r1, r2, r3}         
+0061230a: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+0061230e: b8e80f00   ldm.w    r8!, {r0, r1, r2, r3}         
+00612312: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+00612316: b8e80f00   ldm.w    r8!, {r0, r1, r2, r3}         
+0061231a: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+0061231e: 07f15802   add.w    r2, r7, #0x58                 
+00612322: d7f8c430   ldr.w    r3, [r7, #0xc4]               
+00612326: 98e80300   ldm.w    r8, {r0, r1}                  
+0061232a: 7b65       str      r3, [r7, #0x54]               
+0061232c: d7f8c830   ldr.w    r3, [r7, #0xc8]               
+00612330: 8ee80300   stm.w    lr, {r0, r1}                  
+00612334: 2046       mov      r0, r4                        
+00612336: 2149       ldr      r1, [pc, #0x84]                 ; [006123bc]=23000043
+00612338: 42f8583d   str      r3, [r2, #-0x58]!             
+0061233c: 3a46       mov      r2, r7                        
+0061233e: 5823       movs     r3, #0x58                     
+00612340: 3af08bfc   bl       #0x64cc5a                       ; 
+00612344: 50b1       cbz      r0, #0x61235c                 
+00612346: 6068       ldr      r0, [r4, #4]                  
+00612348: 4ff44171   mov.w    r1, #0x304                    
+0061234c: 2a46       mov      r2, r5                        
+0061234e: 41f6c853   movw     r3, #0x1dc8                   
+00612352: 3df0e9fb   bl       #0x64fb28                       ; 
+00612356: e068       ldr      r0, [r4, #0xc]                
+00612358: 1949       ldr      r1, [pc, #0x64]                 ; [006123c0]=008e2749 "GetContentResumePoint : ER_OK"
+0061235a: 1ae0       b        #0x612392                     
+0061235c: 144b       ldr      r3, [pc, #0x50]                 ; [006123b0]=008dd7bc "GetContentResumePoint"
+0061235e: 4ff44171   mov.w    r1, #0x304                    
+00612362: 144a       ldr      r2, [pc, #0x50]                 ; [006123b4]=31000005
+00612364: 0220       movs     r0, #2                        
+00612366: 41f6c858   movw     r8, #0x1dc8                   
+0061236a: cdf80480   str.w    r8, [sp, #4]                  
+0061236e: 0093       str      r3, [sp]                      
+00612370: 6368       ldr      r3, [r4, #4]                  
+00612372: 0293       str      r3, [sp, #8]                  
+00612374: 0123       movs     r3, #1                        
+00612376: 0393       str      r3, [sp, #0xc]                
+00612378: 0f4b       ldr      r3, [pc, #0x3c]                 ; [006123b8]=008dd9c0 "avimmgr/AviMMgr.cpp"
+0061237a: 3bf07fff   bl       #0x64e27c                       ; 
+0061237e: 4ff44171   mov.w    r1, #0x304                    
+00612382: 0c4a       ldr      r2, [pc, #0x30]                 ; [006123b4]=31000005
+00612384: 4346       mov      r3, r8                        
+00612386: 0546       mov      r5, r0                        
+00612388: 6068       ldr      r0, [r4, #4]                  
+0061238a: 3df0cdfb   bl       #0x64fb28                       ; 
+0061238e: e068       ldr      r0, [r4, #0xc]                
+00612390: 0c49       ldr      r1, [pc, #0x30]                 ; [006123c4]=008e2767 "GetContentResumePoint : ER_CMD_CONFLICT"
+00612392: 3278       ldrb     r2, [r6]                      
+00612394: 3ef0d5f9   bl       #0x650742                       ; 
+00612398: 2846       mov      r0, r5                        
+0061239a: 07f15807   add.w    r7, r7, #0x58                 
+0061239e: bd46       mov      sp, r7                        
+006123a0: bde8f041   pop.w    {r4, r5, r6, r7, r8, lr}      
+006123a4: 04b0       add      sp, #0x10                     
+006123a6: 7047       bx       lr                            
+
+== AviMMgr::SetContentResumePoint 0x612140
+00612140: 84b0       sub      sp, #0x10                     
+00612142: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+00612146: 9ab0       sub      sp, #0x68                     
+00612148: 04af       add      r7, sp, #0x10                 
+0061214a: 07f17408   add.w    r8, r7, #0x74                 
+0061214e: 444e       ldr      r6, [pc, #0x110]                ; [00612260]=009df25c
+00612150: 0446       mov      r4, r0                        
+00612152: 4068       ldr      r0, [r0, #4]                  
+00612154: 88e80e00   stm.w    r8, {r1, r2, r3}              
+00612158: 40f20331   movw     r1, #0x303                    
+0061215c: 41f6a652   movw     r2, #0x1da6                   
+00612160: 3df01afc   bl       #0x64f998                       ; 
+00612164: e068       ldr      r0, [r4, #0xc]                
+00612166: 3f49       ldr      r1, [pc, #0xfc]                 ; [00612264]=008e26d1 "SetContentResumePoint : "
+00612168: 3278       ldrb     r2, [r6]                      
+0061216a: 3ef0eafa   bl       #0x650742                       ; 
+0061216e: 2046       mov      r0, r4                        
+00612170: 3af0f8f9   bl       #0x64c564                       ; 
+00612174: 0546       mov      r5, r0                        
+00612176: c0b1       cbz      r0, #0x6121aa                 
+00612178: 3b4b       ldr      r3, [pc, #0xec]                 ; [00612268]=008e6cf0 "SetContentResumePoint"
+0061217a: 0220       movs     r0, #2                        
+0061217c: 40f20331   movw     r1, #0x303                    
+00612180: 3a4a       ldr      r2, [pc, #0xe8]                 ; [0061226c]=31000005
+00612182: 41f6a656   movw     r6, #0x1da6                   
+00612186: 0196       str      r6, [sp, #4]                  
+00612188: 0093       str      r3, [sp]                      
+0061218a: 6368       ldr      r3, [r4, #4]                  
+0061218c: 0293       str      r3, [sp, #8]                  
+0061218e: 0123       movs     r3, #1                        
+00612190: 0393       str      r3, [sp, #0xc]                
+00612192: 374b       ldr      r3, [pc, #0xdc]                 ; [00612270]=008dd9c0 "avimmgr/AviMMgr.cpp"
+00612194: 3cf072f8   bl       #0x64e27c                       ; 
+00612198: 40f20331   movw     r1, #0x303                    
+0061219c: 334a       ldr      r2, [pc, #0xcc]                 ; [0061226c]=31000005
+0061219e: 3346       mov      r3, r6                        
+006121a0: 0546       mov      r5, r0                        
+006121a2: 6068       ldr      r0, [r4, #4]                  
+006121a4: 3df0c0fc   bl       #0x64fb28                       ; 
+006121a8: 52e0       b        #0x612250                     
+006121aa: 07f1ac0c   add.w    ip, r7, #0xac                 
+006121ae: 07f1400e   add.w    lr, r7, #0x40                 
+006121b2: bce80f00   ldm.w    ip!, {r0, r1, r2, r3}         
+006121b6: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+006121ba: 9ce80300   ldm.w    ip, {r0, r1}                  
+006121be: 8ee80300   stm.w    lr, {r0, r1}                  
+006121c2: 07f1080e   add.w    lr, r7, #8                    
+006121c6: b8e80f00   ldm.w    r8!, {r0, r1, r2, r3}         
+006121ca: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+006121ce: b8e80f00   ldm.w    r8!, {r0, r1, r2, r3}         
+006121d2: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+006121d6: b8e80f00   ldm.w    r8!, {r0, r1, r2, r3}         
+006121da: aee80f00   stm.w    lr!, {r0, r1, r2, r3}         
+006121de: 07f15802   add.w    r2, r7, #0x58                 
+006121e2: 98e80300   ldm.w    r8, {r0, r1}                  
+006121e6: d7f8c430   ldr.w    r3, [r7, #0xc4]               
+006121ea: 8ee80300   stm.w    lr, {r0, r1}                  
+006121ee: 2046       mov      r0, r4                        
+006121f0: 42f8543d   str      r3, [r2, #-0x54]!             
+006121f4: 5423       movs     r3, #0x54                     
+006121f6: 1f49       ldr      r1, [pc, #0x7c]                 ; [00612274]=23000042
+006121f8: 3af02ffd   bl       #0x64cc5a                       ; 
+006121fc: 50b1       cbz      r0, #0x612214                 
+006121fe: 6068       ldr      r0, [r4, #4]                  
+00612200: 40f20331   movw     r1, #0x303                    
+00612204: 2a46       mov      r2, r5                        
+00612206: 41f6b053   movw     r3, #0x1db0                   
+0061220a: 3df08dfc   bl       #0x64fb28                       ; 
+0061220e: e068       ldr      r0, [r4, #0xc]                
+00612210: 1949       ldr      r1, [pc, #0x64]                 ; [00612278]=008e26ea "SetContentResumePoint : ER_OK"
+00612212: 1ae0       b        #0x61224a                     
+00612214: 144b       ldr      r3, [pc, #0x50]                 ; [00612268]=008e6cf0 "SetContentResumePoint"
+00612216: 40f20331   movw     r1, #0x303                    
+0061221a: 144a       ldr      r2, [pc, #0x50]                 ; [0061226c]=31000005
+0061221c: 0220       movs     r0, #2                        
+0061221e: 41f6b058   movw     r8, #0x1db0                   
+00612222: cdf80480   str.w    r8, [sp, #4]                  
+00612226: 0093       str      r3, [sp]                      
+00612228: 6368       ldr      r3, [r4, #4]                  
+0061222a: 0293       str      r3, [sp, #8]                  
+0061222c: 0123       movs     r3, #1                        
+0061222e: 0393       str      r3, [sp, #0xc]                
+00612230: 0f4b       ldr      r3, [pc, #0x3c]                 ; [00612270]=008dd9c0 "avimmgr/AviMMgr.cpp"
+00612232: 3cf023f8   bl       #0x64e27c                       ; 
+00612236: 40f20331   movw     r1, #0x303                    
+0061223a: 0c4a       ldr      r2, [pc, #0x30]                 ; [0061226c]=31000005
+0061223c: 4346       mov      r3, r8                        
+0061223e: 0546       mov      r5, r0                        
+00612240: 6068       ldr      r0, [r4, #4]                  
+00612242: 3df071fc   bl       #0x64fb28                       ; 
+00612246: e068       ldr      r0, [r4, #0xc]                
+00612248: 0c49       ldr      r1, [pc, #0x30]                 ; [0061227c]=008e2708 "SetContentResumePoint : ER_CMD_CONFLICT"
+0061224a: 3278       ldrb     r2, [r6]                      
+0061224c: 3ef079fa   bl       #0x650742                       ; 
+00612250: 2846       mov      r0, r5                        
+00612252: 07f15807   add.w    r7, r7, #0x58                 
+00612256: bd46       mov      sp, r7                        
+00612258: bde8f041   pop.w    {r4, r5, r6, r7, r8, lr}      
+0061225c: 04b0       add      sp, #0x10                     
+0061225e: 7047       bx       lr                            
+
+== vtable AviMMgr 0x8E6E58: +0x54 UpdateResumeInfo=0x61AAA4, +0x58 isSupportContent=0x61A8F0, +0x5C GetPlayMovieStatus=0x60945C, +0x60 GetPlayStillStatus=0x603DBC, +0xB4 MovieReadStart=0x608698
+
+== AviMMgrDBIf::GetContentResumePointCmd 0x63523C: validacion (contentType missmatch / EntryId Unmatch / ResumeInfoToPlayPosition)
+0063523c: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+00635240: b1b0       sub      sp, #0xc4                     
+00635242: a54e       ldr      r6, [pc, #0x294]                ; [006354d8]=009df25c
+00635244: 0446       mov      r4, r0                        
+00635246: 14af       add      r7, sp, #0x50                 
+00635248: 4068       ldr      r0, [r0, #4]                  
+0063524a: 40f29942   movw     r2, #0x499                    
+0063524e: 0d46       mov      r5, r1                        
+00635250: 4ff44171   mov.w    r1, #0x304                    
+00635254: 1af08bfb   bl       #0x64f96e                       ; 
+00635258: 3278       ldrb     r2, [r6]                      
+0063525a: e068       ldr      r0, [r4, #0xc]                
+0063525c: 04f5357a   add.w    sl, r4, #0x2d4                
+00635260: 9e49       ldr      r1, [pc, #0x278]                ; [006354dc]=008ee7f7 "GetContentResumePointCmd : "
+00635262: 4ff00008   mov.w    r8, #0                        
+00635266: 1bf06cfa   bl       #0x650742                       ; 
+0063526a: 9d4b       ldr      r3, [pc, #0x274]                ; [006354e0]=20000049
+0063526c: 1821       movs     r1, #0x18                     
+0063526e: c4f8d482   str.w    r8, [r4, #0x2d4]              
+00635272: 84f8dc82   strb.w   r8, [r4, #0x2dc]              
+00635276: 0af11000   add.w    r0, sl, #0x10                 
+0063527a: c4f8d032   str.w    r3, [r4, #0x2d0]              
+0063527e: b346       mov      fp, r6                        
+00635280: fef74cfc   bl       #0x633b1c                       ; 
+00635284: 0af12800   add.w    r0, sl, #0x28                 
+00635288: 3c21       movs     r1, #0x3c                     
+0063528a: fef747fc   bl       #0x633b1c                       ; 
+0063528e: 3378       ldrb     r3, [r6]                      
+00635290: 3bb3       cbz      r3, #0x6352e2                 
+00635292: 2e46       mov      r6, r5                        
+00635294: e068       ldr      r0, [r4, #0xc]                
+00635296: 0121       movs     r1, #1                        
+00635298: 924a       ldr      r2, [pc, #0x248]                ; [006354e4]=008ee813 "GetContentResumePointCmd
+"
+0063529a: 1bf0c7f9   bl       #0x65062c                       ; 
+0063529e: 56f8043b   ldr      r3, [r6], #4                  
+006352a2: e068       ldr      r0, [r4, #0xc]                
+006352a4: 0121       movs     r1, #1                        
+006352a6: 904a       ldr      r2, [pc, #0x240]                ; [006354e8]=008ee6ce "      callerId %x
+"
+006352a8: 1bf0c0f9   bl       #0x65062c                       ; 
+006352ac: e068       ldr      r0, [r4, #0xc]                
+006352ae: 0121       movs     r1, #1                        
+006352b0: 8e4a       ldr      r2, [pc, #0x238]                ; [006354ec]=00877ac3 "      "
+006352b2: 3346       mov      r3, r6                        
+006352b4: 1cf066f8   bl       #0x651384                       ; 
+006352b8: 05f13c03   add.w    r3, r5, #0x3c                 
+006352bc: e068       ldr      r0, [r4, #0xc]                
+006352be: 0121       movs     r1, #1                        
+006352c0: 8a4a       ldr      r2, [pc, #0x228]                ; [006354ec]=00877ac3 "      "
+006352c2: 1bf0bbfe   bl       #0x65103c                       ; 
+006352c6: 8a4a       ldr      r2, [pc, #0x228]                ; [006354f0]=008e60e7 "      filtercontentType = ["
+006352c8: e068       ldr      r0, [r4, #0xc]                
+006352ca: 0121       movs     r1, #1                        
+006352cc: 1bf0aef9   bl       #0x65062c                       ; 
+006352d0: 686d       ldr      r0, [r5, #0x54]               
+006352d2: 0121       movs     r1, #1                        
+006352d4: 1bf02cfb   bl       #0x650930                       ; 
+006352d8: 8648       ldr      r0, [pc, #0x218]                ; [006354f4]=007bda5f
+006352da: 0121       movs     r1, #1                        
+006352dc: 4246       mov      r2, r8                        
+006352de: 1bf095f9   bl       #0x65060c                       ; 
+006352e2: a946       mov      sb, r5                        
+006352e4: 2046       mov      r0, r4                        
+006352e6: 4ff44171   mov.w    r1, #0x304                    
+006352ea: 0422       movs     r2, #4                        
+006352ec: 59f8043b   ldr      r3, [sb], #4                  
+006352f0: c4f8d832   str.w    r3, [r4, #0x2d8]              
+006352f4: 05f13c03   add.w    r3, r5, #0x3c                 
+006352f8: 0093       str      r3, [sp]                      
+006352fa: 4b46       mov      r3, sb                        
+006352fc: e5f732fa   bl       #0x61a764                       ; 
+00635300: 0646       mov      r6, r0                        
+00635302: f8b1       cbz      r0, #0x635344                 
+00635304: 7c4b       ldr      r3, [pc, #0x1f0]                ; [006354f8]=009df25a
+00635306: e068       ldr      r0, [r4, #0xc]                
+00635308: 7c4a       ldr      r2, [pc, #0x1f0]                ; [006354fc]=008ee82d "GetContentResumePointCmd : Error [%x]
+"
+0063530a: 1978       ldrb     r1, [r3]                      
+0063530c: 3346       mov      r3, r6                        
+0063530e: 1bf08df9   bl       #0x65062c                       ; 
+00635312: 7b4b       ldr      r3, [pc, #0x1ec]                ; [00635500]=008f354d "GetContentResumePointCmd"
+00635314: 4ff44171   mov.w    r1, #0x304                    
+00635318: 3246       mov      r2, r6                        
+0063531a: 0220       movs     r0, #2                        
+0063531c: 0093       str      r3, [sp]                      
+0063531e: 40f2c143   movw     r3, #0x4c1                    
+00635322: 0193       str      r3, [sp, #4]                  
+00635324: 6368       ldr      r3, [r4, #4]                  
+00635326: 0293       str      r3, [sp, #8]                  
+00635328: 0123       movs     r3, #1                        
+0063532a: 0393       str      r3, [sp, #0xc]                
+0063532c: 754b       ldr      r3, [pc, #0x1d4]                ; [00635504]=008edecd "avimmgr/AviMMgrDBIf.cpp"
+0063532e: 18f0a5ff   bl       #0x64e27c                       ; 
+00635332: 4ff44171   mov.w    r1, #0x304                    
+00635336: 40f2c243   movw     r3, #0x4c2                    
+0063533a: 0246       mov      r2, r0                        
+0063533c: c4f8d402   str.w    r0, [r4, #0x2d4]              
+00635340: 6068       ldr      r0, [r4, #4]                  
+00635342: c5e2       b        #0x6358d0                     
+00635344: 4ff6ff73   movw     r3, #0xffff                   
+00635348: fb66       str      r3, [r7, #0x6c]               
+0063534a: 6b68       ldr      r3, [r5, #4]                  
+0063534c: 13f00806   ands     r6, r3, #8                    
+00635350: 02d0       beq      #0x635358                     
+00635352: 0126       movs     r6, #1                        
+00635354: 0322       movs     r2, #3                        
+00635356: fa66       str      r2, [r7, #0x6c]               
+00635358: 13f0100f   tst.w    r3, #0x10                     
+...
+00635510: 012e       cmp      r6, #1                        
+00635512: 6b6d       ldr      r3, [r5, #0x54]               
+00635514: 0ed0       beq      #0x635534                     
+00635516: 2bb1       cbz      r3, #0x635524                 
+00635518: c7f86c80   str.w    r8, [r7, #0x6c]               
+0063551c: 4146       mov      r1, r8                        
+0063551e: d4f86c07   ldr.w    r0, [r4, #0x76c]              
+00635522: 0ee0       b        #0x635542                     
+00635524: d4f86c07   ldr.w    r0, [r4, #0x76c]              
+00635528: 07f16c01   add.w    r1, r7, #0x6c                 
+0063552c: 3a46       mov      r2, r7                        
+0063552e: 29f171f9   bl       #0x75e814                       ; 
+00635532: 09e0       b        #0x635548                     
+00635534: 13b1       cbz      r3, #0x63553c                 
+00635536: fb6e       ldr      r3, [r7, #0x6c]               
+00635538: 4345       cmp      r3, r8                        
+0063553a: 08d1       bne      #0x63554e                     
+0063553c: d4f86c07   ldr.w    r0, [r4, #0x76c]              
+00635540: f96e       ldr      r1, [r7, #0x6c]               
+00635542: 3a46       mov      r2, r7                        
+00635544: 29f1aafb   bl       #0x75ec9c                       ; 
+00635548: 0646       mov      r6, r0                        
+0063554a: c0b1       cbz      r0, #0x63557e                 
+0063554c: 00e0       b        #0x635550                     
+0063554e: 994e       ldr      r6, [pc, #0x264]                ; [006357b4]=31000009
+00635550: 994b       ldr      r3, [pc, #0x264]                ; [006357b8]=009df25a
+00635552: e068       ldr      r0, [r4, #0xc]                
+00635554: 994a       ldr      r2, [pc, #0x264]                ; [006357bc]=008ee880 "GetContentResumePointCmd : GetResumeInfo Error [%x]
+"
+00635556: 1978       ldrb     r1, [r3]                      
+00635558: 3346       mov      r3, r6                        
+0063555a: 1bf067f8   bl       #0x65062c                       ; 
+0063555e: 984b       ldr      r3, [pc, #0x260]                ; [006357c0]=008f354d "GetContentResumePointCmd"
+00635560: 0220       movs     r0, #2                        
+00635562: 4ff44171   mov.w    r1, #0x304                    
+00635566: 3246       mov      r2, r6                        
+00635568: 0093       str      r3, [sp]                      
+0063556a: 40f23453   movw     r3, #0x534                    
+0063556e: 0193       str      r3, [sp, #4]                  
+00635570: 6368       ldr      r3, [r4, #4]                  
+00635572: 0293       str      r3, [sp, #8]                  
+00635574: 0123       movs     r3, #1                        
+00635576: 0393       str      r3, [sp, #0xc]                
+00635578: 924b       ldr      r3, [pc, #0x248]                ; [006357c4]=008edecd "avimmgr/AviMMgrDBIf.cpp"
+0063557a: 18f0c1fe   bl       #0x64e300                       ; 
+0063557e: fb6e       ldr      r3, [r7, #0x6c]               
+00635580: 082b       cmp      r3, #8                        
+00635582: 00f28181   bhi.w    #0x635888                     
+00635586: dfe813f0   tbh      [pc, r3, lsl #1]              
+0063558a: 0900       movs     r1, r1                        
+0063558c: 0e00       movs     r6, r1                        
+0063558e: 0e00       movs     r6, r1                        
+00635590: 1300       movs     r3, r2                        
+00635592: 1800       movs     r0, r3                        
+00635594: 7f01       lsls     r7, r7, #5                    
+00635596: 1d00       movs     r5, r3                        
+00635598: 2200       movs     r2, r4                        
+0063559a: 2700       movs     r7, r4                        
+0063559c: a068       ldr      r0, [r4, #8]                  
+0063559e: 0368       ldr      r3, [r0]                      
+006355a0: d3f85031   ldr.w    r3, [r3, #0x150]              
+006355a4: 1ce0       b        #0x6355e0                     
+006355a6: a068       ldr      r0, [r4, #8]                  
+006355a8: 0368       ldr      r3, [r0]                      
+006355aa: d3f85431   ldr.w    r3, [r3, #0x154]              
+006355ae: 17e0       b        #0x6355e0                     
+006355b0: a068       ldr      r0, [r4, #8]                  
+006355b2: 0368       ldr      r3, [r0]                      
+006355b4: d3f84431   ldr.w    r3, [r3, #0x144]              
+006355b8: 12e0       b        #0x6355e0                     
+006355ba: a068       ldr      r0, [r4, #8]                  
+006355bc: 0368       ldr      r3, [r0]                      
+006355be: d3f84c31   ldr.w    r3, [r3, #0x14c]              
+006355c2: 0de0       b        #0x6355e0                     
+006355c4: a068       ldr      r0, [r4, #8]                  
+006355c6: 0368       ldr      r3, [r0]                      
+006355c8: d3f85831   ldr.w    r3, [r3, #0x158]              
+006355cc: 08e0       b        #0x6355e0                     
+006355ce: a068       ldr      r0, [r4, #8]                  
+006355d0: 0368       ldr      r3, [r0]                      
+006355d2: d3f85c31   ldr.w    r3, [r3, #0x15c]              
+006355d6: 03e0       b        #0x6355e0                     
+006355d8: a068       ldr      r0, [r4, #8]                  
+006355da: 0368       ldr      r3, [r0]                      
+006355dc: d3f86031   ldr.w    r3, [r3, #0x160]              
+006355e0: 9847       blx      r3                            
+006355e2: 0028       cmp      r0, #0                        
+006355e4: 00f05081   beq.w    #0x635888                     
+006355e8: 002e       cmp      r6, #0                        
+006355ea: 40f04d81   bne.w    #0x635888                     
+006355ee: fb6e       ldr      r3, [r7, #0x6c]               
+006355f0: 082b       cmp      r3, #8                        
+006355f2: 5fd8       bhi      #0x6356b4                     
+006355f4: dfe803f0   tbb      [pc, r3]                      
+006355f8: 0510       asrs     r5, r0, #0x20                 
+006355fa: 1b26       movs     r6, #0x1b                     
+006355fc: 315e       ldrsh    r1, [r6, r0]                  
+006355fe: 3c47       bxns     r7                            
+00635600: 5200       lsls     r2, r2, #1                    
+00635602: d4f83807   ldr.w    r0, [r4, #0x738]              
+00635606: 3946       mov      r1, r7                        
+00635608: 07f15402   add.w    r2, r7, #0x54                 
+0063560c: 4ff00108   mov.w    r8, #1                        
+00635610: 70f59aff   bl       #0x3a6548                       ; 
+00635614: 0646       mov      r6, r0                        
+00635616: 4be0       b        #0x6356b0                     
+00635618: d4f83407   ldr.w    r0, [r4, #0x734]              
+0063561c: 3946       mov      r1, r7                        
+0063561e: 07f15402   add.w    r2, r7, #0x54                 
+00635622: 4ff00208   mov.w    r8, #2                        
+00635626: b4f0c5fd   bl       #0x6ea1b4                       ; 
+0063562a: 0646       mov      r6, r0                        
+0063562c: 40e0       b        #0x6356b0                     
+0063562e: d4f83407   ldr.w    r0, [r4, #0x734]              
+00635632: 3946       mov      r1, r7                        
+00635634: 07f15402   add.w    r2, r7, #0x54                 
+00635638: 4ff00408   mov.w    r8, #4                        
+0063563c: b4f0bafd   bl       #0x6ea1b4                       ; 
+00635640: 0646       mov      r6, r0                        
+00635642: 35e0       b        #0x6356b0                     
+00635644: d4f82c07   ldr.w    r0, [r4, #0x72c]              
+00635648: 391d       adds     r1, r7, #4                    
+0063564a: 07f15402   add.w    r2, r7, #0x54                 
+0063564e: 4ff00808   mov.w    r8, #8                        
+00635652: 77f7c3fe   bl       #0x5ad3dc                       ; 
+00635656: 0646       mov      r6, r0                        
+00635658: 2ae0       b        #0x6356b0                     
+0063565a: d4f83007   ldr.w    r0, [r4, #0x730]              
+0063565e: 3946       mov      r1, r7                        
+00635660: 07f15402   add.w    r2, r7, #0x54                 
+00635664: 4ff01008   mov.w    r8, #0x10                     
+00635668: 9af79afd   bl       #0x5d01a0                       ; 
+0063566c: 0646       mov      r6, r0                        
+0063566e: 1fe0       b        #0x6356b0                     
+00635670: d4f83c07   ldr.w    r0, [r4, #0x73c]              
+00635674: 3946       mov      r1, r7                        
+00635676: 07f15402   add.w    r2, r7, #0x54                 
+0063567a: 4ff08008   mov.w    r8, #0x80                     
+0063567e: 82f71ffc   bl       #0x5b7ec0                       ; 
+00635682: 0646       mov      r6, r0                        
+00635684: 14e0       b        #0x6356b0                     
+00635686: d4f84007   ldr.w    r0, [r4, #0x740]              
+0063568a: 3946       mov      r1, r7                        
+0063568c: 07f15402   add.w    r2, r7, #0x54                 
+...
+006356e8: 6b68       ldr      r3, [r5, #4]                  
+006356ea: 18ea030f   tst.w    r8, r3                        
+006356ee: 16d1       bne      #0x63571e                     
+006356f0: 314b       ldr      r3, [pc, #0xc4]                 ; [006357b8]=009df25a
+006356f2: e068       ldr      r0, [r4, #0xc]                
+006356f4: 364a       ldr      r2, [pc, #0xd8]                 ; [006357d0]=008ee8f5 "GetContentResumePointCmd : contentType missmatch
+"
+006356f6: 1978       ldrb     r1, [r3]                      
+006356f8: 3346       mov      r3, r6                        
+006356fa: 1af097ff   bl       #0x65062c                       ; 
+006356fe: 304b       ldr      r3, [pc, #0xc0]                 ; [006357c0]=008f354d "GetContentResumePointCmd"
+00635700: 0220       movs     r0, #2                        
+00635702: 4ff44171   mov.w    r1, #0x304                    
+00635706: 334a       ldr      r2, [pc, #0xcc]                 ; [006357d4]=31000002
+00635708: 0093       str      r3, [sp]                      
+0063570a: 40f28b53   movw     r3, #0x58b                    
+0063570e: 0193       str      r3, [sp, #4]                  
+00635710: 6368       ldr      r3, [r4, #4]                  
+00635712: 0293       str      r3, [sp, #8]                  
+00635714: 0123       movs     r3, #1                        
+00635716: 0393       str      r3, [sp, #0xc]                
+00635718: 2a4b       ldr      r3, [pc, #0xa8]                 ; [006357c4]=008edecd "avimmgr/AviMMgrDBIf.cpp"
+0063571a: 18f0affd   bl       #0x64e27c                       ; 
+0063571e: 002e       cmp      r6, #0                        
+00635720: 40f0b280   bne.w    #0x635888                     
+00635724: 4846       mov      r0, sb                        
+00635726: 07f13c06   add.w    r6, r7, #0x3c                 
+0063572a: c7f7cff9   bl       #0x5fcacc                       ; 
+0063572e: 0028       cmp      r0, #0                        
+00635730: 54d0       beq      #0x6357dc                     
+00635732: 05f13c0e   add.w    lr, r5, #0x3c                 
+00635736: bee80f00   ldm.w    lr!, {r0, r1, r2, r3}         
+0063573a: 0fc6       stm      r6!, {r0, r1, r2, r3}         
+0063573c: 4ff0ff33   mov.w    r3, #-1                       
+00635740: 9ee80300   ldm.w    lr, {r0, r1}                  
+00635744: 05f1040e   add.w    lr, r5, #4                    
+...
+00635828: fa6c       ldr      r2, [r7, #0x4c]               
+0063582a: 9342       cmp      r3, r2                        
+0063582c: 26d1       bne      #0x63587c                     
+0063582e: 2b6d       ldr      r3, [r5, #0x50]               
+00635830: b3f1ff3f   cmp.w    r3, #-1                       
+00635834: 02d0       beq      #0x63583c                     
+00635836: 3a6d       ldr      r2, [r7, #0x50]               
+00635838: 9342       cmp      r3, r2                        
+0063583a: 1fd1       bne      #0x63587c                     
+0063583c: 07f13c06   add.w    r6, r7, #0x3c                 
+00635840: 0af11005   add.w    r5, sl, #0x10                 
+00635844: 0af1280a   add.w    sl, sl, #0x28                 
+00635848: c4f8e082   str.w    r8, [r4, #0x2e0]              
+0063584c: 0fce       ldm      r6!, {r0, r1, r2, r3}         
+0063584e: 0fc5       stm      r5!, {r0, r1, r2, r3}         
+00635850: 0123       movs     r3, #1                        
+00635852: 96e80300   ldm.w    r6, {r0, r1}                  
+00635856: 84f8dc32   strb.w   r3, [r4, #0x2dc]              
+0063585a: 85e80300   stm.w    r5, {r0, r1}                  
+0063585e: 3d46       mov      r5, r7                        
+00635860: 0fcd       ldm      r5!, {r0, r1, r2, r3}         
+00635862: aae80f00   stm.w    sl!, {r0, r1, r2, r3}         
+00635866: 0fcd       ldm      r5!, {r0, r1, r2, r3}         
+00635868: aae80f00   stm.w    sl!, {r0, r1, r2, r3}         
+0063586c: 0fcd       ldm      r5!, {r0, r1, r2, r3}         
+0063586e: aae80f00   stm.w    sl!, {r0, r1, r2, r3}         
+00635872: 95e80700   ldm.w    r5, {r0, r1, r2}              
+00635876: 8ae80700   stm.w    sl, {r0, r1, r2}              
+0063587a: 05e0       b        #0x635888                     
+0063587c: 234b       ldr      r3, [pc, #0x8c]                 ; [0063590c]=009df25a
+0063587e: e068       ldr      r0, [r4, #0xc]                
+00635880: 264a       ldr      r2, [pc, #0x98]                 ; [0063591c]=008ee9ad "GetContentResumePointCmd : EntryId Unmatch"
+00635882: 1978       ldrb     r1, [r3]                      
+00635884: 1af0d2fe   bl       #0x65062c                       ; 
+00635888: d4f86007   ldr.w    r0, [r4, #0x760]              
+0063588c: acf51efa   bl       #0x3e1ccc                       ; 
+00635890: 0546       mov      r5, r0                        
+00635892: 00b3       cbz      r0, #0x6358d6                 
+00635894: 1d4b       ldr      r3, [pc, #0x74]                 ; [0063590c]=009df25a
+00635896: e068       ldr      r0, [r4, #0xc]                

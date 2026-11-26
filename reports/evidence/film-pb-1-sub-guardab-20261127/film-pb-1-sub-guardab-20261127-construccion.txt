@@ -1,0 +1,112 @@
+# film-pb-1-sub-guardab-20261127 — desensamblados clave (libmpr.so 3.21, VA de ELF)
+# sha256 libmpr.so: 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+
+## AviMMgr::ctor 0x60AA98 (store vptr 0x8E6E58 en 0x60AAB2)
+0060aa98: 2de9f843   push.w   {r3, r4, r5, r6, r7, r8, sb, lr}
+0060aa9c: 00af       add      r7, sp, #0                    
+0060aa9e: 0546       mov      r5, r0                        
+0060aaa0: 41f0feff   bl       #0x64caa0                     
+0060aaa4: 714b       ldr      r3, [pc, #0x1c4]                ; [0060ac6c]=008e6e58
+0060aaa6: 05f5e069   add.w    sb, r5, #0x700                
+0060aaaa: 09f10c09   add.w    sb, sb, #0xc                  
+0060aaae: 0021       movs     r1, #0                        
+0060aab0: 4846       mov      r0, sb                        
+0060aab2: 2b60       str      r3, [r5]                      
+0060aab4: f2f774fe   bl       #0x5fd7a0                     
+0060aab8: 05f5f868   add.w    r8, r5, #0x7c0                
+0060aabc: 08f10408   add.w    r8, r8, #4                    
+0060aac0: 4046       mov      r0, r8                        
+0060aac2: dff556fc   bl       #0x3ea372                     
+0060aac6: 05f5fc66   add.w    r6, r5, #0x7e0                
+0060aaca: 0436       adds     r6, #4                        
+0060aacc: 3046       mov      r0, r6                        
+0060aace: dff550fc   bl       #0x3ea372                     
+0060aad2: 05f50064   add.w    r4, r5, #0x800                
+0060aad6: 0834       adds     r4, #8                        
+0060aad8: 2046       mov      r0, r4                        
+0060aada: 0ff7ebfb   bl       #0x51a2b4                     
+0060aade: 05f50660   add.w    r0, r5, #0x860                
+0060aae2: 0c30       adds     r0, #0xc                      
+0060aae4: 77f0e0fa   bl       #0x6820a8                     
+0060aae8: 0024       movs     r4, #0                        
+0060aaea: 4ff0ff33   mov.w    r3, #-1                       
+0060aaee: 2146       mov      r1, r4                        
+0060aaf0: c5f89437   str.w    r3, [r5, #0x794]              
+0060aaf4: c5f82847   str.w    r4, [r5, #0x728]              
+
+## MMgrBaseThread::ctor 0x64CAA0 (store vptr 0x8F60A0)
+0064caa0: 98b5       push     {r3, r4, r7, lr}              
+0064caa2: 00af       add      r7, sp, #0                    
+0064caa4: 0446       mov      r4, r0                        
+0064caa6: fff7f5fc   bl       #0x64c494                     
+0064caaa: 094b       ldr      r3, [pc, #0x24]                 ; [0064cad0]=008f60a0
+0064caac: 2046       mov      r0, r4                        
+0064caae: 2360       str      r3, [r4]                      
+0064cab0: 0023       movs     r3, #0                        
+0064cab2: c4f8c832   str.w    r3, [r4, #0x2c8]              
+0064cab6: c4f8fc36   str.w    r3, [r4, #0x6fc]              
+0064caba: c4f80037   str.w    r3, [r4, #0x700]              
+0064cabe: 84f8cc32   strb.w   r3, [r4, #0x2cc]              
+0064cac2: c4f80437   str.w    r3, [r4, #0x704]              
+0064cac6: c4f8d032   str.w    r3, [r4, #0x2d0]              
+0064caca: c4f8d434   str.w    r3, [r4, #0x4d4]              
+0064cace: 98bd       pop      {r3, r4, r7, pc}              
+0064cad0: a060       str      r0, [r4, #8]                  
+0064cad2: 8f00       lsls     r7, r1, #2                    
+0064cad4: b0b5       push     {r4, r5, r7, lr}              
+0064cad6: 82b0       sub      sp, #8                        
+0064cad8: 02af       add      r7, sp, #8                    
+0064cada: 0446       mov      r4, r0                        
+0064cadc: 0d46       mov      r5, r1                        
+
+## AviMMgrIf::NewMsAviMMgr — crea AviMMgr y lo guarda en facade+0x24 (0x66B73C..0x66B778)
+0066b730: 0123       movs     r3, #1                        
+0066b732: 87f82b31   strb.w   r3, [r7, #0x12b]              
+0066b736: 40f6c800   movw     r0, #0x8c8                    
+0066b73a: 6369       ldr      r3, [r4, #0x14]               
+0066b73c: d5f80090   ldr.w    sb, [r5]                      
+0066b740: c7f82031   str.w    r3, [r7, #0x120]              
+0066b744: a369       ldr      r3, [r4, #0x18]               
+0066b746: c7f82431   str.w    r3, [r7, #0x124]              
+0066b74a: 237f       ldrb     r3, [r4, #0x1c]               
+0066b74c: 87f82831   strb.w   r3, [r7, #0x128]              
+0066b750: 637f       ldrb     r3, [r4, #0x1d]               
+0066b752: 87f82931   strb.w   r3, [r7, #0x129]              
+0066b756: a37f       ldrb     r3, [r4, #0x1e]               
+0066b758: 87f82c31   strb.w   r3, [r7, #0x12c]              
+0066b75c: e37f       ldrb     r3, [r4, #0x1f]               
+0066b75e: 87f82d31   strb.w   r3, [r7, #0x12d]              
+0066b762: b3f620e0   blx      #0x11e7a4                       ; _Znwj
+0066b766: 0646       mov      r6, r0                        
+0066b768: 9ff796f9   bl       #0x60aa98                     
+0066b76c: 2b68       ldr      r3, [r5]                      
+0066b76e: 391d       adds     r1, r7, #4                    
+0066b770: c9f82460   str.w    r6, [sb, #0x24]               
+0066b774: 586a       ldr      r0, [r3, #0x24]               
+0066b776: d862       str      r0, [r3, #0x2c]               
+0066b778: 9ff7a4fc   bl       #0x60b0c4                     
+0066b77c: 2b68       ldr      r3, [r5]                      
+0066b77e: 2268       ldr      r2, [r4]                      
+
+## AviMMgrIf::ctor 0x66AF70 (vtable 0x9067A8, base MMgrIf 0x66D0E4)
+0066af70: 98b5       push     {r3, r4, r7, lr}              
+0066af72: 00af       add      r7, sp, #0                    
+0066af74: 0446       mov      r4, r0                        
+0066af76: 02f0b5f8   bl       #0x66d0e4                     
+0066af7a: 0a4b       ldr      r3, [pc, #0x28]                 ; [0066afa4]=009067a8
+0066af7c: 2046       mov      r0, r4                        
+0066af7e: 0a4a       ldr      r2, [pc, #0x28]                 ; [0066afa8]=0066d109
+0066af80: 2360       str      r3, [r4]                      
+0066af82: 0023       movs     r3, #0                        
+0066af84: a260       str      r2, [r4, #8]                  
+0066af86: e362       str      r3, [r4, #0x2c]               
+0066af88: e360       str      r3, [r4, #0xc]                
+0066af8a: 2361       str      r3, [r4, #0x10]               
+0066af8c: 6261       str      r2, [r4, #0x14]               
+0066af8e: a361       str      r3, [r4, #0x18]               
+0066af90: e361       str      r3, [r4, #0x1c]               
+0066af92: e1f7ddfb   bl       #0x64c750                     
+0066af96: 2046       mov      r0, r4                        
+0066af98: 98bd       pop      {r3, r4, r7, pc}              
+0066af9a: 2046       mov      r0, r4                        
+0066af9c: 01f09cfe   bl       #0x66ccd8                     

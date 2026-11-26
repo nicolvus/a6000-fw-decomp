@@ -1,0 +1,64 @@
+# MovieReadStart 0x608698 (ELF) / 0x618698 (REA) - libmpr.so 3.21
+00608698: f0b5       push     {r4, r5, r6, r7, lr}          
+0060869a: 85b0       sub      sp, #0x14                     
+0060869c: 0446       mov      r4, r0                        
+0060869e: dc21       movs     r1, #0xdc                     
+006086a0: 04af       add      r7, sp, #0x10                 
+006086a2: 4068       ldr      r0, [r0, #4]                  
+006086a4: 42f6e522   movw     r2, #0x2ae5                   
+006086a8: 47f076f9   bl       #0x64f998                     
+006086ac: 2046       mov      r0, r4                        
+006086ae: 2421       movs     r1, #0x24                     
+006086b0: 43f0f2fd   bl       #0x64c298                     
+006086b4: 60b1       cbz      r0, #0x6086d0                 
+006086b6: 04f5fc60   add.w    r0, r4, #0x7e0                
+006086ba: 0430       adds     r0, #4                        
+006086bc: e1f542fe   bl       #0x3ea344                     
+006086c0: 0128       cmp      r0, #1                        
+006086c2: 05d0       beq      #0x6086d0                     
+006086c4: 2046       mov      r0, r4                        
+006086c6: 43f0affd   bl       #0x64c228                     
+006086ca: 0546       mov      r5, r0                        
+006086cc: 0028       cmp      r0, #0                        
+006086ce: 20d0       beq      #0x608712                     
+006086d0: 184b       ldr      r3, [pc, #0x60]                 ; [00608734]=009df25a
+006086d2: e068       ldr      r0, [r4, #0xc]                
+006086d4: 1849       ldr      r1, [pc, #0x60]                 ; [00608738]=008decd3 "MovieReadStart : ER_SEQUENCE"
+006086d6: 1a78       ldrb     r2, [r3]                      
+006086d8: 48f033f8   bl       #0x650742                     
+006086dc: 174d       ldr      r5, [pc, #0x5c]                 ; [0060873c]=31000007
+006086de: 6068       ldr      r0, [r4, #4]                  
+006086e0: dc21       movs     r1, #0xdc                     
+006086e2: 2a46       mov      r2, r5                        
+006086e4: 42f60b33   movw     r3, #0x2b0b                   
+006086e8: 47f01efa   bl       #0x64fb28                     
+006086ec: 144b       ldr      r3, [pc, #0x50]                 ; [00608740]=008e780e "MovieReadStart"
+006086ee: 0220       movs     r0, #2                        
+006086f0: dc21       movs     r1, #0xdc                     
+006086f2: 2a46       mov      r2, r5                        
+006086f4: 0093       str      r3, [sp]                      
+006086f6: 42f60c33   movw     r3, #0x2b0c                   
+006086fa: 0193       str      r3, [sp, #4]                  
+006086fc: 6368       ldr      r3, [r4, #4]                  
+006086fe: 0293       str      r3, [sp, #8]                  
+00608700: 0123       movs     r3, #1                        
+00608702: 0393       str      r3, [sp, #0xc]                
+00608704: 0f4b       ldr      r3, [pc, #0x3c]                 ; [00608744]=008dd9c0 "avimmgr/AviMMgr.cpp"
+00608706: 45f0b9fd   bl       #0x64e27c                     
+0060870a: 07f10407   add.w    r7, r7, #4                    
+0060870e: bd46       mov      sp, r7                        
+00608710: f0bd       pop      {r4, r5, r6, r7, pc}          
+00608712: 04f59276   add.w    r6, r4, #0x124                
+00608716: 3046       mov      r0, r6                        
+00608718: cdf792f6   bl       #0x1d6440                     
+0060871c: d4f84831   ldr.w    r3, [r4, #0x148]              
+00608720: 3046       mov      r0, r6                        
+00608722: 0133       adds     r3, #1                        
+00608724: c4f84831   str.w    r3, [r4, #0x148]              
+00608728: cdf791f6   bl       #0x1d644e                     
+0060872c: f7f7a8fe   bl       #0x600480                     
+00608730: d5e7       b        #0x6086de                     
+00608732: 00bf       nop                                    
+
+# vtable 0x8e6e58 slots
++0x58 0061a8f1 isSupportContent; +0x5c 0060945d GetPlayMovieStatus; +0x60 00603dbd GetPlayStillStatus; +0xb4 00608699 MovieReadStart
