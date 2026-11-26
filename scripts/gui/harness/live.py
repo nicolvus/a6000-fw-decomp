@@ -103,9 +103,12 @@ TECLAS = {"arriba": (0x3, 0x1), "abajo": (0x30, 0x5), "izquierda": (0x15, 0x3), 
           "borrar": (0x1F8, 0x20), "rueda_izq": (0x10000015, 0x1E5, -1), "rueda_der": (0x10000015, 0x1E5, 1),
           "dial_izq": (0x10000014, 0x1E4, -1), "dial_der": (0x10000014, 0x1E4, 1)}
 DIAL_MODO = (0x7025, 0x27)  # KEY_POS_MODE_DIAL → evento 0x15070050 → InputService::callback_mode_dial (valor = posición)
-# (nombre, estado del dial): solo los cinco con estado verificado (getExposureMode e icono de la vista, ver DIAL_INICIAL). 1 = MR, 8 = película, 0xb = SCN y 0x10 = panorámica
-# salen de getExposureMode pero no se probaron con la vista. shortcut: sin ellos hasta medirlos.
-POSICIONES_MODO = (("Auto", 2), ("P", 3), ("A", 4), ("S", 5), ("M", 6))
+# (nombre, estado del dial). MEDIDO por la ruta real con `OPENVIEWDIAL` y captura (G22-DIAL-POS, docs/gui/g22-dial-fn-rueda.md §9):
+# el firmware devuelve la posición tal cual y la vista pinta el modo. 2 = Auto, 3 = P, 4 = A, 5 = S y 6 = M (letra en la
+# esquina); 8 = película (cambia al diseño de película) y 0xb = SCN (icono de SCN arriba y rótulo «SCN» abajo).
+# NO_VERIFICADO, y por eso no están: 1 = MR y 0x10 = panorámica — devuelven su posición, pero dan la MISMA pantalla byte a
+# byte y sin indicador de modo, así que no se pueden distinguir ni comparar con la cámara (medir con cámara y/o con av-cam).
+POSICIONES_MODO = (("Auto", 2), ("P", 3), ("A", 4), ("S", 5), ("M", 6), ("Película", 8), ("SCN", 0xB))
 
 
 def pulsa(vm: "Vm", nombre: str, v: int) -> None:
