@@ -659,9 +659,15 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
     return srv
 
 
-def arranque_fallido(consola: str, transcurrido: float, fotogramas: int, limite: float) -> bool:
-    """Un arranque en frío fallido: im.elf murió («IMEXIT» de im.sh, SEGV intermitente del arranque) o no hay pantalla pasado `limite` s (cuelgue)."""
-    return not fotogramas and ("IMEXIT " in consola or transcurrido > limite)
+# LISTAS_OK: un invitado que arranca de verdad compone la OSD (25-1400 listas por fotograma); el cuelgue conocido deja el
+# fotograma de «2 listas» y no crece nunca (G22-CUELGUE, medido 4 de 4 en docs/gui/g22-cuelgue-navegacion.md). Por eso el
+# vigilante no da el arranque por bueno con el primer fotograma, sino con listas de verdad.
+LISTAS_OK = int(os.environ.get("LIVE_LISTAS_OK", "20"))
+
+
+def arranque_fallido(consola: str, transcurrido: float, listas: int, limite: float) -> bool:
+    """Un arranque en frío fallido: im.elf murió («IMEXIT» de im.sh, SEGV intermitente) o se quedó en el cuelgue de «2 listas» pasado `limite` s."""
+    return listas < LISTAS_OK and ("IMEXIT " in consola or transcurrido > limite)
 
 
 def supervisa(argv: list[str], consola: Path, avcam: Path, puerto: int, intentos: int, limite: float) -> int:
@@ -675,16 +681,16 @@ def supervisa(argv: list[str], consola: Path, avcam: Path, puerto: int, intentos
         consola.unlink(missing_ok=True); avcam.unlink(missing_ok=True); (consola.parent / "shim.log").unlink(missing_ok=True)
         t0 = time.time()
         hijo = subprocess.Popen([sys.executable, *argv], env={**os.environ, "LIVE_HIJO": "1"})
-        fotogramas = 0
-        while hijo.poll() is None and not fotogramas:
+        listas = 0
+        while hijo.poll() is None and listas < LISTAS_OK:  # el primer fotograma no basta: el cuelgue también pinta 1-2
             time.sleep(3)
             try:
-                fotogramas = json.load(urllib.request.urlopen(f"http://127.0.0.1:{puerto}/estado", timeout=3))["fotogramas"]
-            except (OSError, ValueError):
+                listas = int(json.load(urllib.request.urlopen(f"http://127.0.0.1:{puerto}/estado", timeout=3))["listas"])
+            except (OSError, ValueError, KeyError):
                 pass
             txt = consola.read_text(errors="replace") if consola.exists() else ""
-            if arranque_fallido(txt, time.time() - t0, fotogramas, limite) and n < intentos:
-                print(f"arranque {n}/{intentos} fallido a los {time.time() - t0:.0f} s: se repite", flush=True)
+            if arranque_fallido(txt, time.time() - t0, listas, limite) and n < intentos:
+                print(f"arranque {n}/{intentos} fallido a los {time.time() - t0:.0f} s ({listas} listas): se repite", flush=True)
                 hijo.send_signal(signal.SIGTERM); hijo.wait(60)
                 break
         else:

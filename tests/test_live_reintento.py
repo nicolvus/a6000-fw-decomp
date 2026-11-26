@@ -14,9 +14,16 @@ def test_sin_pantalla_pasado_el_limite_es_arranque_fallido():
     assert not live.arranque_fallido("LIVE=/dev/vport0p1\n", 200, 0, 240)
 
 
-def test_con_pantalla_nunca_es_fallido():
-    assert not live.arranque_fallido("LIVE=/dev/vport0p1\n", 900, 3, 240)
-    assert not live.arranque_fallido("IMEXIT im_s 0\n", 900, 3, 240)
+def test_con_osd_de_verdad_nunca_es_fallido():
+    assert not live.arranque_fallido("LIVE=/dev/vport0p1\n", 900, live.LISTAS_OK, 240)
+    assert not live.arranque_fallido("IMEXIT im_s 0\n", 900, 1400, 240)
+
+
+def test_el_cuelgue_de_dos_listas_es_arranque_fallido():
+    """G22-CUELGUE: el invitado que se cuelga SÍ pinta 1-2 fotogramas («2 listas», 0,0046 opacos) y luego no crece; darlo por
+    arrancado deja la sesión inservible, así que pasado el límite cuenta como fallo y el vigilante reinicia."""
+    assert live.arranque_fallido("LIVE=/dev/vport0p1\n", 241, 2, 240)
+    assert not live.arranque_fallido("LIVE=/dev/vport0p1\n", 200, 2, 240)  # aún dentro del plazo: se le da tiempo
 
 
 def test_autoguardado_no_antes_del_instante_del_arranque_lento():
