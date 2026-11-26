@@ -513,6 +513,10 @@ Lo que se sabe de ese tramo, con su etiqueta:
   familia `viewUnified*` (**INFERENCIA**: coincide con `viewUnified2.so+0x446630`, dentro de
   `.data.rel.ro 0x4448d8…0x49b124`), lo que explicaría que la raíz de la vista viva fuera de `libObj`; falta medirlo.
 
+> **Corregido en §8 (G22-OYENTE, 26-11-2026):** el objeto `[AppSystem+0x1c]` **no** es un `ActionEventMapBase` de la
+> vista sino un `UtilityManager`, y sus 8 oyentes medidos no incluyen ninguna vista. Lo que falla no es el reparto del
+> destino sino la traducción del id en `ViewBase::GetEventId` (devuelve `0x150100f2` sin traducir).
+
 **Nota de método (para no repetir el fallo).** `TRACEDEREF=d<reg>:<off>:<n>` desreferencia **siempre**, así que solo vale
 en trampas cuyo registro sea un puntero: puesta en la trampa de `1106b8` (donde `r1` es el *código* del evento) o en la
 de `f59f0` (donde `r1` es un id pequeño) mata al hilo con SIGSEGV y deja el invitado sin ese hilo (pasó dos veces en esta
@@ -525,29 +529,111 @@ perfiles `tecla2` y `tecla3`, puertos 8692/8693) se quedaron en el cuelgue conoc
 sigue vaciando la cola; para ver la pantalla hay que repetir el arranque. `destkeyv()` deja
 `DESTKEYV: libObj+0x113076 04 22 -> 0c 22` en el registro (necesita `WLALL=1` para llegar a `shim.log`).
 
-## 8. Siguiente paso medible
+## 8. Medido en G22-OYENTE (26-11-2026): quién recibe el bit 8 y por qué la acción 4 no se ejecuta
 
-**Paso 0 (HECHO en G22-TECLA, §7.3).** El interruptor `DESTKEYV=1` cambia los tres sitios correctos
-(`libObj+0x113076`, `viewUnified2+0x18201c`, `viewUnified2+0x182042`) y la medida da `TRACE 1106b8 … r2=c` +
-`EQTRACE … dest=12` en los tres eventos. **El paso 1 del §8 original queda tachado**: el `movs` de `libObj+0x111972`
-no era el que fija el destino de esta ruta (código muerto).
+Interruptor nuevo del shim **`OYD=1`** (apagado por omisión): pone un `UDF` en `libObj+0x10e914` (`68 03` = `ldr r3,[r0]`,
+la primera de las tres instrucciones de la llamada virtual del reparto) y la **emula** en el manejador
+(`c->arm_r3 = vt; c->arm_pc = pc + 2`), de modo que la trampa es repetible sin parchear la instrucción siguiente (lo que
+sí hace `TRACEREP`). Por cada vuelta imprime clave del mapa, oyente, su vtable, la ranura `+8` y el **nombre RTTI**, cada
+dirección como «biblioteca+desplazamiento» (`dladdr`), más el tamaño del mapa (`this+0x28`) y el `Event` que llega
+(`+4` código, `+8` destino, `+9` clase). Evidencia: `reports/evidence/g22-oyente-20261126/`.
 
-**Paso 1 (decisivo ahora, medible).** Averiguar qué oyente de `[AppSystem+0x1c]+0x14` debería traducir el evento:
+### 8.1 `[AppSystem+0x1c]` es un `UtilityManager`, **no** el `ActionEventMap` de la vista
 
-- trampa en `libObj+0x10e914` (`ldr r0,[r0,#4]` del bucle multicast) con `TRACEDEREF=d0:0:8`: da el **oyente** de cada
-  vuelta (y cuántas vueltas hay) cuando llega la tecla;
-- con el oyente en la mano, `P`/`DEREF` sobre su vtable para ver su `vtable[8]`, y una trampa en esa ranura con
-  `TRACEDEREF=d1:0:3` (aquí `r1` **sí** es el `Event*`) para confirmar que recibe `code=150100f2 dest=0x0c`;
-- si el oyente es el `ActionEventMap`, leer su mapa de `{evento → acción}`: buscar en el invitado los `insert` con
-  claves `0x1501xxxx` (o volcar el mapa con `P` una vez conocido el puntero).
+La vtable que el invitado midió en `libObj+0xfea630` (§7.3) tiene `offset-to-top` 0 y su palabra `-4` apunta a un
+`typeinfo` cuyo nombre es **`14UtilityManager`**; sus tres únicas ranuras son `0x10eb49`, `0x10eb75` y `0x10e8ed` (el
+reparto). `0x10e8ed` aparece **una sola vez** en todo el fichero, así que la identificación no es ambigua.
+`UtilityManager::regist(int, UtilityBase*)` (`libObj+0x10ee08`) es el alta de oyentes y el constructor (`+0x10eb48`) deja
+el contenedor en `this+0x14`.
 
-**Criterio de cierre del tramo:** `TRACE 11817e > 0` con `r1=4` en la misma pasada que la pulsación, o el mapa del
-oyente volcado y `0x150100f0` **ausente** de él (eso cerraría el diagnóstico: la vista nunca registra la tecla).
+Corrige el §7.4: la ranura del bit 8 **no** es el `DispatchEvent` de la vista (`0xf59f0` es el thunk
+`this->[this]->vtable[8]` de `DefRootView::ActionEventMapBase`, otra clase). El reparto del destino 8 es el **registro de
+utilidades del framework** (`LookManager`, `SvcCaution`, `InputService`, `Database::HndlMgr`…), no la vista de disparo.
 
-**Paso 2 (si el mapa no tiene la entrada).** Buscar el productor que sí registra `{0x150100f0, 4}`: no es la tabla
-`.rodata 0x3a03d4` (su lector es inalcanzable, §7.4), así que o se construye en tiempo de ejecución (buscar en el
-invitado los `insert` con esa clave) o la tecla de la cámara no pasa por el `ActionEventMap` y hay otra vía
-(la `[View+0x20]`, `View::getTriggerTable`, sigue **NO_VERIFICADA**).
+### 8.2 Los ocho oyentes, medidos
+
+`oyentes=8` en todas las pasadas (la cuenta sale del propio mapa, `this+0x28`), y el orden es el del `std::map<int,
+UtilityBase*>` (in-orden por clave):
+
+| # | clave | RTTI del oyente | vtable | ranura `+8` (lo que ejecuta) |
+|---|---|---|---|---|
+| 1 | `0x1d` | `LookManager` | `libObj+0xfed4e8` | `libObj+0x137684` |
+| 2 | (puntero) | `SvcCaution` | `libObj+0xfebcd8` | `libObj+0x123954` |
+| 3 | `0x1d` | `TestcmdManager` | `libObj+0xfe9600` | `libObj+0xfebd8` |
+| 4 | `0x35` | `HighlightManagerCustom` | **`viewUnified2+0x452870`** | `libObj+0x104650` |
+| 5 | `0x25` | `InputService` | `libObj+0xfea788` | `libObj+0x1106e0` |
+| 6 | `0x25` | `CameraProfileService` | `libObj+0xfea7b0` | `libObj+0x1142ea` |
+| 7 | `0xbd` | `TopologyManager` | `libObj+0xcc32b8` | `libObj+0x41a934` |
+| 8 | (puntero) | `Database::HndlMgr` | `libObj+0xccb9ac` | `libObj+0x439520` |
+
+**Ninguno es una vista.** El único cuya vtable vive en `viewUnified2.so` es `HighlightManagerCustom`, que es el gestor
+del resalte de foco, no la vista. `ScalarView::EventHandler` (`libObj+0x116bd0`) y
+`ActionCheckerListBase::execAction` (`libObj+0x11817e`) siguen a **0 disparos** con las trampas armadas durante >380 s
+(`oyente6`): la vista no entra por aquí.
+
+### 8.3 La tecla **sí** llega al reparto, y los ocho la reciben y la ignoran
+
+Tres medidas encadenadas en el mismo invitado (`oyente8`, `DESTKEYV=1 OYD=1`):
+
+1. **Se publica con el bit 8**: `EQTRACE 2 code=15070010 dest=12 clase=1 notify=0 lr=libObj.so+0x111841`,
+   `EQTRACE 4 code=150100f2 dest=12 …`, `EQTRACE 6 code=150100f1 dest=12 …` (`oyente6`).
+2. **Entra en la rama `dest & 8`**: con `TRACEFN=7eee68` + `TRACEDEREF=d1:4:3` (aquí `r1` **sí** es el `Event*`), cada
+   despacho imprime el evento: `15070010 ffff010c …`, `150701a0 0000010c …`, `150100f1 020a010c …` (palabra `+8` =
+   `0x010c`: destino `0x0c`, clase `1`).
+3. **Llega a los oyentes**: `OYENTE n=256 … rtti=N8Database7HndlMgrE evento=0x20d17f8 codigo=0x15070010 dest=0xc clase=0x1
+   oyentes=8` — la cuenta de llamadas al reparto pasó de 128 a 256 justo con el evento sintético de la tecla, o sea que
+   los ocho oyentes recibieron la pulsación.
+
+Ninguno de los ocho hace nada con ella: `execAction` sigue a 0 y la pantalla no cambia.
+
+### 8.4 El eslabón que falta está en la **traducción del id**, no en el destino
+
+`ViewBase::GetEventId` (`libObj+0x121d58`) sí recibe la tecla — 141 llamadas medidas con `TRACEFN=121d58` y
+`TRACEDEREF=0:14:1` (dos niveles: `r0` = vista, `[vista+0x14]` = `Event*`), con `codigo=150100f2 dest|clase=0000010c`
+entre ellas. Y lo que devuelve se ve en su llamante (`viewUnified2+0x1994e8`, tras el `blx` a la ranura virtual; trampa
+con `TRACELIB=viewUnified2.so` + `TRACEFN2=1994e8`, caliente):
+
+```
+TRACE 1994e8 n=3 r0=2a         r3=1306c000      <- evento 0x1306c02a: TRAducido (id 0x2a)
+TRACE 1994e8 n=4 r0=150100f2   r3=15010000      <- la tecla: SIN traducir (devuelve el código tal cual)
+TRACE 1994e8 n=5 r0=8          r3=1306c000      <- otro evento de la vista: id 8
+TRACE 1994e8 n=6 r0=150701a0   r3=15070000      <- el sintético del filtro: SIN traducir
+```
+
+La regla del código (`0x121d76`-`0x121d8c`) es: `v = mapa[View+0x28][id]`; si `v & ~0xfff == (View::getView()<<12) +
+0x13000000` devuelve `v - esa base`. Para la vista de disparo esa base es **`0x1306c000`** (vista `0x6c`), así que el
+espacio de eventos **que la vista sabe accionar es `0x1306cNNN`**; los códigos de entrada `0x1501xxxx`/`0x1507xxxx` no
+pertenecen a él y se devuelven **sin traducir** (`0x150100f2`), con lo que el conmutador del consumidor
+(`viewUnified2+0x1994e8`: casos `0xf07`, `0xf03`, `2`, `8`, `0x2a`…) no encuentra caso y no ejecuta nada.
+
+Conclusión causal completa: tecla `0x1f7` → `0x150100f2` (dest `0x0c`) → cola 1 → cola 0 → `AppSystem::dispatch`
+(bits 4 y 8) → `UtilityManager` (8 oyentes, ninguno vista) **y** la vista (vía `viewUnified2`, que llama a
+`GetEventId`) → `GetEventId` **no traduce** `0x1501xxxx` → no hay acción → `execAction` 0.
+
+### 8.5 ¿Se puede cerrar en el arnés con un interruptor del tipo `DESTKEYV`? **No**
+
+El interruptor que había (`DESTKEYV`) actuaba sobre el **destino**, y el destino ya no es el problema: la tecla llega a
+todo lo que depende de él. Lo que falta es una entrada `{0x1501xxxx → 0x1306c004}` en el mapa de la vista o el productor
+que convierta el código de entrada en un evento `0x1306cNNN` (candidatos ya localizados, sin medir: el conmutador
+`getFilterEventFunc`/`getFuncEvent`/`inverseTransformFuncEvent` de `viewUnified2` en `0x1820cc`/`0x182400`/`0x182a84`, y
+la tabla de disparo `[View+0x20]`, `View::getTriggerTable` = `libObj+0x7f1a98`). Cerrarlo pediría o bien una cueva de
+código que llame al `insert` del mapa con la clave y el valor calculados con `View::getView()`, o bien el productor real,
+que hoy no está identificado; ninguna de las dos es un parche de 2 bytes como `DESTKEYV`.
+
+**Medida de pantalla (lo que sí se puede afirmar):** con el estado del arnés en este entorno, pulsar Reproducción **no
+cambia la pantalla**: `antes.png` y `despues.png` de `reports/evidence/g22-oyente-20261126/` son byte a byte iguales
+(12 861 B, 0 píxeles distintos) y `/estado` sigue en `2 fotogramas · 2 listas · opacos 0,0046`. Los cinco arranques en
+frío de la sesión (`oyente1`…`oyente8`) acabaron en el cuelgue conocido **G22-CUELGUE** (mismo fotograma), así que la
+comparación de pantalla se hizo sobre la OSD a medio componer: es evidencia del síntoma, no de la reproducción.
+
+### 8.6 Cómo se instrumentó (y qué no se pudo medir)
+
+- `OYD=1`: trampa repetible en `0x10e914` con emulación de la instrucción; imprime por oyente clave, puntero, vtable,
+  ranura `+8`, RTTI y cuenta del mapa. Se arma en el gancho `dlopen` de `libObj` y también en caliente (`E OYD=1`).
+- `E TRACEFN=…` en caliente **sin** `TRACEFN` en el arranque: ahora el shim busca la base de `libObj` con
+  `libbase_de()` (antes exigía `TRACEFN=0` en el arranque para dejar fijada `trc_base`).
+- Lo que **no** se pudo medir: el contenido del mapa `View+0x28` (habría que interpretar el `std::map` del invitado y el
+  `find` es `0xf2fe0`, ajeno a la firma de `regist`); y la pantalla de disparo completa, por G22-CUELGUE.
 
 ## 9. VERIFICADO / INFERENCIA / NO VERIFICADO
 
@@ -573,11 +659,20 @@ invitado los `insert` con esa clave) o la tecla de la cámara no pasa por el `Ac
 | 18 | La ranura `(*[AppSystem+0x1c])->vtable[byte+8]` **no** es `libObj+0xf59f0`: con `libObj` en `0xadf5c000`, la tabla `0xaef46630` tiene `0xae06a8ed` = `libObj+0x10e8ed` | **VERIFICADO (medido + aritmética)** | `DEREF 0xaef46630+0: ae06ab49 ae06ab75 ae06a8ed …`; corrige el §3.2/§7 |
 | 19 | `libObj+0x10e8ec` es un reparto multicast: recorre la lista de `this+0x14` y hace `(*oyente)->vtable[8](oyente, Event*)` | **VERIFICADO (bytes)** | `0x10e8ec`-`0x10e934` (`0x10e914`: `ldr r3,[r3,#8]` · `0x10e918`: `blx r3`) |
 | 20 | `execAction` (`libObj+0x11817e`) sigue sin ejecutarse con la tecla, aun con `dest=0xc` | **VERIFICADO (medido)** | 0 líneas `TRACE 11817e` en tres pasadas |
-| 21 | Qué oyente de `[AppSystem+0x1c]+0x14` traduce `0x150100f0` a la acción 4, y de qué tabla sale | **NO VERIFICADO** | §7.4 y §8 paso 1 |
+| 21 | El oyente del bit 8 era una incógnita | **CERRADO** | lo sustituyen las filas 22-29 |
+| 22 | `[AppSystem+0x1c]` es un **`UtilityManager`** (vtable `libObj+0xfea630`, `offset-to-top` 0, RTTI `14UtilityManager`, ranuras `0x10eb49`/`0x10eb75`/`0x10e8ed`) | **VERIFICADO (estático + medido)** | vtable y RTTI leídos del ELF y del invitado; `0x10e8ed` aparece una sola vez en el fichero |
+| 23 | El reparto recorre el `std::map<int, UtilityBase*>` de `this+0x14` (header en `+0x18`: left `+0x20`, cuenta `+0x28`; nodo `{+0x10 clave, +0x14 puntero}`; incremento importado por el veneer `0xe0b00`) | **VERIFICADO (bytes)** | `0x10e8c8`, `0x10e8a6`, `0x10e844`, `0x10e834`-`0x10e83a`, `UtilityManager::regist` `0x10ee08` |
+| 24 | El registro tiene **8 oyentes** y ninguno es una vista: `LookManager`, `SvcCaution`, `TestcmdManager`, `HighlightManagerCustom`, `InputService`, `CameraProfileService`, `TopologyManager`, `Database::HndlMgr` | **VERIFICADO (medido)** | `OYENTE n=1..8 oyentes=8` con RTTI; `reports/evidence/g22-oyente-20261126/oyentes-oyente1.txt` |
+| 25 | Con `DESTKEYV=1` la tecla se publica con `dest=12` (`0x0c`), clase 1 y `notify=0` | **VERIFICADO (medido)** | `EQTRACE … code=150100f2 dest=12`; `eqtrace-dest12-oyente6.txt` |
+| 26 | La tecla **entra** en la rama `dest & 8` de `AppSystem::dispatch` y **llega a los 8 oyentes** (`codigo=0x15070010 dest=0xc clase=0x1`) | **VERIFICADO (medido)** | `TRACE 7eee68` + `DEREF d1:4:3`; `OYENTE n=256 … codigo=0x15070010`|
+| 27 | `ViewBase::GetEventId` recibe la tecla (141 llamadas, `codigo=150100f2 dest|clase=0000010c`) y **la devuelve sin traducir** (`0x150100f2`), mientras los eventos de la vista (`0x1306cNNN`) devuelven ids pequeños (`0x2a`, `8`, `2`) con base `0x1306c000` | **VERIFICADO (medido)** | `TRACE 1994e8 r0=… r3=…`; `geteventid-devuelve-oyente8.txt` |
+| 28 | La vista solo sabe accionar eventos `0x1306cNNN` (`(View::getView()<<12)+0x13000000`, vista `0x6c`); los códigos de entrada `0x1501xxxx`/`0x1507xxxx` no se traducen y el conmutador del consumidor (`viewUnified2+0x1994e8`: `0xf07`, `0xf03`, `2`, `8`, `0x2a`) no tiene caso | **VERIFICADO (medido + bytes)** | fila 27 y `viewUnified2+0x1994d8`-`0x1994fe` |
+| 29 | `ScalarView::EventHandler` (`0x116bd0`) y `execAction` (`0x11817e`) siguen a **0 disparos** con la tecla llegando al reparto | **VERIFICADO (medido)** | trampas armadas >380 s en `oyente6`, 0 líneas `TRACE 116bd0`/`TRACE 11817e` |
+| 30 | Cerrar el tramo con un interruptor de destino («estilo `DESTKEYV`») es imposible: el destino ya no corta nada y lo que falta es la traducción del id (entrada del mapa `View+0x28` o productor de eventos `0x1306cNNN`) | **VERIFICADO (medido)** | §8.5 |
 
 ## 10. Tests sin QEMU
 
-`tests/test_g22_dispatch.py` (**16 casos**) fija, contra los ELF 3.21 de
+`tests/test_g22_dispatch.py` (**21 casos**, 5 de ellos nuevos de G22-OYENTE) fija, contra los ELF 3.21 de
 `analysis/gui/g22/harness/stage/cam/usr/lib` (no versionados: si faltan, el módulo se salta):
 
 1. `Event` +4/+8/+9 y `getDest`;
@@ -594,7 +689,13 @@ invitado los `insert` con esa clave) o la tecla de la cámara no pasa por el `Ac
 12. la lista de teclas del grupo `0xf` (`0x4aa6c8` → `0x4aa848`) y la máscara `0x7ffffffe`;
 13. la vista acepta `0x15xxxxx` (`0x17dfb0`) y `getInputEventStatus` no tiene llamantes.
 
-Medido en 7 s (`pytest tests/test_g22_dispatch.py -q`): 16 casos, sin QEMU. Los tres ficheros de la serie
+Los cinco casos de G22-OYENTE fijan la identidad del `UtilityManager` (vtable `0xfea630`, RTTI, ranura `+8`, unicidad
+de `0x10e8ed` en el fichero), los bytes del reparto (`0x10e8ec`-`0x10e91a`, con la trampa en `0x10e914`), la forma del
+mapa (begin/end/valor/constructor) y la evidencia del invitado: **8 oyentes, ninguno con `View`/`ActionEventMap`/
+`DefRootView` en su RTTI**. En `tests/test_gui_harness.py` se añade
+`test_oyd_pone_un_udf_repetible_en_10e914_y_emula_la_carga`.
+
+Medido en 7 s (`pytest tests/test_g22_dispatch.py -q`): 21 casos, sin QEMU. Los tres ficheros de la serie
 (`test_g22_cola.py`, `test_g22_repro.py`, `test_g22_dispatch.py`) suman 35 casos en verde. Los tres casos nuevos de
 G22-TECLA fijan los bytes que se parchean: los de `libObj+0x113076` (con el `blx` de `0x11307c` a `createEvent` y los
 `adds r1,r6,#2/#1/#4` del código), la ausencia de referencias a `libObj+0x11191c`, y los dos literales del filtro junto
@@ -606,4 +707,5 @@ sitios, que compara los bytes antes (`*p != 0x2204`) y que se llama en los dos g
 
 | ID | Estado | Resumen | Criterio de cierre |
 |---|---|---|---|
-| G22-DISPATCH | CAUSA ESTÁTICA CERRADA (27-11-2026) | **La tecla no llega a la acción porque el evento se publica con destino `4` y la vista solo recibe `dest & 8`.** VERIFICADO en bytes: `Event` = `{+4 código, +8 destino (byte), +9 clase (byte)}` (`libObj+0x7f17f8`, `Event::getDest` `+0x7eebf8` `ldrb r0,[r0,#8]`); `InputService::createEvent` (`+0x1106b8`) fija clase `1` y el destino de su 2.º argumento; **los 21 llamantes dan 0, 1 o 4 y ninguno 8**; la publicación de la tecla es `movs r2,#4` en `+0x111972` → `createEvent` (`+0x11197c`) → 3 `addParameter` → `pushFilterEvent` (`+0x1119ea`). `AppSystem::dispatch` (`+0x7eed0c`, llamado desde el bucle `AppSystem::Main` `+0x7eefe2`/`+0x7ef0ce`) reparte por `Event[+8]`: bit1 → `0x7f4c30(+8)`, bit2 → `0x7ed49c(+4)`, bit4 → `0x7f4528(*this)` (aquí entra la tecla, y su conmutador no conoce `0x1501xxxx` ni `0x1507xxxx`), bit8 → `[AppSystem+0x1c]->vtable[+8]` = `ActionEventMapBase::DispatchEvent` (`+0xf59f0`), donde `[AppSystem+0x1c]` se rellena con `[this+0x14]->vtable[0x3c]()` (`+0x7ef332`). La **clase** no es una clase registrada: `EventManager::push` (`+0x7ef960`) la usa solo como selector de cola (1 → cola 1 con aviso `[FMWK] EventQueue pile. count: %d` cada 100; 0 → cola 0; otra → descartada) y `AppSystem::Main` solo vacía la cola 0. La «lista del filtro» **no es de la vista**: es `InputService+0xc`, el filtro (`viewUnified2+0x181fb8`) le hace `push_back` (además de sintetizar `Event(0x15070010,4,1)` y `Event(0x150701a0,4,1)`) y `pushFilterEvent` la vacía en la misma llamada hacia `0x127bb6` → `0x7f0adc` (`EventManager::push`, `notify=0`). La máscara `0x7ffffffe` de la entrada `{0x1f7,0x150100f0}` (lista `0x4aa848`, descriptor `0x4aa6c8`) no se compara: `InfraInput::GetEventStatus` (`+0x805804`) la **devuelve** en `_InfraInputEvent+8`. `getInputEventStatus` (`+0x114104`) es un mandato `ParamList` sin llamantes: no hay «modo VIEW». La vista sí admite `0x15xxxxx` (`viewUnified2+0x17dfb0`, salvo `0x150700c0`/`0x15010011`/`0x15090002`, y el resto se despacha como id `2` en `0x17dfd2`); la tabla `{evento, acción}` (`.rodata 0x3a03d4`, 19 entradas, `{0x150100f0,4}`) solo la lee `viewUnified2+0x1906a8`, **sin llamantes estáticos**. Tests: `tests/test_g22_dispatch.py` (13 casos). | Que una pulsación de Reproducción con el parche `DESTKEY` (`libObj+0x111972`: `04 22` → `0c 22`, y opcionalmente `viewUnified2+0x18201c`/`+0x182042`) produzca `TRACE f59f0 … r1=150100f2` (o `=2`) **y** `TRACE 11817e` > 0 en la misma pasada; si `f59f0` recibe `2` y `11817e` sigue a 0, cerrar el mapa `[View+0x28]+0x1c` (`libObj+0xf2fe0`) y la tabla de disparo (`View::getTriggerTable` = `[View+0x20]`) |
+| G22-OYENTE | CERRADO (26-11-2026) | **El reparto del bit 8 es un `UtilityManager` con 8 oyentes y ninguno es una vista.** VERIFICADO en bytes y medido: la vtable que el invitado midió en `libObj+0xfea630` es de `UtilityManager` (RTTI `14UtilityManager`, `offset-to-top` 0, ranuras `0x10eb49`/`0x10eb75`/`0x10e8ed`; `0x10e8ed` aparece **una sola vez** en el fichero). Su ranura `+8` recorre el `std::map<int, UtilityBase*>` de `this+0x14` (header `+0x18`, left `+0x20`, cuenta `+0x28`, nodo `{+0x10 clave, +0x14 puntero}`, incremento importado por el veneer `0xe0b00`) y llama a `(*oyente)->vtable[8](oyente, Event*)` en `0x10e914`. Interruptor nuevo `OYD=1` del shim (trampa repetible con **emulación** de `ldr r3,[r0]`, sin parchear la instrucción siguiente; imprime clave, oyente, vtable, ranura `+8`, RTTI y cuenta del mapa como «biblioteca+desplazamiento»). MEDIDO: `oyentes=8` y los ocho son `LookManager` (`+0x137684`), `SvcCaution` (`+0x123954`), `TestcmdManager` (`+0xfebd8`), `HighlightManagerCustom` (vtable `viewUnified2+0x452870`, `+0x104650`), `InputService` (`+0x1106e0`), `CameraProfileService` (`+0x1142ea`), `TopologyManager` (`+0x41a934`) y `Database::HndlMgr` (`+0x439520`). Con `DESTKEYV=1` la tecla **sí** llega: `EQTRACE code=150100f2 dest=12 clase=1`, `TRACE 7eee68` + `DEREF d1:4:3` da `15070010/150701a0/150100f1` con palabra `+8 = 0x010c`, y `OYENTE n=256 … codigo=0x15070010 dest=0xc clase=0x1 oyentes=8`. `ScalarView::EventHandler` (`0x116bd0`) y `ActionCheckerListBase::execAction` (`0x11817e`) siguen a **0 disparos** con las trampas armadas >380 s. Evidencia en `reports/evidence/g22-oyente-20261126/`. Tests: `tests/test_g22_dispatch.py` (5 casos nuevos) y `tests/test_gui_harness.py` (1). | Cumplido: los 8 oyentes identificados con RTTI y la tecla medida dentro del reparto. |
+| G22-ACCION4 | ABIERTO (26-11-2026) | **El eslabón que falta es la traducción del id, no el destino del evento.** MEDIDO: `ViewBase::GetEventId` (`libObj+0x121d58`) recibe la tecla (141 llamadas, `codigo=150100f2 dest|clase=0000010c`) y **la devuelve sin traducir** (`0x150100f2`): su regla es «si `mapa[View+0x28][id]` tiene la forma `(View::getView()<<12)+0x13000000` devuelve la diferencia», y para la vista de disparo esa base es `0x1306c000` (vista `0x6c`), así que los eventos de la vista (`0x1306cNNN`) sí se traducen (`r0=0x2a`, `0x8`, `0x2`) y los de entrada (`0x1501xxxx`/`0x1507xxxx`) no. El conmutador del consumidor (`viewUnified2+0x1994e8`, casos `0xf07`/`0xf03`/`2`/`8`/`0x2a`) no tiene caso para ellos. Corrige la hipótesis del destino (`DESTKEYV` no cierra nada, §8.5). MEDIDO además: pulsar Reproducción **no cambia la pantalla** (`antes.png`/`despues.png` idénticos, 12 861 B, 0 píxeles distintos; `/estado` en `2 fotogramas · 2 listas · opacos 0,0046`); los cinco arranques en frío de la sesión acabaron en **G22-CUELGUE**, así que la captura es de la OSD a medio componer. | Identificar el productor que convierte un código de entrada `0x1501xxxx` en un evento de vista `0x1306cNNN` (candidatos: `viewUnified2+0x1820cc` `getFilterEventFunc`, `+0x182400` `getFuncEvent`, `+0x182a84` `inverseTransformFuncEvent`, y la tabla de disparo `[View+0x20]` = `View::getTriggerTable` `libObj+0x7f1a98`), o demostrar que la cámara lo hace por otra vía; cierre en el arnés: `TRACE 11817e` > 0 con `r1=4` tras una pulsación y cambio de pantalla con diff de PNG sobre una OSD completa (requiere antes cerrar G22-CUELGUE en frío) |
