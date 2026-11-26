@@ -210,7 +210,8 @@ del `ContentInfo` que nadie ha servido, porque el lector del índice AV no se ej
    código que responde y cuántos parámetros trae; el código que en la cámara devuelve la lista debe dar 0 aquí.
    Es la medida que separa «no hay lista» de «la lista está vacía».
 2. **Ver si el índice se lee con el medio aceptado**: con la OSD ya pintada (armar en caliente, **nunca en el
-   arranque**: alarga y tumba el invitado, medido §7 de abajo), y en este orden:
+   arranque**: con `SDIO` + dos trampas en `libmpr` el invitado no pasó de «2 listas» en 201 s,
+   [`arranques-con-dos-vm.txt`](../../reports/evidence/g22-pbmodel-20261128/arranques-con-dos-vm.txt)), y en este orden:
    `E TRACEFN=dc504` (la PLT de `MprIf::GetContentInfo` en `libObj`: ¿el servidor de contenidos pregunta a MPR?),
    `E TRACEFN=dc144` (`MWF::ObjIf::IssueCommandAsync`: ¿emite `ObjMsg` el navegador?),
    y con `TRACELIB=libmpr.so` en el `SHIMEXTRA`, `E TRACEFN2=7203c0,13e474` (la petición de la lista AV y
