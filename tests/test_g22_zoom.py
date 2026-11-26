@@ -179,3 +179,78 @@ def test_shim_emula_la_respuesta_de_objcamera_del_ajuste_de_zoom() -> None:
     assert "0x4a58b2 + 1" in src and "0x4a5836 + 1" in src and "0x4a5914 + 1" in src  # get/set/sync reales
     assert 'getenv("NOZOOM")' in src
     assert "*a == 0xf247 && *(a + 1) == 0x6214 && *b == 0x4605" in src  # guardia de versión: bytes de 3.21
+
+
+def test_el_modelo_despacha_las_acciones_0x63_y_0x64() -> None:
+    """§3: las dos acciones del ajuste se piden por código en el despachador de `ModelCamera`
+    (`0x63` = inteligente → `0x4bf230`, `0x64` = precisión → `0x4bf108`). Es lo que el arnés tendría que
+    emitir para disparar el bloque «ZOOM» del shim (§7) cuando la fila se pueda abrir (§8)."""
+    assert _ins(0x4CFD62) == "cmp r0, #0x63"
+    assert _ins(0x4CFD64) == "beq.w #0x4d00d8"
+    assert _ins(0x4D00D8) == "mov r0, r5"  # r0 = this (ModelCamera), r1 = ParamList de la acción
+    assert _ins(0x4D00DC) == "bl #0x4bf230"  # orden inteligente
+    assert _ins(0x4CFD68) == "cmp r0, #0x64"
+    assert _ins(0x4CFD6E) == "b #0x4d00e2"
+    assert _ins(0x4D00E2) == "mov r0, r5"
+    assert _ins(0x4D00E6) == "bl #0x4bf108"  # orden de precisión
+
+
+SCALAR = (ROOT / "analysis/gui/g22/harness/stage/cam/usr/lib/libScalarDaemon.so",
+          ROOT / "analysis/camera-extract/usr/lib/libScalarDaemon.so")
+
+
+def _scalar() -> Path:
+    for p in SCALAR:
+        if p.is_file():
+            return p
+    pytest.skip("libScalarDaemon.so 3.21 ausente (harness/stage o camera-extract)")
+
+
+def test_tabla_paramid_tiene_los_ids_del_zoom() -> None:
+    """§6: `libScalarDaemon.so` lleva el enum PARAMID completo (960 entradas `{nombre, id}` en el fichero
+    `0x1b05a4`); el ajuste del menú es `PARAMID_BKUP_DIGITAL_ZOOM_SETTING = 0x2093` — el espacio *escalar*
+    de ids, distinto del de `libObj` (`0x95xx`/`0x97xx`) para los mismos nombres."""
+    from elftools.elf.elffile import ELFFile
+
+    d = _scalar().read_bytes()
+    with open(_scalar(), "rb") as f:
+        secs = [(s.header.sh_addr, s.header.sh_offset, s.header.sh_size) for s in ELFFile(f).iter_sections()]
+
+    def va2off(v: int) -> int | None:
+        for a, o, sz in secs:
+            if a <= v < a + sz:
+                return o + (v - a)
+        return None
+
+    ids: dict[str, int] = {}
+    entradas = 0
+    for k in range(960):
+        ptr, pid = struct.unpack_from("<II", d, 0x1B05A4 + 8 * k)
+        o = va2off(ptr)
+        assert o is not None
+        ids[d[o : d.find(b"\0", o)].decode()] = pid
+        entradas += 1
+    assert entradas == 960  # el enum completo (5 nombres repetidos: 955 nombres distintos)
+    assert ids["PARAMID_INVALID"] == 0  # primera entrada del enum
+    assert ids["PARAMID_BKUP_DIGITAL_ZOOM_SETTING"] == 0x2093  # el ajuste del menú
+    assert ids["PARAMID_BKUP_EZOOM_MODE"] == 0x2082  # modo de e-zoom (1 B en el Backup)
+    assert ids["PARAMID_BKUP_EZOOM_SUPER_RESOLUTION_MODE"] == 0x2083
+    assert ids["PARAMID_SYS_DATA_EZOOM_MODE_SET"] == 0x12A2  # datos del sistema: SET
+    assert ids["PARAMID_SYS_DATA_EZOOM_MODE_ACT"] == 0x12A3  # …y ACT
+    assert ids["PARAMID_CAMSETTING_EZOOM_MODE"] == 0x5002
+
+
+def test_la_pagina_del_ajuste_es_una_vista_del_arnes() -> None:
+    """§8.3: la fila se puede abrir por el atajo del arnés `POST /linea «O view/DIGITAL_ZOOM_SETTING»`
+    (medido: id de vista `0x21` en `viewUnified4.so`, que pide `model/CAMERA` info `0x98`). Es un camino
+    del ARNÉS, no de la cámara: sirve para saber qué pide la página, no para probar el ajuste."""
+    vu2 = ROOT / "analysis/gui/g22/harness/stage/cam/usr/lib/viewUnified2.so"
+    uxc = ROOT / "analysis/gui/g22/harness/stage/cam/usr/share/app/viewDgtlZoomSetting.uxc"
+    if not vu2.is_file():
+        pytest.skip("viewUnified2.so 3.21 ausente (harness/stage)")
+    d = vu2.read_bytes()
+    assert b"view/DIGITAL_ZOOM_SETTING\0" in d  # el nombre que acepta openView (medido en caliente)
+    assert b"viewDgtlZoomSetting.so\0" in d  # el plugin de la página
+    assert b"cmnViewSettingNodeRootZoomSetting\0" in d  # el nodo del recurso
+    assert uxc.is_file()
+    assert b"Zoom" in uxc.read_bytes() or uxc.stat().st_size > 0
