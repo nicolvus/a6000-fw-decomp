@@ -129,6 +129,16 @@ def rgba4444_png(w: int, h: int, raw: bytes) -> bytes:
 MAC_CAMARA = "fc:c2:de:3a:5d:5c"  # la que muestra «Mostr. Direcc. MAC» (PsmNsGetMacAddress, NVRAM del volcado); ath0 la lleva como en la cámara
 
 
+def estado_json(vm: "Vm") -> dict:
+    """Parte numérica de `GET /estado` (G22-CUELGUE): fotogramas presentados y listas de GPU.
+
+    `listas` son las listas que dibujó la GPU en el último fotograma y `listas_total` las acumuladas;
+    si el invitado sigue vivo pero no llega ningún fotograma nuevo, ambas se quedan quietas (el
+    síntoma «0 listas» del cuelgue de navegación). Se separa del texto para poder probarlo sin QEMU.
+    """
+    return {"fotogramas": vm.seq, "listas": vm.listas, "listas_total": vm.listas_total, "opacos": round(vm.opacos, 4)}
+
+
 def red_args(red: dict | None) -> tuple[str, list[str]]:
     """(NET para SHIMENV, args de QEMU) de la config red: slirp (red local del anfitrión) + virtio-net; telnet = hostfwd 127.0.0.1:puerto → 23 del invitado."""
     red = red or {}
@@ -237,6 +247,8 @@ class Vm:
         self.cerrojo = threading.Lock()  # un solo guardado a la vez
         self.cerrojo_dial = threading.Lock()  # un giro del dial a la vez
         self.fps, self.coste = 0.0, ""
+        self.listas, self.listas_total = 0, 0  # listas de GPU del último fotograma y acumuladas (G22-CUELGUE: /estado las da en números)
+        self.opacos = 0.0  # fracción de píxeles con alfa ≠ 0 del último fotograma (distingue OSD pintada de pantalla vacía)
         if avcam:
             # G22-ARR2: en un hilo, para que el lector conecte con QEMU mientras la LIRO VM arranca (≈3 s que al restaurar eran el 70 % del tiempo).
             threading.Thread(target=self.arranca_puente, args=(mod_puente, ae), daemon=True).start()
@@ -374,12 +386,14 @@ class Vm:
                 if len(buf) < i + 24 + n:
                     break
                 png = rgba4444_png(w, h, buf[i + 24:i + 24 + n])
+                self.opacos = float((np.frombuffer(buf[i + 24:i + 24 + n], "<u2") & 0xF).astype(bool).mean())  # G22-CUELGUE: fracción de píxeles opacos (OSD sana ≈ 0,09; cuelgue ≈ 0,005)
                 buf = buf[i + 24 + n:]
                 now = time.time()
                 marcas = [t for t in marcas if now - t < 2] + [now]
                 if prev:  # coste en el invitado desde el fotograma anterior: listas, ms de dibujo, relleno/copias y LDEC
                     dl, *dt = ((a - b) & 0xFFFFFFFF for a, b in zip(cont, prev, strict=True))
                     self.coste = f"{dl} listas · dibujo {dt[0] / 1000:.0f} ms · copias {dt[1] / 1000:.0f} ms · LDEC {dt[2] / 1000:.0f} ms"
+                    self.listas, self.listas_total = dl, self.listas_total + dl
                 prev = cont
                 with self.cv:
                     self.png, self.seq, self.fps = png, self.seq + 1, len(marcas) / 2
@@ -569,7 +583,7 @@ def servidor(vm: Vm, puerto: int) -> ThreadingHTTPServer:
                     texto += f" · aviso: {c['aviso']}"
                 if vm.p.poll() is not None:
                     texto = f"QEMU terminó (código {vm.p.returncode})"
-                self.responde(json.dumps({"texto": texto, "fotogramas": vm.seq}).encode(), "application/json")
+                self.responde(json.dumps({"texto": texto, **estado_json(vm)}).encode(), "application/json")
             elif self.path.startswith("/avmem") and vm.puente:  # E2E-15: /avmem?a=43ede338:4,43e81240:8 → memoria de la LIRO VM en vivo
                 self.responde(json.dumps(vm.puente.vuelca(parse_qs(urlparse(self.path).query).get("a", [""])[0])).encode(), "application/json")
             elif self.path.startswith("/avinyecta") and vm.puente:  # DIAGNÓSTICO E2E-3: /avinyecta?l=«qid tam cab cuerpo» (hex) entrega un mensaje a av-cam como si viniera del invitado (queda en avcam.jsonl)

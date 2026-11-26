@@ -1992,7 +1992,9 @@ static int live_fd = -1; static volatile int live_force;
 static pthread_mutex_t live_wm = PTHREAD_MUTEX_INITIALIZER;  /* los fotogramas y las líneas de WAITLOG comparten el puerto: no se mezclan */
 static int wl_all(void) { if (wla_v < 0) wla_v = getenv("WAITLOG") && getenv("WLALL") ? 1 : 0; return wla_v; }  /* WLALL=1 (con WAITLOG): cada LOG del shim también va a shim.log, con hora */
 static void wl_logfwd(const char *f, ...) {
-    char b[400]; int o = snprintf(b, sizeof b, "%.2f ", wl_ts()); va_list v; va_start(v, f); o += vsnprintf(b + o, sizeof b - o - 2, f, v); va_end(v);
+    char b[400]; int o = snprintf(b, sizeof b, "%.2f ", wl_ts()); va_list v;
+    if (getenv("TIDLOG")) o += snprintf(b + o, sizeof b - o, "[%ld] ", (long)syscall(224));  /* TIDLOG: el tid también en las líneas reenviadas (con WLALL no se sabía qué hilo hizo cada una: G22-CUELGUE) */
+    va_start(v, f); o += vsnprintf(b + o, sizeof b - o - 2, f, v); va_end(v);
     if (o > (int)sizeof b - 2) o = sizeof b - 2; b[o++] = '\n';
     if (live_fd < 0) return; pthread_mutex_lock(&live_wm); write(live_fd, "\x01WL ", 4); write(live_fd, b, o); pthread_mutex_unlock(&live_wm);
 }

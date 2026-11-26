@@ -58,11 +58,12 @@ if [ -n "$STKRSS" ]; then
       awk '/^[0-9a-f]+-[0-9a-f]+ /{n=$1;nm=$6} /^Size:/{sz=$2} /^Rss:/{if (nm=="" && sz>=200 && sz<=2100) print "STKRSS", n, sz, $2}' /proc/$PP/smaps | head -20; sleep 20; done ) &
 fi
 # PMWAIT=s (diagnóstico, fuera del proceso im.elf): a los s segundos y cada PMEVERY (60) s vuelca por la consola comm/estado/wchan/syscall de cada hilo de im.elf y su mapa de módulos
-# («PM» en consola.log); sirve para construir el grafo de espera de un interbloqueo (syscall: nº, argumentos, sp, pc).
+# (PMROUNDS: nº de volcados, 3 por defecto; con un cuelgue tardío hace falta más de una ventana; PMFILTER=regex solo vuelca los hilos cuyo
+# comm casa: im.elf tiene ~300 hilos y leer stat/wchan/syscall de todos con procesos de busybox tarda minutos y no cabe entre dos volcados). Sirve para construir el grafo de espera de un interbloqueo (syscall: nº, argumentos, sp, pc).
 if [ -n "$PMWAIT" ]; then
   echo 1 > /proc/sys/kernel/print-fatal-signals 2>/dev/null; ls /proc/sys/debug 2>/dev/null | sed "s/^/PM sysdebug /"
-  ( sleep $PMWAIT; for r in 1 2 3; do PP=$(for d in /proc/[0-9]*; do echo "$(ls $d/task 2>/dev/null | wc -l) ${d#/proc/}"; done | sort -rn | head -1 | cut -d" " -f2); echo "PM-BEGIN $r pid=$PP"; tail -${PMTAIL:-4} /tmp/im_s.log | cut -c1-200 | sed "s/^/PM imlog /"; grep -a -A25 "pila (sig \(11\|6\|4\|7\) " /tmp/im_s.log | head -40 | cut -c1-150 | sed "s/^/PM segv /"; [ -n "$PMSTK" ] && grep -a -A14 "pila (sig 10" /tmp/im_s.log | head -$PMSTK | cut -c1-120 | sed "s/^/PM stk /"; grep -a "EXIT=" /tmp/im_s.log | sed "s/^/PM imexit /"; dmesg | grep -a -A9 "potentially" | tail -12 | sed "s/^/PM dmesg /"; ps | grep -a "im.elf\|busybox" | head -5 | sed "s/^/PM ps /"
-      for t in /proc/$PP/task/*; do echo "PM $(basename $t) $(cat $t/comm) st=$(cut -d' ' -f3 $t/stat) wchan=$(cat $t/wchan) sys=$(cat $t/syscall)"; done
+  ( sleep $PMWAIT; r=0; while [ $r -lt ${PMROUNDS:-3} ]; do r=$((r+1)); PP=$(for d in /proc/[0-9]*; do echo "$(ls $d/task 2>/dev/null | wc -l) ${d#/proc/}"; done | sort -rn | head -1 | cut -d" " -f2); echo "PM-BEGIN $r pid=$PP"; tail -${PMTAIL:-4} /tmp/im_s.log | cut -c1-200 | sed "s/^/PM imlog /"; grep -a -A25 "pila (sig \(11\|6\|4\|7\) " /tmp/im_s.log | head -40 | cut -c1-150 | sed "s/^/PM segv /"; [ -n "$PMSTK" ] && grep -a -A14 "pila (sig 10" /tmp/im_s.log | head -$PMSTK | cut -c1-120 | sed "s/^/PM stk /"; grep -a "EXIT=" /tmp/im_s.log | sed "s/^/PM imexit /"; dmesg | grep -a -A9 "potentially" | tail -12 | sed "s/^/PM dmesg /"; ps | grep -a "im.elf\|busybox" | head -5 | sed "s/^/PM ps /"
+      for t in /proc/$PP/task/*; do C=$(cat $t/comm 2>/dev/null); [ -n "$PMFILTER" ] && ! echo "$C" | grep -qE "$PMFILTER" && continue; echo "PM $(basename $t) $C st=$(cut -d' ' -f3 $t/stat) wchan=$(cat $t/wchan) sys=$(cat $t/syscall)"; done
       [ $r = 1 ] && grep -a "\.so\|im.elf" /proc/$PP/maps | grep -a "r-xp\|r--p" | awk '{print "PMMAP",$1,$6}'
       echo "PM-END $r"; sleep ${PMEVERY:-60}; done ) &
 fi
