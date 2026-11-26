@@ -43,6 +43,8 @@ PTCALL_LOCAL = REPO / "tools/camera-ptrace/ptcall"
 # libmpr.so: offsets del ELF (base = primer mapeo r-xp de /proc/PID/maps)
 OFF_DESCRIPTOR = 0xA4FD88   # u32 -> X (puntero al área del anillo)
 OFF_TABLA = 0xA3699C        # tabla de sectores: 30 entradas de 0x14 B
+OFF_FBS_INIT = 0x9E484C     # byte de estado del DFB/FBS (diagnóstico, no interpretado)
+OFF_REPARACION = 0x9E598C   # byte de reparación pendiente (diagnóstico, no interpretado)
 N_ENTRADAS = 30
 TAM_ENTRADA = 0x14
 IDX_SECTOR31 = 10           # 0x9D23FC[13] u04/m3/ft031/om6 -> sector 0x31
@@ -244,6 +246,9 @@ def estado(cam: Camara, pid: int, base: int, etiqueta: str) -> dict:
     print(f"  {etiqueta}: con handle != 0: {len(con_handle)}/{N_ENTRADAS}"
           + (" -> " + ", ".join(f"idx {e['idx']}(0x{e['sector']:02x} h{e['handle']})" for e in con_handle)
              if con_handle else " (ninguna)"))
+    print(f"  {etiqueta}: DFB/FBS (diagnóstico) "
+          f"[{OFF_FBS_INIT:#x}]={cam.peek(pid, base + OFF_FBS_INIT, 1).get(base + OFF_FBS_INIT, 0):#04x} "
+          f"[{OFF_REPARACION:#x}]={cam.peek(pid, base + OFF_REPARACION, 1).get(base + OFF_REPARACION, 0):#04x}")
     return {"idx10": idx10, "con_handle": con_handle}
 
 
