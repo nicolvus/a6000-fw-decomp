@@ -257,6 +257,17 @@ Es decir: **hacen falta las dos cosas**, el sector y el `fn` de la fila `0x9D23F
 ft031 / om6`) — exactamente lo que hacen `FBM EWBDFD 4 3 0` + `FBM InitB 6 3` y lo que hace el parche C.
 Con las dos, un clip nuevo queda registrado en la BD.
 
+### 6.7 El `fn` no persiste; el sector sí
+
+`0x9D23FC` es `.data`: el `fn` que registra `EWBDFD` vive **sólo en RAM** de esa sesión. El sector `0x31`,
+en cambio, queda en `nflasha4`. Consecuencia práctica, medida en el invitado: tras reiniciar, la
+**lectura** sigue arreglada (`BkRead` = `0x10100003`), pero la **escritura** de un clip nuevo vuelve a
+`ChangeSector = 0x10800010` / `WritePackEnd = 0x10800020`. Por eso:
+
+- consola: aplicar → **sin apagar** → grabar el clip nuevo → reproducirlo (si se reinicia antes de grabar,
+  repetir `FBM EWBDFD 4 3 0`; el `InitB` ya no hace falta);
+- CFW 3.97: su cueva registra el `fn` en **cada** arranque, así que no depende de la sesión.
+
 ## 7. Cómo verificarlo sin cámara y cómo comprobarlo en cámara
 
 - **Arnés**: `InitB` sobre el MPR real y lectura de `base+0xA3699C`; el sector debe quedar con `+4 != 0`

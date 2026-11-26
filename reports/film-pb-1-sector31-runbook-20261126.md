@@ -3,6 +3,16 @@
 **Fecha:** 26-11-2026 · **Script:** `scripts/film_pb1_sector31.py` · **Evidencia:** `reports/evidence/film-pb-1-sector31-runbook-20261126/`
 **Estado de la cámara:** **no se ha ejecutado contra ella** (192.168.1.29/30/18 no responden). Todo lo medido aquí es el invitado del arnés (`NFLASH4=1` + telnet), nunca la cámara.
 
+> **No reiniciar entre aplicar y grabar.** El `fn` de `0x9D23FC[13]` vive en `.data` y **no persiste**:
+> `FBM EWBDFD 4 3 0` sólo lo deja en RAM de esa sesión. El **sector sí persiste** (está en `nflasha4`),
+> así que la **lectura** queda arreglada para siempre, pero la **escritura** de un clip nuevo necesita el
+> `fn` en el mismo arranque: medido en el invitado, con el sector persistido y `fn = 0` se vuelve a
+> `ChangeSector = 0x10800010` / `WritePackEnd = 0x10800020` y **0 B escritos**; con `fn` en la misma
+> sesión, `ChangeSector / WritePackBegin / Add / End = 0` y **4 770 B** (payload `0x5a` en `0x3A0206`).
+> Por eso la secuencia es: aplicar → **sin apagar** → grabar el clip nuevo → reproducirlo. Si se reinicia
+> antes de grabar, hay que repetir `FBM EWBDFD 4 3 0` (el `InitB` ya no hace falta). El paquete 3.97 no
+> tiene este problema: su cueva registra el `fn` en cada arranque.
+
 ## Resumen (18 líneas)
 
 1. El arreglo son **dos líneas** en el anillo del monitor EX-PC de `im.elf`: **`FBM EWBDFD 4 3 0`** y después **`FBM InitB 6 3`**. Criterio de OK: idx 10 de `base+0xA3699C` con `sector=0x31 handle≠0 valido=1 OM=6`.
