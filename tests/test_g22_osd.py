@@ -171,32 +171,16 @@ def test_de_donde_lee_la_osd_el_modo_y_la_bateria():
 # --- (d) G22-ESTADO-CAMARA: model/POWER desde el anfitrión y repintado tras B/U ----------------------------------------------
 
 
-def test_power_se_rellena_con_el_nivel_del_anfitrion_y_solo_si_falta_el_modelo():
-    """`power_params` responde a `model/POWER` con las claves que lee +0x275530 y con el nivel de `B`; POWEREMU=0 lo apaga."""
-    src = SHIM.read_text()
-    i = src.index("static int power_params")
-    trozo = src[i : src.index("/* ViewBase::getModelInfo", i)]
-    assert 'strcmp(name, "model/POWER")' in trozo  # solo ese modelo
-    for clave in ("0x100", "0x102", "0x103", "0x104", "0x105"):  # info 0
-        assert f"add(list, {clave}," in trozo, clave
-    for clave in ("0x108", "0x10b", "0x10c"):  # info 1: 0x10c = nivel 0..100 (umbrales 20/50/80)
-        assert f"add(list, {clave}," in trozo, clave
-    assert "add(list, 0x10c, p)" in trozo and "power_pct()" in trozo
-    assert 'getenv("POWEREMU")' in trozo  # opt-out medible
-    # el nivel sale de la misma variable que la respuesta emulada de CamMgr («B <pct>»)
-    j = src.index("static unsigned power_pct")
-    assert "cam_bateria" in src[j : j + 160]
+def test_el_relleno_de_model_power_no_esta_y_queda_el_porque():
+    """G22-ESTADO-CAMARA: el relleno de `model/POWER` desde el anfitrión se retiró (sin consumidor y sospechoso en el arranque).
 
-
-def test_power_no_pisa_al_modelo_real():
-    """Las tres puertas de getModelInfo solo rellenan cuando la llamada real devuelve 0 (av-cam real manda)."""
+    El icono no se instancia y el modelo no se pide nunca (0 de 37 222 `getModelInfo`), así que el relleno no se veía; y con él activo el
+    arranque en frío dejó de componer la OSD. El porqué, las claves que lee `+0x275530` y el siguiente paso quedan en el shim y en
+    docs/gui/g22-estado-camara.md §9.
+    """
     src = SHIM.read_text()
-    for puerta in ("_ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_", "_ZN20LayoutableWidgetBase12getModelInfoEPKciP9ParamListPKS2_"):
-        i = src.index("int " + puerta + "(")
-        trozo = src[i : i + 2000]  # la ventana cubre la sonda GMIPROBE3 que va antes del relleno
-        assert "if (!x && readable(a) && power_params(" in trozo, puerta
-    i = src.index("int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(")
-    assert "if (!r && real && readable(name) && power_params(" in src[i : i + 3000]
+    assert "static int power_params" not in src and "power_pct" not in src
+    assert "docs/gui/g22-estado-camara.md §9" in src
 
 
 def test_repint_al_cambiar_bateria_o_jack_lo_hace_el_invitado():

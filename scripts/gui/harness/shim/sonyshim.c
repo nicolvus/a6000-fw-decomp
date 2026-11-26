@@ -186,7 +186,6 @@ static unsigned *bk_find(unsigned id, unsigned *len) {
     return 0;
 }
 static int readable(const void *p);
-static int power_params(const char *name, int info, void *list);  /* G22-ESTADO-CAMARA: model/POWER desde el anfitrión */
 static void backup_service(unsigned *m) {
     unsigned op = m[0], n = m[2], *id = m + 6, len = 0, *d = bk_find(id[0], &len);
     m[1] = 0;
@@ -1477,19 +1476,10 @@ int _ZN13viewManagerIf12getModelInfoEPKciP9ParamListPKS2_(const char *a, unsigne
         static unsigned n3; int x3 = r("@M00B", b, c, d);
         if (n3++ < 20) LOG("GMIPROBE3 %s info %#x -> %d; @M00B -> %d", a, b, x, x3);
     }
-    if (!x && readable(a) && power_params(a, (int)b, (void *)(unsigned long)c)) x = 1;
     if (x && readable(a)) gmi_dump(a, (int)b, (void *)(unsigned long)c);
     return x;
 }
 MODHOOK(_ZN13viewManagerIf19requestModelExecuteEPKcmP9ParamList)
-/* LayoutableWidgetBase::getModelInfo(this, nombre, info, lista, filtro): la otra puerta de las vistas a los modelos (UND de viewUnified2, definida
- * en libObj+0x130c55). Mismo relleno de model/POWER; sin él solo se devuelve lo que diga el modelo real. */
-int _ZN20LayoutableWidgetBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *a, int b, void *c, const void *d) {
-    static int (*r)(void *, const char *, int, void *, const void *); if (!r) r = nextsym("_ZN20LayoutableWidgetBase12getModelInfoEPKciP9ParamListPKS2_");
-    int x = r ? r(self, a, b, c, d) : 0;
-    if (!x && readable(a) && power_params(a, b, c)) x = 1;
-    return x;
-}
 SETHOOK(_ZN21CmnViewProcessDataMgr8setValueEii)
 SETHOOK(_ZN21CmnViewProcessDataMgr8execProcEi)
 SETHOOK(_ZN31CmnViewProcessDataElementNormal8setValueEi)
@@ -1719,50 +1709,11 @@ static int reloj_params(void *list, int info) {
     efp("[shim] G22-FECHA reloj del anfitrión para la vista (info %d): %04d-%02d-%02d %02d:%02d:%02d\n", info, v[0], v[1], v[2], v[3], v[4], v[5]);
     return 1;
 }
-/* G22-ESTADO-CAMARA: el icono de batería no tiene dato en el arnés. `ACT_IconBattery::WidgetUpdateSync` (viewUnified2+0x2758b8) salta a
- * +0x275530, que pide getModelInfo("model/POWER", 0, …) y ("model/POWER", 1, …, filtro {0x107}) y, si la primera devuelve 0, se queda sin
- * pintar: nadie alimenta el modelo de alimentación (en la cámara lo haría av-cam/UPM). Se rellena aquí —como el reloj de G22-FECHA— con el
- * nivel del ANFITRIÓN (`B <pct>`, el mismo de la respuesta emulada de CamMgr) y SÓLO cuando la llamada real FALLA: si el modelo existe
- * (av-cam real), manda él. Claves y valores leídos en +0x275530 (VA = desplazamiento, md5 1adc83954cfad8b17ff2e7199090f923):
- *   info 0 — 0x100 tipo de alimentación: sólo sigue si == 2 (0x2755b0/0x2755b4; la misma clave de CmnViewModelWrpPowerState::getPowerType,
- *            +0x243c50); 0x102 (0x2755be) y 0x104 (0x2755dc) booleanos de tipo 5 que deben ser ciertos; 0x103 entero ≤ el valor cacheado del
- *            icono, que su constructor deja en 3 (+0x275872) y no cambia ⇒ 3; 0x105 entero ≠ 0 (0x2755fa) que se reenvía como FILTRO 0x107
- *            de la consulta info 1 (0x2756a8/0x2756ae) ⇒ 1.
- *   info 1 — 0x108 == 1 (0x2756b8), 0x10b == 2 (0x2756d0) y **0x10c = nivel 0..100**, que elige entre cinco imágenes con umbrales
- *            20/50/80 y 0 = apagado (0x275726…0x27573c).
- * POWEREMU=1 lo enciende (APAGADO por defecto). Medido el 26-11-2026: el icono no se instancia y nadie pide model/POWER (0 de
- * 37 222 getModelInfo), así que rellenarlo no se ve en pantalla y, con el relleno activo, el arranque en frío dejó de componer la
- * OSD en 3 de 3 intentos (0,002 de píxeles opacos) mientras que con POWEREMU=0 pintó a la primera (0,136) — con el mismo `.so`.
- * shortcut: se apaga hasta que haya consumidor verificado; entonces habrá que medir si el relleno es lo que rompe el arranque.
- * POWERPCT=nn fuerza el nivel (diagnóstico). */
-static unsigned power_pct(void) { const char *e = getenv("POWERPCT"); int v = e ? num(e) : cam_bateria; return v < 0 ? 100u : (unsigned)v; }
-static int power_params(const char *name, int info, void *list) {
-    static int (*add)(void *, unsigned long, void *);
-    if (!add) add = dlsym(RTLD_DEFAULT, "_ZN9ParamList3addEmP9ParamBase");
-    Dl_info di; void *sym = lobj_h ? dlsym(lobj_h, "_ZN12ModelManager9pushEventEP5Event") : 0;
-    const char *e = getenv("POWEREMU");
-    if (!e || *e == '0') return 0;  /* apagado por defecto: sin consumidor verificado (ver arriba) */
-    if (!add || !sym || !dladdr(sym, &di) || !readable(list) || !name || strcmp(name, "model/POWER")) return 0;
-    if (info != 0 && info != 1) return 0;
-    unsigned char *lb = (unsigned char *)di.dli_fbase;
-    int (*pint)(void *, int) = (void *)(lb + 0xf0fb0 + 1);   /* Param<int>(int): el mismo que usa reloj_params */
-    int (*pbool)(void *, int) = (void *)(lb + 0xe50e8 + 1);  /* PrmBool(bool) tipo 5: lo que la vista pide para 0x102/0x104 */
-    int n = 0; void *p;
-    if (info == 0) {
-        if ((p = calloc(1, 0x10))) { pint(p, 2); add(list, 0x100, p); n++; }
-        if ((p = calloc(1, 0x10))) { pbool(p, 1); add(list, 0x102, p); n++; }
-        if ((p = calloc(1, 0x10))) { pint(p, 3); add(list, 0x103, p); n++; }
-        if ((p = calloc(1, 0x10))) { pbool(p, 1); add(list, 0x104, p); n++; }
-        if ((p = calloc(1, 0x10))) { pint(p, 1); add(list, 0x105, p); n++; }
-    } else {
-        if ((p = calloc(1, 0x10))) { pint(p, 1); add(list, 0x108, p); n++; }
-        if ((p = calloc(1, 0x10))) { pint(p, 2); add(list, 0x10b, p); n++; }
-        if ((p = calloc(1, 0x10))) { pint(p, (int)power_pct()); add(list, 0x10c, p); n++; }
-    }
-    { static int last[2] = { -1, -1 }, cnt; int pct = (int)power_pct();
-        if (pct != last[info] || cnt++ < 4) { last[info] = pct; LOG("POWER model/POWER info %d desde el anfitrión: %d claves, nivel %d %% (G22-ESTADO-CAMARA)", info, n, pct); } }
-    return n > 0;
-}
+/* G22-ESTADO-CAMARA (batería): el icono `ACT_IconBattery` (viewUnified2+0x2758b8 → +0x275530) pide `getModelInfo("model/POWER", 0)`
+ * y `(…, 1, filtro 0x107)`, y en el arnés nadie alimenta ese modelo, así que no se pinta. Rellenarlo desde el anfitrión se probó y NO
+ * sirve: el icono no llega a instanciarse y el modelo no se pide nunca (0 de 37 222 `getModelInfo` en un arranque) — claves, umbrales y
+ * medidas en docs/gui/g22-estado-camara.md §9. Para pintarlo hace falta que el layout cree el widget (o `M model/POWER` antes de abrir la
+ * vista), no un relleno del shim. Lo que SÍ queda es el repintado del invitado tras `B`/`U` (abajo). */
 /* ViewBase::getModelInfo(nombre, info, lista, filtro): las vistas piden datos de modelo por aquí (PLT → este símbolo antes que libObj). GMILOG=1 registra cada petición y su resultado. */
 int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name, int info, void *list, const void *flt) {
     static int (*real)(void *, const char *, int, void *, const void *);
@@ -1771,7 +1722,6 @@ int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name
     const char *re = getenv("RELOJEMU");  /* RELOJEMU=0 lo apaga (para medir el «antes» en la misma sesión) */
     if (!r && real && readable(name) && (!strcmp(name, "@M018") || !strcmp(name, "model/CLOCK")) && (info == 0 || info == 1) && !(re && re[0] == '0')) {  /* G22-FECHA: ModelClock no existe en el arnés; se responde con el reloj del anfitrión (ver reloj_params) */
         static unsigned n; if (reloj_params(list, info)) { r = 1; if (n++ < 20) LOG("getModelInfo(%s, %d) -> 1 (reloj del anfitrión, G22-FECHA)", name, info); } }
-    if (!r && real && readable(name) && power_params(name, info, list)) r = 1;  /* G22-ESTADO-CAMARA: model/POWER con el nivel del anfitrión */
     if (real && r && getenv("GMIPROBE2") && !strcmp(name, "model/ROOT") && info == 6) {  /* misma lista que la vista: info 1 y 7, y se restaura la 6 */
         static int n2; if (n2++ < 3) { int a = real(self, name, 1, list, flt), b = real(self, name, 7, list, flt), c = real(self, name, 6, list, flt); LOG("GMIPROBE2 misma lista: info1=%d info7=%d info6=%d", a, b, c); }
     }
