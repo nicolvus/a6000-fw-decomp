@@ -1,0 +1,37 @@
+TABLA DE COMANDOS DE CONSOLA DEL MODULO "FBM" (libmpr.so 3.21, VA del ELF)
+tabla = 0x7e7fac .. 0x7e8108, 29 registros de 12 B {char*name; int(*fn)(long,char**); char*desc}, terminador {0,0,0}
+handler del modulo = 0x2B50D8 (literal 0x2B4E60 = 0x2B50D9); alta en el monitor: 0x2B4D7E -> 0x684940("FBM")
+despacho: 0x2B50D8 -> 0x6847EC -> 0x6822F8(tabla, argc-1, argv+1) -> 0x682230 strcmp + blx [+4]
+
+#   nombre        handler    sintaxis / descripcion
+00  Destroy       0x002b5ea0 Destroy <1|2|3|4> … (tipo 1 void; 2 [mediaID(HEX)]; 3 [mediaID(HEX)] [operationMode(HEX)]; 4 [userID(HEX)] [mediaID(HEX)])   [Flash Backup All Sector Clear]
+01  Close         0x002b5e6c Close [index]   [Close Sector]
+02  Delete        0x002b5e38 Delete [index]   [Delete Sector]
+03  DeleteAll     0x002b5e20 (sin argumentos)   [Delete All Sectors]
+04  ReadAllPD     0x002b5d30 ReadAllPD [Sec name]   [Read all pack data in Sector]
+05  ReadPD        0x002b5c6c ReadPD [UserID(Hex)] [MediaID(Hex)]   [Read pack data in Sector]
+06  WritePack     0x002b5b74 WritePack [USER_ID] [MEDIA_ID] [DATA_ID] [Data length]   [Write pack]
+07  InitB         0x002b5b34 InitB [Operation Mode] [MediaID]   (los dos DECIMALES)   [Init backup data]
+08  ChgSec        0x002b5af4 ChgSec [userID(Hex)] [mediaID(Hex)]   [Change sector]
+09  SetOM         0x002b5a60 SetOM <OM> <x>   (imprime por error la ayuda de InitB)   [Set operation mode]
+10  SetSMI        0x002b59dc SetSMI [index] [SectorName(Hex)] [handle] [status] [OM]   [Set Sector Managet Information]
+11  View          0x002b59ca (sin argumentos)   [Display Sector Managet Information]
+12  ASV           0x002b59b8 (sin argumentos)   [Display All Sector Status]
+13  GASI          0x002b5aa8 (sin argumentos)   [Get All Sector Information]
+14  WDS           0x002b5e08 (sin argumentos)   [Wait Delete Sector]
+15  Flush         0x002b5df0 (sin argumentos)   [Flush Buffer]
+16  SSS           0x002b5db0 SSS [SectorNo] [Status]   [Set Sector Status]
+17  GSS           0x002b5d64 GSS  |  GSS [UserID(Hex)] [MediaID(Hex)]   [Get Sector Status]
+18  ARB           0x002b5ac0 (sin argumentos)   [All Delete Ring Buffer]
+19  Quit          0x002b598c (sin argumentos)   [Quit DVD FLASH Backup Library]
+20  GetAlignSize  0x002b5924 GetAlignSize [Original Data Size]   [Get Alignment Size]
+21  INRFB         0x002b5904 (sin argumentos)   [Is Need Repair Flash Backup]
+22  CRFB          0x002b58ec (sin argumentos)   [Check and Repair Flash Backup]
+23  DFT           0x002b58d4 (sin argumentos)   [Display User Function Table]
+24  DRWBI         0x002b58bc (sin argumentos)   [Display Read/Write buffer information]
+25  LTC           0x002b57f0 fbm ltc [module number] [parameter1]....   [Local test function call]
+26  EWBDFD        0x002b5198 EWBDFD [UserID(Hex)][MediaID(Hex)][FunctionDataAdrs(Hex)]   [EntryWriteBaseDataFunction to Dummy]
+27  CWBDF         0x002b5128 CWBDF [UserID(Hex)][MediaID(Hex)]   [ClearWriteBaseDataFunction]
+28  WBI           0x002b4aac (sin argumentos)   [WarmBootInit]
+
+No hay CreateSector, ni Format, ni Repair. Crea `InitB` (0x2B5B34 -> 0x2B43F0 -> 0x2B4030 -> FlashLib::CreateSector32 + alta en 0xA3699C en 0x2B40DA).

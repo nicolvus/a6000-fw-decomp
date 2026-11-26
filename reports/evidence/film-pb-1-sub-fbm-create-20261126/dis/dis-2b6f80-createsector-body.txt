@@ -1,0 +1,106 @@
+002b6f80: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+002b6f84: 9846       mov      r8, r3                        
+002b6f86: 85b0       sub      sp, #0x14                     
+002b6f88: 384b       ldr      r3, [pc, #0xe0]                 ; [002b706c]=00a36c78
+002b6f8a: 0546       mov      r5, r0                        
+002b6f8c: 02af       add      r7, sp, #8                    
+002b6f8e: 9146       mov      sb, r2                        
+002b6f90: 1b78       ldrb     r3, [r3]                      
+002b6f92: 002b       cmp      r3, #0                        
+002b6f94: 5ed0       beq      #0x2b7054                     
+002b6f96: 67f694ef   blx      #0x11eec0                       ; _ZN8FlashLib9MutexLockEv
+002b6f9a: 2846       mov      r0, r5                        
+002b6f9c: 67f6dceb   blx      #0x11e758                       ; _ZN8FlashLib14GetIdCheckFlagEm
+002b6fa0: 0646       mov      r6, r0                        
+002b6fa2: 2846       mov      r0, r5                        
+002b6fa4: 66f628ee   blx      #0x11dbf8                       ; _ZN8FlashLib21GetFileTypeBaseLengthEm
+002b6fa8: 0446       mov      r4, r0                        
+002b6faa: 2846       mov      r0, r5                        
+002b6fac: 68f65ee9   blx      #0x11f26c                       ; _ZN8FlashLib20GetFileTypeMaxLengthEm
+002b6fb0: 3a1d       adds     r2, r7, #4                    
+002b6fb2: 3146       mov      r1, r6                        
+002b6fb4: 0192       str      r2, [sp, #4]                  
+002b6fb6: 2246       mov      r2, r4                        
+002b6fb8: cdf80090   str.w    sb, [sp]                      
+002b6fbc: 0346       mov      r3, r0                        
+002b6fbe: 2846       mov      r0, r5                        
+002b6fc0: faf75ef8   bl       #0x2b1080                     
+002b6fc4: 0446       mov      r4, r0                        
+002b6fc6: 0028       cmp      r0, #0                        
+002b6fc8: 28d0       beq      #0x2b701c                     
+002b6fca: 4928       cmp      r0, #0x49                     
+002b6fcc: 12d0       beq      #0x2b6ff4                     
+002b6fce: 0022       movs     r2, #0                        
+002b6fd0: 2748       ldr      r0, [pc, #0x9c]                 ; [002b7070]=007e3b69 "CreateSector"
+002b6fd2: 1346       mov      r3, r2                        
+002b6fd4: 2146       mov      r1, r4                        
+002b6fd6: 0092       str      r2, [sp]                      
+002b6fd8: 0192       str      r2, [sp, #4]                  
+002b6fda: 66f67aef   blx      #0x11ded0                       ; _ZN8FlashLib11ConPutErrorEPKcmS1_mS1_m
+002b6fde: 254b       ldr      r3, [pc, #0x94]                 ; [002b7074]=009d2790
+002b6fe0: 1b78       ldrb     r3, [r3]                      
+002b6fe2: 002b       cmp      r3, #0                        
+002b6fe4: 3ed0       beq      #0x2b7064                     
+002b6fe6: 882c       cmp      r4, #0x88                     
+002b6fe8: 18d0       beq      #0x2b701c                     
+002b6fea: 892c       cmp      r4, #0x89                     
+002b6fec: 16d0       beq      #0x2b701c                     
+002b6fee: e0b2       uxtb     r0, r4                        
+002b6ff0: 4af3ecfb   bl       #0x6017cc                     
+002b6ff4: 892c       cmp      r4, #0x89                     
+002b6ff6: 11d0       beq      #0x2b701c                     
+002b6ff8: 1f4e       ldr      r6, [pc, #0x7c]                 ; [002b7078]=00a36c88
+002b6ffa: 3378       ldrb     r3, [r6]                      
+002b6ffc: 202b       cmp      r3, #0x20                     
+002b6ffe: 0dd8       bhi      #0x2b701c                     
+002b7000: 1020       movs     r0, #0x10                     
+002b7002: a2b2       uxth     r2, r4                        
+002b7004: 7821       movs     r1, #0x78                     
+002b7006: 8de80c00   stm.w    sp, {r2, r3}                  
+002b700a: 34fa00f3   lsrs.w   r3, r4, r0                    
+002b700e: 41f20602   movw     r2, #0x1006                   
+002b7012: 04f313fc   bl       #0x5bb83c                     
+002b7016: 3378       ldrb     r3, [r6]                      
+002b7018: 0133       adds     r3, #1                        
+002b701a: 3370       strb     r3, [r6]                      
+002b701c: b8f1000f   cmp.w    r8, #0                        
+002b7020: 05d0       beq      #0x2b702e                     
+002b7022: 2846       mov      r0, r5                        
+002b7024: 7968       ldr      r1, [r7, #4]                  
+002b7026: 66f676ee   blx      #0x11dd14                       ; _ZN8FlashLib5GetIDEmm
+002b702a: c8f80000   str.w    r0, [r8]                      
+002b702e: 74b9       cbnz     r4, #0x2b704e                 
+002b7030: d9f80020   ldr.w    r2, [sb]                      
+002b7034: 0120       movs     r0, #1                        
+002b7036: 1149       ldr      r1, [pc, #0x44]                 ; [002b707c]=00a36c89
+002b7038: 02eb0212   add.w    r2, r2, r2, lsl #4            
+002b703c: 8b18       adds     r3, r1, r2                    
+002b703e: 1872       strb     r0, [r3, #8]                  
+002b7040: 8d54       strb     r5, [r1, r2]                  
+002b7042: 2a0a       lsrs     r2, r5, #8                    
+002b7044: 5a70       strb     r2, [r3, #1]                  
+002b7046: 2a0c       lsrs     r2, r5, #0x10                 
+002b7048: 2d0e       lsrs     r5, r5, #0x18                 
+002b704a: 9a70       strb     r2, [r3, #2]                  
+002b704c: dd70       strb     r5, [r3, #3]                  
+002b704e: 67f6a6ea   blx      #0x11e59c                       ; _ZN8FlashLib11MutexUnLockEv
+002b7052: 01e0       b        #0x2b7058                     
+002b7054: 4ff0ff34   mov.w    r4, #-1                       
+002b7058: 2046       mov      r0, r4                        
+002b705a: 07f10c07   add.w    r7, r7, #0xc                  
+002b705e: bd46       mov      sp, r7                        
+002b7060: bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}  
+002b7064: 882c       cmp      r4, #0x88                     
+002b7066: d9d0       beq      #0x2b701c                     
+002b7068: c4e7       b        #0x2b6ff4                     
+002b706a: 00bf       nop                                    
+002b706c: 786c       ldr      r0, [r7, #0x44]               
+002b706e: a300       lsls     r3, r4, #2                    
+002b7070: 693b       subs     r3, #0x69                     
+002b7072: 7e00       lsls     r6, r7, #1                    
+002b7074: 9027       movs     r7, #0x90                     
+002b7076: 9d00       lsls     r5, r3, #2                    
+002b7078: 886c       ldr      r0, [r1, #0x48]               
+002b707a: a300       lsls     r3, r4, #2                    
+002b707c: 896c       ldr      r1, [r1, #0x48]               
+002b707e: a300       lsls     r3, r4, #2                    

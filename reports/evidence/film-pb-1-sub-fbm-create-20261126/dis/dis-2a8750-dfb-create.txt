@@ -1,0 +1,63 @@
+002a8750: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+002a8754: 89b0       sub      sp, #0x24                     
+002a8756: 02af       add      r7, sp, #8                    
+002a8758: a54e       ldr      r6, [pc, #0x294]                ; [002a89f0]=009e3cf8
+002a875a: 0546       mov      r5, r0                        
+002a875c: d7f84090   ldr.w    sb, [r7, #0x40]               
+002a8760: 8846       mov      r8, r1                        
+002a8762: fa60       str      r2, [r7, #0xc]                
+002a8764: 0022       movs     r2, #0                        
+002a8766: bb60       str      r3, [r7, #8]                  
+002a8768: 83b2       uxth     r3, r0                        
+002a876a: 7a61       str      r2, [r7, #0x14]               
+002a876c: 1946       mov      r1, r3                        
+002a876e: 3a61       str      r2, [r7, #0x10]               
+002a8770: 4ff48060   mov.w    r0, #0x400                    
+002a8774: c9f80020   str.w    r2, [sb]                      
+002a8778: 3270       strb     r2, [r6]                      
+002a877a: 7270       strb     r2, [r6, #1]                  
+002a877c: 7b60       str      r3, [r7, #4]                  
+002a877e: 1346       mov      r3, r2                        
+002a8780: 07f074fd   bl       #0x2b026c                     
+002a8784: ba68       ldr      r2, [r7, #8]                  
+002a8786: fb68       ldr      r3, [r7, #0xc]                
+002a8788: 2946       mov      r1, r5                        
+002a878a: 9a48       ldr      r0, [pc, #0x268]                ; [002a89f4]=007ded09 "[DFB]CreateSector--start[%d][%d][%ld][%l"
+002a878c: 0092       str      r2, [sp]                      
+002a878e: 4246       mov      r2, r8                        
+002a8790: 02f092fd   bl       #0x2ab2b8                     
+002a8794: 984b       ldr      r3, [pc, #0x260]                ; [002a89f8]=009e484c
+002a8796: 1b78       ldrb     r3, [r3]                      
+002a8798: 33b9       cbnz     r3, #0x2a87a8                 
+002a879a: 9848       ldr      r0, [pc, #0x260]                ; [002a89fc]=007ded34 "[DFB]not initialized yet:CreateSector()"
+002a879c: 4f24       movs     r4, #0x4f                     
+002a879e: 02f007fe   bl       #0x2ab3b0                     
+002a87a2: 40f63f33   movw     r3, #0xb3f                    
+002a87a6: 3de1       b        #0x2a8a24                     
+002a87a8: 954b       ldr      r3, [pc, #0x254]                ; [002a8a00]=009e598c
+002a87aa: 1b78       ldrb     r3, [r3]                      
+002a87ac: 002b       cmp      r3, #0                        
+002a87ae: 40f01181   bne.w    #0x2a89d4                     
+002a87b2: 9448       ldr      r0, [pc, #0x250]                ; [002a8a04]=009e412c
+002a87b4: fdf7c8f9   bl       #0x2a5b48                     
+002a87b8: 9348       ldr      r0, [pc, #0x24c]                ; [002a8a08]=009e3d08
+002a87ba: 9249       ldr      r1, [pc, #0x248]                ; [002a8a04]=009e412c
+002a87bc: 07f0f4fe   bl       #0x2b05a8                     
+002a87c0: b8f1010f   cmp.w    r8, #1                        
+002a87c4: 44d1       bne      #0x2a8850                     
+002a87c6: 9048       ldr      r0, [pc, #0x240]                ; [002a8a08]=009e3d08
+002a87c8: 2946       mov      r1, r5                        
+002a87ca: 07f11402   add.w    r2, r7, #0x14                 
+002a87ce: 08f03ef8   bl       #0x2b084e                     
+002a87d2: 0028       cmp      r0, #0                        
+002a87d4: 53d1       bne      #0x2a887e                     
+002a87d6: 8c48       ldr      r0, [pc, #0x230]                ; [002a8a08]=009e3d08
+002a87d8: 7969       ldr      r1, [r7, #0x14]               
+002a87da: 08f015f8   bl       #0x2b0808                     
+002a87de: ff28       cmp      r0, #0xff                     
+002a87e0: 00f0fc80   beq.w    #0x2a89dc                     
+002a87e4: 7c69       ldr      r4, [r7, #0x14]               
+002a87e6: 8848       ldr      r0, [pc, #0x220]                ; [002a8a08]=009e3d08
+002a87e8: 2146       mov      r1, r4                        
+002a87ea: 08f00df8   bl       #0x2b0808                     
+002a87ee: 2146       mov      r1, r4                        

@@ -151,8 +151,34 @@ Llamantes: consola FBM **`InitB`** (`0x2B5B5A`), y los de uso normal `mp4 0x37FC
 `MSV 0x38FEC4`, `DCF 0x61D94C` — es decir, la cámara crea estos sectores **cuando graba o guarda**, y en
 esta unidad ese camino nunca ha llegado a completarse para foto ni para vídeo.
 
-Comando de consola ya existente: **`InitB [OM] [MediaID]`**, cadenas `0x7E88D1`/`0x7E8946`.
-Después: **reiniciar MPR** (la tabla `0xA3699C` es un snapshot de `FBM::Init`).
+Comando de consola ya existente: **`InitB [OM] [MediaID]`** (handler `0x2B5B34`, `bl 0x2B43F0` en
+`0x2B5B5A`), los dos argumentos en **decimal**.
+
+### 6.1 La orden exacta: `FBM InitB 6 3`
+
+La tabla de pares `0x9D23FC` (37 filas × 0x18) está en `.data` de `libmpr.so` y se lee del propio ELF:
+`{+0 userID, +4 mediaID, +8 sector, +0xC OM, +0x10 función, +0x14 dato}`. Volcado reproducible en
+`reports/evidence/film-pb-1-causa-fbm-20261126/tabla_pares_om.txt`.
+
+| userID | OM | mediaID | sector | handle en el volcado |
+|---|---|---|---|---|
+| `0x10` (HD-AVC) | 4 | **3** | `0x30` | **4** ✓ |
+| `0x04` / `0x21` (M2PS) | **6** | **3** | **`0x31`** | **0** ✗ |
+| `0x20` (DCF) | 7 | **3** | `0x62` | **3** ✓ |
+| `0x23` (MP4) | 10 | **3** | `0xB2` | **5** ✓ |
+| `0x22` | 9 | 8 | `0xA0` | 1 ✓ |
+
+Que la tarjeta es **mediaID 3 (MS1)** no es una suposición: es el único media con tres pares ya
+registrados, y es el que sostiene lo que sí funciona (fotos y su DCF `(0x20,3)`). **El único par del
+media 3 sin handle es el del sector `0x31`**, compartido por `userID 0x04` y `0x21`, con **OM 6 (M2PS)**.
+Por eso fallan MSV, DCF y XAVC/MP4 a la vez: los tres leen la misma tabla de contenidos de `0x31`.
+
+⇒ Una sola orden: **`FBM InitB 6 3`**. En el arnés el handler se ejecuta (`0x2B5B34` → `0x2B43F0`) y la
+tabla no se rellena porque el shim no emula `/dev/nflasha4` (`CreateSector32` devuelve `0x7` =
+`FBS_INVALID_PROCESS`); con `NFLASH4=1` y una imagen real la prueba es válida (en curso).
+
+Después de crearlo: **reiniciar MPR** (la tabla `0xA3699C` es un snapshot de `FBM::Init`) — aunque
+`fbm-crear` documenta que el alta ya queda en la SMT viva y `FBM::Init` la reabre al arrancar.
 
 ## 7. Cómo verificarlo sin cámara y cómo comprobarlo en cámara
 

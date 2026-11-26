@@ -1,0 +1,117 @@
+002a8df8: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+002a8dfc: 84b0       sub      sp, #0x10                     
+002a8dfe: 8348       ldr      r0, [pc, #0x20c]                ; [002a900c]=007def58 "[DFB]AllDeleteFileType--start"
+002a8e00: 02af       add      r7, sp, #8                    
+002a8e02: 0024       movs     r4, #0                        
+002a8e04: 02f058fa   bl       #0x2ab2b8                     
+002a8e08: 0120       movs     r0, #1                        
+002a8e0a: fc71       strb     r4, [r7, #7]                  
+002a8e0c: 3c60       str      r4, [r7]                      
+002a8e0e: fef757f9   bl       #0x2a70c0                     
+002a8e12: 7f4a       ldr      r2, [pc, #0x1fc]                ; [002a9010]=009d216c
+002a8e14: 4ff0ff33   mov.w    r3, #-1                       
+002a8e18: 1360       str      r3, [r2]                      
+002a8e1a: 7e4a       ldr      r2, [pc, #0x1f8]                ; [002a9014]=009d2168
+002a8e1c: 1360       str      r3, [r2]                      
+002a8e1e: 7e4a       ldr      r2, [pc, #0x1f8]                ; [002a9018]=009d2160
+002a8e20: 1360       str      r3, [r2]                      
+002a8e22: 7e4b       ldr      r3, [pc, #0x1f8]                ; [002a901c]=009e4d70
+002a8e24: 1c70       strb     r4, [r3]                      
+002a8e26: 7e4b       ldr      r3, [pc, #0x1f8]                ; [002a9020]=009e452c
+002a8e28: 4ff0ff32   mov.w    r2, #-1                       
+002a8e2c: 1a51       str      r2, [r3, r4]                  
+002a8e2e: 1034       adds     r4, #0x10                     
+002a8e30: b4f5447f   cmp.w    r4, #0x310                    
+002a8e34: f7d1       bne      #0x2a8e26                     
+002a8e36: 0023       movs     r3, #0                        
+002a8e38: 7a4a       ldr      r2, [pc, #0x1e8]                ; [002a9024]=009e4a94
+002a8e3a: 4ff0ff31   mov.w    r1, #-1                       
+002a8e3e: 9046       mov      r8, r2                        
+002a8e40: d150       str      r1, [r2, r3]                  
+002a8e42: 1433       adds     r3, #0x14                     
+002a8e44: b3f5347f   cmp.w    r3, #0x2d0                    
+002a8e48: f6d1       bne      #0x2a8e38                     
+002a8e4a: 774d       ldr      r5, [pc, #0x1dc]                ; [002a9028]=009e598c
+002a8e4c: 2c78       ldrb     r4, [r5]                      
+002a8e4e: 002c       cmp      r4, #0                        
+002a8e50: 00f09180   beq.w    #0x2a8f76                     
+002a8e54: 7548       ldr      r0, [pc, #0x1d4]                ; [002a902c]=007def76 "[DFB]AllDeleteFileType--bad block clear "
+002a8e56: 0024       movs     r4, #0                        
+002a8e58: 02f0ccfa   bl       #0x2ab3f4                     
+002a8e5c: 7448       ldr      r0, [pc, #0x1d0]                ; [002a9030]=007defbd "[DFB]bad block clear process start"
+002a8e5e: 02f0c9fa   bl       #0x2ab3f4                     
+002a8e62: 7448       ldr      r0, [pc, #0x1d0]                ; [002a9034]=007defe0 "[DFB]data area erase"
+002a8e64: 02f0c6fa   bl       #0x2ab3f4                     
+002a8e68: 3c60       str      r4, [r7]                      
+002a8e6a: 0ee0       b        #0x2a8e8a                     
+002a8e6c: 3068       ldr      r0, [r6]                      
+002a8e6e: f91d       adds     r1, r7, #7                    
+002a8e70: 2018       adds     r0, r4, r0                    
+002a8e72: fbf751fc   bl       #0x2a4718                     
+002a8e76: f979       ldrb     r1, [r7, #7]                  
+002a8e78: 31b9       cbnz     r1, #0x2a8e88                 
+002a8e7a: 3068       ldr      r0, [r6]                      
+002a8e7c: 2018       adds     r0, r4, r0                    
+002a8e7e: fef77ff9   bl       #0x2a7180                     
+002a8e82: 3b68       ldr      r3, [r7]                      
+002a8e84: 0133       adds     r3, #1                        
+002a8e86: 3b60       str      r3, [r7]                      
+002a8e88: 0134       adds     r4, #1                        
+002a8e8a: 6b4b       ldr      r3, [pc, #0x1ac]                ; [002a9038]=009e4a88
+002a8e8c: 6b4e       ldr      r6, [pc, #0x1ac]                ; [002a903c]=009e5580
+002a8e8e: 1b68       ldr      r3, [r3]                      
+002a8e90: 9c42       cmp      r4, r3                        
+002a8e92: ebd3       blo      #0x2a8e6c                     
+002a8e94: 6a48       ldr      r0, [pc, #0x1a8]                ; [002a9040]=007deff5 "[DFB]data area bad block numbers first c"
+002a8e96: 0024       movs     r4, #0                        
+002a8e98: 3968       ldr      r1, [r7]                      
+002a8e9a: 02f0abfa   bl       #0x2ab3f4                     
+002a8e9e: 6948       ldr      r0, [pc, #0x1a4]                ; [002a9044]=007df026 "[DFB]ctrlinfo area erase"
+002a8ea0: 02f0a8fa   bl       #0x2ab3f4                     
+002a8ea4: 09e0       b        #0x2a8eba                     
+002a8ea6: f91d       adds     r1, r7, #7                    
+002a8ea8: 2046       mov      r0, r4                        
+002a8eaa: fbf735fc   bl       #0x2a4718                     
+002a8eae: f979       ldrb     r1, [r7, #7]                  
+002a8eb0: 11b9       cbnz     r1, #0x2a8eb8                 
+002a8eb2: 2046       mov      r0, r4                        
+002a8eb4: fef764f9   bl       #0x2a7180                     
+002a8eb8: 0134       adds     r4, #1                        
+002a8eba: 3368       ldr      r3, [r6]                      
+002a8ebc: 9c42       cmp      r4, r3                        
+002a8ebe: f2d3       blo      #0x2a8ea6                     
+002a8ec0: 3846       mov      r0, r7                        
+002a8ec2: fbf771fc   bl       #0x2a47a8                     
+002a8ec6: 5d4b       ldr      r3, [pc, #0x174]                ; [002a903c]=009e5580
+002a8ec8: 0446       mov      r4, r0                        
+002a8eca: 1868       ldr      r0, [r3]                      
+002a8ecc: 9830       adds     r0, #0x98                     
+002a8ece: fbf74ffc   bl       #0x2a4770                     
+002a8ed2: 3860       str      r0, [r7]                      
+002a8ed4: 002c       cmp      r4, #0                        
+002a8ed6: 3fd1       bne      #0x2a8f58                     
+002a8ed8: 5b48       ldr      r0, [pc, #0x16c]                ; [002a9048]=009e3d08
+002a8eda: 5c49       ldr      r1, [pc, #0x170]                ; [002a904c]=009e5178
+002a8edc: 07f064fb   bl       #0x2b05a8                     
+002a8ee0: 5a48       ldr      r0, [pc, #0x168]                ; [002a904c]=009e5178
+002a8ee2: fdf7cdfc   bl       #0x2a6880                     
+002a8ee6: 2346       mov      r3, r4                        
+002a8ee8: 4ff0ff32   mov.w    r2, #-1                       
+002a8eec: 48f80320   str.w    r2, [r8, r3]                  
+002a8ef0: 1433       adds     r3, #0x14                     
+002a8ef2: b3f5347f   cmp.w    r3, #0x2d0                    
+002a8ef6: f7d1       bne      #0x2a8ee8                     
+002a8ef8: 3368       ldr      r3, [r6]                      
+002a8efa: 3a68       ldr      r2, [r7]                      
+002a8efc: 9a42       cmp      r2, r3                        
+002a8efe: 02d9       bls      #0x2a8f06                     
+002a8f00: 0023       movs     r3, #0                        
+002a8f02: 2b70       strb     r3, [r5]                      
+002a8f04: 08e0       b        #0x2a8f18                     
+002a8f06: 0123       movs     r3, #1                        
+002a8f08: 5148       ldr      r0, [pc, #0x144]                ; [002a9050]=007df03f "[DFB]AllDeleteFileType--alart ! CANNOT t"
+002a8f0a: 2b70       strb     r3, [r5]                      
+002a8f0c: 02f050fa   bl       #0x2ab3b0                     
+002a8f10: 5048       ldr      r0, [pc, #0x140]                ; [002a9054]=007df08e "[DFB]Because nonBadBlock is few.[%d]"
+002a8f12: 3968       ldr      r1, [r7]                      
+002a8f14: 02f04cfa   bl       #0x2ab3b0                     

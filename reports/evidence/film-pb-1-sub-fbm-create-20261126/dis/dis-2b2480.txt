@@ -1,0 +1,69 @@
+002b2480: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+002b2484: 84b0       sub      sp, #0x10                     
+002b2486: 8046       mov      r8, r0                        
+002b2488: 2048       ldr      r0, [pc, #0x80]                 ; [002b250c]=007dbd3b "GetSectorInfo"
+002b248a: 04af       add      r7, sp, #0x10                 
+002b248c: 0e46       mov      r6, r1                        
+002b248e: 1546       mov      r5, r2                        
+002b2490: fff7eafc   bl       #0x2b1e68                     
+002b2494: b8f1000f   cmp.w    r8, #0                        
+002b2498: 2bd0       beq      #0x2b24f2                     
+002b249a: 4046       mov      r0, r8                        
+002b249c: 3146       mov      r1, r6                        
+002b249e: 6cf60cea   blx      #0x11e8b8                       ; _ZN8FlashLib13GetSectorInfoEmP8FBS_INFO
+002b24a2: 0446       mov      r4, r0                        
+002b24a4: e0b9       cbnz     r0, #0x2b24e0                 
+002b24a6: 3188       ldrh     r1, [r6]                      
+002b24a8: 7388       ldrh     r3, [r6, #2]                  
+002b24aa: 7268       ldr      r2, [r6, #4]                  
+002b24ac: 5db1       cbz      r5, #0x2b24c6                 
+002b24ae: 0092       str      r2, [sp]                      
+002b24b0: b268       ldr      r2, [r6, #8]                  
+002b24b2: 1748       ldr      r0, [pc, #0x5c]                 ; [002b2510]=007e6b48 "   0x%04x 0x%08x   0x%04x   0x%08x   0x%"
+002b24b4: 0192       str      r2, [sp, #4]                  
+002b24b6: f268       ldr      r2, [r6, #0xc]                
+002b24b8: 0292       str      r2, [sp, #8]                  
+002b24ba: 3269       ldr      r2, [r6, #0x10]               
+002b24bc: 0392       str      r2, [sp, #0xc]                
+002b24be: 4246       mov      r2, r8                        
+002b24c0: 02f01cfe   bl       #0x2b50fc                     
+002b24c4: 19e0       b        #0x2b24fa                     
+002b24c6: 0092       str      r2, [sp]                      
+002b24c8: 2c46       mov      r4, r5                        
+002b24ca: b268       ldr      r2, [r6, #8]                  
+002b24cc: 1048       ldr      r0, [pc, #0x40]                 ; [002b2510]=007e6b48 "   0x%04x 0x%08x   0x%04x   0x%08x   0x%"
+002b24ce: 0192       str      r2, [sp, #4]                  
+002b24d0: f268       ldr      r2, [r6, #0xc]                
+002b24d2: 0292       str      r2, [sp, #8]                  
+002b24d4: 3269       ldr      r2, [r6, #0x10]               
+002b24d6: 0392       str      r2, [sp, #0xc]                
+002b24d8: 4246       mov      r2, r8                        
+002b24da: 02f0d1fd   bl       #0x2b5080                     
+002b24de: 0ce0       b        #0x2b24fa                     
+002b24e0: 0c48       ldr      r0, [pc, #0x30]                 ; [002b2514]=007e6b86 "  handle:0x%x"
+002b24e2: 4146       mov      r1, r8                        
+002b24e4: 02f0ccfd   bl       #0x2b5080                     
+002b24e8: 2046       mov      r0, r4                        
+002b24ea: fff79fff   bl       #0x2b242c                     
+002b24ee: 0446       mov      r4, r0                        
+002b24f0: 03e0       b        #0x2b24fa                     
+002b24f2: 0948       ldr      r0, [pc, #0x24]                 ; [002b2518]=007e6b94 "handle is NULL!"
+002b24f4: 02f082fd   bl       #0x2b4ffc                     
+002b24f8: 084c       ldr      r4, [pc, #0x20]                 ; [002b251c]=10100009
+002b24fa: 0448       ldr      r0, [pc, #0x10]                 ; [002b250c]=007dbd3b "GetSectorInfo"
+002b24fc: 2146       mov      r1, r4                        
+002b24fe: fff72bfd   bl       #0x2b1f58                     
+002b2502: 2046       mov      r0, r4                        
+002b2504: bd46       mov      sp, r7                        
+002b2506: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+002b250a: 00bf       nop                                    
+002b250c: 3bbd       pop      {r0, r1, r3, r4, r5, pc}      
+002b250e: 7d00       lsls     r5, r7, #1                    
+002b2510: 486b       ldr      r0, [r1, #0x34]               
+002b2512: 7e00       lsls     r6, r7, #1                    
+002b2514: 866b       ldr      r6, [r0, #0x38]               
+002b2516: 7e00       lsls     r6, r7, #1                    
+002b2518: 946b       ldr      r4, [r2, #0x38]               
+002b251a: 7e00       lsls     r6, r7, #1                    
+002b251c: 0900       movs     r1, r1                        
+002b251e: 1010       asrs     r0, r2, #0x20                 

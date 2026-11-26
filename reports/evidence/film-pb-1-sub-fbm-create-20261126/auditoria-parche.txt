@@ -1,0 +1,31 @@
+original : /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libmpr.so
+sha256   : 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+gancho   : 007126e6  a2 f7 9b f0 -> 28 f2 8b fc   bl 0x0093b000  (antes: bl 0x002b4820)
+cueva    : 0093b000  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+        -> 0093b000  01 b5 79 f5 0d f4 06 20 03 21 79 f5 f1 f1 01 bd
+original : 007126e6 = bl 0x002b4820 (FBM::Init) · 007126ea = 96 f5 bb f8 (no se toca)
+cueva    : bl 0x002b4820 en 0093b002 y bl 0x002b43f0 en 0093b00a (decodificados = pedidos)
+sitio    : 007126e6 en .text, PT_LOAD R+X off=00000000
+sitio    : 0093b000 en .rodata, PT_LOAD R+X off=00000000
+reloc    : 132021 entradas en .rel*; en los sitios parcheados: NINGUNA
+refs     : ldr/adr pc-relativos que leen la cueva: NINGUNO
+punteros : u32 del fichero iguales a una dirección de la cueva: NINGUNO
+diff     : 20 bytes en 2 rangos (007126e6..007126e9, 0093b000..0093b00f), tamaño 10321204 B sin cambios
+ELF      : cabecera, 5 PT_* y 25 secciones idénticas byte a byte
+desasm   : cueva 0093b000
+   0093b000: 01b5       push     {r0, lr}
+   0093b002: 79f50df4   bl       #0x2b4820
+   0093b006: 0620       movs     r0, #6
+   0093b008: 0321       movs     r1, #3
+   0093b00a: 79f5f1f1   bl       #0x2b43f0
+   0093b00e: 01bd       pop      {r0, pc}
+desasm   : gancho 0x7126DE..0x7126F0
+   007126de: a069       ldr      r0, [r4, #0x18]
+   007126e0: 504c       ldr      r4, [pc, #0x140]
+   007126e2: 0bf682e4   blx      #0x11dfe8
+   007126e6: 28f28bfc   bl       #0x93b000
+   007126ea: 96f5bbf8   bl       #0x4a8864
+   007126ee: 72f515fa   bl       #0x484b1c
+salida   : /home/nicolas/Documents/a6000/sony-a6000-electronic-shutter/build/cfw_fbm_sector31/libmpr.so
+sha256   : 12c420c1c9955b1cb3e0e979d6394522841c37a333d1227349b81d1b32591c4f
+original intacto: 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30

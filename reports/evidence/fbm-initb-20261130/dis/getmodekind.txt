@@ -1,0 +1,38 @@
+002b1dbc: 024b       ldr      r3, [pc, #8]                  
+002b1dbe: 80b5       push     {r7, lr}                      
+002b1dc0: 00af       add      r7, sp, #0                    
+002b1dc2: 1878       ldrb     r0, [r3]                      
+002b1dc4: 80bd       pop      {r7, pc}                      
+002b1dc6: 00bf       nop                                    
+002b1dc8: 646c       ldr      r4, [r4, #0x44]               
+002b1dca: a300       lsls     r3, r4, #2                    
+002b1dcc: 0738       subs     r0, #7                        
+002b1dce: 0128       cmp      r0, #1                        
+002b1dd0: 80b5       push     {r7, lr}                      
+002b1dd2: 88bf       it       hi                            
+002b1dd4: 0020       movhi    r0, #0                        
+002b1dd6: 00af       add      r7, sp, #0                    
+002b1dd8: 98bf       it       ls                            
+002b1dda: 0120       movls    r0, #1                        
+002b1ddc: 80bd       pop      {r7, pc}                      
+002b1dde: 80b5       push     {r7, lr}                      
+002b1de0: 00af       add      r7, sp, #0                    
+002b1de2: 80bd       pop      {r7, pc}                      
+002b1de4: 80b5       push     {r7, lr}                      
+002b1de6: 00af       add      r7, sp, #0                    
+002b1de8: 80bd       pop      {r7, pc}                      
+002b1dea: 0000       movs     r0, r0                        
+002b1dec: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+002b1df0: 0446       mov      r4, r0                        
+002b1df2: 00af       add      r7, sp, #0                    
+002b1df4: 0e46       mov      r6, r1                        
+002b1df6: 1546       mov      r5, r2                        
+002b1df8: 0c48       ldr      r0, [pc, #0x30]                 ; [002b1e2c]=007e6680 "[FBM] BackupMgr::EntryWriteBaseDataFunct"
+002b1dfa: 1a46       mov      r2, r3                        
+002b1dfc: 2146       mov      r1, r4                        
+002b1dfe: 9846       mov      r8, r3                        
+002b1e00: 03f03ef9   bl       #0x2b5080                     
+002b1e04: 0023       movs     r3, #0                        
+002b1e06: 08e0       b        #0x2b1e1a                     
+002b1e08: a042       cmp      r0, r4                        
+002b1e0a: 04d1       bne      #0x2b1e16                     

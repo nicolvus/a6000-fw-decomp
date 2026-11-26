@@ -1,0 +1,41 @@
+002b2e54: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+002b2e58: 84b0       sub      sp, #0x10                     
+002b2e5a: 0546       mov      r5, r0                        
+002b2e5c: 0e46       mov      r6, r1                        
+002b2e5e: 3148       ldr      r0, [pc, #0xc4]                 ; [002b2f24]=007e6fa1 "GetNewSectorManagerInfoTableIndexFromUse"
+002b2e60: 02af       add      r7, sp, #8                    
+002b2e62: 9046       mov      r8, r2                        
+002b2e64: fff700f8   bl       #0x2b1e68                     
+002b2e68: 3146       mov      r1, r6                        
+002b2e6a: 3a1d       adds     r2, r7, #4                    
+002b2e6c: 2846       mov      r0, r5                        
+002b2e6e: fff7c1ff   bl       #0x2b2df4                     
+002b2e72: 3346       mov      r3, r6                        
+002b2e74: 2c48       ldr      r0, [pc, #0xb0]                 ; [002b2f28]=007e6fcd "  OM:0x%x, userID:0x%02x, mediaID:0x%02x"
+002b2e76: 2a46       mov      r2, r5                        
+002b2e78: 7968       ldr      r1, [r7, #4]                  
+002b2e7a: 02f001f9   bl       #0x2b5080                     
+002b2e7e: 3146       mov      r1, r6                        
+002b2e80: 3a46       mov      r2, r7                        
+002b2e82: 2846       mov      r0, r5                        
+002b2e84: fff748fe   bl       #0x2b2b18                     
+002b2e88: 97e80600   ldm.w    r7, {r1, r2}                  
+002b2e8c: 2b46       mov      r3, r5                        
+002b2e8e: 0096       str      r6, [sp]                      
+002b2e90: 0446       mov      r4, r0                        
+002b2e92: 2648       ldr      r0, [pc, #0x98]                 ; [002b2f2c]=007e6ff6 "  fileType:0x%x, OM:0x%x, userID:0x%02x,"
+002b2e94: 02f0f4f8   bl       #0x2b5080                     
+002b2e98: 002c       cmp      r4, #0                        
+002b2e9a: 39d1       bne      #0x2b2f10                     
+002b2e9c: 3968       ldr      r1, [r7]                      
+002b2e9e: 2546       mov      r5, r4                        
+002b2ea0: 11e0       b        #0x2b2ec6                     
+002b2ea2: 234a       ldr      r2, [pc, #0x8c]                 ; [002b2f30]=00a3699c
+002b2ea4: 1423       movs     r3, #0x14                     
+002b2ea6: 6b43       muls     r3, r5, r3                    
+002b2ea8: d618       adds     r6, r2, r3                    
+002b2eaa: d358       ldr      r3, [r2, r3]                  
+002b2eac: 8b42       cmp      r3, r1                        
+002b2eae: 08d1       bne      #0x2b2ec2                     
+002b2eb0: b368       ldr      r3, [r6, #8]                  
+002b2eb2: 33b1       cbz      r3, #0x2b2ec2                 

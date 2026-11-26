@@ -1,6 +1,34 @@
 # Estado actual — léeme primero
 
-**FILM-PB-1 (26-11), CAUSA RAÍZ — la tabla de sectores del backup FBM está vacía y nada la recrea:** `0xA3699C` (30 entradas × 0x14, `+4` = handle de sector de `FlashLib`) tiene solo **4 entradas con handle** en el volcado de RAM del 20-10 (`0x30`, `0x62`, `0xA0`, `0xB2`); foto (`0x90/0x91/0x92`) y vídeo (idx 24…29) están a 0. `ReadFirstPackData` (`0x2B3948`) produce **`0x10100001` en `0x2B3A28`** cuando `[entrada+4]==0`; de ahí `Err RcsBackupTblData` → `0xB0800001` (mp4Ifo 1749, por el fallback de `0x6F0D4C`) → ninguna IFO cargada → guarda A (`0x447810`, « Pb Disable!! ref) dsm get») → **`0x1A` en `0x437C0A`** = «No se puede visualizar.». `FBM::Init` (`0x2B4820`) solo registra lo que ya existe (`CheckExistSector == 0x45`) y **no crea nada**, y el anillo de `nflasha4` nunca tuvo más de cinco `fileType` en ninguno de los tres volcados (20-10, 05-11, 05-11-total). **Correcciones:** `FlashLib::Init` **sí** tiene llamante (`0x7126E2`) y el `[DFB] partition start sector = 100864` del log demuestra que el flash se inicializa; `ExecMprUtility(1)` no interviene en el arranque. **Arreglo:** `BackupMgr::InitBackupData(OM, mediaID)` (`0x2B43F0`) o su consola `InitB [OM] [MediaID]` (`0x2B5B5A`) + reiniciar MPR. [Informe](../reports/film-pb-1-causa-fbm-20261126.md).
+**FILM-PB-1 (26-11), CAUSA RAÍZ — la tabla de sectores del backup FBM está vacía y nada la recrea:** `0xA3699C` (30 entradas × 0x14, `+4` = handle de sector de `FlashLib`) tiene solo **4 entradas con handle** en el volcado de RAM del 20-10 (`0x30`, `0x62`, `0xA0`, `0xB2`); foto (`0x90/0x91/0x92`) y vídeo (idx 24…29) están a 0. `ReadFirstPackData` (`0x2B3948`) produce **`0x10100001` en `0x2B3A28`** cuando `[entrada+4]==0`; de ahí `Err RcsBackupTblData` → `0xB0800001` (mp4Ifo 1749, por el fallback de `0x6F0D4C`) → ninguna IFO cargada → guarda A (`0x447810`, « Pb Disable!! ref) dsm get») → **`0x1A` en `0x437C0A`** = «No se puede visualizar.». `FBM::Init` (`0x2B4820`) solo registra lo que ya existe (`CheckExistSector == 0x45`) y **no crea nada**, y el anillo de `nflasha4` nunca tuvo más de cinco `fileType` en ninguno de los tres volcados (20-10, 05-11, 05-11-total). **Correcciones:** `FlashLib::Init` **sí** tiene llamante (`0x7126E2`) y el `[DFB] partition start sector = 100864` del log demuestra que el flash se inicializa; `ExecMprUtility(1)` no interviene en el arranque. **Arreglo:** `BackupMgr::InitBackupData(OM, mediaID)` (`0x2B43F0`) o su consola `InitB [OM] [MediaID]` (`0x2B5B5A`) + reiniciar MPR. **Medido 26-11-2026 en el arnés (`NFLASH4=1`): la consola sola no basta** — `0x2B3000` salta las filas de `0x9D23FC` con `fn==0` (las 37 lo están) y `fn` sólo lo escribe `BackupMgr::EntryWriteBaseDataFunction` (`0x2B1DEC`), expuesto como `FBM EWBDFD`/`CWBDF` y como el test de fábrica **`LTC 1`**: `FBM LTC 1` (o `EWBDFD 4 3 0`) + `FBM InitB 6 3` deja idx 10 = `0x31`/handle/`+8=1`, `BkRead(0x04,3)` = `0` (`0x10100003` con el dummy) y persiste al reiniciar (1 300 B en `nflasha4`). [Informe causal](../reports/film-pb-1-causa-fbm-20261126.md) · [consola/0x31](../reports/film-pb-1-sub-consola-sector31-20261126.md).
+
+**Arreglo identificado y verificado en el arnés (26-11-2026).** El sector que falta es **uno solo**:
+`0x31`, idx **10** de `0xA3699C`, compartido por `userID 0x04` y `0x21` (**OM 6 = M2PS**) con
+**mediaID 3 (MS1, la tarjeta)**. Tabla de pares `0x9D23FC` volcada del propio ELF
+(`reports/evidence/film-pb-1-causa-fbm-20261126/tabla_pares_om.txt`): los otros tres pares del media 3
+ya tienen handle (`0x10` OM 4 → `0x30`, `0x20` OM 7 → `0x62`, `0x23` OM 10 → `0xB2`), y `0x90/0x91/0x92`
+son de **media 7 (USB)**, no de la tarjeta. El cerrojo es `0x2B3000` (`0x2B301A cbz r2`): salta las 37
+filas de `0x9D23FC` con `fn == 0`, y las 37 lo están; el único escritor de `fn` es
+`BackupMgr::EntryWriteBaseDataFunction` (`0x2B1DEC`), expuesto en consola como `EWBDFD` y como test de
+fábrica **`LTC`**.
+**Vía de consola, sin flashear y persistente (1 300 B en `nflasha4`):** `FBM LTC 1` (o `FBM EWBDFD 4 3 0`)
+y después **`FBM InitB 6 3`** → idx 10 = `0x31 / h3 / +8=1 / om6` y `BkRead(0x04,3)` pasa de
+`0x10100001` a `0`; persiste tras reiniciar porque `FBM::Init` la reabre. El monitor se alimenta por un
+anillo en memoria (`X = u32 en libmpr+0xA4FD88`, cabecera `[X]`=lectura `[X+4]`=escritura, datos en
+`X+0x10`, 0x400 B, terminador CR), y desde la cámara se deposita con `tools/camera-ptrace/ptcall`
+(`sh tools/camera-ptrace/fbm_ring.sh "FBM InitB 6 3"`). La vía `EWBDFD`/`ChgSec`/`CRFB`/`WBI` por sí
+solas no crean nada. [Informe](film-pb-1-sub-consola-sector31-20261126.md) · [anillo](film-pb-1-sub-consola-fbm-anillo-20261127.md).
+**Vía CFW (alternativa, sin depender del telnet):** parche de 68 B en `libmpr.so` (gancho en `0x7126E6`
+→ cueva en `0x93B000`: `FBM::Init` + `CreateSector32(0x31)` + alta manual de la entrada) medido en el
+arnés (`idx10 h2 válido1`, `BkRead` `0x10100003`, que el llamante tolera). Paquete **3.95**
+`build/cfw_fbm31_pkg395/pkg-3.95/package-3.95/firmware_packed.dat`
+(sha256 `61bfcb79…b442a`, auditoría `todo_ok` 22/22, solo cambia `/lib/libmpr.so` de 715 ficheros) y
+vuelta atrás **3.96** (`f5283bf9…6c47`). No persiste entre arranques con `libmpr` de fábrica y rota una
+página de control de 1 KiB por arranque. [Informe](film-pb-1-sub-fbm-sector31-20261126.md) ·
+[paquete](film-pb-1-sub-paquete-cfw395-fbm31-20261126.md).
+**Aviso:** crear el sector **no rellena** la base de datos; después hay que dejar que la cámara la
+reconstruya (grabar un clip nuevo o el menú de recuperación) y solo entonces probar la reproducción.
+
 
 
 **FILM-PB-1 (26-11), «MODO CON MOVIE=0» DESCARTADO para vídeo:** `MemInfo::Type2Mode` (`0x5F699C`) decide el modo solo con `(type, subType)` y `m_systemType` (constante de compilación = 1, escrita una única vez en `0x5F755C`); **no** lee HDMI, tarjeta, batería ni ajustes. Los cinco modos con movie = 0 (0x03, 0x06, 0x12, 0x13, 0x20) son trabajos de **foto** (`Still Rec`, `Still Pb`, `Still Dubbing`, `Still Pb RAW`; 0x13 no se alcanza con `m_systemType=1`) y la entrada en reproducción de vídeo (`0x437A40`–`0x437AC4`, `EnterMoviePbStillRec`) pide `Movie Pb` (`type` de la tabla `0x85AA54`) con reparto nuevo y cambia a **0x0E con 20 MiB**; si el reparto falla aborta antes de montar el reproductor (`0x437AA8`), pero `areaTblMode` ya se escribe antes (`0x5F7C7C`). **No hay ajuste de cámara que fuerce movie = 0.** Corregidos los nombres de modo del informe de la tabla (base real `0x9DF094` `{id,ptr}`, `id 0 = Movie Pb`). Pendiente en cámara: leer `0x9DECAC` / `0xA4F478` / `0xA4F4A8` al pulsar play. [Informe](../reports/film-pb-1-sub-modo-camara-20261126.md).

@@ -1,0 +1,204 @@
+002a9ad8: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+002a9adc: 93b0       sub      sp, #0x4c                     
+002a9ade: 02af       add      r7, sp, #8                    
+002a9ae0: 0020       movs     r0, #0                        
+002a9ae2: fb62       str      r3, [r7, #0x2c]               
+002a9ae4: 914b       ldr      r3, [pc, #0x244]                ; [002a9d2c]=009e484c
+002a9ae6: 3a63       str      r2, [r7, #0x30]               
+002a9ae8: 7963       str      r1, [r7, #0x34]               
+002a9aea: 1a78       ldrb     r2, [r3]                      
+002a9aec: 87f83f00   strb.w   r0, [r7, #0x3f]               
+002a9af0: b863       str      r0, [r7, #0x38]               
+002a9af2: 002a       cmp      r2, #0                        
+002a9af4: 40f06385   bne.w    #0x2aa5be                     
+002a9af8: 8d48       ldr      r0, [pc, #0x234]                ; [002a9d30]=009e5178
+002a9afa: ff21       movs     r1, #0xff                     
+002a9afc: 4ff48062   mov.w    r2, #0x400                    
+002a9b00: 76f6effb   bl       #0x1202e2                     
+002a9b04: 8b4b       ldr      r3, [pc, #0x22c]                ; [002a9d34]=009e557c
+002a9b06: 9846       mov      r8, r3                        
+002a9b08: 1d68       ldr      r5, [r3]                      
+002a9b0a: 45b9       cbnz     r5, #0x2a9b1e                 
+002a9b0c: a020       movs     r0, #0xa0                     
+002a9b0e: 74f64aee   blx      #0x11e7a4                       ; _Znwj
+002a9b12: 2946       mov      r1, r5                        
+002a9b14: 0446       mov      r4, r0                        
+002a9b16: 53f363fe   bl       #0x5fd7e0                     
+002a9b1a: c8f80040   str.w    r4, [r8]                      
+002a9b1e: 864e       ldr      r6, [pc, #0x218]                ; [002a9d38]=009e483c
+002a9b20: 3568       ldr      r5, [r6]                      
+002a9b22: 3db9       cbnz     r5, #0x2a9b34                 
+002a9b24: a020       movs     r0, #0xa0                     
+002a9b26: 74f63eee   blx      #0x11e7a4                       ; _Znwj
+002a9b2a: 2946       mov      r1, r5                        
+002a9b2c: 0446       mov      r4, r0                        
+002a9b2e: 53f357fe   bl       #0x5fd7e0                     
+002a9b32: 3460       str      r4, [r6]                      
+002a9b34: 814c       ldr      r4, [pc, #0x204]                ; [002a9d3c]=009e4850
+002a9b36: 06f001fc   bl       #0x2b033c                     
+002a9b3a: 2368       ldr      r3, [r4]                      
+002a9b3c: 43b9       cbnz     r3, #0x2a9b50                 
+002a9b3e: 0c20       movs     r0, #0xc                      
+002a9b40: 74f630ee   blx      #0x11e7a4                       ; _Znwj
+002a9b44: 7e49       ldr      r1, [pc, #0x1f8]                ; [002a9d40]=007df6f5
+002a9b46: 0122       movs     r2, #1                        
+002a9b48: 0546       mov      r5, r0                        
+002a9b4a: d9f3bdfa   bl       #0x6830c8                     
+002a9b4e: 2560       str      r5, [r4]                      
+002a9b50: 7c4d       ldr      r5, [pc, #0x1f0]                ; [002a9d44]=009e4844
+002a9b52: 0121       movs     r1, #1                        
+002a9b54: 7c48       ldr      r0, [pc, #0x1f0]                ; [002a9d48]=003c008e
+002a9b56: 2a46       mov      r2, r5                        
+002a9b58: 07f086fc   bl       #0x2b1468                     
+002a9b5c: 20b1       cbz      r0, #0x2a9b68                 
+002a9b5e: 7b48       ldr      r0, [pc, #0x1ec]                ; [002a9d4c]=007ddcd5 "[DFB]getEEP(DEF_EEP_DFB_DEBUG_01) failed"
+002a9b60: 01f026fc   bl       #0x2ab3b0                     
+002a9b64: 0023       movs     r3, #0                        
+002a9b66: 2b70       strb     r3, [r5]                      
+002a9b68: 07f14002   add.w    r2, r7, #0x40                 
+002a9b6c: 0025       movs     r5, #0                        
+002a9b6e: 7848       ldr      r0, [pc, #0x1e0]                ; [002a9d50]=003c03f4
+002a9b70: 0121       movs     r1, #1                        
+002a9b72: 02f8025d   strb     r5, [r2, #-0x2]!              
+002a9b76: 07f077fc   bl       #0x2b1468                     
+002a9b7a: 20b1       cbz      r0, #0x2a9b86                 
+002a9b7c: 7548       ldr      r0, [pc, #0x1d4]                ; [002a9d54]=007df6f9 "[DFB]getEEP(DEF_EEP_FLASHBACKUP_DRIVER) "
+002a9b7e: 01f017fc   bl       #0x2ab3b0                     
+002a9b82: 87f83e50   strb.w   r5, [r7, #0x3e]               
+002a9b86: 97f83e10   ldrb.w   r1, [r7, #0x3e]               
+002a9b8a: 734a       ldr      r2, [pc, #0x1cc]                ; [002a9d58]=009e3cac
+002a9b8c: 734b       ldr      r3, [pc, #0x1cc]                ; [002a9d5c]=009d212c
+002a9b8e: 11b9       cbnz     r1, #0x2a9b96                 
+002a9b90: 0120       movs     r0, #1                        
+002a9b92: 1070       strb     r0, [r2]                      
+002a9b94: 03e0       b        #0x2a9b9e                     
+002a9b96: 0129       cmp      r1, #1                        
+002a9b98: 03d1       bne      #0x2a9ba2                     
+002a9b9a: 0139       subs     r1, #1                        
+002a9b9c: 1170       strb     r1, [r2]                      
+002a9b9e: 1970       strb     r1, [r3]                      
+002a9ba0: 03e0       b        #0x2a9baa                     
+002a9ba2: 0121       movs     r1, #1                        
+002a9ba4: 1170       strb     r1, [r2]                      
+002a9ba6: 0022       movs     r2, #0                        
+002a9ba8: 1a70       strb     r2, [r3]                      
+002a9baa: 6d48       ldr      r0, [pc, #0x1b4]                ; [002a9d60]=007df728 "[DFB]Init()--start"
+002a9bac: 01f084fb   bl       #0x2ab2b8                     
+002a9bb0: dff8b4b1   ldr.w    fp, [pc, #0x1b4]                ; [002a9d68]=009e4848
+002a9bb4: fbf734fc   bl       #0x2a5420                     
+002a9bb8: 0546       mov      r5, r0                        
+002a9bba: 0028       cmp      r0, #0                        
+002a9bbc: 32d0       beq      #0x2a9c24                     
+002a9bbe: 6948       ldr      r0, [pc, #0x1a4]                ; [002a9d64]=007df1b7 "[DFB]driver open failed"
+002a9bc0: 01f0f6fb   bl       #0x2ab3b0                     
+002a9bc4: fdf798fa   bl       #0x2a70f8                     
+002a9bc8: d8f80080   ldr.w    r8, [r8]                      
+002a9bcc: b8f1000f   cmp.w    r8, #0                        
+002a9bd0: 08d0       beq      #0x2a9be4                     
+002a9bd2: 4046       mov      r0, r8                        
+002a9bd4: 53f323fe   bl       #0x5fd81e                     
+002a9bd8: 4046       mov      r0, r8                        
+002a9bda: 74f6eeec   blx      #0x11e5b8                       ; _ZdlPv
+002a9bde: 554b       ldr      r3, [pc, #0x154]                ; [002a9d34]=009e557c
+002a9be0: 0022       movs     r2, #0                        
+002a9be2: 1a60       str      r2, [r3]                      
+002a9be4: 3668       ldr      r6, [r6]                      
+002a9be6: 46b1       cbz      r6, #0x2a9bfa                 
+002a9be8: 3046       mov      r0, r6                        
+002a9bea: 53f318fe   bl       #0x5fd81e                     
+002a9bee: 3046       mov      r0, r6                        
+002a9bf0: 74f6e2ec   blx      #0x11e5b8                       ; _ZdlPv
+002a9bf4: 504b       ldr      r3, [pc, #0x140]                ; [002a9d38]=009e483c
+002a9bf6: 0022       movs     r2, #0                        
+002a9bf8: 1a60       str      r2, [r3]                      
+002a9bfa: 2068       ldr      r0, [r4]                      
+002a9bfc: 28b1       cbz      r0, #0x2a9c0a                 
+002a9bfe: 0368       ldr      r3, [r0]                      
+002a9c00: 5b68       ldr      r3, [r3, #4]                  
+002a9c02: 9847       blx      r3                            
+002a9c04: 4d4b       ldr      r3, [pc, #0x134]                ; [002a9d3c]=009e4850
+002a9c06: 0022       movs     r2, #0                        
+002a9c08: 1a60       str      r2, [r3]                      
+002a9c0a: dbf80000   ldr.w    r0, [fp]                      
+002a9c0e: 20b1       cbz      r0, #0x2a9c1a                 
+002a9c10: 96f7b9f8   bl       #0x23fd86                     
+002a9c14: 544b       ldr      r3, [pc, #0x150]                ; [002a9d68]=009e4848
+002a9c16: 0022       movs     r2, #0                        
+002a9c18: 1a60       str      r2, [r3]                      
+002a9c1a: 2846       mov      r0, r5                        
+002a9c1c: fbf7a0ff   bl       #0x2a5b60                     
+002a9c20: 00f0cdbc   b.w      #0x2aa5be                     
+002a9c24: 5148       ldr      r0, [pc, #0x144]                ; [002a9d6c]=007df1cf "[DFB]OneNAND Flash opend"
+002a9c26: 01f047fb   bl       #0x2ab2b8                     
+002a9c2a: 514b       ldr      r3, [pc, #0x144]                ; [002a9d70]=009e3bf4
+002a9c2c: 514d       ldr      r5, [pc, #0x144]                ; [002a9d74]=009e4d64
+002a9c2e: 5248       ldr      r0, [pc, #0x148]                ; [002a9d78]=009e4874
+002a9c30: 1b68       ldr      r3, [r3]                      
+002a9c32: a946       mov      sb, r5                        
+002a9c34: 514e       ldr      r6, [pc, #0x144]                ; [002a9d7c]=009e3ce4
+002a9c36: 8046       mov      r8, r0                        
+002a9c38: dff86ce1   ldr.w    lr, [pc, #0x16c]                ; [002a9da8]=009e3c04
+002a9c3c: 2b60       str      r3, [r5]                      
+002a9c3e: 504b       ldr      r3, [pc, #0x140]                ; [002a9d80]=009e3cb0
+002a9c40: 3668       ldr      r6, [r6]                      
+002a9c42: def80010   ldr.w    r1, [lr]                      
+002a9c46: 1b68       ldr      r3, [r3]                      
+002a9c48: 4e4c       ldr      r4, [pc, #0x138]                ; [002a9d84]=009e4128
+002a9c4a: 3029       cmp      r1, #0x30                     
+002a9c4c: 4e4a       ldr      r2, [pc, #0x138]                ; [002a9d88]=009e5588
+002a9c4e: 0360       str      r3, [r0]                      
+002a9c50: 4e4b       ldr      r3, [pc, #0x138]                ; [002a9d8c]=009e3ce8
+002a9c52: 2160       str      r1, [r4]                      
+002a9c54: 4e4d       ldr      r5, [pc, #0x138]                ; [002a9d90]=009e5580
+002a9c56: d3f800c0   ldr.w    ip, [r3]                      
+002a9c5a: 4e4b       ldr      r3, [pc, #0x138]                ; [002a9d94]=009e4d74
+002a9c5c: c2f800c0   str.w    ip, [r2]                      
+002a9c60: 9a46       mov      sl, r3                        
+002a9c62: 1e60       str      r6, [r3]                      
+002a9c64: 4fea9c2c   lsr.w    ip, ip, #0xa                  
+002a9c68: 4b4e       ldr      r6, [pc, #0x12c]                ; [002a9d98]=009e4840
+002a9c6a: c6f800c0   str.w    ip, [r6]                      
+002a9c6e: 01d8       bhi      #0x2a9c74                     
+002a9c70: 0223       movs     r3, #2                        
+002a9c72: 04e0       b        #0x2a9c7e                     
+002a9c74: 5029       cmp      r1, #0x50                     
+002a9c76: 01d8       bhi      #0x2a9c7c                     
+002a9c78: 0623       movs     r3, #6                        
+002a9c7a: 00e0       b        #0x2a9c7e                     
+002a9c7c: 0823       movs     r3, #8                        
+002a9c7e: 2b60       str      r3, [r5]                      
+002a9c80: 4648       ldr      r0, [pc, #0x118]                ; [002a9d9c]=007df73b "[DFB]AllBlockNum:%d / CtrlInfoBlockNum:%"
+002a9c82: 2a68       ldr      r2, [r5]                      
+002a9c84: 01f018fb   bl       #0x2ab2b8                     
+002a9c88: 2868       ldr      r0, [r5]                      
+002a9c8a: 9830       adds     r0, #0x98                     
+002a9c8c: 4000       lsls     r0, r0, #1                    
+002a9c8e: 96f774f8   bl       #0x23fd7a                     
+002a9c92: 2a68       ldr      r2, [r5]                      
+002a9c94: ff21       movs     r1, #0xff                     
+002a9c96: 9832       adds     r2, #0x98                     
+002a9c98: 5200       lsls     r2, r2, #1                    
+002a9c9a: cbf80000   str.w    r0, [fp]                      
+002a9c9e: 76f620fb   bl       #0x1202e2                     
+002a9ca2: 3f4b       ldr      r3, [pc, #0xfc]                 ; [002a9da0]=009e4868
+002a9ca4: 0020       movs     r0, #0                        
+002a9ca6: dff804b1   ldr.w    fp, [pc, #0x104]                ; [002a9dac]=009e4a88
+002a9caa: 1880       strh     r0, [r3]                      
+002a9cac: 3d48       ldr      r0, [pc, #0xf4]                 ; [002a9da4]=007df1e8 "[DFB]----------------------EraseBlockThr"
+002a9cae: 01f0c5fa   bl       #0x2ab23c                     
+002a9cb2: fdf76bf9   bl       #0x2a6f8c                     
+002a9cb6: 2b68       ldr      r3, [r5]                      
+002a9cb8: 2268       ldr      r2, [r4]                      
+002a9cba: 9833       adds     r3, #0x98                     
+002a9cbc: 796b       ldr      r1, [r7, #0x34]               
+002a9cbe: 9a42       cmp      r2, r3                        
+002a9cc0: f86a       ldr      r0, [r7, #0x2c]               
+002a9cc2: 84bf       itt      hi                            
+002a9cc4: 2f4a       ldrhi    r2, [pc, #0xbc]                 ; [002a9d84]=009e4128
+002a9cc6: 1360       strhi    r3, [r2]                      
+002a9cc8: 2368       ldr      r3, [r4]                      
+002a9cca: 3a6b       ldr      r2, [r7, #0x30]               
+002a9ccc: 0b60       str      r3, [r1]                      
+002a9cce: d9f80030   ldr.w    r3, [sb]                      
+002a9cd2: 1360       str      r3, [r2]                      
+002a9cd4: d8f80030   ldr.w    r3, [r8]                      

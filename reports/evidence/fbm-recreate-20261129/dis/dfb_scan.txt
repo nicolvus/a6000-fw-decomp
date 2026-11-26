@@ -1,0 +1,102 @@
+002a8c84: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+002a8c88: 87b0       sub      sp, #0x1c                     
+002a8c8a: 5148       ldr      r0, [pc, #0x144]                ; [002a8dd0]=007deebd "[DFB]WaitDeleteSector--start"
+002a8c8c: 02af       add      r7, sp, #8                    
+002a8c8e: 02f0d5fa   bl       #0x2ab23c                     
+002a8c92: 504b       ldr      r3, [pc, #0x140]                ; [002a8dd4]=009e484c
+002a8c94: 1b78       ldrb     r3, [r3]                      
+002a8c96: 23b9       cbnz     r3, #0x2a8ca2                 
+002a8c98: 4f48       ldr      r0, [pc, #0x13c]                ; [002a8dd8]=007deeda "[DFB]not initialized yet:WaitDeleteSecto"
+002a8c9a: 02f089fb   bl       #0x2ab3b0                     
+002a8c9e: 4f20       movs     r0, #0x4f                     
+002a8ca0: 8ee0       b        #0x2a8dc0                     
+002a8ca2: 4e4b       ldr      r3, [pc, #0x138]                ; [002a8ddc]=009e4124
+002a8ca4: 1b78       ldrb     r3, [r3]                      
+002a8ca6: 73b1       cbz      r3, #0x2a8cc6                 
+002a8ca8: 4d48       ldr      r0, [pc, #0x134]                ; [002a8de0]=007def06 "[DFB]suspend state:WaitDeleteSector()"
+002a8caa: 02f081fb   bl       #0x2ab3b0                     
+002a8cae: 0023       movs     r3, #0                        
+002a8cb0: 0220       movs     r0, #2                        
+002a8cb2: 0093       str      r3, [sp]                      
+002a8cb4: 0193       str      r3, [sp, #4]                  
+002a8cb6: c421       movs     r1, #0xc4                     
+002a8cb8: 40f25152   movw     r2, #0x551                    
+002a8cbc: 5b33       adds     r3, #0x5b                     
+002a8cbe: 12f3bdfd   bl       #0x5bb83c                     
+002a8cc2: 5b20       movs     r0, #0x5b                     
+002a8cc4: 7ce0       b        #0x2a8dc0                     
+002a8cc6: 0120       movs     r0, #1                        
+002a8cc8: fef7faf9   bl       #0x2a70c0                     
+002a8ccc: fef796fa   bl       #0x2a71fc                     
+002a8cd0: 0446       mov      r4, r0                        
+002a8cd2: 0120       movs     r0, #1                        
+002a8cd4: fef704fa   bl       #0x2a70e0                     
+002a8cd8: a0b2       uxth     r0, r4                        
+002a8cda: 0028       cmp      r0, #0                        
+002a8cdc: 72d0       beq      #0x2a8dc4                     
+002a8cde: 414b       ldr      r3, [pc, #0x104]                ; [002a8de4]=009e598c
+002a8ce0: 1c78       ldrb     r4, [r3]                      
+002a8ce2: 0cb1       cbz      r4, #0x2a8ce8                 
+002a8ce4: 4020       movs     r0, #0x40                     
+002a8ce6: 6be0       b        #0x2a8dc0                     
+002a8ce8: fcf7fefd   bl       #0x2a58e8                     
+002a8cec: 0120       movs     r0, #1                        
+002a8cee: fef7e7f9   bl       #0x2a70c0                     
+002a8cf2: 3d48       ldr      r0, [pc, #0xf4]                 ; [002a8de8]=009e412c
+002a8cf4: fcf728ff   bl       #0x2a5b48                     
+002a8cf8: 3c48       ldr      r0, [pc, #0xf0]                 ; [002a8dec]=009e3d08
+002a8cfa: 3b49       ldr      r1, [pc, #0xec]                 ; [002a8de8]=009e412c
+002a8cfc: 2646       mov      r6, r4                        
+002a8cfe: 07f053fc   bl       #0x2b05a8                     
+002a8d02: a146       mov      sb, r4                        
+002a8d04: 9823       movs     r3, #0x98                     
+002a8d06: fc73       strb     r4, [r7, #0xf]                
+002a8d08: 7b60       str      r3, [r7, #4]                  
+002a8d0a: a046       mov      r8, r4                        
+002a8d0c: 00e0       b        #0x2a8d10                     
+002a8d0e: 0126       movs     r6, #1                        
+002a8d10: fef798fa   bl       #0x2a7244                     
+002a8d14: 4ff6ff7b   movw     fp, #0xffff                   
+002a8d18: 5845       cmp      r0, fp                        
+002a8d1a: 0546       mov      r5, r0                        
+002a8d1c: 35d0       beq      #0x2a8d8a                     
+002a8d1e: 0021       movs     r1, #0                        
+002a8d20: fef72efa   bl       #0x2a7180                     
+002a8d24: 0646       mov      r6, r0                        
+002a8d26: 88b1       cbz      r0, #0x2a8d4c                 
+002a8d28: 2846       mov      r0, r5                        
+002a8d2a: 07f10f01   add.w    r1, r7, #0xf                  
+002a8d2e: fbf7f3fc   bl       #0x2a4718                     
+002a8d32: fb7b       ldrb     r3, [r7, #0xf]                
+002a8d34: fbb1       cbz      r3, #0x2a8d76                 
+002a8d36: 2e4b       ldr      r3, [pc, #0xb8]                 ; [002a8df0]=009e5580
+002a8d38: 1b68       ldr      r3, [r3]                      
+002a8d3a: 9d42       cmp      r5, r3                        
+002a8d3c: 1bd3       blo      #0x2a8d76                     
+002a8d3e: ed1a       subs     r5, r5, r3                    
+002a8d40: 2a48       ldr      r0, [pc, #0xa8]                 ; [002a8dec]=009e3d08
+002a8d42: 0322       movs     r2, #3                        
+002a8d44: a9b2       uxth     r1, r5                        
+002a8d46: 07f0f4fc   bl       #0x2b0732                     
+002a8d4a: 14e0       b        #0x2a8d76                     
+002a8d4c: dff8a0a0   ldr.w    sl, [pc, #0xa0]                 ; [002a8df0]=009e5580
+002a8d50: daf80010   ldr.w    r1, [sl]                      
+002a8d54: 8d42       cmp      r5, r1                        
+002a8d56: 13d3       blo      #0x2a8d80                     
+002a8d58: 691a       subs     r1, r5, r1                    
+002a8d5a: 3246       mov      r2, r6                        
+002a8d5c: 2348       ldr      r0, [pc, #0x8c]                 ; [002a8dec]=009e3d08
+002a8d5e: 89b2       uxth     r1, r1                        
+002a8d60: 07f0e7fc   bl       #0x2b0732                     
+002a8d64: daf80030   ldr.w    r3, [sl]                      
+002a8d68: 2048       ldr      r0, [pc, #0x80]                 ; [002a8dec]=009e3d08
+002a8d6a: 5a46       mov      r2, fp                        
+002a8d6c: ed1a       subs     r5, r5, r3                    
+002a8d6e: a9b2       uxth     r1, r5                        
+002a8d70: 07f0c8fc   bl       #0x2b0704                     
+002a8d74: 04e0       b        #0x2a8d80                     
+002a8d76: 3446       mov      r4, r6                        
+002a8d78: 4ff00109   mov.w    sb, #1                        
+002a8d7c: 41f26338   movw     r8, #0x1363                   
+002a8d80: 7b68       ldr      r3, [r7, #4]                  
+002a8d82: 013b       subs     r3, #1                        

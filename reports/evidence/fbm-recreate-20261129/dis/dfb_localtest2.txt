@@ -1,0 +1,97 @@
+002af198: 90b5       push     {r4, r7, lr}                  
+002af19a: 83b0       sub      sp, #0xc                      
+002af19c: 5d48       ldr      r0, [pc, #0x174]                ; [002af314]=007e33c6 "[DFB]local test 2 "
+002af19e: 00af       add      r7, sp, #0                    
+002af1a0: 0024       movs     r4, #0                        
+002af1a2: fcf713fb   bl       #0x2ab7cc                     
+002af1a6: 0120       movs     r0, #1                        
+002af1a8: 7c60       str      r4, [r7, #4]                  
+002af1aa: 3c60       str      r4, [r7]                      
+002af1ac: fff7c0fe   bl       #0x2aef30                     
+002af1b0: 5948       ldr      r0, [pc, #0x164]                ; [002af318]=007e33d9 "[DFB]FlashLib::CreateSector(FBS_UDF,FBS_"
+002af1b2: fcf70bfb   bl       #0x2ab7cc                     
+002af1b6: 2346       mov      r3, r4                        
+002af1b8: 5020       movs     r0, #0x50                     
+002af1ba: 0121       movs     r1, #1                        
+002af1bc: 3a1d       adds     r2, r7, #4                    
+002af1be: 6ff65eeb   blx      #0x11e87c                       ; _ZN8FlashLib12CreateSectorEt12FBS_MOVEFLAGPmPt
+002af1c2: 0446       mov      r4, r0                        
+002af1c4: 0028       cmp      r0, #0                        
+002af1c6: 56d1       bne      #0x2af276                     
+002af1c8: 7968       ldr      r1, [r7, #4]                  
+002af1ca: 5448       ldr      r0, [pc, #0x150]                ; [002af31c]=007e3419 "[DFB]FlashLib::CreateSector success! res"
+002af1cc: fcf7fefa   bl       #0x2ab7cc                     
+002af1d0: 0120       movs     r0, #1                        
+002af1d2: fff7adfe   bl       #0x2aef30                     
+002af1d6: 5248       ldr      r0, [pc, #0x148]                ; [002af320]=007e3456 "[DFB]FlashLib::ChangeSectorToValid(resul"
+002af1d8: fcf7f8fa   bl       #0x2ab7cc                     
+002af1dc: 7868       ldr      r0, [r7, #4]                  
+002af1de: 70f654e9   blx      #0x11f488                       ; _ZN8FlashLib19ChangeSectorToValidEm
+002af1e2: 0446       mov      r4, r0                        
+002af1e4: 0028       cmp      r0, #0                        
+002af1e6: 5ad1       bne      #0x2af29e                     
+002af1e8: 4e48       ldr      r0, [pc, #0x138]                ; [002af324]=007e3488 "[DFB]FlashLib::ChangeSectorToValid succe"
+002af1ea: fcf7effa   bl       #0x2ab7cc                     
+002af1ee: 0120       movs     r0, #1                        
+002af1f0: fff79efe   bl       #0x2aef30                     
+002af1f4: 4c48       ldr      r0, [pc, #0x130]                ; [002af328]=007e34b5 "[DFB]FlashLib::CreateSector(FBS_UDF,FBS_"
+002af1f6: fcf7e9fa   bl       #0x2ab7cc                     
+002af1fa: 2346       mov      r3, r4                        
+002af1fc: 0121       movs     r1, #1                        
+002af1fe: 3a46       mov      r2, r7                        
+002af200: 5020       movs     r0, #0x50                     
+002af202: 6ff63ceb   blx      #0x11e87c                       ; _ZN8FlashLib12CreateSectorEt12FBS_MOVEFLAGPmPt
+002af206: 0446       mov      r4, r0                        
+002af208: fcf7cafd   bl       #0x2abda0                     
+002af20c: 2146       mov      r1, r4                        
+002af20e: 0246       mov      r2, r0                        
+002af210: 4648       ldr      r0, [pc, #0x118]                ; [002af32c]=007e1e2d "[DFB]FlashLib::CreateSector err!:err cod"
+002af212: fcf7dbfa   bl       #0x2ab7cc                     
+002af216: 0120       movs     r0, #1                        
+002af218: fff78afe   bl       #0x2aef30                     
+002af21c: 4448       ldr      r0, [pc, #0x110]                ; [002af330]=007e34f6 "[DFB]FlashLib::CloseSector(resultHandle)"
+002af21e: fcf7d5fa   bl       #0x2ab7cc                     
+002af222: 7868       ldr      r0, [r7, #4]                  
+002af224: 6ff6e6ec   blx      #0x11ebf4                       ; _ZN8FlashLib11CloseSectorEm
+002af228: 0446       mov      r4, r0                        
+002af22a: 0028       cmp      r0, #0                        
+002af22c: 4ad1       bne      #0x2af2c4                     
+002af22e: 4148       ldr      r0, [pc, #0x104]                ; [002af334]=007e3520 "[DFB]FlashLib::CloseSector success!"
+002af230: fcf7ccfa   bl       #0x2ab7cc                     
+002af234: 0120       movs     r0, #1                        
+002af236: fff77bfe   bl       #0x2aef30                     
+002af23a: 3f48       ldr      r0, [pc, #0xfc]                 ; [002af338]=007e3544 "[DFB]FlashLib::DeleteSector(FBS_UDF);"
+002af23c: fcf7c6fa   bl       #0x2ab7cc                     
+002af240: 5020       movs     r0, #0x50                     
+002af242: 6ff686e9   blx      #0x11e550                       ; _ZN8FlashLib12DeleteSectorEt
+002af246: 0446       mov      r4, r0                        
+002af248: 20b1       cbz      r0, #0x2af254                 
+002af24a: fcf7a9fd   bl       #0x2abda0                     
+002af24e: 0246       mov      r2, r0                        
+002af250: 3a48       ldr      r0, [pc, #0xe8]                 ; [002af33c]=007e356a "[DFB]FlashLib::DeleteSector err!:err cod"
+002af252: 50e0       b        #0x2af2f6                     
+002af254: 3a48       ldr      r0, [pc, #0xe8]                 ; [002af340]=007e359c "[DFB]FlashLib::DeleteSector success!"
+002af256: fcf7b9fa   bl       #0x2ab7cc                     
+002af25a: 0120       movs     r0, #1                        
+002af25c: fff768fe   bl       #0x2aef30                     
+002af260: 2d48       ldr      r0, [pc, #0xb4]                 ; [002af318]=007e33d9 "[DFB]FlashLib::CreateSector(FBS_UDF,FBS_"
+002af262: fcf7b3fa   bl       #0x2ab7cc                     
+002af266: 2346       mov      r3, r4                        
+002af268: 5020       movs     r0, #0x50                     
+002af26a: 0121       movs     r1, #1                        
+002af26c: 3a1d       adds     r2, r7, #4                    
+002af26e: 6ff606eb   blx      #0x11e87c                       ; _ZN8FlashLib12CreateSectorEt12FBS_MOVEFLAGPmPt
+002af272: 0446       mov      r4, r0                        
+002af274: 20b1       cbz      r0, #0x2af280                 
+002af276: fcf793fd   bl       #0x2abda0                     
+002af27a: 0246       mov      r2, r0                        
+002af27c: 2b48       ldr      r0, [pc, #0xac]                 ; [002af32c]=007e1e2d "[DFB]FlashLib::CreateSector err!:err cod"
+002af27e: 3ae0       b        #0x2af2f6                     
+002af280: 7968       ldr      r1, [r7, #4]                  
+002af282: 2648       ldr      r0, [pc, #0x98]                 ; [002af31c]=007e3419 "[DFB]FlashLib::CreateSector success! res"
+002af284: fcf7a2fa   bl       #0x2ab7cc                     
+002af288: 0120       movs     r0, #1                        
+002af28a: fff751fe   bl       #0x2aef30                     
+002af28e: 2448       ldr      r0, [pc, #0x90]                 ; [002af320]=007e3456 "[DFB]FlashLib::ChangeSectorToValid(resul"
+002af290: fcf79cfa   bl       #0x2ab7cc                     
+002af294: 7868       ldr      r0, [r7, #4]                  

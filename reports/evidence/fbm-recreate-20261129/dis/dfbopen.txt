@@ -1,0 +1,193 @@
+002a81e8: 2de9f04f   push.w   {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+002a81ec: 8bb0       sub      sp, #0x2c                     
+002a81ee: 02af       add      r7, sp, #8                    
+002a81f0: 8346       mov      fp, r0                        
+002a81f2: 9a48       ldr      r0, [pc, #0x268]                ; [002a845c]=007deaa7 "[DFB]OpenSector--start[%d][%d]"
+002a81f4: 3b61       str      r3, [r7, #0x10]               
+002a81f6: 0023       movs     r3, #0                        
+002a81f8: ba60       str      r2, [r7, #8]                  
+002a81fa: 1ffa8bf4   uxth.w   r4, fp                        
+002a81fe: 3a69       ldr      r2, [r7, #0x10]               
+002a8200: 7961       str      r1, [r7, #0x14]               
+002a8202: 5946       mov      r1, fp                        
+002a8204: 1360       str      r3, [r2]                      
+002a8206: 7a69       ldr      r2, [r7, #0x14]               
+002a8208: 03f056f8   bl       #0x2ab2b8                     
+002a820c: 7b69       ldr      r3, [r7, #0x14]               
+002a820e: 3d69       ldr      r5, [r7, #0x10]               
+002a8210: 4ff48260   mov.w    r0, #0x410                    
+002a8214: 2146       mov      r1, r4                        
+002a8216: 9ab2       uxth     r2, r3                        
+002a8218: 2b88       ldrh     r3, [r5]                      
+002a821a: 08f027f8   bl       #0x2b026c                     
+002a821e: 904b       ldr      r3, [pc, #0x240]                ; [002a8460]=009e484c
+002a8220: 1b78       ldrb     r3, [r3]                      
+002a8222: 33b9       cbnz     r3, #0x2a8232                 
+002a8224: 8f48       ldr      r0, [pc, #0x23c]                ; [002a8464]=007deac6 "[DFB]not initialized yet:OpenSector()"
+002a8226: 4f26       movs     r6, #0x4f                     
+002a8228: 03f0c2f8   bl       #0x2ab3b0                     
+002a822c: 40f64743   movw     r3, #0xc47                    
+002a8230: 12e0       b        #0x2a8258                     
+002a8232: 8d48       ldr      r0, [pc, #0x234]                ; [002a8468]=009e412c
+002a8234: fdf788fc   bl       #0x2a5b48                     
+002a8238: 8c48       ldr      r0, [pc, #0x230]                ; [002a846c]=009e3d08
+002a823a: 8b49       ldr      r1, [pc, #0x22c]                ; [002a8468]=009e412c
+002a823c: 08f0b4f9   bl       #0x2b05a8                     
+002a8240: 8a48       ldr      r0, [pc, #0x228]                ; [002a846c]=009e3d08
+002a8242: 5946       mov      r1, fp                        
+002a8244: 07f11c02   add.w    r2, r7, #0x1c                 
+002a8248: 08f001fb   bl       #0x2b084e                     
+002a824c: 0646       mov      r6, r0                        
+002a824e: 0028       cmp      r0, #0                        
+002a8250: 00f03382   beq.w    #0x2a86ba                     
+002a8254: 40f65243   movw     r3, #0xc52                    
+002a8258: b5b2       uxth     r5, r6                        
+002a825a: 1ffa8bf2   uxth.w   r2, fp                        
+002a825e: 0220       movs     r0, #2                        
+002a8260: 8de80c00   stm.w    sp, {r2, r3}                  
+002a8264: c421       movs     r1, #0xc4                     
+002a8266: 40f21142   movw     r2, #0x411                    
+002a826a: 2b46       mov      r3, r5                        
+002a826c: 13f3e6fa   bl       #0x5bb83c                     
+002a8270: 40f21140   movw     r0, #0x411                    
+002a8274: 2146       mov      r1, r4                        
+002a8276: 2a46       mov      r2, r5                        
+002a8278: 0023       movs     r3, #0                        
+002a827a: 07f0f7ff   bl       #0x2b026c                     
+002a827e: 3046       mov      r0, r6                        
+002a8280: 14e2       b        #0x2a86ac                     
+002a8282: 7b48       ldr      r0, [pc, #0x1ec]                ; [002a8470]=007deaec "[DFB]OpenSector--  OPEN id check Flag is"
+002a8284: 03f018f8   bl       #0x2ab2b8                     
+002a8288: bc68       ldr      r4, [r7, #8]                  
+002a828a: 7a4a       ldr      r2, [pc, #0x1e8]                ; [002a8474]=009e452c
+002a828c: 2301       lsls     r3, r4, #4                    
+002a828e: d158       ldr      r1, [r2, r3]                  
+002a8290: b1f1ff3f   cmp.w    r1, #-1                       
+002a8294: 0dd0       beq      #0x2a82b2                     
+002a8296: 7548       ldr      r0, [pc, #0x1d4]                ; [002a846c]=009e3d08
+002a8298: 08f000fb   bl       #0x2b089c                     
+002a829c: fb69       ldr      r3, [r7, #0x1c]               
+002a829e: 9842       cmp      r0, r3                        
+002a82a0: 07d1       bne      #0x2a82b2                     
+002a82a2: 2146       mov      r1, r4                        
+002a82a4: 7448       ldr      r0, [pc, #0x1d0]                ; [002a8478]=007deb1f "[DFB]already open handle[%d]"
+002a82a6: 03f083f8   bl       #0x2ab3b0                     
+002a82aa: 40f67b48   movw     r8, #0xc7b                    
+002a82ae: 4724       movs     r4, #0x47                     
+002a82b0: 05e0       b        #0x2a82be                     
+002a82b2: 0134       adds     r4, #1                        
+002a82b4: 312c       cmp      r4, #0x31                     
+002a82b6: e8d1       bne      #0x2a828a                     
+002a82b8: 4ff00008   mov.w    r8, #0                        
+002a82bc: 4446       mov      r4, r8                        
+002a82be: 6f4a       ldr      r2, [pc, #0x1bc]                ; [002a847c]=009e598c
+002a82c0: 1378       ldrb     r3, [r2]                      
+002a82c2: 002b       cmp      r3, #0                        
+002a82c4: 6ad1       bne      #0x2a839c                     
+002a82c6: 002c       cmp      r4, #0                        
+002a82c8: 40f0fc81   bne.w    #0x2a86c4                     
+002a82cc: 2546       mov      r5, r4                        
+002a82ce: a146       mov      sb, r4                        
+002a82d0: b246       mov      sl, r6                        
+002a82d2: f969       ldr      r1, [r7, #0x1c]               
+002a82d4: 6548       ldr      r0, [pc, #0x194]                ; [002a846c]=009e3d08
+002a82d6: 05eb4101   add.w    r1, r5, r1, lsl #1            
+002a82da: c9b2       uxtb     r1, r1                        
+002a82dc: 08f056fb   bl       #0x2b098c                     
+002a82e0: 0228       cmp      r0, #2                        
+002a82e2: 57d1       bne      #0x2a8394                     
+002a82e4: fe69       ldr      r6, [r7, #0x1c]               
+002a82e6: 6648       ldr      r0, [pc, #0x198]                ; [002a8480]=007deb3c "[DFB]OpenSector-- found  FBS_READY file["
+002a82e8: 05eb4606   add.w    r6, r5, r6, lsl #1            
+002a82ec: 3146       mov      r1, r6                        
+002a82ee: 02f0a5ff   bl       #0x2ab23c                     
+002a82f2: 5e48       ldr      r0, [pc, #0x178]                ; [002a846c]=009e3d08
+002a82f4: 3146       mov      r1, r6                        
+002a82f6: 634a       ldr      r2, [pc, #0x18c]                ; [002a8484]=009e3cf8
+002a82f8: 08f061fc   bl       #0x2b0bbe                     
+002a82fc: 0446       mov      r4, r0                        
+002a82fe: 0028       cmp      r0, #0                        
+002a8300: 35d0       beq      #0x2a836e                     
+002a8302: 6148       ldr      r0, [pc, #0x184]                ; [002a8488]=007deb72 "[DFB]OpenSector-- delete files block con"
+002a8304: 2146       mov      r1, r4                        
+002a8306: 5646       mov      r6, sl                        
+002a8308: 02f098ff   bl       #0x2ab23c                     
+002a830c: 40f68d48   movw     r8, #0xc8d                    
+002a8310: d9e1       b        #0x2a86c6                     
+002a8312: 03eb4409   add.w    sb, r3, r4, lsl #1            
+002a8316: 5548       ldr      r0, [pc, #0x154]                ; [002a846c]=009e3d08
+002a8318: 99f80310   ldrb.w   r1, [sb, #3]                  
+002a831c: 99f80230   ldrb.w   r3, [sb, #2]                  
+002a8320: 43ea0121   orr.w    r1, r3, r1, lsl #8            
+002a8324: 08f00dfa   bl       #0x2b0742                     
+002a8328: 00b3       cbz      r0, #0x2a836c                 
+002a832a: 99f80310   ldrb.w   r1, [sb, #3]                  
+002a832e: 99f80230   ldrb.w   r3, [sb, #2]                  
+002a8332: 4e48       ldr      r0, [pc, #0x138]                ; [002a846c]=009e3d08
+002a8334: 43ea0121   orr.w    r1, r3, r1, lsl #8            
+002a8338: 08f003fa   bl       #0x2b0742                     
+002a833c: 0228       cmp      r0, #2                        
+002a833e: 15d0       beq      #0x2a836c                     
+002a8340: 99f80300   ldrb.w   r0, [sb, #3]                  
+002a8344: 99f80230   ldrb.w   r3, [sb, #2]                  
+002a8348: 43ea0020   orr.w    r0, r3, r0, lsl #8            
+002a834c: 4f4b       ldr      r3, [pc, #0x13c]                ; [002a848c]=009e5580
+002a834e: 1b68       ldr      r3, [r3]                      
+002a8350: c018       adds     r0, r0, r3                    
+002a8352: 80b2       uxth     r0, r0                        
+002a8354: fef71eff   bl       #0x2a7194                     
+002a8358: 99f80310   ldrb.w   r1, [sb, #3]                  
+002a835c: 99f80230   ldrb.w   r3, [sb, #2]                  
+002a8360: 0222       movs     r2, #2                        
+002a8362: 4248       ldr      r0, [pc, #0x108]                ; [002a846c]=009e3d08
+002a8364: 43ea0121   orr.w    r1, r3, r1, lsl #8            
+002a8368: 08f0e3f9   bl       #0x2b0732                     
+002a836c: 0134       adds     r4, #1                        
+002a836e: 454b       ldr      r3, [pc, #0x114]                ; [002a8484]=009e3cf8
+002a8370: 5978       ldrb     r1, [r3, #1]                  
+002a8372: 1a78       ldrb     r2, [r3]                      
+002a8374: 42ea0122   orr.w    r2, r2, r1, lsl #8            
+002a8378: 9442       cmp      r4, r2                        
+002a837a: cad3       blo      #0x2a8312                     
+002a837c: 3146       mov      r1, r6                        
+002a837e: 3b48       ldr      r0, [pc, #0xec]                 ; [002a846c]=009e3d08
+002a8380: 08f091fc   bl       #0x2b0ca6                     
+002a8384: 1423       movs     r3, #0x14                     
+002a8386: 5e43       muls     r6, r3, r6                    
+002a8388: 414b       ldr      r3, [pc, #0x104]                ; [002a8490]=009e4a94
+002a838a: 4ff00109   mov.w    sb, #1                        
+002a838e: 4ff0ff32   mov.w    r2, #-1                       
+002a8392: 9a51       str      r2, [r3, r6]                  
+002a8394: 0135       adds     r5, #1                        
+002a8396: 022d       cmp      r5, #2                        
+002a8398: 05d0       beq      #0x2a83a6                     
+002a839a: 9ae7       b        #0x2a82d2                     
+002a839c: 002c       cmp      r4, #0                        
+002a839e: 40f0f480   bne.w    #0x2a858a                     
+002a83a2: a146       mov      sb, r4                        
+002a83a4: 00e0       b        #0x2a83a8                     
+002a83a6: 5646       mov      r6, sl                        
+002a83a8: 3048       ldr      r0, [pc, #0xc0]                 ; [002a846c]=009e3d08
+002a83aa: f969       ldr      r1, [r7, #0x1c]               
+002a83ac: 08f02cfa   bl       #0x2b0808                     
+002a83b0: 0128       cmp      r0, #1                        
+002a83b2: 0446       mov      r4, r0                        
+002a83b4: 00f3ee80   bgt.w    #0x2a8594                     
+002a83b8: 4ff0ff35   mov.w    r5, #-1                       
+002a83bc: 0222       movs     r2, #2                        
+002a83be: aa46       mov      sl, r5                        
+002a83c0: fa60       str      r2, [r7, #0xc]                
+002a83c2: f969       ldr      r1, [r7, #0x1c]               
+002a83c4: e3b2       uxtb     r3, r4                        
+002a83c6: 2948       ldr      r0, [pc, #0xa4]                 ; [002a846c]=009e3d08
+002a83c8: 7b60       str      r3, [r7, #4]                  
+002a83ca: 03eb4101   add.w    r1, r3, r1, lsl #1            
+002a83ce: c9b2       uxtb     r1, r1                        
+002a83d0: 08f0dcfa   bl       #0x2b098c                     
+002a83d4: fa69       ldr      r2, [r7, #0x1c]               
+002a83d6: 7b68       ldr      r3, [r7, #4]                  
+002a83d8: 0328       cmp      r0, #3                        
+002a83da: 04d1       bne      #0x2a83e6                     
+002a83dc: baf1ff3f   cmp.w    sl, #-1                       
+002a83e0: 08bf       it       eq                            
+002a83e2: 04eb420a   addeq.w  sl, r4, r2, lsl #1            

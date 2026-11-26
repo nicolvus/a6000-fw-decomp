@@ -1,0 +1,19 @@
+[FBMC] base libmpr=0xae309000 tabla sectores=0xaed3f99c
+[FBMC] registro del monitor 0xaed5aee4: lookup("FBM") -> 0xae5be0d9 (esperado 0xae5be0d9)
+[FBMC] espera 1/10
+[FBMC] espera 2/10
+[FBMC] espera 3/10
+[FBMC] espera 4/10
+[FBMC] espera 5/10
+[FBMC] espera 6/10
+[FBMC] espera 7/10
+[FBMC] espera 8/10
+[FBMC] espera 9/10
+[FBMC] espera 10/10
+[FBMC] antes  entradas con handle!=0 = 0/30
+[FBMC] antes [00..14] idx:name=h<handle>/s<status>  00:010=h0/s0 01:011=h0/s0 02:012=h0/s0 03:020=h0/s0 04:021=h0/s0 05:028=h0/s0 06:029=h0/s0 07:02c=h0/s0 08:02d=h0/s0 09:030=h0/s0 10:031=h0/s0 11:038=h0/s0 12:039=h0/s0 13:040=h0/s0 14:060=h0/s0 
+[FBMC] antes [15..29] idx:name=h<handle>/s<status>  15:061=h0/s0 16:068=h0/s0 17:06c=h0/s0 18:062=h0/s0 19:063=h0/s0 20:090=h0/s0 21:091=h0/s0 22:092=h0/s0 23:0a0=h0/s0 24:0b1=h0/s0 25:0b2=h0/s0 26:0b3=h0/s0 27:0b8=h0/s0 28:0bc=h0/s0 29:0bd=h0/s0 
+[FBMR] *(u32*)(libmpr+0xA4FD88)=0x8fb46000  [+4]=0x82df9000  [+8]=0x8000  [+C]=0
+[FBMR] objeto stream *(u32*)(libmpr+0xA51AC4)=0x8f92c008
+[FBMR] mincore(0x8fb46000,0x2000) -> 0 vec=0001 (1 = pagina mapeada)
+[FBMR] X=0x8fb46000  [X]=A=0 [X+4]=B=0 [X+8]=0 [X+0xC]=0xb41  buf=0x8fb46010\n[FBMR] objeto: +0=0x8fb46000 +4=0x8fb46004 +8=0x8fb46010 +C=0x400 (debe ser 0x8fb46000,0x8fb46004,0x8fb46010,0x400)\n[FBMR] escribo en el anillo: "FBM SetSMI 20 90 7 1 10"   (A=0 B=0 antes)\n[FBMR] tras escribir: A=0 B=24\n[FBMR] SetSMI: A=24 B=24 a los 1 s\n

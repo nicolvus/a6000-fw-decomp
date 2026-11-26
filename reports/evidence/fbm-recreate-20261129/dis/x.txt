@@ -1,0 +1,102 @@
+002aaf00: 10e0       b        #0x2aaf24                     
+002aaf02: baf1000f   cmp.w    sl, #0                        
+002aaf06: 08d0       beq      #0x2aaf1a                     
+002aaf08: 4d48       ldr      r0, [pc, #0x134]                ; [002ab040]=007dfb49 "[DFB]IsValidCtrlInfoFormation B to V:for"
+002aaf0a: 4ff00109   mov.w    sb, #1                        
+002aaf0e: 00f0d3f9   bl       #0x2ab2b8                     
+002aaf12: 4446       mov      r4, r8                        
+002aaf14: 05e0       b        #0x2aaf22                     
+002aaf16: 0024       movs     r4, #0                        
+002aaf18: 03e0       b        #0x2aaf22                     
+002aaf1a: 4ff00109   mov.w    sb, #1                        
+002aaf1e: 00e0       b        #0x2aaf22                     
+002aaf20: c246       mov      sl, r8                        
+002aaf22: 0135       adds     r5, #1                        
+002aaf24: 474b       ldr      r3, [pc, #0x11c]                ; [002ab044]=009e5580
+002aaf26: 7968       ldr      r1, [r7, #4]                  
+002aaf28: 9b46       mov      fp, r3                        
+002aaf2a: 1a68       ldr      r2, [r3]                      
+002aaf2c: 4a43       muls     r2, r1, r2                    
+002aaf2e: 9542       cmp      r5, r2                        
+002aaf30: 0bd2       bhs      #0x2aaf4a                     
+002aaf32: 54b1       cbz      r4, #0x2aaf4a                 
+002aaf34: 2846       mov      r0, r5                        
+002aaf36: fef7fdf8   bl       #0x2a9134                     
+002aaf3a: 0128       cmp      r0, #1                        
+002aaf3c: 8046       mov      r8, r0                        
+002aaf3e: efd0       beq      #0x2aaf20                     
+002aaf40: 0228       cmp      r0, #2                        
+002aaf42: e8d0       beq      #0x2aaf16                     
+002aaf44: 0028       cmp      r0, #0                        
+002aaf46: dcd0       beq      #0x2aaf02                     
+002aaf48: ebe7       b        #0x2aaf22                     
+002aaf4a: b9f1000f   cmp.w    sb, #0                        
+002aaf4e: 04d1       bne      #0x2aaf5a                     
+002aaf50: 3d48       ldr      r0, [pc, #0xf4]                 ; [002ab048]=007dfb80 "[DFB]IsValidCtrlInfoFormation find only "
+002aaf52: 4c46       mov      r4, sb                        
+002aaf54: 00f0b0f9   bl       #0x2ab2b8                     
+002aaf58: 6ae0       b        #0x2ab030                     
+002aaf5a: 002c       cmp      r4, #0                        
+002aaf5c: 68d0       beq      #0x2ab030                     
+002aaf5e: 3b48       ldr      r0, [pc, #0xec]                 ; [002ab04c]=007dfbb6 "[DFB]IsValidCtrlInfoFormation- CtrlInfo "
+002aaf60: 00f0aaf9   bl       #0x2ab2b8                     
+002aaf64: 3068       ldr      r0, [r6]                      
+002aaf66: 94f708ff   bl       #0x23fd7a                     
+002aaf6a: 8046       mov      r8, r0                        
+002aaf6c: 20b9       cbnz     r0, #0x2aaf78                 
+002aaf6e: 3848       ldr      r0, [pc, #0xe0]                 ; [002ab050]=007dfbeb "[DFB]IsValidCtrlInfoFormation alloc fail"
+002aaf70: 4446       mov      r4, r8                        
+002aaf72: 00f0a1f9   bl       #0x2ab2b8                     
+002aaf76: 5be0       b        #0x2ab030                     
+002aaf78: 3648       ldr      r0, [pc, #0xd8]                 ; [002ab054]=007dfc16 "[DFB]IsValidCtrlInfoFormation unused blo"
+002aaf7a: 0025       movs     r5, #0                        
+002aaf7c: 00f09cf9   bl       #0x2ab2b8                     
+002aaf80: 07f10800   add.w    r0, r7, #8                    
+002aaf84: 3449       ldr      r1, [pc, #0xd0]                 ; [002ab058]=009e5178
+002aaf86: 05f00ffb   bl       #0x2b05a8                     
+002aaf8a: 38e0       b        #0x2aaffe                     
+002aaf8c: dbf80030   ldr.w    r3, [fp]                      
+002aaf90: 4146       mov      r1, r8                        
+002aaf92: 3268       ldr      r2, [r6]                      
+002aaf94: 05eb030a   add.w    sl, r5, r3                    
+002aaf98: 07f10c03   add.w    r3, r7, #0xc                  
+002aaf9c: 02fb0afa   mul      sl, r2, sl                    
+002aafa0: 5046       mov      r0, sl                        
+002aafa2: f9f7c3fa   bl       #0x2a452c                     
+002aafa6: 10b9       cbnz     r0, #0x2aafae                 
+002aafa8: c246       mov      sl, r8                        
+002aafaa: 8146       mov      sb, r0                        
+002aafac: 0ee0       b        #0x2aafcc                     
+002aafae: 2b48       ldr      r0, [pc, #0xac]                 ; [002ab05c]=007dfc4e "[DFB]IsValidCtrlInfoFormation FlashRead "
+002aafb0: 5146       mov      r1, sl                        
+002aafb2: fa68       ldr      r2, [r7, #0xc]                
+002aafb4: 4c46       mov      r4, sb                        
+002aafb6: 00f07ff9   bl       #0x2ab2b8                     
+002aafba: 1fe0       b        #0x2aaffc                     
+002aafbc: 2848       ldr      r0, [pc, #0xa0]                 ; [002ab060]=007dfc95 "[DFB]IsValidCtrlInfoFormation compaire f"
+002aafbe: 2946       mov      r1, r5                        
+002aafc0: 4a46       mov      r2, sb                        
+002aafc2: 0024       movs     r4, #0                        
+002aafc4: 00f078f9   bl       #0x2ab2b8                     
+002aafc8: 09f10109   add.w    sb, sb, #1                    
+002aafcc: 3368       ldr      r3, [r6]                      
+002aafce: b9eb930f   cmp.w    sb, r3, lsr #2                
+002aafd2: 06d2       bhs      #0x2aafe2                     
+002aafd4: 94b1       cbz      r4, #0x2aaffc                 
+002aafd6: 5af8043b   ldr      r3, [sl], #4                  
+002aafda: b3f1ff3f   cmp.w    r3, #-1                       
+002aafde: edd1       bne      #0x2aafbc                     
+002aafe0: f2e7       b        #0x2aafc8                     
+002aafe2: 5cb1       cbz      r4, #0x2aaffc                 
+002aafe4: 1f48       ldr      r0, [pc, #0x7c]                 ; [002ab064]=007dfcd6 "[DFB]IsValidCtrlInfoFormation unused blo"
+002aafe6: 2946       mov      r1, r5                        
+002aafe8: 00f066f9   bl       #0x2ab2b8                     
+002aafec: 06e0       b        #0x2aaffc                     
+002aafee: 1e48       ldr      r0, [pc, #0x78]                 ; [002ab068]=007dfd11 "[DFB]IsValidCtrlInfoFormation Find Erase"
+002aaff0: 00e0       b        #0x2aaff4                     
+002aaff2: 1e48       ldr      r0, [pc, #0x78]                 ; [002ab06c]=007dfd58 "[DFB]IsValidCtrlInfoFormation Find BadBl"
+002aaff4: 2946       mov      r1, r5                        
+002aaff6: 0024       movs     r4, #0                        
+002aaff8: 00f05ef9   bl       #0x2ab2b8                     
+002aaffc: 0135       adds     r5, #1                        
+002aaffe: 1c4b       ldr      r3, [pc, #0x70]                 ; [002ab070]=009e4a88

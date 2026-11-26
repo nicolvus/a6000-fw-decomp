@@ -1,0 +1,91 @@
+[FBMC] base libmpr=0xae324000 tabla sectores=0xaed5a99c
+[FBMC] registro del monitor 0xaed75ee4: lookup("FBM") -> 0xae5d90d9 (esperado 0xae5d90d9)
+[FBMC] espera 1/10
+[FBMC] espera 2/10
+[FBMC] espera 3/10
+[FBMC] espera 4/10
+[FBMC] espera 5/10
+[FBMC] espera 6/10
+[FBMC] espera 7/10
+[FBMC] espera 8/10
+[FBMC] espera 9/10
+[FBMC] espera 10/10
+[FBMC] antes  entradas con handle!=0 = 0/30
+[FBMC] antes [00..14] idx:name=h<handle>/s<status>  00:010=h0/s0 01:011=h0/s0 02:012=h0/s0 03:020=h0/s0 04:021=h0/s0 05:028=h0/s0 06:029=h0/s0 07:02c=h0/s0 08:02d=h0/s0 09:030=h0/s0 10:031=h0/s0 11:038=h0/s0 12:039=h0/s0 13:040=h0/s0 14:060=h0/s0 
+[FBMC] antes [15..29] idx:name=h<handle>/s<status>  15:061=h0/s0 16:068=h0/s0 17:06c=h0/s0 18:062=h0/s0 19:063=h0/s0 20:090=h0/s0 21:091=h0/s0 22:092=h0/s0 23:0a0=h0/s0 24:0b1=h0/s0 25:0b2=h0/s0 26:0b3=h0/s0 27:0b8=h0/s0 28:0bc=h0/s0 29:0bd=h0/s0 
+[FBMR] *(u32*)(libmpr+0xA4FD88)=0x95c61000  [+4]=0x82df9000  [+8]=0x8000  [+C]=0
+[FBMR] objeto stream *(u32*)(libmpr+0xA51AC4)=0x98d2a0
+[FBMR] mincore(0x95c61000,0x2000) -> 0 vec=0001 (1 = pagina mapeada)
+[FBMR] X=0x95c61000  [X]=A=0 [X+4]=B=0 [X+8]=0 [X+0xC]=0xb3e  buf=0x95c61010\n[FBMR] objeto: +0=0x95c61000 +4=0x95c61004 +8=0x95c61010 +C=0x400 (debe ser 0x95c61000,0x95c61004,0x95c61010,0x400)\n[FBMR] escribo en el anillo: "FBM SetSMI 20 90 7 1 10"   (A=0 B=0 antes)\n[FBMR] tras escribir: A=0 B=24\n[FBMR] SetSMI: A=24 B=24 a los 1 s\n[FBMR] SetSMI: A=24 B=24 tras 6 s (A cambia => el monitor consume)\n[FBMC] tras-anillo-SetSMI  entradas con handle!=0 = 1/30
+[FBMC] tras-anillo-SetSMI [00..14] idx:name=h<handle>/s<status>  00:010=h0/s0 01:011=h0/s0 02:012=h0/s0 03:020=h0/s0 04:021=h0/s0 05:028=h0/s0 06:029=h0/s0 07:02c=h0/s0 08:02d=h0/s0 09:030=h0/s0 10:031=h0/s0 11:038=h0/s0 12:039=h0/s0 13:040=h0/s0 14:060=h0/s0 
+[FBMC] tras-anillo-SetSMI [15..29] idx:name=h<handle>/s<status>  15:061=h0/s0 16:068=h0/s0 17:06c=h0/s0 18:062=h0/s0 19:063=h0/s0 20:090=h7/s1 21:091=h0/s0 22:092=h0/s0 23:0a0=h0/s0 24:0b1=h0/s0 25:0b2=h0/s0 26:0b3=h0/s0 27:0b8=h0/s0 28:0bc=h0/s0 29:0bd=h0/s0 
+[FBMR] escribo en el anillo: "FBM InitB 6 3"   (A=24 B=24 antes)\n[FBMR] tras escribir: A=24 B=38\n[FBMR] InitB: A=38 B=38 a los 1 s\n[FBMR] InitB: A=38 B=38 tras 6 s (A cambia => el monitor consume)\n[FBMC] tras-anillo-InitB  entradas con handle!=0 = 1/30
+[FBMC] tras-anillo-InitB [00..14] idx:name=h<handle>/s<status>  00:010=h0/s0 01:011=h0/s0 02:012=h0/s0 03:020=h0/s0 04:021=h0/s0 05:028=h0/s0 06:029=h0/s0 07:02c=h0/s0 08:02d=h0/s0 09:030=h0/s0 10:031=h0/s0 11:038=h0/s0 12:039=h0/s0 13:040=h0/s0 14:060=h0/s0 
+[FBMC] tras-anillo-InitB [15..29] idx:name=h<handle>/s<status>  15:061=h0/s0 16:068=h0/s0 17:06c=h0/s0 18:062=h0/s0 19:063=h0/s0 20:090=h7/s1 21:091=h0/s0 22:092=h0/s0 23:0a0=h0/s0 24:0b1=h0/s0 25:0b2=h0/s0 26:0b3=h0/s0 27:0b8=h0/s0 28:0bc=h0/s0 29:0bd=h0/s0 
+[FBMR] escribo en el anillo: "FBM LTC 1"   (A=38 B=38 antes)\n[FBMR] tras escribir: A=38 B=48\n[FBMR] LTC: A=48 B=48 a los 1 s\n[FBMR] LTC: A=48 B=48 tras 4 s (A cambia => el monitor consume)\n[FBMR] fin del ensayo del anillo (ring_ok=1)\n[FBMC] MON> FBM View    (argc al handler de modulo = 2, al comando = 1)
+[FBMC] FBM View -> 1
+[FBMC] MON> FBM InitB 0 7    (argc al handler de modulo = 4, al comando = 3)
+[FBMC] FBM InitB 0 7 -> 1
+[FBMC] tras-InitB-0-7  entradas con handle!=0 = 1/30
+[FBMC] tras-InitB-0-7 [00..14] idx:name=h<handle>/s<status>  00:010=h0/s0 01:011=h0/s0 02:012=h0/s0 03:020=h0/s0 04:021=h0/s0 05:028=h0/s0 06:029=h0/s0 07:02c=h0/s0 08:02d=h0/s0 09:030=h0/s0 10:031=h0/s0 11:038=h0/s0 12:039=h0/s0 13:040=h0/s0 14:060=h0/s0 
+[FBMC] tras-InitB-0-7 [15..29] idx:name=h<handle>/s<status>  15:061=h0/s0 16:068=h0/s0 17:06c=h0/s0 18:062=h0/s0 19:063=h0/s0 20:090=h7/s1 21:091=h0/s0 22:092=h0/s0 23:0a0=h0/s0 24:0b1=h0/s0 25:0b2=h0/s0 26:0b3=h0/s0 27:0b8=h0/s0 28:0bc=h0/s0 29:0bd=h0/s0 
+[FBMC] MON> FBM InitB 4 7    (argc al handler de modulo = 4, al comando = 3)
+[FBMC] FBM InitB 4 7 -> 1
+[FBMC] tras-InitB-4-7  entradas con handle!=0 = 1/30
+[FBMC] tras-InitB-4-7 [00..14] idx:name=h<handle>/s<status>  00:010=h0/s0 01:011=h0/s0 02:012=h0/s0 03:020=h0/s0 04:021=h0/s0 05:028=h0/s0 06:029=h0/s0 07:02c=h0/s0 08:02d=h0/s0 09:030=h0/s0 10:031=h0/s0 11:038=h0/s0 12:039=h0/s0 13:040=h0/s0 14:060=h0/s0 
+[FBMC] tras-InitB-4-7 [15..29] idx:name=h<handle>/s<status>  15:061=h0/s0 16:068=h0/s0 17:06c=h0/s0 18:062=h0/s0 19:063=h0/s0 20:090=h7/s1 21:091=h0/s0 22:092=h0/s0 23:0a0=h0/s0 24:0b1=h0/s0 25:0b2=h0/s0 26:0b3=h0/s0 27:0b8=h0/s0 28:0bc=h0/s0 29:0bd=h0/s0 
+[FBMC] MON> FBM InitB 6 7    (argc al handler de modulo = 4, al comando = 3)
+[FBMC] FBM InitB 6 7 -> 1
+[FBMC] MON> FBM InitB 7 7    (argc al handler de modulo = 4, al comando = 3)
+[FBMC] FBM InitB 7 7 -> 1
+[FBMC] MON> FBM InitB 10 7    (argc al handler de modulo = 4, al comando = 3)
+[FBMC] FBM InitB 10 7 -> 1
+[FBMC] tras-InitB-6-7-10-7  entradas con handle!=0 = 1/30
+[FBMC] tras-InitB-6-7-10-7 [00..14] idx:name=h<handle>/s<status>  00:010=h0/s0 01:011=h0/s0 02:012=h0/s0 03:020=h0/s0 04:021=h0/s0 05:028=h0/s0 06:029=h0/s0 07:02c=h0/s0 08:02d=h0/s0 09:030=h0/s0 10:031=h0/s0 11:038=h0/s0 12:039=h0/s0 13:040=h0/s0 14:060=h0/s0 
+[FBMC] tras-InitB-6-7-10-7 [15..29] idx:name=h<handle>/s<status>  15:061=h0/s0 16:068=h0/s0 17:06c=h0/s0 18:062=h0/s0 19:063=h0/s0 20:090=h7/s1 21:091=h0/s0 22:092=h0/s0 23:0a0=h0/s0 24:0b1=h0/s0 25:0b2=h0/s0 26:0b3=h0/s0 27:0b8=h0/s0 28:0bc=h0/s0 29:0bd=h0/s0 
+[FBMC] MON> FBM InitB 10 3    (argc al handler de modulo = 4, al comando = 3)
+[FBMC] FBM InitB 10 3 -> 1
+[FBMC] tras-InitB-10-3  entradas con handle!=0 = 1/30
+[FBMC] tras-InitB-10-3 [00..14] idx:name=h<handle>/s<status>  00:010=h0/s0 01:011=h0/s0 02:012=h0/s0 03:020=h0/s0 04:021=h0/s0 05:028=h0/s0 06:029=h0/s0 07:02c=h0/s0 08:02d=h0/s0 09:030=h0/s0 10:031=h0/s0 11:038=h0/s0 12:039=h0/s0 13:040=h0/s0 14:060=h0/s0 
+[FBMC] tras-InitB-10-3 [15..29] idx:name=h<handle>/s<status>  15:061=h0/s0 16:068=h0/s0 17:06c=h0/s0 18:062=h0/s0 19:063=h0/s0 20:090=h7/s1 21:091=h0/s0 22:092=h0/s0 23:0a0=h0/s0 24:0b1=h0/s0 25:0b2=h0/s0 26:0b3=h0/s0 27:0b8=h0/s0 28:0bc=h0/s0 29:0bd=h0/s0 
+[FBMC] MON> FBM View    (argc al handler de modulo = 2, al comando = 1)
+[FBMC] FBM View -> 1
+[FBMC] CreateSector32(0x90, flag=0) -> ret=0x7 handle=0 id=0x90
+[FBMC] CreateSector32(0x91, flag=0) -> ret=0x7 handle=0 id=0x91
+[FBMC] CreateSector32(0x92, flag=0) -> ret=0x7 handle=0 id=0x92
+[FBMC] CreateSector32(0xbd, flag=0) -> ret=0x7 handle=0 id=0xbd
+[FBMC] GetErrorString(0) = "unknown"
+[FBMC] GetErrorString(0x1) = "FBS_BADBLOCK_OVER_MODE"
+[FBMC] GetErrorString(0x2) = "FBS_SERVICE_CRASH"
+[FBMC] GetErrorString(0x3) = "FBS_FATAL_SERVICE_CRASH"
+[FBMC] GetErrorString(0x4) = "FBS_EXISTED"
+[FBMC] GetErrorString(0x5) = "FBS_FILE_NOT_FOUND"
+[FBMC] GetErrorString(0x6) = "FBS_EMPTY_FREE_AREA"
+[FBMC] GetErrorString(0x7) = "FBS_INVALID_PROCESS"
+[FBMC] GetErrorString(0x8) = "FBS_READ_ONLY"
+[FBMC] GetErrorString(0x9) = "FBS_INVALID_PARAM"
+[FBMC] GetErrorString(0xa) = "FBS_EOF"
+[FBMC] GetErrorString(0xb) = "FBS_OUT_OF_RANGE"
+[FBMC] GetErrorString(0xc) = "FBS_DELETE_WAIT_TIMEOUT"
+[FBMC] GetErrorString(0xd) = "FBS_NOT_ERASE_COMPLETE"
+[FBMC] GetErrorString(0xe) = "FBS_WRITE_MISS"
+[FBMC] GetErrorString(0xf) = "FBS_READ_MISS"
+[FBMC] GetErrorString(0x10) = "FBS_INVALID_NAME"
+[FBMC] GetErrorString(0x11) = "FBS_UNCERTAIN_WRITE_POINT"
+[FBMC] tras-CreateSector32-directo  entradas con handle!=0 = 1/30
+[FBMC] tras-CreateSector32-directo [00..14] idx:name=h<handle>/s<status>  00:010=h0/s0 01:011=h0/s0 02:012=h0/s0 03:020=h0/s0 04:021=h0/s0 05:028=h0/s0 06:029=h0/s0 07:02c=h0/s0 08:02d=h0/s0 09:030=h0/s0 10:031=h0/s0 11:038=h0/s0 12:039=h0/s0 13:040=h0/s0 14:060=h0/s0 
+[FBMC] tras-CreateSector32-directo [15..29] idx:name=h<handle>/s<status>  15:061=h0/s0 16:068=h0/s0 17:06c=h0/s0 18:062=h0/s0 19:063=h0/s0 20:090=h7/s1 21:091=h0/s0 22:092=h0/s0 23:0a0=h0/s0 24:0b1=h0/s0 25:0b2=h0/s0 26:0b3=h0/s0 27:0b8=h0/s0 28:0bc=h0/s0 29:0bd=h0/s0 
+[FBMP] hilo victima tid=371 (pid=208)  ptcall=/cam/tmp/ptcall
+[FBMP] $ ptcall --dry 208 371 call 1 0x2b50d9 1   (system -> 32512)
+[FBMP]   (sin /cam/tmp/pt.out: no existe /cam/tmp/ptcall o falló el fork)
+[FBMP] $ ptcall --dry 208 371 peek 0xa3699c 0x20   (system -> 32512)
+[FBMP]   (sin /cam/tmp/pt.out: no existe /cam/tmp/ptcall o falló el fork)
+[FBMP] $ ptcall 208 371 peek 0xaed5a99c 0x20   (system -> 32512)
+[FBMP]   (sin /cam/tmp/pt.out: no existe /cam/tmp/ptcall o falló el fork)
+[FBMP] $ ptcall 208 371 call 1 0xae5da115 7   (system -> 32512)
+[FBMP]   (sin /cam/tmp/pt.out: no existe /cam/tmp/ptcall o falló el fork)
+[FBMP] $ ptcall 208 371 poke 0xb6e60518 78 56 34 12   (system -> 32512)
+[FBMP]   (sin /cam/tmp/pt.out: no existe /cam/tmp/ptcall o falló el fork)
+[FBMP] pb_scratch tras el poke = 0x11111111 (esperado 0x12345678)
+[FBMP] fin de la prueba de ptrace
+[FBMC] FIN

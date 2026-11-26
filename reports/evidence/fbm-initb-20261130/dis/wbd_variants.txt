@@ -1,0 +1,243 @@
+002b41b4: f0b5       push     {r4, r5, r6, r7, lr}          
+002b41b6: 85b0       sub      sp, #0x14                     
+002b41b8: 02af       add      r7, sp, #8                    
+002b41ba: 07f10804   add.w    r4, r7, #8                    
+002b41be: 0023       movs     r3, #0                        
+002b41c0: 0646       mov      r6, r0                        
+002b41c2: 0d46       mov      r5, r1                        
+002b41c4: 44f8083d   str      r3, [r4, #-0x8]!              
+002b41c8: 69f6aceb   blx      #0x11d924                       ; _ZN8FlashLib14InvalidateSyncEv
+002b41cc: 2e48       ldr      r0, [pc, #0xb8]                 ; [002b4288]=00835905 "ChangeSector"
+002b41ce: fdf74bfe   bl       #0x2b1e68                     
+002b41d2: 3046       mov      r0, r6                        
+002b41d4: 2946       mov      r1, r5                        
+002b41d6: 3a46       mov      r2, r7                        
+002b41d8: fef75cff   bl       #0x2b3094                     
+002b41dc: 28b1       cbz      r0, #0x2b41ea                 
+002b41de: 2b48       ldr      r0, [pc, #0xac]                 ; [002b428c]=007e7ad9 "ChangeSector()::this combination not fou"
+002b41e0: 3146       mov      r1, r6                        
+002b41e2: 2a46       mov      r2, r5                        
+002b41e4: 00f00aff   bl       #0x2b4ffc                     
+002b41e8: 25e0       b        #0x2b4236                     
+002b41ea: 3b68       ldr      r3, [r7]                      
+002b41ec: 33b9       cbnz     r3, #0x2b41fc                 
+002b41ee: 2848       ldr      r0, [pc, #0xa0]                 ; [002b4290]=007e7b17 "ChangeSector()::Source backup handle not"
+002b41f0: 3146       mov      r1, r6                        
+002b41f2: 2a46       mov      r2, r5                        
+002b41f4: 274c       ldr      r4, [pc, #0x9c]                 ; [002b4294]=10100006
+002b41f6: 00f001ff   bl       #0x2b4ffc                     
+002b41fa: 1de0       b        #0x2b4238                     
+002b41fc: 3046       mov      r0, r6                        
+002b41fe: 391d       adds     r1, r7, #4                    
+002b4200: fef7e4fc   bl       #0x2b2bcc                     
+002b4204: b8b9       cbnz     r0, #0x2b4236                 
+002b4206: 7c68       ldr      r4, [r7, #4]                  
+002b4208: 2046       mov      r0, r4                        
+002b420a: fdf7dffd   bl       #0x2b1dcc                     
+002b420e: 0128       cmp      r0, #1                        
+002b4210: 06d0       beq      #0x2b4220                     
+002b4212: 34b1       cbz      r4, #0x2b4222                 
+002b4214: 082c       cmp      r4, #8                        
+002b4216: 08d1       bne      #0x2b422a                     
+002b4218: 012d       cmp      r5, #1                        
+002b421a: 06d1       bne      #0x2b422a                     
+002b421c: 1e48       ldr      r0, [pc, #0x78]                 ; [002b4298]=007e7b7f "  Can not changesector in OM_DCFONLY!"
+002b421e: 01e0       b        #0x2b4224                     
+002b4220: 1cb9       cbnz     r4, #0x2b422a                 
+002b4222: 1e48       ldr      r0, [pc, #0x78]                 ; [002b429c]=007e7b59 "  Can not changesector in OM_INITIAL!"
+002b4224: 00f0eafe   bl       #0x2b4ffc                     
+002b4228: 05e0       b        #0x2b4236                     
+002b422a: 2046       mov      r0, r4                        
+002b422c: 2946       mov      r1, r5                        
+002b422e: fff7fffe   bl       #0x2b4030                     
+002b4232: 0446       mov      r4, r0                        
+002b4234: 00e0       b        #0x2b4238                     
+002b4236: 1a4c       ldr      r4, [pc, #0x68]                 ; [002b42a0]=10800010
+002b4238: 6bf6d2ef   blx      #0x1201e0                       ; _ZN8FlashLib12ValidateSyncEv
+002b423c: 6af6e4ed   blx      #0x11ee08                       ; _ZN8FlashLib4SyncEv
+002b4240: 184b       ldr      r3, [pc, #0x60]                 ; [002b42a4]=00a36c14
+002b4242: 1b78       ldrb     r3, [r3]                      
+002b4244: 0bb1       cbz      r3, #0x2b424a                 
+002b4246: fff70bf8   bl       #0x2b3260                     
+002b424a: 1748       ldr      r0, [pc, #0x5c]                 ; [002b42a8]=007e7ba5 "ChangeSector(userID,mediaID)"
+002b424c: 2146       mov      r1, r4                        
+002b424e: fdf783fe   bl       #0x2b1f58                     
+002b4252: 0220       movs     r0, #2                        
+002b4254: 1f21       movs     r1, #0x1f                     
+002b4256: 43f21102   movw     r2, #0x3011                   
+002b425a: b3b2       uxth     r3, r6                        
+002b425c: adb2       uxth     r5, r5                        
+002b425e: 0095       str      r5, [sp]                      
+002b4260: 0025       movs     r5, #0                        
+002b4262: 0195       str      r5, [sp, #4]                  
+002b4264: 07f3eafa   bl       #0x5bb83c                     
+002b4268: 4cb1       cbz      r4, #0x2b427e                 
+002b426a: a3b2       uxth     r3, r4                        
+002b426c: 0220       movs     r0, #2                        
+002b426e: 8de82800   stm.w    sp, {r3, r5}                  
+002b4272: 1f21       movs     r1, #0x1f                     
+002b4274: 43f21802   movw     r2, #0x3018                   
+002b4278: 230c       lsrs     r3, r4, #0x10                 
+002b427a: 07f3dffa   bl       #0x5bb83c                     
+002b427e: 2046       mov      r0, r4                        
+002b4280: 07f10c07   add.w    r7, r7, #0xc                  
+002b4284: bd46       mov      sp, r7                        
+002b4286: f0bd       pop      {r4, r5, r6, r7, pc}          
+002b4288: 0559       ldr      r5, [r0, r4]                  
+002b428a: 8300       lsls     r3, r0, #2                    
+002b428c: d97a       ldrb     r1, [r3, #0xb]                
+002b428e: 7e00       lsls     r6, r7, #1                    
+002b4290: 177b       ldrb     r7, [r2, #0xc]                
+002b4292: 7e00       lsls     r6, r7, #1                    
+002b4294: 0600       movs     r6, r0                        
+002b4296: 1010       asrs     r0, r2, #0x20                 
+002b4298: 7f7b       ldrb     r7, [r7, #0xd]                
+002b429a: 7e00       lsls     r6, r7, #1                    
+002b429c: 597b       ldrb     r1, [r3, #0xd]                
+002b429e: 7e00       lsls     r6, r7, #1                    
+002b42a0: 1000       movs     r0, r2                        
+002b42a2: 8010       asrs     r0, r0, #2                    
+002b42a4: 146c       ldr      r4, [r2, #0x40]               
+002b42a6: a300       lsls     r3, r4, #2                    
+002b42a8: a57b       ldrb     r5, [r4, #0xe]                
+002b42aa: 7e00       lsls     r6, r7, #1                    
+002b42ac: f0b5       push     {r4, r5, r6, r7, lr}          
+002b42ae: 83b0       sub      sp, #0xc                      
+002b42b0: 0646       mov      r6, r0                        
+002b42b2: 02af       add      r7, sp, #8                    
+002b42b4: 69f636eb   blx      #0x11d924                       ; _ZN8FlashLib14InvalidateSyncEv
+002b42b8: 012e       cmp      r6, #1                        
+002b42ba: 12d0       beq      #0x2b42e2                     
+002b42bc: 244d       ldr      r5, [pc, #0x90]                 ; [002b4350]=00a36974
+002b42be: 2c68       ldr      r4, [r5]                      
+002b42c0: 94b1       cbz      r4, #0x2b42e8                 
+002b42c2: 244b       ldr      r3, [pc, #0x90]                 ; [002b4354]=00a36970
+002b42c4: 1b68       ldr      r3, [r3]                      
+002b42c6: 082b       cmp      r3, #8                        
+002b42c8: 234b       ldr      r3, [pc, #0x8c]                 ; [002b4358]=00a36c0c
+002b42ca: 08d1       bne      #0x2b42de                     
+002b42cc: 1a68       ldr      r2, [r3]                      
+002b42ce: 012a       cmp      r2, #1                        
+002b42d0: 05d1       bne      #0x2b42de                     
+002b42d2: 2248       ldr      r0, [pc, #0x88]                 ; [002b435c]=007e7b7f "  Can not changesector in OM_DCFONLY!"
+002b42d4: 0025       movs     r5, #0                        
+002b42d6: 00f091fe   bl       #0x2b4ffc                     
+002b42da: 214c       ldr      r4, [pc, #0x84]                 ; [002b4360]=10800010
+002b42dc: 10e0       b        #0x2b4300                     
+002b42de: 2046       mov      r0, r4                        
+002b42e0: 09e0       b        #0x2b42f6                     
+002b42e2: 1c4d       ldr      r5, [pc, #0x70]                 ; [002b4354]=00a36970
+002b42e4: 2c68       ldr      r4, [r5]                      
+002b42e6: 24b9       cbnz     r4, #0x2b42f2                 
+002b42e8: 1e48       ldr      r0, [pc, #0x78]                 ; [002b4364]=007e7b59 "  Can not changesector in OM_INITIAL!"
+002b42ea: 2546       mov      r5, r4                        
+002b42ec: 00f086fe   bl       #0x2b4ffc                     
+002b42f0: f3e7       b        #0x2b42da                     
+002b42f2: 1d4b       ldr      r3, [pc, #0x74]                 ; [002b4368]=00a36c18
+002b42f4: 2046       mov      r0, r4                        
+002b42f6: 1968       ldr      r1, [r3]                      
+002b42f8: fff79afe   bl       #0x2b4030                     
+002b42fc: 2d68       ldr      r5, [r5]                      
+002b42fe: 0446       mov      r4, r0                        
+002b4300: 6bf66eef   blx      #0x1201e0                       ; _ZN8FlashLib12ValidateSyncEv
+002b4304: 6af680ed   blx      #0x11ee08                       ; _ZN8FlashLib4SyncEv
+002b4308: 184b       ldr      r3, [pc, #0x60]                 ; [002b436c]=00a36c14
+002b430a: 1b78       ldrb     r3, [r3]                      
+002b430c: 0bb1       cbz      r3, #0x2b4312                 
+002b430e: fef7a7ff   bl       #0x2b3260                     
+002b4312: 1748       ldr      r0, [pc, #0x5c]                 ; [002b4370]=007e7bc2 "ChangeSector(typeSelect)"
+002b4314: 2146       mov      r1, r4                        
+002b4316: fdf71ffe   bl       #0x2b1f58                     
+002b431a: 0220       movs     r0, #2                        
+002b431c: 1f21       movs     r1, #0x1f                     
+002b431e: 43f21002   movw     r2, #0x3010                   
+002b4322: b3b2       uxth     r3, r6                        
+002b4324: adb2       uxth     r5, r5                        
+002b4326: 0095       str      r5, [sp]                      
+002b4328: 0025       movs     r5, #0                        
+002b432a: 0195       str      r5, [sp, #4]                  
+002b432c: 07f386fa   bl       #0x5bb83c                     
+002b4330: 4cb1       cbz      r4, #0x2b4346                 
+002b4332: a3b2       uxth     r3, r4                        
+002b4334: 0220       movs     r0, #2                        
+002b4336: 8de82800   stm.w    sp, {r3, r5}                  
+002b433a: 1f21       movs     r1, #0x1f                     
+002b433c: 43f21802   movw     r2, #0x3018                   
+002b4340: 230c       lsrs     r3, r4, #0x10                 
+002b4342: 07f37bfa   bl       #0x5bb83c                     
+002b4346: 2046       mov      r0, r4                        
+002b4348: 07f10407   add.w    r7, r7, #4                    
+002b434c: bd46       mov      sp, r7                        
+002b434e: f0bd       pop      {r4, r5, r6, r7, pc}          
+002b4350: 7469       ldr      r4, [r6, #0x14]               
+002b4352: a300       lsls     r3, r4, #2                    
+002b4354: 7069       ldr      r0, [r6, #0x14]               
+002b4356: a300       lsls     r3, r4, #2                    
+002b4358: 0c6c       ldr      r4, [r1, #0x40]               
+002b435a: a300       lsls     r3, r4, #2                    
+002b435c: 7f7b       ldrb     r7, [r7, #0xd]                
+002b435e: 7e00       lsls     r6, r7, #1                    
+002b4360: 1000       movs     r0, r2                        
+002b4362: 8010       asrs     r0, r0, #2                    
+002b4364: 597b       ldrb     r1, [r3, #0xd]                
+002b4366: 7e00       lsls     r6, r7, #1                    
+002b4368: 186c       ldr      r0, [r3, #0x40]               
+002b436a: a300       lsls     r3, r4, #2                    
+002b436c: 146c       ldr      r4, [r2, #0x40]               
+002b436e: a300       lsls     r3, r4, #2                    
+002b4370: c27b       ldrb     r2, [r0, #0xf]                
+002b4372: 7e00       lsls     r6, r7, #1                    
+002b4374: b0b5       push     {r4, r5, r7, lr}              
+002b4376: 82b0       sub      sp, #8                        
+002b4378: 174d       ldr      r5, [pc, #0x5c]                 ; [002b43d8]=00a36974
+002b437a: 02af       add      r7, sp, #8                    
+002b437c: 69f6d2ea   blx      #0x11d924                       ; _ZN8FlashLib14InvalidateSyncEv
+002b4380: 2868       ldr      r0, [r5]                      
+002b4382: 28b1       cbz      r0, #0x2b4390                 
+002b4384: 154b       ldr      r3, [pc, #0x54]                 ; [002b43dc]=00a36c0c
+002b4386: 1968       ldr      r1, [r3]                      
+002b4388: fff752fe   bl       #0x2b4030                     
+002b438c: 0446       mov      r4, r0                        
+002b438e: 38b9       cbnz     r0, #0x2b43a0                 
+002b4390: 134b       ldr      r3, [pc, #0x4c]                 ; [002b43e0]=00a36970
+002b4392: 1868       ldr      r0, [r3]                      
+002b4394: 18b1       cbz      r0, #0x2b439e                 
+002b4396: 134b       ldr      r3, [pc, #0x4c]                 ; [002b43e4]=00a36c18
+002b4398: 1968       ldr      r1, [r3]                      
+002b439a: fff749fe   bl       #0x2b4030                     
+002b439e: 0446       mov      r4, r0                        
+002b43a0: 6bf61eef   blx      #0x1201e0                       ; _ZN8FlashLib12ValidateSyncEv
+002b43a4: 6af630ed   blx      #0x11ee08                       ; _ZN8FlashLib4SyncEv
+002b43a8: 0f4b       ldr      r3, [pc, #0x3c]                 ; [002b43e8]=00a36c14
+002b43aa: 1b78       ldrb     r3, [r3]                      
+002b43ac: 0bb1       cbz      r3, #0x2b43b2                 
+002b43ae: fef757ff   bl       #0x2b3260                     
+002b43b2: 2146       mov      r1, r4                        
+002b43b4: 0d48       ldr      r0, [pc, #0x34]                 ; [002b43ec]=007e7bdb "ChangeSector(void)"
+002b43b6: fdf7cffd   bl       #0x2b1f58                     
+002b43ba: 220c       lsrs     r2, r4, #0x10                 
+002b43bc: 0220       movs     r0, #2                        
+002b43be: 0092       str      r2, [sp]                      
+002b43c0: 2b88       ldrh     r3, [r5]                      
+002b43c2: a2b2       uxth     r2, r4                        
+002b43c4: 1f21       movs     r1, #0x1f                     
+002b43c6: 0192       str      r2, [sp, #4]                  
+002b43c8: 4ff44052   mov.w    r2, #0x3000                   
+002b43cc: 07f336fa   bl       #0x5bb83c                     
+002b43d0: 2046       mov      r0, r4                        
+002b43d2: bd46       mov      sp, r7                        
+002b43d4: b0bd       pop      {r4, r5, r7, pc}              
+002b43d6: 00bf       nop                                    
+002b43d8: 7469       ldr      r4, [r6, #0x14]               
+002b43da: a300       lsls     r3, r4, #2                    
+002b43dc: 0c6c       ldr      r4, [r1, #0x40]               
+002b43de: a300       lsls     r3, r4, #2                    
+002b43e0: 7069       ldr      r0, [r6, #0x14]               
+002b43e2: a300       lsls     r3, r4, #2                    
+002b43e4: 186c       ldr      r0, [r3, #0x40]               
+002b43e6: a300       lsls     r3, r4, #2                    
+002b43e8: 146c       ldr      r4, [r2, #0x40]               
+002b43ea: a300       lsls     r3, r4, #2                    
+002b43ec: db7b       ldrb     r3, [r3, #0xf]                
+002b43ee: 7e00       lsls     r6, r7, #1                    
+002b43f0: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      

@@ -1,0 +1,41 @@
+002b208c: 2de9f041   push.w   {r4, r5, r6, r7, r8, lr}      
+002b2090: 0446       mov      r4, r0                        
+002b2092: 00af       add      r7, sp, #0                    
+002b2094: 0d48       ldr      r0, [pc, #0x34]                 ; [002b20cc]=007e6801 "SetSectorManagerInfo"
+002b2096: 0d46       mov      r5, r1                        
+002b2098: 1646       mov      r6, r2                        
+002b209a: 9846       mov      r8, r3                        
+002b209c: fff7e4fe   bl       #0x2b1e68                     
+002b20a0: 1d2c       cmp      r4, #0x1d                     
+002b20a2: 0bd8       bhi      #0x2b20bc                     
+002b20a4: 0a4a       ldr      r2, [pc, #0x28]                 ; [002b20d0]=00a3699c
+002b20a6: 1423       movs     r3, #0x14                     
+002b20a8: 5c43       muls     r4, r3, r4                    
+002b20aa: 1319       adds     r3, r2, r4                    
+002b20ac: 1551       str      r5, [r2, r4]                  
+002b20ae: 0024       movs     r4, #0                        
+002b20b0: ba69       ldr      r2, [r7, #0x18]               
+002b20b2: 5e60       str      r6, [r3, #4]                  
+002b20b4: c3f80880   str.w    r8, [r3, #8]                  
+002b20b8: da60       str      r2, [r3, #0xc]                
+002b20ba: 00e0       b        #0x2b20be                     
+002b20bc: 0124       movs     r4, #1                        
+002b20be: 0348       ldr      r0, [pc, #0xc]                  ; [002b20cc]=007e6801 "SetSectorManagerInfo"
+002b20c0: 2146       mov      r1, r4                        
+002b20c2: fff749ff   bl       #0x2b1f58                     
+002b20c6: 2046       mov      r0, r4                        
+002b20c8: bde8f081   pop.w    {r4, r5, r6, r7, r8, pc}      
+002b20cc: 0168       ldr      r1, [r0]                      
+002b20ce: 7e00       lsls     r6, r7, #1                    
+002b20d0: 9c69       ldr      r4, [r3, #0x18]               
+002b20d2: a300       lsls     r3, r4, #2                    
+002b20d4: b0b5       push     {r4, r5, r7, lr}              
+002b20d6: 0546       mov      r5, r0                        
+002b20d8: 00af       add      r7, sp, #0                    
+002b20da: 0c46       mov      r4, r1                        
+002b20dc: 0848       ldr      r0, [pc, #0x20]                 ; [002b2100]=007e6816 "GetAlignSize"
+002b20de: fff7c3fe   bl       #0x2b1e68                     
+002b20e2: 2146       mov      r1, r4                        
+002b20e4: 2846       mov      r0, r5                        
+002b20e6: 6cf600ee   blx      #0x11ece8                       ; _ZN8FlashLib12GetAlignSizeEmPm
+002b20ea: 2946       mov      r1, r5                        

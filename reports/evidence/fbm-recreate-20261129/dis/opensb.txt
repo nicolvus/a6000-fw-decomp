@@ -1,0 +1,98 @@
+002b6688: f0b5       push     {r4, r5, r6, r7, lr}          
+002b668a: 83b0       sub      sp, #0xc                      
+002b668c: 2e4b       ldr      r3, [pc, #0xb8]                 ; [002b6748]=00a36c78
+002b668e: 0546       mov      r5, r0                        
+002b6690: 02af       add      r7, sp, #8                    
+002b6692: 1646       mov      r6, r2                        
+002b6694: 1b78       ldrb     r3, [r3]                      
+002b6696: 002b       cmp      r3, #0                        
+002b6698: 3dd0       beq      #0x2b6716                     
+002b669a: 68f612ec   blx      #0x11eec0                       ; _ZN8FlashLib9MutexLockEv
+002b669e: 2846       mov      r0, r5                        
+002b66a0: 68f65ae8   blx      #0x11e758                       ; _ZN8FlashLib14GetIdCheckFlagEm
+002b66a4: 0021       movs     r1, #0                        
+002b66a6: 3346       mov      r3, r6                        
+002b66a8: 0246       mov      r2, r0                        
+002b66aa: 2846       mov      r0, r5                        
+002b66ac: faf705fd   bl       #0x2b10ba                     
+002b66b0: 1028       cmp      r0, #0x10                     
+002b66b2: 0446       mov      r4, r0                        
+002b66b4: 2cd0       beq      #0x2b6710                     
+002b66b6: 0028       cmp      r0, #0                        
+002b66b8: 37d0       beq      #0x2b672a                     
+002b66ba: 4928       cmp      r0, #0x49                     
+002b66bc: 14d0       beq      #0x2b66e8                     
+002b66be: 234b       ldr      r3, [pc, #0x8c]                 ; [002b674c]=007e384c "fileID"
+002b66c0: 2146       mov      r1, r4                        
+002b66c2: 2348       ldr      r0, [pc, #0x8c]                 ; [002b6750]=007e46ca "OpenSector"
+002b66c4: 234a       ldr      r2, [pc, #0x8c]                 ; [002b6754]=0081fe88 "fileType"
+002b66c6: 0093       str      r3, [sp]                      
+002b66c8: 0023       movs     r3, #0                        
+002b66ca: 0193       str      r3, [sp, #4]                  
+002b66cc: 2b46       mov      r3, r5                        
+002b66ce: 67f600ec   blx      #0x11ded0                       ; _ZN8FlashLib11ConPutErrorEPKcmS1_mS1_m
+002b66d2: 214b       ldr      r3, [pc, #0x84]                 ; [002b6758]=009d2790
+002b66d4: 1b78       ldrb     r3, [r3]                      
+002b66d6: 002b       cmp      r3, #0                        
+002b66d8: 24d0       beq      #0x2b6724                     
+002b66da: 882c       cmp      r4, #0x88                     
+002b66dc: 18d0       beq      #0x2b6710                     
+002b66de: 892c       cmp      r4, #0x89                     
+002b66e0: 16d0       beq      #0x2b6710                     
+002b66e2: e0b2       uxtb     r0, r4                        
+002b66e4: 4bf372f8   bl       #0x6017cc                     
+002b66e8: 892c       cmp      r4, #0x89                     
+002b66ea: 11d0       beq      #0x2b6710                     
+002b66ec: 1b4d       ldr      r5, [pc, #0x6c]                 ; [002b675c]=00a36c88
+002b66ee: 2b78       ldrb     r3, [r5]                      
+002b66f0: 202b       cmp      r3, #0x20                     
+002b66f2: 0dd8       bhi      #0x2b6710                     
+002b66f4: 1020       movs     r0, #0x10                     
+002b66f6: a2b2       uxth     r2, r4                        
+002b66f8: 7821       movs     r1, #0x78                     
+002b66fa: 8de80c00   stm.w    sp, {r2, r3}                  
+002b66fe: 34fa00f3   lsrs.w   r3, r4, r0                    
+002b6702: 41f20e02   movw     r2, #0x100e                   
+002b6706: 05f399f8   bl       #0x5bb83c                     
+002b670a: 2b78       ldrb     r3, [r5]                      
+002b670c: 0133       adds     r3, #1                        
+002b670e: 2b70       strb     r3, [r5]                      
+002b6710: 67f644ef   blx      #0x11e59c                       ; _ZN8FlashLib11MutexUnLockEv
+002b6714: 01e0       b        #0x2b671a                     
+002b6716: 4ff0ff34   mov.w    r4, #-1                       
+002b671a: 2046       mov      r0, r4                        
+002b671c: 07f10407   add.w    r7, r7, #4                    
+002b6720: bd46       mov      sp, r7                        
+002b6722: f0bd       pop      {r4, r5, r6, r7, pc}          
+002b6724: 882c       cmp      r4, #0x88                     
+002b6726: f3d0       beq      #0x2b6710                     
+002b6728: dee7       b        #0x2b66e8                     
+002b672a: 3268       ldr      r2, [r6]                      
+002b672c: 0c49       ldr      r1, [pc, #0x30]                 ; [002b6760]=00a36c89
+002b672e: 02eb0212   add.w    r2, r2, r2, lsl #4            
+002b6732: 8b18       adds     r3, r1, r2                    
+002b6734: 1872       strb     r0, [r3, #8]                  
+002b6736: 8d54       strb     r5, [r1, r2]                  
+002b6738: 2a0a       lsrs     r2, r5, #8                    
+002b673a: 5a70       strb     r2, [r3, #1]                  
+002b673c: 2a0c       lsrs     r2, r5, #0x10                 
+002b673e: 2d0e       lsrs     r5, r5, #0x18                 
+002b6740: 9a70       strb     r2, [r3, #2]                  
+002b6742: dd70       strb     r5, [r3, #3]                  
+002b6744: e4e7       b        #0x2b6710                     
+002b6746: 00bf       nop                                    
+002b6748: 786c       ldr      r0, [r7, #0x44]               
+002b674a: a300       lsls     r3, r4, #2                    
+002b674c: 4c38       subs     r0, #0x4c                     
+002b674e: 7e00       lsls     r6, r7, #1                    
+002b6750: ca46       mov      sl, sb                        
+002b6752: 7e00       lsls     r6, r7, #1                    
+002b6754: 88fe8100   cdp2     p0, #8, c0, c8, c1, #4        
+002b6758: 9027       movs     r7, #0x90                     
+002b675a: 9d00       lsls     r5, r3, #2                    
+002b675c: 886c       ldr      r0, [r1, #0x48]               
+002b675e: a300       lsls     r3, r4, #2                    
+002b6760: 896c       ldr      r1, [r1, #0x48]               
+002b6762: a300       lsls     r3, r4, #2                    
+002b6764: 80b5       push     {r7, lr}                      
+002b6766: 00af       add      r7, sp, #0                    

@@ -1,0 +1,117 @@
+FILM-PB-1 · sub-encargo FBM sector 0x31 — medidas crudas del arnés (2026-11-26, 2ª iteración)
+==============================================================================================
+Todo QEMU (-M virt, -cpu cortex-a15, -m 1536, TCG). Cámara NO tocada. mcp_rea NO usado.
+Imagen /dev/nflasha4 = analysis/camera-dumps/nand-20261020/dev_nflasha4.bin
+  sha256 a5ab15ca743950d6a8c64c17a8ed024cddc6d5c94a24a08cf60ca5d4e9ac7247 (10 485 760 B)
+libmpr de fábrica sha256 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+
+[ARNÉS] fbm_run.py (copia propia de run.py/live.py) con overlay cam/usr/lib/{sonyshim.so,libmpr.so}.
+  SHIMENV = CADENA de scripts/gui/harness/estable.sh + WAIT=120 FBMTAB=1
+            + NFLASH4=<sha256(img)[:12]>  <- imprescindible: sonyshim.c:111 (nf_name) sólo emula
+              /dev/nflasha4 con esa variable; sin ella CreateSector32 devuelve 0x7 y no hay DFB.
+  El run.py del arnés (live.py:83) hace lo mismo: NFLASH4=hashlib.sha256(img).hexdigest()[:12].
+  NF4DUMP=1 vuelca el diff /cam/nflasha4.img vs /cam/usr/share/nflasha4.img; NF4IMG=1 además saca
+  la imagen escrita por consola (gzip del busybox de la cámara + base64) y fbm_run.py la decodifica.
+
+--------------------------------------------------------------------------------------------------
+R0  sin parche · imagen D1 · FBMPROBE=1 · run-r0/
+  FBMTAB t=0s  llena=0  nh=0
+  FBMTAB t=5s  llena=30 nh=1 lst: 0xa0        <- SÓLO 0xA0 abre; 0x30/0x62/0xB2 no (la cámara
+                                                 tiene 4: idx9 0x30/h4, idx18 0x62/h3,
+                                                 idx23 0xA0/h1, idx25 0xB2/h5)
+  tabla completa (idx: sector handle valido om):
+     0:0x0010 0/0/0    1:0x0011 0/0/0    2:0x0012 0/0/0    3:0x0020 0/0/0    4:0x0021 0/0/0
+     5:0x0028 0/0/0    6:0x0029 0/0/0    7:0x002c 0/0/0    8:0x002d 0/0/0    9:0x0030 0/0/0
+    10:0x0031 0/0/0   11:0x0038 0/0/0   12:0x0039 0/0/0   13:0x0040 0/0/0   14:0x0060 0/0/0
+    15:0x0061 0/0/0   16:0x0068 0/0/0   17:0x006c 0/0/0   18:0x0062 0/0/0   19:0x0063 0/0/0
+    20:0x0090 0/0/0   21:0x0091 0/0/0   22:0x0092 0/0/0   23:0x00a0 h=1 valido=1 om=9 b10=0x8
+    24:0x00b1 0/0/0   25:0x00b2 0/0/0   26:0x00b3 0/0/0   27:0x00b8 0/0/0   28:0x00bc 0/0/0
+    29:0x00bd 0/0/0
+  PROBE CheckExistSector(0x31) -> 0x48        <- NO existe para el FBS
+  PROBE OpenSector32(0x31,0)    -> 0x10 handle=0
+  PROBE GetSectorInfo(0)        -> 0x10100009
+  PROBE GetIdx(0x21,3) -> idx=10 sector=0x0031 handle=0
+  PROBE GetIdx(0x04,3) -> idx=10 sector=0x0031 handle=0
+  PROBE ReadFirstPackData(0x21,3) -> 0x10100001     <- criterio de partida
+  PROBE ReadFirstPackData(0x04,3) -> 0x10100001
+  (el hijo que llama a ReadFirstPackData escribe el código y NO termina: se mata a los 6 s; el
+   código queda igualmente en /tmp/rfp.txt, que es lo que se imprime)
+
+--------------------------------------------------------------------------------------------------
+R1  parche v2 (literal absoluto) · run-v2-crash/   *** FALLO, para memoria ***
+  cueva cargada: gancho=28 f2 8b fc cueva=10 b5 79 f5 0d f4 82 46 (bytes 0..6 y 0x0F)
+  im.elf muere con SIGSEGV antes de FBM::Init:
+    raw pc=aed20010 lr=ae9a0c95 addr=00a36a68 r0=0 r1=0xb r2=0x1d01
+      aed20010 /usr/lib/libmpr.so+0x93b010   (ldr r0,[r4,#4] de la cueva v2)
+      ae9a0c95 /usr/lib/libmpr.so+0x5bbc95
+      aeaf76eb /usr/lib/libmpr.so+0x7126eb   (vuelta del bl del gancho)
+  Causa: 0x93B038 contenía 0x00A36A64 = VA de ENLACE. libmpr se carga en 0xAE3E5000 (la tabla
+  real está en 0xAEE1B99C) y .rodata NO tiene relocaciones, así que el literal no se reubica.
+  => la cueva v3 calcula la tabla desde el PC (sin literales).
+
+--------------------------------------------------------------------------------------------------
+R1v3  parche v3 · imagen D1 · run-r1v3/        *** CRITERIO CUMPLIDO ***
+  FBMTAB libmpr base=0xae345000 tabla=0xaed7b99c gancho=28 f2 8b fc cueva=10 b5 79 f5 0d f4 82 46
+  FBMTAB t=0s  llena=0  nh=0
+  FBMTAB t=5s  llena=30 nh=2 lst: 0x31 0xa0
+  FBMTAB t=10..120s llena=30 nh=2 (sin cambios)
+  PROBE t=25s idx=10 sector=0x0031 handle=0x00000002 valido=1 om=6 b10=0
+  PROBE CheckExistSector(0x31) -> 0x45            <- existe (antes 0x48)
+  PROBE OpenSector32(0x31,0)   -> 0x4  handle=0
+  PROBE GetSectorInfo(0)       -> 0x10100009
+  PROBE GetIdx(0x21,3) -> 0x10800010 idx=10 sector=0x0031 handle=2
+  PROBE GetIdx(0x04,3) -> 0x10800010 idx=10 sector=0x0031 handle=2
+  PROBE ReadFirstPackData(0x21,3) -> 0x10100003   <- criterio final
+  PROBE ReadFirstPackData(0x04,3) -> 0x10100003
+  NF4DIFF bytes_distintos=394  sectores=1258 1259 (0x9D400..0x9D7FF)
+  imagen escrita: run-r1v3/nflash4.img (10 485 760 B)
+    sha256 609afa7308d10b9738e1677e48a67b9b040a42d6f4999df85ef1c8a3271ded9b
+  página 0x9D400 nueva: cabecera 00 00 00 00 4a 00 4a 00 y entradas de 8 B
+    81 00 00 00 01 01 03 ff · a0 00 00 00 00 01 01 ff · 31 00 00 00 00 05 07 ff · resto ff
+    cola: seq c2 02 00 00 (0x2C2) y cks 8f d5 06 ac
+  (coincide byte a byte con la imagen de run5 de reports/evidence/fbm-initb-6-3-nflasha4-20261126/,
+   que se obtuvo por la ruta InitB 6 3 + CreateSector32 a mano: mismo sha256 609afa73…)
+
+--------------------------------------------------------------------------------------------------
+R2  SIN parche · imagen YA escrita por R1v3 · run-r2/   *** la persistencia NO funciona ***
+  FBMTAB t=5s llena=30 nh=1 lst: 0xa0            <- FBM::Init NO registra 0x31 aunque el sector
+                                                    está en la imagen
+  PROBE idx=10 sector=0x0031 handle=0 valido=0 om=0
+  PROBE CheckExistSector(0x31) -> 0x48           <- al arrancar el FBS dice que NO existe
+  PROBE GetIdx(0x21,3) -> idx=10 handle=0 ; (0x04,3) igual
+  PROBE ReadFirstPackData(0x21,3) -> 0x10100001  <- el fallo de reproducción vuelve
+  PROBE ReadFirstPackData(0x04,3) -> 0x10100001
+  NF4DIFF bytes_distintos=766 sectores=236 237 1514 1515 (escrituras normales de ese arranque;
+  los sectores 1258/1259 NO cambian: la página creada sigue intacta)
+
+--------------------------------------------------------------------------------------------------
+R2b parche v3 · imagen YA escrita por R1v3 · run-r2b/   *** el parche vuelve a funcionar ***
+  FBMTAB t=5s llena=30 nh=2 lst: 0x31 0xa0
+  PROBE idx=10 sector=0x0031 handle=0x00000002 valido=1 om=6
+  PROBE CheckExistSector(0x31) -> 0x45
+  PROBE ReadFirstPackData(0x21,3) -> 0x10100003 ; (0x04,3) -> 0x10100003
+  NF4DIFF sectores=236 237 492 493 1514 1515  <- 1258/1259 NO se reescriben (no duplica la
+  página de control), pero aparecen 0x3D800..0x3DDFF (sectores 492/493) que en R2 no salen
+
+R2c parche v3 · misma imagen · run-r2c/ (con NF4IMG=1: imagen extraída y mirada en bytes)
+  FBMTAB t=5s llena=30 nh=2 lst: 0x31 0xa0 ; PROBE idx=10 handle=2 valido=1 om=6 ;
+  CheckExistSector(0x31)=0x45 ; ReadFirstPackData(0x21,3)=0x10100003
+  entrada run-r2c  sha256 609afa7308d10b9738e1677e48a67b9b040a42d6f4999df85ef1c8a3271ded9b
+  salida  run-r2c  sha256 a24b692cfc18ec9bd611883f7924da0130913e1dec109ee4adf5eec65c684676
+  1160 B distintos, sectores 236 237 492 493 1514 1515 (0x1D800, 0x3D800, 0xBD400)
+    sector 236/237 y 1514/1515: página de control SIN 0x31 (81, a0) -> escrituras normales del
+      arranque (también salen en R2, sin parche)
+    sector 492/493 (0x3D800): página de control CON 0x31 (81, a0, 31) -> NO existía en R2; el
+      sector ya estaba en la imagen y el DFB NO reescribe 0x9D400, rota a otro slot
+  => el parche funciona en el 2º arranque, pero crea/registra el sector otra vez y el DFB rota
+     1 KiB de página de control por arranque (en el arnés; en cámara está por ver)
+
+--------------------------------------------------------------------------------------------------
+Códigos
+  0x10100001 = "no hay handle para (userID,mediaID)": ReadFirstPackData 0x2B39EE `cbz r2,#0x2b3a28`
+               y la rama 0x2B3A28 carga el literal de 0x2B3A54 = 0x01010001.
+  0x10100003 = lo devuelve el camino profundo (0x2B3948 -> 0x2B267C); no está como literal en
+               libmpr y FlashLib::GetErrorString (0x2B6114) no lo nombra (sólo cubre 1..0x55).
+  0x48 / 0x45 = CheckExistSector (0x2B8B48): 0x45 = existe (es lo que compara FBM::Init en
+               0x2B4888), 0x48 = no existe. En el arnés, tras crearlo en el mismo arranque pasa a
+               0x45; en un arranque nuevo con la imagen ya escrita vuelve a 0x48.

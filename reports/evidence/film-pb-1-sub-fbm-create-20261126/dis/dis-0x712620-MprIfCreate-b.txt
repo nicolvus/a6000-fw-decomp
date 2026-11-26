@@ -1,0 +1,88 @@
+00712620: 4ff722fc   bl       #0x661e68                     
+00712624: 0020       movs     r0, #0                        
+00712626: 0146       mov      r1, r0                        
+00712628: a5f462fe   bl       #0x3b82f0                     
+0071262c: 0020       movs     r0, #0                        
+0071262e: a7f431fe   bl       #0x3ba294                     
+00712632: cff46ffd   bl       #0x3e2114                     
+00712636: b7f799f2   bl       #0x2c9b6c                     
+0071263a: 48f0affa   bl       #0x75ab9c                     
+0071263e: 44f015fc   bl       #0x756e6c                     
+00712642: 41f0abff   bl       #0x75459c                     
+00712646: 4af099fb   bl       #0x75cd7c                     
+0071264a: 48f0b5fb   bl       #0x75adb8                     
+0071264e: 7df4edfd   bl       #0x39022c                     
+00712652: 56f487fc   bl       #0x368f64                     
+00712656: 4ef41ffc   bl       #0x360e98                     
+0071265a: 51f4cdff   bl       #0x3645f8                     
+0071265e: 9ff4c5fc   bl       #0x3b1fec                     
+00712662: 9ff447fe   bl       #0x3b22f4                     
+00712666: 0df6cee1   blx      #0x11fa04                       ; _ZN9MprIfMcmd4InitEv
+0071266a: e8f767f4   bl       #0x2faf3c                     
+0071266e: 1ef467f8   bl       #0x330740                     
+00712672: 57f5affb   bl       #0x469dd4                     
+00712676: 69f5b5fa   bl       #0x47bbe4                     
+0071267a: 87f5ebf9   bl       #0x499a54                     
+0071267e: e0f577ff   bl       #0x4f3570                     
+00712682: 02f6f3fa   bl       #0x514c6c                     
+00712686: b7f5d3ff   bl       #0x4ca630                     
+0071268a: bef581f9   bl       #0x4d0990                     
+0071268e: f2f4bbf9   bl       #0x404a08                     
+00712692: a7f767f4   bl       #0x2b9f64                     
+00712696: 3bf09ffa   bl       #0x74dbd8                     
+0071269a: 2df0bdfb   bl       #0x73fe18                     
+0071269e: e7f41bfe   bl       #0x3fa2d8                     
+007126a2: edf48dfd   bl       #0x4001c0                     
+007126a6: aaf7d7f0   bl       #0x2bc858                     
+007126aa: f0f66dfb   bl       #0x602d88                     
+007126ae: def655fd   bl       #0x5f115c                     
+007126b2: cef40bfb   bl       #0x3e0ccc                     
+007126b6: 0023       movs     r3, #0                        
+007126b8: 0220       movs     r0, #2                        
+007126ba: fb60       str      r3, [r7, #0xc]                
+007126bc: bb60       str      r3, [r7, #8]                  
+007126be: 07f10c01   add.w    r1, r7, #0xc                  
+007126c2: 7b60       str      r3, [r7, #4]                  
+007126c4: 07f10802   add.w    r2, r7, #8                    
+007126c8: 3b1d       adds     r3, r7, #4                    
+007126ca: e5f6a3f9   bl       #0x5f7a14                     
+007126ce: fb68       ldr      r3, [r7, #0xc]                
+007126d0: 2bb1       cbz      r3, #0x7126de                 
+007126d2: bb68       ldr      r3, [r7, #8]                  
+007126d4: 1bb1       cbz      r3, #0x7126de                 
+007126d6: 7b68       ldr      r3, [r7, #4]                  
+007126d8: 0bb1       cbz      r3, #0x7126de                 
+007126da: 15f67bf0   bl       #0x1277d4                     
+007126de: a069       ldr      r0, [r4, #0x18]               
+007126e0: 504c       ldr      r4, [pc, #0x140]                ; [00712824]=00ad28e8
+007126e2: 0bf682e4   blx      #0x11dfe8                       ; _ZN8FlashLib4InitEN3MPR10SystemTypeE
+007126e6: a2f79bf0   bl       #0x2b4820                     
+007126ea: 96f5bbf8   bl       #0x4a8864                     
+007126ee: 72f515fa   bl       #0x484b1c                     
+007126f2: 5df509fa   bl       #0x46fb08                     
+007126f6: fff51dff   bl       #0x512534                     
+007126fa: b4f5a1f9   bl       #0x4c6a40                     
+007126fe: 7ff507fe   bl       #0x492310                     
+00712702: 64f515fc   bl       #0x476f30                     
+00712706: 07f645fb   bl       #0x519d94                     
+0071270a: caf583fe   bl       #0x4dd414                     
+0071270e: 84f581fc   bl       #0x497014                     
+00712712: 66f557ff   bl       #0x4795c4                     
+00712716: acf587f9   bl       #0x4bea28                     
+0071271a: 90f5ebff   bl       #0x4a36f4                     
+0071271e: 5af585fe   bl       #0x46d42c                     
+00712722: 6cf51bfa   bl       #0x47eb5c                     
+00712726: 14f603f5   bl       #0x127130                     
+0071272a: aef73bf0   bl       #0x2c07a4                     
+0071272e: e3f64bfa   bl       #0x5f5bc8                     
+00712732: a2f6a7fa   bl       #0x5b4c84                     
+00712736: a7f69ffe   bl       #0x5ba478                     
+0071273a: e1f4dffc   bl       #0x3f40fc                     
+0071273e: 99f659ff   bl       #0x5ac5f4                     
+00712742: c1f679fc   bl       #0x5d4038                     
+00712746: 7ff757f9   bl       #0x6919f8                     
+0071274a: d5f797fc   bl       #0x6e807c                     
+0071274e: 53f005fc   bl       #0x765f5c                     
+00712752: 7df087f9   bl       #0x78fa64                     
+00712756: 8cf0ddf9   bl       #0x79eb14                     
+0071275a: 60f5d5ff   bl       #0x473708                     

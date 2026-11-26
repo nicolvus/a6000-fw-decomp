@@ -1,0 +1,55 @@
+original : build/cfw_fbm31_pkg395/work/libmpr-394.so
+sha256   : 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30
+gancho   : 007126e6  a2 f7 9b f0 -> 28 f2 8b fc   bl 0x0093b000  (antes: bl 0x002b4820)
+cueva    : 0093b000  00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+        -> 0093b000  10 b5 79 f5 0d f4 82 b0 00 20 00 90 01 90 7c 46 4b f6 52 21 c0 f2 0f 01 0c 44 60 68 70 b9 31 20 00 21 6a 46 01 ab 7c f5 2b f0 38 b9 00 99 01 9a 22 60 61 60 01 21 a1 60 06 21 e1 60 02 b0 10 bd
+original : 007126e6 = bl 0x002b4820 (FBM::Init) · 007126ea = 96 f5 bb f8 (no se toca)
+cueva    : 28 instrucciones verificadas; la tabla se alcanza con mov r4,pc + movw/movt 0xfba52 = C+0xfba64 = &0xa36a64 (PC-relativo, sin literales ni relocaciones)
+vuelta   : pop {r4,pc} usa el lr del bl del gancho -> continua en 007126ea (96 f5 bb f8)
+sitio    : 007126e6 en .text, PT_LOAD R+X off=00000000
+sitio    : 0093b000 en .rodata, PT_LOAD R+X off=00000000
+reloc    : 132021 entradas en .rel*; en los sitios parcheados: NINGUNA
+refs     : ldr/adr pc-relativos que leen la cueva: NINGUNO
+punteros : u32 iguales a una dirección de la cueva: NINGUNO
+           descartados por caer dentro de una instrucción: ['00495390=0x0093b014(.text)']
+diff     : 68 bytes escritos en 2 rangos (007126e6..007126e9, 0093b000..0093b03f); 64 de ellos cambian de valor (4 ya eran 0x00); tamaño 10321204 B sin cambios
+ELF      : cabecera, 5 PT_* y 25 secciones idénticas byte a byte
+desasm   : cueva 0093b000
+   0093b000: 10b5       push     {r4, lr}
+   0093b002: 79f50df4   bl       #0x2b4820
+   0093b006: 82b0       sub      sp, #8
+   0093b008: 0020       movs     r0, #0
+   0093b00a: 0090       str      r0, [sp]
+   0093b00c: 0190       str      r0, [sp, #4]
+   0093b00e: 7c46       mov      r4, pc
+   0093b010: 4bf65221   movw     r1, #0xba52
+   0093b014: c0f20f01   movt     r1, #0xf
+   0093b018: 0c44       add      r4, r1
+   0093b01a: 6068       ldr      r0, [r4, #4]
+   0093b01c: 70b9       cbnz     r0, #0x93b03c
+   0093b01e: 3120       movs     r0, #0x31
+   0093b020: 0021       movs     r1, #0
+   0093b022: 6a46       mov      r2, sp
+   0093b024: 01ab       add      r3, sp, #4
+   0093b026: 7cf52bf0   bl       #0x2b7080
+   0093b02a: 38b9       cbnz     r0, #0x93b03c
+   0093b02c: 0099       ldr      r1, [sp]
+   0093b02e: 019a       ldr      r2, [sp, #4]
+   0093b030: 2260       str      r2, [r4]
+   0093b032: 6160       str      r1, [r4, #4]
+   0093b034: 0121       movs     r1, #1
+   0093b036: a160       str      r1, [r4, #8]
+   0093b038: 0621       movs     r1, #6
+   0093b03a: e160       str      r1, [r4, #0xc]
+   0093b03c: 02b0       add      sp, #8
+   0093b03e: 10bd       pop      {r4, pc}
+desasm   : gancho 0x7126DE..0x7126F2
+   007126de: a069       ldr      r0, [r4, #0x18]
+   007126e0: 504c       ldr      r4, [pc, #0x140]
+   007126e2: 0bf682e4   blx      #0x11dfe8
+   007126e6: 28f28bfc   bl       #0x93b000
+   007126ea: 96f5bbf8   bl       #0x4a8864
+   007126ee: 72f515fa   bl       #0x484b1c
+salida   : build/cfw_fbm31_pkg395/libmpr.so
+sha256   : 9be3731213a776dbc5934e7f37d9a7a4ef50480e35b09a4e8b1d0727e0b00640
+original intacto: 9a74a3bb42836559888509b6113d281b85ae53b03eb9cdf4a965eafb545e4c30

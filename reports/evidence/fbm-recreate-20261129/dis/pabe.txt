@@ -1,0 +1,59 @@
+002aba28: 90b5       push     {r4, r7, lr}                  
+002aba2a: 83b0       sub      sp, #0xc                      
+002aba2c: 0124       movs     r4, #1                        
+002aba2e: 02af       add      r7, sp, #8                    
+002aba30: 2046       mov      r0, r4                        
+002aba32: faf7e9fd   bl       #0x2a6608                     
+002aba36: 18b9       cbnz     r0, #0x2aba40                 
+002aba38: 2448       ldr      r0, [pc, #0x90]                 ; [002abacc]=007e02a4 "handle (%d) Close"
+002aba3a: 2146       mov      r1, r4                        
+002aba3c: fff7c6fe   bl       #0x2ab7cc                     
+002aba40: 0134       adds     r4, #1                        
+002aba42: 312c       cmp      r4, #0x31                     
+002aba44: f4d1       bne      #0x2aba30                     
+002aba46: 2248       ldr      r0, [pc, #0x88]                 ; [002abad0]=007e02b6 "AllDeleteFileType"
+002aba48: fff7c0fe   bl       #0x2ab7cc                     
+002aba4c: fdf7d4f9   bl       #0x2a8df8                     
+002aba50: 2048       ldr      r0, [pc, #0x80]                 ; [002abad4]=007e02c8 "ExecEMP::WriteProtect"
+002aba52: fff7bbfe   bl       #0x2ab7cc                     
+002aba56: fff733fb   bl       #0x2ab0c0                     
+002aba5a: 1f48       ldr      r0, [pc, #0x7c]                 ; [002abad8]=007e02de "[DFB]:partition all block ERASE start"
+002aba5c: fff7b6fe   bl       #0x2ab7cc                     
+002aba60: 1e4b       ldr      r3, [pc, #0x78]                 ; [002abadc]=009e3c04
+002aba62: 0020       movs     r0, #0                        
+002aba64: 1968       ldr      r1, [r3]                      
+002aba66: f9f767fa   bl       #0x2a4f38                     
+002aba6a: 1d48       ldr      r0, [pc, #0x74]                 ; [002abae0]=0090f1e1
+002aba6c: fff7aefe   bl       #0x2ab7cc                     
+002aba70: 1c48       ldr      r0, [pc, #0x70]                 ; [002abae4]=007e0304 "[DFB]:partition all block ERASE end"
+002aba72: fff7abfe   bl       #0x2ab7cc                     
+002aba76: 0023       movs     r3, #0                        
+002aba78: c421       movs     r1, #0xc4                     
+002aba7a: 4ff41062   mov.w    r2, #0x900                    
+002aba7e: 0820       movs     r0, #8                        
+002aba80: 0093       str      r3, [sp]                      
+002aba82: 0193       str      r3, [sp, #4]                  
+002aba84: 0ff3dafe   bl       #0x5bb83c                     
+002aba88: 72f6e4e8   blx      #0x11dc54                       ; _ZN8FlashLib18DisableAllFunctionEv
+002aba8c: 1648       ldr      r0, [pc, #0x58]                 ; [002abae8]=007e0328 "[DFB]:FlashBackup AllFunction Disabled!!"
+002aba8e: fff79dfe   bl       #0x2ab7cc                     
+002aba92: 0620       movs     r0, #6                        
+002aba94: 0ff31cfc   bl       #0x5bb2d0                     
+002aba98: 0146       mov      r1, r0                        
+002aba9a: 1448       ldr      r0, [pc, #0x50]                 ; [002abaec]=007e0351 "PabeCount"
+002aba9c: 54f387f9   bl       #0x5ffdae                     
+002abaa0: 18b9       cbnz     r0, #0x2abaaa                 
+002abaa2: 0630       adds     r0, #6                        
+002abaa4: 0ff328fc   bl       #0x5bb2f8                     
+002abaa8: 04e0       b        #0x2abab4                     
+002abaaa: 0620       movs     r0, #6                        
+002abaac: 0121       movs     r1, #1                        
+002abaae: 0f4a       ldr      r2, [pc, #0x3c]                 ; [002abaec]=007e0351 "PabeCount"
+002abab0: 0ff3f2fb   bl       #0x5bb298                     
+002abab4: 0620       movs     r0, #6                        
+002abab6: 0ff3fdfb   bl       #0x5bb2b4                     
+002ababa: 0146       mov      r1, r0                        
+002ababc: 0c48       ldr      r0, [pc, #0x30]                 ; [002abaf0]=007e035b "[DFB]"dfb pabe" Count from PowerOn[%d]"
+002ababe: fff785fe   bl       #0x2ab7cc                     
+002abac2: 0120       movs     r0, #1                        
+002abac4: 07f10407   add.w    r7, r7, #4                    

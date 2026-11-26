@@ -1,0 +1,126 @@
+=== OM (OperationMode): tabla de nombres 0x7E6654, usada por 0x2B2384 (om<=0x0A) ===
+  OM  0 = 'INITIAL'
+  OM  1 = '   VF  '
+  OM  2 = '  -VR  '
+  OM  3 = '  +VR  '
+  OM  4 = 'HD-AVC '
+  OM  5 = 'M2PSAVC'
+  OM  6 = ' M2PS  '
+  OM  7 = '  DCF  '
+  OM  8 = 'DCFONLY'
+  OM  9 = 'DCFDIFF'
+  OM 10 = ' MP4   '
+  0x2B1DCC(om) == 1  <=>  om-7 <= 1  <=>  om in {7,8} (DCF/DCFONLY) => rama STILL de InitBackupData (0xA36970/0xA36C18); el resto => rama MOVIE (0xA36974/0xA36C0C)
+
+=== MediaID: tabla de nombres 0x7E6364, usada por 0x2B21AC (mediaID<=8) ===
+  mediaID 0 = '  UNKNOWN '
+  mediaID 1 = '   DVD    '
+  mediaID 2 = '   HDD    '
+  mediaID 3 = '    MS1   '
+  mediaID 4 = '    MS2   '
+  mediaID 5 = '   FLASH  '
+  mediaID 6 = '   SSD    '
+  mediaID 7 = '   USB    '
+  mediaID 8 = ' DCF DIFF '
+
+=== tabla estatica (userID, mediaID, SectorName, OM) en 0x9D23FC, paso 0x18, fin cuando +8 == -1 ===
+  idx  0  userID 16 mediaID 1 sector 0x10 OM  4
+  idx  1  userID 2  mediaID 1 sector 0x11 OM  2
+  idx  2  userID 3  mediaID 1 sector 0x12 OM  3
+  idx  3  userID 16 mediaID 2 sector 0x20 OM  4
+  idx  4  userID 4  mediaID 2 sector 0x21 OM  6
+  idx  5  userID 33 mediaID 2 sector 0x21 OM  6
+  idx  6  userID 16 mediaID 5 sector 0x28 OM  4
+  idx  7  userID 4  mediaID 5 sector 0x29 OM  6
+  idx  8  userID 33 mediaID 5 sector 0x29 OM  6
+  idx  9  userID 16 mediaID 6 sector 0x2c OM  4
+  idx 10  userID 4  mediaID 6 sector 0x2d OM  6
+  idx 11  userID 33 mediaID 6 sector 0x2d OM  6
+  idx 12  userID 16 mediaID 3 sector 0x30 OM  4
+  idx 13  userID 4  mediaID 3 sector 0x31 OM  6
+  idx 14  userID 33 mediaID 3 sector 0x31 OM  6
+  idx 15  userID 16 mediaID 4 sector 0x38 OM  4
+  idx 16  userID 4  mediaID 4 sector 0x39 OM  6
+  idx 17  userID 33 mediaID 4 sector 0x39 OM  6
+  idx 18  userID 1  mediaID 1 sector 0x40 OM  1
+  idx 19  userID 48 mediaID 1 sector 0x40 OM  1
+  idx 20  userID 32 mediaID 1 sector 0x60 OM  7
+  idx 21  userID 32 mediaID 2 sector 0x61 OM  7
+  idx 22  userID 32 mediaID 5 sector 0x68 OM  7
+  idx 23  userID 32 mediaID 6 sector 0x6c OM  7
+  idx 24  userID 32 mediaID 3 sector 0x62 OM  7
+  idx 25  userID 32 mediaID 4 sector 0x63 OM  7
+  idx 26  userID 16 mediaID 7 sector 0x90 OM  4   <- foto
+  idx 27  userID 4  mediaID 7 sector 0x91 OM  6   <- foto
+  idx 28  userID 33 mediaID 7 sector 0x91 OM  6   <- foto
+  idx 29  userID 32 mediaID 7 sector 0x92 OM  7   <- foto
+  idx 30  userID 34 mediaID 8 sector 0xa0 OM  9
+  idx 31  userID 35 mediaID 2 sector 0xb1 OM 10   <- video
+  idx 32  userID 35 mediaID 3 sector 0xb2 OM 10   <- video
+  idx 33  userID 35 mediaID 4 sector 0xb3 OM 10   <- video
+  idx 34  userID 35 mediaID 5 sector 0xb8 OM 10   <- video
+  idx 35  userID 35 mediaID 6 sector 0xbc OM 10   <- video
+  idx 36  userID 35 mediaID 7 sector 0xbd OM 10   <- video
+  fin en idx 37
+
+=== InitB: handler 0x2B5B34 (tabla 0x7E8000) ===
+--- 002b5b34..002b5b70 InitB
+002b5b34: 0228       cmp r0, #2           
+002b5b36: b0b5       push {r4, r5, r7, lr}
+002b5b38: 0c46       mov r4, r1           
+002b5b3a: 00af       add r7, sp, #0       
+002b5b3c: 11dd       ble #0x2b5b62        
+002b5b3e: 0d1d       adds r5, r1, #4      
+002b5b40: 0a48       ldr r0, [pc, #0x28]    ; 007e8890 "%s %s %s"
+002b5b42: 0ec9       ldm r1, {r1, r2, r3} 
+002b5b44: fff7dafa   bl #0x2b50fc         
+002b5b48: 6068       ldr r0, [r4, #4]     
+002b5b4a: 4af390f9   bl #0x5ffe6e         
+002b5b4e: 0446       mov r4, r0           
+002b5b50: 6868       ldr r0, [r5, #4]     
+002b5b52: 4af38cf9   bl #0x5ffe6e         
+002b5b56: 0146       mov r1, r0           
+002b5b58: 2046       mov r0, r4           
+002b5b5a: fef749fc   bl #0x2b43f0         
+002b5b5e: 0120       movs r0, #1          
+002b5b60: b0bd       pop {r4, r5, r7, pc} 
+002b5b62: 0348       ldr r0, [pc, #0xc]     ; 007e8946 "InitB [Operation Mode] [MediaID]"
+002b5b64: fff7cafa   bl #0x2b50fc         
+002b5b68: 0020       movs r0, #0          
+002b5b6a: b0bd       pop {r4, r5, r7, pc} 
+002b5b6c: 9088       ldrh r0, [r2, #4]    
+002b5b6e: 7e00       lsls r6, r7, #1      
+
+=== 0x2B43F0 BackupMgr::InitBackupData (primeras 40 instrucciones) ===
+--- 002b43f0..002b4450 InitBackupData
+002b43f0: 2de9f041   push.w {r4, r5, r6, r7, r8, lr}
+002b43f4: 9ab0       sub sp, #0x68        
+002b43f6: 02af       add r7, sp, #8       
+002b43f8: 0646       mov r6, r0           
+002b43fa: 0d46       mov r5, r1           
+002b43fc: fdf7defc   bl #0x2b1dbc         
+002b4400: 18b1       cbz r0, #0x2b440a    
+002b4402: 07f15000   add.w r0, r7, #0x50  
+002b4406: 4bf377fa   bl #0x5ff8f8         
+002b440a: 3146       mov r1, r6           
+002b440c: 2a46       mov r2, r5           
+002b440e: 5448       ldr r0, [pc, #0x150]   ; 007e7bee "[FBM] BackupMgr::InitBackupData(operationMode[%d], mediaID[%d])"
+002b4410: 00f036fe   bl #0x2b5080         
+002b4414: 5348       ldr r0, [pc, #0x14c]   ; 007e7c2e "InitBackupData"
+002b4416: fdf727fd   bl #0x2b1e68         
+002b441a: 69f684ea   blx #0x11d924          ; _ZN8FlashLib14InvalidateSyncEv
+002b441e: 3046       mov r0, r6           
+002b4420: fdf7d4fc   bl #0x2b1dcc         
+002b4424: 0128       cmp r0, #1           
+002b4426: 8046       mov r8, r0           
+002b4428: 08d0       beq #0x2b443c        
+002b442a: 4f4b       ldr r3, [pc, #0x13c]   ; [002b4568]=00a36974
+002b442c: 012d       cmp r5, #1           
+002b442e: 1e60       str r6, [r3]         
+002b4430: 4e4b       ldr r3, [pc, #0x138]   ; [002b456c]=00a36c0c
+002b4432: 1d60       str r5, [r3]         
+002b4434: 06d1       bne #0x2b4444        
+002b4436: 4e4b       ldr r3, [pc, #0x138]   ; [002b4570]=00a36c08
+002b4438: 1e60       str r6, [r3]         
+002b443a: 03e0       b #0x2b4444          
+002b443c: 4d4b       ldr r3, [pc, #0x134]   ; [002b4574]=00a36970

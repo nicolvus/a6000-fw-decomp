@@ -2,6 +2,19 @@
 
 ## FILM-PB-1 — causa raíz FBM y arreglo identificado (26-11-2026)
 
+### FILM-PB-1 — arreglo del sector FBM `0x31` (26-11-2026, verificado en arnés)
+
+El sector que falta es el `0x31` (idx 10), de `userID 0x04/0x21` con **OM 6 (M2PS)** y **media 3 (MS1)**.
+El cerrojo es `0x2B3000` saltando las filas de `0x9D23FC` con `fn == 0`; lo escribe
+`EntryWriteBaseDataFunction` (`0x2B1DEC`, consola `EWBDFD`, test de fábrica `LTC`). Vía de consola
+verificada con la imagen real de `nflasha4` en el arnés: `FBM LTC 1` + `FBM InitB 6 3` → idx 10 con
+handle y `BkRead(0x04,3)` de `0x10100001` a `0`, persistiendo tras reinicio (1 300 B escritos). El anillo
+del monitor está documentado (`libmpr+0xA4FD88`, cabecera lectura/escritura, datos en `X+0x10`, CR como
+terminador) y `tools/camera-ptrace/ptcall` + `fbm_ring.sh` lo depositan desde la cámara. Alternativa sin
+telnet: parche de 68 B en `libmpr.so` (`0x7126E6` → cueva `0x93B000`) y paquete 3.95 auditado, con vuelta
+atrás 3.96.
+
+
 La tabla de sectores del backup FBM (`0xA3699C`, 30 entradas × 0x14, `+4` = handle) tiene solo 4 entradas
 con handle en el volcado de RAM del 20-10; foto y vídeo están a 0. `ReadFirstPackData` (`0x2B3948`)
 devuelve `0x10100001` en `0x2B3A28` cuando `[entrada+4]==0`, lo que deja `Err RcsBackupTblData`,
@@ -16,6 +29,20 @@ geometría DFB. Arreglo: `BackupMgr::InitBackupData(OM, mediaID)` (`0x2B43F0`) o
 [nflasha4](../reports/film-pb-1-sub-nflasha4-20261126.md),
 [executility](../reports/film-pb-1-sub-executility-20261126.md); síntesis en
 [causa-fbm](../reports/film-pb-1-causa-fbm-20261126.md).
+
+**Checkpoint 26-11-2026 — vía de consola que registra el sector `0x31` (arnés, sin cámara).** Hecho/medido:
+la consola sola no crea nada porque `GetSectorHandleFromOperatioModeAndMediaID` (`0x2B3000`, único llamante
+`0x2B406A` dentro de `WriteBaseData`) **salta las filas de `0x9D23FC` con `fn==0`** (`0x2B301A`) y las 37 están a
+0; el único escritor de `fn`/`arg` es `BackupMgr::EntryWriteBaseDataFunction` (`0x2B1DEC`), expuesto como
+`FBM EWBDFD [user] [media] [adrs]` y, como test de fábrica, **`LTC 1`** (`0x2B5598`). En el perfil `nf4` con
+`NFLASH4=1` sobre copia del volcado: `FBM LTC 1` (o `EWBDFD 4 3 0`) + `FBM InitB 6 3` ⇒ `0x2B3000(6,3)` de
+`0x10800010` a 0 e idx 10 = `0x31`/`h3`/`+8=1`/`om6`; `BkRead(0x04,3)` = `0` (`LTC 1`) / `0x10100003`
+(`EWBDFD`), antes `0x10100001`. Persiste: `WBI` y reinicio real reconstruyen con `CheckExistSector==0x45`, sin
+órdenes. Escribe 1 300 B en `nflasha4` (páginas `0x9D400`, `0xBD780`, `0x380000`; sin la tercera `+8=0`).
+Negativos medidos: `ChgSec 6 3`, `ChgSec 4 3`, `CRFB`, `INRFB`, `DRWBI`, `WBI` → 0 B y ningún alta; `ChgSec` no
+puede crear (exige handle de origen, `0x10100006`). Bloqueado: falta la cámara. Informe:
+[consola/0x31](../reports/film-pb-1-sub-consola-sector31-20261126.md). Próximo paso exacto: en cámara, teclear
+`FBM LTC 1` + `FBM InitB 6 3` en el monitor EX-PC, reiniciar MPR y leer `base+0xA3699C` y `BkRead(0x04,3)`.
 
 
 > **E26 R9 parcial:** [revisión](../docs/capture/e26-r9-bootrom-ram-execution.md) corrige R8: CRC-32, copia por tipos distintos de 0 y 0xffff; parser R8 no válido. Falta emular la ruta, demostrar RAM ejecutable y señal física.

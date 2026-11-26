@@ -1,0 +1,69 @@
+002b6e40: b0b5       push     {r4, r5, r7, lr}              
+002b6e42: 82b0       sub      sp, #8                        
+002b6e44: 02af       add      r7, sp, #8                    
+002b6e46: 68f63ce8   blx      #0x11eec0                       ; _ZN8FlashLib9MutexLockEv
+002b6e4a: 1f4b       ldr      r3, [pc, #0x7c]                 ; [002b6ec8]=00a36c78
+002b6e4c: 1d78       ldrb     r5, [r3]                      
+002b6e4e: 2db1       cbz      r5, #0x2b6e5c                 
+002b6e50: 1e48       ldr      r0, [pc, #0x78]                 ; [002b6ecc]=007e8f14
+002b6e52: 4ff0ff34   mov.w    r4, #-1                       
+002b6e56: 69f63dfa   bl       #0x1202d4                     
+002b6e5a: 2de0       b        #0x2b6eb8                     
+002b6e5c: faf7adfa   bl       #0x2b13ba                     
+002b6e60: 0446       mov      r4, r0                        
+002b6e62: 0028       cmp      r0, #0                        
+002b6e64: 28d0       beq      #0x2b6eb8                     
+002b6e66: 4928       cmp      r0, #0x49                     
+002b6e68: 12d0       beq      #0x2b6e90                     
+002b6e6a: 2b46       mov      r3, r5                        
+002b6e6c: 1848       ldr      r0, [pc, #0x60]                 ; [002b6ed0]=007e8f39 "ForceDeleteSector"
+002b6e6e: 2146       mov      r1, r4                        
+002b6e70: 2a46       mov      r2, r5                        
+002b6e72: 0095       str      r5, [sp]                      
+002b6e74: 0195       str      r5, [sp, #4]                  
+002b6e76: 67f62ce8   blx      #0x11ded0                       ; _ZN8FlashLib11ConPutErrorEPKcmS1_mS1_m
+002b6e7a: 164b       ldr      r3, [pc, #0x58]                 ; [002b6ed4]=009d2790
+002b6e7c: 1b78       ldrb     r3, [r3]                      
+002b6e7e: 002b       cmp      r3, #0                        
+002b6e80: 1fd0       beq      #0x2b6ec2                     
+002b6e82: 882c       cmp      r4, #0x88                     
+002b6e84: 18d0       beq      #0x2b6eb8                     
+002b6e86: 892c       cmp      r4, #0x89                     
+002b6e88: 16d0       beq      #0x2b6eb8                     
+002b6e8a: e0b2       uxtb     r0, r4                        
+002b6e8c: 4af39efc   bl       #0x6017cc                     
+002b6e90: 892c       cmp      r4, #0x89                     
+002b6e92: 11d0       beq      #0x2b6eb8                     
+002b6e94: 104d       ldr      r5, [pc, #0x40]                 ; [002b6ed8]=00a36c88
+002b6e96: 2b78       ldrb     r3, [r5]                      
+002b6e98: 202b       cmp      r3, #0x20                     
+002b6e9a: 0dd8       bhi      #0x2b6eb8                     
+002b6e9c: 1020       movs     r0, #0x10                     
+002b6e9e: a2b2       uxth     r2, r4                        
+002b6ea0: 7821       movs     r1, #0x78                     
+002b6ea2: 8de80c00   stm.w    sp, {r2, r3}                  
+002b6ea6: 34fa00f3   lsrs.w   r3, r4, r0                    
+002b6eaa: 41f20a02   movw     r2, #0x100a                   
+002b6eae: 04f3c5fc   bl       #0x5bb83c                     
+002b6eb2: 2b78       ldrb     r3, [r5]                      
+002b6eb4: 0133       adds     r3, #1                        
+002b6eb6: 2b70       strb     r3, [r5]                      
+002b6eb8: 67f670eb   blx      #0x11e59c                       ; _ZN8FlashLib11MutexUnLockEv
+002b6ebc: 2046       mov      r0, r4                        
+002b6ebe: bd46       mov      sp, r7                        
+002b6ec0: b0bd       pop      {r4, r5, r7, pc}              
+002b6ec2: 882c       cmp      r4, #0x88                     
+002b6ec4: e4d1       bne      #0x2b6e90                     
+002b6ec6: f7e7       b        #0x2b6eb8                     
+002b6ec8: 786c       ldr      r0, [r7, #0x44]               
+002b6eca: a300       lsls     r3, r4, #2                    
+002b6ecc: 148f       ldrh     r4, [r2, #0x38]               
+002b6ece: 7e00       lsls     r6, r7, #1                    
+002b6ed0: 398f       ldrh     r1, [r7, #0x38]               
+002b6ed2: 7e00       lsls     r6, r7, #1                    
+002b6ed4: 9027       movs     r7, #0x90                     
+002b6ed6: 9d00       lsls     r5, r3, #2                    
+002b6ed8: 886c       ldr      r0, [r1, #0x48]               
+002b6eda: a300       lsls     r3, r4, #2                    
+002b6edc: b0b5       push     {r4, r5, r7, lr}              
+002b6ede: 82b0       sub      sp, #8                        

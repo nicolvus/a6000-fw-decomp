@@ -1,0 +1,29 @@
+002b5af4: 0228       cmp      r0, #2                        
+002b5af6: b0b5       push     {r4, r5, r7, lr}              
+002b5af8: 0c46       mov      r4, r1                        
+002b5afa: 00af       add      r7, sp, #0                    
+002b5afc: 11dd       ble      #0x2b5b22                     
+002b5afe: 0d1d       adds     r5, r1, #4                    
+002b5b00: 0a48       ldr      r0, [pc, #0x28]                 ; [002b5b2c]=007e8890 "%s %s %s"
+002b5b02: 0ec9       ldm      r1, {r1, r2, r3}              
+002b5b04: fff7fafa   bl       #0x2b50fc                     
+002b5b08: 6068       ldr      r0, [r4, #4]                  
+002b5b0a: 4af386f9   bl       #0x5ffe1a                     
+002b5b0e: 0446       mov      r4, r0                        
+002b5b10: 6868       ldr      r0, [r5, #4]                  
+002b5b12: 4af382f9   bl       #0x5ffe1a                     
+002b5b16: 0146       mov      r1, r0                        
+002b5b18: 2046       mov      r0, r4                        
+002b5b1a: fef74bfb   bl       #0x2b41b4                     
+002b5b1e: 0120       movs     r0, #1                        
+002b5b20: b0bd       pop      {r4, r5, r7, pc}              
+002b5b22: 0348       ldr      r0, [pc, #0xc]                  ; [002b5b30]=007e891f "ChangeSector[userID(HEX),mediaID(HEX)]"
+002b5b24: fff7eafa   bl       #0x2b50fc                     
+002b5b28: 0020       movs     r0, #0                        
+002b5b2a: b0bd       pop      {r4, r5, r7, pc}              
+002b5b2c: 9088       ldrh     r0, [r2, #4]                  
+002b5b2e: 7e00       lsls     r6, r7, #1                    
+002b5b30: 1f89       ldrh     r7, [r3, #8]                  
+002b5b32: 7e00       lsls     r6, r7, #1                    
+002b5b34: 0228       cmp      r0, #2                        
+002b5b36: b0b5       push     {r4, r5, r7, lr}              

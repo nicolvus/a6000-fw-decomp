@@ -1,0 +1,25 @@
+002b8b48: 98b5       push     {r3, r4, r7, lr}              
+002b8b4a: 0446       mov      r4, r0                        
+002b8b4c: 0a4b       ldr      r3, [pc, #0x28]                 ; [002b8b78]=00a36c78
+002b8b4e: 00af       add      r7, sp, #0                    
+002b8b50: 1b78       ldrb     r3, [r3]                      
+002b8b52: 63b1       cbz      r3, #0x2b8b6e                 
+002b8b54: 66f6b4e9   blx      #0x11eec0                       ; _ZN8FlashLib9MutexLockEv
+002b8b58: 2046       mov      r0, r4                        
+002b8b5a: 65f6feed   blx      #0x11e758                       ; _ZN8FlashLib14GetIdCheckFlagEm
+002b8b5e: 0146       mov      r1, r0                        
+002b8b60: 2046       mov      r0, r4                        
+002b8b62: f8f781fa   bl       #0x2b1068                     
+002b8b66: 0446       mov      r4, r0                        
+002b8b68: 65f618ed   blx      #0x11e59c                       ; _ZN8FlashLib11MutexUnLockEv
+002b8b6c: 01e0       b        #0x2b8b72                     
+002b8b6e: 4ff0ff34   mov.w    r4, #-1                       
+002b8b72: 2046       mov      r0, r4                        
+002b8b74: 98bd       pop      {r3, r4, r7, pc}              
+002b8b76: 00bf       nop                                    
+002b8b78: 786c       ldr      r0, [r7, #0x44]               
+002b8b7a: a300       lsls     r3, r4, #2                    
+002b8b7c: 98b5       push     {r3, r4, r7, lr}              
+002b8b7e: 00af       add      r7, sp, #0                    
+002b8b80: 66f69ee9   blx      #0x11eec0                       ; _ZN8FlashLib9MutexLockEv
+002b8b84: f8f735fc   bl       #0x2b13f2                     

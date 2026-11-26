@@ -2,6 +2,34 @@
 
 ## Reproducción de vídeo — FILM-PB-1, causa raíz FBM (26-11-2026, cerrada)
 
+> **Arreglo identificado y verificado en el arnés (26-11-2026).** El sector que falta es **uno solo**:
+> `0x31`, idx **10** de `0xA3699C`, compartido por `userID 0x04` y `0x21` (**OM 6 = M2PS**) con
+> **mediaID 3 (MS1, la tarjeta)**. Tabla de pares `0x9D23FC` volcada del propio ELF
+> (`reports/evidence/film-pb-1-causa-fbm-20261126/tabla_pares_om.txt`): los otros tres pares del media 3
+> ya tienen handle (`0x10` OM 4 → `0x30`, `0x20` OM 7 → `0x62`, `0x23` OM 10 → `0xB2`), y `0x90/0x91/0x92`
+> son de **media 7 (USB)**, no de la tarjeta. El cerrojo es `0x2B3000` (`0x2B301A cbz r2`): salta las 37
+> filas de `0x9D23FC` con `fn == 0`, y las 37 lo están; el único escritor de `fn` es
+> `BackupMgr::EntryWriteBaseDataFunction` (`0x2B1DEC`), expuesto en consola como `EWBDFD` y como test de
+> fábrica **`LTC`**.
+> **Vía de consola, sin flashear y persistente (1 300 B en `nflasha4`):** `FBM LTC 1` (o `FBM EWBDFD 4 3 0`)
+> y después **`FBM InitB 6 3`** → idx 10 = `0x31 / h3 / +8=1 / om6` y `BkRead(0x04,3)` pasa de
+> `0x10100001` a `0`; persiste tras reiniciar porque `FBM::Init` la reabre. El monitor se alimenta por un
+> anillo en memoria (`X = u32 en libmpr+0xA4FD88`, cabecera `[X]`=lectura `[X+4]`=escritura, datos en
+> `X+0x10`, 0x400 B, terminador CR), y desde la cámara se deposita con `tools/camera-ptrace/ptcall`
+> (`sh tools/camera-ptrace/fbm_ring.sh "FBM InitB 6 3"`). La vía `EWBDFD`/`ChgSec`/`CRFB`/`WBI` por sí
+> solas no crean nada. [Informe](film-pb-1-sub-consola-sector31-20261126.md) · [anillo](film-pb-1-sub-consola-fbm-anillo-20261127.md).
+> **Vía CFW (alternativa, sin depender del telnet):** parche de 68 B en `libmpr.so` (gancho en `0x7126E6`
+> → cueva en `0x93B000`: `FBM::Init` + `CreateSector32(0x31)` + alta manual de la entrada) medido en el
+> arnés (`idx10 h2 válido1`, `BkRead` `0x10100003`, que el llamante tolera). Paquete **3.95**
+> `build/cfw_fbm31_pkg395/pkg-3.95/package-3.95/firmware_packed.dat`
+> (sha256 `61bfcb79…b442a`, auditoría `todo_ok` 22/22, solo cambia `/lib/libmpr.so` de 715 ficheros) y
+> vuelta atrás **3.96** (`f5283bf9…6c47`). No persiste entre arranques con `libmpr` de fábrica y rota una
+> página de control de 1 KiB por arranque. [Informe](film-pb-1-sub-fbm-sector31-20261126.md) ·
+> [paquete](film-pb-1-sub-paquete-cfw395-fbm31-20261126.md).
+> **Aviso:** crear el sector **no rellena** la base de datos; después hay que dejar que la cámara la
+> reconstruya (grabar un clip nuevo o el menú de recuperación) y solo entonces probar la reproducción.
+
+
 > **La tabla de sectores del backup FBM está vacía y nada la recrea.** `0xA3699C` (30 entradas × 0x14,
 > `+4` = handle de sector de `FlashLib`) solo tiene **4 entradas con handle** en el volcado de RAM del
 > 20-10 (`0x30`, `0x62`, `0xA0`, `0xB2`); las de foto (`0x90/0x91/0x92`) y las de vídeo (idx 24…29) están
@@ -15,8 +43,15 @@
 > trae `[DFB] partition start sector = 100864`, así que el flash arranca bien; `ExecMprUtility(1)` no es
 > la vía de arranque. **Arreglo:** `BackupMgr::InitBackupData(OM, mediaID)` (`0x2B43F0`) o su consola
 > `InitB [OM] [MediaID]` (`0x2B5B5A`), y después reiniciar MPR (la tabla es un snapshot de
-> `MprIf::Create`). No escribir `nflasha4` a mano sin rollback.
-> [Informe](../reports/film-pb-1-causa-fbm-20261126.md).
+> `MprIf::Create`). **La consola sola no basta (medido 26-11-2026):** `0x2B3000` salta las filas de
+> `0x9D23FC` con `fn==0` (las 37 están a 0) y el único escritor de `fn` es `BackupMgr::EntryWriteBaseDataFunction`
+> (`0x2B1DEC`), que la consola expone como `EWBDFD`/`CWBDF` — y como el test de fábrica **`LTC 1`**.
+> Secuencia que funciona en el arnés (`NFLASH4=1`): `FBM LTC 1` (o `FBM EWBDFD 4 3 0`) + `FBM InitB 6 3`
+> ⇒ idx 10 de `0xA3699C` = `0x31`/handle válido/`+8=1`, `BkRead(0x04,3)` = `0` (`0x10100003` con el dummy)
+> y **persiste** al reiniciar (1 300 B en `nflasha4`: páginas `0x9D400`, `0xBD780` y `0x380000`).
+> No escribir `nflasha4` a mano sin rollback.
+> [Informe causa](../reports/film-pb-1-causa-fbm-20261126.md) ·
+> [informe consola/0x31](../reports/film-pb-1-sub-consola-sector31-20261126.md).
 
 
 ## Reproducción de vídeo — FILM-PB-1 (26-11-2026)

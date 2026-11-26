@@ -1,0 +1,78 @@
+002b3948: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+002b394c: 89b0       sub      sp, #0x24                     
+002b394e: 0446       mov      r4, r0                        
+002b3950: 04af       add      r7, sp, #0x10                 
+002b3952: 1848       ldr      r0, [pc, #0x60]                 ; [002b39b4]=007e767f "ReadNextPackData"
+002b3954: 0d46       mov      r5, r1                        
+002b3956: 1646       mov      r6, r2                        
+002b3958: 9846       mov      r8, r3                        
+002b395a: fef785fa   bl       #0x2b1e68                     
+002b395e: 2046       mov      r0, r4                        
+002b3960: fff7a8ff   bl       #0x2b38b4                     
+002b3964: 07f10f03   add.w    r3, r7, #0xf                  
+002b3968: 628c       ldrh     r2, [r4, #0x22]               
+002b396a: 8de84800   stm.w    sp, {r3, r6}                  
+002b396e: 3b1d       adds     r3, r7, #4                    
+002b3970: 2069       ldr      r0, [r4, #0x10]               
+002b3972: 0293       str      r3, [sp, #8]                  
+002b3974: 3b1c       adds     r3, r7, #0                    
+002b3976: 6168       ldr      r1, [r4, #4]                  
+002b3978: 0393       str      r3, [sp, #0xc]                
+002b397a: 07f10803   add.w    r3, r7, #8                    
+002b397e: fef77dfe   bl       #0x2b267c                     
+002b3982: 8146       mov      sb, r0                        
+002b3984: 30b9       cbnz     r0, #0x2b3994                 
+002b3986: 3b68       ldr      r3, [r7]                      
+002b3988: ba68       ldr      r2, [r7, #8]                  
+002b398a: 2361       str      r3, [r4, #0x10]               
+002b398c: a368       ldr      r3, [r4, #8]                  
+002b398e: 9a42       cmp      r2, r3                        
+002b3990: e8d1       bne      #0x2b3964                     
+002b3992: 09e0       b        #0x2b39a8                     
+002b3994: 0748       ldr      r0, [pc, #0x1c]                 ; [002b39b4]=007e767f "ReadNextPackData"
+002b3996: 4946       mov      r1, sb                        
+002b3998: fef7defa   bl       #0x2b1f58                     
+002b399c: 4846       mov      r0, sb                        
+002b399e: 07f11407   add.w    r7, r7, #0x14                 
+002b39a2: bd46       mov      sp, r7                        
+002b39a4: bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}  
+002b39a8: fb7b       ldrb     r3, [r7, #0xf]                
+002b39aa: 2b70       strb     r3, [r5]                      
+002b39ac: 7b68       ldr      r3, [r7, #4]                  
+002b39ae: c8f80030   str.w    r3, [r8]                      
+002b39b2: efe7       b        #0x2b3994                     
+002b39b4: 7f76       strb     r7, [r7, #0x19]               
+002b39b6: 7e00       lsls     r6, r7, #1                    
+002b39b8: 2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}  
+002b39bc: 85b0       sub      sp, #0x14                     
+002b39be: 00af       add      r7, sp, #0                    
+002b39c0: 9846       mov      r8, r3                        
+002b39c2: 0546       mov      r5, r0                        
+002b39c4: 7b6b       ldr      r3, [r7, #0x34]               
+002b39c6: 0c46       mov      r4, r1                        
+002b39c8: 2048       ldr      r0, [pc, #0x80]                 ; [002b3a4c]=007e7690 "ReadFirstPackData"
+002b39ca: 1646       mov      r6, r2                        
+002b39cc: 7b60       str      r3, [r7, #4]                  
+002b39ce: fef74bfa   bl       #0x2b1e68                     
+002b39d2: 2146       mov      r1, r4                        
+002b39d4: 07f10f02   add.w    r2, r7, #0xf                  
+002b39d8: 2846       mov      r0, r5                        
+002b39da: fff7b5fa   bl       #0x2b2f48                     
+002b39de: fa7b       ldrb     r2, [r7, #0xf]                
+002b39e0: 1421       movs     r1, #0x14                     
+002b39e2: 5143       muls     r1, r2, r1                    
+002b39e4: 7b68       ldr      r3, [r7, #4]                  
+002b39e6: 8146       mov      sb, r0                        
+002b39e8: 1948       ldr      r0, [pc, #0x64]                 ; [002b3a50]=00a3699c
+002b39ea: 4218       adds     r2, r0, r1                    
+002b39ec: 5268       ldr      r2, [r2, #4]                  
+002b39ee: dab1       cbz      r2, #0x2b3a28                 
+002b39f0: b9f1000f   cmp.w    sb, #0                        
+002b39f4: 1ad1       bne      #0x2b3a2c                     
+002b39f6: 415a       ldrh     r1, [r0, r1]                  
+002b39f8: 1846       mov      r0, r3                        
+002b39fa: 83f82490   strb.w   sb, [r3, #0x24]               
+002b39fe: 5a60       str      r2, [r3, #4]                  
+002b3a00: 4246       mov      r2, r8                        
+002b3a02: 1980       strh     r1, [r3]                      
+002b3a04: 3146       mov      r1, r6                        
