@@ -84,6 +84,7 @@ hold are forbidden.
 - `site/status.json` and `site/badge-*.json` are **generated**: regenerate them with `scripts/build_pages_status.py`, never edit by hand.
 - `site/index.html`, `site/app.js`, `site/styles.css` and `site/progress/index.html` are hand-written; their data must match
   `docs/STATE.md` and `README.md`.
+- The site front page comes in a pair: `site/index.html` (Spanish) and `site/en/index.html` (English), each linking to the other. `site/progress/` is generated and stays Spanish-only until translating it is decided.
 - Site and wiki publish themselves (`pages.yml`, `wiki.yml`); nobody publishes by hand.
 
 ## 9. Absolute prohibitions

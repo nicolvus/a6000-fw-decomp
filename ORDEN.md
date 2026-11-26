@@ -84,6 +84,7 @@ secciones que ya no se sostienen.
 - `site/status.json` y `site/badge-*.json` son **generados**: se regeneran con `scripts/build_pages_status.py`, nunca se editan a mano.
 - `site/index.html`, `site/app.js`, `site/styles.css` y `site/progress/index.html` son manuales; sus datos deben coincidir con
   `docs/STATE.md` y `README.md`.
+- La portada del sitio tiene par: `site/index.html` (español) y `site/en/index.html` (inglés), con selector cruzado en las dos. El tablero `site/progress/` es generado y va solo en español hasta que se decida traducirlo.
 - El sitio y la wiki se publican solos (`pages.yml`, `wiki.yml`); nadie publica a mano.
 
 ## 9. Prohibiciones absolutas
