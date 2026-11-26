@@ -20,6 +20,7 @@ The reports, backlog and code comments are in Spanish; issues and pull requests 
 - Every task that is done, dropped or reopened updates [`docs/PENDIENTES.md`](docs/PENDIENTES.md) in the same change; every new open item is added there with an ID, origin and closing criterion.
 - After editing any indexed `.md`: `python scripts/knowledge/index_docs.py && python scripts/knowledge/build_graph.py && python scripts/knowledge/export_corrections.py` and run the first two again (see the `knowledge-maintenance` skill).
 - The `.md` files are not a history log: edit them so they state the current truth; history lives in Git. Do not leave old versions or "it used to say" notes.
+- File order, names, states and EN/ES pairs are **mandatory**: [ORDER.md](ORDER.md). Before every commit: `python scripts/audit/check_order.py` and `pytest tests/test_order.py`.
 - To change the wiki, edit `wiki/` (Spanish pages and their `en-*` English counterparts together); a workflow publishes it to the GitHub wiki on merge to `main`.
 
 ## License

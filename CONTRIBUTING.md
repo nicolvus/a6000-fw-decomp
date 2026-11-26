@@ -19,6 +19,7 @@ Gracias por querer ayudar. Este proyecto es ingeniería inversa del firmware de 
 - Toda tarea que se haga, descarte o reabra actualiza [`docs/PENDIENTES.md`](docs/PENDIENTES.md) en el mismo cambio; todo pendiente nuevo se añade allí con ID, origen y criterio de cierre.
 - Tras editar cualquier `.md` indexado: `python scripts/knowledge/index_docs.py && python scripts/knowledge/build_graph.py && python scripts/knowledge/export_corrections.py` y vuelve a ejecutar los dos primeros (ver la skill `knowledge-maintenance`).
 - Los `.md` no son un historial: se editan para que digan la verdad actual; el historial está en Git. No dejes versiones antiguas ni notas de «antes decía».
+- El orden de ficheros, nombres, estados y pares ES/EN es **obligatorio**: [ORDEN.md](ORDEN.md). Antes de cada commit: `python scripts/audit/check_order.py` y `pytest tests/test_order.py`.
 - Si cambias la wiki, edita `wiki/` (las páginas en español y su equivalente `en-*` en inglés a la vez); un workflow la publica en la wiki de GitHub al fusionar en `main`.
 
 ## Licencia

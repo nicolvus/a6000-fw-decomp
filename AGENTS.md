@@ -34,6 +34,9 @@ REA y Ghidra comparten motor; verifica lo decisivo contra bytes/instrucciones. R
 Servidor MCP compartido con Claude Code: ver `knowledge/PROGRESS.md` (Fase 6)
 para el snippet de `~/.codex/config.toml` necesario para habilitarlo aquí.
 
+Orden del repositorio: `ORDEN.md` es vinculante (dónde va cada fichero, nombres, estados, pares ES/EN de la wiki);
+compruébalo con `python3 scripts/audit/check_order.py` antes de cada commit.
+
 Pendientes: `docs/PENDIENTES.md` es el índice maestro de lo que falta. Regla permanente: toda tarea que se haga, descarte o reabra actualiza ese documento en el mismo commit, y todo pendiente nuevo que se descubra se añade allí (ID nuevo, origen y criterio de cierre). No se cierra una fase sin revisarlo.
 
 ## Regla permanente: reinicio experimental en cada sesión física
