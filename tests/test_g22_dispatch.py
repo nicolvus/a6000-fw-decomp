@@ -469,3 +469,108 @@ def test_el_filtro_fija_el_destino_de_sus_dos_copias_y_no_toca_el_original(viewu
     assert _w(viewunified2, 0x182098) == 0x150701A0, "0x182098: código de la 2.ª copia"
     escrituras = [va for va in range(FILTRO, FILTRO_FIN, 2) if 0x7200 <= _h(viewunified2, va) <= 0x723F]
     assert escrituras == [], f"strb rX,[rY,#8] dentro del filtro: {[hex(v) for v in escrituras]}"
+
+
+# ---------------------------------- G22-OYENTE: quién recibe de verdad el bit 8 (el reparto multicast)
+# Medido en el invitado el 26-11-2026 (docs/gui/g22-reproduccion-dispatch.md §8): `[AppSystem+0x1c]` NO es un
+# `DefRootView::ActionEventMapBase`, es un **`UtilityManager`** (vtable `libObj+0xfea630`, RTTI `14UtilityManager`), y su
+# ranura `+8` es `libObj+0x10e8ec`: el reparto a TODOS los oyentes del `std::map<int, UtilityBase*>` de `this+0x14`.
+UTIL_VTABLE = 0xFEA630  # vtable de [AppSystem+0x1c]
+UTIL_SLOT8 = 0x10E8EC  # UtilityManager: reparto a todos los oyentes (ranura +8)
+UTIL_TRAMPA = 0x10E914  # `ldr r3,[r0]` del bucle: aquí se ve cada oyente (r0) y el Event* (r1)
+UTIL_BEGIN = 0x10E8C8  # begin() del mapa: `ldr r1,[r3,#0xc]`
+UTIL_END = 0x10E8A6  # end(): el iterador es `lista+4`
+UTIL_DEREF = 0x10E844  # iterador → valor: `ldr r0,[r0]` + `adds r0,#0x10`
+UTIL_REGIST = 0x10EE08  # UtilityManager::regist(int, UtilityBase*)
+UTIL_CTOR = 0x10EB48  # constructor: `str r3,[r0],#0x14` (el mapa empieza en +0x14)
+UTIL_RTTI = "14UtilityManager"  # nombre del typeinfo (la cadena _ZTS… sin prefijo)
+EVIDENCIA_OYENTES = ROOT / "reports/evidence/g22-oyente-20261126/oyentes-oyente1.txt"
+
+
+def test_el_objeto_del_bit_8_es_un_utility_manager(libobj: Elf) -> None:
+    """La vtable que el invitado midió en `libObj+0xfea630` es de `UtilityManager`, no de una vista.
+
+    Rompe la lectura del §7 («la ranura `+8` es `ActionEventMapBase::DispatchEvent`»): `offset-to-top` 0, typeinfo en
+    `vtable-4` cuya cadena de nombre es `14UtilityManager`, y la ranura `+8` = `0x10e8ec` (el reparto), no `0xf59f0`.
+    """
+    assert _w(libobj, UTIL_VTABLE - 8) == 0, "offset-to-top de la vtable (vtable principal)"
+    ti = _w(libobj, UTIL_VTABLE - 4)
+    nombre = libobj.cstr(_w(libobj, ti + 4))
+    assert nombre == UTIL_RTTI, f"RTTI de la vtable: {nombre}"
+    assert "View" not in nombre and "Action" not in nombre
+    assert _w(libobj, UTIL_VTABLE + 8) == UTIL_SLOT8 | 1, "ranura +8 = reparto del UtilityManager"
+    assert _w(libobj, UTIL_VTABLE + 8) != DISPATCH_THUNK | 1, "no es el thunk de ActionEventMapBase"
+    simbolos = libobj.dinamicos()
+    assert simbolos["_ZN14UtilityManager6registEiP11UtilityBase"] == UTIL_REGIST | 1
+
+
+def test_la_ranura_de_repuesto_del_utility_manager_solo_aparece_una_vez(libobj: Elf) -> None:
+    """`0x10e8ed` aparece **una** vez en todo el fichero: la clase que lo tiene como ranura `+8` es única y localizable.
+
+    Es lo que permite afirmar sin ambigüedad que la tabla del objeto del bit 8 es `libObj+0xfea630`.
+    """
+    patron = struct.pack("<I", UTIL_SLOT8 | 1)
+    apariciones = []
+    desde = 0
+    while (i := libobj.d.find(patron, desde)) >= 0:
+        apariciones.append(i)
+        desde = i + 1
+    va = libobj.v2o(UTIL_VTABLE + 8)
+    assert apariciones == [va], [hex(a) for a in apariciones]
+
+
+def test_el_reparto_recorre_el_mapa_y_llama_a_vtable_8_por_oyente(libobj: Elf) -> None:
+    """`0x10e8ec` es un bucle `for (oyente : mapa) (*oyente)->vtable[8](oyente, evento)`; la trampa va en `0x10e914`.
+
+    Se fijan los bytes: `push {r4,r5,r7,lr}`, `add.w r5,r0,#0x14` (el mapa), `ldr r0,[r0,#4]` (el valor del par), y las
+    tres instrucciones de la llamada virtual (`ldr r3,[r0]` · `ldr r3,[r3,#8]` · `blx r3`).
+    """
+    assert _h(libobj, UTIL_SLOT8) == 0xB5B0, "push {r4,r5,r7,lr}"
+    assert (_h(libobj, UTIL_SLOT8 + 2), _h(libobj, UTIL_SLOT8 + 4)) == (0xF100, 0x0514), "add.w r5,r0,#0x14"
+    assert _h(libobj, UTIL_TRAMPA - 2) == 0x6840, "ldr r0,[r0,#4] sobre el nodo"
+    assert _h(libobj, UTIL_TRAMPA) == 0x6803, "ldr r3,[r0]  ← la instrucción que se sustituye por UDF en OYD"
+    assert _h(libobj, UTIL_TRAMPA + 2) == 0x689B, "ldr r3,[r3,#8]"
+    assert _h(libobj, UTIL_TRAMPA + 4) == 0x4798, "blx r3"
+    # la llamada al oyente lleva el Event* en r1 (mov r1,r4) y el oyente en r0
+    assert _h(libobj, UTIL_TRAMPA - 4) == 0x4621, "mov r1,r4"
+
+
+def test_begin_end_y_valor_del_mapa_de_oyentes(libobj: Elf) -> None:
+    """`this+0x14` es un `std::map<int, UtilityBase*>`: begin = `[lista+0xc]`, end = `lista+4`, valor = `nodo+0x14`.
+
+    El incremento no está en libObj: es una función importada, alcanzada por el veneer ARM de `0xe0b00`. Por eso el
+    shim no recorre el árbol (usaría offsets de un STL ajeno) y se limita a leer r0 en `0x10e914`, que es el oyente que
+    el propio firmware acaba de sacar del mapa.
+    """
+    assert _h(libobj, UTIL_BEGIN) == 0xB580, "push {r7,lr}"
+    assert _h(libobj, UTIL_BEGIN + 10) == 0x68D9, "ldr r1,[r3,#0xc]  (left del header = begin)"
+    assert _h(libobj, UTIL_END) == 0xB580 and _h(libobj, UTIL_END + 6) == 0x1D01, "adds r1,r0,#4 (end = lista+4)"
+    assert _h(libobj, UTIL_DEREF) == 0x6800, "ldr r0,[r0]"
+    assert _h(libobj, UTIL_DEREF + 4) == 0x3010, "adds r0,#0x10"
+    assert (_h(libobj, 0x10E834), _h(libobj, 0x10E83A)) == (0x6804, 0xF7D2), "++ del mapa: veneer importado"
+    assert _h(libobj, UTIL_CTOR + 0x10) == 0xF840, "str r3,[r0],#0x14 del constructor"
+
+
+def test_la_evidencia_del_invitado_da_ocho_oyentes_y_ninguno_es_una_vista() -> None:
+    """La traza `OYENTE` del invitado (26-11-2026) lista los 8 oyentes y la cuenta del mapa.
+
+    Se comprueba la evidencia guardada: 8 oyentes distintos, el mapa dice `oyentes=8` y **ningún** RTTI es una vista
+    (`View`/`ActionEventMap`/`DefRootView`): el reparto del bit 8 no toca la vista de disparo, que es la razón por la que
+    `execAction` sigue a 0 por mucho que se le sume el bit 8 al destino.
+    """
+    if not EVIDENCIA_OYENTES.exists():
+        pytest.skip(f"falta la evidencia {EVIDENCIA_OYENTES}")
+    filas = [ln for ln in EVIDENCIA_OYENTES.read_text().splitlines() if "OYENTE" in ln]
+    assert filas, "la evidencia no tiene líneas OYENTE"
+    oyentes, rttis = [], []
+    for ln in filas:
+        assert "oyentes=8" in ln, f"la cuenta del mapa no es 8: {ln}"
+        oyentes.append(re.search(r"oyente=(0x[0-9a-f]+)", ln).group(1))
+        rttis.append(re.search(r"rtti=(\S+)", ln).group(1))
+    assert len(filas) == 8, f"se esperaban los 8 oyentes del mapa, hay {len(filas)}"
+    assert len(set(oyentes)) == 8, oyentes
+    assert len(set(rttis)) == 8, rttis
+    for nombre in rttis:
+        assert "View" not in nombre and "ActionEventMap" not in nombre and "DefRootView" not in nombre, nombre
+    texto = " ".join(rttis)
+    assert "InputService" in texto and "LookManager" in texto and "HighlightManagerCustom" in texto

@@ -1159,8 +1159,15 @@ static unsigned long gpu_pc;  /* libObj+0x6c4c46: «str r1,[r3,r0]» de rm_reg_w
 /* Experimento (TRACEFN=716800,6cd1e0,...): traza de una sola vez (UDF + restauración) de la entrada de esas funciones de libObj: r0-r3 y lr. */
 static struct { unsigned long pc, step; unsigned short orig, orig2; unsigned hits; } trc[32]; static int ntrc; static unsigned long trc_base; static volatile unsigned long app_sys;  /* app_sys: r0 de AppSystem::dispatch (libObj+0x7eed0c) en su primera traza */
 static void gpu_exec(unsigned off, unsigned val);
+/* OYD (G22-OYENTE): identifica a los oyentes del reparto multicast. La trampa vive en libObj+0x10e914 (`ldr r3,[r0]`,
+ * la primera de las tres instrucciones que hacen `(*oyente)->vtable[8](oyente, Event*)`), y se EMULA en el manejador
+ * para que la trampa sea repetible sin tocar la instrucción siguiente (TRACEREP parchea 0x10e916, que también ejecutan
+ * otros hilos). Ver oyd_arm()/oyd_hit() más abajo. */
+static unsigned long oyd_base; static unsigned oyd_n;
+static void oyd_hit(mcontext_t *c);
 static void on_trace(int sig, siginfo_t *si, void *u) {
     mcontext_t *c = &((ucontext_t *)u)->uc_mcontext; unsigned long pc = c->arm_pc & ~1UL; int i;
+    if (oyd_base && pc == oyd_base + 0x10e914) { oyd_hit(c); return; }  /* OYD: el oyente va en r0 y el evento en r1; se emula `ldr r3,[r0]` */
     if (efcs_pc && pc == efcs_pc) {  /* se restaura la instrucción y se reejecuta; solo valores 1/2 del registro (av-cam 0x2d9e7c acepta esos) */
         unsigned len = 0, *d = bk_find(0x107086e, &len), v = d && len ? *(unsigned char *)d : 0; unsigned *prop = *(unsigned **)(c->arm_r4 + 0x428);
         if ((v == 1 || v == 2) && prop) for (int k = 0; k < 2; k++) ((void (*)(void *, unsigned, unsigned))((void **)*(void **)prop)[5])(prop, k, v);  /* set (vtable+0x14, 0x41589e): ranura + palabra de estado */
@@ -1349,6 +1356,56 @@ static unsigned long libbase_de(const char *nombre) {
     if (m) fclose(m);
     return base;
 }
+/* OYD=1 (G22-OYENTE; APAGADO por omisión): QUIÉN recibe el evento en el reparto multicast y qué hace con él.
+ * Medido (docs/gui/g22-reproduccion-dispatch.md §7.4 y §8): `AppSystem::dispatch` manda el bit 8 del destino a
+ * `(*[AppSystem+0x1c])->vtable[+8]`; ese objeto es un `UtilityManager` (vtable `libObj+0xfea630`, RTTI
+ * «14UtilityManager», `offset-to-top` 0, y su ranura +8 = `libObj+0x10e8ec` = el reparto), NO un
+ * `DefRootView::ActionEventMapBase` (0xf59f0 es el thunk `this->[this]->vtable[8]` de esa otra clase). El reparto
+ * recorre el `std::map<int, UtilityBase*>` de `this+0x14` (VERIFICADO con capstone y con `UtilityManager::regist`
+ * `libObj+0x10ee08`): header en `this+0x18` (color +0, parent +4, left +8, right +0xc y cuenta +0x10 → `this+0x28`),
+ * begin() = left más a la izquierda (`[this+0x20]`), nodo = {+0 color, +4 parent, +8 left, +0xc right,
+ * +0x10 clave(int), +0x14 puntero al oyente} y el incremento es la función importada del veneer `0xe0b00`. Con
+ * `0x10e914` (`68 03` = `ldr r3,[r0]`) se tiene r0 = oyente y r1 = `Event*`; aquí se emula esa carga (r3 = vtable) y se
+ * imprime por oyente su clave, su puntero, su vtable, la ranura +8 y el nombre RTTI, cada uno como
+ * «biblioteca+desplazamiento» (dladdr), más el tamaño del mapa. Diagnóstico del arnés, no de la cámara. */
+static const char *oy_de(unsigned long p, char *b, int n) {
+    Dl_info di;
+    if (!p) { snprintf(b, n, "NULL"); return b; }
+    if (dladdr((void *)p, &di) && di.dli_fname) { const char *s = strrchr(di.dli_fname, '/'); snprintf(b, n, "%s+%#lx", s ? s + 1 : di.dli_fname, p - (unsigned long)di.dli_fbase); }
+    else snprintf(b, n, "fuera-de-biblioteca(%#lx)", p);
+    return b;
+}
+static void oyd_hit(mcontext_t *c) {
+    unsigned long oy = c->arm_r0, ev = c->arm_r1, vt = oy ? *(unsigned long *)oy : 0, pc = c->arm_pc & ~1UL;
+    unsigned n = ++oyd_n;
+    if (!(n <= 16 || !(n & (n - 1)))) { c->arm_r3 = vt; c->arm_pc = pc + 2; return; }  /* primeras 16 y potencias de 2 */
+    char b1[64], b2[64], b3[64], rt[96] = "?";
+    unsigned long tgt = vt ? *(unsigned long *)(vt + 8) : 0;
+    Dl_info di;
+    if (vt && dladdr((void *)vt, &di)) {  /* el nombre RTTI cuelga de vtable-4 (typeinfo) y de typeinfo+4 (cadena _ZTS…) */
+        unsigned ti = *(unsigned *)(vt - 4);
+        if (ti) { const char *nm = *(const char **)(ti + 4); if (nm) { strncpy(rt, nm, sizeof rt - 1); rt[sizeof rt - 1] = 0; } }
+    }
+    /* clave del mapa: el nodo empieza 0x14 B antes del valor (`pair<const int, UtilityBase*>`); cuenta en this+0x28 */
+    efp("[shim] OYENTE n=%u clave=%ld oyente=%#lx (%s) vtable=%#lx (%s) slot8=%#lx (%s) rtti=%s evento=%#lx codigo=%#lx dest=%#x clase=%#x oyentes=%u\n",
+        n, (long)*(int *)(oy - 4), oy, oy_de(oy, b1, sizeof b1), vt, oy_de(vt, b2, sizeof b2), tgt, oy_de(tgt, b3, sizeof b3), rt,
+        ev, ev ? *(unsigned long *)(ev + 4) : 0, ev ? *(unsigned char *)(ev + 8) : 0, ev ? *(unsigned char *)(ev + 9) : 0,
+        c->arm_r5 ? *(unsigned *)(c->arm_r5 + 0x14) : 0);
+    c->arm_r3 = vt; c->arm_pc = pc + 2;  /* se emula `ldr r3,[r0]` y se sigue en pc+2 */
+}
+static void oyd_arm(void) {
+    const char *e = getenv("OYD"); if (!e || *e == '0') return;
+    if (oyd_base) return;
+    unsigned long base = libbase_de("libObj.so");
+    if (!base) { LOG("OYD: libObj no hallada"); return; }
+    unsigned short *p = (unsigned short *)(base + 0x10e914);
+    if (*p != 0x6803) { LOG("OYD: libObj distinta (%#x en +0x10e914, se esperaba 6803): sin trampa", *p); return; }
+    struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_trace; sa.sa_flags = SA_SIGINFO | SA_NODEFER; sigaction(SIGILL, &sa, 0);
+    mprotect((void *)((unsigned long)p & ~4095UL), 8192, PROT_READ | PROT_WRITE | PROT_EXEC);
+    *p = 0xde00; __builtin___clear_cache((char *)p, (char *)p + 2);
+    oyd_base = base;
+    LOG("OYD: trampa en libObj+0x10e914 (oyente en r0, evento en r1); ldr r3,[r0] se emula en el manejador");
+}
 static void dest4_a_c(unsigned long base, unsigned long off, const char *lib) {
     if (!base) return;                                       /* la biblioteca aún no está mapeada: se reintenta en el siguiente dlopen */
     unsigned short *p = (unsigned short *)(base + off);
@@ -1400,7 +1457,7 @@ void *dlopen(const char *f, int fl) {
     if (f && strstr(f, "viewUnified")) gpu_live = 1;
     LOG("dlopen(%s) ...", f ? f : "(null)");
     void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
-    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lrm_arranque(); lobj_h = h; mwf_nullsafe(); evqnotify(); destkey(); destkeyv(); }
+    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lrm_arranque(); lobj_h = h; mwf_nullsafe(); evqnotify(); destkey(); destkeyv(); oyd_arm(); }
     if (h && f && strstr(f, "viewUnified")) destkeyv();  /* DESTKEYV: viewUnified2 entra por dlopen DESPUÉS de libObj; el parche de sus dos literales se hace aquí (idempotente) */
     if (h && f && getenv("TRACELIB") && (strstr(f, getenv("TRACELIB")) || strstr(f, "viewUnified")) && !trc_lib_done) {  /* la biblioteca puede entrar como dependencia de viewUnified*: se busca en /proc/self/maps tras cada dlopen hasta hallarla */
         char ln[256]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");
@@ -2285,7 +2342,8 @@ static void *live_keys(void *a) {
             *nl = 0; const char *e;
             if (ln[0] == 'T') { LOG("hora del anfitrión %s", ln + 2); date_base = (long long)hexv(ln + 2, &e); date_mono0 = mono_s(); date_have = 1; }  /* «T epoch_local_hex»: hora local del anfitrión (+ desfase del usuario); se avanza con el reloj monotónico */
             if (ln[0] == 'E') { char *eq = strchr(ln + 2, '='); if (eq) { *eq = 0; hotenv_set(ln + 2, eq + 1); LOG("env %s=%s", ln + 2, eq + 1);
-                if (!strcmp(ln + 2, "TRACEFN") && trc_base) { trace_fns(trc_base); LOG("TRACEFN armadas en caliente (%d)", ntrc); }
+                if (!strcmp(ln + 2, "TRACEFN")) { unsigned long b = trc_base ? trc_base : libbase_de("libObj.so"); if (b) { trace_fns(b); LOG("TRACEFN armadas en caliente (%d)", ntrc); } else LOG("TRACEFN: libObj no hallada"); }  /* sin TRACEFN en el arranque la base se busca ahora (G22-OYENTE) */
+                if (!strcmp(ln + 2, "OYD")) oyd_arm();  /* «E OYD=1»: arma la trampa de los oyentes en caliente (G22-OYENTE) */
                 if (!strcmp(ln + 2, "TRACEFN2") && getenv("TRACELIB")) {  /* «E TRACEFN2=…» con TRACELIB: arma las trampas en la biblioteca ya mapeada (la carga por dlopen puede no pasar por el gancho) */
                     char ml[300]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");
                     while (m && fgets(ml, sizeof ml, m)) if (strstr(ml, getenv("TRACELIB"))) { base = hexv(ml, 0); break; }

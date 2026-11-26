@@ -162,9 +162,14 @@ def test_50004_pinget_responde_con_eco_de_pin() -> None:
 
 
 def test_tracefn_se_arma_en_caliente_sin_pisar_trampas_armadas() -> None:
-    """§10: «E TRACEFN=…» arma trampas tras el arranque; una dirección aún armada (UDF 0xde00) no se vuelve a guardar como original."""
+    """§10: «E TRACEFN=…» arma trampas tras el arranque; una dirección aún armada (UDF 0xde00) no se vuelve a guardar como original.
+
+    G22-OYENTE (26-11-2026): si el arranque no llevaba `TRACEFN`, `trc_base` está a 0 y el armado en caliente busca la base
+    de `libObj` con `libbase_de()`; antes la condición exigía `trc_base` y el armado se quedaba sin efecto.
+    """
     src = (HARNESS / "shim/sonyshim.c").read_text()
-    assert '!strcmp(ln + 2, "TRACEFN") && trc_base) { trace_fns(trc_base)' in src and "if (*p == 0xde00)" in src
+    assert '!strcmp(ln + 2, "TRACEFN")) { unsigned long b = trc_base ? trc_base : libbase_de("libObj.so")' in src
+    assert "trace_fns(b);" in src and "if (*p == 0xde00)" in src
 
 
 def test_fecha_inicial_900141_orden_3_responde_con_fecha() -> None:
@@ -864,3 +869,23 @@ def test_destkeyv_parchea_los_tres_sitios_medidos_y_comprueba_los_bytes() -> Non
     assert 'dest4_a_c(libbase_de("libObj.so"), 0x113076, "libObj")' in src
     # se llama en los dos ganchos: libObj (la tecla) y viewUnified2 (las copias del filtro)
     assert src.count("destkeyv();") == 2
+
+
+def test_oyd_pone_un_udf_repetible_en_10e914_y_emula_la_carga() -> None:
+    """G22-OYENTE: `OYD=1` instrumenta el reparto multicast sin tocar la instrucción siguiente.
+
+    La trampa va en `libObj+0x10e914` (`68 03` = `ldr r3,[r0]`, dentro del bucle del reparto de `UtilityManager`), y se
+    EMULA en el manejador (`c->arm_r3 = vt; c->arm_pc = pc + 2`) para que sea repetible: `TRACEREP` parchearía `0x10e916`,
+    que también ejecutan otros hilos. Tiene que comprobar los bytes antes de escribir e imprimir «biblioteca+desplazamiento»
+    del oyente, su vtable, la ranura `+8` y el nombre RTTI (es lo que identifica a los 8 oyentes medidos).
+    """
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    assert 'getenv("OYD")' in src
+    assert '"libObj.so"), 0x10e914' not in src  # la base se busca en la propia función, no en el gancho
+    assert "0x10e914" in src and "*p != 0x6803" in src and "*p = 0xde00" in src
+    assert "oyd_hit(c)" in src and "oyd_arm();" in src
+    # emulación de `ldr r3,[r0]`: se escribe la vtable en r3 y se salta la instrucción
+    bloque = src[src.index("static void oyd_hit") : src.index("static void oyd_arm")]
+    assert "c->arm_r3 = vt; c->arm_pc = pc + 2" in bloque
+    assert "dladdr" in bloque and "strncpy(rt, nm" in bloque  # nombre RTTI del oyente
+    assert "oyentes=%u" in bloque and "arm_r5 + 0x14" in bloque  # cuenta del mapa en this+0x28
