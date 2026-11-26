@@ -1,0 +1,373 @@
+{
+  "meta": {
+    "titulo": "Live View y getEvent del Camera Remote API de la Sony A6000 (fw 3.21)",
+    "fecha": "2026-10-28",
+    "idioma": "es",
+    "tipo": "analisis-estatico",
+    "reglas": "Sin ejecucion, sin camara, sin escrituras. Etiquetas: VERIFICADO / INFERENCIA / NO_VERIFICADO.",
+    "entregable_md": "analysis/eyeaf/orb_liveview.md",
+    "convencion_direcciones": "VA del binario mapeado (espacio Ghidra/REA). En este ELF: .text y .rodata => VA = offset_fichero + 0x8000; .data => VA = offset_fichero + 0x10000."
+  },
+  "sujeto": {
+    "binario": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/bin/orb-server",
+    "sha256": "2ef500ba5871b8017b94ef2af4788eb8c27e1614e6510db8f8b1839ab70ad4c6",
+    "formato": "ELF32 ARM EABI5 EXEC, stripped (sin .symtab, con .dynsym completo: 12862 simbolos / 10472 FUNC)",
+    "secciones": {
+      "text": ["0x183e88", "0x2e34b0"],
+      "rodata": ["0x2e34b8", "0x379e64"],
+      "data": ["0x39184c", "0x3921d8"],
+      "bss": ["0x3921d8", "0x396e7c"]
+    },
+    "herramientas": ["mcp_rea (Ghidra/REA) batch_decompile", "capstone Thumb-2 propio para literales movw/movt", "readelf/c++filt"],
+    "artefactos_auxiliares": [
+      "0700_part_image/dev/nflasha16_unpacked_unpacked/app/SmartRemote.apk (+ .odex) - app Smart Remote Control, package com.sony.imaging.app.srctrl",
+      "0700_part_image/dev/nflasha15_unpacked_unpacked/bin/WebApiLauncher.sh",
+      "0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libIMDB.so",
+      "0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libInfraWebApi.so",
+      "0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libInfraRemoteControlNet.so",
+      "0700_part_image/dev/nflasha15_unpacked_unpacked/share/network/remotecontrol/index.html"
+    ]
+  },
+  "liveview": {
+    "startLiveview": {
+      "clase": "libj::node::orb::server::service::Remote::v1_0::StartLiveview",
+      "parametros": {
+        "valor": "ninguno",
+        "estado": "VERIFICADO",
+        "evidencia": [
+          {"tipo": "funcion", "direccion": "0x21fe2c", "nombre": "Remote::v1_0::StartLiveview::parameterTypes()", "detalle": "crea TypedJsArray<String> vacio y lo devuelve; no hay addTyped"},
+          {"tipo": "pseudocodigo", "direccion": "0x21fe2c", "texto": "if (((parameterTypes()::types & 1) == 0) && (iVar2 = __cxa_guard_acquire(&parameterTypes()::types)) != 0) { libj::TypedJsArray<boost::shared_ptr<libj::String const>>::create(); } ... return this;"}
+        ]
+      },
+      "resultado": {
+        "valor": "una sola cadena (URL)",
+        "estado": "VERIFICADO",
+        "evidencia": [
+          {"tipo": "funcion", "direccion": "0x21feac", "nombre": "Remote::v1_0::StartLiveview::resultTypes()", "detalle": "array de 1 elemento, descriptor de tipo literal 'string'"},
+          {"tipo": "cadena", "direccion": "0x3749a0", "texto": "string"}
+        ]
+      },
+      "construccion_de_la_url": {
+        "valor": "orb-server NO compone la URL: copia el payload del mensaje de la camara (WebApiIntMsg + 0x14) y lo devuelve",
+        "estado": "VERIFICADO",
+        "evidencia": [
+          {"tipo": "pseudocodigo", "direccion": "0x1a3f8c", "nombre": "Remote::v1_0::StartLiveview_invoke_cmd", "texto": "String::create((String *)&local_40, param_2 + 0x14, 0, 0xffffffff); ... JsArray::create(...); (add)(...);"},
+          {"tipo": "cadena", "direccion": "0x2fb034", "texto": "(%04d)[INF:invoke_cmd: %04d][startLiveview cmd] url=%s\n"},
+          {"tipo": "pseudocodigo", "direccion": "0x1a4004", "texto": "fprintf(pFVar2,\"(%04d)[INF:invoke_cmd: %04d][startLiveview cmd] url=%s\\n\",_Var3,0x10b7,param_2 + 0x14,iVar10);"}
+        ]
+      },
+      "peticion_interna": {
+        "estado": "VERIFICADO",
+        "evidencia": [
+          {"tipo": "pseudocodigo", "direccion": "0x21f4f0", "nombre": "Remote::v1_0::StartLiveview::invoke()", "texto": "WebApiAddonUipcUser::WebApiAddonUipc::setEvtParamId(aWStack_6b8,0x1b3,0xae); local_6ac = LibOrbRelayPool::AddToPool(&local_78); iVar3 = WebApiAddonUipcUser::WebApiAddonUipc::sendMsgToServer(aWStack_6b8,local_20);"}
+        ],
+        "detalle": {"msgid": "0x1b3", "paramid": "0xae"}
+      }
+    },
+    "startLiveviewWithSize": {
+      "valor": "NO existe en orb-server fw3.21",
+      "estado": "VERIFICADO",
+      "evidencia": [
+        {"tipo": "recuento", "detalle": "grep -c 'WithSize' orb-server => 0"},
+        {"tipo": "cadena", "direccion": "0x2e7eec", "texto": "lista de APIs compilada (26 entradas) que incluye camera/startLiveview pero no camera/startLiveviewWithSize"},
+        {"tipo": "simbolos", "detalle": "ninguna clase StartLiveviewWithSize en .dynsym"}
+      ],
+      "nota": "La variante con tamano SI existe en la app de camara (SmartRemote.odex): MethodStartLiveviewWithSize, GetSupportedLiveviewSize, GetAvailableLiveviewSize, GetLiveviewSize. 'Solo en la app' = VERIFICADO por nombres de clase; su contrato JSON no se puede fijar desde orb-server."
+    },
+    "url": {
+      "plantilla": "http://<ip-camara>:8080/liveview/liveviewstream",
+      "estado": "VERIFICADO (literal) / INFERENCIA (IP en ejecucion)",
+      "evidencia": [
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x247b67", "texto": "http://192.168.122.1:8080/liveview/liveviewstream"},
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x24bcfb", "texto": "liveviewstream"},
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x1d47ce", "texto": "/liveview/"},
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x1d47da", "texto": "/liveview/*"},
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x1e759a", "texto": "Accepted HTTP GET for Liveview"},
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x247b9a", "texto": "http://192.168.122.1:8080/postview/"},
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x247beb", "texto": "http://192.168.122.1:8080/sony"},
+        {"tipo": "cadena", "fichero": "share/network/remotecontrol/index.html", "texto": "'url': 'http://10.0.0.1:10000/sony/camera'"}
+      ],
+      "puertos": {
+        "10000": {"uso": "JSON-RPC del Camera Remote API (orb-server)", "estado": "VERIFICADO", "evidencia": ["WebApiLauncher.sh: orb-server -p 10000", "share/network/remotecontrol/index.html", "main @0x18428a: movwlt r6,#0x2710"]},
+        "8080": {"uso": "servidor HTTP de la app Smart Remote Control: /liveview/, /postview/, /sony", "estado": "VERIFICADO (literal)"}
+      }
+    },
+    "formato_frame": {
+      "valor": "HTTP chunked, un JPEG por chunk (Transfer-Encoding: chunked, Content-Type: image/jpeg). NO es MJPEG multipart.",
+      "estado": "VERIFICADO",
+      "evidencia": [
+        {"tipo": "clase", "fichero": "SmartRemote.odex", "offset": "0x211dbf", "texto": "Lcom/sony/mexi/orb/server/OrbChunkedOutputStream;"},
+        {"tipo": "clase", "fichero": "SmartRemote.odex", "offset": "0x221795", "texto": "Lorg/apache/http/impl/io/ChunkedOutputStream;"},
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x2302c8", "texto": "Transfer-Encoding"},
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x2391dc", "texto": "chunked"},
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x1e47dc", "texto": "Content-Type"},
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "texto": "image/jpeg"},
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x22e780", "texto": "Start chunked transfer."},
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x1e8c80", "texto": "End chunked transfer."},
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x1ec18b", "texto": "Force disconnect chunked transfer."},
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x1f3573", "texto": "JPEG data size (="},
+        {"tipo": "ausencia", "detalle": "0 ocurrencias de multipart / boundary / x-mixed-replace en orb-server y en SmartRemote.odex"}
+      ],
+      "metadatos_por_parte": {"valor": "ninguno identificado", "estado": "INFERENCIA"}
+    },
+    "tamanos": {
+      "en_orb_server": {"valor": "sin tabla de tamanos de liveview; startLiveview no acepta parametros", "estado": "VERIFICADO"},
+      "en_la_app": {
+        "valor": "existen claves LIVEVIEW_SIZE / LIVEVIEW_COMPRESS_RATE_FOR_* / LIVEVIEW_MAXIMUM_SIZE_IN_KB_FOR_* pero sin valores numericos literales localizables",
+        "estado": "NO_VERIFICADO (valores)",
+        "evidencia": [
+          {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x1f52e1", "texto": "LIVEVIEW_SIZE"},
+          {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x1f5155", "texto": "LIVEVIEW_COMPRESS_RATE_FOR_DEFAULT"},
+          {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x1f51a1", "texto": "LIVEVIEW_COMPRESS_RATE_FOR_LARGE"},
+          {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x1f521b", "texto": "LIVEVIEW_MAXIMUM_SIZE_IN_KB_FOR_DEFAULT"},
+          {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x1f5271", "texto": "LIVEVIEW_MAXIMUM_SIZE_IN_KB_FOR_LARGE"},
+          {"tipo": "simbolos", "fichero": "SmartRemote.odex", "detalle": "GetSupportedLiveviewSize / GetAvailableLiveviewSize / GetLiveviewSize / CameraProxyLiveviewSize"}
+        ]
+      },
+      "tabla_de_tamanos_en_orb_server": {
+        "valor": "tabla generica de conversion de STILL SIZE (no es la lista de la A6000): 16:9 -> 17M/13M/7.5M/4.2M/2M; 4:3 -> 18M/5M; 3:2 -> 20M; 1:1 -> 3.7M",
+        "estado": "VERIFICADO (contenido) / INFERENCIA (no aplicable a la A6000)",
+        "direcciones": ["0x2e5bec 16:9", "0x2e5bf4 17M", "0x2e5bf8 13M", "0x2e5bfc 7.5M", "0x2e5c04 4.2M", "0x2e5c0c 2M", "0x2e5c10 4:3", "0x2e5c14 18M", "0x2e5c18 5M", "0x2e5c1c 3:2", "0x2e5c20 20M", "0x2e5c24 1:1", "0x2e5c28 3.7M"]
+      },
+      "postviewImageSize": {"valor": "unico literal de valor: 'Original' (VA 0x2e6520)", "estado": "VERIFICADO (parcial)"}
+    },
+    "fps": {
+      "valor": "sin limite ni constante de fps en orb-server",
+      "estado": "NO_VERIFICADO",
+      "evidencia": [
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x1f51fd", "texto": "LIVEVIEW_GENERATING_FRAMERATE"},
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x1f52c4", "texto": "LIVEVIEW_OBTAINING_INTERVAL"},
+        {"tipo": "ausencia", "detalle": "no hay literales numericos de fps ni sleep/temporizador en StartLiveview::invoke ni en StartLiveview_invoke_cmd"}
+      ],
+      "inferencia": "el ritmo lo impone la cadena de captura/JPEG de la camara; el PC no puede fijarlo por API en esta version"
+    }
+  },
+  "liveviewChunkTransfer": {
+    "en_orb_server": {"valor": "no existe", "estado": "VERIFICADO", "evidencia": "0 ocurrencias de la cadena en el binario"},
+    "implementacion": {
+      "valor": "servlet de la app: com.sony.imaging.app.srctrl.webapi.servlet.LiveviewChunkTransfer sobre patron /liveview/*, con OrbChunkedOutputStream",
+      "estado": "VERIFICADO (clases/literales)",
+      "evidencia": [
+        {"tipo": "clase", "fichero": "SmartRemote.odex", "offset": "0x2103b7", "texto": "Lcom/sony/imaging/app/srctrl/webapi/servlet/LiveviewChunkTransfer;"},
+        {"tipo": "clase", "fichero": "SmartRemote.odex", "texto": "Lcom/sony/mexi/orb/android/servlet/OrbAndroidChunkTransfer;"},
+        {"tipo": "clase", "fichero": "SmartRemote.odex", "texto": "Lcom/sony/mexi/orb/server/OrbDivisionOutputStream;"},
+        {"tipo": "cadena", "fichero": "SmartRemote.odex", "offset": "0x21e4de", "texto": "Liveview Loader is not generating liveview data.  Stop chunked transfer."}
+      ]
+    },
+    "cabecera_de_parte": {
+      "valor": "framing chunked de HTTP/1.1: Transfer-Encoding: chunked + Content-Type: image/jpeg; tamano de chunk en hex + CRLF; terminador 0 CRLF CRLF",
+      "estado": "VERIFICADO (cabeceras) / INFERENCIA (semantica RFC 7230 del ChunkedOutputStream de Apache)"
+    },
+    "metadatos": {"valor": "ninguno por parte", "estado": "INFERENCIA"}
+  },
+  "getEvent": {
+    "naturaleza": {
+      "valor": "polling JSON-RPC; no hay canal de push al PC. El push de WebAPI 1.x (receiveEvent) esta explicitamente no soportado.",
+      "estado": "VERIFICADO",
+      "evidencia": [
+        {"tipo": "cadena", "direccion": "0x2fa9ec", "texto": "(%04d)[ERR:invoke_cmd: %04d][LibOrb::ReceiveEvent_invoke_cmd] do NOT support after WebAPI2.0 "},
+        {"tipo": "pseudocodigo", "direccion": "0x2299c0", "nombre": "Remote::v1_0::GetEvent::invoke(bool)", "texto": "WebApiAddonUipcUser::WebApiAddonUipc::setEvtParamId(aWStack_6c0,0x205,0x100); ... local_6b4 = LibOrbRelayPool::AddToPool(&local_80); local_6b0 = (uint)param_1; iVar3 = WebApiAddonUipcUser::WebApiAddonUipc::sendMsgToServer(aWStack_6c0,local_28);"},
+        {"tipo": "simbolos", "detalle": "LibOrbRelayPool::{AddToPool 0x1859bd, SetSentFlagInPool 0x186224, GetUnSentPoolDataListInPool 0x186b0c, RemoveFromPool 0x185be4, IsRelayIDInPool 0x186688}"},
+        {"tipo": "pseudocodigo", "direccion": "0x186b0c", "nombre": "LibOrbRelayPool::GetUnSentPoolDataListInPool", "texto": "recorre entradas de 0x28 B con flags [0x14] y [0x24] y copia las no enviadas a param_1; termina en &DAT_0039254c"}
+      ]
+    },
+    "delta": {
+      "valor": "tras la primera respuesta, getEvent entrega solo los grupos con cambios",
+      "estado": "INFERENCIA",
+      "base": "pool de relay con marca de 'enviado' y lista de 'no enviados'"
+    },
+    "significado_del_bool": {"valor": "no determinado (se propaga a la camara como param_1)", "estado": "NO_VERIFICADO"},
+    "sendResult": {"direccion": "0x1e342c", "simbolo": "_ZN4libj4node3orb6server7service6Remote4v1_08GetEvent10sendResultE...", "detalle": "35 parametros en el orden de la tabla de grupos"},
+    "grupos": [
+      {"n": 1, "type": "availableApiList", "decl_va": "0x33ccf8", "decl": "{\"type\":\"string\", \"names\":\"string*\"}", "campos": ["names"], "estado": "VERIFICADO"},
+      {"n": 2, "type": "cameraStatus", "decl_va": "0x33cd20", "decl": "{\"type\":\"string\", \"cameraStatus\":\"string\"}", "campos": ["cameraStatus"], "estado": "VERIFICADO"},
+      {"n": 3, "type": "zoomInformation", "decl_va": "0x33cd4c", "decl": "{\"type\":\"string\", \"zoomPosition\":\"int\", \"zoomNumberBox\":\"int\", \"zoomIndexCurrentBox\":\"int\", \"zoomPositionCurrentBox\":\"int\"}", "campos": ["zoomPosition", "zoomNumberBox", "zoomIndexCurrentBox", "zoomPositionCurrentBox"], "estado": "VERIFICADO"},
+      {"n": 4, "type": "liveviewStatus", "decl_va": "0x33cdc8", "decl": "{\"type\":\"string\", \"liveviewStatus\":\"bool\"}", "campos": ["liveviewStatus"], "estado": "VERIFICADO"},
+      {"n": 5, "type": "liveviewOrientation", "decl_va": "0x33cdf4", "decl": "{\"type\":\"string\", \"liveviewOrientation\":\"string\"}", "campos": ["liveviewOrientation"], "estado": "VERIFICADO"},
+      {"n": 6, "type": "takePicture", "decl_va": "0x33ce28", "decl": "{\"type\":\"string\", \"takePictureUrl\":\"string*\"}*", "campos": ["takePictureUrl"], "estado": "VERIFICADO"},
+      {"n": 7, "type": "continuousError", "decl_va": "0x33ce58", "decl": "{\"type\":\"string\", \"continuousError\":\"string\", \"isContinued\":\"bool\"}*", "campos": ["continuousError", "isContinued"], "estado": "VERIFICADO"},
+      {"n": 8, "type": "triggeredError", "decl_va": "0x33cea0", "decl": "{\"type\":\"string\", \"triggeredError\":\"string*\"}", "campos": ["triggeredError"], "estado": "VERIFICADO"},
+      {"n": 9, "type": "sceneRecognition", "decl_va": "0x33ced0", "decl": "{\"type\":\"string\", \"sceneRecognition\":\"string\", \"steadyRecognition\":\"string\", \"motionRecognition\":\"string\"}", "campos": ["sceneRecognition", "steadyRecognition", "motionRecognition"], "estado": "VERIFICADO"},
+      {"n": 10, "type": "formatStatus", "decl_va": "0x33cf3c", "decl": "{\"type\":\"string\", \"formatResult\":\"string\"}", "campos": ["formatResult"], "estado": "VERIFICADO"},
+      {"n": 11, "type": "storageInformation", "decl_va": "0x33cf68", "decl": "{\"type\":\"string\", \"storageID\":\"string\", \"recordTarget\":\"bool\", \"numberOfRecordableImages\":\"int\", \"recordableTime\":\"int\", \"storageDescription\":\"string\"}*", "campos": ["storageID", "recordTarget", "numberOfRecordableImages", "recordableTime", "storageDescription"], "estado": "VERIFICADO"},
+      {"n": 12, "type": "beepMode", "decl_va": "0x33d004", "campos": ["currentBeepMode", "beepModeCandidates"], "estado": "VERIFICADO"},
+      {"n": 13, "type": "cameraFunction", "decl_va": "0x33d054", "campos": ["currentCameraFunction", "cameraFunctionCandidates"], "estado": "VERIFICADO"},
+      {"n": 14, "type": "movieQuality", "decl_va": "0x33d0b0", "campos": ["currentMovieQuality", "movieQualityCandidates"], "estado": "VERIFICADO"},
+      {"n": 15, "type": "stillSize", "decl_va": "0x33d108", "campos": ["checkAvailability", "currentAspect", "currentSize"], "estado": "VERIFICADO"},
+      {"n": 16, "type": "cameraFunctionResult", "decl_va": "0x33d168", "campos": ["cameraFunctionResult"], "estado": "VERIFICADO"},
+      {"n": 17, "type": "steadyMode", "decl_va": "0x33d19c", "campos": ["currentSteadyMode", "steadyModeCandidates"], "estado": "VERIFICADO"},
+      {"n": 18, "type": "viewAngle", "decl_va": "0x33d1f0", "campos": ["currentViewAngle", "viewAngleCandidates"], "estado": "VERIFICADO"},
+      {"n": 19, "type": "exposureMode", "decl_va": "0x33d23c", "campos": ["currentExposureMode", "exposureModeCandidates"], "estado": "VERIFICADO"},
+      {"n": 20, "type": "postviewImageSize", "decl_va": "0x33d294", "campos": ["currentPostviewImageSize", "postviewImageSizeCandidates"], "estado": "VERIFICADO"},
+      {"n": 21, "type": "selfTimer", "decl_va": "0x33d2f4", "campos": ["currentSelfTimer", "selfTimerCandidates"], "estado": "VERIFICADO"},
+      {"n": 22, "type": "shootMode", "decl_va": "0x33d340", "campos": ["currentShootMode", "shootModeCandidates"], "estado": "VERIFICADO"},
+      {"n": 23, "type": "aeLock", "decl_va": "0x33d390", "campos": ["currentAELock", "aeLockCandidates"], "estado": "VERIFICADO"},
+      {"n": 24, "type": "bracketShootMode", "decl_va": "0x33d3d8", "campos": ["checkAvailability", "currentBracketShootMode", "currentBracketShootModeOption"], "estado": "VERIFICADO"},
+      {"n": 25, "type": "creativeStyle", "decl_va": "0x33d454", "campos": ["checkAvailability", "currentCreativeStyle", "currentCreativeStyleContrast", "currentCreativeStyleSaturation", "currentCreativeStyleSharpness"], "estado": "VERIFICADO"},
+      {"n": 26, "type": "exposureCompensation", "decl_va": "0x33d518", "campos": ["currentExposureCompensation", "maxExposureCompensation", "minExposureCompensation", "stepIndexOfExposureCompensation"], "estado": "VERIFICADO"},
+      {"n": 27, "type": "flashMode", "decl_va": "0x33d5bc", "campos": ["currentFlashMode", "flashModeCandidates"], "estado": "VERIFICADO"},
+      {"n": 28, "type": "fNumber", "decl_va": "0x33d60c", "campos": ["currentFNumber", "fNumberCandidates"], "estado": "VERIFICADO"},
+      {"n": 29, "type": "focusMode", "decl_va": "0x33d658", "campos": ["currentFocusMode", "focusModeCandidates"], "estado": "VERIFICADO"},
+      {"n": 30, "type": "isoSpeedRate", "decl_va": "0x33d6a8", "campos": ["currentIsoSpeedRate", "isoSpeedRateCandidates"], "estado": "VERIFICADO"},
+      {"n": 31, "type": "pictureEffect", "decl_va": "0x33d700", "campos": ["checkAvailability", "currentPictureEffect", "currentPictureEffectOption"], "estado": "VERIFICADO"},
+      {"n": 32, "type": "programShift", "decl_va": "0x33d778", "campos": ["isShifted"], "estado": "VERIFICADO"},
+      {"n": 33, "type": "shutterSpeed", "decl_va": "0x33d7a0", "campos": ["currentShutterSpeed", "shutterSpeedCandidates"], "estado": "VERIFICADO"},
+      {"n": 34, "type": "whiteBalance", "decl_va": "0x33d7f8", "campos": ["checkAvailability", "currentWhiteBalanceMode", "currentColorTemperature"], "estado": "VERIFICADO"},
+      {"n": 35, "type": "touchAFPosition", "decl_va": "0x33d86c", "decl": "{\"type\":\"string\", \"currentSet\":\"bool\", \"currentTouchCoordinates\":\"double*\"}", "campos": ["currentSet", "currentTouchCoordinates"], "estado": "VERIFICADO"}
+    ],
+    "nombres_de_grupo_literales_en_la_ruta_getEvent": {
+      "rango_va": ["0x2fe53c", "0x2fe7d4"],
+      "valores": ["formatStatus", "exposureMode", "flashMode", "shootMode", "cameraFunction", "postviewImageSize", "stillSize", "zoomInformation", "availableApiList", "selfTimer", "beepMode", "takePicture", "viewAngle", "storageInformation", "movieQuality", "steadyMode", "focusMode", "touchAFPosition", "exposureCompensation", "fNumber", "whiteBalance", "shutterSpeed"],
+      "estado": "VERIFICADO"
+    },
+    "tabla_de_nombres_de_campo": {"rango_va": ["0x2faa58", "0x2faf6c"], "primeros": ["type", "cameraStatus", "formatResult", "cameraFunctionResult", "liveviewOrientation", "sceneRecognition", "steadyRecognition", "motionRecognition", "aspect", "size", "names"], "ultimos": ["currentSet", "currentTouchCoordinates", "set", "touchCoordinates"], "estado": "VERIFICADO"},
+    "campos_de_seguimiento": {
+      "liveviewStatus": {"existe": true, "grupo": 4, "tipo": "bool", "va": "0x33cdc8", "estado": "VERIFICADO"},
+      "cameraStatus": {"existe": true, "grupo": 2, "tipo": "string", "va": "0x33cd20", "estado": "VERIFICADO"},
+      "touchAFPosition": {"existe": true, "grupo": 35, "campos": ["currentSet", "currentTouchCoordinates"], "va": "0x33d86c", "estado": "VERIFICADO"},
+      "focusStatus": {"existe": false, "detalle": "0 ocurrencias de 'focusStatus' en el binario", "estado": "VERIFICADO"},
+      "focusMode": {"existe": true, "grupo": 29, "campos": ["currentFocusMode", "focusModeCandidates"], "va": "0x33d658", "estado": "VERIFICADO"},
+      "currentShootMode": {"existe": true, "grupo": 22, "va": "0x33d340", "estado": "VERIFICADO"},
+      "zoomInformation": {"existe": true, "grupo": 3, "va": "0x33cd4c", "estado": "VERIFICADO"},
+      "storageInformation": {"existe": true, "grupo": 11, "va": "0x33cf68", "estado": "VERIFICADO"},
+      "postviewImageSize": {"existe": true, "grupo": 20, "va": "0x33d294", "estado": "VERIFICADO"},
+      "AFResult_AFType": {"existe": "cadenas presentes, sin declaracion ni simbolo que las use", "va": ["0x2fad3c", "0x2fad48"], "estado": "NO_VERIFICADO"}
+    },
+    "cameraStatus_valores": {
+      "va": ["0x2e62f8", "0x2e63c8"],
+      "valores": ["NotReady", "IDLE", "StillCapturing", "StillSaving", "MovieWaitRecStart", "MovieRecording", "MovieWaitRecStop", "MovieSaving", "IntervalWaitRecStart", "IntervalRecording", "IntervalWaitRecStop", "Formatting", "ContentsTransfer"],
+      "estado": "VERIFICADO"
+    },
+    "polling_vs_notificacion": {
+      "notificacion_logica_via_getEvent": ["liveviewStatus", "cameraStatus", "touchAFPosition", "focusMode", "shootMode", "zoomInformation", "takePicture", "triggeredError", "continuousError", "storageInformation", "postviewImageSize", "stillSize", "formatStatus", "sceneRecognition", "availableApiList"],
+      "polling_puro_llamada_propia": ["getApplicationInfo", "getAvailableApiList", "getSupported*", "getAvailable*", "getTouchAFPosition", "getStorageInformation", "getShootMode", "getFocusMode", "getVersions"],
+      "push_al_pc": {"valor": "no existe (receiveEvent no soportado)", "estado": "VERIFICADO"}
+    }
+  },
+  "modos": {
+    "getSupportedShootMode": {
+      "valor_estatico": ["movie (VA 0x2e6400)", "intervalstill (VA 0x2e6408)", "'still' solo como sufijo del literal intervalstill (VA 0x2e6410)"],
+      "subconjunto_A6000": "no determinable en estatico",
+      "estado": "VERIFICADO (literales) / NO_VERIFICADO (subconjunto real)"
+    },
+    "getSupportedFocusMode": {
+      "valor_estatico": [
+        {"va": "0x2e6cdc", "texto": "MF"},
+        {"va": "0x2e6ce0", "texto": "AF-S"},
+        {"va": "0x2e6ce8", "texto": "A-Macro"},
+        {"va": "0x2e6cf0", "texto": "AF-C"},
+        {"va": "0x2e6cf8", "texto": "AF-A"},
+        {"va": "0x2e6d00", "texto": "AF-D"},
+        {"va": "0x2e6d08", "texto": "DMF"},
+        {"va": "0x2e6d0c", "texto": "MF-R"}
+      ],
+      "subconjunto_A6000": "no determinable en estatico; tabla generica multi-modelo",
+      "estado": "VERIFICADO (literales) / INFERENCIA (subconjunto tipico AF-S/AF-C/AF-A/DMF/MF) / NO_VERIFICADO (real)"
+    },
+    "touchAF": {
+      "metodos": ["setTouchAFPosition", "cancelTouchAFPosition", "getTouchAFPosition"],
+      "validacion_observada": "solo parametros x,y; log 'touch AF position x=%f y=%f val=%x' (VA 0x327cf8) y 'parameter err' (VA 0x327cb4)",
+      "gate_de_shootMode": {"valor": "no encontrado en orb-server", "estado": "NO_VERIFICADO"},
+      "inferencia": "requiere la app Smart Remote Control activa y AF disponible (modo foto); decide el backend de camara"
+    }
+  },
+  "servidor": {
+    "lanzador": {
+      "fichero": "0700_part_image/dev/nflasha15_unpacked_unpacked/bin/WebApiLauncher.sh",
+      "contenido": "#!/bin/sh\n\necho \"busybox killall orb-server\"\nbusybox killall orb-server\n\necho \"Starting orb-server!\"\nLD_LIBRARY_PATH=/usr/glib orb-server -f /usr/share/network/remotecontrol -p 10000 -D -1 &\necho \"... Started!\"\n",
+      "estado": "VERIFICADO"
+    },
+    "puerto": {"valor": 10000, "estado": "VERIFICADO", "evidencia": ["-p 10000 en WebApiLauncher.sh", "main @0x18428a movwlt r6,#0x2710 (default si no hay -p)", "main @0x1843ea movw r3,#0x2710 (clave 'port' del transporte)", "log '(%04d)[INF:OrbServerMain: %04d]port        <= %d\\n' VA 0x2e38ac"]},
+    "argumentos": {"valor": "-f <fsPath>, -p <puerto>, -D <debug_level>", "estado": "VERIFICADO", "evidencia": ["getopt 'f:p:D:' VA 0x2e3870", "logs fsPath/port/debug_level VA 0x2e3878, 0x2e38ac, 0x2e38e0"]},
+    "raiz_de_contenido": {"valor": "/usr/share/network/remotecontrol (existe en la particion: index.html + orbjs/dist/orb-client.min.js)", "estado": "VERIFICADO"},
+    "quien_lo_lanza": {
+      "valor": "la capa de infraestructura del userland: libIMDB.so (tabla IMDB) referencia /usr/bin/WebApiLauncher.sh; libInfraRemoteControlNet.so expone InfraRemoteControlNet_Init; libInfraWebApi.so (iwaJobs) lo mata con 'busybox killall orb-server'",
+      "estado": "VERIFICADO (cadenas/simbolos) / INFERENCIA (orden de arranque)"
+    },
+    "que_hacer_en_la_camara": {
+      "valor": "abrir la app Smart Remote Control (package com.sony.imaging.app.srctrl; componente com.sony.imaging.app.srctrl.webapi.service.OrbAndroidService) con la Wi-Fi de la camara activa",
+      "estado": "INFERENCIA",
+      "evidencia": [
+        {"tipo": "manifest", "fichero": "SmartRemote.apk", "texto": "package com.sony.imaging.app.srctrl; com.sony.imaging.app.srctrl.webapi.service.OrbAndroidService; permisos ACCESS_WIFI_STATE, CHANGE_WIFI_STATE, CHANGE_WIFI_MULTICAST_STATE, INTERNET"},
+        {"tipo": "cadenas", "fichero": "lib/libIMDB.so", "texto": "/usr/bin/WebApiLauncher.sh , /usr/bin/network.sh , libInfraRemoteControlNet.so , InfraRemoteControlNet_Init , libInfraWebApi.so , InfraNetWebApi_init"},
+        {"tipo": "cadena", "fichero": "bin/network.sh", "texto": "/usr/bin/WS_SubProcess.elf"}
+      ]
+    },
+    "descubrimiento": {
+      "valor": "SSDP en la app ScalarWebAPIDdService (SsdpDeviceJni, claves SSDP_SCPDURL / SSDP_DEVICE_TYPE / SSDP_WEBAPI_SERVICE_TYPE / ssdpPort, ruta /scalarwebapi_dd.xml)",
+      "estado": "VERIFICADO (cadenas)"
+    },
+    "rutas": {
+      "json": ["/sony/camera", "/sony/guide", "/sony/accessControl", "/sony/index.html", "/sony/orb-client.min.js"],
+      "internas": ["/sony/localloopback (VA 0x391e68)", "/sony/shutdown con {\"method\":\"actShutdown\"} (VA 0x391ef8 / 0x391f08)"],
+      "stream": ["/liveview/liveviewstream", "/liveview/*"],
+      "otros": ["/postview/", "/postview/memory", "/chunk/", "/DdService", "/scalarwebapi_dd.xml"],
+      "estado": "VERIFICADO (literales)"
+    }
+  },
+  "caras": {
+    "faceDetection": {"presente": false, "estado": "VERIFICADO", "detalle": "0 ocurrencias en orb-server; ningun grupo/campo de caras entre los 35 de getEvent; ninguna clase GetEvent*Face* en .dynsym"},
+    "faceInfos": {"presente": false, "estado": "VERIFICADO", "detalle": "0 ocurrencias de 'faceInfos'/'faceDetection' como claves; en la app existe maquinaria interna getFaceInfos / com.sony.scalar.meta.FaceInfo, no publicada como evento"}
+  },
+  "bucle_cerrado_pc": {
+    "secuencia": [
+      "Wi-Fi a la camara + abrir Smart Remote Control",
+      "getVersions en http://<ip>:10000/sony/camera",
+      "startRecMode",
+      "getEvent -> type availableApiList.names",
+      "setShootMode('still') y ajustes",
+      "startLiveview -> GET chunked de la URL devuelta (puerto 8080)",
+      "bucle: getEvent (liveviewStatus, cameraStatus, touchAFPosition, focusMode, zoomInformation, takePicture)",
+      "setTouchAFPosition / getTouchAFPosition / cancelTouchAFPosition",
+      "actTakePicture -> awaitTakePicture",
+      "stopLiveview, stopRecMode"
+    ],
+    "latencia": {"valor": "no determinable en estatico", "estado": "NO_VERIFICADO"}
+  },
+  "pendientes": [
+    {"id": "LV-1", "descripcion": "Subconjunto real de getSupportedShootMode / getSupportedFocusMode / getSupportedLiveviewSize en la A6000", "criterio": "llamada en camara con Smart Remote Control activo"},
+    {"id": "LV-2", "descripcion": "Dimensiones y fps efectivos del stream de 8080", "criterio": "medir con curl/python sobre el stream"},
+    {"id": "LV-3", "descripcion": "Significado del bool de GetEvent::invoke(bool) y completitud de la primera respuesta", "criterio": "capturar dos getEvent consecutivos en camara"},
+    {"id": "LV-4", "descripcion": "Si setTouchAFPosition exige shootMode 'still'", "criterio": "probar en modos still/movie"},
+    {"id": "LV-5", "descripcion": "IP real del AP (192.168.122.1 es literal de la app)", "criterio": "ip addr en camara / DHCP del PC"}
+  ],
+  "anexo_direcciones": {
+    "funciones": {
+      "0x184140": "main",
+      "0x1a3f8c": "Remote::v1_0::StartLiveview_invoke_cmd",
+      "0x21f4f0": "Remote::v1_0::StartLiveview::invoke",
+      "0x21fe2c": "Remote::v1_0::StartLiveview::parameterTypes",
+      "0x21feac": "Remote::v1_0::StartLiveview::resultTypes",
+      "0x2299c0": "Remote::v1_0::GetEvent::invoke(bool)",
+      "0x229ef4": "Remote::v1_0::GetEvent::create",
+      "0x1e342c": "Remote::v1_0::GetEvent::sendResult",
+      "0x1bd2f8": "Remote::v1_0::GetEvent_invoke_cmd",
+      "0x1ac21c": "Remote::v1_0::initInvokeCmd",
+      "0x1859bc": "LibOrbRelayPool::AddToPool",
+      "0x186224": "LibOrbRelayPool::SetSentFlagInPool",
+      "0x186b0c": "LibOrbRelayPool::GetUnSentPoolDataListInPool",
+      "0x1874ec": "WebApiAddonUipc::initializeClient"
+    },
+    "cadenas": {
+      "0x2e7eec": "lista de APIs (26 entradas)",
+      "0x2e3914": "/sony/",
+      "0x2e3870": "f:p:D:",
+      "0x2fb034": "[startLiveview cmd] url=%s",
+      "0x2fa9ec": "LibOrb::ReceiveEvent_invoke_cmd] do NOT support after WebAPI2.0",
+      "0x2facfc": "liveviewStatus",
+      "0x2fad3c": "AFResult",
+      "0x2fad48": "AFType",
+      "0x33cdc8": "{\"type\":\"string\", \"liveviewStatus\":\"bool\"}",
+      "0x33d86c": "{\"type\":\"string\", \"currentSet\":\"bool\", \"currentTouchCoordinates\":\"double*\"}",
+      "0x3703f0": "host",
+      "0x370414": "port",
+      "0x353b4c": "root",
+      "0x353b54": "backlog",
+      "0x353b6c": "maxBodySize",
+      "0x353b78": "timeout",
+      "0x2e7534": "listen",
+      "0x391e68": "/sony/localloopback",
+      "0x391ef8": "/sony/shutdown"
+    }
+  }
+}

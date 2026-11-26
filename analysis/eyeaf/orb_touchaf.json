@@ -1,0 +1,752 @@
+{
+  "schema": "a6000-touchaf-orb-server/1",
+  "generado": "2026-11-25T21:53:30-03:00",
+  "metodo": "análisis estático: readelf (.dynsym), Capstone Thumb-2 (analysis/eyeaf/tools/armdis.py, xrefs.py, xref_movt.py, vtable.py), pseudocódigo REA/Ghidra 12.1.4 sobre orb-server, lectura de tablas de libInfraWebApi.so y libInfraRemoteControlNet.so. Sin ejecución, sin cámara, sin escrituras.",
+  "veredictos_posibles": [
+    "VERIFICADO",
+    "INFERENCIA",
+    "NO_VERIFICADO"
+  ],
+  "binarios": {
+    "principal": {
+      "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/bin/orb-server",
+      "sha256": "2ef500ba5871b8017b94ef2af4788eb8c27e1614e6510db8f8b1839ab70ad4c6",
+      "tamano": 3680104,
+      "formato": "ELF32 ARM EABI5 EXEC stripped (con .dynsym completo)",
+      "texto": {
+        "vaddr": "0x183e88",
+        "file_off": "0x17be88",
+        "size": "0x15f628"
+      },
+      "rodata": {
+        "vaddr": "0x2e34b8",
+        "file_off": "0x2db4b8",
+        "size": "0x969ac"
+      }
+    },
+    "comparativo_a7s_fw320": {
+      "path": "firmware/extracted/a7s-fw320/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/bin/orb-server",
+      "sha256": "2ef500ba5871b8017b94ef2af4788eb8c27e1614e6510db8f8b1839ab70ad4c6",
+      "veredicto": "VERIFICADO",
+      "nota": "byte a byte idéntico al de la A6000 fw3.21"
+    },
+    "comparativo_a6300_fw201": {
+      "path": "firmware/extracted/a6300-fw201/payload/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/bin/orb-server",
+      "sha256": "9c41b66e4f20b196280f3d79ea4ff386d66895c3592681f896986f21032be28a",
+      "tamano": 5494000,
+      "veredicto": "VERIFICADO",
+      "nota": "sin .dynsym; contiene la tabla literal de getMethodTypes y 243 rutas de servicio"
+    },
+    "lado_camara": [
+      {
+        "path": "firmware/extracted/fw321/.../lib/libInfraWebApi.so",
+        "tamano": 177164,
+        "simbolos": [
+          "WebApiUser::WebApi2::wa_job_setTouchAFPosition_cmd @0x11e50",
+          "WebApiUser::WebApi2::wa_job_cancelTouchAFPosition_cmd @0x11ed9",
+          "WebApiUser::WebApi2::wa_job_getTouchAFPosition_cmd @0x11f61",
+          "WebApiUser::WebApi30wa_job_getAvailableApiList_cmd @0xf55c"
+        ]
+      },
+      {
+        "path": "firmware/extracted/fw321/.../lib/libInfraRemoteControlNet.so",
+        "tamano": 106040,
+        "simbolos": [
+          "PsmRcWebAPIGetTouchAFPosition",
+          "PsmRcCameraStateChangeAvailableApiList",
+          "PsmRcWebAPIEditAvailableApiList",
+          "PsmRcWebAPICopyAvailableApiList",
+          "RcCameraStateSetParameter @0x8ed9 (9688 B)"
+        ]
+      }
+    ]
+  },
+  "pregunta_1_firma": {
+    "metodo_jsonrpc": "setTouchAFPosition",
+    "parametros": {
+      "forma": "array posicional de 2 elementos (JsArray longitud exactamente 2)",
+      "tipos": [
+        "double",
+        "double"
+      ],
+      "nombres_de_campo": null,
+      "no_acepta": "objeto con claves {x,y} en la capa libj de este build",
+      "veredicto": "VERIFICADO"
+    },
+    "resultado": {
+      "tipos": [
+        "int",
+        "{\"AFResult\":\"bool\", \"AFType\":\"string\"}"
+      ],
+      "valores_observados": "[0, {\"AFResult\":<bool del mensaje>, \"AFType\":\"Touch\"}]",
+      "veredicto": "VERIFICADO"
+    },
+    "coordenadas": {
+      "espacio": "porcentaje del encuadre, 0.0..100.0 (0=borde izq/sup, 100=borde der/inf)",
+      "rango_validado": "[0.0, 100.0] inclusivo, ambos ejes",
+      "fuera_de_rango": "sólo loguea 'parameter err' y no envía mensaje",
+      "constante_escala": {
+        "valor": 100.0,
+        "literal_hex": "0000000000005940",
+        "direccion": "0x215308"
+      },
+      "veredicto": "VERIFICADO (rango y escala); INFERENCIA (que 0..100 sea el encuadre liveview completo)"
+    },
+    "tercer_valor_val": {
+      "es_parametro_del_cliente": false,
+      "formula": "val = (u32)(y*100) | ((u32)(x*100) << 16)",
+      "bits": {
+        "31:16": "x escalado (0..10000)",
+        "15:0": "y escalado (0..10000)"
+      },
+      "formato_log": "(%04d)[INF:setTouchAFPosition: %04d]touch AF position x=%f y=%f val=%x\\n",
+      "cadena_addr": "0x327cf8",
+      "ejemplo_x50_y50": "0x13881388",
+      "veredicto": "VERIFICADO"
+    },
+    "funciones": [
+      {
+        "addr": "0x21574c",
+        "size": 524,
+        "simbolo": "libj::node::orb::server::service::Remote::v1_0::SetTouchAFPosition::call(boost::shared_ptr<libj::JsArray>)",
+        "hace": "comprueba args->length()==2 ([vtable+0x44]); get(0)->valueToDouble=x; get(1)->valueToDouble=y; llama invoke(x,y) ([vtable+0x68]); si no, sendStatus(client,3,\"illegal argument\")",
+        "evidencia": "pseudocódigo REA 0x21574c + asm; str 'illegal argument' @0x2ea140",
+        "veredicto": "VERIFICADO"
+      },
+      {
+        "addr": "0x214ec8",
+        "size": 1724,
+        "simbolo": "SetTouchAFPosition::invoke(double,double)",
+        "hace": "valida 0<=x,y<=100; empaqueta val; setEvtParamId(msg,0x192,0x8d); RelayPool.AddToPool; sendMsgToServer",
+        "evidencia": "pseudocódigo REA; asm 0x2150a8..0x2151a8; str @0x327ca4/0x327cf8/0x327d40",
+        "veredicto": "VERIFICADO"
+      },
+      {
+        "addr": "0x215958",
+        "size": 416,
+        "simbolo": "SetTouchAFPosition::parameterTypes() const",
+        "hace": "TypedJsArray<String> con 'double' x2 (str 0x2e63e8)",
+        "veredicto": "VERIFICADO"
+      },
+      {
+        "addr": "0x215af8",
+        "size": 416,
+        "simbolo": "SetTouchAFPosition::resultTypes() const",
+        "hace": "TypedJsArray<String> ['int' (0x2e5c30), '{\"AFResult\":\"bool\", \"AFType\":\"string\"}' (0x327d9c, ref 0x215c1c)]",
+        "veredicto": "VERIFICADO"
+      },
+      {
+        "addr": "0x2156a4",
+        "size": 32,
+        "simbolo": "SetTouchAFPosition::name() const",
+        "hace": "devuelve 'setTouchAFPosition' (0x2e62b8, ref 0x2156b0)",
+        "veredicto": "VERIFICADO"
+      },
+      {
+        "addr": "0x1a7820",
+        "size": 2008,
+        "simbolo": "libj::node::orb::server::service::Remote::v1_0::SetTouchAFPosition_invoke_cmd(shared_ptr<Client>,DefWebApi::WebApiIntMsg*)",
+        "hace": "response=msg+0x10, relay=msg+0x0c, AFResult=*(bool*)(msg+0x14); setBoolean('AFResult'), setString('AFType','Touch'); responde [0,obj]; ACK sendMsgToServerCmp(msg,0x194,0x8f,relay)",
+        "evidencia": "pseudocódigo REA; str AFResult 0x2fad3c, AFType 0x2fad48, 'Touch' 0x2fb4a4",
+        "veredicto": "VERIFICADO"
+      }
+    ]
+  },
+  "pregunta_2_efecto_y_mensaje": {
+    "cadena": [
+      "call() -> invoke(x,y)",
+      "invoke: setEvtParamId(WebApiIntMsg, msgid=0x192, paramid=0x8d)  [0x18773c]",
+      "invoke: msg+0x10 = val (16:16 de x,y escalados)",
+      "invoke: relay = LibOrbRelayPool::AddToPool(client) [0x1859bc]",
+      "invoke: WebApiAddonUipc::sendMsgToServer(msg,&ret) [0x18767c] -> OrbSocket::SocketClient::Write(msg,0x620)",
+      "camara: libInfraWebApi.so WebApiUser::WebApi2::wa_job_setTouchAFPosition_cmd @0x11e50 (job kode 0x7e7)",
+      "camara: libInfraRemoteControlNet.so PsmRcWebAPIGetTouchAFPosition (máquina de estado RcCameraStateSetParameter @0x8ed9)",
+      "orb: SetTouchAFPosition_invoke_cmd @0x1a7820 construye [0,{AFResult,AFType}] y ACK 0x194/0x8f"
+    ],
+    "webapiintmsg": {
+      "tamano": "0x620 (1568)",
+      "campos": [
+        {
+          "off": "0x00",
+          "campo": "msgid",
+          "veredicto": "VERIFICADO"
+        },
+        {
+          "off": "0x08",
+          "campo": "paramid",
+          "veredicto": "VERIFICADO"
+        },
+        {
+          "off": "0x0c",
+          "campo": "relay",
+          "veredicto": "VERIFICADO"
+        },
+        {
+          "off": "0x10",
+          "campo": "payload en petición / response en respuesta",
+          "veredicto": "VERIFICADO"
+        },
+        {
+          "off": "0x14",
+          "campo": "bool (AFResult en set / currentSet en get)",
+          "veredicto": "VERIFICADO"
+        }
+      ]
+    },
+    "ids_protocolo_uipc": {
+      "setTouchAFPosition": {
+        "peticion": {
+          "msgid": "0x192",
+          "paramid": "0x8d"
+        },
+        "evento": {
+          "msgid": "0x193",
+          "paramid": "0x8e"
+        },
+        "ack": {
+          "msgid": "0x194",
+          "paramid": "0x8f"
+        }
+      },
+      "cancelTouchAFPosition": {
+        "peticion": {
+          "msgid": "0x195",
+          "paramid": "0x90"
+        },
+        "evento": {
+          "msgid": "0x196",
+          "paramid": "0x91"
+        },
+        "ack": {
+          "msgid": "0x197",
+          "paramid": "0x92"
+        }
+      },
+      "getTouchAFPosition": {
+        "peticion": {
+          "msgid": "0x198",
+          "paramid": "0x93"
+        },
+        "evento": {
+          "msgid": "0x199",
+          "paramid": "0x94"
+        },
+        "ack": {
+          "msgid": "0x19a",
+          "paramid": "0x95"
+        }
+      },
+      "setFocusMode": {
+        "peticion": {
+          "msgid": "0x186",
+          "paramid": "0x81"
+        },
+        "ack": {
+          "msgid": "0x188",
+          "paramid": "0x83"
+        }
+      },
+      "fuente_tabla": "libInfraWebApi.so liborbEvtCmdTbl @0x2d5d4 (cuadruplas {cmd,evt,cmp,param}); fila 0x192 en 0x2d8a4",
+      "veredicto": "VERIFICADO"
+    },
+    "dispara_af": {
+      "orb_envia_indicador_de_disparo": false,
+      "orb_devuelve_resultado_de_af": true,
+      "campo_resultado": "AFResult (msg+0x14)",
+      "AFType_constante": "Touch",
+      "af_puntual_vs_continuo": "NO_VERIFICADO",
+      "veredicto": "VERIFICADO (no hay flag de disparo en orb; el resultado de AF lo produce la cámara) / INFERENCIA (AF puntual) / NO_VERIFICADO (modalidad real)"
+    }
+  },
+  "pregunta_3_disponibilidad": {
+    "gate_en_orb_server": {
+      "condiciones_locales": [
+        "0.0 <= x <= 100.0",
+        "0.0 <= y <= 100.0",
+        "escritura correcta del socket (0x620 B)"
+      ],
+      "mensajes_error": [
+        {
+          "addr": "0x327ca4",
+          "str": "(%04d)[\\u001b[41mERR\\u001b[49m:setTouchAFPosition: %04d][setTouchAFPosition] parameter err \\n"
+        },
+        {
+          "addr": "0x327d40",
+          "str": "(%04d)[\\u001b[41mERR\\u001b[49m:setTouchAFPosition: %04d][setTouchAFPosition] sendMsgToServer err \\n"
+        }
+      ],
+      "filtros_por_modo_objetivo_area": "ninguno",
+      "veredicto": "VERIFICADO"
+    },
+    "mecanismo_getAvailableApiList": {
+      "descripcion": "la cámara devuelve ids numéricos; orb los traduce a nombre con WebApiAddonUtils::convIdToString(0,id,buf) y descarta los no mapeados",
+      "funcion": "GetAvailableApiList_invoke_cmd @0x1b52b0",
+      "ack": {
+        "msgid": "0x114",
+        "paramid": "0x11"
+      },
+      "cadenas": [
+        "(%04d)[\\u001b[41mERR\\u001b[49m:invoke_cmd: %04d][getAvailableApiList cmd] methodName_wk (0x?)",
+        "(%04d)[\\u001b[41mERR\\u001b[49m:invoke_cmd: %04d]response form Infra is not success"
+      ],
+      "tabla_ids_nombres": {
+        "addr": "0x2e4514",
+        "formato": "{u32 id; const char* name_ptr} stride 8, terminador id=-1",
+        "entradas": 84,
+        "relevantes": {
+          "setFocusMode": {
+            "id": 41,
+            "id_hex": "0x29",
+            "entry": "0x2e477c"
+          },
+          "getFocusMode": {
+            "id": 42,
+            "id_hex": "0x2a",
+            "entry": "0x2e4784"
+          },
+          "getSupportedFocusMode": {
+            "id": 43,
+            "id_hex": "0x2b",
+            "entry": "0x2e478c"
+          },
+          "getAvailableFocusMode": {
+            "id": 44,
+            "id_hex": "0x2c",
+            "entry": "0x2e4794"
+          },
+          "setTouchAFPosition": {
+            "id": 45,
+            "id_hex": "0x2d",
+            "entry": "0x2e479c"
+          },
+          "cancelTouchAFPosition": {
+            "id": 46,
+            "id_hex": "0x2e",
+            "entry": "0x2e47a4"
+          },
+          "getTouchAFPosition": {
+            "id": 47,
+            "id_hex": "0x2f",
+            "entry": "0x2e47ac"
+          },
+          "receiveEvent": {
+            "id": 82,
+            "id_hex": "0x52",
+            "entry": "0x2e476c"
+          },
+          "getEvent": {
+            "id": 83,
+            "id_hex": "0x53",
+            "entry": "0x2e4774"
+          }
+        },
+        "volcado_completo": "analysis/eyeaf/data/api_id_table_a6000.json"
+      },
+      "condicion_para_aparecer": "que la cámara incluya el id 45 (0x2d) en su lista",
+      "veredicto": "VERIFICADO"
+    },
+    "lado_camara": {
+      "generador": "libInfraWebApi.so wa_job_getAvailableApiList_cmd @0xf55c (trunca a 0x40 entradas; añade wa_getAvailableApiListAddTbl @0x2df64 = {0,1,0x53})",
+      "estado": "libInfraRemoteControlNet.so PsmRcCameraStateChangeAvailableApiList / PsmRcWebAPIEditAvailableApiList / PsmRcWebAPICopyAvailableApiList / RcCameraState_update_AvailableApiList_nr",
+      "condiciones_concretas_modo_area_objetivo": "NO_VERIFICADO",
+      "siguiente_paso": "REA sobre libInfraRemoteControlNet.so: PsmRcWebAPIEditAvailableApiList, RcCameraStateSetParameter @0x8ed9"
+    }
+  },
+  "pregunta_4_get_cancel_eventos": {
+    "getTouchAFPosition": {
+      "parametros": [],
+      "resultado": "{\"set\":bool, \"touchCoordinates\":double[]}",
+      "funciones": [
+        "0x2175f4 call (292 B)",
+        "0x216ddc invoke (1528 B)",
+        "0x217798 resultTypes (300 B)",
+        "0x217718 parameterTypes (128 B)",
+        "0x1b756c invoke_cmd (1960 B)"
+      ],
+      "ids": {
+        "peticion": "0x198/0x93",
+        "ack": "0x19a/0x95"
+      },
+      "coordenadas": "array creado vacío en 0x1b776e y adjuntado sin relleno en 0x1b78ee; la función 0x1b756c..0x1b7d14 no contiene instrucciones de coma flotante ni inserciones",
+      "veredicto": "VERIFICADO que devuelve 'set' y un array de coordenadas SIEMPRE VACÍO en fw3.21"
+    },
+    "cancelTouchAFPosition": {
+      "parametros": [],
+      "resultado": "[] (sin resultado)",
+      "funciones": [
+        "0x216864 call (292 B)",
+        "0x215fec invoke (1528 B)",
+        "0x216a08 resultTypes (128 B)",
+        "0x1a75dc invoke_cmd (580 B)"
+      ],
+      "ids": {
+        "peticion": "0x195/0x90",
+        "ack": "0x197/0x92"
+      },
+      "veredicto": "VERIFICADO"
+    },
+    "evento_touchAFPosition": {
+      "constructor": "GetEvent_invoke_cmd @0x1bd2f8 (bloque 0x1c49c0..0x1c4b0c)",
+      "estructura": {
+        "type": "touchAFPosition",
+        "currentSet": "bool",
+        "currentTouchCoordinates": "double[]"
+      },
+      "cadenas": {
+        "touchAFPosition": "0x2fe634 (ref 0x1c4a48)",
+        "type": "0x2faa58",
+        "currentSet": "0x2faf24",
+        "currentTouchCoordinates": "0x2faf30"
+      },
+      "esquema": {
+        "addr": "0x33d86c",
+        "str": "{\"type\":\"string\", \"currentSet\":\"bool\", \"currentTouchCoordinates\":\"double*\"}",
+        "usado_en": "GetEvent::resultTypes @0x22a36c (ref 0x22b280)"
+      },
+      "cadencia": "por petición getEvent del cliente (no hay push); rama condicional por byte de estado en 0x1c4a90 (cmp #8) puede omitir campos",
+      "veredicto": "VERIFICADO (estructura y construcción) / INFERENCIA (cadencia ligada al bucle getEvent) / NO_VERIFICADO (emisión en todos los modos)"
+    },
+    "estructuras": {
+      "TouchAFPositionParams": {
+        "campos": [
+          "AFResult",
+          "AFType"
+        ],
+        "isValid": "0x1cbb2c",
+        "uso": "resultado de setTouchAFPosition",
+        "veredicto": "VERIFICADO"
+      },
+      "TouchAFCurrentPositionParams": {
+        "campos": [
+          "set",
+          "touchCoordinates"
+        ],
+        "isValid": "0x1cbe1c",
+        "uso": "resultado de getTouchAFPosition",
+        "veredicto": "VERIFICADO"
+      },
+      "GetEventTouchAFPositionParams": {
+        "campos": [
+          "type",
+          "currentSet",
+          "currentTouchCoordinates"
+        ],
+        "isValid": "0x1cbde4",
+        "uso": "entrada de getEvent",
+        "veredicto": "VERIFICADO"
+      }
+    }
+  },
+  "pregunta_5_comparativa": {
+    "a7s_fw320": {
+      "orb_server_identico": true,
+      "metodos_touch_af": [
+        "setTouchAFPosition",
+        "getTouchAFPosition",
+        "cancelTouchAFPosition"
+      ],
+      "libInfraRemoteControlNet": "59964 B, sin ninguna cadena 'touchaf'",
+      "veredicto": "VERIFICADO (API idéntica) / NO_VERIFICADO (soporte real en cámara)"
+    },
+    "a6300_fw201": {
+      "metodos_touch_af": [
+        "setTouchAFPosition",
+        "getTouchAFPosition",
+        "cancelTouchAFPosition"
+      ],
+      "methodTypes_literal": [
+        "[\"setTouchAFPosition\",[\"double\",\"double\"],[\"int\",\"{\\\"AFResult\\\":\\\"bool\\\", \\\"AFType\\\":\\\"string\\\"}\"],\"1.0\"]",
+        "[\"getTouchAFPosition\",[],[\"{\\\"set\\\":\\\"bool\\\", \\\"touchCoordinates\\\":\\\"double*\\\"}\"],\"1.0\"]",
+        "[\"cancelTouchAFPosition\",[],[],\"1.0\"]"
+      ],
+      "rutas_servicio": 243,
+      "metodos_exclusivos_relacionados": [
+        "actTrackingFocus",
+        "cancelTrackingFocus",
+        "setTrackingFocus",
+        "getTrackingFocus",
+        "getSupportedTrackingFocus",
+        "getAvailableTrackingFocus",
+        "setHighlightSceneFaceSetting",
+        "getHighlightSceneFaceSetting",
+        "getSupportedHighlightSceneFaceSetting",
+        "getAvailableHighlightSceneFaceSetting",
+        "getTemporarilyUnavailableApiList",
+        "actHalfPressShutter",
+        "cancelHalfPressShutter",
+        "startContShooting",
+        "stopContShooting"
+      ],
+      "metodos_o_campos_de_ojos": [],
+      "cadenas_eye_pupil_face": [
+        "AutoFlashRedEyeOff/On",
+        "FillFlashRedEyeOff/On",
+        "SlowSyncRedEyeOn/Off",
+        "set|get|Supported|Available HighlightSceneFaceSetting"
+      ],
+      "libInfraRemoteControlNet": "167376 B, con setTouchAFSupportCache / setTouchAFStatusSettingCache / setTouchAFSettingAppID",
+      "veredicto": "VERIFICADO (misma API de touch AF; sin API de ojos; tracking focus exclusivo del A6300)"
+    },
+    "conclusion_eye_af": {
+      "a6000_hereda_eye_af_nativo_por_esta_via": false,
+      "motivo": "ninguna de las tres cámaras expone método o campo de ojos en orb-server; el A6300 sólo añade tracking focus y HighlightSceneFaceSetting",
+      "veredicto": "VERIFICADO (ausencia de API) / NO_VERIFICADO (capacidad del hardware A6000)"
+    }
+  },
+  "pregunta_6_focus_mode": {
+    "metodos": [
+      "setFocusMode",
+      "getFocusMode",
+      "getSupportedFocusMode",
+      "getAvailableFocusMode"
+    ],
+    "setFocusMode": {
+      "funcion": "SetFocusMode::invoke(boost::shared_ptr<const libj::String>) @0x2112ec (2036 B)",
+      "parametro": "una cadena con el NOMBRE del modo (call() @0x211ca4 exige args->length()==1 y MethodBase::valueToString)",
+      "conversion": "WebApiAddonUtils::convStringToId(paramName=0x11, name, &id) @0x1879dc (call site 0x2115da)",
+      "log": {
+        "focusModeId": "0x323fb0",
+        "input": "0x323f3c",
+        "error": "0x323f74"
+      },
+      "ids": {
+        "peticion": "0x186/0x81",
+        "ack": "0x188/0x83"
+      },
+      "tabla_nombre_id": {
+        "addr": "0x2e5244",
+        "formato": "{u32 id; const char* name_ptr}",
+        "valores": [
+          {
+            "id": 0,
+            "name": "",
+            "str_addr": "0x2e37c8"
+          },
+          {
+            "id": 1,
+            "name": "MF",
+            "str_addr": "0x2e6cdc"
+          },
+          {
+            "id": 2,
+            "name": "AF-S",
+            "str_addr": "0x2e6ce0"
+          },
+          {
+            "id": 3,
+            "name": "A-Macro",
+            "str_addr": "0x2e6ce8"
+          },
+          {
+            "id": 4,
+            "name": "AF-C",
+            "str_addr": "0x2e6cf0"
+          },
+          {
+            "id": 5,
+            "name": "AF-A",
+            "str_addr": "0x2e6cf8"
+          },
+          {
+            "id": 6,
+            "name": "AF-D",
+            "str_addr": "0x2e6d00"
+          },
+          {
+            "id": 7,
+            "name": "DMF",
+            "str_addr": "0x2e6d08"
+          },
+          {
+            "id": 8,
+            "name": "MF-R",
+            "str_addr": "0x2e6d0c"
+          },
+          {
+            "id": -1,
+            "name": null,
+            "nota": "terminador"
+          }
+        ]
+      },
+      "tabla_reducida": {
+        "addr": "0x2e5b90",
+        "pares": [
+          [
+            "MF",
+            1
+          ],
+          [
+            "AF-S",
+            2
+          ],
+          [
+            "AF-C",
+            3
+          ]
+        ],
+        "parametro": "NO_VERIFICADO"
+      },
+      "veredicto": "VERIFICADO (nombre->id por tabla) / INFERENCIA (conjunto realmente aceptado depende del estado de cámara)"
+    },
+    "getFocusMode": {
+      "resultado": "{\"currentFocusMode\": string, \"focusModeCandidates\": string[]}",
+      "esquema": "0x33d658 (usado por GetEvent::resultTypes y campo focusMode de getEvent)",
+      "veredicto": "VERIFICADO el esquema del evento focusMode (0x33d658) / INFERENCIA fuerte la misma forma en la respuesta de getFocusMode"
+    },
+    "changeAF_o_changeAFArea": {
+      "existe": false,
+      "veredicto": "VERIFICADO",
+      "notas": "tampoco existen setAFArea, actHalfPressShutter ni actTrackingFocus en este build"
+    },
+    "inventario_api_a6000": {
+      "metodos_unicos": 86,
+      "funciones_name": 87,
+      "fichero": "analysis/eyeaf/data/remote_methods_a6000.json"
+    }
+  },
+  "cadenas_clave": [
+    {
+      "addr": "0x2e6268",
+      "str": "setFocusMode"
+    },
+    {
+      "addr": "0x2e6278",
+      "str": "getFocusMode"
+    },
+    {
+      "addr": "0x2e6288",
+      "str": "getSupportedFocusMode"
+    },
+    {
+      "addr": "0x2e62a0",
+      "str": "getAvailableFocusMode"
+    },
+    {
+      "addr": "0x2e62b8",
+      "str": "setTouchAFPosition"
+    },
+    {
+      "addr": "0x2e62cc",
+      "str": "cancelTouchAFPosition"
+    },
+    {
+      "addr": "0x2e62e4",
+      "str": "getTouchAFPosition"
+    },
+    {
+      "addr": "0x2e63e8",
+      "str": "double"
+    },
+    {
+      "addr": "0x2e5c30",
+      "str": "int"
+    },
+    {
+      "addr": "0x2ea140",
+      "str": "illegal argument"
+    },
+    {
+      "addr": "0x2fb4a4",
+      "str": "Touch"
+    },
+    {
+      "addr": "0x2fe634",
+      "str": "touchAFPosition"
+    },
+    {
+      "addr": "0x2fad3c",
+      "str": "AFResult"
+    },
+    {
+      "addr": "0x2fad48",
+      "str": "AFType"
+    },
+    {
+      "addr": "0x2faf24",
+      "str": "currentSet"
+    },
+    {
+      "addr": "0x2faf30",
+      "str": "currentTouchCoordinates"
+    },
+    {
+      "addr": "0x2faf4c",
+      "str": "touchCoordinates"
+    },
+    {
+      "addr": "0x2fb4ac",
+      "str": "(%04d)[INF:invoke_cmd: %04d]afResult=%d AFType=%s"
+    },
+    {
+      "addr": "0x327c70",
+      "str": "(%04d)[PRN:setTouchAFPosition: %04d]---> IN  %s"
+    },
+    {
+      "addr": "0x327ca4",
+      "str": "(%04d)[\\u001b[41mERR\\u001b[49m:setTouchAFPosition: %04d][setTouchAFPosition] parameter err \\n"
+    },
+    {
+      "addr": "0x327cf8",
+      "str": "(%04d)[INF:setTouchAFPosition: %04d]touch AF position x=%f y=%f val=%x\\n"
+    },
+    {
+      "addr": "0x327d40",
+      "str": "(%04d)[\\u001b[41mERR\\u001b[49m:setTouchAFPosition: %04d][setTouchAFPosition] sendMsgToServer err \\n"
+    },
+    {
+      "addr": "0x327d9c",
+      "str": "{\"AFResult\":\"bool\", \"AFType\":\"string\"}"
+    },
+    {
+      "addr": "0x328b58",
+      "str": "(%04d)[PRN:cancelTouchAFPosition: %04d]---> IN  %s"
+    },
+    {
+      "addr": "0x328b9c",
+      "str": "(%04d)[\\u001b[41mERR\\u001b[49m:cancelTouchAFPosition: %04d][cancelTouchAFPosition] sendMsgToServer err \\n"
+    },
+    {
+      "addr": "0x329b28",
+      "str": "{\"set\":\"bool\", \"touchCoordinates\":\"double*\"}"
+    },
+    {
+      "addr": "0x329a98",
+      "str": "(%04d)[PRN:getTouchAFPosition: %04d]---> IN  %s"
+    },
+    {
+      "addr": "0x33d658",
+      "str": "{\"type\":\"string\", \"currentFocusMode\":\"string\", \"focusModeCandidates\":\"string*\"}"
+    },
+    {
+      "addr": "0x33d86c",
+      "str": "{\"type\":\"string\", \"currentSet\":\"bool\", \"currentTouchCoordinates\":\"double*\"}"
+    },
+    {
+      "addr": "0x2e40d0",
+      "str": "(%04d)[INF:AddonUipc: %04d]in setEvtParamId: [%p] msgid=0x%x, paramid=0x%x, relay=0x%x\\n"
+    },
+    {
+      "addr": "0x2e4070",
+      "str": "(%04d)[\\u001b[41mERR\\u001b[49m:AddonUipc: %04d]Err: size mismatch!! ret<=%d, sizeof(WebApiIntMsg) <= %d\\n"
+    },
+    {
+      "addr": "0x2e402c",
+      "str": "(debug) gp_client was NULL in sendMsgToServer"
+    }
+  ],
+  "receta_cliente": {
+    "peticion": "{\"method\":\"setTouchAFPosition\",\"params\":[50.0,30.0],\"id\":1,\"version\":\"1.0\"}",
+    "respuesta_esperada": "{\"result\":[0,{\"AFResult\":true,\"AFType\":\"Touch\"}]}",
+    "precondicion": "getAvailableApiList contiene 'setTouchAFPosition' (id 45 reportado por la cámara)",
+    "veredicto": "VERIFICADO el contenido de params/result; INFERENCIA el envoltorio JSON-RPC exacto del endpoint"
+  },
+  "no_verificado": [
+    "modalidad de AF (puntual, continuo o sólo reposición) tras el mensaje 0x192/0x8d",
+    "condiciones de estado (modo, área de AF, objetivo, ajuste Touch AF) que publican el id 45",
+    "semántica exacta de AFResult y de 'set' devueltos por la cámara",
+    "comportamiento efectivo en A7S (orb idéntico, soporte interno distinto)",
+    "si el evento touchAFPosition se emite en todos los modos y con qué frecuencia real"
+  ],
+  "siguiente_paso": "REA sobre libInfraRemoteControlNet.so (177 KB→A6000 106 KB): PsmRcWebAPIGetTouchAFPosition, RcCameraStateSetParameter @0x8ed9, PsmRcWebAPIEditAvailableApiList; y/o prueba en cámara con un cliente que envíe [x,y] y registre AFResult"
+}

@@ -836,3 +836,23 @@ obturador mecánico completo, y el de recuperación) como release de GitHub, con
 - 25-11-2026: G112 — open gate en vídeo (siete frentes en paralelo). El recorte 16:9 nace en el modo de lectura del IMX210 (vídeo 1996×1124; foto 6000×4000 a 14,98 Hz (66,8 ms); Live View `0x03` = 2000×800 = altura completa anamórfica). A 24/25/30p un 3:2 con binning 3 (≈1996×1333) cabe en el barrido; a 59,94 Hz no. Muro real: el codificador, `FUN_436124b8` (coincidencia exacta con 5 rasters) y `FUN_4391c540` (1920 ⇒ alto 1080), así que el único 3:2 que pasa es **1440×960** por la rama «no full HD» del ctor `0x43a7bf56`; 1920×1280 queda bloqueado. Formato de película: orden LIRO `0x4000` (23 B, aspecto en `0x11`) con solo 16:9/4:3/15:9, aunque `libObj` tiene vocabulario 3:2 (`MOVIE_ASPECT_3_2` `0xda6df6`). HDMI topado a 1080 y el sensor cambia a 1996×1124 al grabar; PMCA/SDK no exponen geometría. Añadidos OG-1…OG-5; sin tocar la cámara. [Informe](../docs/gui/g112-opengate-video-3-2.md).
 - 25-11-2026: G113 — opengate implementado en estático: alto 3:2 del modo `0x19` (1124→1333 en la fila de 72 B `0x43bc1a30`, período de 48 Hz intacto), codificador que acepta 1440×960 (cueva `0x43fb8480` sustituye el `cmp` de `0x4361255c`, ctor del perfil 1 `0x43a7bfba` a 960) y variante 60p (línea 676 ciclos, cuadro 1333 = 59,99 Hz). Build `og` `daaaf81f…` con auditoría 29/29 y 7 tests Unicorn. Además, el límite de 66,75 ms a 24 MP no se puede mejorar estáticamente (período `a·b/54,054 MHz`, única palanca el blanking: +5,1 %); el 3:2 sí llega a 60p. [Informe](../docs/gui/g113-opengate-video-parche.md).
 - 25-11-2026: G113 (cierre estático) — OG-E: el pedido del codificador es un embudo único (`0x4361234e` → `0x43a7c8fa`) y el raster que elige perfil son los u16 `+0x56/+0x58` del bloque de formato (`obj+0x45a/+0x45c`); cueva en `0x43612364` que reescribe 1920×1080 → 1440×960 sin tocar 720p/480p/1440×1080. `apply_bytes` pasa a ser el opengate completo (3:2 a 24p y 60p). Build 3.96 `eb0c0481…`, auditoría 29/29, 8 tests. Barrido: los 12 `movw #1124` son logs y descriptores de UI, no aritmética de buffers. Sólo falta validación física (OG-8).
+
+## H1 — Eye AF en tiempo real por la API remota de touch AF (26-11-2026)
+
+Carril nuevo, independiente del obturador, a petición del usuario. Se descartó la vía interna: la orden
+`PARAMID_EYE_START_AF` (`0x4054`) solo copia al espejo y no tiene consumidor localizado (g83), `Camera::FC`
+no tiene canal externo y la A6300 tampoco expone API de ojos. La vía real es la **API remota que la cámara ya
+tiene**: `setTouchAFPosition` (params `[x, y]` `double` en **porcentaje 0..100**, respuesta
+`[0, {"AFResult": bool, "AFType": "Touch"}]`, mensaje `0x192/0x8d`) y `startLiveview` (HTTP `chunked`, un JPEG
+por trozo; la app compone la URL con el puerto 8080 y `orb-server` arranca con `-p 10000`). El `orb-server` de
+la A7S es idéntico byte a byte y el de la A6300 no añade ninguna API de ojos. Implementado en el PC
+`tools/eye-af/` (detector YuNet con degradación Haar, cliente JSON-RPC con autodetección de puerto, parser de
+Live View por SOI/EOI, controlador con suavizado + banda muerta + límite de Hz + salto de sujeto +
+cancelación, bucle con ventana y grabación, y `fake_camera.py` con el mismo contrato); lanzador
+`scripts/eye_af.py`. Verificación sin cámara: 28 pruebas (`tests/test_eye_af_{api,tracker,loop,detector}.py`),
+incluido el bucle completo con visión real contra la cámara falsa (19,3 fps, 16–19 ms de detección, orden de
+AF en las coordenadas del ojo detectado); `ruff`/`mypy` limpios. Límite: **nada en hardware**; el estático es
+de fw3.21 y la cámara está en 3.93. Entregables: [informe](../docs/capture/eye-af-tiempo-real.md),
+[orb_touchaf](../analysis/eyeaf/orb_touchaf.md), [orb_liveview](../analysis/eyeaf/orb_liveview.md),
+`tools/eye-af/README.md`, `tools/eye-af/BENCH.md`. Pendientes H1–H3 en `docs/PENDIENTES.md`.
+Cero escrituras en cámara o firmware.

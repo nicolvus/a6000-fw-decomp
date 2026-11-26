@@ -1,0 +1,640 @@
+001b756c  2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}
+001b7570  42f26c54   movw     r4, #0x256c
+001b7574  c0f23904   movt     r4, #0x39; _ZN17WebApiAddonDbgMon11debug_levelE
+001b7578  adf5d66d   sub.w    sp, sp, #0x6b0
+001b757c  81b0       sub      sp, #4
+001b757e  0746       mov      r7, r0
+001b7580  2368       ldr      r3, [r4]
+001b7582  0e46       mov      r6, r1
+001b7584  022b       cmp      r3, #2
+001b7586  00f39b82   bgt.w    #0x1b7ac0
+001b758a  41f21838   movw     r8, #0x1318
+001b758e  43f2c871   movw     r1, #0x37c8
+001b7592  c0f23708   movt     r8, #0x37; _ZN4libj7NO_SIZEE
+001b7596  0022       movs     r2, #0
+001b7598  0df5d360   add.w    r0, sp, #0x698
+001b759c  c0f22e01   movt     r1, #0x2e
+001b75a0  d8f80030   ldr.w    r3, [r8]
+001b75a4  01f138fa   bl       #0x2b8a18; _ZN4libj6String6createEPKvNS0_8EncodingEj
+001b75a8  0df5cb60   add.w    r0, sp, #0x658
+001b75ac  fdf050fb   bl       #0x2b4c50; _ZN4libj8JsObject6createEv
+001b75b0  ddf85c36   ldr.w    r3, [sp, #0x65c]
+001b75b4  ddf85826   ldr.w    r2, [sp, #0x658]
+001b75b8  cdf85436   str.w    r3, [sp, #0x654]
+001b75bc  cdf85026   str.w    r2, [sp, #0x650]
+001b75c0  6bb1       cbz      r3, #0x1b75de
+001b75c2  0125       movs     r5, #1
+001b75c4  0433       adds     r3, #4
+001b75c6  bff35f8f   dmb      sy
+001b75ca  53e8001f   ldrex    r1, [r3]
+001b75ce  2944       add      r1, r5
+001b75d0  43e80010   strex    r0, r1, [r3]
+001b75d4  90f0000f   teq.w    r0, #0
+001b75d8  f7d1       bne      #0x1b75ca
+001b75da  bff35f8f   dmb      sy
+001b75de  1820       movs     r0, #0x18
+001b75e0  cbf760ed   blx      #0x1830a4; _Znwj@GLIBCXX_3.4
+001b75e4  ddf85026   ldr.w    r2, [sp, #0x650]
+001b75e8  ddf85436   ldr.w    r3, [sp, #0x654]
+001b75ec  cdf84826   str.w    r2, [sp, #0x648]
+001b75f0  cdf84c36   str.w    r3, [sp, #0x64c]
+001b75f4  0546       mov      r5, r0
+001b75f6  73b3       cbz      r3, #0x1b7656
+001b75f8  0121       movs     r1, #1
+001b75fa  181d       adds     r0, r3, #4
+001b75fc  bff35f8f   dmb      sy
+001b7600  50e8002f   ldrex    r2, [r0]
+001b7604  0a44       add      r2, r1
+001b7606  40e8002c   strex    ip, r2, [r0]
+001b760a  9cf0000f   teq.w    ip, #0
+001b760e  f7d1       bne      #0x1b7600
+001b7610  bff35f8f   dmb      sy
+001b7614  ddf84c36   ldr.w    r3, [sp, #0x64c]
+001b7618  ddf84826   ldr.w    r2, [sp, #0x648]
+001b761c  63b1       cbz      r3, #0x1b7638
+001b761e  181d       adds     r0, r3, #4
+001b7620  bff35f8f   dmb      sy
+001b7624  50e800ef   ldrex    lr, [r0]
+001b7628  8e44       add      lr, r1
+001b762a  40e800ec   strex    ip, lr, [r0]
+001b762e  9cf0000f   teq.w    ip, #0
+001b7632  f7d1       bne      #0x1b7624
+001b7634  bff35f8f   dmb      sy
+001b7638  6bb1       cbz      r3, #0x1b7656
+001b763a  0120       movs     r0, #1
+001b763c  191d       adds     r1, r3, #4
+001b763e  bff35f8f   dmb      sy
+001b7642  51e800ef   ldrex    lr, [r1]
+001b7646  8644       add      lr, r0
+001b7648  41e800ec   strex    ip, lr, [r1]
+001b764c  9cf0000f   teq.w    ip, #0
+001b7650  f7d1       bne      #0x1b7642
+001b7652  bff35f8f   dmb      sy
+001b7656  9849       ldr      r1, [pc, #0x260]
+001b7658  aa60       str      r2, [r5, #8]
+001b765a  01f15c00   add.w    r0, r1, #0x5c
+001b765e  eb60       str      r3, [r5, #0xc]
+001b7660  2960       str      r1, [r5]
+001b7662  6860       str      r0, [r5, #4]
+001b7664  13b3       cbz      r3, #0x1b76ac
+001b7666  0120       movs     r0, #1
+001b7668  191d       adds     r1, r3, #4
+001b766a  bff35f8f   dmb      sy
+001b766e  51e800ef   ldrex    lr, [r1]
+001b7672  8644       add      lr, r0
+001b7674  41e800ec   strex    ip, lr, [r1]
+001b7678  9cf0000f   teq.w    ip, #0
+001b767c  f7d1       bne      #0x1b766e
+001b767e  bff35f8f   dmb      sy
+001b7682  4ff0ff38   mov.w    r8, #-1
+001b7686  bff35f8f   dmb      sy
+001b768a  51e800cf   ldrex    ip, [r1]
+001b768e  0ceb080e   add.w    lr, ip, r8
+001b7692  41e800ec   strex    ip, lr, [r1]
+001b7696  9cf0000f   teq.w    ip, #0
+001b769a  f6d1       bne      #0x1b768a
+001b769c  aeeb080c   sub.w    ip, lr, r8
+001b76a0  bff35f8f   dmb      sy
+001b76a4  bcf1010f   cmp.w    ip, #1
+001b76a8  00f01e82   beq.w    #0x1b7ae8
+001b76ac  8349       ldr      r1, [pc, #0x20c]
+001b76ae  2a61       str      r2, [r5, #0x10]
+001b76b0  6b61       str      r3, [r5, #0x14]
+001b76b2  01f15c02   add.w    r2, r1, #0x5c
+001b76b6  85e80600   stm.w    r5, {r1, r2}
+001b76ba  13b3       cbz      r3, #0x1b7702
+001b76bc  0121       movs     r1, #1
+001b76be  1a1d       adds     r2, r3, #4
+001b76c0  bff35f8f   dmb      sy
+001b76c4  52e8000f   ldrex    r0, [r2]
+001b76c8  0844       add      r0, r1
+001b76ca  42e8000e   strex    lr, r0, [r2]
+001b76ce  9ef0000f   teq.w    lr, #0
+001b76d2  f7d1       bne      #0x1b76c4
+001b76d4  bff35f8f   dmb      sy
+001b76d8  4ff0ff38   mov.w    r8, #-1
+001b76dc  bff35f8f   dmb      sy
+001b76e0  52e800ef   ldrex    lr, [r2]
+001b76e4  0eeb0800   add.w    r0, lr, r8
+001b76e8  42e8000e   strex    lr, r0, [r2]
+001b76ec  9ef0000f   teq.w    lr, #0
+001b76f0  f6d1       bne      #0x1b76e0
+001b76f2  a0eb080e   sub.w    lr, r0, r8
+001b76f6  bff35f8f   dmb      sy
+001b76fa  bef1010f   cmp.w    lr, #1
+001b76fe  00f01782   beq.w    #0x1b7b30
+001b7702  6f4b       ldr      r3, [pc, #0x1bc]
+001b7704  0df5c860   add.w    r0, sp, #0x640
+001b7708  0c30       adds     r0, #0xc
+001b770a  03f15c02   add.w    r2, r3, #0x5c
+001b770e  6a60       str      r2, [r5, #4]
+001b7710  2b60       str      r3, [r5]
+001b7712  cdf7a9fa   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+001b7716  6b4a       ldr      r2, [pc, #0x1ac]
+001b7718  1020       movs     r0, #0x10
+001b771a  0023       movs     r3, #0
+001b771c  02f15c01   add.w    r1, r2, #0x5c
+001b7720  6960       str      r1, [r5, #4]
+001b7722  2a60       str      r2, [r5]
+001b7724  cdf89056   str.w    r5, [sp, #0x690]
+001b7728  cdf89436   str.w    r3, [sp, #0x694]
+001b772c  cdf8ac36   str.w    r3, [sp, #0x6ac]
+001b7730  cbf7b8ec   blx      #0x1830a4; _Znwj@GLIBCXX_3.4
+001b7734  6449       ldr      r1, [pc, #0x190]
+001b7736  0122       movs     r2, #1
+001b7738  0346       mov      r3, r0
+001b773a  0df5d660   add.w    r0, sp, #0x6b0
+001b773e  5a60       str      r2, [r3, #4]
+001b7740  9a60       str      r2, [r3, #8]
+001b7742  ddf89426   ldr.w    r2, [sp, #0x694]
+001b7746  1960       str      r1, [r3]
+001b7748  dd60       str      r5, [r3, #0xc]
+001b774a  0df5ca65   add.w    r5, sp, #0x650
+001b774e  40f8042d   str      r2, [r0, #-0x4]!
+001b7752  cdf89436   str.w    r3, [sp, #0x694]
+001b7756  cdf787fa   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+001b775a  281d       adds     r0, r5, #4
+001b775c  cdf784fa   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+001b7760  0df5ca60   add.w    r0, sp, #0x650
+001b7764  0c30       adds     r0, #0xc
+001b7766  cdf77ffa   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+001b776a  0df5d160   add.w    r0, sp, #0x688
+001b776e  2ef0edfe   bl       #0x1e654c; _ZN4libj12TypedJsArrayIdE6createEv
+001b7772  2068       ldr      r0, [r4]
+001b7774  d6f80c80   ldr.w    r8, [r6, #0xc]
+001b7778  0128       cmp      r0, #1
+001b777a  3569       ldr      r5, [r6, #0x10]
+001b777c  13dd       ble      #0x1b77a6
+001b777e  42f29829   movw     sb, #0x2298
+001b7782  c0f23909   movt     sb, #0x39; stderr@GLIBC_2.4
+001b7786  d9f80090   ldr.w    sb, [sb]
+001b778a  cbf7d0ec   blx      #0x18312c; getpid@GLIBC_2.4
+001b778e  4af68c71   movw     r1, #0xaf8c
+001b7792  40f6fd23   movw     r3, #0xafd
+001b7796  c0f22f01   movt     r1, #0x2f; "(%04d)[INF:invoke_cmd: %04d]response=%d relay=0x%08X\n"
+001b779a  8de82001   stm.w    sp, {r5, r8}
+001b779e  0246       mov      r2, r0
+001b77a0  4846       mov      r0, sb
+001b77a2  ccf7dae9   blx      #0x183b58; fprintf@GLIBC_2.4
+001b77a6  002d       cmp      r5, #0
+001b77a8  00f09080   beq.w    #0x1b78cc
+001b77ac  2468       ldr      r4, [r4]
+001b77ae  012c       cmp      r4, #1
+001b77b0  12dd       ble      #0x1b77d8
+001b77b2  42f2982c   movw     ip, #0x2298
+001b77b6  c0f2390c   movt     ip, #0x39; stderr@GLIBC_2.4
+001b77ba  dcf80040   ldr.w    r4, [ip]
+001b77be  cbf7b6ec   blx      #0x18312c; getpid@GLIBC_2.4
+001b77c2  4df6b041   movw     r1, #0xdcb0
+001b77c6  40f6ff23   movw     r3, #0xaff
+001b77ca  c0f22f01   movt     r1, #0x2f; "(%04d)[INF:invoke_cmd: %04d]getTouchAFPosition Cmd Response=%d\n"
+001b77ce  0095       str      r5, [sp]
+001b77d0  0246       mov      r2, r0
+001b77d2  2046       mov      r0, r4
+001b77d4  ccf7c0e9   blx      #0x183b58; fprintf@GLIBC_2.4
+001b77d8  97e80c00   ldm.w    r7, {r2, r3}
+001b77dc  cdf86826   str.w    r2, [sp, #0x668]
+001b77e0  cdf86c36   str.w    r3, [sp, #0x66c]
+001b77e4  6bb1       cbz      r3, #0x1b7802
+001b77e6  0124       movs     r4, #1
+001b77e8  1a1d       adds     r2, r3, #4
+001b77ea  bff35f8f   dmb      sy
+001b77ee  52e8001f   ldrex    r1, [r2]
+001b77f2  2144       add      r1, r4
+001b77f4  42e8001e   strex    lr, r1, [r2]
+001b77f8  9ef0000f   teq.w    lr, #0
+001b77fc  f7d1       bne      #0x1b77ee
+001b77fe  bff35f8f   dmb      sy
+001b7802  ddf89c36   ldr.w    r3, [sp, #0x69c]
+001b7806  ddf89816   ldr.w    r1, [sp, #0x698]
+001b780a  cdf86436   str.w    r3, [sp, #0x664]
+001b780e  cdf86016   str.w    r1, [sp, #0x660]
+001b7812  6bb1       cbz      r3, #0x1b7830
+001b7814  0124       movs     r4, #1
+001b7816  0433       adds     r3, #4
+001b7818  bff35f8f   dmb      sy
+001b781c  53e8001f   ldrex    r1, [r3]
+001b7820  2144       add      r1, r4
+001b7822  43e80010   strex    r0, r1, [r3]
+001b7826  90f0000f   teq.w    r0, #0
+001b782a  f7d1       bne      #0x1b781c
+001b782c  bff35f8f   dmb      sy
+001b7830  2946       mov      r1, r5
+001b7832  0df5cc62   add.w    r2, sp, #0x660
+001b7836  0df5cd60   add.w    r0, sp, #0x668
+001b783a  0df5cc65   add.w    r5, sp, #0x660
+001b783e  daf78bfe   bl       #0x192558; _ZN4libj4node3orb6server10MethodBase10sendStatusEN5boost10shared_ptrINS2_6ClientEEEiNS5_IKNS_6StringEEE
+001b7842  0446       mov      r4, r0
+001b7844  281d       adds     r0, r5, #4
+001b7846  cdf70ffa   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+001b784a  0df5cc60   add.w    r0, sp, #0x660
+001b784e  0c30       adds     r0, #0xc
+001b7850  cdf70afa   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+001b7854  4ff4cd71   mov.w    r1, #0x19a
+001b7858  9522       movs     r2, #0x95
+001b785a  4346       mov      r3, r8
+001b785c  04a8       add      r0, sp, #0x10
+001b785e  cff79dff   bl       #0x18779c; _ZN19WebApiAddonUipcUser15WebApiAddonUipc18sendMsgToServerCmpEPN9DefWebApi12WebApiIntMsgEjji
+001b7862  0df5d060   add.w    r0, sp, #0x680
+001b7866  0c30       adds     r0, #0xc
+001b7868  cdf7fef9   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+001b786c  0df5d260   add.w    r0, sp, #0x690
+001b7870  0430       adds     r0, #4
+001b7872  cdf7f9f9   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+001b7876  ddf89c56   ldr.w    r5, [sp, #0x69c]
+001b787a  adb1       cbz      r5, #0x1b78a8
+001b787c  4ff0ff36   mov.w    r6, #-1
+001b7880  2a1d       adds     r2, r5, #4
+001b7882  bff35f8f   dmb      sy
+001b7886  52e800ef   ldrex    lr, [r2]
+001b788a  0eeb0601   add.w    r1, lr, r6
+001b788e  42e8001e   strex    lr, r1, [r2]
+001b7892  9ef0000f   teq.w    lr, #0
+001b7896  f6d1       bne      #0x1b7886
+001b7898  a1eb060e   sub.w    lr, r1, r6
+001b789c  bff35f8f   dmb      sy
+001b78a0  bef1010f   cmp.w    lr, #1
+001b78a4  00f06381   beq.w    #0x1b7b6e
+001b78a8  2046       mov      r0, r4
+001b78aa  0df52d7d   add.w    sp, sp, #0x2b4
+001b78ae  0df5806d   add.w    sp, sp, #0x400
+001b78b2  bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}
+001b78b6  00bf       nop      
+001b78b8  a8ca       ldm      r2!, {r3, r5, r7}
+001b78ba  2e00       movs     r6, r5
+001b78bc  38ca       ldm      r2!, {r3, r4, r5}
+001b78be  2e00       movs     r6, r5
+001b78c0  c8c9       ldm      r1!, {r3, r6, r7}
+001b78c2  2e00       movs     r6, r5
+001b78c4  c825       movs     r5, #0xc8
+001b78c6  2f00       movs     r7, r5
+001b78c8  3826       movs     r6, #0x38
+001b78ca  2f00       movs     r7, r5
+001b78cc  ddf89006   ldr.w    r0, [sp, #0x690]
+001b78d0  327d       ldrb     r2, [r6, #0x14]
+001b78d2  0028       cmp      r0, #0
+001b78d4  00f00082   beq.w    #0x1b7cd8
+001b78d8  4af64871   movw     r1, #0xaf48
+001b78dc  c0f22f01   movt     r1, #0x2f
+001b78e0  a6f00eff   bl       #0x25e700; _ZN4libj4node3orb6server13StructureBase10setBooleanEPKcb
+001b78e4  ddf89006   ldr.w    r0, [sp, #0x690]
+001b78e8  0028       cmp      r0, #0
+001b78ea  00f0f581   beq.w    #0x1b7cd8
+001b78ee  ddf88826   ldr.w    r2, [sp, #0x688]
+001b78f2  ddf88c36   ldr.w    r3, [sp, #0x68c]
+001b78f6  cdf88026   str.w    r2, [sp, #0x680]
+001b78fa  cdf88436   str.w    r3, [sp, #0x684]
+001b78fe  8bb1       cbz      r3, #0x1b7924
+001b7900  0125       movs     r5, #1
+001b7902  0433       adds     r3, #4
+001b7904  bff35f8f   dmb      sy
+001b7908  53e8001f   ldrex    r1, [r3]
+001b790c  2944       add      r1, r5
+001b790e  43e8001e   strex    lr, r1, [r3]
+001b7912  9ef0000f   teq.w    lr, #0
+001b7916  f7d1       bne      #0x1b7908
+001b7918  bff35f8f   dmb      sy
+001b791c  ddf88026   ldr.w    r2, [sp, #0x680]
+001b7920  ddf88456   ldr.w    r5, [sp, #0x684]
+001b7924  cdf84026   str.w    r2, [sp, #0x640]
+001b7928  cdf84456   str.w    r5, [sp, #0x644]
+001b792c  6db1       cbz      r5, #0x1b794a
+001b792e  0124       movs     r4, #1
+001b7930  0435       adds     r5, #4
+001b7932  bff35f8f   dmb      sy
+001b7936  55e8002f   ldrex    r2, [r5]
+001b793a  2244       add      r2, r4
+001b793c  45e80021   strex    r1, r2, [r5]
+001b7940  91f0000f   teq.w    r1, #0
+001b7944  f7d1       bne      #0x1b7936
+001b7946  bff35f8f   dmb      sy
+001b794a  4af64c71   movw     r1, #0xaf4c
+001b794e  0df5c862   add.w    r2, sp, #0x640
+001b7952  c0f22f01   movt     r1, #0x2f; "touchCoordinates"
+001b7956  a7f0fffa   bl       #0x25ef58; _ZN4libj4node3orb6server13StructureBase14setDoubleArrayEPKcN5boost10shared_ptrIKNS_12TypedJsArrayIdEEEE
+001b795a  0df5c861   add.w    r1, sp, #0x640
+001b795e  081d       adds     r0, r1, #4
+001b7960  cdf782f9   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+001b7964  0df5d060   add.w    r0, sp, #0x680
+001b7968  0430       adds     r0, #4
+001b796a  cdf77df9   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+001b796e  97e80c00   ldm.w    r7, {r2, r3}
+001b7972  cdf87826   str.w    r2, [sp, #0x678]
+001b7976  cdf87c36   str.w    r3, [sp, #0x67c]
+001b797a  6bb1       cbz      r3, #0x1b7998
+001b797c  0122       movs     r2, #1
+001b797e  0433       adds     r3, #4
+001b7980  bff35f8f   dmb      sy
+001b7984  53e8001f   ldrex    r1, [r3]
+001b7988  1144       add      r1, r2
+001b798a  43e80014   strex    r4, r1, [r3]
+001b798e  94f0000f   teq.w    r4, #0
+001b7992  f7d1       bne      #0x1b7984
+001b7994  bff35f8f   dmb      sy
+001b7998  ddf89436   ldr.w    r3, [sp, #0x694]
+001b799c  ddf89046   ldr.w    r4, [sp, #0x690]
+001b79a0  cdf87436   str.w    r3, [sp, #0x674]
+001b79a4  cdf87046   str.w    r4, [sp, #0x670]
+001b79a8  6bb1       cbz      r3, #0x1b79c6
+001b79aa  0125       movs     r5, #1
+001b79ac  181d       adds     r0, r3, #4
+001b79ae  bff35f8f   dmb      sy
+001b79b2  50e8001f   ldrex    r1, [r0]
+001b79b6  2944       add      r1, r5
+001b79b8  40e80016   strex    r6, r1, [r0]
+001b79bc  96f0000f   teq.w    r6, #0
+001b79c0  f7d1       bne      #0x1b79b2
+001b79c2  bff35f8f   dmb      sy
+001b79c6  ddf87816   ldr.w    r1, [sp, #0x678]
+001b79ca  0029       cmp      r1, #0
+001b79cc  00f0f980   beq.w    #0x1b7bc2
+001b79d0  0df5c760   add.w    r0, sp, #0x638
+001b79d4  faf0fafc   bl       #0x2b23cc; _ZN4libj7JsArray6createEv
+001b79d8  ddf87066   ldr.w    r6, [sp, #0x670]
+001b79dc  002e       cmp      r6, #0
+001b79de  00f0f280   beq.w    #0x1b7bc6
+001b79e2  ddf83856   ldr.w    r5, [sp, #0x638]
+001b79e6  002d       cmp      r5, #0
+001b79e8  00f0de80   beq.w    #0x1b7ba8
+001b79ec  2a68       ldr      r2, [r5]
+001b79ee  0c20       movs     r0, #0xc
+001b79f0  d469       ldr      r4, [r2, #0x1c]
+001b79f2  cbf758eb   blx      #0x1830a4; _Znwj@GLIBCXX_3.4
+001b79f6  b249       ldr      r1, [pc, #0x2c8]
+001b79f8  ddf87426   ldr.w    r2, [sp, #0x674]
+001b79fc  0346       mov      r3, r0
+001b79fe  0160       str      r1, [r0]
+001b7a00  ddf87006   ldr.w    r0, [sp, #0x670]
+001b7a04  9a60       str      r2, [r3, #8]
+001b7a06  5860       str      r0, [r3, #4]
+001b7a08  6ab1       cbz      r2, #0x1b7a26
+001b7a0a  0126       movs     r6, #1
+001b7a0c  111d       adds     r1, r2, #4
+001b7a0e  bff35f8f   dmb      sy
+001b7a12  51e8000f   ldrex    r0, [r1]
+001b7a16  3044       add      r0, r6
+001b7a18  41e8000c   strex    ip, r0, [r1]
+001b7a1c  9cf0000f   teq.w    ip, #0
+001b7a20  f7d1       bne      #0x1b7a12
+001b7a22  bff35f8f   dmb      sy
+001b7a26  0df5d661   add.w    r1, sp, #0x6b0
+001b7a2a  2846       mov      r0, r5
+001b7a2c  41f8103d   str      r3, [r1, #-0x10]!
+001b7a30  a047       blx      r4
+001b7a32  ddf8a006   ldr.w    r0, [sp, #0x6a0]
+001b7a36  10b1       cbz      r0, #0x1b7a3e
+001b7a38  0468       ldr      r4, [r0]
+001b7a3a  6368       ldr      r3, [r4, #4]
+001b7a3c  9847       blx      r3
+001b7a3e  ddf87866   ldr.w    r6, [sp, #0x678]
+001b7a42  002e       cmp      r6, #0
+001b7a44  00f05581   beq.w    #0x1b7cf2
+001b7a48  3468       ldr      r4, [r6]
+001b7a4a  0c20       movs     r0, #0xc
+001b7a4c  246d       ldr      r4, [r4, #0x50]
+001b7a4e  cbf72aeb   blx      #0x1830a4; _Znwj@GLIBCXX_3.4
+001b7a52  9c49       ldr      r1, [pc, #0x270]
+001b7a54  ddf83c36   ldr.w    r3, [sp, #0x63c]
+001b7a58  0546       mov      r5, r0
+001b7a5a  0160       str      r1, [r0]
+001b7a5c  ddf83806   ldr.w    r0, [sp, #0x638]
+001b7a60  ab60       str      r3, [r5, #8]
+001b7a62  6860       str      r0, [r5, #4]
+001b7a64  6bb1       cbz      r3, #0x1b7a82
+001b7a66  0122       movs     r2, #1
+001b7a68  0433       adds     r3, #4
+001b7a6a  bff35f8f   dmb      sy
+001b7a6e  53e8001f   ldrex    r1, [r3]
+001b7a72  1144       add      r1, r2
+001b7a74  43e8001c   strex    ip, r1, [r3]
+001b7a78  9cf0000f   teq.w    ip, #0
+001b7a7c  f7d1       bne      #0x1b7a6e
+001b7a7e  bff35f8f   dmb      sy
+001b7a82  0df5d662   add.w    r2, sp, #0x6b0
+001b7a86  0021       movs     r1, #0
+001b7a88  3046       mov      r0, r6
+001b7a8a  0b46       mov      r3, r1
+001b7a8c  42f8085d   str      r5, [r2, #-0x8]!
+001b7a90  a047       blx      r4
+001b7a92  ddf8a806   ldr.w    r0, [sp, #0x6a8]
+001b7a96  10b1       cbz      r0, #0x1b7a9e
+001b7a98  0168       ldr      r1, [r0]
+001b7a9a  4d68       ldr      r5, [r1, #4]
+001b7a9c  a847       blx      r5
+001b7a9e  0df5c660   add.w    r0, sp, #0x630
+001b7aa2  0024       movs     r4, #0
+001b7aa4  0c30       adds     r0, #0xc
+001b7aa6  cdf7dff8   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+001b7aaa  0df5ce60   add.w    r0, sp, #0x670
+001b7aae  0430       adds     r0, #4
+001b7ab0  cdf7daf8   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+001b7ab4  0df5ce60   add.w    r0, sp, #0x670
+001b7ab8  0c30       adds     r0, #0xc
+001b7aba  cdf7d5f8   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+001b7abe  c9e6       b        #0x1b7854
+001b7ac0  42f29820   movw     r0, #0x2298
+001b7ac4  c0f23900   movt     r0, #0x39; stderr@GLIBC_2.4
+001b7ac8  0568       ldr      r5, [r0]
+001b7aca  cbf730eb   blx      #0x18312c; getpid@GLIBC_2.4
+001b7ace  4af66071   movw     r1, #0xaf60
+001b7ad2  40f6ee23   movw     r3, #0xaee
+001b7ad6  c0f22f01   movt     r1, #0x2f; "(%04d)[PRN:invoke_cmd: %04d]---> IN  %s\n"
+001b7ada  0246       mov      r2, r0
+001b7adc  2846       mov      r0, r5
+001b7ade  7a4d       ldr      r5, [pc, #0x1e8]
+001b7ae0  0095       str      r5, [sp]
+001b7ae2  ccf73ae8   blx      #0x183b58; fprintf@GLIBC_2.4
+001b7ae6  50e5       b        #0x1b758a
+001b7ae8  1968       ldr      r1, [r3]
+001b7aea  1846       mov      r0, r3
+001b7aec  8968       ldr      r1, [r1, #8]
+001b7aee  0293       str      r3, [sp, #8]
+001b7af0  0392       str      r2, [sp, #0xc]
+001b7af2  8847       blx      r1
+001b7af4  029b       ldr      r3, [sp, #8]
+001b7af6  03f10801   add.w    r1, r3, #8
+001b7afa  bff35f8f   dmb      sy
+001b7afe  51e8002f   ldrex    r2, [r1]
+001b7b02  02eb080c   add.w    ip, r2, r8
+001b7b06  41e800c2   strex    r2, ip, [r1]
+001b7b0a  92f0000f   teq.w    r2, #0
+001b7b0e  f6d1       bne      #0x1b7afe
+001b7b10  aceb0802   sub.w    r2, ip, r8
+001b7b14  bff35f8f   dmb      sy
+001b7b18  012a       cmp      r2, #1
+001b7b1a  039a       ldr      r2, [sp, #0xc]
+001b7b1c  7ff4c6ad   bne.w    #0x1b76ac
+001b7b20  1968       ldr      r1, [r3]
+001b7b22  1846       mov      r0, r3
+001b7b24  ca68       ldr      r2, [r1, #0xc]
+001b7b26  0293       str      r3, [sp, #8]
+001b7b28  9047       blx      r2
+001b7b2a  029b       ldr      r3, [sp, #8]
+001b7b2c  039a       ldr      r2, [sp, #0xc]
+001b7b2e  bde5       b        #0x1b76ac
+001b7b30  1a68       ldr      r2, [r3]
+001b7b32  1846       mov      r0, r3
+001b7b34  9168       ldr      r1, [r2, #8]
+001b7b36  0293       str      r3, [sp, #8]
+001b7b38  8847       blx      r1
+001b7b3a  029b       ldr      r3, [sp, #8]
+001b7b3c  03f10802   add.w    r2, r3, #8
+001b7b40  bff35f8f   dmb      sy
+001b7b44  52e8000f   ldrex    r0, [r2]
+001b7b48  00eb080c   add.w    ip, r0, r8
+001b7b4c  42e800c0   strex    r0, ip, [r2]
+001b7b50  90f0000f   teq.w    r0, #0
+001b7b54  f6d1       bne      #0x1b7b44
+001b7b56  aceb0800   sub.w    r0, ip, r8
+001b7b5a  bff35f8f   dmb      sy
+001b7b5e  0128       cmp      r0, #1
+001b7b60  7ff4cfad   bne.w    #0x1b7702
+001b7b64  1968       ldr      r1, [r3]
+001b7b66  1846       mov      r0, r3
+001b7b68  cb68       ldr      r3, [r1, #0xc]
+001b7b6a  9847       blx      r3
+001b7b6c  c9e5       b        #0x1b7702
+001b7b6e  2968       ldr      r1, [r5]
+001b7b70  2846       mov      r0, r5
+001b7b72  8a68       ldr      r2, [r1, #8]
+001b7b74  9047       blx      r2
+001b7b76  05f10803   add.w    r3, r5, #8
+001b7b7a  bff35f8f   dmb      sy
+001b7b7e  53e8001f   ldrex    r1, [r3]
+001b7b82  01eb060c   add.w    ip, r1, r6
+001b7b86  43e800c1   strex    r1, ip, [r3]
+001b7b8a  91f0000f   teq.w    r1, #0
+001b7b8e  f6d1       bne      #0x1b7b7e
+001b7b90  aceb0601   sub.w    r1, ip, r6
+001b7b94  bff35f8f   dmb      sy
+001b7b98  0129       cmp      r1, #1
+001b7b9a  7ff485ae   bne.w    #0x1b78a8
+001b7b9e  2a68       ldr      r2, [r5]
+001b7ba0  2846       mov      r0, r5
+001b7ba2  d368       ldr      r3, [r2, #0xc]
+001b7ba4  9847       blx      r3
+001b7ba6  7fe6       b        #0x1b78a8
+001b7ba8  43f2d860   movw     r0, #0x36d8
+001b7bac  43f2e061   movw     r1, #0x36e0
+001b7bb0  c0f22e00   movt     r0, #0x2e; "px != 0"
+001b7bb4  c0f22e01   movt     r1, #0x2e; "/home/0000131102/Network/orb_server_build_musashi/native/liborb/deps/libnode/deps/libj/deps/boost-svn/boost/smart_ptr/sh"
+001b7bb8  4ff42372   mov.w    r2, #0x28c
+001b7bbc  434b       ldr      r3, [pc, #0x10c]
+001b7bbe  cbf772ed   blx      #0x1836a4; __assert_fail@GLIBC_2.4
+001b7bc2  0324       movs     r4, #3
+001b7bc4  71e7       b        #0x1b7aaa
+001b7bc6  ddf83856   ldr.w    r5, [sp, #0x638]
+001b7bca  002d       cmp      r5, #0
+001b7bcc  ecd0       beq      #0x1b7ba8
+001b7bce  42f2f467   movw     r7, #0x26f4
+001b7bd2  2a68       ldr      r2, [r5]
+001b7bd4  c0f23907   movt     r7, #0x39; _ZGVZN4libj6Object4nullEvE5nullp
+001b7bd8  3868       ldr      r0, [r7]
+001b7bda  d669       ldr      r6, [r2, #0x1c]
+001b7bdc  10f00109   ands     sb, r0, #1
+001b7be0  45d0       beq      #0x1b7c6e
+001b7be2  42f2f864   movw     r4, #0x26f8
+001b7be6  c0f23904   movt     r4, #0x39; _ZZN4libj6Object4nullEvE5nullp
+001b7bea  94e80c00   ldm.w    r4, {r2, r3}
+001b7bee  cdf83026   str.w    r2, [sp, #0x630]
+001b7bf2  cdf83436   str.w    r3, [sp, #0x634]
+001b7bf6  6bb1       cbz      r3, #0x1b7c14
+001b7bf8  0124       movs     r4, #1
+001b7bfa  181d       adds     r0, r3, #4
+001b7bfc  bff35f8f   dmb      sy
+001b7c00  50e8001f   ldrex    r1, [r0]
+001b7c04  2144       add      r1, r4
+001b7c06  40e8001e   strex    lr, r1, [r0]
+001b7c0a  9ef0000f   teq.w    lr, #0
+001b7c0e  f7d1       bne      #0x1b7c00
+001b7c10  bff35f8f   dmb      sy
+001b7c14  0c20       movs     r0, #0xc
+001b7c16  2e4c       ldr      r4, [pc, #0xb8]
+001b7c18  cbf744ea   blx      #0x1830a4; _Znwj@GLIBCXX_3.4
+001b7c1c  ddf83426   ldr.w    r2, [sp, #0x634]
+001b7c20  ddf83016   ldr.w    r1, [sp, #0x630]
+001b7c24  0346       mov      r3, r0
+001b7c26  0460       str      r4, [r0]
+001b7c28  4160       str      r1, [r0, #4]
+001b7c2a  8260       str      r2, [r0, #8]
+001b7c2c  6ab1       cbz      r2, #0x1b7c4a
+001b7c2e  0121       movs     r1, #1
+001b7c30  0432       adds     r2, #4
+001b7c32  bff35f8f   dmb      sy
+001b7c36  52e8000f   ldrex    r0, [r2]
+001b7c3a  0844       add      r0, r1
+001b7c3c  42e80004   strex    r4, r0, [r2]
+001b7c40  94f0000f   teq.w    r4, #0
+001b7c44  f7d1       bne      #0x1b7c36
+001b7c46  bff35f8f   dmb      sy
+001b7c4a  0df5d661   add.w    r1, sp, #0x6b0
+001b7c4e  2846       mov      r0, r5
+001b7c50  41f80c3d   str      r3, [r1, #-0xc]!
+001b7c54  b047       blx      r6
+001b7c56  ddf8a406   ldr.w    r0, [sp, #0x6a4]
+001b7c5a  10b1       cbz      r0, #0x1b7c62
+001b7c5c  0668       ldr      r6, [r0]
+001b7c5e  7568       ldr      r5, [r6, #4]
+001b7c60  a847       blx      r5
+001b7c62  0df5c663   add.w    r3, sp, #0x630
+001b7c66  181d       adds     r0, r3, #4
+001b7c68  ccf7feff   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+001b7c6c  e7e6       b        #0x1b7a3e
+001b7c6e  3846       mov      r0, r7
+001b7c70  ccf768e8   blx      #0x183d44; __cxa_guard_acquire@CXXABI_1.3
+001b7c74  0028       cmp      r0, #0
+001b7c76  b4d0       beq      #0x1b7be2
+001b7c78  42f2f864   movw     r4, #0x26f8
+001b7c7c  1420       movs     r0, #0x14
+001b7c7e  c0f23904   movt     r4, #0x39; _ZZN4libj6Object4nullEvE5nullp
+001b7c82  c4f80090   str.w    sb, [r4]
+001b7c86  c4f80490   str.w    sb, [r4, #4]
+001b7c8a  cbf70cea   blx      #0x1830a4; _Znwj@GLIBCXX_3.4
+001b7c8e  1149       ldr      r1, [pc, #0x44]
+001b7c90  0122       movs     r2, #1
+001b7c92  0346       mov      r3, r0
+001b7c94  3846       mov      r0, r7
+001b7c96  5a60       str      r2, [r3, #4]
+001b7c98  1960       str      r1, [r3]
+001b7c9a  9a60       str      r2, [r3, #8]
+001b7c9c  c3f80c90   str.w    sb, [r3, #0xc]
+001b7ca0  6360       str      r3, [r4, #4]
+001b7ca2  cbf7aaeb   blx      #0x1833f8; __cxa_guard_release@CXXABI_1.3
+001b7ca6  41f2c151   movw     r1, #0x15c1
+001b7caa  41f65002   movw     r2, #0x1850
+001b7cae  2046       mov      r0, r4
+001b7cb0  c0f21d01   movt     r1, #0x1d; _ZN5boost10shared_ptrIN4libj6ObjectEED1Ev
+001b7cb4  c0f23902   movt     r2, #0x39
+001b7cb8  cbf74cea   blx      #0x183154; __aeabi_atexit@CXXABI_ARM_1.3.3
+001b7cbc  95e7       b        #0x1b7bea
+001b7cbe  00bf       nop      
+001b7cc0  5826       movs     r6, #0x58
+001b7cc2  2f00       movs     r7, r5
+001b7cc4  4883       strh     r0, [r1, #0x1a]
+001b7cc6  2e00       movs     r6, r5
+001b7cc8  f079       ldrb     r0, [r6, #7]
+001b7cca  2f00       movs     r7, r5
+001b7ccc  4465       str      r4, [r0, #0x54]
+001b7cce  2f00       movs     r7, r5
+001b7cd0  580b       lsrs     r0, r3, #0xd
+001b7cd2  2f00       movs     r7, r5
+001b7cd4  380b       lsrs     r0, r7, #0xc
+001b7cd6  2f00       movs     r7, r5
+001b7cd8  43f2d860   movw     r0, #0x36d8
+001b7cdc  43f2e061   movw     r1, #0x36e0
+001b7ce0  c0f22e00   movt     r0, #0x2e; "px != 0"
+001b7ce4  c0f22e01   movt     r1, #0x2e; "/home/0000131102/Network/orb_server_build_musashi/native/liborb/deps/libnode/deps/libj/deps/boost-svn/boost/smart_ptr/sh"
+001b7ce8  4ff42372   mov.w    r2, #0x28c
+001b7cec  074b       ldr      r3, [pc, #0x1c]
+001b7cee  cbf7daec   blx      #0x1836a4; __assert_fail@GLIBC_2.4
+001b7cf2  43f2d860   movw     r0, #0x36d8
+001b7cf6  43f2e061   movw     r1, #0x36e0
+001b7cfa  c0f22e00   movt     r0, #0x2e; "px != 0"
+001b7cfe  c0f22e01   movt     r1, #0x2e; "/home/0000131102/Network/orb_server_build_musashi/native/liborb/deps/libnode/deps/libj/deps/boost-svn/boost/smart_ptr/sh"
+001b7d02  4ff42372   mov.w    r2, #0x28c
+001b7d06  024b       ldr      r3, [pc, #8]
+001b7d08  cbf7ccec   blx      #0x1836a4; __assert_fail@GLIBC_2.4
+001b7d0c  107a       ldrb     r0, [r2, #8]
+001b7d0e  2f00       movs     r7, r5
+001b7d10  6864       str      r0, [r5, #0x44]
+001b7d12  2f00       movs     r7, r5

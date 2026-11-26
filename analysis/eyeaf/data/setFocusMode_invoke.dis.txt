@@ -1,0 +1,663 @@
+002112ec  2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}
+002112f0  42f26c55   movw     r5, #0x256c
+002112f4  c0f23905   movt     r5, #0x39; _ZN17WebApiAddonDbgMon11debug_levelE
+002112f8  adf5d86d   sub.w    sp, sp, #0x6c0
+002112fc  83b0       sub      sp, #0xc
+002112fe  0646       mov      r6, r0
+00211300  2b68       ldr      r3, [r5]
+00211302  8846       mov      r8, r1
+00211304  022b       cmp      r3, #2
+00211306  00f37382   bgt.w    #0x2117f0
+0021130a  41f21837   movw     r7, #0x1318
+0021130e  0024       movs     r4, #0
+00211310  c0f23707   movt     r7, #0x37; _ZN4libj7NO_SIZEE
+00211314  43f2c871   movw     r1, #0x37c8
+00211318  2246       mov      r2, r4
+0021131a  0df5d160   add.w    r0, sp, #0x688
+0021131e  c0f22e01   movt     r1, #0x2e
+00211322  3b68       ldr      r3, [r7]
+00211324  cdf8b046   str.w    r4, [sp, #0x6b0]
+00211328  a7f076fb   bl       #0x2b8a18; _ZN4libj6String6createEPKvNS0_8EncodingEj
+0021132c  3368       ldr      r3, [r6]
+0021132e  42f6d464   movw     r4, #0x2ed4
+00211332  c0f23904   movt     r4, #0x39
+00211336  3146       mov      r1, r6
+00211338  0df5d060   add.w    r0, sp, #0x680
+0021133c  da6d       ldr      r2, [r3, #0x5c]
+0021133e  9047       blx      r2
+00211340  2168       ldr      r1, [r4]
+00211342  11f00109   ands     sb, r1, #1
+00211346  00f0b981   beq.w    #0x2116bc
+0021134a  6268       ldr      r2, [r4, #4]
+0021134c  002a       cmp      r2, #0
+0021134e  00f0d181   beq.w    #0x2116f4
+00211352  1ff0c1fc   bl       #0x230cd8; _ZN7AuthLib11getInstanceEv
+00211356  6168       ldr      r1, [r4, #4]
+00211358  0746       mov      r7, r0
+0021135a  0029       cmp      r1, #0
+0021135c  00f03f83   beq.w    #0x2119de
+00211360  0b68       ldr      r3, [r1]
+00211362  0022       movs     r2, #0
+00211364  0df5d560   add.w    r0, sp, #0x6a8
+00211368  42f2e814   movw     r4, #0x21e8
+0021136c  c0f23904   movt     r4, #0x39; _ZNSs4_Rep20_S_empty_rep_storageE@GLIBCXX_3.4
+00211370  5b6e       ldr      r3, [r3, #0x64]
+00211372  9847       blx      r3
+00211374  3846       mov      r0, r7
+00211376  ddf8a816   ldr.w    r1, [sp, #0x6a8]
+0021137a  1ff00bfd   bl       #0x230d94; _ZN7AuthLib15isAuthenticatedEPKc
+0021137e  ddf8a836   ldr.w    r3, [sp, #0x6a8]
+00211382  0746       mov      r7, r0
+00211384  a3f10c00   sub.w    r0, r3, #0xc
+00211388  a042       cmp      r0, r4
+0021138a  40f0e082   bne.w    #0x21194e
+0021138e  002f       cmp      r7, #0
+00211390  40f0d880   bne.w    #0x211544
+00211394  0df5cc60   add.w    r0, sp, #0x660
+00211398  a1f018f8   bl       #0x2b23cc; _ZN4libj7JsArray6createEv
+0021139c  ddf86056   ldr.w    r5, [sp, #0x660]
+002113a0  002d       cmp      r5, #0
+002113a2  00f02983   beq.w    #0x2119f8
+002113a6  2968       ldr      r1, [r5]
+002113a8  0820       movs     r0, #8
+002113aa  cc69       ldr      r4, [r1, #0x1c]
+002113ac  71f77aee   blx      #0x1830a4; _Znwj@GLIBCXX_3.4
+002113b0  0df5d961   add.w    r1, sp, #0x6c8
+002113b4  40f29312   movw     r2, #0x193
+002113b8  0346       mov      r3, r0
+002113ba  2846       mov      r0, r5
+002113bc  bc4d       ldr      r5, [pc, #0x2f0]
+002113be  5a60       str      r2, [r3, #4]
+002113c0  1d60       str      r5, [r3]
+002113c2  41f8243d   str      r3, [r1, #-0x24]!
+002113c6  a047       blx      r4
+002113c8  ddf8a406   ldr.w    r0, [sp, #0x6a4]
+002113cc  10b1       cbz      r0, #0x2113d4
+002113ce  0368       ldr      r3, [r0]
+002113d0  5c68       ldr      r4, [r3, #4]
+002113d2  a047       blx      r4
+002113d4  ddf86046   ldr.w    r4, [sp, #0x660]
+002113d8  002c       cmp      r4, #0
+002113da  00f00d83   beq.w    #0x2119f8
+002113de  3268       ldr      r2, [r6]
+002113e0  0df5cb60   add.w    r0, sp, #0x658
+002113e4  2568       ldr      r5, [r4]
+002113e6  3146       mov      r1, r6
+002113e8  d36c       ldr      r3, [r2, #0x4c]
+002113ea  ed69       ldr      r5, [r5, #0x1c]
+002113ec  9847       blx      r3
+002113ee  ddf85806   ldr.w    r0, [sp, #0x658]
+002113f2  0028       cmp      r0, #0
+002113f4  00f0a682   beq.w    #0x211944
+002113f8  3368       ldr      r3, [r6]
+002113fa  3146       mov      r1, r6
+002113fc  0df5ca60   add.w    r0, sp, #0x650
+00211400  de6c       ldr      r6, [r3, #0x4c]
+00211402  b047       blx      r6
+00211404  0c20       movs     r0, #0xc
+00211406  71f74eee   blx      #0x1830a4; _Znwj@GLIBCXX_3.4
+0021140a  ddf85426   ldr.w    r2, [sp, #0x654]
+0021140e  ddf85016   ldr.w    r1, [sp, #0x650]
+00211412  0346       mov      r3, r0
+00211414  a748       ldr      r0, [pc, #0x29c]
+00211416  5960       str      r1, [r3, #4]
+00211418  1860       str      r0, [r3]
+0021141a  9a60       str      r2, [r3, #8]
+0021141c  6ab1       cbz      r2, #0x21143a
+0021141e  0121       movs     r1, #1
+00211420  0432       adds     r2, #4
+00211422  bff35f8f   dmb      sy
+00211426  52e8000f   ldrex    r0, [r2]
+0021142a  0844       add      r0, r1
+0021142c  42e80006   strex    r6, r0, [r2]
+00211430  96f0000f   teq.w    r6, #0
+00211434  f7d1       bne      #0x211426
+00211436  bff35f8f   dmb      sy
+0021143a  0df5d961   add.w    r1, sp, #0x6c8
+0021143e  2046       mov      r0, r4
+00211440  41f8283d   str      r3, [r1, #-0x28]!
+00211444  a847       blx      r5
+00211446  ddf8a006   ldr.w    r0, [sp, #0x6a0]
+0021144a  10b1       cbz      r0, #0x211452
+0021144c  0568       ldr      r5, [r0]
+0021144e  6c68       ldr      r4, [r5, #4]
+00211450  a047       blx      r4
+00211452  0df5ca66   add.w    r6, sp, #0x650
+00211456  301d       adds     r0, r6, #4
+00211458  73f706fc   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+0021145c  0df5ca60   add.w    r0, sp, #0x650
+00211460  0c30       adds     r0, #0xc
+00211462  73f701fc   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+00211466  ddf88066   ldr.w    r6, [sp, #0x680]
+0021146a  002e       cmp      r6, #0
+0021146c  00f0f282   beq.w    #0x211a54
+00211470  3368       ldr      r3, [r6]
+00211472  0c20       movs     r0, #0xc
+00211474  1c6d       ldr      r4, [r3, #0x50]
+00211476  71f716ee   blx      #0x1830a4; _Znwj@GLIBCXX_3.4
+0021147a  8f49       ldr      r1, [pc, #0x23c]
+0021147c  ddf86436   ldr.w    r3, [sp, #0x664]
+00211480  0546       mov      r5, r0
+00211482  0160       str      r1, [r0]
+00211484  ddf86006   ldr.w    r0, [sp, #0x660]
+00211488  ab60       str      r3, [r5, #8]
+0021148a  6860       str      r0, [r5, #4]
+0021148c  6bb1       cbz      r3, #0x2114aa
+0021148e  0122       movs     r2, #1
+00211490  181d       adds     r0, r3, #4
+00211492  bff35f8f   dmb      sy
+00211496  50e8001f   ldrex    r1, [r0]
+0021149a  1144       add      r1, r2
+0021149c  40e80017   strex    r7, r1, [r0]
+002114a0  97f0000f   teq.w    r7, #0
+002114a4  f7d1       bne      #0x211496
+002114a6  bff35f8f   dmb      sy
+002114aa  0df5d962   add.w    r2, sp, #0x6c8
+002114ae  3046       mov      r0, r6
+002114b0  0221       movs     r1, #2
+002114b2  0023       movs     r3, #0
+002114b4  42f82c5d   str      r5, [r2, #-0x2c]!
+002114b8  a047       blx      r4
+002114ba  ddf89c06   ldr.w    r0, [sp, #0x69c]
+002114be  10b1       cbz      r0, #0x2114c6
+002114c0  0668       ldr      r6, [r0]
+002114c2  7468       ldr      r4, [r6, #4]
+002114c4  a047       blx      r4
+002114c6  0df5cc61   add.w    r1, sp, #0x660
+002114ca  0026       movs     r6, #0
+002114cc  081d       adds     r0, r1, #4
+002114ce  73f7cbfb   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+002114d2  ddf88446   ldr.w    r4, [sp, #0x684]
+002114d6  acb1       cbz      r4, #0x211504
+002114d8  4ff0ff35   mov.w    r5, #-1
+002114dc  201d       adds     r0, r4, #4
+002114de  bff35f8f   dmb      sy
+002114e2  50e800cf   ldrex    ip, [r0]
+002114e6  0ceb0507   add.w    r7, ip, r5
+002114ea  40e8007c   strex    ip, r7, [r0]
+002114ee  9cf0000f   teq.w    ip, #0
+002114f2  f6d1       bne      #0x2114e2
+002114f4  a7eb050c   sub.w    ip, r7, r5
+002114f8  bff35f8f   dmb      sy
+002114fc  bcf1010f   cmp.w    ip, #1
+00211500  00f00382   beq.w    #0x21190a
+00211504  ddf88c46   ldr.w    r4, [sp, #0x68c]
+00211508  acb1       cbz      r4, #0x211536
+0021150a  4ff0ff35   mov.w    r5, #-1
+0021150e  201d       adds     r0, r4, #4
+00211510  bff35f8f   dmb      sy
+00211514  50e800ef   ldrex    lr, [r0]
+00211518  0eeb0501   add.w    r1, lr, r5
+0021151c  40e8001e   strex    lr, r1, [r0]
+00211520  9ef0000f   teq.w    lr, #0
+00211524  f6d1       bne      #0x211514
+00211526  a1eb050e   sub.w    lr, r1, r5
+0021152a  bff35f8f   dmb      sy
+0021152e  bef1010f   cmp.w    lr, #1
+00211532  00f0cc81   beq.w    #0x2118ce
+00211536  3046       mov      r0, r6
+00211538  0df5337d   add.w    sp, sp, #0x2cc
+0021153c  0df5806d   add.w    sp, sp, #0x400
+00211540  bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}
+00211544  8122       movs     r2, #0x81
+00211546  4ff4c371   mov.w    r1, #0x186
+0021154a  02a8       add      r0, sp, #8
+0021154c  76f7f6f8   bl       #0x18773c; _ZN19WebApiAddonUipcUser15WebApiAddonUipc13setEvtParamIdEPN9DefWebApi12WebApiIntMsgEjj
+00211550  2b68       ldr      r3, [r5]
+00211552  012b       cmp      r3, #1
+00211554  26dd       ble      #0x2115a4
+00211556  42f2982e   movw     lr, #0x2298
+0021155a  c0f2390e   movt     lr, #0x39; stderr@GLIBC_2.4
+0021155e  def80070   ldr.w    r7, [lr]
+00211562  71f7e4ed   blx      #0x18312c; getpid@GLIBC_2.4
+00211566  d8f80010   ldr.w    r1, [r8]
+0021156a  0646       mov      r6, r0
+0021156c  0029       cmp      r1, #0
+0021156e  00f03682   beq.w    #0x2119de
+00211572  0b68       ldr      r3, [r1]
+00211574  0022       movs     r2, #0
+00211576  0df5d360   add.w    r0, sp, #0x698
+0021157a  5b6e       ldr      r3, [r3, #0x64]
+0021157c  9847       blx      r3
+0021157e  3246       mov      r2, r6
+00211580  ddf89866   ldr.w    r6, [sp, #0x698]
+00211584  43f63c71   movw     r1, #0x3f3c
+00211588  4323       movs     r3, #0x43
+0021158a  3846       mov      r0, r7
+0021158c  c0f23201   movt     r1, #0x32; "(%04d)[INF:setFocusMode: %04d]input %s\n"
+00211590  0096       str      r6, [sp]
+00211592  72f7e2ea   blx      #0x183b58; fprintf@GLIBC_2.4
+00211596  ddf89836   ldr.w    r3, [sp, #0x698]
+0021159a  a3f10c00   sub.w    r0, r3, #0xc
+0021159e  8442       cmp      r4, r0
+002115a0  40f06582   bne.w    #0x211a6e
+002115a4  d8f80010   ldr.w    r1, [r8]
+002115a8  0029       cmp      r1, #0
+002115aa  00f01882   beq.w    #0x2119de
+002115ae  0e68       ldr      r6, [r1]
+002115b0  0df5d262   add.w    r2, sp, #0x690
+002115b4  101d       adds     r0, r2, #4
+002115b6  0022       movs     r2, #0
+002115b8  736e       ldr      r3, [r6, #0x64]
+002115ba  9847       blx      r3
+002115bc  0df5d860   add.w    r0, sp, #0x6c0
+002115c0  021d       adds     r2, r0, #4
+002115c2  ddf89416   ldr.w    r1, [sp, #0x694]
+002115c6  0df5d260   add.w    r0, sp, #0x690
+002115ca  72f738e9   blx      #0x18383c; _ZNSsC1EPKcRKSaIcE@GLIBCXX_3.4
+002115ce  0df5d462   add.w    r2, sp, #0x6a0
+002115d2  1120       movs     r0, #0x11
+002115d4  0c32       adds     r2, #0xc
+002115d6  0df5d261   add.w    r1, sp, #0x690
+002115da  76f7fff9   bl       #0x1879dc; _ZN20WebApiAddonUtilsUser16WebApiAddonUtils14convStringToIdE20WebApiAddonParamNameSsPi
+002115de  ddf89036   ldr.w    r3, [sp, #0x690]
+002115e2  0646       mov      r6, r0
+002115e4  a3f10c00   sub.w    r0, r3, #0xc
+002115e8  8442       cmp      r4, r0
+002115ea  40f01282   bne.w    #0x211a12
+002115ee  ddf89436   ldr.w    r3, [sp, #0x694]
+002115f2  a3f10c00   sub.w    r0, r3, #0xc
+002115f6  8442       cmp      r4, r0
+002115f8  40f0ce81   bne.w    #0x211998
+002115fc  002e       cmp      r6, #0
+002115fe  40f00a81   bne.w    #0x211816
+00211602  2868       ldr      r0, [r5]
+00211604  0321       movs     r1, #3
+00211606  0028       cmp      r0, #0
+00211608  11db       blt      #0x21162e
+0021160a  42f2982e   movw     lr, #0x2298
+0021160e  c0f2390e   movt     lr, #0x39; stderr@GLIBC_2.4
+00211612  def80060   ldr.w    r6, [lr]
+00211616  71f78aed   blx      #0x18312c; getpid@GLIBC_2.4
+0021161a  43f66471   movw     r1, #0x3f64
+0021161e  4923       movs     r3, #0x49
+00211620  c0f23201   movt     r1, #0x32; "(%04d)[[41mERR[49m:setFocusMode: %04d][setFocusMode] setFocusMode err\n"
+00211624  0246       mov      r2, r0
+00211626  3046       mov      r0, r6
+00211628  72f796ea   blx      #0x183b58; fprintf@GLIBC_2.4
+0021162c  0321       movs     r1, #3
+0021162e  ddf88436   ldr.w    r3, [sp, #0x684]
+00211632  ddf88026   ldr.w    r2, [sp, #0x680]
+00211636  cdf84436   str.w    r3, [sp, #0x644]
+0021163a  cdf84026   str.w    r2, [sp, #0x640]
+0021163e  6bb1       cbz      r3, #0x21165c
+00211640  0126       movs     r6, #1
+00211642  0433       adds     r3, #4
+00211644  bff35f8f   dmb      sy
+00211648  53e8000f   ldrex    r0, [r3]
+0021164c  3044       add      r0, r6
+0021164e  43e80004   strex    r4, r0, [r3]
+00211652  94f0000f   teq.w    r4, #0
+00211656  f7d1       bne      #0x211648
+00211658  bff35f8f   dmb      sy
+0021165c  ddf88c36   ldr.w    r3, [sp, #0x68c]
+00211660  ddf88846   ldr.w    r4, [sp, #0x688]
+00211664  cdf83c36   str.w    r3, [sp, #0x63c]
+00211668  cdf83846   str.w    r4, [sp, #0x638]
+0021166c  6bb1       cbz      r3, #0x21168a
+0021166e  0122       movs     r2, #1
+00211670  0433       adds     r3, #4
+00211672  bff35f8f   dmb      sy
+00211676  53e8000f   ldrex    r0, [r3]
+0021167a  1044       add      r0, r2
+0021167c  43e80006   strex    r6, r0, [r3]
+00211680  96f0000f   teq.w    r6, #0
+00211684  f7d1       bne      #0x211676
+00211686  bff35f8f   dmb      sy
+0021168a  0df5c762   add.w    r2, sp, #0x638
+0021168e  0df5c860   add.w    r0, sp, #0x640
+00211692  80f761ff   bl       #0x192558; _ZN4libj4node3orb6server10MethodBase10sendStatusEN5boost10shared_ptrINS2_6ClientEEEiNS5_IKNS_6StringEEE
+00211696  0646       mov      r6, r0
+00211698  0df5c660   add.w    r0, sp, #0x630
+0021169c  0c30       adds     r0, #0xc
+0021169e  73f7e3fa   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+002116a2  0df5c861   add.w    r1, sp, #0x640
+002116a6  081d       adds     r0, r1, #4
+002116a8  73f7defa   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+002116ac  11e7       b        #0x2114d2
+002116ae  00bf       nop      
+002116b0  2835       adds     r5, #0x28
+002116b2  2e00       movs     r6, r5
+002116b4  c834       adds     r4, #0xc8
+002116b6  2e00       movs     r6, r5
+002116b8  4883       strh     r0, [r1, #0x1a]
+002116ba  2e00       movs     r6, r5
+002116bc  2046       mov      r0, r4
+002116be  72f742eb   blx      #0x183d44; __cxa_guard_acquire@CXXABI_1.3
+002116c2  0028       cmp      r0, #0
+002116c4  3ff441ae   beq.w    #0x21134a
+002116c8  2046       mov      r0, r4
+002116ca  c4f80490   str.w    sb, [r4, #4]
+002116ce  c4f80890   str.w    sb, [r4, #8]
+002116d2  71f792ee   blx      #0x1833f8; __cxa_guard_release@CXXABI_1.3
+002116d6  4cf6f161   movw     r1, #0xcef1
+002116da  41f65002   movw     r2, #0x1850
+002116de  201d       adds     r0, r4, #4
+002116e0  c0f23902   movt     r2, #0x39
+002116e4  c0f21801   movt     r1, #0x18; _ZN5boost10shared_ptrIKN4libj6StringEED1Ev
+002116e8  71f734ed   blx      #0x183154; __aeabi_atexit@CXXABI_ARM_1.3.3
+002116ec  6268       ldr      r2, [r4, #4]
+002116ee  002a       cmp      r2, #0
+002116f0  7ff42fae   bne.w    #0x211352
+002116f4  4ff66811   movw     r1, #0xf968
+002116f8  3b68       ldr      r3, [r7]
+002116fa  c0f22f01   movt     r1, #0x2f; "camera/"
+002116fe  0df5cf60   add.w    r0, sp, #0x678
+00211702  a7f089f9   bl       #0x2b8a18; _ZN4libj6String6createEPKvNS0_8EncodingEj
+00211706  ddf87c26   ldr.w    r2, [sp, #0x67c]
+0021170a  ddf87836   ldr.w    r3, [sp, #0x678]
+0021170e  1146       mov      r1, r2
+00211710  cdf83426   str.w    r2, [sp, #0x634]
+00211714  cdf83036   str.w    r3, [sp, #0x630]
+00211718  8ab1       cbz      r2, #0x21173e
+0021171a  0123       movs     r3, #1
+0021171c  171d       adds     r7, r2, #4
+0021171e  bff35f8f   dmb      sy
+00211722  57e8001f   ldrex    r1, [r7]
+00211726  1944       add      r1, r3
+00211728  47e80010   strex    r0, r1, [r7]
+0021172c  90f0000f   teq.w    r0, #0
+00211730  f7d1       bne      #0x211722
+00211732  bff35f8f   dmb      sy
+00211736  ddf83036   ldr.w    r3, [sp, #0x630]
+0021173a  ddf83416   ldr.w    r1, [sp, #0x634]
+0021173e  a768       ldr      r7, [r4, #8]
+00211740  0df5d960   add.w    r0, sp, #0x6c8
+00211744  6268       ldr      r2, [r4, #4]
+00211746  a160       str      r1, [r4, #8]
+00211748  6360       str      r3, [r4, #4]
+0021174a  40f8947d   str      r7, [r0, #-0x94]!
+0021174e  cdf83026   str.w    r2, [sp, #0x630]
+00211752  73f789fa   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+00211756  0df5ce60   add.w    r0, sp, #0x670
+0021175a  0c30       adds     r0, #0xc
+0021175c  73f784fa   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+00211760  d4f80490   ldr.w    sb, [r4, #4]
+00211764  b9f1000f   cmp.w    sb, #0
+00211768  00f03981   beq.w    #0x2119de
+0021176c  3768       ldr      r7, [r6]
+0021176e  0df5ce60   add.w    r0, sp, #0x670
+00211772  d9f80020   ldr.w    r2, [sb]
+00211776  3146       mov      r1, r6
+00211778  fb6c       ldr      r3, [r7, #0x4c]
+0021177a  576a       ldr      r7, [r2, #0x24]
+0021177c  9847       blx      r3
+0021177e  0df5ce62   add.w    r2, sp, #0x670
+00211782  0df5cd60   add.w    r0, sp, #0x668
+00211786  4946       mov      r1, sb
+00211788  b847       blx      r7
+0021178a  ddf86c36   ldr.w    r3, [sp, #0x66c]
+0021178e  ddf86826   ldr.w    r2, [sp, #0x668]
+00211792  1f46       mov      r7, r3
+00211794  cdf82c36   str.w    r3, [sp, #0x62c]
+00211798  cdf82826   str.w    r2, [sp, #0x628]
+0021179c  8bb1       cbz      r3, #0x2117c2
+0021179e  0120       movs     r0, #1
+002117a0  0433       adds     r3, #4
+002117a2  bff35f8f   dmb      sy
+002117a6  53e8001f   ldrex    r1, [r3]
+002117aa  0144       add      r1, r0
+002117ac  43e80017   strex    r7, r1, [r3]
+002117b0  97f0000f   teq.w    r7, #0
+002117b4  f7d1       bne      #0x2117a6
+002117b6  bff35f8f   dmb      sy
+002117ba  ddf82826   ldr.w    r2, [sp, #0x628]
+002117be  ddf82c76   ldr.w    r7, [sp, #0x62c]
+002117c2  a168       ldr      r1, [r4, #8]
+002117c4  0df5d960   add.w    r0, sp, #0x6c8
+002117c8  6368       ldr      r3, [r4, #4]
+002117ca  a760       str      r7, [r4, #8]
+002117cc  40f89c1d   str      r1, [r0, #-0x9c]!
+002117d0  6260       str      r2, [r4, #4]
+002117d2  cdf82836   str.w    r3, [sp, #0x628]
+002117d6  73f747fa   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+002117da  0df5cc60   add.w    r0, sp, #0x660
+002117de  0c30       adds     r0, #0xc
+002117e0  73f742fa   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+002117e4  0df5ce61   add.w    r1, sp, #0x670
+002117e8  081d       adds     r0, r1, #4
+002117ea  73f73dfa   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+002117ee  b0e5       b        #0x211352
+002117f0  42f29820   movw     r0, #0x2298
+002117f4  b64c       ldr      r4, [pc, #0x2d8]
+002117f6  c0f23900   movt     r0, #0x39; stderr@GLIBC_2.4
+002117fa  0768       ldr      r7, [r0]
+002117fc  71f796ec   blx      #0x18312c; getpid@GLIBC_2.4
+00211800  43f61071   movw     r1, #0x3f10
+00211804  2023       movs     r3, #0x20
+00211806  c0f23201   movt     r1, #0x32; "(%04d)[PRN:setFocusMode: %04d]---> IN  %s\n"
+0021180a  0094       str      r4, [sp]
+0021180c  0246       mov      r2, r0
+0021180e  3846       mov      r0, r7
+00211810  72f7a2e9   blx      #0x183b58; fprintf@GLIBC_2.4
+00211814  79e5       b        #0x21130a
+00211816  2968       ldr      r1, [r5]
+00211818  ddf8ac36   ldr.w    r3, [sp, #0x6ac]
+0021181c  0129       cmp      r1, #1
+0021181e  0693       str      r3, [sp, #0x18]
+00211820  13dd       ble      #0x21184a
+00211822  42f2982c   movw     ip, #0x2298
+00211826  c0f2390c   movt     ip, #0x39; stderr@GLIBC_2.4
+0021182a  dcf80060   ldr.w    r6, [ip]
+0021182e  71f77eec   blx      #0x18312c; getpid@GLIBC_2.4
+00211832  ddf8ac46   ldr.w    r4, [sp, #0x6ac]
+00211836  43f6b071   movw     r1, #0x3fb0
+0021183a  c0f23201   movt     r1, #0x32; "(%04d)[INF:setFocusMode: %04d]focusModeId=%d\n"
+0021183e  4f23       movs     r3, #0x4f
+00211840  0094       str      r4, [sp]
+00211842  0246       mov      r2, r0
+00211844  3046       mov      r0, r6
+00211846  72f788e9   blx      #0x183b58; fprintf@GLIBC_2.4
+0021184a  ddf88436   ldr.w    r3, [sp, #0x684]
+0021184e  ddf88026   ldr.w    r2, [sp, #0x680]
+00211852  cdf84c36   str.w    r3, [sp, #0x64c]
+00211856  cdf84826   str.w    r2, [sp, #0x648]
+0021185a  6bb1       cbz      r3, #0x211878
+0021185c  0124       movs     r4, #1
+0021185e  0433       adds     r3, #4
+00211860  bff35f8f   dmb      sy
+00211864  53e8001f   ldrex    r1, [r3]
+00211868  2144       add      r1, r4
+0021186a  43e80010   strex    r0, r1, [r3]
+0021186e  90f0000f   teq.w    r0, #0
+00211872  f7d1       bne      #0x211864
+00211874  bff35f8f   dmb      sy
+00211878  0df5c960   add.w    r0, sp, #0x648
+0021187c  0026       movs     r6, #0
+0021187e  74f79df8   bl       #0x1859bc; _ZN4libj4node3orb6server15LibOrbRelayPool9AddToPoolEN5boost10shared_ptrINS2_6ClientEEE
+00211882  0590       str      r0, [sp, #0x14]
+00211884  0df5c860   add.w    r0, sp, #0x640
+00211888  0c30       adds     r0, #0xc
+0021188a  73f7edf9   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+0021188e  02a8       add      r0, sp, #8
+00211890  0df5d661   add.w    r1, sp, #0x6b0
+00211894  75f7f2fe   bl       #0x18767c; _ZN19WebApiAddonUipcUser15WebApiAddonUipc15sendMsgToServerEPN9DefWebApi12WebApiIntMsgEPj
+00211898  0028       cmp      r0, #0
+0021189a  7ff41aae   bne.w    #0x2114d2
+0021189e  2868       ldr      r0, [r5]
+002118a0  0121       movs     r1, #1
+002118a2  0028       cmp      r0, #0
+002118a4  fff6c3ae   blt.w    #0x21162e
+002118a8  42f2982e   movw     lr, #0x2298
+002118ac  c0f2390e   movt     lr, #0x39; stderr@GLIBC_2.4
+002118b0  def80060   ldr.w    r6, [lr]
+002118b4  71f73aec   blx      #0x18312c; getpid@GLIBC_2.4
+002118b8  43f6e071   movw     r1, #0x3fe0
+002118bc  5423       movs     r3, #0x54
+002118be  c0f23201   movt     r1, #0x32; "(%04d)[[41mERR[49m:setFocusMode: %04d][setFocusMode] sendMsgToServer err \n"
+002118c2  0246       mov      r2, r0
+002118c4  3046       mov      r0, r6
+002118c6  72f748e9   blx      #0x183b58; fprintf@GLIBC_2.4
+002118ca  0121       movs     r1, #1
+002118cc  afe6       b        #0x21162e
+002118ce  2168       ldr      r1, [r4]
+002118d0  2046       mov      r0, r4
+002118d2  8b68       ldr      r3, [r1, #8]
+002118d4  9847       blx      r3
+002118d6  04f10802   add.w    r2, r4, #8
+002118da  bff35f8f   dmb      sy
+002118de  52e800cf   ldrex    ip, [r2]
+002118e2  0ceb0507   add.w    r7, ip, r5
+002118e6  42e8007c   strex    ip, r7, [r2]
+002118ea  9cf0000f   teq.w    ip, #0
+002118ee  f6d1       bne      #0x2118de
+002118f0  a7eb050c   sub.w    ip, r7, r5
+002118f4  bff35f8f   dmb      sy
+002118f8  bcf1010f   cmp.w    ip, #1
+002118fc  7ff41bae   bne.w    #0x211536
+00211900  2268       ldr      r2, [r4]
+00211902  2046       mov      r0, r4
+00211904  d768       ldr      r7, [r2, #0xc]
+00211906  b847       blx      r7
+00211908  15e6       b        #0x211536
+0021190a  2168       ldr      r1, [r4]
+0021190c  2046       mov      r0, r4
+0021190e  8b68       ldr      r3, [r1, #8]
+00211910  9847       blx      r3
+00211912  04f10802   add.w    r2, r4, #8
+00211916  bff35f8f   dmb      sy
+0021191a  52e8007f   ldrex    r7, [r2]
+0021191e  07eb0500   add.w    r0, r7, r5
+00211922  42e80007   strex    r7, r0, [r2]
+00211926  97f0000f   teq.w    r7, #0
+0021192a  f6d1       bne      #0x21191a
+0021192c  a0eb0507   sub.w    r7, r0, r5
+00211930  bff35f8f   dmb      sy
+00211934  012f       cmp      r7, #1
+00211936  7ff4e5ad   bne.w    #0x211504
+0021193a  2768       ldr      r7, [r4]
+0021193c  2046       mov      r0, r4
+0021193e  fc68       ldr      r4, [r7, #0xc]
+00211940  a047       blx      r4
+00211942  dfe5       b        #0x211504
+00211944  0df5ca60   add.w    r0, sp, #0x650
+00211948  a7f0d4fe   bl       #0x2b96f4; _ZN4libj6String6createEv
+0021194c  5ae5       b        #0x211404
+0021194e  43f67012   movw     r2, #0x3970
+00211952  c0f21802   movt     r2, #0x18
+00211956  002a       cmp      r2, #0
+00211958  00f0aa80   beq.w    #0x211ab0
+0021195c  4ff0ff31   mov.w    r1, #-1
+00211960  043b       subs     r3, #4
+00211962  bff35f8f   dmb      sy
+00211966  53e800cf   ldrex    ip, [r3]
+0021196a  0ceb010e   add.w    lr, ip, r1
+0021196e  43e800ec   strex    ip, lr, [r3]
+00211972  9cf0000f   teq.w    ip, #0
+00211976  f6d1       bne      #0x211966
+00211978  aeeb010c   sub.w    ip, lr, r1
+0021197c  bff35f8f   dmb      sy
+00211980  6346       mov      r3, ip
+00211982  002b       cmp      r3, #0
+00211984  3ff703ad   bgt.w    #0x21138e
+00211988  0df5d861   add.w    r1, sp, #0x6c0
+0021198c  71f706ee   blx      #0x18359c; _ZNSs4_Rep10_M_destroyERKSaIcE@GLIBCXX_3.4
+00211990  002f       cmp      r7, #0
+00211992  7ff4d7ad   bne.w    #0x211544
+00211996  fde4       b        #0x211394
+00211998  43f67014   movw     r4, #0x3970
+0021199c  c0f21804   movt     r4, #0x18
+002119a0  002c       cmp      r4, #0
+002119a2  00f08d80   beq.w    #0x211ac0
+002119a6  4ff0ff3c   mov.w    ip, #-1
+002119aa  043b       subs     r3, #4
+002119ac  bff35f8f   dmb      sy
+002119b0  53e8001f   ldrex    r1, [r3]
+002119b4  01eb0c0e   add.w    lr, r1, ip
+002119b8  43e800e1   strex    r1, lr, [r3]
+002119bc  91f0000f   teq.w    r1, #0
+002119c0  f6d1       bne      #0x2119b0
+002119c2  aeeb0c01   sub.w    r1, lr, ip
+002119c6  bff35f8f   dmb      sy
+002119ca  0b46       mov      r3, r1
+002119cc  002b       cmp      r3, #0
+002119ce  3ff715ae   bgt.w    #0x2115fc
+002119d2  0df5d664   add.w    r4, sp, #0x6b0
+002119d6  211d       adds     r1, r4, #4
+002119d8  71f7e0ed   blx      #0x18359c; _ZNSs4_Rep10_M_destroyERKSaIcE@GLIBCXX_3.4
+002119dc  0ee6       b        #0x2115fc
+002119de  43f2d860   movw     r0, #0x36d8
+002119e2  43f2e061   movw     r1, #0x36e0
+002119e6  c0f22e00   movt     r0, #0x2e; "px != 0"
+002119ea  c0f22e01   movt     r1, #0x2e; "/home/0000131102/Network/orb_server_build_musashi/native/liborb/deps/libnode/deps/libj/deps/boost-svn/boost/smart_ptr/sh"
+002119ee  4ff42372   mov.w    r2, #0x28c
+002119f2  384b       ldr      r3, [pc, #0xe0]
+002119f4  71f756ee   blx      #0x1836a4; __assert_fail@GLIBC_2.4
+002119f8  43f2d860   movw     r0, #0x36d8
+002119fc  43f2e061   movw     r1, #0x36e0
+00211a00  c0f22e00   movt     r0, #0x2e; "px != 0"
+00211a04  c0f22e01   movt     r1, #0x2e; "/home/0000131102/Network/orb_server_build_musashi/native/liborb/deps/libnode/deps/libj/deps/boost-svn/boost/smart_ptr/sh"
+00211a08  4ff42372   mov.w    r2, #0x28c
+00211a0c  324b       ldr      r3, [pc, #0xc8]
+00211a0e  71f74aee   blx      #0x1836a4; __assert_fail@GLIBC_2.4
+00211a12  43f67011   movw     r1, #0x3970
+00211a16  c0f21801   movt     r1, #0x18
+00211a1a  0029       cmp      r1, #0
+00211a1c  54d0       beq      #0x211ac8
+00211a1e  4ff0ff3c   mov.w    ip, #-1
+00211a22  043b       subs     r3, #4
+00211a24  bff35f8f   dmb      sy
+00211a28  53e800ef   ldrex    lr, [r3]
+00211a2c  0eeb0c07   add.w    r7, lr, ip
+00211a30  43e8007e   strex    lr, r7, [r3]
+00211a34  9ef0000f   teq.w    lr, #0
+00211a38  f6d1       bne      #0x211a28
+00211a3a  a7eb0c0e   sub.w    lr, r7, ip
+00211a3e  bff35f8f   dmb      sy
+00211a42  7346       mov      r3, lr
+00211a44  002b       cmp      r3, #0
+00211a46  3ff7d2ad   bgt.w    #0x2115ee
+00211a4a  0df5d761   add.w    r1, sp, #0x6b8
+00211a4e  71f7a6ed   blx      #0x18359c; _ZNSs4_Rep10_M_destroyERKSaIcE@GLIBCXX_3.4
+00211a52  cce5       b        #0x2115ee
+00211a54  43f2d860   movw     r0, #0x36d8
+00211a58  43f2e061   movw     r1, #0x36e0
+00211a5c  c0f22e00   movt     r0, #0x2e; "px != 0"
+00211a60  c0f22e01   movt     r1, #0x2e; "/home/0000131102/Network/orb_server_build_musashi/native/liborb/deps/libnode/deps/libj/deps/boost-svn/boost/smart_ptr/sh"
+00211a64  4ff42372   mov.w    r2, #0x28c
+00211a68  1c4b       ldr      r3, [pc, #0x70]
+00211a6a  71f71cee   blx      #0x1836a4; __assert_fail@GLIBC_2.4
+00211a6e  43f67012   movw     r2, #0x3970
+00211a72  c0f21802   movt     r2, #0x18
+00211a76  fab1       cbz      r2, #0x211ab8
+00211a78  4ff0ff31   mov.w    r1, #-1
+00211a7c  1e1f       subs     r6, r3, #4
+00211a7e  bff35f8f   dmb      sy
+00211a82  56e800cf   ldrex    ip, [r6]
+00211a86  0ceb010e   add.w    lr, ip, r1
+00211a8a  46e800ec   strex    ip, lr, [r6]
+00211a8e  9cf0000f   teq.w    ip, #0
+00211a92  f6d1       bne      #0x211a82
+00211a94  aeeb010c   sub.w    ip, lr, r1
+00211a98  bff35f8f   dmb      sy
+00211a9c  6346       mov      r3, ip
+00211a9e  002b       cmp      r3, #0
+00211aa0  3ff780ad   bgt.w    #0x2115a4
+00211aa4  0df5d661   add.w    r1, sp, #0x6b0
+00211aa8  0c31       adds     r1, #0xc
+00211aaa  71f778ed   blx      #0x18359c; _ZNSs4_Rep10_M_destroyERKSaIcE@GLIBCXX_3.4
+00211aae  79e5       b        #0x2115a4
+00211ab0  8368       ldr      r3, [r0, #8]
+00211ab2  5a1e       subs     r2, r3, #1
+00211ab4  8260       str      r2, [r0, #8]
+00211ab6  64e7       b        #0x211982
+00211ab8  8368       ldr      r3, [r0, #8]
+00211aba  5a1e       subs     r2, r3, #1
+00211abc  8260       str      r2, [r0, #8]
+00211abe  eee7       b        #0x211a9e
+00211ac0  8368       ldr      r3, [r0, #8]
+00211ac2  5a1e       subs     r2, r3, #1
+00211ac4  8260       str      r2, [r0, #8]
+00211ac6  81e7       b        #0x2119cc
+00211ac8  8368       ldr      r3, [r0, #8]
+00211aca  5a1e       subs     r2, r3, #1
+00211acc  8260       str      r2, [r0, #8]
+00211ace  b9e7       b        #0x211a44
+00211ad0  603c       subs     r4, #0x60
+00211ad2  3200       movs     r2, r6
+00211ad4  683c       subs     r4, #0x68
+00211ad6  3200       movs     r2, r6
+00211ad8  8436       adds     r6, #0x84
+00211ada  3200       movs     r2, r6
+00211adc  843b       subs     r3, #0x84
+00211ade  3200       movs     r2, r6

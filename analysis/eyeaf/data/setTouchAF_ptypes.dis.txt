@@ -1,0 +1,147 @@
+00215958  2de9f043   push.w   {r4, r5, r6, r7, r8, sb, lr}
+0021595c  42f6c074   movw     r4, #0x2fc0
+00215960  c0f23904   movt     r4, #0x39; _ZGVZNK4libj4node3orb6server7service6Remote4v1_018SetTouchAFPosition14parameterTypesEvE5types
+00215964  87b0       sub      sp, #0x1c
+00215966  0546       mov      r5, r0
+00215968  2368       ldr      r3, [r4]
+0021596a  13f0010f   tst.w    r3, #1
+0021596e  24d0       beq      #0x2159ba
+00215970  42f6c474   movw     r4, #0x2fc4
+00215974  c0f23904   movt     r4, #0x39; _ZZNK4libj4node3orb6server7service6Remote4v1_018SetTouchAFPosition14parameterTypesEvE5types
+00215978  2068       ldr      r0, [r4]
+0021597a  0028       cmp      r0, #0
+0021597c  00f0aa80   beq.w    #0x215ad4
+00215980  0268       ldr      r2, [r0]
+00215982  516c       ldr      r1, [r2, #0x44]
+00215984  8847       blx      r1
+00215986  0246       mov      r2, r0
+00215988  0028       cmp      r0, #0
+0021598a  33d0       beq      #0x2159f4
+0021598c  94e80c00   ldm.w    r4, {r2, r3}
+00215990  85e80c00   stm.w    r5, {r2, r3}
+00215994  6bb1       cbz      r3, #0x2159b2
+00215996  0122       movs     r2, #1
+00215998  0433       adds     r3, #4
+0021599a  bff35f8f   dmb      sy
+0021599e  53e8001f   ldrex    r1, [r3]
+002159a2  1144       add      r1, r2
+002159a4  43e80010   strex    r0, r1, [r3]
+002159a8  90f0000f   teq.w    r0, #0
+002159ac  f7d1       bne      #0x21599e
+002159ae  bff35f8f   dmb      sy
+002159b2  2846       mov      r0, r5
+002159b4  07b0       add      sp, #0x1c
+002159b6  bde8f083   pop.w    {r4, r5, r6, r7, r8, sb, pc}
+002159ba  2046       mov      r0, r4
+002159bc  6ef7c2e9   blx      #0x183d44; __cxa_guard_acquire@CXXABI_1.3
+002159c0  0028       cmp      r0, #0
+002159c2  d5d0       beq      #0x215970
+002159c4  42f6c470   movw     r0, #0x2fc4
+002159c8  c0f23900   movt     r0, #0x39; _ZZNK4libj4node3orb6server7service6Remote4v1_018SetTouchAFPosition14parameterTypesEvE5types
+002159cc  7df73af9   bl       #0x192c44; _ZN4libj12TypedJsArrayIN5boost10shared_ptrIKNS_6StringEEEE6createEv
+002159d0  2046       mov      r0, r4
+002159d2  6df712ed   blx      #0x1833f8; __cxa_guard_release@CXXABI_1.3
+002159d6  42f6c470   movw     r0, #0x2fc4
+002159da  4cf65d71   movw     r1, #0xcf5d
+002159de  41f65002   movw     r2, #0x1850
+002159e2  c0f21801   movt     r1, #0x18; _ZN5boost10shared_ptrIN4libj12TypedJsArrayINS0_IKNS1_6StringEEEEEED1Ev
+002159e6  c0f23902   movt     r2, #0x39
+002159ea  c0f23900   movt     r0, #0x39; _ZZNK4libj4node3orb6server7service6Remote4v1_018SetTouchAFPosition14parameterTypesEvE5types
+002159ee  6df7b2eb   blx      #0x183154; __aeabi_atexit@CXXABI_ARM_1.3.3
+002159f2  bde7       b        #0x215970
+002159f4  2668       ldr      r6, [r4]
+002159f6  002e       cmp      r6, #0
+002159f8  6cd0       beq      #0x215ad4
+002159fa  41f21837   movw     r7, #0x1318
+002159fe  3368       ldr      r3, [r6]
+00215a00  c0f23707   movt     r7, #0x37; _ZN4libj7NO_SIZEE
+00215a04  46f2e831   movw     r1, #0x63e8
+00215a08  02a8       add      r0, sp, #8
+00215a0a  c0f22e01   movt     r1, #0x2e; "double"
+00215a0e  d7f80090   ldr.w    sb, [r7]
+00215a12  d3f81c80   ldr.w    r8, [r3, #0x1c]
+00215a16  4b46       mov      r3, sb
+00215a18  354f       ldr      r7, [pc, #0xd4]
+00215a1a  a2f0fdff   bl       #0x2b8a18; _ZN4libj6String6createEPKvNS0_8EncodingEj
+00215a1e  0c20       movs     r0, #0xc
+00215a20  6df740eb   blx      #0x1830a4; _Znwj@GLIBCXX_3.4
+00215a24  039a       ldr      r2, [sp, #0xc]
+00215a26  0346       mov      r3, r0
+00215a28  0760       str      r7, [r0]
+00215a2a  0298       ldr      r0, [sp, #8]
+00215a2c  9a60       str      r2, [r3, #8]
+00215a2e  5860       str      r0, [r3, #4]
+00215a30  6ab1       cbz      r2, #0x215a4e
+00215a32  0121       movs     r1, #1
+00215a34  0432       adds     r2, #4
+00215a36  bff35f8f   dmb      sy
+00215a3a  52e8000f   ldrex    r0, [r2]
+00215a3e  0844       add      r0, r1
+00215a40  42e8000e   strex    lr, r0, [r2]
+00215a44  9ef0000f   teq.w    lr, #0
+00215a48  f7d1       bne      #0x215a3a
+00215a4a  bff35f8f   dmb      sy
+00215a4e  06a9       add      r1, sp, #0x18
+00215a50  3046       mov      r0, r6
+00215a52  41f8043d   str      r3, [r1, #-0x4]!
+00215a56  c047       blx      r8
+00215a58  0598       ldr      r0, [sp, #0x14]
+00215a5a  10b1       cbz      r0, #0x215a62
+00215a5c  0368       ldr      r3, [r0]
+00215a5e  5e68       ldr      r6, [r3, #4]
+00215a60  b047       blx      r6
+00215a62  03a8       add      r0, sp, #0xc
+00215a64  6ff700f9   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+00215a68  2668       ldr      r6, [r4]
+00215a6a  002e       cmp      r6, #0
+00215a6c  32d0       beq      #0x215ad4
+00215a6e  d6f800e0   ldr.w    lr, [r6]
+00215a72  46f2e831   movw     r1, #0x63e8
+00215a76  0022       movs     r2, #0
+00215a78  4b46       mov      r3, sb
+00215a7a  6846       mov      r0, sp
+00215a7c  c0f22e01   movt     r1, #0x2e; "double"
+00215a80  def81c80   ldr.w    r8, [lr, #0x1c]
+00215a84  a2f0c8ff   bl       #0x2b8a18; _ZN4libj6String6createEPKvNS0_8EncodingEj
+00215a88  0c20       movs     r0, #0xc
+00215a8a  6df70ceb   blx      #0x1830a4; _Znwj@GLIBCXX_3.4
+00215a8e  019a       ldr      r2, [sp, #4]
+00215a90  0346       mov      r3, r0
+00215a92  0760       str      r7, [r0]
+00215a94  0098       ldr      r0, [sp]
+00215a96  9a60       str      r2, [r3, #8]
+00215a98  5860       str      r0, [r3, #4]
+00215a9a  6ab1       cbz      r2, #0x215ab8
+00215a9c  0121       movs     r1, #1
+00215a9e  0432       adds     r2, #4
+00215aa0  bff35f8f   dmb      sy
+00215aa4  52e8000f   ldrex    r0, [r2]
+00215aa8  0844       add      r0, r1
+00215aaa  42e80007   strex    r7, r0, [r2]
+00215aae  97f0000f   teq.w    r7, #0
+00215ab2  f7d1       bne      #0x215aa4
+00215ab4  bff35f8f   dmb      sy
+00215ab8  06a9       add      r1, sp, #0x18
+00215aba  3046       mov      r0, r6
+00215abc  41f8083d   str      r3, [r1, #-0x8]!
+00215ac0  c047       blx      r8
+00215ac2  0498       ldr      r0, [sp, #0x10]
+00215ac4  10b1       cbz      r0, #0x215acc
+00215ac6  0168       ldr      r1, [r0]
+00215ac8  4b68       ldr      r3, [r1, #4]
+00215aca  9847       blx      r3
+00215acc  01a8       add      r0, sp, #4
+00215ace  6ff7cbf8   bl       #0x184c68; _ZN5boost6detail12shared_countD1Ev
+00215ad2  5be7       b        #0x21598c
+00215ad4  43f2d860   movw     r0, #0x36d8
+00215ad8  43f2e061   movw     r1, #0x36e0
+00215adc  c0f22e00   movt     r0, #0x2e; "px != 0"
+00215ae0  c0f22e01   movt     r1, #0x2e; "/home/0000131102/Network/orb_server_build_musashi/native/liborb/deps/libnode/deps/libj/deps/boost-svn/boost/smart_ptr/sh"
+00215ae4  4ff42372   mov.w    r2, #0x28c
+00215ae8  024b       ldr      r3, [pc, #8]
+00215aea  6df7dced   blx      #0x1836a4; __assert_fail@GLIBC_2.4
+00215aee  00bf       nop      
+00215af0  c834       adds     r4, #0xc8
+00215af2  2e00       movs     r6, r5
+00215af4  8c7a       ldrb     r4, [r1, #0xa]
+00215af6  3200       movs     r2, r6
