@@ -11,10 +11,12 @@ parche (`scripts/gui/og_avcam_patch.py`), siete pruebas Unicorn/datos (`tests/te
 | OG-A | Alto activo del modo de sensor `0x19` (24p): lectura 3:2 de altura completa | `0x43bc1a30` (fila 11 de 72 B de `0x43bc16dc`, campo `+0x3c`) | `1124` → **`1333`** |
 | OG-B | El codificador acepta el raster 3:2 | `0x4361255c` (`cmp.w r3,#0x438; bne error`) → `bl` a cueva en `0x43fb8480` (`ZONA_G18+0x600`) | 1440×**1080** → 1440×**1080 o 960** |
 | OG-C | Raster del perfil 1 del codificador | `0x43a7bfba` (`mov.w r3,#0x438`) | alto **1080** → **960** |
-| OG-D (opcional) | Opengate a 59,94 Hz en los modos `0x10`/`0x1a` | filas 3 y 10 (`+0x3c`) y tablas A/B `0x43bc1ae8`/`0x43bc1b84` | alto 1124 → 1333; línea `693→676` ciclos, cuadro `1300→1333` |
+| OG-D (incluido en `apply_bytes`) | Opengate a 59,94 Hz en los modos `0x10`/`0x1a` | filas 3 y 10 (`+0x3c`) y tablas A/B `0x43bc1ae8`/`0x43bc1b84` | alto 1124 → 1333; línea `693→676` ciclos, cuadro `1300→1333` |
+| OG-E | El pedido del codificador pasa a 1440×960 | `0x43612364` (`bl` a cueva `0x43fb8500`) | si el bloque de formato pedía 1920×1080 (`+0x45a/+0x45c`) lo reescribe a 1440×960; 720p, 480p y 1440×1080 intactos |
 
-`apply_bytes()` aplica OG-A/B/C (24p); `apply_60p()` añade OG-D. Ambas son idempotentes y validan los bytes
-originales.
+`apply_24p()` aplica OG-A/B/C/E (3:2 a 24p); `apply_bytes()` añade OG-D (3:2 también a 60p, 59,99 Hz) y es lo que
+construye `--funciones og`. Ambas son idempotentes y validan los bytes originales. **Consecuencia:** el 16:9 a 1080p
+desaparece; queda en 720p y en AVCHD 1440×1080i.
 
 **Por qué 1440×960 y no 1920×1280.** `FUN_4391c540` exige, para anchos distintos de 1920, que ancho de entrada =
 ancho de salida y alto de entrada = alto de salida, y su lista blanca de anchos es `{640, 800, 1280, 1440, 1920}`
@@ -88,6 +90,9 @@ límite es el número de líneas (1333), no la tasa de columna.
 `firmware_packed.dat` sha256 **`daaaf81fda7107b85bb419d0985c925867f17670902dcfba46e56d40116dd129`**,
 tar `6560a15aae68c35387667cf7468cd97e43229b81f5ca8d1e28b5b70596eec9f7`.
 
+Build final con OG-D incluido (3.96): `firmware_packed.dat` sha256
+**`eb0c04813e44c4a5acf2da4a2d01af4609be88d9f79d157589aeb46239bbbeec`**.
+
 `audit_package_nflasha15.py … --darwin-v3 --sin-wbi --bionz-g22` → **`todo_ok: true`, 29/29 comprobaciones** y 65
 sumas verificadas. Para que la comprobación `g22.bionz_es_3.38_mas_patch_tristate` reconozca la build se añadió la
 rama `{"og"}` a `bionz_g22_checks` (sin ella, el `av-cam` parcheado se veía como «no es el esperado», que es
@@ -95,11 +100,21 @@ exactamente lo que debía pasar hasta ahora).
 
 **Nada instalado**: la cámara no se toca en esta fase.
 
+## 4bis. Barrido de suposiciones de 1080/1124 (estático)
+
+Los `movw rN,#0x464` (1124) del binario son **12** y ninguno hace aritmética de buffers: `0x4361094a` y
+`0x4367a45a` los pasan como argumento a la función de log `0x43a4e534`; `0x43b65352/…/0x43b6581e` construyen
+registros de 20 B (`0x14`, tipo `0x21`/`0x23`, u16@+2 = alto) para la UI; `0x439b0b52`, `0x43a9c68c` y
+`0x4364c8fa` hacen lo mismo en descriptores de pantalla (tipos `0x86`, `0x80`, `0x40`). No hay ningún
+`malloc`/stride/offset calculado con 1124 ⇒ el opengate no rompe tamaños de buffer; como mucho, el encuadre
+dibujado en pantalla puede seguir asumiendo 16:9 (cosmético, no grabación).
+
 ## 5. Lo que falta para «funcionalidad completa» (y dónde está el riesgo)
 
-1. **Que la cámara pida 1440×960.** Hoy el formato de película pide 1920×1080; el parche hace que el raster 1440
-   exista y que el codificador acepte 960, pero el pedido sale del bloque de formato (`obj+0x404`, 0x84 B) y de la
-   orden LIRO `0x4000` (tamaño `0xf`, aspecto `0x11`), cuyo emisor no está resuelto. Es el paso pendiente OG-6.
+1. ~~Que la cámara pida 1440×960~~ **RESUELTO (OG-E)**: el embudo es único (`0x43612364` → `0x43a7c8fa`, llamada
+   desde `0x4361234e` con `r1 = obj+0x404`), y el raster que elige perfil son los u16 `+0x56/+0x58` de ese bloque
+   (`obj+0x45a/+0x45c`). La cueva reescribe 1920×1080 → 1440×960 y deja intactos 720p/480p/1440×1080 (probado en
+   Unicorn). **Ojo:** también afecta a 1080p60, así que sin OG-D el 60p saldría con el 16:9 comprimido (anamórfico).
 2. **El ISP** debe aceptar 1333 líneas de entrada y escalarlas a 960: no se puede comprobar estáticamente (el
    arnés no emula MCAVC ni graba, E2E-15).
 3. **El imager** debe aceptar la ventana de 1333 líneas activas sin cambio de registros (la matriz de 59 filas no

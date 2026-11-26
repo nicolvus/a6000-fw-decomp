@@ -21,7 +21,11 @@ Aritmética del readout (54,054 MHz, tablas `0x43bc1ae8`/`0x43bc1b84`): período
 900 900) **1333 no cabe** (1333·675 = 899 775 sí, con línea de 675 ciclos en vez de 693: eso es el modo
 60p, OG-D, no incluido aquí).
 
-Uso: og_avcam_patch.py ENTRADA SALIDA · `apply_bytes(data)` es idempotente y valida los bytes originales.
+Dos entradas: `apply_24p(data)` = OG-A/B/C/E (3:2 a 24p) y `apply_bytes(data)` = lo anterior + OG-D (3:2 también a
+60p, 59,99 Hz), que es lo que construye `build_cfw_film --funciones og`. Ambas son idempotentes y validan los bytes
+originales. Con el opengate completo el 16:9 a 1080p desaparece: queda en 720p y en AVCHD 1440×1080i.
+
+Uso: og_avcam_patch.py ENTRADA SALIDA
 """
 import struct
 import sys
@@ -64,11 +68,32 @@ MODOS_60P = (3, 10)                 # índices de 0x10 y 0x1a en la lista 0x43fe
 AB_VIEJO, AB_60P = (693, 1300), (676, 1333)   # 676·1333 = 901 108 → 59,986 Hz (675 daría 60,07)
 
 
+# --- OG-E: el pedido del codificador pasa a 1440×960 (sólo si pedía 1920×1080) ----------------
+# `0x43612364` (`bl 0x43a7c8fa`) es el único embudo al selector de perfil: en `r4+0x404` va el
+# bloque de formato de 0x84 B, cuyo `+0x56/+0x58` (u16) son ancho/alto que elige perfil.
+SITIO_PEDIDO = 0x43612364
+BL_ORIG = "6af0c9f2"
+CUEVA_PEDIDO = D.ZONA_G18[0] + 0x680
+CUEVA_PEDIDO_ASM = """ldrh.w ip, [r4, #0x45a]
+cmp.w ip, #0x780
+bne skip
+ldrh.w ip, [r4, #0x45c]
+cmp.w ip, #0x438
+bne skip
+movw ip, #0x5a0
+strh.w ip, [r4, #0x45a]
+movw ip, #0x3c0
+strh.w ip, [r4, #0x45c]
+skip: b.w 0x43a7c8fa"""
+PEDIDO_VIEJO, PEDIDO_OG = (1920, 1080), (1440, 960)
+
+
 def alto_camcore(data: bytes) -> int:
     return struct.unpack_from("<H", data, ALTO_PTR - BASE)[0]
 
 
-def apply_bytes(data: bytes) -> bytes:
+def apply_24p(data: bytes) -> bytes:
+    """OG-A + OG-B + OG-C + OG-E: 3:2 en el sensor (modo 0x19) y 1440×960 en el codificador."""
     out = bytearray(data)
     # OG-A
     assert alto_camcore(bytes(data)) in (ALTO_VIEJO, ALTO_OG), f"{ALTO_PTR:#x}: {alto_camcore(data)}"
@@ -84,6 +109,16 @@ def apply_bytes(data: bytes) -> bytes:
             out[CUEVA - BASE:CUEVA - BASE + len(cueva)] = cueva
         out[va - BASE:va - BASE + 4] = nueva
     assert bytes(out[CUEVA - BASE:CUEVA - BASE + len(cueva)]) == cueva, "la cueva de ZONA_G18 no es la esperada"
+    # OG-E
+    cueva_pedido = _asm(CUEVA_PEDIDO_ASM, CUEVA_PEDIDO)
+    cur = bytes(out[SITIO_PEDIDO - BASE:SITIO_PEDIDO - BASE + 4])
+    nuevo_pedido = _asm(f"bl {CUEVA_PEDIDO:#x}", SITIO_PEDIDO)
+    assert cur in (bytes.fromhex(BL_ORIG), nuevo_pedido), f"{SITIO_PEDIDO:#x}: {cur.hex()}"
+    D.comprobar_zonas([(CUEVA_PEDIDO, CUEVA_PEDIDO + len(cueva_pedido))], (D.ZONA_G18,))
+    if not any(out[CUEVA_PEDIDO - BASE:CUEVA_PEDIDO - BASE + len(cueva_pedido)]):
+        out[CUEVA_PEDIDO - BASE:CUEVA_PEDIDO - BASE + len(cueva_pedido)] = cueva_pedido
+    out[SITIO_PEDIDO - BASE:SITIO_PEDIDO - BASE + 4] = nuevo_pedido
+    assert bytes(out[CUEVA_PEDIDO - BASE:CUEVA_PEDIDO - BASE + len(cueva_pedido)]) == cueva_pedido
     # OG-C
     cur = bytes(out[CTOR_ALTO - BASE:CTOR_ALTO - BASE + 4])
     mov_3c0 = _asm("mov.w r3, #0x3c0", CTOR_ALTO)
@@ -92,9 +127,9 @@ def apply_bytes(data: bytes) -> bytes:
     return bytes(out)
 
 
-def apply_60p(data: bytes) -> bytes:
-    """OG-D: alto 3:2 y línea de 675 ciclos en los modos 0x10/0x1a (el 60p pasa a 3:2). Idempotente."""
-    out = bytearray(apply_bytes(data))
+def apply_bytes(data: bytes) -> bytes:
+    """Opengate completo: `apply_24p` + OG-D (alto 3:2 y línea de 676 ciclos en 0x10/0x1a). Idempotente."""
+    out = bytearray(apply_24p(data))
     viejos = {(693, 1300), (800, 1350), (720, 1500)}
     for i in MODOS_60P:
         struct.pack_into("<H", out, CAMCORE + 72 * i + 0x3C - BASE, ALTO_OG)

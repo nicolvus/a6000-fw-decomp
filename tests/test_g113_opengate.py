@@ -11,6 +11,7 @@ from unicorn.arm_const import (
     UC_ARM_REG_R1,
     UC_ARM_REG_R2,
     UC_ARM_REG_R3,
+    UC_ARM_REG_R4,
     UC_ARM_REG_SP,
 )
 
@@ -57,6 +58,7 @@ def _perfil(data: bytes, ancho: int, alto: int, modo: int, codec: int = 0) -> in
 def test_patch_idempotente_y_bytes(img):
     orig, nuevo = img
     assert P.apply_bytes(nuevo) == nuevo
+    assert P.apply_24p(P.apply_24p(orig)) == P.apply_24p(orig)
     assert P.alto_camcore(orig) == 1124 and P.alto_camcore(nuevo) == 1333
     # el resto de la fila 72 B del modo 0x19 no cambia
     fila = slice(P.ALTO_PTR - P.BASE - 0x3C, P.ALTO_PTR - P.BASE + 0x0C)
@@ -93,11 +95,36 @@ def test_encoder_conserva_1080p_y_720p(img):
         assert _perfil(d, 640, 480, modo=1) == 3
 
 
+def _pedido(data: bytes, ancho: int, alto: int) -> tuple[int, int]:
+    """Ejecuta la cueva OG-E con un bloque de formato falso y devuelve (ancho, alto) tras el paso."""
+    mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
+    mu.mem_map(P.BASE, (len(data) + 0xFFFFF) // 0x100000 * 0x100000 + 0x100000)
+    mu.mem_write(P.BASE, data)
+    mu.mem_map(0x20000000, 0x2000)
+    objeto = 0x20000000                                   # r4 = objeto; el bloque de formato va en +0x404
+    mu.mem_write(objeto + 0x45A, struct.pack("<HH", ancho, alto))
+    mu.reg_write(UC_ARM_REG_R4, objeto)
+    mu.reg_write(UC_ARM_REG_LR, SALIDA | 1)
+    mu.hook_add(UC_HOOK_CODE, lambda m, a, s, u: m.emu_stop() if a in (0x43A7C8FA, SALIDA) else None)
+    mu.emu_start(P.CUEVA_PEDIDO | 1, 0x43A7C8FA, count=100)
+    return struct.unpack("<HH", mu.mem_read(objeto + 0x45A, 4))
+
+
+def test_pedido_1080p_pasa_a_1440x960(img):
+    orig, nuevo = img
+    assert bytes(nuevo[P.SITIO_PEDIDO - P.BASE:P.SITIO_PEDIDO - P.BASE + 4]) != bytes.fromhex(P.BL_ORIG)
+    assert _pedido(nuevo, *P.PEDIDO_VIEJO) == P.PEDIDO_OG          # 1920×1080 → 1440×960
+    assert _pedido(nuevo, 1280, 720) == (1280, 720)                # 720p intacto
+    assert _pedido(nuevo, 1440, 1080) == (1440, 1080)              # AVCHD intacto
+    assert _pedido(nuevo, 640, 480) == (640, 480)                  # 480p intacto
+    assert not any(orig[P.CUEVA_PEDIDO - P.BASE:P.CUEVA_PEDIDO - P.BASE + 40])
+
+
 def test_60p_3_2_cabe_en_el_cuadro(img):
     """OG-D: 676×1333 ciclos = 59,986 Hz; 1333 líneas activas caben en el cuadro de 1333."""
     orig, _nuevo = img
-    n60 = P.apply_60p(orig)
-    assert P.apply_60p(n60) == n60
+    n60 = P.apply_bytes(orig)
+    assert P.apply_bytes(n60) == n60
     for i in P.MODOS_60P:
         assert struct.unpack_from("<H", n60, P.CAMCORE + 72 * i + 0x3C - P.BASE)[0] == P.ALTO_OG
         for tabla in (0x43BC1AE8, 0x43BC1B84):
