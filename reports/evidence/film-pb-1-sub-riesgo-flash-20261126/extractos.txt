@@ -1,0 +1,112 @@
+# Extractos citados — FILM-PB-1 sub riesgo de flasheo (26-11-2026)
+# Generado con grep -n sobre ficheros del repo. Solo lectura.
+
+## 1. config.xml del actualizador (updater.img 3.21): qué verifica y en qué orden
+5:		<proc key="config_sum/config.sum">
+6:			<shell module="us_crc32sum.sh" param="config file"/>
+7:			<shell module="chkfirm.sh"/>
+8:			<shell module="edit_mount.sh"/>
+9:                        <shell module="keep_big_backup.sh"/>
+11:		<proc key="updater_sum/updater.sum">
+12:			<shell module="us_crc32sum.sh" param="updater image"/>
+14:		<proc key="appli_sum/appli.sum">
+15:			<shell module="us_crc32sum_appli.sh" param="appli"/>
+17:		<proc key="part_image_sum/part_image.sum">
+18:			<shell module="us_crc32sum.sh" param="part_image image"/>
+20:		<proc key="partconf/partinf.conf">
+21:			<shell module="chknandcapa.elf" param="partconf/partinf.conf"/>
+23:		<proc key="partconf_sum/partconf.sum">
+24:			<shell module="us_crc32sum.sh" param="partconf file"/>
+25:			<shell module="us_mkfs.sh"/>
+27:		<proc key="front_sum/front.sum">
+28:			<shell module="us_crc32sum.sh" param="front file"/>
+29:			<shell module="us_front_firmup.sh" param="front"/>
+31:		<proc key="ca_sum/ca.sum">
+32:			<shell module="us_crc32sum.sh" param="ca file"/>
+33:			<shell module="us_ca_firm.sh" param="ca" thread="yes"/>
+35:		<proc key="darwin_sum/darwin.sum">
+36:			<shell module="us_crc32sum.sh" param="darwin file"/>
+37:			<shell module="us_darwin_firm.sh" param="darwin" thread="yes"/>
+39:		<proc key="prfile_sum/prfile.sum">
+40:			<shell module="us_crc32sumprfile.sh" param="prfile" thread="yes"/>
+42:		<proc key="backup_sum/backup.sum">
+43:			<shell module="us_crc32sum_backup.sh" param="backup file"/>
+45:		<proc key="accsy_sum/accsy.sum">
+46:			<shell module="us_crc32sum.sh" param="accsy file"/>
+48:		<proc key="loader_sum/loader.sum">
+49:			<shell module="us_crc32sum.sh" param="loader file"/>
+50:			<shell module="loader_writer.sh" param="loader"/>
+
+## 2. us_mkfs.sh: rama USER (la que usa el flujo oficial)
+13:PRODUCT=1
+14:LOADER_UPDATER=2
+15:USER=3
+16:SERVICE=4
+17:MINOR=5
+18:MSCRYPT=6
+19:VERSKIP=7
+27:KEEP_BACKUP=ud_keep_backup.elf
+41:                echo "[DETAIL] do not edisx.elf."
+51:            echo "[DETAIL] do not edisx.elf."
+73:		fmode="full"
+74:		test -f $NOT_WRITE_LOADER && fmode="app"
+79:		fmode="app"
+83:		fmode="full"
+92:echo "fmode=$fmode"
+93:uc_mkfs.elf -m $fmode -f $FILE_MOUNTCONF || { getledval.elf $ERROR_LOGICAL_FORMAT ; exit $? ; }
+106:ud_wbi_drop.elf $FILE_PARTINF || { echo "[ERROR] ud_wbi_drop.elf" ; getledval.elf $ERROR_WBI_DROP ; exit $? ; }
+111:#execute dosfsck
+112:dosfsck -Y /dev/nflasha2
+113:echo "[DETAIL] dosfsck done."
+
+## 3. part_image.sum del paquete oficial 3.21 (qué particiones y qué CRC-32)
+5,ffffffff,00000000,000001ed,00000000,000003e8,root,root,-1,-1,dev,
+0,b969856d,0032ba4f,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha7,
+0,9cb10112,02855780,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha5,
+0,df198ecd,050264e1,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha15,
+0,c77af80c,038477ef,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha16,
+0,0c047870,00af4f10,000001a4,00000000,000003e8,root,root,-1,-1,dev/nflasha3,
+
+## 4. Sumas que viajan en el tar: no hay updater.sum ni loader.sum (= no se reescriben nflasha1 ni los loaders)
+firmware/extracted/fw321/firmware.tar -> ['0101_config_sum/config.sum', '0111_backup_sum/backup.sum', '0301_partconf_sum/partconf.sum', '0641_darwin_sum/darwin.sum', '0651_prfile_sum/prfile.sum', '0701_part_image_sum/part_image.sum', '0801_appli_sum/appli.sum']
+analysis/e25-27/artifacts-338/firmware.integrated.tar -> ['0101_config_sum/config.sum', '0111_backup_sum/backup.sum', '0301_partconf_sum/partconf.sum', '0641_darwin_sum/darwin.sum', '0651_prfile_sum/prfile.sum', '0701_part_image_sum/part_image.sum', '0801_appli_sum/appli.sum']
+analysis/gui/g22/base-380.tar -> ['0101_config_sum/config.sum', '0111_backup_sum/backup.sum', '0301_partconf_sum/partconf.sum', '0641_darwin_sum/darwin.sum', '0651_prfile_sum/prfile.sum', '0701_part_image_sum/part_image.sum', '0801_appli_sum/appli.sum']
+build/cfw_func393/base/base-film.tar -> ['0101_config_sum/config.sum', '0111_backup_sum/backup.sum', '0301_partconf_sum/partconf.sum', '0641_darwin_sum/darwin.sum', '0651_prfile_sum/prfile.sum', '0701_part_image_sum/part_image.sum', '0801_appli_sum/appli.sum']
+
+## 5. Script A (reflasheo 3.21): hash, comprobación y confirmación
+     1	#!/bin/sh
+     2	# Reinstala el firmware oficial ILCE-6000 v3.21 por USB con pmca-console (Sony-PMCA-RE). NO se ejecuta solo: lo lanza el usuario.
+     3	# Requisitos: batería >50 %, cámara en modo MTP o almacenamiento masivo (Ajustes > Conexión USB), cable directo, PC sin suspensión.
+     4	# NO desconectar ni apagar durante la actualización. Verifica primero el archivo (solo lectura) y pide confirmación.
+     5	set -e
+     6	cd "$(dirname "$0")/.."
+     7	DAT=firmware/extracted/updater/Update_ILCE6000V321/Resources/FirmwareUpdater.app/Contents/Resources/FirmwareData_ILCE6000V321.dat
+     8	SHA=29aef21ab9b5c2e98388974ac9749c2cbfb1815273b444e62f2e41398aa8892f
+     9	PY=${PMCA_PY:-$HOME/.local/share/pmca-venv/bin/python}
+    10	echo "$SHA  $DAT" | sha256sum -c -
+    11	lsusb | grep -i "054c" || { echo "No se ve ninguna cámara Sony por USB"; exit 1; }
+    12	printf 'Esto FLASHEA el firmware 3.21 en la cámara. Escribe SI para continuar: '
+    13	read r; [ "$r" = "SI" ] || { echo cancelado; exit 1; }
+    14	exec "$PY" references/pmca/pmca-console.py firmware -f "$DAT"
+
+## 6. Guard: códigos de estado que devuelve la cámara en checkGuard (antes de escribir)
+483: STAT_LOW_BATTERY = 0x100
+487: STAT_DISK_INSERTED = 0x120
+489: STAT_INVALID_MODEL = 0x140
+490: STAT_INVALID_REGION = 0x141
+491: STAT_INVALID_VERSION = 0x142
+545:   self.STAT_LOW_BATTERY: 'Low battery',
+549:   self.STAT_DISK_INSERTED: 'Disk inserted',
+551:   self.STAT_INVALID_MODEL: 'Invalid model',
+552:   self.STAT_INVALID_REGION: 'Invalid region',
+553:   self.STAT_INVALID_VERSION: 'Invalid version',
+562: def checkGuard(self, file, size):
+565: def getFirmwareVersion(self):
+
+## 7. pmca: checkGuard ocurre antes de 'Writing firmware'
+387: print('Initializing firmware update')
+390: dev.checkGuard(file, size)
+396:  print('Switching to updater mode')
+419:  print('Writing firmware')
+421:  dev.writeFirmware(ProgressFile(file, size), size, complete)
+447:      dev.checkGuard(io.BytesIO(data), len(data))
