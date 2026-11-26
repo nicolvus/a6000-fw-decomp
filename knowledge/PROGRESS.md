@@ -868,8 +868,10 @@ Cero escrituras en cámara o firmware.
 Publicado en la rama `harness/arnes-completo` del repo privado de handoff (100 MB): rootfs y `/usr`
 de Sony 3.21 ya extraídos (53 MB), kernel/initrd de Debian fijados y cabeceras del shim (34 MB),
 volcado NVRAM del que sale `bk.tbl`, `AV-CAM.BIN`/`IDT_CAM.BIN`/`liro.ko` (12 MB) y la config del
-configurador; el código del arnés queda pinneado a `46372a10`. `restore.sh` comprueba SHA-256, coloca
-cada artefacto en su ruta y con `--verificar` ejecuta `setup.sh` y los tests. Verificado desde un clon
-y un venv limpios: SHA ok, initramfs, shim y `bk.tbl` construidos, 48 tests pasan y 7 saltan, primera
-pantalla 152 s y restauración 3 s. Detalle en [PENDIENTES](../docs/PENDIENTES.md) R10 y en
+configurador. Se instala de una vez con `./instalar.sh` (herramientas, clona el código de la punta de
+`main`, venv, artefactos, `setup.sh` y tests), que deja el mismo árbol donde se mejora el arnés;
+`DESARROLLO.md` mapea cada pieza a su fichero. Verificado desde un clon limpio: instalación en 42 s,
+SHA-256 ok, initramfs, shim y `bk.tbl` construidos, 54 tests pasan y 7 saltan, primer arranque 167 s
+con pantalla idéntica a la anterior y restauración 3 s; editar `emu_config.py` mueve el test que lo
+cubre y revertirlo lo devuelve a verde. Detalle en [PENDIENTES](../docs/PENDIENTES.md) R10 y en
 [G22-E](../docs/gui/g22-emulador-uso.md#reconstruirlo-en-otro-equipo-26112026).

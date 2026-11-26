@@ -72,7 +72,15 @@ La rama `harness/arnes-completo` del paquete privado
 [`a6000-handoff-context`](https://github.com/nicolvus/a6000-handoff-context/tree/harness/arnes-completo)
 lleva lo que el arnés necesita y no está en Git: rootfs y `/usr` de Sony 3.21 ya extraídos, kernel
 e initrd de Debian fijados, cabeceras del shim, volcado NVRAM de `bk.tbl`, `AV-CAM.BIN`/`IDT_CAM.BIN`/`liro.ko`
-y la config del configurador; el código va pinneado al commit del momento. `restore.sh --repo <clon> --verificar`
-deja cada artefacto en su ruta, comprueba SHA-256, ejecuta `setup.sh` y los tests del arnés. Medido
-desde un clon y un venv limpios: primera pantalla 152 s, restauración 3 s, 48 tests pasan y 7 saltan.
-Qué queda fuera y cómo se regenera: `README.md` y `MANIFIESTO.md` de esa rama.
+y la config del configurador. Se instala de una vez:
+
+```sh
+git clone --depth 1 --branch harness/arnes-completo https://github.com/nicolvus/a6000-handoff-context.git ~/a6000-harness
+cd ~/a6000-harness && ./instalar.sh          # herramientas, código, venv, artefactos, entorno y tests
+```
+
+`instalar.sh` clona el repo público en la punta de `main` (ahí se mejora el arnés), así que el mismo
+comando sirve para montarlo y para seguir desarrollándolo: `DESARROLLO.md` mapea cada pieza a su
+fichero y el ciclo de pruebas. `restore.sh` hace solo la parte de artefactos. Medido en un equipo
+limpio: 42 s de instalación, 54 tests pasan y 7 saltan, primer arranque 167 s con pantalla idéntica
+y restauración 3 s. Qué queda fuera y cómo se regenera: `README.md` y `MANIFIESTO.md` de esa rama.
