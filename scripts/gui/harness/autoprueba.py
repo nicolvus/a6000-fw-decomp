@@ -265,6 +265,7 @@ def main() -> int:
         """
         # la salida de live.py va a un fichero: con una tubería sin lector se llena a los 64 KB y el invitado se queda esperando
         cierra_live()
+        p.dir.mkdir(parents=True, exist_ok=True)  # el registro va a la carpeta del informe, que puede no existir todavía
         io_live["f"] = (p.dir / "live.log").open("wb")
         pr = subprocess.Popen([str(VENV), str(HERE / "live.py"), str(work), "--perfil-dir", a.perfil_dir, "--puerto", str(a.puerto),
                                "--config", a.config], stdout=io_live["f"], stderr=subprocess.STDOUT, start_new_session=True)
@@ -378,8 +379,8 @@ def main() -> int:
             proc.wait(30)
         cierra_live()
         estado_zst = work / "live" / a.perfil_dir / "estado.zst"
-        p.paso("cierre", proc.returncode in (0, -11, -15) and socket.socket().connect_ex(("127.0.0.1", a.puerto)) != 0,
-               f"código {proc.returncode}{' (SIGSEGV al cerrar tras guardar: G22-ARR3)' if proc.returncode == -11 else ''}, "
+        p.paso("cierre", proc.returncode in (0, -11, -15, 245) and socket.socket().connect_ex(("127.0.0.1", a.puerto)) != 0,
+               f"código {proc.returncode}{' (SIGSEGV al cerrar tras guardar: G22-ARR3)' if proc.returncode in (-11, 245) else ''}, "
                f"estado guardado {estado_zst.stat().st_size >> 20 if estado_zst.exists() else 0} MiB")
         shutil.rmtree(tmp, ignore_errors=True)
     d = p.informe({"perfil": a.perfil_dir, "puerto": a.puerto, "work": str(work)})
