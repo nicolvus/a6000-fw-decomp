@@ -1,8 +1,12 @@
 const input = document.querySelector('#session');
 const result = document.querySelector('#result');
 const sessionsElement = document.querySelector('#sessions');
+let check = null;
 
-fetch('status.json')
+document.querySelector('#check').addEventListener('click', () => check?.());
+input.addEventListener('keydown', event => { if (event.key === 'Enter') check?.(); });
+
+fetch(new URL('status.json', document.currentScript.src))
   .then(response => {
     if (!response.ok) throw new Error(`HTTP ${response.status}`);
     return response.json();
@@ -15,7 +19,7 @@ fetch('status.json')
     document.querySelector('#index-note').textContent = `${data.documented_count} identificadores Sx con un documento localizado. El índice puede omitir sesiones con otro nombre de archivo.`;
 
     const byId = new Map(data.sessions.map(session => [session.id, session]));
-    const check = () => {
+    check = () => {
       const query = input.value.trim().toUpperCase();
       const normalized = query.match(/^S?(\d{1,3})$/);
       result.replaceChildren();
@@ -42,8 +46,6 @@ fetch('status.json')
       link.textContent = `${id}: ${session.title} →`;
       result.append('Documento localizado · ', link);
     };
-    document.querySelector('#check').addEventListener('click', check);
-    input.addEventListener('keydown', event => { if (event.key === 'Enter') check(); });
 
     const fragment = document.createDocumentFragment();
     for (const session of data.sessions) {

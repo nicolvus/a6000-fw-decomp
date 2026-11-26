@@ -15,7 +15,6 @@ PROGRESS = ROOT / "analysis" / "s178_census" / "census.md"
 REGISTRY = ROOT / "docs" / "capture" / "registro-pruebas-camara.md"
 REPO = "https://github.com/nicolvus/a6000-fw-decomp/blob/main/"
 WIKI = "https://github.com/nicolvus/a6000-fw-decomp/wiki/"
-RELEASE = "https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.23-3.24"
 # P1–P24: inventario de physical-test-review-2026-10-26.md (P22–P24 añadidos ese día).
 PLANS = 24
 SESSION = re.compile(r"(?:^|/)s(\d{1,3})(?:[-_/]|\.md$)", re.IGNORECASE)
@@ -24,7 +23,7 @@ HEADING = re.compile(r"^#\s+(.+)$", re.MULTILINE)
 
 def title(path: Path) -> str:
     match = HEADING.search(path.read_text(encoding="utf-8", errors="replace")[:3000])
-    return match.group(1).strip() if match else path.stem.replace("-", " ")
+    return match.group(1).strip().replace("`", "") if match else path.stem.replace("-", " ")
 
 
 COLORS = {"hito": "#2ea043", "sub": "#9be9a8", "todo": "#30363d", "cancel": "#d29922", "ok": "#2ea043"}
@@ -161,7 +160,7 @@ def render_html(grids, data: dict) -> str:
     names = topics(data["sessions"])
 
     def squares(cells) -> str:
-        return "".join(f'<span class="cell {c}" title="{escape(t)}"></span>' for c, t in cells)
+        return "".join(f'<span class="cell {c}" role="img" aria-label="{escape(t)}" title="{escape(t)}"></span>' for c, t in cells)
 
     closed = closed_labels(detail, data["sessions"])
     fam_rows = ""
@@ -187,17 +186,21 @@ td:nth-child(n+3):not(:last-child),td:last-child,th:nth-child(n+3){{text-align:r
 .legend span{{display:inline-block;width:12px;height:12px;border-radius:2px;margin:0 4px 0 12px}}
 @media(max-width:600px){{.grid{{grid-template-columns:repeat(31,1fr)}}}}</style></head><body>
 <h1>Progreso</h1>
-<p class="hito"><b>Hito (27-10-2026): la A6000 disparó en silencio</b> con el firmware modificado 3.23 (Darwin tipo 0 + B1a, 2 bytes), confirmado por el usuario en cámara real. Hoy cualquiera puede reproducirlo de principio a fin con la <a href="{WIKI}">Wiki CFW Sony a6000</a>.</p>
-<h2>Estado actual (02-11-2026)</h2>
+<p class="hito"><b>Obturador electrónico funcionando desde el 3.30</b> (envío en línea de <code>pkt[0x0e]</code> + compuerta de Darwin) y Silent calibrado en el firmware desde el 3.77. El 3.23 (Darwin tipo 0 + B1a, 2 bytes) fue el primer hito: la cámara disparó sin mover el obturador mecánico el 27-10-2026. Guía de réplica: <a href="{WIKI}">Wiki CFW Sony a6000</a>.</p>
+<h2>Estado actual (25-11-2026)</h2>
 <table><tr><th>Pieza</th><th>Estado</th><th>Detalle</th></tr>
-<tr><td>Firmware 3.23</td><td>Publicado y reproducible</td><td>Darwin tipo 0 + B1a. <a href="{RELEASE}">Release fw-3.23-3.24</a>; los .dat se reconstruyen con los mismos SHA-256 (<a href="{WIKI}4-Construir-los-paquetes">wiki 4</a>, <a href="{WIKI}5-Instalar-el-3.23">wiki 5</a>).</td></tr>
-<tr><td>Firmware 3.24</td><td>Publicado</td><td>Restaura el Darwin oficial; vuelta atrás probada (<a href="{WIKI}7-Volver-atras-y-recuperacion">wiki 7</a>).</td></tr>
-<tr><td>Capa 2 (exposición uniforme)</td><td>Probada desde el PC</td><td>Parche en RAM por telnet con guardián de 25 s; exposición (4219−r5)×15,2 µs (<a href="{WIKI}6-Capa-2-exposicion-uniforme">wiki 6</a>). Hacerlo desde la cámara es solo una idea.</td></tr>
-<tr><td>Firmware 3.25c</td><td><b>Experimental</b></td><td>3.25 corregido: <code>nflasha3</code> en el formato de Sony, 30/30 comprobaciones y emulación del cargador sin fallos; debería arrancar pero nunca se ha instalado. <a href="https://github.com/nicolvus/a6000-fw-decomp/releases/tag/fw-3.25c-experimental">Release fw-3.25c-experimental</a> (<a href="{REPO}docs/capture/e26-r45-firmware-325c-experimental.md">R45</a>).</td></tr>
-<tr><td>Recuperación física (SWD)</td><td><b>Experimental, sin ejecutar</b></td><td>Procedimiento redactado (<a href="{REPO}docs/capture/e26-r46-procedimiento-fisico-swd.md">R46</a>, <a href="{WIKI}15-Recuperacion-SWD-experimental">wiki 15</a>). R4911, R4912, R4915, R4916 y CN4906 sin montar; sin medir tensión, eFuse ni DAP; autorización física pendiente.</td></tr>
+<tr><td>Obturador electrónico</td><td><b>Funciona</b></td><td>Desde el 3.30; exposición calibrada en el 3.35 y Silent nivelado de 1/1250 a 1/50 desde el 3.77 (<a href="{REPO}docs/capture/e26-r54-paquete-330-envio-pkt0e.md">R54</a>, <a href="{REPO}docs/capture/e26-r87-disparo-remoto-y-recalibracion.md">R87</a>).</td></tr>
+<tr><td>EFCS</td><td><b>Negro desde 1/1000</b></td><td>≈1,27 ms perdidos, también con firmware de Sony: causa física, no de firmware (<a href="{REPO}docs/capture/e26-r74-conclusion-final-efcs-negro.md">R74</a>, <a href="{REPO}docs/capture/e26-r83-informe-final-efcs-negro.md">R83</a>).</td></tr>
+<tr><td>Serie 3.93</td><td>Una build por función</td><td>Silent + Film Simulation, Picture Profile, Extra Fine o ISO por separado; <code>iso</code> deja la cámara en bucle de arranque (<a href="{REPO}docs/gui/g105-builds-por-funcion.md">G105</a>).</td></tr>
+<tr><td>Serie 4.0x</td><td>Bisección del vídeo</td><td>4.01 y 4.02 instaladas; 4.03 y 4.04 construidas y auditadas, sin instalar.</td></tr>
+<tr><td>Vídeo (FILM-PB-1)</td><td><b>Abierto</b></td><td>Los clips se ven en el PC y la cámara no los reproduce; causa probable: el selector PAL/NTSC frente a la cadencia, ajuste no expuesto en el menú (<a href="{REPO}reports/film-pb-1-causa-sistema-tv-20261127.md">informe</a>).</td></tr>
+<tr><td>Recuperación física (SWD)</td><td><b>Cerrada (03-11-2026)</b></td><td>Se fuerza un registro de CPU y el actualizador de fábrica instala por USB sin escribir NAND (<a href="{REPO}docs/capture/e26-r49-cierre-recuperacion-326.md">R49</a>, <a href="{WIKI}15-Recuperacion-SWD-experimental">wiki 15</a>). Sin recuperación independiente del firmware de Darwin.</td></tr>
+<tr><td>Paquetes .dat</td><td>No se publican</td><td>Se construyen desde el 3.21 oficial con los scripts del repositorio (<a href="{WIKI}4-Construir-los-paquetes">wiki 4</a>).</td></tr>
+</table>
 <h2>Qué falta</h2>
 <table><tr><th>Área</th><th>Pendiente</th><th>Bloqueo</th></tr>
 <tr><td>Cobertura de etiquetas</td><td>Todas las etiquetas documentadas (372/372); documentada no implica decodificada.</td><td>Trabajo de análisis</td></tr>
+<tr><td>Vídeo en el CFW</td><td>FILM-PB-1: los clips grabados no se reproducen en la cámara; falta el paso físico que separa selector PAL/NTSC, arranque en frío y catálogo.</td><td>Acceso a la cámara</td></tr>
 <tr><td>Darwin por actualización oficial</td><td>E23: puerta Silent y parcheo de <code>0640_darwin</code> (CRC-32 único control); F6: sin ruta demostrada (decisión S51).</td><td>Abierto</td></tr>
 <tr><td>Interfaz (GUI)</td><td>G2–G8: formatos <code>.uxc/.uxb/.xdb</code>, menús, texto y fuentes, entrada, ajustes y modificación reversible de la UI.</td><td>Abierto</td></tr>
 <tr><td>Cadena sensor / obturador</td><td>E6 (Darwin fuera de <code>av-cam</code>), E9/D5 (registros IMX210/IMX235), E11 (segunda cortina), E13 (servicio ODL), F8 (valores solo en ejecución).</td><td>Hojas de datos, volcado de Darwin o prueba física</td></tr></table>
@@ -206,7 +209,7 @@ td:nth-child(n+3):not(:last-child),td:last-child,th:nth-child(n+3){{text-align:r
 <p>Índice ponderado sobre {cov['total']} etiquetas: cada etiqueta cubierta aporta <code>VERIFICADO / (VERIFICADO + NO_VERIFICADO)</code> según su informe. Cobertura documental: mide documentación, no código descompilado ni funciones comprobadas en cámara.</p>
 <h2>Etiquetas por familia: {cov['percent']}% documentadas ({cov['covered']}/{cov['total']}), {cov['verified_percent']}% sin pendientes ({cov['verified']}/{cov['total']})</h2>
 <p class="legend"><span class="m-ver"></span>documentada y sin pendientes<span class="m-hito"></span>módulo con hito, con pendientes<span class="m-sub"></span>sub-etiqueta cubierta, con pendientes<span class="m-todo"></span>pendiente / sin informe / sin ejecutar<span class="m-rejected"></span>fragmento descartado<span class="s-cancel"></span>cancelada</p>
-<table><tr><th>Familia</th><th>Etiquetas</th><th>Total</th><th>% doc.</th></tr>{fam_rows}</table>
+<table><tr><th>Familia</th><th>Etiquetas</th><th>Con hito</th><th>Sin pendientes</th><th>Total</th><th>% doc.</th></tr>{fam_rows}</table>
 {other}
 <p>Pruebas en cámara: {data['physical_tests']['done']}/{data['physical_tests']['total']} planes con prueba (<a href="{data['physical_tests']['source']}">registro</a>). Censo <a href="{cov['source']}">S178</a>; pasa el ratón por un cuadrado para ver su etiqueta. Generado por <code>scripts/build_pages_status.py</code>; datos en <a href="../status.json">status.json</a>.</p>
 </body></html>
