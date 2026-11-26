@@ -47,6 +47,7 @@ class Captura:
         return self._proc is not None and self._proc.poll() is None
 
     def estado(self) -> dict:
+        self._recoge_huerfano()
         return {"grabando": self.grabando, "segundos": round(time.time() - self._t0) if self.grabando else 0,
                 "ultimo": self.ultimo, "aviso": self.aviso}
 
@@ -75,7 +76,7 @@ class Captura:
             jpg = S.jpeg_con_exif(jpeg)
         except (OSError, ValueError) as e:
             return {"error": f"no es un JPEG válido: {e}"}
-        with self.cerrojo:
+        with S.CERROJO:
             if not S.cabe(raiz, gb, len(jpg)):
                 return {"error": "SD llena (cuota superada)"}
             n, num = S.siguiente_foto(raiz)
@@ -111,68 +112,81 @@ class Captura:
         if not ff:
             return b"", "falta ffmpeg para sacar un fotograma del vídeo"
         if fuente == "webcam":
-            args = ["-f", "v4l2", "-i", str(ruta or "/dev/video0")]
+            args = ["-f", "v4l2", "-i", str(ruta) if str(ruta) else "/dev/video0"]
         else:
             if not ruta.is_file():
                 return b"", "la fuente de sensor es un vídeo y no hay ruta válida en el configurador"
             args = ["-i", str(ruta)]
-        r = subprocess.run([ff, "-v", "error", "-nostdin", *args, "-frames:v", "1", "-f", "image2", "-vcodec", "mjpeg", "pipe:1"],
-                           check=False, capture_output=True, timeout=120)
+        try:
+            r = subprocess.run([ff, "-v", "error", "-nostdin", *args, "-frames:v", "1", "-f", "image2", "-vcodec", "mjpeg", "pipe:1"],
+                               check=False, capture_output=True, timeout=120)
+        except subprocess.TimeoutExpired:
+            return b"", "ffmpeg no dio un fotograma en 120 s"
         return (r.stdout, "") if r.returncode == 0 and r.stdout else (b"", "ffmpeg no dio fotograma de la fuente")
 
     # ---------------------------------------------------------------- vídeo
     def video_inicia(self) -> dict:
         """Empieza a grabar en el anfitrión. Devuelve {grabando} o {error}."""
-        if self.grabando:
-            return {"grabando": True, "segundos": round(time.time() - self._t0)}
-        ff = shutil.which("ffmpeg")
-        if not ff:
-            return {"error": "falta ffmpeg para grabar vídeo"}
-        cfg = self.configura()
-        sen = cfg.get("sensor", {})
-        ruta = Path(sen.get("ruta", "")).expanduser()
-        fuente = sen.get("fuente", "imagen")
-        if fuente == "webcam":
-            entrada = ["-f", "v4l2", "-i", str(ruta or "/dev/video0")]
-        elif ruta.is_file():
-            entrada = (["-loop", "1", "-framerate", "30", "-i", str(ruta)] if fuente == "imagen"
-                       else ["-stream_loop", "-1", "-i", str(ruta)])
-        else:
-            return {"error": "elige en el configurador la imagen, el vídeo o la cámara web que graba el clip"}
-        self._tmp = Path(tempfile.mkdtemp(prefix="a6000-clip-")) / "clip.mp4"
-        self._proc = subprocess.Popen([ff, "-v", "error", "-nostdin", *entrada, "-an", "-c:v", "libx264", "-preset", "veryfast",
-                                       "-crf", "20", "-pix_fmt", "yuv420p", "-t", str(MAX_CLIP_S), "-movflags", "+faststart", str(self._tmp)],
-                                      stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        self._t0 = time.time()
-        self.aviso = ""
-        return {"grabando": True, "segundos": 0}
+        with self.cerrojo:
+            self._recoge_huerfano()
+            if self.grabando:
+                return {"grabando": True, "segundos": round(time.time() - self._t0)}
+            ff = shutil.which("ffmpeg")
+            if not ff:
+                return {"error": "falta ffmpeg para grabar vídeo"}
+            cfg = self.configura()
+            sen = cfg.get("sensor", {})
+            ruta = Path(sen.get("ruta", "")).expanduser()
+            fuente = sen.get("fuente", "imagen")
+            if fuente == "webcam":
+                entrada = ["-f", "v4l2", "-i", str(ruta) if str(ruta) else "/dev/video0"]
+            elif ruta.is_file():
+                entrada = (["-loop", "1", "-framerate", "30", "-i", str(ruta)] if fuente == "imagen"
+                           else ["-stream_loop", "-1", "-i", str(ruta)])
+            else:
+                return {"error": "elige en el configurador la imagen, el vídeo o la cámara web que graba el clip"}
+            self._tmp = Path(tempfile.mkdtemp(prefix="a6000-clip-")) / "clip.mp4"
+            self._proc = subprocess.Popen([ff, "-v", "error", "-nostdin", *entrada, "-an", "-c:v", "libx264", "-preset", "veryfast",
+                                           "-crf", "20", "-pix_fmt", "yuv420p", "-t", str(MAX_CLIP_S), "-movflags", "+faststart", str(self._tmp)],
+                                          stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            self._t0 = time.time()
+            self.aviso = ""
+            return {"grabando": True, "segundos": 0}
+
+    def _recoge_huerfano(self) -> None:
+        """Si ffmpeg murió por su cuenta, cierra el estado y borra el temporal (QA F12)."""
+        if self._proc is not None and self._proc.poll() is not None:
+            self._proc, tmp, self._tmp = None, self._tmp, None
+            if tmp:
+                shutil.rmtree(tmp.parent, ignore_errors=True)
+            self.aviso = "la grabación terminó sola (ffmpeg murió)"
 
     def video_para(self) -> dict:
         """Cierra el clip en curso (SIGINT a ffmpeg) y lo deja en la SD con su nombre."""
         with self.cerrojo:
             p, tmp, segs = self._proc, self._tmp, round(time.time() - self._t0)
-            self._proc, self._tmp = None, None
             if not p or not tmp:
+                self._recoge_huerfano()
                 return {"error": "no hay grabación en curso"}
-            if p.poll() is None:
-                p.send_signal(signal.SIGINT)
-                try:
-                    p.wait(30)
-                except subprocess.TimeoutExpired:
-                    p.kill()
-                    p.wait(10)
-            if not tmp.is_file() or not tmp.stat().st_size:
+            try:
+                if p.poll() is None:
+                    p.send_signal(signal.SIGINT)
+                    try:
+                        p.wait(30)
+                    except subprocess.TimeoutExpired:
+                        p.kill()  # no se puede quedar colgado con el estado a medias (QA F03)
+                        p.wait(10)
+                if not tmp.is_file() or not tmp.stat().st_size:
+                    return {"error": "el clip quedó vacío (ffmpeg no escribió nada)"}
+                cfg = self.configura()
+                raiz, gb = S.raiz_sd(cfg["sd"]["carpeta"]), cfg["sd"]["tamano_gb"]
+                if not S.cabe(raiz, gb, tmp.stat().st_size):
+                    return {"error": "SD llena (cuota superada)"}
+                d = S.ruta_clip(raiz, S.siguiente_clip(raiz))
+                S.escribe_desde(d, tmp)  # por trozos: el clip no pasa por RAM (QA F11)
+            finally:
+                self._proc, self._tmp = None, None  # se suelta al terminar, muera o no ffmpeg (QA F03)
                 shutil.rmtree(tmp.parent, ignore_errors=True)
-                return {"error": "el clip quedó vacío (ffmpeg no escribió nada)"}
-            cfg = self.configura()
-            raiz, gb = S.raiz_sd(cfg["sd"]["carpeta"]), cfg["sd"]["tamano_gb"]
-            if not S.cabe(raiz, gb, tmp.stat().st_size):
-                shutil.rmtree(tmp.parent, ignore_errors=True)
-                return {"error": "SD llena (cuota superada)"}
-            n = S.siguiente_clip(raiz)
-            d = S.ruta_clip(raiz, n)
-            S.escribe_atomico(d, tmp.read_bytes())
-            shutil.rmtree(tmp.parent, ignore_errors=True)
             self._apunta("clip", d, "tecla", NOTA_CLIP)
         return {"ruta": d.relative_to(raiz).as_posix(), "bytes": d.stat().st_size, "segundos": segs, "nota": NOTA_CLIP}
 
@@ -185,9 +199,15 @@ class Captura:
             threading.Thread(target=self._video_tecla, daemon=True).start()
 
     def _foto_tecla(self) -> None:
-        r = self.foto_de_fuente("tecla")
-        self.aviso = "" if "ruta" in r else r.get("error", "")
+        try:
+            r = self.foto_de_fuente("tecla")
+            self.aviso = "" if "ruta" in r else r.get("error", "")
+        except Exception as e:  # noqa: BLE001 - frontera del hilo: un fallo no puede dejar la tecla muda (QA F10)
+            self.aviso = f"foto: {type(e).__name__}: {e}"
 
     def _video_tecla(self) -> None:
-        r = self.video_para() if self.grabando else self.video_inicia()
-        self.aviso = "" if ("grabando" in r or "ruta" in r) else r.get("error", "")
+        try:
+            r = self.video_para() if self.grabando else self.video_inicia()
+            self.aviso = "" if ("grabando" in r or "ruta" in r) else r.get("error", "")
+        except Exception as e:  # noqa: BLE001 - frontera del hilo
+            self.aviso = f"clip: {type(e).__name__}: {e}"

@@ -136,7 +136,7 @@ def test_importa_nombra_como_la_camara(tmp_path: Path) -> None:
     d = S.importa(tmp_path / "sd", "vacaciones.jpg", jpg())
     assert d.name == "DSC00001.JPG" and Image.open(d).getexif()[0x0110] == "ILCE-6000"
     clip = S.importa(tmp_path / "sd", "clip.mp4", b"\x00\x00\x00\x18ftypmp42")
-    assert clip == tmp_path / "sd/PRIVATE/M4ROOT/CLIP/clip.mp4"
+    assert clip == tmp_path / "sd/PRIVATE/M4ROOT/CLIP/C0001.MP4"  # un vídeo entra como clip de la cámara, no con su nombre
 
 
 def test_http_sd_galeria_importar_y_formatear(tmp_path: Path) -> None:
@@ -204,5 +204,60 @@ def test_http_captura_video_desde_el_servidor(tmp_path: Path) -> None:
         h = H()
         assert W.maneja(h, "POST", "/captura/video/para", b"", str(cfg))
         assert h.json()["ruta"] == "PRIVATE/M4ROOT/CLIP/C0001.MP4", h.json()
+    finally:
+        W.registra_captura(None)
+
+
+def test_formatear_no_vacia_una_carpeta_cualquiera(tmp_path: Path) -> None:
+    """QA F01: «Formatear» solo toca el árbol de la cámara; una carpeta de trabajo se rechaza."""
+    curro = tmp_path / "trabajo"
+    (curro / "src").mkdir(parents=True)
+    (curro / "src/main.c").write_text("int main(){}")
+    with pytest.raises(ValueError, match="no parece una tarjeta SD"):
+        S.formatea(curro)
+    assert (curro / "src/main.c").is_file()  # nada borrado
+    sd = tmp_path / "sd"
+    S.escribe_atomico(sd / "DCIM/100MSDCF/DSC00001.JPG", jpg())
+    (sd / "apuntes.txt").write_text("del anfitrión")
+    assert S.formatea(sd) == 1
+    assert not (sd / "DCIM/100MSDCF/DSC00001.JPG").exists() and (sd / "apuntes.txt").is_file()
+
+
+def test_importar_concurrente_no_pisa_y_respeta_la_cuota(tmp_path: Path) -> None:
+    """QA F07/F08: dos subidas a la vez sacan números distintos y la cuota se mide con el tamaño final."""
+    import threading
+    sd = tmp_path / "sd"
+    rutas: list[Path] = []
+    hilos = [threading.Thread(target=lambda c=c: rutas.append(S.importa(sd, "f.jpg", jpg(c)))) for c in ((1, 2, 3), (9, 8, 7), (4, 5, 6))]
+    for h in hilos:
+        h.start()
+    for h in hilos:
+        h.join()
+    assert sorted(p.name for p in rutas) == ["DSC00001.JPG", "DSC00002.JPG", "DSC00003.JPG"]
+    with pytest.raises(ValueError, match="llena"):
+        S.importa(sd, "grande.jpg", jpg(lado=512), cuota=S.usado(sd) + 10)
+
+
+def test_escribir_no_sigue_un_enlace_fuera_de_la_sd(tmp_path: Path) -> None:
+    """QA F09: un enlace en la SD no puede sacar la escritura fuera de la carpeta."""
+    sd = tmp_path / "sd"
+    fuera = tmp_path / "fuera.txt"
+    fuera.write_text("intacto")
+    (sd / "DCIM/100MSDCF").mkdir(parents=True)
+    (sd / "DCIM/100MSDCF/DSC00001.JPG").symlink_to(fuera)
+    S.escribe_atomico(sd / "DCIM/100MSDCF/DSC00001.JPG", jpg())
+    assert fuera.read_text() == "intacto"
+    assert (sd / "DCIM/100MSDCF/DSC00001.JPG").is_file() and not (sd / "DCIM/100MSDCF/DSC00001.JPG").is_symlink()
+
+
+def test_importar_sin_cuota_da_507(tmp_path: Path) -> None:
+    """QA F07: si el tamaño final no cabe, la subida se rechaza con 507 (no se escribe nada)."""
+    cfg = _cfg(tmp_path, sd={"carpeta": str(tmp_path / "sd"), "tamano_gb": 1e-6})
+    W.registra_captura(_cap(cfg, tmp_path / "live"))
+    try:
+        h = H({"X-Nombre": "grande.jpg"})
+        assert W.maneja(h, "POST", "/sd/importa", jpg(lado=512), str(cfg))
+        assert h.codigo == 507 and "llena" in h.json()["error"]
+        assert S.lista(tmp_path / "sd") == []
     finally:
         W.registra_captura(None)
