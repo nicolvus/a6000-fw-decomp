@@ -75,10 +75,34 @@ python3 scripts/filmpb1_convertir_clips.py /ruta/tarjeta/MP_ROOT/103ANV01 /ruta/
 Solo procesa ficheros que tengan las cinco cajas de Sony; si a uno le falta alguna, lo deja intacto y
 lo marca `NO TOCADO` ([transcripción](evidence/film-pb-1-v1-remux-20261127/lote-conversion.txt)).
 
-## 4. Lo que falta, y es un minuto
+## 4. Primer ensayo en cámara: no concluyente (el fichero quedó incoherente)
 
-Copiar `prueba-MAH04198-25p.mp4` (generado en `~/Documents/a6000/`) a la tarjeta como
-`MP_ROOT/103ANV01/MAH04200.MP4` y reproducirlo:
+Lo que se vio el 27-11 con el primer `prueba-MAH04198-25p.mp4`: la cámara **lo indexa** (aparece en la
+lista y en el contador), **no genera miniatura** y **no reproduce**. Por la propia cadena del firmware eso
+encaja con un fichero incoherente: el primer reescritor cambiaba `mdhd.timescale` pero dejaba
+`mvhd.duration`, `tkhd.duration` y `elst.segment_duration` en los 9,5095 s originales, así que el mismo
+fichero declaraba 9,51 s en tres sitios y 11,40 s en el `mdhd`. Cualquier lector que use `mvhd`/`elst`
+sigue calculando 285 / 9,5095 = **29,97 fps** (y el que use el `mdhd` ve 25): el ensayo no probaba «un
+clip de 25p válido».
+
+Corregido: el reescritor escala ahora las cuatro fuentes. El fichero resultante es coherente:
+
+| Campo | Antes | Ahora |
+|---|---|---|
+| `mdhd.timescale` / `duration` | 30000 / 285285 (9,5095 s) | 25025 / 285285 (11,400 s) |
+| `tkhd.duration` (vídeo) | 855855 | 1026000 |
+| `elst.segment_duration` (vídeo) | 855855 | 1026000 |
+| `mvhd.duration` | 855855 | 1026000 (escala 90000) |
+| audio (`mdhd`, `tkhd`, `elst`) | 9,4933 s | **sin tocar** |
+| `ffprobe` | — | formato 11,400 s · vídeo 25/1 11,400 s · audio 9,4933 s |
+| bytes distintos | 2 | **11** (solo campos de tiempo) |
+
+Nuevo fichero: `prueba-MAH04198-25p-v2.mp4` (copia en `~/Documents/a6000/`).
+
+## 5. Lo que falta, y es un minuto
+
+Copiar **`prueba-MAH04198-25p-v2.mp4`** a la tarjeta como `MP_ROOT/103ANV01/MAH04201.MP4` y
+reproducirlo (y borrar antes el `MAH04200.MP4` del primer intento):
 
 | Resultado | Conclusión y siguiente paso |
 |---|---|
@@ -92,7 +116,7 @@ si se sobrescribe el original, la entrada queda descuadrada. Si al insertar la t
 no aparece en la lista, ejecutar «Recuperar BD imág.» (reconstruye el índice, `CreateAVIndexFile`
 `0x7A7E7C`) y volver a mirar.
 
-## 5. Límites
+## 6. Límites
 
 - **NO_VERIFICADO en cámara**: que `TvSystem()` valga 1 hoy (se deduce de que falle el 100 % de
   los clips NTSC, no de una lectura directa) y que el clip convertido se reproduzca.
