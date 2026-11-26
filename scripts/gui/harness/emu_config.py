@@ -32,6 +32,8 @@ CONFIG_DEFECTO = {
     "sensor": {"fuente": "imagen", "ruta": ""},  # imagen | video | webcam
     "sd": {"tamano_gb": 4, "carpeta": ""},
     "red": {"telnet": False, "wifi": False, "puerto": 2323},
+    # camara (G22-E): estado que el anfitrión impone al invitado (batería 0-100 y jack USB; usb ⇒ cargando). Ver estado_camara.py.
+    "camara": {"bateria": 100, "usb": False, "hdmi": False},
 }
 
 MODELO_A6000 = 0x41030035  # build.MODEL (e25_27); región 0
@@ -102,8 +104,12 @@ def valida_config(d: object, botones: list[str] | None = None) -> dict:
     red = {**CONFIG_DEFECTO["red"], **(d.get("red") or {})}
     if not isinstance(red["puerto"], int) or isinstance(red["puerto"], bool) or not 1024 <= red["puerto"] <= 65535:
         raise ValueError("red.puerto debe estar entre 1024 y 65535")
+    camara = {**CONFIG_DEFECTO["camara"], **(d.get("camara") or {})}
+    if not isinstance(camara["bateria"], int) or isinstance(camara["bateria"], bool) or not 0 <= camara["bateria"] <= 100:
+        raise ValueError("camara.bateria debe ser un entero entre 0 y 100")
     return {"version": 1, "firmware": fw, "teclas": teclas, "sensor": sensor, "sd": sd,
-            "red": {"telnet": bool(red["telnet"]), "wifi": bool(red["wifi"]), "puerto": red["puerto"]}}
+            "red": {"telnet": bool(red["telnet"]), "wifi": bool(red["wifi"]), "puerto": red["puerto"]},
+            "camara": {"bateria": camara["bateria"], "usb": bool(camara["usb"]), "hdmi": bool(camara["hdmi"])}}
 
 
 def carga_config(ruta: Path = CONFIG_RUTA) -> dict:

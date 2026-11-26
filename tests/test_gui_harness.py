@@ -531,3 +531,122 @@ def test_t95_reqrsrc_contada_por_tipo() -> None:
     """E2E-3 (G75 T95): con TRACEFN2=81b0ec el shim cuenta ReqRsrc por tipo y solo imprime los tipos 20-23 (pin de captura) y la 1.ª de cada tipo."""
     src = (HARNESS / "shim/sonyshim.c").read_text()
     assert "trc_base + 0x81b0ec" in src and "t >= 20 && t <= 23" in src
+
+
+# ------------------------------------------------------------------------------------------- G22-E: batería, carga y USB
+def test_configurador_guarda_la_seccion_camara(tmp_path: Path) -> None:
+    """G22-E: la sección `camara` (batería 0-100, usb, hdmi) tiene valores por defecto, se valida y persiste."""
+    sys.path.insert(0, str(HARNESS))
+    import emu_config as E
+
+    assert E.valida_config({})["camara"] == {"bateria": 100, "usb": False, "hdmi": False}
+    assert E.valida_config({"camara": {"bateria": 7, "usb": True}})["camara"] == {"bateria": 7, "usb": True, "hdmi": False}
+    assert E.valida_config({"camara": {"bateria": 0}})["camara"]["bateria"] == 0
+    for malo in ({"camara": {"bateria": 101}}, {"camara": {"bateria": -1}}, {"camara": {"bateria": "50"}},
+                 {"camara": {"bateria": True}}, {"camara": {"bateria": 5.5}}):
+        with pytest.raises(ValueError, match="camara.bateria"):
+            E.valida_config(malo)
+    ruta = tmp_path / "c/config.json"
+    E.guarda_config({"camara": {"bateria": 5, "usb": True, "hdmi": True}}, ruta)
+    assert E.carga_config(ruta)["camara"] == {"bateria": 5, "usb": True, "hdmi": True}
+
+
+def test_estado_camara_modelo_usb_implica_carga() -> None:
+    """G22-E: modelo puro del anfitrión; el jack USB implica carga y cada estado se traduce a las órdenes del shim."""
+    sys.path.insert(0, str(HARNESS))
+    import estado_camara as C
+
+    e = C.Estado()
+    assert (e.bateria, e.usb, e.hdmi, e.cargando) == (100, False, False, False)
+    assert e.ordenes() == [b"B 100\n", b"U 0\n"]
+    cargando = e.con(usb=True)
+    assert cargando.cargando and not e.cargando and cargando.ordenes()[1] == b"U 1\n"  # no muta el original
+    assert e.con(bateria=5).a_dict() == {"bateria": 5, "usb": False, "hdmi": False, "cargando": False}
+    for malo in (-1, 101, True, "50", 1.5):
+        with pytest.raises(ValueError, match="camara.bateria"):
+            C.pct(malo)
+    assert C.desde_config({"camara": {"bateria": 9, "usb": True}}) == C.Estado(bateria=9, usb=True)  # desde el config normalizado
+    assert C.a_config(C.Estado(bateria=3, hdmi=True)) == {"bateria": 3, "usb": False, "hdmi": True}
+
+
+class _H:  # manejador HTTP mínimo: guarda lo que el módulo responde
+    def __init__(self) -> None:
+        self.codigo, self.cuerpo, self.tipo = 0, b"", ""
+
+    def send_response(self, c: int) -> None:
+        self.codigo = c
+
+    def send_header(self, k: str, v: str) -> None:
+        self.tipo = v if k == "Content-Type" else self.tipo
+
+    def end_headers(self) -> None:
+        pass
+
+    def send_error(self, c: int) -> None:
+        self.codigo = c
+
+    @property
+    def wfile(self):  # imita a BaseHTTPRequestHandler
+        return self
+
+    def write(self, d: bytes) -> None:
+        self.cuerpo += d
+
+
+def test_camara_web_puntos_y_pagina(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """G22-E: GET /camara/estado, POST /camara/{bateria,usb,hdmi} → orden LIVE al invitado y sección `camara` del config."""
+    import json
+    from types import SimpleNamespace
+
+    sys.path.insert(0, str(HARNESS))
+    import camara_web as W
+    import emu_config as E
+
+    monkeypatch.setattr(W, "CONFIG_RUTA", tmp_path / "config.json")
+    sys.path.insert(0, str(HARNESS))
+    import live
+    monkeypatch.setitem(live.CONFIG, "ruta", "")  # sin --config: se usa CONFIG_RUTA (el del configurador)
+    enviado: list[bytes] = []
+    vm = SimpleNamespace(envia=enviado.append, sock=None, dir=tmp_path / "perfil")
+    (tmp_path / "perfil").mkdir()
+    (vm.dir / "shim.log").write_text("[shim] JACK USB estado=1 (LIVE, driver de entrada 0x7a0020)\n")
+
+    def punto(metodo: str, ruta: str, cuerpo: bytes = b"") -> _H:
+        h = _H()
+        assert W.maneja(h, metodo, ruta, cuerpo, vm) is True
+        return h
+
+    h = punto("GET", "/camara/")
+    assert h.codigo == 200 and "cam_usb" in h.cuerpo.decode() and h.tipo.startswith("text/html")
+    h = punto("GET", "/camara/estado")
+    j = json.loads(h.cuerpo)
+    assert j["modelo"] == {"bateria": 100, "usb": False, "hdmi": False, "cargando": False}
+    assert j["invitado"]["conectado"] is False and j["invitado"]["shim"] == ["[shim] JACK USB estado=1 (LIVE, driver de entrada 0x7a0020)"]
+    assert punto("POST", "/camara/bateria", b'{"pct": 5}').codigo == 200 and enviado == [b"B 5\n"]
+    h = punto("POST", "/camara/usb", b'{"on": true}')
+    assert enviado[-1] == b"U 1\n" and json.loads(h.cuerpo)["modelo"]["cargando"] is True
+    assert punto("POST", "/camara/usb", b'{"on": false}').codigo == 200 and enviado[-1] == b"U 0\n"
+    h = punto("POST", "/camara/hdmi", b'{"on": true}')
+    assert len(enviado) == 3 and json.loads(h.cuerpo)["modelo"]["hdmi"] is True and "NO_VERIFICADO" in json.loads(h.cuerpo)["nota"]
+    assert E.carga_config(tmp_path / "config.json")["camara"] == {"bateria": 5, "usb": False, "hdmi": True}  # persistido
+    assert punto("POST", "/camara/bateria", b'{"pct": 101}').codigo == 400 and len(enviado) == 3  # nada se envía si no vale
+    assert json.loads(punto("POST", "/camara/bateria", b'{"pct": 101}').cuerpo)["error"]
+    assert W.maneja(_H(), "GET", "/isp/estado", b"", vm) is False  # no se queda con rutas ajenas
+
+
+def test_shim_comandos_live_de_bateria_y_jack_usb() -> None:
+    """G22-E: el protocolo LIVE del shim tiene «U <0|1>» (jack USB con la misma construcción que KEYINIT) y «B <0..100>»."""
+    src = (HARNESS / "shim/sonyshim.c").read_text()
+    assert "#define CLAVE_JACK_USB 0x7000001u" in src and "#define IDX_JACK_USB   0x177u" in src  # §5.18w, sin índices inventados
+    assert "entrada_estado(km[0], km[2], km[4]);" in src  # KEYINIT usa el mismo constructor
+    assert "entrada_estado(CLAVE_JACK_USB, st ? 1u : 0u, IDX_JACK_USB);" in src
+    assert "((unsigned *)m)[3] = bateria_pct();" in src  # CAMGREMU: batería del modelo, 100 % por omisión
+    assert "cam_bateria = (int)bv;" in src and "bv = bv * 10 + (unsigned)(*p - '0')" in src  # «B» en decimal (100 = cien) y sin strtol
+    assert 'atoi(getenv("RTMAP"))' not in src  # atoi pasa por __isoc23_strtol, que la glibc 2.11 del invitado no tiene (EXIT=127 medido)
+
+
+def test_live_engancha_camara_web_en_get_y_post() -> None:
+    """G22-E: solo dos líneas backend en live.py (do_GET y do_POST), junto a los otros módulos de página."""
+    src = (HARNESS / "live.py").read_text()
+    assert src.count('camara_web.maneja(self, "GET"') == 1 and src.count('camara_web.maneja(self, "POST"') == 1
+    assert "import camara_web" in src
