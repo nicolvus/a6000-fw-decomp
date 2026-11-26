@@ -2121,7 +2121,7 @@ static void *openhot(void *a) {
  * la vista de disparo con el modo del firmware (misma ruta que REDIAL). Una pulsación = un cambio, sin estado escondido en la UI. */
 static void *menuhot(void *a) {
     if (a) { openhot(strdup("@V00E")); return 0; }  /* abre el menú (BASE_MENU 0x0E → SETTINGMENUX 0x7C) */
-    openhot(strdup("view/ROOT")); usleep(250000); openhot(strdup("view/STLREC")); return 0;  /* lo cierra: vista de disparo, como el cierre medido */
+    return openhot(strdup("view/STLREC"));          /* lo cierra volviendo a la vista de disparo, igual que REDIAL */
 }
 /* REDIAL (G22-OSD-REFRESCO): al llegar la tecla del dial de modo (KEY_POS_MODE_DIAL 0x7025) el propio INVITADO vuelve a activar la vista de
  * disparo con el modo que da el firmware (OPENVIEWDIAL → CmnViewBigModelUtil::getRecViewFromDial, viewUnified2+0x19f004). Medido/estático: en

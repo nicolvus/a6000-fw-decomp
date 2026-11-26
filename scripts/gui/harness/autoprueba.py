@@ -117,6 +117,26 @@ def _vacia(png: Path) -> float:
     return sum(1 for c in px if sum(abs(a - b) for a, b in zip(c, fondo, strict=True)) > 60) / len(px)
 
 
+def _asienta(url: str, destino: Path, ventana: float = 3.0) -> float:
+    """Drena el SSE durante `ventana` s, guarda el ÚLTIMO fotograma y devuelve sus píxeles opacos.
+
+    Un cambio de vista repinta tarde (cientos de ms a segundos): quedarse con el primer fotograma mide el estado anterior.
+    """
+    _post(url.replace("/eventos", "/refrescar"))
+    fin = time.time() + ventana
+    try:
+        with urllib.request.urlopen(url, timeout=ventana + 10) as r:
+            while time.time() < fin:
+                linea = r.readline()
+                if not linea:
+                    break
+                if linea.startswith(b"data: "):
+                    destino.write_bytes(base64.b64decode(linea[6:].strip()))
+    except (OSError, ValueError):
+        pass
+    return _opaco(destino)
+
+
 def _opaco(png: Path) -> float:
     """Fracción de píxeles opacos del fotograma: la OSD de disparo es un overlay transparente (≈ 0,09) y el menú pinta la pantalla entera (≈ 1,0).
 
@@ -252,11 +272,9 @@ def main() -> int:
 
         disparo = _opaco(pantalla)
         menu()
-        _, _ = _fotograma_con_contenido(f"{base}/eventos", p.dir / "03-menu.png", 0.002, 25)
-        abierto_px = _opaco(p.dir / "03-menu.png")
+        abierto_px = _asienta(f"{base}/eventos", p.dir / "03-menu.png", 4.0)
         menu()
-        _fotograma_con_contenido(f"{base}/eventos", p.dir / "03c-cerrado.png", 0.002, 25)
-        vuelta = _opaco(p.dir / "03c-cerrado.png")
+        vuelta = _asienta(f"{base}/eventos", p.dir / "03c-cerrado.png", 4.0)
         p.paso("teclas-MENU", abierto_px > 0.9 > vuelta,
                f"opacos: disparo {disparo:.2f} → menú {abierto_px:.2f} → disparo {vuelta:.2f} (una pulsación por cambio)", "03-menu.png")
 
