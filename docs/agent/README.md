@@ -1,7 +1,9 @@
 # Uso del agente (Claude Code, Codex/ChatGPT y DeepSeek Harness)
 
-Este repositorio es la fuente única de reglas y skills para cualquier agente que
-trabaje en la investigación. Nada de configuración vive solo en la máquina de un
+Este repositorio es la fuente de reglas y skills para cualquier agente que trabaje en la
+investigación. Las reglas **nuevas sobre el orden del repo** se publican primero en
+[`a6000-handoff-context`](https://github.com/nicolvus/a6000-handoff-context) (privado) y se traen
+con `scripts/agent/sync_rules.sh`; si GitHub y la copia local difieren, manda GitHub. Nada de configuración vive solo en la máquina de un
 agente: si algo no está aquí, no es reproducible.
 
 ## Quién lee qué
@@ -25,6 +27,8 @@ falla si se separan: editar siempre `.claude/skills/<name>/SKILL.md` y copiar.
 
 ## Arranque de una sesión
 
+0. `bash scripts/agent/sync_rules.sh` — reglas vigentes desde `a6000-handoff-context`
+   (privado, requiere `gh auth switch -u nicolvus`). Lista qué difiere de la copia local.
 1. Leer `knowledge/CURRENT.md` (resumen operativo), luego los pendientes relevantes de `docs/PENDIENTES.md` y solo los
    informes necesarios (por tema: `docs/INDEX.md`). `knowledge/PROGRESS.md` solo para el detalle histórico.
 2. Comprobar entorno: `python scripts/agent/check_env.py` (con `--json` para agentes).

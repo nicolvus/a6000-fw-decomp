@@ -16,6 +16,17 @@ Al terminar: informe → PENDIENTES → `docs/STATE.md` (si cambió una conclusi
 Después de editar cualquier `.md` indexado: corre `knowledge-maintenance`.
 Antes de reutilizar un hallazgo: corre `contradiction-audit` (puede estar corregido/superado).
 
+## Regla permanente: las reglas vigentes están en `a6000-handoff-context`
+
+Este repo es la fuente de reglas del trabajo, pero las reglas nuevas —sobre todo las que fijan
+el orden del repo (qué documento manda, jerarquía, dónde va cada cosa)— se publican en
+`https://github.com/nicolvus/a6000-handoff-context` (privado). Al empezar cada sesión y antes de
+decidir algo sobre el orden del repo, ejecuta `bash scripts/agent/sync_rules.sh`: baja lo vigente a `.handoff-rules/` y
+lista qué difiere de las copias locales. **Manda GitHub**: aplica en la sesión lo que traiga y,
+si la copia local versionada se quedó atrás, actualízala en el mismo commit. Nunca sobrescribas
+la copia local con un snapshot más antiguo: si GitHub aún no trae esta regla, esta regla sigue
+vigente y no se borra.
+
 Restricciones del proyecto: sin firmware ejecutado, sin cámara, sin flasheo salvo autorización
 expresa del usuario para ese caso concreto.
 Al terminar cada cambio versionable: validar, crear un commit convencional y subirlo
