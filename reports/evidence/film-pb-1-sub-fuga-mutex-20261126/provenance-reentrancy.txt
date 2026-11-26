@@ -1,0 +1,63 @@
+# Guardas: escritores de [reg,#4] (posibles escritores de [handle+4])
+== TU mp4Ifo_If
+  006e80ce str     r3, [r4, #4]
+  006e816a str     r5, [r4, #4]
+  006e8480 str     r1, [sp, #4]
+  006e86aa str     r2, [sp, #4]
+  006e8f08 str     r2, [sp, #4]
+  006e8f9c str     r2, [sp, #4]
+  006e9140 str     r2, [sp, #4]
+  006e9260 str     r2, [sp, #4]
+  006e9486 str     r2, [sp, #4]
+  006e9ea4 str     r2, [sp, #4]
+  006e9f48 str     r2, [sp, #4]
+  006e9fe2 str     r2, [sp, #4]
+  006ea7be str     r3, [sp, #4]
+  006eab06 str     r3, [sp, #4]
+  006ead2c str     r2, [sp, #4]
+  006eafe0 str     r2, [sp, #4]
+  006eb38c str     r2, [sp, #4]
+  006eb84a str     r2, [sp, #4]
+  006ec120 str     r5, [r4, #4]
+  total 19  {'str': 19}
+== .text completa
+  total 23521  {'strb': 1159, 'str': 19975, 'strb.w': 108, 'strh': 343, 'str.w': 1868, 'strh.w': 68}
+
+# NOTA: en la TU solo 0x6E80CE (=0) y 0x6E816A (=sem) escriben [mp4Ifo_If+4];
+#       el resto de coincidencias son [sp,#4] o el contenedor de 0x6EC0F0.
+
+# Censo de llamadas a 0x5BAD00 / 0x5BACB0 y firma de procedencia del objeto
+acquire sites: 809 release: 809
+  load:#8                435
+  load:#4                274
+  strh                   37
+  load:#0x34c            35
+  entry-r0               23
+  adr                    2
+  load:#0xd0             1
+  cbz                    1
+  load:                  1
+
+003a290a unit=003a28fc base=r0 off=#8
+003a2964 unit=003a28fc base=r0 off=#8
+003a29be unit=003a28fc base=r0 off=#8
+003a2a5e unit=003a28fc base=r0 off=#8
+003a2ab8 unit=003a28fc base=r0 off=#8
+
+# Reentrada: llamadas directas desde dentro de la seccion critica a otro metodo que adquiere
+acquire sites: 106 units: 106
+
+=== calls from inside the critical section to another acquiring method (same class, direct bl) ===
+
+=== calls to another acquiring method from ANYWHERE in these units (incl. outside crit sect) ===
+units with intra-class calls: 0
+
+# Llamadores de los 106 metodos que ademas llaman a acquire
+units 106
+units with direct callers: 103 total caller sites: 245
+
+=== caller functions that ALSO call acquire (possible same-object nesting) ===
+
+# bl directos dentro de la seccion critica (adquirido -> release)
+  0x6f0a54 x107
+  0x6ec0c8 x1

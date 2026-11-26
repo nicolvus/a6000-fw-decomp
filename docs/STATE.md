@@ -41,6 +41,15 @@
 > `[MprCnv] Warning ResumeInfo Structure Size is different! 64 vs 60`. **Causa material: el IFO no se carga del
 > volumen.** La guarda A no se cae «por bits» sino por el mismo motivo que la B (`GetInhInfo` devuelve error con el
 > `mp4Ifo_If` sin *loaded*), y el mutex del `mp4Ifo_If` es el eslabón que lo hace visible, no la causa.
+> **Auditoría del mutex (26-11): no se fuga, pero su destructor tiene un bug real.** Censo completo: 106 acquire y 106
+> release en la TU `mp4Ifo_If`, un par por método y **todos** los caminos de salida liberan (CFG por descenso recursivo,
+> 106/106); reentrada por `bl` directo: 0 casos. En cambio el destructor `0x6E81BC` destruye aunque el acquire haya fallado
+> (`0x6E81E0` cae en `0x6E81EC`), **libera un lock que no posee** (`0x6E81F6`), borra el semáforo tomado (`0x6E81FE`) y **no
+> limpia `[handle+4]`**, dejando puntero colgante hasta el `_ZdlPv` del handle (`0x67C78A`, `0x6F1B2E`). Llamadores del
+> destructor: `0x67C784` (`DestroySub`) y `0x6F1B28`. Parche mínimo si se confirma: `0x6E81E0: 20 B1 → 80 B9`
+> (`cbnz r0,#0x6E8204`). Es decir: un fallo de montaje que haga destruir el acsr deja el `mp4Ifo_If` inservible para el
+> resto de la sesión, y por eso el fallo se ve también con un clip recién grabado.
+> [Auditoría del mutex](../reports/film-pb-1-sub-fuga-mutex-20261126.md).
 > Tres pruebas sin riesgo antes de flashear nada: miniaturas de **foto**, **otra tarjeta formateada en la cámara**, y
 > reproducir **sin tarjeta** (memoria interna). [Informe del log](../reports/film-pb-1-log-real-20261126.md).
 >
