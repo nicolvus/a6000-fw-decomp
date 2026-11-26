@@ -1,0 +1,9214 @@
+{
+ "meta": {
+  "fecha": "2026-11-25",
+  "repo": "a6000-main @ aa618415",
+  "entorno": ".venv (numpy 2.5.5, scipy 1.18.1)",
+  "herramientas": [
+   "scripts/lut/cube_a6000.py (lee_cube, aplica_cube, descompone, error, de2000)",
+   "scripts/lut/lut_opt.py (ajusta_de, muestras, MODELO_DEFECTO='ambos')",
+   "scripts/lut/lut_pkg.py + scripts/gui/avcam_dinamico.py (empaquetado 21 bits)"
+  ],
+  "sin_camara": true,
+  "sin_firmware_ejecutado": true,
+  "cadenas_medidas": {
+   "solo": "descompone(usa_M=False, usa_T=False, metodo='de', modelo='ambos')",
+   "T": "descompone(usa_M=False, usa_T=True, metodo='de', modelo='ambos')"
+  },
+  "rejilla_densa": {
+   "n": 20000,
+   "seed": 7,
+   "generador": "np.random.default_rng(7).random((20000,3))"
+  },
+  "pixeles_reales": {
+   "n": 20000,
+   "por_foto": 5000,
+   "seed": 3,
+   "fotos": [
+    "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/analysis/camera-dumps/20261026-235750-T026-tipo2-barrido/1_15.jpg",
+    "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/analysis/camera-dumps/20261027-000415-T027-efcs-on/1_125.jpg",
+    "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/analysis/camera-dumps/20261026-235154-T025-barrido-velocidades/1_15.jpg",
+    "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/analysis/camera-dumps/20261026-235750-T026-tipo2-barrido/1_2000.jpg"
+   ]
+  },
+  "metricas": "ΔE2000 (CIEDE2000) entre la salida del .cube y la de la cadena, sRGB 0..1",
+  "umbrales": {
+   "APTA": "mejor cadena ΔE medio ≤0,60 · p95 ≤1,5 · 0 nodos recortados · foto ≤0,70",
+   "ACEPTABLE con T": "con T ΔE medio ≤0,70 · p95 ≤2,0 · ≤12 nodos recortados · foto ≤1,0",
+   "SOLO SOFTWARE": "el resto con look válido (ΔE ≤4 en el hardware)",
+   "NO APTA": "espacio de entrada que la A6000 no produce (V-Log) o tabla saturada (≥250/405 nodos)"
+  },
+  "tiempo_total_ajuste_s": 947.1,
+  "n_medidos": 21,
+  "n_validados": 75
+ },
+ "validacion": [
+  {
+   "title": "ektachrome_e100",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": null,
+   "domain_max_decl": null,
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.0,
+   "vmax": 1.0,
+   "lineas_comentario": 0,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "peliculas",
+   "nombre": "ektachrome_e100",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/peliculas/ektachrome_e100.cube",
+   "bytes": 970338,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.049162966561853615,
+    "desviacion_identidad_max": 0.19733500000000004,
+    "fraccion_nodos_fuera_gamut": 0.1232249028392279,
+    "croma_medio_tabla": 0.24359273294932798,
+    "separacion_canales_diagonal_max": 0.015269333333333357,
+    "gris_L_negro": 0.2269056,
+    "gris_L_blanco": 98.81724249999999,
+    "gris_contraste": 98.59033689999998,
+    "ganancia_lum_medios": 0.990067898,
+    "salida_para_entrada_0_0_0": [
+     0.0,
+     0.0,
+     0.0199
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.9801,
+     0.99,
+     1.0
+    ],
+    "salida_para_entrada_medio": [
+     0.4898,
+     0.495,
+     0.509
+    ]
+   }
+  },
+  {
+   "title": "gold200",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": null,
+   "domain_max_decl": null,
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.0,
+   "vmax": 1.0,
+   "lineas_comentario": 0,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "peliculas",
+   "nombre": "gold200",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/peliculas/gold200.cube",
+   "bytes": 970330,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.04408132268506924,
+    "desviacion_identidad_max": 0.18784500000000004,
+    "fraccion_nodos_fuera_gamut": 0.07143055903386482,
+    "croma_medio_tabla": 0.21863240204926523,
+    "separacion_canales_diagonal_max": 0.08073966666666654,
+    "gris_L_negro": 2.2568425999999997,
+    "gris_L_blanco": 97.70060899999999,
+    "gris_contraste": 95.44376639999999,
+    "ganancia_lum_medios": 0.999254736,
+    "salida_para_entrada_0_0_0": [
+     0.0308,
+     0.0218,
+     0.0047
+    ],
+    "salida_para_entrada_1_1_1": [
+     1.0,
+     0.9846,
+     0.8778
+    ],
+    "salida_para_entrada_medio": [
+     0.5188,
+     0.4998,
+     0.4481
+    ]
+   }
+  },
+  {
+   "title": "kodachrome64",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": null,
+   "domain_max_decl": null,
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.0,
+   "vmax": 1.0,
+   "lineas_comentario": 0,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "peliculas",
+   "nombre": "kodachrome64",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/peliculas/kodachrome64.cube",
+   "bytes": 970335,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.05059928088970513,
+    "desviacion_identidad_max": 0.241479,
+    "fraccion_nodos_fuera_gamut": 0.07800688241459591,
+    "croma_medio_tabla": 0.23323703359273792,
+    "separacion_canales_diagonal_max": 0.0451516666666667,
+    "gris_L_negro": 0.11400000000000002,
+    "gris_L_blanco": 98.62427750000002,
+    "gris_contraste": 98.51027750000002,
+    "ganancia_lum_medios": 1.017826418,
+    "salida_para_entrada_0_0_0": [
+     0.0,
+     0.0,
+     0.01
+    ],
+    "salida_para_entrada_1_1_1": [
+     1.0,
+     0.9899,
+     0.9312
+    ],
+    "salida_para_entrada_medio": [
+     0.5189,
+     0.5073,
+     0.4908
+    ]
+   }
+  },
+  {
+   "title": "portra400",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": null,
+   "domain_max_decl": null,
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.005878,
+   "vmax": 0.99925,
+   "lineas_comentario": 0,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "peliculas",
+   "nombre": "portra400",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/peliculas/portra400.cube",
+   "bytes": 970332,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.0511782167589578,
+    "desviacion_identidad_max": 0.236669,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.15538348980468905,
+    "separacion_canales_diagonal_max": 0.038323333333333376,
+    "gris_L_negro": 3.56356,
+    "gris_L_blanco": 97.87025899999999,
+    "gris_contraste": 94.306699,
+    "ganancia_lum_medios": 1.008449394,
+    "salida_para_entrada_0_0_0": [
+     0.035,
+     0.0356,
+     0.0373
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.9992,
+     0.9775,
+     0.9309
+    ],
+    "salida_para_entrada_medio": [
+     0.5136,
+     0.5033,
+     0.4845
+    ]
+   }
+  },
+  {
+   "title": "pro400h",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": null,
+   "domain_max_decl": null,
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.002605,
+   "vmax": 0.99567,
+   "lineas_comentario": 0,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "peliculas",
+   "nombre": "pro400h",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/peliculas/pro400h.cube",
+   "bytes": 970330,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.042606923968797256,
+    "desviacion_identidad_max": 0.272829,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.16616334366623073,
+    "separacion_canales_diagonal_max": 0.017163333333333333,
+    "gris_L_negro": 4.030786999999999,
+    "gris_L_blanco": 98.83919800000001,
+    "gris_contraste": 94.808411,
+    "ganancia_lum_medios": 1.025897126,
+    "salida_para_entrada_0_0_0": [
+     0.0243,
+     0.0457,
+     0.0544
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.975,
+     0.9938,
+     0.9957
+    ],
+    "salida_para_entrada_medio": [
+     0.5011,
+     0.5174,
+     0.5213
+    ]
+   }
+  },
+  {
+   "title": "velvia50",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": null,
+   "domain_max_decl": null,
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.0,
+   "vmax": 1.0,
+   "lineas_comentario": 0,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "peliculas",
+   "nombre": "velvia50",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/peliculas/velvia50.cube",
+   "bytes": 970331,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.09460736728163174,
+    "desviacion_identidad_max": 0.354501,
+    "fraccion_nodos_fuera_gamut": 0.23934477928968287,
+    "croma_medio_tabla": 0.28380910511296004,
+    "separacion_canales_diagonal_max": 0.017835000000000045,
+    "gris_L_negro": 0.23132,
+    "gris_L_blanco": 99.07327999999998,
+    "gris_contraste": 98.84195999999999,
+    "ganancia_lum_medios": 0.9913194800000001,
+    "salida_para_entrada_0_0_0": [
+     0.004,
+     0.0,
+     0.0098
+    ],
+    "salida_para_entrada_1_1_1": [
+     1.0,
+     0.99,
+     0.9702
+    ],
+    "salida_para_entrada_medio": [
+     0.503,
+     0.493,
+     0.49
+    ]
+   }
+  },
+  {
+   "title": "ASTIA STD - Sky Refined v2",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.0,
+   "vmax": 1.0,
+   "lineas_comentario": 6,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fuji_sim_astia",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_astia.cube",
+   "bytes": 1294161,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.10412499063060354,
+    "desviacion_identidad_max": 0.549813,
+    "fraccion_nodos_fuera_gamut": 0.012392056469191455,
+    "croma_medio_tabla": 0.1734936673080298,
+    "separacion_canales_diagonal_max": 0.008562999999999987,
+    "gris_L_negro": 1.36721,
+    "gris_L_blanco": 94.01824144999999,
+    "gris_contraste": 92.65103145,
+    "ganancia_lum_medios": 1.18440301,
+    "salida_para_entrada_0_0_0": [
+     0.0137,
+     0.0137,
+     0.0137
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.9411,
+     0.9401,
+     0.9382
+    ],
+    "salida_para_entrada_medio": [
+     0.5876,
+     0.5943,
+     0.5933
+    ]
+   }
+  },
+  {
+   "title": "Generated by Resolve",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.00416571,
+   "vmax": 0.95761,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fuji_sim_classic_chrome",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_classic_chrome.cube",
+   "bytes": 961735,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.10581634847529472,
+    "desviacion_identidad_max": 0.516045,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.13412559160351603,
+    "separacion_canales_diagonal_max": 0.004516666666666724,
+    "gris_L_negro": 0.488289,
+    "gris_L_blanco": 92.4239573,
+    "gris_contraste": 91.93566829999999,
+    "ganancia_lum_medios": 1.234294194,
+    "salida_para_entrada_0_0_0": [
+     0.0049,
+     0.0049,
+     0.0049
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.92,
+     0.9264,
+     0.9242
+    ],
+    "salida_para_entrada_medio": [
+     0.6121,
+     0.6197,
+     0.6174
+    ]
+   }
+  },
+  {
+   "title": "Generated by Resolve",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.000610361,
+   "vmax": 0.999985,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fuji_sim_classic_neg",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_classic_neg.cube",
+   "bytes": 961137,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.143233203987005,
+    "desviacion_identidad_max": 0.613214,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.134947634866368,
+    "separacion_canales_diagonal_max": 0.030588999999999977,
+    "gris_L_negro": 0.7814021480000001,
+    "gris_L_blanco": 95.6125256,
+    "gris_contraste": 94.831123452,
+    "ganancia_lum_medios": 1.3271291440000001,
+    "salida_para_entrada_0_0_0": [
+     0.0064,
+     0.0085,
+     0.0078
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.9623,
+     0.9537,
+     0.9523
+    ],
+    "salida_para_entrada_medio": [
+     0.6853,
+     0.6554,
+     0.6484
+    ]
+   }
+  },
+  {
+   "title": "ETERNA - STD Green Fix",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 1e-05,
+   "vmax": 0.9872975,
+   "lineas_comentario": 4,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fuji_sim_eterna",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_eterna.cube",
+   "bytes": 1078462,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.09222123326469468,
+    "desviacion_identidad_max": 0.3634699,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.1408714112827077,
+    "separacion_canales_diagonal_max": 0.004005333333333416,
+    "gris_L_negro": 3.0273899999999996,
+    "gris_L_blanco": 94.01824144999999,
+    "gris_contraste": 90.99085145,
+    "ganancia_lum_medios": 1.1749766610000003,
+    "salida_para_entrada_0_0_0": [
+     0.0303,
+     0.0303,
+     0.0303
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.9411,
+     0.9401,
+     0.9382
+    ],
+    "salida_para_entrada_medio": [
+     0.5884,
+     0.5874,
+     0.5855
+    ]
+   }
+  },
+  {
+   "title": "ETERNA BB - STD Green Fix",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.0175784,
+   "vmax": 0.99999,
+   "lineas_comentario": 4,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fuji_sim_eterna_bleach_bypass",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_eterna_bleach_bypass.cube",
+   "bytes": 1078465,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.1856535289515912,
+    "desviacion_identidad_max": 0.718059,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.06275105764717885,
+    "separacion_canales_diagonal_max": 0.00446566666666659,
+    "gris_L_negro": 1.75784,
+    "gris_L_blanco": 94.01824144999999,
+    "gris_contraste": 92.26040144999999,
+    "ganancia_lum_medios": 1.3469560114000003,
+    "salida_para_entrada_0_0_0": [
+     0.0176,
+     0.0176,
+     0.0176
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.9411,
+     0.9401,
+     0.9382
+    ],
+    "salida_para_entrada_medio": [
+     0.6747,
+     0.6734,
+     0.6709
+    ]
+   }
+  },
+  {
+   "title": "PRO Neg - Panasonic S1M2 STD",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.019295,
+   "vmax": 0.989082,
+   "lineas_comentario": 3,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fuji_sim_pro_neg",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_pro_neg.cube",
+   "bytes": 1078402,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.08308568829247479,
+    "desviacion_identidad_max": 0.336179,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.16512293210525825,
+    "separacion_canales_diagonal_max": 0.008131333333333324,
+    "gris_L_negro": 2.0508100000000002,
+    "gris_L_blanco": 94.01824144999999,
+    "gris_contraste": 91.96743144999999,
+    "ganancia_lum_medios": 1.184346056,
+    "salida_para_entrada_0_0_0": [
+     0.0205,
+     0.0205,
+     0.0205
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.9411,
+     0.9401,
+     0.9382
+    ],
+    "salida_para_entrada_medio": [
+     0.5863,
+     0.5951,
+     0.5923
+    ]
+   }
+  },
+  {
+   "title": "PROVIA STD - Sky Refined v2",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.0,
+   "vmax": 0.999949897,
+   "lineas_comentario": 6,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fuji_sim_provia",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_provia.cube",
+   "bytes": 1294220,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.0825042770829971,
+    "desviacion_identidad_max": 0.5575945,
+    "fraccion_nodos_fuera_gamut": 0.005871386036675293,
+    "croma_medio_tabla": 0.17877271202508094,
+    "separacion_canales_diagonal_max": 0.009112166666666643,
+    "gris_L_negro": 1.56252,
+    "gris_L_blanco": 94.01824144999999,
+    "gris_contraste": 92.45572145,
+    "ganancia_lum_medios": 1.1825046600000002,
+    "salida_para_entrada_0_0_0": [
+     0.0156,
+     0.0156,
+     0.0156
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.9411,
+     0.9401,
+     0.9382
+    ],
+    "salida_para_entrada_medio": [
+     0.5836,
+     0.5951,
+     0.5914
+    ]
+   }
+  },
+  {
+   "title": "REALA-ACE - STD Green Fix",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 7.6e-06,
+   "vmax": 0.99999,
+   "lineas_comentario": 4,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fuji_sim_reala_ace",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_reala_ace.cube",
+   "bytes": 1078465,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.14912060529259538,
+    "desviacion_identidad_max": 0.8510797,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.11300245240034257,
+    "separacion_canales_diagonal_max": 0.004984666666666637,
+    "gris_L_negro": 1.0742399999999999,
+    "gris_L_blanco": 93.82294145,
+    "gris_contraste": 92.74870145,
+    "ganancia_lum_medios": 1.261510657,
+    "salida_para_entrada_0_0_0": [
+     0.0107,
+     0.0107,
+     0.0107
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.9392,
+     0.9381,
+     0.9363
+    ],
+    "salida_para_entrada_medio": [
+     0.6307,
+     0.6308,
+     0.6309
+    ]
+   }
+  },
+  {
+   "title": "VELVIA - STD Green Fix",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.0,
+   "vmax": 1.0,
+   "lineas_comentario": 4,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fuji_sim_velvia",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_velvia.cube",
+   "bytes": 1078462,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.08599642517924885,
+    "desviacion_identidad_max": 0.6740309,
+    "fraccion_nodos_fuera_gamut": 0.0002782647410746584,
+    "croma_medio_tabla": 0.22451309006440284,
+    "separacion_canales_diagonal_max": 0.0032039333333333253,
+    "gris_L_negro": 0.09766,
+    "gris_L_blanco": 94.01824144999999,
+    "gris_contraste": 93.92058145,
+    "ganancia_lum_medios": 1.1534487318000002,
+    "salida_para_entrada_0_0_0": [
+     0.001,
+     0.001,
+     0.001
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.9411,
+     0.9401,
+     0.9382
+    ],
+    "salida_para_entrada_medio": [
+     0.5772,
+     0.5767,
+     0.5756
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 1001VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.013057712,
+   "vmax": 0.910383964,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fujifilm_c200",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_c200.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.09444406112084111,
+    "desviacion_identidad_max": 0.460778763,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.17630756245523493,
+    "separacion_canales_diagonal_max": 0.03830552299999995,
+    "gris_L_negro": 4.7434240937,
+    "gris_L_blanco": 85.7007006814,
+    "gris_contraste": 80.9572765877,
+    "ganancia_lum_medios": 1.0299631609320001,
+    "salida_para_entrada_0_0_0": [
+     0.0256,
+     0.0547,
+     0.0675
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.856,
+     0.8587,
+     0.8508
+    ],
+    "salida_para_entrada_medio": [
+     0.4777,
+     0.533,
+     0.5199
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 2194VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.005594743,
+   "vmax": 0.876413369,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fujifilm_eterna_250",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_eterna_250.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.15368295424018885,
+    "desviacion_identidad_max": 0.635267931,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.12806498716817394,
+    "separacion_canales_diagonal_max": 0.016236700333333354,
+    "gris_L_negro": 0.9274197312,
+    "gris_L_blanco": 80.74125855599999,
+    "gris_contraste": 79.8138388248,
+    "ganancia_lum_medios": 0.7827530752280001,
+    "salida_para_entrada_0_0_0": [
+     0.0103,
+     0.0094,
+     0.0056
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8134,
+     0.8051,
+     0.8034
+    ],
+    "salida_para_entrada_medio": [
+     0.3952,
+     0.389,
+     0.3938
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 2204VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.005309747,
+   "vmax": 0.877275003,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fujifilm_eterna_250d",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_eterna_250d.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.15921670706512323,
+    "desviacion_identidad_max": 0.617718514,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.12977165672836105,
+    "separacion_canales_diagonal_max": 0.018234308000000005,
+    "gris_L_negro": 0.8590353932999999,
+    "gris_L_blanco": 80.3325024428,
+    "gris_contraste": 79.4734670495,
+    "ganancia_lum_medios": 0.7799160329280002,
+    "salida_para_entrada_0_0_0": [
+     0.0085,
+     0.0092,
+     0.0058
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8142,
+     0.7994,
+     0.7951
+    ],
+    "salida_para_entrada_medio": [
+     0.3942,
+     0.3874,
+     0.3922
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 2214VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.006756035,
+   "vmax": 0.848839813,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fujifilm_eterna_400",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_eterna_400.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.15764535822137815,
+    "desviacion_identidad_max": 0.6163412859999999,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.11839080645795573,
+    "separacion_canales_diagonal_max": 0.020897276000000006,
+    "gris_L_negro": 1.1141327879,
+    "gris_L_blanco": 78.1932721067,
+    "gris_contraste": 77.07913931879999,
+    "ganancia_lum_medios": 0.7685426269360001,
+    "salida_para_entrada_0_0_0": [
+     0.0129,
+     0.0111,
+     0.0068
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.7937,
+     0.7759,
+     0.7824
+    ],
+    "salida_para_entrada_medio": [
+     0.3858,
+     0.3827,
+     0.3881
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 2224VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.005159708,
+   "vmax": 0.869924194,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fujifilm_eterna_500",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_eterna_500.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.1558287202271753,
+    "desviacion_identidad_max": 0.650614559,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.13221692554514847,
+    "separacion_canales_diagonal_max": 0.02003172766666661,
+    "gris_L_negro": 0.816987189,
+    "gris_L_blanco": 80.4336654878,
+    "gris_contraste": 79.6166782988,
+    "ganancia_lum_medios": 0.7867621431920001,
+    "salida_para_entrada_0_0_0": [
+     0.009,
+     0.0083,
+     0.0052
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8164,
+     0.7996,
+     0.797
+    ],
+    "salida_para_entrada_medio": [
+     0.3978,
+     0.391,
+     0.394
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 2234VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.005607035,
+   "vmax": 0.889357005,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fujifilm_eterna_vivid_160",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_eterna_vivid_160.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.15073242770909276,
+    "desviacion_identidad_max": 0.642727519,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.13025002697507676,
+    "separacion_canales_diagonal_max": 0.01260797866666663,
+    "gris_L_negro": 1.0170404248999998,
+    "gris_L_blanco": 81.5324525044,
+    "gris_contraste": 80.51541207950001,
+    "ganancia_lum_medios": 0.7829378853500001,
+    "salida_para_entrada_0_0_0": [
+     0.0135,
+     0.0093,
+     0.0056
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8216,
+     0.8126,
+     0.8126
+    ],
+    "salida_para_entrada_medio": [
+     0.3937,
+     0.3898,
+     0.3945
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 2244VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.005565031,
+   "vmax": 0.858393965,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fujifilm_eterna_vivid_250d",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_eterna_vivid_250d.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.16858912185004313,
+    "desviacion_identidad_max": 0.655505911,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.12935382733243672,
+    "separacion_canales_diagonal_max": 0.014256894666666686,
+    "gris_L_negro": 0.8873510144999999,
+    "gris_L_blanco": 79.5854229633,
+    "gris_contraste": 78.69807194879999,
+    "ganancia_lum_medios": 0.7848573436440001,
+    "salida_para_entrada_0_0_0": [
+     0.0117,
+     0.0081,
+     0.0057
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.7958,
+     0.7964,
+     0.793
+    ],
+    "salida_para_entrada_medio": [
+     0.3962,
+     0.3901,
+     0.3944
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 2254VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.004419965,
+   "vmax": 0.870326289,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fujifilm_eterna_vivid_500",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_eterna_vivid_500.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.15668299960737775,
+    "desviacion_identidad_max": 0.663738064,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.13692700059698917,
+    "separacion_canales_diagonal_max": 0.018279040000000024,
+    "gris_L_negro": 0.7197416797999999,
+    "gris_L_blanco": 81.22691085539999,
+    "gris_contraste": 80.50716917559998,
+    "ganancia_lum_medios": 0.7933454418580002,
+    "salida_para_entrada_0_0_0": [
+     0.0088,
+     0.0069,
+     0.0045
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8202,
+     0.8115,
+     0.7954
+    ],
+    "salida_para_entrada_medio": [
+     0.4001,
+     0.3947,
+     0.3981
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 2264VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.00351093,
+   "vmax": 0.900402883,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fujifilm_f64d",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_f64d.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.16451244066687076,
+    "desviacion_identidad_max": 0.646699716,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.1463738363693439,
+    "separacion_canales_diagonal_max": 0.042054017,
+    "gris_L_negro": 0.7407742468,
+    "gris_L_blanco": 82.21835002409999,
+    "gris_contraste": 81.47757577729999,
+    "ganancia_lum_medios": 0.7917013178440001,
+    "salida_para_entrada_0_0_0": [
+     0.0063,
+     0.0083,
+     0.0059
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8544,
+     0.811,
+     0.7952
+    ],
+    "salida_para_entrada_medio": [
+     0.4047,
+     0.3916,
+     0.3947
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 1009VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.012940901,
+   "vmax": 0.90728463,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fujifilm_pro_400h",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_pro_400h.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.09592093997832317,
+    "desviacion_identidad_max": 0.47246422899999996,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.16393099819271378,
+    "separacion_canales_diagonal_max": 0.05184459699999999,
+    "gris_L_negro": 4.6706624015,
+    "gris_L_blanco": 85.1939690144,
+    "gris_contraste": 80.52330661289999,
+    "ganancia_lum_medios": 1.005215751744,
+    "salida_para_entrada_0_0_0": [
+     0.0264,
+     0.0534,
+     0.0656
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8497,
+     0.8539,
+     0.8476
+    ],
+    "salida_para_entrada_medio": [
+     0.4625,
+     0.5179,
+     0.5288
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 0017VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.007685285,
+   "vmax": 0.888697325,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fujifilm_provia_100f",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_provia_100f.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.10078853334821121,
+    "desviacion_identidad_max": 0.681858392,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.1310914038981613,
+    "separacion_canales_diagonal_max": 0.007892554666666607,
+    "gris_L_negro": 0.8234914723999999,
+    "gris_L_blanco": 85.2699275705,
+    "gris_contraste": 84.44643609810001,
+    "ganancia_lum_medios": 1.0285884650120003,
+    "salida_para_entrada_0_0_0": [
+     0.0087,
+     0.0077,
+     0.0098
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.852,
+     0.853,
+     0.8531
+    ],
+    "salida_para_entrada_medio": [
+     0.5215,
+     0.5114,
+     0.5101
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 2274VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.004473171,
+   "vmax": 0.867909171,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fujifilm_reala_500d",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_reala_500d.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.1629199017540789,
+    "desviacion_identidad_max": 0.636584759,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.12985720956535665,
+    "separacion_canales_diagonal_max": 0.019278983333333326,
+    "gris_L_negro": 0.7196387827999999,
+    "gris_L_blanco": 79.5431970243,
+    "gris_contraste": 78.8235582415,
+    "ganancia_lum_medios": 0.78368827895,
+    "salida_para_entrada_0_0_0": [
+     0.0081,
+     0.0072,
+     0.0045
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8113,
+     0.7887,
+     0.7883
+    ],
+    "salida_para_entrada_medio": [
+     0.3947,
+     0.3901,
+     0.3932
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 0025VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.001936169,
+   "vmax": 0.87576146,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fujifilm_velvia_100",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_velvia_100.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.08946999238898627,
+    "desviacion_identidad_max": 0.561047013,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.15109348377929896,
+    "separacion_canales_diagonal_max": 0.008965417333333336,
+    "gris_L_negro": 0.39248951519999997,
+    "gris_L_blanco": 83.5573383166,
+    "gris_contraste": 83.1648488014,
+    "ganancia_lum_medios": 1.0353610664180002,
+    "salida_para_entrada_0_0_0": [
+     0.004,
+     0.0033,
+     0.007
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8323,
+     0.8374,
+     0.8347
+    ],
+    "salida_para_entrada_medio": [
+     0.5256,
+     0.514,
+     0.5162
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 1033VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.012473534,
+   "vmax": 0.915912475,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "fujifilm_xtra_400",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_xtra_400.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.0975865422702229,
+    "desviacion_identidad_max": 0.473109129,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.18118898664567315,
+    "separacion_canales_diagonal_max": 0.030449684000000005,
+    "gris_L_negro": 4.7429077532,
+    "gris_L_blanco": 85.84561527089998,
+    "gris_contraste": 81.1027075177,
+    "ganancia_lum_medios": 1.0464020679700001,
+    "salida_para_entrada_0_0_0": [
+     0.0256,
+     0.0547,
+     0.0672
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8599,
+     0.8588,
+     0.853
+    ],
+    "salida_para_entrada_medio": [
+     0.4922,
+     0.5404,
+     0.5159
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 0041VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.003752734,
+   "vmax": 0.89810543,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "kodak_ektachrome_100",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_ektachrome_100.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.09945166924350948,
+    "desviacion_identidad_max": 0.616010205,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.13437954568441068,
+    "separacion_canales_diagonal_max": 0.01156721066666666,
+    "gris_L_negro": 0.469734341,
+    "gris_L_blanco": 84.23488712159998,
+    "gris_contraste": 83.76515278059998,
+    "ganancia_lum_medios": 1.017163169192,
+    "salida_para_entrada_0_0_0": [
+     0.0057,
+     0.0044,
+     0.0038
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8506,
+     0.8384,
+     0.8409
+    ],
+    "salida_para_entrada_medio": [
+     0.5148,
+     0.5079,
+     0.4958
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 1054VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.030937479,
+   "vmax": 0.918615434,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "kodak_ektar_100",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_ektar_100.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.08835720212236228,
+    "desviacion_identidad_max": 0.5376084489999999,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.1638983647267471,
+    "separacion_canales_diagonal_max": 0.022442146999999968,
+    "gris_L_negro": 6.0170635813999995,
+    "gris_L_blanco": 84.4774223131,
+    "gris_contraste": 78.46035873170001,
+    "ganancia_lum_medios": 1.007750357468,
+    "salida_para_entrada_0_0_0": [
+     0.0648,
+     0.0567,
+     0.066
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8474,
+     0.8434,
+     0.845
+    ],
+    "salida_para_entrada_medio": [
+     0.5306,
+     0.4887,
+     0.5116
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 1060VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.033239398,
+   "vmax": 0.899675232,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "kodak_gold_200",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_gold_200.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.08105822209380305,
+    "desviacion_identidad_max": 0.593163244,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.16319287949451047,
+    "separacion_canales_diagonal_max": 0.032077197,
+    "gris_L_negro": 5.428189961099999,
+    "gris_L_blanco": 84.31424817869998,
+    "gris_contraste": 78.8860582176,
+    "ganancia_lum_medios": 1.0591383642980001,
+    "salida_para_entrada_0_0_0": [
+     0.0545,
+     0.0517,
+     0.0669
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8424,
+     0.8443,
+     0.8391
+    ],
+    "salida_para_entrada_medio": [
+     0.5499,
+     0.5268,
+     0.4907
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 0065VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.005506263,
+   "vmax": 0.840106681,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "kodak_kodachrome_64",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_kodachrome_64.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.10337169714272197,
+    "desviacion_identidad_max": 0.634371822,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.12613983225622616,
+    "separacion_canales_diagonal_max": 0.02670486466666666,
+    "gris_L_negro": 1.3116652115,
+    "gris_L_blanco": 80.387332807,
+    "gris_contraste": 79.0756675955,
+    "ganancia_lum_medios": 1.008243461672,
+    "salida_para_entrada_0_0_0": [
+     0.0176,
+     0.0123,
+     0.0055
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8113,
+     0.8069,
+     0.769
+    ],
+    "salida_para_entrada_medio": [
+     0.5115,
+     0.5028,
+     0.4917
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 1078VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.02794979,
+   "vmax": 0.915855895,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "kodak_portra_160",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_portra_160.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.07885350976517239,
+    "desviacion_identidad_max": 0.48083235599999996,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.15350731222063302,
+    "separacion_canales_diagonal_max": 0.013043898333333304,
+    "gris_L_negro": 5.4398661511999995,
+    "gris_L_blanco": 84.5360467191,
+    "gris_contraste": 79.09618056789999,
+    "ganancia_lum_medios": 1.009968202342,
+    "salida_para_entrada_0_0_0": [
+     0.0502,
+     0.0543,
+     0.0657
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8416,
+     0.8473,
+     0.845
+    ],
+    "salida_para_entrada_medio": [
+     0.5086,
+     0.5017,
+     0.5126
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 1086VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.024997935,
+   "vmax": 0.919011299,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "kodak_portra_400",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_portra_400.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.07787775237888526,
+    "desviacion_identidad_max": 0.433628861,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.15755716591497465,
+    "separacion_canales_diagonal_max": 0.009468773333333402,
+    "gris_L_negro": 5.3617729673,
+    "gris_L_blanco": 84.7003635167,
+    "gris_contraste": 79.3385905494,
+    "ganancia_lum_medios": 1.010508293954,
+    "salida_para_entrada_0_0_0": [
+     0.0497,
+     0.0533,
+     0.0657
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8467,
+     0.8479,
+     0.8434
+    ],
+    "salida_para_entrada_medio": [
+     0.5008,
+     0.5072,
+     0.507
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 1094VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.028335887,
+   "vmax": 0.916985459,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "kodak_portra_800",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_portra_800.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.0810697587111148,
+    "desviacion_identidad_max": 0.44863118700000004,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.15682365190079553,
+    "separacion_canales_diagonal_max": 0.038226799666666755,
+    "gris_L_negro": 5.229096208600001,
+    "gris_L_blanco": 84.4446650858,
+    "gris_contraste": 79.2155688772,
+    "ganancia_lum_medios": 1.015796519458,
+    "salida_para_entrada_0_0_0": [
+     0.049,
+     0.0513,
+     0.0661
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8488,
+     0.8433,
+     0.8389
+    ],
+    "salida_para_entrada_medio": [
+     0.5436,
+     0.4937,
+     0.4872
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 1102VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.021981023,
+   "vmax": 0.925943919,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "kodak_portra_800_push1",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_portra_800_push1.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.09044245296796245,
+    "desviacion_identidad_max": 0.46520432,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.17318895642811338,
+    "separacion_canales_diagonal_max": 0.04014270766666661,
+    "gris_L_negro": 5.2114378516999995,
+    "gris_L_blanco": 85.1145212979,
+    "gris_contraste": 79.9030834462,
+    "ganancia_lum_medios": 1.0312108786920002,
+    "salida_para_entrada_0_0_0": [
+     0.0485,
+     0.0512,
+     0.0663
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.855,
+     0.8498,
+     0.8478
+    ],
+    "salida_para_entrada_medio": [
+     0.5493,
+     0.5029,
+     0.4927
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 1110VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.021391816,
+   "vmax": 0.927986581,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "kodak_portra_800_push2",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_portra_800_push2.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.0988575515990298,
+    "desviacion_identidad_max": 0.480094691,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.18262186129256447,
+    "separacion_canales_diagonal_max": 0.038860528666666616,
+    "gris_L_negro": 5.2021541102999995,
+    "gris_L_blanco": 85.36245313750001,
+    "gris_contraste": 80.16029902720001,
+    "ganancia_lum_medios": 1.0406941411560002,
+    "salida_para_entrada_0_0_0": [
+     0.0481,
+     0.0512,
+     0.0664
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8563,
+     0.8531,
+     0.8491
+    ],
+    "salida_para_entrada_medio": [
+     0.5522,
+     0.5087,
+     0.4968
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 1116VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.033013061,
+   "vmax": 0.900828829,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "kodak_ultramax_400",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_ultramax_400.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.07829650160585654,
+    "desviacion_identidad_max": 0.482811895,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.16412384807812438,
+    "separacion_canales_diagonal_max": 0.03592479799999998,
+    "gris_L_negro": 5.334825500299999,
+    "gris_L_blanco": 84.28140633109999,
+    "gris_contraste": 78.94658083079999,
+    "ganancia_lum_medios": 1.0523072011720003,
+    "salida_para_entrada_0_0_0": [
+     0.0531,
+     0.0508,
+     0.0671
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8418,
+     0.8438,
+     0.8406
+    ],
+    "salida_para_entrada_medio": [
+     0.553,
+     0.5195,
+     0.4897
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 2122VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.001763494,
+   "vmax": 0.884569589,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "kodak_verita_200d",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_verita_200d.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.16142162103328975,
+    "desviacion_identidad_max": 0.607318518,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.1385109584496449,
+    "separacion_canales_diagonal_max": 0.031092383000000057,
+    "gris_L_negro": 0.3260375177,
+    "gris_L_blanco": 81.54651900309999,
+    "gris_contraste": 81.2204814854,
+    "ganancia_lum_medios": 0.7769985500080001,
+    "salida_para_entrada_0_0_0": [
+     0.0023,
+     0.0038,
+     0.003
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8346,
+     0.8132,
+     0.7772
+    ],
+    "salida_para_entrada_medio": [
+     0.39,
+     0.388,
+     0.3872
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 2130VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.002329753,
+   "vmax": 0.890076979,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "kodak_vision3_200t",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_vision3_200t.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.15948954940957785,
+    "desviacion_identidad_max": 0.6647084,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.13634444077136842,
+    "separacion_canales_diagonal_max": 0.03631521333333332,
+    "gris_L_negro": 0.26811500029999996,
+    "gris_L_blanco": 82.16957941839999,
+    "gris_contraste": 81.9014644181,
+    "ganancia_lum_medios": 0.7803220499640001,
+    "salida_para_entrada_0_0_0": [
+     0.0024,
+     0.0029,
+     0.0023
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8388,
+     0.8219,
+     0.7759
+    ],
+    "salida_para_entrada_medio": [
+     0.3927,
+     0.3894,
+     0.3873
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 2138VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.002358984,
+   "vmax": 0.89103149,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "kodak_vision3_250d",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_vision3_250d.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.16023398005179437,
+    "desviacion_identidad_max": 0.62749453,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.13920500624200993,
+    "separacion_canales_diagonal_max": 0.03666175599999999,
+    "gris_L_negro": 0.2787669408,
+    "gris_L_blanco": 82.0223656364,
+    "gris_contraste": 81.7435986956,
+    "ganancia_lum_medios": 0.7818677328160001,
+    "salida_para_entrada_0_0_0": [
+     0.0026,
+     0.003,
+     0.0024
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8377,
+     0.8203,
+     0.774
+    ],
+    "salida_para_entrada_medio": [
+     0.393,
+     0.3903,
+     0.3886
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 2146VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.002242947,
+   "vmax": 0.886252369,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "kodak_vision3_500t",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_vision3_500t.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.1528430371474896,
+    "desviacion_identidad_max": 0.636136724,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.13415842614316412,
+    "separacion_canales_diagonal_max": 0.03763409266666662,
+    "gris_L_negro": 0.2572024308,
+    "gris_L_blanco": 82.1221416362,
+    "gris_contraste": 81.8649392054,
+    "ganancia_lum_medios": 0.7818889222600001,
+    "salida_para_entrada_0_0_0": [
+     0.0022,
+     0.0028,
+     0.0024
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8401,
+     0.8208,
+     0.774
+    ],
+    "salida_para_entrada_medio": [
+     0.3934,
+     0.3901,
+     0.3887
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard - 2154VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.00196077,
+   "vmax": 0.897329673,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "std",
+   "nombre": "kodak_vision3_50d",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_vision3_50d.cube",
+   "bytes": 1293941,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.16066546027037132,
+    "desviacion_identidad_max": 0.6540201560000001,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.14075832402287336,
+    "separacion_canales_diagonal_max": 0.032623974333333416,
+    "gris_L_negro": 0.2728535548,
+    "gris_L_blanco": 82.7312669233,
+    "gris_contraste": 82.45841336849999,
+    "ganancia_lum_medios": 0.7839387984720001,
+    "salida_para_entrada_0_0_0": [
+     0.0022,
+     0.0031,
+     0.0024
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8444,
+     0.8265,
+     0.7865
+    ],
+    "salida_para_entrada_medio": [
+     0.3945,
+     0.3913,
+     0.3889
+    ]
+   }
+  },
+  {
+   "title": "1001_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.010579,
+   "vmax": 0.924168,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "fujifilm_c200",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/fujifilm_c200.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.14582713646102902,
+    "desviacion_identidad_max": 0.880242,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.17813199358135998,
+    "separacion_canales_diagonal_max": 0.03831133333333331,
+    "gris_L_negro": 4.7433209,
+    "gris_L_blanco": 86.02559349999999,
+    "gris_contraste": 81.28227259999998,
+    "ganancia_lum_medios": 1.3784539880000002,
+    "salida_para_entrada_0_0_0": [
+     0.0256,
+     0.0547,
+     0.0675
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8611,
+     0.8603,
+     0.8579
+    ],
+    "salida_para_entrada_medio": [
+     0.6737,
+     0.6987,
+     0.6812
+    ]
+   }
+  },
+  {
+   "title": "2194_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.003925,
+   "vmax": 0.927067,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "fujifilm_eterna_250",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/fujifilm_eterna_250.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.16086927886764799,
+    "desviacion_identidad_max": 0.879133,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.15504893582287518,
+    "separacion_canales_diagonal_max": 0.03046866666666659,
+    "gris_L_negro": 0.9273325000000001,
+    "gris_L_blanco": 86.685929,
+    "gris_contraste": 85.75859650000001,
+    "ganancia_lum_medios": 1.0834901000000003,
+    "salida_para_entrada_0_0_0": [
+     0.0103,
+     0.0094,
+     0.0056
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8797,
+     0.8678,
+     0.8281
+    ],
+    "salida_para_entrada_medio": [
+     0.5582,
+     0.532,
+     0.5485
+    ]
+   }
+  },
+  {
+   "title": "2204_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.00302,
+   "vmax": 0.931094,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "fujifilm_eterna_250d",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/fujifilm_eterna_250d.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.1400531036072386,
+    "desviacion_identidad_max": 0.77144,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.15359324117823475,
+    "separacion_canales_diagonal_max": 0.030065999999999926,
+    "gris_L_negro": 0.8589464,
+    "gris_L_blanco": 86.6546674,
+    "gris_contraste": 85.79572099999999,
+    "ganancia_lum_medios": 1.0676623000000003,
+    "salida_para_entrada_0_0_0": [
+     0.0085,
+     0.0092,
+     0.0058
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8784,
+     0.868,
+     0.8281
+    ],
+    "salida_para_entrada_medio": [
+     0.5511,
+     0.5237,
+     0.5406
+    ]
+   }
+  },
+  {
+   "title": "2214_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.005121,
+   "vmax": 0.916498,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "fujifilm_eterna_400",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/fujifilm_eterna_400.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.1525107573438703,
+    "desviacion_identidad_max": 0.865113,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.1503750695321751,
+    "separacion_canales_diagonal_max": 0.027795999999999932,
+    "gris_L_negro": 1.1138983,
+    "gris_L_blanco": 86.4649228,
+    "gris_contraste": 85.3510245,
+    "ganancia_lum_medios": 1.02066659,
+    "salida_para_entrada_0_0_0": [
+     0.0129,
+     0.0111,
+     0.0068
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8756,
+     0.866,
+     0.8291
+    ],
+    "salida_para_entrada_medio": [
+     0.5188,
+     0.5038,
+     0.5219
+    ]
+   }
+  },
+  {
+   "title": "2224_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.003293,
+   "vmax": 0.930048,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "fujifilm_eterna_500",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/fujifilm_eterna_500.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.15425499183756758,
+    "desviacion_identidad_max": 0.82845,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.15480052290891774,
+    "separacion_canales_diagonal_max": 0.03277433333333335,
+    "gris_L_negro": 0.8169328,
+    "gris_L_blanco": 86.78869929999998,
+    "gris_contraste": 85.97176649999997,
+    "ganancia_lum_medios": 1.09537188,
+    "salida_para_entrada_0_0_0": [
+     0.009,
+     0.0083,
+     0.0052
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8831,
+     0.8682,
+     0.8265
+    ],
+    "salida_para_entrada_medio": [
+     0.5668,
+     0.5382,
+     0.5462
+    ]
+   }
+  },
+  {
+   "title": "2234_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.005435,
+   "vmax": 0.932883,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "fujifilm_eterna_vivid_160",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/fujifilm_eterna_vivid_160.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.15920506026286743,
+    "desviacion_identidad_max": 0.878629,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.15568258636564605,
+    "separacion_canales_diagonal_max": 0.03287799999999996,
+    "gris_L_negro": 1.0169735,
+    "gris_L_blanco": 86.82832859999999,
+    "gris_contraste": 85.8113551,
+    "ganancia_lum_medios": 1.0853796100000002,
+    "salida_para_entrada_0_0_0": [
+     0.0135,
+     0.0093,
+     0.0056
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8842,
+     0.8682,
+     0.8269
+    ],
+    "salida_para_entrada_medio": [
+     0.5501,
+     0.5365,
+     0.5548
+    ]
+   }
+  },
+  {
+   "title": "2244_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.005119,
+   "vmax": 0.929603,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "fujifilm_eterna_vivid_250d",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/fujifilm_eterna_vivid_250d.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.14274548188032762,
+    "desviacion_identidad_max": 0.770565,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.15187865251226684,
+    "separacion_canales_diagonal_max": 0.03180433333333332,
+    "gris_L_negro": 0.8873046999999998,
+    "gris_L_blanco": 86.7133063,
+    "gris_contraste": 85.82600159999998,
+    "ganancia_lum_medios": 1.0753633360000003,
+    "salida_para_entrada_0_0_0": [
+     0.0117,
+     0.0081,
+     0.0057
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.882,
+     0.8674,
+     0.827
+    ],
+    "salida_para_entrada_medio": [
+     0.5533,
+     0.5287,
+     0.5431
+    ]
+   }
+  },
+  {
+   "title": "2254_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.00358,
+   "vmax": 0.927249,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "fujifilm_eterna_vivid_500",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/fujifilm_eterna_vivid_500.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.15850134298911983,
+    "desviacion_identidad_max": 0.834241,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.15494723893356582,
+    "separacion_canales_diagonal_max": 0.033432666666666555,
+    "gris_L_negro": 0.719685,
+    "gris_L_blanco": 86.760343,
+    "gris_contraste": 86.04065800000001,
+    "ganancia_lum_medios": 1.123470146,
+    "salida_para_entrada_0_0_0": [
+     0.0088,
+     0.0069,
+     0.0045
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8839,
+     0.8675,
+     0.8255
+    ],
+    "salida_para_entrada_medio": [
+     0.5785,
+     0.5534,
+     0.5607
+    ]
+   }
+  },
+  {
+   "title": "2264_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.002199,
+   "vmax": 0.93661,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "fujifilm_f64d",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/fujifilm_f64d.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.15203815789668956,
+    "desviacion_identidad_max": 0.811264,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.15848363462602766,
+    "separacion_canales_diagonal_max": 0.042306000000000066,
+    "gris_L_negro": 0.7407669,
+    "gris_L_blanco": 86.46604579999999,
+    "gris_contraste": 85.72527889999999,
+    "ganancia_lum_medios": 1.1124986380000004,
+    "salida_para_entrada_0_0_0": [
+     0.0063,
+     0.0083,
+     0.0059
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8849,
+     0.8624,
+     0.8233
+    ],
+    "salida_para_entrada_medio": [
+     0.5934,
+     0.5391,
+     0.5469
+    ]
+   }
+  },
+  {
+   "title": "1009_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.010524,
+   "vmax": 0.924724,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "fujifilm_pro_400h",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/fujifilm_pro_400h.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.13590021014553244,
+    "desviacion_identidad_max": 0.853831,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.16608540180501064,
+    "separacion_canales_diagonal_max": 0.052254999999999996,
+    "gris_L_negro": 4.6705616999999995,
+    "gris_L_blanco": 86.02567399999998,
+    "gris_contraste": 81.35511229999999,
+    "ganancia_lum_medios": 1.31465928,
+    "salida_para_entrada_0_0_0": [
+     0.0264,
+     0.0534,
+     0.0656
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8611,
+     0.8603,
+     0.8579
+    ],
+    "salida_para_entrada_medio": [
+     0.6322,
+     0.6681,
+     0.6676
+    ]
+   }
+  },
+  {
+   "title": "0017_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.003766,
+   "vmax": 0.89372,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "fujifilm_provia_100f",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/fujifilm_provia_100f.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.18159029253044678,
+    "desviacion_identidad_max": 0.874559,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.10375502398332885,
+    "separacion_canales_diagonal_max": 0.008006333333333338,
+    "gris_L_negro": 0.8232182999999998,
+    "gris_L_blanco": 85.5607191,
+    "gris_contraste": 84.7375008,
+    "ganancia_lum_medios": 1.3771638000000002,
+    "salida_para_entrada_0_0_0": [
+     0.0087,
+     0.0077,
+     0.0098
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8545,
+     0.8559,
+     0.857
+    ],
+    "salida_para_entrada_medio": [
+     0.6943,
+     0.6866,
+     0.684
+    ]
+   }
+  },
+  {
+   "title": "2274_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.002917,
+   "vmax": 0.933851,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "fujifilm_reala_500d",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/fujifilm_reala_500d.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.1426229127361772,
+    "desviacion_identidad_max": 0.775079,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.15448212587460153,
+    "separacion_canales_diagonal_max": 0.032180999999999904,
+    "gris_L_negro": 0.7195988,
+    "gris_L_blanco": 86.74031969999999,
+    "gris_contraste": 86.02072089999999,
+    "ganancia_lum_medios": 1.079563014,
+    "salida_para_entrada_0_0_0": [
+     0.0081,
+     0.0072,
+     0.0045
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8832,
+     0.8672,
+     0.8269
+    ],
+    "salida_para_entrada_medio": [
+     0.5543,
+     0.5321,
+     0.5414
+    ]
+   }
+  },
+  {
+   "title": "0025_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.000836,
+   "vmax": 0.882366,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "fujifilm_velvia_100",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/fujifilm_velvia_100.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.1867250049160104,
+    "desviacion_identidad_max": 0.839673,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.10030649821137608,
+    "separacion_canales_diagonal_max": 0.009008000000000016,
+    "gris_L_negro": 0.3924625,
+    "gris_L_blanco": 83.641481,
+    "gris_contraste": 83.24901849999999,
+    "ganancia_lum_medios": 1.401780548,
+    "salida_para_entrada_0_0_0": [
+     0.004,
+     0.0033,
+     0.007
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8326,
+     0.8382,
+     0.8373
+    ],
+    "salida_para_entrada_medio": [
+     0.7061,
+     0.7,
+     0.6917
+    ]
+   }
+  },
+  {
+   "title": "1033_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.01071,
+   "vmax": 0.925407,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "fujifilm_xtra_400",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/fujifilm_xtra_400.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.1431072368682231,
+    "desviacion_identidad_max": 0.900652,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.19465166994709876,
+    "separacion_canales_diagonal_max": 0.03064566666666666,
+    "gris_L_negro": 4.7428330999999995,
+    "gris_L_blanco": 86.02651399999999,
+    "gris_contraste": 81.2836809,
+    "ganancia_lum_medios": 1.4056568480000002,
+    "salida_para_entrada_0_0_0": [
+     0.0256,
+     0.0547,
+     0.0672
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8611,
+     0.8603,
+     0.8579
+    ],
+    "salida_para_entrada_medio": [
+     0.6859,
+     0.7139,
+     0.6901
+    ]
+   }
+  },
+  {
+   "title": "0041_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.001379,
+   "vmax": 0.909662,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "kodak_ektachrome_100",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/kodak_ektachrome_100.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.16491859551437235,
+    "desviacion_identidad_max": 0.854254,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.11565074846413322,
+    "separacion_canales_diagonal_max": 0.011710333333333378,
+    "gris_L_negro": 0.46953429999999996,
+    "gris_L_blanco": 85.07480029999999,
+    "gris_contraste": 84.605266,
+    "ganancia_lum_medios": 1.3201253700000002,
+    "salida_para_entrada_0_0_0": [
+     0.0057,
+     0.0044,
+     0.0038
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8597,
+     0.8457,
+     0.8533
+    ],
+    "salida_para_entrada_medio": [
+     0.6648,
+     0.6604,
+     0.6458
+    ]
+   }
+  },
+  {
+   "title": "1054_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.025084,
+   "vmax": 0.930849,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "kodak_ektar_100",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/kodak_ektar_100.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.15843116832234186,
+    "desviacion_identidad_max": 0.912685,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.17148854962851656,
+    "separacion_canales_diagonal_max": 0.02266766666666664,
+    "gris_L_negro": 6.0169154,
+    "gris_L_blanco": 85.6666946,
+    "gris_contraste": 79.6497792,
+    "ganancia_lum_medios": 1.323265914,
+    "salida_para_entrada_0_0_0": [
+     0.0648,
+     0.0567,
+     0.066
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.858,
+     0.8572,
+     0.8502
+    ],
+    "salida_para_entrada_medio": [
+     0.6815,
+     0.6481,
+     0.6792
+    ]
+   }
+  },
+  {
+   "title": "1060_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.022297,
+   "vmax": 0.911781,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "kodak_gold_200",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/kodak_gold_200.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.18502933708063185,
+    "desviacion_identidad_max": 0.904539,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.13998282175288237,
+    "separacion_canales_diagonal_max": 0.032356666666666756,
+    "gris_L_negro": 5.4279826,
+    "gris_L_blanco": 84.972117,
+    "gris_contraste": 79.54413439999999,
+    "ganancia_lum_medios": 1.4169328980000002,
+    "salida_para_entrada_0_0_0": [
+     0.0545,
+     0.0517,
+     0.0669
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8492,
+     0.8503,
+     0.8483
+    ],
+    "salida_para_entrada_medio": [
+     0.7196,
+     0.7086,
+     0.6787
+    ]
+   }
+  },
+  {
+   "title": "0065_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.004963,
+   "vmax": 0.851102,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "kodak_kodachrome_64",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/kodak_kodachrome_64.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.17521582918255096,
+    "desviacion_identidad_max": 0.817822,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.10171385844981803,
+    "separacion_canales_diagonal_max": 0.028942666666666672,
+    "gris_L_negro": 1.3113544,
+    "gris_L_blanco": 81.0797248,
+    "gris_contraste": 79.7683704,
+    "ganancia_lum_medios": 1.283139016,
+    "salida_para_entrada_0_0_0": [
+     0.0176,
+     0.0123,
+     0.0055
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8173,
+     0.8147,
+     0.7739
+    ],
+    "salida_para_entrada_medio": [
+     0.6495,
+     0.6405,
+     0.6266
+    ]
+   }
+  },
+  {
+   "title": "1078_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.017396,
+   "vmax": 0.928749,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "kodak_portra_160",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/kodak_portra_160.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.17075773584328127,
+    "desviacion_identidad_max": 0.914686,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.15499558659753335,
+    "separacion_canales_diagonal_max": 0.013231000000000104,
+    "gris_L_negro": 5.4396282,
+    "gris_L_blanco": 85.6608335,
+    "gris_contraste": 80.22120529999998,
+    "ganancia_lum_medios": 1.3258591800000001,
+    "salida_para_entrada_0_0_0": [
+     0.0502,
+     0.0543,
+     0.0657
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8578,
+     0.8573,
+     0.8502
+    ],
+    "salida_para_entrada_medio": [
+     0.6611,
+     0.6607,
+     0.6795
+    ]
+   }
+  },
+  {
+   "title": "1086_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.017641,
+   "vmax": 0.930643,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "kodak_portra_400",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/kodak_portra_400.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.15783837814323212,
+    "desviacion_identidad_max": 0.912994,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.1678093313792965,
+    "separacion_canales_diagonal_max": 0.00985333333333338,
+    "gris_L_negro": 5.361552,
+    "gris_L_blanco": 85.66727359999999,
+    "gris_contraste": 80.30572159999998,
+    "ganancia_lum_medios": 1.3233641060000003,
+    "salida_para_entrada_0_0_0": [
+     0.0497,
+     0.0533,
+     0.0657
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.858,
+     0.8572,
+     0.8502
+    ],
+    "salida_para_entrada_medio": [
+     0.6541,
+     0.6643,
+     0.6684
+    ]
+   }
+  },
+  {
+   "title": "1094_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.017032,
+   "vmax": 0.930312,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "kodak_portra_800",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/kodak_portra_800.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.14750127267161975,
+    "desviacion_identidad_max": 0.900841,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.16658533079803237,
+    "separacion_canales_diagonal_max": 0.03833233333333336,
+    "gris_L_negro": 5.228676999999999,
+    "gris_L_blanco": 85.66570859999999,
+    "gris_contraste": 80.43703159999998,
+    "ganancia_lum_medios": 1.311346174,
+    "salida_para_entrada_0_0_0": [
+     0.049,
+     0.0513,
+     0.0661
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.858,
+     0.8572,
+     0.8502
+    ],
+    "salida_para_entrada_medio": [
+     0.6855,
+     0.6433,
+     0.641
+    ]
+   }
+  },
+  {
+   "title": "1102_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.017766,
+   "vmax": 0.931029,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "kodak_portra_800_push1",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/kodak_portra_800_push1.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.1480316858947603,
+    "desviacion_identidad_max": 0.922147,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.18803578112932198,
+    "separacion_canales_diagonal_max": 0.04032666666666662,
+    "gris_L_negro": 5.211284999999999,
+    "gris_L_blanco": 85.6673921,
+    "gris_contraste": 80.4561071,
+    "ganancia_lum_medios": 1.369013124,
+    "salida_para_entrada_0_0_0": [
+     0.0485,
+     0.0512,
+     0.0663
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.858,
+     0.8572,
+     0.8502
+    ],
+    "salida_para_entrada_medio": [
+     0.7094,
+     0.674,
+     0.6733
+    ]
+   }
+  },
+  {
+   "title": "1110_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.018822,
+   "vmax": 0.931027,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "kodak_portra_800_push2",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/kodak_portra_800_push2.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.1522190318242109,
+    "desviacion_identidad_max": 0.926685,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.19834949894413992,
+    "separacion_canales_diagonal_max": 0.03917000000000004,
+    "gris_L_negro": 5.2020311999999995,
+    "gris_L_blanco": 85.6673921,
+    "gris_contraste": 80.4653609,
+    "ganancia_lum_medios": 1.413567068,
+    "salida_para_entrada_0_0_0": [
+     0.0481,
+     0.0512,
+     0.0664
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.858,
+     0.8572,
+     0.8502
+    ],
+    "salida_para_entrada_medio": [
+     0.7285,
+     0.6975,
+     0.6978
+    ]
+   }
+  },
+  {
+   "title": "1116_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.021028,
+   "vmax": 0.912915,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "kodak_ultramax_400",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/kodak_ultramax_400.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.15586059680366568,
+    "desviacion_identidad_max": 0.900586,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.16705424506466562,
+    "separacion_canales_diagonal_max": 0.036051333333333324,
+    "gris_L_negro": 5.3345465,
+    "gris_L_blanco": 84.99441209999999,
+    "gris_contraste": 79.65986559999999,
+    "ganancia_lum_medios": 1.404556794,
+    "salida_para_entrada_0_0_0": [
+     0.0531,
+     0.0508,
+     0.0671
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8494,
+     0.8505,
+     0.8486
+    ],
+    "salida_para_entrada_medio": [
+     0.7185,
+     0.6997,
+     0.6729
+    ]
+   }
+  },
+  {
+   "title": "2122_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.000679,
+   "vmax": 0.940828,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "kodak_verita_200d",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/kodak_verita_200d.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.14907311066588752,
+    "desviacion_identidad_max": 0.875813,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.16719258394783465,
+    "separacion_canales_diagonal_max": 0.0353363333333333,
+    "gris_L_negro": 0.3259842,
+    "gris_L_blanco": 86.8032194,
+    "gris_contraste": 86.4772352,
+    "ganancia_lum_medios": 1.061645734,
+    "salida_para_entrada_0_0_0": [
+     0.0023,
+     0.0038,
+     0.003
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8849,
+     0.8676,
+     0.8259
+    ],
+    "salida_para_entrada_medio": [
+     0.5472,
+     0.5239,
+     0.5232
+    ]
+   }
+  },
+  {
+   "title": "2130_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.000713,
+   "vmax": 0.935376,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "kodak_vision3_200t",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/kodak_vision3_200t.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.15929462523304672,
+    "desviacion_identidad_max": 0.852379,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.16099916111837687,
+    "separacion_canales_diagonal_max": 0.0368463333333332,
+    "gris_L_negro": 0.26802,
+    "gris_L_blanco": 86.77099369999999,
+    "gris_contraste": 86.50297369999998,
+    "ganancia_lum_medios": 1.0770284640000003,
+    "salida_para_entrada_0_0_0": [
+     0.0024,
+     0.0029,
+     0.0023
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8835,
+     0.8679,
+     0.8252
+    ],
+    "salida_para_entrada_medio": [
+     0.5571,
+     0.5322,
+     0.5224
+    ]
+   }
+  },
+  {
+   "title": "2138_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.000799,
+   "vmax": 0.939229,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "kodak_vision3_250d",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/kodak_vision3_250d.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.14812169882479526,
+    "desviacion_identidad_max": 0.866327,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.16561243978196413,
+    "separacion_canales_diagonal_max": 0.03775633333333328,
+    "gris_L_negro": 0.27864249999999996,
+    "gris_L_blanco": 86.7994127,
+    "gris_contraste": 86.5207702,
+    "ganancia_lum_medios": 1.0783488660000002,
+    "salida_para_entrada_0_0_0": [
+     0.0026,
+     0.003,
+     0.0024
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.884,
+     0.8682,
+     0.825
+    ],
+    "salida_para_entrada_medio": [
+     0.5588,
+     0.5321,
+     0.5243
+    ]
+   }
+  },
+  {
+   "title": "2146_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.000677,
+   "vmax": 0.935391,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "kodak_vision3_500t",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/kodak_vision3_500t.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.15628025419484098,
+    "desviacion_identidad_max": 0.883128,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.15655515290029157,
+    "separacion_canales_diagonal_max": 0.03843833333333335,
+    "gris_L_negro": 0.257078,
+    "gris_L_blanco": 86.7961518,
+    "gris_contraste": 86.5390738,
+    "ganancia_lum_medios": 1.0802076100000002,
+    "salida_para_entrada_0_0_0": [
+     0.0022,
+     0.0028,
+     0.0024
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8839,
+     0.8681,
+     0.8254
+    ],
+    "salida_para_entrada_medio": [
+     0.56,
+     0.533,
+     0.5244
+    ]
+   }
+  },
+  {
+   "title": "2154_VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.000675,
+   "vmax": 0.938975,
+   "lineas_comentario": 1,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "vlog",
+   "nombre": "kodak_vision3_50d",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/vlog/kodak_vision3_50d.cube",
+   "bytes": 970431,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.14814981103968983,
+    "desviacion_identidad_max": 0.821062,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.16535164392625368,
+    "separacion_canales_diagonal_max": 0.033486000000000016,
+    "gris_L_negro": 0.2727841,
+    "gris_L_blanco": 86.7972674,
+    "gris_contraste": 86.52448329999999,
+    "ganancia_lum_medios": 1.0980756080000003,
+    "salida_para_entrada_0_0_0": [
+     0.0022,
+     0.0031,
+     0.0024
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8839,
+     0.868,
+     0.8259
+    ],
+    "salida_para_entrada_medio": [
+     0.5687,
+     0.5423,
+     0.5324
+    ]
+   }
+  },
+  {
+   "title": "S1II Standard to V-Log",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": null,
+   "domain_max_decl": null,
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.1207456583,
+   "vmax": 0.7625080774,
+   "lineas_comentario": 6,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "extra",
+   "nombre": "S1IIS2V",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/S1IIS2V.cube",
+   "bytes": 1402062,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.17413153339438278,
+    "desviacion_identidad_max": 0.5119294596999999,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.06343969359588292,
+    "separacion_canales_diagonal_max": 5.551115123125783e-17,
+    "gris_L_negro": 12.50305325,
+    "gris_L_blanco": 66.56898856,
+    "gris_contraste": 54.06593530999999,
+    "ganancia_lum_medios": 0.8832087154,
+    "salida_para_entrada_0_0_0": [
+     0.125,
+     0.125,
+     0.125
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.6657,
+     0.6657,
+     0.6657
+    ],
+    "salida_para_entrada_medio": [
+     0.4416,
+     0.4416,
+     0.4416
+    ]
+   }
+  },
+  {
+   "title": "GH7 Standard - 0049VLOG",
+   "lut_3d_size": 33,
+   "lut_1d_size": null,
+   "lut_1d": false,
+   "domain_min_decl": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max_decl": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "input_range_decl": null,
+   "filas": 35937,
+   "filas_mal_formadas": 0,
+   "valores": 107811,
+   "fuera_0_1": 0,
+   "vmin": 0.014080737,
+   "vmax": 0.908257375,
+   "lineas_comentario": 2,
+   "cabeceras_desconocidas": [],
+   "error_texto": null,
+   "grupo": "extra",
+   "nombre": "Ektar100CA",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/Ektar100CA.cube",
+   "bytes": 1293940,
+   "lee_cube_ok": true,
+   "grid": [
+    33,
+    33,
+    33
+   ],
+   "domain_min": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "domain_max": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "nan": false,
+   "propiedades": {
+    "desviacion_identidad": 0.10188467678658024,
+    "desviacion_identidad_max": 0.460574563,
+    "fraccion_nodos_fuera_gamut": 0.0,
+    "croma_medio_tabla": 0.1720034476669604,
+    "separacion_canales_diagonal_max": 0.030266506333333318,
+    "gris_L_negro": 4.9367382466,
+    "gris_L_blanco": 85.4623320286,
+    "gris_contraste": 80.52559378199999,
+    "ganancia_lum_medios": 1.018347270198,
+    "salida_para_entrada_0_0_0": [
+     0.0307,
+     0.0556,
+     0.0661
+    ],
+    "salida_para_entrada_1_1_1": [
+     0.8561,
+     0.8555,
+     0.8463
+    ],
+    "salida_para_entrada_medio": [
+     0.5074,
+     0.5105,
+     0.507
+    ]
+   }
+  }
+ ],
+ "validacion_resumen": {
+  "peliculas": {
+   "n": 6,
+   "rejillas": [
+    33
+   ],
+   "1D": 0,
+   "fuera_0_1": 0,
+   "mal_formadas": 0,
+   "lee_cube_ok": 6
+  },
+  "std": {
+   "n": 38,
+   "rejillas": [
+    33
+   ],
+   "1D": 0,
+   "fuera_0_1": 0,
+   "mal_formadas": 0,
+   "lee_cube_ok": 38
+  },
+  "vlog": {
+   "n": 29,
+   "rejillas": [
+    33
+   ],
+   "1D": 0,
+   "fuera_0_1": 0,
+   "mal_formadas": 0,
+   "lee_cube_ok": 29
+  },
+  "extra": {
+   "n": 2,
+   "rejillas": [
+    33
+   ],
+   "1D": 0,
+   "fuera_0_1": 0,
+   "mal_formadas": 0,
+   "lee_cube_ok": 2
+  }
+ },
+ "medidas": {
+  "peliculas/portra400": {
+   "grupo": "peliculas",
+   "nombre": "portra400",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/peliculas/portra400.cube",
+   "solo": {
+    "de_medio": 0.225,
+    "de_p95": 0.5896,
+    "de_max": 1.3982,
+    "de_foto_medio": 0.2182,
+    "de_foto_p95": 0.4105,
+    "de_foto_max": 0.9381,
+    "rec": 0,
+    "t_ajuste_s": 14.95,
+    "t_error_s": 0.18,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      0.266,
+      547
+     ],
+     "0.15-0.35": [
+      0.187,
+      4413
+     ],
+     "0.35-0.60": [
+      0.194,
+      8413
+     ],
+     "0.60-0.85": [
+      0.277,
+      6071
+     ],
+     "0.85-1.00": [
+      0.385,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.299,
+      3073
+     ],
+     "0.15-0.35": [
+      0.183,
+      4719
+     ],
+     "0.35-0.60": [
+      0.222,
+      5057
+     ],
+     "0.60-0.85": [
+      0.202,
+      6635
+     ],
+     "0.85-1.00": [
+      0.232,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 0.2485,
+    "de_p95": 0.6404,
+    "de_max": 1.4771,
+    "de_foto_medio": 0.2495,
+    "de_foto_p95": 0.4795,
+    "de_foto_max": 0.9323,
+    "rec": 0,
+    "t_ajuste_s": 12.83,
+    "t_error_s": 0.12,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      0.248,
+      547
+     ],
+     "0.15-0.35": [
+      0.217,
+      4413
+     ],
+     "0.35-0.60": [
+      0.227,
+      8413
+     ],
+     "0.60-0.85": [
+      0.288,
+      6071
+     ],
+     "0.85-1.00": [
+      0.402,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.233,
+      3073
+     ],
+     "0.15-0.35": [
+      0.271,
+      4719
+     ],
+     "0.35-0.60": [
+      0.267,
+      5057
+     ],
+     "0.60-0.85": [
+      0.226,
+      6635
+     ],
+     "0.85-1.00": [
+      0.272,
+      516
+     ]
+    }
+   }
+  },
+  "peliculas/pro400h": {
+   "grupo": "peliculas",
+   "nombre": "pro400h",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/peliculas/pro400h.cube",
+   "solo": {
+    "de_medio": 0.2721,
+    "de_p95": 0.8543,
+    "de_max": 2.2804,
+    "de_foto_medio": 0.2759,
+    "de_foto_p95": 0.5325,
+    "de_foto_max": 1.3251,
+    "rec": 0,
+    "t_ajuste_s": 18.02,
+    "t_error_s": 0.23,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      0.236,
+      547
+     ],
+     "0.15-0.35": [
+      0.232,
+      4413
+     ],
+     "0.35-0.60": [
+      0.236,
+      8413
+     ],
+     "0.60-0.85": [
+      0.334,
+      6071
+     ],
+     "0.85-1.00": [
+      0.488,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.183,
+      3073
+     ],
+     "0.15-0.35": [
+      0.259,
+      4719
+     ],
+     "0.35-0.60": [
+      0.277,
+      5057
+     ],
+     "0.60-0.85": [
+      0.323,
+      6635
+     ],
+     "0.85-1.00": [
+      0.376,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 0.2987,
+    "de_p95": 0.897,
+    "de_max": 1.9287,
+    "de_foto_medio": 0.3116,
+    "de_foto_p95": 0.6339,
+    "de_foto_max": 1.4818,
+    "rec": 0,
+    "t_ajuste_s": 13.69,
+    "t_error_s": 0.17,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      0.277,
+      547
+     ],
+     "0.15-0.35": [
+      0.27,
+      4413
+     ],
+     "0.35-0.60": [
+      0.271,
+      8413
+     ],
+     "0.60-0.85": [
+      0.344,
+      6071
+     ],
+     "0.85-1.00": [
+      0.466,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.28,
+      3073
+     ],
+     "0.15-0.35": [
+      0.298,
+      4719
+     ],
+     "0.35-0.60": [
+      0.357,
+      5057
+     ],
+     "0.60-0.85": [
+      0.305,
+      6635
+     ],
+     "0.85-1.00": [
+      0.266,
+      516
+     ]
+    }
+   }
+  },
+  "peliculas/gold200": {
+   "grupo": "peliculas",
+   "nombre": "gold200",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/peliculas/gold200.cube",
+   "solo": {
+    "de_medio": 0.3026,
+    "de_p95": 0.7922,
+    "de_max": 2.4486,
+    "de_foto_medio": 0.3652,
+    "de_foto_p95": 0.6839,
+    "de_foto_max": 1.4658,
+    "rec": 0,
+    "t_ajuste_s": 17.55,
+    "t_error_s": 0.12,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      0.365,
+      547
+     ],
+     "0.15-0.35": [
+      0.235,
+      4413
+     ],
+     "0.35-0.60": [
+      0.276,
+      8413
+     ],
+     "0.60-0.85": [
+      0.364,
+      6071
+     ],
+     "0.85-1.00": [
+      0.513,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.341,
+      3073
+     ],
+     "0.15-0.35": [
+      0.405,
+      4719
+     ],
+     "0.35-0.60": [
+      0.387,
+      5057
+     ],
+     "0.60-0.85": [
+      0.339,
+      6635
+     ],
+     "0.85-1.00": [
+      0.268,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 0.28,
+    "de_p95": 0.7231,
+    "de_max": 2.1131,
+    "de_foto_medio": 0.3624,
+    "de_foto_p95": 0.7244,
+    "de_foto_max": 1.7746,
+    "rec": 0,
+    "t_ajuste_s": 14.39,
+    "t_error_s": 0.13,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      0.525,
+      547
+     ],
+     "0.15-0.35": [
+      0.287,
+      4413
+     ],
+     "0.35-0.60": [
+      0.222,
+      8413
+     ],
+     "0.60-0.85": [
+      0.314,
+      6071
+     ],
+     "0.85-1.00": [
+      0.481,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.531,
+      3073
+     ],
+     "0.15-0.35": [
+      0.338,
+      4719
+     ],
+     "0.35-0.60": [
+      0.297,
+      5057
+     ],
+     "0.60-0.85": [
+      0.341,
+      6635
+     ],
+     "0.85-1.00": [
+      0.488,
+      516
+     ]
+    }
+   }
+  },
+  "peliculas/ektachrome_e100": {
+   "grupo": "peliculas",
+   "nombre": "ektachrome_e100",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/peliculas/ektachrome_e100.cube",
+   "solo": {
+    "de_medio": 0.3762,
+    "de_p95": 0.8643,
+    "de_max": 2.9085,
+    "de_foto_medio": 0.5583,
+    "de_foto_p95": 1.0335,
+    "de_foto_max": 2.2311,
+    "rec": 0,
+    "t_ajuste_s": 18.95,
+    "t_error_s": 0.14,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      0.662,
+      547
+     ],
+     "0.15-0.35": [
+      0.395,
+      4413
+     ],
+     "0.35-0.60": [
+      0.36,
+      8413
+     ],
+     "0.60-0.85": [
+      0.343,
+      6071
+     ],
+     "0.85-1.00": [
+      0.562,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.732,
+      3073
+     ],
+     "0.15-0.35": [
+      0.637,
+      4719
+     ],
+     "0.35-0.60": [
+      0.425,
+      5057
+     ],
+     "0.60-0.85": [
+      0.531,
+      6635
+     ],
+     "0.85-1.00": [
+      0.465,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 0.2844,
+    "de_p95": 0.8528,
+    "de_max": 3.75,
+    "de_foto_medio": 0.3999,
+    "de_foto_p95": 0.8393,
+    "de_foto_max": 2.1984,
+    "rec": 0,
+    "t_ajuste_s": 19.04,
+    "t_error_s": 0.16,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      0.771,
+      547
+     ],
+     "0.15-0.35": [
+      0.251,
+      4413
+     ],
+     "0.35-0.60": [
+      0.166,
+      8413
+     ],
+     "0.60-0.85": [
+      0.367,
+      6071
+     ],
+     "0.85-1.00": [
+      0.958,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.595,
+      3073
+     ],
+     "0.15-0.35": [
+      0.339,
+      4719
+     ],
+     "0.35-0.60": [
+      0.225,
+      5057
+     ],
+     "0.60-0.85": [
+      0.47,
+      6635
+     ],
+     "0.85-1.00": [
+      0.608,
+      516
+     ]
+    }
+   }
+  },
+  "peliculas/kodachrome64": {
+   "grupo": "peliculas",
+   "nombre": "kodachrome64",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/peliculas/kodachrome64.cube",
+   "solo": {
+    "de_medio": 0.6379,
+    "de_p95": 1.7779,
+    "de_max": 4.7968,
+    "de_foto_medio": 0.8545,
+    "de_foto_p95": 1.607,
+    "de_foto_max": 3.6262,
+    "rec": 0,
+    "t_ajuste_s": 21.19,
+    "t_error_s": 0.15,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      0.944,
+      547
+     ],
+     "0.15-0.35": [
+      0.674,
+      4413
+     ],
+     "0.35-0.60": [
+      0.617,
+      8413
+     ],
+     "0.60-0.85": [
+      0.588,
+      6071
+     ],
+     "0.85-1.00": [
+      0.904,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      1.205,
+      3073
+     ],
+     "0.15-0.35": [
+      0.862,
+      4719
+     ],
+     "0.35-0.60": [
+      0.814,
+      5057
+     ],
+     "0.60-0.85": [
+      0.736,
+      6635
+     ],
+     "0.85-1.00": [
+      0.618,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 0.4198,
+    "de_p95": 1.2663,
+    "de_max": 3.9784,
+    "de_foto_medio": 0.5479,
+    "de_foto_p95": 1.2074,
+    "de_foto_max": 2.4395,
+    "rec": 0,
+    "t_ajuste_s": 18.19,
+    "t_error_s": 0.11,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      0.629,
+      547
+     ],
+     "0.15-0.35": [
+      0.398,
+      4413
+     ],
+     "0.35-0.60": [
+      0.324,
+      8413
+     ],
+     "0.60-0.85": [
+      0.526,
+      6071
+     ],
+     "0.85-1.00": [
+      0.673,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.572,
+      3073
+     ],
+     "0.15-0.35": [
+      0.568,
+      4719
+     ],
+     "0.35-0.60": [
+      0.502,
+      5057
+     ],
+     "0.60-0.85": [
+      0.553,
+      6635
+     ],
+     "0.85-1.00": [
+      0.606,
+      516
+     ]
+    }
+   }
+  },
+  "peliculas/velvia50": {
+   "grupo": "peliculas",
+   "nombre": "velvia50",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/peliculas/velvia50.cube",
+   "solo": {
+    "de_medio": 0.6667,
+    "de_p95": 1.729,
+    "de_max": 5.8688,
+    "de_foto_medio": 0.8433,
+    "de_foto_p95": 1.6621,
+    "de_foto_max": 3.4027,
+    "rec": 28,
+    "t_ajuste_s": 27.33,
+    "t_error_s": 0.12,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      1.185,
+      547
+     ],
+     "0.15-0.35": [
+      0.717,
+      4413
+     ],
+     "0.35-0.60": [
+      0.58,
+      8413
+     ],
+     "0.60-0.85": [
+      0.659,
+      6071
+     ],
+     "0.85-1.00": [
+      1.145,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.67,
+      3073
+     ],
+     "0.15-0.35": [
+      0.883,
+      4719
+     ],
+     "0.35-0.60": [
+      0.974,
+      5057
+     ],
+     "0.60-0.85": [
+      0.803,
+      6635
+     ],
+     "0.85-1.00": [
+      0.751,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 0.6365,
+    "de_p95": 1.8348,
+    "de_max": 6.5322,
+    "de_foto_medio": 0.8879,
+    "de_foto_p95": 2.0446,
+    "de_foto_max": 4.4924,
+    "rec": 11,
+    "t_ajuste_s": 30.86,
+    "t_error_s": 0.16,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      1.552,
+      547
+     ],
+     "0.15-0.35": [
+      0.622,
+      4413
+     ],
+     "0.35-0.60": [
+      0.395,
+      8413
+     ],
+     "0.60-0.85": [
+      0.777,
+      6071
+     ],
+     "0.85-1.00": [
+      1.974,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      1.488,
+      3073
+     ],
+     "0.15-0.35": [
+      1.027,
+      4719
+     ],
+     "0.35-0.60": [
+      0.447,
+      5057
+     ],
+     "0.60-0.85": [
+      0.814,
+      6635
+     ],
+     "0.85-1.00": [
+      1.307,
+      516
+     ]
+    }
+   }
+  },
+  "std/fuji_sim_classic_chrome": {
+   "grupo": "std",
+   "nombre": "fuji_sim_classic_chrome",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_classic_chrome.cube",
+   "solo": {
+    "de_medio": 0.6198,
+    "de_p95": 1.3566,
+    "de_max": 4.8219,
+    "de_foto_medio": 0.6698,
+    "de_foto_p95": 1.3691,
+    "de_foto_max": 2.8037,
+    "rec": 80,
+    "t_ajuste_s": 32.14,
+    "t_error_s": 0.19,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      1.263,
+      547
+     ],
+     "0.15-0.35": [
+      0.612,
+      4413
+     ],
+     "0.35-0.60": [
+      0.581,
+      8413
+     ],
+     "0.60-0.85": [
+      0.615,
+      6071
+     ],
+     "0.85-1.00": [
+      0.678,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      1.117,
+      3073
+     ],
+     "0.15-0.35": [
+      0.723,
+      4719
+     ],
+     "0.35-0.60": [
+      0.638,
+      5057
+     ],
+     "0.60-0.85": [
+      0.472,
+      6635
+     ],
+     "0.85-1.00": [
+      0.372,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 0.6304,
+    "de_p95": 1.3261,
+    "de_max": 3.2649,
+    "de_foto_medio": 0.5479,
+    "de_foto_p95": 1.1305,
+    "de_foto_max": 2.8811,
+    "rec": 4,
+    "t_ajuste_s": 28.22,
+    "t_error_s": 0.15,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      1.058,
+      547
+     ],
+     "0.15-0.35": [
+      0.537,
+      4413
+     ],
+     "0.35-0.60": [
+      0.568,
+      8413
+     ],
+     "0.60-0.85": [
+      0.7,
+      6071
+     ],
+     "0.85-1.00": [
+      1.131,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.655,
+      3073
+     ],
+     "0.15-0.35": [
+      0.429,
+      4719
+     ],
+     "0.35-0.60": [
+      0.611,
+      5057
+     ],
+     "0.60-0.85": [
+      0.52,
+      6635
+     ],
+     "0.85-1.00": [
+      0.735,
+      516
+     ]
+    }
+   }
+  },
+  "std/fuji_sim_pro_neg": {
+   "grupo": "std",
+   "nombre": "fuji_sim_pro_neg",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_pro_neg.cube",
+   "solo": {
+    "de_medio": 0.8143,
+    "de_p95": 1.8093,
+    "de_max": 6.3501,
+    "de_foto_medio": 0.7414,
+    "de_foto_p95": 1.3085,
+    "de_foto_max": 4.0703,
+    "rec": 31,
+    "t_ajuste_s": 28.75,
+    "t_error_s": 0.23,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      1.39,
+      547
+     ],
+     "0.15-0.35": [
+      0.775,
+      4413
+     ],
+     "0.35-0.60": [
+      0.703,
+      8413
+     ],
+     "0.60-0.85": [
+      0.898,
+      6071
+     ],
+     "0.85-1.00": [
+      1.334,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.752,
+      3073
+     ],
+     "0.15-0.35": [
+      0.731,
+      4719
+     ],
+     "0.35-0.60": [
+      0.601,
+      5057
+     ],
+     "0.60-0.85": [
+      0.816,
+      6635
+     ],
+     "0.85-1.00": [
+      1.187,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 0.9553,
+    "de_p95": 2.3551,
+    "de_max": 8.9163,
+    "de_foto_medio": 0.8379,
+    "de_foto_p95": 2.9448,
+    "de_foto_max": 7.1049,
+    "rec": 7,
+    "t_ajuste_s": 20.69,
+    "t_error_s": 0.15,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      1.158,
+      547
+     ],
+     "0.15-0.35": [
+      0.731,
+      4413
+     ],
+     "0.35-0.60": [
+      0.766,
+      8413
+     ],
+     "0.60-0.85": [
+      1.219,
+      6071
+     ],
+     "0.85-1.00": [
+      2.521,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.53,
+      3073
+     ],
+     "0.15-0.35": [
+      0.521,
+      4719
+     ],
+     "0.35-0.60": [
+      0.631,
+      5057
+     ],
+     "0.60-0.85": [
+      1.25,
+      6635
+     ],
+     "0.85-1.00": [
+      2.31,
+      516
+     ]
+    }
+   }
+  },
+  "std/fuji_sim_eterna": {
+   "grupo": "std",
+   "nombre": "fuji_sim_eterna",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_eterna.cube",
+   "solo": {
+    "de_medio": 0.8427,
+    "de_p95": 2.1122,
+    "de_max": 7.5555,
+    "de_foto_medio": 0.7124,
+    "de_foto_p95": 1.5046,
+    "de_foto_max": 6.2173,
+    "rec": 44,
+    "t_ajuste_s": 19.72,
+    "t_error_s": 0.17,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      1.855,
+      547
+     ],
+     "0.15-0.35": [
+      0.841,
+      4413
+     ],
+     "0.35-0.60": [
+      0.654,
+      8413
+     ],
+     "0.60-0.85": [
+      0.929,
+      6071
+     ],
+     "0.85-1.00": [
+      1.779,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.639,
+      3073
+     ],
+     "0.15-0.35": [
+      0.566,
+      4719
+     ],
+     "0.35-0.60": [
+      0.596,
+      5057
+     ],
+     "0.60-0.85": [
+      0.871,
+      6635
+     ],
+     "0.85-1.00": [
+      1.59,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 1.0774,
+    "de_p95": 2.6268,
+    "de_max": 6.9836,
+    "de_foto_medio": 1.0226,
+    "de_foto_p95": 2.3235,
+    "de_foto_max": 5.488,
+    "rec": 7,
+    "t_ajuste_s": 22.84,
+    "t_error_s": 0.13,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      2.042,
+      547
+     ],
+     "0.15-0.35": [
+      1.089,
+      4413
+     ],
+     "0.35-0.60": [
+      0.847,
+      8413
+     ],
+     "0.60-0.85": [
+      1.203,
+      6071
+     ],
+     "0.85-1.00": [
+      2.158,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      1.056,
+      3073
+     ],
+     "0.15-0.35": [
+      0.81,
+      4719
+     ],
+     "0.35-0.60": [
+      0.848,
+      5057
+     ],
+     "0.60-0.85": [
+      1.222,
+      6635
+     ],
+     "0.85-1.00": [
+      1.913,
+      516
+     ]
+    }
+   }
+  },
+  "std/fujifilm_eterna_250": {
+   "grupo": "std",
+   "nombre": "fujifilm_eterna_250",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_eterna_250.cube",
+   "solo": {
+    "de_medio": 1.0883,
+    "de_p95": 2.4688,
+    "de_max": 8.6906,
+    "de_foto_medio": 0.7933,
+    "de_foto_p95": 1.6819,
+    "de_foto_max": 4.3015,
+    "rec": 183,
+    "t_ajuste_s": 25.44,
+    "t_error_s": 0.4,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      1.441,
+      547
+     ],
+     "0.15-0.35": [
+      1.103,
+      4413
+     ],
+     "0.35-0.60": [
+      0.976,
+      8413
+     ],
+     "0.60-0.85": [
+      1.221,
+      6071
+     ],
+     "0.85-1.00": [
+      0.875,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.667,
+      3073
+     ],
+     "0.15-0.35": [
+      0.591,
+      4719
+     ],
+     "0.35-0.60": [
+      0.848,
+      5057
+     ],
+     "0.60-0.85": [
+      0.959,
+      6635
+     ],
+     "0.85-1.00": [
+      0.717,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 1.4608,
+    "de_p95": 3.2495,
+    "de_max": 8.2974,
+    "de_foto_medio": 1.255,
+    "de_foto_p95": 2.545,
+    "de_foto_max": 5.4823,
+    "rec": 16,
+    "t_ajuste_s": 20.42,
+    "t_error_s": 0.14,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      1.846,
+      547
+     ],
+     "0.15-0.35": [
+      1.351,
+      4413
+     ],
+     "0.35-0.60": [
+      1.457,
+      8413
+     ],
+     "0.60-0.85": [
+      1.511,
+      6071
+     ],
+     "0.85-1.00": [
+      1.46,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      1.503,
+      3073
+     ],
+     "0.15-0.35": [
+      1.029,
+      4719
+     ],
+     "0.35-0.60": [
+      1.468,
+      5057
+     ],
+     "0.60-0.85": [
+      1.149,
+      6635
+     ],
+     "0.85-1.00": [
+      1.119,
+      516
+     ]
+    }
+   }
+  },
+  "std/kodak_vision3_250d": {
+   "grupo": "std",
+   "nombre": "kodak_vision3_250d",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_vision3_250d.cube",
+   "solo": {
+    "de_medio": 1.1775,
+    "de_p95": 2.6285,
+    "de_max": 12.0156,
+    "de_foto_medio": 0.9409,
+    "de_foto_p95": 1.8732,
+    "de_foto_max": 4.0555,
+    "rec": 207,
+    "t_ajuste_s": 32.58,
+    "t_error_s": 0.33,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      1.586,
+      547
+     ],
+     "0.15-0.35": [
+      1.197,
+      4413
+     ],
+     "0.35-0.60": [
+      1.015,
+      8413
+     ],
+     "0.60-0.85": [
+      1.357,
+      6071
+     ],
+     "0.85-1.00": [
+      1.119,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      1.027,
+      3073
+     ],
+     "0.15-0.35": [
+      0.897,
+      4719
+     ],
+     "0.35-0.60": [
+      0.933,
+      5057
+     ],
+     "0.60-0.85": [
+      0.933,
+      6635
+     ],
+     "0.85-1.00": [
+      1.009,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 1.5654,
+    "de_p95": 3.504,
+    "de_max": 8.8578,
+    "de_foto_medio": 1.4024,
+    "de_foto_p95": 2.7815,
+    "de_foto_max": 7.3333,
+    "rec": 19,
+    "t_ajuste_s": 19.34,
+    "t_error_s": 0.12,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      2.495,
+      547
+     ],
+     "0.15-0.35": [
+      1.671,
+      4413
+     ],
+     "0.35-0.60": [
+      1.361,
+      8413
+     ],
+     "0.60-0.85": [
+      1.588,
+      6071
+     ],
+     "0.85-1.00": [
+      2.661,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      1.834,
+      3073
+     ],
+     "0.15-0.35": [
+      1.514,
+      4719
+     ],
+     "0.35-0.60": [
+      1.318,
+      5057
+     ],
+     "0.60-0.85": [
+      1.162,
+      6635
+     ],
+     "0.85-1.00": [
+      1.725,
+      516
+     ]
+    }
+   }
+  },
+  "std/fujifilm_pro_400h": {
+   "grupo": "std",
+   "nombre": "fujifilm_pro_400h",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_pro_400h.cube",
+   "solo": {
+    "de_medio": 1.1777,
+    "de_p95": 2.6119,
+    "de_max": 9.0453,
+    "de_foto_medio": 0.9896,
+    "de_foto_p95": 2.0097,
+    "de_foto_max": 4.829,
+    "rec": 123,
+    "t_ajuste_s": 21.15,
+    "t_error_s": 0.11,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      1.957,
+      547
+     ],
+     "0.15-0.35": [
+      1.35,
+      4413
+     ],
+     "0.35-0.60": [
+      1.097,
+      8413
+     ],
+     "0.60-0.85": [
+      1.094,
+      6071
+     ],
+     "0.85-1.00": [
+      1.184,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      1.077,
+      3073
+     ],
+     "0.15-0.35": [
+      1.011,
+      4719
+     ],
+     "0.35-0.60": [
+      1.054,
+      5057
+     ],
+     "0.60-0.85": [
+      0.894,
+      6635
+     ],
+     "0.85-1.00": [
+      0.881,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 1.5966,
+    "de_p95": 3.6799,
+    "de_max": 11.5424,
+    "de_foto_medio": 1.4444,
+    "de_foto_p95": 2.8563,
+    "de_foto_max": 7.7975,
+    "rec": 25,
+    "t_ajuste_s": 13.08,
+    "t_error_s": 0.11,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      2.772,
+      547
+     ],
+     "0.15-0.35": [
+      1.672,
+      4413
+     ],
+     "0.35-0.60": [
+      1.351,
+      8413
+     ],
+     "0.60-0.85": [
+      1.702,
+      6071
+     ],
+     "0.85-1.00": [
+      2.411,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      2.021,
+      3073
+     ],
+     "0.15-0.35": [
+      1.677,
+      4719
+     ],
+     "0.35-0.60": [
+      1.341,
+      5057
+     ],
+     "0.60-0.85": [
+      1.088,
+      6635
+     ],
+     "0.85-1.00": [
+      1.478,
+      516
+     ]
+    }
+   }
+  },
+  "std/fuji_sim_classic_neg": {
+   "grupo": "std",
+   "nombre": "fuji_sim_classic_neg",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_classic_neg.cube",
+   "solo": {
+    "de_medio": 1.4809,
+    "de_p95": 4.8611,
+    "de_max": 11.1941,
+    "de_foto_medio": 0.7831,
+    "de_foto_p95": 1.3845,
+    "de_foto_max": 3.2803,
+    "rec": 203,
+    "t_ajuste_s": 19.01,
+    "t_error_s": 0.29,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      2.167,
+      547
+     ],
+     "0.15-0.35": [
+      1.474,
+      4413
+     ],
+     "0.35-0.60": [
+      1.301,
+      8413
+     ],
+     "0.60-0.85": [
+      1.721,
+      6071
+     ],
+     "0.85-1.00": [
+      0.952,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.697,
+      3073
+     ],
+     "0.15-0.35": [
+      0.809,
+      4719
+     ],
+     "0.35-0.60": [
+      0.89,
+      5057
+     ],
+     "0.60-0.85": [
+      0.757,
+      6635
+     ],
+     "0.85-1.00": [
+      0.35,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 1.1798,
+    "de_p95": 2.7236,
+    "de_max": 6.0905,
+    "de_foto_medio": 0.9614,
+    "de_foto_p95": 1.7943,
+    "de_foto_max": 3.8808,
+    "rec": 62,
+    "t_ajuste_s": 26.2,
+    "t_error_s": 0.15,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      2.489,
+      547
+     ],
+     "0.15-0.35": [
+      1.183,
+      4413
+     ],
+     "0.35-0.60": [
+      0.987,
+      8413
+     ],
+     "0.60-0.85": [
+      1.31,
+      6071
+     ],
+     "0.85-1.00": [
+      1.346,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      1.368,
+      3073
+     ],
+     "0.15-0.35": [
+      1.132,
+      4719
+     ],
+     "0.35-0.60": [
+      0.834,
+      5057
+     ],
+     "0.60-0.85": [
+      0.758,
+      6635
+     ],
+     "0.85-1.00": [
+      0.835,
+      516
+     ]
+    }
+   }
+  },
+  "std/kodak_portra_400": {
+   "grupo": "std",
+   "nombre": "kodak_portra_400",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_portra_400.cube",
+   "solo": {
+    "de_medio": 1.1836,
+    "de_p95": 2.6341,
+    "de_max": 11.7289,
+    "de_foto_medio": 1.0455,
+    "de_foto_p95": 2.0668,
+    "de_foto_max": 4.074,
+    "rec": 126,
+    "t_ajuste_s": 25.62,
+    "t_error_s": 0.1,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      2.082,
+      547
+     ],
+     "0.15-0.35": [
+      1.436,
+      4413
+     ],
+     "0.35-0.60": [
+      1.046,
+      8413
+     ],
+     "0.60-0.85": [
+      1.121,
+      6071
+     ],
+     "0.85-1.00": [
+      1.064,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      1.109,
+      3073
+     ],
+     "0.15-0.35": [
+      1.191,
+      4719
+     ],
+     "0.35-0.60": [
+      0.971,
+      5057
+     ],
+     "0.60-0.85": [
+      0.988,
+      6635
+     ],
+     "0.85-1.00": [
+      0.797,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 1.69,
+    "de_p95": 3.8807,
+    "de_max": 10.8376,
+    "de_foto_medio": 1.4249,
+    "de_foto_p95": 2.6986,
+    "de_foto_max": 7.5621,
+    "rec": 43,
+    "t_ajuste_s": 23.1,
+    "t_error_s": 0.16,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      3.432,
+      547
+     ],
+     "0.15-0.35": [
+      1.83,
+      4413
+     ],
+     "0.35-0.60": [
+      1.344,
+      8413
+     ],
+     "0.60-0.85": [
+      1.881,
+      6071
+     ],
+     "0.85-1.00": [
+      2.01,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      1.945,
+      3073
+     ],
+     "0.15-0.35": [
+      1.514,
+      4719
+     ],
+     "0.35-0.60": [
+      1.291,
+      5057
+     ],
+     "0.60-0.85": [
+      1.224,
+      6635
+     ],
+     "0.85-1.00": [
+      1.416,
+      516
+     ]
+    }
+   }
+  },
+  "std/fuji_sim_provia": {
+   "grupo": "std",
+   "nombre": "fuji_sim_provia",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_provia.cube",
+   "solo": {
+    "de_medio": 1.2469,
+    "de_p95": 3.1701,
+    "de_max": 11.5074,
+    "de_foto_medio": 0.9758,
+    "de_foto_p95": 2.9817,
+    "de_foto_max": 5.4672,
+    "rec": 131,
+    "t_ajuste_s": 26.1,
+    "t_error_s": 0.11,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      2.133,
+      547
+     ],
+     "0.15-0.35": [
+      1.425,
+      4413
+     ],
+     "0.35-0.60": [
+      1.151,
+      8413
+     ],
+     "0.60-0.85": [
+      1.159,
+      6071
+     ],
+     "0.85-1.00": [
+      1.371,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.827,
+      3073
+     ],
+     "0.15-0.35": [
+      0.94,
+      4719
+     ],
+     "0.35-0.60": [
+      1.311,
+      5057
+     ],
+     "0.60-0.85": [
+      0.825,
+      6635
+     ],
+     "0.85-1.00": [
+      0.841,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 1.4212,
+    "de_p95": 3.7925,
+    "de_max": 12.4985,
+    "de_foto_medio": 1.1118,
+    "de_foto_p95": 3.7012,
+    "de_foto_max": 5.8584,
+    "rec": 74,
+    "t_ajuste_s": 28.13,
+    "t_error_s": 0.3,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      1.658,
+      547
+     ],
+     "0.15-0.35": [
+      1.503,
+      4413
+     ],
+     "0.35-0.60": [
+      1.243,
+      8413
+     ],
+     "0.60-0.85": [
+      1.462,
+      6071
+     ],
+     "0.85-1.00": [
+      2.788,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.544,
+      3073
+     ],
+     "0.15-0.35": [
+      0.907,
+      4719
+     ],
+     "0.35-0.60": [
+      1.323,
+      5057
+     ],
+     "0.60-0.85": [
+      1.272,
+      6635
+     ],
+     "0.85-1.00": [
+      2.246,
+      516
+     ]
+    }
+   }
+  },
+  "std/fujifilm_velvia_100": {
+   "grupo": "std",
+   "nombre": "fujifilm_velvia_100",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fujifilm_velvia_100.cube",
+   "solo": {
+    "de_medio": 1.2669,
+    "de_p95": 2.6825,
+    "de_max": 14.9766,
+    "de_foto_medio": 1.1217,
+    "de_foto_p95": 2.2938,
+    "de_foto_max": 5.2425,
+    "rec": 109,
+    "t_ajuste_s": 34.86,
+    "t_error_s": 0.23,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      2.121,
+      547
+     ],
+     "0.15-0.35": [
+      1.48,
+      4413
+     ],
+     "0.35-0.60": [
+      1.218,
+      8413
+     ],
+     "0.60-0.85": [
+      1.084,
+      6071
+     ],
+     "0.85-1.00": [
+      1.469,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      1.154,
+      3073
+     ],
+     "0.15-0.35": [
+      1.231,
+      4719
+     ],
+     "0.35-0.60": [
+      1.164,
+      5057
+     ],
+     "0.60-0.85": [
+      1.04,
+      6635
+     ],
+     "0.85-1.00": [
+      0.564,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 1.5128,
+    "de_p95": 3.3032,
+    "de_max": 13.3959,
+    "de_foto_medio": 1.4878,
+    "de_foto_p95": 2.8039,
+    "de_foto_max": 9.9026,
+    "rec": 33,
+    "t_ajuste_s": 17.24,
+    "t_error_s": 0.13,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      3.366,
+      547
+     ],
+     "0.15-0.35": [
+      1.706,
+      4413
+     ],
+     "0.35-0.60": [
+      1.285,
+      8413
+     ],
+     "0.60-0.85": [
+      1.527,
+      6071
+     ],
+     "0.85-1.00": [
+      1.455,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      2.168,
+      3073
+     ],
+     "0.15-0.35": [
+      1.677,
+      4719
+     ],
+     "0.35-0.60": [
+      1.305,
+      5057
+     ],
+     "0.60-0.85": [
+      1.227,
+      6635
+     ],
+     "0.85-1.00": [
+      0.858,
+      516
+     ]
+    }
+   }
+  },
+  "std/fuji_sim_velvia": {
+   "grupo": "std",
+   "nombre": "fuji_sim_velvia",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_velvia.cube",
+   "solo": {
+    "de_medio": 1.3244,
+    "de_p95": 3.0478,
+    "de_max": 10.8948,
+    "de_foto_medio": 1.1071,
+    "de_foto_p95": 2.2773,
+    "de_foto_max": 4.4652,
+    "rec": 67,
+    "t_ajuste_s": 28.2,
+    "t_error_s": 0.23,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      2.203,
+      547
+     ],
+     "0.15-0.35": [
+      1.488,
+      4413
+     ],
+     "0.35-0.60": [
+      1.075,
+      8413
+     ],
+     "0.60-0.85": [
+      1.424,
+      6071
+     ],
+     "0.85-1.00": [
+      1.855,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.987,
+      3073
+     ],
+     "0.15-0.35": [
+      0.974,
+      4719
+     ],
+     "0.35-0.60": [
+      1.272,
+      5057
+     ],
+     "0.60-0.85": [
+      1.131,
+      6635
+     ],
+     "0.85-1.00": [
+      1.118,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 1.6864,
+    "de_p95": 4.2164,
+    "de_max": 12.9616,
+    "de_foto_medio": 1.2966,
+    "de_foto_p95": 3.1947,
+    "de_foto_max": 10.5149,
+    "rec": 91,
+    "t_ajuste_s": 23.46,
+    "t_error_s": 0.18,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      2.737,
+      547
+     ],
+     "0.15-0.35": [
+      1.702,
+      4413
+     ],
+     "0.35-0.60": [
+      1.277,
+      8413
+     ],
+     "0.60-0.85": [
+      1.828,
+      6071
+     ],
+     "0.85-1.00": [
+      5.173,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.565,
+      3073
+     ],
+     "0.15-0.35": [
+      1.045,
+      4719
+     ],
+     "0.35-0.60": [
+      1.04,
+      5057
+     ],
+     "0.60-0.85": [
+      1.822,
+      6635
+     ],
+     "0.85-1.00": [
+      3.714,
+      516
+     ]
+    }
+   }
+  },
+  "std/kodak_gold_200": {
+   "grupo": "std",
+   "nombre": "kodak_gold_200",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/kodak_gold_200.cube",
+   "solo": {
+    "de_medio": 1.3564,
+    "de_p95": 3.0449,
+    "de_max": 12.2798,
+    "de_foto_medio": 1.1348,
+    "de_foto_p95": 2.3357,
+    "de_foto_max": 4.9796,
+    "rec": 138,
+    "t_ajuste_s": 31.08,
+    "t_error_s": 0.17,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      1.925,
+      547
+     ],
+     "0.15-0.35": [
+      1.352,
+      4413
+     ],
+     "0.35-0.60": [
+      1.273,
+      8413
+     ],
+     "0.60-0.85": [
+      1.442,
+      6071
+     ],
+     "0.85-1.00": [
+      1.161,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.824,
+      3073
+     ],
+     "0.15-0.35": [
+      1.202,
+      4719
+     ],
+     "0.35-0.60": [
+      1.283,
+      5057
+     ],
+     "0.60-0.85": [
+      1.151,
+      6635
+     ],
+     "0.85-1.00": [
+      0.704,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 1.868,
+    "de_p95": 4.4615,
+    "de_max": 12.796,
+    "de_foto_medio": 1.4161,
+    "de_foto_p95": 2.642,
+    "de_foto_max": 7.3043,
+    "rec": 66,
+    "t_ajuste_s": 17.92,
+    "t_error_s": 0.14,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      3.466,
+      547
+     ],
+     "0.15-0.35": [
+      1.773,
+      4413
+     ],
+     "0.35-0.60": [
+      1.447,
+      8413
+     ],
+     "0.60-0.85": [
+      2.362,
+      6071
+     ],
+     "0.85-1.00": [
+      2.025,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      1.639,
+      3073
+     ],
+     "0.15-0.35": [
+      1.623,
+      4719
+     ],
+     "0.35-0.60": [
+      1.293,
+      5057
+     ],
+     "0.60-0.85": [
+      1.284,
+      6635
+     ],
+     "0.85-1.00": [
+      1.1,
+      516
+     ]
+    }
+   }
+  },
+  "std/fuji_sim_astia": {
+   "grupo": "std",
+   "nombre": "fuji_sim_astia",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_astia.cube",
+   "solo": {
+    "de_medio": 1.4713,
+    "de_p95": 3.8601,
+    "de_max": 14.6926,
+    "de_foto_medio": 1.1911,
+    "de_foto_p95": 3.2142,
+    "de_foto_max": 7.9785,
+    "rec": 144,
+    "t_ajuste_s": 26.84,
+    "t_error_s": 0.15,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      2.297,
+      547
+     ],
+     "0.15-0.35": [
+      1.63,
+      4413
+     ],
+     "0.35-0.60": [
+      1.227,
+      8413
+     ],
+     "0.60-0.85": [
+      1.532,
+      6071
+     ],
+     "0.85-1.00": [
+      2.436,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      1.019,
+      3073
+     ],
+     "0.15-0.35": [
+      1.092,
+      4719
+     ],
+     "0.35-0.60": [
+      1.222,
+      5057
+     ],
+     "0.60-0.85": [
+      1.225,
+      6635
+     ],
+     "0.85-1.00": [
+      2.39,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 1.7083,
+    "de_p95": 4.3838,
+    "de_max": 15.8889,
+    "de_foto_medio": 1.3089,
+    "de_foto_p95": 3.8803,
+    "de_foto_max": 9.7325,
+    "rec": 64,
+    "t_ajuste_s": 26.55,
+    "t_error_s": 0.27,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      1.693,
+      547
+     ],
+     "0.15-0.35": [
+      1.811,
+      4413
+     ],
+     "0.35-0.60": [
+      1.431,
+      8413
+     ],
+     "0.60-0.85": [
+      1.834,
+      6071
+     ],
+     "0.85-1.00": [
+      3.733,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.69,
+      3073
+     ],
+     "0.15-0.35": [
+      0.914,
+      4719
+     ],
+     "0.35-0.60": [
+      1.408,
+      5057
+     ],
+     "0.60-0.85": [
+      1.609,
+      6635
+     ],
+     "0.85-1.00": [
+      3.786,
+      516
+     ]
+    }
+   }
+  },
+  "std/fuji_sim_eterna_bleach_bypass": {
+   "grupo": "std",
+   "nombre": "fuji_sim_eterna_bleach_bypass",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_eterna_bleach_bypass.cube",
+   "solo": {
+    "de_medio": 3.1861,
+    "de_p95": 10.8863,
+    "de_max": 21.9704,
+    "de_foto_medio": 1.6713,
+    "de_foto_p95": 8.4742,
+    "de_foto_max": 20.3774,
+    "rec": 384,
+    "t_ajuste_s": 21.78,
+    "t_error_s": 0.17,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      3.488,
+      547
+     ],
+     "0.15-0.35": [
+      2.415,
+      4413
+     ],
+     "0.35-0.60": [
+      2.257,
+      8413
+     ],
+     "0.60-0.85": [
+      5.024,
+      6071
+     ],
+     "0.85-1.00": [
+      2.999,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.58,
+      3073
+     ],
+     "0.15-0.35": [
+      0.865,
+      4719
+     ],
+     "0.35-0.60": [
+      1.169,
+      5057
+     ],
+     "0.60-0.85": [
+      3.206,
+      6635
+     ],
+     "0.85-1.00": [
+      0.733,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 2.9738,
+    "de_p95": 6.5,
+    "de_max": 12.0345,
+    "de_foto_medio": 2.862,
+    "de_foto_p95": 5.3583,
+    "de_foto_max": 11.3692,
+    "rec": 51,
+    "t_ajuste_s": 16.89,
+    "t_error_s": 0.24,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      5.968,
+      547
+     ],
+     "0.15-0.35": [
+      3.514,
+      4413
+     ],
+     "0.35-0.60": [
+      2.335,
+      8413
+     ],
+     "0.60-0.85": [
+      3.19,
+      6071
+     ],
+     "0.85-1.00": [
+      3.041,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      4.057,
+      3073
+     ],
+     "0.15-0.35": [
+      2.829,
+      4719
+     ],
+     "0.35-0.60": [
+      2.655,
+      5057
+     ],
+     "0.60-0.85": [
+      2.608,
+      6635
+     ],
+     "0.85-1.00": [
+      1.335,
+      516
+     ]
+    }
+   }
+  },
+  "std/fuji_sim_reala_ace": {
+   "grupo": "std",
+   "nombre": "fuji_sim_reala_ace",
+   "ruta": "/home/nicolas/Documentos/a6000/sony-a6000-electronic-shutter/luts/sosang/std/fuji_sim_reala_ace.cube",
+   "solo": {
+    "de_medio": 3.8773,
+    "de_p95": 17.2688,
+    "de_max": 32.0592,
+    "de_foto_medio": 2.007,
+    "de_foto_p95": 7.8617,
+    "de_foto_max": 23.9494,
+    "rec": 298,
+    "t_ajuste_s": 25.87,
+    "t_error_s": 0.14,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      1.78,
+      547
+     ],
+     "0.15-0.35": [
+      1.468,
+      4413
+     ],
+     "0.35-0.60": [
+      2.771,
+      8413
+     ],
+     "0.60-0.85": [
+      7.378,
+      6071
+     ],
+     "0.85-1.00": [
+      3.577,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      0.414,
+      3073
+     ],
+     "0.15-0.35": [
+      0.917,
+      4719
+     ],
+     "0.35-0.60": [
+      1.252,
+      5057
+     ],
+     "0.60-0.85": [
+      4.1,
+      6635
+     ],
+     "0.85-1.00": [
+      1.956,
+      516
+     ]
+    }
+   },
+   "T": {
+    "de_medio": 3.3667,
+    "de_p95": 9.5201,
+    "de_max": 19.694,
+    "de_foto_medio": 2.3955,
+    "de_foto_p95": 7.7529,
+    "de_foto_max": 15.4112,
+    "rec": 74,
+    "t_ajuste_s": 16.93,
+    "t_error_s": 0.33,
+    "de_por_luminancia": {
+     "0.00-0.15": [
+      2.864,
+      547
+     ],
+     "0.15-0.35": [
+      1.847,
+      4413
+     ],
+     "0.35-0.60": [
+      2.58,
+      8413
+     ],
+     "0.60-0.85": [
+      5.423,
+      6071
+     ],
+     "0.85-1.00": [
+      5.369,
+      556
+     ]
+    },
+    "de_foto_por_luminancia": {
+     "0.00-0.15": [
+      1.299,
+      3073
+     ],
+     "0.15-0.35": [
+      1.133,
+      4719
+     ],
+     "0.35-0.60": [
+      1.964,
+      5057
+     ],
+     "0.60-0.85": [
+      3.969,
+      6635
+     ],
+     "0.85-1.00": [
+      4.468,
+      516
+     ]
+    }
+   }
+  }
+ },
+ "clasificacion": [
+  {
+   "nombre": "portra400",
+   "grupo": "peliculas",
+   "clase": "APTA",
+   "motivo": "ΔE medio 0.23 y p95 0.59 con 0 nodos recortados; foto 0.22",
+   "mejor_cadena": "solo",
+   "T_recomendada": "no",
+   "de_medio": 0.225,
+   "de_p95": 0.5896,
+   "de_max": 1.3982,
+   "de_foto_medio": 0.2182,
+   "rec": 0,
+   "solo": {
+    "de_medio": 0.225,
+    "de_p95": 0.5896,
+    "de_max": 1.3982,
+    "de_foto_medio": 0.2182,
+    "de_foto_p95": 0.4105,
+    "de_foto_max": 0.9381,
+    "rec": 0,
+    "t_ajuste_s": 14.95
+   },
+   "T": {
+    "de_medio": 0.2485,
+    "de_p95": 0.6404,
+    "de_max": 1.4771,
+    "de_foto_medio": 0.2495,
+    "de_foto_p95": 0.4795,
+    "de_foto_max": 0.9323,
+    "rec": 0,
+    "t_ajuste_s": 12.83
+   }
+  },
+  {
+   "nombre": "pro400h",
+   "grupo": "peliculas",
+   "clase": "APTA",
+   "motivo": "ΔE medio 0.27 y p95 0.85 con 0 nodos recortados; foto 0.28",
+   "mejor_cadena": "solo",
+   "T_recomendada": "no",
+   "de_medio": 0.2721,
+   "de_p95": 0.8543,
+   "de_max": 2.2804,
+   "de_foto_medio": 0.2759,
+   "rec": 0,
+   "solo": {
+    "de_medio": 0.2721,
+    "de_p95": 0.8543,
+    "de_max": 2.2804,
+    "de_foto_medio": 0.2759,
+    "de_foto_p95": 0.5325,
+    "de_foto_max": 1.3251,
+    "rec": 0,
+    "t_ajuste_s": 18.02
+   },
+   "T": {
+    "de_medio": 0.2987,
+    "de_p95": 0.897,
+    "de_max": 1.9287,
+    "de_foto_medio": 0.3116,
+    "de_foto_p95": 0.6339,
+    "de_foto_max": 1.4818,
+    "rec": 0,
+    "t_ajuste_s": 13.69
+   }
+  },
+  {
+   "nombre": "gold200",
+   "grupo": "peliculas",
+   "clase": "APTA",
+   "motivo": "ΔE medio 0.28 y p95 0.72 con 0 nodos recortados; foto 0.36",
+   "mejor_cadena": "T",
+   "T_recomendada": "sí",
+   "de_medio": 0.28,
+   "de_p95": 0.7231,
+   "de_max": 2.1131,
+   "de_foto_medio": 0.3624,
+   "rec": 0,
+   "solo": {
+    "de_medio": 0.3026,
+    "de_p95": 0.7922,
+    "de_max": 2.4486,
+    "de_foto_medio": 0.3652,
+    "de_foto_p95": 0.6839,
+    "de_foto_max": 1.4658,
+    "rec": 0,
+    "t_ajuste_s": 17.55
+   },
+   "T": {
+    "de_medio": 0.28,
+    "de_p95": 0.7231,
+    "de_max": 2.1131,
+    "de_foto_medio": 0.3624,
+    "de_foto_p95": 0.7244,
+    "de_foto_max": 1.7746,
+    "rec": 0,
+    "t_ajuste_s": 14.39
+   }
+  },
+  {
+   "nombre": "ektachrome_e100",
+   "grupo": "peliculas",
+   "clase": "APTA",
+   "motivo": "ΔE medio 0.28 y p95 0.85 con 0 nodos recortados; foto 0.40",
+   "mejor_cadena": "T",
+   "T_recomendada": "sí",
+   "de_medio": 0.2844,
+   "de_p95": 0.8528,
+   "de_max": 3.75,
+   "de_foto_medio": 0.3999,
+   "rec": 0,
+   "solo": {
+    "de_medio": 0.3762,
+    "de_p95": 0.8643,
+    "de_max": 2.9085,
+    "de_foto_medio": 0.5583,
+    "de_foto_p95": 1.0335,
+    "de_foto_max": 2.2311,
+    "rec": 0,
+    "t_ajuste_s": 18.95
+   },
+   "T": {
+    "de_medio": 0.2844,
+    "de_p95": 0.8528,
+    "de_max": 3.75,
+    "de_foto_medio": 0.3999,
+    "de_foto_p95": 0.8393,
+    "de_foto_max": 2.1984,
+    "rec": 0,
+    "t_ajuste_s": 19.04
+   }
+  },
+  {
+   "nombre": "kodachrome64",
+   "grupo": "peliculas",
+   "clase": "APTA",
+   "motivo": "ΔE medio 0.42 y p95 1.27 con 0 nodos recortados; foto 0.55",
+   "mejor_cadena": "T",
+   "T_recomendada": "sí",
+   "de_medio": 0.4198,
+   "de_p95": 1.2663,
+   "de_max": 3.9784,
+   "de_foto_medio": 0.5479,
+   "rec": 0,
+   "solo": {
+    "de_medio": 0.6379,
+    "de_p95": 1.7779,
+    "de_max": 4.7968,
+    "de_foto_medio": 0.8545,
+    "de_foto_p95": 1.607,
+    "de_foto_max": 3.6262,
+    "rec": 0,
+    "t_ajuste_s": 21.19
+   },
+   "T": {
+    "de_medio": 0.4198,
+    "de_p95": 1.2663,
+    "de_max": 3.9784,
+    "de_foto_medio": 0.5479,
+    "de_foto_p95": 1.2074,
+    "de_foto_max": 2.4395,
+    "rec": 0,
+    "t_ajuste_s": 18.19
+   }
+  },
+  {
+   "nombre": "velvia50",
+   "grupo": "peliculas",
+   "clase": "ACEPTABLE con T",
+   "motivo": "sin T: 0.67/1.73 y 28 nodos recortados; con T: 0.64/1.83 y 11 nodos",
+   "mejor_cadena": "T",
+   "T_recomendada": "no (mejora la rejilla, empeora la foto)",
+   "de_medio": 0.6365,
+   "de_p95": 1.8348,
+   "de_max": 6.5322,
+   "de_foto_medio": 0.8879,
+   "rec": 11,
+   "solo": {
+    "de_medio": 0.6667,
+    "de_p95": 1.729,
+    "de_max": 5.8688,
+    "de_foto_medio": 0.8433,
+    "de_foto_p95": 1.6621,
+    "de_foto_max": 3.4027,
+    "rec": 28,
+    "t_ajuste_s": 27.33
+   },
+   "T": {
+    "de_medio": 0.6365,
+    "de_p95": 1.8348,
+    "de_max": 6.5322,
+    "de_foto_medio": 0.8879,
+    "de_foto_p95": 2.0446,
+    "de_foto_max": 4.4924,
+    "rec": 11,
+    "t_ajuste_s": 30.86
+   }
+  },
+  {
+   "nombre": "fuji_sim_classic_chrome",
+   "grupo": "std",
+   "clase": "ACEPTABLE con T",
+   "motivo": "sin T: 0.62/1.36 y 80 nodos recortados; con T: 0.63/1.33 y 4 nodos",
+   "mejor_cadena": "solo",
+   "T_recomendada": "sí, por recortes",
+   "de_medio": 0.6198,
+   "de_p95": 1.3566,
+   "de_max": 4.8219,
+   "de_foto_medio": 0.6698,
+   "rec": 80,
+   "solo": {
+    "de_medio": 0.6198,
+    "de_p95": 1.3566,
+    "de_max": 4.8219,
+    "de_foto_medio": 0.6698,
+    "de_foto_p95": 1.3691,
+    "de_foto_max": 2.8037,
+    "rec": 80,
+    "t_ajuste_s": 32.14
+   },
+   "T": {
+    "de_medio": 0.6304,
+    "de_p95": 1.3261,
+    "de_max": 3.2649,
+    "de_foto_medio": 0.5479,
+    "de_foto_p95": 1.1305,
+    "de_foto_max": 2.8811,
+    "rec": 4,
+    "t_ajuste_s": 28.22
+   }
+  },
+  {
+   "nombre": "fuji_sim_pro_neg",
+   "grupo": "std",
+   "clase": "SOLO SOFTWARE",
+   "motivo": "el hardware se queda en ΔE medio 0.81/p95 1.81 (31 nodos en el tope sin T); fiel solo con el .cube completo en el JPEG",
+   "mejor_cadena": "solo",
+   "T_recomendada": "no",
+   "de_medio": 0.8143,
+   "de_p95": 1.8093,
+   "de_max": 6.3501,
+   "de_foto_medio": 0.7414,
+   "rec": 31,
+   "solo": {
+    "de_medio": 0.8143,
+    "de_p95": 1.8093,
+    "de_max": 6.3501,
+    "de_foto_medio": 0.7414,
+    "de_foto_p95": 1.3085,
+    "de_foto_max": 4.0703,
+    "rec": 31,
+    "t_ajuste_s": 28.75
+   },
+   "T": {
+    "de_medio": 0.9553,
+    "de_p95": 2.3551,
+    "de_max": 8.9163,
+    "de_foto_medio": 0.8379,
+    "de_foto_p95": 2.9448,
+    "de_foto_max": 7.1049,
+    "rec": 7,
+    "t_ajuste_s": 20.69
+   }
+  },
+  {
+   "nombre": "fuji_sim_eterna",
+   "grupo": "std",
+   "clase": "SOLO SOFTWARE",
+   "motivo": "el hardware se queda en ΔE medio 0.84/p95 2.11 (44 nodos en el tope sin T); fiel solo con el .cube completo en el JPEG",
+   "mejor_cadena": "solo",
+   "T_recomendada": "no",
+   "de_medio": 0.8427,
+   "de_p95": 2.1122,
+   "de_max": 7.5555,
+   "de_foto_medio": 0.7124,
+   "rec": 44,
+   "solo": {
+    "de_medio": 0.8427,
+    "de_p95": 2.1122,
+    "de_max": 7.5555,
+    "de_foto_medio": 0.7124,
+    "de_foto_p95": 1.5046,
+    "de_foto_max": 6.2173,
+    "rec": 44,
+    "t_ajuste_s": 19.72
+   },
+   "T": {
+    "de_medio": 1.0774,
+    "de_p95": 2.6268,
+    "de_max": 6.9836,
+    "de_foto_medio": 1.0226,
+    "de_foto_p95": 2.3235,
+    "de_foto_max": 5.488,
+    "rec": 7,
+    "t_ajuste_s": 22.84
+   }
+  },
+  {
+   "nombre": "fujifilm_eterna_250",
+   "grupo": "std",
+   "clase": "SOLO SOFTWARE",
+   "motivo": "el hardware se queda en ΔE medio 1.09/p95 2.47 (183 nodos en el tope sin T); fiel solo con el .cube completo en el JPEG",
+   "mejor_cadena": "solo",
+   "T_recomendada": "no",
+   "de_medio": 1.0883,
+   "de_p95": 2.4688,
+   "de_max": 8.6906,
+   "de_foto_medio": 0.7933,
+   "rec": 183,
+   "solo": {
+    "de_medio": 1.0883,
+    "de_p95": 2.4688,
+    "de_max": 8.6906,
+    "de_foto_medio": 0.7933,
+    "de_foto_p95": 1.6819,
+    "de_foto_max": 4.3015,
+    "rec": 183,
+    "t_ajuste_s": 25.44
+   },
+   "T": {
+    "de_medio": 1.4608,
+    "de_p95": 3.2495,
+    "de_max": 8.2974,
+    "de_foto_medio": 1.255,
+    "de_foto_p95": 2.545,
+    "de_foto_max": 5.4823,
+    "rec": 16,
+    "t_ajuste_s": 20.42
+   }
+  },
+  {
+   "nombre": "kodak_vision3_250d",
+   "grupo": "std",
+   "clase": "SOLO SOFTWARE",
+   "motivo": "el hardware se queda en ΔE medio 1.18/p95 2.63 (207 nodos en el tope sin T); fiel solo con el .cube completo en el JPEG",
+   "mejor_cadena": "solo",
+   "T_recomendada": "no",
+   "de_medio": 1.1775,
+   "de_p95": 2.6285,
+   "de_max": 12.0156,
+   "de_foto_medio": 0.9409,
+   "rec": 207,
+   "solo": {
+    "de_medio": 1.1775,
+    "de_p95": 2.6285,
+    "de_max": 12.0156,
+    "de_foto_medio": 0.9409,
+    "de_foto_p95": 1.8732,
+    "de_foto_max": 4.0555,
+    "rec": 207,
+    "t_ajuste_s": 32.58
+   },
+   "T": {
+    "de_medio": 1.5654,
+    "de_p95": 3.504,
+    "de_max": 8.8578,
+    "de_foto_medio": 1.4024,
+    "de_foto_p95": 2.7815,
+    "de_foto_max": 7.3333,
+    "rec": 19,
+    "t_ajuste_s": 19.34
+   }
+  },
+  {
+   "nombre": "fujifilm_pro_400h",
+   "grupo": "std",
+   "clase": "SOLO SOFTWARE",
+   "motivo": "el hardware se queda en ΔE medio 1.18/p95 2.61 (123 nodos en el tope sin T); fiel solo con el .cube completo en el JPEG",
+   "mejor_cadena": "solo",
+   "T_recomendada": "no",
+   "de_medio": 1.1777,
+   "de_p95": 2.6119,
+   "de_max": 9.0453,
+   "de_foto_medio": 0.9896,
+   "rec": 123,
+   "solo": {
+    "de_medio": 1.1777,
+    "de_p95": 2.6119,
+    "de_max": 9.0453,
+    "de_foto_medio": 0.9896,
+    "de_foto_p95": 2.0097,
+    "de_foto_max": 4.829,
+    "rec": 123,
+    "t_ajuste_s": 21.15
+   },
+   "T": {
+    "de_medio": 1.5966,
+    "de_p95": 3.6799,
+    "de_max": 11.5424,
+    "de_foto_medio": 1.4444,
+    "de_foto_p95": 2.8563,
+    "de_foto_max": 7.7975,
+    "rec": 25,
+    "t_ajuste_s": 13.08
+   }
+  },
+  {
+   "nombre": "fuji_sim_classic_neg",
+   "grupo": "std",
+   "clase": "SOLO SOFTWARE",
+   "motivo": "el hardware se queda en ΔE medio 1.18/p95 2.72 (203 nodos en el tope sin T); fiel solo con el .cube completo en el JPEG",
+   "mejor_cadena": "T",
+   "T_recomendada": "no (mejora la rejilla, empeora la foto)",
+   "de_medio": 1.1798,
+   "de_p95": 2.7236,
+   "de_max": 6.0905,
+   "de_foto_medio": 0.9614,
+   "rec": 62,
+   "solo": {
+    "de_medio": 1.4809,
+    "de_p95": 4.8611,
+    "de_max": 11.1941,
+    "de_foto_medio": 0.7831,
+    "de_foto_p95": 1.3845,
+    "de_foto_max": 3.2803,
+    "rec": 203,
+    "t_ajuste_s": 19.01
+   },
+   "T": {
+    "de_medio": 1.1798,
+    "de_p95": 2.7236,
+    "de_max": 6.0905,
+    "de_foto_medio": 0.9614,
+    "de_foto_p95": 1.7943,
+    "de_foto_max": 3.8808,
+    "rec": 62,
+    "t_ajuste_s": 26.2
+   }
+  },
+  {
+   "nombre": "kodak_portra_400",
+   "grupo": "std",
+   "clase": "SOLO SOFTWARE",
+   "motivo": "el hardware se queda en ΔE medio 1.18/p95 2.63 (126 nodos en el tope sin T); fiel solo con el .cube completo en el JPEG",
+   "mejor_cadena": "solo",
+   "T_recomendada": "no",
+   "de_medio": 1.1836,
+   "de_p95": 2.6341,
+   "de_max": 11.7289,
+   "de_foto_medio": 1.0455,
+   "rec": 126,
+   "solo": {
+    "de_medio": 1.1836,
+    "de_p95": 2.6341,
+    "de_max": 11.7289,
+    "de_foto_medio": 1.0455,
+    "de_foto_p95": 2.0668,
+    "de_foto_max": 4.074,
+    "rec": 126,
+    "t_ajuste_s": 25.62
+   },
+   "T": {
+    "de_medio": 1.69,
+    "de_p95": 3.8807,
+    "de_max": 10.8376,
+    "de_foto_medio": 1.4249,
+    "de_foto_p95": 2.6986,
+    "de_foto_max": 7.5621,
+    "rec": 43,
+    "t_ajuste_s": 23.1
+   }
+  },
+  {
+   "nombre": "fuji_sim_provia",
+   "grupo": "std",
+   "clase": "SOLO SOFTWARE",
+   "motivo": "el hardware se queda en ΔE medio 1.25/p95 3.17 (131 nodos en el tope sin T); fiel solo con el .cube completo en el JPEG",
+   "mejor_cadena": "solo",
+   "T_recomendada": "no",
+   "de_medio": 1.2469,
+   "de_p95": 3.1701,
+   "de_max": 11.5074,
+   "de_foto_medio": 0.9758,
+   "rec": 131,
+   "solo": {
+    "de_medio": 1.2469,
+    "de_p95": 3.1701,
+    "de_max": 11.5074,
+    "de_foto_medio": 0.9758,
+    "de_foto_p95": 2.9817,
+    "de_foto_max": 5.4672,
+    "rec": 131,
+    "t_ajuste_s": 26.1
+   },
+   "T": {
+    "de_medio": 1.4212,
+    "de_p95": 3.7925,
+    "de_max": 12.4985,
+    "de_foto_medio": 1.1118,
+    "de_foto_p95": 3.7012,
+    "de_foto_max": 5.8584,
+    "rec": 74,
+    "t_ajuste_s": 28.13
+   }
+  },
+  {
+   "nombre": "fujifilm_velvia_100",
+   "grupo": "std",
+   "clase": "SOLO SOFTWARE",
+   "motivo": "el hardware se queda en ΔE medio 1.27/p95 2.68 (109 nodos en el tope sin T); fiel solo con el .cube completo en el JPEG",
+   "mejor_cadena": "solo",
+   "T_recomendada": "no",
+   "de_medio": 1.2669,
+   "de_p95": 2.6825,
+   "de_max": 14.9766,
+   "de_foto_medio": 1.1217,
+   "rec": 109,
+   "solo": {
+    "de_medio": 1.2669,
+    "de_p95": 2.6825,
+    "de_max": 14.9766,
+    "de_foto_medio": 1.1217,
+    "de_foto_p95": 2.2938,
+    "de_foto_max": 5.2425,
+    "rec": 109,
+    "t_ajuste_s": 34.86
+   },
+   "T": {
+    "de_medio": 1.5128,
+    "de_p95": 3.3032,
+    "de_max": 13.3959,
+    "de_foto_medio": 1.4878,
+    "de_foto_p95": 2.8039,
+    "de_foto_max": 9.9026,
+    "rec": 33,
+    "t_ajuste_s": 17.24
+   }
+  },
+  {
+   "nombre": "fuji_sim_velvia",
+   "grupo": "std",
+   "clase": "SOLO SOFTWARE",
+   "motivo": "el hardware se queda en ΔE medio 1.32/p95 3.05 (67 nodos en el tope sin T); fiel solo con el .cube completo en el JPEG",
+   "mejor_cadena": "solo",
+   "T_recomendada": "no",
+   "de_medio": 1.3244,
+   "de_p95": 3.0478,
+   "de_max": 10.8948,
+   "de_foto_medio": 1.1071,
+   "rec": 67,
+   "solo": {
+    "de_medio": 1.3244,
+    "de_p95": 3.0478,
+    "de_max": 10.8948,
+    "de_foto_medio": 1.1071,
+    "de_foto_p95": 2.2773,
+    "de_foto_max": 4.4652,
+    "rec": 67,
+    "t_ajuste_s": 28.2
+   },
+   "T": {
+    "de_medio": 1.6864,
+    "de_p95": 4.2164,
+    "de_max": 12.9616,
+    "de_foto_medio": 1.2966,
+    "de_foto_p95": 3.1947,
+    "de_foto_max": 10.5149,
+    "rec": 91,
+    "t_ajuste_s": 23.46
+   }
+  },
+  {
+   "nombre": "kodak_gold_200",
+   "grupo": "std",
+   "clase": "SOLO SOFTWARE",
+   "motivo": "el hardware se queda en ΔE medio 1.36/p95 3.04 (138 nodos en el tope sin T); fiel solo con el .cube completo en el JPEG",
+   "mejor_cadena": "solo",
+   "T_recomendada": "no",
+   "de_medio": 1.3564,
+   "de_p95": 3.0449,
+   "de_max": 12.2798,
+   "de_foto_medio": 1.1348,
+   "rec": 138,
+   "solo": {
+    "de_medio": 1.3564,
+    "de_p95": 3.0449,
+    "de_max": 12.2798,
+    "de_foto_medio": 1.1348,
+    "de_foto_p95": 2.3357,
+    "de_foto_max": 4.9796,
+    "rec": 138,
+    "t_ajuste_s": 31.08
+   },
+   "T": {
+    "de_medio": 1.868,
+    "de_p95": 4.4615,
+    "de_max": 12.796,
+    "de_foto_medio": 1.4161,
+    "de_foto_p95": 2.642,
+    "de_foto_max": 7.3043,
+    "rec": 66,
+    "t_ajuste_s": 17.92
+   }
+  },
+  {
+   "nombre": "fuji_sim_astia",
+   "grupo": "std",
+   "clase": "SOLO SOFTWARE",
+   "motivo": "el hardware se queda en ΔE medio 1.47/p95 3.86 (144 nodos en el tope sin T); fiel solo con el .cube completo en el JPEG",
+   "mejor_cadena": "solo",
+   "T_recomendada": "no",
+   "de_medio": 1.4713,
+   "de_p95": 3.8601,
+   "de_max": 14.6926,
+   "de_foto_medio": 1.1911,
+   "rec": 144,
+   "solo": {
+    "de_medio": 1.4713,
+    "de_p95": 3.8601,
+    "de_max": 14.6926,
+    "de_foto_medio": 1.1911,
+    "de_foto_p95": 3.2142,
+    "de_foto_max": 7.9785,
+    "rec": 144,
+    "t_ajuste_s": 26.84
+   },
+   "T": {
+    "de_medio": 1.7083,
+    "de_p95": 4.3838,
+    "de_max": 15.8889,
+    "de_foto_medio": 1.3089,
+    "de_foto_p95": 3.8803,
+    "de_foto_max": 9.7325,
+    "rec": 64,
+    "t_ajuste_s": 26.55
+   }
+  },
+  {
+   "nombre": "fuji_sim_eterna_bleach_bypass",
+   "grupo": "std",
+   "clase": "SOLO SOFTWARE",
+   "motivo": "tabla saturada: 384/405 nodos en el tope ±64; el look solo es fiel con el .cube completo",
+   "mejor_cadena": "T",
+   "T_recomendada": "no (mejora la rejilla, empeora la foto)",
+   "de_medio": 2.9738,
+   "de_p95": 6.5,
+   "de_max": 12.0345,
+   "de_foto_medio": 2.862,
+   "rec": 51,
+   "solo": {
+    "de_medio": 3.1861,
+    "de_p95": 10.8863,
+    "de_max": 21.9704,
+    "de_foto_medio": 1.6713,
+    "de_foto_p95": 8.4742,
+    "de_foto_max": 20.3774,
+    "rec": 384,
+    "t_ajuste_s": 21.78
+   },
+   "T": {
+    "de_medio": 2.9738,
+    "de_p95": 6.5,
+    "de_max": 12.0345,
+    "de_foto_medio": 2.862,
+    "de_foto_p95": 5.3583,
+    "de_foto_max": 11.3692,
+    "rec": 51,
+    "t_ajuste_s": 16.89
+   }
+  },
+  {
+   "nombre": "fuji_sim_reala_ace",
+   "grupo": "std",
+   "clase": "SOLO SOFTWARE",
+   "motivo": "tabla saturada: 298/405 nodos en el tope ±64; el look solo es fiel con el .cube completo",
+   "mejor_cadena": "T",
+   "T_recomendada": "no (mejora la rejilla, empeora la foto)",
+   "de_medio": 3.3667,
+   "de_p95": 9.5201,
+   "de_max": 19.694,
+   "de_foto_medio": 2.3955,
+   "rec": 74,
+   "solo": {
+    "de_medio": 3.8773,
+    "de_p95": 17.2688,
+    "de_max": 32.0592,
+    "de_foto_medio": 2.007,
+    "de_foto_p95": 7.8617,
+    "de_foto_max": 23.9494,
+    "rec": 298,
+    "t_ajuste_s": 25.87
+   },
+   "T": {
+    "de_medio": 3.3667,
+    "de_p95": 9.5201,
+    "de_max": 19.694,
+    "de_foto_medio": 2.3955,
+    "de_foto_p95": 7.7529,
+    "de_foto_max": 15.4112,
+    "rec": 74,
+    "t_ajuste_s": 16.93
+   }
+  }
+ ],
+ "vlog": {
+  "por_fichero": {
+   "fujifilm_c200": {
+    "ganancia_0_5": 0.687,
+    "entrada_para_L_50": 0.438,
+    "negro": 0.047,
+    "blanco": 0.86
+   },
+   "fujifilm_eterna_250": {
+    "ganancia_0_5": 0.541,
+    "entrada_para_L_50": 0.485,
+    "negro": 0.009,
+    "blanco": 0.867
+   },
+   "fujifilm_eterna_250d": {
+    "ganancia_0_5": 0.533,
+    "entrada_para_L_50": 0.487,
+    "negro": 0.009,
+    "blanco": 0.867
+   },
+   "fujifilm_eterna_400": {
+    "ganancia_0_5": 0.51,
+    "entrada_para_L_50": 0.496,
+    "negro": 0.011,
+    "blanco": 0.865
+   },
+   "fujifilm_eterna_500": {
+    "ganancia_0_5": 0.547,
+    "entrada_para_L_50": 0.483,
+    "negro": 0.008,
+    "blanco": 0.868
+   },
+   "fujifilm_eterna_vivid_160": {
+    "ganancia_0_5": 0.542,
+    "entrada_para_L_50": 0.484,
+    "negro": 0.01,
+    "blanco": 0.868
+   },
+   "fujifilm_eterna_vivid_250d": {
+    "ganancia_0_5": 0.537,
+    "entrada_para_L_50": 0.486,
+    "negro": 0.009,
+    "blanco": 0.867
+   },
+   "fujifilm_eterna_vivid_500": {
+    "ganancia_0_5": 0.56,
+    "entrada_para_L_50": 0.479,
+    "negro": 0.007,
+    "blanco": 0.868
+   },
+   "fujifilm_f64d": {
+    "ganancia_0_5": 0.554,
+    "entrada_para_L_50": 0.482,
+    "negro": 0.007,
+    "blanco": 0.865
+   },
+   "fujifilm_pro_400h": {
+    "ganancia_0_5": 0.656,
+    "entrada_para_L_50": 0.442,
+    "negro": 0.047,
+    "blanco": 0.86
+   },
+   "fujifilm_provia_100f": {
+    "ganancia_0_5": 0.687,
+    "entrada_para_L_50": 0.437,
+    "negro": 0.008,
+    "blanco": 0.856
+   },
+   "fujifilm_reala_500d": {
+    "ganancia_0_5": 0.539,
+    "entrada_para_L_50": 0.485,
+    "negro": 0.007,
+    "blanco": 0.867
+   },
+   "fujifilm_velvia_100": {
+    "ganancia_0_5": 0.699,
+    "entrada_para_L_50": 0.436,
+    "negro": 0.004,
+    "blanco": 0.836
+   },
+   "fujifilm_xtra_400": {
+    "ganancia_0_5": 0.7,
+    "entrada_para_L_50": 0.436,
+    "negro": 0.047,
+    "blanco": 0.86
+   },
+   "kodak_ektachrome_100": {
+    "ganancia_0_5": 0.659,
+    "entrada_para_L_50": 0.439,
+    "negro": 0.005,
+    "blanco": 0.851
+   },
+   "kodak_ektar_100": {
+    "ganancia_0_5": 0.66,
+    "entrada_para_L_50": 0.441,
+    "negro": 0.06,
+    "blanco": 0.857
+   },
+   "kodak_gold_200": {
+    "ganancia_0_5": 0.706,
+    "entrada_para_L_50": 0.434,
+    "negro": 0.054,
+    "blanco": 0.85
+   },
+   "kodak_kodachrome_64": {
+    "ganancia_0_5": 0.64,
+    "entrada_para_L_50": 0.44,
+    "negro": 0.013,
+    "blanco": 0.811
+   },
+   "kodak_portra_160": {
+    "ganancia_0_5": 0.662,
+    "entrada_para_L_50": 0.44,
+    "negro": 0.054,
+    "blanco": 0.857
+   },
+   "kodak_portra_400": {
+    "ganancia_0_5": 0.66,
+    "entrada_para_L_50": 0.44,
+    "negro": 0.054,
+    "blanco": 0.857
+   },
+   "kodak_portra_800": {
+    "ganancia_0_5": 0.655,
+    "entrada_para_L_50": 0.439,
+    "negro": 0.052,
+    "blanco": 0.857
+   },
+   "kodak_portra_800_push1": {
+    "ganancia_0_5": 0.682,
+    "entrada_para_L_50": 0.437,
+    "negro": 0.052,
+    "blanco": 0.857
+   },
+   "kodak_portra_800_push2": {
+    "ganancia_0_5": 0.703,
+    "entrada_para_L_50": 0.437,
+    "negro": 0.052,
+    "blanco": 0.857
+   },
+   "kodak_ultramax_400": {
+    "ganancia_0_5": 0.7,
+    "entrada_para_L_50": 0.434,
+    "negro": 0.053,
+    "blanco": 0.85
+   },
+   "kodak_verita_200d": {
+    "ganancia_0_5": 0.53,
+    "entrada_para_L_50": 0.488,
+    "negro": 0.003,
+    "blanco": 0.868
+   },
+   "kodak_vision3_200t": {
+    "ganancia_0_5": 0.538,
+    "entrada_para_L_50": 0.485,
+    "negro": 0.003,
+    "blanco": 0.868
+   },
+   "kodak_vision3_250d": {
+    "ganancia_0_5": 0.538,
+    "entrada_para_L_50": 0.486,
+    "negro": 0.003,
+    "blanco": 0.868
+   },
+   "kodak_vision3_500t": {
+    "ganancia_0_5": 0.54,
+    "entrada_para_L_50": 0.485,
+    "negro": 0.003,
+    "blanco": 0.868
+   },
+   "kodak_vision3_50d": {
+    "ganancia_0_5": 0.548,
+    "entrada_para_L_50": 0.483,
+    "negro": 0.003,
+    "blanco": 0.868
+   }
+  },
+  "resumen": {
+   "n": 29,
+   "ganancia_0_5_min": 0.51,
+   "ganancia_0_5_max": 0.706,
+   "blanco_min": 0.811,
+   "blanco_max": 0.868,
+   "entrada_para_L_50_min": 0.434,
+   "entrada_para_L_50_max": 0.496
+  }
+ },
+ "pack": {
+  "LUT1": {
+   "cube": "peliculas/portra400.cube",
+   "rol": "negativo de retrato, piel suave",
+   "de_medio_entregable_sin_T": 0.225,
+   "de_p95_sin_T": 0.5896,
+   "de_foto_medio_sin_T": 0.2182,
+   "rec_sin_T": 0,
+   "de_medio_con_T": 0.2485,
+   "rec_con_T": 0,
+   "T_recomendada": "no",
+   "paquete": "pack/LUT1.LUT",
+   "paquete_valido": true
+  },
+  "LUT2": {
+   "cube": "peliculas/pro400h.cube",
+   "rol": "negativo suave, verdes y rosas",
+   "de_medio_entregable_sin_T": 0.2721,
+   "de_p95_sin_T": 0.8543,
+   "de_foto_medio_sin_T": 0.2759,
+   "rec_sin_T": 0,
+   "de_medio_con_T": 0.2987,
+   "rec_con_T": 0,
+   "T_recomendada": "no",
+   "paquete": "pack/LUT2.LUT",
+   "paquete_valido": true
+  },
+  "LUT3": {
+   "cube": "peliculas/gold200.cube",
+   "rol": "negativo cálido de consumo",
+   "de_medio_entregable_sin_T": 0.3026,
+   "de_p95_sin_T": 0.7922,
+   "de_foto_medio_sin_T": 0.3652,
+   "rec_sin_T": 0,
+   "de_medio_con_T": 0.28,
+   "rec_con_T": 0,
+   "T_recomendada": "sí",
+   "paquete": "pack/LUT3.LUT",
+   "paquete_valido": true
+  },
+  "LUT4": {
+   "cube": "peliculas/ektachrome_e100.cube",
+   "rol": "diapositiva neutra/fría",
+   "de_medio_entregable_sin_T": 0.3762,
+   "de_p95_sin_T": 0.8643,
+   "de_foto_medio_sin_T": 0.5583,
+   "rec_sin_T": 0,
+   "de_medio_con_T": 0.2844,
+   "rec_con_T": 0,
+   "T_recomendada": "sí",
+   "paquete": "pack/LUT4.LUT",
+   "paquete_valido": true
+  },
+  "LUT5": {
+   "cube": "peliculas/kodachrome64.cube",
+   "rol": "diapositiva cálida, contraste alto",
+   "de_medio_entregable_sin_T": 0.6379,
+   "de_p95_sin_T": 1.7779,
+   "de_foto_medio_sin_T": 0.8545,
+   "rec_sin_T": 0,
+   "de_medio_con_T": 0.4198,
+   "rec_con_T": 0,
+   "T_recomendada": "sí",
+   "paquete": "pack/LUT5.LUT",
+   "paquete_valido": true
+  },
+  "LUT6": {
+   "cube": "peliculas/velvia50.cube",
+   "rol": "diapositiva muy saturada",
+   "de_medio_entregable_sin_T": 0.6667,
+   "de_p95_sin_T": 1.729,
+   "de_foto_medio_sin_T": 0.8433,
+   "rec_sin_T": 28,
+   "de_medio_con_T": 0.6365,
+   "rec_con_T": 11,
+   "T_recomendada": "no (mejora la rejilla, empeora la foto)",
+   "paquete": "pack/LUT6.LUT",
+   "paquete_valido": true
+  }
+ },
+ "no_medidos": [
+  {
+   "nombre": "fujifilm_c200",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "fujifilm_eterna_250d",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "fujifilm_eterna_400",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "fujifilm_eterna_500",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "fujifilm_eterna_vivid_160",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "fujifilm_eterna_vivid_250d",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "fujifilm_eterna_vivid_500",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "fujifilm_f64d",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "fujifilm_provia_100f",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "fujifilm_reala_500d",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "fujifilm_xtra_400",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "kodak_ektachrome_100",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "kodak_ektar_100",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "kodak_kodachrome_64",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "kodak_portra_160",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "kodak_portra_800",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "kodak_portra_800_push1",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "kodak_portra_800_push2",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "kodak_ultramax_400",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "kodak_verita_200d",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "kodak_vision3_200t",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "kodak_vision3_500t",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "kodak_vision3_50d",
+   "grupo": "std",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "fujifilm_c200",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "fujifilm_eterna_250",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "fujifilm_eterna_250d",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "fujifilm_eterna_400",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "fujifilm_eterna_500",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "fujifilm_eterna_vivid_160",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "fujifilm_eterna_vivid_250d",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "fujifilm_eterna_vivid_500",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "fujifilm_f64d",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "fujifilm_pro_400h",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "fujifilm_provia_100f",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "fujifilm_reala_500d",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "fujifilm_velvia_100",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "fujifilm_xtra_400",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "kodak_ektachrome_100",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "kodak_ektar_100",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "kodak_gold_200",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "kodak_kodachrome_64",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "kodak_portra_160",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "kodak_portra_400",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "kodak_portra_800",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "kodak_portra_800_push1",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "kodak_portra_800_push2",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "kodak_ultramax_400",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "kodak_verita_200d",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "kodak_vision3_200t",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "kodak_vision3_250d",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "kodak_vision3_500t",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "kodak_vision3_50d",
+   "grupo": "vlog",
+   "motivo": "entrada V-Log: no aplicable a la A6000 (no graba V-Log); solo validado"
+  },
+  {
+   "nombre": "S1IIS2V",
+   "grupo": "extra",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  },
+  {
+   "nombre": "Ektar100CA",
+   "grupo": "extra",
+   "motivo": "fuera del alcance acordado (tiempo de CPU)"
+  }
+ ],
+ "mc": {
+  "nota": "ajuste que hace `lut_pkg.desde_funcion` tal cual (metodo='mc', LSQ de G71), solo LUT",
+  "filas": [
+   {
+    "nombre": "kodachrome64",
+    "metodo": "mc",
+    "de_medio": 0.5582,
+    "de_p95": 1.4208,
+    "de_max": 6.4933,
+    "de_foto_medio": 1.374,
+    "rec": 1,
+    "t_s": 1.23
+   },
+   {
+    "nombre": "pro400h",
+    "metodo": "mc",
+    "de_medio": 0.2375,
+    "de_p95": 0.6469,
+    "de_max": 1.8516,
+    "de_foto_medio": 0.4555,
+    "rec": 0,
+    "t_s": 1.93
+   },
+   {
+    "nombre": "gold200",
+    "metodo": "mc",
+    "de_medio": 0.3271,
+    "de_p95": 0.8333,
+    "de_max": 2.081,
+    "de_foto_medio": 0.4989,
+    "rec": 0,
+    "t_s": 1.85
+   },
+   {
+    "nombre": "portra400",
+    "metodo": "mc",
+    "de_medio": 0.2132,
+    "de_p95": 0.5336,
+    "de_max": 1.1798,
+    "de_foto_medio": 0.3882,
+    "rec": 0,
+    "t_s": 2.05
+   }
+  ]
+ },
+ "limites": [
+  "48 .cube de los que se validaron sin medir: 29 de sosang/vlog (fuera de alcance por entrada V-Log) y 19 de sosang/std + 2 sueltos (alcance acordado: 21 medidos de 75).",
+  "No hay RAW: `rawpy` no está en el .venv, así que los píxeles reales son JPEG de la propia A6000 (4 exposiciones de la misma escena de banco, interior). Sin piel, cielo ni especulares: el ΔE de foto no es representativo de paisaje/retrato.",
+  "La curva T no se puede entregar todavía (LUT-T-1 pendiente, g92 §5): las columnas T son modelo, la entrega de hoy es la tabla sin T.",
+  "El modelo de interpolación es 'ambos' (media trilineal/tetraédrica) porque la cámara no ha decidido (experimento A, g90 §1). Con la real, el ΔE puede moverse.",
+  "Se asume el orden de g71 §1(d) (gamma → matriz → YCbCr BT.601 → LUT 3D), inferido, no medido en cámara.",
+  "usa_M=False por la conclusión de G90 §B (la matriz por mínimos cuadrados empeora); no es una elección libre.",
+  "`lut_pkg.desde_funcion` (la vía de entrega) llama a `descompone` SIN metodo='de', así que genera la tabla 'mc': ver bloque \"mc\" (mejor en la rejilla densa, peor en foto).",
+  "El ajuste «LUT» del .dat solo expone 3 tablas (Off/LUT1/LUT2/LUT3); las 6 ranuras solo existen por la vía SD (`lutsd.c`: SLOTS 6, `X:/LUT/LUT<n>.LUT`).",
+  "Los .LUT de pack/ se han generado pero NO se han grabado en ninguna tarjeta ni cámara."
+ ]
+}

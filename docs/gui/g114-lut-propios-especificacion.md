@@ -267,6 +267,8 @@ interpolación/optimización · [G91](g91-lut-completa-por-software.md) software
 [G93](g93-ampliar-lut-3d-17.md) geometría · [G94](g94-lut-resolucion-entrega-fidelidad.md) entrega/modos ·
 [G95](g95-lut-paquete-precalculado.md) paquete · [G96](g96-peliculas-iconicas.md)/[G97](g97-cfw-film-sosang.md) películas ·
 [G113](g113-lut-t1-curva-1d.md) T en el ajuste LUT · [PENDIENTES](../PENDIENTES.md) filas LUT-*.
+Evidencias completas (auditoría, medidas de los 75 `.cube` y especificaciones de otros fabricantes):
+[reports/lut-20261126](../../reports/lut-20261126/README.md).
 
 Especificación Adobe Cube LUT 1.0: <https://github.com/ImageEngine/gaffer/wiki/File-Formats#cube-lut>
 Sony, LUTs de usuario: <https://helpguide.sony.net/ilc/2210/v1/en/contents/TP1000888940.html> ·
