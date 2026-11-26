@@ -1,0 +1,99 @@
+{
+ "fecha": "2026-11-26 09:57:02",
+ "ok": true,
+ "pasos": [
+  {
+   "paso": "arranque",
+   "ok": true,
+   "evidencia": "primera pantalla en 150.1 s · arranque en frío, 149 s · 1 fotogramas · 0.5 fps · último: ",
+   "png": "01-pantalla.png"
+  },
+  {
+   "paso": "pantalla",
+   "ok": true,
+   "evidencia": "contenido dibujado 0.051, píxeles opacos 0.087 (OSD de la cámara ≈ 0,09; 0,003 = no compuso)",
+   "png": "01b-pantalla.png"
+  },
+  {
+   "paso": "teclas-MENU",
+   "ok": true,
+   "evidencia": "opacos: disparo 0.09 → menú 1.00 → disparo 0.08 (menú ≥ 0,9 y vuelta ≤ 0,5: una pulsación por cambio)",
+   "png": ""
+  },
+  {
+   "paso": "dial-de-modos",
+   "ok": true,
+   "evidencia": "pantalla con contenido tras girar a M (0.045)",
+   "png": "04-dial.png"
+  },
+  {
+   "paso": "foto-disparador",
+   "ok": true,
+   "evidencia": "1 foto(s) nueva(s), modelo EXIF ILCE-6000",
+   "png": ""
+  },
+  {
+   "paso": "movie-grabando",
+   "ok": true,
+   "evidencia": "el anfitrión está grabando",
+   "png": ""
+  },
+  {
+   "paso": "movie-clip",
+   "ok": true,
+   "evidencia": "1 clip(s) nuevo(s) MP4",
+   "png": ""
+  },
+  {
+   "paso": "sd-lista",
+   "ok": true,
+   "evidencia": "2 ficheros: ['PRIVATE/M4ROOT/CLIP/C0001.MP4', 'DCIM/100MSDCF/DSC00001.JPG']",
+   "png": ""
+  },
+  {
+   "paso": "sd-fichero",
+   "ok": true,
+   "evidencia": "HTTP 200, 14500 B",
+   "png": ""
+  },
+  {
+   "paso": "sd-importar",
+   "ok": true,
+   "evidencia": "HTTP 200 → DCIM/100MSDCF/DSC00002.JPG",
+   "png": ""
+  },
+  {
+   "paso": "sd-borrar",
+   "ok": true,
+   "evidencia": "HTTP 200 → DCIM/100MSDCF/DSC00002.JPG",
+   "png": ""
+  },
+  {
+   "paso": "sd-formatear",
+   "ok": true,
+   "evidencia": "HTTP 200 → {'ok': True, 'borrados': 2}",
+   "png": ""
+  },
+  {
+   "paso": "camara-bateria",
+   "ok": true,
+   "evidencia": "modelo 5 % → enviado ['B 5']",
+   "png": ""
+  },
+  {
+   "paso": "camara-usb",
+   "ok": true,
+   "evidencia": "HTTP 200 → ['U 1']",
+   "png": ""
+  },
+  {
+   "paso": "cierre",
+   "ok": true,
+   "evidencia": "código 245 (SIGSEGV al cerrar tras guardar: G22-ARR3), estado guardado 118 MiB",
+   "png": ""
+  }
+ ],
+ "perfil": "ap2",
+ "puerto": 8685,
+ "work": "/home/nicolas/hv/harness"
+}
