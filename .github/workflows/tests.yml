@@ -27,5 +27,7 @@ jobs:
         run: |
           python scripts/knowledge/index_docs.py
           python scripts/knowledge/build_graph.py
+      - name: Orden del repositorio
+        run: python scripts/audit/check_order.py
       - name: Suite
         run: python -m pytest tests -q

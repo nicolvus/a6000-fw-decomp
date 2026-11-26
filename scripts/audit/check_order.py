@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Comprueba mecánicamente las reglas de ORDEN.md (orden del repositorio).
 
-Uso: python scripts/audit/check_order.py [-v]
+Uso: python3 scripts/audit/check_order.py
 Salida 0 si todo cumple; 1 con la lista de incumplimientos.
 """
 from __future__ import annotations

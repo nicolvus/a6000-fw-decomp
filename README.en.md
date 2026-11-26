@@ -67,7 +67,7 @@ builds sharing a version number).
 | [docs/PENDIENTES.md](docs/PENDIENTES.md) | Open, blocked and closed tasks (single source) |
 | [docs/INDEX.md](docs/INDEX.md) | Reports by subsystem; the reports live in [`docs/capture/`](docs/capture/) and [`reports/`](reports/) |
 | [FUNCIONES.md](FUNCIONES.md) | Full list of target features |
-| [ORDER.md](ORDER.md) | Repository order rules (binding, with a checker) |
+| [ORDER.md](ORDER.md) · [ORDEN.md](ORDEN.md) | Repository order rules (binding; checked by `scripts/audit/check_order.py` and `tests/test_order.py`) |
 
 Research reports and code comments are in **Spanish**; the wiki and this README come in Spanish and English.
 

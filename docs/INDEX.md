@@ -24,7 +24,7 @@ y su evidencia `analysis/s<N>*/`; la categoría sale de reglas sobre el nombre d
 | [tests/](../tests/) | Verificadores y pruebas |
 | [projects/electronic-shutter/](../projects/electronic-shutter/README.md) | Documentación del objetivo principal |
 | [docs/CORRECTIONS.md](CORRECTIONS.md), [docs/OPEN-QUESTIONS.md](OPEN-QUESTIONS.md) | Derivados del grafo de conocimiento (no editar a mano) |
-| [ORDEN.md](../ORDEN.md) | Orden del repositorio: dónde va cada fichero, nombres, estados y pares ES/EN (`scripts/audit/check_order.py`) |
+| [ORDEN.md](../ORDEN.md) · [ORDER.md](../ORDER.md) | Orden del repositorio: dónde va cada fichero, nombres, estados y pares ES/EN (`scripts/audit/check_order.py`, `tests/test_order.py`) |
 
 ## Documentos de síntesis por subsistema
 

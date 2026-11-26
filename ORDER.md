@@ -60,6 +60,9 @@ Prefixes in use: `s<N>` session, `e<NN>` static phase, `e25-`/`e26-` shutter and
 Every `.md` tells the **current** truth; history lives in Git. Old versions, “it used to say” blocks and sections that no longer
 hold are forbidden.
 
+Sections in `ORDEN.md` and `ORDER.md` are numbered 1..N, **never repeated or skipped**, and the same number says the same
+thing in both languages. `scripts/audit/check_order.py` checks it.
+
 ## 5. Normalised states
 
 - Evidence for each claim: `VERIFICADO`, `INFERENCIA`, `NO_VERIFICADO`.
@@ -107,9 +110,9 @@ the ES/EN site front page).
 ## 11. Check before every commit
 
 ```sh
-python scripts/audit/check_order.py     # this document's rules, mechanically
-python -m pytest tests/knowledge tests/test_order.py -q
-CI=1 python -m pytest tests -q          # no firmware
+python3 scripts/audit/check_order.py    # this document's rules, mechanically
+python3 -m pytest tests/knowledge tests/test_order.py -q
+CI=1 python3 -m pytest tests -q         # no firmware
 ```
 
 ## 12. Copy of the rules in `a6000-handoff-context`
@@ -122,6 +125,6 @@ in `estado/ORDEN.md` and `estado/ORDER.md`, for agents without this repository a
 bash scripts/agent/sync_rules.sh   # fetches that copy and lists what differs from this document
 ```
 
-- If the copy and this document differ, **this document wins** and the copy is updated in the same commit.
+- If the copy and this document differ, **this document wins** and the copy is updated in the next commit, within the same change.
 - An older snapshot never deletes a local rule: if the copy does not have a rule, it stays in force.
 - To change a rule: its own commit in this document, the handoff copy behind it, and the rest of the change after.

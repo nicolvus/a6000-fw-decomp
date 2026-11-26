@@ -16,16 +16,16 @@ Al terminar: informe → PENDIENTES → `docs/STATE.md` (si cambió una conclusi
 Después de editar cualquier `.md` indexado: corre `knowledge-maintenance`.
 Antes de reutilizar un hallazgo: corre `contradiction-audit` (puede estar corregido/superado).
 
-## Regla permanente: las reglas vigentes están en `a6000-handoff-context`
+## Regla permanente: el orden del repo lo fija `ORDEN.md` y su copia vive en `a6000-handoff-context`
 
-Este repo es la fuente de reglas del trabajo, pero las reglas nuevas —sobre todo las que fijan
-el orden del repo (qué documento manda, jerarquía, dónde va cada cosa)— se publican en
-`https://github.com/nicolvus/a6000-handoff-context` (privado). Al empezar cada sesión y antes de
-decidir algo sobre el orden del repo, ejecuta `bash scripts/agent/sync_rules.sh`: baja lo vigente a `.handoff-rules/` y
-lista qué difiere de las copias locales. **Manda GitHub**: aplica en la sesión lo que traiga y,
-si la copia local versionada se quedó atrás, actualízala en el mismo commit. Nunca sobrescribas
-la copia local con un snapshot más antiguo: si GitHub aún no trae esta regla, esta regla sigue
-vigente y no se borra. Norma: `ORDEN.md` §11.
+`ORDEN.md` es la fuente única del orden del repo: qué documento manda, jerarquía, dónde va cada
+cosa. `https://github.com/nicolvus/a6000-handoff-context` (privado) guarda una copia de lectura en
+`estado/ORDEN.md` y `estado/ORDER.md`, para los agentes que no tienen este repo a mano. Al empezar
+cada sesión y antes de decidir algo sobre el orden del repo, ejecuta `bash scripts/agent/sync_rules.sh`:
+baja lo vigente a `.handoff-rules/` y lista qué difiere de las copias locales. Si la copia y `ORDEN.md`
+difieren, **manda `ORDEN.md`** y la copia se actualiza en el commit siguiente, dentro del mismo cambio.
+Nunca sobrescribas una regla local con un snapshot más antiguo: si la copia no trae la regla, sigue
+vigente. Norma: `ORDEN.md` §12.
 
 Restricciones del proyecto: sin firmware ejecutado, sin cámara, sin flasheo salvo autorización
 expresa del usuario para ese caso concreto.
@@ -45,8 +45,9 @@ REA y Ghidra comparten motor; verifica lo decisivo contra bytes/instrucciones. R
 Servidor MCP compartido con Claude Code: ver `knowledge/PROGRESS.md` (Fase 6)
 para el snippet de `~/.codex/config.toml` necesario para habilitarlo aquí.
 
-Orden del repositorio: `ORDEN.md` es vinculante (dónde va cada fichero, nombres, estados, pares ES/EN de la wiki);
-compruébalo con `python3 scripts/audit/check_order.py` antes de cada commit.
+Orden del repositorio: `ORDEN.md` y su gemelo `ORDER.md` son vinculantes (dónde va cada fichero, nombres, estados,
+pares ES/EN de la wiki); compruébalo con `python3 scripts/audit/check_order.py` y `python3 -m pytest tests/test_order.py`
+antes de cada commit.
 
 Pendientes: `docs/PENDIENTES.md` es el índice maestro de lo que falta. Regla permanente: toda tarea que se haga, descarte o reabra actualiza ese documento en el mismo commit, y todo pendiente nuevo que se descubra se añade allí (ID nuevo, origen y criterio de cierre). No se cierra una fase sin revisarlo.
 

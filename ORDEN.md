@@ -60,6 +60,9 @@ Prefijos en uso: `s<N>` sesión, `e<NN>` fase estática, `e25-`/`e26-` obturador
 Todo `.md` dice la verdad **actual**; el historial está en Git. Prohibido dejar versiones antiguas, bloques «antes decía» o
 secciones que ya no se sostienen.
 
+Las secciones de `ORDEN.md` y `ORDER.md` se numeran 1..N, **sin repetir ni saltar**, y el mismo número dice lo mismo en los
+dos idiomas. `scripts/audit/check_order.py` lo comprueba.
+
 ## 5. Estados normalizados
 
 - Evidencia de cada afirmación: `VERIFICADO`, `INFERENCIA`, `NO_VERIFICADO`.
@@ -107,9 +110,9 @@ añade la comprobación antes que el fichero deja la CI roja en el historial aun
 ## 11. Verificación previa a cada commit
 
 ```sh
-python scripts/audit/check_order.py     # reglas de este documento, de forma mecánica
-python -m pytest tests/knowledge tests/test_order.py -q
-CI=1 python -m pytest tests -q          # sin firmware
+python3 scripts/audit/check_order.py    # reglas de este documento, de forma mecánica
+python3 -m pytest tests/knowledge tests/test_order.py -q
+CI=1 python3 -m pytest tests -q         # sin firmware
 ```
 
 ## 12. Copia de las reglas en `a6000-handoff-context`
@@ -122,6 +125,6 @@ en `estado/ORDEN.md` y `estado/ORDER.md`, para los agentes que no tienen este re
 bash scripts/agent/sync_rules.sh   # trae esa copia y lista qué difiere de este documento
 ```
 
-- Si la copia y este documento difieren, **manda este documento** y la copia se actualiza en el mismo commit.
+- Si la copia y este documento difieren, **manda este documento** y la copia se actualiza en el commit siguiente, dentro del mismo cambio.
 - Un snapshot más antiguo no borra ninguna regla local: si la copia no trae una regla, sigue vigente.
 - Para cambiar una regla: commit propio en este documento, la copia del handoff detrás y el resto del cambio después.
