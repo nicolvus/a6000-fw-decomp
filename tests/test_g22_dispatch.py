@@ -119,7 +119,10 @@ def _bl_target(lib: Elf, va: int) -> int | None:
     imm = (s << 24) | (i1 << 23) | (i2 << 22) | (imm10 << 12) | ((h2 & 0x7FF) << 1)
     if s:
         imm -= 1 << 25
-    return (va + 4 + imm) & 0xFFFFFFFF
+    # BLX (inmediato, T2) alinea la base: destino = Align(PC,4) + imm (ARM ARM A5.3.2); BL/B.W usan PC = va+4.
+    # Sin esto los stubs .plt de las vistas quedan 16 B cortos (medido en G22-ACCION4: 0x15418 -> 0xcadc en vez de 0xcaec).
+    base = (va + 4) & ~3 if (h2 & 0xD000) == 0xC000 else va + 4
+    return (base + imm) & 0xFFFFFFFF
 
 
 def _arm_imm(w: int) -> int:
