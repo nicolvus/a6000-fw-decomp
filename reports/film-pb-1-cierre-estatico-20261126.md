@@ -207,3 +207,27 @@ ni la tabla de particiones; el único camino a ladrillo es el core de Darwin
 - La emulación de `0x6E8430` no puede completarse sin el `dfs_If`/`MMgrIf` reales: se para en
   `ER_FAILED_ACQUIRE_SEMAPHORE`, que es precisamente el mecanismo que se quiere observar
   ([emu-fps](film-pb-1-sub-emu-fps-20261127.md)).
+
+## 10. Qué hacer ahora, en este orden
+
+Todo lo que sigue es sin flashear y sin abrir la cámara.
+
+1. **Sacar la tarjeta, copiarla entera al PC y ejecutar**
+   `.venv/bin/python3 scripts/filmpb1_audita_tarjeta.py <carpeta>`. Devuelve, por clip, la
+   duración del índice frente a la del `mvhd`, el tamaño del índice frente al de disco, las
+   entradas huérfanas y las que tienen `bValid=0`. Si sale limpio, M3 pierde peso; si no, ya
+   está el culpable.
+2. **Renombrar `AVF_INFO` a `AVF_INFO.bak`** en el PC, poner la tarjeta y encender. La cámara
+   debe reconstruir el índice. Es reversible y **no** es lo mismo que «Recuperar BD imág.»:
+   esa opción se apoya en el journal `RcsTbl`, que es justo lo que puede estar mal.
+3. Grabar un clip nuevo y reproducirlo. Si va, el problema era el índice y se puede devolver
+   el resto de los clips copiándolos y dejando que la cámara los reindexe.
+4. Si sigue sin ir: **formatear la tarjeta en la cámara** (con todo copiado) y repetir la
+   grabación. Esto reconstruye `AVF_INFO` y el journal de cero.
+5. Solo si tampoco así: el paquete **A2** ya está construido y verificado
+   (`build/sony_puro_con_wbi_404/package-4.04/firmware_packed.dat`), que es Sony oficial byte
+   a byte con `nflasha5`, para separar firmware de cámara.
+
+Si en algún momento hay acceso a la cámara (red o USB), la traza de nivel 5 con
+`CMD(SET_AREA)`, `Type2Mode:` y `StreamAreaFree` cierra M1 en un minuto, y el breakpoint en
+`0x437C0A`/`0x437C3C` dice qué guarda dispara.
