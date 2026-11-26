@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """Autoprueba del arnés (G22): arranca la VM, ejercita las funciones de la cámara y dice PASS/FAIL con evidencia.
 
-Uso: autoprueba.py DIR_TRABAJO [--perfil-dir autoprueba] [--puerto 8695] [--config CONFIG.json] [--espera 300] [--intentos 2] [--rapida]
+Uso: autoprueba.py DIR_TRABAJO [--perfil-dir autoprueba] [--puerto 8695] [--config CONFIG.json] [--espera 300] [--espera-pintado 150] [--intentos 3] [--rapida]
 
 Arranca `live.py` como subproceso, espera la primera pantalla y recorre: teclas (MENU abre/cierra), dial de modos, disparador
 (foto en la SD con EXIF), MOVIE (clip MP4), galería (lista/fichero/importar/borrar/formatear), estado de cámara (batería/USB)
 y cierre (`/salir`: estado guardado y sin procesos). Cada paso deja su PNG y su comprobación en el informe JSON/Markdown de
-`DIR_TRABAJO/autoprueba/<AAAAMMDD-HHMMSS>/`; código de salida 1 si algo falla. El cuelgue intermitente del arranque (G22-CUELGUE: el invitado responde pero no llega a
-componer la pantalla) se reintenta en frío con `--intentos`; el paso `arranque-reintento` deja constancia.
+`DIR_TRABAJO/autoprueba/<AAAAMMDD-HHMMSS>/`; código de salida 1 si algo falla. La OSD tarda ≈ 30 s más que el primer fotograma en componerse, así que el paso `pantalla`
+sondea hasta `--espera-pintado`; solo si no llega se reintenta en frío (`--intentos`, G22-CUELGUE) y el paso
+`arranque-reintento` deja constancia.
 
 Es la comprobación de humo que el usuario puede correr tras tocar cualquier pieza del arnés: mide lo que la cámara hace de
 verdad en el invitado (teclas, dial, captura, SD) y no solo que los procesos arranquen.
@@ -206,7 +207,8 @@ def main() -> int:
     ap.add_argument("--perfil-dir", default="autoprueba")
     ap.add_argument("--puerto", type=int, default=8695)
     ap.add_argument("--config", default="", help="config del configurador; sin él se usa uno propio en un directorio temporal")
-    ap.add_argument("--espera", type=float, default=300, help="tope hasta la primera pantalla (frío ~170 s)")
+    ap.add_argument("--espera", type=float, default=300, help="tope hasta el primer fotograma (frío ~170 s)")
+    ap.add_argument("--espera-pintado", type=float, default=150, help="tope hasta que la OSD está compuesta (llega ~30 s tras el primer fotograma)")
     ap.add_argument("--salida", default="", help="carpeta del informe (por defecto DIR_TRABAJO/autoprueba/<fecha>)")
     ap.add_argument("--intentos", type=int, default=3, help="arranques en frío si el invitado no llega a pintar (G22-CUELGUE: 4 de 12 medidos)")
     a = ap.parse_args()
@@ -220,23 +222,32 @@ def main() -> int:
     cfg = json.loads(Path(a.config).read_text())
     raiz_sd = Path(cfg["sd"]["carpeta"])
     def _pantalla(arrancada: bool) -> tuple[float, float]:
-        """(contenido, opacos) de la pantalla inicial: tras restaurar puede no haber repintado (G22-ARR2) y DISP la fuerza.
+        """(contenido, opacos) de la pantalla inicial, esperando a que la OSD TERMINE de componerse.
 
-        La OSD de disparo de verdad deja ≈ 0,09 de píxeles opacos; un invitado que solo pinta el marco o nada se queda en ≈ 0,003
-        (es el cuelgue de G22-CUELGUE), así que el paso exige las dos cosas y no solo «hay algo dibujado».
+        Medido 26-11-2026 (perfil nudge1): los primeros fotogramas llegan con 0,017 de píxeles opacos («2 listas») y la OSD de
+        verdad (0,087, 25 listas) aparece ≈ 30 s después — la composición va por detrás del primer fotograma. Por eso se sondea
+        hasta `--espera-pintado` s (con una nudge de DISP a mitad) en vez de medir dos veces y dar el arranque por perdido: así
+        solo se reintenta el cuelgue de verdad (G22-CUELGUE), no un pintado lento. Tras restaurar puede no haber repintado
+        (G22-ARR2) y la nudge de DISP lo fuerza.
         """
         if not arrancada:
             return 0.0, 0.0
         destino = p.dir / "01b-pantalla.png"
-        _post(f"{base}/refrescar")
-        _fotograma(f"{base}/eventos", destino, None, 15)
-        contenido, opacos = _vacia(destino), _opaco(destino)
-        if contenido < 0.002 or opacos < 0.02:
-            _post(f"{base}/tecla", b'{"k":"disp","v":1}')
-            time.sleep(0.6)
-            _post(f"{base}/tecla", b'{"k":"disp","v":0}')
+        fin = time.time() + a.espera_pintado
+        contenido = opacos = 0.0
+        nudge = False
+        while time.time() < fin:
+            _post(f"{base}/refrescar")
             _fotograma(f"{base}/eventos", destino, None, 20)
             contenido, opacos = _vacia(destino), _opaco(destino)
+            if contenido > 0.002 and opacos >= 0.02:
+                return contenido, opacos
+            if not nudge and time.time() > fin - a.espera_pintado / 2:
+                nudge = True  # DISP cambia la cantidad de información y fuerza el repintado
+                _post(f"{base}/tecla", b'{"k":"disp","v":1}')
+                time.sleep(0.6)
+                _post(f"{base}/tecla", b'{"k":"disp","v":0}')
+            time.sleep(3)
         return contenido, opacos
 
     def arranca() -> tuple[subprocess.Popen, bool, float, dict, tuple[float, float]]:
