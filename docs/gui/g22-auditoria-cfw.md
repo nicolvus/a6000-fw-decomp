@@ -498,3 +498,25 @@ Los tres casos quedan como test sin QEMU en `tests/test_gui_audita_cfw.py`.
 
 Límite: los CFW históricos (3.79 y siguientes) **no están en este clon**, así que la auditoría de esos
 paquetes sigue pendiente de tener los `.dat` (fila G22-AUDIT-CFW).
+
+## Lote: todos los CFW del árbol en una orden (27-11-2026)
+
+El requisito «todos los CFW instalables deben ser auditables desde el arnés» se cubre con `--lote`, que
+recorre un directorio, encuentra cada paquete y deja **un índice JSON y una tabla Markdown**:
+
+```
+.venv/bin/python scripts/gui/harness/audita_cfw.py /home/nicolas/cfwbuild --lote --rapido --sin-arranque --salida <DIR>
+```
+
+Resultado con los tres paquetes que hay en este clon (`reports/evidence/g22-audit-lote-20261127/`):
+
+| CFW | Versión | SHA-256 | Veredicto | Fallos | Coste |
+|---|---|---|---|---|---|
+| `firmware_packed.dat` | 3.39 | `833619df` | AVISO | — | 38,0 s |
+| `firmware_packed.dat` | 3.40 | `04f6c18b` | AVISO | — | 36,4 s |
+| `firmware_packed.dat` | 3.41 | `c19eafb2` | **FALLO** | `contenedor.wbi_acoplamiento` | 38,3 s |
+
+El 3.41 es el caso que el usuario pedía cazar **antes** de tocar la cámara: `/usr` recompuesto con el WBI de
+Sony intacto → el arranque normal reanudaría el WBI viejo y el CFW no surtiría efecto. El auditor lo marca
+FALLO con el motivo y sugiere `--sin-wbi`. Los otros dos quedan en AVISO porque no se les pasó su
+declaración de parches (`--declara`), que es lo que baja el veredicto a OK.
