@@ -44,7 +44,7 @@ def checks(r: dict) -> dict[str, dict]:
 
 def test_detecta_tipo_y_rechaza_un_fichero_cualquiera(tmp_path: Path) -> None:
     basura = tmp_path / "basura.bin"
-    basura.write_bytes(b"no es un firmware")
+    basura.write_bytes(b"no es un paquete de Sony")
     with pytest.raises(A.EntradaError):
         A.detecta_tipo(basura)
     assert A.main([str(basura)]) == 2  # error claro, no un OK falso
