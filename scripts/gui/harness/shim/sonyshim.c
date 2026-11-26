@@ -1148,7 +1148,8 @@ static void on_trace(int sig, siginfo_t *si, void *u) {
             if (t >= 20 && t <= 23 || rs[t] == 1) efp("[shim] RSRC tipo=%u n=%u dueno=%lx lr=%lx\n", t, rs[t], c->arm_r2, c->arm_lr); }
         unsigned h = ++trc[i].hits, mx = getenv("TRACEMAX") ? (unsigned)hexv(getenv("TRACEMAX"), 0) : 4;
         int show = h <= mx || !(h & (h - 1));  /* TRACEREP: las mx primeras y luego en potencias de 2 */
-        if (show) efp("[shim] TRACE %lx n=%u r0=%lx r1=%lx r2=%lx r3=%lx lr=%lx\n", pc - trc_base, h, c->arm_r0, c->arm_r1, c->arm_r2, c->arm_r3, c->arm_lr);
+        if (show) { Dl_info li = {0}; dladdr((void *)(c->arm_lr & ~1UL), &li);  /* llamante como biblioteca+desplazamiento: identifica la vista que llama */
+            efp("[shim] TRACE %lx n=%u r0=%lx r1=%lx r2=%lx r3=%lx lr=%lx (%s+%#lx)\n", pc - trc_base, h, c->arm_r0, c->arm_r1, c->arm_r2, c->arm_r3, c->arm_lr, li.dli_fname ? strrchr(li.dli_fname, '/') ? strrchr(li.dli_fname, '/') + 1 : li.dli_fname : "?", li.dli_fname ? (unsigned long)(c->arm_lr & ~1UL) - (unsigned long)li.dli_fbase : 0); }
         if (show) {
         for (const char *e = getenv("TRACEPEEK"); e && *e; ) { unsigned long a = hexv(e, &e); efp("[shim]   PEEK %lx = %08x\n", a, *(unsigned *)(trc_base + a)); while (*e == ',') e++; }
         { const char *e = getenv("TRACEDEREF");  /* «reg:off:palabras» (hex): vuelca palabras en *(reg+off), p. ej. 4:24:90 = tabla de teclas de InfraInput; con «d» delante («d0:a0:20») vuelca desde reg+off sin desreferenciar */
@@ -1577,11 +1578,57 @@ int _ZN12ModelManager13releaseStatusEi(void *mm, int st) {
     if (getenv("PUSHLOG")) { unsigned long lr = (unsigned long)__builtin_return_address(0); Dl_info di; int ok = dladdr((void *)lr, &di); LOG("releaseStatus(%#x) lr=%lx (+%lx)", st, lr, ok ? lr - (unsigned long)di.dli_fbase : 0); }
     return real ? real(mm, st) : 0;
 }
+/* G22-FECHA: reloj del anfitrión para las vistas cuando ModelClock no existe (docs/gui/g22-fecha-hora.md).
+ * En el arnés el modelo `model/CLOCK` (`@M018`, id 0x18) NUNCA se instancia: la cadena de arranque de modelos se para
+ * dentro de `Mi 00A` (ModelSalvage, espera la notificación «información de salvamento estable», §5.18s) y el bucle
+ * `Ts`→`Md/Ms` que en la cámara real define y arranca todos los modelos (incluido `Md 018`/`Ms 018` del registro real
+ * de mem-20261020) no llega a correr. La página «Ajuste fecha/hora → Fecha/Hora» pide la fecha por
+ * ViewBase::getModelInfo("@M018", 0/1) y, al devolver 0, el widget PAS_BtnDateTime se queda en 0-0-0 0:00.
+ * Cuando la llamada real FALLA, se rellena la misma lista que rellena ModelClock::onGetInfo (libObj+0x4f1250,
+ * VERIFICADO sobre bytes: ParamList::add con las claves 0x100=válida y 0x101..0x106 = año, mes, día, hora, min, seg)
+ * con la hora local del anfitrión — la MISMA fuente que la orden 2 de 0x90013d (date_local()). Si el modelo existe,
+ * esto no se ejecuta. RELOJEMU=0 lo desactiva; RELOJINIT=1 da la fecha inicial de la NVRAM (como la orden 3 de
+ * 0x900141) para la info 1. */
+static int reloj_params(void *list, int info) {
+    static int (*add)(void *, unsigned long, void *);
+    if (!add) add = dlsym(RTLD_DEFAULT, "_ZN9ParamList3addEmP9ParamBase");
+    Dl_info di; void *sym = lobj_h ? dlsym(lobj_h, "_ZN12ModelManager9pushEventEP5Event") : 0;
+    if (!add || !sym || !dladdr(sym, &di) || !readable(list)) return 0;
+    unsigned char *lb = (unsigned char *)di.dli_fbase;
+    void (*ctor)(void *, int) = (void *)(lb + 0xf0fb0 + 1);   /* Param<int>(int):    el modelo lo usa para 0x101…0x106 (libObj+0x4f1388) */
+    void (*ctbool)(void *, int) = (void *)(lb + 0xe50e8 + 1); /* PrmBool(bool) tipo 5: lo que la vista pide para 0x100 (viewUnified6+0x28ca8) */
+    int v[6];  /* año, mes, día, hora, min, seg */
+    /* info 1 = INITIAL_DATE_TIME, la fecha con la que la vista RECORTA `0x101…0x106` (`ViewDateSet`, viewUnified6+0x29558).
+     * El recorte es CAMPO A CAMPO y satura al extremo contrario: `if (v > NVRAM) v = inicial; else if (v < inicial) v = NVRAM`
+     * (0x29582…0x29594; NVRAM = 0x107004d = 2037-12-31 23:59:59 en `bk.tbl`, VERIFICADO). Basta que UN campo del reloj
+     * actual quede por debajo del mismo campo de la fecha inicial para que ese campo salte al máximo de la NVRAM: medido,
+     * con la inicial = primera «T» (01:50:17) y la actual 02:07, el minuto 7 < 50 salía como 59. Por eso la inicial es la
+     * MEDIANOCHE del día del anfitrión: año/mes/día iguales y hora/min/seg a 0, nunca por encima de la fecha actual. */
+    time_t tt = (time_t)date_local(); struct tm g; gmtime_r(&tt, &g);
+    v[0] = g.tm_year + 1900; v[1] = g.tm_mon + 1; v[2] = g.tm_mday;
+    v[3] = info == 1 ? 0 : g.tm_hour; v[4] = info == 1 ? 0 : g.tm_min; v[5] = info == 1 ? 0 : g.tm_sec;
+    if (info == 1 && getenv("RELOJINIT")) {  /* fecha inicial de la NVRAM, igual que la orden 3 de 0x900141 (direct_service) */
+        static const unsigned ids[] = { 0x90000e, 0x90000f, 0x900008, 0x900004, 0x900006, 0x900007, 0x900009 };
+        unsigned l = 0, *d; int y = 0;
+        for (int i = 0; i < 7; i++) { if (!(d = bk_find(ids[i], &l))) return 0;  /* año = 0x90000e + 0x90000f (libObj+0xb58cba) */
+            int x = l > 2 ? *(unsigned short *)d : *(unsigned char *)d;
+            if (i == 0) y = x; else if (i == 1) y += x; else v[i - 1] = x; }
+        v[0] = y;
+    }
+    void *p; if (!(p = calloc(1, 0x10))) return 0;
+    ctbool(p, getenv("RELOJ100") ? (int)hexv(getenv("RELOJ100"), 0) : 1); add(list, 0x100, p);  /* 0x100 = PrmBool (tipo 5, el que pide la vista) y valor 1: la vista exige que no sea 0 (0x28cb0…0x28cba) para rellenar la fecha. RELOJ100=n lo cambia para medir */
+    for (int i = 0; i < 6; i++) { if (!(p = calloc(1, 0x10))) return 0; ctor(p, v[i]); add(list, (unsigned long)(0x101 + i), p); }
+    efp("[shim] G22-FECHA reloj del anfitrión para la vista (info %d): %04d-%02d-%02d %02d:%02d:%02d\n", info, v[0], v[1], v[2], v[3], v[4], v[5]);
+    return 1;
+}
 /* ViewBase::getModelInfo(nombre, info, lista, filtro): las vistas piden datos de modelo por aquí (PLT → este símbolo antes que libObj). GMILOG=1 registra cada petición y su resultado. */
 int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name, int info, void *list, const void *flt) {
     static int (*real)(void *, const char *, int, void *, const void *);
     if (!real) real = nextsym("_ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_");
     int r = real ? real(self, name, info, list, flt) : 0;
+    const char *re = getenv("RELOJEMU");  /* RELOJEMU=0 lo apaga (para medir el «antes» en la misma sesión) */
+    if (!r && real && readable(name) && (!strcmp(name, "@M018") || !strcmp(name, "model/CLOCK")) && (info == 0 || info == 1) && !(re && re[0] == '0')) {  /* G22-FECHA: ModelClock no existe en el arnés; se responde con el reloj del anfitrión (ver reloj_params) */
+        static unsigned n; if (reloj_params(list, info)) { r = 1; if (n++ < 20) LOG("getModelInfo(%s, %d) -> 1 (reloj del anfitrión, G22-FECHA)", name, info); } }
     if (real && r && getenv("GMIPROBE2") && !strcmp(name, "model/ROOT") && info == 6) {  /* misma lista que la vista: info 1 y 7, y se restaura la 6 */
         static int n2; if (n2++ < 3) { int a = real(self, name, 1, list, flt), b = real(self, name, 7, list, flt), c = real(self, name, 6, list, flt); LOG("GMIPROBE2 misma lista: info1=%d info7=%d info6=%d", a, b, c); }
     }
