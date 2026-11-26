@@ -116,19 +116,19 @@ def _vacia(png: Path) -> float:
     return sum(1 for c in px if sum(abs(a - b) for a, b in zip(c, fondo, strict=True)) > 60) / len(px)
 
 
-def _brillo(png: Path) -> float:
-    """Brillo medio 0–255: la pantalla de disparo es clara (fondo blanco, ≈ 240) y el menú oscuro (fondo negro, ≈ 15).
+def _opaco(png: Path) -> float:
+    """Fracción de píxeles opacos del fotograma: la OSD de disparo es un overlay transparente (≈ 0,09) y el menú pinta la pantalla entera (≈ 1,0).
 
-    Es lo que distingue «MENU abrió el menú» de «MENU no hizo nada»: el contenido dibujado es parecido en las dos (0,06 y 0,03), así que
-    contar píxeles no sirve.
+    Es lo que distingue «MENU abrió el menú» de «MENU no hizo nada», y también de un arranque que no llega a dibujar (≈ 0,01). Medir el
+    brillo no vale: el fotograma lleva alfa y el fondo transparente cuenta como negro.
     """
     try:
         from PIL import Image
-        im = Image.open(png).convert("L")
+        im = Image.open(png).convert("RGBA")
     except (OSError, ValueError):
         return 0.0
-    d = im.tobytes()
-    return sum(d) / len(d) if d else 0.0
+    a = im.getchannel("A").tobytes()
+    return sum(1 for v in a if v > 8) / len(a) if a else 0.0
 
 
 class Prueba:
@@ -228,16 +228,15 @@ def main() -> int:
             _post(f"{base}/tecla", b'{"k":"menu","v":0}')
             time.sleep(1.2)
 
-        claro = _brillo(pantalla)
+        disparo = _opaco(pantalla)
         menu()
         _, _ = _fotograma_con_contenido(f"{base}/eventos", p.dir / "03-menu.png", 0.002, 25)
-        oscuro = _brillo(p.dir / "03-menu.png")
-        abierto = oscuro < claro / 2  # el menú ocupa casi toda la pantalla con fondo negro
+        abierto_px = _opaco(p.dir / "03-menu.png")
         menu()
         _fotograma_con_contenido(f"{base}/eventos", p.dir / "03c-cerrado.png", 0.002, 25)
-        vuelta = _brillo(p.dir / "03c-cerrado.png")
-        p.paso("teclas-MENU", abierto and vuelta > oscuro * 2,
-               f"brillo disparo {claro:.0f} → menú {oscuro:.0f} → disparo {vuelta:.0f} (una pulsación por cambio)", "03-menu.png")
+        vuelta = _opaco(p.dir / "03c-cerrado.png")
+        p.paso("teclas-MENU", abierto_px > 0.9 > vuelta,
+               f"opacos: disparo {disparo:.2f} → menú {abierto_px:.2f} → disparo {vuelta:.2f} (una pulsación por cambio)", "03-menu.png")
 
         # dial de modos: el modo lo da el firmware (OPENVIEWDIAL); la pantalla se repinta
         _post(f"{base}/modo", b'{"p":4}')
