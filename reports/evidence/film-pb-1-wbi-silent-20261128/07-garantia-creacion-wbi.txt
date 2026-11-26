@@ -1,0 +1,190 @@
+# Garantía de creación automática del WBI tras instalar el paquete 4.05
+# generado: 2026-11-26T19:13:47-03:00
+
+== 1. El actualizador invalida el WBI en TODA instalación (incluida la que no trae nflasha5)
+$ grep -n 'ud_wbi_drop' firmware/extracted/fw321/updater.img_unpacked/bin/us_mkfs.sh
+106:ud_wbi_drop.elf $FILE_PARTINF || { echo "[ERROR] ud_wbi_drop.elf" ; getledval.elf $ERROR_WBI_DROP ; exit $? ; }
+
+$ strings -a firmware/extracted/fw321/updater.img_unpacked/bin/ud_wbi_drop.elf | grep -i 'wbi\|nflasha'
+wbi_drop
+Usage: ud_wbi_drop.elf filename
+[UD_WBI_DROP] AnalyzePartitionSettingFile() error
+[UD_WBI_DROP] wbi size is zero. skip wbi_drop()
+[UD_WBI_DROP] error : wbi size is too small. size = %lu
+/dev/nflasha%d
+[UD_WBI_DROP] %s wbi_drop
+[UD_WBI_DROP] %s %d, errno=%d
+[UD_WBI_DROP] wbi_drop() error
+
+$ grep -n nflasha5 firmware/extracted/fw321/firmware.tar_unpacked/0300_partconf/partinf.conf
+25:# /dev/nflasha5        60MB(System Group  Warm Boot Image  /dev/nflasha5  )
+  (offset 0x03B40000, tamaño 0x03C00000 = 60 MiB, type 0x02 = Warm Boot Image)
+
+== 2. Qué escribe 'drop': 512 bytes a cero en el sector 0 (fVersion = 0 => imagen inválida)
+$ sed -n '359,388p' /tmp/ssboot/linux/arch/arm/common/warm.c   # __wbi_drop()
+
+ error:
+	up(&wb_mem_sem);
+	return ret;
+}
+
+/* erase the header */
+static int __wbi_drop(unsigned char *buf, unsigned long size)
+{
+	int ret = 0;
+
+	if(wb_default_device->open) {
+		ret = wb_default_device->open(wb_default_device);
+		if (ret) {
+			printk("%s: cannot open ret = %d\n", __func__, ret);
+			return ret;
+		}
+	}
+
+	memset(buf, 0, size);
+	ret = wb_default_device->write_sector(wb_default_device, buf, 0, size >> 9);
+	if (ret)
+		printk("%s: cannot write = %d\n", __func__, ret);
+	else
+		printk("dropped wbi\n");
+
+	if(wb_default_device->close)
+		wb_default_device->close(wb_default_device);
+
+	return ret;
+
+== 3. El kernel SÍ tiene dispositivo WBI y espacio, en CADA arranque (log real de la cámara)
+$ sed -n '6475,6477p' analysis/camera-dumps/20261117-traza-T2T6/objetivo/log.txt
+[    2.048577] 
+[    2.048628]  nflasha0: p1 p2 p3 p4 p5 p6 p7 p10 p11 p15 p16 p17 p18 p23wb_default_device: sector_size=0x40000,phys_sector_size=0x200
+[    2.054057] WBI partition[5]: id=2, start_secor=0, num_sectors=121344
+  capacidad = 121344 sectores x 512 B = 62128128 B; imagen Sony 3.21 = 42293120 B
+
+== 4. La condición de modo: 'warm' == PM_SUSPEND_DISK y warm.mode=2
+$ sed -n '50,59p' /tmp/ssboot/linux/kernel/power/suspend.c
+const char *const pm_states[PM_SUSPEND_MAX] = {
+	[PM_SUSPEND_STANDBY]	= "standby",
+	[PM_SUSPEND_MEM]	= "mem",
+#if defined (CONFIG_SNSC_SSBOOT) && !defined(CONFIG_WARM_BOOT_IMAGE)
+	[PM_SUSPEND_SNAPSHOT]   = "snapshot",
+#endif
+#ifdef CONFIG_WARM_BOOT_IMAGE
+	[PM_SUSPEND_DISK]	= "warm",
+#endif
+};
+
+$ grep -n 'WBI_MODE\|module_param_named(mode' /tmp/ssboot/linux/arch/arm/common/warm.c
+66:#define WBI_MODE(state, mode) ((state) == PM_SUSPEND_DISK && (mode))
+130:module_param_named(mode, image_mode, uint, S_IRUGO | S_IWUSR);
+1214:	if(!WBI_MODE(pm_state, image_mode))
+1360:	if(!WBI_MODE(pm_state, image_mode) || !wb_default_device)
+1507:	if(!WBI_MODE(pm_state, image_mode) || !wb_default_device)
+1538:	if(!WBI_MODE(pm_state, image_mode) || !wb_default_device)
+
+$ grep -o 'warm.mode=[0-9]*' reports/evidence/film-pb1-sector31-camara-20261126/A-frio/cmdline.txt reports/evidence/film-pb1-sector31-camara-20261126/B-caliente/cmdline.txt
+reports/evidence/film-pb1-sector31-camara-20261126/A-frio/cmdline.txt:warm.mode=2
+reports/evidence/film-pb1-sector31-camara-20261126/A-frio/cmdline.txt:warm.ignore_drop=1
+reports/evidence/film-pb1-sector31-camara-20261126/B-caliente/cmdline.txt:warm.mode=2
+reports/evidence/film-pb1-sector31-camara-20261126/B-caliente/cmdline.txt:warm.ignore_drop=1
+  (no aparece 'chk_opened=' ni 'warm.errmode=' en la cmdline: la compuerta de ficheros abiertos queda inerte y un fallo no aborta el apagado)
+
+== 5. Compuerta de ficheros abiertos (wbi_chk_opened_files) inerte si no hay chk_opened=
+$ sed -n '1471,1477p;1505,1520p' /tmp/ssboot/linux/arch/arm/common/warm.c
+#define MAX_MNTS 30
+static char *wbi_mount_points[MAX_MNTS] = { NULL };
+module_param_array_named(chk_opened, wbi_mount_points, charp, NULL, S_IRUGO | S_IWUSR);
+
+static int wbi_chk_opened_files(void)
+{
+	int i, ret = 0;
+	int ret = 0;
+
+	if(!WBI_MODE(pm_state, image_mode) || !wb_default_device)
+		return 0;
+
+	if (wbi_chk_opened_files()) {
+		wb_printk("some files are still opened, stopping all of operations\n");
+		_wbi_drop();
+#ifdef CONFIG_EXCEPTION_MONITOR
+		errind_start(ERRIND_OOM);
+#endif
+		while (1)
+			;
+	}
+
+	BOOT_TIME_ADD1("B warm_boot_pm_prepare");
+
+== 6. El disparo: im.elf, un ÚNICO sitio llama a la compuerta y decide 'warm' vs 'mem'
+$ python3 - (capstone, skipdata) buscando llamadas a 0x9F44 en im.elf de Sony 3.21
+  1 llamada -> ('0x9ff2', 'bl', '#0x9f44')
+
+$ disassembly VA 0x9FE6..0xA004 (Thumb)
+00009fe6 cmp      r5, #1            ; r5 = modo pedido por el mensaje
+00009fe8 bne      #0xa030
+00009fea movs     r2, #0x40
+00009fee blx      #0x8ef8
+00009ff2 bl       #0x9f44           ; compuerta: ¿se permite 'warm'?
+00009ff6 cbz      r0, #0xa01a       ; 0 -> rama 'mem'
+00009ff8 bl       #0xaad4
+00009ffc bl       #0x9f34
+0000a000 movs     r1, #0x40
+0000a002 ldr      r2, [pc, #0x58]   ; pool 0x00a05c = 0x00c0cd "WARM(warm_count=%d)"
+0000a004 mov      r3, r0
+0000a006 mov      r0, r7
+0000a008 blx      #0x909c
+0000a00c mov      r0, r7
+0000a00e bl       #0x9800           ; traza
+0000a012 mov      r0, r4            ; fd de /sys/power/state
+0000a014 ldr      r1, [pc, #0x48]   ; pool 0x00a060 = 0x00c0c8 "warm"
+0000a016 movs     r2, #4            ; 4 bytes
+0000a01a bl       #0x9f34           ; (rama r0==0)
+0000a020 ldr      r2, [pc, #0x40]   ; pool 0x00a064 = 0x00c0e1 "SUS(warm_count=%d)"
+0000a034 ldr      r1, [pc, #0x30]   ; pool 0x00a068 = 0x00c0f4 "mem"
+0000a038 movs     r2, #3            ; 3 bytes
+
+Compuerta 0x9F44 en Sony (bytes 06 4b 80 b5) desensamblada:
+00009f44 ldr      r3, [pc, #0x18]   ; pool 0x00a05c -> global límite
+00009f46 push     {r7, lr}
+00009f48 add      r7, sp, #0
+00009f4a ldr      r3, [r3]
+00009f4c cbz      r3, #0x9f5c       ; límite 0 -> devuelve 1
+00009f4e ldr      r2, [pc, #0x14]   ; contador
+00009f50 ldr      r0, [r2]
+00009f52 cmp      r0, r3
+00009f54 ite      hi
+00009f56 movhi    r0, #0            ; contador > límite -> 0 (=> 'mem')
+00009f58 movls    r0, #1
+00009f5a pop      {r7, pc}
+00009f5c movs     r0, #1
+00009f5e pop      {r7, pc}
+  -> función pura: lee dos globales y devuelve 0/1; no escribe nada (el contador lo lleva la
+     función de 0x9F68 vía Backup_write, canal 0x94, y NO depende de la compuerta).
+
+== 7. Parche aplicado y comprobado en el artefacto
+$ xxd -s $((0x9F44-0x8000)) -l 8 <im.elf de Sony>
+00001f44: 064b 80b5 00af 1b68                      .K.....h
+  (Sony original; el parche deja 0120 7047 = 'movs r0,#1 ; bx lr')
+
+$ python3 scripts/gui/verify_nflasha15_im_elf.py build/wbi_silent/nflasha15-405.bin <im.elf Sony>
+im.elf en la imagen : 23108 522f2f2ef64b895cb8d01c05ca9fd7562a7dc1485f278b18373903831013be7d
+im.elf esperado     : 23108 f0f181426af4add55a8510c5441ff86c3121678fd1f7e0467152070e870d803a
+IGUAL               : False
+compuerta 0x9F44    : 01207047 (esperado 01207047)
+
+== 8. La imagen que trae Sony de fábrica: cabecera y tamaño
+$ head -c 32 firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha5 | od -A d -c | head -2
+0000000   W   B   I   1 214 004  \0  \0  \t  \0  \0  \0 274   # 005 200
+0000016   $ 002 006      \0 002  \0  \0  \0 306 200 002  \0  \0  \0  \0
+  (42 293 120 B; 'WBI1' = WBI_VER => la rama CONFIG_SNSC_SSBOOT no se usa en este kernel)
+
+== 9. El paso 1 no depende del contenido del paquete: lo lanza el propio actualizador
+$ grep -n 'us_mkfs' firmware/extracted/fw321/updater.img_unpacked/config/config.xml
+25:			<shell module="us_mkfs.sh"/>
+  (us_mkfs.sh se ejecuta al procesar 'partconf_sum/partconf.sum', presente en TODO paquete;
+   y dentro de us_mkfs.sh la llamada a ud_wbi_drop es incondicional)
+
+== 10. Paquete construido: frente a Sony 3.21 solo cambian dev/nflasha15 y part_image.sum
+$ sha256sum build/wbi_silent/pkg405sony/package-4.05/firmware_packed.dat
+92cbd3b22dab67419bae08ee5617cf9455617013583dff5ef7bee864c0e124a6  build/wbi_silent/pkg405sony/package-4.05/firmware_packed.dat
+$ python3 scripts/gui/cuenta_paginas_wbi.py ... (omitido aquí: ver 02-paginas-del-wbi.txt)
+  auditoría del paquete: build/wbi_silent/audit-405-sony.json (23/23)

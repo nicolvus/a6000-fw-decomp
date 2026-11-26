@@ -27,9 +27,10 @@ Además la bandera **no se puede dejar puesta**: el bloque de ajustes se reinici
 
 Y el motivo de que fuera **irreversible**: **la cámara no vuelve a fabricar su WBI**. `im.elf` escribe
 `"warm"` en `/sys/power/state` solo si una compuerta (`0x9F44`) deja, y esa compuerta compara un
-**contador persistente** (Backup `0x940004`) con un límite; pasada la cuenta escribe `"mem"` (`0x9FB4`) y la
-instantánea se queda como estaba. Por eso todo CFW instalado en frío se queda en frío para siempre: **no
-hay forma de que el WBI se rehaga con el `/usr` nuevo** y el menú Silent nunca aparece en caliente.
+**contador persistente** (Backup `0x940004`) con un límite; pasada la cuenta escribe `"mem"` y la
+instantánea se queda como estaba. Encima, el instalador **borra la cabecera** de `nflasha5` en cada
+actualización (`ud_wbi_drop`), así que todo CFW instalado en frío se queda en frío para siempre: **no hay
+forma de que el WBI se rehaga con el `/usr` nuevo** y el menú Silent nunca aparece en caliente.
 
 **La solución (dos vías, la primera es la buena):**
 
@@ -37,9 +38,9 @@ hay forma de que el WBI se rehaga con el `/usr` nuevo** y el menú Silent nunca 
    `movs r0,#1 ; bx lr`) dentro del paquete CFW, que se instala **sin** `nflasha5`. Secuencia:
    instalar → primer arranque **en frío** (aquí el menú Silent existe, la reproducción aún no) → apagar con
    el interruptor → la cámara escribe un **WBI nuevo con el `/usr` del CFW** → a partir de ahí **arranca
-   caliente con el `/usr` del CFW**: reproducción **y** Silent. El parche se agota solo (si el WBI existe,
-   `im.elf` no se ejecuta nunca más).
-   Construido y verificado offline en esta sesión (§5). `build/wbi_silent/pkg405/`.
+   caliente con el `/usr` del CFW**: reproducción **y** Silent. La regeneración la hace la cámara sola, sin
+   ningún ajuste de fábrica: los seis eslabones de la cadena están verificados en §8.
+   Construido y verificado offline en esta sesión (§5). `build/wbi_silent/pkg405sony/` (23/23).
 2. **S2 — Silent sin `/usr` (respaldo, si la cámara no coopera).** Dejar el disparo de Silent en un ajuste
    del menú **de fábrica** en vez de en la entrada nueva: el bloque de ajustes ya tiene
    `+0x210` = EFCS y `+0x238` = Silent (`scripts/g22/patch_tristate.py:18`). Cambiando la fuente de las dos
@@ -251,21 +252,30 @@ se prueba en cámara (§6).
    `pmca-console firmware <dat> --flash --confirm --reflash`.
 3. Primer encendido. Confirmar **frío**: `busybox cat /proc/uptime` pequeño y arranque lento. Comprobar
    que el menú muestra **Silent Shooting** y que un vídeo **no** se reproduce (es lo esperado).
-4. **Apagar con el interruptor** y esperar a que el LED termine (puede tardar más: escribe la instantánea).
-   **No quitar la batería.**
-5. Encender. Confirmar **caliente**: arranque rápido y, en telnet,
+4. Menú → activar **Silent Shooting** antes de apagar (así, si H2 se cumple, la bandera viaja en la
+   instantánea; si no, se activa a mano en cada sesión).
+5. **Apagar con el interruptor** y esperar a que el LED termine (puede tardar más: escribe la instantánea).
+   **No quitar la batería.** Es el único gesto que dispara la creación: `upm.ko` → mensaje `0x92014F` →
+   `im.elf` → `"warm"`, y el instalador ya dejó la cabecera a cero, así que no hace falta nada más.
+6. Encender. Confirmar **caliente**: arranque rápido y, en telnet,
    `busybox dd if=/dev/nflasha5 bs=16 count=1 2>/dev/null | busybox od -c` debe empezar por `W B I 1`
    (antes estaba a cero).
-6. Probar las dos cosas juntas: reproducir `MAH04204.MP4` **y** disparar con Silent activado.
-7. Si algo falla: reinstalar el paquete **B** de `build/cfw_bisect/B` (3.21 íntegro con WBI de fábrica) y
+7. Probar las dos cosas juntas: reproducir `MAH04204.MP4` **y** disparar con Silent activado.
+8. Si algo falla: reinstalar el paquete **B** de `build/cfw_bisect/B` (3.21 íntegro con WBI de fábrica) y
    anotar el punto exacto (`WARM(warm_count=…)` / `SUS(warm_count=…)` en `/log`).
 
 ---
 
 ## 7. Límites
 
-- **No** está medido que la cámara acepte el `write("warm")` con `nflasha5` a cero: el kernel llama a
-  `cxd_create_warmbootimage` y a `nand.ko` (`wbi_open/read/write/close`), y eso no se puede simular aquí.
+- **No** está medido que la cámara acepte el `write("warm")` con `nflasha5` a cero: el código lo permite en
+  todos sus pasos (§8) y el dispositivo está registrado con 62 MB en el `/log` real, pero la escritura de
+  42 MB en NAND no se puede simular aquí.
+- El parche hace que **cada** apagado por interruptor reescriba la instantánea (~42 MB). Sony limitaba eso
+  con el contador `0x940004`, probablemente por desgaste de NAND; sin el contador, la partición de 60 MB
+  recibe una escritura por ciclo. Uso normal (miles de apagados) queda dentro de la resistencia típica, pero
+  es un coste real. Refinamiento posible si molesta: parchear la compuerta para que devuelva 1 solo cuando
+  `nflasha5` no tenga cabecera válida (no implementado).
 - El contador `0x940004` y su límite son **persistentes**: si el límite ya está agotado en la unidad del
   usuario, el parche es lo que lo salta; sin el parche, la única vía sería poner el contador a cero (existe
   la rutina `0x9A84`, pero no se ha localizado una orden de consola que la ejecute).
@@ -275,3 +285,62 @@ se prueba en cámara (§6).
   marcha atrás documentada.
 - `warm.mode`, `warm.mem_dst`, `warm.mem_work`, `wbi_cmpr.*` se han leído en `warm.c` y en la cmdline; su
   interpretación exacta en Loader3 no se ha verificado (binario ausente).
+
+---
+
+## 8. La cámara crea sola el WBI nuevo (VERIFICADO en estático)
+
+El usuario no quiere depender de disparar Silent desde el ajuste de fábrica: el paquete tiene que dejar la
+cámara en un estado en el que **ella misma** fabrique la instantánea con el `/usr` del CFW. La cadena
+completa, eslabón por eslabón, con la prueba de cada uno
+([evidencia 07](evidence/film-pb-1-wbi-silent-20261128/07-garantia-creacion-wbi.txt)):
+
+| # | Eslabón | Estado | Prueba |
+|---|---------|--------|--------|
+| 1 | Al instalar, el actualizador **invalida** el WBI aunque el paquete no traiga `nflasha5` | VERIFICADO | `config/config.xml:25` lanza `us_mkfs.sh` al procesar `partconf_sum/partconf.sum` (va en **todo** paquete), y `us_mkfs.sh:106` llama a `ud_wbi_drop.elf` **sin condición**, antes del `exit_flag`; el binario resuelve `/dev/nflasha%d` desde `partinf.conf` (`nflasha5`, `0x03B40000`, `0x03C00000`, **type 0x02** = Warm Boot Image) |
+| 2 | «Invalidar» = 512 B a cero en el sector 0 ⇒ `fVersion` = 0 ⇒ sin instantánea | VERIFICADO | `__wbi_drop()` en `warm.c:359-388`: `memset(buf,0,512)` + `write_sector(...,0,1)` |
+| 3 | En cada arranque el kernel registra el dispositivo WBI con sitio de sobra | VERIFICADO (log de cámara) | `/log` real: `wb_default_device: sector_size=0x40000,phys_sector_size=0x200` y `WBI partition[5]: id=2, start_secor=0, num_sectors=121344` = **62 128 128 B** de capacidad frente a los **42 293 120 B** de la imagen de Sony |
+| 4 | Escribir `"warm"` en `/sys/power/state` es la **única** vía que crea instantánea | VERIFICADO | `kernel/power/suspend.c:50-58`: `[PM_SUSPEND_MEM]="mem"` y, con `CONFIG_WARM_BOOT_IMAGE`, `[PM_SUSPEND_DISK]="warm"`; `WBI_MODE(state,mode) = (state==PM_SUSPEND_DISK && mode)` (`warm.c:66`) y `warm.mode=2` en la cmdline de A y B ⇒ `image_mode=2` |
+| 5 | Nada aborta la creación | VERIFICADO | la cmdline **no** trae `chk_opened=` ⇒ `wbi_mount_points[0]==NULL` ⇒ `wbi_chk_opened_files()` devuelve 0; `warm.errmode` ausente ⇒ `wbi_errmode=0` ⇒ un fallo solo se registra; `warm.ignore_drop=1` (irrelevante: ya está a cero) |
+| 6 | `im.elf` pide `"warm"` sin depender del contador | VERIFICADO contra instrucciones | compuerta `0x9F44` es **pura** (lee dos globales, devuelve 0/1, no escribe); **un solo** `bl #0x9f44` en todo el binario, en `0x9FF2`; `cbz r0` → rama `"warm"` (`0xA012`) o `"mem"` (`0xA034`). Parche `06 4B 80 B5` → `01 20 70 47` verificado en el artefacto (`verify_nflasha15_im_elf.py`: `01207047`, `im.elf` sha256 `522f2f2e…`) |
+
+Con los seis eslabones, la secuencia posterior a la instalación **no necesita ninguna acción de fábrica**:
+
+1. Instalar → reiniciar (**frío** obligatorio: la cabecera está a cero). Menú con Silent, vídeo no.
+2. Menú → **Silent Shooting ON** (si se quiere la bandera dentro de la instantánea; ver H2).
+3. **Apagar con el interruptor.** `upm.ko` envía `0x92014F` → `im.elf` escribe `"warm"` → el kernel
+   escribe la instantánea del `/usr` **del CFW** en `nflasha5` (cabecera `WBI1`).
+4. Encender: **caliente**. Vídeo sí, y el `/usr` restaurado es el del CFW.
+
+### H2 (INFERENCIA, no verificada): la bandera Silent puede viajar dentro de la instantánea
+
+La instantánea es una copia de la RAM; la bandera `+0x238` del bloque `0x43EDF684` (la que enciende Silent)
+está en RAM. Si en el momento del apagado vale 1 y esa página entra en la imagen, el arranque caliente
+empezaría **con Silent ya activo**, sin volver a tocar el menú. En contra: `0x43804610` reinicializa el
+bloque a 0 al arrancar el programa, y no está medido si un arranque caliente vuelve a ejecutar ese código o
+reanuda el proceso tal cual. **Comprobación funcional**: tras el paso 4, mirar si el menú sigue en Silent
+Shooting. Si no lo está, Silent se activa a mano en cada sesión — que ya cumple el objetivo (vídeo **y**
+Silent a la vez), porque el problema nunca fue la bandera sino la instantánea.
+
+### Si algo de la cadena falla, cómo se ve
+
+- **`nflasha5` sigue a cero después del apagado** (`dd if=/dev/nflasha5 bs=16 count=1 | od -c` da ceros):
+  el `write("warm")` no llegó. Mirar en `/log` la línea `WARM(warm_count=…)` (llegó) frente a
+  `SUS(warm_count=…)` (se fue por `"mem"`), y `do_make_image` / `dropped wbi` del kernel.
+- **Se apaga pero el siguiente arranque es frío**: la imagen se escribió a medias (`fVersion` queda `invl`
+  hasta el final, a propósito) o Loader3 la rechaza. No hay riesgo de ladrillo: un arranque frío siempre
+  funciona; se repite el apagado con el interruptor.
+- **Marcha atrás**: reinstalar `build/cfw_bisect/B/pkg/package-4.02/firmware_packed.dat` (3.21 íntegro,
+  el actualizador vuelve a dejar el WBI de Sony válido y sale caliente como de fábrica).
+
+### Petición de lectura en cámara (no ejecutada: cámara apagada)
+
+Con telnet, tras el primer apagado y antes de dar el caso por bueno:
+
+```sh
+cat /sys/power/image_mode                 # esperado: 2
+cat /sys/power/image_dev                  # esperado: una línea con '*' delante de nflasha5
+cat /sys/power/image_mem                  # esperado: las 12 regiones wbimem de la cmdline
+busybox dd if=/dev/nflasha5 bs=16 count=1 2>/dev/null | busybox od -c   # esperado: W B I 1
+grep -E 'do_make_image|rewrite header|warm_count' /log/* 2>/dev/null | tail
+```

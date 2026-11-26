@@ -6,6 +6,10 @@
 > `im.elf` (`0x9F44`) compara un contador persistente de Backup (`0x940004`) con un límite y escribe `"mem"`.
 > Solución construida y auditada 23/23: paquete 4.05 = `/usr` del CFW Silent + `im.elf` con 4 B parcheados +
 > `--sin-wbi`; instalar → frío → apagar con el interruptor → WBI nuevo → caliente con reproducción **y** Silent.
+> La regeneración es **automática y está garantizada** (informe §8): el actualizador invalida la cabecera de
+> `nflasha5` en toda instalación (`ud_wbi_drop.elf`), el kernel registra el dispositivo en cada arranque
+> (62 MB > 42 MB), `warm` = `PM_SUSPEND_DISK` con `warm.mode=2`, nada aborta (`chk_opened=`/`warm.errmode`
+> ausentes) y la compuerta `0x9F44` es pura con una sola llamada. No hace falta ningún ajuste de fábrica.
 > [Informe](../reports/film-pb-1-wbi-silent-20261128.md). **Falta la prueba física.**
 
 > **FILM-PB-1, entorno medido.** `0x1600F101` es un estado traducido del fin de arranque del decodificador. DMM activo y microcódigo H.264 de disco igual al de fábrica. El AV-CAM medido solo difiere en los 233 bytes catalogados de captura, y el 3.94 limpio cambia también `libObj.so` respecto a esta sesión. [Diagnóstico y control](../reports/film-pb-1-sector31-resultado-20261126.md#10-respuesta-de-inicio-del-decodificador-y-estado-del-bloque-av).

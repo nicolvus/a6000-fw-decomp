@@ -15,8 +15,14 @@
 > **Solución construida (S1):** paquete 4.05 con el `/usr` del CFW Silent + `/usr/bin/im.elf` parcheado en
 > 4 B (`0x9F44`: `06 4B 80 B5` → `01 20 70 47`) y `--sin-wbi`. Secuencia: instalar → primer arranque **frío**
 > (menú Silent sí, vídeo no) → apagar con el interruptor (la cámara crea un WBI con el `/usr` del CFW) →
-> arranques siguientes **calientes** con reproducción **y** Silent. El parche se agota solo: con WBI válido no
-> se ejecuta `/sbin/init` ni `im.elf`. **Plan B (S2)** si no se crea el WBI: llevar el disparo de Silent al
+> arranques siguientes **calientes** con reproducción **y** Silent. **La regeneración la hace la cámara
+> sola, sin tocar ningún ajuste de fábrica** (§8 del informe, seis eslabones VERIFICADOS): el actualizador
+> invalida la cabecera de `nflasha5` en toda instalación (`config/config.xml:25` → `us_mkfs.sh:106` →
+> `ud_wbi_drop.elf`, 512 B a cero en el sector 0), el kernel registra el dispositivo en cada arranque
+> (`/log`: `WBI partition[5]: id=2, num_sectors=121344` = 62 MB > 42 MB), `warm` es `PM_SUSPEND_DISK` con
+> `warm.mode=2`, la cmdline no trae `chk_opened=` ni `warm.errmode` (nada aborta) y la compuerta `0x9F44` es
+> una función **pura** con una sola llamada (`0x9FF2`), así que los 4 B no pierden efectos laterales.
+> **Plan B (S2)** si no se crea el WBI: llevar el disparo de Silent al
 > ajuste de fábrica EFCS (`+0x210` en vez de `+0x238`, dos lecturas ya localizadas) para no tocar `/usr`.
 > Verificado offline: 4 B en `im.elf`, `nflasha15` 84 615 168 B con `fsck` limpio y bloque TPZL 0 = Sony,
 > `.dat` sha256 `584d2aac…`; **prueba física pendiente**.
