@@ -15,8 +15,10 @@ parche (`scripts/gui/og_avcam_patch.py`), siete pruebas Unicorn/datos (`tests/te
 | OG-E | El pedido del codificador pasa a 1440×960 | `0x43612364` (`bl` a cueva `0x43fb8500`) | si el bloque de formato pedía 1920×1080 (`+0x45a/+0x45c`) lo reescribe a 1440×960; 720p, 480p y 1440×1080 intactos |
 
 `apply_24p()` aplica OG-A/B/C/E (3:2 a 24p); `apply_bytes()` añade OG-D (3:2 también a 60p, 59,99 Hz) y es lo que
-construye `--funciones og`. Ambas son idempotentes y validan los bytes originales. **Consecuencia:** el 16:9 a 1080p
-desaparece; queda en 720p y en AVCHD 1440×1080i.
+construye `--funciones og`. Ambas son idempotentes y validan los bytes originales. **Consecuencia exacta** (medida modo a modo): pasan a 3:2
+exactamente `0x10`, `0x1a` y `0x19`; siguen en 16:9 `0x05`, `0x18` y `0x07`, la foto (`0x0b`/`0x2f`), el Live View
+(`0x01`/`0x03`) y 720p/480p. Como el selector de vídeo usa `0x1A`/`0x10` para 60p y `0x19` (o `0x07`) para 24p, el
+resultado es 3:2 en las dos cadencias principales y 16:9 sólo si el selector cae en `0x07`.
 
 **Por qué 1440×960 y no 1920×1280.** `FUN_4391c540` exige, para anchos distintos de 1920, que ancho de entrada =
 ancho de salida y alto de entrada = alto de salida, y su lista blanca de anchos es `{640, 800, 1280, 1440, 1920}`
