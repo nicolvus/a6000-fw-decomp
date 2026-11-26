@@ -1,8 +1,9 @@
 # Estado actual — léeme primero
 
 > **WBI + Silent RESUELTO en estático (28-11-2026).** Silent son dos capas y solo una choca con el WBI: el
-> comportamiento va en `av-cam.bin` (`nflasha3`, 0 de 24 432 páginas del WBI) y la bandera/menú en `/usr` (998 de
-> 4 254 páginas de `libObj.so` restauradas). El eslabón que faltaba: la cámara **ya no fabrica su WBI** porque
+> comportamiento y la bandera `+0x238` van en `av-cam.bin` (`nflasha3`, 0 de 24 432 páginas del WBI; su
+> constructor deja la bandera a 0 en cada encendido) y el menú/emisor del `0x40e3` en `/usr` (998 de 4 254
+> páginas de `libObj.so` restauradas). El eslabón que faltaba: la cámara **ya no fabrica su WBI** porque
 > `im.elf` (`0x9F44`) compara un contador persistente de Backup (`0x940004`) con un límite y escribe `"mem"`.
 > Solución construida y auditada 23/23: paquete 4.05 = `/usr` del CFW Silent + `im.elf` con 4 B parcheados +
 > `--sin-wbi`; instalar → frío → apagar con el interruptor → WBI nuevo → caliente con reproducción **y** Silent.
@@ -10,6 +11,9 @@
 > `nflasha5` en toda instalación (`ud_wbi_drop.elf`), el kernel registra el dispositivo en cada arranque
 > (62 MB > 42 MB), `warm` = `PM_SUSPEND_DISK` con `warm.mode=2`, nada aborta (`chk_opened=`/`warm.errmode`
 > ausentes) y la compuerta `0x9F44` es pura con una sola llamada. No hace falta ningún ajuste de fábrica.
+> **Sin inferencias abiertas:** la bandera Silent vive en `av-cam.bin` (base `0x43541000`), no entra en la
+> imagen (0 de 2 200 páginas) y `av-cam` se recarga en cada encendido ⇒ Silent se reactiva en cada sesión;
+> el resto de dudas del hilo quedaron cerradas (informe §8.1 y §9).
 > [Informe](../reports/film-pb-1-wbi-silent-20261128.md). **Falta la prueba física.**
 
 > **FILM-PB-1, entorno medido.** `0x1600F101` es un estado traducido del fin de arranque del decodificador. DMM activo y microcódigo H.264 de disco igual al de fábrica. El AV-CAM medido solo difiere en los 233 bytes catalogados de captura, y el 3.94 limpio cambia también `libObj.so` respecto a esta sesión. [Diagnóstico y control](../reports/film-pb-1-sector31-resultado-20261126.md#10-respuesta-de-inicio-del-decodificador-y-estado-del-bloque-av).

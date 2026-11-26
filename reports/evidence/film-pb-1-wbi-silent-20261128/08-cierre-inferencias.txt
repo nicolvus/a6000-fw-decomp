@@ -1,0 +1,127 @@
+# Cierre estático de las inferencias del hilo WBI + Silent
+# generado: 2026-11-26T19:21:54-03:00
+
+== I1. El bloque 0x43EDF684 y su constructor 0x43804610 están en av-cam.bin (base 0x43541000)
+$ python3 (capstone Thumb) av-cam.bin @ offset 0x43804610-0x43541000 = 0x2C3610
+43804610 push     {r0, r1, r2, r3, r4, r5, r6, lr}
+43804612 add.w    r1, sp, #0xf
+43804616 ldr      r0, [pc, #0x3ac]
+43804618 bl       #0x435613b0
+4380461c cmp      r0, #1
+4380461e beq      #0x43804644
+43804620 ldr      r3, [pc, #0x3a4]
+43804622 movs     r0, #5
+43804624 ldr      r4, [pc, #0x3a4]
+43804626 movs     r1, #0
+43804628 movs     r2, #1
+4380462a add      r3, pc
+4380462c add      r4, pc
+4380462e movs     r5, #0x82
+43804630 str      r4, [sp]
+43804632 str      r5, [sp, #4]
+43804634 bl       #0x43803d80
+43804638 ldr      r0, [pc, #0x394]
+4380463a mov      r1, r4
+4380463c mov      r2, r5
+4380463e add      r0, pc
+43804640 bl       #0x43902718
+43804644 ldr      r4, [pc, #0x38c]
+43804646 movw     r1, #0x1770
+4380464a ldrb.w   r0, [sp, #0xf]
+4380464e .byte    0x4f, 0xf4
+#  -> 'bl #0x435613b0' = wrapper de Backup_read que documenta S64
+
+== I1b. Control: el literal 0x43EDF684 no aparece en libObj.so ni en libmpr.so (0 ocurrencias),
+#     y esas librerías no contienen el wrapper de Backup_read en esa dirección; capstone decodifica
+#     bytes al azar en cualquier sitio, así que la prueba buena es el literal + la llamada a 0x435613b0.
+libObj.so [('blx', '#0x430df9e0'), ('ldrd', 'r4, r5, [r7, #0x40]'), ('movw', 'r2, #0x4e20'), ('movs', 'r3, #0'), ('mov', 'r0, r7'), ('adds', 'r4, r4, r2')]
+libmpr.so [('subs', 'r2, #0x20'), ('orrs', 'r0, r4'), ('add', 'r5, sb'), ('muls', 'r7, r3, r7'), ('ldr', 'r6, [pc, #0x104]'), ('cmp', 'r3, r8')]
+literal 0x43edf684 en libObj+libmpr: 0
+literal 0x43804610 en libObj+libmpr: 0
+
+== I2. do_make_image no lee la cabecera existente
+$ sed -n '1054,1078p' /tmp/ssboot/linux/arch/arm/common/warm.c
+static int do_make_image(unsigned long entry, unsigned long adjust_vma)
+{
+	int ret = 0;
+	u32 t0;
+
+	wb_printk_init();
+
+	if (wbi_is_canceled()) {
+		ret = -ECANCELED;
+		goto close_error;
+	}
+	/* set timeout */
+	wbi_expire = mach_read_cycles() + mach_usecs_to_cycles(wbi_tmo*USEC_PER_MSEC);
+
+	t0 = mach_read_cycles();
+	wbheader.resume_vector = virt_to_phys((void *)entry);
+
+	if(wb_default_device->open)
+		if((ret=wb_default_device->open(wb_default_device)<0))
+			goto send_error;
+
+	do {
+		unsigned long image_size;
+
+		watchdog_touch();
+
+== I3. Tamaño de la imagen = todas las páginas en uso (o_data_size)
+$ sed -n '1002,1006p' /tmp/ssboot/linux/arch/arm/common/warm.c
+		return 0;
+	}
+	else if(flag==END){
+		BUG_ON(sections > header->sections);
+
+$ stat -c%s (nflasha5 de Sony)
+42293120
+
+== I4. /usr va montado en ro en los dos modos
+$ grep usr reports/evidence/film-pb1-sector31-camara-20261126/{A-frio,B-caliente}/mounts.txt
+reports/evidence/film-pb1-sector31-camara-20261126/A-frio/mounts.txt:/dev/dnflasha15 /usr ext2 ro,relatime,errors=continue 0 0
+reports/evidence/film-pb1-sector31-camara-20261126/B-caliente/mounts.txt:/dev/dnflasha15 /usr ext2 ro,relatime,errors=continue 0 0
+
+== I5. warm.* y wbi_cmpr.* son module_param del kernel, no de Loader3
+$ grep -n 'module_param' /tmp/ssboot/linux/arch/arm/common/warm.c /tmp/ssboot/linux/arch/arm/common/wbi_cmpr.c
+/tmp/ssboot/linux/arch/arm/common/warm.c:130:module_param_named(mode, image_mode, uint, S_IRUGO | S_IWUSR);
+/tmp/ssboot/linux/arch/arm/common/warm.c:132:module_param_string(mem_dst, wbi_mem_dst, sizeof(wbi_mem_dst), S_IRUGO | S_IWUSR);
+/tmp/ssboot/linux/arch/arm/common/warm.c:134:module_param_string(mem_work, wbi_mem_work, sizeof(wbi_mem_work), S_IRUGO | S_IWUSR);
+/tmp/ssboot/linux/arch/arm/common/warm.c:136:module_param_named(tmo, wbi_tmo, ulong, S_IRUGO | S_IWUSR);
+/tmp/ssboot/linux/arch/arm/common/warm.c:139:module_param_named(cancel, wbi_cancel, port, S_IRUSR);
+/tmp/ssboot/linux/arch/arm/common/warm.c:141:module_param_named(resume_drop, resume_drop, int, S_IRUSR|S_IWUSR);
+/tmp/ssboot/linux/arch/arm/common/warm.c:143:module_param_named(boot_drop, wbi_boot_drop, bool, S_IRUSR);
+/tmp/ssboot/linux/arch/arm/common/warm.c:145:module_param_named(ignore_drop, wbi_ignore_drop, bool, S_IRUSR|S_IWUSR);
+/tmp/ssboot/linux/arch/arm/common/warm.c:147:module_param_named(errmode, wbi_errmode, int, S_IRUSR|S_IWUSR);
+/tmp/ssboot/linux/arch/arm/common/warm.c:149:module_param_named(chksum, wbi_chksum, bool, S_IRUSR|S_IWUSR);
+/tmp/ssboot/linux/arch/arm/common/warm.c:1473:module_param_array_named(chk_opened, wbi_mount_points, charp, NULL, S_IRUGO | S_IWUSR);
+/tmp/ssboot/linux/arch/arm/common/wbi_cmpr.c:54:module_param_named(nbuf, wbi_nbuf, int, S_IRUSR|S_IWUSR);
+/tmp/ssboot/linux/arch/arm/common/wbi_cmpr.c:56:module_param_named(cancel_tmo, wbi_cancel_tmo, int, S_IRUSR|S_IWUSR);
+/tmp/ssboot/linux/arch/arm/common/wbi_cmpr.c:100:module_param_named(stamp_addr, wbi_stamp_addr, ulongH, S_IRUSR);
+/tmp/ssboot/linux/arch/arm/common/wbi_cmpr.c:102:module_param_named(stamp_size, wbi_stamp_size, ulongH, S_IRUSR);
+/tmp/ssboot/linux/arch/arm/common/wbi_cmpr.c:626:module_param_named(waddr, wbi_wbuf.addr, ulongH, S_IRUSR|S_IWUSR);
+/tmp/ssboot/linux/arch/arm/common/wbi_cmpr.c:627:module_param_named(wsize, wbi_wbuf.size, ulongH, S_IRUSR|S_IWUSR);
+
+== I7. Páginas de av-cam en el WBI de Sony (0 de 2200)
+# Qué guarda el WBI de Sony (dev/nflasha5, 42 293 120 B) — medido por páginas de 4 KiB
+# Método: fwtool.sony.wbi.readWbi (descompresión LZ77 de las 1164 secciones) + SHA-1 por página
+#         contra los ficheros de la imagen de fábrica 3.21. Script: scripts/gui/cuenta_paginas_wbi.py
+
+  páginas no nulas del WBI ............ 24 432
+  páginas que son de av-cam.bin ....... 0        <- la imagen del core AV NO está en el WBI
+  páginas que son de un fichero de /usr 1 654    (77 ficheros distintos)
+     lib/libObj.so ................... 998
+
+== I1c. Coherencia del base de av-cam
+  av-cam virtual 0x43541000 + 0x40000000 = 0x83541000 (física) -> cae en memrsv=0x13B1000@0x82D90000
+  rango memrsv: 0x82D90000 .. 0x84141000
+  av-cam 0x83541000 dentro del rango reservado: True
+  regiones wbimem que tocan 0x83541000: []
+  la más alta por debajo: 0x834c0000
+
+== I6. Corrección de dirección en im.elf: ver 07-garantia-creacion-wbi.txt
+#  "WARM(warm_count=%d)" pool 0x00A05C, "warm" 0x00A060 ("warm" se carga en 0xA014)
+#  "SUS(warm_count=%d)"  pool 0x00A064, "mem"  0x00A068 ("mem" se carga en 0xA034)
+#  la escritura común es blx 0x8F68 en 0xA03A (r2 = 4 con "warm", 3 con "mem")
+#  (el 0x9FB4 que circulaba en los informes es el prólogo `push {r4,r5,r7,lr}` de esa misma
+#   función, no la rama de "mem"; verificado con /tmp/imdis.py 0x1FA0 0x40 thumb)

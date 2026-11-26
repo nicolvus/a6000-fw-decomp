@@ -4,10 +4,12 @@
 
 > **Silent son dos capas y solo una choca con el WBI.** El **comportamiento** (ShutMode 0, `r5`, tristate a
 > Darwin) vive en `av-cam.bin` → `nflasha3` (`/system`) y **sí** convive: **0 de 24 432** páginas no nulas del
-> WBI son suyas y Loader3 la recarga en los dos modos de RAMCFG. La **bandera** (`[0x43EDF684+0x238]`, comando
-> `0x40e3`) y la **entrada de menú** viven en `/usr` (`libObj.so` 998 de 4 254 páginas restauradas,
-> `viewUnified2.so` 50, `CautionConfig.so` 8, `.uxc`), y el WBI devuelve el `/usr` de Sony congelado (TOC en
-> `0x8D3B8000`). Con `/usr` recompuesto la instantánea queda incoherente: **0/6** arranques (G11 §11).
+> WBI son suyas y Loader3 la recarga en los dos modos de RAMCFG. La **bandera** (`[0x43EDF684+0x238]`) está
+> también en `av-cam.bin` (constructor `0x43804610`, base `0x43541000`) y su memoria no entra en la imagen ⇒
+> vuelve a 0 en cada encendido. La **entrada de menú** y el emisor del comando `0x40e3` viven en `/usr`
+> (`libObj.so` 998 de 4 254 páginas restauradas, `viewUnified2.so` 50, `CautionConfig.so` 8, `.uxc`), y el WBI
+> devuelve el `/usr` de Sony congelado (TOC en `0x8D3B8000`): sin menú no hay quien encienda Silent. Con
+> `/usr` recompuesto la instantánea queda incoherente: **0/6** arranques (G11 §11).
 > **El eslabón que faltaba:** la cámara **ya no fabrica su WBI**. `im.elf` escribe `"warm"` en
 > `/sys/power/state` solo si la compuerta `0x9F44` deja, y esa compuerta compara un **contador persistente**
 > (Backup `0x940004`) con un límite; pasado el límite escribe `"mem"` (`0x9FB4`) y no hay instantánea nueva.
@@ -22,6 +24,12 @@
 > (`/log`: `WBI partition[5]: id=2, num_sectors=121344` = 62 MB > 42 MB), `warm` es `PM_SUSPEND_DISK` con
 > `warm.mode=2`, la cmdline no trae `chk_opened=` ni `warm.errmode` (nada aborta) y la compuerta `0x9F44` es
 > una función **pura** con una sola llamada (`0x9FF2`), así que los 4 B no pierden efectos laterales.
+> **Sin inferencias abiertas (28-11-2026):** la bandera `+0x238` **no** viaja en la instantánea —
+> `0x43EDF684`/`0x43804610` son de `av-cam.bin` (base `0x43541000`), su memoria queda fuera de la imagen
+> (0 de 2 200 páginas, en `memrsv=0x13B1000@0x82D90000`, sin `wbimem=` que la cubra) y el RAMCFG `0x4000000`
+> recarga `av-cam.bin` en caliente ⇒ el constructor corre en cada encendido y **Silent se reactiva en cada
+> sesión**. Corregido también el sitio del literal `"mem"` (`0xA034`, no `0x9FB4`) y confirmado que
+> `warm.mem_dst/mem_work`/`wbi_cmpr.*` son `module_param` del kernel, no de Loader3.
 > **Plan B (S2)** si no se crea el WBI: llevar el disparo de Silent al
 > ajuste de fábrica EFCS (`+0x210` en vez de `+0x238`, dos lecturas ya localizadas) para no tocar `/usr`.
 > Verificado offline: 4 B en `im.elf`, `nflasha15` 84 615 168 B con `fsck` limpio y bloque TPZL 0 = Sony,

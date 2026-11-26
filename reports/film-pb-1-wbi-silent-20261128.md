@@ -20,7 +20,8 @@ Evidencia: [`reports/evidence/film-pb-1-wbi-silent-20261128/`](evidence/film-pb-
 | Capa | Dónde vive | ¿Sobrevive al WBI? |
 |---|---|---|
 | **Comportamiento** (ShutMode 0, `r5`, tristate hacia Darwin) | `av-cam.bin` → `nflasha3` (`/system`) | **Sí**: `av-cam.bin` tiene **0 de 2 200 páginas** dentro del WBI y Loader3 lo recarga en **ambos** modos (RAMCFG `0x1000000` y `0x4000000`) |
-| **Bandera** (Silent 0/1, `[0x43EDF684+0x238]`, comando `0x40e3`) y **entrada de menú** | `libObj.so`, `CautionConfig.so`, `viewUnified2.so`, `share/app/*.uxc` → `nflasha15` (`/usr`) | **No**: el WBI congela el `/usr` de Sony (TOC en `0x8D3B8000` + **1 654 páginas de 77 ficheros**, `libObj.so` 998/4 254) |
+| **Bandera** Silent 0/1 (`[0x43EDF684+0x238]`) y su constructor | también `av-cam.bin` → `nflasha3` (verificado: `0x43804610` = offset `0x2C3610` con base `0x43541000`, §8.1) | **Sí** al WBI, pero **no al apagado**: `av-cam` se recarga en cada encendido y el constructor deja `+0x238`=0 ⇒ se reactiva en cada sesión |
+| **Entrada de menú** y emisor del comando `0x40e3` | `libObj.so`, `CautionConfig.so`, `viewUnified2.so`, `share/app/*.uxc` → `nflasha15` (`/usr`) | **No**: el WBI congela el `/usr` de Sony (TOC en `0x8D3B8000` + **1 654 páginas de 77 ficheros**, `libObj.so` 998/4 254). Sin el menú no hay quien envíe `0x40e3` |
 
 Además la bandera **no se puede dejar puesta**: el bloque de ajustes se reinicializa en cada arranque
 (`0x43804610`) y `+0x238` queda a 0 (§2.4), así que no hay atajo «seleccionar Silent una vez».
@@ -170,7 +171,7 @@ Los dos llevan el mismo `nflasha15` (29 ficheros, sha256 `ed456f8a…`) y el mis
 | 1. Instalar | `Done` + reinicio | actualizador normal |
 | 2. Primer encendido | **frío**: arranque lento, `BootMode 1`; menú **Silent** presente; vídeo **no** reproduce | `/usr` es el del CFW; el decodificador no arranca en frío |
 | 3. Apagar con el interruptor (no quitar la batería) y esperar a que termine | LED de apagado normal, más lento que otras veces (escribe ~40 MB) | `im.elf` → `"warm"` → `cxd_create_warmbootimage` |
-| 4. Encender | **caliente**: arranque rápido, **sin** mensajes de `init`; **reproduce vídeo** y el menú **Silent** sigue ahí | el WBI nuevo trae el page cache del `/usr` del CFW |
+| 4. Encender | **caliente**: arranque rápido, **sin** mensajes de `init`; **reproduce vídeo** y el menú **Silent** está (la *selección* vuelve a 0: §8.1) | el WBI nuevo trae el page cache del `/usr` del CFW |
 
 **Riesgo y marcha atrás.** Si el paso 3 no produce un WBI válido, la cámara sigue en frío (sin
 reproducción, con Silent): se recupera instalando de nuevo el paquete B de la bisecta (3.21 íntegro con su
@@ -252,8 +253,8 @@ se prueba en cámara (§6).
    `pmca-console firmware <dat> --flash --confirm --reflash`.
 3. Primer encendido. Confirmar **frío**: `busybox cat /proc/uptime` pequeño y arranque lento. Comprobar
    que el menú muestra **Silent Shooting** y que un vídeo **no** se reproduce (es lo esperado).
-4. Menú → activar **Silent Shooting** antes de apagar (así, si H2 se cumple, la bandera viaja en la
-   instantánea; si no, se activa a mano en cada sesión).
+4. (No hace falta tocar Silent antes de apagar: la bandera vive en `av-cam`, que se recarga en cada
+   encendido — §8.1 — así que se activa en el menú de cada sesión.)
 5. **Apagar con el interruptor** y esperar a que el LED termine (puede tardar más: escribe la instantánea).
    **No quitar la batería.** Es el único gesto que dispara la creación: `upm.ko` → mensaje `0x92014F` →
    `im.elf` → `"warm"`, y el instalador ya dejó la cabecera a cero, así que no hace falta nada más.
@@ -268,23 +269,25 @@ se prueba en cámara (§6).
 
 ## 7. Límites
 
-- **No** está medido que la cámara acepte el `write("warm")` con `nflasha5` a cero: el código lo permite en
-  todos sus pasos (§8) y el dispositivo está registrado con 62 MB en el `/log` real, pero la escritura de
-  42 MB en NAND no se puede simular aquí.
-- El parche hace que **cada** apagado por interruptor reescriba la instantánea (~42 MB). Sony limitaba eso
-  con el contador `0x940004`, probablemente por desgaste de NAND; sin el contador, la partición de 60 MB
-  recibe una escritura por ciclo. Uso normal (miles de apagados) queda dentro de la resistencia típica, pero
-  es un coste real. Refinamiento posible si molesta: parchear la compuerta para que devuelva 1 solo cuando
-  `nflasha5` no tenga cabecera válida (no implementado).
+- El **diseño** no tiene huecos: §8 (cadena de creación) y §9 (inferencias cerradas) cubren el camino
+  completo, incluida la escritura sobre una cabecera a cero (`do_make_image` no la lee). Lo que no se ha
+  ejecutado es la escritura física de 42 MB en esta NAND concreta: eso es la prueba de §6, no una duda de
+  diseño.
+- Coste medido, sin conjeturas: el parche hace que **cada** apagado por interruptor escriba una imagen de
+  `header->o_data_size = pages*PAGE_SIZE` con todas las páginas en uso, comprimidas (la de Sony ocupa
+  42 293 120 B), sobre una partición de 62 128 128 B. El contador `0x940004` limitaba eso en stock; su
+  motivo no se afirma. Refinamiento posible: que la compuerta devuelva 1 solo cuando `nflasha5` no tenga
+  cabecera válida (no implementado).
 - El contador `0x940004` y su límite son **persistentes**: si el límite ya está agotado en la unidad del
   usuario, el parche es lo que lo salta; sin el parche, la única vía sería poner el contador a cero (existe
   la rutina `0x9A84`, pero no se ha localizado una orden de consola que la ejecute).
 - S2 cambia la semántica de un ajuste de fábrica y no se ha implementado ni medido.
-- La reanudación de un WBI creado con el `/usr` del CFW **no** está probada: podría fallar por mezcla igual
-  que la de Sony (aunque aquí la coherencia es total: mismo ext2, mismo page cache). Riesgo asumido y con
-  marcha atrás documentada.
-- `warm.mode`, `warm.mem_dst`, `warm.mem_work`, `wbi_cmpr.*` se han leído en `warm.c` y en la cmdline; su
-  interpretación exacta en Loader3 no se ha verificado (binario ausente).
+- La reanudación de un WBI creado con el `/usr` del CFW **está cerrada por construcción** (§9, I4): la
+  imagen la escribe la propia cámara leyendo el `/usr` montado en ese momento, y nada lo reescribe entre la
+  creación y la reanudación. La marcha atrás sigue documentada por si el hardware dice otra cosa.
+- `warm.mode`, `warm.mem_dst`, `warm.mem_work` y `wbi_cmpr.*` **no son de Loader3**: son parámetros de
+  módulo del propio kernel (`module_param_named`/`module_param_string` en `warm.c:130-149` y
+  `wbi_cmpr.c:54-102,626-627`) y están en el árbol que se leyó; Loader3 no los interpreta (§9, I5).
 
 ---
 
@@ -307,20 +310,40 @@ completa, eslabón por eslabón, con la prueba de cada uno
 Con los seis eslabones, la secuencia posterior a la instalación **no necesita ninguna acción de fábrica**:
 
 1. Instalar → reiniciar (**frío** obligatorio: la cabecera está a cero). Menú con Silent, vídeo no.
-2. Menú → **Silent Shooting ON** (si se quiere la bandera dentro de la instantánea; ver H2).
+2. Menú → **Silent Shooting ON**. Ojo: la bandera **no sobrevive a ningún apagado** (§8.1), así que este
+   paso se repite en cada sesión; el paquete no cambia eso ni puede cambiarlo.
 3. **Apagar con el interruptor.** `upm.ko` envía `0x92014F` → `im.elf` escribe `"warm"` → el kernel
    escribe la instantánea del `/usr` **del CFW** en `nflasha5` (cabecera `WBI1`).
 4. Encender: **caliente**. Vídeo sí, y el `/usr` restaurado es el del CFW.
 
-### H2 (INFERENCIA, no verificada): la bandera Silent puede viajar dentro de la instantánea
+### 8.1 La bandera Silent **no** viaja en la instantánea (REFUTADO, verificado contra bytes)
 
-La instantánea es una copia de la RAM; la bandera `+0x238` del bloque `0x43EDF684` (la que enciende Silent)
-está en RAM. Si en el momento del apagado vale 1 y esa página entra en la imagen, el arranque caliente
-empezaría **con Silent ya activo**, sin volver a tocar el menú. En contra: `0x43804610` reinicializa el
-bloque a 0 al arrancar el programa, y no está medido si un arranque caliente vuelve a ejecutar ese código o
-reanuda el proceso tal cual. **Comprobación funcional**: tras el paso 4, mirar si el menú sigue en Silent
-Shooting. Si no lo está, Silent se activa a mano en cada sesión — que ya cumple el objetivo (vídeo **y**
-Silent a la vez), porque el problema nunca fue la bandera sino la instantánea.
+Se propuso que la instantánea, al ser una copia de RAM, devolviera `+0x238` = 1 sin tocar el menú. **Es
+falso**, y ahora está cerrado por los tres lados:
+
+1. **El bloque no es de Linux.** `0x43EDF684` y su constructor `0x43804610` están en **`av-cam.bin`**, no en
+   `libObj.so` ni en `libmpr.so`: el base de `av-cam` es `0x43541000` (S64: «física = virtual de `av-cam` −
+   `0x40000000`» —en la práctica **física = virtual + `0x40000000`**, como comprueba `0x43EDF8BC` →
+   `0x83EDF8BC`—, y la A7S usa «mismo base `0x43541000`»), así que `0x43804610` = offset `0x2C3610` y allí
+   hay una función Thumb bien formada que **empieza llamando a `0x435613b0`**, el wrapper de `Backup_read`
+   que S64 atribuye a este constructor; el bloque `0x43EDF684` cae además en el rango de `av-cam`
+   (`0x99A684` < 11 427 236 B de fichero) y su física medida `0x83EDF8BC` es exactamente virtual +
+   `0x40000000`. El literal `0x43EDF684` no aparece ni en `libObj.so` ni en `libmpr.so` (0 ocurrencias).
+   [evidencia 08](evidence/film-pb-1-wbi-silent-20261128/08-cierre-inferencias.txt)
+2. **Esa memoria no entra en la imagen.** De las 2 200 páginas de `av-cam.bin`, **0** están en el WBI de
+   Sony ([evidencia 02](evidence/film-pb-1-wbi-silent-20261128/02-paginas-del-wbi.txt)). Y la aritmética lo
+   confirma: `av-cam` vive en `0x83541000…` (física), dentro del `memrsv=0x13B1000@0x82D90000`
+   (`0x82D90000–0x84141000`), que `saveable()` descarta por `PageReserved` + área reservada
+   (`warm.c:790-815`); ninguna de las 12 regiones `wbimem=` de la cmdline lo cubre (la más alta,
+   `0x500000@0x82FC0000`, llega a `0x834C0000`).
+3. **Y se recarga en los dos modos.** RAMCFG modo `0x4000000` (caliente) carga `idt_cam.bin` **y
+   `av-cam.bin`** ([sub-wbi §](../film-pb-1-sub-wbi-20261127.md) → [R14 §5](../docs/capture/e26-r14-ramcfg-bos-analysis.md)),
+   igual que el modo frío `0x1000000`.
+
+Conclusión: `av-cam` arranca de cero en **cada** encendido, el constructor corre, `+0x238` vuelve a 0 y
+**Silent hay que reactivarlo en el menú en cada sesión**. Es lo que ya decía §2.4 y lo que midió S64; la
+hipótesis contraria queda retirada. El objetivo no se resiente: el problema nunca fue la bandera, sino que
+la instantánea devolviera un `/usr` sin el menú.
 
 ### Si algo de la cadena falla, cómo se ve
 
@@ -344,3 +367,24 @@ cat /sys/power/image_mem                  # esperado: las 12 regiones wbimem de 
 busybox dd if=/dev/nflasha5 bs=16 count=1 2>/dev/null | busybox od -c   # esperado: W B I 1
 grep -E 'do_make_image|rewrite header|warm_count' /log/* 2>/dev/null | tail
 ```
+
+---
+
+## 9. Auditoría de inferencias: ninguna queda abierta
+
+Cada afirmación que antes se apoyaba en «probablemente» o «no verificado» en este hilo, con su cierre
+estático y la prueba:
+
+| # | Lo que estaba abierto | Cierre | Estado |
+|---|---|---|---|
+| I1 | «La bandera `+0x238` puede viajar dentro de la instantánea» | `0x43804610`/`0x43EDF684` están en `av-cam.bin` (base `0x43541000` ⇒ offset `0x2C3610`, Thumb real que llama a `0x435613b0` = wrapper de `Backup_read`); **0** de 2 200 páginas de `av-cam` están en el WBI; RAMCFG `0x4000000` (caliente) recarga `idt_cam.bin` y `av-cam.bin`. Ver §8.1 | **REFUTADO** |
+| I2 | «No está medido que la cámara acepte `write("warm")` con `nflasha5` a cero» | `do_make_image` (`warm.c:1054-1175`) no lee la cabecera existente: solo `wbi_is_canceled()` (GPIO, `warm.cancel` ausente de la cmdline ⇒ nunca cancela), `wb_default_device->open`, `count_pages`, comprobación de capacidad y escritura. `__wbi_drop` ya escribe por esa misma vía en stock | **CERRADO** |
+| I3 | «Se reescribe la instantánea en cada apagado (desgaste)» | Dato, no conjetura: `header->o_data_size = pages*PAGE_SIZE` (`warm.c:1004`) con todas las páginas en uso, comprimidas; la imagen de Sony ocupa 42 293 120 B. El contador `0x940004` la limita en stock; el motivo del límite no se afirma | **CERRADO (dato)** |
+| I4 | «La reanudación de un WBI creado con el `/usr` del CFW podría fallar por mezcla» | El `/usr` está montado **`ro`** (`/dev/dnflasha15 /usr ext2 ro`, `mounts.txt` de A y B) y la imagen la escribe la cámara leyendo ese mismo `/usr` en ese mismo instante: entre creación y reanudación nada puede cambiarlo. El 0/6 de G11 era otra cosa: WBI de Sony (TOC `0x8D3B8000`) contra un `/usr` **recompuesto** | **CERRADO** |
+| I5 | «`warm.mem_dst`, `warm.mem_work`, `wbi_cmpr.*`: interpretación en Loader3 no verificada» | No son de Loader3. Son `module_param_*` del kernel: `warm.c:130-149` (`mode`, `mem_dst`, `mem_work`, `tmo`, `cancel`, `resume_drop`, `boot_drop`, `ignore_drop`, `errmode`, `chksum`) y `wbi_cmpr.c:54-102,626-627` (`nbuf`, `cancel_tmo`, `stamp_addr/size`, `waddr`, `wsize`) | **CERRADO** |
+| I6 | «`im.elf` escribe `"mem"` en `0x9FB4`» | Corrección: `0x9FB4` es el **prólogo** (`push {r4,r5,r7,lr}`) de la función que decide; el literal `"mem"` se carga en **`0xA034`** (`ldr r1,=0x00C0F4`) y `"warm"` en **`0xA014`** (`ldr r1,=0x00C0C8`); la escritura es `blx 0x8F68` en `0xA03A`, con `r2`=3 o 4 bytes | **CORREGIDO** |
+| I7 | «El `0xB051000B` de `ff4PlayIf` podría ser la causa» | Aparece igual en B, que reproduce y acaba en `ER_STREAM_END` ⇒ inóculo | **DESCARTADO** |
+
+Lo único que no se puede decidir sin encender la cámara es la **ejecución** de esta cadena en un aparato
+concreto (que la NAND acepte la escritura y que Loader3 reanude), y eso no es una inferencia sobre el
+diseño: es la prueba física pedida en §6.
