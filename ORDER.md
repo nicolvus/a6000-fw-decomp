@@ -98,7 +98,13 @@ hold are forbidden.
 6. Editing a generated derivative by hand.
 7. Committing `.md` changes without running `knowledge-maintenance` and `check_order.py`.
 
-## 10. Check before every commit
+## 10. A check and what it demands go in the same commit
+
+If a change adds a rule to the checker, the file that rule demands enters **in the same commit**. A commit that adds
+the check before the file leaves CI red in the history even if the next commit fixes it (happened on 2026-11-25 with
+the ES/EN site front page).
+
+## 11. Check before every commit
 
 ```sh
 python scripts/audit/check_order.py     # this document's rules, mechanically

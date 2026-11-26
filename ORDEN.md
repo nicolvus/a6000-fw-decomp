@@ -98,7 +98,13 @@ secciones que ya no se sostienen.
 6. Editar a mano un derivado generado.
 7. Commitear cambios en `.md` sin ejecutar `knowledge-maintenance` y `check_order.py`.
 
-## 10. Verificación previa a cada commit
+## 10. Un chequeo y lo que exige van en el mismo commit
+
+Si un cambio añade una regla al comprobador, el fichero que esa regla exige entra **en el mismo commit**. Un commit que
+añade la comprobación antes que el fichero deja la CI roja en el historial aunque el siguiente lo arregle (pasó el
+25-11-2026 con el par ES/EN de la portada).
+
+## 11. Verificación previa a cada commit
 
 ```sh
 python scripts/audit/check_order.py     # reglas de este documento, de forma mecánica
