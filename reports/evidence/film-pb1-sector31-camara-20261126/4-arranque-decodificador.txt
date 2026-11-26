@@ -1,0 +1,55 @@
+FILM-PB-1 | Arranque del decodificador y lectura del entorno | 26-11-2026
+
+El log del clip MAH04204 (2-graba-reproduce.txt) registró, en ese orden:
+  [CodecDrv][Error] E_AVCON_MOVIE_CODEC_STOP ( 00002003h )
+  Dec start complete error!!
+  [MDecI/F][Error] ER_MOVIE_DECODE_FAILED ( 1600F101h )
+
+Contraste del ELF libmpr.so de fábrica, MD5 igual al de cámara:
+  002c1916  8a68      ldr r2, [r1, #8]            ; palabra de estado del mensaje
+  002c1918  002a      cmp r2, #0
+  002c191a  2bd1      bne 0x2c1974               ; ruta de error
+  002c193a  ldr r0, [pc, #0x34]                  ; "Dec start complete"
+  002c1974  01f10800  add.w r0, r1, #8
+  002c1978  fff786fa  bl 0x2c0e88               ; traductor de estado
+  002c1988  7048      ldr r0, [pc, #0x1c0]      ; "Dec start complete error!!"
+  002c0eb6–002c0ec8: compara con 0xf1000002-1 y salta a 0x2c0fb0 en igualdad.
+  002c0f4c–002c0f50: compara con 0xfb050001 y salta al mismo 0x2c0fb0 en igualdad.
+  002c0fb0: carga 0x1600f101. 002c103a: escribe el valor traducido en el mismo campo.
+No se leyó la palabra original del mensaje en la prueba.
+
+Cámara, PID im.elf=144 y tiempo de inicio=148 ticks (mismo proceso de la prueba):
+  /usr/lib/libmpr.so                           d65462a32da6b8249ec7add0a99d8fe0
+  /usr/lib/libObj.so                           406ffd33e185e2543ac61e5e275b8f8b
+  /usr/lib/libmprctrl.so                       6703a08d1c3d9a93f14f96c6c78bf66c
+  /system/av-cam.bin                          aeea4ca959f908383e340e4e87be67f8
+  /usr/sabin/sa_avcd_performance_zma.bin      20dd05de1de4177007d8f11fa48d9136
+  /usr/sabin/sa_avcd_compatible_zma.bin       b4604ab16ade7ba1d49837f8ba770673
+  /usr/sabin/sa_zima_startup_zma0.bin         b5cbf2ad4df86a7f3c2d38b42e7fd905
+  /usr/sabin/sa_zima_startup_zma1.bin         c4207d34d82988afd6d246aec45f9bc3
+  /setting/DmmConfig.bin                      af67a64fe5c0a056585852b1547c2f2a   97544 bytes
+  /proc/udm/dmm_info: dmm is active.
+  /proc/udm/dmm_units y dmm_units2: ambas tablas devuelven registros.
+Las huellas de los cuatro ficheros sabin coinciden con sus archivos Sony 3.21.
+
+En 34 firmware.tar bajo build/, 13 particiones AV distintas:
+  aeea4ca959f908383e340e4e87be67f8   3.93 base, 3.93 exfine, 4.02 sin_iso, 4.03n
+  SHA-256 del AV-CAM.BIN extraído: b8ad482f1b6c8ba172a822d578b71bd79a92728dbf78fb9ede5cafdccb49aeaa
+  Tamaño 11427236, igual a Sony 3.21. Diferencias frente a Sony: 233 bytes.
+  Sitios T1…T8 del catálogo film-pb-1-sub-avcam-parches-20261126:
+    43841472..43841487  16 B
+    4384219e             1 B
+    43842270             1 B
+    43845f2e..43845fa3  83 B
+    438c82fe..438c8301   4 B
+    43fb7e00..43fb7e69 103 B
+    438d01a2             1 B
+    438d01aa..438d01c1  24 B
+  Suma: 233 B en captura de foto, selección de obturador y envío a Darwin.
+
+Controles de paquete verificados por extracción, ambos de igual tamaño de AV:
+  3.93 PP           AV md5=3f521f26df39bd29a450d422079aaeb2
+  Sony 3.21/3.94   AV md5=ef2e3003ddad7185b5398cb76287c5aa
+  El 3.94 limpio lleva libObj.so md5=d707bbad76e8d7e4412cd14688b3e6bc, distinto del de cámara.
+  3.93 base y 4.02 sin_iso coinciden con los tres MD5 de bibliotecas medidos;
+  los paquetes de este conjunto con AV Sony difieren en al menos una biblioteca.

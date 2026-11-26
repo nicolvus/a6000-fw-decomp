@@ -110,6 +110,13 @@
 > cargado. [Contraste con el MP4](../reports/film-pb-1-sector31-resultado-20261126.md#9-contraste-del-tiempo-solicitado-y-los-límites-del-mp4).
 > [Resultado y evidencia](../reports/film-pb-1-sector31-resultado-20261126.md#8-relectura-física-del-arranque-posterior-26-11-2026-1633-clst).
 
+> **Mismo arranque, contraste del entorno.** DMM activo, con unidades publicadas, y
+> microcódigo H.264 de disco igual al de fábrica. El núcleo AV medido tiene 233
+> bytes de cambios de captura de fotos. El 3.94 limpio lleva otro `libObj.so`, así que
+> cambiaría también el código Linux del reproductor. `0x1600F101` traduce al menos dos
+> estados originales del fin de arranque: `0xF1000001` y `0xFB050001`.
+> [Huellas y condición de control](../reports/film-pb-1-sector31-resultado-20261126.md#10-respuesta-de-inicio-del-decodificador-y-estado-del-bloque-av).
+
 ## Reproducción de vídeo — FILM-PB-1 (26-11-2026)
 
 > **Descartado el 26-11-2026: el «modo con movie = 0».** `Type2Mode` (`0x5F699C`) decide solo con

@@ -1,5 +1,10 @@
 # FILM-PB-1 (sub) — Camino de decodificación de vídeo y su dependencia de entorno
 
+> **Contraste físico del caso `MAH04204`.** La reproducción alcanzó un fallo de fin
+> de arranque del decodificador. DMM estaba activo y los ficheros de microcódigo
+> coincidían con Sony. Esto acota la discusión estática de §5 a sus escenarios
+> originales. [Medición y traducción del error](film-pb-1-sector31-resultado-20261126.md#10-respuesta-de-inicio-del-decodificador-y-estado-del-bloque-av).
+
 Fecha: 28-11-2026. **Solo análisis estático** del firmware 3.21 de fábrica y del paquete CFW
 instalado. Cámara no accesible en esta sesión (sin red, sin USB, sin `adb`).
 Evidencia en [`reports/evidence/film-pb-1-sub-decodificador-20261128/`](evidence/film-pb-1-sub-decodificador-20261128/).

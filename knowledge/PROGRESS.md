@@ -1,5 +1,15 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## FILM-PB-1 — respuesta de arranque y entorno AV (26-11-2026)
+
+El manejador recibe un estado de error y normaliza `0xF1000001` y `0xFB050001` a
+`0x1600F101`. En el arranque de la prueba, DMM estaba activo y el microcódigo de
+disco coincidía con Sony. El núcleo AV de cámara difiere de Sony en 233 bytes de
+captura. El 3.94 limpio cambia también `libObj.so` respecto a la cámara. Próximo
+paso: conservar la palabra original de fin de arranque o disponer de un control
+que cambie el núcleo manteniendo las bibliotecas medidas y la tarjeta.
+[Evidencia](../reports/evidence/film-pb1-sector31-camara-20261126/4-arranque-decodificador.txt).
+
 ## FILM-PB-1 — contraste del tiempo de muestra de MAH04204 (26-11-2026)
 
 El primer `0xB051000B` no identifica la pista. El ELF comparte el buscador entre audio, vídeo

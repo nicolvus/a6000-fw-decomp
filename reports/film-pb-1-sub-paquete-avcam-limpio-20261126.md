@@ -1,5 +1,10 @@
 # FILM-PB-1 · Sub-paquete con el `AV-CAM.BIN` de fábrica 3.21 (CFW 3.94, sin el PP del núcleo)
 
+> **Comparación con la cámara medida después.** El 3.94 conserva el userland del
+> paquete 3.93 PP usado como base de esta construcción. La sesión física posterior
+> llevaba otro `libObj.so` y un núcleo AV con 233 bytes modificados.
+> [Huellas de la sesión](film-pb-1-sector31-resultado-20261126.md#10-respuesta-de-inicio-del-decodificador-y-estado-del-bloque-av).
+
 26-11-2026. Paquete construido **offline**: no se ha instalado nada, no se ha tocado la cámara ni
 `firmware/`. Base = el paquete **instalado** `build/cfw_func393/pp/` (3.93). Lo único que cambia es el
 núcleo BIONZ: el `AV-CAM.BIN` de dentro de `nflasha3` pasa a ser **byte a byte el de fábrica 3.21**.

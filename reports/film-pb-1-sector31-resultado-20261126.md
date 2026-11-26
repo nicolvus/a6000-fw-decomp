@@ -201,3 +201,38 @@ devuelto por la búsqueda de la tabla y el límite, si la tabla existe. Si el pu
 es nulo, la prioridad es la
 carga de la tabla. Si existe, se puede reconstruir la comparación con el tiempo
 solicitado. [Evidencia del contraste](evidence/film-pb1-sector31-camara-20261126/3-tiempo-de-muestra.txt).
+
+## 10. Respuesta de inicio del decodificador y estado del bloque AV
+
+En el ELF de `libmpr.so` verificado en cámara, el manejador de fin de arranque lee el
+estado original en el desplazamiento `+8` del mensaje (`0x2C1916`). Con cero emite
+`Dec start complete`; con un valor distinto de cero toma la rama `0x2C1974`, traduce
+el estado y emite `Dec start complete error!!`. La traducción en `0x2C0E88` lleva
+tanto `0xF1000001` como `0xFB050001` a `0x1600F101` y sobrescribe la palabra original.
+El log físico conserva el resultado traducido y otro mensaje de `CodecDrv` con
+`0x2003` (`E_AVCON_MOVIE_CODEC_STOP`). La palabra original y quién puso el códec
+en ese estado siguen sin medir.
+
+En el mismo arranque (`im.elf` PID 144, tiempo de inicio 148), la lectura de DMM dio
+`dmm is active.`, tablas de unidades pobladas y el fichero `/setting/DmmConfig.bin`
+de 97 544 bytes. Los dos ficheros de microcódigo H.264 y los dos de arranque ZMA
+coinciden con Sony 3.21 por MD5. Se comprobó su contenido en disco; la carga y el
+estado del decodificador al pulsar PLAY quedan pendientes.
+
+El `/system/av-cam.bin` leído por hash coincide con el núcleo incluido en cuatro
+paquetes locales, entre ellos 3.93 **base**. Frente a Sony 3.21 cambian 233 bytes en
+los ocho sitios documentados de la ruta de captura de fotos (Silent/EFCS y envío a
+Darwin). El paquete 3.93 **PP** contiene otro núcleo, con 34 013 bytes distintos
+del de fábrica. El 3.94 limpio empareja el núcleo Sony con las bibliotecas de la
+variante PP, cuyo `libObj.so` difiere del medido en cámara. Por ello el 3.94 limpio
+cambiaría más de una variable si se comparase con la sesión actual.
+
+Entre los paquetes locales inspeccionados, 3.93 base y 4.02 sin ISO coinciden con el
+núcleo y las tres bibliotecas medidas. Ningún paquete inspeccionado con el
+núcleo AV de Sony coincidió en esas tres bibliotecas. Las huellas coincidientes
+en dos versiones dejan abierto el número de versión instalado.
+
+El control que aislaría el núcleo AV debe conservar las bibliotecas medidas y la
+misma tarjeta, y cambiar solo `av-cam.bin`. En paralelo, una captura del mensaje de
+fin de arranque antes de que se traduzca `+8` separaría los orígenes que hoy
+comparten `0x1600F101`. [Huellas y rama de arranque](evidence/film-pb1-sector31-camara-20261126/4-arranque-decodificador.txt).
