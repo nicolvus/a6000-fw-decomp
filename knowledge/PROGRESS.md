@@ -877,3 +877,25 @@ SHA-256 ok, initramfs, shim y `bk.tbl` construidos, 54 tests pasan y 7 saltan, p
 con pantalla idéntica a la anterior y restauración 3 s; editar `emu_config.py` mueve el test que lo
 cubre y revertirlo lo devuelve a verde. Detalle en [PENDIENTES](../docs/PENDIENTES.md) R10 y en
 [G22-E](../docs/gui/g22-emulador-uso.md#reconstruirlo-en-otro-equipo-26112026).
+
+## H3/H4 — Eye AF nativo: verificación y finalización estática (26-11-2026)
+
+A raíz de la corrección del usuario («debe ser AF nativo; la A6000 ya tiene Eye AF pero solo mientras se
+pulsa el obturador»), se verificó la cadena nativa en `av-cam.bin` fw3.21. **VERIFICADO:** existe un motor
+de detección de ojos propio (`Camera::FC::Drv::ProcessEdt`, `FC/Drv/fc_drv_edt.cpp`, cadenas «EyeDetection»
+`0x43cf7022`, servicio `idt_edt_start`); el resultado trae los dos ojos con validez por ojo (`+0x5f`/`+0x60`)
+y coordenadas (`+0x56..+0x5c`), se copia al contexto de FC (`0x437b6ece`→`ctx+0xde..0xe7`) y `0x437b7598`
+lo convierte en los ocho registros de área de AF (`0x437b7200`). **El único camino de entrada es el
+manejador de respuesta de una petición de AF** (`0x437b7ea0` `ReplyForTouchShutter` ← thunk `0x43aef72e`),
+y hay un temporizador de un disparo que caduca el estado (`0x437b74a4`, período `u16[cfg+6]×1000 ms`): eso
+explica que solo actúe mientras se mantiene pulsado. **Diferencial A6300 (fw2.01):** las dos tienen el
+detector (`EyeDetection`, `idt_edt_start`, `CPafStateEyeStart`), pero solo la A6300 tiene el estado continuo
+`CPafStateEyeFocus` y la capa `CheckSetEyeStartAF`/`SET_EYE_START_AF`; `PARAMID_CAMSETTING_EYE_START_AF` es
+**Eye-Start AF** (sensor del visor), no Eye AF, lo que corrige la etiqueta de `g83`. **Finalización
+entregada:** (i) app de cámara `tools/eye-af/camera/` (`ar.eyeaf`) que usa el detector propio
+(`FaceInfo.leftEye/rightEye`) y manda el punto con el mensaje nativo — compila con JDK 17 + `android.jar`,
+se firma (`out/EyeAf.apk`, 16,7 KB) y su núcleo Java puro pasa **32 comprobaciones** sin Android
+(`tests/test_eye_af_camera_core.py`, 3 pruebas); (ii) `tests/test_eye_af_native_evidence.py` (6 pruebas) fija
+con bytes las afirmaciones del informe. Límite: **nada probado en cámara**; la cadencia de peticiones de AF
+en AF-C vive fuera de `av-cam` (NO_VERIFICADO) y el enganche por VD (vía H5) exige parche de código en RAM
+de BIONZ. Cero escrituras en cámara o firmware.

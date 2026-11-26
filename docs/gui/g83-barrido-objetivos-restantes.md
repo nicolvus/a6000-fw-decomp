@@ -9,7 +9,7 @@ Método: `strings` y referencias PC-relativas (`scripts/elf_string_xrefs.py`) so
 | AF Range Control | Latente: `PARAMID_AF_RANGE_LIMIT_MODE/DRIVE_NEAR/FAR`, `ActionExeAfRangeLimitDrive`; el CautionConfig trae botones «AfRange» pero son de otros modelos | Idem |
 | Auto Object Framing | Latente: `PARAMID_AUTO_FRAMING_MODE/_W/_H`, `SeqSetAutoFramingMode` (cadenas de ZV-E1/α7 IV en la plataforma común) | Probable que av-cam 3.21 no lo tenga; verificar |
 | Anamorphic Desqueeze | Latente en ObjEffect: `PARAMID_SQUEEZE_ASPECT_RATIO_X/Y_LIST` (lista de factores de desanamorfizado) | Candidato: comprobar si el renderer lo aplica al visor/reproducción |
-| Eye AF en tiempo real | Solo `PARAMID_EYE_START_AF` (Eye-AF por botón, inicio manual); sin seguimiento continuo | Parcial de fábrica; el «tiempo real» necesita detector en av-cam (no localizado) |
+| Eye AF en tiempo real | **Corregido 26-11-2026:** el detector **sí está** (`Camera::FC::Drv::ProcessEdt`, `idt_edt_*`, «EyeDetection») y sus ojos se convierten en área de AF, pero solo al responder a una petición de AF; la A6300 añade el estado continuo `CPafStateEyeFocus`, ausente en la A6000. `PARAMID_EYE_START_AF` es *Eye-Start AF* (sensor del visor), no Eye AF | Lo que falta no es el detector sino el disparador continuo: [eye-af-nativo](../capture/eye-af-nativo-a6000.md) §3 |
 | Seguimiento / sensibilidad AF | `SetMovieAfSensibility` / `SetStillAfSensibility` existen (sensibilidad en vídeo/foto); sin menú de «casos» | Candidato: exponer sensibilidad |
 | Movie Silent Control, Synchro Scan, Voice Memo, Waveform, Vectorscope, Gamma Display Assist, Sports Finder, Carga USB encendida, FTP | **Ninguna cadena** en `usr/lib` ni `usr/bin` | Sin base en el firmware; irían por código nuevo (Waveform/Vectorscope: sin acceso a los píxeles del visor) |
 
@@ -46,7 +46,7 @@ Pendiente actualizado: AF Adjust / AF Range / Auto Framing pasan a «orden acept
 |---|---|---|---|
 | Sensibilidad AF vídeo (`SeqSetMovieAfSensibility`) | `0x40d1` | `0x438031e8` | 1 byte → espejo `+0x38c` |
 | Sensibilidad AF foto (`SeqSetStillAfSensibility`) | `0x40e5` | `0x438032fd` (Thumb `0x438032fc`) | copia al espejo |
-| Eye AF (`SeqSetEyeStartAF`) | `0x4054` | `0x43802895` | copia al espejo (inicio de Eye AF por botón) |
+| Eye-Start AF (`SeqSetEyeStartAF`) | `0x5007`/`0x5008` según tabla; el `0x4054` de la fila anterior no se reproduce en ninguna tabla | `0x43802895` | copia al espejo; **es Eye-Start AF (visor)**, no Eye AF: [eye-af-nativo](../capture/eye-af-nativo-a6000.md) §2 |
 
 Igual que arriba: manejador presente y copia al espejo (VERIFICADO), consumidor NO_VERIFICADO y sin nodo de menú. Conclusión del barrido: **ninguna de estas funciones queda cerrada sin ejecutar el AF de av-cam (E2E-10)**; con el AF ejecutándose, el método es escribir cada campo del espejo en la VM y comprobar qué rutina lo lee.
 

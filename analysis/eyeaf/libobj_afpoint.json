@@ -1,0 +1,705 @@
+{
+  "schema": "eyeaf/libobj_afpoint/1",
+  "generado": "analisis estatico fw3.21 (A6000); sin ejecucion, sin camara",
+  "objetos": {
+    "libObj.so": {
+      "ruta": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libObj.so",
+      "sha256": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a",
+      "tam": 17436172,
+      "secciones": {
+        ".text": [
+          453488,
+          11430428
+        ],
+        ".rodata": [
+          12359064,
+          2918938
+        ],
+        ".data.rel.ro": [
+          16607712,
+          368784
+        ],
+        ".data": [
+          16995104,
+          472968
+        ]
+      },
+      "nota": "fichero == vaddr hasta .data.rel.ro (0xfd29d0), luego fichero = vaddr - 0x8000"
+    },
+    "libScalarDaemon.so": {
+      "ruta": ".../nflasha15_unpacked_unpacked/lib/libScalarDaemon.so",
+      "sha256": "ca28cbf4c5c6402160ad80f6ad9f5e99052f42c3fabc382c557fcded18addc29",
+      "tam": 1883224
+    },
+    "sdmon.elf": {
+      "ruta": ".../nflasha15_unpacked_unpacked/bin/sdmon.elf",
+      "sha256": "6818058ff4e7380bc7865d8104a15fdb7b38218a1442ad2878d2b898acd48372",
+      "tam": 142720
+    },
+    "libcameraex_jni.so": {
+      "ruta": ".../nflasha16_unpacked_unpacked/lib/libcameraex_jni.so",
+      "sha256": "f860c8849db2cb1169e9b646069d293adddeb04ac7eba40892647e6da6be54a8"
+    },
+    "sony.cameraex.odex": {
+      "ruta": ".../nflasha16_unpacked_unpacked/framework/sony.cameraex.odex",
+      "sha256": "af3b450ce48bd052de16b6e2f1264f8b743faab683dbfa7b823407737a24448f"
+    },
+    "SmartRemote.odex": {
+      "ruta": ".../nflasha16_unpacked_unpacked/app/SmartRemote.odex",
+      "sha256": "bba6646e760aa79e94bb97e7a5a65cb80c63d449b0bc8bace806be7850c0f594"
+    }
+  },
+  "tablas_de_nombres_libObj": {
+    "MSGID": {
+      "base": "0xfe35f0",
+      "entradas": 725,
+      "fin": "0xfe4144",
+      "evidencia": "primera entrada MSGID_EE_START_CMD -> 0xd305b8"
+    },
+    "PARAMID": {
+      "base": "0xfe4144",
+      "entradas": 1350,
+      "fin": "0xfe565c",
+      "evidencia": "PARAMID_FOCUS_AREA_MODE en 0xfe44cc"
+    },
+    "VALUEID": {
+      "base": "0xfe565c",
+      "entradas": 1288,
+      "fin": "0xfe6a7c",
+      "evidencia": "VALUEID_AF_AREA_POINT_CTRL_AUTO en 0xfe67bc"
+    },
+    "numero_igual_a_indice": {
+      "estado": "VERIFICADO",
+      "cruces": [
+        "VALUEID_HOUSING_MODE_OFF/ON/WATER_TYPE1_ON = 0x18c/0x18b/0x4bf usados en 0x9a1084-0x9a10aa",
+        "VALUEID_EYE_START_AF_OFF/ON = 0x14c/0x14d usados en 0x9a13ac/0x9a13b4",
+        "VALUEID_AF_AREA_POINT_CTRL_AUTO/LV1 = 0x458/0x459 usados en 0x99af5c/0x99af64"
+      ]
+    }
+  },
+  "paramids": {
+    "PARAMID_TOUCH_SPOT_X": {
+      "valor": "0x051",
+      "dec": 81,
+      "tabla": "0xfe4288"
+    },
+    "PARAMID_TOUCH_SPOT_Y": {
+      "valor": "0x052",
+      "dec": 82,
+      "tabla": "0xfe428c"
+    },
+    "PARAMID_FOCUS_AREA_MODE": {
+      "valor": "0x0e2",
+      "dec": 226,
+      "tabla": "0xfe44cc"
+    },
+    "PARAMID_FOCUS_AREA_LOCAL_NUM": {
+      "valor": "0x0e3",
+      "dec": 227,
+      "tabla": "0xfe44d0"
+    },
+    "PARAMID_FOCUS_AREA_MODE_SET": {
+      "valor": "0x0e4",
+      "dec": 228,
+      "tabla": "0xfe44d4"
+    },
+    "PARAMID_TOUCH_SPOT_X_SET": {
+      "valor": "0x0e5",
+      "dec": 229,
+      "tabla": "0xfe44d8"
+    },
+    "PARAMID_TOUCH_SPOT_Y_SET": {
+      "valor": "0x0e6",
+      "dec": 230,
+      "tabla": "0xfe44dc"
+    },
+    "PARAMID_FOCUS_AREA_LOCAL_NUM_SET": {
+      "valor": "0x0e7",
+      "dec": 231,
+      "tabla": "0xfe44e0"
+    },
+    "PARAMID_FOCUS_AREA_MODE_ACT": {
+      "valor": "0x0e8",
+      "dec": 232,
+      "tabla": "0xfe44e4"
+    },
+    "PARAMID_TOUCH_SPOT_X_ACT": {
+      "valor": "0x0e9",
+      "dec": 233,
+      "tabla": "0xfe44e8"
+    },
+    "PARAMID_TOUCH_SPOT_Y_ACT": {
+      "valor": "0x0ea",
+      "dec": 234,
+      "tabla": "0xfe44ec"
+    },
+    "PARAMID_FOCUS_AREA_LOCAL_NUM_ACT": {
+      "valor": "0x0eb",
+      "dec": 235,
+      "tabla": "0xfe44f0"
+    },
+    "PARAMID_EYE_START_AF": {
+      "valor": "0x0f4",
+      "dec": 244,
+      "tabla": "0xfe4514"
+    },
+    "PARAMID_EYE_START_AF_SET": {
+      "valor": "0x0f5",
+      "dec": 245,
+      "tabla": "0xfe4518"
+    },
+    "PARAMID_EYE_START_AF_ACT": {
+      "valor": "0x0f6",
+      "dec": 246,
+      "tabla": "0xfe451c"
+    },
+    "PARAMID_FOCUS_AREA_LOCAL_SEMIWIDE": {
+      "valor": "0x24a",
+      "dec": 586
+    },
+    "PARAMID_LENS_AF_AREA_CENTER_ONLY": {
+      "valor": "0x271",
+      "dec": 625
+    },
+    "PARAMID_FOCUS_AREA_ALT": {
+      "valor": "0x2a3",
+      "dec": 675
+    },
+    "PARAMID_CAM_EXPAND_FOCUS_AREA_CENTER_X": {
+      "valor": "0x2a7",
+      "dec": 679,
+      "tabla": "0xfe4be0"
+    },
+    "PARAMID_CAM_EXPAND_FOCUS_AREA_CENTER_Y": {
+      "valor": "0x2a8",
+      "dec": 680,
+      "tabla": "0xfe4be4"
+    },
+    "PARAMID_CAM_EXPAND_FOCUS_AREA_ASPECT": {
+      "valor": "0x2a9",
+      "dec": 681,
+      "tabla": "0xfe4be8"
+    },
+    "PARAMID_CAM_EXPAND_FOCUS_AREA_CENTER_X_REQ": {
+      "valor": "0x333",
+      "dec": 819
+    },
+    "PARAMID_CAM_EXPAND_FOCUS_AREA_CENTER_Y_REQ": {
+      "valor": "0x334",
+      "dec": 820
+    },
+    "PARAMID_FOCUS_AREA_SEMIMULTI_NUM": {
+      "valor": "0x338",
+      "dec": 824
+    },
+    "PARAMID_FOCUS_AREA_SEMIWIDE_NUM": {
+      "valor": "0x48c",
+      "dec": 1164
+    },
+    "PARAMID_AF_AREA_POINT_CTRL": {
+      "valor": "0x48f",
+      "dec": 1167,
+      "tabla": "0xfe5380",
+      "cadena": "0xe4edab"
+    },
+    "PARAMID_AF_AREA_POINT_CTRL_SET": {
+      "valor": "0x490",
+      "dec": 1168,
+      "tabla": "0xfe5384"
+    },
+    "PARAMID_AF_AREA_POINT_CTRL_ACT": {
+      "valor": "0x491",
+      "dec": 1169,
+      "tabla": "0xfe5388"
+    },
+    "PARAMID_AF_AREA_POINT_STATUS": {
+      "valor": "0x492",
+      "dec": 1170,
+      "tabla": "0xfe538c",
+      "cadena": "0xe4ee04"
+    },
+    "PARAMID_FACE_SCAN_RESULT": {
+      "valor": "0x05d",
+      "dec": 93,
+      "tabla": "0xfe42b8"
+    }
+  },
+  "paramid_af_area_es_enum_no_coordenadas": {
+    "estado": "VERIFICADO",
+    "valores": {
+      "VALUEID_AF_AREA_POINT_CTRL_AUTO": {
+        "id": "0x458",
+        "dec": 1112,
+        "tabla": "0xfe67bc",
+        "salida_liro_byte8": 0
+      },
+      "VALUEID_AF_AREA_POINT_CTRL_LV1": {
+        "id": "0x459",
+        "dec": 1113,
+        "tabla": "0xfe67c0",
+        "salida_liro_byte8": 1
+      },
+      "VALUEID_AF_AREA_POINT_STATUS_LEVEL_0": {
+        "id": "0x45a",
+        "dec": 1114,
+        "tabla": "0xfe67c4"
+      },
+      "VALUEID_AF_AREA_POINT_STATUS_LEVEL_1": {
+        "id": "0x45b",
+        "dec": 1115,
+        "tabla": "0xfe67c8"
+      }
+    },
+    "evidencia": [
+      "0x99af5c: cmp.w r0, #0x458 ; beq -> [r5,#8]=0",
+      "0x99af64: movw r3, #0x459 ; strb r3,[r5,#8] -> 1",
+      "cadenas 0xe07230 (UNKNOWN) y 0xe07290 (is NULL) referenciadas en 0x99af84 / rama NULL"
+    ]
+  },
+  "envelope_camuser_to_liro": {
+    "estado": "VERIFICADO (formato) / NO VERIFICADO (consumidor final en el SoC)",
+    "layout": {
+      "+0x00": "u8 = 5 (tipo/categoria)",
+      "+0x02": "u8 sub-id de campo (0x5a / 0x64)",
+      "+0x03": "u8 = 0x40",
+      "+0x04": "u32 id de mensaje 0x75xx",
+      "+0x08": "valor (u8 enum, u16 LE coordenada)"
+    },
+    "patron_msgid": "ObjMsg 0x7500 | MSGID_*: 0x7566<->102 SET_AF_AREA_CMD, 0x756e<->110 SET_EYE_START_AF_CMD, 0x7528<->40 TOUCH_SPOT_METER_FOCUS_CMD, 0x7524<->36 TOUCH_SPOT_FOCUS_CMD, 0x7526=38 (TOUCH_SPOT_METER_CMD); 0x75e6 comodin",
+    "evidencia": [
+      "0x99af0c",
+      "0x9b13f0",
+      "0x9a135c",
+      "0x9b8ac4"
+    ]
+  },
+  "msgid_relevantes": {
+    "MSGID_SET_AF_AREA_CMD": {
+      "id": 102,
+      "hex": "0x66",
+      "tabla": "0xfe3788"
+    },
+    "MSGID_SET_EYE_START_AF_CMD": {
+      "id": 110,
+      "hex": "0x6e",
+      "tabla": "0xfe37a8"
+    },
+    "MSGID_SET_AF_AREA_POINT_CMD": {
+      "id": 402,
+      "hex": "0x192",
+      "tabla": "0xfe3c38"
+    },
+    "MSGID_SET_AF_AREA_POINT_CMP": {
+      "id": 403,
+      "hex": "0x193",
+      "tabla": "0xfe3c3c"
+    },
+    "MSGID_TOUCH_SPOT_FOCUS_CMD": {
+      "id": 36,
+      "hex": "0x24",
+      "tabla": "0xfe3680"
+    },
+    "MSGID_TOUCH_SPOT_METER_FOCUS_CMD": {
+      "id": 40,
+      "hex": "0x28",
+      "tabla": "0xfe3690"
+    },
+    "MSGID_NOTIFY_AF_AREA_POINT_EVT": {
+      "id": 699,
+      "hex": "0x2bb",
+      "tabla": "0xfe40dc"
+    },
+    "MSGID_NOTIFY_AF_AREA_POINT_STATUS_EVT": {
+      "id": 700,
+      "hex": "0x2bc",
+      "tabla": "0xfe40e0"
+    }
+  },
+  "funciones": [
+    {
+      "addr": "0x20c08c",
+      "que": "volcado 'SDF BEAUTY_EFFECT PARAM' con cara, angulos y cajas de ojos; base r4, +0x30..+0x4a",
+      "estado": "VERIFICADO",
+      "evidencia": "sitios de log 0x20c0c0-0x20c968; ldrh/ldrsh [r4,#0x30..#0x4a]"
+    },
+    {
+      "addr": "0x20cac0",
+      "que": "ExecCmdSdfBeautyEffect::ExecuteCommand: PARAM_ID_INFRA_STRUCT (0xE001) -> MprIf::SetRecAspect -> msg 0x4c B -> volcado 0x20c08c",
+      "estado": "VERIFICADO",
+      "evidencia": "movw r1,#0xe001 en 0x20cba2; bl 0x145ba0; SetRecAspect 0xdb9ac; bl 0x20c08c en 0x20cc2e; CreateObject 0x20ccf4"
+    },
+    {
+      "addr": "0x99af0c",
+      "que": "CamMsgConv::SetAfAreaPointCtrlForLiro (MsgID 0x7692/0x75e6; 0x458->0, 0x459->1)",
+      "estado": "VERIFICADO",
+      "evidencia": "0x99af1e-0x99af74; cadenas 0xe071ce/0xe07230/0xe07290"
+    },
+    {
+      "addr": "0x9b13f0",
+      "que": "CamMsgConv::SetTouchSpotMeterForLiro (MsgID 0x7528/0x7526/0x75e6): u16 x (NID 0x9551) en +8/+9, u16 y (NID 0x9552) en +0xa/+0xb",
+      "estado": "VERIFICADO",
+      "evidencia": "0x9b146c-0x9b1478; cadena 0xe1667b ref 0x9b1430"
+    },
+    {
+      "addr": "0x9b8ac4",
+      "que": "CamMsgConv::SetAFAreaForLiro (MsgID 0x7566/0x7620/0x75e6): +8=3 y u16 en +9..+0xe desde NID 0x983b/0x95e9, 0x983c/0x95ea, 0x983d/0x95eb, 0x974c",
+      "estado": "VERIFICADO",
+      "evidencia": "0x9b8b10, 0x9b8b68, 0x9b8b6e-0x9b8c0c"
+    },
+    {
+      "addr": "0x9a135c",
+      "que": "CamMsgConv::SetEyeStartAFForLiro (MsgID 0x756e/0x75e6): VALUEID 0x14c->0, 0x14d->1",
+      "estado": "VERIFICADO",
+      "evidencia": "0x9a136e-0x9a13c8; cadena 0xe0de3a"
+    },
+    {
+      "addr": "0x9a4e84",
+      "que": "consumidor NID_AF_AREA_POINT_STATUS: pMsg[0]==6, pMsg[2..3]==0x206f, uc_AfAreaPointStatus 0/1 -> VALUEID 0x45a/0x45b, llama 0xe01a8(obj,0x9992,&v)",
+      "estado": "VERIFICADO (valores) / INFERENCIA (publicacion NID 0x9992)",
+      "evidencia": "0x9a4e8e-0x9a4ee0; cadenas 0xe110b8, 0xe1112c"
+    },
+    {
+      "addr": "0x4c3670",
+      "que": "pvt_ActionSetEyeStartAf -> ObjMsg(0x3100, 0x756e)",
+      "estado": "VERIFICADO",
+      "evidencia": "0x4c369a/0x4c369e; cadena 0xcf0201 en 0x4c3720"
+    },
+    {
+      "addr": "0x4c38b8",
+      "que": "prv_ActionSetAfAreaMode -> ObjMsg(0x3100, 0x7566); error 'Err (pvt_SetParamAfAreaMode)'",
+      "estado": "VERIFICADO",
+      "evidencia": "0x4c38e6; cadena 0xcf0343 en 0x4c3958"
+    },
+    {
+      "addr": "0x4c6008",
+      "que": "ObjCamera relay MSGID_TOUCH_SPOT_METER_FOCUS_CMD (x,y) -> ObjMsg(0x3100, 0x7528)",
+      "estado": "VERIFICADO",
+      "evidencia": "0x4c6090; cadenas 0xcf1261, 0xcf129a"
+    },
+    {
+      "addr": "0x4bba48",
+      "que": "pvt_ChangePosition: valida y envia ChPosIn ObjMsg(0x3400, 0x2033)",
+      "estado": "VERIFICADO",
+      "evidencia": "0x4bba5c, 0x4bba8c, 0x4bbaa2"
+    },
+    {
+      "addr": "0x4e8910",
+      "que": "aplica PARAMID_FOCUS_AREA_MODE_SET/_ACT, LOCAL_NUM_SET/_ACT, TOUCH_SPOT_X/Y_SET/_ACT",
+      "estado": "VERIFICADO (cadenas y sitios) / NO VERIFICADO (switch interno)",
+      "evidencia": "cadenas 0xcfc724..0xcfc9f1; refs 0x4e89b4..0x4e8be8"
+    },
+    {
+      "addr": "0x4d1c08",
+      "que": "peticion PARAMID_CAM_EXPAND_FOCUS_AREA_CENTER_X/Y_REQ",
+      "estado": "VERIFICADO (cadena y sitios)",
+      "evidencia": "0xcf3198 refs 0x4d1d10, 0x4d1d5c"
+    },
+    {
+      "addr": "0x9b11f8",
+      "que": "CamMsgConv::SetCamExpandFocusModeForLiro (centro + aspecto de expand-focus)",
+      "estado": "VERIFICADO (cadena y sitio)",
+      "evidencia": "0xe16427 ref 0x9b1230"
+    },
+    {
+      "addr": "0x9b14bc",
+      "que": "CamMsgConv::SetTouchSpotFocusForLiro (MsgID 0x7528/0x7524/0x75e6): mismo par u16 x,y en +8/+0xa",
+      "estado": "VERIFICADO",
+      "evidencia": "0x9b151a-0x9b1524; cadena 0xe166dc ref 0x9b14fc"
+    }
+  ],
+  "struct_sdf_beauty_effect_param": {
+    "estado": "VERIFICADO",
+    "base": "registro r4 (argumento r1 de 0x20c08c)",
+    "campos": [
+      {
+        "off": "0x00",
+        "tipo": "u16",
+        "campo": "cateId"
+      },
+      {
+        "off": "0x02",
+        "tipo": "u16",
+        "campo": "msgId"
+      },
+      {
+        "off": "0x04",
+        "tipo": "u16",
+        "campo": "msgLength (0x4c)"
+      },
+      {
+        "off": "0x06",
+        "tipo": "u16",
+        "campo": "version"
+      },
+      {
+        "off": "0x0c",
+        "tipo": "u16",
+        "campo": "ackCateId"
+      },
+      {
+        "off": "0x0e",
+        "tipo": "u16",
+        "campo": "ackMsgId (0x8321)"
+      },
+      {
+        "off": "0x10",
+        "tipo": "u16",
+        "campo": "cmpCateId"
+      },
+      {
+        "off": "0x12",
+        "tipo": "u16",
+        "campo": "cmpMsgId (0x8322)"
+      },
+      {
+        "off": "0x30",
+        "tipo": "u16",
+        "campo": "faceLeft"
+      },
+      {
+        "off": "0x32",
+        "tipo": "u16",
+        "campo": "faceTop"
+      },
+      {
+        "off": "0x34",
+        "tipo": "u16",
+        "campo": "faceWidth"
+      },
+      {
+        "off": "0x36",
+        "tipo": "u16",
+        "campo": "faceHeight"
+      },
+      {
+        "off": "0x38",
+        "tipo": "s16",
+        "campo": "faceAngle"
+      },
+      {
+        "off": "0x3a",
+        "tipo": "s16",
+        "campo": "faceYawAngle"
+      },
+      {
+        "off": "0x3c",
+        "tipo": "u16",
+        "campo": "leftEyeLeft"
+      },
+      {
+        "off": "0x3e",
+        "tipo": "u16",
+        "campo": "leftEyeTop"
+      },
+      {
+        "off": "0x40",
+        "tipo": "u16",
+        "campo": "leftEyeWidth"
+      },
+      {
+        "off": "0x42",
+        "tipo": "u16",
+        "campo": "leftEyeHeight"
+      },
+      {
+        "off": "0x44",
+        "tipo": "u16",
+        "campo": "rightEyeLeft"
+      },
+      {
+        "off": "0x46",
+        "tipo": "u16",
+        "campo": "rightEyeTop"
+      },
+      {
+        "off": "0x48",
+        "tipo": "u16",
+        "campo": "rightEyeWidth"
+      },
+      {
+        "off": "0x4a",
+        "tipo": "u16",
+        "campo": "rightEyeHeight"
+      }
+    ],
+    "origen": {
+      "funcion": "0x20cac0 ExecCmdSdfBeautyEffect::ExecuteCommand",
+      "parametro": "PARAM_ID_INFRA_STRUCT = 0xE001 (movw r1,#0xe001 en 0x20cba2)",
+      "transformacion": "bl 0x145ba0 (get infra struct) -> MprIf::SetRecAspect 0xdb9ac -> buffer 0x4c B -> volcado 0x20c08c -> MWF::ObjIf::CreateObject 0x20ccf4",
+      "estado": "VERIFICADO el flujo y los literales; NO VERIFICADO el escalado de las coordenadas"
+    },
+    "cadenas": {
+      "leftEyeLeft": "0xc17a7f",
+      "leftEyeTop": "0xc17ab5",
+      "leftEyeWidth": "0xc17aeb",
+      "leftEyeHeight": "0xc17b21",
+      "rightEyeLeft": "0xc17b57",
+      "rightEyeTop": "0xc17b8d",
+      "rightEyeWidth": "0xc17bc3",
+      "rightEyeHeight": "0xc17bf9",
+      "cabecera": "0xc1755c",
+      "cierre": "0xc17c2f",
+      "nombre_funcion": "0xc17c78"
+    }
+  },
+  "api_java_app": {
+    "fuente": "dex de sony.cameraex.odex (126 clases) + libcameraex_jni.so",
+    "FaceInfo": {
+      "clase": "Lcom/sony/scalar/meta/FaceInfo;",
+      "campos": [
+        {
+          "tipo": "int",
+          "nombre": "id"
+        },
+        {
+          "tipo": "int",
+          "nombre": "score"
+        },
+        {
+          "tipo": "android.graphics.Rect",
+          "nombre": "rect"
+        },
+        {
+          "tipo": "android.graphics.Point",
+          "nombre": "leftEye"
+        },
+        {
+          "tipo": "android.graphics.Point",
+          "nombre": "rightEye"
+        },
+        {
+          "tipo": "android.graphics.Point",
+          "nombre": "mouth"
+        },
+        {
+          "tipo": "android.graphics.Point",
+          "nombre": "mouthLeft"
+        },
+        {
+          "tipo": "android.graphics.Point",
+          "nombre": "mouthRight"
+        },
+        {
+          "tipo": "com.sony.scalar.meta.FaceAngle",
+          "nombre": "faceAngle"
+        },
+        {
+          "tipo": "com.sony.scalar.meta.SmileStatus",
+          "nombre": "smile"
+        },
+        {
+          "tipo": "com.sony.scalar.meta.EyeBlinkStatus",
+          "nombre": "leftEyeBlink"
+        },
+        {
+          "tipo": "com.sony.scalar.meta.EyeBlinkStatus",
+          "nombre": "rightEyeBlink"
+        },
+        {
+          "tipo": "com.sony.scalar.meta.GenderStatus",
+          "nombre": "gender"
+        },
+        {
+          "tipo": "com.sony.scalar.meta.GenerationStatus",
+          "nombre": "generation"
+        }
+      ],
+      "nota": "no existen campos de ancho/alto de ojo"
+    },
+    "listeners_tipos": {
+      "CameraEx$FaceDetectionListener.onFaceDetected(FaceInfo[], CameraEx)": "abstracto",
+      "CameraEx$FocusAreaListener.onChanged(CameraEx$FocusAreaInfos, CameraEx)": "abstracto",
+      "CameraEx$FocusAreaInfos": {
+        "fields": [
+          "String focusAreaMode",
+          "FocusAreaRectInfo[] rectInfos"
+        ]
+      },
+      "CameraEx$FocusAreaRectInfo": {
+        "fields": [
+          "boolean enable",
+          "int index",
+          "Rect rect"
+        ]
+      },
+      "CameraEx$FocusPosition": {
+        "fields": [
+          "int currentPosition",
+          "int maxPosition"
+        ]
+      }
+    },
+    "jni_campos_cacheados": [
+      "faceinfo",
+      "faceangle",
+      "smilestatus",
+      "eyeblinkstatus",
+      "genderstatus",
+      "generationstatus",
+      "histogram",
+      "lensinfo",
+      "analizedata",
+      "reviewinfo",
+      "point",
+      "rect",
+      "focusareainfos",
+      "focusarearectinfo",
+      "focusposition"
+    ],
+    "jni_simbolos": [
+      "com_sony_scalar::FaceInfo_CppToJAVA",
+      "com_sony_scalar::FaceInfoArray_CppToJAVA",
+      "com_sony_scalar::FaceAngle_CppToJAVA",
+      "com_sony_scalar::EyeBlinkStatus_CppToJAVA",
+      "com_sony_scalar::SmileStatus_CppToJAVA"
+    ],
+    "conclusion": {
+      "ojos_punto_xy": "SI (android.graphics.Point en FaceInfo)",
+      "ojos_caja_wh": "NO (no hay campo; las cajas +0x3c..+0x4a de libObj no llegan a Java)",
+      "rect_cara": "SI (FaceInfo.rect)",
+      "areas_af_como_rect": "SI (CameraEx$FocusAreaInfos/FocusAreaRectInfo)",
+      "paramids_crudos": "NO existe API por paramid",
+      "mover_punto_af": "solo por mensaje (setTouchAFPosition -> ObjMsg(0x3100,0x7528) -> 0x9b13f0), no por paramid directo",
+      "estado": "VERIFICADO para la superficie Java; INFERENCIA fuerte para la perdida de w/h de ojo"
+    }
+  },
+  "paramid_camsetting_eye_start_af": {
+    "valor": "0x5007",
+    "donde": {
+      "libScalarDaemon.so": {
+        "tabla": "0x1b9eb0 (copia en 0x1b1fxx)",
+        "entrada": "0x1ba018",
+        "cadena": "0x14daff"
+      },
+      "sdmon.elf": {
+        "entrada": "fichero 0x1d1b8",
+        "cadena_vaddr": "0x1e2cc"
+      }
+    },
+    "uso_en_codigo": {
+      "libScalarDaemon.so": "no hay movw #0x5007 en .text; 0x5007 solo aparece en las dos copias de la tabla (.data.rel.ro 0x1b2018 y 0x1c1fe8)",
+      "sdmon.elf": "0x5007 solo en la entrada de tabla",
+      "libObj.so": "el prefijo PARAMID_CAMSETTING_ no existe; usa PARAMID_EYE_START_AF = 0x0f4",
+      "estado": "VERIFICADO (busqueda negativa acotada a esos binarios) / NO VERIFICADO (otros procesos)"
+    },
+    "cadena_real_de_eye_start_af": [
+      "pvt_ActionSetEyeStartAf 0x4c3670 -> ObjMsg(0x3100, 0x756e)",
+      "CamMsgConv::SetEyeStartAFForLiro 0x9a135c -> VALUEID 0x14c/0x14d -> byte +8",
+      "ObjCamera::MSGID_SET_EYE_START_AF_CMD (110) con cadenas 0xcf0201 / 0xcf0234"
+    ]
+  },
+  "respuesta_12_lineas": [
+    "1. PARAMID_AF_AREA_POINT_CTRL = 0x48F (1167) en la tabla PARAMID de libObj (base 0xfe4144, entrada 0xfe5380).",
+    "2. No lleva coordenadas: es un enum {AUTO=0x458, LV1=0x459} que se traduce a un byte (0/1) en el mensaje Liro (+0x08).",
+    "3. Lo escribe CamMsgConv::SetAfAreaPointCtrlForLiro 0x99af0c (MsgID 0x7692/0x75e6); el status vuelve por 0x9a4e84 (NID AF_AREA_POINT_STATUS, uc_AfAreaPointStatus 0->0x45a, 1->0x45b).",
+    "4. Las coordenadas del punto de AF van por PARAMID_TOUCH_SPOT_X/Y(_SET) = 0x51/0x52 y 0xE5/0xE6, como dos u16 (conversor 0x9b13f0).",
+    "5. El aplicador de PARAMID_FOCUS_AREA_MODE/_LOCAL_NUM/_SET/_ACT es 0x4e8910; el area-mode de UI sale de 0x4c38b8 -> ObjMsg(0x3100,0x7566).",
+    "6. Las cajas de ojos las imprime 0x20c08c desde el struct 'SDF BEAUTY_EFFECT PARAM': +0x3c/+0x3e/+0x40/+0x42 (leftEye) y +0x44..+0x4a (rightEye), u16 no normalizadas.",
+    "7. Ese struct lo construye ExecCmdSdfBeautyEffect::ExecuteCommand 0x20cac0 desde PARAM_ID_INFRA_STRUCT = 0xE001 (bl 0x145ba0) + MprIf::SetRecAspect, y lo entrega como ObjMsg de 0x4c B.",
+    "8. No hay PARAMID de la tabla que transporte esas cajas: viajan por el bloque infra/AVBBC del pipeline de imagen (no por PARAMID_*).",
+    "9. Una app puede leer FaceInfo por CameraEx$FaceDetectionListener: rect de cara, leftEye/rightEye como android.graphics.Point, blink, smile y faceAngle.",
+    "10. NO puede leer las cajas de ojo: FaceInfo no tiene ancho/alto de ojo, y tampoco existe API por paramid. Si puede leer rects de area de AF (CameraEx$FocusAreaInfos).",
+    "11. Para mover el punto de AF la unica via es mensaje (setTouchAFPosition -> ObjMsg(0x3100,0x7528) -> 0x9b13f0 -> u16 x,y), no un paramid de coordenadas.",
+    "12. PARAMID_CAMSETTING_EYE_START_AF = 0x5007 solo existe como entrada de tabla en libScalarDaemon.so/sdmon.elf, sin lector ni escritor: espejo, como decia g83."
+  ]
+}

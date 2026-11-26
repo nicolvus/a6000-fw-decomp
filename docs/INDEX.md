@@ -391,7 +391,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 
 ### 6. Otros subsistemas (AF, estabilización, vídeo, audio, lentes, energía, visor, accesorios, módulos de trazas)
 
-203 informes.
+204 informes.
 
 - **—** [E21 — Lecturas sin cámara de los volcados del 20-10-2026](capture/e21-lecturas-backups-2026-10-26.md)
 - **—** [E24-01 — Arranque, modo actualizador y dependencia de Darwin (27-10-2026)](capture/e24-01-arranque-recuperacion.md)
@@ -497,6 +497,7 @@ trazas → 6 (cobertura documental, no demostración funcional). S40–S69: ruta
 - **—** [E26-R89 — ADJUST, dmode y smode en la A6000 fw3.21 (arranque sin app)](capture/e26-r89-adjust-dmode-smode-a6000.md)
 - **—** [E26-R9 — Sony A6000: ejecución desde RAM mediante BootROM/UART](capture/e26-r9-bootrom-ram-execution.md)
 - **—** [E26-RECOVERY — incidente 3.25 (investigación abierta)](capture/e26-recovery.md)
+- **—** [eye-af-nativo — ¿tiene la A6000 Eye AF nativo y por qué solo actúa al pulsar? (26-11-2026)](capture/eye-af-nativo-a6000.md)
 - **—** [eye-af — Eye AF en tiempo real en la A6000 (26-11-2026)](capture/eye-af-tiempo-real.md)
 - **—** [Registro de pruebas en cámara (solo software, USB)](capture/registro-pruebas-camara.md)
 - **S102** [S102 — Menú principal (botón MENU): cadena de carga y apertura](capture/s102-menu-principal.md)

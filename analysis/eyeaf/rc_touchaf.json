@@ -1,0 +1,221 @@
+{
+  "schema": "a6000.touchaf.rc/1",
+  "generated_by": "analisis estatico (REA/Ghidra headless + Capstone); sin ejecucion, sin escritura en camara/firmware/RAM",
+  "objective": "Que hace que la camara admita touch AF y como se ejecuta dentro de la camara (lado receptor)",
+  "binary": {
+    "path": "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/lib/libInfraRemoteControlNet.so",
+    "sha256": "4b906c34ccc42679bc5063057a296457db1db8eea3f4ad4bf9e42c379f363ab2",
+    "size_bytes": 106040,
+    "format": "ELF32 ARM EABI5 EXEC, stripped con .dynsym completo (137 FUNC)",
+    "sections": {
+      ".text": ["0x3568", "0x10f74"],
+      ".rodata": ["0x10f7c", "0x16bbe"],
+      ".data": ["0x1f6e4", "0x2190c"],
+      ".bss": ["0x2190c", "0x26bac"]
+    },
+    "address_convention": "direcciones = vaddr del ELF (= file offset en PROGBITS). REA/Ghidra suma 0x10000. .dynsym lleva bit Thumb (st_value & ~1)."
+  },
+  "message_ids": {
+    "layer": "DefInfraRemoteControlNet / DefWebApi::WebApiMid (campo +0x00 del WebApiMsg de 0x610 B)",
+    "setTouchAFPosition": {"req": "0x8f", "res": "0x90", "prm": "0x8e", "api_id": 45, "api_id_hex": "0x2d", "status": "VERIFICADO"},
+    "cancelTouchAFPosition": {"req": "0x92", "res": "0x93", "prm": "0x91", "api_id": 46, "api_id_hex": "0x2e", "status": "VERIFICADO"},
+    "getTouchAFPosition": {"req": "0x95", "res": "0x96", "prm": "0x94", "api_id": 47, "api_id_hex": "0x2f", "status": "VERIFICADO"},
+    "evidence": {
+      "s_TimerValsTable": {
+        "addr": "0x20e00",
+        "entry_size": 28,
+        "layout": ["+0 msgid_req", "+4 has_res_obj", "+8 msgid_res", "+0xc PRM", "+0x10 categoria (0x54)", "+0x14 ResObjCmd (0x2005)", "+0x18 ResAppId"],
+        "rows": {
+          "61": {"addr": "0x214ac", "value": ["0x8f", 1, "0x90", "0x8e", "0x54", "0x2005", "0x55000003"]},
+          "62": {"addr": "0x214c8", "value": ["0x92", 1, "0x93", "0x91", "0x54", "0x2005", "0x55000005"]},
+          "63": {"addr": "0x214e4", "value": ["0x95", 0, "0x96", "0x94", "0x54", 0, 0]}
+        }
+      },
+      "strings": [
+        ["0x166ff", "[RC_D]: MSGID_REQ_SET_TOUCH_AF_POSITION_EVT", "xref 0x10538 (RcWebAPIFunc case 0x8f)"],
+        ["0x1672b", "[RC_W]: MSGID_REQ_SET_TOUCH_AF_POSITION_EVT - Parameter ERROR", "xref 0x1055e"],
+        ["0x16769", "[RC_D]: MSGID_REQ_CANCEL_TOUCH_AF_POSITION_EVT", "xref 0x10576 (case 0x92)"],
+        ["0x15339", "PsmRcWebAPIGetTouchAFPosition", "xref 0xee3e (PsmRcWebAPIGetEvt case 0x95)"],
+        ["0x13848", "[RC_D]: Called %s, SET_TOUCH_AF_POSITION value %x\\n", "xref 0x18910 (=ELF 0x8910)"],
+        ["0x1387b", "[RC_D]: Called %s, CANCEL_TOUCH_AF_POSITION\\n", "xref 0x18928 (=ELF 0x8928)"],
+        ["0x140be", "[RC_D]: Called %s SUPPORT TOUCH_AF : %x.%x", "xref 0x19ffc (=ELF 0x9ffc)"],
+        ["0x14717", "[RC_D]: Called %s TOUCH_AF : %x\\n", "xref 0x1acca (=ELF 0xacca)"],
+        ["0x1475a", "[RC_D]: Called %s TOUCH_AF parm.appId: %x", "xref 0x1ae1c (=ELF 0xae1c)"]
+      ],
+      "cross_check_orb_side": {
+        "file": ".../lib/libInfraWebApi.so",
+        "table": "liborbEvtCmdTbl @ 0x2d5d4 (cuadruplas {cmd, evt, cmp, param})",
+        "rows": {
+          "45": {"addr": "0x2d8a4", "file_off": "0x258a4", "value": ["0x192", "0x193", "0x194", "0x8e"]},
+          "46": {"addr": "0x2d8b4", "file_off": "0x258b4", "value": ["0x195", "0x196", "0x197", "0x91"]},
+          "47": {"addr": "0x2d8c4", "file_off": "0x258c4", "value": ["0x198", "0x199", "0x19a", "0x94"]}
+        },
+        "rule": "msgid_camara = param + 1 (se cumple en las 3 filas y en vecinas, p.ej. param 0x82 -> 0x83 MSGID_REQ_SET_FOCUS_MODE_EVT)",
+        "status": "VERIFICADO"
+      }
+    }
+  },
+  "payload": {
+    "struct": "WebApiMsg / WebApiIntMsg",
+    "struct_size": "0x610 (interno) / 0x620 (uipc con orb)",
+    "fields": {
+      "+0x00": "msgid (webApiMid)",
+      "+0x08": "paramid / PRM",
+      "+0x0c": "payload u32 (val) para set/cancel",
+      "+0x10": "payload de respuesta (RES); bool 'set' en getTouchAFPosition; codigo en errores",
+      "+0x14": "bool leido por orb como AFResult"
+    },
+    "val_encoding": {
+      "formula": "val = (u16)(x*100) << 16 | (u16)(y*100)",
+      "x": "bits [31:16], escala 0..10000 (= porcentaje 0..100 * 100)",
+      "y": "bits [15:0], misma escala",
+      "status": "VERIFICADO (orb produce el empaquetado; la camara lo reenvia sin recomputar)"
+    },
+    "trace_to_field": {
+      "trace": "[RC_D]: Called %s, SET_TOUCH_AF_POSITION value %x (str 0x13848, xref ELF 0x8910)",
+      "field": "*(u32*)(msg + 0x0c)",
+      "instructions": ["0x890a: ldr r4,[r6,#0xc]", "0x8916: bl -> log", "0x89a0: cmp r3,#0x8f", "0x89a6: ldr r0,[pc] (literal 0x89f8 = 0x55000001)", "0x8998: mov r1,r4 ; bl 0x6c28"],
+      "status": "VERIFICADO"
+    }
+  },
+  "availability": {
+    "question": "condicion exacta que incluye/excluye setTouchAFPosition (id 45) en getAvailableApiList",
+    "table": {
+      "name": "s_MethodValsTable",
+      "addr": "0x216dc",
+      "file_off": "0x196dc",
+      "entries": 28,
+      "entry_size": 20,
+      "entry_layout": ["+0 b0 SupportValid", "+1 b1 AvailableValid", "+2 b2 valido/ViewResponse", "+3 b3 enaDisp", "+4..+0x10 hasta 4 ids publicables"],
+      "target_entry": 22,
+      "target_addr": "0x21894",
+      "target_value": {"flags": [1, 0, 1, 0], "ids": ["0x2d", "0x2e", "0x2f", "0xffffffff"]}
+    },
+    "condition": "id 45 aparece <=> b1 != 0 AND b3 == 0   (b0 == 1 constante de inicializacion)",
+    "consequences": {
+      "b1=1,b3=0 (SUPPORT=1)": "publica 45, 46, 47",
+      "b1=1,b3=1 (ENABLE_DISPLAY_ONLY=4)": "publica solo 46",
+      "b1=0 (NOT_SUPPORT=2)": "no publica ninguno"
+    },
+    "writer": {
+      "function": "RcWebAPIEditMethodValsTable(bool ena, bool enaDisp, int tableId)",
+      "addr": "0x10d6d",
+      "effect": "entry[1]=ena; entry[2]=1; entry[3]=enaDisp",
+      "caller": {
+        "function": "PsmRcCameraStateSetSupport(id, enaDisp)",
+        "addr": "0x65b0",
+        "called_from": "RcCameraStateSetParameter @ 0x8ed9, ELF 0xa0f4 (valor==4) y ELF 0xa0c6 (valor==1)",
+        "param_table": "s_ValsTable @ 0x1f8b8 (227 x 24 B): +0 grupo, +4 viewID, +8 subid, +0xc api_id, +0x10 msgid, +0x14 supported, +0x15 enaDisp",
+        "target_row": {"addr": "0x1fe28", "value": ["0x55000000", "0x55000000", 0, "0x2d", "0x8f"]},
+        "cancel_row": {"addr": "0x1fe40", "value": ["0x55000000", "0x55000000", 1, "0x01", "0x92"]}
+      }
+    },
+    "status_mapping": {
+      "1": "SUPPORT -> PsmRcCameraStateSetSupport(id,0)  => b1=1, b3=0",
+      "2": "NOT_SUPPORT -> PsmRcCameraStateSetNotSupport(id) => b1=0",
+      "4": "ENABLE_DISPLAY_ONLY -> PsmRcCameraStateSetSupport(id,1) => b1=1, b3=1",
+      "other": "traza [RC_E]: DEF_REMOTE_APP_PARAM_TYPE_SUPPORT:%x"
+    },
+    "trace_support_touch_af": {
+      "id": "0x55000000",
+      "value": "1 | 2 | 4",
+      "meaning": "los dos %x son (id de item de estado, valor). NO es flag de soporte + modo de area AF",
+      "side_effects": ["St_SupportedAPI_set_BITs(&DAT_00031b1c, 0x1000, valor)", "DAT_00031b14 |= 0x1000", "DAT_00031b10 |= 2 (GE_CHANGE1_AVAILABLEAPILIST)"],
+      "status": "VERIFICADO (instrucciones ELF 0x9fda-0xa02c)"
+    },
+    "execution_gate": {
+      "function": "PsmRcWebAPIIsAcceptableMethod",
+      "addr": "0xc448",
+      "map": {"0x8f": "0x2d"},
+      "rule": "b0==0 -> ret -5 (SupportValid FALSE); b1==0 y b2==0 -> ret -7 (ViewResponse FALSE)",
+      "note": "0x92 y 0x95 caen en 'Not Check' (no pasan por la tabla)"
+    },
+    "status": "VERIFICADO (mecanismo); valor real que envia la camara en cada modo: NO_VERIFICADO"
+  },
+  "internals": {
+    "device_property_write": {
+      "function": "PsmRcCameraStateSendDeviceProperty",
+      "addr": "0x6c28",
+      "size": 246,
+      "mwf_mid": "0x3a4a",
+      "params": {
+        "0x1001": "uchar = 1",
+        "0x1003": "u32 id = 0x55000001 (set) | 0x55000002 (cancel)",
+        "0x1005": "u32 valor = val empaquetado (x<<16 | y)"
+      },
+      "send": "RcApiSendEventObj(0x169, {0x3002, &ObjMsg}) -> osal_snd_sync_msg (sincrono)",
+      "status": "VERIFICADO"
+    },
+    "completion": {
+      "pending_event": "RcWebApiEvtManage_add @ 0xcc50 (timer 30 000 000 us, ResObjCmd 0x2005, ResAppId 0x55000003 set / 0x55000005 cancel)",
+      "status_codes": {"0x55000003": ["0x55000003", 2], "0x55000004": ["0x55000003", 3], "0x55000005": ["0x55000005", 4], "0x55000006": ["0x55000005", 5]},
+      "completion_call": "RcWebApiEvtManage_del @ 0xfae5 -> FUN_0001f148 -> RcApiSendWebApiCmpToMain @ 0x4b10 (osal cola DAT_00031920)",
+      "status": "VERIFICADO (flujo); semantica de 2/3/4/5 y conversion a AFResult: NO_VERIFICADO (libInfraWebApi.so)"
+    },
+    "move_vs_focus": {
+      "answer": "no se distingue en esta libreria: no existe MID de 'AF start' para touch AF; solo escritura de propiedad. El AF se ejecuta en el consumidor de MID 0x3a4a (fuera de este ELF)",
+      "status": "VERIFICADO (ausencia en este binario) / NO_VERIFICADO (consumidor)"
+    },
+    "success_reply": "en exito RcWebAPIFunc no emite frame propio (local_66c = 0); solo el camino de error emite RES 0x90 con codigo negativo (ELF 0x10562)"
+  },
+  "get_touch_af": {
+    "function": "PsmRcWebAPIGetTouchAFPosition (inline en PsmRcWebAPIGetEvt 0xd050, case 0x95)",
+    "addr": "0xee3e",
+    "pseudocode": "b = *(u8*)(state_block + 0x4d0b); *(u8*)(msg+0x10) = (b == 8) ? 1 : 0;",
+    "state_block": {"base": "DAT_00031b08 (ELF 0x21b08)", "field_elf": "0x26813", "field_rea": "DAT_00036813"},
+    "producer": "estado 0x55000007/0x55000008 del feed (guarda id & 0xff = 7 u 8); instrucciones ELF 0xacd0-0xacee",
+    "returns": "solo bool 'set'; nunca coordenadas",
+    "why_empty_in_orb": "la camara no almacena ni reenvia x/y (el val de set se usa y se descarta); orb crea TypedJsArray<double> vacio (0x1b756c)",
+    "status": "VERIFICADO"
+  },
+  "channels": {
+    "into_this_lib": {
+      "transport": "mensajes osal/MWF (osal_reg_msg_queue_cb, osal_snd_msg, osal_snd_sync_msg, osal_valloc_msg_wait); implementacion Linux libosal_uipc.so",
+      "queues": {"0x17684a6": "peticiones WebApi (mid 0x17684a5, msg 0x610 B)", "DAT_00031920": "respuestas WebApi", "DAT_00031928": "uipc asincrono (0x410 B)", "DAT_00031918/DAT_00031914": "eventos 0x169 / 0x175"},
+      "entry_symbol": "RcWebAPIFunc (exportado en .dynsym, invocado via PLT 0x3500)"
+    },
+    "external_peer": {
+      "lib": "libInfraWebApi.so",
+      "symbols": ["WebApiUser::WebApi3::wa_job_setTouchAFPosition_cmd @ 0x11e51", "wa_job_setTouchAFPosition_evt @ 0x11e0d", "wa_job_setTouchAFPosition_cmp @ 0x14eb5", "OrbSocket::SocketServer", "OrbSocket::SocketClient", "sendMsgToOrb", "getAndDelLiborbEvtRelay"],
+      "unit": "WebApiIntMsg 0x620 B por socket Unix",
+      "status": "VERIFICADO (simbolos/tabla)"
+    },
+    "binder": "no: no hay imports ni referencias a binder en libInfraRemoteControlNet.so ni en libInfraWebApi.so",
+    "android_app": {
+      "SmartRemote.odex": "implementa setTouchAFPosition/cancel/getTouchAFPosition sobre la API remota JSON-RPC (strings: '---> setTouchAFPosition(x=', 'Invoke and wait a TouchAF *CANCEL* call...', 'CameraOperationTouchAFPosition$CameraNotificationListener$AFType')",
+      "can_inject_mid": "INFERENCIA: solo escribiendo un WebApiMsg de 0x610 B en la cola osal 0x17684a6/DAT_00031920, o un WebApiIntMsg de 0x620 B en el socket de libInfraWebApi; no demostrado el acceso desde un proceso ajeno",
+      "status": "NO_VERIFICADO (acceso) / VERIFICADO (no hay canal binder)"
+    }
+  },
+  "functions": [
+    {"addr": "0x5641", "size": 416, "name": "InfraRemoteControlNetMainThread", "does": "bucle osal_rcv_msg_tmo(DAT_000319d0); despacha 0x1000/0x1002/0x5000/0x6000", "evidence": "dynsym + pseudocodigo"},
+    {"addr": "0x4bb4", "size": 180, "name": "RcApiRecvWebApiCmpToApi", "does": "osal_rcv_msg_tmo(DAT_00031920,3000); copia 0x610 B", "evidence": "dynsym"},
+    {"addr": "0x4b10", "size": 164, "name": "RcApiSendWebApiCmpToMain", "does": "osal_snd_msg(DAT_00031920) de 0x610 B (respuesta al peer WebApi)", "evidence": "dynsym"},
+    {"addr": "0x4d99", "size": 252, "name": "RcApiSendMsgWebAPI", "does": "osal_snd_sync_msg(0x17684a6, mid 0x17684a5)", "evidence": "dynsym"},
+    {"addr": "0x4c69", "size": 304, "name": "RcApiSendEventObj", "does": "osal_snd_sync_msg a cola de eventos (0x169/0x175)", "evidence": "dynsym"},
+    {"addr": "0xfc2c", "size": 4008, "name": "RcWebAPIFunc", "does": "dispatcher de peticiones; case 0x8f/0x92 str 0x166ff/0x16769", "evidence": "dynsym + pseudocodigo + xrefs"},
+    {"addr": "0xd050", "size": 7814, "name": "PsmRcWebAPIGetEvt", "does": "dispatcher de lecturas; case 0x95 -> PsmRcWebAPIGetTouchAFPosition", "evidence": "REA FUN_0001d050"},
+    {"addr": "0x87b4", "size": 580, "name": "RcCameraStateSetParameterFromWebApi", "does": "msgid -> escritura de propiedad; val = msg+0xc", "evidence": "dynsym + instrucciones 0x8904-0x89cc"},
+    {"addr": "0x6c28", "size": 246, "name": "PsmRcCameraStateSendDeviceProperty", "does": "ObjMsg(MID 0x3a4a) params 0x1001/0x1003/0x1005 -> evento 0x169", "evidence": "REA + instrucciones 0x6c48-0x6ccc"},
+    {"addr": "0x8ed9", "size": 9688, "name": "RcCameraStateSetParameter", "does": "feed de estado; grupo 0x55000000; SUPPORT/NOT_SUPPORT/ENABLE_DISPLAY_ONLY", "evidence": "dynsym + pseudocodigo 0x9fda-0xa02c"},
+    {"addr": "0x65b0", "size": 737, "name": "PsmRcCameraStateSetSupport", "does": "marca soporte y llama RcWebAPIEditMethodValsTable(true,enaDisp,api_id)", "evidence": "REA FUN_000165b0"},
+    {"addr": "0x6900", "size": 709, "name": "PsmRcCameraStateSetNotSupport", "does": "retira el metodo (b1=0)", "evidence": "REA FUN_00016900"},
+    {"addr": "0xfb1d", "size": 272, "name": "PsmRcWebAPIEditAvailableApiList", "does": "construye lista publicada desde s_MethodValsTable", "evidence": "dynsym"},
+    {"addr": "0x10d6d", "size": 148, "name": "RcWebAPIEditMethodValsTable", "does": "escribe flags de la entrada (b1,b2,b3)", "evidence": "dynsym"},
+    {"addr": "0xc448", "size": 1052, "name": "PsmRcWebAPIIsAcceptableMethod", "does": "msgid->tabla (0x8f->0x2d); exige b0 y b1", "evidence": "REA FUN_0001c448"},
+    {"addr": "0xbf68", "size": 160, "name": "PsmRcWebAPISearchMethodFromMethodValsTable", "does": "busqueda lineal por id", "evidence": "REA"},
+    {"addr": "0xcc50", "size": 892, "name": "PsmRcWebApiEvtManage_add", "does": "validacion + evento pendiente + timer 30 s", "evidence": "REA FUN_0001cc50"},
+    {"addr": "0xfae5", "size": 56, "name": "RcWebApiEvtManage_del", "does": "cierra evento pendiente (-> FUN_0001f148)", "evidence": "dynsym"},
+    {"addr": "0x10d49", "size": 36, "name": "PsmRcWebAPICopyAvailableApiList", "does": "memcpy(0x100) de la lista", "evidence": "dynsym"}
+  ],
+  "corrections": [
+    {"previous": "analysis/eyeaf/orb_touchaf.md: paramid 0x8d/0x90/0x93 y ACK 0x8f", "corrected": "liborbEvtCmdTbl (libInfraWebApi.so @0x2d5d4) filas 45-47 dan param = 0x8e/0x91/0x94; el msgid interno de la capa RC es 0x8f/0x92/0x95 (req) y 0x90/0x93/0x96 (res)", "status": "VERIFICADO"},
+    {"previous": "la logica de estado esta en PsmRcWebAPIGetTouchAFPosition", "corrected": "ese simbolo es solo el handler de lectura (case 0x95); el estado lo forman RcCameraStateSetParameterFromWebApi / PsmRcCameraStateSetCameraStatus / PsmRcCameraStateSendDeviceProperty", "status": "VERIFICADO"}
+  ],
+  "open_questions": [
+    "Que valor (1/2/4) manda la A6000 real en 0x55000000 segun modo/objetivo/area de AF (requiere traza en camara o getAvailableApiList real)",
+    "Consumidor de MID 0x3a4a (¿Camera::FC / BIONZ / av-cam.bin?) y significado de PARAM 0x1003 = 0x55000001|2",
+    "Semantica de los codigos 2/3/4/5 y conversion al AFResult bool (libInfraWebApi.so)",
+    "Accesibilidad de las colas osal / socket uipc desde un proceso Android arbitrario de la camara"
+  ]
+}

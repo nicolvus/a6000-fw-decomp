@@ -392,16 +392,20 @@ Carril separado: no reutiliza ni modifica conclusiones de captura/sensor. Índic
 
 ## H. Eye AF en tiempo real (carril independiente del obturador)
 
-Abierto el 26-11-2026 a petición del usuario («que la cámara tenga Eye AF en tiempo real»). No toca
-firmware ni RAM: usa la API remota que la cámara ya trae (app *Smart Remote Control*,
-`setTouchAFPosition`) y la visión corre en el PC. Informe: [eye-af](capture/eye-af-tiempo-real.md);
-código: `tools/eye-af/`, `scripts/eye_af.py`.
+Abierto el 26-11-2026 a petición del usuario («que la cámara tenga Eye AF en tiempo real»; después,
+«debe ser AF nativo … verifícalo y complétalo»). Dos vías que comparten la misma orden nativa de
+punto de AF: (i) bucle en el PC que decide el ojo y manda `setTouchAFPosition`; (ii) app dentro de la
+cámara que usa el detector de la propia cámara. Informes:
+[eye-af](capture/eye-af-tiempo-real.md) y [eye-af-nativo](capture/eye-af-nativo-a6000.md); código:
+`tools/eye-af/`, `tools/eye-af/camera/`, `scripts/eye_af.py`.
 
 | ID | Estado | Origen y criterio de cierre | Fuente |
 |---|---|---|---|
 | H1 | ABIERTO | Implementado el bucle completo: `startLiveview` → JPEG → ojos (YuNet) → `setTouchAFPosition`. 28 pruebas offline y bucle real contra cámara falsa (19,3 fps, 16–19 ms de detección). Cierre: prueba física con un rostro — el marco de AF sigue al ojo (no a la cara) a ≥2 Hz con `--focus-mode AF-C`, `AFResult` verdadero en la mayoría de las órdenes y una foto con ESPACIO enfocada en el ojo | [informe](capture/eye-af-tiempo-real.md), `tests/test_eye_af_*.py` |
 | H2 | NO_VERIFICADO | Disponibilidad y semántica reales de `setTouchAFPosition` en la cámara: si anuncia el id 45 en `getAvailableApiList` y en qué modo, puerto efectivo (8080/10000), tamaño y fps del Live View, y si cada orden hace AF puntual, AF continuo o sólo reposiciona el marco. **El análisis estático es de fw3.21; la cámara está en 3.26** y no se ha verificado que `orb-server` conserve firma. Cierre: `--check` contra la cámara + dos órdenes con el mismo punto y con puntos distintos, midiendo si hay reenfoque | [orb_touchaf §4–§5](../analysis/eyeaf/orb_touchaf.md), [orb_liveview](../analysis/eyeaf/orb_liveview.md) |
-| H3 | DESCARTADO | Eye AF nativo dentro de la cámara: la vía interna es `PARAMID_EYE_START_AF` (`0x4054`, solo copia al espejo, sin consumidor localizado, [g83](gui/g83-barrido-objetivos-restantes.md)) y `Camera::FC` no tiene canal externo; la A6300 tampoco expone API de ojos. Descartado por ahora: exigiría parche de RAM o de firmware | [S138](capture/s138-camera-main-fc.md), [orb_touchaf §5](../analysis/eyeaf/orb_touchaf.md) |
+| H3 | PARCIAL | **Eye AF nativo dentro de la cámara.** Verificado: hay detector de ojos propio (`Camera::FC::Drv::ProcessEdt`, `idt_edt_*`, «EyeDetection») y sus ojos se convierten en área de AF (`0x437b7598`→`0x437b7200`, `ctx+0xde..0xe7`), pero **solo al responder a una petición de AF**, y el estado caduca por temporizador (`0x437b74a4`). La A6300 añade el estado continuo `CPafStateEyeFocus`, ausente en la A6000. `EYE_START_AF` es *Eye-Start AF* (visor), no Eye AF. Cierre: prueba física de si AF-C mantiene las peticiones (cadencia NO_VERIFICADA: vive fuera de `av-cam`) | [eye-af-nativo](capture/eye-af-nativo-a6000.md), [avcam_eye_native](../analysis/eyeaf/avcam_eye_native.md), [a6300_eyeaf_diff](../analysis/eyeaf/a6300_eyeaf_diff.md), `tests/test_eye_af_native_evidence.py` |
+| H4 | ABIERTO | App de la cámara (`ar.eyeaf`): lee `leftEye`/`rightEye` del detector propio vía `CameraEx`, decide con el mismo criterio que el bucle del PC y manda el punto con el mensaje nativo. Compila, se firma (`out/EyeAf.apk`) y su núcleo pasa 32 comprobaciones sin Android; **no instalada**. Cierre: instalar en la cámara con autorización, verificar que `FaceInfo.leftEye/rightEye` llegan rellenos y que el canal de envío existe, y medir el seguimiento | `tools/eye-af/camera/README.md`, `tests/test_eye_af_camera_core.py` |
+| H5 | NO_VERIFICADO | Vía continua sin depender de la cadencia de peticiones: enganchar el copiador de áreas `0x437b7fe4` (llamado en `0x4378f6a6`, `Imaging::VD_Drive`) para llamar a `0x437b7598` una vez por cuadro. Requiere parche de código en RAM de BIONZ (sin recuperación probada) y autorización expresa; antes, emular el trampolín con Unicorn y verificar los registros | [eye-af-nativo §3](capture/eye-af-nativo-a6000.md) |
 
 ## Cerradas (no borrar)
 
@@ -936,3 +940,4 @@ código: `tools/eye-af/`, `scripts/eye_af.py`.
 | 25-11-2026 | G113: opengate implementado en estático (alto 3:2 del modo 0x19, raster 1440×960 del codificador con cueva, variante 60p); build `og` `daaaf81f…` auditada 29/29 y 7 tests Unicorn. OG-2 hecha, OG-3 parcial, nuevos OG-6 (pedido del formato) y OG-7 (límite de lectura a 24 MP, cerrado por análisis). Sin tocar la cámara. |
 | 26-11-2026 | Carril H (Eye AF): H1 implementado y verificado offline, H2 pendiente de cámara (estático sobre fw3.21, cámara en 3.26), H3 descartado con motivo. |
 | 26-11-2026 | R10: paquete reconstruible del arnés publicado en la rama `harness/arnes-completo` (100 MB con rootfs/`usr` de Sony 3.21, Debian fijado, NVRAM, `AV-CAM.BIN`/`IDT`/`liro.ko` y config); reconstrucción verificada desde un clon limpio. Enlace en [G22-E](gui/g22-emulador-uso.md). |
+| 26-11-2026 | H3 corregido (detector de ojos nativo localizado; el límite es la cadencia, no el detector), H4 nuevo (app de cámara compilada) y H5 nuevo (enganche por VD); `EYE_START_AF` reetiquetado como Eye-Start AF. |

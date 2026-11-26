@@ -1,0 +1,717 @@
+{
+ "schema": "eyeaf-avcam-native/1",
+ "autor": "agente avcam_eye_native",
+ "fecha": "2026-11-26",
+ "binario": {
+  "ruta": "analysis/rea-independent/input/av-cam.bin",
+  "modelo": "ILCE-6000 (A6000)",
+  "firmware": "3.21",
+  "base_carga": "0x43541000",
+  "texto": "0x43541000-0x44026da4",
+  "solo_estatico": true
+ },
+ "veredicto": {
+  "eye_af_nativo": "SI (deteccion de ojos nativa en Camera::FC + consumidor propio en [CAMERA_MAIN_FC])",
+  "disparador": "peticion de AF/tactil: 0x43aef890 <- 0x437b7ea0 (ReplyForTouchShutter) <- 0x437b6670",
+  "causa_de_que_dure_solo_mientras_se_pulsa": "el unico camino conocido hacia 0x437b7200 pasa por 0x437b7ea0 (respuesta a una peticion de AF); ninguna de las 4 funciones de la cadena tiene otra arista de entrada en av-cam.bin (la entrada de 0x437b6670 no aparece en el binario: NO_VERIFICADO)",
+  "pieza_minima_para_continuo": "repetir la peticion de AF (via libObj / setTouchAFPosition) o, dentro de la camara, llamar a 0x437b7598(this=0x43eb392c, ctx=0x43eb3c16, modo=2) desde el tick de VD tras 0x437b6ea4"
+ },
+ "estructuras": [
+  {
+   "nombre": "objeto B (estado de areas + ojos)",
+   "base": "0x43eb3c16",
+   "campos": [
+    {
+     "off": "0x08+i*0x14",
+     "tipo": "u16",
+     "sig": "x del area i (1..8)"
+    },
+    {
+     "off": "0x0a",
+     "tipo": "u16",
+     "sig": "y"
+    },
+    {
+     "off": "0x0c",
+     "tipo": "u16",
+     "sig": "ancho"
+    },
+    {
+     "off": "0x0e",
+     "tipo": "u16",
+     "sig": "alto"
+    },
+    {
+     "off": "0x10",
+     "tipo": "u32",
+     "sig": "id de cara/objeto"
+    },
+    {
+     "off": "0x14",
+     "tipo": "u8",
+     "sig": "clase"
+    },
+    {
+     "off": "0x15",
+     "tipo": "u8",
+     "sig": "flag de cara (face+0x4c)"
+    },
+    {
+     "off": "0x16",
+     "tipo": "u8",
+     "sig": "flag (face+0x61)"
+    },
+    {
+     "off": "0x18",
+     "tipo": "u8",
+     "sig": "estado 1/2/0"
+    },
+    {
+     "off": "0x19",
+     "tipo": "u8",
+     "sig": "flag recalculado en 0x437b7598"
+    },
+    {
+     "off": "0x1b",
+     "tipo": "u8",
+     "sig": "flag recalculado en 0x437b7598"
+    },
+    {
+     "off": "0xd6",
+     "tipo": "u8",
+     "sig": "hay deteccion nueva"
+    },
+    {
+     "off": "0xd7",
+     "tipo": "u8",
+     "sig": "numero de areas (max 8)"
+    },
+    {
+     "off": "0xdb",
+     "tipo": "u8",
+     "sig": "clase de tamano de imagen 1/2/3"
+    },
+    {
+     "off": "0xde",
+     "tipo": "u8",
+     "sig": "validez ojo #1 ('lc flag')"
+    },
+    {
+     "off": "0xdf",
+     "tipo": "u8",
+     "sig": "validez ojo #2 ('lc flag')"
+    },
+    {
+     "off": "0xe0",
+     "tipo": "u16",
+     "sig": "ojo #1 x"
+    },
+    {
+     "off": "0xe2",
+     "tipo": "u16",
+     "sig": "ojo #1 y"
+    },
+    {
+     "off": "0xe4",
+     "tipo": "u16",
+     "sig": "ojo #2 x"
+    },
+    {
+     "off": "0xe6",
+     "tipo": "u16",
+     "sig": "ojo #2 y"
+    },
+    {
+     "off": "0xe8",
+     "tipo": "u8",
+     "sig": "numero de ojos anadidos"
+    }
+   ]
+  },
+  {
+   "nombre": "objeto A (estado de areas copiado por VD)",
+   "base": "0x43eb3af6",
+   "nota": "mismo formato; SOLO lecturas en av-cam.bin (0x437b7e46, 0x437b7fe8, 0x437b803e, 0x437b80b0, 0x437b818e). Escritor NO_VERIFICADO"
+  },
+  {
+   "nombre": "bloque de resultado de Camera::FC (arg r1 de 0x437b6ea4)",
+   "campos": [
+    {
+     "off": "0x1c",
+     "sig": "numero de caras"
+    },
+    {
+     "off": "0x24/0x26/0x28/0x2a",
+     "sig": "rect de la cara"
+    },
+    {
+     "off": "0x30",
+     "sig": "indice de clase (tabla 0x43bc4994)"
+    },
+    {
+     "off": "0x48",
+     "sig": "estado de foco"
+    },
+    {
+     "off": "0x4c",
+     "sig": "flag"
+    },
+    {
+     "off": "0x56/0x58",
+     "sig": "ojo #1 (x,y) u16"
+    },
+    {
+     "off": "0x5a/0x5c",
+     "sig": "ojo #2 (x,y) u16"
+    },
+    {
+     "off": "0x5f",
+     "sig": "validez ojo #1 -> ctx+0xde"
+    },
+    {
+     "off": "0x60",
+     "sig": "validez ojo #2 -> ctx+0xdf"
+    },
+    {
+     "off": "0x61",
+     "sig": "flag"
+    },
+    {
+     "off": "0x64",
+     "sig": "u32 id"
+    },
+    {
+     "off": "0x68/0x69/0x70",
+     "sig": "flags"
+    }
+   ]
+  },
+  {
+   "nombre": "respuesta tactil",
+   "base": "0x43eb3720 / 0x43eb3818 (dos buferes de 0xf8)",
+   "campos": [
+    {
+     "off": "0x05..0x09",
+     "sig": "flags face/obj/af (0x437b7c8c)"
+    },
+    {
+     "off": "0x0c..0xf8",
+     "sig": "copia de 0xec B del objeto B desde 0x43eb3c18"
+    }
+   ]
+  }
+ ],
+ "cadena": [
+  {
+   "paso": 1,
+   "nodo": "IDT/EyeDetection",
+   "sitio": "0x43a303f8 (idt_edt_start, opcode 8, llamado en 0x43a0a55e)",
+   "marca": "VERIFICADO"
+  },
+  {
+   "paso": 2,
+   "nodo": "Camera::FC::ProcessEdt::StartEdt",
+   "sitio": "0x43a0a47c <- 0x43b7587e <- 0x43a06700 (fn 0x43a06428, fc_alg_select_key)",
+   "marca": "VERIFICADO"
+  },
+  {
+   "paso": 3,
+   "nodo": "bloque de resultado FC con ojos",
+   "sitio": "+0x56..+0x60; devuelto por 0x439fd844",
+   "marca": "VERIFICADO"
+  },
+  {
+   "paso": 4,
+   "nodo": "copia a objeto B",
+   "sitio": "0x437b6ea4 (0x437b6fca-0x437b700e)",
+   "marca": "VERIFICADO"
+  },
+  {
+   "paso": 5,
+   "nodo": "ojos -> areas de AF",
+   "sitio": "0x437b7598 -> 0x437b7200 (0x437b7682, 0x437b76d4)",
+   "marca": "VERIFICADO"
+  },
+  {
+   "paso": 6,
+   "nodo": "temporizador de caducidad",
+   "sitio": "0x437b74a4 -> 0x437b7778; periodo u16[cfg+6]*1000 ms",
+   "marca": "VERIFICADO"
+  },
+  {
+   "paso": 7,
+   "nodo": "salida de la respuesta",
+   "sitio": "0x437b7ea0: memcpy 0xec desde 0x43eb3c18 a reply+0xc (0x437b7f86) y envio por vtable +0xb0 (0x437b7fba)",
+   "marca": "VERIFICADO"
+  },
+  {
+   "paso": 8,
+   "nodo": "copia por VD del objeto A",
+   "sitio": "0x437b7fe4 <- 0x4378f6a6 (Imaging::VD_Drive)",
+   "marca": "VERIFICADO"
+  }
+ ],
+ "preguntas": [
+  {
+   "id": 1,
+   "pregunta": "Quien escribe los datos de ojo que valida el chequeo",
+   "respuesta": "0x437b6ea4 copia a ctx+0xde/0xdf y ctx+0xe0..0xe6 desde el bloque de resultado de Camera::FC (+0x5f/+0x60 y +0x56..+0x5c); el dato nace en la deteccion de ojos pedida al servicio IDT por Camera::FC (ProcessEdt::StartEdt / idt_edt_start)",
+   "sitios": [
+    "0x437b6eac",
+    "0x437b6eb2",
+    "0x437b6fca",
+    "0x437b6fce",
+    "0x437b6fd8",
+    "0x437b6fdc",
+    "0x437b6fee",
+    "0x437b6ff2",
+    "0x437b6ffc",
+    "0x437b7004"
+   ],
+   "llamador_periodico": "ninguno en live view; 0x437b6ea4 solo se llama desde 0x43aef890 (5 sitios) y 0x43aef890 solo desde 0x437b7ea0 (0x437b7f02). Lo periodico es solo el temporizador de caducidad y la copia por VD (0x437b7fe4)",
+   "marca": "VERIFICADO (origen remoto del dato: NO_VERIFICADO dentro del IDT)"
+  },
+  {
+   "id": 2,
+   "pregunta": "Que es el 'lc flag' y que hace valido el dato de ojo",
+   "respuesta": "El dato es valido cuando [ctx+0xde]==1 (ojo 1) y [ctx+0xdf]==1 (ojo 2); el log se emite cuando el valor es distinto de 1. Los bytes son la validez copiada de face_block+0x5f/+0x60. 'lc' nombra el estado del subsistema Camera::LC, no el byte comparado",
+   "comparaciones_exactas": [
+    "0x437b723e ldrb.w r3,[r4,#0xdf] / 0x437b7242 cmp r3,#1 / 0x437b7244 bne 0x437b7260",
+    "0x437b7274 ldrb.w r3,[r4,#0xde] / 0x437b7278 cmp r3,#1 / 0x437b727a bne 0x437b729c",
+    "0x437b72c0 ... 0x437b72c6 bne 0x437b72e6 (modo 1 ojo, ojo 2)",
+    "0x437b72fa ... 0x437b7300 bne 0x437b731e (modo 1 ojo, ojo 1)"
+   ],
+   "cadena_log": "0x43ca6944 \"[CAMERA_MAIN_FC]: Eye data is invalid, but lc flag is true.\"",
+   "marca": "VERIFICADO (comparacion); INFERENCIA (significado de 'lc')"
+  },
+  {
+   "id": 3,
+   "pregunta": "Ciclo de vida: que enciende, que apaga, que mantiene",
+   "enciende": [
+    "fcctx+0x1d3 != 0 (0x43b75848/0x43b75850)",
+    "0x43b780c4 != 0 (0x43b75860)",
+    "flags fcctx+0x1d2/+0x1d3 puestos a 1 en 0x439fe636/0x439fe642",
+    "uso del ojo como area: 0x437b7200 invocado desde 0x437b7598"
+   ],
+   "apaga": [
+    "0x437b7778: [0x43f9a575]=0 (0x437b7784), [0x43f9a563]=1 (0x437b778c), libera el timer (0x437b77e8)"
+   ],
+   "mantiene": [
+    "0x437b74a4 arma timer OSAL de un disparo: periodo = u16[cfg+6]*1000 (0x437b7558/0x437b755a/0x437b7562)",
+    "pestillo 0x43f9a577: si ya se armo una vez no se rearma por la rama 1 (0x437b7680/0x437b7686/0x437b7688, se pone a 1 en 0x437b7692)",
+    "flag 0x43f9a575: lo borra la caducidad (0x437b7784) y lo comprueba la rama 2 (0x437b76d2/0x437b76da)",
+    "0x437b7598 descuenta del total las areas de ojo previas (0x437b75ba/0x437b75be)"
+   ],
+   "atado_a": "secuencia de AF (peticion), NO al modo continuo",
+   "marca": "VERIFICADO"
+  },
+  {
+   "id": 4,
+   "pregunta": "Como llega la coordenada del ojo al punto/area de AF",
+   "escritores_del_area": [
+    {
+     "fn": "0x437b6ea4",
+     "que": "caras/objetos -> ctx+8.."
+    },
+    {
+     "fn": "0x43aef77a",
+     "que": "registro LC/PAF externo 0x43eb3bf4 -> ctx+8.. y ojos"
+    },
+    {
+     "fn": "0x437b7200",
+     "que": "ojos -> registros adicionales (0x437b73e0-0x437b743a modo 2 ojos; 0x437b7456-0x437b747c modo 1 ojo)"
+    }
+   ],
+   "geometria": "x = [ctx+0xe4]-w/2, y = [ctx+0xe6]-w/2 (0x437b7246-0x437b725e); w=h=r5 derivado del tamano de cara (tabla [GOT+0x463c]+5/8/9/0xa/0xb); recorte a 0x280x0x1e0 (0x437b7366-0x437b73a4)",
+   "salida": "0x437b7ea0: memcpy 0xec B desde 0x43eb3c18 -> reply+0xc (0x437b7f7c-0x437b7f86); envio por vtable de this+0xb0 (0x437b7fba -> 0x43ad6034). Notificacion FC: 0x437b67b8 copia 0xec desde A o B (0x437b67fa)",
+   "copia_por_frame": "0x437b7fe4 desde A (0x43eb3af6) al buffer de 0x4378f6a6 (Imaging::VD_Drive)",
+   "confirmacion_ojo": true,
+   "marca": "VERIFICADO (escritor y salida); NO_VERIFICADO (consumo final fuera del modulo)"
+  },
+  {
+   "id": 5,
+   "pregunta": "Existe un modo/orden que active el seguimiento de ojo persistente",
+   "respuesta": "NO. Solo dos escritores de [ctx+0xde]/[ctx+0xdf] (0x437b6ea4 y 0x43aef77a), ambos dentro de la ruta de respuesta de AF. face_on/obj_on (+0x49c/+0x49e) solo se leen en el modulo. El modulo registra unicamente los ids 0x0003012e y 0x0003012d (0x437b7818/0x437b7820); 0 ids 0x4xxx y 0 cadenas 'eye'/'EyeAF' en la zona del modulo",
+   "conmutadores_existentes": [
+    "[LCobj+0x56] habilita ojos (0x437b765c/0x437b76b0)",
+    "[LCobj+0x55] 1 o 2 ojos (0x437b7662/0x437b76b8)",
+    "modo 0/1/2 pasado a 0x437b7598 desde 0x43aef890 (0x43aef96c/0x43aef97c/0x43aef9aa)"
+   ],
+   "marca": "VERIFICADO (ausencia); INFERENCIA (que sean banderas de estado del AF)"
+  }
+ ],
+ "funciones": [
+  {
+   "addr": "0x437b6b40",
+   "tam": "0x2c",
+   "que": "despachador por indice 0..7 de los 8 handlers FC (tabla 0x43ff460c)",
+   "evidencia": "0x437b6b4c; tabla 0x43ff460c-0x43ff4628"
+  },
+  {
+   "addr": "0x437b6670",
+   "tam": "0x62",
+   "que": "entrada del camino tactil: elige bufer 0x43eb3720/0x43eb3818, llama ReplyForTouchShutter y entrega por vtable+0xb0",
+   "evidencia": "0x437b6688, 0x437b668c, 0x437b669a, 0x437b6668"
+  },
+  {
+   "addr": "0x437b67b8",
+   "tam": "0x4a",
+   "que": "notificacion FC: copia 0xec B desde A o B al buzon y lo marca",
+   "evidencia": "0x437b67d0, 0x437b67fa"
+  },
+  {
+   "addr": "0x437b6e68",
+   "tam": "0x2a",
+   "que": "consulta de estado desde la tabla [0x4401eee4]",
+   "evidencia": "0x437b6e6c, 0x437b6e74"
+  },
+  {
+   "addr": "0x437b6ea4",
+   "tam": "0x27c",
+   "que": "productor de areas: caras/objetos y par de ojos -> objeto B",
+   "evidencia": "0x437b6eac, 0x437b6ede, 0x437b6ee4, 0x437b6fca-0x437b700e"
+  },
+  {
+   "addr": "0x437b7158",
+   "tam": "0xa0",
+   "que": "logger privado del modulo ([CAMERA_MAIN_FC])",
+   "evidencia": "12 sitios bl 0x437b7158"
+  },
+  {
+   "addr": "0x437b7200",
+   "tam": "0x282",
+   "que": "ojos -> registros de area; 4 sitios del aviso 'Eye data is invalid, but lc flag is true.'",
+   "evidencia": "0x437b723e-0x437b7326, 0x43ca6944"
+  },
+  {
+   "addr": "0x437b74a4",
+   "tam": "0xd8",
+   "que": "arma timer OSAL de un disparo (periodo u16[cfg+6]*1000)",
+   "evidencia": "0x437b7558, 0x437b755a, 0x437b7562; logs 0x437b7548/0x437b7570"
+  },
+  {
+   "addr": "0x437b7598",
+   "tam": "0x1b6",
+   "que": "actualizador de areas desde caras/ojos; decide modo 1/2 ojos; rearma timer",
+   "evidencia": "0x437b75ba, 0x437b765c-0x437b76e4, entrada 0x43aef9ca"
+  },
+  {
+   "addr": "0x437b7778",
+   "tam": "0x86",
+   "que": "caducidad: [0x43f9a575]=0, [0x43f9a563]=1, libera timer",
+   "evidencia": "0x437b7784, 0x437b778c, 0x437b77e8, log 0x437b77f6"
+  },
+  {
+   "addr": "0x437b7810",
+   "tam": "0x22",
+   "que": "init: registra ids 0x3012e y 0x3012d y enmascara [0x43f9a573]&1",
+   "evidencia": "0x437b7818, 0x437b7820, 0x437b782a"
+  },
+  {
+   "addr": "0x437b7844",
+   "tam": "0x422",
+   "que": "bloque de parametros del reply (face_on/obj_on, modo); emite 'APP MODE ERROR: face_on, obj_on'",
+   "evidencia": "0x437b7868, 0x437b787c, 0x43ca6a0a"
+  },
+  {
+   "addr": "0x437b7c8c",
+   "tam": "0xc4",
+   "que": "flags del reply (face/obj/af)",
+   "evidencia": "0x437b7c94-0x437b7d4a"
+  },
+  {
+   "addr": "0x437b7d6c",
+   "tam": "0xa6",
+   "que": "estado del reply desde 0x439fd740/FC",
+   "evidencia": "0x437b7d70, 0x437b7df6"
+  },
+  {
+   "addr": "0x437b7e38",
+   "tam": "0x06",
+   "que": "getter del objeto B (0x43eb3c16)",
+   "evidencia": "0x437b7e3a"
+  },
+  {
+   "addr": "0x437b7e44",
+   "tam": "0x06",
+   "que": "getter del objeto A (0x43eb3af6)",
+   "evidencia": "0x437b7e46"
+  },
+  {
+   "addr": "0x437b7e50",
+   "tam": "0x12",
+   "que": "getter de dos flags (0x43f9a572/0x43f9a576)",
+   "evidencia": "0x437b7e52-0x437b7e5c"
+  },
+  {
+   "addr": "0x437b7e6c",
+   "tam": "0x08",
+   "que": "getter [0x43f9a56e]",
+   "evidencia": "0x437b7e6e"
+  },
+  {
+   "addr": "0x437b7e78",
+   "tam": "0x08",
+   "que": "getter [[0x43eb3be6]]",
+   "evidencia": "0x437b7e7a"
+  },
+  {
+   "addr": "0x437b7e84",
+   "tam": "0x08",
+   "que": "getter [[0x43eb3af2]]",
+   "evidencia": "0x437b7e86"
+  },
+  {
+   "addr": "0x437b7e90",
+   "tam": "0x0a",
+   "que": "fija [0x4401e959]=1",
+   "evidencia": "0x437b7e94"
+  },
+  {
+   "addr": "0x437b7ea0",
+   "tam": "0x126",
+   "que": "ReplyForTouchShutter: construye reply 0xf8, copia 0xec del objeto B y lo envia",
+   "evidencia": "0x437b7eb2, 0x437b7f02, 0x437b7f86, 0x437b7fba"
+  },
+  {
+   "addr": "0x437b7fe4",
+   "tam": "0xec+",
+   "que": "copia de estado de areas A -> buffer del llamador (recorte 640x480)",
+   "evidencia": "0x437b7fe8, 0x437b803e, 0x437b8084"
+  },
+  {
+   "addr": "0x437b81f0",
+   "tam": "0x30",
+   "que": "SetRequestReplyForTouchShutter",
+   "evidencia": "0x437b8200, 0x437b820e"
+  },
+  {
+   "addr": "0x43aef77a",
+   "tam": "0x80",
+   "que": "copia un registro externo (0x43eb3bf4) al objeto B, ojos incluidos",
+   "evidencia": "0x43aef78e-0x43aef7f6"
+  },
+  {
+   "addr": "0x43aef890",
+   "tam": "0x13c",
+   "que": "despachador de AF: modo 0/1/2, llama 0x437b6ea4 y termina en 0x437b7598",
+   "evidencia": "0x43aef8ca, 0x43aef96c, 0x43aef9aa, 0x43aef9ca"
+  },
+  {
+   "addr": "0x43a0a47c",
+   "tam": "0x100+",
+   "que": "ProcessEdt::StartEdt -> idt_edt_start (peticion EyeDetection al IDT)",
+   "evidencia": "0x43a0a48c 'EyeDetection', 0x43a0a498 'FC/Drv/fc_drv_edt.cpp', 0x43a0a55e bl 0x43a303f8, 0x43a0a570"
+  },
+  {
+   "addr": "0x43b75836",
+   "tam": "0x66",
+   "que": "envoltorio FC: gate [fcctx+0x1d3], 0x43b780c4, marca +0x2780+0x65, llama EDT",
+   "evidencia": "0x43b75848, 0x43b75860, 0x43b75876, 0x43b7587e"
+  },
+  {
+   "addr": "0x43a06428",
+   "tam": ">0x300",
+   "que": "algoritmo de seleccion de objetivo AF (fc_alg_select_key) que invoca EDT",
+   "evidencia": "0x43a0640c './FC/Alg/fc_alg_select_key.h', 0x43a06700 bl 0x43b75836"
+  },
+  {
+   "addr": "0x43a303f8",
+   "tam": "-",
+   "que": "servicio IDT idt_edt_start (interior NO_VERIFICADO)",
+   "evidencia": "unica llamada 0x43a0a55e"
+  }
+ ],
+ "cadenas_clave": [
+  {
+   "vaddr": "0x43ca6944",
+   "texto": "[CAMERA_MAIN_FC]: Eye data is invalid, but lc flag is true.",
+   "sitios": [
+    "0x437b7268",
+    "0x437b72a6",
+    "0x437b72ee",
+    "0x437b7326"
+   ]
+  },
+  {
+   "vaddr": "0x43ca6a0a",
+   "texto": "[CAMERA_MAIN_FC]: APP MODE ERROR: face_on, obj_on",
+   "sitios": [
+    "0x437b787c"
+   ]
+  },
+  {
+   "vaddr": "0x43cf6f80",
+   "texto": "::ProcessEdt::StartEdt(const Camera::FC::DataMonFace&, const Camera::FC::CallBackEvent&)",
+   "sitios": [
+    "log en 0x43a0a4a0"
+   ]
+  },
+  {
+   "vaddr": "0x43cf6fd9",
+   "texto": "FC/Drv/fc_drv_edt.cpp",
+   "sitios": [
+    "0x43a0a498"
+   ]
+  },
+  {
+   "vaddr": "0x43cf6fef",
+   "texto": "idt_edtsa_stop() rtn: %d",
+   "sitios": []
+  },
+  {
+   "vaddr": "0x43cf7008",
+   "texto": "idt_edt_get_result rtn=%d",
+   "sitios": [
+    "0x43a0a468"
+   ]
+  },
+  {
+   "vaddr": "0x43cf7022",
+   "texto": "EyeDetection",
+   "sitios": [
+    "0x43a0a48c"
+   ]
+  },
+  {
+   "vaddr": "0x43cf702f",
+   "texto": "idt_edt_start rtn=%d",
+   "sitios": [
+    "0x43a0a570"
+   ]
+  },
+  {
+   "vaddr": "0x43ca7b3a",
+   "texto": "N6Camera2LC17CPafStateEyeStartE",
+   "sitios": []
+  },
+  {
+   "vaddr": "0x43cb6032",
+   "texto": "N6Camera2LC15IAfAreaPriorityE",
+   "sitios": []
+  },
+  {
+   "vaddr": "0x43cb6050",
+   "texto": "N6Camera2LC19CAfAreaPriorityGpmaE",
+   "sitios": []
+  },
+  {
+   "vaddr": "0x43ccb2cd",
+   "texto": "N6Camera2LC12CCoordAfAreaE",
+   "sitios": []
+  },
+  {
+   "vaddr": "0x43ccb2e8",
+   "texto": "N6Camera2LC15CPAFCoordAfAreaE",
+   "sitios": []
+  }
+ ],
+ "globales": [
+  {
+   "addr": "0x43eb3c16",
+   "uso": "objeto B: estado de areas + ojos (escrito por 0x437b6ea4, 0x43aef77a, 0x437b7598)"
+  },
+  {
+   "addr": "0x43eb3af6",
+   "uso": "objeto A: estado de areas copiado por VD (0x437b7fe4); solo lecturas"
+  },
+  {
+   "addr": "0x43eb3bf4",
+   "uso": "registro LC/PAF de entrada a 0x43aef77a (ojos en +0x16..+0x1e)"
+  },
+  {
+   "addr": "0x43eb3be6",
+   "uso": "objeto de deteccion usado por los handlers de notificacion"
+  },
+  {
+   "addr": "0x43eb392c",
+   "uso": "contexto del modulo (this de ReplyForTouchShutter); +0x38 = objeto LC, +0xb0 = emisor"
+  },
+  {
+   "addr": "0x43eb3720",
+   "uso": "buffer de reply 0"
+  },
+  {
+   "addr": "0x43eb3818",
+   "uso": "buffer de reply 1"
+  },
+  {
+   "addr": "0x43f9a563",
+   "uso": "selector de buffer de reply (toggle en 0x437b6670/0x437b669a; 1 en 0x437b778c)"
+  },
+  {
+   "addr": "0x43f9a564",
+   "uso": "flag de turno de SetRequestReplyForTouchShutter"
+  },
+  {
+   "addr": "0x43f9a565",
+   "uso": "puesto a 0 en 0x437b711e"
+  },
+  {
+   "addr": "0x43f9a570",
+   "uso": "flag de estado AF usado en 0x437b7c8c/0x437b7d48"
+  },
+  {
+   "addr": "0x43f9a571",
+   "uso": "flag de 'ocupado' comprobado en 0x437b7598 (0x437b766e) y 0x437b7c8c"
+  },
+  {
+   "addr": "0x43f9a573",
+   "uso": "flag enmascarado a 1 en init (0x437b782a) y puesto desde reply[2] (0x437b7d36)"
+  },
+  {
+   "addr": "0x43f9a574",
+   "uso": "contador incrementado en 0x437b7eae"
+  },
+  {
+   "addr": "0x43f9a575",
+   "uso": "flag 'timer vigente' borrado en 0x437b7778 (0x437b7784); leido en 0x437b76d2->0x437b76da"
+  },
+  {
+   "addr": "0x4401eee4",
+   "uso": "tabla GOT-like de punteros absolutos; indice +0x463c = bloque de parametros de Camera::FC"
+  },
+  {
+   "addr": "0x43ff460c",
+   "uso": "tabla de 8 punteros a handlers FC (0x437b6bad, 0x43aef74b, 0x437b6839, 0x437b680d, 0x437b67b9, 0x437b678d, 0x437b6925, 0x437b68b1)"
+  },
+  {
+   "addr": "0x43f9a577",
+   "uso": "pestillo 'ya armado una vez' puesto a 1 en 0x437b7692 y leido en 0x437b7680->0x437b7686"
+  }
+ ],
+ "no_verificado": [
+  "quien invoca 0x437b6670 (sin ramas directas, sin puntero absoluto, sin delta PIC)",
+  "quien llena el objeto A 0x43eb3af6",
+  "interior del servicio IDT 0x43a303f8 y de 0x43b780c4",
+  "semantica exacta del nombre 'lc' en el mensaje",
+  "consumo final del estado de areas fuera de [CAMERA_MAIN_FC]"
+ ],
+ "pieza_minima_continuo": [
+  "repetir periodicamente la peticion de AF/tactil (camino libObj) para que corra 0x437b7598",
+  "o llamar a 0x437b7598(this=0x43eb392c, ctx=0x43eb3c16, modo=2) desde el tick de VD tras 0x437b6ea4",
+  "requisitos: [ctx+0xd6]!=0 o rama 0x437b769a; ctx+0x1b!=0; [0x43eb392c+0x38]+0x54 & 0x00ffff00 != 0",
+  "sin el servicio IDT no hay ojos: el gate de deteccion esta en Camera::FC ([fcctx+0x1d3], 0x43b780c4)"
+ ],
+ "artefactos": {
+  "informe": "analysis/eyeaf/avcam_eye_native.md",
+  "datos": "analysis/eyeaf/avcam_eye_native/",
+  "indices": [
+   "branches.json",
+   "refs_pic.json",
+   "field_access.json",
+   "eye_fields.json",
+   "fieldscan_1d2_1d3.json"
+  ],
+  "herramientas": [
+   "avdis.py",
+   "sweep.py",
+   "sweep_eyes.py",
+   "fieldscan.py",
+   "index_branches.py",
+   "refs_pic.py",
+   "blfind.py",
+   "find_pic_refs.py"
+  ]
+ }
+}

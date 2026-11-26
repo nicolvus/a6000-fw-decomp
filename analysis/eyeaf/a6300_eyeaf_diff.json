@@ -1,0 +1,612 @@
+{
+ "schema": "eyeaf-diff/1",
+ "title": "Diferencial Eye AF: A6000 fw3.21 vs A6300 fw2.01 (estatico)",
+ "fecha": "2026-11-26",
+ "metodo": {
+  "solo_estatico": true,
+  "reachazado": "sin camara, sin firmware ejecutado, sin escritura en RAM/NVRAM",
+  "base_direcciones": {
+   "av-cam.bin": "0x43541000 para el offset de fichero 0 (VA = offset + 0x43541000)",
+   "prueba": "u32 0x4C49524F (magia 'LIRO', que en memoria se lee 4F 52 49 4C) en +0x04 y puntero 0x43541044 en +0x0C en AMBOS av-cam.bin",
+   "nota": "analysis/av-cam-analysis-view.elf resta 0x1F0 (A6000) / 0x218 (A6300); este informe NO usa esa vista"
+  },
+  "herramientas": [
+   "analysis/eyeaf/data/diff/elfmap.py (lector ELF propio, off<->va)",
+   "analysis/eyeaf/data/diff/mwx.py (indice y xrefs movw/movt Thumb-2)",
+   "analysis/eyeaf/data/diff/enum_tables.py (matrices const char* de libObj)",
+   "analysis/eyeaf/data/diff/dump_tables.py (tablas nombre->id de libScalarDaemon)",
+   "analysis/eyeaf/data/diff/verify.py (38 comprobaciones byte-exactas de este informe)",
+   "capstone 5.0.7 Thumb para tramos concretos"
+  ],
+  "rea": {
+   "usado": false,
+   "motivo": "1 GB de RAM disponible (15 GB totales, 13 en uso) y otra sesion Ghidra cargando en el MCP compartido; av-cam.bin tarda ~8 min en frio por binario",
+   "consultas_previstas": [
+    "open_binary {path:<abs>/av-cam.bin, format:raw-binary, architecture:arm, entry_point:0x43541000}",
+    "inspect_address_context 0x43dcadd6 (CheckSetEyeStartAF)",
+    "inspect_address_context 0x43dac049 (SET_EYE_START_AF[%d])",
+    "inspect_address_context 0x4418dab4 / 0x4418daf4 (vtables EyeStart/EyeFocus)",
+    "batch_decompile slots de las dos vtables"
+   ]
+  },
+  "reproducibilidad": {
+   "verify": "python3 analysis/eyeaf/data/diff/verify.py -> 42 comprobaciones, 0 fallos",
+   "tablas": "python3 analysis/eyeaf/data/diff/dump_tables.py -> scalar_param_table.json (960/1370 entradas, 0x5008/0x8008, 919 comunes, 492 con id distinto)",
+   "nota_slots": "los slots de vtable son punteros Thumb (bit 0 = 1); la entrada real es slot & ~1"
+  }
+ },
+ "binarios": {
+  "A6000": {
+   "fw": "3.21",
+   "av-cam.bin": {
+    "sha256": "b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c37805959ebee2b429e56bb9",
+    "bytes": 11427236
+   },
+   "libObj.so": {
+    "sha256": "8e8a937aed23c2783e7bbee8a4afa2fb4bcd897606f190b17dccadd207d05b6a"
+   },
+   "libScalarDaemon.so": {
+    "sha256": "ca28cbf4c5c6402160ad80f6ad9f5e99052f42c3fabc382c557fcded18addc29"
+   }
+  },
+  "A6300": {
+   "fw": "2.01",
+   "av-cam.bin": {
+    "sha256": "6a5a25728dc378c99d5b883c9743b69faa5f719ff844b4e1788e73bd5ae7be16",
+    "bytes": 13382836
+   },
+   "libObj.so": {
+    "sha256": "c70b635bcbd386b4b34b6a5c37ef941a1463253aebb43d83fada7fe4e9fe9073"
+   },
+   "libScalarDaemon.so": {
+    "sha256": "9009bb9b8fa5defb7d3d7d27fe8a7b8f6743dccc6511c655396d8b414a1b30a9"
+   }
+  }
+ },
+ "orden_eye_af": {
+  "msgid": "MSGID_SET_EYE_START_AF_CMD",
+  "msgid_acompanantes": [
+   "MSGID_SET_EYE_START_AF_CMP",
+   "MSGID_NOTIFY_EYE_START_AF_EVT"
+  ],
+  "paramid": "PARAMID_CAMSETTING_EYE_START_AF",
+  "payload": "entero ON/OFF (VALUEID_EYE_START_AF_ON / VALUEID_EYE_START_AF_OFF)",
+  "ids_numericos": {
+   "A6000": {
+    "PARAMID_CAMSETTING_EYE_START_AF": "0x5008",
+    "estado": "VERIFICADO",
+    "evidencia": "libScalarDaemon.so A6000, tabla 0x1b05a4..0x1b23a4 (960 entradas const char*+u32); nombre en 0x1b201c, id en 0x1b2020"
+   },
+   "A6300": {
+    "PARAMID_CAMSETTING_EYE_START_AF": "0x8008",
+    "estado": "VERIFICADO",
+    "evidencia": "libScalarDaemon.so A6300, tabla 0x1d82ec..0x1dadbc (1370 entradas); nombre en 0x1da9ec, id en 0x1da9f0"
+   },
+   "MSGID_SET_EYE_START_AF_CMD": {
+    "valor": null,
+    "estado": "NO_VERIFICADO",
+    "motivo": "libObj.so solo publica la matriz const char* (sin ids) y no es densa; la tabla (nombre,u16) de InhInfo_InhMgr.db no pertenece a ese espacio (diferencias de indice 0x98 vs de valor 0xCE)"
+   },
+   "0x4054_del_enunciado": {
+    "estado": "NO_VERIFICADO",
+    "motivo": "no se reproduce: 0 tablas ordenadas de 16 bits con 0x4054 en ninguno de los dos av-cam.bin (115/113 apariciones sueltas de la constante)"
+   }
+  },
+  "emisor": {
+   "subsistema": "userland de la camara (libObj.so): CamUser::SequenceSetEyeStartAF",
+   "cadena": [
+    "CamUser::SequenceSetEyeStartAF (RTTI N7CamUser21SequenceSetEyeStartAFE)",
+    "CamMsgConv: SetEyeStartAFForLiro",
+    "ObjCamera::MSGID_SET_EYE_START_AF_CMD (relay)",
+    "ScalarDaemon -> av-cam (LIRO)"
+   ],
+   "estado": "VERIFICADO el texto / INFERENCIA la cadena",
+   "app": "SmartRemote.odex NO lo emite: 0 metodos EyeAF/pupil/faceDetection en orb-server (carril orb_touchaf)",
+   "tecla_ui": "VALUEID_AF_KEY_EYE_PRIORITY_AF, habilitada en A6300 por INH_FACTOR_CAM_AF_KEY_EYE_PRIORITY_AF_TYPE_P"
+  }
+ },
+ "familias_de_nombres": {
+  "presentes_en_ambos_libObj": [
+   "PARAMID_EYE_START_AF",
+   "PARAMID_EYE_START_AF_SET",
+   "PARAMID_EYE_START_AF_ACT",
+   "MSGID_SET_EYE_START_AF_CMD",
+   "MSGID_SET_EYE_START_AF_CMP",
+   "MSGID_NOTIFY_EYE_START_AF_EVT",
+   "VALUEID_EYE_START_AF_ON",
+   "VALUEID_EYE_START_AF_OFF",
+   "VALUEID_FOCUSING_STATE_EYE_START",
+   "VALUEID_EYE_BLINK_DETECTED",
+   "VALUEID_EYE_BLINK_NOT_DET",
+   "VALUEID_AF_KEY_EYE",
+   "VALUEID_AF_KEY_EYE_PRIORITY_AF",
+   "PARAMID_EE_EYE_BLINK",
+   "PARAMID_REVIEW_EYE_BLINK"
+  ],
+  "solo_A6300_libObj": [
+   "PARAMID_FOCUS_RELEASE_PRIORITY_AF_C",
+   "VALUEID_FOCUS_PRIORITY_AF_C",
+   "VALUEID_RELEASE_PRIORITY_AF_C",
+   "VALUEID_BALANCE_PRIORITY_AF_C",
+   "VALUEID_AF_KEY_IR"
+  ],
+  "offsets_libObj": {
+   "A6000": {
+    "PARAMID_EYE_START_AF": "0xe49a25 (slot de la matriz 0xfdc514)",
+    "PARAMID_EYE_START_AF_SET": "0xe49a3a",
+    "PARAMID_EYE_START_AF_ACT": "0xe49a53",
+    "MSGID_SET_EYE_START_AF_CMD": "0xe50e08 (slot 0xfdb7a8)",
+    "VALUEID_AF_KEY_EYE_PRIORITY_AF": "0xe487d7 (slot 0xfdea0c)",
+    "SetEyeStartAFForLiro NON SUPPORTED MsgID[0x%04x]": "0xe0de65",
+    "N7CamUser21SequenceSetEyeStartAFE": "0xe2492b"
+   },
+   "A6300": {
+    "PARAMID_EYE_START_AF": "0xe02237 (slot de la matriz 0xfbdfc8)",
+    "PARAMID_EYE_START_AF_SET": "0xe0224c",
+    "PARAMID_EYE_START_AF_ACT": "0xe02265",
+    "MSGID_SET_EYE_START_AF_CMD": "0xe0b1f9 (slot 0xfbd5a4)",
+    "VALUEID_AF_KEY_EYE_PRIORITY_AF": "0xdff786 (slot 0xfc17a8)",
+    "SetEyeStartAFForLiro NON SUPPORTED MsgID[0x%04x]": "0xdbfa2f",
+    "N7CamUser21SequenceSetEyeStartAFE": "0xe208c7"
+   },
+   "matrices_const_char_ptr": {
+    "A6000": {
+     "PARAMID": "0xfdc144 (1350)",
+     "MSGID": "0xfdb5f0 (725)",
+     "VALUEID": "0xfdd65c (1288)"
+    },
+    "A6300": {
+     "PARAMID": "0xfbdbf8 (1624)",
+     "MSGID": "0xfbd3ec (515)",
+     "VALUEID": "0xfc03f8 (1491)"
+    }
+   },
+   "indice_PARAMID_EYE_START_AF": "244 desde PARAMID_ZOOM_SPD en AMBOS modelos"
+  }
+ },
+ "avcam": {
+  "A6300": {
+   "tiene": {
+    "CheckSetEyeStartAF": {
+     "va": "0x43dcadd6",
+     "off": "0x889dd6",
+     "estado": "VERIFICADO"
+    },
+    "SET_EYE_START_AF[%d]": {
+     "va": "0x43dac049",
+     "off": "0x86b049",
+     "estado": "VERIFICADO"
+    },
+    "LiroSeq ParamCheckErr@%s[eye_start_af] cur:%d req:%d": {
+     "va": "0x43dc6ca3",
+     "off": "0x885ca3",
+     "estado": "VERIFICADO"
+    },
+    "familia_CheckSet": {
+     "n": 201,
+     "estado": "VERIFICADO"
+    },
+    "familia_ParamCheckErr": {
+     "n": 370,
+     "estado": "VERIFICADO"
+    },
+    "b8_SHD_EY_dataN / b8_pupil_information_dataN": {
+     "va": "0x43e012cb",
+     "off": "0x8612cb",
+     "n": 7,
+     "estado": "VERIFICADO"
+    },
+    "CPafStateEyeStart": {
+     "rtti": "N6Camera2LC7PhaseAF5State17CPafStateEyeStartE",
+     "va_rtti": "0x43dcfbf9",
+     "type_info": "0x441d9470",
+     "vtable": "0x4418dab4",
+     "estado": "VERIFICADO"
+    },
+    "CPafStateEyeFocus": {
+     "rtti": "N6Camera2LC7PhaseAF5State17CPafStateEyeFocusE",
+     "va_rtti": "0x43dcfc27",
+     "off_rtti": "0x88ec27",
+     "type_info": "0x441d9494",
+     "vtable": "0x4418daf4",
+     "estado": "VERIFICADO"
+    },
+    "CheckSetFacePriorityTrackingMode": {
+     "estado": "VERIFICADO"
+    },
+    "CheckSetObjectTrackingMode": {
+     "estado": "VERIFICADO"
+    }
+   },
+   "vtables_detalle": {
+    "0x4418dab4": {
+     "clase": "CPafStateEyeStart",
+     "offset_to_top": "0x4418dab0 = 0",
+     "type_info": "0x441d9470",
+     "slots": {
+      "+0x04": "0x43bd04b3",
+      "+0x08": "0x43bd0465",
+      "+0x0c": "0x43bd04a7",
+      "+0x10": "0x43bd04e7",
+      "+0x14": "0x43bd046d",
+      "+0x18": "0x43bd04ed",
+      "+0x1c": "0x43bd0591"
+     }
+    },
+    "0x4418daf4": {
+     "clase": "CPafStateEyeFocus",
+     "type_info": "0x441d9494",
+     "slots": {
+      "+0x04": "0x43bd05c1",
+      "+0x08": "0x43bd0465",
+      "+0x0c": "0x43bd04af",
+      "+0x10": "0x43bd04e7",
+      "+0x14": "0x43bd046d",
+      "+0x18": "0x43bd04ed",
+      "+0x1c": "0x43bd04f3"
+     }
+    }
+   }
+  },
+  "A6000": {
+   "tiene": {
+    "CPafStateEyeStart": {
+     "rtti": "N6Camera2LC17CPafStateEyeStartE",
+     "va_rtti": "0x43ca7b3a",
+     "off_rtti": "0x766b3a",
+     "type_info": "0x43ff6e4c",
+     "vtable": "0x43fcd0bc",
+     "estado": "VERIFICADO"
+    },
+    "EyeDetection (idt_edt_start/stop/get_result)": {
+     "va": "0x43cf7022",
+     "off": "0x7b6022",
+     "estado": "VERIFICADO"
+    },
+    "[CAMERA_MAIN_FC]: Eye data is invalid, but lc flag is true.": {
+     "va": "0x43ca6944",
+     "estado": "VERIFICADO",
+     "ref": "docs/capture/s138-camera-main-fc.md"
+    },
+    "9 clases de estado PhaseAF": {
+     "lista": [
+      "TrackSelect",
+      "EyeStart",
+      "S1",
+      "Smile",
+      "CPafState",
+      "None",
+      "SelfTimer",
+      "Normal",
+      "Enter"
+     ],
+     "estado": "VERIFICADO"
+    }
+   },
+   "NO_tiene": {
+    "CPafStateEyeFocus": {
+     "n": 0,
+     "estado": "VERIFICADO por ausencia de cadena"
+    },
+    "CheckSetEyeStartAF / SET_EYE_START_AF[%d] / eye_start_af": {
+     "n": 0
+    },
+    "familia CheckSet* (201 en A6300) y LiroSeq ParamCheckErr (370)": {
+     "n": 0
+    },
+    "b8_pupil_information_dataN": {
+     "n": 0,
+     "nota": "solo existe el log 'ZAF img_id:%04X, a_gain:%04X, pupil:%d' en 0x7623d8"
+    },
+    "CheckSetFacePriorityTrackingMode / CheckSetObjectTrackingMode": {
+     "n": 0
+    }
+   },
+   "vtables_detalle": {
+    "0x43fcd0bc": {
+     "clase": "CPafStateEyeStart",
+     "type_info": "0x43ff6e4c",
+     "slots": {
+      "+0x04": "0x43af45df",
+      "+0x08": "0x43af45c5",
+      "+0x0c": "0x43af45c7",
+      "+0x10": "0x43af45e5",
+      "+0x14": "0x43af46cb",
+      "+0x18": "0x43af4727",
+      "+0x1c": "0x43af45b1"
+     }
+    }
+   }
+  },
+  "semantica": {
+   "EYE_START_AF": "Eye-Start AF: el sensor de ojo del visor arranca el AF. Presente en AMBOS modelos.",
+   "Eye AF": "prioridad al ojo: VALUEID_AF_KEY_EYE_PRIORITY_AF (tecla) + estado CPafStateEyeFocus. Solo A6300.",
+   "estado": "VERIFICADO el reparto de cadenas; INFERENCIA la semantica funcional"
+  }
+ },
+ "tabla_funciones": [
+  {
+   "modelo": "A6000",
+   "slot": "0x43fcd0bc",
+   "direccion": "0x43fcd0bc",
+   "tamano": "32 B (8 punteros)",
+   "que_hace": "vtable de Camera2LC::CPafStateEyeStart; +0x00 type_info 0x43ff6e4c, offset_to_top 0 en 0x43fcd0b8",
+   "evidencia": "bytes en off 0x50bc",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6000",
+   "slot": "0x43af45df",
+   "direccion": "0x43af45de",
+   "tamano": "6 B",
+   "que_hace": "slot+0x04: strb.w r1,[r0,#0x43] guarda el flag de entrada del estado",
+   "evidencia": "capstone en 0x43af45de",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6000",
+   "slot": "0x43af45c5",
+   "direccion": "0x43af45c4",
+   "tamano": "2 B",
+   "que_hace": "slot+0x08: bx lr (no-op)",
+   "evidencia": "0x43af45c4",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6000",
+   "slot": "0x43af45c7",
+   "direccion": "0x43af45c6",
+   "tamano": "4 B",
+   "que_hace": "slot+0x0c: movs r0,#0; bx lr (consulta falsa)",
+   "evidencia": "0x43af45c6",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6000",
+   "slot": "0x43af45e5",
+   "direccion": "0x43af45e4",
+   "tamano": "6 B",
+   "que_hace": "slot+0x10: ldrb.w r0,[r0,#0x43] lee el flag",
+   "evidencia": "0x43af45e4",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6000",
+   "slot": "0x43af46cb",
+   "direccion": "0x43af46ca",
+   "tamano": "8 B",
+   "que_hace": "slot+0x14: estado siguiente en [r0+0x34] ([r0+4]==0 -> +1; [r0+0x40] -> +7; si no 9)",
+   "evidencia": "0x43af46ca..0x43af46e0",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6000",
+   "slot": "0x43af4727",
+   "direccion": "0x43af4726",
+   "tamano": "48 B",
+   "que_hace": "slot+0x18: ejecucion del estado; copia contexto (bl 0x43af3b7a), evalua [r5+0x1a], [r5+0x1c]==1, ldrh [r5+0x20]-0x24c<=1, escribe [r4+0x40], llama virtual [vt]+0x20 y decrementa [r4+4]",
+   "evidencia": "0x43af4726..0x43af4774",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6000",
+   "slot": "0x43af45b1",
+   "direccion": "0x43af45b0",
+   "tamano": "2 B",
+   "que_hace": "slot+0x1c: bx lr",
+   "evidencia": "0x43af45b0",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6300",
+   "slot": "0x4418dab4",
+   "direccion": "0x4418dab4",
+   "tamano": "32 B",
+   "que_hace": "vtable de Camera2LC::PhaseAF::State::CPafStateEyeStart; type_info 0x441d9470",
+   "evidencia": "off 0x18dab4",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6300",
+   "slot": "0x43bd04b3",
+   "direccion": "0x43bd04b2",
+   "tamano": "32 B",
+   "que_hace": "slot+0x04: si [r1,#0x10] es 0 llama virtual [vt]+4; si [this+4]==4 lo decrementa y limpia [this+8] (temporizador)",
+   "evidencia": "0x43bd04b2..0x43bd04d2",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6300",
+   "slot": "0x43bd0465",
+   "direccion": "0x43bd0464",
+   "tamano": "4 B",
+   "que_hace": "slot+0x08: movs r0,#0; bx lr",
+   "evidencia": "0x43bd0464",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6300",
+   "slot": "0x43bd04a7",
+   "direccion": "0x43bd04a6",
+   "tamano": "4 B",
+   "que_hace": "slot+0x0c: movs r0,#7 -> id de estado 7",
+   "evidencia": "0x43bd04a6",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6300",
+   "slot": "0x43bd04e7",
+   "direccion": "0x43bd04e6",
+   "tamano": "6 B",
+   "que_hace": "slot+0x10: strb.w r1,[r0,#0x23] setter de flag",
+   "evidencia": "0x43bd04e6",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6300",
+   "slot": "0x43bd046d",
+   "direccion": "0x43bd046c",
+   "tamano": "2 B",
+   "que_hace": "slot+0x14: bx lr",
+   "evidencia": "0x43bd046c",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6300",
+   "slot": "0x43bd04ed",
+   "direccion": "0x43bd04ec",
+   "tamano": "6 B",
+   "que_hace": "slot+0x18: ldrb.w r0,[r0,#0x23] getter del flag",
+   "evidencia": "0x43bd04ec",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6300",
+   "slot": "0x43bd0591",
+   "direccion": "0x43bd0590",
+   "tamano": "8 B",
+   "que_hace": "slot+0x1c: estado siguiente en [r0+0x14] ([r0+4]==0 -> +1; [r0+0x20] -> +7; si no 9)",
+   "evidencia": "0x43bd0590",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6300",
+   "slot": "0x4418daf4",
+   "direccion": "0x4418daf4",
+   "tamano": "32 B",
+   "que_hace": "vtable de CPafStateEyeFocus (solo A6300); type_info 0x441d9494",
+   "evidencia": "off 0x18daf4",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6300",
+   "slot": "0x43bd05c1",
+   "direccion": "0x43bd05c0",
+   "tamano": "18 B",
+   "que_hace": "EyeFocus slot+0x04: si [this+4]==4 resta 2 y limpia [this+8] (temporizador)",
+   "evidencia": "0x43bd05c0..0x43bd05d0",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6300",
+   "slot": "0x43bd04af",
+   "direccion": "0x43bd04ae",
+   "tamano": "4 B",
+   "que_hace": "EyeFocus slot+0x0c: movs r0,#9 -> id de estado 9 (frente al 7 de EyeStart)",
+   "evidencia": "0x43bd04ae",
+   "estado": "VERIFICADO"
+  },
+  {
+   "modelo": "A6300",
+   "slot": "0x43bd04f3",
+   "direccion": "0x43bd04f2",
+   "tamano": "8 B",
+   "que_hace": "EyeFocus slot+0x1c: estado siguiente con cmp r3,#6 y tbb [pc,r3] (6 saltos)",
+   "evidencia": "0x43bd04f2, tbb en 0x43bd0506",
+   "estado": "VERIFICADO"
+  }
+ ],
+ "paramid_tables": {
+  "libScalarDaemon": {
+   "A6000": {
+    "rango": "0x1b05a4..0x1b23a4",
+    "entradas": 960,
+    "PARAMID_CAMSETTING_EYE_START_AF": "0x5008",
+    "entry_name_at": "0x1b201c",
+    "entry_id_at": "0x1b2020"
+   },
+   "A6300": {
+    "rango": "0x1d82ec..0x1dadbc",
+    "entradas": 1370,
+    "PARAMID_CAMSETTING_EYE_START_AF": "0x8008",
+    "entry_name_at": "0x1da9ec",
+    "entry_id_at": "0x1da9f0"
+   },
+   "comunes": 919,
+   "con_id_distinto": 492,
+   "ejemplo_renumeracion": {
+    "PARAMID_BKUP_AE_METER_MODE": [
+     "0x201F",
+     "0x5017"
+    ]
+   }
+  },
+  "inhinfo_db": {
+   "A6000": {
+    "INH_FEATURE_CAM_VALUEID_AF_KEY_EYE": "presente",
+    "INH_FEATURE_CAM_VALUEID_AF_KEY_EYE_PRIORITY_AF": "presente",
+    "INH_FACTOR_CAM_AF_KEY_EYE_PRIORITY_AF_TYPE_P": "AUSENTE"
+   },
+   "A6300": {
+    "INH_FACTOR_CAM_AF_KEY_EYE_PRIORITY_AF_TYPE_P": "presente en 0x031fb2 y 0x03c297",
+    "Caution.odex INH_FACTOR_ID_CAM_AF_KEY_EYE_PRIORITY_AF_TYPE_P": "0x060e35 (A6000: 0 ocurrencias de AF_KEY_EYE en Caution.odex)"
+   },
+   "api_inh_records": {
+    "A6000": 616,
+    "A6300": 784,
+    "solo_A6300_eye_relacionado": "ninguno (la familia EYE no esta en la tabla viva; solo en paginas libres)"
+   }
+  },
+  "ui": {
+   "CautionConfig.so": {
+    "ambos": [
+     "cmnViewSettingNodeRootCustomEyeStartAF",
+     "cmnViewSettingPropertiesCustomEyeStartAFRoot/On/Off"
+    ],
+    "A6000_off": "0x8578d..",
+    "A6300_off": "0x117dd6.."
+   },
+   "viewUnified2.so": {
+    "ambos": [
+     "cmnViewSettingNodeRootCustomEyeStartAF"
+    ]
+   },
+   "wrapperSettingUtil.so": {
+    "A6000": [
+     "_ZN18WrapperSettingUtil21_getEyeStartAFSettingEP15ViewBaseProduct",
+     "_ZN18WrapperSettingUtil18_executeEyeStartAFEP15ViewBaseProductb"
+    ],
+    "A6300": "sin EyeStartAF"
+   }
+  }
+ },
+ "preguntas": {
+  "p1": {
+   "respuesta": "MSGID_SET_EYE_START_AF_CMD con PARAMID_CAMSETTING_EYE_START_AF; id 0x8008 en A6300 (0x5008 en A6000); lo emite el userland de la camara (CamUser::SequenceSetEyeStartAF), no la app",
+   "estado": "VERIFICADO el id y los nombres / INFERENCIA la cadena de emision"
+  },
+  "p2": {
+   "respuesta": "La familia EYE existe en los dos; cambia el NUMERO (0x5008 vs 0x8008) y solo aparecen en A6300 los *_PRIORITY_AF_C y el factor INH de la tecla; 492/919 nombres comunes cambian de id",
+   "estado": "VERIFICADO"
+  },
+  "p3": {
+   "respuesta": "El av-cam de la A6000 tiene CPafStateEyeStart y la FC con ojos, pero NO tiene CPafStateEyeFocus ni la ruta LiroSeq eye_start_af: no implementa el receptor de Eye AF; su EyeStart es Eye-Start AF (visor)",
+   "estado": "VERIFICADO la ausencia de cadenas/clases / INFERENCIA el efecto de una orden"
+  },
+  "p4": {
+   "respuesta": "En A6300 el Eye AF es un MODO (AF-C + estado CPafStateEyeFocus + prioridad de ojo), no una orden repetida; la A6000 tiene AF-C pero no el estado ni los ajustes *_PRIORITY_AF_C",
+   "estado": "INFERENCIA con apoyos VERIFICADOS"
+  },
+  "p5": {
+   "respuesta": "Orden (si solo se emite): 0x5008=1 por Scalar/UIPC. Para Eye AF persistente la pieza minima es el RECEPTOR: portar CPafStateEyeFocus + la ruta eye_start_af al av-cam de la A6000 y engancharla a la salida de ojos de la FC (el emisor ya existe)",
+   "estado": "INFERENCIA"
+  }
+ },
+ "no_verificado": [
+  "id numerico de MSGID_SET_EYE_START_AF_CMD / _CMP / NOTIFY_EYE_START_AF_EVT",
+  "el 0x4054 del enunciado para PARAMID_EYE_START_AF (no se reproduce en ninguna tabla de los dos av-cam.bin)",
+  "quien invoca CheckSetEyeStartAF: las cadenas del bloque 0x86xxxx-0x8Dxxxx no tienen puntero absoluto ni pareja movw/movt (0/200 muestreadas dentro, 70/300 fuera)",
+  "efecto real de enviar 0x5008 a una A6000 (requiere ejecucion o decompilacion)",
+  "decompilacion REA de los dos av-cam.bin (memoria insuficiente en esta sesion)"
+ ],
+ "contradicciones": [
+  {
+   "fuente": "knowledge/CURRENT.md (carril Eye AF, 26-11-2026), H3 'Eye AF nativo por Camera::FC descartado'",
+   "matiz": "la FC tiene ojos en los dos modelos y el PhaseAF de la A6000 tiene CPafStateEyeStart; lo que falta es CPafStateEyeFocus y la ruta LiroSeq del parametro. No cambia la conclusion operativa (sin parche no hay Eye AF), cambia el motivo."
+  },
+  {
+   "fuente": "lectura inicial de esta misma sesion con base 0x43540DE8/0x43540E10",
+   "correccion": "la base correcta es 0x43541000 (cabecera LIRO + tabla de punteros); con la base anterior los xrefs de cadenas daban 0 y CPafStateEyeStart parecia exclusivo de la A6300"
+  }
+ ]
+}
