@@ -208,10 +208,36 @@ ni la tabla de particiones; el único camino a ladrillo es el core de Darwin
   `ER_FAILED_ACQUIRE_SEMAPHORE`, que es precisamente el mecanismo que se quiere observar
   ([emu-fps](film-pb-1-sub-emu-fps-20261127.md)).
 
+## 9.1 Dato de campo decisivo (26-11): formatear la tarjeta no arregla nada
+
+El usuario **formateó la tarjeta en la cámara** y el vídeo sigue sin reproducirse. Con eso caen
+las tres familias de contenido de golpe:
+
+- La tarjeta, el volumen y el sistema de ficheros: el formateo los reconstruye.
+- El índice AV (`AVF_INFO\AVIN0001.INP`): `CreateAVIndexFile` lo rehace desde cero.
+- El journal `RcsTbl`: el formateo lo invalida y la cámara lo reescribe.
+
+Y no cae el otro dato de campo: **las miniaturas de foto siguen apareciendo**. Es decir, la
+lectura funciona, el reproductor de imagen funciona, y lo único roto es la **carga del IFO de
+vídeo** (los tres formatos) y el **área de buffers del camino de movie**.
+
+Eso deja el problema, sin ambigüedad, en el **firmware**: o la tabla de buffers del modo no
+define el hueco de movie, o el `SetLoadInfo`/`Load` del `mp4Ifo` no acepta el contenido, o el
+`av-cam` parcheado del CFW (que es el de 3.21 con tablas de curvas de Picture Profile) rompe algo
+del camino de vídeo que no se había probado nunca.
+
 ## 10. Qué hacer ahora, en este orden
 
 Todo lo que sigue es sin flashear y sin abrir la cámara.
 
+> Los pasos 1 a 4 originales (auditar el índice, renombrar `AVF_INFO`, formatear) **ya no
+> aplican**: el usuario formateó la tarjeta en la cámara y el síntoma sigue. Se conservan como
+> registro de lo descartado. Lo que queda es el firmware y las pruebas de más abajo.
+
+0. **Decidir con un dato de 10 s**: ¿la cámara reproduce vídeo si se enciende y se pulsa
+   reproducción antes de que se generen miniaturas? Si el primer intento va y luego deja de ir,
+   el área de buffers se libera (`StreamAreaFree`) y no se vuelve a asignar; si no va nunca, la
+   tabla del modo no la define o el IFO no carga nunca.
 1. **Sacar la tarjeta, copiarla entera al PC y ejecutar**
    `.venv/bin/python3 scripts/filmpb1_audita_tarjeta.py <carpeta>`. Devuelve, por clip, la
    duración del índice frente a la del `mvhd`, el tamaño del índice frente al de disco, las
