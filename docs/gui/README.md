@@ -128,3 +128,10 @@ Evidencia: `analysis/gui/`. Pruebas: `tests/test_gui_elf_scan.py`.
 - [G21 — Informe de Picture Profile y CFW 3.56](g21-informe-picture-profile.md)
 - [G22-B — Arnés de la UI: `im.elf` bajo QEMU con shim](g22-arnes-ui-qemu.md) · `scripts/gui/harness/` (`setup.sh`, `run.py`, `im.sh`, `shim/`) · `tests/test_gui_harness.py`
 - [G22-E — Batería, carga y USB en el arnés](g22-estado-camara.md) · `scripts/gui/harness/{estado_camara,camara_web}.py` · `tests/test_gui_harness.py`
+- [G22-E — Captura y galería de la SD](g22-emulador-uso.md#sensor-sd-y-grabación-t4-12-11-2026) · `scripts/gui/harness/{captura,sd_emu,sensor_web}.py` · `tests/test_gui_captura.py`
+- [G22-ARR3 — Arranque paralelo del Puente](g22-arranque-paralelo.md) · `scripts/gui/harness/live.py` · `scripts/gui/avcam/puente.py`
+- [G22-CFW-ARRANQUE — Por qué un CFW no arranca en la cámara y sí en el arnés](g22-cfw-arnes-vs-camara.md)
+- [G22-AUDIT-CFW — Auditoría de un CFW instalable (CLI y configurador)](g22-auditoria-cfw.md) · `scripts/gui/harness/audita_cfw.py` · `tests/test_gui_audita_cfw.py`
+- [G22-REPRO — Reproducción y recuento desde la SD](g22-reproduccion-sd.md) · `scripts/gui/harness/sd_image.py` · `tests/test_gui_sd_image.py`
+- [G22-ZOOM — Ajuste de zoom](g22-ajuste-zoom.md) · `tests/test_g22_zoom.py`
+- [G22-DIAL-FN — Dial de modos, Fn y rueda](g22-dial-fn-rueda.md) · `tests/test_g22_dial.py`
