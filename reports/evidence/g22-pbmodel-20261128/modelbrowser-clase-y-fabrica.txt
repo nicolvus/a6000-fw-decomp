@@ -1,0 +1,80 @@
+# libObj.so 3.21 — @M010 = clase ModelBrowser (no hay modelBrowser.so en /usr/lib: los modelos se fusionaron)
+# RTTI      0xcdf62c = '12ModelBrowser'
+# cola log  0xcdf695 = '[M_Browser] %s() ModelBrowser Info'
+# fábrica exportada:
+#   ModelMediaToInstance       = libObj+0x5d8d95 (Thumb)
+#   ModelBrowserToInstance     = libObj+0x47fa79 (Thumb)
+#   ModelIndexPbToInstance     = libObj+0x598931 (Thumb)
+#   ModelContShotsPbToInstance = libObj+0x4fd115 (Thumb)
+
+## fábrica libObj+0x47fa78 (new(0x134) + ctor):
+0047fa78  b0b5       push     {r4, r5, r7, lr}
+0047fa7a  4ff49a70   mov.w    r0, #0x134
+0047fa7e  00af       add      r7, sp, #0
+0047fa80  0d46       mov      r5, r1
+0047fa82  5cf43eeb   blx      #0xdc100
+0047fa86  0446       mov      r4, r0
+0047fa88  fff7deff   bl       #0x47fa48
+0047fa8c  2562       str      r5, [r4, #0x20]
+0047fa8e  2046       mov      r0, r4
+0047fa90  b0bd       pop      {r4, r5, r7, pc}
+
+## constructor libObj+0x47fa48 (ModelBase + vtables propias):
+0047fa48  b0b5       push     {r4, r5, r7, lr}
+0047fa4a  00af       add      r7, sp, #0
+0047fa4c  084d       ldr      r5, [pc, #0x20]
+0047fa4e  0446       mov      r4, r0
+0047fa50  b2f454fd   bl       #0x1324fc
+0047fa54  074b       ldr      r3, [pc, #0x1c]
+0047fa56  7d44       add      r5, pc
+0047fa58  04f1e800   add.w    r0, r4, #0xe8
+0047fa5c  eb58       ldr      r3, [r5, r3]
+0047fa5e  03f10802   add.w    r2, r3, #8
+0047fa62  5c33       adds     r3, #0x5c
+0047fa64  2260       str      r2, [r4]
+0047fa66  6362       str      r3, [r4, #0x24]
+0047fa68  a1f765ff   bl       #0x421936
+0047fa6c  2046       mov      r0, r4
+0047fa6e  b0bd       pop      {r4, r5, r7, pc}
+
+## campos que imprime [M_Browser] ActionTestCmdDebugPrint (libObj+0x4802b8):
+    CurrentState                       : %d
+    StatusView                         : %d
+    MedType                            : %d
+    GrpCond                            : %d
+    SortType                           : %d
+    LumpContShots                      : %d
+    HighlightEdited                    : %d
+    FlatRequest                        : %d
+    3DContents                         : %d
+    CreateCond :GrpCond                : %d
+    CreateCond :SortType               : %d
+    CreateCond :LumpContShots          : %d
+    CreateCond :HighlightEdited        : %d
+    CreateCond :FlatRequest            : %d
+    CreateCond :3DContents             : %d
+    CreateCond :ResolutionFiltering    : %d
+    CreateCond :FramerateFiltering     : %d
+    StsContentInfoReady                : %d
+    StsContentInfoResult               : %d
+    RefCntContentInfo                  : %d
+    ContentPos_MedType                 : %d
+    IsNeedOpeGetContentExist           : %d
+    RefCntContentExist                 : %d
+    ContentsExist                      : %d
+    MaxHandleCacheCount            : %d
+    MaxHandleAtrbCacheCount        : %d
+    MaxItemAtrbCacheCount          : %d
+    CreateCond : GrpCond                : %d
+    CreateCond : SortType               : %d
+    CreateCond : LumpContShots          : %d
+    CreateCond : HighlightEdited        : %d
+    CreateCond : FlatRequest            : %d
+    CreateCond : 3DContents             : %d
+    CreateCond : ResolutionFiltering    : %d
+    CreateCond : FramerateFiltering     : %d
+    FilterCond : StartTime         : %04d/%02d/%02d
+    FilterCond : EndTime           : %04d/%02d/%02d
+    ContShotsCond : ContShotsType  : %d
+
+## símbolos de la PLT que usan las funciones de ModelBrowser (0x47f600..0x482600):

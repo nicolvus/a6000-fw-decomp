@@ -1,0 +1,32 @@
+Arranques de esta sesión (G22-PBMODEL, 26-11-2026) y por qué no sirven para medir la rejilla
+=============================================================================================
+Receta usada (la que el usuario da como 6/6 ese día), perfil nuevo y puerto 8697:
+
+  cd /home/nicolas/hv/harness && rm -rf live/<perfil>
+  SD_MEDIA=1 SD_MEDIA_CAB=0 SHIMEXTRA='PLAYVIEW=1 INSHORT=1 GMILOG=1 WAITLOG=3000 WLALL=1' \
+    LIVE_ARRANQUE_MAX=<200|240> LIVE_REINTENTOS=4 \
+    /home/nicolas/a6000-arnes/.venv/bin/python /home/nicolas/h-pbmodel/scripts/gui/harness/live.py \
+    /home/nicolas/hv/harness --perfil-dir <perfil> --puerto 8697 --config /tmp/final/cfg.json
+
+pbmodel1  (SHIMEXTRA + SDIO=20000 TRACELIB=libmpr.so TRACEFN2=7203c0,13e474)
+  arranque 1/4 fallido a los 201 s (2 listas): se repite
+  /estado tras restaurar: {"fotogramas": 1, "listas": 0, "opacos": 0.0046}   <- firma G22-CUELGUE
+  trazas armadas: 0 disparos;  getModelInfo(@M010…): 0 llamadas (el invitado no llegó a la OSD)
+
+pbmodel2  (SHIMEXTRA sin SDIO y sin trampas; solo TRACELIB=libmpr.so para poder armarlas en caliente)
+  arranque 1/4 fallido a los 201 s (2 listas): se repite
+  /estado: {"fotogramas": 1, "listas": 0, "opacos": 0.0046}
+  arranque en frío posterior: 66 s «esperando la primera pantalla» → vuelve a fallar
+  /estado tras restaurar: {"fotogramas": 1, "listas": 0, "opacos": 0.0046}
+
+Contención medida mientras corrían esos arranques (misma máquina, otros agentes):
+
+  $ pgrep -c qemu-system-arm     -> 2
+  $ ps -eo etime,cmd | grep qemu-system | sed -E 's/.*live\/([a-z0-9]+)\/.*/\1/'
+    estadic
+    nav1
+  $ uptime                       -> load average: 14,70 9,95 7,68   (además: pytest de otro agente al 94 % de CPU)
+
+Conclusión operativa (ya la avisaba el usuario y coincide con G22-CUELGUE): con dos invitados a la vez el
+arranque se queda en «2 listas» y no hay OSD; no se puede medir ni la tecla ni la rejilla. Los tres arranques
+de esta tanda son de esta clase y no se usan como medida de nada.

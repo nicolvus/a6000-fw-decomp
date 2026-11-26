@@ -1,0 +1,52 @@
+# libObj.so 3.21 — IdGenerator::Get(const char*) = libObj+0x12d670: el nombre @Mxxx ES el id
+# (VA == desplazamiento de fichero en el 1.er PT_LOAD de estos ELF)
+0012d670  b0b5       push     {r4, r5, r7, lr}
+0012d672  a4b0       sub      sp, #0x90
+0012d674  0546       mov      r5, r0
+0012d676  00af       add      r7, sp, #0
+0012d678  0378       ldrb     r3, [r0]
+0012d67a  402b       cmp      r3, #0x40
+0012d67c  47d0       beq      #0x12d70e
+0012d67e  fff71dfc   bl       #0x12cebc
+0012d682  2946       mov      r1, r5
+0012d684  07f18c02   add.w    r2, r7, #0x8c
+0012d688  0446       mov      r4, r0
+0012d68a  07f18000   add.w    r0, r7, #0x80
+
+0012d70c  1ee0       b        #0x12d74c
+0012d70e  1b49       ldr      r1, [pc, #0x6c]
+0012d710  0522       movs     r2, #5
+0012d712  7944       add      r1, pc
+0012d714  b2f750ea   blx      #0xdfbb8
+0012d718  b0b1       cbz      r0, #0x12d748
+0012d71a  ac78       ldrb     r4, [r5, #2]
+0012d71c  402c       cmp      r4, #0x40
+0012d71e  01d9       bls      #0x12d724
+0012d720  373c       subs     r4, #0x37
+0012d722  00e0       b        #0x12d726
+0012d724  303c       subs     r4, #0x30
+0012d726  eb78       ldrb     r3, [r5, #3]
+0012d728  2402       lsls     r4, r4, #8
+0012d72a  402b       cmp      r3, #0x40
+0012d72c  01d9       bls      #0x12d732
+0012d72e  373b       subs     r3, #0x37
+0012d730  00e0       b        #0x12d734
+0012d732  303b       subs     r3, #0x30
+0012d734  1a01       lsls     r2, r3, #4
+0012d736  2b79       ldrb     r3, [r5, #4]
+0012d738  402b       cmp      r3, #0x40
+0012d73a  01d9       bls      #0x12d740
+0012d73c  373b       subs     r3, #0x37
+0012d73e  00e0       b        #0x12d742
+0012d740  303b       subs     r3, #0x30
+0012d742  1419       adds     r4, r2, r4
+0012d744  e418       adds     r4, r4, r3
+0012d746  01e0       b        #0x12d74c
+0012d748  6ff00104   mvn      r4, #1
+0012d74c  2046       mov      r0, r4
+
+# literal comparado (5 B) en 0xbcf1e1 = @MFFE
+# regla: name[0]=='@' (cmp r3,#0x40) → memcmp/ncmp con "@MFFE" 5 B; si no coincide,
+#        id = (d2<<8 | d3<<4) + d4 con d=(c-0x30) dígito / (c-0x37) letra  ⇒ "@M010"=0x10, "@M00A"=0x0A
+# verificado con la orden "M <nombre>" del shim (docs/gui/g22-playview-tecla-abre-reproduccion.md §8):
+#   M model/INDEX_PB -> id 0x15 · M @M010 -> id 0x10 · M model/CONT_SHOTS_PB -> id 0x2f
