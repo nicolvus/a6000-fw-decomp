@@ -1,0 +1,24 @@
+# Conversión en lote de los clips (27-11-2026)
+
+## Conversión de dos clips reales (uno a 29,97 y otro ya a 25)
+clip                 tamaño  fps antes fps después  cajas  estado
+MAH04198.MP4       14545696 30000/1001        25/1      13  ok
+MAH04200.MP4       14545696       25/1        25/1      13  ok
+
+2/2 correctos; salida en /tmp/clips-out
+EXIT=0
+
+## Ensayo en seco
+clip                 tamaño  fps antes fps después  cajas  estado
+MAH04198.MP4       14545696 30000/1001   (dry-run)      13  listo
+MAH04200.MP4       14545696       25/1   (dry-run)      13  listo
+
+2/2 correctos; salida en /tmp/clips-out2
+EXIT=0
+
+## Control negativo: MP4 sin las cajas de Sony
+clip                 tamaño  fps antes fps después  cajas  estado
+OTRO.MP4               8448       30/1           -  faltan ['MSNV', 'uuid', 'PROF', 'USMT', 'MTDT']  NO TOCADO
+
+0/1 correctos; salida en /tmp/clips-out3
+EXIT=1

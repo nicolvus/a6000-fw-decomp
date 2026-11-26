@@ -65,6 +65,16 @@ verifica. Sobre `MAH04198.MP4`:
 | fps calculado | **25,000000** frente a 29,970030 |
 | duración | 11,40 s (20 % más lento; los 285 cuadros se mantienen) |
 
+Para los siete clips hay un comando único que convierte y **verifica cada fichero** (mismas cajas,
+mismo tamaño, cadencia leída):
+
+```bash
+python3 scripts/filmpb1_convertir_clips.py /ruta/tarjeta/MP_ROOT/103ANV01 /ruta/salida --fps 25
+```
+
+Solo procesa ficheros que tengan las cinco cajas de Sony; si a uno le falta alguna, lo deja intacto y
+lo marca `NO TOCADO` ([transcripción](evidence/film-pb-1-v1-remux-20261127/lote-conversion.txt)).
+
 ## 4. Lo que falta, y es un minuto
 
 Copiar `prueba-MAH04198-25p.mp4` (generado en `~/Documents/a6000/`) a la tarjeta como
