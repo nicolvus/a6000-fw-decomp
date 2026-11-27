@@ -1,0 +1,230 @@
+================================================================================================
+S4 · DEPENDENCIAS DE AV-CAM: 0x43561594, 0x43560aa4 y 0x435609b0
+Pregunta 4 del hilo «warm/suspend de liro». Sólo análisis estático, 100% offline.
+Fecha: 26-11-2026. Autor: agente S4 (rama g22/s4-avcam-dependencias).
+================================================================================================
+
+0. MÉTODO, ARTEFACTOS Y HASHES
+------------------------------------------------------------------------------------------------
+Artefactos (los binarios de fábrica del repo, no la cámara):
+  · av-cam.bin  firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/
+                nflasha3_unpacked_unpacked/av-cam.bin
+                md5 ef2e3003ddad7185b5398cb76287c5aa · sha256 b60c845ccb90c0ff86b7f62f1f3f2ecda714aa20c3780599…
+                base VA 0x43541000, 11 427 236 B (0xAE54A4) ⇒ ventana 0x43541000–0x440264A3
+  · liro.ko     firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/
+                nflasha15_unpacked_unpacked/kmod/liro.ko
+                sha256 7b10868067752913541c83e998783f51b51f13d7e1ca677d98fb3db7027ab2d4
+                ELF32 relocatable, NO stripped ⇒ .symtab y .rel.* utilizables.
+
+Método y herramientas (por este orden, como manda AGENTS.md):
+  1) MCP REA (Ghidra 12.1.4) sobre el binario ya abierto: demonio de sistema
+     `rea-avcam.service` (PID 115036), socket analysis/rea-independent/out/av-cam.sock, cliente
+     analysis/rea-independent/bin/q.py. Llamadas usadas: resolve_containing_procedure,
+     procedure_info, procedure_pseudo_code, get_call_graph(direction=forward), xrefs.
+     REA respondió en todos los casos (0,01–0,08 s): NO hubo consulta vacía ni caída de sesión.
+  2) Verificación de bytes con capstone 5.0.7 (.venv) desensamblando los cuerpos completos y
+     resolviendo a mano los literales PC-relativos (Thumb) y sus destinos.
+  3) Para las llamadas indirectas (slots), resolución de la tabla de servicios de liro.ko por sus
+     RELOCALIZACIONES: .rel.init.data (176 R_ARM_ABS32 sobre 209 huecos de 4 B = 0x344 B) y
+     .rel.text (R_ARM_CALL). Es la pieza que faltaba en S3.
+  4) Contraste independiente con el doc del propio repo: scripts/gui/avcam/liro_vm.py:6-10
+     («memcpy(descriptor+0x24, tabla, 0x344): 209 punteros (μITRON 4 + OSAL + Backup + arch_*)»).
+
+Convención de estado: [VERIFICADO] = bytes/instrucciones o relocalizaciones leídas;
+[INFERENCIA] = deducción encadenada; [NO VERIFICADO] = no se pudo cerrar offline.
+
+Regla clave que resuelve el resto del informe (y corrige el «blx a 0» que S3 dejó como INFERENCIA):
+  el módulo NO tiene una tabla de punteros propia: el campo +0x14 de su descriptor
+  (*(0x43541014) = 0x435410B4) es el destino donde liro.ko copia su vector de servicios de 0x344 B
+  en descriptor+0x24 ⇒ base del vector = 0x435410B4 + 0x24 = 0x435410D8.
+  Por tanto, un stub que hace `ldr r3,[r3,#S]` sobre 0x435410B4 llama al servicio
+  índice (S − 0x24)/4 de la tabla .init.data de liro.ko.
+  [VERIFICADO en tres piezas independientes:
+   (i) liro.ko .text+0x1B8 y .text+0x4A8 y .text+0x65C:
+       `ldr r3,[r4,#0x2c]` (r4 = ctx, +0x2c = puntero al módulo) / `mov r2,#0x344` /
+       `ldr r0|r1,[r3,#0x14]` / `add r0|r1,r1,#0x24` / `bl memcpy|memset` ⇒ copia/borrado de 0x344 B
+       exactamente en *(mod+0x14)+0x24;
+   (ii) liro.ko .init.data: 176 relocaciones R_ARM_ABS32 = 209 huecos × 4 B = 0x344 B, orden
+        CRE_TSK, cre_tsk, acre_tsk, … Backup_*, dmm_direct_call, … malloc_reset, cache_*, dmac_*;
+   (iii) la aritmética encaja con los usos reales (abajo: 0x24→CRE_TSK, 0x48→ter_tsk, 0x30→del_tsk,
+        0x2F8→malloc_reset), cosa que NO ocurre sin el desplazamiento.]
+
+
+1. 0x43561594 — llamada a `malloc_reset()` de liro  [VERIFICADO]
+------------------------------------------------------------------------------------------------
+Cuerpo REA: FUN_43561594, 0x43561594–0x435615A7, 20 B, 1 bloque básico, sin llamadas resueltas.
+Bytes: 08b5 044b 044a 7b44 9b58 5b69 d3f8f832 9847 08bd
+Desensamblado (Thumb) y resolución de literales:
+  43561596  ldr   r3,[pc,#0x10]   ; lit @0x435615A8 = 0x00ABD946
+  43561598  ldr   r2,[pc,#0x10]   ; lit @0x435615AC = 0x000016DC
+  4356159A  add   r3,pc          ; r3 = 0x4356159E + 0xABD946 = 0x4401EEE4
+  4356159C  ldr   r3,[r3,r2]      ; r3 = *(0x440205C0) = 0x43541000  (= base del blob)
+  4356159E  ldr   r3,[r3,#0x14]   ; r3 = *(0x43541014) = 0x435410B4  (= descriptor)
+  435615A0  ldr.w r3,[r3,#0x2f8]  ; r3 = *(0x435413AC)                (= slot 0x2F8)
+  435615A4  blx   r3
+  435615A6  pop   {r3,pc}
+El mismo patrón (misma ranura GOT 0x440205C0, mismo +0x16DC) aparece en 102 sitios de la región
+LIRO; un escaneo estricto del prefijo 08b5 044b 044a 7b44 9b58 5b69 encuentra 86 stubs con slots
+entre 0x80 y 0x318 (slot 0x2F8 usado UNA sola vez, aquí). [VERIFICADO por bytes]
+
+Identidad del destino: slot 0x2F8 ⇒ índice (0x2F8−0x24)/4 = 181 de la tabla de liro.ko
+⇒ .rel.init.data offset 0x2D4 → `malloc_reset` (liro.ko .text 0x7FD0, 60 B). [VERIFICADO por
+relocalización + desplazamiento]
+Cuerpo de malloc_reset (liro .text 0x7FD0–0x800B, ARM): recorre la lista de bloques libres del buddy
+(`ldr r3,[pc,#0x24]`; `ldr r2,[r3,#4]`; `cmp r2,r3`; si no vacía: `ldr r0,[r3]` + `add r0,r0,#8`
++ `bl buddy_free_entity`) y reitera hasta que la lista queda vacía. Sin Vspin_lock, sin enable/disable
+IRQ, sin hrtimer, sin acceso a hardware, sin sleep. [VERIFICADO por instrucciones]
+
+Respuestas a la pregunta 4 para esta función:
+  · Qué hace: llama al servicio «reset del heap LIRO» (libera de golpe todo lo asignado).
+  · A quién llama: a un único puntero de la tabla de servicios de liro (malloc_reset).
+  · Esperas/bucles: NO tiene bucle propio (1 bloque básico). El bucle interno de malloc_reset es de
+    lista enlazada con cota acotada por el número de entidades libres; no hay temporizador ni
+    contador de tiempo. [VERIFICADO]
+  · Otro hilo / otro procesador: no espera a nadie; corre en el mismo hilo del llamador.
+  · MMIO del core AV: ninguna.
+  · Semáforos/mutex del RTOS: ninguno (malloc_reset no toma Vspin_lock).
+  · ¿Puede bloquearse con Linux a medio suspender? Por sí misma no: no espera IRQ, ni dispositivo, ni
+    cerrojo. Sólo depende de que *(0x440205C0) y *(0x43541014) sigan válidos (lo están: son estáticos
+    del blob y liro sólo escribe en descriptor+0x24). Riesgo REAL distinto: al resetear el heap deja
+    colgando cualquier asignación previa; si algo posterior volviera a usar esos bloques sería UAF,
+    pero el callback reconstruye el mundo justo después (§3).
+
+
+2. 0x43560aa4 — desmontaje completo del mundo RTOS  [VERIFICADO]
+------------------------------------------------------------------------------------------------
+Cuerpo REA: FUN_43560aa4, 0x43560AA4–0x43560B3F, 156 B, devuelve 0.
+Pseudo-código REA + desensamblado: 7 barridos de tablas estáticas, cada uno con un servicio:
+
+  tabla base   stride  nº   servicio llamado (slot → índice (.init.data) = nombre)
+  0x43FD1448   0x9C    114  +0x48 → idx 9  = ter_tsk   y  +0x30 → idx 3 = del_tsk   (tareas)
+  0x43FD717C   0x24     35  +0x7C → idx 22 = del_sem                               (semáforos)
+  0x43FD7770   0x20     30  +0x98 → idx 29 = del_flg                               (event flags)
+  0x43FD5EA4   0x48     67  +0xD4 → idx 44 = del_mbf                               (buzones)
+  0x43FD7668   +0, +0x84 2  +0x10C → idx 58 = del_mpl                              (memory pools)
+  0x43FD1400   —         1  +0x12C → idx 66 = del_cyc                              (handler cíclico)
+  0x43FD5924   0x10     88  +0x17C → idx 86 = def_inh                              (manejadores IRQ)
+
+Bases resueltas por literales PC-relativos (0x43560AAC/ACE/AE4/AF8/B0C/B20/B2C → 0x43FD1448,
+0x43FD717C, 0x43FD7770, 0x43FD5EA4, 0x43FD7668, 0x43FD1400, 0x43FD5924). Las entradas de las tablas
+llevan el ID del objeto en +0 (1, 8, 3, 9… / 0x28,0x29,0x2A…): no son punteros, son IDs.
+[VERIFICADO por bytes + tabla]
+Nota de fidelidad: el desmontaje recorre 114 entradas de 0x9C (0x4578) y el montaje §3 sólo 113
+(cmp r4,#0x71); diferencia de 1 → la última entrada nunca se recrea. Es un dato, no lo interpreto.
+
+Respuestas:
+  · Qué hace: da de baja, en orden, todas las tareas (terminar + borrar), semáforos, flags, buzones,
+    pools, un cíclico y 88 manejadores de interrupción.
+  · A quién llama: 8 servicios distintos de liro (los de la tabla).
+  · Esperas/bucles: 7 bucles de contador FIJO (114/35/30/67/2/1/88), sin temporizador ni sondeo de
+    estado; el retorno es inmediato si los servicios no bloquean. [VERIFICADO]
+  · Otro hilo: sí, indirectamente y de forma importante — ter_tsk/del_tsk de liro.ko corren sobre el
+    planificador de Linux: en .rel.text, ter_tsk (0x2A2C..0x2BD4) llama a os_lock, os_this_task,
+    os_prepare_schedule, wake_up_process, os_unlock y schedule; del_tsk (0x26FC..0x2830) hace lo mismo
+    y además __free_res. tslp_tsk/twai_sem usan hwtimer_schedule_timeout. [VERIFICADO por
+    relocalizaciones]
+  · MMIO del core AV: ninguna en el cuerpo; los manejadores que se dan de baja (def_inh×88) sí son de
+    hardware, pero aquí sólo se desregistran.
+  · Semáforos/mutex del RTOS: no toma ninguno; los BORRA (del_sem/del_flg).
+  · ¿Puede bloquearse con Linux a medio suspender? El cuerpo no; los servicios sí pueden: del_tsk y
+    ter_tsk hacen schedule() y no llevan timeout, así que si una de las 114 tareas está esperando algo
+    que ya no puede ocurrir (IRQ deshabilitada o dispositivo ya suspendido) la fase de borrado se
+    queda dentro de schedule() sin retorno. Ese es el punto exacto donde encaja el corte del log
+    (última línea = entry_suspend y ninguna marca posterior). [INFERENCIA; el detalle de del_tsk/ter_tsk
+    más allá de sus llamadas queda NO VERIFICADO]
+
+
+3. 0x435609b0 — reconstrucción del mundo RTOS  [VERIFICADO]
+------------------------------------------------------------------------------------------------
+Cuerpo REA: FUN_435609b0, 0x435609B0–0x43560A53, 164 B, devuelve 0.
+Barridos (espejo de §2; bases 0x43FD1448, 0x43FD717C, 0x43FD7770, 0x43FD5EA4, 0x43FD7668):
+  113 × +0x24 → idx 0  = CRE_TSK   (crear tarea con ID y descriptor)
+   35 × +0x70 → idx 19 = CRE_SEM
+   30 × +0x8C → idx 26 = CRE_FLG
+   67 × +0xC8 → idx 41 = CRE_MBF
+    2 × +0x100→ idx 55 = CRE_MPL
+[VERIFICADO por bytes; el pseudo-código de REA coincide]
+
+Respuestas:
+  · Qué hace: vuelve a crear todas las tareas y objetos RTOS con los mismos IDs/descriptores.
+  · A quién llama: CRE_TSK/CRE_SEM/CRE_FLG/CRE_MBF/CRE_MPL (liro.ko cre_tsk, cre_sem, cre_flg,
+    cre_mbf, cre_mpl; todos con os_lock/os_unlock y kmalloc, sin esperas de hardware).
+  · Esperas/bucles: 5 bucles de contador fijo (113/35/30/67/2). Sin temporizador. [VERIFICADO]
+  · Otro hilo: crea hilos (kthreads) pero no los espera.
+  · MMIO: ninguna. Semáforos: los crea, no los toma.
+  · ¿Bloqueo con Linux suspendido? El cuerpo no. Riesgo indirecto: crear tareas que luego esperan IRQ
+    ya deshabilitadas sólo se notaría después (al reanudar), no aquí. [INFERENCIA]
+
+
+4. LOS TRES DENTRO DEL CALLBACK REAL (contexto que fija las dependencias)
+------------------------------------------------------------------------------------------------
+liro.ko llama al handler del blob de forma SÍNCRONA en el propio hilo que suspende:
+  liro_suspend (.text 0x348–0x50B): `ldr r3,[ctx,#0x2c]` (módulo) → `ldr r1,[r3,#0x18]` (entrada
+  0x43541068) → printk "[LIRO]: entry_suspend:%p(%d)" (.rodata.str1.1+0x19E, ref. en .text+0x4E8) →
+  `ldr r3,[r6,#0x18]` → `blx r3` (.text+0x3B8) → `ldr r3,[r6,#0x14]` + `add r3,r3,#0x24`
+  (.text+0x4A8) + `mov r2,#0x344` ⇒ borrado/copia del vector. Sin hrtimer, sin timeout, sin kthread
+  para el suspend. [VERIFICADO por instrucciones]
+El callback 0x435608C0 (92 B, Thumb; ARM 0x43541068 → `blx`) hace, en este orden:
+   FUN_435605A8(3,0xED) → 0x43560AA4 (§2) → 0x43561594 (§1) → FUN_435605A8(0xB,0x150) →
+   memset(0x43D63000,0,0x244D5A) → memcpy(0x43FA8F00,0x44026E00,0x75FE4) → FUN_435605A8(0x1B,0x163)
+   → 0x435609B0 (§3) → FUN_435605A8(0x13,0xFC)
+[VERIFICADO; los memset/memcpy están desarrollados en S5, aquí sólo se citan]
+Pista falsa descartada: los `FUN_435605A8(x,y)` NO son un printk de códigos: son un ENVÍO DE MENSAJE
+que primero reserva con `osal_valloc_msg_wait` (+0x1F0 → idx 115), rellena el paquete y lo entrega con
+`osal_snd_msg` (+0x1D4 → idx 108), con caminos de error por `osal_snd_sync_msg` (+0x1D8 → idx 109) /
+`osal_snd_sync_direct` (+0x1DC → idx 110) y `osal_free_msg` (+0x1F4 → idx 116). Como el nombre dice
+«wait», la reserva puede esperar si no hay buffers: es la ÚNICA espera potencial dentro del callback y
+está en el camino de traza, no en las tres funciones preguntadas. [VERIFICADO el código y las ranuras;
+INFERENCIA el comportamiento bloqueante de osal_valloc_msg_wait, símbolo UND de liro.ko implementado
+en otro módulo del kernel, no presente en este repo]
+
+
+5. RESPUESTA DIRECTA A (a), (b) y (c)
+------------------------------------------------------------------------------------------------
+(a) ¿Alguna espera una respuesta que llega por interrupción?
+    NO en sus cuerpos: ninguna de las tres tiene bucle de sondeo, `wfe/wfi/sev`, temporizador ni
+    recepción de semáforo/buzón. [VERIFICADO]
+    Indirectamente SÍ es posible, y por dos vías concretas: (1) ter_tsk/del_tsk de liro.ko terminan en
+    schedule() sin timeout (V, §2) y la tabla T7 desregistra 88 manejadores de IRQ (V); (2) la traza
+    del callback reserva mensaje con osal_valloc_msg_wait (V el código, I el bloqueo).
+    El motor real del callback son 114 tareas + 88 IRQs: si alguna tarea esperaba una IRQ que ya no
+    puede llegar, el punto de no retorno está en §2 y encaja con que el log muera justo en
+    entry_suspend.
+
+(b) ¿Alguna escribe en una dirección que podría no estar mapeada en ese estado?
+    Las tres escriben sólo RAM del propio blob, y siempre a direcciones estáticas leídas del GOT:
+      dst1 = *(0x4401EEE4+0x1C5C) = 0x43D63000 , len1 = 0x43FA7D5A−0x43D63000 = 0x244D5A   (memset 0)
+      dst2 = *(0x4401EEE4+0x7C70) = 0x43FA8F00 , src = 0x44026E00 (BSS más allá del fin de fichero,
+            0x440264A4), len2 = 0x4401EEE4−0x43FA8F00 = 0x75FE4                              (memcpy)
+    Todas dentro de la ventana del blob; ninguna en rango MMIO. [VERIFICADO que los valores salen del
+    fichero; la cobertura de .bss por el mapeo de liro: INFERENCIA]
+    El único «salto» no literal de la cadena es el puntero del slot 0x2F8: si fuera 0, `blx r3` saltaría
+    a 0. Con el desplazamiento +0x24 NO lo es: el vector que liro copia ocupa 209 huecos y el slot 0x2F8
+    cae en el índice 181 = malloc_reset. [VERIFICADO] Esto corrige el «blx a una página de ceros» que
+    S3 proponía como INFERENCIA: la ranura se ve a cero en el fichero porque es BSS, no porque falte
+    el servicio.
+
+(c) ¿Hay un watchdog propio de av-cam que pueda resetear si no se le da de comer?
+    NO hay rastro: 0 cadenas «wdt/WDT/watchdog» en av-cam.bin (11,4 MB) y 0 en liro.ko. [VERIFICADO]
+    En la región del módulo LIRO (0x43541000–0x43570000, 72 320 instrucciones decodificadas con
+    skipdata) no aparece NINGÚN literal ≥ 0x50000000, es decir ninguna constante de MMIO: el blob no
+    puede tocar un registro de watchdog por su cuenta; sólo ve hardware a través de la tabla de
+    servicios, y malloc_reset (único servicio del camino §1) no toca hardware. [VERIFICADO por barrido
+    de literales; el barrido lineal tiene el ruido propio de mezclar datos con código]
+    Tampoco hay watchdog de tiempo en el camino de suspensión: liro_suspend llama a entry_suspend con
+    `blx` directo, sin hrtimer ni timeout (arriba, §4). [VERIFICADO]
+    LÍMITE: los árboles OSS disponibles (analysis/session18/main/.../linux/drivers = media, mmc, mtd,
+    video; codex-g = dma, media, misc, staging, video) NO traen drivers/watchdog ⇒ no se puede
+    descartar un WDT del SoC alimentado por Linux o por el cargador. [NO VERIFICADO]
+
+
+6. LÍMITES DE ESTA EVIDENCIA
+------------------------------------------------------------------------------------------------
+· Todo es estático. No hay ejecución, ni cámara, ni repetición de `warm`.
+· La identidad de los servicios se apoya en las relocalizaciones de .init.data de liro.ko y en el
+  desplazamiento +0x24, ambos verificados en instrucciones; los símbolos UND (osal_*, Backup_*,
+  dmm_direct_call… los pone el kernel) no están en el repo: su semántica es la que declara el nombre.
+· No se ha cambiado de conclusiones físicas: el corte del log en `entry_suspend:43541068(1)` sigue sin
+  causa medida; aquí sólo se acota QUÉ código había detrás y dónde puede quedarse sin retorno (§2).
+· /tmp/a6000-warm-sin-sd/ no existe: la limitación se registra, no se suple.
+================================================================================================
