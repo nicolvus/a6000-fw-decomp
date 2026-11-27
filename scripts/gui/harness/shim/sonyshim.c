@@ -1105,8 +1105,18 @@ static void startev(const char *spec) {
 }
 static void *openviewer(void *a) {
     (void)a; espera_calma((unsigned)num(getenv("OPENVIEWAT") ? getenv("OPENVIEWAT") : "40"), "CALMA0");
-    int (*ov)(const char *, int) = lobj_h ? dlsym(lobj_h, "_ZN13viewManagerIf8openViewEPKci") : 0;
-    if (!ov) { efp("[shim] OPENVIEW: sin viewManagerIf::openView\n"); return 0; }
+    int (*ov)(const char *, int) = 0; void **pv = 0;
+    for (int k = 0; k < 3000; k++) {
+        void *h = __atomic_load_n(&lobj_h, __ATOMIC_ACQUIRE);
+        if (h) {
+            ov = dlsym(h, "_ZN13viewManagerIf8openViewEPKci"); pv = dlsym(h, "pViewManager");
+            if (ov && pv && *pv && *(void **)((char *)*pv + 0x18) &&
+                (!(getenv("STARTEV") || getenv("POSTROOTEV")) || (dlsym(RTLD_DEFAULT, "_ZN5EventC1Emhh") &&
+                 dlsym(RTLD_DEFAULT, "_ZN12ModelManager9pushEventEP5Event")))) break;
+        }
+        ov = 0; usleep(100000);
+    }
+    if (!ov) { efp("[shim] OPENVIEW: gestor o eventos no disponibles\n"); return 0; }
     if (getenv("PREACQ") && lobj_h) {  /* PREACQ=modelo: pide un «execute» al modelo antes de abrir vistas (¿fuerza su creación?) */
         int (*rq)(const char *, unsigned long, void *) = dlsym(lobj_h, "_ZN13viewManagerIf19requestModelExecuteEPKcmP9ParamList");
         void (*ctor)(void *) = dlsym(RTLD_DEFAULT, "_ZN9ParamListC1Ev"); static char lb[512];
@@ -1117,7 +1127,6 @@ static void *openviewer(void *a) {
     }
     if (getenv("PRECREATE") && lobj_h) model_create(getenv("PRECREATE"));
     if (getenv("STARTEV") && lobj_h) startev(getenv("STARTEV"));
-    { void **pv = dlsym(lobj_h, "pViewManager"); for (int k = 0; pv && !*pv && k < 600; k++) usleep(100000); }  /* openView con ViewManager aún NULL = SIGSEGV (arranque lento) */
     char *spec = strdup(getenv("OPENVIEW")), *sv = 0;
     for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) { efp("[shim] OPENVIEW %s ...\n", it); int r = ov(it, !strcmp(it, "view/STLREC") && getenv("OPENVIEWARG") ? (int)hexv(getenv("OPENVIEWARG"), 0) : 0); efp("[shim] OPENVIEW %s -> %d\n", it, r); if (getenv("POSTROOTEV") && !strcmp(it, "view/ROOT")) { espera_calma(8, "CALMA"); startev(getenv("POSTROOTEV")); }  /* POSTROOTEV: tras abrir view/ROOT (su @T100 termina antes) la vista raíz pide @T0E3 (viewUnified2+0x16c58c) */ espera_calma(getenv("OPENVIEWGAP") ? (unsigned)hexv(getenv("OPENVIEWGAP"), 0) : 2, "CALMA"); }
     return 0;
@@ -1556,7 +1565,7 @@ void *dlopen(const char *f, int fl) {
     if (f && strstr(f, "viewUnified")) gpu_live = 1;
     LOG("dlopen(%s) ...", f ? f : "(null)");
     void *h = d(f, fl); LOG("dlopen(%s) -> %p%s%s", f ? f : "(null)", h, h ? "" : " ERR=", h ? "" : dlerror());
-    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lrm_arranque(); lobj_h = h; mwf_nullsafe(); evqnotify(); destkey(); destkeyv(); oyd_arm(); playview_arm(); }
+    if (h && f && strstr(f, "libObj.so")) { gpu_patch(); efcs_patch(); lrm_arranque(); __atomic_store_n(&lobj_h, h, __ATOMIC_RELEASE); mwf_nullsafe(); evqnotify(); destkey(); destkeyv(); oyd_arm(); playview_arm(); }
     if (h && f && strstr(f, "viewUnified")) destkeyv();  /* DESTKEYV: viewUnified2 entra por dlopen DESPUÉS de libObj; el parche de sus dos literales se hace aquí (idempotente) */
     if (h && f && getenv("TRACELIB") && (strstr(f, getenv("TRACELIB")) || strstr(f, "viewUnified")) && !trc_lib_done) {  /* la biblioteca puede entrar como dependencia de viewUnified*: se busca en /proc/self/maps tras cada dlopen hasta hallarla */
         char ln[256]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");

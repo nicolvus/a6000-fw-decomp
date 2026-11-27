@@ -1,5 +1,9 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## G22 — sincronización del arranque de la vista (27-11-2026)
+
+El hilo de apertura espera el gestor, el gestor de modelos y los símbolos de eventos: dos arranques fríos llegaron a la vista de disparo, uno con opacidad 0,0823. La reproducción abre la capa `0x17` pero queda negra: `model/MEDIA` = 1, `@M010` = 0 incluso tras precrearlo y `model/INDEX_PB` = 1. Próximo paso: identificar por qué no se inicializa `ModelBrowser` y su cadena de contenidos; completar además 3/3 arranques con OSD. [Informe](../reports/g22-arranque-espera-gestor-20261127.md).
+
 ## G22-PBMEDIA — colisión de la tarjeta de prueba (27-11-2026)
 
 `SD_MEDIA=1` ya aplica la foto y el índice generados después de copiar la tarjeta anfitriona, solo en la imagen FAT. Una regresión comprueba ambas colisiones y preserva los archivos originales. Con la tarjeta actual, `SD_MEDIA_CAB=0` pasó de un índice de 512 B sobrescrito a uno generado de 128 B. En el invitado el medio llegó a 1, pero el modelo de la galería siguió en 0; el arranque sin OSD impide concluir. Esperar solo la carga de `libObj` causó SIGSEGV al abrir `view/ROOT`: experimento retirado. Próximo paso: sincronizar con el gestor y eventos inicializados (G22-PBARRANQUE-LIBOBJ), y medir G22-PBMODEL con la SD corregida. [Informe](../reports/g22-pbmedia-prioridad-indice-20261127.md).
