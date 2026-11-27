@@ -1,0 +1,260 @@
+S3 — ENTRADA DE AV-CAM: 0x43541068 (ARM) -> 0x435608c0 (Thumb)
+Fecha: 2026-11-27 00:55 UTC (100 % offline; no se ha tocado cámara, flash ni RAM)
+Binario: firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin
+         md5 ef2e3003ddad7185b5398cb76287c5aa · sha256 b60c845c…e56bb9 · 11 427 236 B (0xAE5DA4)
+         base de carga 0x43541000  =>  imagen 0x43541000..0x44026DA4, fichero<->VA lineal
+liro.ko: firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha15_unpacked_unpacked/kmod/liro.ko
+         (65 128 B; .text @fichero 0x34, len 0x8160; .rodata.str1.1 @fichero 0x90D5, len 0x76A)
+
+MÉTODO Y HERRAMIENTA
+- REA/Ghidra NO usados: no hay MCP `rea` en la sesión, no hay demonio vivo (ni `session_daemon.py` ni Ghidra en
+  `ps`; /tmp/rea3 y /tmp/rea-ghidra-IuCMaK solo contienen jsonl antiguos) y quedaban 1597 MB libres (por debajo
+  del umbral 2500 MB). Se ha usado capstone 5.0.7 (ARM + Thumb) leyendo bytes del fichero, y verificación de
+  modo por calidad de decodificación (recuento de instrucciones válidas vs `(data)`).
+- Las 2 llamadas a 0x439C5A04 / 0x439C5320 son `BLX <inm>` desde Thumb: BLX inmediato CAMBIA a estado ARM,
+  por eso se decodifican en ARM (y no en Thumb). Comprobado: ARM da `push {r0,lr}; subs r2,r2,#4; …` y
+  `and r3,r1,#0xff; orr r3,r3,r3,lsl #8 …` = memset/memcpy; Thumb da basura (`(data)`, `rev`, `stm r0!`).
+
+================================================================================================
+(1) HALLAZGO
+================================================================================================
+
+0. La tabla de vectores del módulo (fichero 0x0C..0x2C, punteros absolutos) está verificada contra el
+   volcado de arranque de la cámara real: [0x0C]=0x43541044 "entry(pre)", [0x10]=0x43541058 "entry(main)",
+   [0x18]=0x43541068 "suspend", [0x1C]=0x43541078 "resume", [0x20]=0x43541088 "exit",
+   [0x24]=0x43541098 "func1", [0x28]=0x4354109C "func2". 0x43541068 ES el vector de suspend, y su entrada
+   en el fichero (offset 0x18) lleva el mismo valor que liro guarda en dev+0x18 y que imprime.  [VERIFICADO]
+
+0-bis. Todas las llamadas "de trabajo" de esta ruta son INDIRECTAS a través de una tabla de API de
+   plataforma: ancla global en [0x440205C0] (= B+0x16DC, con B = 0x4401EEE4) -> objeto -> +0x14 tabla ->
+   +slot función -> `blx r3`. En el fichero, [0x440205C0] vale 0x43541000 (la base del propio módulo; es el
+   único 0x43541000 de toda la imagen); el campo +0x14 de esa cabecera vale 0x435410B4 y el word que hay
+   en 0x435410B4 es 0: en frío la cadena no lleva a ninguna función, la tiene que instalar el cargador/liro. Esto es lo primero que hay
+   que mirar en el arnés: si el G22 no instala ese objeto, la PRIMERA llamada del vector de suspend salta a
+   una página de ceros (`blx` a 0) y no hay retorno. [ancla y valores: VERIFICADO; instalación por liro:
+   INFERENCIA]
+
+(a) WRAPPER ARM 0x43541068 = puente ARM->Thumb puro. 16 B, 4 instrucciones, en el fichero offset 0x68:
+      43541068  e92d4ff0   push {r4-r11, lr}          ; 9 registros = 36 B
+      4354106c  fa007e13   blx  #0x435608c0           ; BLX inm, H=0 -> bit1 del destino = 0 => Thumb
+      43541070  e8bd4ff0   pop  {r4-r11, lr}
+      43541074  e12fff1e   bx   lr                    ; = retorno del vector
+    Cálculo del destino: offset = sign_extend(0x007E13<<2) = 0x1F84C; PC = 0x4354106C+8 = 0x43541074 (ya
+    alineado) => 0x43541074 + 0x1F84C = 0x435608C0 = base + 0x1F8C0.  Coincide con el offset del fichero.
+    REGISTROS QUE FIJA: NINGUNO. No toca r0-r3 (ni sp salvo el push de 36 B), así que el argumento que pasa
+    liro (r0 = 1, el "(1)" del log) llega intacto a 0x435608c0. No hay comprobación de nada.  [VERIFICADO]
+
+(b) CUERPO THUMB 0x435608C0 — 34 instrucciones (0x435608C0..0x43560918) + pool de literales
+    0x4356091C..0x43560932.
+    Orden exacto de llamadas (todas las que hay, en orden de ejecución):
+
+    #  VA emisora  instrucción         destino                          argumentos
+    -  ----------  ------------------  -------------------------------  ------------------------------
+    1  435608C8    bl  0x435605A8       emisor de marca (log binario)    r0=3, r1=0xED
+    2  435608CC    bl  0x43560AA4       caminante A (5 tablas)           (sin args)
+    3  435608D2    bl  0x43561594       stub API slot +0x2F8             (sin args)
+    4  435608DC    bl  0x435605A8       emisor de marca                  r0=0xB, r1=0x150
+    5  435608EC    blx 0x439C5A04       memset (ARM)                     r0=[B+0x1C5C], r1=0,
+                                                                        r2=[B+0xA24]-r0
+    6  435608FE    blx 0x439C5320       memcpy (ARM)                     r0=[B+0x7C70], r1=[B+0x3A28],
+                                                                        r2=[B+0x4868]-r0
+    7  43560908    bl  0x435605A8       emisor de marca                  r0=0x1B, r1=0x163
+    8  4356090C    bl  0x435609B0       caminante B (4 tablas)           (sin args)
+    9  43560918    b.w 0x435605A8       emisor de marca (tail call)      r0=0x13, r1=0xFC
+                     => el valor devuelto por el vector es el que devuelve esta última marca.
+
+    B = base de datos del módulo = 0x435608D4 (PC alineado) + 0xABE610 = 0x4401EEE4  [VERIFICADO por la
+    instrucción `add r4,pc` de 0x435608D0 y el literal de 0x4356091C].
+
+    Listado íntegro del cuerpo (bytes -> mnemónico):
+      435608C0  10B5        push {r4,lr}
+      435608C2  ED21        movs r1,#0xED
+      435608C4  0320        movs r0,#3
+      435608C6  154C        ldr  r4,[pc,#0x54]  -> [0x4356091C]=0x00ABE610   ; offset a la base de datos
+      435608C8  FFF76EFE    bl   0x435605A8                                  ; MARCA (3,0xED)
+      435608CC  00F0EAF8    bl   0x43560AA4                                  ; caminante A
+      435608D0  7C44        add  r4,pc                                  ; r4 = 0x4401EEE4 (base datos)
+      435608D2  00F05FFE    bl   0x43561594                                  ; stub API +0x2F8
+      435608D6  0B20        movs r0,#0xB
+      435608D8  4FF4A871    mov.w r1,#0x150
+      435608DC  FFF764FE    bl   0x435605A8                                  ; MARCA (0xB,0x150)
+      435608E0  0F4B        ldr  r3,[pc,#0x3C]  -> 0x00000A24
+      435608E2  0021        movs r1,#0
+      435608E4  E258        ldr  r2,[r4,r3]     ; r2 = [B+0xA24]
+      435608E6  0F4B        ldr  r3,[pc,#0x3C]  -> 0x00001C5C
+      435608E8  E058        ldr  r0,[r4,r3]     ; r0 = [B+0x1C5C]
+      435608EA  121A        subs r2,r2,r0
+      435608EC  65F08AE0    blx  0x439C5A04   ; memset([B+0x1C5C], 0, [B+0xA24]-[B+0x1C5C])
+      435608F0  0D4B        ldr  r3,[pc,#0x34]  -> 0x00007C70
+      435608F2  E058        ldr  r0,[r4,r3]     ; dst = [B+0x7C70]
+      435608F4  0D4B        ldr  r3,[pc,#0x34]  -> 0x00004868
+      435608F6  E258        ldr  r2,[r4,r3]     ; r2 = [B+0x4868]
+      435608F8  0D4B        ldr  r3,[pc,#0x34]  -> 0x00003A28
+      435608FA  121A        subs r2,r2,r0       ; n = [B+0x4868]-[B+0x7C70]
+      435608FC  E158        ldr  r1,[r4,r3]     ; src = [B+0x3A28]
+      435608FE  64F010E5    blx  0x439C5320   ; memcpy(dst,src,n)
+      43560902  1B20        movs r0,#0x1B
+      43560904  40F26311    movw r1,#0x163
+      43560908  FFF74EFE    bl   0x435605A8                                  ; MARCA (0x1B,0x163)
+      4356090C  00F050F8    bl   0x435609B0                                  ; caminante B
+      43560910  1320        movs r0,#0x13
+      43560912  FC21        movs r1,#0xFC
+      43560914  BDE81040    pop.w {r4,lr}
+      43560918  FFF746BE    b.w  0x435605A8                                  ; MARCA (0x13,0xFC)
+      pool: 0x4356091C=0x00ABE610  0x43560920=0x00000A24  0x43560924=0x00001C5C
+            0x43560928=0x00007C70  0x4356092C=0x00004868  0x43560930=0x00003A28
+    (0x43560934 ya es otra función: 0x43560934 `ldr r3,[pc,#0x38]`.)
+
+    Qué es cada llamada:
+    * 0x435605A8 (emisor de marca) — arma un registro de 12 B en un global {+0=1, +1=0, +2=r0(byte),
+      +3=0, +4=r1(word), +8=0}, pide un mensaje para el destino 0x008F013A con el stub API +0x1F0
+      (0x435605C4 -> 0x435612D0), rellena el paquete, escribe el ID de clase 0x008F013A en [pkt-4]
+      (0x4356059C: `ldr r3,=0x008F013A; str r3,[r0,#-4]`) y lo envía con el stub +0x1D4 (0x435605F8 ->
+      0x4356120C). Si el alloc falla usa el destino alternativo 0x008F0313 (0x435605FE-0x43560634).
+      No espera respuesta; solo mira el código de retorno del alloc/envío. [VERIFICADO el código;
+      INTERPRETACIÓN "log/traza" por la forma del registro y por el nombre de los slots]
+    * 0x43560AA4 = caminante A: 5 barridos de tablas de descriptores con contadores ACOTADOS
+      (paso 0x9C hasta 0x4578 = 114 iters; paso 0x24 hasta 0x4EC = 35; paso 0x20 hasta 0x3C0 = 30;
+      paso 0x48 hasta 0x12D8 = 67; + 2 llamadas sueltas) y por entrada 1-2 llamadas indirectas:
+      0x43560C04 (API +0x48), 0x43560B78 (+0x30), 0x43560D00 (+0x7C), 0x43560D8C (+0x98),
+      0x43560E70 (+0xD4), 0x43560EFC (+0x10C). [VERIFICADO]
+    * 0x435609B0 = caminante B: los MISMOS 4 conjuntos de tablas (contadores 0x71=113, 0x23=35, 0x1E=30,
+      0x43=67) pero con OTROS slots por entrada: 0x43560B5C (+0x24), 0x43560CE4 (+0x70),
+      0x43560D70 (+0x8C), 0x43560E54 (+0xC8) y 0x43560EE0 (+0x100) x2. Devuelve 0
+      (`movs r0,#0` / `pop {r3,r4,r5,pc}` en 0x43560A50). [VERIFICADO]
+    * Todos los stubs (0x435612D0, 0x43561594, 0x43560B5C … 0x43560F18) tienen la MISMA forma:
+        push {r3,lr}; ldr r3,=off; ldr r2,=0x16DC; add r3,pc; ldr r3,[r3,r2]
+        ldr r3,[r3,#0x14]; ldr r3,[r3,#<slot>]; blx r3; pop {r3,pc}
+      = llamada INDIRECTA a la tabla de API de plataforma: global +0x16DC -> objeto, +0x14 -> tabla,
+      +slot -> función. Slots que toca esta ruta: 0x24 0x30 0x48 0x70 0x7C 0x8C 0x98 0xC8 0xD4 0x100
+      0x10C 0x1D4 0x1F0 0x2F8. [VERIFICADO la forma y cada slot]
+      ANCLA DE LA API: el global es [B+0x16DC] = [0x440205C0] y su valor EN EL FICHERO es 0x43541000,
+      es decir la base del propio módulo — el único 0x43541000 de toda la imagen (comprobado: 1 aparición,
+      justo ahí). Ojo: los literales de los stubs solo cuadran con B = 0x4401EEE4 si se toma pc = dir+4 SIN
+      enmascarar los dos bits bajos (el `add` de los stubs cae en dirección 2-mód-4); con la regla de ARM
+      salen 2 B por debajo y el slot quedaría desalineado => o el cargador LIRO los parchea o los montó un
+      generador con esa convención. Consecuencia: en frío, [0x43541000+0x14] = 0x435410B4, que es un hueco
+      a cero; si el cargador no sustituye ese objeto, TODAS las llamadas de la ruta saltan a una página de
+      ceros y el `blx` va a 0. [El ancla y su valor: VERIFICADO; la sustitución por parte de liro en carga:
+      INFERENCIA]
+
+(c) MARCAS DE PROGRESO YA PRESENTES EN EL FIRMWARE
+    * En av-cam, esta ruta NO imprime texto: no hay ni una cadena de la zona de strings (0x43C1xxxx-0x43CE
+      xxxx) entre los literales del vector y de los dos caminantes (comprobado: todos los literales son
+      deltas 0x00Axxxxx, offsets de slot 0xA24/0x1C5C/0x7C70/0x4868/0x3A28 o los IDs 0x008F013A/0x008F0313).
+      El log de texto de av-cam existe (`[ACCY][DEBUG][Main] Suspend Sus-Attached %d, %03X.` en 0x43C24E8x,
+      `[SDF][ERROR] DMM_RET_WRN_SUSPEND` en 0x43C7C92E, `osal_send_sync_msg(liro_adc) error:%d` en
+      0x43CCABF6…) pero no está en esta ruta. [VERIFICADO]
+    * Sus marcas son REGISTROS BINARIOS de 12 B al destino 0x008F013A, pares (id de vector, paso):
+        vector "pre"  0x43541044 -> (1, 0x94)    primera instrucción tras el `bl` (0x43560652)
+        vector "main" 0x43541058 -> (2, 0xC6)
+        vector SUSPEND 0x43541068 -> (3, 0xED)   en 0x435608C8
+                                     (0xB, 0x150) en 0x435608DC
+                                     (0x1B, 0x163) en 0x43560908
+                                     (0x13, 0xFC) al final, 0x43560918
+      [VERIFICADO el emisor, los pares y el orden]
+    * PRIMERA MARCA SI EL CALLBACK AVANZA: el par (3, 0xED) — se emite en la 5ª instrucción del cuerpo,
+      antes de cualquier barrido, memset o llamada de API. Pero es un registro binario, no un printk: no
+      puede salir en el klog; solo existe si el consumidor de 0x008F013A está vivo. [VERIFICADO]
+    * Por eso la ÚNICA señal válida de "el callback volvió" es de liro.ko: `liro_suspend` (.text 0x348)
+      imprime "[LIRO]: entry_suspend:%p(%d)" (.rodata.str1.1+0x19E = fichero 0x9273) en .text 0x370-0x388
+      con r1 = [dev+0x18] (el puntero 0x43541068) y r2 = flag, y DESPUÉS hace `ldr r3,[r6,#0x18]` +
+      `blx r3` en .text 0x3B4-0x3B8 -> confirma que se imprime ANTES de invocar. Después del `blx`, el
+      siguiente texto posible es "LIRO: suspend error(kthread_create)" (+0x1C8), "[LIRO]: liro suspend (WBI)"
+      (+0x1ED), "[LIRO]: liro suspend error!" (+0x209) o "[LIRO]: liro suspend complete!" (+0x226, .text
+      0x4D0). [VERIFICADO]
+      => Predicción falsable: si el vector hubiera retornado, tras la última línea capturada
+      "…entry_suspend:43541068(1)" tendría que aparecer UNA de esas cuatro; no hay "exit_suspend" en liro.
+
+(d) PUNTO EXACTO DONDE YA NO HAY RETORNO FÁCIL
+    1. Primer salto indirecto de TODO el callback: 0x435612E0 `blx r4` (slot API +0x1F0), dentro de
+       0x435612D0, al que se llega desde la 1ª llamada del vector en 0x435608C8 (5ª instrucción del
+       cuerpo). No comprueba NULL ni el código de retorno. Y ese slot se resuelve por
+       [0x440205C0] -> +0x14 -> +0x1F0: con los valores en frío del fichero (0x440205C0 = 0x43541000,
+       [0x43541000+0x14] = 0x435410B4, [0x435410B4] = 0) el salto sería a 0. Es decir: en frío, el
+       PRIMER salto de la ruta ya no vuelve; solo funciona si el cargador ha instalado el objeto de API.
+       [VERIFICADO el código y los valores en frío; INFERENCIA la instalación por el cargador]
+    2. Escritura destructiva: el memset de 0x435608EC escribe [B+0x1C5C] con longitud
+       [B+0xA24]-[B+0x1C5C] SIN acotar, y el memcpy de 0x435608FE copia a [B+0x7C70] desde [B+0x3A28]
+       con longitud [B+0x4868]-[B+0x7C70] SIN acotar. Si esos globales no están inicializados o están a
+       cero/alterados, las longitudes son arbitrarias => barrido de memoria y pérdida inmediata de control.
+       Es el primer punto con efecto irreversible (más que el salto indirecto). [VERIFICADO el código;
+       NO VERIFICADO el valor en el arranque warm]
+    3. NO hay bucle de espera en esta ruta: todos los bucles son de contador fijo (114/35/30/67 en el
+       caminante A; 113/35/30/67 en el B) con 1-2 llamadas indirectas por iteración (~600 llamadas
+       indirectas sin comprobar antes de volver). Por tanto el cuelgue, si lo hubo, está DENTRO de una
+       función llamada por la tabla de API, no en el código estático de la entrada. [NO VERIFICADO cuál]
+    4. NO hay ninguna escritura a registro fijo del core AV en esta ruta. El único ayudante de escritura de
+       registro de esta capa es 0x43560540 (`str r1,[r0]; ldr r2,[r0]; ldr r3,=…; str r2,[r3]` = escribe +
+       relee + espeja) y lo usa SOLO el vector 0 (0x43560648, "pre"), que escribe 0xF3400060, 0xF3400260 y
+       0xF30A1280/8C/A0/A4/AC/B4/BC/C4. El vector de suspend no lo llama. [VERIFICADO]
+       => No atribuir el corte a una escritura de registro del core AV: el candidato vivo es la cadena de
+       llamadas indirectas y/o las longitudes del memset/memcpy.
+    5. Observación a abrir: el orden memset(0) y luego memcpy(desde un área salvada) es el patrón de una
+       RESTAURACIÓN, no de una suspensión, y el vector "resume" es otro (0x43541078 -> `blx 0x43A3A98C`).
+       Queda la duda de si el cuerpo de 0x435608C0 es realmente "suspend" o un "restore" compartido.
+       [INFERENCIA / NO VERIFICADO]
+
+================================================================================================
+(2) EVIDENCIA (todo reproducible con capstone sobre el fichero; VA = base 0x43541000 + offset)
+================================================================================================
+- Tabla de vectores y nombres: av-cam.bin off 0x0C..0x2C  vs
+  analysis/camera-dumps/20261117-traza-T2T6/sd/log.txt:5724-5730
+  ("entry(pre) - 43541044 / entry(main) - 43541058 / suspend - 43541068 / resume - 43541078 /
+    exit - 43541088 / func1 - 43541098 / func2 - 4354109c"). Y "suspend - 43541068" también en
+  analysis/camera-dumps/20261109-swd-360/klog.txt:29196 y 20261110-swd-371/klog3.txt:4536.
+- Wrapper ARM: fichero 0x68..0x77 = f0 5f 2d e9 · 13 7e 00 fa · f0 5f bd e8 · 1e ff 2f e1.
+- Cuerpo Thumb: fichero 0x1F8C0..0x1F932 (bytes en el listado de (b)).
+- memset/memcpy: 0x439C5A04 y 0x439C5320 decodificados en ARM (25 y 32 instrucciones válidas, 0 inválidas
+  en 0x200 B); en Thumb aparecen `(data)`/basura; BLX inmediato desde Thumb cambia a ARM.
+- Emisor de marca: 0x435605A8 (fichero 0x1F5A8) con 0x4356059C (`str 0x008F013A,[r0,#-4]`),
+  0x435612D0 (+0x1F0) y 0x4356120C (+0x1D4).
+- Stubs API: 0x435612D0(+0x1F0) 0x43561594(+0x2F8) 0x43560B5C(+0x24) 0x43560B78(+0x30) 0x43560C04(+0x48)
+  0x43560CE4(+0x70) 0x43560D00(+0x7C) 0x43560D70(+0x8C) 0x43560D8C(+0x98) 0x43560E54(+0xC8)
+  0x43560EE0(+0x100) 0x43560EFC(+0x10C) 0x43560F18(+0x110), todos con `ldr r3,[r3,#0x14]` previo.
+- Escritura de registro: 0x43560540 (fichero 0x1F540), único usuario 0x43560648 (vector "pre").
+- liro: símbolos `liro_suspend` .text 0x348 (size 0x1C4) y `liro_resume` .text 0xE8; cadenas en
+  .rodata.str1.1: +0x19E "…entry_suspend:%p(%d)" (fichero 0x9273), +0x1C8 "LIRO: suspend
+  error(kthread_create)", +0x1ED "[LIRO]: liro suspend (WBI)", +0x209 "[LIRO]: liro suspend error!",
+  +0x226 "[LIRO]: liro suspend complete!", +0xCA "…entry_resume:%p(%d)" (fichero 0x919F).
+  (Los literales del objeto guardan offsets de sección: 0x19E, 0x1C8, 0x1ED, 0x209, 0x226, y el enlazador
+  les suma la dirección de .rodata.str1.1 = 0x90D5 -> 0x9273, 0x929D, 0x92C2, 0x92DE, 0x92FB.)
+
+================================================================================================
+(3) ESTADO
+================================================================================================
+VERIFICADO
+  · 0x43541068 es el vector "suspend" de la tabla ORIL/LIRO y es un puente ARM->Thumb sin efectos
+    (no fija registros; r0-r3 y el stack se conservan).
+  · 0x435608C0 es Thumb, 34 instrucciones, y el orden y destino de sus 9 llamadas es el de la tabla (b).
+  · memset(dst,len) y memcpy(dst,src,len) con longitudes que salen de globales sin acotar.
+  · Marcas binarias (3,0xED) (0xB,0x150) (0x1B,0x163) (0x13,0xFC) al destino 0x008F013A; primera = (3,0xED).
+  · liro imprime "entry_suspend:%p(%d)" ANTES del `blx r3` y su siguiente línea posible es una de las 4
+    citadas (no hay "exit_suspend").
+  · No hay bucle de espera ni escritura a registro del core AV en el código estático de esta ruta.
+INFERENCIA
+  · El emisor 0x435605A8 es la API de log/traza de av-cam (registro de 12 B con id de clase 0x008F013A).
+  · El memset(0)+memcpy(desde área salvada) es una restauración; posible cuerpo compartido con "resume".
+  · El primer sitio sin retorno es el salto indirecto 0x435612E0 (`blx r4`, slot +0x1F0) y el primer efecto
+    irreversible es el memset de 0x435608EC.
+NO VERIFICADO
+  · Que liro.ko sustituya en carga el objeto de API del ancla [0x440205C0] (en el fichero vale 0x43541000,
+    la base del módulo; el hueco +0x14 de la cabecera, 0x435410B4, está a cero). En frío, sin esa
+    sustitución, el primer `blx` de la ruta salta a una página de ceros.
+  · Qué función real hay detrás de cada slot (0x24…0x2F8) y si alguna bloquea o escribe MMIO del core AV:
+    hace falta REA/Ghidra con el binario abierto (av-cam ~8 min en frío) o emulación.
+  · El consumidor del mensaje 0x008F013A y si convierte las marcas en texto.
+
+================================================================================================
+(4) LÍMITE
+================================================================================================
+- Nada de esto explica POR QUÉ se cortó el enlace SWD: solo fija qué se ejecuta y cuál es la próxima señal
+  esperable. La diferencia medida (sin SD: corte tras "entry_suspend"; con SD: última marca "B b-250" del
+  controlador de tarjeta, udif_bdev_suspend 0x401FA1A0) NO se ha podido correlacionar con el interior de
+  0x435608C0, porque el corte ocurre precisamente antes de la primera marca visible.
+- No se ha ejecutado nada, ni en cámara ni en emulador. No se ha usado REA ni Ghidra (no disponibles en
+  esta sesión) ⇒ una consulta vacía de REA no se usa como prueba de nada.
+- Sigue sin probarse si el vector retornó alguna vez: para eso hace falta capturar con SWD/klog las 4 líneas
+  de liro posteriores a `blx r3` (o un breakpoint en 0x435608C0/0x435612E0), y eso es una prueba en
+  hardware que este trabajo no autoriza.
+- No se ha podido revisar /tmp/a6000-warm-sin-sd/ (no existe): limitación a registrar, no analizada aquí.

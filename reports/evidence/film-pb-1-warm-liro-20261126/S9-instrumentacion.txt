@@ -1,0 +1,262 @@
+S9 — INSTRUMENTACIÓN: UNA CAPTURA QUE DISTINGA ENTRÓ / NO ENTRÓ / VOLVIÓ CON ERROR / SE LO LLEVÓ EL RESET
+Caso film-pb-1-warm-liro-20261126 · Pregunta 9 · 100 % offline (sin cámara, sin SWD, sin escrituras)
+Estático propio con capstone 5.0.7 + pyelftools 0.33 + lectura de las capturas de /tmp.
+Etiquetas: [V] verificado contra bytes o fuente citada · [I] inferencia · [N] no verificado.
+
+Método declarado: el MCP `rea` NO está disponible en esta sesión (no hay herramienta `rea` en el entorno y no
+había binario abierto); todo el desensamblado es capstone propio sobre los binarios del repo. Donde una consulta
+no cubre, se dice; una consulta vacía no se usa como prueba de ausencia.
+
+Rutas citadas:
+  RAW   = /tmp/a6000-warm-captura-swd/{kernel-swd.bin, swd.log, vigilar.cfg, control.py, boottime-antes.txt,
+          boottime-despues.txt, antes.json, despues.json, resultado.txt}
+  SINSD = /tmp/a6000-warm-sin-sd/  (SÍ EXISTE: control sin SD y sin sonda del 26-11 21:31-21:36; el contexto
+          de la pregunta decía que no existía → se corrige aquí)
+  SD    = /tmp/a6000-warm-controlador-sd.txt
+  VML   = firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/vmlinux.bin
+          (3 478 912 B). Base de VA = 0x40038000 [V: VML[0x2f6d72]="udif_driver_register" ↔ kallsyms 0x4032ed72]
+  LIRO  = .../nflasha15_unpacked_unpacked/kmod/liro.ko (65 128 B, con .symtab)
+  KS    = analysis/camera-dumps/senser-shell-20261020-180946/shell.txt (kallsyms del kernel de la cámara)
+  PM    = analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/pm.c
+  SL    = .../arch/arm/mach-cxd90014/sleep.S     CORE = .../core.c     WDT = .../wdt.c
+  W     = .../arch/arm/common/warm.c             I     = .../include/linux/snsc_boot_time.h
+  S     = analysis/session18/codex-g/oss-linux/linux/kernel/power/suspend.c
+  T     = .../arch/arm/kernel/traps.c            EM = .../kernel/exception.c
+
+====================================================================================================
+0. HALLAZGO (una frase)
+====================================================================================================
+El callback SÍ se invoca y el bucle UDIF sólo aborta si el *op de liro* devuelve error —liro ignora el retorno
+del callback [V]—; el reset llegó con el op todavía dentro (en el volcado sin SD no hay "E liro" ni "E unified drivers" —con
+la cautela de §1— y el último printk es el de entrada), así que lo que falta por medir es "¿murió dentro del callback por excepción, o
+lo reinició algo externo (WDT)?" y eso NO lo puede separar ninguna lectura pasiva: hace falta una PARADA en la
+entrada del callback (o el UART con pmdebug). El anillo de printk no sirve después del reset (8 KiB se llenan en el
+primer segundo o dos del arranque nuevo y el DAP no vuelve antes) y `pm.sus_error` se borra en el arranque nuevo (~1 s) antes de que el
+DAP esté disponible.
+
+====================================================================================================
+1. QUÉ HACÍA LA CAPTURA ANTERIOR Y POR QUÉ SE PERDIÓ EL ENLACE
+====================================================================================================
+[V] vigilar.cfg: sonda CMSIS-DAP en SWD a 1 MHz, un `target create ... mem_ap -ap-num 0` (sólo memoria, SIN
+    halt, SIN registros del core), sin GDB. Anillo de printk: descriptor en 0x8037c760 = {0x00002000,
+    0x4039575d} y puntero de escritura `log_end` en 0x80395290; datos en 0x8039575d + (end & 0x1fff).
+[V] Bucle: lee `log_end` (1 palabra), y si hay novedad copia hasta 1024 B; `sleep 15` ⇒ cadencia real ~17 ms
+    (swd.log: 8563 lecturas en ~150 s) con `sleep 150` cuando el enlace cae. Guardas: `ring_check` compara
+    {0x2000, 0x4039575d} y la condición `end < last || end-last > 0x2000` escribe "Reanudación".
+[V] Por qué se perdió: el enlace no muere por el reset en sí, muere cuando el SoC deja de servir la DRAM
+    (`Error: Failed to read memory at 0x00000000`); después, la primera lectura buena ya encuentra
+    `log_end=0xc5fd` y el contenido es del kernel NUEVO (en el bruto hay líneas de [2.02] s y más tarde de
+    [51.0] s). Es decir: entre la última muestra buena y la reconexión, el kernel nuevo escribió de sobra los
+    8 KiB del anillo ⇒ la cola vieja es irrecuperable por esta vía. [V] dato, [I] atribución temporal exacta.
+[V] Defecto metodológico añadido: `control.py` compara contadores de líneas (`Counter`) entre el volcado de
+    "antes" y el de "después". El anillo de snsc es un búfer de texto que da la vuelta; una marca vieja puede
+    aparecer en "después" y no en "antes" y contarse como "nueva". La lista "Marcas nuevas" de
+    /tmp/a6000-warm-sin-sd/resultado.txt tiene esa contaminación posible (sus timestamps 142231/157327 ms no
+    cuadran con el uptime 1044 s de ese intento). No se usa como prueba única de nada en este documento.
+[V] Corrección al recetario E1: `warm.errmode=1` y `pm.suserr=1` NO evitan el apagado de esta rama. Sólo
+    gobiernan `enter_state()` (S:519-535) y `do_make_image()` (W:1196-1206); la rama que nos ocupa es
+    `cxd90014_pm_prepare()` → `pm_suspend_error()` (PM:224-231, 247-252), que no vuelve nunca.
+
+====================================================================================================
+2. LO QUE YA ESTÁ MEDIDO Y ACOTA EL PROBLEMA
+====================================================================================================
+[V] Cadena exacta del suspend (S:339 `suspend_console()` → S:342 `dpm_suspend_start` → S:352 `suspend_enter`
+    → S:241 `suspend_ops->prepare` = PM:247 `cxd90014_pm_prepare`). Consecuencia: cuando liro imprime, la
+    consola YA está suspendida ⇒ nada de la fase silenciosa llega a klog (0x834E0000) ni a ttynull.
+[V] PM:247-252:  `if (unlikely(udif_driver_suspend()))  pm_suspend_error(0);  return warm_boot_pm_prepare();`
+    PM:224-231:  `wbi_drop(); *(u32*)phys_to_virt(sus_error)=1; cxd90014_pm_halt(0);`  (no vuelve)
+[V] PM:121-143 + CORE:239-248: `cxd90014_pm_setup()` (desde `cxd90014_core_init`, init temprano de la máquina)
+    imprime "sus_error address: 0x%08lx" y escribe 0 en `pm.sus_error=0x80021060` (cmdline del bruto). Es el
+    ÚNICO escritor de ese 0; el ÚNICO que escribe 1 es pm_suspend_error.
+[V] SL:95-96 y SL:112-115: `PM_ENTER_ERROR` también va a `goto_suspend`, que hace `pm_memory` (SL:163) y WFI
+    (SL:187-190) ⇒ el halt de pm_suspend_error acaba en el standby del SoC, y sin imagen WBI el siguiente
+    arranque es FRÍO (log_end continúa, boot_id cambia).
+[V] SL:99-108: si fallara la creación de imagen, se vuelve al llamante (no hay standby); no es nuestro caso
+    (nflasha5 no se tocó y `do_make_image` ni se alcanzó: no hay marcas de `warm_boot_pm_prepare`; cautela de atribución en §1).
+[V] W:1508-1545: `warm_boot_pm_prepare()` escribe "B warm_boot_pm_prepare" ANTES de `suspend_prepare`. En las
+    dos capturas sin SD no aparece ⇒ `udif_driver_suspend()` no retornó (o retornó con error y se desvió a
+    pm_suspend_error, que tampoco lo escribe: ambas cosas son compatibles).
+[V] Desensamblado de VML (éste es el dato que faltaba):
+      udif_driver_suspend = 0x401fb848
+        0x401fb864  trace(0,"suspend start: ", "unified drivers")      ← "<6>UDIF: suspend start: unified drivers"
+        0x401fb8cc  trace(0,"suspend start: ", nombre)                 ← "<6>UDIF: ... liro"
+        0x401fb8e8  bl 0x401fb178  → envuelve y llama ops->suspend (blx) y DEVUELVE su r0 [V 0x401fb1b4]
+        0x401fb8f0  bne 0x401fb924          ← si r0 != 0: SALTA la marca E del driver
+        0x401fb900  trace(1,"suspend end:   ", nombre)                 ← la "E" por driver, SÓLO si r0 == 0
+        0x401fb938  trace(1,"suspend end:   ", "unified drivers")       ← la "E" global, siempre
+      cxd90014_pm_prepare = 0x400520e0
+        0x400520ec  bl 0x401fb848            ← udif_driver_suspend
+        0x400520f0  cmp r0,#0 ; 0x400520f4 beq 0x40052114 (warm_boot_pm_prepare)
+        0x400520f8  bl wbi_drop (0x4004ba94)
+        0x40052100  mov r0,#1 ; 0x4005210c str r0,[r2,r3]  (r2=sus_error, r3=0xC0000000 = __va con wrap de 32 b)
+        0x40052110  bl cxd90014_pm_halt (0x4037bea0)
+      udif_trace = 0x401fb108: formatea "<6>UDIF: %s%s" y emite la marca con id 0x8E (0x401fb144) y el carácter
+        "B" (0x4030aa56) si r0==0, "E" (0x4030aa74) si r0!=0, más el nombre → es la misma marca "008E B/E ..." del
+        /proc/snsc_boot_time. [V por bytes: el helper y el id 0x8E]
+      liro_suspend = LIRO 0x348:
+        0x388  printk("[LIRO]: entry_suspend:%p(%d)\n", [ctx+0x18], arg)
+        0x3b8  blx r3                      ← llama EXACTAMENTE el puntero impreso
+        0x3bc… EL RETORNO DEL CALLBACK NO SE MIRA (r0 se recarga antes de usarlo) [V]
+        0x3cc  kthread_create_on_node(...) → si falla: printk("LIRO: suspend error(kthread_create)") y return -8
+        0x3f8… rama de pm_get_state()==4 (warm): backups ft/cp con vmalloc; fallo → printk y return -12
+        0x4d0  printk("[LIRO]: liro suspend complete!") y return 0
+    ⇒ Consecuencias duras:
+      (a) "el callback vuelve con error y el bucle UDIF aborta" (hipótesis ii tal como está escrita) es IMPOSIBLE:
+          liro no propaga el retorno del callback. Para que UDIF aborte, lo que falla es el *trabajo propio* de
+          liro tras el callback (kthread_create o los vmalloc de la rama warm), con código -8 o -12.
+      (b) "E <driver>" ausente ⇔ ese op no retornó 0 (o no retornó). "E unified drivers" presente ⇔
+          udif_driver_suspend retornó (con 0 o con error).
+[V] Últimas señales del intento con sonda (RAW): última línea íntegra = "[LIRO]: entry_suspend:43541068(1)" a
+    537.295341 y NADA después (ni "UDIF: suspend end", ni el print de error de liro, ni "Internal error").
+[V] En el volcado sin SD (SINSD, leído a los ~56 s): últimas marcas del kernel viejo = "B warm_boot_pm_begin",
+    "E warm_boot_pm_begin", "008E B unified drivers", "008E B liro" y ninguna "E" detrás [I: atribución, ver
+    §1]; en el intento con SD la última es "008E B b-250" (SD) ⇒ el mismo cuadro, pero dentro de
+    `udif_bdev_suspend` (0x401fa1a0): no es un fallo exclusivo de liro.
+[V] La consola está suspendida ⇒ el texto de un oops va sólo a `log_buf` (T:247) y `em_cond_reboot()` (T:258)
+    reinicia EN LA MISMA FUNCIÓN, antes de `em_show()` (T:271): el volcado del Exception Monitor por UART
+    (EM:188-199, console_write a UART0) no llega a producirse en el camino de reboot.
+[V] Fuentes de reset que quedan vivas: (1) excepción → `em_reboot` → `machine_restart` → `pm_machine_reset(1)`
+    → RSTREQ con irqs off (EM:760-763, CORE:213-226); (2) watchdog `wdt.timeout=500` con `wdt.mode=1 xrstreq=1`
+    (WDT:170-180 imprime "WDT:RSTREQ_STAT=0x.." y llama pm_machine_reset; el refresco periódico lo hace
+    `watchdog_tick` en el tick del timer, WDT:127-138); (3) pm_suspend_error (descartado si no hay "E").
+
+====================================================================================================
+3. MEDIOS DISPONIBLES, UNO A UNO (sin flashear)
+====================================================================================================
+3.1 SWD leyendo el anillo de printk (0x80395290 / 0x8039575d) — SÍ, pero sólo hasta el corte
+    [V] Funciona y es lo que dio la última línea. Cadencia útil: `log_end` cada ~1 ms (una lectura de 32 b);
+        leer el delta sólo si cambia. [I] A 1 MHz se pueden sostener ~1-2 kHz; la captura anterior iba a 17 ms.
+    [V] LÍMITE DURO: deja de responder cuando el SoC apaga/para la DRAM, y NO se recupera antes de que el
+        kernel nuevo haya dado la vuelta a los 8 KiB. No sirve para leer la cola después del reset.
+    [V] Muestra mezclada: el anillo NO se borra en un arranque frío. PM:184-190: `clear_logbuf()` sólo si
+        `PM_SUSPEND_DISK == pm_get_state() && !pm_is_mem_alive()`; en un frío `pm_state` vale PM_SUSPEND_MEM
+        (W:123) y PM_SUSPEND_DISK es 4 en esta configuración (CONFIG_ARCH_HAS_PM_SUSPEND_DISK, suspend.h:45-48),
+        así que no se limpia; además `log_end` es monótono entre arranques (visto 0x8878 → 0xc5fd). La frontera
+        es exactamente donde empieza la primera línea del kernel nuevo; para partirla, el corte es el salto de
+        timestamp (537.xxx → 0.000000) o la primera línea con "[    0.000000]"/"Linux version".
+3.2 SWD leyendo el PC del core ARM — NO en pasivo; sí con halt (una ESCRITURA a registros de depuración)
+    [V] La configuración actual es un `mem_ap` (AP0): sólo memoria. El PC/CPSR/R0-R15 viven en el interfaz de
+        depuración del Cortex-A9 (APB-AP, normalmente AP1) y se leen SÓLO con el core parado (request halt por
+        DBGDRCR/DBGDSCR). Para eso hay que declarar un target `cortex_a` con dos APs y escribir DBGBVR/DBGBCR.
+    [N] NO VERIFICADO en esta cámara: que exista/respuesta el APB-AP, que el halt funcione y que el SoC no se
+        reinicie por el watchdog mientras el core está parado. Es la pieza que hay que probar antes de usarla.
+    [I] Parar el core congela el sistema ⇒ cambia el experimento: hay que leer en <100 ms y reanudar, y si el
+        halt dura >400 ms cualquier reset observado después es sospechoso (WDT=500 ms).
+3.3 UART de depuración (printascii / pmdebug / sus_msg / Exception Monitor)
+    [V] `pmdebug` es un parámetro de printk: con la consola suspendida, `printk` se refleja por `printascii()`
+        (salida por UART de depuración 0xf2000000 + 0x1000*N). Una sola escritura sysfs:
+        `echo 1 > /sys/module/printk/parameters/pmdebug`.
+    [V] `pm.sus_msg` (PM:76, escribible) hace que `sleep.S` escriba 'E' por `__printch` al final del standby
+        (SL:166-180): es una AUTO-PRUEBA del UART dentro del propio camino de suspensión.
+    [V] El Exception Monitor escribe su volcado por `console_write` a UART0 (EM:188-199), pero en el camino de
+        reboot no llega a ejecutarse (T:258 antes de T:271).
+    [N] No hay en el repo ni en KS prueba de un pad/conector serie accesible: sin acceso físico esto no existe.
+    [V] `console=ttynull` (cmdline del bruto) ⇒ no hay consola serie normal; sólo el espejo de pmdebug.
+3.4 /proc/snsc_boot_time (búfer 0x834C0000, `boottime=0x20000@0x834C0000`) — SÍ, el único que sobrevive
+    [V] Contiene las marcas "008E B/E <driver>" que escribe el propio UDIF (mismo helper de 3.1), más
+        "B/E warm_boot_pm_*", "PM: ..." y las marcas del cargador ("L: Kernel Jump[MODE#1 NR_RES#0]").
+    [V] `boot_time_takeover()` se llama en la reanudación (PM:198) ⇒ el búfer está pensado para sobrevivir.
+    [V] Ventana real medida: a los 56 s de arranque nuevo aún estaban las últimas marcas viejas; a los 92 s ya
+        no. ⇒ volcar SIEMPRE dentro de los primeros ~20 s, y sin `Counter` (leer el bruto y localizar el
+        empalme).
+    [I] El orden de /proc/snsc_boot_time es el del búfer físico, no cronológico: el "final" del kernel viejo
+        está justo donde empieza el kernel nuevo (en SINSD, tras "008E B liro" viene "L: BOOT (VER 01.90)").
+3.5 Contadores/estados persistentes en RAM que sobreviven al reset
+    [V] `pm.sus_error` = 0x80021060 (página reservada `wbimem=0x1000@0x80021000`, fuera de la imagen WBI).
+        1 ⇔ pm_suspend_error corrió ⇔ udif_driver_suspend() devolvió error. Es el discriminante limpio
+        (ii) vs (i)/(iv). PERO: lo borra `cxd90014_pm_setup()` en el init temprano del arranque nuevo
+        (CORE:239-248, PM:137-143) y el DAP tarda ~2 s ⇒ [I, alta] NO es legible después del reset.
+        Sí es legible (y comprobable) si el core está PARADO en 0x400520f8 o 0x40052110.
+    [V] `mem_alive` (lo pone SL:113-115) explica que el anillo de printk no se borre en el arranque siguiente.
+    [V] `log_end` es monótono entre arranques ⇒ sirve de "epoch" del kernel: si retrocede, hay un kernel nuevo
+        con el contador reiniciado (no es el caso: no retrocedió).
+3.6 El log del kernel nuevo
+    [V] Aporta el boot_id (cambia), el modo (`warm`/`mem` en im.elf), "sus_error address: 0x80021060" (marca de
+        que el flag ya se borró) y las marcas "L: ..."/"Kernel Jump[MODE#1 NR_RES#0]".
+    [V] No aporta nada del callback: el texto de la fase silenciosa quedó en el anillo viejo.
+
+====================================================================================================
+4. FIRMAS ESPERADAS (lo que hay que ver en cada hipótesis)
+====================================================================================================
+                        BP entrada 0x43541068 | "E liro"/"E unified" | anillo tras la entrada | final
+(i)  entra y no vuelve   DISPARA               | NO / NO                 | nada nuevo             | cuelgue (sin reset, tick refresca WDT) o reset a ~500 ms si el callback dejó las IRQ off (WDT:170-180 sin print porque el IRQ no corre)
+(ii) vuelve con error    DISPARA               | NO / SÍ                 | prints de liro (ft/cp o "suspend error(kthread_create)" o "liro suspend complete!") | pm_suspend_error: sus_error=1 y reset "ordenado" en ~1-10 ms
+(iii) nunca se alcanza   no dispara            | NO / (lo que toque)     | nada nuevo             | reset sin print (ya EXCLUIDA por el print de entrada medido en el anillo)
+(iv) el reset se lo lleva DISPARA o no         | NO / NO                 | nada nuevo             | reset con latencia < muestra (sin prints)
+Nota: (iv) con el BP armado no puede ocurrir "antes de la primera instrucción" sin que el BP dispare: si el BP
+está armado y verificado y no dispara, el CPU nunca buscó 0x43541068 ⇒ el reset llegó antes de la llamada.
+
+====================================================================================================
+5. LA CAPTURA (una sola pasada; prueba prioritaria)
+====================================================================================================
+Objetivo: convertir el "reset que borra la evidencia" en una PARADA que la conserve, y medir la latencia.
+Preparación (sólo RAM, ninguna escritura de flash; requiere autorización expresa):
+  P1  `printf 0 > /sys/module/exception/parameters/reboot`   ← convierte un oops en parada observable
+      (exception.c:51-52 `exception.reboot`; con 0, T:258 no reinicia y el texto del oops se queda en log_buf)
+  P2  `printf 1 > /sys/module/printk/parameters/pmdebug`     ← sólo si hay UART; espeja TODO el printk
+  P3  `printf 1 > /sys/module/warm/parameters/errmode` y `printf 300000 > .../tmo` (higiene; no cambian esta rama)
+  P4  línea base: boot_id, /proc/uptime, `cat /proc/snsc_boot_time`, batería >50 %, SD ausente
+Armado SWD (target `cortex_a`, o el que se valide):
+  A1  BP0 = 0x43541068  (entrada del callback; alternativa/refuerzo 0x435608c0 Thumb)
+  A2  BP1 = 0x400520f8  (rama de error de cxd90014_pm_prepare; al parar, r0 = código devuelto por el op de liro)
+      DBGBCR: BAS=0b1111, PMC=0b11, E=1 (leer de vuelta y COMPARAR; si no coinciden, la prueba no vale)
+  A3  auto-prueba del halt ANTES del intento: BP en 0x40091f90 (`state_show`; si no para, probar 0x40095d30) y
+      `cat /sys/power/state`; si no para, el halt no es utilizable ⇒ pasar al plan UART
+  A4  bucle pasivo en paralelo: `log_end` (0x80395290) cada 1 ms, leyendo el delta en 0x8039575d + (idx&0x1fff)
+      y anotando la hora del host en cada muestra (para medir la latencia del reset)
+Ejecución:
+  E1  `echo warm > /sys/power/state` (una sola vez)
+  E2  al primer halt: leer PC, CPSR, R0-R3, LR, SP y (por CP15 vía APB) DFSR/DFAR/IFSR/IFAR; volcar el anillo
+      8 KiB; leer 0x80021060; UN solo paso y releer (¿salta a la primera instrucción o aborta?); continuar
+  E3  si dispara BP1: r0 = -8 (kthread_create) o -12 (vmalloc de la rama warm) + los prints de liro en el anillo
+  E4  si a los 15 s no hay halt y el enlace sigue: el op está colgado ⇒ halt manual y leer PC (¿dentro de
+      0x4354xxxx?) ⇒ (i) sin ambigüedad
+  E5  si el enlace muere sin halt: medir latencia = t(primera lectura fallida) − t(última lectura buena) y
+      volcar /proc/snsc_boot_time ≤20 s (o leer 0x834C0000 por SWD en cuanto vuelva)
+Cierre: apagar por el interruptor si quedó parada; NO repetir warm; comprobar nflasha5 (cabecera y 256 KiB).
+Qué NO se toca: flash, imagen de /usr, WBI, SD. Escrituras: 3-4 `module_param` (RAM) y registros de depuración.
+
+====================================================================================================
+6. ORDEN POR COSTE/RIESGO
+====================================================================================================
+N0  (coste 0, riesgo 0) Repetir el análisis del bruto y del snsc con la frontera bien localizada. Ya hecho:
+    no hay "E unified drivers" ni "E liro" (cautela de atribución en §1) ⇒ el op no retornó; el reset es
+    interno a la llamada.
+N1  (coste 1 escritura, riesgo 0) `pmdebug=1` + UART ⇒ lo ve TODO (oops, prints de liro, "sus_msg"), sin tocar
+    el flujo. Descartado por ahora sólo por falta de pad. Es el mejor si existe.
+N2  (coste bajo, riesgo 0) Captura pasiva mejorada: `log_end` a 1 ms + hora por muestra + volcado de snsc ≤20 s.
+    No distingue entrada, pero mide la latencia del reset (WDT 500 ms vs excepción ~1 ms) y recupera más cola.
+N3  (coste medio, riesgo medio) BP en 0x400520f8 sola ⇒ responde "¿retornó el op y con qué código?" sin tocar
+    la entrada (menos perturbación que N4).
+N4  (coste medio, riesgo medio) BP entrada 0x43541068 + BP error 0x400520f8 + parada/1 paso/DFSR ⇒ la prueba
+    prioritaria: distingue (i)/(ii)/(iv) y, con `exception.reboot=0`, conserva el oops.
+N5  (riesgo alto) Igual que N4 pero además halts largos o single-step múltiple: puede colgar la cámara.
+
+PRUEBA PRIORITARIA (una): N4 con `exception.reboot=0` (P1) y, si el halt no se valida en A3, se sustituye por
+N1 (UART con pmdebug=1). Criterio de éxito: ver disparar BP0 y/o BP1, o medir latencia y hallar "E"; con eso
+queda una sola rama viva.
+
+====================================================================================================
+7. CUÁNDO DAR LA PRUEBA POR INVÁLIDA
+====================================================================================================
+- El enlace no llega a leer el print de entrada de liro (no hay cobertura de la ventana).
+- Los BP no se leen de vuelta igual a lo escrito, o A3 no para el core ⇒ el "no dispara" no prueba nada.
+- El boot_id ya era distinto antes de enviar `warm`, o cambia el estado de SD/batería respecto al control.
+- `log_end` retrocede o cambia el descriptor {0x2000, 0x4039575d} ⇒ muestra de dos kernels: partir en la
+  frontera y no atribuir nada al tramo posterior.
+- La parada dura >400 ms antes de continuar ⇒ cualquier reset posterior puede ser del WDT (500 ms).
+- `pm.sus_error` se lee después de que el kernel nuevo haya impreso "sus_error address:" ⇒ el 0 no significa nada.
+- El snsc se vuelca >30 s después del arranque ⇒ la ausencia de "E" es evicción, no prueba.
+- Lecturas de RAM con el SoC en standby: cualquier valor leído después del corte de DRAM es basura; sólo vale
+  lo leído antes del primer fallo o lo que sobrevive por diseño (snsc, 0x834C0000).
+
+====================================================================================================
+8. LÍMITES
+====================================================================================================
+[N] No se ha probado nunca en esta cámara: halt, APB-AP, DBGBVR/DBGBCR, ni la lectura del PC. Todo el diseño de
+    §5 depende de A3.
+[N] No hay evidencia de un pad UART accesible; sin él, `pmdebug` es inútil.
+[I] La atribución temporal de las marcas de snsc de los intentos del 26-11 es dudosa (contaminación del
+    `Counter` y timestamps que no cuadran con el uptime): se ha usado como indicio, no como prueba aislada.
+[N] No se ha determinado si el callback de av-cam aborta, cuelga o pide un reset: es exactamente lo que mide §5.
+[V] No se ha escrito nada: ni cámara, ni SWD, ni RAM, ni flash. Este documento es diseño + estático.

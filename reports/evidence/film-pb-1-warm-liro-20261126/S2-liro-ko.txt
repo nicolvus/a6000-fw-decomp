@@ -1,0 +1,342 @@
+S2 — liro.ko: registro UDIF, llamada indirecta al callback de suspend y su envoltorio
+Caso: film-pb-1-warm-liro-20261126 · Pregunta 2 · 100 % offline
+Sin cámara, sin repetir warm, sin escribir RAM/flash, sin instalar nada, sin commit/push.
+Estados: [V] VERIFICADO contra bytes/fuente/medida · [I] INFERENCIA · [NV] NO VERIFICADO.
+
+MÉTODO
+  · MCP `rea` SÍ responde (Ghidra 12.1.4, demonio rea-avcam.service, socket
+    analysis/rea-independent/out/av-cam.sock): tiene abierto **av-cam.bin** (base 0x43541000,
+    sha256 b60c845c…), NO liro.ko. Se usó para lo único que puede dar: los xrefs del puntero
+    (ver §1.6); un `decompile_function` en 0x435608c0 (Thumb) devuelve vacío porque el proyecto
+    está cargado en ARM sin semillas Thumb — se anota, no se usa como prueba de ausencia.
+  · Todo liro.ko se resuelve con **pyelftools 0.33 + capstone 5.0.7** sobre las secciones y la
+    tabla de relocaciones R_ARM_ABS32/R_ARM_CALL del propio ELF (no está stripped: hay symtab).
+  · Binario: firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/
+    nflasha15_unpacked_unpacked/kmod/liro.ko · 65 128 B · ELF32 ARM EABI5 · BuildID
+    3a81f0796e4ff8b18ddca6479cd24f95e890c502 · md5 **1a67c943eb26fb6096be476126a1db87**.
+  · Cruce con medidas reales: analysis/camera-dumps/mem-20261020-log/log.txt y
+    analysis/camera-dumps/20261109-swd-360/klog.txt (sólo lectura).
+  · Kernel OSS: analysis/session18/main/sony-oss-extracted/linux (mach-cxd90014/pm.c,
+    arch/arm/common/warm.c, arch/arm/mach-cxd90014/*) + include/linux/udif/driver.h del árbol
+    codex-g (misma versión de cabecera).
+
+================================================================================================
+0. HALLAZGO (una frase)
+================================================================================================
+`liro_suspend` (UDIF `ops->suspend`) imprime el destino, **copia 9 palabras** de la cabecera
+LIRO, y llama por puntero **`entry->suspend` = [0x43541018] = 0x43541068 con r0 = 1**; el valor
+de retorno del callback se **descarta** (r0 se sobrescribe en 0x3BC) y la función sólo puede
+devolver 0, −8 o −12, de modo que el firmware AV-CAM **no puede abortar la suspensión por
+valor de retorno**; no hay ninguna espera ni timeout alrededor de la llamada.
+
+================================================================================================
+1. (a) REGISTRO UDIF Y LLAMADA INDIRECTA
+================================================================================================
+1.1 Copias del módulo — CORRECCIÓN del contexto previo [V]
+    liro.ko **NO está en nflasha7**: `ls …/nflasha7_unpacked_unpacked/kmod/` = {devno, dmac,
+    ldec, lld, nand}. Está en **nflasha15** (/usr):
+      · firmware/extracted/fw321/…/nflasha15_unpacked_unpacked/kmod/liro.ko      1a67c943…
+      · analysis/camera-extract/usr/kmod/liro.ko (extracción de la cámara)         1a67c943…
+      · analysis/gui/g22/harness/stage/cam/usr/kmod/liro.ko (arnés G22)          1a67c943…
+      · build/cfw_fbm31_pkg397/work/xn/kmod/liro.ko                              1a67c943…
+    Las cuatro son byte a byte el mismo fichero ⇒ el módulo del arnés == el de la cámara (Sony).
+
+1.2 Estructura de driver `udif_liro` [V] — símbolo OBJECT de 0x64 B en `.data+0x6C`
+    Volcado literal (hexlify de 4 en 4, `.data+0x6c … +0xcf`):
+      00000000 00000000 6c69726f 00000000 00000000 342d4d55 53415348 49000000
+      0c000000 00000000 d0000000 00000000 00000000 00000000 00000000 00000000
+      00000000 00000000 00000000 01000000 00000000 54000000 54000000 1c010000 05000000
+    campos (relocs de `.rel.data`: 0x8C→.rodata+0xC, 0x94→.data+0xD0, 0xC0/0xC4→udif_liro+0x54):
+      +0x00 list (next/prev, NULL en el .ko)      +0x08 name[12] = **"liro"** (0x6C69726F…)
+      +0x14 ver[12]  = **"4-MUSASHI"**            +0x20 → ".rodata+0xC" = "liro_resume_async"
+      +0x24 nr_devs = 0                           +0x28 ops → **.data+0xD0**
+      +0x2C data = 0 · +0x30 th = 0 · +0x34 com = 0 · +0x3C nr_depends = 0
+      +0x54 segundo list_head auto-referente (0xC0) · +0x5C → .bss+0x11C · +0x60 = 5
+    La cabecera OSS include/linux/udif/driver.h (UDIF_DRIVER: list, name[12], ver[12], devs,
+    nr_devs, ops, data, th, com, depends, nr_depends) encaja hasta +0x3C; los campos +0x20,
+    +0x54, +0x5C y +0x60 **no** son los de esa copia de 2010 ⇒ [NV] su nombre exacto en el
+    kernel de la cámara (la versión enviada es posterior; no cambia nada de lo que sigue).
+
+1.3 Tabla de operaciones [V] — `UDIF_DRIVER_OPS` en `.data+0xD0` (7 punteros, 0x1C B)
+    orden de driver.h = {init, exit, probe, remove, **suspend**, **resume**, shutdown}:
+      .data+0xD0 → liro_init (.init.text+0x000)      .data+0xD4 → liro_exit (.exit.text+0x000)
+      .data+0xD8 → 0 (probe)                         .data+0xDC → 0 (remove)
+      .data+0xE0 → **liro_suspend (.text+0x348)** ← el gancho de suspensión
+      .data+0xE4 → liro_resume (.text+0x0E8)         .data+0xE8 → **liro_suspend** (shutdown)
+    Relocs: 0xD0 (`liro_init`), 0xD4 (`liro_exit`), 0xE0 (`liro_suspend`), 0xE4 (`liro_resume`),
+    0xE8 (`liro_suspend`), todas R_ARM_ABS32 (tipo 2) sobre `.rel.data`.
+    Único xref de reloc de cada gancho (barrido completo de la tabla de relocaciones):
+      liro_init → [.data+0xD0] · liro_exit → [.data+0xD4] · liro_resume → [.data+0xE4]
+      **liro_suspend → [.data+0xE0] y [.data+0xE8]** (suspend y shutdown; ninguna llamada directa)
+
+1.4 Alta y baja en UDIF [V]
+    `init_module` (.init.text+0x538, 0x30 B) — único cuerpo:
+      0548  ldr r3,=udif_liro (.data+0x6C)   054c  sub r0,fp,#0xc
+      0550  mov r1,#1                        0554  str r3,[r0,#-4]!   ; array local {&udif_liro}
+      0558  bl  **udif_driver_register**     055c..0560 epílogo
+    ⇒ `udif_driver_register(&drv[1], 1)`: una sola entrada, la del propio liro (crudo a UDIF).
+    `cleanup_module` (.exit.text+0x1F4): 0214 `bl udif_driver_unregister` con los mismos
+    argumentos (mismo array local, n=1).
+    `liro_init` no registra nada: es `ops->init` (lo llama el core tras el alta). Lo confirma su
+    prólogo y el uso de `adr` (§2.3).
+
+1.5 La llamada INDIRECTA con argumento 1 [V] — `.text+0x348` = `liro_suspend` (0x1C4 B)
+    Bytes y decodificación (capstone ARM; el módulo es ARM, no Thumb):
+      0348  0dc0a0e1  mov  ip, sp                       ; prólogo
+      0358  84419fe5  ldr  r4,=liro_dev (.bss+0x00)
+      035C  2c0094e5  ldr  r0,[r4,#0x2c]                ; dev->entry
+      0360  000050e3  cmp  r0,#0
+      0364  5c00000a  beq  0x4dc                        ; sin entry ⇒ return 0
+      0368  feffffeb  bl   **pm_get_state**
+      036C  043040e2  sub  r3,r0,#4
+      0374  005073e2  rsbs r5,r3,#0
+      0378  0350a5e0  adc  r5,r5,r3                     ; **r5 = (pm_get_state()==4) ? 1 : 0**
+      037C  2c3094e5  ldr  r3,[r4,#0x2c]
+      0380  0520a0e1  mov  r2,r5
+      0384  181093e5  ldr  r1,[r3,#0x18]                ; r1 = entry->suspend (para el print)
+      0388  feffffeb  bl   **printk**  ; r0 = "[LIRO]: entry_suspend:%p(%d)\n" (.rodata.str1.1+0x19E)
+      038C  2c6094e5  ldr  r6,[r4,#0x2c]                ; r6 = entry
+      0390  04c0a0e1  mov  ip,r4
+      0394  14e096e5  ldr  lr,[r6,#0x14]                ; lr = entry->image_ref (=0x435410B4)
+      0398  0f00bee8  ldm  lr!,{r0,r1,r2,r3}            ; copia 9 palabras
+      039C  0f00ace8  stm  ip!,{r0,r1,r2,r3}            ;   desde [entry+0x14]
+      03A0  0f00bee8  ldm  lr!,{r0,r1,r2,r3}            ;   hacia liro_dev+0x00..0x23
+      03A4  0f00ace8  stm  ip!,{r0,r1,r2,r3}
+      03A8  0500a0e1  mov  r0,r5                        ; **argumento = modo**
+      03AC  00309ee5  ldr  r3,[lr]
+      03B0  00308ce5  str  r3,[ip]
+      03B4  183096e5  ldr  r3,[r6,#0x18]                ; r3 = entry->suspend
+      03B8  33ff2fe1  blx  r3                            ; **LLAMADA INDIRECTA, r0 = 1 en warm**
+    `rsbs/adc` es el idioma de gcc para `x == 0`: C=1 ⇔ (state−4)==0 ⇒ r5 = 1 **si**
+    pm_get_state()==4, 0 si no.
+
+1.6 De dónde sale 0x43541068 [V]
+    `liro_init` (.init.text+0x000): 007C `add r1,r1,#0xc0000000` · 0084 `str r1,[r5,#0x2c]`
+    ⇒ **dev->entry = (adr + 0xC0000000) & 0xFFFFFFFF**, con `adr` = module_param uint
+    (`__param` 0x70: name="adr", param_ops_uint — el print lo llama "adrs").
+    Medido en cámara (klog.txt:29187-29188): `Param:adrs=83541000, debug=0, delay=0` y
+    `entry point:43541000` ⇒ 0x83541000 + 0xC0000000 = **0x43541000** = base de AV-CAM.BIN.
+    Cabecera LIRO de av-cam.bin (offsets de fichero, 24 B):
+      0x00 ea00000a | 0x04 4c49524f "LIRO" | 0x08 00000004 (versión)
+      0x0C 43541044 | 0x10 43541058 | 0x14 **435410B4** | 0x18 **43541068** | 0x1C 43541078
+      0x20 43541088 | 0x24 43541098 | 0x28 4354109C | 0x2C 435410A0
+    ⇒ `entry->suspend` = palabra de 0x18 = **0x43541068**; `entry->resume` = 0x1C = 0x43541078.
+    El patrón `68 10 54 43` aparece **1 sola vez** en los 11 427 236 B de av-cam.bin, y está en
+    el offset 0x18.
+    REA (xrefs 0x43541068) devuelve **["0x43541018"]**: la ÚNICA referencia a esa
+    entrada es la ranura de datos +0x18 — nadie la llama de forma estática; la invoca liro.
+    Prueba de campo: la línea medida `[LIRO]: entry_suspend:43541068(1)` (S1) y, en arranque,
+    `[LIRO]: entry_resume:43541078(1) ` (log.txt:5591) — los dos punteros impresos son
+    exactamente las palabras 0x18/0x1C de la cabecera. **[V]**
+
+1.7 Qué hay en la entrada [V, capstone]
+    0x43541068 (fichero 0x068): f05f2de9 push {r4,r5,r6,r7,r8,sb,sl,fp,ip,lr}
+                                137e00fa blx 0x435608C0        ← salta a Thumb
+                                f05fbde8 pop {…} · 1eff2fe1 bx lr
+    La rutina Thumb 0x435608C0 (fichero 0x1F8C0) hace, como primeras instrucciones,
+      push {r4,lr} · movs r1,#0xED · **movs r0,#3** · … ⇒ **el argumento (r0=1) se pisa antes
+    de usarse**: el modo que pasa liro no llega a la lógica del AV-CAM. [V] (bytes)
+
+================================================================================================
+2. (b) EL ENVOLTORIO: ANTES, ARGUMENTO Y DESPUÉS DE LA LLAMADA
+================================================================================================
+2.1 ANTES (0x348–0x3B8) [V]
+    (1) guarda: si `[liro_dev+0x2C]` (entry) == 0 ⇒ return 0 sin print (0x35C–0x364).
+    (2) `mode = (pm_get_state() == 4)` (§1.5). 4 = PM_SUSPEND_DISK según warm.c:66
+        `#define WBI_MODE(state, mode) ((state)==PM_SUSPEND_DISK && (mode))` y el patrón
+        de la propia cámara (§4.1). [I, alto] que 4 sea DISK en este kernel; la medida
+        "entry_suspend:…(1)" en warm es consistente.
+    (3) printk("[LIRO]: entry_suspend:%p(%d)\n", entry->suspend, mode) — el destino se imprime
+        ANTES de invocarlo (coincide con la última línea íntegra de la captura SWD).
+    (4) copia literal de 9 palabras (0x24 B) desde `[entry+0x14]` = 0x435410B4 a
+        `liro_dev+0x00..0x23`. Es un bloque de parámetros (floats y enteros: 0x00000000,
+        0x43FA8F00, 0x00075FE4, 0x43CFE37F, 0x00244D5A, 0x4409CE00, 0x00000004, 0x44140FFC,
+        0x00000004) del que después salen cp_start/cp_size (§2.3).
+    (5) **r0 = mode**; NO toca r1/r2 (quedan los restos de la copia: w5=0x4409CE00,
+        w6=0x00000004) ⇒ el ABI sólo garantiza r0. [V bytes / I sobre si el destino los usa:
+        no, §1.7.]
+
+2.2 LA LLAMADA (0x3B4–0x3B8) [V]
+    `ldr r3,[entry+0x18]` · `blx r3` — puntero leído **en el momento** de la memoria mapeada en
+    entry (no de una copia), así que si algo reescribe la cabecera antes del suspend, cambia el
+    destino. El .ko **no** lleva el valor incrustado: los 4 bytes `68 10 54 43` aparecen **0
+    veces** en sus 65 128 B (tampoco 0x43541078/0x43541000) ⇒ el destino sale siempre de la
+    memoria de la imagen, no de una constante del módulo.
+
+2.3 DESPUÉS (0x3BC–0x4DC) [V]
+    (6) 0x3BC `ldr r0,=thread_resume` · 0x3C0 `add r1,r4,#0x28` · 0x3C4 `mvn r2,#0`
+        0x3C8 `ldr r3,="liro-RESUME"` · 0x3CC `bl kthread_create_on_node`
+        0x3D0 `cmn r0,#0x1000` (IS_ERR) · 0x3D4 `str r0,[dev+0x38]` (guarda la tarea)
+        ⇒ **crea un kthread en CADA suspensión** cuyo cuerpo hará el resume real (§5.2).
+        Si IS_ERR: printk("LIRO: suspend error(kthread_create)") y **return −8** (0x3E4
+        `mvn r0,#7`), sin hacer el backup.
+    (7) 0x3EC `bl pm_get_state` · 0x3F0 `cmp r0,#4` · 0x3F4 `bne 0x4D0` ⇒ **sólo si state==4**
+        hace el respaldo de la imagen AV-CAM:
+          0x408 `mov r0,#0x344` · 0x40C `bl vmalloc` → dev+0x30 (ft_backup)
+          0x414 `mov r0,get_cp_size()` · 0x418 `bl vmalloc` → dev+0x34 (cp_backup)
+          0x444 `bl get_cp_start`; 0x4B8 `bl memcpy(ft_backup, [entry+0x14]+0x24, 0x344)`
+          0x4C8/0x4CC `bl memcpy(cp_backup, get_cp_start(), get_cp_size())`
+          fallo de vmalloc ⇒ 2×vfree, printk("[LIRO]: liro suspend error!") y **return −12**
+          (0x4A0 `mvn r0,#0xb`).
+    (8) 0x4D0 printk("[LIRO]: liro suspend complete!") · 0x4D8 `mov r0,#0` → **return 0**.
+    Funciones auxiliares (0x30 y 0x54), ambas triviales [V]:
+      `get_cp_start()` = `[dev+0x10] + [dev+0x0C]`  (es decir, palabras 3 y 4 de la copia)
+      `get_cp_size()`  = `[dev+0x14] − get_cp_start()` (palabra 5)
+    Cuadre exacto con la cámara (log.txt:5589-5592) usando 0xB4 como base:
+      ft: 0x435410B4+0x24 = **0x435410D8** … +0x344 = **0x4354141C**  (836 B) ← medido idéntico
+      cp: 0x43CFE37F+0x00244D5A = **0x43F430D9** … **0x4409CE00** (1 416 487 B) ← medido idéntico
+      (`ft_backup c2afb000 size:836 (435410d8-4354141c)` / `cp_backup c30ff000 size:1416487
+        (43f430d9-4409ce00)`)
+    ⇒ la copia de 9 palabras y la aritmética de cp están **confirmadas por la cámara**, no sólo
+    por el desensamblado.
+
+================================================================================================
+3. (c) VALORES DE RETORNO Y QUÉ HACE EL BUCLE UDIF CON ELLOS
+================================================================================================
+3.1 Retornos posibles de `liro_suspend` [V, 3 salidas y sólo 3]
+      · **0**  — sin entry (0x364) | camino normal (0x4D8) | estamos en state!=4 (0x3F4→0x4D0)
+      · **−8** — `mvn r0,#7` (0x3E4): falló `kthread_create_on_node` (IS_ERR)
+      · **−12** — `mvn r0,#0xb` (0x4A0): fallaron los `vmalloc` del respaldo (ENOMEM)
+    **El valor que devuelve el callback AV-CAM se tira a la basura**: `blx r3` deja su resultado
+    en r0 y la instrucción siguiente (0x3BC) es `ldr r0,=thread_resume`; no se guarda, no se
+    prueba, no se propaga. [V] ⇒ **el firmware no dispone de ninguna vía de error por retorno**;
+    su único efecto observable es lo que escriba/imprima por su cuenta.
+
+3.2 Qué hace el llamador con ese retorno [V, fuente]
+    arch/arm/mach-cxd90014/pm.c:247-252
+        static int cxd90014_pm_prepare(void) {
+            if (unlikely(udif_driver_suspend()))   /* ≠0 */
+                pm_suspend_error(0);
+            return warm_boot_pm_prepare();
+        }
+    ⇒ (i) un valor ≠0 **no aborta**: se sigue llamando a warm_boot_pm_prepare() y la suspensión
+       continúa; (ii) el efecto es `pm_suspend_error(0)` (pm.c:224); (iii) ese error se enmascara
+       luego en warm.c:1193-1206 con `errmode=0` (medido errmode=0) ⇒ devuelve 0 y `sleep.S`
+       apaga igual — conclusión ya establecida en reports/film-pb-1-warm-abort-20261126.md §2,
+       que sigue vigente para esta pregunta. [V fuente + medida]
+    Consecuencia práctica para el arnés: para reproducir la cámara, el hook de liro **no debe
+    propagar** el resultado del AV-CAM; devuelve 0 salvo que fallen kthread_create o vmalloc.
+
+3.3 Agregación interna de `udif_driver_suspend()` — [NV]
+    No está en el árbol OSS (sólo el `extern` de pm.c). Intentos de localizarla en el kernel
+    empaquetado (nflasha3/vmlinux.bin, 3 478 912 B, flat ARM, "Linux version" en 0x25301C):
+      · cadenas halladas y localizadas: `"<6>UDIF: %s%s\n"` (0x2DC6E9), `"suspend start: "`
+        (0x2DC722), `"unified drivers"` (0x2DC732), `"suspend skipped: "` (0x2DC742),
+        `"suspend end:   "` (0x2DC754), `"resume start: "`/`"resume end: "`, `"udm_%s"`,
+        `"unified register thread"` ⇒ el marco imprime por conductor y **puede saltar** uno
+        ("suspend skipped: ") — pero no se ve el criterio.
+      · **no se pudo** llegar al código: la imagen no contiene punteros utilizables hacia sus
+        cadenas. Medido sobre los 3 478 912 B: 17 palabras en 0xC0000000–0xC0400000 y 80 en
+        0x80000000–0x80400000 (nada, para un kernel de 3,4 MB); barrido de literales cada 2 bytes
+        hacia el bloque 0x2DC600–0x2DC800 con bases 0x0/0x80000000/0x80008000/0xC0000000/
+        0xC0008000 ⇒ 1 acierto y es casual (valor 0x002DC6C0 en 0x262D9C, fuera de todo rango de
+        código); 185 movw y 282 movt sueltos en toda la imagen pero sólo 2 pares que formen una
+        dirección, ambos absurdos (0xC4325432, 0xEC32FC32) ⇒ no es código Thumb-2 direccionable;
+        sin cabecera ELF ni gzip/xz/bz2. Sin xref no hay función que desensamblar sin mapa de
+        símbolos ⇒ se deja **NO VERIFICADO** (no se deduce del log).
+    Lo que sí se puede afirmar sin eso: en la captura real el marco imprimió
+    `UDIF: suspend start: unified drivers` → `UDIF: suspend start: liro` → el print de liro y
+    **nunca** `UDIF: suspend end:   liro` ni `…end:   unified drivers` ⇒ el hilo no salió del
+    callback (coherente con S1/S8: reset por watchdog/corte, no retorno con error).
+
+================================================================================================
+4. (d) CONTEXTO E IRQ
+================================================================================================
+4.1 Contexto [V por orden medido + fuente]
+    Cadena: escritura en el nodo de suspensión → `enter_state` → `suspend_devices_and_enter` →
+    `ops->begin` (cxd90014_pm_begin → warm_boot_pm_begin, que fija `pm_state = state`) →
+    `console_suspend` → `dpm_suspend_start` → `suspend_enter` → `ops->prepare` =
+    **cxd90014_pm_prepare** → **udif_driver_suspend()** → `liro_suspend` → callback.
+    Prueba de orden en la captura: `PM: suspend of devices complete after 12.181 msecs` precede
+    inmediatamente a `UDIF: suspend start: unified drivers` / `…: liro` / `entry_suspend`.
+    ⇒ es **contexto de proceso** (el que escribe el nodo; no workqueue: el módulo **no importa**
+    schedule_work/queue_work/tasklet — 0 símbolos en la tabla de indefinidos de liro.ko; sólo
+    hwtimer_* y colas OSAL para su propio runtime), **después de dpm_suspend** de los devices,
+    **antes de** `dpm_suspend_noirq`/`disable_nonboot_cpus`/`syscore_suspend` (donde sí se
+    apagan las IRQ).
+
+4.2 IRQs [V por ausencia + I por consecuencia]
+    · En `liro_suspend` (0x348–0x508) **no hay** `msr/mrs/cpsid/cpsie`, ni `local_irq_*`, ni
+      `spin_lock`, ni `preempt_disable`, ni `disable_irq`: barrido capstone de las 112
+      instrucciones (0x1C4 B) = 0 coincidencias; las únicas llamadas son pm_get_state, printk,
+      kthread_create_on_node, get_cp_size, vmalloc, get_cp_start, memcpy, vfree y el `blx`.
+    · El callback se invoca **antes** de esas llamadas, así que liro tampoco cambia el estado.
+    ⇒ **IRQs habilitadas (I=0 en CPSR)** en el momento del `blx` (*[I] alto*: se deriva de que
+      acto seguido, sin restaurar nada, llama a `kthread_create_on_node` y a `vmalloc`, que
+      duermen; si el callback corriera con IRQs off, eso sería un BUG del propio Sony).
+    · No hay spinlock ni mutex alrededor (no hay campo de lock en juego; `[dev+0x64]` se usa en
+      el resume, no aquí).
+
+================================================================================================
+5. (e) ESPERAS / TIMEOUTS PROPIOS DE liro
+================================================================================================
+5.1 Alrededor de la llamada (suspend): **NINGUNA** [V]
+    No hay `schedule_timeout`, `msleep`, `udelay`, `wait_for_*`, `complete*`, `hwtimer_*`,
+    `schedule()` en `liro_suspend`; el callback se llama en línea y se sigue de largo sin
+    comprobar nada. Tampoco hay timeout de módulo (`delay`/`liro_resume_async` no se consultan
+    en esta función). Por eso la captura no tiene marcas de tiempo intermedias: entre
+    `entry_suspend` y la muerte no hubo espera de liro.
+
+5.2 El resume sí espera, pero **sin timeout** [V]
+    `liro_resume` (.text+0x0E8, 0x260 B):
+      0114 `bl pm_get_state` · 0118 `cmp r0,#4` · 011C `bne 0x22C`
+      0120 `bl pm_is_mem_alive` · 0128 `bne 0x210`           ; si la memoria sobrevivió, no restaura
+      012C `bl get_cp_size` · 0130 `mov r6,#1` · 0134 `str r6,[dev+0x28]`   ; flag=1 (WBI)
+      01DC/01E0 boot_time_add("cache maint start") … 0204/0208 ("cache maint end")
+      0210 2×vfree (dev+0x30, dev+0x34) · 0224 `cmp r5,#0` · 0228 `bne 0x2E4` (return r5)
+      022C…023C printk("[LIRO]: entry_resume:%p(%d) \n", entry->resume, dev+0x28)
+      024C `ldr r3,[dev+0x38]` · 0250 `cmn r3,#0x1000` · 0254/025C printk(resume error(kthread))
+      0268..028C kthread_bind(tarea, cpu=resume_cpu) si != −1
+      0290 `os_tsk_setprio(tarea, 5)` · 02A4 `dev+0x3C = 0` · 02AC `__init_waitqueue_head`
+      02B0/02B4 `wake_up_process(tarea)`
+      02C4/02C8 boot_time_add("wait for liroapp resume")
+      02CC/02D0 **`wait_for_completion(dev+0x3C)`**  ← espera **sin timeout** (salvo que
+              `[dev+0x64] != 0`, en cuyo caso la salta: 0x2B8–0x2C0)
+      02DC printk("[LIRO]: liro resume complete")
+    Y el cuerpo que hace el resume real es el kthread creado en el suspend
+    `thread_resume` (.text+0x8F4, 0x50 B):
+      0910 `ldr r0,[r5]`            ; r5 = arg = &dev+0x28 ⇒ r0 = flag (1 si hubo WBI)
+      0914/0918 `ldr r3,[entry+0x1C]` ; = 0x43541078
+      091C **`blx r3`**             ; entry->resume(flag)
+      0928/092C `complete(dev+0x3C)`
+    Cuadre medido: `entry_resume:43541078(1)` cuando antes se imprimió `liro resume (WBI)` y
+    `entry_resume:43541078(0)` cuando no (log.txt:5591 y 6079) ⇒ el argumento del resume es el
+    flag de restauración, tal y como sale del código. [V]
+    No hay timeout en ningún punto: si el AV-CAM no vuelve, `wait_for_completion` cuelga el
+    proceso de resume para siempre (la cámara lo resuelve con watchdog, no con un límite de liro).
+
+5.3 Otros usos que no son del suspend [V]
+    `proc_suspend` (.text+0x50C, 0x3E8 B; incluye `wait_for_completion` en 0x0860) y
+    `tsk_entry_2nd` (.text+0xA10; `wait_for_completion` en 0x0A8C y `kthread_create_on_node` en
+    0x0594 dentro de proc_suspend) tienen sus propias esperas: son el arranque manual del
+    firmware por /proc, no el camino de suspensión.
+
+================================================================================================
+6. LO QUE ESTO IMPONE AL ARNÉS G22 (derivado, no ejecutado)
+================================================================================================
+  · El hook UDIF del liro real llama al AV-CAM con **r0 = 1** en `warm` (state==DISK) y con 0 en
+    una suspensión a MEM; el destino **ignora el argumento** (§1.7).
+  · El retorno del AV-CAM **no** llega a nadie: cualquier emulación que "aborte por retorno"
+    del callback se aparta de la cámara.
+  · En warm, liro **crea un kthread `liro-RESUME`** y, tras el callback, hace `vmalloc(836)` +
+    `memcpy` de **[0x435410D8, 0x4354141C)** y `vmalloc(1 416 487)` + `memcpy` de
+    **[0x43F430D9, 0x4409CE00)**: esas dos ventanas tienen que estar mapeadas y legibles o el
+    camino real falla por excepción (no por retorno). Si esos rangos no existen en el mapa del
+    emulador, es un delta concreto y medible.
+  · `liro_resume` espera el `complete()` del kthread **sin timeout**.
+
+================================================================================================
+7. LÍMITES
+================================================================================================
+  · [NV] Agregación interna de `udif_driver_suspend()` (¿primer error? ¿OR? ¿break?): sin fuente
+    y sin xref resoluble en vmlinux.bin con las herramientas de esta sesión (§3.3). Lo que sí
+    queda fijado es el llamador (pm.c) y que liro nunca devuelve el valor del AV-CAM.
+  · [NV] Nombre real de los campos `+0x20`, `+0x54`, `+0x5C`, `+0x60` de `UDIF_DRIVER` en el
+    kernel de la cámara (la cabecera OSS disponible es de 2010). Irrelevante para (a)–(e).
+  · [NV] Identidad de `[liro_dev+0x64]` (el que decide si el resume espera). No afecta a la
+    pregunta, que es sobre el suspend.
+  · [I, alto] Que `PM_SUSPEND_DISK == 4` en este kernel: se apoya en warm.c:66 y en que la
+    cámara imprime `(1)` justo en el warm. No hay cabecera con el enum en el árbol OSS.
+  · No se ha ejecutado nada: ni cámara, ni QEMU, ni warm. REA sólo se usó para los xrefs de
+    av-cam.bin; el módulo se resolvió con capstone+relocaciones, y se dice expresamente que
+    ninguna consulta vacía de REA se ha tomado como prueba de ausencia.

@@ -1,0 +1,270 @@
+S8 — ORIGEN DEL REINICIO tras `warm` con liro activo (A6000, 26-11-2026)
+Caso: film-pb-1-warm-liro-20261126 · Pregunta 8 · 100 % offline
+Estado del documento: evidencia de una sola pregunta (no es informe). Sin cámara, sin flash, sin RAM.
+
+Método declarado: MCP `rea` NO disponible en esta sesión (no hay herramientas `rea` en el entorno; no se ha abierto
+sesión ni binario en REA). Toda la parte estática sale de (i) el GPL de Sony ya extraído en el repo
+(analysis/session18/{main/sony-oss-extracted/linux, codex-g/oss-linux/linux}) y (ii) búsqueda de cadenas con
+grep/python sobre los volcados. No se ha desensamblado nada nuevo con capstone porque no hizo falta: los hechos
+decisivos están en fuente C/asm exacta y en las marcas medidas. Lo que no se ha podido leer (semántica del
+cargador) queda marcado NO VERIFICADO y no se usa como prueba.
+
+====================================================================================================
+1. HALLAZGO (una frase)
+====================================================================================================
+El arranque nuevo NO es un corte de alimentación ni un reinicio ordenado por `warm`: el SoC recibió un reset por
+la línea RSTREQ (el mismo registro que escribe el kernel: `MISC_RSTREQ_ASSERT` en VA_MISC+0x44, con `xrstreq=1`)
+en el MISMO segundo en que liro imprime su entrada de suspend, sin que se creara imagen alguna (nflasha5 intacto,
+nada de `do_make_image`). La ruta que lo explica sin hipótesis adicionales es (a) el watchdog de la plataforma
+—`wdt.mode=1 wdt.timeout=500` = 500 ms— al quedarse la CPU sin refrescarlo dentro de `udif_driver_suspend()` →
+liro, colgada o en el halt de `pm_suspend_error` (que NO reinicia: hace WFI). La única alternativa viva es una
+excepción dentro del callback Thumb (`exception.reboot=1` → `em_reboot(0)` → `machine_restart` → el mismo RSTREQ);
+no se puede descartar porque los últimos ~300 ms de printk se perdieron con el enlace SWD.
+
+====================================================================================================
+2. CRONOLOGÍA MEDIDA (todo con ficheros de /tmp y sus mtime; sin interpretación)
+====================================================================================================
+Ancla del kernel VIEJO (ff49ff1d): `cat /proc/uptime` imprimió 524.23 dentro de la misma orden telnet que
+escribió `warm` (orden-enviada.txt, epoch 1795740004.820 = 21:40:04.820).
+  ⇒ t0(kernel viejo) ∈ [21:31:20.59, 21:31:21.19]
+Últimas marcas del kernel viejo (uptime del propio dmesg):
+  525.616 s  "B warm_boot_pm_begin"        (tLog, = count_pages fase 1; dura 11.666 s)
+  537.282 s  "E warm_boot_pm_begin"
+  537.295257 "PM: suspend of devices complete after 12.181 msecs"
+  537.295315 "UDIF: suspend start: liro"
+  537.295341 "[LIRO]: entry_suspend:43541068(1)"   ← ÚLTIMA marca del kernel viejo (klog SWD)
+  ⇒ 537.295 s = [21:40:17.89, 21:40:18.49]
+Corte: la lectura SWD siguiente falla (`mem2array: Read @ 0x80395d5a ... failed`), swd.log. Se leyó entre
+  21:40:16 (marca "Reanudación" nº1) y 21:40:17 (marca nº2) el volcado de 8192 B que acaba en la línea LIRO.
+Ancla del kernel NUEVO (73273afe): despues.json, uptime 91.78, escrito a las 21:41:50.140
+  ⇒ t0(kernel nuevo) ∈ [21:40:16.86, 21:40:18.36]
+  Ancla independiente: el último contenido del anillo SWD tiene ts 51.012147 y se escribió en disco a las
+  21:41:07.878 ⇒ t0 ≤ 21:40:16.864. Las dos anclas coinciden dentro de 1,5 s (error de reloj entre el uptime de
+  la cámara y el reloj del PC; 1,5 s / 537 s = 0,3 %).
+Resultado: hueco (t0 nuevo − última línea vieja) ∈ [−1,6 s, +0,5 s] ⇒ |hueco| ≲ 1,6 s.
+LATENCIA DEL CARGADOR (su propio reloj, del mismo arranque): "L: BOOT (VER 01.90)" a 355 ms y
+  "L: Kernel Jump[MODE#1 NR_RES#0]" a 1075 ms ⇒ reset→salto al kernel ≈ 0,72 s medidos.
+  Por tanto el reset del SoC ocurrió ≈ 1,1 s antes de t0(nuevo) ≈ 21:40:15,9-17,3, es decir, en el mismo
+  segundo que la entrada del callback LIRO. NO hay ningún intervalo de segundos entre el corte y el arranque.
+(Nota: los ms del tLog/`/proc/snsc_boot_time` NO son tiempo real fiable en valor absoluto — en el arranque nuevo
+van 43 s por detrás del uptime y en el anterior iban 900 s por detrás; sirven para orden y para diferencias dentro
+del mismo arranque, como se ha usado aquí y en el punto 5.)
+
+====================================================================================================
+3. LAS TRES EXPLICACIONES
+====================================================================================================
+3.1 (a) Watchdog del SoC — VERIFICADO en la mecánica; INFERENCIA en la atribución.
+· cmdline REAL de la cámara (klog del 09-11, analysis/camera-dumps/20261109-swd-360/klog.txt:29040, y
+  analysis/camera-dumps/senser-shell-20261020-180946/shell.txt:16; también
+  firmware/extracted/fw321/.../0800_appli/setting/kemco.txt:11):
+  "... wdt.timeout=500 ... xrstreq=1 wdt.mode=1 ... exception.reboot=1 ... warm.mode=2 warm.tmo=50000 ...
+   pm.sus_error=0x80021060 ... klog.addr=0x834E0000 klog.size=0x20000 ... boottime=0x20000@0x834C0000"
+· UNIDADES (VERIFICADO): el parámetro está en MILISEGUNDOS, no segundos.
+  arch/arm/mach-cxd90014/wdt.c:199 `cpu_wdt_count = msec * wdt_timeout;` con
+  wdt.c:198 `msec = (clk / cpu_wdt_prescaler) / MSEC_PER_SEC;` (ticks por ms) y
+  wdt.c:203 `cxd90014_wdt_count = (msec + 1) * wdt_timeout; /* to fire CPU WDT before TIMER WD */`
+  ⇒ `wdt.timeout=500` = 500 ms en los DOS perros (MPCore por CPU y TIMER-IP).
+· Armado y refresco: wdt.c:39-44 (`mode`, `timeout`), 48 (`CXD90014_WDT_CFG = TMCK_DIV4|TMCS_ONESHOT|TMRST`),
+  115-122 (`watchdog_touch`), 127-139 (`watchdog_tick`, lo llama la IRQ de timer: si `wdt_mode == WDT_OFF`
+  no hace nada), 174-182 (`wdt_intr`: lee VA_MISC_RSTREQ_STAT, imprime "WDT:RSTREQ_STAT=0x%lx", y si hay bit
+  de CPU hace `pm_machine_reset(0)`; si no, `BUG()`), 189-212 (`wdt_setup`), 233-256 (`wdt_init`, con la
+  compuerta `MISC_DBGMODE`), 258-267 (`cxd90014_wdt_resume` rearma tras despertar).
+· Que está ARMADO en producción (VERIFICADO por medida, no por el código): dos reinicios reales con
+  `WDT:RSTREQ_STAT=0x0` + `kernel BUG at arch/arm/mach-cxd90014/wdt.c:182!`
+  (docs/capture/camera-reset-logs.md:9-10 y analysis/camera-dumps/20261110-swd-369/klog.txt:3323-3324).
+· Consecuencia clave: si la CPU deja de refrescar (IRQs desactivadas o bucle cerrado) el RSTREQ sale por
+  HARDWARE en ~500 ms y NO imprime nada (la IRQ 254 no se atiende). Encaja con que la captura acabe en la línea
+  LIRO sin ninguna marca de WDT.
+· Además, el propio código asume que hay que refrescar a mano en las rutas largas:
+  arch/arm/common/warm.c:1078 `watchdog_touch();` dentro del bucle de `do_make_image`.
+3.2 (b) Apagado/reset ordenado por software — enumerado y acotado.
+Rutas que pueden reiniciar, con su condición:
+  b1 `em_reboot(1)` desde `cxd90014_create_warmbootimage` (arch/arm/mach-cxd90014/pm.c:389) → sólo en la rama
+     `SSBOOT_CREATE_OPTSSBI`, y esa función sólo se llama desde `cxd90014_cpu_suspend` (sleep.S:99), es decir
+     DESPUÉS de `.prepare` y de `dpm_suspend_noirq`, en la fase de PM_ENTER_NORMAL. INALCANZABLE aquí: las
+     marcas se cortan en `.prepare` y nflasha5 no se tocó (punto 5).
+  b2 `pm_suspend_error()` (pm.c:224-232) → escribe 1 en pm.sus_error y llama `cxd90014_pm_halt(0)` →
+     `cxd90014_cpu_suspend(PM_ENTER_ERROR)` (pm.c:217-222) → sleep.S:95-96 `bne goto_suspend` → desactiva IRQ
+     (sleep.S:88-89), copia el código de resume, `pm_memory` (sleep.S:163; pm_macro.S:51-…: PASR si está
+     configurado + self-refresh — no es un corte del riel de la DRAM) y bucle `wfi` infinito (sleep.S:187-191).
+     NO reinicia: se queda colgado.
+     ⇒ Si el camino real fue éste, el reset lo produce igualmente (a) 500 ms después.
+  b3 `enter_state()` (kernel/power/suspend.c:516-536) tras un error: con `/sys/module/pm/parameters/suserr`
+     (kernel/power/pm.c:34-35) = 0 → FAIL_ACTION_EXCEPTION (BUG()); = 1 → FAIL_ACTION_RESUME (no hace nada);
+     = 2 → `machine_restart(NULL)`; = 3 → `machine_halt()`. En ESTE intento el sondeo dejó suserr=1
+     (`params-antes-de-warm.json` = ["1","1","300000"], escrito 0,1 ms antes de enviar la orden) ⇒ aunque
+     `enter_state()` hubiera visto error, NO reiniciaría. (Y en esta ruta ni se llega: `suspend_enter` no
+     retorna por b2.)
+  b4 `machine_restart`/`arch_reset` (include/mach/system.h:48-58 → `pm_machine_reset(1)`).
+  b5 Excepción de kernel: `exception.reboot=1` (cmdline) ⇒ `em_reboot_flag=1` ⇒ cualquier oops/panic llama
+     `em_reboot(0)` → `machine_restart(NULL)` (kernel/exception.c:51-52, 760-775, 989-991).
+     ESTA es la única vía de (b) que sigue viva: un fault dentro del callback Thumb 0x435608c0 (o en su
+     retorno) produciría exactamente lo observado (RSTREQ + reinicio sin escribir flash).
+  Todas las de (b) —salvo b1, inalcanzable— acaban en el MISMO registro RSTREQ que (a); no dejan huella
+  distinguible en el loader (punto 4) y su printk (`WDT:RSTREQ_STAT`, `ERROR:suspending kernel.`, traza de
+  oops/panic) caería en el klog, que no se pudo leer tras el reset.
+3.3 (c) Reset externo / caída de alimentación — DESCARTADO. Tres pruebas independientes:
+  c1 Batería/mando: batería 87 %, 4000 mV, `AC powered: false`, `USB powered: false`
+     (bateria-antes.txt y antes.json/despues.json del mismo sondeo) ⇒ nada que sugiera corte ni consumo
+     externo; el único "apagón" sería la retirada de batería, y entonces el arranque que sigue sería un
+     encendido por interruptor, con otra firma en el cargador (c3).
+  c2 CONTINUIDAD DE RAM (VERIFICADO byte a byte, ver punto 6): el anillo tLog de DDR y el anillo de dmesg de
+     8 KiB conservan marcas del kernel anterior y las continúan. Un colapso del riel de alimentación durante el
+     ~1 s que tarda el cargador habría perdido la DRAM (no hay self-refresh fuera de sleep.S).
+  c3 Contador/motivo del cargador: los dos intentos `warm` dejan
+     `L: check POWER[KEY_E#0 KEY_L#29 RMEM#0 HIC#0 R_REQ#1 H/C#0]` + `L: check BACKUP[FILE#1 RST#0 ERR#0-0]
+     DATE[2] DDR[0]` + `L: Kernel Jump[MODE#1 NR_RES#0]`, mientras que los encendidos por interruptor medidos en
+     el repo dejan `R_REQ#0` y `H/C#1` con `RMEM#7/8` (tabla del punto 4). Es decir: el reset de estos dos
+     intentos está REGISTRADO como "reset request", no como puesta en tensión.
+
+====================================================================================================
+4. REGISTROS PERSISTENTES / MOTIVO DE REINICIO (lo más parecido a un "reset reason")
+====================================================================================================
+4.1 Registro RSTREQ del SoC (VERIFICADO en fuente).
+  include/mach/regs-misc.h:36-37 (`MISC_DBGMODE 0x30`, `MISC_RSTREQ 0x40`), 66-81:
+    SET 0x0044 · CLR 0x0048 · STAT 0x0050
+    bits de STAT: ST_TIM 0x10, ST_CPU3 0x08, ST_CPU2 0x04, ST_CPU1 0x02, ST_CPU0 0x01
+    EN 0x010 (habilita la petición) · ASSERT 0x001 (la pide) · CPUCLR 0x100
+  core.c:213-227 `cxd90014_reset(force)`: con force=1 `local_irq_disable()` + `MISC_RSTREQ_EN|ASSERT` y bucle
+    infinito; con force=0 sólo `MISC_RSTREQ_ASSERT`. `pm_machine_reset` = ese puntero (core.c:226).
+  core.c:276-300 `xrstreq` (cmdline `xrstreq=1`) deja el EN puesto desde el arranque ⇒ cualquier ASSERT
+    (software, watchdog o el propio `machine_restart`) provoca el reset del SoC.
+  Ojo: el handler de la IRQ 254 sólo mira los bits de CPU (wdt.c:176). Con `STAT=0x0` (lo medido en cámara)
+    no hay bit de CPU ⇒ cae en el `BUG()` de wdt.c:182, sea cual sea la fuente que pidió el RSTREQ. Es decir:
+    `STAT=0x0` no identifica al emisor; sólo dice que no fue un perro por-CPU.
+4.2 Motivo que publica el cargador tras el reset (medido).
+  `L: check POWER[KEY_E#… KEY_L#… RMEM#… HIC#… R_REQ#… H/C#…]`, `L: check BACKUP[FILE#… RST#… ERR#…] DATE[…]
+  DDR[…]]`, `L: Kernel Jump[MODE#… NR_RES#…]` (tLog = /proc/snsc_boot_time; también copiado a `KIKILOG.DAT`
+  de nflasha10 = /tmp, ver nand-20261105/dev_nflasha10.bin @0x170588).
+  Muestreo de todos los registros accesibles en el repo + los dos intentos:
+
+  | fuente                                                        | reset que lo precede          | KEY_E | KEY_L | RMEM | R_REQ | H/C | BACKUP                | MODE | NR_RES |
+  |---------------------------------------------------------------|-------------------------------|-------|-------|------|-------|-----|-----------------------|------|--------|
+  | /tmp/a6000-warm-sin-sd/boottime-despues.txt:229               | 1.er intento warm (sin SD)    | 0     | 29    | 0    | **1** | 0   | FILE#1 RST#0 ERR#0-0  | 1    | 0      |
+  | /tmp/a6000-warm-captura-swd/boottime-despues.txt:235          | 2.º intento warm (SWD)        | 0     | 29    | 0    | **1** | 0   | FILE#1 RST#0 ERR#0-0  | 1    | 0      |
+  | analysis/camera-dumps/20261110-swd-369/klog.txt:2523          | sesión SWD 10-11 (ese mismo         | 0     | 29    | 0    | **1** | 0   | FILE#1 RST#0 ERR#0-0  | 1    | 0      |
+  |                                                               | arranque dispara RSTREQ+BUG a 36 s) |      |       |      |       |     |                       |      |        |
+  | analysis/camera-dumps/20261110-swd-371/klog3.txt:3023         | ídem (sesión SWD 10-11)       | 0     | 229   | 0    | **1** | 0   | FILE#1 RST#0 ERR#0-0  | 1    | 0      |
+  | /tmp/a6000-warm-sin-sd/boottime-antes.txt:993                 | encendido por interruptor     | 1     | 19    | 7    | 0     | 1   | FILE#3 RST#0 ERR#0-0  | 2    | 2      |
+  | analysis/camera-dumps/mem-20261020-log/log.txt:4127           | puesta en tensión (20-10)     | 800   | a09   | 8    | 0     | 1   | FILE#3 …              | 2    | 3      |
+  | analysis/camera-dumps/20261117-traza-T2T6/log_reposo.txt:3678 | encendido normal              | 0     | 201   | 0    | 0     | 0   | FILE#1 …              | 1    | 0      |
+  | nand-20261105/dev_nflasha10.bin@0x170588 (KIKILOG.DAT)        | puesta en tensión antigua     | 10    | 219   | 8    | 0     | 1   | FILE#3 …              | 2    | 3      |
+
+  Lectura (INFERENCIA FUERTE, no VERIFICADO en el binario del cargador): `R_REQ#1` = el reset entró por una
+  petición RSTREQ (el mismo registro que escriben el WDT y `cxd90014_reset`), y `R_REQ#0` con `H/C#1`/`RMEM#7-8`
+  = puesta en tensión por interruptor. Los dos intentos `warm` —experimentos distintos, 9 min aparte— dan la
+  MISMA firma (R_REQ#1 / FILE#1 / MODE#1 / NR_RES#0); los cuatro arranques ajenos a la prueba dan R_REQ#0 (tres
+  de ellos con FILE#3 / MODE#2 / RMEM#7-8 / H-C#1, y uno con FILE#1 / MODE#1 como la prueba — o sea que FILE/
+  MODE no discriminan, R_REQ sí). Las dos muestras `R_REQ#1` de 10-11 no permiten atribuir su reset (no está la
+  cola del arranque anterior en esas ventanas), pero sí se comprueba en el volcado 369 que ese kernel dispara
+  `WDT:RSTREQ_STAT=0x0` + `BUG at wdt.c:182` a los 36 s, es decir que la vía RSTREQ→reinicio está viva.
+  `RST#0` es 0 en TODAS las muestras ⇒ no distingue nada. La semántica exacta de
+  KEY_E/KEY_L/RMEM/HIC/H/C/MODE/NR_RES **NO ESTÁ VERIFICADA**: el binario del cargador no está localizado en el
+  repo (nflasha10 es /tmp, no el cargador); no se ha desensamblado. Se usa sólo como correlación empírica.
+4.3 Lo que NO queda registrado en ningún sitio persistente: quién pidió el RSTREQ (la STAT se limpia con el
+  reset; el cargador sólo publica el bit de petición). Por eso (a) y (b5) no se separan con lo ya capturado.
+
+====================================================================================================
+5. nflasha5 y "no se escribió nada" (VERIFICADO)
+====================================================================================================
+antes.json / despues.json del sondeo: `header` = f1d3ff8443297732862df21dc4e57262 (= "cero" en la tabla DIGEST
+de control.py) y `block` = ec87a838931d4d5d2e94a04644788a55 (md5 de los primeros 256 KiB) IDÉNTICOS antes y
+después. ⇒ El flujo no llegó a crear imagen: no se ejecutó `cxd_create_warmbootimage` (warm.c:1212) ni, por
+tanto, `do_make_image` (warm.c:1054) ni la rama b1. Con `warm.errmode=1` (valor del intento) un fallo de
+`do_make_image` habría devuelto error y sacado "SUSPNED is aborted" (warm.c:1200-1206) — tampoco aparece.
+Encaja con que el corte esté antes: dentro de `suspend_ops->prepare()`.
+
+====================================================================================================
+6. CONTINUIDAD DE RAM (VERIFICADO, byte a byte)
+====================================================================================================
+6.1 Anillo tLog (`boottime=0x20000@0x834C0000`, /proc/snsc_boot_time; en el volcado se titula "boot time
+    (434c0000)"): en /tmp/a6000-warm-captura-swd/boottime-despues.txt las líneas 230-231 son las ÚLTIMAS del
+    kernel viejo ("3: 008E B unified drivers : 537295 [ms]" y "3: 008E B liro : 537295 [ms]") y la 232 es la
+    PRIMERA del arranque nuevo ("L: BOOT (VER 01.90) : 355 [ms]"), sin reiniciar el búfer y en la misma ventana
+    lineal de 141 991 B.
+    Inmediatamente detrás van `L: check POWER[IC#7 …]`, `L: check BACKUP[FILE#1 …]`, `L: Kernel Jump[…]`,
+    `0: setup_arch`, … Es decir: el cargador ESCRIBE EN EL MISMO ANILLO DE DDR que dejó el kernel anterior.
+6.2 Anillo de dmesg de 8 KiB (cabecera 0x8037C760/0x8037C764 = {0x2000, 0x4039575D}, datos en 0x8039575D,
+    puntero en 0x80395290; vigilar.cfg, leído por SWD por AHB-AP0): el volcado previo al corte acaba en
+    "[ 537.295341] [LIRO]: entry_suspend:43541068(1)"; los volcados posteriores al corte (mismo anillo, mismas
+    direcciones) contienen el arranque del kernel nuevo, desde "<6>[ 0.000000] cmdline override at 40033005",
+    con huecos a cero (zona aún no reescrita). Si la DDR se hubiera reiniciado/perdido, esas marcas no estarían.
+6.3 El klog reservado (0x834E0000, 128 KiB, `klog.addr/klog.size`) tiene salvamento entre arranques: el kernel
+    nuevo imprime "<6>[ 1.730761] klog: keep logging buffer: 0x00020000@0x834e0000, magic wrong nbit: 0"
+    (kernel/klog.c:259-283); `magic wrong nbit: 0` significa que la cabecera anterior era VÁLIDA (umbral 3
+    bits) ⇒ el buffer del kernel viejo SE CONSERVÓ. Ese es el sitio donde estaban (o no) `WDT:RSTREQ_STAT`,
+    `ERROR:suspending kernel.` y la traza de oops de los últimos 300 ms, y no se leyó (el `dmesg` del sondeo
+    posterior salió vacío: dmesg-despues.txt = 1 byte).
+
+====================================================================================================
+7. QUÉ NO SE PUEDE DECIDIR CON LO YA MEDIDO, Y LA MEDIDA QUE LO DECIDE
+====================================================================================================
+7.1 (a) WDT vs (b5) excepción en el callback: las dos escriben el mismo RSTREQ y reinician en <1 s. Decisión:
+    leer el klog conservado (0x834E0000, 128 KiB) por SWD o `dd if=/dev/mem` INMEDIATAMENTE tras el arranque
+    nuevo, antes de que el log nuevo lo pise (~128 KiB ≈ 2-3 min de arranque). Basta buscar
+    `WDT:RSTREQ_STAT` / `kernel BUG at …/wdt.c:182` (⇒ a) frente a `Unable to handle kernel` /
+    `Kernel panic` / traza (⇒ b5).
+7.2 Si se quiere separar (a) de (b2+WDT) —es decir, si la CPU estaba colgada dentro del Thumb o ya en el bucle
+    WFI de sleep.S—: tras el corte, detener las CPU con `halt` y leer PC/SP de las 4. La STAT (VA_MISC+0x50)
+    no sirve (se limpia con el reset), pero el PC sí: PC dentro del bucle `1: b 1b` de sleep.S:187-191 ⇒ b2
+    (halt de `pm_suspend_error`); PC dentro de 0x435608c0 (Thumb) o de su llamante av-cam ⇒ colgado en el
+    callback.
+7.3 El retardo exacto: un contador de ms en el propio printk (o `BOOT_TIME_ADD1`) entre la línea LIRO y el
+    reinicio; 500 ms exactos apuntan al WDT, <100 ms apunta a reset directo por software.
+7.4 NO REPETIR nada de esto sin autorización: son medidas que exigen cámara.
+
+====================================================================================================
+8. CONSECUENCIAS PARA EL ARNÉS G22 (QEMU) — lo que hay que modelar para "igual que la cámara"
+====================================================================================================
+8.1 ORDEN REAL del `warm` (VERIFICADO en fuente: kernel/power/suspend.c:342,352,240-244 y pm.c:242-258):
+    `enter_state` → printk "PM: Syncing filesystems ... done." → `suspend_prepare` (freeze + `.begin` =
+    `warm_boot_pm_begin` = count_pages) → `dpm_suspend_start` → "PM: suspend of devices complete after X" →
+    `suspend_enter` → **`suspend_ops->prepare` = `cxd90014_pm_prepare`** → `udif_driver_suspend()` (imprime
+    "UDIF: suspend start: <drv>" por driver, liro el último) → `warm_boot_pm_prepare()`.
+    Con SD, en la misma ronda la última marca fue "B b-250" (udif_bdev_suspend 0x401fa1a0): el corte cae
+    SIEMPRE dentro de `udif_driver_suspend`, no en el controlador de tarjeta ni en el escritor del WBI.
+8.2 Hay que modelar (si no, el arnés se queda colgado donde la cámara se reinicia):
+    (1) RSTREQ como reset de SoC que PRESERVA DDR (VA_MISC+0x44/0x48/0x50, bits de regs-misc.h:66-81) y que
+        deja el bit de petición para el cargador (`R_REQ#1`);
+    (2) el watchdog de 500 ms refrescado desde la IRQ de timer (`watchdog_tick`) y su RSTREQ por hardware
+        cuando la CPU no lo refresca, incluidas IRQs desactivadas (sin printk);
+    (3) el salvamento del klog (magic a ≤2 bits) y del tLog/WCUN entre reinicios;
+    (4) la secuencia del cargador (BOOT → check POWER → check BACKUP → Kernel Jump, 355→1075 ms medidos) con
+        `R_REQ#1`, `FILE#1`, `MODE#1`, `NR_RES#0`;
+    (5) `warm_boot_pm_begin` = count_pages: 11,666 s medidos (intento SWD) y 15,096 s (intento sin SD); es el
+        tramo que va del `echo warm` a `.prepare` y sin él la emulación llega antes de tiempo;
+    (6) `pm_suspend_error` → halt con WFI (NO reinicia) + self-refresh de DRAM (pm_macro.S `pm_memory`), y
+        `enter_state` con la tabla FAIL_ACTION (suserr 0/1/2/3).
+8.3 El "no arranca igual que la cámara" del arnés, en esta fase, no es un cuelgue del firmware: es un reset
+    del SoC. Cualquier prueba del arnés que espere un cuelgue tras la línea LIRO está esperando algo que la
+    cámara no hace.
+
+====================================================================================================
+9. LÍMITES
+====================================================================================================
+· REA no disponible en esta sesión y no se ha abierto binario: la estática es el GPL de Sony tal como está en el
+  repo. `av-cam.bin` (donde vive el Thumb 0x435608c0) no se ha mirado aquí (es alcance de otras preguntas del
+  caso); este documento NO dice qué hace el callback, sólo cuánto tarda el sistema en reiniciarse y por dónde.
+· Semántica del cargador (R_REQ/H-C/RMEM/MODE/NR_RES): NO VERIFICADA; la tabla del punto 4 es correlación.
+· Los últimos ~300 ms de klog del kernel viejo se perdieron (enlace SWD roto) y el klog conservado no se leyó
+  (dmesg posterior vacío). Por eso (a) y (b5) no se separan.
+· `wdt_init` depende del bit `MISC_DBGMODE` (wdt.c:240-244) que no se puede leer en los volcados; que el WDT
+  está armado en producción se apoya en dos reinicios reales con `WDT:RSTREQ_STAT` + `BUG at wdt.c:182`.
+· Relojes: el uptime del kernel y el reloj del PC difieren ~0,3 % en este arranque; todas las cotas del punto 2
+  lo incluyen. Los ms del tLog no son fiables en valor absoluto (43 s y 900 s de desviación en dos arranques).
+· Este fichero es evidencia de una sola pregunta (S8) y no sustituye al informe del caso.
+
+====================================================================================================
+10. REPRODUCIBILIDAD (comandos usados; ninguno toca la cámara)
+====================================================================================================
+grep -n "L: check POWER\|L: BOOT (VER\|L: Kernel Jump" /tmp/a6000-warm-captura-swd/boottime-despues.txt \
+     /tmp/a6000-warm-sin-sd/boottime-despues.txt /tmp/a6000-warm-sin-sd/boottime-antes.txt
+python3 -  # separa kernel-swd.bin por las marcas "<epoch> Reanudación…" y lista min/max de ts por tramo
+python3 -  # lista los "L: check POWER[KEY…]" de analysis/camera-dumps y de nand-20261105/dev_nflasha10.bin
+nl -ba analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/{pm.c,core.c,wdt.c}
+nl -ba analysis/session18/main/sony-oss-extracted/linux/arch/arm/mach-cxd90014/sleep.S
+nl -ba analysis/session18/main/sony-oss-extracted/linux/arch/arm/common/warm.c
+nl -ba analysis/session18/codex-g/oss-linux/linux/kernel/power/{suspend.c,pm.c}
+nl -ba analysis/session18/codex-g/oss-linux/linux/kernel/{exception.c,klog.c}
+Aritmética del punto 2 (epoch 1795740004.820, uptimes 523.37/524.23/91.78, ts máx 51.012147, mtime
+21:41:07.878, 21:41:50.140).

@@ -1,0 +1,284 @@
+PREGUNTA 7 · SUSPENSIÓN DEL KERNEL — udif_driver_suspend, pm_suspend_error, pm_halt y el arranque del WBI
+=========================================================================================================
+Sonda `warm` sin SD del 26-11-2026 (captura SWD). Todo offline: no se ha tocado la cámara, ni RAM, ni flash.
+
+MÉTODO Y ANCLAS
+- Fuente C del OSS de Sony 3.21: analysis/session18/main/sony-oss-extracted/linux (idéntico al árbol
+  codex-g: arch/arm/mach-cxd90014/pm.c md5 006cc75a16ec3a40944285b37b64a554). Kernel 3.0.27_nl-rt106
+  (#1 SMP PREEMPT RT, 24-01-2019) según analysis/camera-dumps/senser-shell-20261020-180946/shell.txt:14.
+  El OSS solo trae arch/ y drivers/: kernel/power/* no está, se lee del binario.
+- Binario real: firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/
+  vmlinux.bin (3 478 912 B, sha256 1ad249a2f231785e8d036fb8be2bbb90ca7bcbb00fd24f4a87647a92acd55053).
+  Desensamblado con capstone 5.0.7. VA = 0x40038000 + offset de fichero: base deducida con TRES anclas
+  __kstrtab independientes («udif_driver_register» 0x4032ed72 → off 0x2f6d72, «udif_driver_unregister»
+  0x4032ed87 → 0x2f6d87, «__udif_devnodes» 0x40322dba → 0x2eadba: las tres dan 0x40038000).
+  VA ↔ física = VA + 0x40000000 (PAGE_OFFSET 0x40000000, PHYS_OFFSET 0x80000000): cuadra con el arranque
+  del kernel en 0x80038000 (docs/capture/e26-r14…) y con el `mov r3,#0xc0000000` del propio pm_prepare.
+- Direcciones de símbolos: /proc/kallsyms de la cámara (analysis/camera-dumps/senser-shell-20261020-180946/
+  shell.txt; 22 019 símbolos, CONFIG_KALLSYMS_ALL=n ⇒ no hay símbolos de datos).
+- Cadena de arranque real de la cámara con el orden completo de uDIF: mismas shell.txt:27462-27558.
+- liro.ko: firmware/.../nflasha15_unpacked_unpacked/kmod/liro.ko (sha256 7b10868067752913541c83e998783f51b51f13d7e1ca677d98fb3db7027ab2d4).
+- REA **no disponible en esta sesión** (ni conector `rea` ni sesión abierta) ⇒ TODO lo del binario está
+  verificado con capstone contra bytes; Ghidra no se ha usado. (Una consulta vacía de REA no probaría ausencia.)
+
+Comando de reproducción del desensamblado (sin dependencias del repo):
+```
+python3 -c "
+import capstone;b=open('.../nflasha3_unpacked_unpacked/vmlinux.bin','rb').read();B=0x40038000
+m=capstone.Cs(capstone.CS_ARCH_ARM,capstone.CS_MODE_ARM)
+va=0x400520e0
+[print('%08x %-8s %s %s'%(i.address,i.bytes.hex(),i.mnemonic,i.op_str)) for i in m.disasm(b[va-B:va-B+4*30],va)]"
+```
+
+---------------------------------------------------------------------------------------------------------
+(a) ¿EN QUÉ FASE DEL PM CORE CORRE udif_driver_suspend?  [VERIFICADO]
+---------------------------------------------------------------------------------------------------------
+Corre en la fase **platform prepare** (`suspend_ops->prepare`), es decir la fase «prepare» de la
+plataforma dentro de `suspend_enter`, NO en las fases dpm.
+
+Cadena verificada en bytes (VA → símbolo de kallsyms → instrucción):
+  enter_state → pm_notifier_call_chain(3) · usermodehelper_disable (0x40073d64) ·
+  freeze_processes (0x400923b8) → pm_suspend (≈0x40092a30…0x40092bcc)
+    → suspend_devices_and_enter (0x400927a8; shell.txt:2864)
+       0x400927e0  blx [suspend_ops+4]        = cxd90014_pm_begin (0x40051f58, shell.txt:1139)
+                  (suspend_ops = *(0x40398744+4); los otros slots usan la misma base)
+                                                  → warm_boot_pm_begin (0x4004c27c, shell.txt:955)
+       0x400927ec  bl 0x400610b4              = suspend_console
+       0x400927f4  bl 0x401bee74              = dpm_suspend_start (shell.txt:9290 = dpm_prepare
+                                                  0x401bec7c + dpm_suspend 0x401beadc)
+                                                  dpm_suspend acaba en dpm_show_time (0x401bdf00,
+                                                  shell.txt:9270) con la cadena de 0x4030df65:
+                                                  "<6>PM: %s%s%s of devices complete after %ld.%03ld msecs\n"
+       0x40092828  blx [suspend_ops+8]        = cxd90014_pm_prepare (0x400520e0, shell.txt:1146)
+                                                  → udif_driver_suspend (0x401fb848, shell.txt:10271)
+       0x40092838  bl 0x401be3e8              = dpm_suspend_noirq (shell.txt:9276)
+       0x40092864  blx [suspend_ops+0xc]      = prepare_late  → NULL en esta plataforma
+       0x40092880  bl 0x400622b8              = disable_nonboot_cpus (shell.txt:1565)
+       0x4009288c  bl 0x40092780              = arch_suspend_disable_irqs
+       0x400928b8  bl 0x401b9e58              = syscore_suspend (shell.txt:9087)
+       0x400928e0  blx [suspend_ops+0x10]     = cxd90014_pm_enter (0x40052220, shell.txt:1148)
+                                                  → _cxd90014_pm_enter(PM_ENTER_NORMAL) → cxd90014_cpu_suspend
+Tabla real `cxd90014_pm_ops` en .data 0x4037be60 (fuente pm.c:291-297): +0 valid 0x40051e90,
++4 begin 0x40051f58, +8 prepare 0x400520e0, +0xc prepare_late 0x00000000, +0x10 enter 0x40052220,
++0x14 wake 0, +0x18 finish 0x40051ee8. `suspend_set_ops(&cxd90014_pm_ops)` en pm.c:350.
+
+Qué implica para IRQs y contexto:
+- **Contexto de proceso**: el hilo que escribe en /sys/power/state (`echo warm`), dentro de pm_suspend.
+  Tareas de usuario ya congeladas; notificadores PM_SUSPEND_PREPARE ya pasados (0x40092044(3)).
+  Consola suspendida (irrelevante: console=ttynull y el log se lee de la RAM, klog.addr=0x834E0000).
+- **IRQs ABIERTAS y 4 CPUs en línea**: `local_irq_disable` ocurre después (0x4009288c) y
+  `disable_nonboot_cpus` también (0x40092880) ⇒ el callback corre con interrupciones, timers y
+  CPUs secundarias vivas; puede dormir (proceso), pero un semáforo tomado por una tarea congelada
+  lo cuelga.
+- **Estado de los dispositivos**: todos los `.suspend` de dispositivo ya se ejecutaron;
+  `.suspend_late`/`.suspend_noirq` NO. Por eso el bloque SD (udif_bdev_suspend 0x401fa1a0,
+  shell.txt:10244, marca de boot_time «B b-250») es una fase ANTERIOR a esta. [INFERENCIA a partir de
+  la marca de boot_time; coherente con el orden del código]
+- **Sin plazo del PM core**: nada limita esta fase salvo el WDT de Sony (wdt.mode=1, wdt.timeout=500 ≈
+  500 ms; se refresca en el tick —wdt.c:127— y desde sleep.S —wdt.c:115—; RSTREQ habilitado con
+  xrstreq=1, core.c:276-304). Un cuelgue que enmudezca el tick o desactive IRQs ⇒ reset sin rastro.
+- **Encaje con el log medido**: «PM: suspend of devices complete after 12.181 msecs» lo imprime
+  dpm_suspend (dpm_show_time, 0x401bec58 = dpm_suspend+0x17c) y **25 µs después** sale «UDIF: suspend
+  start: unified drivers»: la sonda entró exactamente en `prepare`. 12 s antes estaba
+  «PM: Syncing filesystems ... done.» (525.564155 en kernel-swd.bin:offset 0x12).
+
+---------------------------------------------------------------------------------------------------------
+(b) QUÉ HACE EXACTAMENTE pm_suspend_error(0) Y POR QUÉ CAMINO TERMINA EL SISTEMA  [VERIFICADO]
+---------------------------------------------------------------------------------------------------------
+pm.c:224-232 (`wbi_drop(); *(unsigned long *)phys_to_virt(cxd90014_sus_error) = 1UL; cxd90014_pm_halt(0);`)
+está **inlineado en cxd90014_pm_prepare** (no existe el símbolo `pm_suspend_error` en kallsyms). Bytes:
+  0x400520f0  cmp r0,#0                 (resultado de udif_driver_suspend)
+  0x400520f4  beq 0x40052114            (ramo bueno → warm_boot_pm_prepare 0x4004c5e0)
+  0x400520f8  bl 0x4004ba94             = wbi_drop
+  0x400520fc  ldr r3,=0x4037be30 ; 0x40052104 ldr r2,[r3,#0x54]  = cxd90014_sus_error (0x4037be84;
+              ficha __param en 0x40332550, nombre «pm.sus_error», arg=0x4037be84, valor inicial 0xffffffff)
+  0x40052108  mov r3,#0xc0000000 ; 0x4005210c str r0(=1),[r2,r3]
+              ⇒ escribe 1 en phys_to_virt(0x80021060) = VA 0x40021060 (0xc0000000 = −PHYS_OFFSET+PAGE_OFFSET;
+              la cmdline real trae `pm.sus_error=0x80021060`)
+  0x40052110  bl 0x4037bea0             = cxd90014_cpu_suspend(1 = PM_ENTER_ERROR)
+              (r0 sigue valiendo 1; 0x4037bea0 es sleep.S, fuera del mapa kallsyms, prologo `push {r4-…,lr}`
+              + `str r0,[pc,#0x1dc]` = modeflag)
+Después, en cxd90014_cpu_suspend (sleep.S:40-190):
+  msr cpsr (IRQ/FIQ off) → v7_flush_kern_cache_all → `ldr r0,modeflag; cmp #0; bne goto_suspend`
+  (sleep.S:94-96) ⇒ **no** pasa por sleep.S:99 ⇒ **no intenta crear WBI**; pone cxd90014_mem_alive=1;
+  copia `exec_in_resume_ram` a 0xc0020000; apaga MMU/cachés (sleep.S:157-163); `pm_memory` (apagado de
+  memoria, sleep.S:163); imprime 'E' por UART solo si `pm.sus_msg`≠0 (aquí no); afirma XPWR_OFF
+  (`cfg.poff=0,10` → cfg.c:55-58); y queda en `mcr p15,0,r0,c7,c0,4 / b .` (sleep.S:190). No retorna
+  («never reached», pm.c:221/231).
+
+Por qué termina el sistema y por qué camino: no es un halt lógico del kernel sino una **parada de
+hardware**: o corta la alimentación por XPWR_OFF (PMIC), o el WDT de 500 ms pide RSTREQ (xrstreq=1) y
+resetea el SoC. En ambos casos el arranque siguiente es **frío** y no hay WBI nuevo (no se intentó).
+No imprime nada: pm_suspend_error no tiene printk; la única huella sería el 1 en 0x80021060.
+Y ojo: `wbi_drop()` es **no-op** en esta cámara porque `wbi_drop` lee `wbi_ignore_drop`
+(0x403937d0, ficha __param 0x40332250 con arg=0x403937d0) y la cmdline trae `warm.ignore_drop=1`:
+  0x4004baa0 ldr r3,=0x403937a4 ; 0x4004baa4 ldr r3,[r3,#0x2c] (=0x403937d0 = wbi_ignore_drop) ;
+  0x4004baa8 cmp r3,#0 ;
+  0x4004baac bne 0x4004bab8 (return 0) ; si 0 → bl _wbi_drop (0x4004b9fc) → __wbi_drop (0x4004b7e8):
+  memset 512 B y `write_sector(...,0,1)` + printk «dropped wbi» (0x402f67fa) o «%s: cannot write = %d».
+Corolario: con ignore_drop=1, ni siquiera el camino de error toca nflasha5 ⇒ «la cabecera sigue igual»
+NO discrimina si pm_suspend_error llegó a correr.
+
+---------------------------------------------------------------------------------------------------------
+(c) QUÉ ERRORES QUEDAN REGISTRADOS (suserr / errmode) Y CUÁLES NO  [VERIFICADO salvo lo indicado]
+---------------------------------------------------------------------------------------------------------
+CUIDADO: hay dos cosas distintas con nombre parecido, y el informe mezcla sus lecturas.
+
+1) `sus_error` (pm.c:95-96, param `pm.sus_error`, cmdline `pm.sus_error=0x80021060`): es una
+   **dirección física**, no un registro. pm_suspend_error escribe 1 en ella; pm_setup (pm.c:137-143) la
+   pone a **0 en cada arranque**. Única referencia en código a la variable 0x4037be84: el `ldr r2,[r3,#0x54]`
+   de pm_prepare (la otra referencia del fichero es la ficha __param 0x4033255c). ⇒ **solo este camino
+   escribe «1»**, y no hay ningún otro escritor.
+2) `suserr` (kernel/power/suspend.c, param `pm.suserr`, leído en /sys/module/pm/parameters/suserr,
+   ficha __param 0x40332870 → arg 0x40398740, valor inicial 0): **no es un registro de errores: es un
+   selector de política** al final de pm_suspend. Bytes 0x40092b84-0x40092bc0:
+      si error: printk("<3>ERROR:suspending kernel.\n")  (0x402fb69f)
+      switch (*pm_suserr):
+        0 → __bug("kernel/power/suspend.c", 0x209=521) y luego machine_restart(0)
+            (en la práctica el propio __bug aborta antes: escribe en la dirección 0)
+        2 → machine_restart(0)              (0x4003edf8 = machine_shutdown + hook de reset)
+        3 → machine_halt()                  (0x4003edb8 = machine_shutdown + `b .` infinito)
+        otro (1,4,…) → no hace nada
+   __bug (0x40041000) = printk("<2>kernel BUG at %s:%d!\n") + `mov r3,#0; str r3,[r3]` (data abort
+   deliberado en dirección 0) + `b .`. machine_restart → hook de plataforma → cxd90014_reset →
+   em_reboot(1) → cxd90014_cpu_suspend(PM_ENTER_RESET=2) (también sin WBI: 2≠0).
+   El valor medido `suserr=0` significa «ante un fallo de suspensión que LLEGUE a pm_suspend, BUG+reset»;
+   NO informa del intento warm (ver más abajo).
+
+Qué queda registrado y qué no:
+ - sus_err=1 (0x80021060): SOLO pm_suspend_error (udif_driver_suspend ≠ 0). Nada más, en ningún otro sitio.
+ - errmode=1: solo cambia el desenlace de un **fallo de creación del WBI** (warm.c:1199-1207 y 1252-1260):
+   con 0 (valor de la cámara) imprime «do_make_image: ret=%d» (0x402f6986+) y **devuelve 0** (suspende
+   igual, sin WBI); con 1 imprime «…: SUSPNED is aborted - error code (%d)!» (0x402f69db) y devuelve el
+   error ⇒ sleep.S:100-101 aborta y restaura el contexto ⇒ cxd90014_cpu_suspend retorna ≠0 ⇒
+   _cxd90014_pm_enter imprime «suspend error!» (pm.c:175-178; 0x402f7d95) y sigue el camino de
+   reanudación: NO hay halt, NO hay sus_error, NO hay WBI. errmode NO interviene en udif ni en el flag.
+ - **NO registran nada**: (i) reset por watchdog — wdt_intr (wdt.c:170-182) imprime «WDT:RSTREQ_STAT=0x%lx»
+   y llama pm_machine_reset(0) (si llega a ejecutarse el ISR; si no, el reset es directo) y no toca
+   pm.sus_error; (ii) un data abort/oops — no hay ninguna escritura a pm.sus_error en rutas de excepción;
+   (iii) los halts de PM_ENTER_ERROR/RESET (terminan en el bucle de sleep.S, sin printk).
+ - El manejador de `exception.reboot=1` (param 0x4039a678, ops 0x4037da88, perm 0600; valor 1 en la
+   cmdline) **no está en el árbol OSS** y su consumidor no aparece como literal en el vmlinux (puede
+   leerse como base+offset, como ocurre con wbi_ignore_drop) ⇒ cómo convierte una excepción en reinicio:
+   NO VERIFICADO.
+ - La lectura `suserr=0` del informe NO dice nada del intento: (i) es política, no latch; (ii) el destino
+   de pm.sus_error se pone a 0 en cada arranque; (iii) ignore_drop=1 anula la única traza en flash.
+   Para discriminar de verdad hacen falta las marcas de /proc/snsc_boot_time del MISMO arranque
+   (ver (e)) o el buffer de log completo antes del reset.
+
+---------------------------------------------------------------------------------------------------------
+(d) ¿PUEDE UN FALLO DEL CALLBACK DE liro LLEGAR A pm_suspend_error O SE QUEDA EN EL BUCLE UDIF?
+    [VERIFICADO en bytes]
+---------------------------------------------------------------------------------------------------------
+udif_driver_suspend (0x401fb848) — comportamiento exacto:
+  0x401fb858-0x401fb864  udif_print(0, "suspend start: ", "unified drivers") → "<6>UDIF: %s%s\n" (0x403146e9)
+  0x401fb868           mutex_lock(grupo+0x1c = 0x40385344)
+  0x401fb870           ssboot_is_rewriting() (0x40092cac, shell.txt:2870) → ramo de «suspend skipped: »
+  0x401fb888           r4 = [0x40385328+0x18] = head->prev  (0x40385340)
+  **el recorrido es REVERSO**: arranca en head->prev y avanza por el campo `prev` de cada entrada
+  (0x401fb908 `ldr r4,[r4,#4]`), terminando en &head (0x4038533c). Consecuencia medida/coherente: liro,
+  que es el último en registrarse (último en «UDIF: resume» de shell.txt:27462-27558), es el PRIMERO en
+  suspenderse; por eso el log salta de «unified drivers» a «liro» sin ver gpio/hwtimer/dma/…
+  (udif_driver_resume 0x401fb95c recorre al revés: [head->next] y `ldr r4,[r4]`).
+  Por cada driver: print "suspend start: <nombre>" (r5 = entrada+8), y si la entrada tiene tabla
+  (entrada+0x28) llama udif_driver_call_fn_reverse (0x401fb178) con (entrada, fn+0x10, entrada+0x24):
+     0x401fb8e8  bl 0x401fb178
+     0x401fb8ec  subs r6, r0, #0
+     0x401fb8f0  bne 0x401fb924        ← **corta el bucle al primer error**
+     0x401fb8f4  print "suspend end:   <nombre>"
+     0x401fb924..0x401fb93c  unlock; print "suspend end:   unified drivers"; return r6 (≠0)
+  ⇒ **SÍ**: un callback que devuelva ≠0 sale del bucle UDIF, devuelve ese código y cxd90014_pm_prepare
+  (`cmp r0,#0; beq`) llama a pm_suspend_error(0) → flag 1 → halt sin WBI. No hay reintento ni bucle de
+  espera: no existe ningún «retry» en el camino (solo el bucle de drivers).
+  **Condición**: sólo si el callback RETORNA. Si se cuelga, sufre un data abort o provoca reset, no se
+  ejecuta nada de eso (= se queda dentro del bucle/llamada).
+
+Dato de apoyo del propio arranque nuevo (kernel-swd.bin, zona ~0x5b): liro.ko imprime su tabla al
+cargarse y deja «suspend     - 43541068» y «resume      - 43541078», es decir, 0x43541068 es el
+callback de suspend que registra en uDIF y 0x43541078 el de resume (coincide con [LIRO]: entry_*).
+
+Firma de log para distinguir los tres casos (cadenas de liro.ko verificadas en el .ko):
+  (i) retorno 0      → "[LIRO]: liro suspend (WBI)" + "[LIRO]: liro suspend complete!" + "UDIF: suspend end:   liro"
+  (ii) retorno ≠0    → (lo que imprima liro) + "UDIF: suspend end:   unified drivers" **sin** la de liro,
+                        y después halt mudo (sin «dropped wbi» por ignore_drop=1)
+  (iii) sin retorno  → sólo "[LIRO]: entry_suspend:43541068(1)"  ← ESTO es lo capturado
+En la captura (kernel-swd.bin, offsets 0x2258/0x22c3) no hay ni «liro suspend (WBI)», ni «complete!»,
+ni «error!», ni «UDIF: suspend end:» de ningún tipo ⇒ el callback no retornó. [VERIFICADO sobre el
+fragmento; el fragmento no cubre todo el ring — ver límites]
+
+---------------------------------------------------------------------------------------------------------
+(e) QUÉ LÍNEAS DE LOG IMPRIMIRÍA CADA DESENLACE
+---------------------------------------------------------------------------------------------------------
+Ya emitidas por la cámara en un arranque real (shell.txt:27462-27558): «PM: early resume of devices
+complete after…», «UDIF: resume start/end: <drv>», «PM: resume of devices complete after…»,
+«Restarting tasks ... done.». En la captura del intento: «PM: Syncing filesystems ... done.»,
+«PM: suspend of devices complete after 12.181 msecs», «UDIF: suspend start: unified drivers»,
+«UDIF: suspend start: liro», «[LIRO]: entry_suspend:43541068(1)».
+
+1. Todo bien (udif OK y WBI creado) — dmesg:
+   «PM: Syncing filesystems ... done.» · «PM: suspend of devices complete after N.NNN msecs» ·
+   «UDIF: suspend start: unified drivers» · «UDIF: suspend start: liro» · «[LIRO]: entry_suspend:…» ·
+   «[LIRO]: liro suspend (WBI)» · «[LIRO]: liro suspend complete!» · «UDIF: suspend end:   liro» ·
+   (resto de drivers) · «UDIF: suspend end:   unified drivers» (aquí ya se llama warm_boot_pm_prepare →
+   wb_printk «checking opened files» / «OK: checked opened files: …» — 0x402f6b7a y ss.) ·
+   (creación) «do_make_image: %d [us]», «wbi_stat» … (wb_printk → vprintk; warm.c:660) ·
+   (reanudación) «WARMBOOT» (pm.c:188; 0x402f7da5) · «PM: early resume of devices complete after…» ·
+   «UDIF: resume start: unified drivers» … «PM: resume of devices complete after…» ·
+   «Restarting tasks ... done.» (0x402fb4f4).
+   En /proc/snsc_boot_time (marcas, no dmesg): «B/E warm_boot_pm_begin», «B/E warm_boot_pm_prepare»,
+   «PM: suspend enter», «PM: resume start», «PM: resume finished» (boot_time_add 0x4018eed8).
+2. udif_driver_suspend ≠ 0 (un driver falla): ver (d)(ii). Añadir: **ningún printk de
+   pm_suspend_error**; si ignore_drop=0, «dropped wbi» (0x402f67fa); después halt mudo. **Nunca**
+   aparecen «PM: resume…», «Restarting tasks», ni «ERROR:suspending kernel.».
+3. Aborto por fallo del WBI con errmode=1: «…: SUSPNED is aborted - error code (%d)!» (0x402f69db) ·
+   «suspend error!» (0x402f7d95) · sigue la reanudación (líneas de 1, sin «WARMBOOT») · y al volver a
+   pm_suspend: «<3>ERROR:suspending kernel.» (0x402fb69f) + con suserr=0 «kernel BUG at
+   kernel/power/suspend.c:521!» (0x402f4074) y reset (machine_restart).
+   Con errmode=0 (cámara): sólo «do_make_image: ret=%d» y la suspensión continúa sin WBI.
+4. Fallo de un dispositivo en las fases dpm: «<3>PM: Some devices failed to suspend» (0x402fb542) o
+   «<3>PM: Some devices failed to power down» (0x402fb569) → luego «ERROR:suspending kernel.» y, según
+   suserr, BUG+reset (0) o halt (3) o nada (1).
+5. Congelación fallida: «<3>PM: suspend_freeze_processes failed» (0x402fb663) + __bug(suspend.c:203).
+6. Inhibido: «<3>PM: suspend is inhibited.» (0x402fb645).
+7. Aborto por ficheros abiertos (warm_boot_pm_prepare, warm.c:1509-1518): «some files are still opened,
+   stopping all of operations» (0x402f6b7a) y **bucle infinito** (no hay línea de salida).
+8. Pánico/excepción: «Kernel panic - not syncing…», «Unable to handle…», «Backtrace:»… **no hay ninguna
+   de esas cadenas en el fragmento capturado**; el desenlace exacto por excepción queda NO VERIFICADO
+   (exception.reboot=1, ver (c)).
+
+---------------------------------------------------------------------------------------------------------
+LÍMITES Y CORRECCIONES
+---------------------------------------------------------------------------------------------------------
+- REA no disponible: todo se ha verificado con capstone sobre vmlinux.bin + kallsyms de la cámara.
+  La zona de sleep.S (cxd90014_cpu_suspend 0x4037bea0 y su código copiado a 0xc0020000) **no está en
+  kallsyms** (mapa solo de texto hasta 0x40351ac0); se ha identificado por bytes (prólogo y
+  `str r0,[pc,#0x1dc]` = modeflag, `bl sleep_phys_sp` 0x400522b8).
+- No se puede decidir con lo medido si pm_suspend_error llegó a ejecutarse: (i) el fragmento SWD de
+  43 007 B no cubre el instante posterior y el anillo se solapó con el arranque nuevo («Kernel command
+  line» en offset 0x2f64, «LIRO (liro) rev:4-MUSASHI» en 0x5b05); (ii) 0x80021060 se limpia en cada
+  arranque (pm.c:142); (iii) ignore_drop=1 anula la traza en nflasha5. El discriminador bueno es el
+  «UDIF: suspend end:   unified drivers» en el ring, que no aparece en el fragmento.
+- Corrección al informe: `suserr` (=/sys/module/pm/parameters/suserr, valor 0) es la POLÍTICA de
+  fallo de pm_suspend, no un latch de error; el latch del camino de udif es `pm.sus_error` (dirección
+  0x80021060). No confundirlos en las próximas capturas.
+- Observación sin cerrar (fuera de la pregunta, pero en el mismo fichero bruto): en kernel-swd.bin
+  offsets ~0xc44-0x1528 hay restos de un volcado de registros («r3:00000000», «r8:3f42e918»,
+  «r3:00000001», «r5:00000004») y un marco de traza «(__device_suspend+0x0/0x138)» (offset 0x13e8)
+  entre líneas con marca de tiempo 537.288-537.292, es decir ~7 ms ANTES de «suspend of devices
+  complete» (537.295) y antes de la fase UDIF. El anillo está solapado y no se puede reconstruir la
+  traza completa: NO VERIFICADO. Merece fila propia (¿aviso/excepción ya en la fase dpm?).
+- No se afirma nada sobre el interior del callback de liro (0x43541068 → Thumb 0x435608c0): es otra
+  pregunta. Aquí sólo se usa que no retornó en la ventana capturada.
+- Sólo lectura: no se ha ejecutado nada en la cámara, ni se ha repetido `warm`, ni escrito RAM/flash.
+
+RESUMEN DE ESTADOS
+  (a) fase = platform `.prepare`, tras dpm_suspend (dispositivos .suspend hechos) y antes de
+      dpm_suspend_noirq / nonboot CPUs / IRQ off: VERIFICADO.
+  (b) wbi_drop (no-op con ignore_drop=1) → flag 1 en 0x80021060 → cpu_suspend(PM_ENTER_ERROR) sin WBI →
+      parada por XPWR_OFF o RSTREQ; no retorna: VERIFICADO.
+  (c) sus_err=1 solo desde pm_suspend_error; suserr es política (0=BUG+reset, 2=reset, 3=halt, otro=nada);
+      errmode solo afecta al fallo del WBI; WDT y data abort no escriben el flag: VERIFICADO
+      (exception.reboot NO VERIFICADO).
+  (d) un callback que retorne ≠0 llega a pm_suspend_error; si no retorna, se queda en la llamada y muere
+      allí: VERIFICADO.
+  (e) firmas de log por desenlace: VERIFICADO contra cadenas del vmlinux y de liro.ko.

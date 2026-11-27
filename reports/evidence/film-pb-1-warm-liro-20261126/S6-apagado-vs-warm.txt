@@ -1,0 +1,261 @@
+P6 — APAGADO NORMAL vs `echo warm` DIRECTO
+Evidencia de S6 · 27-11-2026 · 100 % offline (sin cámara, sin QEMU, sin flasheo)
+
+MÉTODO
+  · MCP `rea` NO está expuesto en esta sesión (los conectores disponibles son file_system,
+    process y self). Sin sesión REA abierta y sin binario cargado ⇒ se usa desensamblado propio:
+    pyelftools + capstone 5.0.7 (.venv). ARM para los .ko; Thumb para im.elf (verificado: en ARM
+    su .text decodifica en basura; en Thumb sale código coherente con el informe previo).
+    Se resuelven símbolos, relocaciones R_ARM_CALL/ABS32, literales pc-relativos y cadenas.
+    Scripts de trabajo (efímeros, /tmp): dis_upm.py (ELF relocatable) y dis_va.py (ELF con VA).
+    Esto se declara como límite: no hay decompilación REA; las conclusiones van contra BYTES.
+  · Binarios (idénticos en analysis/camera-extract, firmware/extracted/fw321 y el stage del arnés):
+      upm.ko  md5 95ae9fce0e382606af0e33ac8f96c4f6  125 096 B  (ARM, .text off. fichero 0x34)
+      dmm.ko  (analysis/camera-extract/usr/kmod/dmm.ko)          (ARM, .text off. fichero 0x34)
+      liro.ko (analysis/camera-extract/usr/kmod/liro.ko)         (ARM, .text off. fichero 0x34)
+      im.elf  md5 a8fe0d3289fe8a392299e7a945a30c1d   23 108 B  (Thumb, base 0x8000, .text 0x9118-0xBF00)
+  · Log real (cámara, ciclo caliente del 20-10):
+    analysis/camera-dumps/mem-20261020-log/log.txt:3990-4043 (secuencia de apagado completa).
+  · Intento manual EN LA CÁMARA (no en el emulador), capturado por SWD:
+    /tmp/a6000-warm-captura-swd/resultado.txt (últimas 4 líneas) y kernel-swd.bin.
+    Nota: /tmp/a6000-warm-sin-sd/ NO EXISTE (limitación a registrar).
+  Estados: [V] VERIFICADO contra bytes/fuente · [I] INFERENCIA · [NV] NO VERIFICADO.
+
+===========================================================================
+1. HALLAZGO PRINCIPAL
+===========================================================================
+El apagado del usuario NO es "im.elf escribe warm". Es un INTERCAMBIO EN CUATRO FASES entre
+upm.ko, un extremo llamado internamente «liro» y im.elf, y la escritura en /sys/power/state es el
+ÚLTIMO eslabón. `echo warm > /sys/power/state` a mano se salta las tres fases previas completas.
+
+Orden real [V] (log real 4012-4043, y bytes de upm.ko e im.elf):
+
+  (1) im  →  upm : cmd 0x920144, param0 = 2   (el emisor es im: upm exige [msg+8]==0x920169;
+                                                 log 3918 «go inact_im», fase 1 en 0xFA28-0xFA38)
+  (2) upm →  LIRO: cmd 0x920143  "liro_sus(inact)"   [cola 0x920195]   (log: 4012)
+      LIRO→ upm : respuesta síncrona                                  (log: 4013)
+  (3) upm →  im : cmd 0x92014D  "im_gi_sus(inact)"   [cola 0x920169]
+      im  : sus_all_u = suspende TODA su cadena de plugins            (log: 4014-4035: 063_Selector,
+            07f_uxengine, 05c_DDSUser, 14b_gs, 080_grm, 16f_jiritsu, 07a_infra_input, 149_ABT,
+            110_KikiLogGenerator, 0bd_odl)  — antes, sus_all_i había suspendido 055_InfraAvbbc_Sus,
+            03d_senser_sus, 0cf_InfraMediaConfig_Suspend, 0ca_UsbControl_Suspend… (log: 3990-4010)
+      im  →  upm : cmd 0x92014E                                       (log: 4036)
+  (4) upm: dmm_pre_suspend()                                          (log: 4036 "do dmm_pre_suspend()")
+      upm →  im : cmd 0x92014F, param1 = predicado «warm»             (log: 4038 "EV OFF Warm boot")
+      im  : modo = 2 si *(0x153E0)==0x27  →  escribe "warm"
+            modo = 1 si *(0x154D0)==1 && [msg+4]!=0
+            modo = 0 en otro caso → escribe "mem"                      (log: 4042 en adelante, UDIF suspend)
+      Sólo después corre el suspend del kernel: "008E B liro" / "008E E liro" (log 4042-4043).
+
+Consecuencia dura [V]: el modo «warm» de im.elf depende de un dato que llega en la FASE 2 —
+im.elf guarda el off-factor recibido en 0x920143 en el global 0x153E0 (0xA12A-0xA132:
+`ldr r3,[r4,#4]` / `ldr r2,=0x153e0` / `str r3,[r2]`), y 0xA262 lo compara con 0x27. Sin la
+fase 2, im.elf NUNCA escribe "warm": escribiría "mem". Por eso el `echo warm` manual no es una
+variante de la ruta real, es un atajo que no existe en la cámara.
+
+===========================================================================
+2. INVENTARIO DE LO QUE HACE upm.ko ANTES DEL WARM (bytes)
+===========================================================================
+Función única que atiende el apagado: `k_upm_off_factor_handler_inactive`, .text 0xFA18 (868 B).
+
+  FASE 1 — cmd 0x920144 (lit 0xFD24), sólo si [msg+8]==0x920169 (im, lit 0xFD2C) y [msg+4]==2:
+    0xFA3C-0xFA4C   toma y suelta el semáforo OSAL 0x9200BB (osal_wai_sem_tmo / osal_sig_sem)
+    0xFA6C          printk 0xA29  "EV OFF OFF_CMP do liro_sus(inact)"
+    0xFA88          osal_valloc_msg_wait(0x920195, &buf, 0x10, 1)      (lit 0xFD34)
+    0xFAAC          cabecera msg[-4] = 0x920021 (lit 0xFD38) = cola propia de upm
+    0xFAB8          cmd = 0x920143 (lit 0xFD3C); params a 0
+    0xFACC          osal_snd_sync_msg  ⇒ espera RESPUESTA
+  FASE 2 — respuesta de 0x920195 ([msg+8]==0x920195):
+    0xFB04          printk 0xA4B  "EV OFF LIRO OFF_CMP do im_gi_sus(inact)"
+    0xFB20          bl k_upm_kikilog_A_E2_pon_ruiseki_stop   (para el acumulador de kikilog;
+                    es el único efecto lateral de esta fase aparte del mensaje)
+    0xFB34          valloc a 0x920169 (im); 0xFB50 cmd = 0x920021+0x12C = 0x92014D; 0xFB68 envía
+  FASE 4 — cmd 0x92014E (lit 0xFD48):
+    0xFBA0-0xFBAC   g_upm[0] = 0x22            (lit 0xFD4C = &g_upm, .data 0x0, 80 B)
+    0xFBB8          g_bf[0xc] = 4              (lit 0xFD54 = &g_bf, .data 0x5E8, 32 B)
+    0xFBC0          bl dmm_pre_suspend         (reloc R_ARM_CALL, dmm.ko)
+    0xFBCC/0xFBF0   bl 0xE32C dos veces (predicado «hot/warm», sin símbolo, 0x5C B)
+    0xFBD8          si !=0: printk 0xAC3 "EV OFF Warm boot"
+    0xFC18-0xFC24   msg = {cmd 0x92014F (lit 0xFD60), param1 = r5 = predicado}
+    0xFC2C          osal_snd_sync_msg a im  ⇒ im escribe el nodo
+
+  Predicado 0xE32C [V] (el «¿se puede apagar en caliente?» que acaba en [msg+4] de 0x92014F):
+    base = .data+0x608 (literal con reloc de SECCIÓN .data, addend 0x608; el símbolo anterior es
+    `g_bf` 0x5E8..0x607, así que el registro del off-factor empieza en 0x608 y no tiene nombre).
+    Devuelve 0 si [+0x50]==0 o si [+0x1c]!=0x1b; si [+0x18]==0x17 o está en 7..10 → 1; si no,
+    1 salvo que valga 0x1f.
+  Otros preparativos de upm.ko que NO están en esta ruta [V]: k_upm_cpu2_online (0xE040, escribe 2 B
+  en /sys/devices/system/cpu/cpu2/online) y k_upm_liro_start (0xE080, escribe 2 B en
+  /proc/liro/start) sólo los llama k_upm_req_c_hot (0xE238) al recibir 0x920108; el poller
+  "UPM_CIPA_SUS_POLLING" (0xDDC4) se crea al recibir 0x922108. Es decir: upm es quien ARRANCA liro
+  (escribe /proc/liro/start) pero no hay ninguna escritura de parada a ese nodo en todo el módulo.
+
+===========================================================================
+3. dmm_pre_suspend: QUÉ HACE Y A QUIÉN LLAMA
+===========================================================================
+dmm.ko, `dmm_pre_suspend` @ .text 0x4644 (216 B) [V]:
+  0x4654  id = osal_dynamic_id(0x2A, 0x61, &id); si falla → devuelve 0
+  0x4670  dmm_ctrl_RemoveBootUnit(0, id)   + 0x4688 dmm_uipc_RcvDynamicMsg (espera respuesta)
+  0x4694  dmm_ctrl_RemovePwrDwnUnit(0, id) + RcvDynamicMsg
+  0x46B0  __memzero(0x18); strh 0x11; strh 0xABCD; args (0x61003C, id, buf, 0x18)
+  0x46DC  dmm_uipc_SndDynamicMsg(0x61003C, …)  + RcvDynamicMsg
+  0x4704  osal_dynamic_id(0x4A, 0, id)   (libera el id dinámico)
+  0x4708  mov r0,#0  →  DEVUELVE 0 SIEMPRE, con cualquier error (por eso el llamador no distingue)
+
+  Callees [V]:
+   dmm_ctrl_RemoveBootUnit @0x80BC: recorre la tabla de extents de arranque
+     (dmm_ext_tbl_GetBootFreeExtentCnt / GetFreeExtentUnitType / SetFreeExtentUnitType,
+      dmm_unit_ctrl_SearchUnitTypeToHandle) y por cada unidad envía un mensaje de 0x18 B
+      con strh 0x16 y magia 0xABCD a la cola 0x61003C.
+   dmm_ctrl_RemovePwrDwnUnit @0x858C: idéntico con dmm_ext_tbl_GetSusFreeResAlcExtentUnitType,
+     GetBootSusResExtentCnt y magia 0xDDDD.
+  Peer: 0x61003C aparece 13+ veces dentro de dmm.ko y dmm.ko registra sus propias colas
+    (osal_reg_msg_queue_cb en .text+0x4FF8, +0x5308, +0x8D70) ⇒ el interlocutor es el propio
+    dmm.ko (capa ctrl/unit) [I].
+  NI UNA referencia a liro ni a av-cam: 0 ocurrencias de 0x9201xx, de 0x43541xxx o de "liro"
+    en dmm.ko [V].
+  Además, dmm.ko tiene su PROPIO PM y corre en cualquier suspend: dmm_module_SuspendModule @0x28
+    (dmm_unit_ctrl_InvalidateReleationID, dmm_unit_ctrl_SearchExistUnitFree, Backup_read 0x51000F
+    == 0xC → dmm_ctrl_GetSsbiUnit) y dmm_module_ResumeModule @0x0 [V].
+  ⇒ dmm_pre_suspend es una liberación TEMPRANA de unidades de memoria (boot / power-down) hacia el
+    controlador DMM, no un preparativo del lado AV. NO deja ni quita nada que liro lea [I fuerte].
+
+CONCLUSIÓN de este apartado: la omisión de dmm_pre_suspend POR SÍ SOLA no explica que muera el
+suspend de liro. Lo que sí cambia el estado de liro antes del suspend es la FASE 2 (0x920143).
+
+===========================================================================
+4. im.elf ENTRE EL MENSAJE Y EL WRITE (re-verificación del §1 del informe previo)
+===========================================================================
+[V] Despachador único: 0xA06C. Literales con UNA sola aparición en el binario:
+    0xA324=0x920143 · 0xA354=0x920144 · 0xA358=0x92014D · 0xA35C=0x92014E · 0xA360=0x92014F.
+[V] Rama 0x920143 (0xA124): `str param0 → *(0x153E0)` (0xA128-0xA132), param1 → 0x15248,
+    0x153DC = (param0==0x27 ? 8 : [msg+8]==0x1b ? 4 : 1), después `bl 0xAFBC` (inact_all) y las
+    trazas "EV OFF: inact_cmp: %x, inact_count:%d".
+[V] Rama 0x92014D (0xA22E): `bl 0xAF7C` (sus_all_u) y acto seguido valloc a la cola 0x920021
+    (upm, lit 0xA350) con cmd 0x92014E (lit 0xA35C) ⇒ es im quien PIDE la fase 4.
+[V] Rama 0x92014F (0xA258): 0xA262 *(0x153E0)==0x27 → 2 · 0xA26E *(0x154D0)==1 y [msg+4]!=0 → 1 ·
+    0xA280 → 0; luego `bl 0x9FB4`.
+[V] 0x9FB4 (escritor): 0x9FBC open("/sys/power/state", 0x1001) (lit 0xA058); si modo==2 salta a
+    0xA012 con lit 0xA060 = "warm" y n=4 → 0xA03A `blx write`; si no, 0x9F68/0xAB10 + la compuerta
+    0x9F44 + snprintf + 0xA034 "mem" (lit 0xA068) n=3. Después: close (0xA040) y `bl 0x9A74`
+    (0x9A74 = dos llamadas al getter 0xAAD4). Nada más.
+[V] Entre 0xA25E y el write sólo hay: `bl 0xAAD4` (lee [0x153E4+0xC]&1), dos lecturas de globales,
+    `ldr r0,[r4,#4]` y la llamada al escritor. CERO ioctl, CERO open de /dev, CERO sync/fsync,
+    CERO mensajes a otros módulos, CERO referencias a nflasha*/wbi.
+⇒ El §1 fila B del informe previo ("im.elf no prepara nada entre el mensaje y el write") SIGUE
+  VIGENTE. Lo que ese §1 NO recogía es que im.elf sí hace algo ANTES de llegar ahí: la fase 2 y 3.
+
+===========================================================================
+5. EL ORDEN 0x920143 / 0x92014E / 0x92014F SÍ CAMBIA EL ESTADO ANTES DE SUSPENDER
+===========================================================================
+[V] 0x920143 debe llegar ANTES que 0x92014F porque fija *(0x153E0) (=0x27), y 0x92014F lo consulta
+    para elegir "warm". Con 0x92014F sin la fase 2 previa, im escribe "mem".
+[V] El par 0x92014E/0x92014F es una petición-respuesta: im manda 0x92014E (tras sus_all_u) y upm
+    responde 0x92014F con el predicado; la respuesta es síncrona (osal_snd_sync_msg).
+[V] La fase 2 y la 3 suspenden cosas del lado usuario/AV ANTES de que el kernel suspenda: la cadena
+    de im incluye 0cf_InfraMediaConfig_Suspend y 055_InfraAvbbc_Sus (log 4014-4035 y 3990-4010).
+[NV] Identidad del extremo 0x920195 («liro_sus»). Se descarta im.elf (no contiene ese literal —ni
+    como dato ni como movw/movt Thumb— y su rama 0x920143 imprimiría inact_cmp, que NO aparece entre
+    4012 y 4013). Se descarta liro.ko (0 ocurrencias del literal). No está en ningún binario de
+    analysis/camera-extract salvo upm.ko (orb-server es coincidencia de bytes). Puede ser un id
+    dinámico (osal_dynamic_id, como usan dmm/upm en tiempo de ejecución) ⇒ no decidible en estático.
+
+===========================================================================
+6. ¿PUEDE LA OMISIÓN EXPLICAR QUE MUERA EL SUSPEND DE LIRO?  CONTRASTE
+===========================================================================
+Cámara real, apagado normal por interruptor (log 4042-4043):
+    0: 008E B liro
+    0: 008E E liro
+  · Sin NINGUNA línea de liro.ko dentro de ese par. En cambio su resume, en el mismo fichero
+    (log 4218-4226), imprime 4: "LIRO resume start", "liroapp resume start", "wait for liroapp
+    resume"… "LIRO resume end". Y en TODO analysis/camera-dumps no hay ni una sola línea
+    "entry_suspend" (grep = 0), mientras "entry_resume" aparece 7 veces.
+  · liro.ko `liro_suspend` @0x348: 0x358 r4=&Vcur_cpu; **0x35C-0x364 `ldr r0,[r4,#0x2c];
+    cmp r0,#0; beq 0x4DC` (epílogo, devuelve 0 sin imprimir)**; 0x368 pm_get_state; 0x36C-0x378
+    r5 = (pm_get_state() == 4); 0x388 printk("[LIRO]: entry_suspend:%p(%d)"); 0x3B8
+    `blx cp->[0x18]` = 0x43541068 (callback AV-cam); después crea el kthread "liro-RESUME". [V]
+  ⇒ [I] En la cámara real, en un apagado normal por interruptor, el hook de suspend de liro SALE
+    ANTICIPADAMENTE porque su contexto [Vcur_cpu+0x2C] está a cero; nunca llega a 0x43541068.
+    Alternativa no descartada: pérdida de printk. A favor del early return: el resume del mismo
+    fichero sí conserva los printks de liro.ko.
+
+Cámara real, `echo warm` a mano (captura SWD del 26-11):
+    <6> UDIF: suspend start: liro
+    <4> [LIRO]: entry_suspend:43541068(1)
+    (corte del enlace SWD; al volver, otro kernel)
+  · Aquí el contexto NO era cero y SÍ se invocó el callback de av-cam — algo que NUNCA ocurre en
+    la cámara real en un apagado normal. La diferencia entre los dos casos no es el estado de
+    suspend: liro no ramifica por estado (r5 sólo va al printk).
+  · El "(1)" NO es anomalía y conviene no leerlo al revés: 0x374-0x378 (`rsbs r5,r3,#0; adc
+    r5,r5,r3`) da r5 = 1 si y sólo si pm_get_state() == 4. Y 4 ES PM_SUSPEND_DISK aquí
+    (suspend.h:45-48, rama CONFIG_WARM_BOOT_IMAGE; "warm" sólo existe en pm_states[] bajo ese
+    #ifdef, suspend.c:50-58, y la cámara aceptó la orden) ⇒ la captura confirma que el suspend
+    manual fue realmente disk/warm. pm_state lo fija `warm_boot_pm_begin` (warm.c:1353-1358) en
+    `.begin` (pm.c:244, ops en pm.c:291-293), o sea antes de cualquier .suspend.
+
+LECTURA: la ruta manual NON es equivalente y **la propia cámara se muere con ella**. Lo que
+cambia entre los dos casos es el estado que deja la preparación de usuarios (fases 1-3), no el
+hecho de pedir warm. Para el emulador G22 esto tiene una consecuencia incómoda: un emulador FIEL
+del `echo warm` pelado también debería morir ahí; igualar a la cámara no es «que funcione», es
+«que falle en el mismo sitio». Lo que hay que reproducir es la secuencia completa (o dejar el
+contexto de liro a cero antes del suspend, como en la cámara).
+
+RESPUESTA: la ruta manual NO debería funcionar igual. Y el culpable más verosímil NO es
+dmm_pre_suspend sino la ausencia de la FASE 2 («liro_sus» 0x920143 → extremo 0x920195) y de la
+FASE 3 (sus_all_u/sus_all_i de im.elf), que son las que dejan el lado usuario/AV quieto antes del
+suspend. dmm_pre_suspend sólo habla con el DMM y devuelve 0 siempre: no explica la muerte.
+
+Para el emulador G22, la reproducción fiel del apagado exige inyectar la secuencia completa
+(0x920144 → 0x920143 → 0x92014D → 0x92014E → 0x92014F) en vez de un `echo warm` pelado, y
+comprobar el valor de liro [Vcur_cpu+0x2C] en el momento del suspend: si la cámara lo tiene a 0,
+el hook de liro no debe llamar a av-cam. NO VERIFICADO qué valor tiene ese campo en el emulador ni
+qué lo pone a cero en la cámara; es la comprobación siguiente.
+
+===========================================================================
+7. QUÉ DEL INFORME PREVIO SIGUE VIGENTE (reports/film-pb-1-warm-abort-20261126.md)
+===========================================================================
+VIGENTE:
+  §1 (tabla de la cadena) en sus filas de im.elf: despachador 0xA06C, decisión de modo 0xA262/
+     0xA26E/0xA280, escritor 0x9FB4 con "warm" (0xC0C8) y "mem" (0xC0F4). Re-verificado byte a byte.
+  §0.1 «el interruptor entra con modo 0 y escribe "mem"»: compatible y confirmado por mi lectura
+     (el modo 0 es la rama 0xA280; el dato que lo empuja a 2 es *(0x153E0)==0x27 que sólo fija la
+     fase 2) [V].
+  §3, fila «im.elf prepara algo antes del write → VERIFICADO que no»: correcto [V].
+NO VIGENTE / INCOMPLETO:
+  §1 se titula «la cadena completa» pero empieza en 0x92014E. Faltan las fases 1-3:
+     0x920144 (im→upm), 0x920143 (upm→0x920195 «liro_sus»), 0x92014D (upm→im, sus_all_u) y el
+     hecho de que es im quien envía 0x92014E. La fila «im.elf reenvía: callback 0x95B0 → lista
+     0x920143…0x92014F → 0x94016A» es imprecisa: 0x920143 y 0x92014D son mensajes que im RECIBE,
+     no una lista.
+  §0 y §4 (P1/P2/P3, "prof"/WBI1) responden a otra pregunta (por qué no se fabrica el WBI). No se
+     re-verifican aquí; no contradicen nada de lo anterior, pero tampoco cubren la muerte de liro.
+
+===========================================================================
+8. RESUMEN DE ESTADOS
+===========================================================================
+[V] Cadena de 4 fases y orden (bytes upm.ko 0xFA18-0xFC38 + im.elf 0xA124/0xA22E/0xA258/0x9FB4 +
+    log real 3990-4043).
+[V] dmm_pre_suspend: 4 llamadas, cola 0x61003C, mensajes 0x11/0x16 + magias 0xABCD/0xDDDD,
+    devuelve 0 siempre; no referencia liro ni av-cam.
+[V] im.elf: nada entre 0x92014F y el write salvo open/lecturas/getters/write/close.
+[V] El modo "warm" depende de la fase 2 (*(0x153E0)==0x27): sin ella im escribe "mem".
+[V] liro.ko: el hook de suspend sale por 0x364 si [Vcur_cpu+0x2C]==0, y es antes de 0x43541068.
+[V] El "(1)" de la captura SWD significa pm_get_state()==PM_SUSPEND_DISK==4: el suspend manual fue
+    disk/warm de verdad (y no ramifica el comportamiento de liro).
+[I] En la cámara real, en el apagado normal el hook de liro sale por ahí y nunca invoca 0x43541068
+    (respaldo: cero "entry_suspend" en 10 volcados; el resume del mismo log sí imprime).
+[I] La causa de la muerte con `echo warm` a mano es la preparación omitida (liro_sus / cadena de
+    im), no dmm_pre_suspend. La cámara real muere igual en esa ruta: no es un fallo del emulador.
+[NV] Quién es el extremo 0x920195 y qué hace exactamente al recibir 0x920143.
+[NV] Qué pone a cero [Vcur_cpu+0x2C] en la cámara (y qué valor tiene en el emulador).
+
+===========================================================================
+9. LÍMITE
+===========================================================================
+Todo es estático + los logs ya capturados. No se ha abierto sesión REA (no disponible) ni Ghidra;
+no se ha ejecutado nada en la cámara ni en la VM; no se ha escrito RAM/flash. No se ha podido
+verificar el comportamiento del extremo 0x920195 ni el valor de [Vcur_cpu+0x2C] en el instante del
+suspend (ni en la cámara ni en el emulador): son las dos comprobaciones que faltan.
+/tmp/a6000-warm-sin-sd/ no existe, así que el «sin SD» se cita desde la captura SWD, no desde un
+árbol de ficheros propio. No se ha abierto Ghidra (no hizo falta: todo lo decisivo se verificó con
+capstone sobre los bytes y con el código del kernel del árbol).

@@ -32,6 +32,7 @@
 > ⇒ el parche de 4 B es inerte para el interruptor; y un arranque frío escribe **`prof`**, no `WBI1`
 > (`ssboot_stat=0` ⇒ `warm.c:1154`). Informe:
 > [warm abortado](../reports/film-pb-1-warm-abort-20261126.md).
+> **[CORREGIDO 26-11-2026, ruta manual]** `echo warm > /sys/power/state` **no llega a `sleep.S`**: muere en `suspend_ops->prepare` (`cxd90014_pm_prepare` → `udif_driver_suspend` → `liro_suspend`), justo tras imprimir `[LIRO]: entry_suspend:43541068(1)` y antes del `blx` al callback `0x435608C0` de `av-cam.bin`. No hay `PM: suspend enter`, ni `008E E liro`, ni imagen escrita; el siguiente contenido es `L: BOOT (VER 01.90)` con `R_REQ#1` (los apagados por interruptor dan `R_REQ#0`). Vivas: cuelgue + `wdt.timeout=500` (500 ms) o excepción + `exception.reboot=1`; ambas acaban en `MISC_RSTREQ_SET`. Además el apagado normal **nunca** ejecuta ese callback (liro sale por `+0x364`), así que la ruta manual invoca código que el producto no usa. Informe: [warm-liro](../reports/film-pb-1-warm-liro-20261126.md).
 > **Sin inferencias abiertas (28-11-2026, sólo sobre la bandera):** la bandera `+0x238` **no** viaja en la instantánea —
 > `0x43EDF684`/`0x43804610` son de `av-cam.bin` (base `0x43541000`), su memoria queda fuera de la imagen
 > (0 de 2 200 páginas, en `memrsv=0x13B1000@0x82D90000`, sin `wbimem=` que la cubra) y el RAMCFG `0x4000000`

@@ -1,0 +1,296 @@
+S5 — MEMORIA Y COPIAS: 0x439c5a04 y 0x439c5320 en av-cam.bin
+Caso: FILM-PB-1 / warm (intento del 26-11-2026, SIN SD). Pregunta 5 del reparto.
+100% offline: sin cámara, sin repetir warm, sin escribir RAM ni flash.
+
+------------------------------------------------------------
+0. MÉTODO Y ENTRADAS
+------------------------------------------------------------
+- REA (MCP `rea`) NO disponible en esta sesión: `search_tool_functions` no devuelve
+  ninguna función de decompilación/xrefs y no hay socket vivo del demonio
+  (analysis/rea-independent/bin/rea_up.sh espera out/av-cam.sock; /tmp no tiene sockets;
+  analysis/rea-independent/av-cam-daemon.log acaba en FileNotFoundError). Por tanto:
+  CAPSTONE 5.0.7 (pyelftools para liro.ko). Lo digo explícitamente como pide el encargo.
+- Binario: firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/
+  nflasha3_unpacked_unpacked/av-cam.bin, md5 ef2e3003ddad7185b5398cb76287c5aa,
+  11 427 236 B, base 0x43541000 (rango 0x43541000..0x44026DA4).
+  0x439c5a04 -> offset 0x484A04 ; 0x439c5320 -> offset 0x484320.
+- Driver: .../nflasha15_unpacked_unpacked/kmod/liro.ko (ELF ARM, NO stripped:
+  símbolos `liro_suspend` .text+0x348, `get_cp_start` +0x30, `get_cp_size` +0x54,
+  `os_init_mapping` .init.text+0x568). Relocaciones .rel.text resueltas para leer
+  literal pools y nombres de llamadas.
+- RAM real: analysis/camera-dumps/ram-servicio-20261020/ram_0x80000000.bin
+  (1 GiB desde 0x80000000, fw 3.21, sistema en marcha, solo lectura).
+- cmdline real: reports/evidence/film-pb1-sector31-camara-20261126/B-caliente/cmdline.txt
+  (= A-frio, misma línea).
+- Mapeo VA->PA usado: VA 0x43xxxxxx = PA 0x83xxxxxx (+0x40000000), README de
+  ram-servicio-20261020 y klog (`Param:adrs=83541000`). Validado aquí: los bytes de
+  las dos rutinas en el volcado son idénticos al fichero y 1 MiB de código desde
+  0x43541000 difiere solo en 769 B (0,07 %).
+
+------------------------------------------------------------
+1. (a) QUÉ HACEN LAS DOS RUTINAS — VERIFICADO (bytes + desensamblado)
+------------------------------------------------------------
+1.1 0x439c5320 = memcpy(dst=r0, src=r1, n=r2). ARM (no Thumb), 0x439c5320..0x439c555C
+    (572 B, 0x23C). Cabecera:
+      439c5320  01402de9  push {r0, lr}
+      439c5324  042052e2  subs r2, r2, #4
+      439c5328  200000ba  blt  0x439c53b0        ; n<4 -> cola
+      439c532c  03c010e2  ands ip, r0, #3        ; ¿dst alineado?
+      439c5330  2800001a  bne  0x439c53d8        ; dst desalineado
+      439c5334  03c011e2  ands ip, r1, #3        ; ¿src alineado?
+      439c5338  3200001a  bne  0x439c5408        ; src desalineado (copia con desplazamiento)
+      439c5350  1850b1e8  ldm r1!, {r3, r4, ip, lr}
+      439c5354  1850a0e8  stm r0!, {r3, r4, ip, lr}   ; 16 B por iteración (2x ldm/stm de 4 palabras)
+    Colas: 8 B / 4 B / byte a byte en 0x439c537c..0x439c53d4 (`pop {r0,pc}`).
+    Caminos de src desalineado: 0x439c5408 (desfase 1), 0x439c5488 (desfase 2),
+    0x439c54f4 (desfase 3), todos con `ldr lr,[r1],#4` + `orr ... lsl` + `stm r0!`.
+    Operación: copia pura por CPU (LDM/STM/LDR/STR/LDRB/STRB sobre [r0]/[r1]).
+    NO hay MCR/MRC, ni DSB/DMB, ni direcciones fijas de MMIO, ni descriptores de DMA:
+    no es DMA ni un descriptor, es memcpy de libc.
+    Función siguiente: 0x439c5560 = memmove (`cmp r0,r1` / `blo 0x439c5320` en 0x439c5574),
+    lo que confirma el final de memcpy en 0x439c555C.
+
+1.2 0x439c5a04 = memset(dst=r0, byte=r1, n=r2). ARM, 0x439c5a04..0x439c5B18 (276 B, 0x114). Cabecera:
+      439c5a04  ff3001e2  and r3, r1, #0xff
+      439c5a08  0210a0e1  mov r1, r2
+      439c5a0c  040051e3  cmp r1, #4
+      439c5a10  00c0a0e1  mov ip, r0
+      439c5a14  390000ba  blt 0x439c5b00        ; n<4
+      439c5a18  03201ce2  ands r2, ip, #3        ; dst desalineado -> 0x439c5ae0
+      439c5a20  033483e1  orr r3, r3, r3, lsl #8   ; replica el byte en 32 bits
+      439c5a28  033883e1  orr r3, r3, r3, lsl #16
+      439c5a3c..439c5a7c  stmge ip!, {r2, r3}  x16   ; 32 B por iteración
+    Colas 16/4 B y byte a byte (0x439c5a8c..0x439c5adc, `bx lr`). Función siguiente:
+    0x439c5b1c = strlen (`ldrb r1,[r2,#1]!` ... `bx lr`).
+    Operación: llenado puro por CPU; sin MMIO, sin DMA, sin barreras; sólo [r0]/[r1]/[ip].
+    No usa estado estático (reentrante); no toca el argumento `n` de llamada salvo registros.
+    Coincide con la nomenclatura ya usada en el repo (memset 0x439c5a04 en
+    docs/capture/s122-camera-main-tc.md:23, s142-imager-s-init.md:14, s175-lif-debug.md:19;
+    memcpy 0x439c5320 en docs/capture/s42-exposure-call-identity.md:177-178,
+    s154-imager-state-ref.md:38, s59-sol.md:23).
+
+    Resumen (a): ninguna de las dos es DMA, ni descriptor ni registro de dispositivo.
+    Son memcpy/memset de la libc ARM del módulo. Sus "rangos y tamaños" no están en el
+    código: son argumentos (r0/r1/r2). Los valores concretos de ESTA ruta van en el §2.
+
+------------------------------------------------------------
+2. (b) CADENA, ARGUMENTOS REALES Y RANGOS — VERIFICADO
+------------------------------------------------------------
+2.1 Quién invoca el callback (liro.ko, `liro_suspend`, .text+0x348..0x4DC):
+    +0x368  bl pm_get_state                 ; r0 = estado PM
+    +0x36c..+0x378  r5 = (estado == 4) ? 1 : 0
+    +0x388  bl printk("...entry_suspend:%p(%d)...", [r6+0x18], r5)
+            => el "(1)" del log "[LIRO]: entry_suspend:43541068(1)" es que PM state == 4,
+               no una fase. VERIFICADO (instrucciones) + INFERENCIA (valor 4 = WBI/warm).
+    +0x3b8  blx r3                          ; r3 = [r6+0x18] = entrada `suspend` del módulo
+            => se ejecuta el código del módulo en contexto de kernel, MMU del kernel/liro.
+    Después: kthread_create(thread_resume) (+0x3cc) y, si estado==4, vmalloc +
+    cp_backup de [0x43F430D9, 0x4409CE00) (+0x3f8..+0x4cc).
+    El mismo printk existe en el log real: analysis/camera-dumps/20261109-swd-360/klog.txt:29196
+    ("suspend - 43541068").
+
+2.2 Trampolín y cuerpo (av-cam.bin):
+    0x43541068  f05f2de9  push {r4..r11, ip, lr}   ; entrada ARM exportada "suspend"
+    0x4354106c  137e00fa  blx  0x435608c0
+    0x43541070  f05fbde8  pop  {r4..r11, ip, lr} ; 0x43541074 bx lr
+    Cuerpo Thumb 0x435608c0 (0x435608c0..0x4356091C), PIC con base r4 = 0x435608d4 +
+    0x00ABE610 = 0x4401EEE4 (GOT del módulo: docs/capture/electronic-still-low-resolution.md:94
+    ya documenta esa base):
+      +0x08 bl 0x435605a8 (log OSAL: 0x435612d0 = osal_try_valloc_msg)  (3,0xED)
+      +0x12 bl 0x43561594
+      +0x1C bl 0x435605a8                                               (0xB,0x150)
+      +0x2C blx 0x439c5A04  <-- memset
+      +0x3E blx 0x439c5320  <-- memcpy
+      +0x48 bl 0x435605a8                                              (0x1B,0x163)
+      +0x4C bl 0x435609b0  (bucle de 0x71 entradas -> 0x43560b5c)
+      +0x58 b.w 0x435605a8 tail-call                                   (0x13,0xFC)
+    Bytes de los dos call sites: 0x435608ec = 65f08ae0 (blx 0x439c5a04),
+    0x435608fe = 64f010e5 (blx 0x439c5320).
+
+2.3 Literales y punteros (leídos del fichero y CONFIRMADOS en el volcado de RAM real;
+    son las mismas 5 palabras, así que son valores estáticos, no inicializadores muertos):
+      ldr r4,[pc,#0x54] @0x4356091C = 0x00ABE610 -> r4 = 0x4401EEE4
+      [r4+0x0A24] @0x4401F908 = 0x43FA7D5A   (fin del memset)
+      [r4+0x1C5C] @0x44020B40 = 0x43D63000   (inicio del memset: destino)
+      [r4+0x7C70] @0x44026B54 = 0x43FA8F00   (destino del memcpy)
+      [r4+0x4868] @0x4402374C = 0x4401EEE4   (fin del memcpy)
+      [r4+0x3A28] @0x4402290C = 0x44026E00   (origen del memcpy)
+    Comprobado también en el volcado (offset PA-0x80000000): 0x401F908=0x43FA7D5A,
+    0x4020B40=0x43D63000, 0x4026B54=0x43FA8F00, 0x402374C=0x4401EEE4, 0x402290C=0x44026E00.
+
+2.4 Operaciones concretas y rangos:
+    (1) memset(dst=0x43D63000, c=0, n=0x244D5A = 2 379 098 B = 2,27 MiB)
+        VA [0x43D63000, 0x43FA7D5A) = PA [0x83D63000, 0x83FA7D5A)
+    (2) memcpy(dst=0x43FA8F00, src=0x44026E00, n=0x75FE4 = 483 300 B = 472 KiB)
+        dst VA [0x43FA8F00, 0x4401EEE4) = PA [0x83FA8F00, 0x8401EEE4)
+        src VA [0x44026E00, 0x4409CDE4) = PA [0x84026E00, 0x8409CDE4)
+    Total ~2,86 MB de accesos, sin esperas ni dispositivos.
+    Correlato con la cabecera LIRO que el driver imprime al cargar
+    (analysis/camera-dumps/20261109-swd-360/klog.txt:29202-29205):
+        ram 43fa8f00 + 00075fe4 | bss 43cfe37f + 00244d5a | tail 4409ce00 | limit 44140ffc
+    => la longitud del memset ES el tamaño `bss` declarado (0x244D5A) y el
+       destino+rango del memcpy ES exactamente el segmento `ram` (0x43FA8F00, 0x75FE4).
+       El origen del memcpy (0x44026E00) es una copia prístina del segmento `ram` guardada
+       justo detrás de la imagen (fin de imagen 0x44026DA4, alineado a 0x100), y termina
+       0x1C B antes de `tail`.
+    NOTA de precisión: el memset NO empieza en la base `bss` declarada sino 0x64C81 más
+    arriba (0x43D63000 vs 0x43CFE37F) y, con la misma longitud, acaba 0x64C81 por encima del
+    fin `bss` (0x43FA7D5A vs 0x43F430D9). La ventana [0x43D63000,0x43FA7D5A) es toda ceros
+    en el fichero (0 bytes distintos de 0), igual que el hueco [0x43FA7D5A,0x43FA8F00);
+    el segmento `ram` tiene 315 211 B no nulos. El porqué del desfase NO está verificado.
+
+2.5 Estado del destino/origen en vivo (volcado 20-10, fw 3.21 en marcha):
+    - La ventana del memset tiene 507 910 B no nulos (21,35 %) => es estado vivo del módulo:
+      el memset al suspender lo borra.
+    - El espejo del origen (PA 0x84026E00..+0x75FE4) es IDÉNTICO byte a byte al segmento
+      `ram` del fichero (0 de 483 300 distintos) mientras el segmento `ram` vivo difiere en
+      7 582 B (1,57 %): el origen de la copia es dato prístino, no estado vivo.
+    - Ese espejo NO está en flash: los primeros 64 B del segmento `ram` aparecen una sola vez
+      en nflasha3_unpacked (0xA71500, que es la propia imagen) y ninguna en nflasha3.
+      => se crea en tiempo de ejecución. Quién lo escribe: NO VERIFICADO.
+
+------------------------------------------------------------
+3. (b) ESOS RANGOS, ¿ESTÁN EN MEMORIA QUE EL KERNEL SUSPENDE? — VERIFICADO (aritmética)
+------------------------------------------------------------
+cmdline real (reports/evidence/film-pb1-sector31-camara-20261126/B-caliente/cmdline.txt:1):
+  mem=256M@0x80000000@0 | mem=576M@0x9C000000@2 | memrsv=0x28000@0x80000000 |
+  memrsv=0x13B1000@0x82D90000 | memrsv=0x1980000@0x8E680000 |
+  wbimem= 12 bloques | cmpr.mem=0x8000@0x9A000000 | warm.mem_dst=0xC00000@0x9B000000 |
+  warm.mem_work=0x600000@0x9C000000 | secgrp= 24 x 8M "offline" 0x90000000..0x9BFFFFFF |
+  tmonitor 0x82000000+0x500000 | boottime@0x834C0000 | klog@0x834E0000 | alog@0x8345FFC0
+3.1 Los tres rangos caen ÍNTEGROS en el bloque reservado para el módulo:
+      memrsv=0x13B1000@0x82D90000 = PA [0x82D90000, 0x84141000) = VA [0x42D90000, 0x44141000)
+      - memset dst  PA 0x83D63000..0x83FA7D5A  dentro; margen hasta el fin 1 675 942 B
+      - memcpy dst  PA 0x83FA8F00..0x8401EEE4  dentro; margen 1 188 124 B
+      - memcpy src  PA 0x84026E00..0x8409CDE4  dentro; margen   672 284 B
+    Prueba independiente de que ese bloque es "el del módulo": `limit` 0x44140FFC + 4 =
+    0x44141000 = PA 0x84141000 = final exacto de ese memrsv.
+3.2 No hay solape con NINGUNA región que el kernel suspenda/reserve para sí:
+    ni ninguno de los 12 `wbimem=` (el bloque más cercano por debajo acaba en 0x834C0000 y el
+    siguiente empieza en 0x8E680000: la ventana 0x83D63000..0x8409CDE4 queda entre ambos),
+    ni warm.mem_dst (0x9B000000), ni warm.mem_work/memrsv 0x9C000000,
+    ni cmpr.mem (0x9A000000), ni las 24 secgrp offline (0x90000000..0x9BFFFFFF),
+    ni tmonitor (0x82000000..0x82500000), ni boottime/klog/alog (0x834xxxxx).
+    Coincide con la conclusión ya asentada en docs/STATE.md:37 ("en memrsv=0x13B1000@
+    0x82D90000, sin wbimem= que la cubra").
+3.3 Interpretación: son DDR de la banda 0, reservada al módulo (fuera del page allocator),
+    NO son memoria que el kernel esté copiando, comprimiendo, reubicando ni apagando en el
+    warm: el warm escribe su imagen en los bloques `wbimem=` (banda 0 alta y banda 2) y
+    deja este bloque fuera. Ninguna de las dos copias toca MMIO, DMA ni memoria de un
+    dispositivo ya suspendido: para hacerse necesitan sólo CPU + DDR.
+3.4 Solape con lo que SÍ hace el driver en ese mismo instante (VERIFICADO en liro.ko):
+    liro_suspend hace cp_backup de [0x43F430D9, 0x4409CE00) (1 416 487 B, impreso en
+    analysis/camera-dumps/senser-shell-20261020-180946/shell.txt:27553) DESPUÉS del
+    callback. Solape: memcpy dst 483 300/483 300 B (100 %), memcpy src 483 300/483 300 B
+    (100 %), memset 412 801 B (17,4 %; el resto queda por debajo de 0x43F430D9).
+    => el propio driver lee después 100 % de los dos rangos de la copia: en ese punto la
+    región está mapeada y legible por definición.
+
+------------------------------------------------------------
+4. (c) ¿PUEDE FALLAR UNA COPIA AHÍ EN SUSPENSIÓN? — INFERENCIA sobre base verificada
+------------------------------------------------------------
+4.1 Lo que NO puede pasar por el mapa de memoria: los tres rangos son RAM reservada y viva,
+    sin dispositivos, y el kernel no las mueve. Un data abort por "el kernel está
+    suspendiendo esa memoria" no tiene mecanismo: no está en ninguna lista de suspensión.
+4.2 Lo que sí podría fallar, y cómo se vería:
+    (i) Fallo de traducción/permiso en el mapeo VA 0x43xxxxxx del módulo (liro crea su
+        propio mapeo; `os_init_mapping` escribe descriptores de tabla de páginas desde una
+        tabla y luego invalida caché/TLB: .init.text+0x568..0x6D8).
+        Manifestación: data abort en contexto de kernel -> "Unable to handle kernel paging
+        request"/"Unhandled fault" del kernel, que con `console=ttynull` no sale por UART
+        pero sí va al klog en RAM (klog.addr=0x834E0000, 0x20000) y, con `exception.reboot=1`
+        (cmdline), acaba en reinicio. Marcador de traza del módulo que quedaría como ÚLTIMO:
+        (0xB,0x150) de 0x435608DC, porque entre ese log y el siguiente (0x1B,0x163, en
+        0x43560908) no hay ninguna otra traza: morir en el memset o en el memcpy deja el
+        mismo último marcador. Si (0x1B,0x163) aparece, las dos copias terminaron.
+    (ii) Cuelgue de bus (la ventana DDR del módulo sin reloj/alimentación o en self-refresh):
+        no hay excepción; la CPU se queda esperando la transacción -> no se imprime nada ->
+        watchdog (`wdt.timeout=500`, `wdt.mode=1`) reinicia. Esta es la forma que encaja con
+        lo observado (silencio total tras el print de liro + boot id nuevo), y también con
+        "el enlace SWD se interrumpió" sin línea de oops.
+    (iii) Si las dos copias terminan: no hay crash, pero el módulo queda con su `bss`
+        borrado y su segmento `ram` restaurado a prístino (2,86 MB de escrituras), y el
+        driver respalda justo después ese estado ya "reseteado". Efecto funcional: el módulo
+        pierde su estado vivo al suspender. No es un fallo de acceso, es de semántica.
+    (iv) Orden relativo: las copias ocurren ANTES de cp_backup y del kthread de resume; no
+        compiten con el guardado de la imagen del kernel.
+4.3 Descartado como causa por esta vía: no hay solape con la imagen warm (`wbimem`), ni con
+    secgrp offline, ni con el área de compresión; y el "destino fuera de lo comparado" que
+    apuntaba docs/capture/e25-16-r5-autonomo-fotografia.md:286 ("memset/memcpy no emulados
+    (destino fuera de lo comparado)") queda ahora acotado a direcciones concretas.
+4.4 LÍMITE de (c): no puedo enumerar el mapa traducción a traducción (la tabla de
+    `os_init_mapping` en .rodata+0x50 sale vacía en el binario: se rellena o vive en otro
+    sitio) => que las tres ventanas estén efectivamente traducidas en ese instante es
+    INFERENCIA, apoyada en que el propio código que copia se ejecuta desde la misma ventana
+    (0x4354xxxx): si faltara la traducción, el fallo sería en la primera instrucción de
+    0x435608C0, no dentro de las copias.
+
+------------------------------------------------------------
+5. (d) QUIÉN LAS LLAMA DESDE LA RUTA 0x435608C0 — VERIFICADO en la ruta
+------------------------------------------------------------
+5.1 En la ruta, las dos llamadas están DENTRO del cuerpo del callback:
+      0x435608EC  blx 0x439c5a04   (memset)   <- único memset de la ruta
+      0x435608FE  blx 0x439c5320   (memcpy)
+    Cadena completa: liro.ko liro_suspend +0x388 printk -> +0x3B8 `blx r3` (entry 0x43541068,
+    r0=1) -> 0x4354106C `blx 0x435608c0` -> 0x435608EC / 0x435608FE.
+5.2 Callees directos del callback, comprobados uno a uno (no llaman a las rutinas en su
+    primer nivel): 0x435605a8 (log OSAL; llama 0x435612d0/0x4356120c/0x43561228/0x435612ec),
+    0x43560aa4, 0x43561594 (20 B, sin llamadas), 0x435609b0 (bucle 0x71 -> 0x43560b5c).
+5.3 Fuera de la ruta (barrido completo del binario, para no reclamar exclusividad):
+    - Barrido ARM lineal (2 856 809 instrucciones): sólo 2 xrefs directas a cada rutina y
+      todas son veneers/tails de la propia libc:
+        memcpy: 0x4393AC88 `b 0x439c5320`, 0x43B7F87C `b 0x439c5320`
+        memset: 0x4393AC9C `b 0x439c5a04`, 0x43B7F894 `b 0x439c5a04`
+        veneers PLT: 0x4393AC7C `ldr pc,[pc,#-4]` + literal 0x439c5320 en 0x4393AC80, y
+        0x4393AC90 `ldr pc,[pc,#-4]` + literal 0x439c5a04 en 0x4393AC94 (únicos literales de
+        toda la imagen que contienen esas direcciones: 1 aparición cada una).
+        memmove 0x439C5560 delega en memcpy (0x439C5574 `blo 0x439c5320`).
+    - Barrido Thumb lineal: 3 843 `blx` a 0x439c5320 y 5 298 a 0x439c5a04 (los call sites de
+      código Thumb del módulo). Cifra NO validada sitio a sitio (puede incluir ruido de
+      zonas de datos decodificadas como Thumb); se da sólo como orden de magnitud, no como
+      lista de llamadores.
+
+------------------------------------------------------------
+6. COMO SE REPRODUCE (todo offline, ~1 min)
+------------------------------------------------------------
+python3 - <<'PY'   # desensamblado y literales
+from capstone import *; import struct
+d=open('firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/av-cam.bin','rb').read(); b=0x43541000
+md=Cs(CS_ARCH_ARM,CS_MODE_ARM)
+for va in (0x439c5320,0x439c5a04):
+    for n,i in enumerate(md.disasm(d[va-b:va-b+0x300],va)):
+        if n>11: break
+        print(hex(i.address),i.mnemonic,i.op_str)
+md=Cs(CS_ARCH_ARM,CS_MODE_THUMB); md.detail=True
+for i in md.disasm(d[0x435608c0-b:0x4356091c-b],0x435608c0): print(hex(i.address),i.mnemonic,i.op_str)
+PY
+# liro.ko: análisis/rea-independent no hace falta; con pyelftools+capstone (ver §2.1)
+# volcado: open('analysis/camera-dumps/ram-servicio-20261020/ram_0x80000000.bin')
+#          .seek(VA+0x40000000-0x80000000)  (para [0x4402290C] etc.)
+
+------------------------------------------------------------
+7. LÍMITES (lo que este informe NO prueba)
+------------------------------------------------------------
+- REA no disponible: todo es capstone + bytes; ninguna consulta de REA se ha podido hacer.
+- No se ha ejecutado ni emulado nada; no hay medida del tiempo real de las dos copias ni de
+  su velocidad (2,86 MB de accesos: orden de ms, no medido).
+- El mapeo VA->PA del módulo se ha validado con el código (byte a byte) y con los cinco
+  punteros del GOT (idénticos fichero/volcado), pero no se ha enumerado la tabla de páginas
+  de liro: la cobertura exacta del mapeo por encima de `tail` y por debajo de 0x43541000
+  queda NO VERIFICADA.
+- El origen del memcpy (espejo prístino en 0x44026E00) se crea en runtime; quién y cuándo lo
+  escribe no está identificado (falta buscar el store / la ruta de init que lo rellena).
+- El desfase de 0x64C81 entre la ventana del memset y la base `bss` declarada en la cabecera
+  LIRO no está explicado.
+- Semántica del "(1)" de `entry_suspend:%p(%d)` = `pm_get_state()==4` está verificada como
+  cálculo; que 4 signifique WBI/warm es inferencia (no hay tabla de estados en el repo).
+- La captura `warm` sin SD no tiene traza de consola: /tmp/a6000-warm-sin-sd/ existe en este
+  equipo pero sólo contiene antes.json, bateria-antes.txt, boottime-antes.txt,
+  boottime-despues.txt y despues.json (sin control.py, sin vigilar.cfg, sin telnet), así que
+  no se puede fechar el corte contra el orden de las trazas del módulo.
+- Conclusión que sostiene el entregable: las copias del callback son memcpy/memset puros
+  sobre RAM reservada al módulo, sin dispositivos ni DMA, y ningún rango suyo entra en la
+  imagen warm ni en zona offline; por tanto la hipótesis "la copia toca memoria que el kernel
+  está suspendiendo" queda DESCARTADA con estos datos. Que el fallo real fuese un data abort
+  antes de las copias (mapeo del módulo) o después de ellas (cp_backup/kthread) no lo decide
+  esta evidencia.

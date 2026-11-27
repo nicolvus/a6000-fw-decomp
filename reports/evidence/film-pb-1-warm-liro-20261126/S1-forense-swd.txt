@@ -1,0 +1,302 @@
+S1 — FORENSE DEL VOLCADO SWD DEL `warm` SIN SD (ff49ff1d → 73273afe)
+Evidencia de S1 · 26-11-2026 (analizada 27-11-2026) · 100 % offline: sin cámara, sin repetir warm,
+sin escribir RAM/flash, sin QEMU, sin flasheo.
+Estados: [V] VERIFICADO contra bytes/fuente · [I] INFERENCIA · [NV] NO VERIFICADO.
+
+MÉTODO
+  · MCP `rea` NO está expuesto en esta sesión (conectores disponibles: file_system, process, self).
+    Sin sesión REA abierta ⇒ todo lo decisivo se comprueba contra BYTES: parseo del volcado,
+    capstone 5.0.7 (ARM/Thumb), tabla de relocaciones ELF de liro.ko y fuentes OSS del kernel.
+    Una consulta vacía de REA no se usa como prueba de nada.
+  · Fuentes de la captura (intactas, sólo lectura):
+      /tmp/a6000-warm-captura-swd/{kernel-swd.bin 43 007 B, swd.log, resultado.txt,
+        boottime-antes.txt, boottime-despues.txt, antes.json, despues.json, orden-enviada.txt,
+        params-antes-de-warm.json, telnet-interrumpido.txt, vigilar.cfg, control.py}
+    **CORRECCIÓN de límite:** /tmp/a6000-warm-sin-sd/ SÍ EXISTE (intento anterior del mismo día,
+    21:31-21:36) y contiene {resultado.txt, telnet-interrumpido.txt, boottime-antes.txt,
+    boottime-despues.txt}. Se usa como PATRÓN DE REFERENCIA de un ciclo de suspensión completo.
+  · Binarios: liro.ko = firmware/extracted/fw321/.../nflasha15_unpacked_unpacked/kmod/liro.ko
+    (65 128 B, ARM, .text en fichero 0x34, símbolos presentes); av-cam.bin = .../nflasha3_.../
+    av-cam.bin (11 427 236 B, md5 ef2e3003ddad7185b5398cb76287c5aa, base VA 0x43541000).
+    Ojo: el contexto previo situaba liro.ko en nflasha7; está en **nflasha15** (/usr/kmod/liro.ko).
+  · Kernel OSS: analysis/session18/main/sony-oss-extracted/linux (arch/arm/common/warm.c,
+    arch/arm/mach-cxd90014/{pm.c,wdt.c}, arch/arm/kernel/setup.c).
+
+================================================================================================
+0. HALLAZGOS (resumen)
+================================================================================================
+1. [V] El volcado está íntegro y se puede descomponer sin ambigüedad: 43 007 B = 42 788 B de anillo
+   + 219 B de TRES separadores que escribe el script Tcl (73 B cada uno). Coincide al byte con
+   `resultado.txt:"FIN: lecturas=8563 bytes=42788"`.
+2. [V] Último registro fiable: `<4>[  537.295341] [LIRO]: entry_suspend:43541068(1)` (offsets
+   8873..8924). Lo que sigue son bytes 8925..8997 = separador Tcl (epoch 1795740017) y, desde 8998,
+   el log del kernel NUEVO (ts 0.000000). No hay ni un byte del kernel viejo después.
+3. [V] Tras el corte, la máquina NO siguió el camino de suspensión: hizo un REARRANQUE POR CARGADOR
+   (BootROM) y arrancó un kernel nuevo desde cero. No hay panic/oops/data abort/watchdog/"WDT:RSTREQ"/
+   "PM: resume"/"WARMBOOT"/"Kernel Jump" en el volcado; el "porqué" está en /proc/snsc_boot_time, que
+   SOBREVIVE al reset: `L: BOOT (VER 01.90)` … `R_REQ#1` … `L: Kernel Jump[MODE#1 NR_RES#0]`.
+4. [V] El enlace SWD se perdió ≤ 0,12 s después de que liro invocara el callback (cota con el ancla
+   del telnet; se adopta 0,5 s como cota conservadora al cruzar con el arranque nuevo). El kernel
+   nuevo ya estaba arrancando en el mismo segundo (ventana: 21:40:17,885–21:40:18,36).
+5. [V] NO hay rastro de que el callback de liro RETORNARA: ni las 4 líneas de printk que liro.ko
+   imprime obligatoriamente después de `blx r3`, ni la marca de fin del marco UDIF
+   (`008E E liro`, que en un ciclo completo llega 71 ms después de `008E B liro`). La marca
+   siguiente a `008E B liro` es el cargador.
+
+================================================================================================
+1. ESTRUCTURA E INTEGRIDAD DEL VOLCADO  [V]
+================================================================================================
+Separadores escritos por el Tcl (`vigilar.cfg`, `puts $out "\n[clock seconds] Reanudación…"`):
+   #1 660..732   epoch 1795740016 = 21:40:16
+   #2 8925..8997 epoch 1795740017 = 21:40:17
+   #3 26543..26615 epoch 1795740064 = 21:41:04
+Bloques: A [0,660) · B [733,8925) · C [8998,26543) · D [26616,43007).
+Comprobación de cuadre: 660 + 73 + 8192 + 73 + 17545 + 73 + 16391 = 43 007 B; datos = 42 788 B
+(igual que `FIN: … bytes=42788`) ⇒ no falta ni sobra nada del volcado. [V]
+
+Por qué hay 3 separadores: el Tcl escribe ese texto cuando `end < last || end - last > 0x2000`
+(anillo desbordado o contador que retrocede) y reengancha en `last = end - 0x2000`.
+  · #1 [V] por desbordamiento: entre dos sondeos el kernel escribió > 8 KiB (la ráfaga cfg80211 de
+    537,29 s). Por eso B mide 8192 B exactos: es una relectura COMPLETA del anillo, 8 KiB por detrás
+    de la cabeza.
+  · #2 [V] es el reenganche tras la pérdida del enlace, y se escribe ANTES de la lectura que falla:
+    `swd.log:30 Error: mem2array: Read @ 0x80395d5a` = 0x8039575d + 0x5FD, y 0x5FD = 0xA5FD & 0x1FFF
+    con 0xA5FD = `log_end(0xC5FD) - 0x2000`. Es decir, en ese mismo sondeo ya se había leído
+    `log_end = 0xC5FD` y se había fijado `last = 0xA5FD`.
+  · #3 [V] por desbordamiento con el kernel nuevo (bloque D ya sale alineado: 0 ceros, ts monótona).
+
+================================================================================================
+2. CLASIFICACIÓN DE REGISTROS  (a)
+================================================================================================
+Bloque A [0,660) — MEZCLADO/TORCIDO (7 cabeceras printk, 9 líneas):
+  · Íntegras y del kernel VIEJO: `525.564155 PM: Syncing filesystems ... done` (0..50),
+    `525.566877 Freezing user space processes` (52), `525.596258 Freezing remaining…` (133, con
+    empalme: «Freezing remaining fl driver version is(elapsed 0.01 seconds) done.»),
+    `525.622654 Freeing memory(use swap parititon): (free_some_memory)…` (219, truncada).
+  · Residuos de OTRO arranque anterior: `39.348117` (346), `39.348161` (466) — y un tercero en el
+    bloque B (`39.353757`, 7918). Son restos de un log de 39 s que quedó en RAM. [V los residuos;
+    I que el arranque anterior de esta cámara fuese CALIENTE, es decir, sin borrado de RAM]
+Bloque B [733,8925) — 8192 B, 85 registros, 0 ceros: es el tramo 537,291111 → 537,295341, denso
+  (cfg80211 + suspensión de dispositivos) con 9 registros EMPALMADOS de ts anterior (537.286231,
+  537.286713, 537.286774, 537.286841, 537.287, 537.288020, 537.288141, 537.289133, 537.290916) y
+  el residuo 39.353757. Son bytes que el escritor aún no había pisado (relectura con retraso): sirven
+  para leer texto, NO para ordenar. Entre ellos hay un `dump_stack` de ath6kl
+  («[<402877a0>] (dump_stack+0x0/0x1c» en 3152, «(__device_suspend+0x0/0x138)» en 5048,
+  «ath6kl: wmi ctrl ep full» en 8012) ⇒ aviso del driver wifi durante el suspend, no un fallo fatal.
+  [V el texto; I el emisor concreto del dump_stack, porque está partido]
+Bloque C [8998,26543) — kernel NUEVO, 226 registros, ts 0.000000 → 47,948238, con **1888 B de ceros**
+  (10,8 %) repartidos en huecos y varios empalmes:
+  · 9372 `<6>[    0.000000] cmdline override at 40033005`
+  · 9459 `arm_add_memory: 0 0x80000000 0x10000000`, 9873 `L310 cache controller enabled`
+  · 12132 `Kernel command line:  ramdisk_size=8192 … warm.mode=2 warm.tmo=50000 … xrstreq=1
+    wdt.mode=1 wdt.timeout=500 … cmpr.path=/system/sabin/ssboot.bin`
+  · 13171..13769 12 × `wbi: added region …`, 17273 `klog: keep logging buffer: 0x00020000@0x834e0000,
+    magic wrong nbit: 0`, 18400 `log_main start: … magic: MAIN`, 18556 `log_events start: … nxt addr:
+    434c0000-magic: EVENTS`
+  · 23301 `LIRO (liro) rev:4-MUSASHI`, 23345 `Param:adrs=83541000`, 23401 `entry point:43541000`,
+    23672 `suspend     - 43541068`, `resume      - 43541078` … (tabla de vectores completa)
+Los 1888 ceros son posiciones que el kernel nuevo AÚN no había escrito cuando el sondeo pasó por
+ellas: el reenganche quedó ADELANTADO respecto a la cabeza real (ver §6, coherencia de `log_end`). [V]
+Bloque D [26616,43007) — kernel NUEVO alineado, 175 registros, ts 48,062953 → 51,012147, 0 ceros.
+  Últimos bytes del fichero (42950..43006):
+  `<6>[   51.012147] cfg80211: Calling CRDA for country: CL` — línea completa.
+
+Kernel VIEJO vs NUEVO: el corte de ts es limpio (el último viejo es 537.295341; el primero nuevo
+0.000000) y el contenido lo confirma: el nuevo trae `cmdline override`, `arm_add_memory`,
+`Linux version … gcc version 4.5.1 (20120717 (Sony CE Linux …` (fragmento en 8998), `setup_arch`,
+`vfs_caches_init_early`, `mem_init` ⇒ arranque de kernel desde cero, no reanudación. [V]
+Identificación con los ficheros del harness: `antes.json` boot `ff49ff1d…`, uptime 523,37 s;
+`despues.json` boot `73273afe…`, uptime 91,78 s. El dump sólo contiene ts de printk del kernel viejo
+(523–537 s) y del nuevo (0–51 s). [V que son dos kernels; I fuerte que el nuevo sea 73273afe:
+  última marca del dump 51,012147 s leída a las 21:41:07,878 y `despues.json` 91,78 s escrito a las
+  21:41:50,140 ⇒ 40,8 s de kernel en 42,3 s de reloj, mismo arranque sin reset intermedio.]
+
+================================================================================================
+3. (b) ÚLTIMO REGISTRO FIABLE Y BYTES QUE LO SIGUEN  [V]
+================================================================================================
+  8705..8772  <6>[  537.295257] PM: suspend of devices complete after 12.181 msecs
+  8774..8827  <6>[  537.295282] UDIF: suspend start: unified drivers
+  8829..8871  <6>[  537.295315] UDIF: suspend start: liro
+  8873..8924  <4>[  537.295341] [LIRO]: entry_suspend:43541068(1)      ← ÚLTIMO FIABLE
+  8925        '\n' (inicio del separador #2)
+  8926..8935  "1795740017"
+  8937..8993  "Reanudación de captura desde un anillo nuevo o sobreescrito"
+  8998..17190 ventana de 8192 B leída justo después: 1888 B de ceros intercalados y, a partir de
+              9354, los PRIMEROS registros del kernel NUEVO (ts 0.000000); en 8998..9416 asoma el
+              fragmento «…4.5.1 (20120717 (Sony CE Linux » del registro «Linux version …»
+Hex de la frontera (8840..8945): «…UDIF: suspend start: liro\n<4>[  537.295341] [LIRO]:
+entry_suspend:43541068(1)\n» + «\n1795740017 Reanudac…».
+La línea es ÍNTEGRA: empieza en `<4>[` y termina en `)\n`; no está truncada ni empalmada (ningún cero ni
+byte de otro registro dentro de los 52 B). [V]
+
+================================================================================================
+4. (c) QUÉ PASÓ DESPUÉS DEL CORTE
+================================================================================================
+4.1 En el volcado [V]
+  · Kernel nuevo arrancando (offsets §2). Nada más del viejo: 0 apariciones de `PM: resume`,
+    `PM: suspend enter`, `WARMBOOT`, `panic`, `Oops`, `BUG`, `Unable to handle`, `data abort`,
+    `Backtrace`, `RSTREQ`, `watchdog`, `WDT:`.
+  · Las únicas 5 apariciones de «warm» son la cmdline del kernel nuevo (`warm.mode=2 warm.tmo=50000
+    warm.resume_drop=0 warm.boot_drop=0 warm.ignore_drop=1`), y las de «panic/wdt/resume» también
+    caen dentro de esa misma cadena (`exception.reboot=1`, `wdt.timeout=500`, …). No son eventos.
+    Recuento exacto: panic 1 (12340), wdt 2 (12380/12588), resume 3 (12428/12845/23713) — las tres
+    dentro de la cmdline o de la tabla de vectores de liro (`resume - 43541078`).
+4.2 Fuera del volcado, en la traza PERSISTENTE /proc/snsc_boot_time [V]
+  `boottime-despues.txt` (fichero del kernel nuevo, pero el anillo conserva lo que escribió el viejo
+  antes del reset; línea 1 = `boot time (434c0000)`, que es justo el `log_events … nxt addr: 434c0000`
+  del kernel nuevo ⇒ mismo buffer persistente):
+      228  3: B warm_boot_pm_begin                    : 525616 [ms]
+      229  3: E warm_boot_pm_begin                    : 537282 [ms]
+      230  3: 008E B unified drivers                  : 537295 [ms]
+      231  3: 008E B liro                             : 537295 [ms]
+      232  L: BOOT (VER 01.90)                        :   355 [ms]
+      233  L: log escape                              :   355 [ms]
+      234  L: normal load config                      :   455 [ms]
+      235  L: check POWER[KEY_E#0 KEY_L#29 RMEM#0 HIC#0 R_REQ#1 H/C#0] : 1075 [ms]
+      236  L: check POWER[IC#7 VER.B#00.46 C#00.78]   :  1075 [ms]
+      237  L: check BACKUP[FILE#1 RST#0 ERR#0-0] DATE[2] DDR[0] : 1075 [ms]
+      238  L: Kernel Jump[MODE#1 NR_RES#0]            :  1075 [ms]
+      239  0: setup_arch                              :  1214 [ms]
+  Es decir: la marca siguiente a «UDIF entra en liro» es el LOG DEL CARGADOR (BootROM) con
+  `R_REQ#1` (línea de reset pedida), backup con `FILE#1 RST#0 ERR#0-0` y `Kernel Jump[MODE#1
+  NR_RES#0]`; después, el kernel nuevo (`setup_arch`, `vfs_caches_init_early`, `mem_init` …).
+  Las marcas 525616/537282/537295 cuadran con el klog al milisegundo (525.564155 / 537.295257 /
+  537.295315) ⇒ la traza y el volcado describen el mismo ciclo. [V]
+  `boottime-antes.txt` (capturado antes) NO tenía aún estas marcas: su última entrada es 225077 ms.
+  Su ciclo anterior (intento sin SD del mismo día, /tmp/a6000-warm-sin-sd/boottime-antes.txt) muestra
+  el MISMO desenlace: B/E warm_boot_pm_begin, `008E B unified drivers`, `008E B liro` y salto.
+4.3 Comparación con un ciclo COMPLETO (patrón de referencia) [V + I]
+  /tmp/a6000-warm-sin-sd/boottime-antes.txt:906-997 (otro arranque, misma cámara y firmware):
+      907  008E B unified drivers          10755
+      908  008E B liro                     10755
+      909  008E E liro                     10826   ← 71 ms después
+      910..988  39 conductores más (sprop, mmc_drv, ms_drv, … b-252 ×5, mumindrv, lld, ldec, dmac,
+                fusb_otg, hwtimer, gpio)
+      989  008E E unified drivers          11549
+      990  PM: suspend enter               11597
+      996  L: Kernel Jump[MODE#2 NR_RES#2]  40
+      997  PM: resume start                 40
+  Dos lecturas: (i) el marco UDIF cierra SIEMPRE con `008E E <conductor>` y `008E E unified drivers`
+  —el par B/E es el uso normal—; (ii) el salto de un ciclo que se completa y reanuda es
+  `MODE#2 NR_RES#2` seguido de `PM: resume start`, mientras que el de esta captura es
+  `MODE#1 NR_RES#0` y NO hay `PM: resume start` ⇒ [I] no hubo imagen que reanudar y el cargador
+  arrancó un kernel nuevo (coherente con nflasha5 a cero y los 256 KiB sin cambios).
+  Diferencia observada (sin conclusión): en el ciclo completo aparece `3: 92 M EV OFF Warm boot` y
+  `dmm_pre_suspend()` 54 ms antes de `008E B unified drivers`; en esta captura no están.
+
+================================================================================================
+5. (d) CUÁNDO SE PERDIÓ EL ENLACE RESPECTO AL APAGADO  [V]
+================================================================================================
+Anclas de reloj (mismo PC): `orden-enviada.txt` = 1795740004,8202186 = 21:40:04,820; el telnet
+imprimió `524.23` (`telnet-interrumpido.txt`) ANTES de `echo warm`, y `antes.json` da 523,37 s.
+⇒ t=0 del kernel viejo ≥ 21:31:20,59 y el registro de 537,295341 s cae en **≥ 21:40:17,885**.
+El separador #2 lleva epoch 1795740017 y, como se vio en §1, se escribió en el sondeo en que
+`log_end` ya valía 0xC5FD y la lectura del anillo FALLÓ ⇒ ese sondeo ocurrió en
+[21:40:17,000 – 21:40:18,000). Y el registro se capturó en el sondeo anterior (el sondeo tarda
+≥ 15 ms del `sleep` + lecturas).
+  ⇒ **La pérdida del enlace ocurrió ≤ 0,12 s después de la línea de liro.** [V como cota con este
+    ancla; la latencia del telnet sólo puede mover el registro hacia delante, es decir, apretarla.]
+Arranque del kernel nuevo: `despues.json` (uptime 91,78 s) escrito a las 21:41:50,140 y la lectura
+del uptime es la primera de `read_state`, así que ocurrió antes ⇒ arranque ≤ 21:40:18,36. Y tiene que
+ser posterior al registro viejo (≥ 21:40:17,885).
+  ⇒ **Rearranque en la ventana 21:40:17,9 – 21:40:18,4 (≈ 0,5 s), justo cuando murió el enlace.** [V]
+    ⇒ El enlace no se cayó antes del apagado ni por un fallo del sonda: se cayó CON el reset. [I]
+  Cota que se adopta en todo el documento: **≤ 0,5 s entre la llamada al callback y el reset**
+  (la del telnet es 4× más fina, pero depende del reloj del kernel viejo; ver §7).
+Respecto a la secuencia de apagado: el kernel viejo había recorrido sincronización (525,56) →
+congelación → `free_some_memory` → 11,67 s de `count_sections_p1` (E warm_boot_pm_begin 537282) →
+`PM: suspend of devices complete` (537.295257) → `cxd90014_pm_prepare()` → `udif_driver_suspend()`
+(`UDIF: suspend start: unified drivers`/`liro`) → callback. Es decir, murió **dentro de la fase
+.prepare de la plataforma**, antes de `.enter`/`PM: suspend enter` y antes de escribir imagen
+alguna. [V el orden; el emparejamiento con pm.c es [V] por código: `cxd90014_pm_prepare()` llama
+`udif_driver_suspend()` y `warm_boot_pm_prepare()`. Coincide con S10 (Q2) y con S8.]
+
+================================================================================================
+6. (e) ¿RETORNÓ EL CALLBACK DE LIRO?  →  NO HAY NINGÚN RASTRO, Y ADEMÁS ESTÁ PROBADO QUE NO
+================================================================================================
+6.1 Qué imprime liro.ko si el callback vuelve [V, bytes]
+  `liro_suspend` = liro.ko .text 0x348..0x50C (452 B, ARM; símbolo LOCAL presente):
+    0x368  bl pm_get_state                    (kernel: devuelve `pm_state`)
+    0x36C  sub r3,r0,#4 ; 0x374 rsbs r5,r3,#0 ; 0x378 adc r5,r5,r3   → r5 = (pm_get_state()==4)
+    0x370  ldr r0,=«[LIRO]: entry_suspend:%p(%d)\n»   (.rodata.str1.1+0x19E = fichero 0x9273)
+    0x384  ldr r1,[r3,#0x18]  (tabla del vector: suspend = 0x43541068)
+    0x388  bl printk                          ← la línea capturada, impresa ANTES de llamar
+    0x3B4  ldr r3,[r6,#0x18] ; 0x3B8 blx r3   ← AQUÍ se invoca 0x43541068 (ARM)
+    0x3BC..0x3CC kthread_create_on_node("liro-RESUME")   (cadena +0x1BC)
+    0x3EC  bl pm_get_state ; cmp r0,#4 ; bne 0x4D0
+    0x404  printk(«[LIRO]: liro suspend (WBI)\n»)        (+0x1ED)   [rama pm_state==4]
+    0x43C/0x440 printk(«ft_backup …») ; 0x45C/0x460 printk(«cp_backup …»)   (+0x45 / +0x63)
+    0x48C/0x49C printk(«[LIRO]: liro suspend error!\n»)        (+0x209)
+    0x4D0/0x4D4 printk(«[LIRO]: liro suspend complete!\n»)     (+0x226)
+    0x3DC/0x3E0 printk(«LIRO: suspend error(kthread_create)\n»)(+0x1C8) ; return -7
+  No hay ningún camino que salga del `blx` sin imprimir: o error de kthread, o «(WBI)» + backups +
+  «complete!». Y el «(1)» del log NO es un contador: es `pm_get_state()==4` (PM_SUSPEND_DISK), así que
+  la rama esperada era la de «(WBI)» (4 líneas). [V; coincide con S5 y con el `pm_state` de
+  arch/arm/common/warm.c:1560]
+  El puente AV-CAM no aporta printk: 0x43541068 = `push {…,lr} ; blx 0x435608C0 ; pop {…,lr} ; bx lr`
+  (ARM, 4 instrucciones) y el cuerpo Thumb 0x435608C0 empieza con marcas (3,0xED) (0xB,0x150)
+  (0x1B,0x163) (0x13,0xFC) al emisor 0x435605A8, que no es printk (ver S3). [V el código]
+6.2 Qué hay en el volcado [V]
+  Apariciones: `liro suspend` 0 · `suspend complete` 0 · `ft_backup` 0 · `cp_backup` 0 ·
+  `RESUME` 0 · `entry_resume` 0 · `UDIF: suspend start:` 2 (sólo «unified drivers» y «liro») ·
+  `PM: ` 2 (Syncing / suspend of devices complete). Es decir: ni una sola marca posterior.
+6.3 Por qué el volcado, POR SÍ SOLO, no probaría el no-retorno  [V el hecho; I la cuantía]
+  El anillo vive en RAM y el kernel nuevo lo pisa desde el índice 0 en sus primeros ~8 KB de log
+  (≈ 1–2 s). Entre la pérdida del enlace (21:40:17,99) y el reenganche, esas posiciones ya estaban
+  reescritas: por eso el bloque C tiene huecos de ceros y fragmentos, y por eso la AUSENCIA de las
+  líneas de liro en el volcado no demuestra nada por sí sola. (Es una matización de la predicción de
+  S3, no una contradicción: la predicción se cumple, pero su prueba tiene que venir de fuera del anillo.)
+6.4 La prueba que sí vale: la traza persistente  [V]
+  `/proc/snsc_boot_time` NO se borra con el reset (es el mismo buffer 0x434c0000 en los dos kernels).
+  En esta captura, después de `008E B liro` (537295 ms) la marca siguiente es `L: BOOT (VER 01.90)`;
+  faltan `008E E liro` y `008E E unified drivers`. La decisiva es la primera: en un ciclo completo
+  `008E E liro` llega **71 ms** después de su B (referencia §4.3), por debajo de la cota de 0,5 s que
+  tenemos hasta el reset. (`008E E unified drivers` necesita además los otros 39 conductores = 794 ms,
+  así que su ausencia no aporta por sí sola.)
+  ⇒ **El callback de liro no retornó antes del reset**: el marco UDIF no cerró y la máquina saltó.
+  [V el orden y la ausencia; I la lectura «no retornó» frente a «retornó y el tracer murió», que la
+  cota de 0,5 s hace inverosímil]
+6.5 Coherencia de `log_end` (no usar para alinear)  [V]
+  El valor leído, 0xC5FD (50 685 B), es INCOMPATIBLE con el contenido que se leyó a continuación:
+  si el kernel nuevo llevara 50 KB escritos, el anillo de 8 KiB estaría lleno de registros recientes,
+  y lo que hay son 1888 B de ceros y los PRIMEROS registros del arranque (ts 0.000000, «cmdline
+  override», «Linux version … gcc 4.5.1»). Consecuencia: el reenganche quedó adelantado ~40 KB y los
+  bloques C/D son texto legible pero NO una instantánea ordenada del anillo. Causa de 0xC5FD: [NV]
+  (¿lectura basura del AP en reset, o contador heredado del «keep logging buffer» con magic erróneo?).
+  Para el resto de conclusiones no se usa.
+
+================================================================================================
+7. LÍMITES
+================================================================================================
+- El volcado no identifica por sí mismo el boot id nuevo; la atribución a 73273afe es [I] fuerte por
+  tiempo (40,8 s de kernel en 42,3 s de reloj) y por contenido (arranque desde cero). Los boot id
+  salen de antes.json/despues.json, no del binario SWD.
+- No se puede acotar el instante del reset mejor que ~0,5 s: no hay reloj común entre el cargador
+  (`L:`, base propia, p.ej. BOOT 355 ms / Kernel Jump 1075 ms) y el kernel (`local_clock`, ts 0).
+  Tampoco se usa la base de ms de la traza para tiempos absolutos (en el mismo fichero conviven
+  entradas de 49 146 ms con un uptime de 91,78 s).
+  Queda además un residuo de ~1 s no resuelto entre las dos anclas de reloj del PC: la del kernel
+  viejo (guard 21:40:04,820 + uptime 524,23 s ⇒ el registro de 537,295341 s cae ≥ 21:40:17,885) y la
+  del nuevo (uptime 91,78 s ⇒ arranque ≤ 21:40:18,36). Se pueden conciliar con arranque entre
+  21:40:17,9 y 21:40:18,4; si el reloj del kernel viejo derivara, la cota de 0,12 s sería más laxa
+  (nunca más de ~1 s). Por eso las conclusiones se dan con la cota conservadora de 0,5 s.
+- El volcado SWD se lee en trozos de 1024 B con `mem2array` de 8 bits a 1 MHz, así que un bloque de
+  8 KiB tarda del orden de 0,1 s y es una RELECTURA CON RETRASO (8 KiB por detrás de la cabeza), no
+  una instantánea: el orden interno de los bloques B y C no sirve para datar. [V el mecanismo por
+  `vigilar.cfg`; I la duración exacta]
+- Causa del reset: sólo se prueba que hubo `R_REQ#1` + `Kernel Jump[MODE#1 NR_RES#0]` y que no hay
+  panic/WDT/RSTREQ/`PM: resume`/`WARMBOOT`. NO se ha identificado QUIÉN pidió el reset (¿el propio
+  callback? ¿`pm_suspend_error`? ¿el camino de sleep.S?). [NV]
+- El patrón de comparación «ciclo completo» (§4.3) es de OTRO arranque del mismo día; el par B/E y el
+  orden de los 39 conductores se toman como comportamiento del mismo firmware, no como medida de esta
+  captura. [I]
+- No se ha usado REA (no expuesto en esta sesión) ni Ghidra. liro.ko se ha verificado con capstone +
+  relocaciones; de av-cam.bin sólo se han mirado 0x43541068 y las 34 primeras instrucciones de
+  0x435608C0 (el resto es de S3/S5).
+- No se ha tocado la cámara, ni la SD, ni el firmware; no se ha repetido `warm`; no se ha escrito en
+  RAM ni en flash; no hay commit ni push en este trabajo.
+
+Relacionados (misma carpeta): S2-liro-ko.txt · S3-avcam-entrada.txt · S5-memoria-copias.txt ·
+S6-apagado-vs-warm.txt · S7-kernel-suspension.txt · S8-origen-reset.txt · S9-instrumentacion.txt ·
+S10-auditoria.txt.
+Enlaces: reports/film-pb-1-warm-abort-20261126.md · reports/film-pb-1-traspaso-codex-20261126.md.

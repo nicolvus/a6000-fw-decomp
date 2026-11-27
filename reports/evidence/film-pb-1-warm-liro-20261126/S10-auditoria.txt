@@ -1,0 +1,416 @@
+S10 — AUDITORÍA INDEPENDIENTE (PREGUNTA 10) · FILM-PB-1-WARM / liro / av-cam
+Fecha: 26-11-2026 · Agente G22 · Rama: g22/s4-avcam-dependencias · 100 % offline
+No se tocó la cámara, no se repitió `warm`, no se escribió RAM ni flash, sin commit/push.
+
+MÉTODO
+- Fuente del kernel: `linux-kernel.tar.gz` (Sony CE Linux 4.5.1 / kernel 3.0.27_nl-rt106), extraído a /tmp/aud10.
+- Bytes: `liro.ko` (md5 1a67c943eb26fb6096be476126a1db87) y `av-cam.bin` (md5 ef2e3003ddad7185b5398cb76287c5aa)
+  con pyelftools 0.3x + capstone 5.0.7 (ARM/Thumb), tablas de reloc `.rel.*` y `.symtab` (el .ko NO está stripped).
+- REA: **no disponible** en esta sesión (no hay conector `rea`/MCP en mi entorno) ⇒ digo y uso bytes+capstone.
+  Ghidra no se usó. Una consulta vacía de REA no prueba ausencia (regla del proyecto), por eso todo lo
+  negativo de este informe está acotado a "0 referencias en los bytes inspeccionados".
+- Traza física: /tmp/a6000-warm-captura-swd/{kernel-swd.bin,swd.log,vigilar.cfg,boottime-antes/despues.txt,
+  antes/despues.json,resultado.txt}; /tmp/a6000-warm-sin-sd/resultado.txt; /tmp/a6000-warm-controlador-sd.txt.
+- Referencias de un suspend SANO en la misma cámara: analysis/camera-dumps/mem-20261020-log/log.txt
+  (anillo persistente con un `warm` completo) y analysis/camera-dumps/20261117-traza-T2T6/log_reposo.txt.
+
+==================================================================================================
+0. RESULTADO EN NUEVE LÍNEAS
+==================================================================================================
+1. Lo que la traza permite afirmar (Q2): SÍ a las dos cosas, y con precisión de función y de línea.
+   "PM: suspend of devices complete" sale de `dpm_suspend()` (fin de `dpm_suspend_start`), o sea: los
+   callbacks `.prepare/.suspend` del modelo de dispositivos TERMINARON sin error. "UDIF: suspend start:
+   unified drivers" sale de `udif_driver_suspend()`, que se ejecuta DESPUÉS, dentro de `.prepare` de la
+   plataforma. Estamos, por tanto, en `cxd90014_pm_prepare` → `udif_driver_suspend`, en la iteración del
+   driver "liro", justo antes de invocar `drv->ops->suspend`.
+2. El "(1)" de la traza NO estaba descifrado y aporta un dato verificado: es `pm_get_state() ==
+   PM_SUSPEND_DISK (=4)`, es decir "estado warm" (aritmética `sub/rsb/adc` en liro.ko 0x36C-0x378).
+3. `0x43541068` = offset 0x68 de av-cam: envoltorio ARM de 4 instrucciones que hace `blx` a la rutina Thumb
+   `0x435608c0` (offset 0x1F8C0). Esa rutina **no es un stub**: encadena 9 llamadas (6 `bl` + 2 `blx` + 1 `b.w`
+   de cola), bucles sobre 4 tablas ⇒ trabajo largo con acceso a hardware.
+4. REFUTADO en el informe el par P2/P3 (fallo al fabricar la imagen): la marca persistente
+   `PM: suspend enter` (suspend.c:280, se escribe DESPUÉS de `.prepare` y de `dpm_suspend_noirq`) NO existe
+   en el anillo posterior al intento, y el anillo **sobrevive al reinicio** (se leen marcas de 142231 / 269254 /
+   525616 ms del arranque anterior). ⇒ El código nunca llegó a `sleep.S`/`warm.c`. El fallo es anterior.
+5. Los TRES intentos murieron en el mismo punto lógico: la PRIMERA llamada a driver de `udif_driver_suspend`
+   ("b-250" con SD; "liro" sin SD) — con tiempos de `.begin` muy distintos (14,7 / 15,1 / 11,7 s) ⇒ no lo
+   dispara un plazo contado desde el principio: lo dispara **llegar a ese punto** (encaja con el WDT de 500 ms,
+   que expira porque el refresco deja de llegar justo ahí, no por un tiempo fijo de la prueba).
+6. Q3 (¿pudo el reinicio ocurrir antes del callback?): la traza **no lo decide y no puede decidirlo**
+   (el callback no escribe nada observable). La ventana print→blx son 11 instrucciones sin llamadas ⇒ una
+   causa externa que acierte ese instante sería una coincidencia de ~1 µs, repetida en dos callbacks distintos.
+7. Pero SÍ hay mecanismos de reinicio automático medidos en el cmdline real de ESTA cámara:
+   `wdt.mode=1 wdt.timeout=500` (perro guardián de CPU armado, 500 ms, wdt.c:41-44 + :174-181 →
+   `pm_machine_reset(0)`) y `exception.reboot=1` (consumidor NO está en el árbol OSS: NO_VERIFICADO qué hace,
+   INFERENCIA fuerte = reiniciar ante excepción). Cualquiera de los dos explica "reinicio solo, < 1 s".
+8. Supuestos indebidos detectados: 3 en los dos informes y 3 en el contexto medido que me dieron
+   (el más grave: "/tmp/a6000-warm-sin-sd/ NO EXISTE" — **existe**, con resultado.txt y antes/despues.json).
+9. `liro.ko activo == Sony 3.21`: **VERIFICADO** ahora (no era un supuesto): decodifiqué el TPZL de la
+   partición que instala el paquete 4.05 (`build/wbi_silent/nflasha15-405.bin`) y su `/kmod/liro.ko` es
+   idéntico byte a byte al de 3.21 (mismo md5), y el `/bin/im.elf` de esa imagen tiene md5 00aa05eac65eaf22…
+   = el que la cámara declaró en `antes.json`. La procedencia del módulo queda cerrada.
+
+==================================================================================================
+1. PREMISAS QUE ME DIERON Y NO SE SOSTIENEN (Q1, lado "contexto medido")
+==================================================================================================
+1.1 REFUTADO — "/tmp/a6000-warm-sin-sd/ NO EXISTE (limitación a registrar)".
+    Existe y está completo (26-11-2026 21:31-21:36): antes.json, despues.json, resultado.txt (1275 B),
+    boottime-antes/despues.txt, bateria-antes.txt, params-antes-de-warm.json, telnet-interrumpido.txt.
+    Ojo: es un intento DISTINTO del de la captura SWD. Hay **tres** intentos, no dos:
+      #1 con SD  (21:27): boot ? → ?           ; último = "B b-250"   (.begin 14678 ms)
+      #2 sin SD  (21:31): 20eed6b9… → ff49ff1d…; último = "B liro"    (.begin 15113 ms)
+      #3 sin SD  (21:40): ff49ff1d… → 73273afe…; último = "B liro"    (.begin 11679 ms)  ← el de la captura
+    Evidencia: ls de ambos directorios; /tmp/a6000-warm-sin-sd/resultado.txt:1-12;
+    /tmp/a6000-warm-captura-swd/boottime-despues.txt:228-231; /tmp/a6000-warm-controlador-sd.txt:3-6.
+1.2 ENGAÑOSO — "Tras el intento: … suserr=0, errmode=0, tmo=50000".
+    Son los **valores por defecto de los module_param tras reiniciar**, no el estado del intento:
+      * `warm.errmode` es `module_param_named(errmode, wbi_errmode, int, …)` con default 0 (warm.c:146-147).
+      * `pm/suserr` es otro parámetro del módulo `pm` (no el flag `pm.sus_error`).
+      * El flag `pm.sus_error` (cmdline medido: `pm.sus_error=0x80021060`) lo pone a 0 `cxd90014_pm_setup()`
+        en CADA arranque (pm.c:137-146) ⇒ leerlo después del reinicio no prueba nada (esto el informe ya lo
+        avisa en §7.5 y aquí queda confirmado en fuente).
+    Los valores REALES del intento se leyeron antes y están guardados: suserr=1, errmode=1, tmo=300000
+    (/tmp/a6000-warm-captura-swd/params-antes-de-warm.json y /tmp/a6000-warm-sin-sd/resultado.txt:4).
+1.3 MEJORABLE — "liro.ko activo == Sony 3.21" venía como premisa. Ya está verificado (§0.9, detalle §6.1).
+
+==================================================================================================
+2. AUDITORÍA DE LOS DOS INFORMES: qué NO está verificado contra bytes o contra la traza (Q1)
+==================================================================================================
+Contradiction-audit del repo: `scripts/knowledge/search.py claim` y `graph --direction out` sobre los dos
+documentos → **0 relaciones salientes** en ambos (no hay corrección registrada), y 3 entrantes desde
+docs/PENDIENTES.md:934-936 con estado `CONFLICTO_PENDIENTE` (docs/CORRECTIONS.md:551/552/559/570/572).
+Es decir: el grafo no tiene ninguna corrección de estos informes; las que siguen las aporto yo.
+
+2.1 `reports/film-pb-1-warm-abort-20261126.md`
+  A. §0.2/§2/§4/§6-A (orden de la cadena de suspend) — **VERIFICADO** contra fuente, con las líneas exactas:
+     suspend.c:334 begin → :339 `suspend_console()` → :342 `dpm_suspend_start()` → :352 `suspend_enter()`;
+     dentro de suspend_enter: :240-244 `suspend_ops->prepare()` (= cxd90014_pm_prepare, pm.c:247-252) →
+     :247 `dpm_suspend_noirq()` → … → :280 `BOOT_TIME_ADD1("PM: suspend enter")` → :281 `syscore_suspend()`
+     → `suspend_ops->enter` (sleep.S). El pseudocódigo del informe es correcto.
+  B. §0.2 "el fallo de la fabricación se traga con errmode=0" — **VERIFICADO**: warm.c:1195-1205
+     (`-ECANCELED` → return 0; `!wbi_errmode` → return 0). sleep.S:99-101 (`bl cxd90014_create_warmbootimage`,
+     `beq goto_suspend`). Ojo al matiz **NO_VERIFICADO** del informe §4-P1: el camino del error
+     (`pm_suspend_error`) llama a `cxd90014_cpu_suspend(PM_ENTER_ERROR)`, y sleep.S:95-96 compara con
+     `PM_ENTER_NORMAL` ⇒ **no fabrica imagen** y cae en `goto_suspend` (self-refresh + WFI). El informe lo
+     dice bien, pero NO dice que ese camino deja la cámara *apagada a la espera*, no reiniciada. Es el punto
+     central de mi §4.
+  C. §3 "la primera escritura posible es 1 bloque de 256 KiB en LBA 0 con fVersion='invl'" — **VERIFICADO**:
+     warm.c:1129-1135 (`memcpy(wbheader.fVersion, WBI_INVAL_VER, 4)`, `wbi_send_data`, `wbi_flush`) y
+     warm.c:1071-1072 (`open` del wb_device).
+  D. §5 "`cxd90014_ssboot_stat` nace `SSBOOT_CREATE_MINSSBI`" (resume.S:50-52) y "en frío sale 'prof'"
+     (warm.c:1155 `WBI_PROF_VER`; pm.c:376-382) — **VERIFICADO** en fuente. El valor medido en la cámara
+     (`ssboot=min`, antes.json) coincide.
+  E. §5 "WBI1 solo sale sin CONFIG_SNSC_SSBOOT" — no lo he re-verificado (fuera de alcance; no lo uso).
+  F. §0.1/§1 (decisión de modo en `im.elf` 0xA258-0xA280) — **NO RE-VERIFICADO** aquí. No es carga de mi
+     conclusión: los tres intentos usaron `echo warm` (control.py:143-147), no el interruptor.
+  G. §4 tabla P1/P2/P3 — **REFUTADO P2 y P3** (ver §3.3): la marca `PM: suspend enter` no existe. P2 y P3
+     sitúan el fallo en `do_make_image`, que corre *después* de esa marca.
+  H. §7 "receta" (image_drop, errmode=1, tmo=300000) — **MAL DIRIGIDA** para lo medido: sus tres
+     discriminantes (escritura del dispositivo, silencio del error, plazo del compresor) están todos DESPUÉS
+     de `.prepare`; si la muerte es en `.prepare`, la receta no puede aportar nada nuevo (ni empeorar).
+  I. §6-E "el método válido para ver el error es errmode=1" — VERIFICADO como mecanismo (warm.c:1200-1205),
+     pero **irrelevante** para este fallo (misma razón que H).
+
+2.2 `reports/film-pb-1-traspaso-codex-20261126.md`
+  A. §4 "liro imprime el destino antes de invocarlo" — **VERIFICADO** (§5.2), con el matiz de que el word se
+     **relee** entre el printk y el `blx`: no puede haber divergencia salvo escritura concurrente, y no hay
+     llamadas en medio.
+  B. §4 "el interruptor nunca pide warm" — no re-verificado (F arriba); irrelevante para `echo warm`.
+  C. §4 "P1 udif_driver_suspend → pm_suspend_error → halt / P2 open/write_sector / P3 timeout" — la
+     ordenación es correcta, pero **P2/P3 quedan refutadas** por la traza (§3.3) y P1 tiene un problema
+     mecánico: ese "halt" no reinicia (ver §4.2).
+  D. §5 "receta §7 del informe" — hereda el problema H.
+  E. §2 "CFW 4.05 … `liro.ko`" — verificado en sentido fuerte por mí (§6.1): el módulo viene de
+     `/usr/kmod/liro.ko` (analysis/camera-dumps/20261110-swd-371/klog4.txt:3474-3475) y esa partición es
+     `nflasha15`, que el paquete 4.05 reconstruye.
+
+==================================================================================================
+3. PREGUNTA 2 — ¿de qué función sale cada línea y qué prueba?
+==================================================================================================
+3.1 "PM: suspend of devices complete after 12.181 msecs"
+    - Formato: drivers/base/power/main.c:407 `pr_info("PM: %s%s%s of devices complete after %ld.%03ld
+      msecs\n", …)` dentro de `dpm_show_time()` (:395). `info == NULL` ⇒ sin prefijo "late"/"early".
+    - Única llamada con info==NULL en un suspend: main.c:968, al final de `dpm_suspend()` (:933), y sólo si
+      `!error` (:966-968). Las otras dos son "early" (475, resume_noirq) y "late" (809, dpm_suspend_noirq).
+    - `dpm_suspend_start()` = `dpm_prepare()` + `dpm_suspend()` (main.c:1076-1084), invocado en suspend.c:342.
+    ⇒ **VERIFICADO**: la línea prueba que todos los callbacks .prepare/.suspend del device-model terminaron
+      con error 0 y que `dpm_suspend_start()` devolvió 0. No dice nada del modelo udif.
+3.2 "UDIF: suspend start: unified drivers"
+    - drivers/udif/driver.c:414, primera sentencia de `udif_driver_suspend()` (:409); el prefijo "UDIF: " y
+      la pareja printk+marca la pone `udif_print_both()` (:405-408).
+    - Único llamante: `cxd90014_pm_prepare()` (pm.c:247-252), que es `suspend_ops->prepare` (pm.c:291-297) y
+      se invoca en suspend.c:240-241, o sea **después** de `dpm_suspend_start` y **antes** de
+      `BOOT_TIME_ADD1("PM: suspend enter")`.
+    - La siguiente línea de la traza ("…: liro") es driver.c:431 y la llamada es driver.c:434
+      (`udif_driver_call_fn_reverse(drv, drv->ops->suspend, drv->nr_devs)`); con `nr_devs == 0` el camino es
+      `fn(0, 0, drv->data)` (driver.c:128-134). Y la marca "E" equivalente sólo se escribe **si ret==0**
+      (driver.c:436-439).
+    ⇒ **VERIFICADO**: estamos en `cxd90014_pm_prepare → udif_driver_suspend`, en la iteración del driver
+      "liro", inmediatamente antes de su callback. La fase queda acreditada por dos fuentes independientes
+      (klog y anillo persistente: 008E B unified drivers / 008E B liro en el mismo milisegundo).
+3.3 La marca que FALTA acota el punto de muerte (evidencia nueva y decisiva)
+    - `BOOT_TIME_ADD1("PM: suspend enter")` (suspend.c:280) se escribe en el anillo **persistente** de
+      /proc/snsc_boot_time (lib/snsc_boot_time.c; `boot_time_takeover()`, pm.c:197).
+    - Ese anillo **sobrevive al reinicio**: en boottime-despues.txt siguen las marcas del intento
+      (:228-231: 525616 / 537282 / 537295 / 537295 ms) que no estaban en boottime-antes.txt.
+    - En boottime-despues.txt:238 la siguiente entrada es `L: Kernel Jump[MODE#1 NR_RES#0]` del arranque
+      nuevo. No hay `008E E liro`, ni `008E E unified drivers`, ni `PM: suspend enter`.
+    ⇒ **VERIFICADO**: el kernel no llegó a `suspend_ops->enter`. **REFUTADAS P2 y P3** del informe
+      (fabricación de la imagen y timeout del compresor): ambas viven en sleep.S/warm.c, detrás de esa marca.
+    ⇒ Y sitúa el fallo entre suspend.c:241 y :280, con el último punto conocido en driver.c:434.
+3.4 Referencia de un `warm` SANO en la misma cámara (para no confundir "no hay marca" con "la marca no existe")
+    - analysis/camera-dumps/mem-20261020-log/log.txt:4039-4043 (`008E B b-250`, `E`, `B liro`, `E liro`,
+      `B sprop`…) → :4124 `PM: suspend enter` → :4130 `L: Kernel Jump[MODE#2 NR_RES#1]` → :4218-4227 resume
+      de liro y "PM: device resumed".
+    - Firma de arranque en frío: analysis/camera-dumps/20261117-traza-T2T6/log_reposo.txt:3681
+      `Kernel Jump[MODE#1 NR_RES#0]` seguido de `setup_arch` (:3682+).
+    ⇒ Conclusión: MODE#1 = arranque frío, MODE#2 = reanudación desde WBI. Los tres intentos acabaron en
+      MODE#1 ⇒ **ningún intento creó ni usó un WBI**, coherente con la cabecera de nflasha5 a cero.
+
+==================================================================================================
+4. PREGUNTA 3 — ¿pudo el reinicio ocurrir ANTES del callback?
+==================================================================================================
+4.1 Lo que hay entre el print y la llamada (medido en bytes, no inferido)
+    liro_suspend (liro.ko 0x348..0x50C, símbolo del .symtab, no stripped):
+      0x368  bl  pm_get_state
+      0x36C  sub/rsb/adc  → r5 = (estado == 4)          [ver §5.1]
+      0x370  ldr r0, ="[LIRO]: entry_suspend:%p(%d)\n"  (.rodata.str1.1+0x19E)
+      0x384  ldr r1, [r3+0x18]      ← el destino impreso
+      0x388  bl  printk
+      0x38C-0x3B0  9 × ldm/stm = copia de 36 B desde [[obj]+0x14] a &obj
+      0x3B4  ldr r3, [r6+0x18]      ← el destino que se invoca (misma dirección de memoria que el impreso)
+      0x3B8  blx r3
+    Entre el printk y el `blx` hay 11 instrucciones, **cero llamadas** y ningún acceso a memoria fuera de la
+    pila y del propio objeto (los `ldm/stm`). No hay sleep, ni mutex, ni IRQ off.
+    ⇒ **VERIFICADO**: "el reinicio entre el print y la llamada" exigiría que ocurriera en una ventana de
+      ~10 instrucciones (≈ 0,5-1 µs a 1 GHz) y que ocurriera *dos veces* en callbacks distintos (b-250 (bdev)
+      y liro), porque los tres intentos murieron en la PRIMERA iteración de `udif_driver_suspend`.
+4.2 El otro extremo: si el callback devolviera error
+    Antes de nada, un dato verificado que estrecha esta rama: **liro ignora el retorno del callback**.
+    Tras `blx r3` (0x3B8) la instrucción 0x3BC es `ldr r0, [pc,#0x128]` (= thread_resume, para
+    kthread_create_on_node): el r0 que devolvió el firmware se descarta sin examinarlo, y el `cmn r0,#0x1000`
+    de 0x3D0 prueba el retorno de **kthread_create**, no el del callback. ⇒ `udif_driver_suspend()` sólo puede
+    devolver error por un fallo PROPIO de liro (kthread_create fallido ⇒ `movs r0,#-8` en 0x3E4), que ocurre
+    DESPUÉS del callback. La versión "el firmware devolvió error y por eso abortó el suspend" **no tiene
+    mecanismo** (coincide con S9, hallazgo independiente).
+    Y si liro devolviera error: pm.c:249-250 → `pm_suspend_error(0)` → pm.c:224-231: `wbi_drop(); *(pm.sus_error)=1;
+    cxd90014_pm_halt(0)` → pm.c:217-218 `cxd90014_cpu_suspend(PM_ENTER_ERROR)` → sleep.S:95-96 salta la
+    imagen (no es PM_ENTER_NORMAL) → `goto_suspend` (:112) → `pm_memory` = **self-refresh** (pm_macro.S:51-110)
+    → posible `xpower_off` por GPIO (sleep.S:172-183) → `WFI` (:185-190).
+    ⇒ **VERIFICADO en fuente**: ese camino deja la CPU *parada*. No reinicia. Para volver a arrancar hace
+      falta un reset externo (botón, PMIC, perro guardián). Es una diferencia importante que el informe no
+      explota: **un "halt" no explica un reinicio automático de < 1 s.**
+4.3 Y sin embargo el reinicio automático es posible: dos mecanismos medidos en el cmdline real
+    Cmdline real de la cámara (analysis/camera-dumps/20261110-swd-371/klog4.txt:4310), extracto:
+      `exception.reboot=1 softlockup_panic=0 softlockup_thresh=30 … wdt.timeout=500 … xrstreq=1
+       wdt.mode=1 … pm.resume=0x80021054 pm.sus_error=0x80021060 …`
+    a) **Perro guardián armado**: wdt.c:41-44 (`wdt_mode=WDT_OFF`, `wdt_timeout=0` por defecto, pero el
+       cmdline trae `wdt.mode=1 wdt.timeout=500` ⇒ wdt_init, wdt.c:233-247, `wdt_mode != OFF` ⇒ `wdt_setup()`
+       + `cpu_wdt_start()`), y su desbordamiento acaba en `pm_machine_reset(0)` (wdt.c:174-181).
+       **VERIFICADO** el código y el valor del cmdline; **NO_VERIFICADO** si, con IRQs desactivadas en
+       sleep.S, el reset lo ejecuta el handler o el bloque MISC por hardware (no es OSS).
+    b) **`exception.reboot=1`**: **NO_VERIFICADO** (no está en el árbol OSS; no aparece en
+       `/tmp/aud10/full/linux`). Por nombre y por el patrón de Sony (params `modulo.param`) es la política
+       "reiniciar ante excepción". El `panic_timeout` genérico es 0 (kernel/panic.c:40) ⇒ el reinicio no viene
+       del panic estándar, viene de ese parámetro ⇒ INFERENCIA: un oops dentro del callback reinicia.
+    Consecuencia: "reinicio solo, rápido, sin marcas" es compatible con (a) y con (b), y **ambas exigen que el
+    kernel haya llegado al punto de la llamada** (a: excepción en la copia de 36 B o dentro del callback;
+    b: cuelgue > 500 ms a partir de ahí). Nada de la traza permite afirmar que se reinició "antes".
+4.4 Cómo se distinguiría (respuesta corta y operativa)
+    - El callback no escribe marcas: `av-cam` es firmware con API propia y **todas** sus llamadas caen dentro
+      de la imagen (0x1F5A8, 0x1FAA4, 0x20594, 0x1F9B0 y las VA 0x439C5A04/0x439C5320 ∈ 0x43541000-
+      0x44026DA4), ninguna
+      en los módulos (0x3F000000-0x40000000) ni en el .text del kernel (0x40038000-0x40333024): no puede
+      llamar a `printk` ni escribir el anillo (§5.3).
+    - Por eso el único discriminador limpio es **capturar el texto del anillo entre la última marca udif y el
+      reset**: un oops/panic deja "Unable to handle kernel paging request"/"Internal error"/"PC is at …" en
+      `__log_buf` **antes** del reset (exception.reboot=1 ⇒ hay unos ms). Con el sondeo actual (15 ms,
+      vigilar.cfg:67) se pierde; a 1 ms se captura. Predicciones en §7.
+    - Discriminador negativo: si a 1 ms no aparece NADA, el reset no fue una excepción del kernel ⇒ reset
+      por hardware (MISC/PMIC) ⇒ la pregunta "¿entró?" sólo se responde con depuración del núcleo, y la
+      sesión usó un **memory AP** (`target create a6000.ram mem_ap`, vigilar.cfg:9; resultado.txt:3 "sin halt
+      ni reset") ⇒ no había breakpoints disponibles sin cambiar de AP.
+    - NO sirve como discriminador: `pm.sus_error` (se borra en cada arranque, §1.2), `warm.errmode/tmo`
+      (module_param, vuelven al default), ni `/sys/power/reboot_reason` (pm.c:330 sólo tiene `.show`; nadie lo
+      escribe salvo `cxd90014_pm_finish` que lo pone a 0, pm.c:266).
+
+==================================================================================================
+5. VERIFICACIONES NUEVAS (bytes) — lo que no estaba comprobado
+==================================================================================================
+5.1 El "(1)" de `entry_suspend:43541068(1)` = estado **warm**
+    liro_suspend 0x36C-0x378:
+      0x36C sub r3, r0, #4          ; r3 = estado - PM_SUSPEND_DISK(4)
+      0x374 rsbs r5, r3, #0         ; r5 = -r3, C = 1 si r3 == 0
+      0x378 adc r5, r5, r3          ; r5 = C
+    ⇒ r5 = 1 si y sólo si `pm_get_state() == 4`. En este árbol `PM_SUSPEND_DISK == 4`
+      (include/linux/suspend.h:45-47, con CONFIG_ARCH_HAS_PM_SUSPEND_DISK en mach-cxd90014/Kconfig:20 y
+      CONFIG_WARM_BOOT_IMAGE) y `pm_states[PM_SUSPEND_DISK] = "warm"` (suspend.c:57).
+    **VERIFICADO**: el intento estaba en estado warm al llamar al driver; el "(1)" no es "un 1 cualquiera".
+    El código posterior (0x3EC-0x3F4 `cmp r0,#4 / bne 0x4D0`) confirma la misma comparación: sólo en warm hace
+    el trabajo WBI (kthread_create_on_node(thread_resume…), vmalloc, memcpy, y "liro suspend complete!").
+5.2 El destino impreso es el que se invoca
+    El mismo [obj+0x18] se lee en 0x384 (para el printk) y en 0x3B4 (para el `blx`); no hay escritura de
+    [obj+0x18] entre ambos (§4.1). **VERIFICADO**.
+5.3 `0x43541068` = envoltorio ARM de 4 instrucciones → rutina Thumb larga
+    av-cam.bin (base 0x43541000):
+      cabecera 0x00 `b`, 0x04 "LIRO", 0x08 = 4, tabla de 9 punteros 0x0C..0x2C:
+        43541044, 43541058, 435410B4, **43541068**, 43541078, 43541088, 43541098, 4354109C, 435410A0
+      offset 0x68 (VA 0x43541068):  68 push {r4-r11,ip,lr} · 6C blx #0x1F8C0 · 70 pop · 74 bx lr
+      offset 0x78 (VA 0x43541078) = `entry_resume` que la cámara imprime en marcha normal
+        (mem-20261020-log/log.txt:5591 `[LIRO]: entry_resume:43541078(1)`): mismo patrón, `blx #0x4F998C`.
+      ⇒ **VERIFICADO**: 0x43541068 → 0x435608c0 (Thumb) y la base 0x43541000 (los punteros de la cabecera son
+        absolutos y caen en el propio fichero; el par suspend/resume 0x68/0x78 coincide con la traza real).
+    0x1F8C0 (Thumb) NO es un stub: push {r4,lr}; `bl 0x1F5A8` / `b.w 0x1F5A8` cuatro veces con los pares
+    (3,0xED), (0xB,0x150), (0x1B,0x163), (0x13,0xFC); `bl 0x1FAA4` (recorre cuatro tablas: 0x4578, 0x4EC,
+    0x3C0 y 0x12D8 B); `bl 0x20594` (llamada indirecta a `[[x]+0x14]+0x2F8`); `bl 0x1F9B0`; y dos `blx` a
+    VA 0x439C5A04 / 0x439C5320 (offset 0x484A04 / 0x484320; BLX inmediato **desde Thumb** ⇒ saltan a ARM;
+    ver S3, que cita las VA) ⇒ secuencia de apagado con
+    tabla y llamadas indirectas, no "un return 0". **VERIFICADO** (desensamblado directo).
+5.4 La ventana de muerte es de fase, no de tiempo
+    Los tres intentos: `.begin → primer driver` = 14678 / 15113 / 11679 ms; en los tres, "unified drivers" y
+    el primer driver caen en el MISMO milisegundo (283932/283932; 157344/157344; 537295/537295) y en el #3
+    los tres printk están a 537.295257 / .295282 / .295315 / .295341 (84 µs entre el fin del device-model y
+    el print de liro). **VERIFICADO** en los ficheros citados.
+
+==================================================================================================
+6. PREGUNTA 4 — supuestos indebidos
+==================================================================================================
+6.1 "liro.ko activo == Sony 3.21" (era un supuesto; ahora verificado)
+    - El módulo se carga desde **/usr/kmod/liro.ko** (analysis/camera-dumps/20261110-swd-371/klog4.txt:3474-3475
+      y :3484-3485; la marca `008E B liro` de ese registro está en :3477). La propia imagen ext2 lleva la
+      cadena "/usr/kmod/liro.ko" en su tabla de arranque.
+    - `/usr` es `nflasha15`, que el paquete 4.05 **reconstruye**: 467 de 2373 bloques
+      (build/wbi_silent/nflasha15-405.bin.json) ⇒ sin comprobar, "== Sony" era un salto.
+    - Comprobación hecha: decodifiqué el TPZL (`scripts/e25_27/tpzl.py`, 155 516 928 B) y con `debugfs`
+      extraje `/kmod/liro.ko` de la imagen instalada y de la de 3.21:
+        405: 1a67c943eb26fb6096be476126a1db87
+        321: 1a67c943eb26fb6096be476126a1db87
+        fichero del repo: 1a67c943eb26fb6096be476126a1db87
+      y `/bin/im.elf` de la imagen 4.05 = 00aa05eac65eaf2225032ff1ad7c1253 = exactamente el md5 que la
+      cámara declaró en /tmp/a6000-warm-captura-swd/antes.json (campo "im"). ⇒ **VERIFICADO**: la imagen que
+      analizo es la que corría, y su liro.ko es el de 3.21.
+    - Lo que sigue siendo INFERENCIA: que el módulo cargado en ese arranque concreto fuese ese fichero
+      (no hay md5 del módulo en vuelo; control.py no lo pide).
+6.2 "El binario llama X" sin verificar rango/estado
+    - El informe dice "`sleep.S:99 bl cxd90014_create_warmbootimage`" ⇒ **VERIFICADO** línea a línea.
+    - Pero el mismo rigor falta en dos puntos que sí usé: (i) nadie había mirado QUÉ hay en 0x43541068 y
+      0x435608c0 (ahora sí, §5.3); (ii) el flag "(1)" no estaba decodificado en los dos informes auditados.
+      Ambos cambian la lectura.
+    - Cuidado con el estado ARM/Thumb: el `blx` de 0x6C es la forma **inmediata**, que siempre conmuta a
+      Thumb (el bit 0 del destino es 0 por construcción y NO significa "ARM"). Interpretar 0x435608c0 como
+      ARM daría un desensamblado basura y conclusiones falsas. **VERIFICADO** que es Thumb (encaja con
+      `entry_resume` 0x43541078 → 0x4F998C, también Thumb).
+6.3 "El halt del error reinicia" (implícito en P1 del informe)
+    pm.c:217-218 + sleep.S:95-96/112-190: el halt **no** reinicia; deja la CPU en WFI con la DDR en
+    self-refresh (y quizá apagando la línea xpower). **VERIFICADO**. Si el informe explica el reinicio con
+    P1, le falta el eslabón del reset (WDT de 500 ms o `exception.reboot=1`, §4.3).
+6.4 "El reinicio vino de fuera / de un temporizador"
+    Refutado por §5.4: los tiempos absolutos difieren en 3,4 s entre intentos y el punto de muerte es el
+    mismo estado del programa. **VERIFICADO**.
+6.5 "La regeneración del WBI está garantizada" (knowledge/CURRENT.md:3-12 y docs/PENDIENTES.md:935)
+    En el MISMO bloque de CURRENT.md conviven "la regeneración es automática y está garantizada" y, unas
+    líneas después, "[CORREGIDO 26-11-2026] La regeneración del WBI en cámara NO funciona". Para el camino que
+    pide WBI (`echo warm`), los tres intentos del 26-11 lo desmienten: nunca se llegó a fabricar la imagen
+    (§3.3). **REFUTADO** para ese camino; para el interruptor, el informe ya demostró que pide "mem".
+    Es una contradicción viva en la fuente única de contexto: hay que decidir cuál de las dos frases queda.
+6.6 "/tmp/a6000-warm-sin-sd/ NO EXISTE" y "sus err/errmode tras el intento" ⇒ §1.1 y §1.2.
+
+==================================================================================================
+7. PREGUNTA 5 — control mínimo con predicciones explícitas
+==================================================================================================
+C1 (offline, 0 riesgo, ~30 min; SE PUEDE HACER YA): resolver las cuatro primeras llamadas del callback.
+    Objetivo: 0x1F5A8 (con los pares (3,0xED) y (0xB,0x150)) y 0x1FAA4 / 0x20594 → base MMIO + registro.
+    Método: seguir 0x1F5A8 (que a su vez llama a 0x202D0, 0x2020C, 0x20228 y 0x202EC; **no he verificado
+    qué son** — no los caracterizo) hasta el `str` que toca hardware; contrastar la dirección con los
+    bloques conocidos del CXD90014 (MISC_RSTREQ_SET/CLR, PMU, DDMC, regs-gpio) que sí están en el árbol
+    OSS (arch/arm/mach-cxd90014/include/mach/regs-*.h).
+    Predicciones:
+      P1a  Si alguna escritura cae en un registro de reset/power (MISC_RSTREQ_*, xpower, DDMC) ⇒ existe
+           mecanismo de reinicio DENTRO del callback ⇒ Q3 se cierra en "no, no fue antes": el reinicio lo
+           provoca entrar en el callback (y el informe debe reescribir P1/P2/P3 a una sola causa).
+      P1b  Si sólo toca clock gates/RAM interna ⇒ no hay mecanismo interno ⇒ el reset viene de
+           `exception.reboot=1` (oops) o del WDT de 500 ms ⇒ pasar a C2 para separarlos.
+      P1c  Si 0x1F5A8 resulta no escribir MMIO (sólo encolar mensajes a otro hilo del firmware) ⇒ el
+           sospechoso pasa a ser el hilo/el consumidor y hay que seguir 0x1FAA4/0x20594.
+    Coste: ninguno; no toca la cámara. Es el control que más información da por unidad de riesgo.
+
+C2 (físico, sólo LECTURAS, ~5 min; el que aporta la evidencia que falta): bajar el sondeo del anillo
+    de 15 ms a 1 ms y repetir un `echo warm` sin SD.
+    Base: vigilar.cfg ya lee `log_end` en 0x80395290 y el anillo en 0x8039575D; sólo hay que cambiar
+    `sleep 15` → `sleep 1` (:67) y, si acaso, el tamaño de bloque. No escribe RAM, ni flash, ni cambia la
+    sonda (`mem_ap`, sin halt).
+    Predicciones (excluyentes entre sí):
+      P2a  Aparece un bloque de oops/panic entre `[LIRO]: entry_suspend…` y el reset (p. ej. "Unable to
+           handle kernel paging request", "PC is at …") ⇒ **el callback SE EJECUTÓ** y falló ahí; Q3 = no.
+           Además el "PC is at" da la instrucción exacta del firmware ⇒ se cierra también el mecanismo.
+      P2b  No aparece nada nuevo y el anillo se reinicia ⇒ reset por hardware, sin excepción del kernel ⇒
+           refuta `exception.reboot=1` como causa y deja (i) reset pedido por hardware/PMIC o (ii) el WDT de
+           500 ms. Como el WDT necesita ≥ 500 ms de cuelgue, medir el hueco última marca→reset separa (i) y
+           (ii): < 500 ms ⇒ hardware/PMIC o escritura de reset; ≥ 500 ms ⇒ WDT.
+      P2c  Aparecen `[LIRO]: liro suspend (WBI)` / `[LIRO]: liro suspend complete!` / `008E E liro` ⇒ el
+           callback devolvió: se cae la hipótesis "murió dentro" y el fallo está más adelante en `.prepare`
+           (warm_boot_pm_prepare / dpm_suspend_noirq). Los dos informes quedarían superados aquí.
+    Nota de por qué NO propongo breakpoints: la sesión usó un memory AP (`mem_ap`) sin acceso al depurador
+    del núcleo (vigilar.cfg:9, resultado.txt:3); montar breakpoints exige otro AP y halt, más invasivo que
+    leer más rápido.
+
+C3 (sólo si C2 = P2b): aislar la invocación fuera del suspend. liro.ko expone una entrada /proc
+    (`create_proc_entry(…, 0444, …)` en `liro_create_entry` 0x116C-0x1184 con el literal "susres",
+    .rodata+0x281) cuyo manejador `proc_suspend` (0x50C) hace **la misma** secuencia: pm_get_state →
+    `blx [[obj]+0x18]` (0x580) → y sólo en warm sigue con kthread/vmalloc (0x5AC-0x5B0). Invocarla fuera
+    del suspend separa "el callback es letal por sí mismo" de "lo es por el contexto (dispositivos ya
+    suspendidos)". Antes hay que fijar en estático si es `read` o `write` y qué argumento espera
+    (INFERENCIA actual: 0444 ⇒ lectura), y avisar del riesgo de dejar la LIRO sin servicio hasta reiniciar.
+    Predicciones: si reinicia igual ⇒ el callback es letal por sí solo (Q3 = no, y no hace falta repetir
+    `warm`); si vuelve limpio ⇒ el veneno es el contexto de suspensión (P2 en su versión buena).
+
+Control de instrumentación (para C2): si en un `warm` se lee el anillo a 1 ms y NO se ve ni una línea nueva,
+comprobar que el método sigue vivo leyendo el anillo durante un `sync` (debe verse "PM: Syncing filesystems…").
+Sin ese control, "no hay oops" no vale.
+
+==================================================================================================
+7-bis. CONCORDANCIA Y DESLINDE CON LA EVIDENCIA HERMANA (S1-S9, escritas en paralelo)
+==================================================================================================
+- S8 (origen del reset: RSTREQ, `xrstreq=1`, WDT 500 ms, `exception.reboot=1`) llega por otra vía a la misma
+  conclusión que mi §4.3: el halt no reinicia y el reinicio automático tiene mecanismo. **Concuerda**; mi
+  aporte extra es que P2/P3 quedan refutadas por la marca `PM: suspend enter` y que la muerte es de fase
+  (tres intentos, tiempos distintos, mismo punto: §5.4).
+- S9 (instrumentación) demuestra que el callback **sí** se invoca y que liro descarta su retorno; y argumenta
+  que una lectura pasiva no separa "murió dentro" de "lo reinició el WDT". **Concuerda** con mi §4.2/§4.4 y
+  con su recomendación (parada en la entrada del callback). Mi C2 es el subconjunto más barato de esa idea
+  (sólo lecturas, 1 ms) y hay que decir que es **con ventana**: si `exception.reboot=1` reinicia de
+  inmediato, el oops puede no llegar a leerse. Por eso C1 (estático) va primero: no depende de ventanas.
+- S3 (entrada de av-cam) verifica por su cuenta 0x43541068 → 0x435608c0 y añade que los dos `blx` de 0x1F8C0
+  son BLX inmediato desde Thumb ⇒ ARM. **Concuerda** con mi §5.3; cito S3 para no duplicar.
+- S1/S5/S6/S7 cubren la traza/manchado de memoria, las copias y la cadena de suspensión; no he encontrado
+  contradicciones con este documento. S2 (liro.ko) y S4 (dependencias de av-cam) no los he cotejado punto por
+  punto; si chocan con algo de aquí, manda lo verificado contra bytes y citado con VA/fichero:línea, no la prosa.
+
+==================================================================================================
+8. LÍMITES DE ESTA AUDITORÍA
+==================================================================================================
+- REA no disponible: todo el desensamblado es capstone sobre bytes; no hay decompilación del callback.
+- Sólo he mirado el *arranque* del callback (0x1F8C0, ~0x120 B) y las 3 funciones que llama de entrada; el
+  resto de la rutina (miles de instrucciones, tablas) no está recorrido.
+- El consumidor de `exception.reboot=1` no está en el árbol OSS ⇒ sigue NO_VERIFICADO qué hace exactamente.
+- No he re-verificado §0.1/§1 del informe (modo de `im.elf`) ni §5-E (WBI1 sin CONFIG_SNSC_SSBOOT).
+- La supervivencia del anillo persistente se ha comprobado sólo para el anillo de boot_time; el `__log_buf`
+  de 8 KiB lo sobrescribe el arranque nuevo (se ve en kernel-swd.bin 0x2469+: "cmdline override at 40033005",
+  layout .text 0x40038000-0x40333024, "klog: keep logging buffer … magic wrong nbit: 0").
+  Ese "magic wrong" es coherente con que nadie cerró el klog persistente (consola suspendida), no con una
+  limpieza de DDR: las marcas del arranque anterior siguen ahí. **INFERENCIA** (no he podido leer más RAM).
+- Ninguna de las cifras de esta auditoría viene de la cámara en esta sesión: todas salen de ficheros ya
+  capturados (26-11-2026 21:27-21:45) o de los bytes del firmware.
+
+==================================================================================================
+9. REPRODUCIBLE (comandos usados, todo offline)
+==================================================================================================
+  tar xzf linux-kernel.tar.gz -C /tmp/aud10 linux/{drivers/base/power/main.c,kernel/power/{suspend,main}.c,
+      drivers/udif,arch/arm/{common/warm.c,mach-cxd90014/{pm.c,sleep.S,resume.S,wdt.c,error.c,
+      include/mach/{pm_macro.S,pm.h}}}}   # + kernel/panic.c, lib/snsc_boot_time.c
+  .venv/bin/python  # pyelftools: .symtab/.rel.text/.rel.data de liro.ko; capstone para 0x348-0x50C,
+                    # 0x50C (proc_suspend), 0x116C (liro_create_entry) y av-cam 0x60-0xA0 + 0x1F8C0
+  .venv/bin/python scripts/e25_27/tpzl.py  # (vía /tmp/aud10/decomp.py) nflasha15-405/-321 → 155 516 928 B
+  debugfs -R "dump /kmod/liro.ko …" /tmp/aud10/nflasha15-{405,321}.raw
+  grep -a -o "008E [BE] .\{0,40\}" /tmp/a6000-warm-captura-swd/boottime-despues.txt
+  python3 scripts/knowledge/search.py claim|graph reports/film-pb-1-{warm-abort,traspaso-codex}-20261126.md
