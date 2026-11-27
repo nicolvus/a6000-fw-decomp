@@ -11,6 +11,15 @@
 > `nflasha5` en toda instalación (`ud_wbi_drop.elf`), el kernel registra el dispositivo en cada arranque
 > (62 MB > 42 MB), `warm` = `PM_SUSPEND_DISK` con `warm.mode=2`, nada aborta (`chk_opened=`/`warm.errmode`
 > ausentes) y la compuerta `0x9F44` es pura con una sola llamada. No hace falta ningún ajuste de fábrica.
+> **[26-11-2026, causa de la ruta `warm` localizada]** El tipo de apagado gobierna todo: `im.elf` reduce el
+> factor de `0x920143` a tipo (8 si `0x27`, 4 si `msg[8]==0x1b`, si no 1) y lo pasa como `r0` a los 34 `Is *_sus`;
+> **sólo `SyncAndroid_sus` ramifica con el tipo**. Ruta B (tipo 8): `unlink bk2.bak` → `make_init_bk.sh 8` (26 s)
+> → **`umount("/android/data")` = EBUSY (errno 16) ×11 → `abort()` en `libSyncAndroid.so@0x209a`** ⇒ no hay
+> imagen. Ruta A (tipo 1): la imagen se crea (SWD 3→4) pero al reanudar `mount_ad: skipping` y `mount_fs`
+> (`/dev/ram8`→`data/data`, `/dev/ram9`→`data/system`, ext2) devuelve −1 → `abort@0x1dc8` → `em_reboot(0)` →
+> `BUG at wdt.c:182`. Corregidos dos hechos previos: la marca `155 B make` **sí** sale (errata `$des_init_bk`) y
+> `osal_wait_thread_exit` **volvió**. Prueba pendiente: quién retiene `/android/data` (`fuser`, `/proc/*/fd`).
+> [Informe](../reports/film-pb-1-ssbi-wbi-20261126.md)
 > **[CORREGIDO 26-11-2026] La regeneración del WBI en cámara NO funciona:** el interruptor entra con **modo 0**
 > en `im.elf` (escribe `"mem"` sin pasar por `0x9F44`), `echo warm` sí llega pero la fabricación corre en
 > `sleep.S:99` tras suspender dispositivos y `warm.errmode=0` **devuelve 0 aunque falle**, y un frío escribe

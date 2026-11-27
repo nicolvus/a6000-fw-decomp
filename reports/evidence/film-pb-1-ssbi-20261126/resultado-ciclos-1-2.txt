@@ -1,0 +1,12 @@
+26-11-2026 · escalera SSBI en el 4.05 (interruptor → im.elf mem→warm por SWD, SD fuera)
+Ciclo 1: nflasha5 cero → prof (cabecera d450c5db, bloque e3f8899e).
+Rearme: fallaba porque se usó /tmp/a6000-interruptor-warm/break.cfg (comprobación de búfer r4 que bloquea);
+  corregido con armar.sh sobre el break.cfg verificado. Ciclo 2: CONVERTED mem→warm, FIN clean=1.
+Encendido tras ciclo 2 (boottime-despues-2.txt, klog-proc.txt):
+  Loader: Kernel Jump[MODE#12] → WARMBOOT 2.744 s → PM resume → LIRO resume (WBI) → "ssboot: basic: start profiling..."
+  → tareas reanudadas, apps hasta "Android Loaded file bk1" 6.64 s
+  → 6.648 s "WDT:RSTREQ_STAT=0x0" + "kernel BUG at wdt.c:182" (wdt_intr: petición de reset sin bit de WDT de CPU)
+  → exception.reboot=1 → arranque frío MODE#1 (sistema actual, boot dbe474e2).
+Cabecera sigue "prof"; bloque cambió a 39f3826f (el ciclo 2 rehízo la min SSBI desde frío).
+Conclusión: Loader3 SÍ acepta "prof" (MODE#12). El peldaño PROFILE muere ~3.8 s tras reanudar por una
+  petición de reset externa (RSTREQ sin causa CPU). Fuente del reset: NO VERIFICADA.
