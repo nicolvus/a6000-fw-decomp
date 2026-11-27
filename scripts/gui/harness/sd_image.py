@@ -71,16 +71,16 @@ def construye(raiz: Path, salida: Path, tamano_gb: float = 4.0, completa: bool =
         vacio.write_bytes(b"")
         for n in ficheros:
             subprocess.run(["mcopy", "-i", str(img), "-m", "-Q", str(vacio), f"::{n}"], check=True, capture_output=True, env=env)
-        if media:  # foto real + índice AV coherente con ella (opt-in: no toca los arranques que ya funcionan)
+        if raiz.is_dir():
+            for sub in sorted(p for p in raiz.iterdir() if p.is_dir()):
+                subprocess.run(["mcopy", "-i", str(img), "-s", "-m", "-Q", "-o", str(sub), "::"], check=False, capture_output=True, env=env)
+        if media:  # prevalece sobre los ficheros homónimos de la tarjeta, solo en la imagen
             med = Path(t) / "media"
             mapa = sd_media.construye(med)
             for sub in sorted(p for p in med.iterdir() if p.is_dir()):
                 subprocess.run(["mcopy", "-i", str(img), "-s", "-m", "-Q", "-o", str(sub), "::"], check=True, capture_output=True, env=env)
             if os.environ.get("SD_MEDIA_MAPA"):  # evidencia: qué se ha metido y con qué formato
                 print(f"SD_MEDIA {mapa}", file=sys.stderr)
-        if raiz.is_dir():
-            for sub in sorted(p for p in raiz.iterdir() if p.is_dir()):
-                subprocess.run(["mcopy", "-i", str(img), "-s", "-m", "-Q", "-o", str(sub), "::"], check=False, capture_output=True, env=env)
         fd = os.open(img, os.O_RDONLY)
         try:
             fin = min(((ultimo_dato(fd, sectores * 512) + 4095) // 4096) * 4096, sectores * 512)

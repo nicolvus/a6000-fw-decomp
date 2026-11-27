@@ -31,7 +31,7 @@ FW_LIBMPR = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_ima
 LIBMPR = HARNESS_LIBMPR if HARNESS_LIBMPR.exists() else FW_LIBMPR
 DESCRIPTOR = 0x9D1270  # .data de libmpr: descriptor de AVIN0001.INP
 MT = {"MTOOLS_SKIP_CHECK": "1"}
-FALTA = [h for h in ("mkfs.vfat", "mmd", "mcopy", "mdir") if shutil.which(h) is None]
+FALTA = [h for h in ("mkfs.vfat", "mmd", "mcopy", "mdir", "mtype") if shutil.which(h) is None]
 
 
 def test_registro_de_0x80_con_los_campos_en_su_offset():
@@ -123,6 +123,29 @@ def test_imagen_fat_con_media_lleva_la_foto_y_el_indice(tmp_path: Path):
     img = salida.read_bytes()
     off = img.find(sd_media.ID)
     assert off > 0 and off % 512 == 0  # empieza en un sector: la traza SDIO lo puede mapear a offset de fichero
+
+
+@pytest.mark.skipif(bool(FALTA), reason=f"faltan herramientas mtools/dosfstools: {', '.join(FALTA)}")
+def test_media_reemplaza_los_archivos_conflictivos_solo_en_la_imagen(tmp_path: Path):
+    raiz = tmp_path / "sd"
+    indice = raiz / "AVF_INFO/AVIN0001.INP"
+    indice.parent.mkdir(parents=True)
+    indice.write_bytes(b"indice previo")
+    foto = raiz / "DCIM/100MSDCF/DSC00001.JPG"
+    foto.parent.mkdir(parents=True)
+    foto.write_bytes(b"foto previa")
+    otro = foto.with_name("DSC00002.JPG")
+    otro.write_bytes(b"otra foto")
+    imagen = tmp_path / "media.head"
+    sd_image.construye(raiz, imagen, 0.25, media=True)
+
+    def leer(ruta: str) -> bytes:
+        return subprocess.run(["mtype", "-i", str(imagen), ruta], check=True, capture_output=True).stdout
+
+    assert leer("::/AVF_INFO/AVIN0001.INP") != indice.read_bytes()
+    assert leer("::/DCIM/100MSDCF/DSC00001.JPG").startswith(b"\xff\xd8")
+    assert leer("::/DCIM/100MSDCF/DSC00002.JPG") == b"otra foto"
+    assert indice.read_bytes() == b"indice previo" and foto.read_bytes() == b"foto previa"
 
 
 def _va_a_offset(d: bytes, va: int) -> int:

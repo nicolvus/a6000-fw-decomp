@@ -1,5 +1,9 @@
 # Progreso — sistema de conocimiento Sony A6000
 
+## G22-PBMEDIA — colisión de la tarjeta de prueba (27-11-2026)
+
+`SD_MEDIA=1` ya aplica la foto y el índice generados después de copiar la tarjeta anfitriona, solo en la imagen FAT. Una regresión comprueba ambas colisiones y preserva los archivos originales. Con la tarjeta actual, `SD_MEDIA_CAB=0` pasó de un índice de 512 B sobrescrito a uno generado de 128 B. En el invitado el medio llegó a 1, pero el modelo de la galería siguió en 0; el arranque sin OSD impide concluir. Esperar solo la carga de `libObj` causó SIGSEGV al abrir `view/ROOT`: experimento retirado. Próximo paso: sincronizar con el gestor y eventos inicializados (G22-PBARRANQUE-LIBOBJ), y medir G22-PBMODEL con la SD corregida. [Informe](../reports/g22-pbmedia-prioridad-indice-20261127.md).
+
 ## FILM-PB-1 — WBI y Silent: causa y solución construida (28-11-2026)
 
 Silent son dos capas y solo una choca con el WBI. El **comportamiento** vive en `av-cam.bin`
