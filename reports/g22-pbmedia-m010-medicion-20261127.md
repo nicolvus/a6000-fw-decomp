@@ -1,0 +1,18 @@
+# G22-PBMEDIA — medición viz14: la vista ya recibe el medio, pero nadie pide ni sirve `@M010` (27-11-2026)
+
+Perfil `viz14`, `SD_MEDIA=1 SD_MEDIA_CAB=0`, `SHIMEXTRA='PLAYVIEW=1 INSHORT=1 GMILOG=1 WAITLOG=3000 WLALL=1 IMCMDLOG=1'` (**`WLALL=1` es imprescindible**: sin él las líneas `[shim]` no llegan a `shim.log`). Arranque en frío 119 s, 30 listas; luego trazas en caliente y la tecla de reproducción. Evidencia: [`viz14-extracto.txt`](evidence/g22-pbmedia-viz14-20261127/viz14-extracto.txt).
+
+## Medido
+1. Tras abrir `view/INDEX_PLAYBACK`: `getModelInfo(@M00A,0)=1`, `(@M00A,64)=1`, `(model/MEDIA,0)=1`. Antes (informe de traspaso) eran **0**; con el índice corregido y el arranque esperando al gestor el medio ya se acepta también desde la vista.
+2. Aun así: **0 listas, opacos 0,0**. En ningún momento la vista consulta `@M010` (cero líneas `getModelInfo(@M010,…)` generadas por ella).
+3. Sondeo `G @M010`: el modelo **existe** y responde 1 en los códigos 3 (`[1/402]`), 4 (`[1/401]`) y 5 (`[1/12000001][1/100]`); códigos 0, 1, 2 y 6…0x17 → 0.
+4. `TRACEFN=dc504` (`MprIf::GetContentInfo`) armado en caliente: **0 disparos**. El servidor de contenidos no pregunta a MPR.
+
+## Conclusión (y límite)
+El 0 de `@M010` ya no es «medio no aceptado»: el navegador no recibe la petición que lo pone en marcha. El eslabón es qué evento/acción de la vista de reproducción arranca `ModelBrowser` (condición de creación → `IssueCommandAsync`). `TRACEFN2=dc144` no se confirmó armado (el shim informó «armadas (1)»): repetir con una sola traza por orden. No se ha probado que el lector de `AVIN0001.INP` se ejecute. La reproducción **sigue negra**; el objetivo de identidad con la cámara real no está alcanzado.
+
+## Causa de los cuelgues con dos invitados (nueva)
+No es CPU (12 núcleos, carga ≈ 4,6): `/tmp` es tmpfs y los perfiles viejos de `a6viz` ocupaban 2,7 GB con ≈ 10 GB de swap en uso. Borrar `live/viz1..11` bastó para arrancar un segundo invitado en 100–119 s con el de WBI corriendo. Limpiar `/tmp/a6viz/live` antes de medir.
+
+## Siguiente
+Desensamblar la creación de `ModelBrowser` (`libObj+0x47fa78`) y qué mensaje de `view/INDEX_PLAYBACK` la dispara; armar `dc144` solo; comprobar con `IMCMDLOG` la categoría/id emitidos.
