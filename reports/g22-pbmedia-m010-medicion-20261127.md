@@ -16,3 +16,10 @@ No es CPU (12 núcleos, carga ≈ 4,6): `/tmp` es tmpfs y los perfiles viejos de
 
 ## Siguiente
 Desensamblar la creación de `ModelBrowser` (`libObj+0x47fa78`) y qué mensaje de `view/INDEX_PLAYBACK` la dispara; armar `dc144` solo; comprobar con `IMCMDLOG` la categoría/id emitidos.
+
+## Adenda viz15 (27-11-2026): ni el ModelBrowser ni las fábricas se ejecutan tras la tecla
+Con `E TRACEFN=47fa78,598930,5d8d94,dc144,dc504` armado en caliente (5 trampas, un solo comando) y la pulsación de Reproducción (`openView(view/INDEX_PLAYBACK,0)` devolvió un puntero): **0 disparos** de `ModelBrowserToInstance` (`+0x47fa78`), `ModelIndexPbToInstance` (`+0x598930`), `ModelMediaToInstance` (`+0x5d8d94`), `IssueCommandAsync` (`+0xdc144`) y `MprIf::GetContentInfo` (`+0xdc504`). Tras la pulsación el invitado queda casi mudo (solo `vdf_if`/`UpdateStatusMonitor`).
+- El demonio solo registra `createModel` de 20 modelos en el arranque (`ROOT`, `MEDIA`, `SCALAR_PB`…); **ninguno** es `INDEX_PB` ni el navegador: esos modelos no se crean al abrir la vista con este atajo.
+- Hipótesis más probable (sin verificar): `PLAYVIEW=1` solo llama a `openView`; en la cámara la tecla cambia primero el modo (`model/SCALAR_PB`, categoría `ObjCamera`) y es ese cambio quien crea los modelos de la vista. El eslabón es la acción 4 de `convertViewEventToAB` → ScalarDaemon/ObjCamera, no el lector del índice.
+- La pantalla tras la tecla (`viz15-despues.png`) es la de disparo con el icono de base de datos en «ERROR» y la tarjeta en «E»; **no se comprobó si ese icono ya estaba antes** de pulsar (el `viz6-before.png` previo no lo tiene): hay que capturar el antes en la misma sesión.
+- Evidencia: [extracto](evidence/g22-pbmedia-viz15-20261127/viz15-extracto.txt), [captura](evidence/g22-pbmedia-viz15-20261127/viz15-despues.png).
