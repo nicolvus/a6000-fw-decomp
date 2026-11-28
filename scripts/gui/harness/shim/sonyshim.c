@@ -562,7 +562,18 @@ static int sd_fd(int fd); static void sd_log(const char *op, int fd, long a, lon
 static void nf_log(const char *op, int fd, long a, long b, long r);
 ssize_t read(int fd, void *b, size_t n) {
     static ssize_t (*real)(int, void *, size_t); if (!real) real = nextsym("read");
-    if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && !nf_fd(fd) && !(getenv("SDIMG") && !strcmp(devname[fd], "/dev/mmca"))) { if (getenv("SYSTAT")) systat_add(fd, 0x100000, 0); if (!getenv("NOBLOCKDEV")) { LOG("read(fd=%d %s) sobre dispositivo no modelado: el hilo se duerme", fd, devname[fd]); { if (getenv("DEVREADWAKE") && (!strcmp(devname[fd], "/dev/cec") || !strcmp(devname[fd], "/dev/hdmi"))) { for (;;) { time_t e = dev_evt; if (sus_phase && e && time(0) - e < 5) { usleep(50000); errno = EINTR; return -1; } usleep(100000); if (kind[fd] != D_GENERIC) { errno = EBADF; return -1; } } } } for (;;) sleep(3600); } }
+    if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && !nf_fd(fd) && !(getenv("SDIMG") && !strcmp(devname[fd], "/dev/mmca"))) {
+        if (getenv("SYSTAT")) systat_add(fd, 0x100000, 0);
+        if (!getenv("NOBLOCKDEV")) {
+            LOG("read(fd=%d %s) sobre dispositivo no modelado: el hilo se duerme", fd, devname[fd]);
+            if (getenv("DEVREADWAKE") && strcmp(devname[fd], "/dev/usb/event"))  /* libusb se cae (SIGSEGV) con EINTR en este nodo */
+                for (;;) {  /* shortcut: sin datos de CEC/HDMI; el driver real deja de bloquear al suspender y el hilo comprueba su bandera de salida; mejorar con el ioctl real de cada driver */
+                    if (sus_phase) { usleep(200000); errno = EINTR; return -1; }
+                    usleep(100000); if (kind[fd] != D_GENERIC) { errno = EBADF; return -1; }
+                }
+            for (;;) sleep(3600);
+        }
+    }
     { ssize_t r = real(fd, b, n); if (sd_fd(fd)) sd_log("read", fd, 0, (long)n, (long)r); if (nf_fd(fd)) nf_log("read", fd, 0, (long)n, (long)r); return r; }
 }
 /* SDIMG: traza de E/S sobre la imagen (primeras 80 llamadas) para ver qué lee libInfraFsys */
@@ -829,6 +840,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
         if (k == ns && ns < 64) { strncpy(seen[ns].d, devname[fd], 31); seen[ns].r = req; seen[ns++].n = 0; }
         unsigned n = k < 64 ? seen[k].n++ : 0;
         pthread_mutex_unlock(&semlock);
+        if (sus_phase && (!strcmp(devname[fd], "/dev/cec") || !strcmp(devname[fd], "/dev/hdmi"))) dev_evt = time(0);  /* el *_sus configura el driver (ioctl) y este despierta la lectura bloqueada */
         if (n == 3 && getenv("DEVSTACK")) raise(SIGUSR1);  /* pila del llamador de la 4.ª repetición */
         if (n < 5 || !(n & 4095)) { Dl_info di; void *ra = __builtin_return_address(0); int ok = dladdr(ra, &di) && di.dli_fname;
             LOG("ioctl(%s, %#lx, %p) arg0=%#x [n=%u] desde %s+%#lx", devname[fd], req, arg, readable(arg) ? *(unsigned *)arg : (unsigned)(unsigned long)arg, n, ok ? di.dli_fname : "?", ok ? (unsigned long)ra - (unsigned long)di.dli_fbase : 0UL); }
@@ -1142,6 +1154,20 @@ static void *openviewer(void *a) {
     for (char *it = strtok_r(spec, ",", &sv); it; it = strtok_r(0, ",", &sv)) { efp("[shim] OPENVIEW %s ...\n", it); int r = ov(it, !strcmp(it, "view/STLREC") && getenv("OPENVIEWARG") ? (int)hexv(getenv("OPENVIEWARG"), 0) : 0); efp("[shim] OPENVIEW %s -> %d\n", it, r); if (getenv("POSTROOTEV") && !strcmp(it, "view/ROOT")) { espera_calma(8, "CALMA"); startev(getenv("POSTROOTEV")); }  /* POSTROOTEV: tras abrir view/ROOT (su @T100 termina antes) la vista raíz pide @T0E3 (viewUnified2+0x16c58c) */ espera_calma(getenv("OPENVIEWGAP") ? (unsigned)hexv(getenv("OPENVIEWGAP"), 0) : 2, "CALMA"); }
     return 0;
 }
+/* SKIPSUS=lib@off,… (WBI): antes de sus_all_i convierte esas funciones Thumb en «movs r0,#0; bx lr».
+ * shortcut: CEC_sus/HDMI_sus (hilos de dispositivos no modelados) no afectan al WBI ni al umount; mejorar modelando /dev/cec y /dev/hdmi. */
+static void skip_sus(void) {
+    for (const char *e = getenv("SKIPSUS"); e && *e; ) {
+        char lib[64]; int n = 0; while (*e && *e != '@' && n < 63) lib[n++] = *e++; lib[n] = 0; if (*e == '@') e++;
+        unsigned long off = hexv(e, &e); while (*e == ',') e++;
+        char ln[256]; unsigned long base = 0; FILE *m = fopen("/proc/self/maps", "r");
+        while (m && fgets(ln, sizeof ln, m)) if (strstr(ln, lib)) { base = hexv(ln, 0); break; }
+        if (m) fclose(m);
+        if (!base) { LOG("SKIPSUS: %s no hallada", lib); continue; }
+        unsigned char *p = (unsigned char *)(base + off); mprotect((void *)((unsigned long)p & ~4095UL), 8192, PROT_READ | PROT_WRITE | PROT_EXEC);
+        p[0] = 0; p[1] = 0x20; p[2] = 0x70; p[3] = 0x47; __builtin___clear_cache((char *)p, (char *)p + 4); LOG("SKIPSUS %s+%#lx parcheada", lib, off);
+    }
+}
 static void *injector(void *a) {
     char *spec = strdup(getenv("INJECT")), *sp1 = 0; (void)a; unsigned long t0 = 0;
     for (char *it = strtok_r(spec, ";/", &sp1); it; it = strtok_r(0, ";/", &sp1)) {
@@ -1149,7 +1175,7 @@ static void *injector(void *a) {
         unsigned *m = calloc(64, 4); int n = 0;
         while (*e == ':' || *e == ',') { m[n++] = hexv(e + 1, &e); if (n >= 60) break; }
         if (at > t0) { sleep(at - t0); t0 = at; }
-        if (m[0] == 0x92014b) sus_phase = 1;  /* a partir de aquí los *_sus esperan la salida de sus hilos */
+        if (m[0] == 0x92014b) { sus_phase = 1; skip_sus(); }  /* a partir de aquí los *_sus esperan la salida de sus hilos */
         int ok = cb_deliver(q, m); const char *how = "callback";
         if (!ok && is_dynq(q)) { if (q == 0x7a0020) mbx_post_raw(q, m); else mbx_post(q, m, 0); ok = 1; how = "buzón"; }  /* cola que un hilo lee con rcv_msg; 0x7a0020 (driver de entrada: {clave, 0, valor, 0, índice físico}) sin tocar w0 (§5.18w) */
         efp("[shim] INJECT q=%#x w0=%#x -> %s\n", q, m[0], ok ? how : "SIN CALLBACK NI BUZÓN");

@@ -10,7 +10,14 @@ Sin cámara. Script: `scripts/gui/harness/wbi_apagado.sh DIR_TRABAJO SALIDA [fac
 ## Conclusión para la cámara
 Con montajes anidados, `libSyncAndroid` y `make_init_bk.sh` como únicos actores, el `umount` **no** da EBUSY. En cámara sí (errno 16 ×11). El culpable es un proceso real con `cwd`/`fd`/`mmap` bajo el vfat `/dev/nflasha17` que el arnés no tiene (candidatos: servicios Android —`init.rc` crea `dalvik-cache`, `app`, `misc` ahí— o `adbd`). Medida pendiente en cámara durante el `make` de 26 s: `ls -l /proc/*/cwd /proc/*/fd | grep android/data`.
 
-## Límites (no idéntico aún)
-- `sus_all_i` no termina: `09c_CEC_sus`/`09a_HDMI_sus` esperan a hilos que leen `/dev/cec`/`/dev/hdmi` (no modelados). `DEVREADWAKE` los despierta con EINTR pero el resultado cambia entre pasadas (carrera). El `write` final no está verificado con la cadena completa.
-- Kernel Debian: no fabrica la imagen (`warm.c`, `liro`) ni reanuda.
-- Tiempos de inyección fijos; `0x92014E` (`dmm_pre_suspend`) no se inyecta.
+## Resultado de la pasada completa (MEDIDO, 28-11-2026)
+`wbi_apagado.sh` con factor `0x27`: `inact_all` → `sus_all_i` (incluye `SyncAndroid_sus` tipo 8, `umount(/android/data)`=0) → `sus_all_u` → `0x92014F` → **`POWERSTATE escrito: [warm] (4 B)`** (modo 2 nativo, como en cámara).
+
+## Atajos del arnés (no son datos de la cámara)
+- `SKIPSUS`: `CEC_sus`, `HDMI_sus` y `UsbControl_Suspend` se neutralizan (esperan hilos de `/dev/cec`, `/dev/hdmi` y `/dev/usb/event`, no modelados).
+- `DEVREADWAKE`: en fase de suspensión, toda lectura bloqueada de dispositivo no modelado (salvo `/dev/usb/event`, donde EINTR hace caer a `libusb` con SIGSEGV) expira cada 200 ms.
+- Aviso de método: tres pasadas intermedias usaron un `.so` viejo porque `build.sh` fallaba en silencio; comprobar siempre la hora del `.so`.
+
+## Límites (no idéntico al 100 %)
+- Kernel Debian: no fabrica la imagen (`warm.c`, `liro`) ni reanuda; el `umount` da 0 en el arnés y EBUSY en cámara (falta el proceso que retiene `/android/data`; medir `/proc/*/cwd,fd` en cámara).
+- Tiempos de inyección fijos; `0x92014E` no se inyecta.

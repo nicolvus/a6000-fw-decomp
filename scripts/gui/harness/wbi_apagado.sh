@@ -12,6 +12,6 @@ set -e
 W=$1; O=$2; F=${3:-27}; HERE=$(cd "$(dirname "$0")" && pwd)
 mkdir -p "$O"
 # Tiempos en hex (s desde el arranque de im.elf); cada fase espera a la anterior: ajustar si el TCG va más lento.
-HARNESS_OUT=$O SHIMENV="WAIT=${WAIT:-700} CVWAIT=0 ANDROIDFS=real FULLLOG=1 SYNCMBX=94016a SELFQ='*' DEVREADWAKE=1 INJECT='3c@94016a:920143:$F;50@94016a:92014b;${T4D:-78}@94016a:92014d;${T4F:-1f4}@94016a:92014f:0'" \
+HARNESS_OUT=$O SHIMENV="WAIT=${WAIT:-700} CVWAIT=0 ANDROIDFS=real FULLLOG=1 SYNCMBX=94016a SELFQ='*' DEVREADWAKE=1 SKIPSUS=libObj.so@7d6d90,libInfraHdmi.so@34e80,libUsbControl.so@10d20 ${SHIMEXTRA} INJECT='3c@94016a:920143:$F;50@94016a:92014b;${T4D:-78}@94016a:92014d;${T4F:-1f4}@94016a:92014f:0'" \
   python3 "$HERE/run.py" "$W" "$HERE/im.sh" "${SECS:-760}" > "$O/run.txt" 2>&1
 grep -a -E "POWERSTATE escrito|WBIFS" "$O/run.txt" || true
