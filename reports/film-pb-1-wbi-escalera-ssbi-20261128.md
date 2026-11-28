@@ -29,8 +29,9 @@ Etiquetas: **VERIFICADO** (bytes o fuente citada), **INFERENCIA**, **NO PROBADO*
 7. **Con eso la cámara completa sola la escalera** (§4): apagado → `prof`; perfilado → apagado → vector
    `_optimize`; arranque → optimiza y escribe `WBI0` → reinicio → sella `WBI1`. El resultado es una WBI del
    CFW con su `/usr` (Silent incluido), lista para meter en un paquete (§5).
-8. La captura del 27-11 y `nflasha5-prof-optimize.bin` de Astra **no sirven**: heredan el registro de
-   suspensión, y la sección de RAM no se puede reescribir sin un compresor LDEC.
+8. La captura del 27-11 y `nflasha5-prof-optimize.bin` de Astra **no sirven**. Heredan el registro de suspensión
+   y, sobre todo, la app que se desmontó con `Suspend` y no con `PowerOff` (§2). Reescribir páginas sí sería
+   posible (bloques en crudo `0x0f`, que la propia cámara emite), pero no reproduciría el estado de fábrica.
 
 ## 1. La escalera SSBI — VERIFICADO
 
@@ -89,6 +90,15 @@ captura 27-11 : 0x920141 factor 0x7  motivo 0x1b código 0x1f  => OFF_TYPE_SUSPE
 `libObj` `GetInactiveFactor` (`0x7e7c18`) pide ese registro (`0x7e7c68`, `0x920161` al buzón `0x920196`) y ramifica
 por el motivo (`0x7e7cba`): `0x1b` → `">> OFF_TYPE_SUSPEND"` (1), `0x1c` → `">> OFF_TYPE_COLDOFF"` (2),
 `0x1a` → `UNKNOWN`. Ese registro está en la RAM de la instantánea, así que **cada** arranque desde esa WBI lo lee igual.
+
+**Quién lo usa y cuándo (VERIFICADO):** `GetInactiveFactor` se consulta **al apagar**, no al reanudar. El hilo de
+`libObj` `0x7e8150` llama siempre a `Inactivate` (`0x7e4c44`, `0x7e81a0`) y, si el estado es `0x100a`, después a
+`InactivateForSnapShot` (`0x7e4a9c`, `0x7e81c6`). `Inactivate` ramifica por el tipo (`0x7e4cdc`): `COLDOFF` →
+`PowerOff` (`0x7e41b0`) y `SUSPEND` → `Suspend(obj,0)` (`0x7e4980`). `InactivateForSnapShot` llama a `Suspend(obj,1)`
+en los dos casos. En la WBI de Sony la app se desmontó con `PowerOff`; en la captura del 27-11, con `Suspend`.
+**La RAM de la aplicación es distinta**, así que reescribir solo el registro de `upm` dentro de la captura no la
+igualaría a la de fábrica. El cfg intercepta antes de que la app pregunte: `upm` copia el mensaje (`0xf024-0xf038`)
+antes de emitir el OFF (`0xf044…`).
 
 Origen del `{7, 0x1b, 0x1f}`: `add_off_factor` (`0xe96c-0xe994`) fuerza el motivo a `0x1b` si no es `0x1b`/`0x1c`,
 y `0x1f` es el código por defecto de `clear_hcrn` (`0xeac4`). **No** sale de `libObj` `0x8035f8`, cuya tabla de
