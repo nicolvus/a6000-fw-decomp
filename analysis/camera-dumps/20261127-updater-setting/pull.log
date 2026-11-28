@@ -1,0 +1,39 @@
+No native drivers available
+Using drivers libusb-MSC, libusb-MTP, libusb-vendor-specific
+Looking for Sony devices
+
+Querying mass storage device
+Sony DSC is a camera in updater mode
+
+Initializing firmware update
+Writing firmware
+100%
+sh: can't access tty; job control turned off
+
+
+BusyBox v1.13.4 (2012-07-17 15:11:04 JST) built-in shell (ash)
+Enter 'help' for a list of built-in commands.
+
+/ # rootfs on / type rootfs (rw)
+/dev/root on / type cramfs (ro,noatime)
+proc on /proc type proc (rw,relatime)
+none on /sys type sysfs (rw,relatime)
+tmpfs on /tmp_updater type tmpfs (rw,relatime,size=12582912)
+/dev/loop0 on /tmp_updater/updater/bodyfs type cramfs (ro,noatime)
+/dev/nflasha2 on /setting type vfat (rw,sync,noatime,fmask=0000,dmask=0000,allow_utime=0022,codepage=cp437,iocharset=ascii,shortname=mixed,posix_attr,avoid_dlink,errors=remount-ro)
+WRITABLE:/tmp_updater
+WRITABLE:/ramdsk
+head: applet not found
+__F2__
+/ # 
+--- fin sondeo; sigo con el primer escribible
+208+0 records in
+208+0 records out
+-rw-rw-rw-    1 0        0        13631488 Jan  1 00:00 /tmp_updater/n2.img
+5522ccf72334ac2aa158f5bb957991e393969758  /tmp_updater/n2.img
+__F2__
+/ # 
+size 13631488
+PULL ok
+reboot
+Done
