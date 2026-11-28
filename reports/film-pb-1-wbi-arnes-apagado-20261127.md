@@ -30,3 +30,6 @@ Límite: los PID 435/851/939 se identifican por sus fds, no por nombre (el `ps` 
 ## Límites (no idéntico al 100 %)
 - Kernel Debian: no fabrica la imagen (`warm.c`, `liro`) ni reanuda.
 - `0x92014E` (`dmm_pre_suspend`) lo consume `upm.ko`, no `im.elf`: no se inyecta. El EBUSY de `BUSY=1` se impone, no se deduce.
+
+## Estado al cierre de sesión (28-11-2026)
+`HOLD` está activo por defecto (la cámara tiene Android vivo; `HOLD=0` da el apagado completo con `warm`). Prueba sin `SKIPSUS` de CEC/HDMI (solo `UsbControl` saltado): `09c_CEC_sus` sigue sin terminar, así que los tres atajos permanecen. Falta: modelar `/dev/cec`, `/dev/hdmi`, `/dev/usb/event` y medir en cámara el `umount`.
