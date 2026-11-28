@@ -35,6 +35,30 @@ def test_acepta_wbi1_sellada_y_recorta():
     assert out == img[:0x40000 + 0x400 + 2 * 32]
 
 
+def test_kemco_memclr_misma_longitud():
+    mod = _builder()
+    txt = b"pm.resume=0x80021054 pm.sus_error=0x80021060\nwbi_memclr=0x800210e8\nwbimem=0x1000@0x80021000\n"
+    out = mod.kemco_memclr(txt)
+    assert len(out) == len(txt) and b"wbi_memclr=0x8029fdc8\n" in out and b"0x800210e8" not in out
+    with pytest.raises(ValueError):
+        mod.kemco_memclr(out)
+
+
+def test_palabra_memclr_vale_1_en_kernel_y_ram():
+    vml = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha3_unpacked_unpacked/vmlinux.bin"
+    cfw = ROOT / "analysis/camera-dumps/20261127-wbi-nflasha5/dev_nflasha5.bin"
+    if not (vml.exists() and cfw.exists()):
+        pytest.skip("requiere firmware extracted y volcados no versionados")
+    sys.path.insert(0, str(ROOT / "scripts/wbi"))
+    from snapram import Ram
+    pa = _builder().MEMCLR_UNO
+    off = pa - 0x80038000  # Loader3 carga vmlinux.bin en crudo en 0x80038000 (RAMCFG entrada 5)
+    pagina = vml.read_bytes()[off & ~4095:(off & ~4095) + 4096]
+    assert struct.unpack_from("<I", pagina, off & 4095)[0] == 1
+    for p in (cfw, ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha5"):
+        assert Ram(p).read((pa & ~4095) - 0x40000000, 4096) == pagina
+
+
 def test_escalera_en_imagenes_reales():
     sony = ROOT / "firmware/extracted/fw321/firmware.tar_unpacked/0700_part_image/dev/nflasha5"
     cfw = ROOT / "analysis/camera-dumps/20261127-wbi-nflasha5/dev_nflasha5.bin"

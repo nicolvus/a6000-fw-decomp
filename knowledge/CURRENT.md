@@ -6,7 +6,9 @@
 > `{0x27,0x1c,0x20}` (`COLDOFF`): el SWD del 27-11 solo cambió `im.elf`. El 4.07 además reanudaba con el vector
 > `_profile`. Nuevo `scripts/cam/swd_upm_coldoff_0x27.cfg` (reescribe el mensaje en `upm.ko` `.text+0xefec`) y pasos de
 > cámara en [escalera SSBI §4](../reports/film-pb-1-wbi-escalera-ssbi-20261128.md). La captura del 27-11 no sirve.
-> El empaquetador `build_package_wbi_propio.py` solo acepta `WBI1`+`_ssboot`. Pendiente `FILM-PB-1-WBI-ESCALERA`.
+> Segunda diferencia: el frío de fábrica borró las regiones `wbimem=` (`wbi_memclr`=1) y ningún frío nuestro lo hace (fondo
+> `0xFF`, también en las del codec); paquete 4.09 sin WBI con `kemco.txt` corregido (`build/wbi_propio/memclr`), base de la
+> escalera y prueba de vídeo en frío. El empaquetador `build_package_wbi_propio.py` solo acepta `WBI1`+`_ssboot`. Pendiente `FILM-PB-1-WBI-ESCALERA`.
 > **WBI + Silent: REABIERTO (27-11-2026, prueba física fallida).** Con `build/wbi_silent/pkg405` instalado (menú Silent visible) la receta
 > «apagar con el interruptor → encender → reproducir» **no reproduce vídeo**: la cámara no regenera el WBI. Lo dicho abajo como «RESUELTO»,
 > «garantizada» o «automática» queda **superado**; vale el análisis de `film-pb-1-warm-abort-20261126.md`: el interruptor da factor `0x7` → modo 0 →

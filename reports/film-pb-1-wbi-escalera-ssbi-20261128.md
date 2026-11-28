@@ -22,14 +22,17 @@ Etiquetas: **VERIFICADO** (bytes o fuente citada), **INFERENCIA**, **NO PROBADO*
    inerte, `or True`). **Corregido** y cubierto por regresión (§6).
 5. El negro con re-suspensión en bucle del 4.07 (`mmc_hwip_system_off` repetido = `suspend` del driver SD,
    §3) encaja con (2)+(4). **INFERENCIA fuerte**: no hay log de espacio de usuario de ese arranque.
-6. **Solución construida:** `scripts/cam/swd_upm_coldoff_0x27.cfg` intercepta en el receptor
+6. **Segunda diferencia (§2b):** el arranque en frío de fábrica puso a cero las 12 regiones `wbimem=` (`wbi_memclr`=1).
+   Los nuestros no: la captura tiene fondo `0xFF` en las regiones del codec. Arreglo construido en `/setting`: paquete 4.09.
+   Puede ser también la causa de que el frío no reproduzca vídeo (**INFERENCIA**).
+7. **Solución construida:** `scripts/cam/swd_upm_coldoff_0x27.cfg` intercepta en el receptor
    (`upm.ko` `.text+0xefec`, VA `0x3f334fec`, igual en Sony y en el CFW) y reescribe el mensaje a
    `{0x27, 0x1c, 0x20}` antes de que `upm` lo lea: el mismo registro que la fábrica. Lógica probada con
    registros y memoria simulados; **NO PROBADO** en cámara.
-7. **Con eso la cámara completa sola la escalera** (§4): apagado → `prof`; perfilado → apagado → vector
+8. **Con eso la cámara completa sola la escalera** (§4): apagado → `prof`; perfilado → apagado → vector
    `_optimize`; arranque → optimiza y escribe `WBI0` → reinicio → sella `WBI1`. El resultado es una WBI del
    CFW con su `/usr` (Silent incluido), lista para meter en un paquete (§5).
-8. La captura del 27-11 y `nflasha5-prof-optimize.bin` de Astra **no sirven**. Heredan el registro de suspensión
+9. La captura del 27-11 y `nflasha5-prof-optimize.bin` de Astra **no sirven**. Heredan el registro de suspensión
    y, sobre todo, la app que se desmontó con `Suspend` y no con `PowerOff` (§2). Reescribir páginas sí sería
    posible (bloques en crudo `0x0f`, que la propia cámara emite), pero no reproduciría el estado de fábrica.
 
@@ -106,6 +109,39 @@ códigos es `0x20,0x22..0x26` y `0x21` (`0xd8ef34`). El emisor del apagado del i
 Corrige `evidence/film-pb-1-ssbi-20261126/C5.md` §1.2 («interruptor = factor 7, motivo `0x1c`»). Por eso el cfg
 intercepta en el receptor y no en el emisor.
 
+## 2b. Segunda diferencia: el frío de fábrica borró las regiones `wbimem=` y los nuestros no — VERIFICADO
+
+Con `CONFIG_EJ_CLEAR_MEMORY`, al registrar cada región `wbimem=` el kernel hace `memset(…, 0, size)` si la palabra
+apuntada por `wbi_memclr=` vale 1 (`warm.c:505-511`, `wbi_memclr()` `1582-1591`). La cmdline (`kemco.txt`, en
+`/setting`, que Loader3 carga en `0x80033000` en frío) apunta a `0x800210e8`. `scripts/wbi/verifica_captura.py`:
+
+```
+WBI Sony 3.21 : wbi_memclr 1 ; wbimem 18552 páginas: 16073 a cero,     0 enteras a 0xFF ; upm 0x27/0x1c/0x20
+captura 27-11 : wbi_memclr 0 ; wbimem 18552 páginas: 10873 a cero,  1632 enteras a 0xFF ; upm 0x7/0x1b/0x1f
+```
+
+- En la de Sony el fondo de las 12 regiones es `0x00`. En la del CFW es `0xFF` en todas, incluidas las del codec
+  (`0x8F708000`+59 MiB, `0x933AD000`, `0x96083000`, `0x96600000`). La RAM de un sistema de serie en caliente
+  (`ram-servicio-20261020`) también tiene fondo `0x00`.
+- `0x96800000` es la ventana donde Loader3 deja `sa_dfdet.bin` en frío (RAMCFG entrada 1). En Sony está **entera a
+  cero**, porque el `memclr` borró la copia del cargador, y aun así reproduce vídeo en caliente. En la del CFW sigue la copia.
+- Página `0x80021000`: en Sony los primeros `0x48` B son aleatorios (DRAM recién encendida) y `+0xe8` = 1. En la del
+  CFW son `0xFF` y `+0xe8` = 0. **Ningún klog medido del proyecto contiene `memclr: 0x`**: ningún arranque en frío nuestro
+  ha limpiado esas regiones. Quién pone el 1 en fábrica no está en el Loader3 volcado (no aparece `0x800210e8`; INFO 6
+  sin adquirir). **NO VERIFICADO**.
+- Consecuencias:
+  - Una WBI tomada en un frío como el nuestro guardaría basura en las regiones del codec.
+  - Es además una causa candidata de que **el 3.21 en frío no reproduzca vídeo** (encaja con C2 de la
+    [búsqueda del decodificador](film-pb-1-busqueda-decodificador-frio-20261128.md#4-causas-candidatas-ordenadas)).
+    **INFERENCIA**.
+- **Arreglo sin tocar `/usr` ni la WBI:** `wbi_memclr=0x8029fdc8`. Es una palabra de `vmlinux.bin`, que Loader3
+  carga en crudo en `0x80038000`: 763 de 849 páginas coinciden byte a byte con la RAM de las dos instantáneas, y esa
+  palabra vale 1 en el fichero y en las dos RAM tras todo el arranque. La línea tiene la misma longitud; el único
+  cambio es el CRC de `setting/kemco.txt` en `appli.sum`. Las regiones por debajo de `0x80028000` (la página
+  `0x80021000`) no se borran (`LOADER_REGION_END`). Paquete construido:
+  `build/wbi_propio/memclr/package-4.09/firmware_packed.dat` (sha256 `0b5b7b0e…24b3`), que es el 4.08 de
+  recuperación con esas dos líneas cambiadas, comprobado miembro a miembro. **NO PROBADO** en cámara.
+
 ## 3. Lectura del fallo del 4.07 — INFERENCIA fuerte
 
 - `mmc_hwip_system_off START/END` es el `suspend` UDIF del driver `mmc_drv`. Sale una vez por cada apagado en
@@ -119,7 +155,13 @@ intercepta en el receptor y no en el emisor.
 
 ## 4. Cómo fabricar la WBI del CFW en la cámara — NO PROBADO
 
-Requisitos (los del 27-11, **MEDIDOS**): CFW instalado sin `nflasha5` (arranque en frío), `/android/data` sin las apps
+**Paso previo A (prueba barata, aporta por sí sola):** instalar el **4.09** (§2b) y arrancar en frío.
+1. Comprobar que el klog trae doce líneas `memclr: 0x…`.
+2. Reproducir un vídeo. Si reproduce en frío, la causa del frío sin vídeo queda localizada y el CFW con Silent
+   funcionaría incluso sin WBI.
+3. Sea cual sea el resultado, el 4.09 es la base de la escalera.
+
+Requisitos (los del 27-11, **MEDIDOS**): CFW instalado sin `nflasha5` (arranque en frío; usar el 4.09), `/android/data` sin las apps
 que retienen el montaje (Tweak, RemoteShutter, WbiMaker) ni volcados, `/setting` con espacio
 (`docs/runbook-setting-llena.md`) y sonda SWD conectada. El `/usr` instalado será el de la WBI: no cambiarlo después.
 
@@ -130,7 +172,10 @@ que retienen el montaje (Tweak, RemoteShutter, WbiMaker) ni volcados, `/setting`
 | 2 | Encender: la cámara reanuda, optimiza, escribe y se reinicia **sola** | `ssboot: optimizing image...` / `done`, `count_sections_p2:` | `WBI0`, vector `0x800523b4` |
 | 3 | Automático tras el reinicio: Loader3 `MODE#11` | `SSBI Create Completed!`; la cámara queda encendida | `WBI1`, vector `0x800523bc` |
 | 4 | Apagado normal (sin SWD) y encender | `MODE#10`, `WARMBOOT`; **prueba**: reproducir vídeo y foto Silent | sin cambios (`mem` no toca la WBI) |
-| 5 | Volcar `nflasha5` por el actualizador (`scripts/cam/ushell_pull_part.py`) y comprobar | `escalera.py`: `WBI1`, stat 4, Loader3 OK; `upm_modulo.py`: `OFF_TYPE_COLDOFF` | — |
+| 5 | Volcar `nflasha5` por el actualizador (`scripts/cam/ushell_pull_part.py`) y comprobar | `escalera.py`: `WBI1`, stat 4, Loader3 OK; `verifica_captura.py`: las tres condiciones OK | — |
+
+Opcional tras el paso 0: volcar `nflasha5` y pasar `verifica_captura.py` antes de invertir en los pasos 1-3. Si falla
+alguna condición, repetir el paso 0 sin seguir.
 
 Notas:
 - **Nunca** armar el SWD durante un arranque (memoria `feedback-swd-no-parar-en-arranque`). El cfg solo se detiene
@@ -157,6 +202,7 @@ igual que tras una actualización de Sony.
 | Fichero | Qué hace |
 |---|---|
 | `scripts/wbi/escalera.py` | valida lo que mira Loader3, decodifica las 4 entradas de la propia imagen y genera variantes de firma/vector (`--paso`) |
+| `scripts/wbi/verifica_captura.py` | las tres condiciones de fábrica de una instantánea (registro de `upm`, `wbi_memclr`, fondo `wbimem`); sale con 1 si falla |
 | `scripts/wbi/upm_modulo.py` | localiza `upm.ko` por tablas de páginas y lee el último apagado guardado |
 | `scripts/wbi/fbm_tabla.py` | tabla FBM `libmpr+0xA3699C` del `im.elf` guardado |
 | `scripts/wbi/montajes.py`, `logs_ram.py` | árbol de `vfsmount` y texto de zonas físicas (anillos de log) |
