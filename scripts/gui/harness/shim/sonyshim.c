@@ -117,6 +117,9 @@ static int fake_open(const char *p, int fl, mode_t m, int is64) {
         if (w >= 0) { if (write(w, t, strlen(t)) < 0) { /* sin sitio: se devuelve el fichero vacío */ } close(w); }
         int r = real_open_call("/tmp/nf4start", O_RDONLY, 0, is64); LOG("NFLASH4 open(%s) -> %d (%s)", p, r, t); stack_all_start(); return r;
     }
+    if (!strcmp(p, "/sys/power/state")) {  /* WBI: el kernel Debian no es el de Sony; lo que im.elf pide al kernel (warm/mem) se captura en /tmp/power_state sin suspender el invitado */
+        int r = real_open_call("/tmp/power_state", O_WRONLY | O_CREAT | O_TRUNC, 0666, is64); LOG("POWERSTATE open(%s, %#x) -> %d", p, fl, r); return r;
+    }
     if (strncmp(p, "/dev/", 5) != 0 && strncmp(p, "/proc/self", 10) != 0 && strncmp(p, "/tmp/", 5) != 0) {
         int r = real_open_call(p, fl, m, is64); LOG("open(%s) -> %d", p, r); return r;
     }
@@ -280,6 +283,10 @@ static unsigned dynq[256]; static int ndynq;  /* colas creadas por dynamic_id ti
 static pthread_mutex_t mbx_m = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t mbx_c = PTHREAD_COND_INITIALIZER;
 static void dynq_add(unsigned q) { pthread_mutex_lock(&mbx_m); if (ndynq < 256) dynq[ndynq++] = q; else LOG("dynq lleno: %#x sin buzón", q); pthread_mutex_unlock(&mbx_m); }
+static volatile int cec_stop, hdmi_stop, own_cnt, join_pending, sus_phase; static volatile time_t dev_evt;  /* DEVREADWAKE: hilos en osal_wait_thread_exit; el driver real despierta las lecturas bloqueadas al cerrarse */  /* contadores de mensajes de parada propios */
+static unsigned rcvseen[512]; static int nrcvseen;
+static void rcv_seen_add(unsigned q) { for (int i = 0; i < nrcvseen; i++) if (rcvseen[i] == q) return; if (nrcvseen < 512) rcvseen[nrcvseen++] = q; }
+static int rcv_seen(unsigned q) { for (int i = 0; i < nrcvseen; i++) if (rcvseen[i] == q) return 1; return 0; }
 static unsigned dynmade[256]; static int ndynmade;  /* colas creadas por osal_dynamic_id (tipo 0x2a): un snd_msg a ellas es de proceso a proceso y va a su buzón */
 static int dynmade_q(unsigned q) { for (int k = 0; k < ndynmade; k++) if (dynmade[k] == q) return 1; return 0; }
 static int is_dynq(unsigned q) { for (int k = 0; k < ndynq; k++) if (dynq[k] == q) return 1; return 0; }
@@ -555,7 +562,7 @@ static int sd_fd(int fd); static void sd_log(const char *op, int fd, long a, lon
 static void nf_log(const char *op, int fd, long a, long b, long r);
 ssize_t read(int fd, void *b, size_t n) {
     static ssize_t (*real)(int, void *, size_t); if (!real) real = nextsym("read");
-    if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && !nf_fd(fd) && !(getenv("SDIMG") && !strcmp(devname[fd], "/dev/mmca"))) { if (getenv("SYSTAT")) systat_add(fd, 0x100000, 0); if (!getenv("NOBLOCKDEV")) { LOG("read(fd=%d %s) sobre dispositivo no modelado: el hilo se duerme", fd, devname[fd]); for (;;) sleep(3600); } }
+    if (fd >= 0 && fd < MAXFD && kind[fd] == D_GENERIC && !nf_fd(fd) && !(getenv("SDIMG") && !strcmp(devname[fd], "/dev/mmca"))) { if (getenv("SYSTAT")) systat_add(fd, 0x100000, 0); if (!getenv("NOBLOCKDEV")) { LOG("read(fd=%d %s) sobre dispositivo no modelado: el hilo se duerme", fd, devname[fd]); { if (getenv("DEVREADWAKE") && (!strcmp(devname[fd], "/dev/cec") || !strcmp(devname[fd], "/dev/hdmi"))) { for (;;) { time_t e = dev_evt; if (sus_phase && e && time(0) - e < 5) { usleep(50000); errno = EINTR; return -1; } usleep(100000); if (kind[fd] != D_GENERIC) { errno = EBADF; return -1; } } } } for (;;) sleep(3600); } }
     { ssize_t r = real(fd, b, n); if (sd_fd(fd)) sd_log("read", fd, 0, (long)n, (long)r); if (nf_fd(fd)) nf_log("read", fd, 0, (long)n, (long)r); return r; }
 }
 /* SDIMG: traza de E/S sobre la imagen (primeras 80 llamadas) para ver qué lee libInfraFsys */
@@ -614,7 +621,7 @@ static int ioctl_in(int fd, unsigned long req, ...) {
         case 0: LOG("uipc stat_sem %#x", w[0]); return 0;
         case 1: { LOG("uipc wai_sem? %#x tmo=%d", w[0], (int)w[1]); int r = uipc_sem_wait(w[0], (int)w[1]); LOG("uipc wai_sem %#x tmo=%d -> %d", w[0], (int)w[1], r); return r; }
         case 2: sem_sig(w[0]); LOG("uipc sig_sem %#x", w[0]); return 0;
-        case 7: { unsigned *t = (unsigned *)w[1]; { char rd[96]; wl_desc(uipc_ra, rd, sizeof rd); LOG("uipc rcv_msg qid=%#x tmo=%d ra=%s", w[0], (int)t[1], rd); } avq_flush(w[0]);
+        case 7: { unsigned *t = (unsigned *)w[1]; rcv_seen_add(w[0]); { char rd[96]; wl_desc(uipc_ra, rd, sizeof rd); LOG("uipc rcv_msg qid=%#x tmo=%d ra=%s", w[0], (int)t[1], rd); } avq_flush(w[0]);
             if ((int)t[1] < 0 && getenv("RCVSTACK")) { static unsigned vq[64]; static int nq; int k, ya = 0; for (k = 0; k < nq; k++) if (vq[k] == w[0]) ya = 1; if (!ya && nq < 64) { vq[nq++] = w[0]; raise(SIGUSR1); } }
             { void *mm; int rr = mbx_take(w[0], (int)t[1], &mm); if (rr == 0) { *(void **)t[0] = mm; LOG("rcv_msg qid=%#x <- respuesta", w[0]); return 0; } if (rr != 1) return rr; }
             if ((int)t[1] < 0) {  /* espera indefinida en una cola estática: se le da buzón para que una respuesta posterior (ACKQ0) la despierte */
@@ -767,6 +774,10 @@ static int ioctl_in(int fd, unsigned long req, ...) {
                 LOG("INLOOP: 0x0c000003 estado=%u ex=%#x -> lector de entrada", ((unsigned *)m)[2], ((unsigned *)m)[3]); return 0; }
             { const char *e = getenv("SELFQ"); if (!e) e = "630130,102021f"; int own = 0;  /* SELFQ=qid,…: colas estáticas que el propio im.elf lee con rcv_msg (InfraSelectorThread lee 0x630130 y CallSelector le envía; CAMUSER_CAM_CAP lee 0x102021f y ObjCamera le envía {0x10, serie} en EE_START): el kernel entrega el mensaje al lector, aquí se descartaba y EE_START esperaba para siempre la concesión del recurso */
               while (*e) { const char *n; unsigned v = hexv(e, &n); if (n == e) break; if (v == w[0]) own = 1; e = *n == ',' ? n + 1 : n; }
+              if (!strcmp(getenv("SELFQ") ? getenv("SELFQ") : "", "*") && rcv_seen(w[0])) own = 1;  /* SELFQ=*: cualquier cola que un hilo de im.elf ya lee con rcv_msg (WBI: los *_sus mandan «parar» a su propio hilo y esperan su salida) */
+              if (own) { own_cnt++; dev_evt = time(0); }
+              if (own && w[0] == 0x9c015b) cec_stop++;
+              if (own && w[0] == 0x9a015a) hdmi_stop++;  /* shortcut: el driver /dev/cec despierta su lectura al suspender; aquí lo hace el mensaje de parada a 0x9c015b */
               if (own) { unsigned char *ob = calloc(1, 0x300); unsigned *ol = (unsigned *)(ob + 0x20); int ok;  /* la cabecera del emisor se conserva (ObjCamera pone en −1 la cola de respuesta de su espera síncrona); si viene a 0, el kernel pone la cola de destino: OsalIf::OsalRcvMsg la lee como OSAL_ID y con 0 rechaza el mensaje */
                   memcpy(ol - 3, (unsigned *)m - 3, 12); memcpy(ol, m, 0x30); if (!ol[-1]) ol[-1] = w[0]; pthread_mutex_lock(&mbx_m); for (ok = 0; ok < 16 && mbx[ok].msg; ok++); if (ok < 16) { mbx[ok].q = w[0]; mbx[ok].msg = ol; } else free(ob); pthread_cond_broadcast(&mbx_c); pthread_mutex_unlock(&mbx_m);
                   LOG("snd_msg %#x -> buzón del lector propio w0=%#x w1=%#x", w[0], ((unsigned *)m)[0], ((unsigned *)m)[1]); return 0; } }
@@ -1138,6 +1149,7 @@ static void *injector(void *a) {
         unsigned *m = calloc(64, 4); int n = 0;
         while (*e == ':' || *e == ',') { m[n++] = hexv(e + 1, &e); if (n >= 60) break; }
         if (at > t0) { sleep(at - t0); t0 = at; }
+        if (m[0] == 0x92014b) sus_phase = 1;  /* a partir de aquí los *_sus esperan la salida de sus hilos */
         int ok = cb_deliver(q, m); const char *how = "callback";
         if (!ok && is_dynq(q)) { if (q == 0x7a0020) mbx_post_raw(q, m); else mbx_post(q, m, 0); ok = 1; how = "buzón"; }  /* cola que un hilo lee con rcv_msg; 0x7a0020 (driver de entrada: {clave, 0, valor, 0, índice físico}) sin tocar w0 (§5.18w) */
         efp("[shim] INJECT q=%#x w0=%#x -> %s\n", q, m[0], ok ? how : "SIN CALLBACK NI BUZÓN");
@@ -2012,7 +2024,11 @@ int _ZN8ViewBase12getModelInfoEPKciP9ParamListPKS2_(void *self, const char *name
         if (n3++ < 20) LOG("GMIPROBE3 %s info %#x -> %d; @M00B -> %d", name, info, r, r3);
         if (r3 && getenv("ZOOMALIAS")) { r = r3; if (n3 < 40) LOG("ZOOMALIAS: %s info %#x servida como @M00B", name, info); }
     }
-    if (getenv("GMILOG")) { static int n; if (n++ < 400) LOG("getModelInfo(%s, %d) -> %d", name, info, r); }
+    if (r && info == 64 && list && getenv("GMIFORCE64") && readable(name) && !strcmp(name, "@M00A") && readable(list)) {  /* EXPERIMENTO G22-PBMEDIA: fuerza a 1 el parametro 0x40 del medio (la vista de reproduccion lo lee como booleano en viewUnified3+0x3c1a0); NO es un dato medido de la camara */
+        unsigned *vec = *(unsigned **)list; if (readable(vec)) { unsigned *a = (unsigned *)(unsigned long)vec[0], *e = (unsigned *)(unsigned long)vec[1];
+            for (; a && a < e && readable(a); a++) { unsigned *q = (unsigned *)(unsigned long)*a; if (readable(q) && q[2] == 0x40) { LOG("GMIFORCE64 @M00A,64 param 0x40: %u -> 1", q[3]); q[3] = 1; } } } }
+    if (getenv("GMILOG")) { static int n; if (n++ < 400) LOG("getModelInfo(%s, %d) -> %d", name, info, r);
+        if (getenv("GMICALLER") && strcmp(name, "model/ROOT") && strcmp(name, "model/INH_WRAPPER")) { static int nc; char d[96]; wl_desc(__builtin_return_address(0), d, sizeof d); if (nc++ < 200) LOG("getModelInfo(%s, %d) llamado desde %s", name, info, d); } }  /* GMICALLER=1: quién pide cada dato (excluye las peticiones de raíz, que son ruido) */
     if (r) gmi_dump(name, info, list);
     return r;
 }
@@ -2028,13 +2044,20 @@ void *dlsym(void *h, const char *n) {  /* DLSYMLOG=1: símbolos que pide la UI (
 /* ANDROIDFS=1 (T98, opt-in): en la cámara /android/data/{data,system} están montados y libSyncAndroid los desmonta en su fase inact («In 155_SyncAndroid_inact»); el arnés no tiene el almacén de Android,
  * el umount falla («error umount data/data») y sus_android aborta im.elf. Dato verificado que cambia: ahí el umount funciona.
  * shortcut: no hay montaje real; solo se da por buen el umount de /android/*, mejorar si algún día se emula el almacén de Android. */
+/* ANDROIDFS=real (WBI): sin falsear; im.sh monta /android/data (tmpfs) y mount() convierte /dev/ramN en tmpfs anidado, así umount devuelve lo que daría la cámara (EBUSY con montajes anidados). Otro valor no vacío = el modo falso histórico. */
+static int androidfs_real(void) { const char *e = getenv("ANDROIDFS"); return e && !strcmp(e, "real"); }
+static int androidfs_fake(void) { const char *e = getenv("ANDROIDFS"); return e && *e && strcmp(e, "real"); }
+int osal_wait_thread_exit(unsigned id) {
+    static int (*real)(unsigned); if (!real) real = nextsym("osal_wait_thread_exit");
+    int r; __sync_fetch_and_add(&join_pending, 1); dev_evt = time(0); LOG("osal_wait_thread_exit(%#x) espera", id); r = real ? real(id) : 0; __sync_fetch_and_sub(&join_pending, 1); LOG("osal_wait_thread_exit(%#x) -> %d", id, r); return r;
+}
 int umount(const char *t) {
     static int (*um)(const char *);
     if (!um) um = nextsym("umount");
     int r = -1;
-    if (getenv("ANDROIDFS") && t && (strstr(t, "/android") || strstr(t, "data/data") || strstr(t, "data/system"))) r = 0;  /* ruta relativa o absoluta */
+    if (androidfs_fake() && t && (strstr(t, "/android") || strstr(t, "data/data") || strstr(t, "data/system"))) r = 0;  /* ruta relativa o absoluta */
     else r = um(t);
-    LOG("umount(%s) -> %d", t ? t : "(null)", r); return r;
+    LOG("umount(%s) -> %d errno=%d", t ? t : "(null)", r, r ? errno : 0); return r;
 }
 int umount2(const char *t, int f) { (void)f; return umount(t); }
 /* ANDROIDFS=1: res_load_backup de libSyncAndroid monta /dev/ram8 y /dev/ram9 en data/data y data/system; si mount falla (-1) la biblioteca llama a abort() (T101, MEDIDO: «mount_fs: ERROR: Mount data/data(-1)» y ABORT).
@@ -2043,9 +2066,10 @@ int mount(const char *src, const char *t, const char *fs, unsigned long fl, cons
     static int (*mt)(const char *, const char *, const char *, unsigned long, const void *);
     if (!mt) mt = nextsym("mount");
     int r;
-    if (getenv("ANDROIDFS") && t && (strstr(t, "/android") || strstr(t, "data/data") || strstr(t, "data/system"))) r = 0;
+    if (androidfs_fake() && t && (strstr(t, "/android") || strstr(t, "data/data") || strstr(t, "data/system"))) r = 0;
+    else if (androidfs_real() && src && !strncmp(src, "/dev/ram", 8)) r = mt("tmpfs", t, "tmpfs", 0, "");  /* shortcut: /dev/ramN ext2 → tmpfs (importa el montaje anidado, no el contenido); mejorar con ext2 real vía loop */
     else r = mt(src, t, fs, fl, d);
-    LOG("mount(%s, %s, %s) -> %d", src ? src : "(null)", t ? t : "(null)", fs ? fs : "(null)", r); return r;
+    LOG("mount(%s, %s, %s) -> %d errno=%d", src ? src : "(null)", t ? t : "(null)", fs ? fs : "(null)", r, r ? errno : 0); return r;
 }
 int system(const char *c) {
     static int (*sy)(const char *);

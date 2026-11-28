@@ -41,6 +41,12 @@ imexit_diag() {  # busybox grep no tiene -A: awk imprime la línea que casa y la
   grep -av "sync5\|SYNCTRACE\|mpTextHeap\|sin callback" /tmp/$1.log | grep -a "glibc\|ABORT\|umount\|system(\|LOG  *155\|ERROR\|rror\|assert" | tail -${IMLASTN:-20} | cut -c1-170 | sed "s/^/IMLAST /"; tail -6 /tmp/$1.log | cut -c1-150 | sed "s/^/IMTAIL /"; dmesg | ctx "potentially" 16 "IMDMESG " | tail -${IMDMN:-18} | cut -c1-150; }
 run_im() { ( LD_PRELOAD=/usr/lib/sonyshim.so chroot /cam /usr/bin/im.elf $1 > /tmp/$2.log 2>&1; r=$?; echo "EXIT=$r" >> /tmp/$2.log; [ -n "$LIVE" ] && { [ "$r" != 0 ] && imexit_diag $2; echo "IMEXIT $2 $r"; } ) & }
 # ANDROIDFS=1 (T98, opt-in; ver el umount de sonyshim.c): árbol mínimo de /android/data que libSyncAndroid abre en inact (copias bk1/bk2 vacías)
+if [ "$ANDROIDFS" = real ]; then  # WBI: /android/data montado de verdad (tmpfs) y los applets de busybox en /bin como en la cámara (system() usa /bin/sh, tar, killall…)
+  mkdir -p /cam/android/data /cam/setting /cam/proc; mount -t tmpfs tmpfs /cam/android/data
+  mkdir -p /cam/android/data/data /cam/android/data/system /cam/android/data/backup; mount -t tmpfs tmpfs /cam/android/data/data; mount -t tmpfs tmpfs /cam/android/data/system  # estado de la cámara al apagar: ram8/ram9 ya montados dentro de /android/data
+  for a in $(chroot /cam /bin/busybox 2>&1 | sed -n '/Currently defined/,$p' | sed 1d | tr -d ' \n' | tr ',' ' '); do [ -e /cam/bin/$a ] || ln -s busybox /cam/bin/$a; done
+  ln -sf busybox /cam/bin/busybox2 2>/dev/null; mkdir -p /cam/usr/bin; [ -e /cam/usr/bin/make_init_bk.sh ] || ln -s /bin/make_init_bk.sh /cam/usr/bin/make_init_bk.sh
+fi
 if [ -n "$ANDROIDFS" ]; then
   mkdir -p /cam/android/data/data /cam/android/data/system /cam/android/data/backup /cam/setting
   : > /cam/android/data/backup/bk1.bak; : > /cam/android/data/backup/bk2.bak
@@ -82,6 +88,7 @@ echo "alive=$P threads=$(ls /proc/$P/task 2>/dev/null | wc -l) lineas=$(grep -ac
 grep -a "EXIT=\|ABORT\|Segmentation\|Aborted\|dlopen(.*) -> 0x0\|respuesta a" /tmp/im_s.log | tail -8 | cut -c1-160
 echo "--- ultimas lineas (filtradas)"
 grep -av "snd_msg a la cola\|valloc\|uipc free\|wait_cb\|094_\|wai_sem\|sig_sem\|LOG $\|dynamic_id sem\|NOFILTER_x\|LOGRAW" /tmp/im_s.log | tail -${TAILN:-40} | cut -c1-190
+[ -f /cam/tmp/power_state ] && echo "POWERSTATE escrito: [$(cat /cam/tmp/power_state)] ($(wc -c < /cam/tmp/power_state) B)"; [ "$ANDROIDFS" = real ] && { echo "WBIFS /setting:"; ls -la /cam/setting | head; echo "WBIFS mounts:"; grep android /proc/mounts; }
 if [ -n "$FULLLOG" ]; then  # registro completo del guest por la consola; run.py lo decodifica en DIR_TRABAJO/guest.log
   tr -d '\r' < /tmp/im_s.log > /cam/tmp/im_s.log  # el busybox del instalador no trae gzip: usar el de la cámara (chroot)
   if chroot /cam /bin/busybox gzip -c /dev/null > /dev/null 2>&1; then GZ="chroot /cam /bin/busybox gzip -9 -c /tmp/im_s.log"; else GZ="cat /cam/tmp/im_s.log"; fi
