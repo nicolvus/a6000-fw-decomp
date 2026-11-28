@@ -283,7 +283,7 @@ static unsigned dynq[256]; static int ndynq;  /* colas creadas por dynamic_id ti
 static pthread_mutex_t mbx_m = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t mbx_c = PTHREAD_COND_INITIALIZER;
 static void dynq_add(unsigned q) { pthread_mutex_lock(&mbx_m); if (ndynq < 256) dynq[ndynq++] = q; else LOG("dynq lleno: %#x sin buzón", q); pthread_mutex_unlock(&mbx_m); }
-static volatile int cec_stop, hdmi_stop, own_cnt, join_pending, sus_phase; static volatile time_t dev_evt;  /* DEVREADWAKE: hilos en osal_wait_thread_exit; el driver real despierta las lecturas bloqueadas al cerrarse */  /* contadores de mensajes de parada propios */
+static volatile int ev_inact, ev_susi, ev_susu, cec_stop, hdmi_stop, own_cnt, join_pending, sus_phase; static volatile time_t dev_evt;  /* DEVREADWAKE: hilos en osal_wait_thread_exit; el driver real despierta las lecturas bloqueadas al cerrarse */  /* contadores de mensajes de parada propios */
 static unsigned rcvseen[512]; static int nrcvseen;
 static void rcv_seen_add(unsigned q) { for (int i = 0; i < nrcvseen; i++) if (rcvseen[i] == q) return; if (nrcvseen < 512) rcvseen[nrcvseen++] = q; }
 static int rcv_seen(unsigned q) { for (int i = 0; i < nrcvseen; i++) if (rcvseen[i] == q) return 1; return 0; }
@@ -989,6 +989,7 @@ static void wl_end(int s) {
 /* LOGMARK="texto1,texto2" (sin espacios: SHIMENV se exporta por /cam/harness.env) (diagnóstico, §5.37): reenvía al anfitrión (con WAITLOG>0) solo las líneas del registro de la cámara que contienen alguno de esos textos, con la hora de wl_ts();
  * mide el orden de hitos sin el coste de WLALL (que reenvía todas y frena el arranque). */
 static void logmark(const char *txt) {
+    if (strstr(txt, "E  In 094_inact_all")) ev_inact = 1; else if (strstr(txt, "E  In 094_sus_all_i")) ev_susi = 1; else if (strstr(txt, "E  In 094_sus_all_u")) ev_susu = 1;  /* WBICHAIN */
     const char *e = getenv("LOGMARK"); if (!e || !wl_on()) return;
     char c[256], *sv = 0; snprintf(c, sizeof c, "%s", e);
     for (char *it = strtok_r(c, ",", &sv); it; it = strtok_r(0, ",", &sv)) if (strstr(txt, it)) { efp("[shim] LOGMARK %.2f %s\n", wl_ts(), txt); break; }
@@ -1168,6 +1169,20 @@ static void skip_sus(void) {
         p[0] = 0; p[1] = 0x20; p[2] = 0x70; p[3] = 0x47; __builtin___clear_cache((char *)p, (char *)p + 4); LOG("SKIPSUS %s+%#lx parcheada", lib, off);
     }
 }
+/* WBICHAIN=factor_hex (WBI): hace de upm.ko; cada fase espera al final de la anterior en el registro de im.elf, sin tiempos fijos.
+ * Orden de la cámara: 0x920143 (OFF, w1=factor) → inact_all → 0x92014B → sus_all_i → 0x92014D → sus_all_u → 0x92014F (im.elf escribe warm|mem). 0x92014E lo consume upm, no im.elf. */
+static void *wbichain(void *a) {
+    (void)a; unsigned f = (unsigned)hexv(getenv("WBICHAIN"), 0); unsigned sq = 0x94016a;
+    sleep(num(getenv("WBIAT") ? getenv("WBIAT") : "60"));
+    struct { unsigned c, w1; volatile int *wait; } st[] = { {0x920143, f, &ev_inact}, {0x92014b, 0, &ev_susi}, {0x92014d, 0, &ev_susu}, {0x92014f, 0, 0} };
+    for (int i = 0; i < 4; i++) {
+        unsigned *m = calloc(64, 4); m[0] = st[i].c; m[1] = st[i].w1;
+        if (st[i].c == 0x92014b) { sus_phase = 1; skip_sus(); }
+        int ok = cb_deliver(sq, m); LOG("WBICHAIN %#x w1=%#x -> %s", st[i].c, st[i].w1, ok ? "callback" : "SIN CALLBACK");
+        if (st[i].wait) { for (int k = 0; k < 6000 && !*st[i].wait; k++) usleep(100000); if (!*st[i].wait) { LOG("WBICHAIN: la fase %#x no terminó en 600 s", st[i].c); return 0; } }
+    }
+    return 0;
+}
 static void *injector(void *a) {
     char *spec = strdup(getenv("INJECT")), *sp1 = 0; (void)a; unsigned long t0 = 0;
     for (char *it = strtok_r(spec, ";/", &sp1); it; it = strtok_r(0, ";/", &sp1)) {
@@ -1194,7 +1209,7 @@ static void presignal(void) {
     const char *e = getenv("SEMSIG"), *p = e ? e : "83037a,83037a,83037a,83037a";
     while (*p) { const char *q; unsigned id = hexv(p, &q); if (q == p) break; sem_sig(id); p = *q == ',' ? q + 1 : q; }
 }
-__attribute__((constructor)) static void shim_init(void) { for (unsigned i = 0; i < sizeof nx_names / sizeof *nx_names; i++) nx_ptr[i] = dlsym(RTLD_NEXT, nx_names[i]); if (getenv("CPUWATCH")) { pthread_t tw; pthread_create(&tw, 0, cpu_watch, 0); } presignal(); keyq_init(); live_init(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("OPENVIEW")) { pthread_t th; pthread_create(&th, 0, openviewer, 0); } if (getenv("PLAYVIEW")) { pthread_t th; pthread_create(&th, 0, playviewer, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
+__attribute__((constructor)) static void shim_init(void) { for (unsigned i = 0; i < sizeof nx_names / sizeof *nx_names; i++) nx_ptr[i] = dlsym(RTLD_NEXT, nx_names[i]); if (getenv("CPUWATCH")) { pthread_t tw; pthread_create(&tw, 0, cpu_watch, 0); } presignal(); keyq_init(); live_init(); if (getenv("INJECT")) { pthread_t th; pthread_create(&th, 0, injector, 0); } if (getenv("WBICHAIN")) { pthread_t th; pthread_create(&th, 0, wbichain, 0); } if (getenv("OPENVIEW")) { pthread_t th; pthread_create(&th, 0, openviewer, 0); } if (getenv("PLAYVIEW")) { pthread_t th; pthread_create(&th, 0, playviewer, 0); } if (getenv("DUMPAT")) { pthread_t th; pthread_create(&th, 0, dumper, 0); } struct sigaction sa; memset(&sa, 0, sizeof sa); sa.sa_sigaction = on_usr1; sa.sa_flags = SA_SIGINFO; sigaction(SIGUSR1, &sa, 0);
     if (getenv("ALTSTK")) { stack_t ss; ss.ss_size = 65536; ss.ss_sp = malloc(ss.ss_size); ss.ss_flags = 0; if (ss.ss_sp) sigaltstack(&ss, 0); }
     sa.sa_flags = SA_SIGINFO | (getenv("ALTSTK") ? SA_ONSTACK : 0) | ((getenv("NULLMWF") || getenv("TABLE0")) ? 0 : SA_RESETHAND); sigaction(SIGSEGV, &sa, 0);  /* con NULLMWF el manejador sobrevive a las recuperaciones (antes SA_RESETHAND lo quitaba y el siguiente SEGV mataba im.elf: EXIT=139); on_usr1 lo restablece solo si el fallo no es recuperable */ sigaction(SIGBUS, &sa, 0); sigaction(SIGILL, &sa, 0); sigaction(SIGABRT, &sa, 0); }  /* un fallo imprime la pila y se reintenta por defecto (core) */
 
@@ -2081,7 +2096,8 @@ int umount(const char *t) {
     static int (*um)(const char *);
     if (!um) um = nextsym("umount");
     int r = -1;
-    if (androidfs_fake() && t && (strstr(t, "/android") || strstr(t, "data/data") || strstr(t, "data/system"))) r = 0;  /* ruta relativa o absoluta */
+    if (getenv("ANDROIDBUSY") && t && !strcmp(t, "/android/data")) { r = -1; errno = EBUSY; }  /* dato medido en cámara (boottime-cuelgue-syncandroid-sus.txt:259-270): errno 16 en los 11 intentos; el proceso que retiene el vfat no se conoce */
+    else if (androidfs_fake() && t && (strstr(t, "/android") || strstr(t, "data/data") || strstr(t, "data/system"))) r = 0;  /* ruta relativa o absoluta */
     else r = um(t);
     LOG("umount(%s) -> %d errno=%d", t ? t : "(null)", r, r ? errno : 0); return r;
 }

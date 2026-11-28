@@ -13,6 +13,10 @@ Con montajes anidados, `libSyncAndroid` y `make_init_bk.sh` como únicos actores
 ## Resultado de la pasada completa (MEDIDO, 28-11-2026)
 `wbi_apagado.sh` con factor `0x27`: `inact_all` → `sus_all_i` (incluye `SyncAndroid_sus` tipo 8, `umount(/android/data)`=0) → `sus_all_u` → `0x92014F` → **`POWERSTATE escrito: [warm] (4 B)`** (modo 2 nativo, como en cámara).
 
+## Cadena por eventos y reproducción de la ruta B (MEDIDO, 28-11-2026)
+`WBICHAIN=27` encadena `0x920143 → 0x92014B → 0x92014D → 0x92014F` esperando al `E In 094_inact_all / sus_all_i / sus_all_u` del registro de `im.elf` (sin tiempos fijos). Salida normal: `umount`=0 y `POWERSTATE escrito: [warm]`.
+`BUSY=1` (`ANDROIDBUSY`): `umount("/android/data")` devuelve `-1/EBUSY`, dato medido en cámara. Resultado idéntico al registro de cámara (`boottime-cuelgue-syncandroid-sus.txt:259-270`): 1 intento + 10 reintentos con errno 16, `umount AD: retry failed.`, `abort()` con `lr=libSyncAndroid+0x209f` (llamada en `0x209a`), `EXIT=134`; no se llega al `write` ⇒ no hay imagen. Es decir, **con solo ese dato la ruta B del arnés reproduce el fallo de la cámara**; lo que sigue desconocido es qué proceso retiene el vfat, no sus consecuencias.
+
 ## Atajos del arnés (no son datos de la cámara)
 - `SKIPSUS`: `CEC_sus`, `HDMI_sus` y `UsbControl_Suspend` se neutralizan (esperan hilos de `/dev/cec`, `/dev/hdmi` y `/dev/usb/event`, no modelados).
 - `DEVREADWAKE`: en fase de suspensión, toda lectura bloqueada de dispositivo no modelado (salvo `/dev/usb/event`, donde EINTR hace caer a `libusb` con SIGSEGV) expira cada 200 ms.
@@ -20,4 +24,4 @@ Con montajes anidados, `libSyncAndroid` y `make_init_bk.sh` como únicos actores
 
 ## Límites (no idéntico al 100 %)
 - Kernel Debian: no fabrica la imagen (`warm.c`, `liro`) ni reanuda; el `umount` da 0 en el arnés y EBUSY en cámara (falta el proceso que retiene `/android/data`; medir `/proc/*/cwd,fd` en cámara).
-- Tiempos de inyección fijos; `0x92014E` no se inyecta.
+- `0x92014E` (`dmm_pre_suspend`) lo consume `upm.ko`, no `im.elf`: no se inyecta. El EBUSY de `BUSY=1` se impone, no se deduce.
