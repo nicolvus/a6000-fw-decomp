@@ -1,5 +1,12 @@
 # Estado actual — léeme primero
 
+> **WBI + Silent: REABIERTO (27-11-2026, prueba física fallida).** Con `build/wbi_silent/pkg405` instalado (menú Silent visible) la receta
+> «apagar con el interruptor → encender → reproducir» **no reproduce vídeo**: la cámara no regenera el WBI. Lo dicho abajo como «RESUELTO»,
+> «garantizada» o «automática» queda **superado**; vale el análisis de `film-pb-1-warm-abort-20261126.md`: el interruptor da factor `0x7` → modo 0 →
+> `"mem"`, el parche `0x9F44` es inerte y `echo warm` aborta (en `umount /android/data` EBUSY o en `sleep.S:99`). Parchear en el PC el WBI de Sony con el
+> `/usr` del CFW **no es viable** (ext2 con otro tamaño; la instantánea guarda TOC, inodos y memoria de procesos de Sony). Queda: medir quién retiene
+> `/android/data` y hacer que la cámara fabrique el WBI con el ritual tipo 8. No repetir `echo warm` (llena `/setting`, CAM-SETTING-1).
+> Histórico (superado) a continuación:
 > **WBI + Silent RESUELTO en estático (28-11-2026).** Silent son dos capas y solo una choca con el WBI: el
 > comportamiento y la bandera `+0x238` van en `av-cam.bin` (`nflasha3`, 0 de 24 432 páginas del WBI; su
 > constructor deja la bandera a 0 en cada encendido) y el menú/emisor del `0x40e3` en `/usr` (998 de 4 254
