@@ -1,5 +1,12 @@
 # Estado actual — léeme primero
 
+> **WBI propia del CFW: diagnóstico y herramientas (28-11-2026, estático).** La WBI es una escalera de 4 arranques
+> (`prof` → perfilado → optimiza y escribe `WBI0` → sella `WBI1`, vectores `0x800523a4/ac/b4/bc`). La captura del 27-11
+> guarda en `upm.ko` el apagado `{7,0x1b,0x1f}` (`OFF_TYPE_SUSPEND` para `libObj` `GetInactiveFactor`) y la de Sony
+> `{0x27,0x1c,0x20}` (`COLDOFF`): el SWD del 27-11 solo cambió `im.elf`. El 4.07 además reanudaba con el vector
+> `_profile`. Nuevo `scripts/cam/swd_upm_coldoff_0x27.cfg` (reescribe el mensaje en `upm.ko` `.text+0xefec`) y pasos de
+> cámara en [escalera SSBI §4](../reports/film-pb-1-wbi-escalera-ssbi-20261128.md). La captura del 27-11 no sirve.
+> El empaquetador `build_package_wbi_propio.py` solo acepta `WBI1`+`_ssboot`. Pendiente `FILM-PB-1-WBI-ESCALERA`.
 > **WBI + Silent: REABIERTO (27-11-2026, prueba física fallida).** Con `build/wbi_silent/pkg405` instalado (menú Silent visible) la receta
 > «apagar con el interruptor → encender → reproducir» **no reproduce vídeo**: la cámara no regenera el WBI. Lo dicho abajo como «RESUELTO»,
 > «garantizada» o «automática» queda **superado**; vale el análisis de `film-pb-1-warm-abort-20261126.md`: el interruptor da factor `0x7` → modo 0 →

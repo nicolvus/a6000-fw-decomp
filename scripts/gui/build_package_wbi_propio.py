@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Paquete CFW con WBI propio: base Sony 3.21 + `/usr`, `nflasha3` y Darwin del pkg405 + `nflasha5` volcado de la cámara
-(cabecera `prof` → `WBI1`, recortado a cabecera+datos+tabla de secciones). NO instala nada.
+tras completar la escalera SSBI (WBI1 + vector `_ssboot`, recortado a cabecera+datos+tabla de secciones). NO instala nada.
+Antes, comprobar el volcado: scripts/wbi/escalera.py y scripts/wbi/upm_modulo.py (reports/film-pb-1-wbi-escalera-ssbi-20261128.md).
 Uso: build_package_wbi_propio.py NFLASHA5_VOLCADO SALIDA VERSION"""
 import hashlib, struct, sys, tempfile
 from pathlib import Path
@@ -12,11 +13,18 @@ FW = ROOT / "firmware/extracted/fw321"
 P405 = ROOT / "build/wbi_silent/pkg405/firmware.tar"
 N = {k: f"0700_part_image/dev/nflasha{k}" for k in (3, 5, 15)}
 
+SSBOOT_VECTOR = 0x800523BC  # cxd90014_cpu_resume_ssboot (stat 4); verificado con scripts/wbi/escalera.py
+
+
 def wbi_member(dump: bytes) -> bytes:
-    n_sec, data_size = struct.unpack_from("<II", dump, 4)[0], struct.unpack_from("<I", dump, 24)[0]
+    # Sólo una WBI1 sellada por la propia cámara (pm_finish tras WBI0). Re-firmar un `prof` como WBI1 deja el
+    # vector _profile y la reanudación arranca en perfilado: es lo que dejó negro el 4.07.
+    firma, n_sec, vector = dump[:4], struct.unpack_from("<I", dump, 4)[0], struct.unpack_from("<I", dump, 12)[0]
+    if firma != b"WBI1" or vector != SSBOOT_VECTOR:
+        raise ValueError(f"nflasha5 no sellado: firma {firma!r}, vector {vector:#x} (se exige WBI1 y {SSBOOT_VECTOR:#x})")
+    data_size = struct.unpack_from("<I", dump, 24)[0]
     end = 262144 + data_size + n_sec * 32  # el WBI de Sony mide exactamente esto (42 293 120 B)
-    assert dump[:4] in (b"prof", b"WBI1") and dump[end:end + 4096].count(0) < 4096 or True
-    return b"WBI1" + dump[4:end]
+    return dump[:end]
 
 def main(dump_path: Path, out: Path, version: str) -> None:
     out.mkdir(parents=True, exist_ok=True)
