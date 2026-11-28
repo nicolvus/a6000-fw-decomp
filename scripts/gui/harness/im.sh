@@ -47,6 +47,10 @@ if [ "$ANDROIDFS" = real ]; then  # WBI: /android/data montado de verdad (tmpfs)
   for a in $(chroot /cam /bin/busybox 2>&1 | sed -n '/Currently defined/,$p' | sed 1d | tr -d ' \n' | tr ',' ' '); do [ -e /cam/bin/$a ] || ln -s busybox /cam/bin/$a; done
   ln -sf busybox /cam/bin/busybox2 2>/dev/null; mkdir -p /cam/usr/bin; [ -e /cam/usr/bin/make_init_bk.sh ] || ln -s /bin/make_init_bk.sh /cam/usr/bin/make_init_bk.sh
 fi
+if [ "$ANDROIDFS" = real ] && [ -n "$ANDROIDHOLD" ]; then  # procesos Android vivos con ficheros abiertos en el vfat /android/data (T014-P6a/shell.txt: apk de la app Tweak por zygote, dhcpcd-ath0.pid)
+  mkdir -p /cam/android/data/app /cam/android/data/misc/dhcp; : > /cam/android/data/app/com.github.ma1co.openmemories.tweak-1.apk; : > /cam/android/data/misc/dhcp/dhcpcd-ath0.pid
+  ( sleep 100000 < /cam/android/data/app/com.github.ma1co.openmemories.tweak-1.apk & ); ( sleep 100000 3>> /cam/android/data/misc/dhcp/dhcpcd-ath0.pid & )
+fi
 if [ -n "$ANDROIDFS" ]; then
   mkdir -p /cam/android/data/data /cam/android/data/system /cam/android/data/backup /cam/setting
   : > /cam/android/data/backup/bk1.bak; : > /cam/android/data/backup/bk2.bak

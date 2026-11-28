@@ -17,11 +17,16 @@ Con montajes anidados, `libSyncAndroid` y `make_init_bk.sh` como únicos actores
 `WBICHAIN=27` encadena `0x920143 → 0x92014B → 0x92014D → 0x92014F` esperando al `E In 094_inact_all / sus_all_i / sus_all_u` del registro de `im.elf` (sin tiempos fijos). Salida normal: `umount`=0 y `POWERSTATE escrito: [warm]`.
 `BUSY=1` (`ANDROIDBUSY`): `umount("/android/data")` devuelve `-1/EBUSY`, dato medido en cámara. Resultado idéntico al registro de cámara (`boottime-cuelgue-syncandroid-sus.txt:259-270`): 1 intento + 10 reintentos con errno 16, `umount AD: retry failed.`, `abort()` con `lr=libSyncAndroid+0x209f` (llamada en `0x209a`), `EXIT=134`; no se llega al `write` ⇒ no hay imagen. Es decir, **con solo ese dato la ruta B del arnés reproduce el fallo de la cámara**; lo que sigue desconocido es qué proceso retiene el vfat, no sus consecuencias.
 
+## Causa del EBUSY deducida de un volcado real (28-11-2026)
+Volcado de cámara `analysis/camera-dumps/20261026-204237-T014-P6a/shell.txt` (cámara con Android vivo: `init`, `vold`, `netd`, `debuggerd`, `zygote`, `installd`): procesos de `zygote` mantienen abierto `/android/data/app/com.github.ma1co.openmemories.tweak-1.apk` (fds en los PID 435 y 851) y `dhcpcd` mantiene `/android/data/misc/dhcp/dhcpcd-ath0.pid` (PID 939). Son ficheros del **vfat** `/dev/nflasha17`, no de `data/data` ni `data/system` (ram8/ram9): por eso esos dos se desmontan bien y `umount("/android/data")` da EBUSY. `sus_android` solo hace `killall android.process.media`; no para `zygote`, apps ni `dhcpcd`.
+`HOLD=1` (`ANDROIDHOLD`): dos procesos reales sujetan esos dos ficheros en el arnés y el EBUSY **sale solo** (11 × errno 16, `retry failed.`, `abort` con `lr=libSyncAndroid+0x209f`, `EXIT=134`), sin imponer errno. Sin esos procesos (`HOLD` ausente) el `umount` da 0: la diferencia con la cámara era precisamente Android vivo.
+Límite: los PID 435/851/939 se identifican por sus fds, no por nombre (el `ps` del volcado no los lista); no hay volcado tomado justo antes del `umount`, así que es la causa más probable, no una medición en el instante del fallo.
+
 ## Atajos del arnés (no son datos de la cámara)
 - `SKIPSUS`: `CEC_sus`, `HDMI_sus` y `UsbControl_Suspend` se neutralizan (esperan hilos de `/dev/cec`, `/dev/hdmi` y `/dev/usb/event`, no modelados).
 - `DEVREADWAKE`: en fase de suspensión, toda lectura bloqueada de dispositivo no modelado (salvo `/dev/usb/event`, donde EINTR hace caer a `libusb` con SIGSEGV) expira cada 200 ms.
 - Aviso de método: tres pasadas intermedias usaron un `.so` viejo porque `build.sh` fallaba en silencio; comprobar siempre la hora del `.so`.
 
 ## Límites (no idéntico al 100 %)
-- Kernel Debian: no fabrica la imagen (`warm.c`, `liro`) ni reanuda; el `umount` da 0 en el arnés y EBUSY en cámara (falta el proceso que retiene `/android/data`; medir `/proc/*/cwd,fd` en cámara).
+- Kernel Debian: no fabrica la imagen (`warm.c`, `liro`) ni reanuda.
 - `0x92014E` (`dmm_pre_suspend`) lo consume `upm.ko`, no `im.elf`: no se inyecta. El EBUSY de `BUSY=1` se impone, no se deduce.
