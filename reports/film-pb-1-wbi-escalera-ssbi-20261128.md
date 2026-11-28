@@ -141,6 +141,13 @@ captura 27-11 : wbi_memclr 0 ; wbimem 18552 páginas: 10873 a cero,  1632 entera
   `0x80021000`) no se borran (`LOADER_REGION_END`). Paquete construido:
   `build/wbi_propio/memclr/package-4.09/firmware_packed.dat` (sha256 `0b5b7b0e…24b3`), que es el 4.08 de
   recuperación con esas dos líneas cambiadas, comprobado miembro a miembro. **NO PROBADO** en cámara.
+- El kernel de Sony (`vmlinux.bin` del 3.21, VA = `0x40038000` + offset) lo implementa igual que el OSS, comprobado en
+  instrucciones:
+  - `wbi_memclr()` (`0x4033b534`): `phys = [0x403937a4+8]`; si es 0 devuelve 0; si no, `ldr r0,[phys+0xc0000000]` y
+    devuelve `r0 == 1`. Para `0x8029fdc8`, `phys+0xc0000000` = `0x4029fdc8`, la palabra comprobada.
+  - `wbi_cmdline_add_region` (`0x4033b61c-0x4033b65c`): `bl wbi_memclr`; si `phys > 0x80028000`, imprime
+    `"<6>memclr: 0x%lx-0x%lx"` (`0x402f5835`) y pone a cero `size` bytes (`bl 0x4004e8e0`, `bl 0x4017c980`).
+  - En frío, el klog del 4.09 debe mostrar por tanto 11 líneas `memclr:` (la región `0x80021000` queda excluida).
 
 ## 3. Lectura del fallo del 4.07 — INFERENCIA fuerte
 
@@ -156,7 +163,7 @@ captura 27-11 : wbi_memclr 0 ; wbimem 18552 páginas: 10873 a cero,  1632 entera
 ## 4. Cómo fabricar la WBI del CFW en la cámara — NO PROBADO
 
 **Paso previo A (prueba barata, aporta por sí sola):** instalar el **4.09** (§2b) y arrancar en frío.
-1. Comprobar que el klog trae doce líneas `memclr: 0x…`.
+1. Comprobar que el klog trae once líneas `memclr: 0x…` (todas las regiones salvo `0x80021000`).
 2. Reproducir un vídeo. Si reproduce en frío, la causa del frío sin vídeo queda localizada y el CFW con Silent
    funcionaría incluso sin WBI.
 3. Sea cual sea el resultado, el 4.09 es la base de la escalera.
